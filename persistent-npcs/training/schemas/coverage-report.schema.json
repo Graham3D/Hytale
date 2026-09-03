@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"CoverageReport","type":"object","required":["schemaVersion","rowCounts","tokenWeightedCounts","warnings","totalRows","approximateTokens","canonicalSha256"],"properties":{"schemaVersion":{"const":1}},"additionalProperties":false}

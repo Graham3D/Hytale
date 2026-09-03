@@ -1,0 +1,11 @@
+{
+  "Container": {
+    "Type": "Single",
+    "Item": {
+      "ItemId": "Core_Tavern",
+      "QuantityMin": 1,
+      "QuantityMax": 1
+    }
+  }
+}
+

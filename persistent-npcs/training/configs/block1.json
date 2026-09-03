@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "mode": "OFF",
+  "allowedModes": ["OFF", "CORPUS_AUDIT"],
+  "offlineRootEnvironmentVariable": "ORBIS_OFFLINE_TRAINING_ROOT",
+  "defaultRelativeRoot": "../Orbis Offline Training",
+  "activeSaveRootEnvironmentVariable": "ORBIS_ACTIVE_SAVE_ROOT",
+  "teacherGenerationEnabled": false,
+  "trainingEnabled": false,
+  "packagingEnabled": false,
+  "promotionEnabled": false
+}

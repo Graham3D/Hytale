@@ -1,0 +1,13 @@
+{
+  "Parent": "Deco_Treasure_Pile_Small",
+  "TranslationProperties": {
+    "Name": "server.items.Tavern_Currency_Silver_Pile.name"
+  },
+  "BlockType": {
+    "CustomModelTexture": [
+      { "Texture": "Blocks/Taverns/Currency/Silver_Pile_Texture.png", "Weight": 1 }
+    ],
+    "ParticleColor": "#D6DEE5",
+    "TextureComputedColor": "#AEB8C0"
+  }
+}

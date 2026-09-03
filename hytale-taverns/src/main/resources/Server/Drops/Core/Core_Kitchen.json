@@ -1,0 +1,10 @@
+{
+  "Container": {
+    "Type": "Single",
+    "Item": {
+      "ItemId": "Core_Kitchen",
+      "QuantityMin": 1,
+      "QuantityMax": 1
+    }
+  }
+}

@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "rowCounts": {
+    "answerability": {
+      "NEEDS_CLARIFICATION": 2,
+      "NEEDS_CURRENT_PERCEPTION": 1,
+      "UNKNOWN": 1,
+      "WITHHELD": 1,
+      "SUBJECTIVE": 2,
+      "CONFLICTED": 1,
+      "PARTIALLY_KNOWN": 1,
+      "INFERRED": 1,
+      "KNOWN": 10,
+      "NEEDS_ACTION": 2
+    },
+    "teacherSource": {
+      "NONE": 22
+    },
+    "failureSignature": {
+      "SOURCE_ATTRIBUTION": 2,
+      "PROVIDER_REALIZATION": 7,
+      "SUPERSEDED_VALUE": 1,
+      "MEMORY_OMISSION": 1,
+      "MISSING_CLARIFICATION": 2,
+      "PARTIAL_OMISSION": 1,
+      "SECRET_DISCLOSURE": 1,
+      "MALFORMED_STRUCTURE": 1,
+      "REFERENT_RESOLUTION": 2,
+      "UNATTRIBUTED_INFERENCE": 1,
+      "FALSE_ACTION_RESULT": 2,
+      "STALE_PERCEPTION": 1
+    },
+    "memoryType": {
+      "CONVERSATION_WORKSPACE": 2,
+      "EPISODIC_MEMORY": 1,
+      "NONE": 19
+    },
+    "split": {
+      "TEST": 4,
+      "CHALLENGE": 2,
+      "TRAIN": 16
+    },
+    "archetype": {
+      "guide": 4,
+      "artisan": 1,
+      "keeper": 2,
+      "villager": 10,
+      "listener": 2,
+      "observer": 1,
+      "agent": 2
+    },
+    "taskType": {
+      "CLARIFICATION": 2,
+      "CORRECTION": 1,
+      "RELATIONSHIP": 1,
+      "CURRENT_PERCEPTION": 1,
+      "DISCLOSURE": 1,
+      "MULTI_TURN_REFERENT": 2,
+      "TESTIMONY": 2,
+      "OBJECTIVE_PROPERTY": 5,
+      "ACTION": 2,
+      "STRUCTURED_CHOICE": 1,
+      "IDENTITY": 1,
+      "MEMORY_RECALL": 1,
+      "PERSONA": 2
+    },
+    "actionOutcome": {
+      "COMMITTED": 1,
+      "REJECTED": 1,
+      "NONE": 20
+    },
+    "temporalCategory": {
+      "CORRECTED": 1,
+      "TIMELESS": 1,
+      "CURRENT": 13,
+      "HISTORICAL": 5,
+      "NONE": 2
+    },
+    "uncertaintyRefusal": {
+      "DIRECT": 16,
+      "REFUSAL": 1,
+      "UNCERTAINTY": 5
+    },
+    "evidenceSourceClass": {
+      "CURRENT_WORLD_STATE": 1,
+      "AUTHORED_CANON": 10,
+      "DIRECT_OBSERVATION": 1,
+      "PLAYER_TESTIMONY": 1,
+      "NPC_TESTIMONY": 1,
+      "NONE": 2,
+      "ACTION_RESULT": 2,
+      "DERIVED_REFLECTION": 1,
+      "EPISODIC_MEMORY": 1,
+      "CONVERSATION_WORKSPACE": 2
+    },
+    "paraphraseTemplate": {
+      "humor-v1": 1,
+      "conflicted-world-v1": 1,
+      "correction-v1": 1,
+      "identity-name-v1": 1,
+      "partial-v1": 1,
+      "clarify-v1": 2,
+      "choice-v1": 1,
+      "action-v1": 2,
+      "relationship-known-v1": 1,
+      "perception-v1": 1,
+      "withheld-v1": 1,
+      "recall-v1": 1,
+      "unknown-owner-v1": 1,
+      "inference-v1": 1,
+      "persona-v1": 1,
+      "known-location-v1": 1,
+      "referent-v1": 2,
+      "testimony-v1": 2
+    },
+    "relationshipStance": {
+      "EXPLICIT": 1,
+      "NONE": 21
+    },
+    "targetSource": {
+      "DETERMINISTIC_ORBIS_TARGET": 22
+    }
+  },
+  "tokenWeightedCounts": {
+    "answerability": {
+      "NEEDS_CLARIFICATION": 44,
+      "NEEDS_CURRENT_PERCEPTION": 29,
+      "UNKNOWN": 26,
+      "WITHHELD": 29,
+      "SUBJECTIVE": 53,
+      "CONFLICTED": 32,
+      "PARTIALLY_KNOWN": 31,
+      "INFERRED": 33,
+      "KNOWN": 244,
+      "NEEDS_ACTION": 52
+    },
+    "teacherSource": {
+      "NONE": 573
+    },
+    "failureSignature": {
+      "SOURCE_ATTRIBUTION": 51,
+      "PROVIDER_REALIZATION": 175,
+      "SUPERSEDED_VALUE": 23,
+      "MEMORY_OMISSION": 25,
+      "MISSING_CLARIFICATION": 44,
+      "PARTIAL_OMISSION": 31,
+      "SECRET_DISCLOSURE": 29,
+      "MALFORMED_STRUCTURE": 26,
+      "REFERENT_RESOLUTION": 55,
+      "UNATTRIBUTED_INFERENCE": 33,
+      "FALSE_ACTION_RESULT": 52,
+      "STALE_PERCEPTION": 29
+    },
+    "memoryType": {
+      "CONVERSATION_WORKSPACE": 55,
+      "EPISODIC_MEMORY": 25,
+      "NONE": 493
+    },
+    "split": {
+      "TEST": 109,
+      "CHALLENGE": 55,
+      "TRAIN": 409
+    },
+    "archetype": {
+      "guide": 112,
+      "artisan": 33,
+      "keeper": 54,
+      "villager": 242,
+      "listener": 51,
+      "observer": 29,
+      "agent": 52
+    },
+    "taskType": {
+      "CLARIFICATION": 44,
+      "CORRECTION": 23,
+      "RELATIONSHIP": 22,
+      "CURRENT_PERCEPTION": 29,
+      "DISCLOSURE": 29,
+      "MULTI_TURN_REFERENT": 55,
+      "TESTIMONY": 51,
+      "OBJECTIVE_PROPERTY": 144,
+      "ACTION": 52,
+      "STRUCTURED_CHOICE": 26,
+      "IDENTITY": 20,
+      "MEMORY_RECALL": 25,
+      "PERSONA": 53
+    },
+    "actionOutcome": {
+      "COMMITTED": 26,
+      "REJECTED": 26,
+      "NONE": 521
+    },
+    "temporalCategory": {
+      "CORRECTED": 23,
+      "TIMELESS": 20,
+      "CURRENT": 355,
+      "HISTORICAL": 131,
+      "NONE": 44
+    },
+    "uncertaintyRefusal": {
+      "DIRECT": 393,
+      "REFUSAL": 29,
+      "UNCERTAINTY": 151
+    },
+    "evidenceSourceClass": {
+      "CURRENT_WORLD_STATE": 26,
+      "AUTHORED_CANON": 258,
+      "DIRECT_OBSERVATION": 29,
+      "PLAYER_TESTIMONY": 27,
+      "NPC_TESTIMONY": 24,
+      "NONE": 44,
+      "ACTION_RESULT": 52,
+      "DERIVED_REFLECTION": 33,
+      "EPISODIC_MEMORY": 25,
+      "CONVERSATION_WORKSPACE": 55
+    },
+    "paraphraseTemplate": {
+      "humor-v1": 28,
+      "conflicted-world-v1": 32,
+      "correction-v1": 23,
+      "identity-name-v1": 20,
+      "partial-v1": 31,
+      "clarify-v1": 44,
+      "choice-v1": 26,
+      "action-v1": 52,
+      "relationship-known-v1": 22,
+      "perception-v1": 29,
+      "withheld-v1": 29,
+      "recall-v1": 25,
+      "unknown-owner-v1": 26,
+      "inference-v1": 33,
+      "persona-v1": 25,
+      "known-location-v1": 22,
+      "referent-v1": 55,
+      "testimony-v1": 51
+    },
+    "relationshipStance": {
+      "EXPLICIT": 22,
+      "NONE": 551
+    },
+    "targetSource": {
+      "DETERMINISTIC_ORBIS_TARGET": 573
+    }
+  },
+  "warnings": [],
+  "totalRows": 22,
+  "approximateTokens": 573,
+  "canonicalSha256": "d6b7859a1353ce0fd52ec1f8c5a97bf4d6802a257a5e7128f849cb2030294059"
+}

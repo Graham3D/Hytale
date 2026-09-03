@@ -1,0 +1,10 @@
+{
+  "Container": {
+    "Type": "Single",
+    "Item": {
+      "ItemId": "Furniture_Tavern_Service",
+      "QuantityMin": 1,
+      "QuantityMax": 1
+    }
+  }
+}

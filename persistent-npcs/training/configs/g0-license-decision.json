@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "gate": "G0_LICENSE",
+  "decision": "PASS_FOR_LOCAL_D6_D7_ONLY",
+  "reviewedAt": "2026-09-03T00:00:00Z",
+  "engineeringClassification": [
+    "APPROVED_FOR_LOCAL_TRAINING",
+    "APPROVED_FOR_DERIVATIVE_ADAPTER",
+    "APPROVED_FOR_MERGE",
+    "REDISTRIBUTION_NEEDS_REVIEW"
+  ],
+  "selectedBaseLicense": {
+    "name": "NVIDIA Nemotron Open Model License",
+    "versionReleaseDate": "2025-12-15",
+    "officialUrl": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-nemotron-open-model-license/",
+    "officialPdfSha256": "2ffd837856bb99d4cee13d17f0b597ecfeb95c38e30abc08d3dffef7d589881d",
+    "officialPageSnapshotSha256": "1d207431c436e58c4b3544d15fd9006fce0ce9c1be6e09f6f62517ceccfbeed5",
+    "modelRepositoryLicenseFile": "EMPTY_AT_PINNED_REVISION",
+    "modelRepositoryLicenseFileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "productionArtifactLicense": {
+    "name": "NVIDIA Open Model License Agreement",
+    "lastModified": "2025-10-24",
+    "ollamaLayerSha256": "355e036064fa9b3a96ce0cdbb69abe54f5c7ce0b6aa2c7d5f8ec8580b011c20e",
+    "relationshipToSelectedBaseTerms": "DIFFERENT_LICENSE_SNAPSHOT"
+  },
+  "rightsForThisBlock": {
+    "localUse": true,
+    "modificationAndDerivativeAdapter": true,
+    "mergeIntoCopy": true,
+    "commercialUse": true,
+    "redistribution": false
+  },
+  "conditions": [
+    "Use must comply with the NVIDIA Nemotron Open Model License and referenced Trustworthy AI terms.",
+    "Do not distribute the base, adapter, or merged copy in Block 3.",
+    "Before any later distribution, preserve the license, applicable notices, and required NOTICE attribution and review all bundled component terms."
+  ],
+  "requiredNotice": "Licensed by NVIDIA Corporation under the NVIDIA Open Model License",
+  "decisionBasis": "The official terms grant use, reproduction, modification, derivative-work, and distribution rights subject to conditions. Block 3 is a local, non-distributed experiment. The separate exact BF16 lineage is authorized by Technical Design section 8.1. This is an engineering gate, not legal advice."
+}

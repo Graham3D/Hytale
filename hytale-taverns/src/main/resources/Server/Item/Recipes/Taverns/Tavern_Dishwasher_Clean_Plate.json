@@ -1,0 +1,9 @@
+{
+  "Input": [ { "ItemId": "Dirty_Plate", "Quantity": 1 } ],
+  "PrimaryOutput": { "ItemId": "Tavern_Clean_Plate", "Quantity": 1 },
+  "Output": [ { "ItemId": "Tavern_Clean_Plate", "Quantity": 1 } ],
+  "BenchRequirement": [
+    { "Type": "Crafting", "Id": "TavernDishwasher", "Categories": [ "Dishwashing" ] }
+  ],
+  "TimeSeconds": 2
+}

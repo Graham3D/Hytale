@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inigmasgames.local/orbis/model-identity.schema.json",
+  "title": "Orbis Model Identity",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "repository", "revision", "artifactSha256", "architecture", "precision", "provenance"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "repository": {"type": "string", "minLength": 1},
+    "revision": {"type": "string", "minLength": 1},
+    "artifactSha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "architecture": {"type": "string", "minLength": 1},
+    "precision": {"type": "string", "minLength": 1},
+    "tokenizerSha256": {"type": "string"},
+    "chatTemplateSha256": {"type": "string"},
+    "provenance": {"type": "object", "additionalProperties": {"type": "string"}}
+  }
+}

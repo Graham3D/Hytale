@@ -1,0 +1,16 @@
+{
+  "Parent": "Food_Kebab_Meat",
+  "MaxStack": 1,
+  "Recipe": {
+    "Input": [
+      { "ItemId": "Ingredient_Stick", "Quantity": 1 },
+      { "ResourceTypeId": "Meats", "Quantity": 4 },
+      { "ItemId": "Tavern_Clean_Plate", "Quantity": 1 }
+    ],
+    "Output": [ { "ItemId": "Tavern_Prepared_Food_Kebab_Meat", "Quantity": 1 } ],
+    "BenchRequirement": [
+      { "Type": "Crafting", "Id": "Cookingbench", "Categories": [ "Prepared" ] }
+    ],
+    "TimeSeconds": 1
+  }
+}

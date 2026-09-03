@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "defaultRegion": "EMERALD_WILDS",
+  "regionalValues": {
+    "EMERALD_WILDS": {
+      "craftable": 1,
+      "discoverable": 2
+    },
+    "HOWLING_SANDS": {
+      "craftable": 3,
+      "discoverable": 4
+    },
+    "WHISPERFROST_FRONTIERS": {
+      "craftable": 5,
+      "discoverable": 6
+    },
+    "DEVASTATED_LANDS": {
+      "craftable": 7,
+      "discoverable": 8
+    }
+  },
+  "regionRules": [
+    {
+      "region": "WHISPERFROST_FRONTIERS",
+      "idContains": [
+        "_frozen_",
+        "_outlander_",
+        "_temple_wind_"
+      ]
+    },
+    {
+      "region": "HOWLING_SANDS",
+      "idContains": [
+        "_desert_",
+        "_feran_",
+        "_scarak_hive_"
+      ]
+    },
+    {
+      "region": "DEVASTATED_LANDS",
+      "idContains": [
+        "_ancient_",
+        "_human_ruins_",
+        "_dungeon_",
+        "_goblin_",
+        "_royal_magic_",
+        "_temple_dark_",
+        "_temple_emerald_",
+        "_temple_light_",
+        "_temple_scarak_"
+      ]
+    },
+    {
+      "region": "EMERALD_WILDS",
+      "idContains": [
+        "_crude_",
+        "_tavern_",
+        "_village_",
+        "_kweebec_",
+        "_lumberjack_",
+        "_jungle_",
+        "_castle_",
+        "_faun_"
+      ]
+    }
+  ],
+  "entries": {}
+}

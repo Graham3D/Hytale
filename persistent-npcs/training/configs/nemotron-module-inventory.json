@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "repository": "nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16",
+  "auditedRevision": "dfaf35de3e30f1867dd8dbc38a7fc9fb52d3914f",
+  "architecture": "NemotronHForCausalLM",
+  "modelType": "nemotron_h",
+  "parameters": 3970000000,
+  "hiddenSize": 3136,
+  "intermediateSize": 12544,
+  "layers": 42,
+  "attentionLayers": 4,
+  "attentionHeads": 40,
+  "keyValueHeads": 8,
+  "linearModules": {
+    "attention": ["q_proj", "k_proj", "v_proj", "o_proj"],
+    "mlp": ["up_proj", "down_proj"],
+    "mamba": ["in_proj", "out_proj"],
+    "output": ["lm_head"]
+  },
+  "embeddingModule": "backbone.embeddings",
+  "candidateAdapterTargets": {
+    "lowestRiskFirstExperiment": ["q_proj", "k_proj", "v_proj", "o_proj"],
+    "secondExperiment": ["up_proj", "down_proj"],
+    "researchOnlyUntilOneBatchProof": ["in_proj", "out_proj"]
+  },
+  "approval": "NOT_APPROVED_FOR_TRAINING",
+  "sourceFileHashesAtAuditedRevision": {
+    "config.json": "fde9241f66cd414458df444a80eb535f53aef2b4b240a91f092e651fa6f27219",
+    "modeling_nemotron_h.py": "ea982af0b805f181573f919ecb001d5bbc0153459923cf4b2f1ccae194e415a4",
+    "chat_template.jinja": "ab7813c3abdd9cb655905a410728b26c7884eca45ddfab8d9f931553485a7862",
+    "tokenizer_config.json": "48de4056b0b17de26e03232fdc1f55b70595c9354ceb2ed061f724f45620aa41"
+  }
+}

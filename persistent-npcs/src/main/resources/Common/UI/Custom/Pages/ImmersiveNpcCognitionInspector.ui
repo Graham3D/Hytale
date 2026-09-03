@@ -1,0 +1,107 @@
+$C = "../Common.ui";
+$Sounds = "../Sounds.ui";
+
+$C.@PageOverlay {
+  LayoutMode: Middle;
+  $C.@DecoratedContainer {
+    Anchor: (Width: 920, Height: 900);
+    #Title { $C.@Title #InspectorTitle { @Text = "Cognition Inspector"; } }
+    #Content {
+      LayoutMode: Top;
+      Padding: (Full: 16);
+      Group {
+        FlexWeight: 1;
+        LayoutMode: TopScrolling;
+        ScrollbarStyle: $C.@DefaultScrollbarStyle;
+        Label { Text: "SEMANTIC COGNITION"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #d8b66a); }
+        Label { Text: "Cognitive depth / context routing"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #ContextRouting { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Semantic perceptions"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Perceptions { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Relationship-gated NPC locator"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Locator { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Authoritative self-state"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #SelfState { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Profile influence (latest decision)"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #ProfileInfluence { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Sourced / authoritative belief updates"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Beliefs { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Retrieved relationships / memories"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Retrieval { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "MEMORY"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #d8b66a); }
+        Label #Memory { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Candidate intents / attention"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Attention { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Selected intent"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #SelectedIntent { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Action / AgentOperation"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Action { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Grounding evidence"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Evidence { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Final spoken text"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #SpokenText { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Emotion / event"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Emotion { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Fallback / rejection"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Fallback { Anchor: (Bottom: 8); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Raw model / canonical boundary"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #ModelBoundary { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "VOICE / HEARING"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #d8b66a); }
+        Label { Text: "HEARING"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #Hearing { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Player utterance"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #VoiceEvent { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Audience / direct address"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #VoiceRouting { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Response / playback"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #VoicePlayback { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "Voice timing"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #VoiceTiming { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "ORBIS TURN RUNTIME"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #6ac7d8); }
+        Label #Orbis { Anchor: (Bottom: 8); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "RESOURCES"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #6ac7d8); }
+        Label #Resources { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Group {
+          LayoutMode: Left;
+          Anchor: (Bottom: 6, Height: 38);
+          $C.@SecondaryTextButton #PolicyGPUHEAVYButton { @Anchor = (Right: 4); Text: "GPU Heavy"; FlexWeight: 1; }
+          $C.@SecondaryTextButton #PolicyBALANCEDButton { @Anchor = (Right: 4); Text: "Balanced"; FlexWeight: 1; }
+          $C.@SecondaryTextButton #PolicyCPUFIRSTButton { Text: "CPU First"; FlexWeight: 1; }
+        }
+        Group {
+          LayoutMode: Left;
+          Anchor: (Bottom: 12, Height: 38);
+          $C.@SecondaryTextButton #PolicyCPUONLYButton { @Anchor = (Right: 4); Text: "CPU Only"; FlexWeight: 1; }
+          $C.@SecondaryTextButton #PolicyREMOTEAIButton { Text: "Remote AI"; FlexWeight: 1; }
+        }
+        Group {
+          LayoutMode: Left;
+          Anchor: (Bottom: 12, Height: 38);
+          $C.@SecondaryTextButton #CancelOrbisButton { @Anchor = (Right: 5); Text: "Cancel Stuck Turn"; FlexWeight: 1; }
+          $C.@SecondaryTextButton #TraceToggleButton { @Anchor = (Left: 5); Text: "Toggle Trace"; FlexWeight: 1; }
+        }
+        Label { Text: "AI BACKENDS / DIAGNOSTICS"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #d8b66a); }
+        Label { Text: "Live LLM provider (operator only)"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #d8b66a); }
+        Label #LlmSelection { Anchor: (Bottom: 8); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Group {
+          LayoutMode: Left;
+          Anchor: (Bottom: 12, Height: 38);
+          $C.@TextButton #QwenButton { @Sounds = $Sounds.@SaveSettings; @Anchor = (Right: 5); Text: "Use Qwen"; FlexWeight: 1; }
+          $C.@SecondaryTextButton #NemotronButton { @Anchor = (Left: 5); Text: "Use Nemotron"; FlexWeight: 1; }
+        }
+        Label #AiBackends { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        $C.@SecondaryTextButton #ProviderHealthButton { @Anchor = (Bottom: 12, Height: 38); Text: "Probe Provider Health"; }
+        Label { Text: "RUNTIME"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #d8b66a); }
+        Label #Runtime { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "LATENCY"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #d8b66a); }
+        Label #LatencyStatus { Anchor: (Bottom: 6); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 13, TextColor: #e66a6a); }
+        Label #Latency { Anchor: (Bottom: 12); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 12); }
+        Label { Text: "RAW DIAGNOSTICS - never sent to dialogue"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #d88a6a); }
+        Label #RawDiagnostics { Anchor: (Bottom: 8); Text: "None."; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 11, TextColor: #aaaab5); }
+      }
+      $C.@SecondaryTextButton #CloseButton { @Sounds = $Sounds.@ButtonsCancel; @Anchor = (Top: 10, Height: 38); Text: "Close"; }
+    }
+  }
+}
+
+$C.@BackButton {}

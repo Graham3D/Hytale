@@ -1,0 +1,18 @@
+{
+  "Group": "InigmasGames",
+  "Name": "ImmersiveNPCs",
+  "Version": "0.6.0-pre.13.1-R124-npc-profile-polish",
+  "Description": "Immersive AI: persistent Hytale NPCs with replaceable local or remote inference providers and server-authoritative cognition.",
+  "Authors": [
+    {
+      "Name": "Zemio"
+    }
+  ],
+  "Main": "com.inigmasgames.persistentnpcs.PersistentNpcsPlugin",
+  "ServerVersion": ">=0.6.0-pre.13.1 <0.7.0",
+  "Dependencies": {
+    "Hytale:NPC": "*"
+  },
+  "IncludesAssetPack": true,
+  "DisabledByDefault": false
+}

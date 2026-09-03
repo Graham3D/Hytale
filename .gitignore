@@ -1,0 +1,61 @@
+# Build and packaged output
+**/build/
+**/dist/
+**/out/
+**/target/
+**/*.jar
+**/*.class
+
+# Local toolchains and downloaded third-party runtimes
+**/.tools/
+**/toolchains/
+**/envs/
+**/.venv/
+**/venv/
+**/node_modules/
+**/persistent-npcs/tools/orbisllm/
+
+# Caches, logs, telemetry, and transient output
+**/.cache/
+**/cache/
+**/__pycache__/
+**/.pytest_cache/
+**/logs/
+**/telemetry/
+**/outputs/
+**/runs/
+**/teacher-runs/
+**/tmp/
+**/temp/
+
+# Runtime/server state and rollback packages
+**/universe/
+**/rollback/
+**/bans.json
+**/whitelist.json
+**/permissions.json
+
+# Model weights and common large ML artifacts
+**/models/
+**/*.safetensors
+**/*.gguf
+**/*.ggml
+**/*.onnx
+**/*.pt
+**/*.pth
+**/*.ckpt
+
+# Secrets and machine-local configuration
+**/.env
+**/.env.*
+**/*credentials*.json
+**/*secret*.json
+**/*token*.json
+**/config.json
+
+# IDE / OS metadata
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+

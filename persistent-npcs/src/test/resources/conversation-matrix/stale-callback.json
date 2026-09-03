@@ -1,0 +1,1 @@
+{"fixtureId":"orbis-stale-branch-callback","failure":"superseded callback arrived after epoch changed","expected":"reject before cognition/action/speech commit"}

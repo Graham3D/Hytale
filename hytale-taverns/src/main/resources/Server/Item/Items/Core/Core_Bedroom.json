@@ -1,0 +1,95 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Core_Bedroom.name",
+    "Description": "server.items.Core_Bedroom.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Rock_Crystal_Blue.png",
+  "Categories": [
+    "Blocks.Ores"
+  ],
+  "SubCategory": "Crystal",
+  "MaxStack": 1,
+  "PlayerAnimationsId": "Block",
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Cube",
+    "Opacity": "Transparent",
+    "CustomModelTexture": [
+      {}
+    ],
+    "Group": "Stone",
+    "Flags": {
+      "IsUsable": true
+    },
+    "InteractionHint": "server.items.Core_Bedroom.interactionHint",
+    "Interactions": {
+      "Use": "Core_Tavern_Use"
+    },
+    "Gathering": {
+      "Breaking": {
+        "DropList": "Core_Bedroom",
+        "GatherType": "Rocks"
+      }
+    },
+    "BlockParticleSetId": "Crystal",
+    "Textures": [
+      {
+        "Sides": "BlockTextures/Rock_Crystal_Blue.png",
+        "UpDown": "BlockTextures/Rock_Crystal_Blue_Top.png",
+        "Weight": 1
+      }
+    ],
+    "ParticleColor": "#245bc1",
+    "BlockSoundSetId": "Crystal",
+    "PhysicalMaterialId": "Stone",
+    "CubeShadingMode": "Reflective",
+    "Light": {
+      "Color": "#8ae"
+    },
+    "VariantRotation": "Pipe",
+    "TextureComputedColor": "#405FB0"
+  },
+  "Tags": {
+    "Type": [
+      "Rock"
+    ],
+    "Family": [
+      "Crystal"
+    ]
+  },
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -13.5
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "Recipe": {
+    "TimeSeconds": 3,
+    "Input": [
+      {
+        "ItemId": "Rock_Crystal_Blue_Block",
+        "Quantity": 1
+      },
+      {
+        "ItemId": "Ingredient_Life_Essence_Concentrated",
+        "Quantity": 1
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Furniture_Bench",
+        "Type": "Crafting",
+        "Categories": [
+          "Furniture_Misc"
+        ]
+      }
+    ]
+  }
+}

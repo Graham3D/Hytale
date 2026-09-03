@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "offlineRoot": "G:\\My Drive\\Inigmas Games\\Orbis Offline Training",
+  "activeSaveRoot": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\UserData\\Saves\\NPC",
+  "g0BaseManifest": "training/configs/g0-training-base.json",
+  "g0LicenseDecision": "training/configs/g0-license-decision.json",
+  "sourceDatasetId": "ds_4eb80ca1033afcefee8bc0344fcb76cb4ef7d247f5deaa6d629f9ce62af43b86",
+  "allowedDatasetLicenseIds": ["PROJECT_OWNED_FIXTURE"],
+  "trainingEnabledOnlyAfter": ["G0_PASS", "G2_PASS"],
+  "productionMutationPermitted": false,
+  "packagingPermitted": false,
+  "promotionPermitted": false,
+  "sft1MinimumUsefulRows": 1000,
+  "sft0MinimumUsefulRows": 32,
+  "sft0MaximumUsefulRows": 128
+}

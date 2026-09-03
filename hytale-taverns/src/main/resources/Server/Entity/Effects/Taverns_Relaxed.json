@@ -1,0 +1,8 @@
+{
+  "Name": "Relaxed",
+  "Duration": 1,
+  "Infinite": false,
+  "Debuff": false,
+  "OverlapBehavior": "Overwrite",
+  "StatusEffectIcon": "Icons/CraftingCategories/Furniture/Misc.png"
+}

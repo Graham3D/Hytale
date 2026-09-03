@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "algorithmVersion": "token-bigram-jaccard-v1",
+  "fuzzyThreshold": 0.94,
+  "issues": [],
+  "rowsChecked": 16,
+  "canonicalSha256": "3b4498d6593ee16137b11d2b81c33a44e20104e3c96dd5f1f8f91ef41667c832"
+}

@@ -1,0 +1,153 @@
+Group {
+  Anchor: (Top: 20, Right: 20, Width: 166, Height: 34);
+  Background: #07120B(0.82);
+  LayoutMode: CenterMiddle;
+  Padding: (Horizontal: 12, Vertical: 6);
+
+  Label #RevisionLabel {
+    Text: "TAVERNS  R033";
+    Style: (FontSize: 14, TextColor: #7CFF93, Alignment: Center);
+  }
+}
+
+Group #RelaxingHud {
+  Anchor: (Top: 64, Width: 360, Height: 54);
+  Visible: false;
+
+  Label {
+    Anchor: (Top: 0, Width: 360, Height: 24);
+    Text: "Relaxing";
+    Style: (FontSize: 18, TextColor: #FFFFFF, RenderBold: true, Alignment: Center);
+  }
+
+  Group {
+    Anchor: (Top: 28, Left: 18, Width: 324, Height: 20);
+    Background: #180A0A(0.92);
+    Padding: (Horizontal: 2, Vertical: 3);
+
+    Group #RelaxingFill1  { Anchor: (Left:   0, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill2  { Anchor: (Left:  16, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill3  { Anchor: (Left:  32, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill4  { Anchor: (Left:  48, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill5  { Anchor: (Left:  64, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill6  { Anchor: (Left:  80, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill7  { Anchor: (Left:  96, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill8  { Anchor: (Left: 112, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill9  { Anchor: (Left: 128, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill10 { Anchor: (Left: 144, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill11 { Anchor: (Left: 160, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill12 { Anchor: (Left: 176, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill13 { Anchor: (Left: 192, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill14 { Anchor: (Left: 208, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill15 { Anchor: (Left: 224, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill16 { Anchor: (Left: 240, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill17 { Anchor: (Left: 256, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill18 { Anchor: (Left: 272, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill19 { Anchor: (Left: 288, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+    Group #RelaxingFill20 { Anchor: (Left: 304, Width: 15, Height: 14); Background: #D83A3A; Visible: false; }
+  }
+}
+
+Group #ServiceAnnouncement {
+  Anchor: (Top: 122, Width: 560, Height: 48);
+  Background: #07120B(0.90);
+  LayoutMode: CenterMiddle;
+  Padding: (Horizontal: 18, Vertical: 8);
+  Visible: false;
+
+  Label #ServiceAnnouncementLabel {
+    Text: "";
+    Style: (FontSize: 19, TextColor: #FFFFFF, RenderBold: true, Alignment: Center);
+  }
+}
+
+Group #ShardCounter {
+  Anchor: (Top: 68, Width: 224, Height: 38);
+  Background: #07120B(0.82);
+  LayoutMode: CenterMiddle;
+  Padding: (Horizontal: 10, Vertical: 4);
+  Visible: false;
+
+  ItemGrid #ShardIcon {
+    Anchor: (Width: 30, Height: 30, Right: 6);
+    SlotsPerRow: 1;
+    RenderItemQualityBackground: false;
+    InfoDisplay: None;
+    Style: (SlotSize: 30, SlotSpacing: 0, SlotIconSize: 28);
+  }
+
+  Group #ShardBalanceOnly {
+    Anchor: (Width: 164, Height: 30);
+
+    Label #ShardCountWhite {
+      Text: "0";
+      Style: (FontSize: 20, TextColor: #FFFFFF, RenderBold: true, Alignment: Center);
+    }
+  }
+
+  Group #ShardTransaction {
+    Anchor: (Width: 164, Height: 30);
+    Visible: false;
+
+    Label #ShardTransactionWhite {
+      Anchor: (Left: 0, Width: 74, Height: 30);
+      Text: "0";
+      Style: (FontSize: 20, TextColor: #FFFFFF, RenderBold: true, Alignment: Center);
+    }
+
+    Label #ShardCountGreen {
+      Anchor: (Left: 74, Width: 90, Height: 30);
+      Text: "(+0)";
+      Visible: false;
+      Style: (FontSize: 20, TextColor: #00FF00, RenderBold: true, Alignment: Center);
+    }
+
+    Label #ShardCountRed {
+      Anchor: (Left: 74, Width: 90, Height: 30);
+      Text: "(-0)";
+      Visible: false;
+      Style: (FontSize: 20, TextColor: #FF0000, RenderBold: true, Alignment: Center);
+    }
+  }
+}
+Group #ComfortPanel {
+  Anchor: (Top: 62, Right: 20, Width: 320, Height: 290);
+  Background: #07120B(0.82);
+  LayoutMode: Top;
+  Padding: (Horizontal: 12, Vertical: 10);
+  Visible: false;
+
+  Label #ComfortTotalLabel {
+    Anchor: (Height: 26);
+    Text: "Comfort: 0";
+    Style: (FontSize: 18, TextColor: #7CFF93, RenderBold: true, HorizontalAlignment: Start);
+  }
+
+  Label #ComfortSourcesLabel {
+    FlexWeight: 1;
+    Text: "No contributing assets";
+    Style: (FontSize: 14, TextColor: #FFFFFF, Wrap: true, HorizontalAlignment: Start, VerticalAlignment: Start);
+  }
+}
+
+// The native StatusEffectHud container is 1102 px wide at the current vanilla
+// hotbar geometry. This transparent label overlays Tavern's native Comfort
+// effect without drawing a second icon. Relaxed shifts Comfort one 52 px slot.
+Group #ComfortValueOverlay {
+  Anchor: (Bottom: 50, Width: 1102, Height: 48);
+  Visible: false;
+
+  Label #ComfortValueWithRelaxed {
+    Anchor: (Left: 14, Bottom: 0, Width: 30, Height: 20);
+    Text: "0";
+    Visible: false;
+    Style: (FontSize: 16, TextColor: #FFFFFF, RenderBold: true, Alignment: Center);
+  }
+
+  Label #ComfortValueOnly {
+    Anchor: (Left: 66, Bottom: 0, Width: 30, Height: 20);
+    Text: "0";
+    Visible: false;
+    Style: (FontSize: 16, TextColor: #FFFFFF, RenderBold: true, Alignment: Center);
+  }
+}

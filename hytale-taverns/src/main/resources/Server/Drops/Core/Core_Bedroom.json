@@ -1,0 +1,10 @@
+{
+  "Container": {
+    "Type": "Single",
+    "Item": {
+      "ItemId": "Core_Bedroom",
+      "QuantityMin": 1,
+      "QuantityMax": 1
+    }
+  }
+}

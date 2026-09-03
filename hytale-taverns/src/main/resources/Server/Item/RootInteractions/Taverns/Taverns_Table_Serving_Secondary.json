@@ -1,0 +1,6 @@
+{
+  "RequireNewClick": true,
+  "Interactions": [
+    "Taverns_Table_Serving_Use"
+  ]
+}

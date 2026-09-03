@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "licenseManifestId": "orbis-project-fixtures-v1",
+  "allowedLicenseIds": [
+    "PROJECT_OWNED_FIXTURE"
+  ],
+  "prohibitedUses": [
+    "real-player-data",
+    "unapproved-teacher-output"
+  ],
+  "decisionBasis": "Bounded synthetic/project-owned validation corpus only.",
+  "approvedForTraining": true,
+  "canonicalSha256": "0dfb4e202f924257fa08520d7eab7180d2bb42c8b77749beea418e3e7cbaebe1"
+}

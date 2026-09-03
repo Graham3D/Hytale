@@ -1,0 +1,29 @@
+{
+  "stt": {
+    "type": "LOCAL_WORKER",
+    "endpoint": "",
+    "model": "AUTO:base.en",
+    "timeoutMillis": 300000,
+    "concurrency": 1,
+    "mode": "LOCAL",
+    "fallbackEnabled": false
+  },
+  "llm": {
+    "type": "OPENAI_COMPATIBLE",
+    "endpoint": "http://127.0.0.1:11434/v1/chat/completions",
+    "model": "nemotron-3-nano:4b",
+    "timeoutMillis": 12000,
+    "concurrency": 2,
+    "mode": "LOCAL",
+    "fallbackEnabled": false
+  },
+  "tts": {
+    "type": "LOCAL_WORKER",
+    "endpoint": "",
+    "model": "chatterbox-turbo",
+    "timeoutMillis": 300000,
+    "concurrency": 1,
+    "mode": "LOCAL",
+    "fallbackEnabled": false
+  }
+}

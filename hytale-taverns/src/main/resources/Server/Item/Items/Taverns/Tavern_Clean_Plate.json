@@ -1,0 +1,50 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Tavern_Clean_Plate.name",
+    "Description": "server.items.Tavern_Clean_Plate.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Deco_Plate.png",
+  "Categories": [ "Blocks.Deco" ],
+  "MaxStack": 25,
+  "Recipe": {
+    "Input": [
+      { "ItemId": "Soil_Clay_Smooth_White", "Quantity": 2 },
+      { "ItemId": "Ingredient_Tree_Sap", "Quantity": 1 }
+    ],
+    "Output": [ { "ItemId": "Tavern_Clean_Plate", "Quantity": 1 } ],
+    "BenchRequirement": [
+      { "Type": "Crafting", "Id": "Furniture_Bench", "Categories": [ "Furniture_Misc" ] }
+    ]
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "BlockType": {
+    "Material": "Solid",
+    "BlockSoundSetId": "Stone",
+    "PhysicalMaterialId": "Stone",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "CustomModel": "Blocks/Miscellaneous/Plate.blockymodel",
+    "CustomModelTexture": [
+      { "Texture": "Blocks/Miscellaneous/Plate_Texture.png", "Weight": 1 }
+    ],
+    "CustomModelScale": 1,
+    "HitboxType": "Plant_Small",
+    "Flags": { "IsStackable": true },
+    "RandomRotation": "YawStep1",
+    "Gathering": { "Soft": {} },
+    "BlockParticleSetId": "Stone",
+    "Support": { "Down": [ { "FaceType": "Full" } ] },
+    "TextureComputedColor": "#A4A196"
+  },
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 0.39,
+    "Translation": [ 0, -13.5 ],
+    "Rotation": [ 22.5, 45, 22.5 ]
+  },
+  "Tags": { "Type": [ "Deco" ] },
+  "ItemSoundSetId": "ISS_Blocks_Wood"
+}

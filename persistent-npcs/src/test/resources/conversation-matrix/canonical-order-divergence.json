@@ -1,0 +1,1 @@
+{"fixtureId":"mara-r058-canonical-order","failure":"immutable early phrase diverged from final response","expected":"reject divergence; preserve ordered committed prefix"}

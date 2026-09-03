@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inigmasgames.local/orbis/eligibility-evidence.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "stageExits", "oracleAndData", "connectedRuntime", "artifactComplete", "sourceEvaluationRunId"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "stageExits": {"type": "object", "additionalProperties": {"enum": ["PASS", "FAIL", "UNKNOWN", "NOT_APPLICABLE"]}},
+    "diagnosis": {"type": ["object", "null"]},
+    "oracleAndData": {"enum": ["PASS", "FAIL", "UNKNOWN", "NOT_APPLICABLE"]},
+    "connectedRuntime": {"enum": ["PASS", "FAIL", "UNKNOWN", "NOT_APPLICABLE"]},
+    "artifactComplete": {"type": "boolean"},
+    "sourceEvaluationRunId": {"type": "string"}
+  }
+}

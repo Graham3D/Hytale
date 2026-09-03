@@ -1,0 +1,17 @@
+{
+  "fixtureId": "R064_RAPID_FIRE_PROVIDER_CANCELLATION",
+  "sequence": [
+    "FAST_SUCCESS",
+    "VRAM_PRESSURE_BOUNDED_NO_RESIDENCY_PING_PONG",
+    "DELIBERATIVE_CANCEL",
+    "IMMEDIATE_FAST_SUCCESS",
+    "FOLLOW_AUTHORITY_FIRST",
+    "GROUNDED_CURRENT_WORLD_SUCCESS"
+  ],
+  "invariants": [
+    "cancelled provider transport drains before another HTTP dispatch",
+    "stale completion cannot release a newer session owner",
+    "Chatterbox remains resident during ordinary LLM headroom pressure",
+    "no stale action or canonical speech commit"
+  ]
+}

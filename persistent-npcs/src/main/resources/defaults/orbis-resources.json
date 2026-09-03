@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "policy": "BALANCED",
+  "backendOverrides": {},
+  "maximumQueuedRequests": 32,
+  "maximumConcurrentStt": 2,
+  "maximumConcurrentLlm": 1,
+  "maximumConcurrentTts": 1,
+  "maximumConcurrentBackground": 1,
+  "maximumConcurrentLocalGpu": 1,
+  "gpuPressureUtilizationPercent": 92,
+  "vramPressureUsedPercent": 88,
+  "minimumFreeRamMiB": 1024,
+  "defaultAdmissionTimeoutMillis": 5000
+}

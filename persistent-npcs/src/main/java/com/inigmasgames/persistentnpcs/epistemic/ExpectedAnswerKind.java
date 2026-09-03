@@ -1,0 +1,6 @@
+package com.inigmasgames.persistentnpcs.epistemic;
+
+public enum ExpectedAnswerKind {
+    ACKNOWLEDGEMENT, FACT, IDENTITY, RECALL, CURRENT_PERCEPTION, CURRENT_SELF_STATE,
+    SUBJECTIVE, CLARIFICATION, ACTION_DECISION, YES_NO, OPEN_RESPONSE, UNKNOWN
+}

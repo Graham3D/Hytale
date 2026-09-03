@@ -1,0 +1,18 @@
+package com.inigmasgames.persistentnpcs.event;
+
+public enum NpcEventType {
+    COMBAT_STARTED,
+    COMBAT_ENDED,
+    ENTITY_DAMAGED,
+    ITEM_GIVEN,
+    ITEM_TAKEN,
+    ITEM_EQUIPPED,
+    LOCATION_CHANGED,
+    TASK_DUE,
+    TASK_COMPLETED,
+    TASK_FAILED,
+    ENTITY_ENTERED_PERCEPTION,
+    RELATIONSHIP_MILESTONE,
+    WORK_SHIFT_STARTED,
+    WORK_SHIFT_ENDED
+}

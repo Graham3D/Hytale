@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "policyId": "orbis-d4-curation-v1",
+  "oracleSuiteVersion": "deterministic-oracle-suite-v1",
+  "privacyPolicy": {
+    "schemaVersion": 1,
+    "policyId": "orbis-curation-privacy-v1",
+    "realPlayerCorpusApproved": false,
+    "permitStablePlayerIdentifiers": false,
+    "permitRawAudio": false,
+    "decisionBasis": "Synthetic/project fixtures only; real-player export requires explicit review.",
+    "reviewedAt": "2026-09-03T00:00:00Z"
+  },
+  "stockResponseMaximumOccurrences": 4,
+  "prohibitedVendorIdentityTerms": [
+    "anthropic",
+    "as an ai language model",
+    "chatgpt",
+    "openai"
+  ],
+  "approvedAt": "2026-09-03T00:00:00Z"
+}

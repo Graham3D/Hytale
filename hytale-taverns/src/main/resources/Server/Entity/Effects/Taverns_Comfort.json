@@ -1,0 +1,7 @@
+{
+  "Name": "Comfort",
+  "Infinite": true,
+  "Debuff": false,
+  "OverlapBehavior": "Overwrite",
+  "StatusEffectIcon": "Icons/ResourceTypes/Fuel.png"
+}

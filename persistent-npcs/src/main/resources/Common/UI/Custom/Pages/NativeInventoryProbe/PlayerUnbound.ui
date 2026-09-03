@@ -1,0 +1,2 @@
+$Probe = "GridCommon.ui";
+$Probe.@ProbeGrid #PlayerInventoryGrid {}

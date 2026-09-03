@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inigmasgames.local/orbis/production-input-snapshot.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "messages", "tools", "responseFormat", "providerSettings", "conversationRoute", "promptTemplate", "baseModel", "epistemicTargetSnapshot", "evidenceSnapshot", "answerabilitySnapshot", "answerPlanSnapshot", "profileConstraints", "providerInputSha256"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "messages": {"type": "array", "minItems": 1},
+    "tools": {}, "responseFormat": {},
+    "providerSettings": {"type": "object", "additionalProperties": {"type": "string"}},
+    "conversationRoute": {"type": "string"},
+    "promptTemplate": {"type": "object"}, "baseModel": {"type": "object"},
+    "epistemicTargetSnapshot": {}, "evidenceSnapshot": {},
+    "answerabilitySnapshot": {}, "answerPlanSnapshot": {}, "profileConstraints": {},
+    "providerInputSha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+  }
+}

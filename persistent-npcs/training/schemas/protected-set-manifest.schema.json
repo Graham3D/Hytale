@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ProtectedSetManifest","type":"object","required":["schemaVersion","protectedSetId","split","canonicalSha256"],"properties":{"schemaVersion":{"const":1},"split":{"enum":["DEV","TEST","CHALLENGE","CONNECTED","CANARY"]}},"additionalProperties":true}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "gate": "D6_READINESS",
+  "decision": "G0_PASS_D6_REQUIRED",
+  "allowedNow": [
+    "D4 deterministic fixture curation",
+    "D5 bounded project-owned fixture dataset freeze",
+    "D6 isolated training preflight after manifest verification"
+  ],
+  "resolved": [
+    "An exact official BF16 Safetensors training lineage is pinned independently of the production GGUF.",
+    "The current NVIDIA Nemotron terms are approved for the present local, non-distributed D6/D7 experiment; redistribution still needs review.",
+    "The R126 project-owned fixture license is approved for bounded training."
+  ],
+  "blockers": [
+    "Python/CUDA training stack must be installed and validated in an isolated environment.",
+    "Nemotron-H/Mamba/PEFT compatibility must pass the D6 one-batch and adapter round-trip gates.",
+    "No external automated teacher or real-player corpus is approved; this limits D7 to project-owned fixtures and blocks SFT-1 unless a legitimate 1K+ corpus later exists."
+  ],
+  "trainingMode": "OFF"
+}

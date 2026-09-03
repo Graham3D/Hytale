@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "policyId": "orbis-d5-dataset-v1",
+  "normalizationVersion": "nfc-lf-trailing-ws-v1",
+  "fuzzyAlgorithm": "token-bigram-jaccard-v1",
+  "fuzzyDuplicateThreshold": 0.94,
+  "fuzzyReviewThreshold": 0.78,
+  "splitSeed": "orbis-family-split-2026-09-03",
+  "trainPercent": 80,
+  "devPercent": 10,
+  "testPercent": 10,
+  "profileHoldoutIds": [
+    "profile-holdout"
+  ],
+  "requireAllRowsAccepted": true,
+  "forbidConnectedAndCanaryTrainerRows": true,
+  "approvedAt": "2026-09-03T00:00:00Z"
+}

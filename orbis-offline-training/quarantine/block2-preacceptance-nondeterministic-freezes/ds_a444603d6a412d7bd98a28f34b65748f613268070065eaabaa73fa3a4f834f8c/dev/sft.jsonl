@@ -1,0 +1,2 @@
+{"chosenResponse":"Jonalith told me the eastern gate was closed.","messages":[{"content":"You are Orbis NPC Mara. Use only the supplied evidence.","role":"system"},{"content":"What did Jonalith report?","role":"user"}]}
+{"chosenResponse":"You told me the eastern ruins were flooded.","messages":[{"content":"You are Orbis NPC Mara. Use only the supplied evidence.","role":"system"},{"content":"What did I say about the ruins?","role":"user"}]}

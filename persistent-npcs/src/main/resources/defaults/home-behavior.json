@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "wanderRadius": 4.0,
+  "minimumIdleSeconds": 30,
+  "maximumIdleSeconds": 75,
+  "investigationPauseSeconds": 5
+}

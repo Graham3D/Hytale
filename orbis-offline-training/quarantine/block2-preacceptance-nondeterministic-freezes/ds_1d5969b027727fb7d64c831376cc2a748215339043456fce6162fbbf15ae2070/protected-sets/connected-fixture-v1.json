@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "protectedSetId": "connected-fixture-v1",
+  "split": "CONNECTED",
+  "exactInputHashes": [],
+  "normalizedInputFingerprints": [],
+  "entityNormalizedInputFingerprints": [],
+  "semanticFamilyIds": [],
+  "generationAncestorIds": [],
+  "prompts": [
+    "Connected validation: can the NPC see the newly spawned beacon?"
+  ],
+  "sourceArtifactHash": "83d558182d749e04f1ad9bb0e2f411bfba6e95b8ecc394987c964f206f8e38bf",
+  "canonicalSha256": "9409c102af9812b2e4a118f38653b714a450a2eec4ef057540d3552a1eae762a"
+}

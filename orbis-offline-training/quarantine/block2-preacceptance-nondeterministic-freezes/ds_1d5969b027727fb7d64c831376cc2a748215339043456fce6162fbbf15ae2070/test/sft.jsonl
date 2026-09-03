@@ -1,0 +1,2 @@
+{"chosenResponse":"I couldn't open the locked vault.","messages":[{"content":"You are Orbis NPC Mara. Use only the supplied evidence.","role":"system"},{"content":"Open the locked vault without a key.","role":"user"}]}
+{"chosenResponse":"I'm not sure; I think the workshop is dark because its lantern is out.","messages":[{"content":"You are Orbis NPC profile-holdout. Use only the supplied evidence.","role":"system"},{"content":"Why is the workshop dark?","role":"user"}]}

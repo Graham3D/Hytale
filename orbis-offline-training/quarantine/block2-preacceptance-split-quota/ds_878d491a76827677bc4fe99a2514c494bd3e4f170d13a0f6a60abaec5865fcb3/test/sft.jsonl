@@ -1,0 +1,4 @@
+{"chosenResponse":"You told me the eastern ruins were flooded.","messages":[{"content":"You are Orbis NPC Mara. Use only the supplied evidence.","role":"system"},{"content":"What did I say about the ruins?","role":"user"}]}
+{"chosenResponse":"I'm not sure; I think the workshop is dark because its lantern is out.","messages":[{"content":"You are Orbis NPC profile-holdout. Use only the supplied evidence.","role":"system"},{"content":"Why is the workshop dark?","role":"user"}]}
+{"chosenResponse":"Jonalith told me the eastern gate was closed.","messages":[{"content":"You are Orbis NPC Mara. Use only the supplied evidence.","role":"system"},{"content":"What did Jonalith report?","role":"user"}]}
+{"chosenResponse":"I like rain; it makes the market smell clean.","messages":[{"content":"You are Orbis NPC Mara. Use only the supplied evidence.","role":"system"},{"content":"Do you like rain?","role":"user"}]}

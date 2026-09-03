@@ -1,0 +1,5 @@
+{"event":"PLAYER_INPUT","responseId":"r090-h3-frozen-lycander","playerText":"What did I hide, and where did I hide it?"}
+{"event":"ORBIS_EVENT","orbisType":"TURN_PLAN_COMPILED","responseId":"r090-h3-frozen-lycander","epistemicQueryKind":"EPISODIC_RECALL","epistemicAnswerability":"PARTIALLY_KNOWN","evidenceIds":"[]"}
+{"event":"ORBIS_EVENT","orbisType":"LLM_DISPATCHED","responseId":"r090-h3-frozen-lycander","contextSections":"[PROFILE, PERSONALITY, RECENT_CONVERSATION]"}
+{"event":"MODEL_OUTPUT","responseId":"r090-h3-frozen-lycander","rawModelOutput":"Four jars were hidden behind the tavern, beneath the loose stones."}
+{"event":"CANONICAL_RESPONSE","responseId":"r090-h3-frozen-lycander","canonicalResponse":"I don't remember what you hid or where you hid it."}

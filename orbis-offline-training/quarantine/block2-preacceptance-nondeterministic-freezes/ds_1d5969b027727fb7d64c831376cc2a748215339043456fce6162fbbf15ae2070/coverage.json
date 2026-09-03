@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "rowCounts": {
+    "sourceType": {
+      "DETERMINISTIC_ORBIS_TARGET": 22
+    },
+    "paraphraseTemplate": {
+      "unknown-owner-v1": 1,
+      "recall-v1": 1,
+      "withheld-v1": 1,
+      "perception-v1": 1,
+      "relationship-known-v1": 1,
+      "action-v1": 2,
+      "choice-v1": 1,
+      "clarify-v1": 2,
+      "partial-v1": 1,
+      "identity-name-v1": 1,
+      "correction-v1": 1,
+      "conflicted-world-v1": 1,
+      "humor-v1": 1,
+      "testimony-v1": 2,
+      "referent-v1": 2,
+      "known-location-v1": 1,
+      "persona-v1": 1,
+      "inference-v1": 1
+    },
+    "temporalCategory": {
+      "HISTORICAL": 5,
+      "CURRENT": 13,
+      "TIMELESS": 1,
+      "CORRECTED": 1,
+      "NONE": 2
+    },
+    "taskType": {
+      "PERSONA": 2,
+      "MEMORY_RECALL": 1,
+      "IDENTITY": 1,
+      "STRUCTURED_CHOICE": 1,
+      "ACTION": 2,
+      "OBJECTIVE_PROPERTY": 5,
+      "TESTIMONY": 2,
+      "MULTI_TURN_REFERENT": 2,
+      "DISCLOSURE": 1,
+      "CURRENT_PERCEPTION": 1,
+      "RELATIONSHIP": 1,
+      "CORRECTION": 1,
+      "CLARIFICATION": 2
+    },
+    "failureSignature": {
+      "STALE_PERCEPTION": 1,
+      "FALSE_ACTION_RESULT": 2,
+      "UNATTRIBUTED_INFERENCE": 1,
+      "REFERENT_RESOLUTION": 2,
+      "MALFORMED_STRUCTURE": 1,
+      "SECRET_DISCLOSURE": 1,
+      "PARTIAL_OMISSION": 1,
+      "MISSING_CLARIFICATION": 2,
+      "MEMORY_OMISSION": 1,
+      "SUPERSEDED_VALUE": 1,
+      "PROVIDER_REALIZATION": 7,
+      "SOURCE_ATTRIBUTION": 2
+    },
+    "answerability": {
+      "NEEDS_ACTION": 2,
+      "KNOWN": 10,
+      "INFERRED": 1,
+      "PARTIALLY_KNOWN": 1,
+      "CONFLICTED": 1,
+      "SUBJECTIVE": 2,
+      "WITHHELD": 1,
+      "UNKNOWN": 1,
+      "NEEDS_CURRENT_PERCEPTION": 1,
+      "NEEDS_CLARIFICATION": 2
+    },
+    "split": {
+      "CHALLENGE": 2,
+      "TEST": 2,
+      "TRAIN": 16,
+      "DEV": 2
+    },
+    "archetype": {
+      "listener": 2,
+      "villager": 10,
+      "keeper": 2,
+      "artisan": 1,
+      "guide": 4,
+      "agent": 2,
+      "observer": 1
+    }
+  },
+  "tokenWeightedCounts": {
+    "split": {
+      "CHALLENGE": 51,
+      "TEST": 59,
+      "TRAIN": 408,
+      "DEV": 51
+    },
+    "taskType": {
+      "PERSONA": 53,
+      "MEMORY_RECALL": 25,
+      "IDENTITY": 20,
+      "STRUCTURED_CHOICE": 26,
+      "ACTION": 52,
+      "OBJECTIVE_PROPERTY": 144,
+      "TESTIMONY": 51,
+      "MULTI_TURN_REFERENT": 55,
+      "DISCLOSURE": 25,
+      "CURRENT_PERCEPTION": 29,
+      "RELATIONSHIP": 22,
+      "CORRECTION": 23,
+      "CLARIFICATION": 44
+    },
+    "sourceType": {
+      "DETERMINISTIC_ORBIS_TARGET": 569
+    },
+    "answerability": {
+      "NEEDS_ACTION": 52,
+      "KNOWN": 244,
+      "INFERRED": 33,
+      "PARTIALLY_KNOWN": 31,
+      "CONFLICTED": 32,
+      "SUBJECTIVE": 53,
+      "WITHHELD": 25,
+      "UNKNOWN": 26,
+      "NEEDS_CURRENT_PERCEPTION": 29,
+      "NEEDS_CLARIFICATION": 44
+    }
+  },
+  "warnings": [],
+  "totalRows": 22,
+  "approximateTokens": 569,
+  "canonicalSha256": "e4489712d1e54f70699497e8917770827e465452124c4539dc4dd3dabb74ceed"
+}

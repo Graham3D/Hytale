@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inigmasgames.local/orbis/teacher-run-manifest.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "teacher", "policySnapshot", "requestHash", "responseHash", "taskConfig", "trust", "attempts", "elapsedMillis", "completedAt"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "id": {"type": "object"}, "teacher": {"type": "object"},
+    "policySnapshot": {"type": "object"},
+    "requestHash": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "responseHash": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "taskConfig": {"type": "object"},
+    "trust": {"enum": ["PROPOSED_LABEL", "UNVERIFIED"]},
+    "attempts": {"type": "integer", "minimum": 1, "maximum": 2},
+    "elapsedMillis": {"type": "integer", "minimum": 0},
+    "completedAt": {"type": "string", "format": "date-time"}
+  }
+}

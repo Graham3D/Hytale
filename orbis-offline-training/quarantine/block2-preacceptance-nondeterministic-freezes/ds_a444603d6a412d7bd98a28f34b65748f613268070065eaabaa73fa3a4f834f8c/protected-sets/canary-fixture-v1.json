@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "protectedSetId": "canary-fixture-v1",
+  "split": "CANARY",
+  "exactInputHashes": [],
+  "normalizedInputFingerprints": [],
+  "entityNormalizedInputFingerprints": [],
+  "semanticFamilyIds": [],
+  "generationAncestorIds": [],
+  "prompts": [
+    "Canary validation: report the rotating codeword without guessing."
+  ],
+  "sourceArtifactHash": "83d558182d749e04f1ad9bb0e2f411bfba6e95b8ecc394987c964f206f8e38bf",
+  "canonicalSha256": "cd39bbac89f6f13693e0edd3ed35d032eaa1f150e63e859bf39e3aadcbf705ce"
+}

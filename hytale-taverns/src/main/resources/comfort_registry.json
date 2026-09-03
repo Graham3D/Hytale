@@ -1,0 +1,1812 @@
+{
+  "schemaVersion": 4,
+  "defaultRegion": "EMERALD_WILDS",
+  "regionalValues": {
+    "EMERALD_WILDS": {
+      "common": 1,
+      "discovery": 2
+    },
+    "HOWLING_SANDS": {
+      "common": 3,
+      "discovery": 4
+    },
+    "WHISPERFROST_FRONTIERS": {
+      "common": 5,
+      "discovery": 6
+    },
+    "DEVASTATED_LANDS": {
+      "common": 7,
+      "discovery": 8
+    }
+  },
+  "thresholds": {
+    "CONTAINERS": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "WARDROBES": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "TABLES": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "SEATING": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "DOORS": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "WINDOWS": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "LIGHTING": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "BEDS": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "SHELVES": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "SIGNS": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "PLACED_INSTANCES"
+    },
+    "DECO": {
+      "enabled": true,
+      "minimum": 1,
+      "countMode": "DISTINCT_ASSET_TYPES"
+    }
+  },
+  "entries": {
+    "Furniture_Ancient_Barrel": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Bed": {
+      "category": "BEDS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Bench": {
+      "category": "SEATING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Bookshelf": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Candle": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Chair": {
+      "category": "SEATING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Chest_Large_Treasure": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Coffin": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Crate": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Door": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Painting": {
+      "category": "SIGNS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Platform": {
+      "category": "SHELVES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Pot": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Sack": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Shelf": {
+      "category": "SHELVES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Sign": {
+      "category": "SIGNS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Statue": {
+      "category": "DECO",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Table": {
+      "category": "TABLES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Torch": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Trapdoor": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Ancient_Window": {
+      "category": "WINDOWS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Crude_Bed": {
+      "category": "BEDS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Brazier": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Candle": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Door": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Platform": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Shelf": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Sign": {
+      "category": "SIGNS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Stool": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Table": {
+      "category": "TABLES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Torch": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Trapdoor": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Crude_Window": {
+      "category": "WINDOWS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Desert_Bed": {
+      "category": "BEDS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Chair": {
+      "category": "SEATING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Door": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Lantern": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Lantern_Ceiling": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Lantern_Tall": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Platform": {
+      "category": "SHELVES",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Shelf": {
+      "category": "SHELVES",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Sign": {
+      "category": "SIGNS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Table": {
+      "category": "TABLES",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Torch": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Trapdoor": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Desert_Window": {
+      "category": "WINDOWS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Bed": {
+      "category": "BEDS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Bench": {
+      "category": "SEATING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Bookshelf": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Candle": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Chandelier": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Door": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Planter": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Platform": {
+      "category": "SHELVES",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Pot": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Pot_Secondary": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Shelf": {
+      "category": "SHELVES",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Sign": {
+      "category": "SIGNS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Stool": {
+      "category": "SEATING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Table": {
+      "category": "TABLES",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Torch": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Torch_Tall": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Trapdoor": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Feran_Window": {
+      "category": "WINDOWS",
+      "region": "HOWLING_SANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Frozen_Castle_Bed": {
+      "category": "BEDS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Bench": {
+      "category": "SEATING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Chair": {
+      "category": "SEATING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Door": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Lamp": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Platform": {
+      "category": "SHELVES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Pot": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Secondary_Lamp": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Secondary_Pot": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Shelf": {
+      "category": "SHELVES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Sign": {
+      "category": "SIGNS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Table": {
+      "category": "TABLES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Trapdoor": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Frozen_Castle_Window": {
+      "category": "WINDOWS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Human_Ruins_Banner": {
+      "category": "SIGNS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Banner_Double": {
+      "category": "SIGNS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Banner_Triple": {
+      "category": "SIGNS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Bed": {
+      "category": "BEDS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Bench": {
+      "category": "SEATING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Bookshelf": {
+      "category": "SHELVES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Brazier": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Candle": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Chair": {
+      "category": "SEATING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Coffin": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Door": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Door_Large": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Door_Medium": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Lantern": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Lantern_Ceiling": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Planter": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Platform": {
+      "category": "SHELVES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Pot": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Pot_Small": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Shelf": {
+      "category": "SHELVES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Sign": {
+      "category": "SIGNS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Statue_Broken": {
+      "category": "DECO",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Stool": {
+      "category": "SEATING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Table": {
+      "category": "TABLES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Torch": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Trapdoor": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Human_Ruins_Window": {
+      "category": "WINDOWS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Bed": {
+      "category": "BEDS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Bench": {
+      "category": "SEATING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Bookshelf": {
+      "category": "SHELVES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Brazier": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Candle": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Chair": {
+      "category": "SEATING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Door": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Painting": {
+      "category": "SIGNS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Planter": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Platform": {
+      "category": "SHELVES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Pot": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Pot_Secondary": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Shelf": {
+      "category": "SHELVES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Table": {
+      "category": "TABLES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Torch": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Trapdoor": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Jungle_Window": {
+      "category": "WINDOWS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Bed": {
+      "category": "BEDS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Candle": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Door": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Lantern": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Lantern_Ceiling": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Painting": {
+      "category": "SIGNS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Platform": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Shelf": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Sign": {
+      "category": "SIGNS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Statue": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Stool": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Table": {
+      "category": "TABLES",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Trapdoor": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Kweebec_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Bed": {
+      "category": "BEDS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Chair": {
+      "category": "SEATING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Door": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Lamp": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Lantern": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Painting": {
+      "category": "SIGNS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Platform": {
+      "category": "SHELVES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Shelf": {
+      "category": "SHELVES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Sign": {
+      "category": "SIGNS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Table": {
+      "category": "TABLES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Trapdoor": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Lumberjack_Window": {
+      "category": "WINDOWS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Royal_Magic_Bed": {
+      "category": "BEDS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Chair": {
+      "category": "SEATING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Couch": {
+      "category": "SEATING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Medium_Door": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Pot": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Potion_Glow": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Potion_Glow_Ceiling": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Table": {
+      "category": "TABLES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Royal_Magic_Window": {
+      "category": "WINDOWS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Scarak_Hive_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Scarak_Hive_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Scarak_Hive_Door_Large": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Scarak_Hive_Door_Medium": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Scarak_Hive_Lamp": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Scarak_Hive_Lantern": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Scarak_Hive_Platform": {
+      "category": "SHELVES",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Scarak_Hive_Window": {
+      "category": "WINDOWS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Tavern_Barrel": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Bed": {
+      "category": "BEDS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Bench": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Candle": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Chair": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Chandelier": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Door": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Painting": {
+      "category": "SIGNS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Planter": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Platform": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Shelf": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Sign": {
+      "category": "SIGNS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Stool": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Table": {
+      "category": "TABLES",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Trapdoor": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Tavern_Window": {
+      "category": "WINDOWS",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY"
+    },
+    "Furniture_Temple_Dark_Bed": {
+      "category": "BEDS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Brazier": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Candle": {
+      "category": "LIGHTING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Coffin": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Door": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Door_Large": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Door_Medium": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Platform": {
+      "category": "SHELVES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Pot": {
+      "category": "CONTAINERS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Shelf": {
+      "category": "SHELVES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Sign": {
+      "category": "SIGNS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Statue": {
+      "category": "DECO",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Statue_Gaia": {
+      "category": "DECO",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Stool": {
+      "category": "SEATING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Table": {
+      "category": "TABLES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Trapdoor": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Dark_Window": {
+      "category": "WINDOWS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Earth_Door": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Bed": {
+      "category": "BEDS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Door": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Door_Medium": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Platform": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Shelf": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Sign": {
+      "category": "SIGNS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Statue": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Stool": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Table": {
+      "category": "TABLES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Torch": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Trapdoor": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Emerald_Window": {
+      "category": "WINDOWS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Bed": {
+      "category": "BEDS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Bench": {
+      "category": "SEATING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Brazier": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Door": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Door_Large": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Door_Medilum": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Lantern": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Lantern_Ceiling": {
+      "category": "LIGHTING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Painting": {
+      "category": "SIGNS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Platform": {
+      "category": "SHELVES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Pot": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Shelf": {
+      "category": "SHELVES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Statue": {
+      "category": "DECO",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Stool": {
+      "category": "SEATING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Table": {
+      "category": "TABLES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Trapdoor": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Light_Window": {
+      "category": "WINDOWS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Brazier": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Door_Large": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Door_Medium": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Lamp": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Lantern": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Planter": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Platform": {
+      "category": "SHELVES",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Pot": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Secondary_Pot": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Scarak_Statue": {
+      "category": "DECO",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Candle": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Chandelier": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Door": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Door_Large": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Door_Medium": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Platform": {
+      "category": "SHELVES",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Pot": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Sign": {
+      "category": "SIGNS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Statue": {
+      "category": "DECO",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Statue_Gaia": {
+      "category": "DECO",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Stool": {
+      "category": "SEATING",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Table": {
+      "category": "TABLES",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Trapdoor": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Temple_Wind_Window": {
+      "category": "WINDOWS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Bed": {
+      "category": "BEDS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Bench": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Bookcase": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Brazier": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Chair": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Chest_Large": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Coffin": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Counter": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Crate": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Door": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Painting_1x1": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Painting_1x2": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Painting_2x1": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Painting_2x2": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Painting_3x2": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Planter": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Platform": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Pot": {
+      "category": "CONTAINERS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Shelf_Full": {
+      "category": "SHELVES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Sign": {
+      "category": "SIGNS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Statue": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Stool": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Table": {
+      "category": "TABLES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Trapdoor": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Wardrobe": {
+      "category": "WARDROBES",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Village_Window": {
+      "category": "WINDOWS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Deco_Kweebec_Plush": {
+      "category": "DECO",
+      "region": "EMERALD_WILDS",
+      "progression": "DISCOVERY",
+      "comfort": 2
+    },
+    "Deco_Lantern": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Deco_Lantern_Ceiling": {
+      "category": "LIGHTING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Faun_Stool": {
+      "category": "SEATING",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Dungeon_Earth_Brazier": {
+      "category": "LIGHTING",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Deco_Pot_Clay_Broken": {
+      "category": "CONTAINERS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Castle_Bench": {
+      "category": "SEATING",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Furniture_Outlander_Banner": {
+      "category": "SIGNS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Deco_Chair_Scrap": {
+      "category": "SEATING",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Furniture_Goblin_Chest_Small": {
+      "category": "CONTAINERS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Wood_Softwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Wood_Hardwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Wood_Lightwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Wood_Redwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Wood_Greenwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "EMERALD_WILDS",
+      "progression": "COMMON"
+    },
+    "Wood_Drywood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "HOWLING_SANDS",
+      "progression": "COMMON"
+    },
+    "Wood_Darkwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "WHISPERFROST_FRONTIERS",
+      "progression": "COMMON"
+    },
+    "Wood_Blackwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Wood_Deadwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Wood_Goldenwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    },
+    "Wood_Tropicalwood_Fence_Gate": {
+      "category": "DOORS",
+      "region": "DEVASTATED_LANDS",
+      "progression": "COMMON"
+    }
+  }
+}
