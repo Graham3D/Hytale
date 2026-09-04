@@ -140,7 +140,7 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R133.1-NPC-AUTHORING-STUDIO-A4-UI-PARSER-HOTFIX";
+    public static final String REVISION = "R134-NPC-AUTHORING-STUDIO-A5-APPEARANCE";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
@@ -568,7 +568,8 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
                 new com.inigmasgames.persistentnpcs.profile.NpcProfileAuthoringService(
                         profiles, profileRegistry, frameworkLog),
                 new com.inigmasgames.persistentnpcs.profile.NpcProfileGenerationService(
-                        aiServices::pinLanguageModel, resourceScheduler, frameworkLog));
+                        aiServices::pinLanguageModel, resourceScheduler, frameworkLog),
+                frameworkLog);
         nativeNpcCommands = new NativeNpcCommandCompatibility(frameworkLog);
         nativeNpcCommands.install(
                 new ImmersiveNpcCreateCommand(profileEditor, profileRegistry,

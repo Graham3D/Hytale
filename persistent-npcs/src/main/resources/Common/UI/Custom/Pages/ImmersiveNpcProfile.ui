@@ -298,6 +298,89 @@ $C.@PageOverlay #ProfileEditorPage {
   }
 }
 
+$C.@PageOverlay #AppearanceEditorPage {
+  LayoutMode: Middle;
+  Visible: false;
+  Group { Anchor: (Width: 1520, Height: 960); LayoutMode: Top; Background: @PanelBackground; Padding: (Full: 18);
+    Group { Anchor: (Height: 42, Bottom: 10); LayoutMode: Left;
+      Label #AppearanceEditorTitle { Text: "NPC APPEARANCE"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 22, RenderBold: true, TextColor: #f1f5f9, VerticalAlignment: Center); }
+      Label #AppearanceDraftMeta { Anchor: (Width: 850); Text: "Draft"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: #6f879a, HorizontalAlignment: End, VerticalAlignment: Center); }
+    }
+    Group { LayoutMode: Left; FlexWeight: 1;
+      Group { Anchor: (Width: 160, Right: 4); LayoutMode: Top; Background: #101a24; Padding: (Full: 10);
+        Label { Anchor: (Height: 28); Text: "APPEARANCE"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
+        $C.@SecondaryTextButton #AppearancePrimaryBODY { @Anchor = (Height: 42, Bottom: 6); Text: "Body"; }
+        $C.@SecondaryTextButton #AppearancePrimaryFACE { @Anchor = (Height: 42, Bottom: 6); Text: "Face"; }
+        $C.@SecondaryTextButton #AppearancePrimaryHAIR { @Anchor = (Height: 42, Bottom: 6); Text: "Hair"; }
+        $C.@SecondaryTextButton #AppearancePrimaryEYES { @Anchor = (Height: 42, Bottom: 6); Text: "Eyes"; }
+        $C.@SecondaryTextButton #AppearancePrimaryCLOTHING { @Anchor = (Height: 42, Bottom: 6); Text: "Clothing"; }
+        $C.@SecondaryTextButton #AppearancePrimaryACCESSORIES { @Anchor = (Height: 42); Text: "Accessories"; }
+        Group { FlexWeight: 1; }
+        Label { Anchor: (Height: 70); Text: "Current-build Hytale registry only. Unknown JSON fields remain preserved."; Style: (...$C.@DefaultLabelStyle, FontSize: 9, Wrap: true, TextColor: #6f879a); }
+      }
+      Group { Anchor: (Width: 170, Left: 4, Right: 4); LayoutMode: Top; Background: #101a24; Padding: (Full: 10);
+        Label { Anchor: (Height: 28); Text: "CATEGORY"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
+        $C.@SecondaryTextButton #AppearanceCategory0 { @Anchor = (Height: 40, Bottom: 6); Text: "Category"; }
+        $C.@SecondaryTextButton #AppearanceCategory1 { @Anchor = (Height: 40, Bottom: 6); Text: "Category"; }
+        $C.@SecondaryTextButton #AppearanceCategory2 { @Anchor = (Height: 40, Bottom: 6); Text: "Category"; }
+        $C.@SecondaryTextButton #AppearanceCategory3 { @Anchor = (Height: 40, Bottom: 6); Text: "Category"; }
+        $C.@SecondaryTextButton #AppearanceCategory4 { @Anchor = (Height: 40, Bottom: 6); Text: "Category"; }
+        $C.@SecondaryTextButton #AppearanceCategory5 { @Anchor = (Height: 40, Bottom: 6); Text: "Category"; }
+        $C.@SecondaryTextButton #AppearanceCategory6 { @Anchor = (Height: 40); Text: "Category"; }
+        Group { FlexWeight: 1; }
+        Label #AppearanceRegistryMeta { Anchor: (Height: 100); Text: "Registry"; Style: (...$C.@DefaultLabelStyle, FontSize: 8, Wrap: true, TextColor: #6f879a); }
+      }
+      Group { Anchor: (Width: 640, Left: 4, Right: 4); LayoutMode: Top; Background: #101a24; Padding: (Full: 10);
+        Label { Anchor: (Height: 28); Text: "REGISTRY OPTIONS"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Cyan); }
+        Group { LayoutMode: Left; Anchor: (Height: 38, Bottom: 8);
+          $C.@TextField #AppearanceSearchInput { @Anchor = (Right: 4); PlaceholderText: "Search current category"; MaxLength: 80; FlexWeight: 1; }
+          $C.@TextButton #AppearanceSearchButton { @Anchor = (Width: 92, Left: 4); Text: "Search"; }
+        }
+        Group { LayoutMode: Left; Anchor: (Height: 30, Bottom: 8);
+          $C.@SecondaryTextButton #AppearancePreviousButton { @Anchor = (Width: 80, Right: 8); Text: "Previous"; }
+          Label #AppearancePageText { FlexWeight: 1; Text: "Page 1 / 1"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: #aebdcb, HorizontalAlignment: Center, VerticalAlignment: Center); }
+          $C.@SecondaryTextButton #AppearanceNextButton { @Anchor = (Width: 80, Left: 8); Text: "Next"; }
+        }
+        Group { LayoutMode: Top; Anchor: (Height: 396, Bottom: 8);
+          Group { LayoutMode: Left; Anchor: (Height: 62, Bottom: 4); $C.@SecondaryTextButton #AppearanceOption0 { @Anchor = (Right: 3); Text: "Option"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceOption1 { @Anchor = (Left: 3); Text: "Option"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 62, Top: 4, Bottom: 4); $C.@SecondaryTextButton #AppearanceOption2 { @Anchor = (Right: 3); Text: "Option"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceOption3 { @Anchor = (Left: 3); Text: "Option"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 62, Top: 4, Bottom: 4); $C.@SecondaryTextButton #AppearanceOption4 { @Anchor = (Right: 3); Text: "Option"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceOption5 { @Anchor = (Left: 3); Text: "Option"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 62, Top: 4, Bottom: 4); $C.@SecondaryTextButton #AppearanceOption6 { @Anchor = (Right: 3); Text: "Option"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceOption7 { @Anchor = (Left: 3); Text: "Option"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 62, Top: 4, Bottom: 4); $C.@SecondaryTextButton #AppearanceOption8 { @Anchor = (Right: 3); Text: "Option"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceOption9 { @Anchor = (Left: 3); Text: "Option"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 62, Top: 4); $C.@SecondaryTextButton #AppearanceOption10 { @Anchor = (Right: 3); Text: "Option"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceOption11 { @Anchor = (Left: 3); Text: "Option"; FlexWeight: 1; } }
+        }
+        Group #AppearanceColorSection { LayoutMode: Top; Anchor: (Height: 120, Bottom: 6);
+          Label { Anchor: (Height: 20); Text: "COLOR / GRADIENT"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, RenderBold: true, TextColor: @Gold); }
+          Group { LayoutMode: Left; Anchor: (Height: 32, Bottom: 4); $C.@SecondaryTextButton #AppearanceColor0 { @Anchor = (Right: 2); Text: "Color"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceColor1 { @Anchor = (Left: 2, Right: 2); Text: "Color"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceColor2 { @Anchor = (Left: 2, Right: 2); Text: "Color"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceColor3 { @Anchor = (Left: 2); Text: "Color"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 32); $C.@SecondaryTextButton #AppearanceColor4 { @Anchor = (Right: 2); Text: "Color"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceColor5 { @Anchor = (Left: 2, Right: 2); Text: "Color"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceColor6 { @Anchor = (Left: 2, Right: 2); Text: "Color"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceColor7 { @Anchor = (Left: 2); Text: "Color"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 24, Top: 4); $C.@SecondaryTextButton #AppearanceColorPreviousButton { @Anchor = (Width: 72, Right: 4); Text: "Prev"; } Label #AppearanceColorPageText { FlexWeight: 1; Text: "Colors 1 / 1"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, TextColor: #aebdcb, HorizontalAlignment: Center, VerticalAlignment: Center); } $C.@SecondaryTextButton #AppearanceColorNextButton { @Anchor = (Width: 72, Left: 4); Text: "Next"; } }
+        }
+        Group #AppearanceVariantSection { LayoutMode: Top; Anchor: (Height: 90);
+          Label { Anchor: (Height: 20); Text: "VARIANT"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, RenderBold: true, TextColor: @Gold); }
+          Group { LayoutMode: Left; Anchor: (Height: 34); $C.@SecondaryTextButton #AppearanceVariant0 { @Anchor = (Right: 2); Text: "Variant"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceVariant1 { @Anchor = (Left: 2, Right: 2); Text: "Variant"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceVariant2 { @Anchor = (Left: 2, Right: 2); Text: "Variant"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceVariant3 { @Anchor = (Left: 2, Right: 2); Text: "Variant"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceVariant4 { @Anchor = (Left: 2, Right: 2); Text: "Variant"; FlexWeight: 1; } $C.@SecondaryTextButton #AppearanceVariant5 { @Anchor = (Left: 2); Text: "Variant"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 24, Top: 4); $C.@SecondaryTextButton #AppearanceVariantPreviousButton { @Anchor = (Width: 72, Right: 4); Text: "Prev"; } Label #AppearanceVariantPageText { FlexWeight: 1; Text: "Variants 1 / 1"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, TextColor: #aebdcb, HorizontalAlignment: Center, VerticalAlignment: Center); } $C.@SecondaryTextButton #AppearanceVariantNextButton { @Anchor = (Width: 72, Left: 4); Text: "Next"; } }
+        }
+      }
+      Group { Anchor: (Width: 490, Left: 4); LayoutMode: Top; Background: #101a24; Padding: (Full: 12);
+        Label { Anchor: (Height: 28); Text: "LIVE DRAFT PREVIEW"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold, HorizontalAlignment: Center); }
+        Group { Anchor: (Height: 560, Bottom: 10); LayoutMode: CenterMiddle; Background: @GoldPanel;
+          CharacterPreviewComponent #AppearancePreviewCharacter { Anchor: (Width: 430, Height: 520); }
+          Group #AppearancePreviewFallback { Visible: false; Anchor: (Width: 250, Height: 250); LayoutMode: CenterMiddle; Background: #2b2417; Label { Text: "NPC\nPREVIEW"; Style: (...$C.@DefaultLabelStyle, FontSize: 24, RenderBold: true, TextColor: #d7c28c, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+        }
+        Label #AppearanceSelectionInfo { Anchor: (Height: 150); Text: "Selection"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #d8e5f2); }
+        Label { FlexWeight: 1; Text: "No game-owned thumbnails are copied. This build uses bounded text tiles and the authoritative 3D preview."; Style: (...$C.@DefaultLabelStyle, FontSize: 9, Wrap: true, TextColor: #6f879a); }
+      }
+    }
+    Label #AppearanceValidationStatus { Anchor: (Height: 30, Top: 8); Text: "Draft valid"; Style: (...$C.@DefaultLabelStyle, Wrap: true, TextColor: #9ed7a6, HorizontalAlignment: Center); }
+    Group { LayoutMode: Left; Anchor: (Height: 42, Top: 8);
+      $C.@TextButton #AppearanceRandomizeButton { @Anchor = (Right: 5); Text: "Randomize"; FlexWeight: 1; }
+      $C.@SecondaryTextButton #AppearanceResetButton { @Anchor = (Left: 5, Right: 5); Text: "Reset"; FlexWeight: 1; }
+      $C.@SecondaryTextButton #AppearanceCancelButton { @Sounds = $Sounds.@ButtonsCancel; @Anchor = (Left: 5, Right: 5); Text: "Cancel"; FlexWeight: 1; }
+      $C.@TextButton #AppearanceSaveButton { @Sounds = $Sounds.@SaveSettings; @Anchor = (Left: 5); Text: "Save Appearance"; FlexWeight: 1; }
+    }
+  }
+}
+
 $C.@PageOverlay #DirtyEditorConfirmPage {
   LayoutMode: Middle;
   Visible: false;

@@ -39,6 +39,13 @@ import com.inigmasgames.persistentnpcs.profile.NpcStatsSnapshotService;
 import com.inigmasgames.persistentnpcs.profile.NpcStatsSnapshotService.NpcStatsSnapshot;
 import com.inigmasgames.persistentnpcs.voice.VoicePresetRepository;
 import com.inigmasgames.persistentnpcs.voice.VoiceSampleType;
+import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceAuthoringService;
+import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService;
+import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService.Category;
+import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService.PrimaryCategory;
+import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceDraft;
+import com.inigmasgames.persistentnpcs.appearance.NpcAppearancePreviewService;
+import com.inigmasgames.persistentnpcs.appearance.NpcSkinCodecAdapter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
@@ -75,7 +82,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             "PROFILE_RESET", "PROFILE_CANCEL", "PROFILE_GENERATE",
             "PROFILE_SCOPE",
             "PROFILE_PROPOSAL_ACCEPT", "PROFILE_PROPOSAL_ACCEPT_SELECTED",
-            "PROFILE_PROPOSAL_DISCARD");
+            "PROFILE_PROPOSAL_DISCARD", "APPEARANCE_PRIMARY",
+            "APPEARANCE_CATEGORY", "APPEARANCE_SEARCH", "APPEARANCE_PAGE_PREV",
+            "APPEARANCE_PAGE_NEXT", "APPEARANCE_OPTION", "APPEARANCE_COLOR",
+            "APPEARANCE_COLOR_PREV", "APPEARANCE_COLOR_NEXT",
+            "APPEARANCE_VARIANT", "APPEARANCE_VARIANT_PREV",
+            "APPEARANCE_VARIANT_NEXT", "APPEARANCE_RANDOMIZE", "APPEARANCE_RESET",
+            "APPEARANCE_CANCEL", "APPEARANCE_SAVE");
     private final String npcName;
     private final boolean update;
     private final NpcProfileEditorService editor;
@@ -115,6 +128,16 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private String profileEditorStatus = "Draft valid.";
     private boolean profileEditorError;
     private String profileGenerationScope = "BIOGRAPHY";
+    private NpcAppearanceDraft appearanceDraft;
+    private final NpcAppearancePreviewService appearancePreview;
+    private PrimaryCategory appearancePrimary = PrimaryCategory.BODY;
+    private Category appearanceCategory = Category.BODY_CHARACTERISTIC;
+    private String appearanceSearch = "";
+    private int appearancePage;
+    private int appearanceColorPage;
+    private int appearanceVariantPage;
+    private String appearanceEditorStatus = "Choose a registry-backed appearance option.";
+    private boolean appearanceEditorError;
 
     public NpcProfilePage(
             PlayerRef playerRef,
@@ -141,6 +164,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 authoringSession, "Authoring session is required.");
         this.preview = preview;
         this.diagnostics = diagnostics == null ? ignored -> { } : diagnostics;
+        this.appearancePreview = new NpcAppearancePreviewService(
+                preview, editor.skinCodec(), this.diagnostics);
         this.committed = committed == null ? ignored -> { } : committed;
         this.deleted = deleted == null
                 ? (ignoredRef, ignoredStore) -> {
@@ -179,6 +204,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                         this.diagnostics);
         this.voiceSamples = editor.rescanVoiceSamples(npcName);
         authoringSession.addCleanup("inventory-event-bridge", this::closeInventoryBridge);
+        authoringSession.addCleanup("appearance-draft-preview", this::closeAppearanceDraft);
         authoringSession.addCleanup("viewer-preview-restoration", this::closePreview);
         authoringSession.addCleanup("inventory-persistence-flush", inventory::close);
         authoringSession.addCleanup("stats-refresh", this::closeStatsRefresh);
@@ -319,6 +345,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#ContextCloseButton", authoringEvent("CLOSE_EDITOR"));
         bindProfileEditorEvents(events);
+        bindAppearanceEditorEvents(events);
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#DirtySaveButton", authoringEvent("DIRTY_SAVE"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
@@ -344,10 +371,14 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#StatusText.Style.TextColor", error ? "#e76f6f" : "#9ed7a6");
         boolean profileEditor = authoringSession.activeEditor()
                 == NpcAuthoringSession.EditorKind.PROFILE;
+        boolean appearanceEditor = authoringSession.activeEditor()
+                == NpcAuthoringSession.EditorKind.APPEARANCE;
         boolean contextualEditor = authoringSession.activeEditor()
-                != NpcAuthoringSession.EditorKind.NONE && !profileEditor;
+                != NpcAuthoringSession.EditorKind.NONE && !profileEditor && !appearanceEditor;
         commands.set("#ProfileEditorPage.Visible", profileEditor);
         if (profileEditor && profileDraft != null) setProfileEditorUi(commands);
+        commands.set("#AppearanceEditorPage.Visible", appearanceEditor);
+        if (appearanceEditor && appearanceDraft != null) setAppearanceEditorUi(commands);
         commands.set("#ContextEditorPage.Visible", contextualEditor);
         if (contextualEditor) {
             String title = switch (authoringSession.activeEditor()) {
@@ -458,7 +489,24 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 return;
             }
             if ("OPEN_APPEARANCE_EDITOR".equals(authoringAction)) {
-                authoringSession.openEditor(NpcAuthoringSession.EditorKind.APPEARANCE);
+                long generation = authoringSession.openEditor(
+                        NpcAuthoringSession.EditorKind.APPEARANCE);
+                try {
+                    appearanceDraft = editor.appearanceAuthoring().begin(npcName,
+                            authoringSession.npcStableId(), authoringSession.sessionId(),
+                            generation);
+                } catch (RuntimeException failure) {
+                    authoringSession.closeEditor(false);
+                    throw failure;
+                }
+                appearancePrimary = PrimaryCategory.BODY;
+                appearanceCategory = Category.BODY_CHARACTERISTIC;
+                appearanceSearch = "";
+                appearancePage = 0;
+                appearanceColorPage = 0;
+                appearanceVariantPage = 0;
+                appearanceEditorStatus = "Draft valid. Registry snapshot is pinned for this page.";
+                appearanceEditorError = false;
                 rebuild();
                 return;
             }
@@ -474,6 +522,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     sendUpdate(commands, false);
                     return;
                 }
+                if (authoringSession.activeEditor()
+                        == NpcAuthoringSession.EditorKind.APPEARANCE) {
+                    restoreAndClearAppearanceDraft();
+                }
                 authoringSession.closeEditor(false);
                 clearProfileDraft();
                 rebuild();
@@ -482,15 +534,23 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             if ("DIRTY_SAVE".equals(authoringAction)) {
                 if (authoringSession.activeEditor() == NpcAuthoringSession.EditorKind.PROFILE) {
                     saveProfileDraft();
+                } else if (authoringSession.activeEditor()
+                        == NpcAuthoringSession.EditorKind.APPEARANCE) {
+                    saveAppearanceDraft(store);
                 } else {
                     authoringSession.markSaved(authoringSession.activeEditor());
                 }
                 authoringSession.closeEditor(false);
                 clearProfileDraft();
+                clearAppearanceDraft(false);
                 rebuild();
                 return;
             }
             if ("DIRTY_DISCARD".equals(authoringAction)) {
+                if (authoringSession.activeEditor()
+                        == NpcAuthoringSession.EditorKind.APPEARANCE) {
+                    restoreAndClearAppearanceDraft();
+                }
                 authoringSession.closeEditor(true);
                 clearProfileDraft();
                 rebuild();
@@ -500,6 +560,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 UICommandBuilder commands = new UICommandBuilder();
                 commands.set("#DirtyEditorConfirmPage.Visible", false);
                 sendUpdate(commands, false);
+                return;
+            }
+            if (authoringAction.startsWith("APPEARANCE_")) {
+                handleAppearanceAction(store, data, authoringAction);
                 return;
             }
             if ("PROFILE_FIELD".equals(authoringAction)) {
@@ -681,6 +745,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             if (authoringSession.activeEditor() == NpcAuthoringSession.EditorKind.PROFILE) {
                 profileEditorStatus = status;
                 profileEditorError = true;
+            } else if (authoringSession.activeEditor()
+                    == NpcAuthoringSession.EditorKind.APPEARANCE) {
+                appearanceEditorStatus = status;
+                appearanceEditorError = true;
             }
             if (activeField != null) {
                 activeField = null;
@@ -727,6 +795,417 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                                 "#ProfileProposalSelectionInput.Value"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#ProfileDiscardProposalButton", authoringEvent("PROFILE_PROPOSAL_DISCARD"));
+    }
+
+    private void bindAppearanceEditorEvents(UIEventBuilder events) {
+        for (PrimaryCategory primary : PrimaryCategory.values()) {
+            events.addEventBinding(CustomUIEventBindingType.Activating,
+                    "#AppearancePrimary" + primary.name(),
+                    authoringEvent("APPEARANCE_PRIMARY")
+                            .append("AppearancePrimary", primary.name()));
+        }
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceSearchButton", authoringEvent("APPEARANCE_SEARCH")
+                        .append("AppearanceSearch", "#AppearanceSearchInput.Value"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearancePreviousButton", authoringEvent("APPEARANCE_PAGE_PREV"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceNextButton", authoringEvent("APPEARANCE_PAGE_NEXT"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceColorPreviousButton", authoringEvent("APPEARANCE_COLOR_PREV"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceColorNextButton", authoringEvent("APPEARANCE_COLOR_NEXT"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceVariantPreviousButton", authoringEvent("APPEARANCE_VARIANT_PREV"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceVariantNextButton", authoringEvent("APPEARANCE_VARIANT_NEXT"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceRandomizeButton", authoringEvent("APPEARANCE_RANDOMIZE"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceResetButton", authoringEvent("APPEARANCE_RESET"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceCancelButton", authoringEvent("APPEARANCE_CANCEL"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#AppearanceSaveButton", authoringEvent("APPEARANCE_SAVE"));
+        if (appearanceDraft == null) return;
+        List<Category> categories = editor.appearanceCatalog().categories(appearancePrimary);
+        for (int index = 0; index < categories.size() && index < 7; index++) {
+            events.addEventBinding(CustomUIEventBindingType.Activating,
+                    "#AppearanceCategory" + index,
+                    authoringEvent("APPEARANCE_CATEGORY")
+                            .append("AppearanceCategory", categories.get(index).name()));
+        }
+        var page = appearanceCatalogPage();
+        for (int index = 0; index < page.options().size(); index++) {
+            var option = page.options().get(index);
+            events.addEventBinding(CustomUIEventBindingType.Activating,
+                    "#AppearanceOption" + index,
+                    authoringEvent("APPEARANCE_OPTION")
+                            .append("AppearanceOptionId", option.cosmeticId()));
+        }
+        var current = currentAppearanceDescriptor();
+        if (current != null) {
+            String encoded = currentAppearanceSelection();
+            List<String> colors = current.colors(NpcSkinCodecAdapter.variantId(encoded));
+            int colorFrom = Math.min(colors.size(), appearanceColorPage * 8);
+            List<String> visibleColors = colors.subList(colorFrom,
+                    Math.min(colors.size(), colorFrom + 8));
+            for (int index = 0; index < visibleColors.size(); index++) {
+                events.addEventBinding(CustomUIEventBindingType.Activating,
+                        "#AppearanceColor" + index,
+                        authoringEvent("APPEARANCE_COLOR")
+                                .append("AppearanceOptionId", current.cosmeticId())
+                                .append("AppearanceColorId", visibleColors.get(index))
+                                .append("AppearanceVariantId",
+                                        NpcSkinCodecAdapter.variantId(encoded)));
+            }
+            List<String> variants = current.variants();
+            int variantFrom = Math.min(variants.size(), appearanceVariantPage * 6);
+            List<String> visibleVariants = variants.subList(variantFrom,
+                    Math.min(variants.size(), variantFrom + 6));
+            for (int index = 0; index < visibleVariants.size(); index++) {
+                events.addEventBinding(CustomUIEventBindingType.Activating,
+                        "#AppearanceVariant" + index,
+                        authoringEvent("APPEARANCE_VARIANT")
+                                .append("AppearanceOptionId", current.cosmeticId())
+                                .append("AppearanceColorId",
+                                        NpcSkinCodecAdapter.colorId(encoded))
+                                .append("AppearanceVariantId", visibleVariants.get(index)));
+            }
+        }
+    }
+
+    private void handleAppearanceAction(Store<EntityStore> store, PageData data,
+            String action) {
+        requireAppearanceDraft();
+        switch (action) {
+            case "APPEARANCE_PRIMARY" -> {
+                appearancePrimary = PrimaryCategory.valueOf(
+                        data.appearancePrimary.toUpperCase(Locale.ROOT));
+                List<Category> categories = editor.appearanceCatalog()
+                        .categories(appearancePrimary);
+                appearanceCategory = categories.getFirst();
+                appearanceSearch = "";
+                appearancePage = 0;
+                appearanceColorPage = 0;
+                appearanceVariantPage = 0;
+                appearanceEditorStatus = "Browsing " + appearancePrimary.name()
+                        + " from the pinned live registry snapshot.";
+                appearanceEditorError = false;
+                rebuild();
+            }
+            case "APPEARANCE_CATEGORY" -> {
+                Category category = Category.valueOf(
+                        data.appearanceCategory.toUpperCase(Locale.ROOT));
+                if (category.primary() != appearancePrimary) {
+                    throw new IllegalArgumentException("Appearance category is stale.");
+                }
+                appearanceCategory = category;
+                appearanceSearch = "";
+                appearancePage = 0;
+                appearanceColorPage = 0;
+                appearanceVariantPage = 0;
+                appearanceEditorStatus = "Choose " + category.label()
+                        + ". Existing missing values remain retained until Save.";
+                appearanceEditorError = false;
+                rebuild();
+            }
+            case "APPEARANCE_SEARCH" -> {
+                appearanceSearch = data.appearanceSearch == null ? ""
+                        : data.appearanceSearch.strip();
+                appearancePage = 0;
+                appearanceEditorStatus = "Registry search applied locally; no model request was made.";
+                appearanceEditorError = false;
+                rebuild();
+            }
+            case "APPEARANCE_PAGE_PREV" -> {
+                appearancePage = Math.max(0, appearancePage - 1);
+                rebuild();
+            }
+            case "APPEARANCE_PAGE_NEXT" -> {
+                var page = appearanceCatalogPage();
+                appearancePage = Math.min(page.pageCount() - 1, appearancePage + 1);
+                rebuild();
+            }
+            case "APPEARANCE_COLOR_PREV" -> {
+                appearanceColorPage = Math.max(0, appearanceColorPage - 1);
+                rebuild();
+            }
+            case "APPEARANCE_COLOR_NEXT" -> {
+                var descriptor = currentAppearanceDescriptor();
+                int count = descriptor == null ? 0 : descriptor.colors(
+                        NpcSkinCodecAdapter.variantId(currentAppearanceSelection())).size();
+                int pages = Math.max(1, (count + 7) / 8);
+                appearanceColorPage = Math.min(pages - 1, appearanceColorPage + 1);
+                rebuild();
+            }
+            case "APPEARANCE_VARIANT_PREV" -> {
+                appearanceVariantPage = Math.max(0, appearanceVariantPage - 1);
+                rebuild();
+            }
+            case "APPEARANCE_VARIANT_NEXT" -> {
+                var descriptor = currentAppearanceDescriptor();
+                int count = descriptor == null ? 0 : descriptor.variants().size();
+                int pages = Math.max(1, (count + 5) / 6);
+                appearanceVariantPage = Math.min(pages - 1, appearanceVariantPage + 1);
+                rebuild();
+            }
+            case "APPEARANCE_OPTION", "APPEARANCE_COLOR", "APPEARANCE_VARIANT" -> {
+                var selected = editor.appearanceAuthoring().select(appearanceDraft,
+                        appearanceCategory, data.appearanceOptionId,
+                        data.appearanceColorId, data.appearanceVariantId);
+                authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.APPEARANCE);
+                appearancePreview.show(appearanceDraft);
+                if ("APPEARANCE_OPTION".equals(action)) {
+                    appearanceColorPage = 0;
+                    appearanceVariantPage = 0;
+                }
+                appearanceEditorStatus = "Previewing " + selected.option().displayName()
+                        + ". Save Appearance commits; Cancel restores persisted appearance.";
+                appearanceEditorError = false;
+                rebuild();
+            }
+            case "APPEARANCE_RANDOMIZE" -> {
+                editor.appearanceAuthoring().randomize(appearanceDraft);
+                authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.APPEARANCE);
+                appearancePreview.show(appearanceDraft);
+                appearanceEditorStatus = "Randomized from Hytale's current registry. Review before saving.";
+                appearanceEditorError = false;
+                rebuild();
+            }
+            case "APPEARANCE_RESET" -> {
+                appearanceDraft.reset();
+                authoringSession.markSaved(NpcAuthoringSession.EditorKind.APPEARANCE);
+                appearancePreview.restore(appearanceDraft);
+                appearanceEditorStatus = "Draft reset to the persisted appearance.";
+                appearanceEditorError = false;
+                rebuild();
+            }
+            case "APPEARANCE_CANCEL" -> {
+                if (appearanceDraft.dirty()) {
+                    UICommandBuilder commands = new UICommandBuilder();
+                    commands.set("#DirtyEditorConfirmPage.Visible", true);
+                    sendUpdate(commands, false);
+                } else {
+                    restoreAndClearAppearanceDraft();
+                    authoringSession.closeEditor(false);
+                    rebuild();
+                }
+            }
+            case "APPEARANCE_SAVE" -> {
+                if (!appearanceDraft.dirty()) {
+                    appearanceEditorStatus = "No appearance changes to save.";
+                    appearanceEditorError = false;
+                    refreshAppearanceEditorUi();
+                    return;
+                }
+                saveAppearanceDraft(store);
+                long generation = authoringSession.editorGeneration();
+                appearanceDraft = editor.appearanceAuthoring().begin(npcName,
+                        authoringSession.npcStableId(), authoringSession.sessionId(), generation);
+                rebuild();
+            }
+            default -> throw new IllegalArgumentException("Unknown appearance action.");
+        }
+    }
+
+    private void setAppearanceEditorUi(UICommandBuilder commands) {
+        var snapshot = editor.appearanceCatalog().snapshot();
+        commands.set("#AppearanceEditorTitle.Text", npcName + " Appearance");
+        commands.set("#AppearanceDraftMeta.Text", "Draft " + appearanceDraft.draftId()
+                + "  |  base r" + appearanceDraft.baseRevision()
+                + "  |  build " + snapshot.identity().hytaleBuildId());
+        commands.set("#AppearanceRegistryMeta.Text", "Registry "
+                + compact(snapshot.identity().registryHash(), 14) + "  |  packs "
+                + compact(snapshot.identity().enabledAssetPackSetHash(), 14)
+                + "  |  " + snapshot.identity().adapterVersion());
+        commands.set("#AppearanceSearchInput.Value", appearanceSearch);
+        List<Category> categories = editor.appearanceCatalog().categories(appearancePrimary);
+        for (int index = 0; index < 7; index++) {
+            boolean visible = index < categories.size();
+            commands.set("#AppearanceCategory" + index + ".Visible", visible);
+            if (visible) {
+                Category category = categories.get(index);
+                commands.set("#AppearanceCategory" + index + ".Text",
+                        (category == appearanceCategory ? "> " : "") + category.label());
+            }
+        }
+        var page = appearanceCatalogPage();
+        appearancePage = page.pageIndex();
+        commands.set("#AppearancePageText.Text", "Page " + (page.pageIndex() + 1)
+                + " / " + page.pageCount() + "  ·  " + page.totalMatches() + " options");
+        commands.set("#AppearancePreviousButton.Disabled", page.pageIndex() == 0);
+        commands.set("#AppearanceNextButton.Disabled",
+                page.pageIndex() + 1 >= page.pageCount());
+        String currentId = currentAppearanceCosmeticId();
+        for (int index = 0; index < NpcAppearanceCatalogService.PAGE_SIZE; index++) {
+            boolean visible = index < page.options().size();
+            commands.set("#AppearanceOption" + index + ".Visible", visible);
+            if (visible) {
+                var option = page.options().get(index);
+                commands.set("#AppearanceOption" + index + ".Text",
+                        (option.cosmeticId().equals(currentId) ? "✓ " : "")
+                                + option.displayName() + "\n"
+                                + (option.source()
+                                        == NpcAppearanceCatalogService.SourceKind.HYTALE_DEFAULT
+                                        ? "Hytale Default" : "Enabled Pack"));
+            }
+        }
+        var descriptor = currentAppearanceDescriptor();
+        String current = currentAppearanceSelection();
+        List<String> colors = descriptor == null ? List.of()
+                : descriptor.colors(NpcSkinCodecAdapter.variantId(current));
+        int colorPages = Math.max(1, (colors.size() + 7) / 8);
+        appearanceColorPage = Math.max(0, Math.min(appearanceColorPage, colorPages - 1));
+        int colorFrom = Math.min(colors.size(), appearanceColorPage * 8);
+        List<String> visibleColors = colors.subList(colorFrom,
+                Math.min(colors.size(), colorFrom + 8));
+        for (int index = 0; index < 8; index++) {
+            boolean visible = index < visibleColors.size();
+            commands.set("#AppearanceColor" + index + ".Visible", visible);
+            if (visible) commands.set("#AppearanceColor" + index + ".Text",
+                    (visibleColors.get(index).equals(NpcSkinCodecAdapter.colorId(current)) ? "✓ " : "")
+                            + visibleColors.get(index));
+        }
+        commands.set("#AppearanceColorPageText.Text", "Colors "
+                + (appearanceColorPage + 1) + " / " + colorPages);
+        commands.set("#AppearanceColorPreviousButton.Disabled", appearanceColorPage == 0);
+        commands.set("#AppearanceColorNextButton.Disabled",
+                appearanceColorPage + 1 >= colorPages);
+        List<String> variants = descriptor == null ? List.of() : descriptor.variants();
+        int variantPages = Math.max(1, (variants.size() + 5) / 6);
+        appearanceVariantPage = Math.max(0,
+                Math.min(appearanceVariantPage, variantPages - 1));
+        int variantFrom = Math.min(variants.size(), appearanceVariantPage * 6);
+        List<String> visibleVariants = variants.subList(variantFrom,
+                Math.min(variants.size(), variantFrom + 6));
+        for (int index = 0; index < 6; index++) {
+            boolean visible = index < visibleVariants.size();
+            commands.set("#AppearanceVariant" + index + ".Visible", visible);
+            if (visible) commands.set("#AppearanceVariant" + index + ".Text",
+                    (visibleVariants.get(index).equals(NpcSkinCodecAdapter.variantId(current)) ? "✓ " : "")
+                            + visibleVariants.get(index));
+        }
+        commands.set("#AppearanceVariantPageText.Text", "Variants "
+                + (appearanceVariantPage + 1) + " / " + variantPages);
+        commands.set("#AppearanceVariantPreviousButton.Disabled",
+                appearanceVariantPage == 0);
+        commands.set("#AppearanceVariantNextButton.Disabled",
+                appearanceVariantPage + 1 >= variantPages);
+        commands.set("#AppearanceColorSection.Visible", !colors.isEmpty());
+        commands.set("#AppearanceVariantSection.Visible", !variants.isEmpty());
+        boolean missing = descriptor == null && current != null && !current.isBlank();
+        commands.set("#AppearanceSelectionInfo.Text", missing
+                ? "Retained missing/incompatible registry value: " + current
+                : descriptor == null ? "None selected (optional field)."
+                : descriptor.displayName() + "\nID: " + descriptor.cosmeticId()
+                        + "\nSource: " + descriptor.source()
+                        + "\nCompatibility: " + descriptor.compatibility());
+        commands.set("#AppearanceSelectionInfo.Style.TextColor",
+                missing ? "#e76f6f" : "#d8e5f2");
+        commands.set("#AppearanceValidationStatus.Text", appearanceEditorStatus);
+        commands.set("#AppearanceValidationStatus.Style.TextColor",
+                appearanceEditorError ? "#e76f6f" : "#9ed7a6");
+        commands.set("#AppearancePreviewCharacter.Visible", preview != null);
+        commands.set("#AppearancePreviewFallback.Visible", preview == null);
+    }
+
+    private void refreshAppearanceEditorUi() {
+        UICommandBuilder commands = new UICommandBuilder();
+        setAppearanceEditorUi(commands);
+        sendUpdate(commands, false);
+    }
+
+    private NpcAppearanceCatalogService.CatalogPage appearanceCatalogPage() {
+        return editor.appearanceCatalog().query(
+                appearanceCategory, appearanceSearch, appearancePage);
+    }
+
+    private String currentAppearanceSelection() {
+        return appearanceDraft == null ? null : NpcSkinCodecAdapter.selection(
+                appearanceDraft.currentSkin(), appearanceCategory);
+    }
+
+    private String currentAppearanceCosmeticId() {
+        String encoded = currentAppearanceSelection();
+        return switch (appearanceCategory) {
+            case BODY_CHARACTERISTIC, FACE, EARS, MOUTH -> encoded == null ? "" : encoded;
+            default -> NpcSkinCodecAdapter.partId(encoded);
+        };
+    }
+
+    private NpcAppearanceCatalogService.CosmeticOptionDescriptor
+            currentAppearanceDescriptor() {
+        String id = currentAppearanceCosmeticId();
+        if (id == null || id.isBlank()) return null;
+        return editor.appearanceCatalog().snapshot().options()
+                .getOrDefault(appearanceCategory, List.of()).stream()
+                .filter(option -> option.cosmeticId().equals(id)).findFirst().orElse(null);
+    }
+
+    private void saveAppearanceDraft(Store<EntityStore> store) {
+        requireAppearanceDraft();
+        authoringSession.beginCommit();
+        try {
+            NpcAppearanceAuthoringService.SaveResult result =
+                    editor.appearanceAuthoring().save(appearanceDraft, playerRef.getUuid());
+            appearancePreview.commit(appearanceDraft, result);
+            boolean liveApplied = liveStorageAuthority == null || editor.applyAppearanceLive(
+                    npcName, liveStorageAuthority.npcRef(), store);
+            authoringSession.markSaved(NpcAuthoringSession.EditorKind.APPEARANCE);
+            appearanceEditorStatus = liveApplied
+                    ? "Appearance saved atomically at revision " + result.revision() + "."
+                    : "Appearance saved at revision " + result.revision()
+                            + "; live NPC refresh is degraded and will recover on reload.";
+            appearanceEditorError = !liveApplied;
+            status = appearanceEditorStatus;
+            error = !liveApplied;
+            if (!liveApplied) authoringSession.degraded("APPEARANCE_LIVE_APPLY_FAILED");
+            diagnostics.accept("NPC_AUTHORING_APPEARANCE_SAVE_COMPLETED timestamp="
+                    + Instant.now() + " npc=" + npcName + " sessionId="
+                    + authoringSession.sessionId() + " revision=" + result.revision()
+                    + " persisted=true liveNpcApplied=" + liveApplied
+                    + " previewCommitted=true viewerEcsMutation=false");
+        } catch (RuntimeException failure) {
+            authoringSession.commitFailed(NpcAuthoringSession.EditorKind.APPEARANCE,
+                    failure.getMessage());
+            appearanceEditorStatus = failure.getMessage() == null
+                    ? "Appearance save failed; draft preserved." : failure.getMessage();
+            appearanceEditorError = true;
+            throw failure;
+        }
+    }
+
+    private void requireAppearanceDraft() {
+        if (appearanceDraft == null
+                || authoringSession.activeEditor()
+                        != NpcAuthoringSession.EditorKind.APPEARANCE
+                || appearanceDraft.editorGeneration() != authoringSession.editorGeneration()
+                || !appearanceDraft.sessionId().equals(authoringSession.sessionId())
+                || !appearanceDraft.stableNpcId().equals(authoringSession.npcStableId())) {
+            throw new IllegalStateException("Appearance draft is missing or stale.");
+        }
+    }
+
+    private void restoreAndClearAppearanceDraft() {
+        if (appearanceDraft != null) appearancePreview.restore(appearanceDraft);
+        clearAppearanceDraft(false);
+    }
+
+    private void clearAppearanceDraft(boolean closeService) {
+        appearanceDraft = null;
+        appearanceSearch = "";
+        appearancePage = 0;
+        appearanceColorPage = 0;
+        appearanceVariantPage = 0;
+        appearanceEditorStatus = "Choose a registry-backed appearance option.";
+        appearanceEditorError = false;
+        if (closeService) appearancePreview.close();
+    }
+
+    private void closeAppearanceDraft() {
+        if (appearanceDraft != null) appearancePreview.restore(appearanceDraft);
+        clearAppearanceDraft(true);
     }
 
     private void setProfileEditorUi(UICommandBuilder commands) {
@@ -1086,7 +1565,16 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     ? NpcAuthoringPermissions.GEAR : NpcAuthoringPermissions.INVENTORY;
             case "INFINITE_AMMO", "ARMOR_VISIBILITY" -> NpcAuthoringPermissions.GEAR;
             case "VOICE_RESCAN", "OPEN_VOICE_EDITOR" -> NpcAuthoringPermissions.VOICE;
-            case "OPEN_APPEARANCE_EDITOR" -> NpcAuthoringPermissions.APPEARANCE;
+            case "OPEN_APPEARANCE_EDITOR", "APPEARANCE_PRIMARY",
+                    "APPEARANCE_CATEGORY", "APPEARANCE_SEARCH",
+                    "APPEARANCE_PAGE_PREV", "APPEARANCE_PAGE_NEXT",
+                    "APPEARANCE_OPTION", "APPEARANCE_COLOR",
+                    "APPEARANCE_COLOR_PREV", "APPEARANCE_COLOR_NEXT",
+                    "APPEARANCE_VARIANT", "APPEARANCE_VARIANT_PREV",
+                    "APPEARANCE_VARIANT_NEXT",
+                    "APPEARANCE_RANDOMIZE", "APPEARANCE_RESET",
+                    "APPEARANCE_CANCEL", "APPEARANCE_SAVE"
+                    -> NpcAuthoringPermissions.APPEARANCE;
             case "OPEN_PROFILE_EDITOR", "PROFILE_FIELD", "PROFILE_SAVE",
                     "PROFILE_RESET", "PROFILE_CANCEL", "PROFILE_PROPOSAL_ACCEPT",
                     "PROFILE_PROPOSAL_ACCEPT_SELECTED", "PROFILE_PROPOSAL_DISCARD",
@@ -1095,8 +1583,14 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             case "PROFILE_SCOPE" -> NpcAuthoringPermissions.PROFILE;
             case "ADVANCED_FILE_OPEN", "BROWSER_EVENT", "DELETE_PROMPT",
                     "DELETE_CANCEL", "DELETE_CONFIRM" -> NpcAuthoringPermissions.ADVANCED;
-            case "CANCEL", "CLOSE_EDITOR", "DIRTY_SAVE", "DIRTY_DISCARD",
-                    "DIRTY_STAY" -> NpcAuthoringPermissions.OPEN;
+            case "DIRTY_SAVE" -> switch (authoringSession.activeEditor()) {
+                case PROFILE -> NpcAuthoringPermissions.PROFILE;
+                case APPEARANCE -> NpcAuthoringPermissions.APPEARANCE;
+                case VOICE -> NpcAuthoringPermissions.VOICE;
+                case NONE -> NpcAuthoringPermissions.OPEN;
+            };
+            case "CANCEL", "CLOSE_EDITOR", "DIRTY_DISCARD", "DIRTY_STAY"
+                    -> NpcAuthoringPermissions.OPEN;
             default -> throw new IllegalArgumentException("Unknown authoring action.");
         };
     }
@@ -1601,6 +2095,24 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append(new KeyedCodec<>("ProfileProposalSelection", Codec.STRING),
                         (data, value) -> data.profileProposalSelection = value,
                         data -> data.profileProposalSelection).add()
+                .append(new KeyedCodec<>("AppearancePrimary", Codec.STRING),
+                        (data, value) -> data.appearancePrimary = value,
+                        data -> data.appearancePrimary).add()
+                .append(new KeyedCodec<>("AppearanceCategory", Codec.STRING),
+                        (data, value) -> data.appearanceCategory = value,
+                        data -> data.appearanceCategory).add()
+                .append(new KeyedCodec<>("AppearanceSearch", Codec.STRING),
+                        (data, value) -> data.appearanceSearch = value,
+                        data -> data.appearanceSearch).add()
+                .append(new KeyedCodec<>("AppearanceOptionId", Codec.STRING),
+                        (data, value) -> data.appearanceOptionId = value,
+                        data -> data.appearanceOptionId).add()
+                .append(new KeyedCodec<>("AppearanceColorId", Codec.STRING),
+                        (data, value) -> data.appearanceColorId = value,
+                        data -> data.appearanceColorId).add()
+                .append(new KeyedCodec<>("AppearanceVariantId", Codec.STRING),
+                        (data, value) -> data.appearanceVariantId = value,
+                        data -> data.appearanceVariantId).add()
                 .build();
 
         private String open;
@@ -1636,5 +2148,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         private String profileFieldValue;
         private String profileGenerateScope;
         private String profileProposalSelection;
+        private String appearancePrimary;
+        private String appearanceCategory;
+        private String appearanceSearch;
+        private String appearanceOptionId;
+        private String appearanceColorId;
+        private String appearanceVariantId;
     }
 }

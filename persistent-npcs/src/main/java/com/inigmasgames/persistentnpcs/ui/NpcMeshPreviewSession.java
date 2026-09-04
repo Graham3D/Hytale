@@ -42,11 +42,11 @@ public final class NpcMeshPreviewSession implements AutoCloseable {
     private final long epoch;
     private final String npcName;
     private final String baselineModelId;
-    private final String targetModelId;
+    private volatile String targetModelId;
     private final ModelUpdate baseline;
-    private final ModelUpdate target;
+    private volatile ModelUpdate target;
     private final PlayerSkinUpdate baselineSkin;
-    private final PlayerSkinUpdate targetSkin;
+    private volatile PlayerSkinUpdate targetSkin;
     private final EquipmentUpdate baselineEquipment;
     private volatile EquipmentUpdate targetEquipment;
     private final Consumer<String> diagnostics;
@@ -191,6 +191,67 @@ public final class NpcMeshPreviewSession implements AutoCloseable {
     /** Reasserts the NPC overlay after a viewer inventory transaction updates equipment. */
     public void refreshEquipment() {
         refreshEquipment(new EquipmentUpdate(targetEquipment));
+    }
+
+    /**
+     * Replaces only the client-local NPC preview overlay. It deliberately writes
+     * no viewer or NPC ECS component and always keeps authoritative NPC equipment.
+     */
+    public void applyAppearanceDraft(Model model, PlayerSkin skin,
+            UUID draftId, long previewGeneration) {
+        if (model == null || skin == null) {
+            throw new IllegalArgumentException("Draft preview model and skin are required");
+        }
+        synchronized (ACTIVE) {
+            if (closed.get() || !targetApplied || ACTIVE.get(viewerId) != this) return;
+            ModelUpdate draftModel = new ModelUpdate(model.toPacket(), model.getScale());
+            PlayerSkinUpdate draftSkin = new PlayerSkinUpdate(new PlayerSkin(skin));
+            send(draftModel);
+            send(draftSkin);
+            send(new EquipmentUpdate(targetEquipment));
+            log("NPC_AUTHORING_APPEARANCE_PREVIEW_APPLIED",
+                    "draftId=" + draftId + " previewGeneration=" + previewGeneration
+                            + " modelId=" + safe(model.getModelAssetId())
+                            + " skinFingerprint=" + skinFingerprint(skin)
+                            + " authoritativeViewerEcsMutation=false equipmentPreserved=true");
+        }
+    }
+
+    /** Restores the last persisted NPC target while the Profile remains open. */
+    public void restoreAuthoritativeTarget(UUID draftId, long previewGeneration) {
+        synchronized (ACTIVE) {
+            if (closed.get() || !targetApplied || ACTIVE.get(viewerId) != this) return;
+            send(new ModelUpdate(target));
+            send(new PlayerSkinUpdate(targetSkin));
+            send(new EquipmentUpdate(targetEquipment));
+            log("NPC_AUTHORING_APPEARANCE_PREVIEW_RESTORED",
+                    "draftId=" + draftId + " previewGeneration=" + previewGeneration
+                            + " targetModelId=" + targetModelId
+                            + " authoritativeViewerEcsMutation=false equipmentPreserved=true");
+        }
+    }
+
+    /** Advances the persisted NPC appearance used by later draft cancellation. */
+    public void commitAuthoritativeTarget(Model model, PlayerSkin skin,
+            UUID draftId, long revision) {
+        if (model == null || skin == null) {
+            throw new IllegalArgumentException("Committed preview model and skin are required");
+        }
+        synchronized (ACTIVE) {
+            if (closed.get() || ACTIVE.get(viewerId) != this) return;
+            targetModelId = model.getModelAssetId();
+            target = new ModelUpdate(model.toPacket(), model.getScale());
+            targetSkin = new PlayerSkinUpdate(new PlayerSkin(skin));
+            if (targetApplied) {
+                send(new ModelUpdate(target));
+                send(new PlayerSkinUpdate(targetSkin));
+                send(new EquipmentUpdate(targetEquipment));
+            }
+            log("NPC_AUTHORING_APPEARANCE_PREVIEW_COMMITTED",
+                    "draftId=" + draftId + " appearanceRevision=" + revision
+                            + " targetModelId=" + targetModelId
+                            + " authoritativeViewerEcsMutation=false");
+        }
     }
 
     @Override

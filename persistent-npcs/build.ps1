@@ -1,5 +1,5 @@
 param(
-    [string]$ServerJar = "$env:APPDATA\Hytale\install\pre-release\package\game\latest\Server\HytaleServer.jar"
+    [string]$ServerJar = "$env:APPDATA\Hytale\install\release\package\game\latest\Server\HytaleServer.jar"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -23,7 +23,7 @@ if (-not (Test-Path -LiteralPath $ServerJar)) {
 
 $classes = Join-Path $projectRoot 'build\classes'
 $dist = Join-Path $projectRoot 'dist'
-$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.0-pre.13.1-R133.1-NPC-AUTHORING-STUDIO-A4-UI-PARSER-HOTFIX.jar'
+$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.3-R134-NPC-AUTHORING-STUDIO-A5-APPEARANCE.jar'
 $resolvedClasses = [IO.Path]::GetFullPath($classes)
 $resolvedBuildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot 'build'))
 if (-not $resolvedClasses.StartsWith($resolvedBuildRoot, [StringComparison]::OrdinalIgnoreCase)) {

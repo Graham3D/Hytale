@@ -152,7 +152,8 @@ public final class R027ProfileDialogueRenameTest {
         String editor = Files.readString(Path.of("src/main/java/com/inigmasgames/persistentnpcs/profile/NpcProfileEditorService.java"));
         String voice = Files.readString(Path.of("src/main/java/com/inigmasgames/persistentnpcs/voice/HytaleSpatialVoiceAdapter.java"));
         assert manifest.contains("\"Name\": \"ImmersiveNPCs\"");
-        assert manifest.contains("\"Version\": \"0.6.0-pre.13.1-R");
+        assert manifest.matches("(?s).*\\\"Version\\\"\\s*:\\s*\\\"0\\.6\\.[0-9]+-R[0-9]+.*")
+                : "Manifest must retain a versioned ImmersiveNPCs revision";
         assert page.contains("InteractiveCustomUIPage");
         assert page.contains("ServerFileBrowser");
         assert editor.contains("<name>.json");

@@ -1,6 +1,6 @@
 # Orbis NPC Authoring Studio — Technical Design and Implementation Report
 
-Updated: 2026-09-03 (America/New_York)
+Updated: 2026-09-04 (America/New_York)
 
 Program: A0–A7, stage-gated
 
@@ -8,7 +8,7 @@ Authoritative design: `hytale-taverns/Orbis NPC Authoring Studio Technical Desig
 
 Design SHA-256: `7F1FD4FE5E7C37B90A2CF79B2DBD09CBC7C565002FD5F6052E5C388809F0FDC9`
 
-Repository baseline: `5ea4c424bb9e754c1a081e31dc9176b2d8674eaf`
+Repository baseline entering A5: `3bafb58cead0d314366bc8e756c87a5fa86e39dc`
 
 A1 source checkpoint: `4f32daff921eb6d5cec8f5c34981b454ae0a0584`
 
@@ -21,9 +21,9 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | A0 — audit/freeze | Complete | PASS | Prior R124 connected evidence retained | PASS |
 | A1 — session/workspace shell | Complete | PASS | PASS: stable Jonalith/Mara open-close at available 1080p/720p modes | PASS; inventory limitation carried into A2 |
 | A2 — complete coupled inventory | Complete in R131 | PASS | PASS: full operator transaction matrix | PASS |
-| A3 — gear/loadout/live stats | Not activated | Not run | Not run | BLOCKED |
-| A4 — profile editor/generate | Not activated | Not run | Not run | BLOCKED |
-| A5 — appearance editor | Not activated | Not run | Not run | BLOCKED |
+| A3 — gear/loadout/live stats | Complete in R132 | PASS | PASS | PASS |
+| A4 — profile editor/generate | Complete in R133.1 | PASS | PASS: operator confirmed editor and workspace behavior | PASS |
+| A5 — appearance editor | Complete in R134 source | PASS | Pending R134 connected validation | HOLD FOR CONNECTED PASS |
 | A6 — voice recorder | Not activated | Not run | Not run | BLOCKED |
 | A7 — integration/polish | Not activated | Not run | Not run | BLOCKED |
 
@@ -32,7 +32,7 @@ adapter, model-download, environment, promotion, or runtime-model work was perfo
 
 ## A0 — Repository audit and production freeze
 
-### Current installed Hytale build
+### Initially audited Hytale build (A0–A4)
 
 - Server JAR: `C:\Users\Zemio\AppData\Roaming\Hytale\install\pre-release\package\game\latest\Server\HytaleServer.jar`
 - Server size: `110,437,983` bytes
@@ -404,3 +404,121 @@ The independently preserved R131 rollback remains unchanged at
 `C:\HytaleRollback\NpcAuthoringStudio-A3-2026-09-04\ImmersiveNPCs-0.6.0-pre.13.1-R131-NPC-AUTHORING-STUDIO-A2-INVENTORY-BRIDGE.jar`
 (2,667,348 bytes; SHA-256
 `C6FB298934E5B1FA96DFB54FF4DF7D0373F1741645D9F44DAF929AA989840C18`).
+
+## A4 — Profile Editor and Generate
+
+A3 connected validation passed in full before A4 activation. R133 implemented the
+profile draft/editor transaction and proposal-only Generate workflow; R133.1 corrected
+the current-client label-alignment enum without changing those authorities. The
+operator subsequently confirmed the editor and main workspace opened and behaved as
+expected, which is the connected A4 PASS authorizing A5.
+
+Profile edits remain server-owned drafts with stable NPC identity, base revision/hash,
+field-level dirty state, unknown-root-field preservation, validation, atomic replacement,
+rollback, audit, and stale-writer conflict rejection. Generate remains low-priority,
+proposal-only, and incapable of committing profile canon. The accepted A4 checkpoint is
+commit `3bafb58cead0d314366bc8e756c87a5fa86e39dc`.
+
+The exact accepted A4 JAR is preserved independently for immediate A5 rollback:
+
+- path: `C:\HytaleRollback\NpcAuthoringStudio-A5-2026-09-04\ImmersiveNPCs-0.6.0-pre.13.1-R133.1-NPC-AUTHORING-STUDIO-A4-UI-PARSER-HOTFIX.jar`;
+- size: `2,735,834` bytes;
+- SHA-256: `666ED5EB1A585127D4DA2141B1F05243B4B107E7EDCF3825A1B7814AE71881FF`.
+
+## A5 — NPC Appearance Editor
+
+### Current-build preflight and feasibility gate
+
+A5 was audited and compiled against the actual installed release server used by the
+current client:
+
+- server version/revision: `0.6.3` / `ff802bf5a538f7e4b1df43a575c72f9d2bebb504`;
+- server JAR: `C:\Users\Zemio\AppData\Roaming\Hytale\install\release\package\game\latest\Server\HytaleServer.jar`;
+- size: `110,438,908` bytes;
+- SHA-256: `BB4ECBE2D1BC189C22E63491EB4078C95B42EF6CBE6650CCFA3E6160AAED7102`.
+
+Direct API inspection confirmed the current build exposes `CosmeticsModule`, its live
+`CosmeticRegistry`, every `PlayerSkin` category map used by the editor, part IDs/names,
+textures, gradient sets, variants, tags, compatibility descriptors, default-asset
+classification, parsing, validation, random generation, and model construction. The
+hard feasibility gate therefore passed without an invented appearance schema or asset
+path. The protocol `PlayerSkin` is fully qualified at the codec boundary to avoid the
+server/protocol type-name collision.
+
+### Catalog and codec authority
+
+`NpcAppearanceCatalogService` creates one immutable, lazily captured snapshot from the
+live current-build registry. Its identity records the Hytale build, deterministic
+registry hash, enabled-registry source-set hash, adapter version, and capture time.
+Options carry category, exact cosmetic ID, display name, tags, available colors,
+gradients/variants, compatibility metadata, and whether the part is a Hytale default or
+an enabled registry extension. Search and pagination are local and bounded to twelve
+tiles; they perform no inference request and no model warmup.
+
+`NpcSkinCodecAdapter` is the explicit serialization boundary. The existing profile-local
+`SS_Skin_Character.json` and Hytale's parser/validator remain authoritative. A draft
+deep-copies the raw JSON tree and patches only the twenty known protocol fields, so
+unknown future or asset-pack properties survive round trip. Missing registry values are
+retained and visibly marked; there is no silent substitution. Client event IDs are
+re-resolved against the pinned server catalog before validation.
+
+### Draft, preview, save, and live application
+
+Each `NpcAppearanceDraft` carries its own UUID, authoring session UUID, stable NPC UUID,
+editor generation, base revision/hash, extension-preserving raw document, current
+protocol skin, dirty categories, and preview generation. Randomize delegates to the
+current Hytale cosmetics runtime. Reset restores the persisted open-time skin.
+
+Preview reuses `NpcMeshPreviewSession`: the server builds a validated Hytale model and
+sends model/skin/equipment packets only to the viewing client. It never writes the
+logged-in player's ECS model, skin, or equipment. Equipment is reasserted after every
+draft preview. Preview generations are newest-only, and Cancel, dirty-discard, page
+dismissal, disconnect, world unload, plugin shutdown, and replacement session all
+converge through ordered restoration. A successful save advances the preview's
+persisted NPC target; final page close still restores the viewer's immutable baseline.
+
+Save performs optimistic revision/hash validation, Hytale validation, temporary-file
+write, reread/round-trip verification, rollback creation, atomic replacement, revision
+sidecar update, and JSONL audit append. Only after persistence succeeds does it apply the
+new appearance to a spawned NPC. A live-apply failure leaves saved authority intact and
+marks the session degraded for reload recovery. Unspawned NPCs, including Mara, use the
+same profile-local persistence path without requiring a live entity.
+
+### A5 UI and assets
+
+The inert appearance shell is now an interactive full-workspace editor with primary and
+secondary category rails, bounded search/pagination, twelve reusable option tiles,
+color/gradient and variant controls, selection/source/compatibility details, a large
+gold-backed 3D preview, validation status, and the required action order:
+`Randomize | Reset | Cancel | Save Appearance`.
+
+No Hytale-owned thumbnail asset is copied or repackaged. Until a supported icon path is
+exposed, the editor uses project-authored bounded text tiles and the authoritative 3D
+preview, with a project-authored text fallback when preview is unavailable.
+
+### A5 deterministic gate and connected stop
+
+The full deterministic suite passes against the release server JAR, including the new
+R134 A5 gate and every A0–A4 inventory, persistence, equipment, preview, profile,
+generation, cognition, Sentinel, evaluation, and 8,100-scenario conversation regression.
+The A5 gate directly verifies catalog allowlisting, bounded search/pagination, lossless
+unknown-field preservation, atomic save/rollback/audit, stale-draft conflict rejection,
+invalid-ID rejection, removed/missing-cosmetic retention with validation at the commit
+boundary, action order, asset-ownership hygiene, and packet-only preview restoration.
+Live model tests remain intentionally skipped.
+
+The deployed connected-test candidate is:
+
+- path: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R134-NPC-AUTHORING-STUDIO-A5-APPEARANCE.jar`;
+- size: `2,788,451` bytes;
+- SHA-256: `DDDBDF6F575469476C934DE72AFFFF97DB7810A83C273089CEE96949E073DF5A`;
+- installed Immersive NPC JAR count: exactly one;
+- build/deployed hash equality: verified.
+
+The accepted A4 rollback listed above remains outside the active save and is unchanged.
+
+A5 automated status: **PASS**. Connected-client status: **PENDING**. R134 must remain a
+validation candidate until the operator confirms registry browsing, preview changes,
+save/cancel/reset/randomize, spawned and unspawned persistence, close/reopen and restart
+behavior, stale/failure handling, equipment continuity, and viewer restoration. A6 is
+not authorized.

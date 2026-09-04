@@ -129,6 +129,17 @@ public final class AppearanceRepository {
         return Files.isRegularFile(path) ? Optional.of(path) : Optional.empty();
     }
 
+    /** Canonical profile-local skin authority used by the Authoring Studio. */
+    public Path requireAuthoritativeSkinFile(String profileName) {
+        Path canonical = canonicalProfileDirectory(profileName)
+                .resolve("SS_Skin_Character.json");
+        if (!Files.isRegularFile(canonical)) {
+            throw new IllegalStateException("Authoritative profile-local skin is missing: "
+                    + canonical.getFileName());
+        }
+        return canonical;
+    }
+
     public Optional<Path> resolveModelFile(String preset) {
         if (preset == null || preset.isBlank() || saveRoot == null) {
             return Optional.empty();

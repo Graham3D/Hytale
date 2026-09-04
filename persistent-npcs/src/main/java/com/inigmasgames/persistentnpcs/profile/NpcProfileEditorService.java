@@ -13,6 +13,10 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.function.Consumer;
+import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceAuthoringService;
+import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService;
+import com.inigmasgames.persistentnpcs.appearance.NpcSkinCodecAdapter;
 
 /** Transaction boundary for the native profile page; delegates to existing profile/voice/skin systems. */
 public final class NpcProfileEditorService {
@@ -23,6 +27,9 @@ public final class NpcProfileEditorService {
     private final VoicePresetRepository voices;
     private final NpcProfileAuthoringService authoring;
     private final NpcProfileGenerationService generation;
+    private final NpcAppearanceCatalogService appearanceCatalog;
+    private final NpcSkinCodecAdapter skinCodec;
+    private final NpcAppearanceAuthoringService appearanceAuthoring;
 
     public NpcProfileEditorService(
             ProfileRepository profiles,
@@ -59,6 +66,19 @@ public final class NpcProfileEditorService {
             VoicePresetRepository voices,
             NpcProfileAuthoringService authoring,
             NpcProfileGenerationService generation) {
+        this(profiles, registry, appearances, inventories, voices, authoring,
+                generation, ignored -> { });
+    }
+
+    public NpcProfileEditorService(
+            ProfileRepository profiles,
+            NpcProfileRegistry registry,
+            AppearanceRepository appearances,
+            NpcInventoryRepository inventories,
+            VoicePresetRepository voices,
+            NpcProfileAuthoringService authoring,
+            NpcProfileGenerationService generation,
+            Consumer<String> diagnostics) {
         this.profiles = profiles;
         this.registry = registry;
         this.appearances = appearances;
@@ -67,6 +87,11 @@ public final class NpcProfileEditorService {
         this.authoring = authoring == null
                 ? new NpcProfileAuthoringService(profiles, registry, ignored -> { }) : authoring;
         this.generation = generation;
+        Consumer<String> trace = diagnostics == null ? ignored -> { } : diagnostics;
+        this.appearanceCatalog = new NpcAppearanceCatalogService(trace);
+        this.skinCodec = new NpcSkinCodecAdapter();
+        this.appearanceAuthoring = new NpcAppearanceAuthoringService(
+                appearances, appearanceCatalog, skinCodec, trace);
     }
 
     public Path beginCreate(String name) {
@@ -106,6 +131,22 @@ public final class NpcProfileEditorService {
         return java.util.Optional.ofNullable(generation);
     }
 
+    public NpcAppearanceCatalogService appearanceCatalog() { return appearanceCatalog; }
+    public NpcSkinCodecAdapter skinCodec() { return skinCodec; }
+    public NpcAppearanceAuthoringService appearanceAuthoring() {
+        return appearanceAuthoring;
+    }
+
+    /** Applies a just-persisted skin to a spawned NPC only after commit succeeds. */
+    public boolean applyAppearanceLive(String name,
+            com.hypixel.hytale.component.Ref<
+                    com.hypixel.hytale.server.core.universe.world.storage.EntityStore> npcRef,
+            com.hypixel.hytale.component.Store<
+                    com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store) {
+        return npcRef != null && appearances.apply(
+                ProfileRepository.sanitizeProfileName(name), npcRef, store);
+    }
+
     /** Immutable open-time revision/hash snapshot for the unified authoring lease. */
     public Map<String, String> authoringRevisionSnapshot(String name) {
         String safe = ProfileRepository.sanitizeProfileName(name);
@@ -113,7 +154,8 @@ public final class NpcProfileEditorService {
         LinkedHashMap<String, String> revisions = new LinkedHashMap<>();
         revisions.put("PROFILE", sha256(profiles.profilePath(safe)));
         revisions.put("INVENTORY", sha256(inventories.path(safe)));
-        revisions.put("APPEARANCE", appearances.resolveSkinFile(profile.appearancePreset())
+        revisions.put("APPEARANCE", appearances.resolveSkinFile(profile.name())
+                .or(() -> appearances.resolveSkinFile(profile.appearancePreset()))
                 .map(NpcProfileEditorService::sha256).orElse("MISSING"));
         VoicePresetRepository.VoiceSampleScan scan = voices.scan(safe);
         StringBuilder voice = new StringBuilder();

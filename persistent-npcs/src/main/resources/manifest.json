@@ -1,7 +1,7 @@
 {
   "Group": "InigmasGames",
   "Name": "ImmersiveNPCs",
-  "Version": "0.6.0-pre.13.1-R133.1-npc-authoring-studio-a4-ui-parser-hotfix",
+  "Version": "0.6.3-R134-npc-authoring-studio-a5-appearance",
   "Description": "Immersive AI: persistent Hytale NPCs with replaceable local or remote inference providers and server-authoritative cognition.",
   "Authors": [
     {
