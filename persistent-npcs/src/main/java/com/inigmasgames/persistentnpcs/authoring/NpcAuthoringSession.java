@@ -145,7 +145,27 @@ public final class NpcAuthoringSession implements AutoCloseable {
             throw new IllegalArgumentException("Only the active contextual editor can be saved.");
         }
         dirtyDomains.remove(dirtyDomain(editor));
+        if (state == WorkspaceState.COMMITTING) {
+            state = switch (editor) {
+                case PROFILE -> WorkspaceState.PROFILE_EDIT;
+                case APPEARANCE -> WorkspaceState.APPEARANCE_EDIT;
+                case VOICE -> WorkspaceState.VOICE_EDIT;
+                case NONE -> WorkspaceState.READY;
+            };
+        }
         trace("NPC_AUTHORING_SESSION_EDITOR_SAVED", "editor=" + editor);
+    }
+
+    public synchronized void commitFailed(EditorKind editor, String reason) {
+        if (editor != null && editor == activeEditor && state == WorkspaceState.COMMITTING) {
+            state = switch (editor) {
+                case PROFILE -> WorkspaceState.PROFILE_EDIT;
+                case APPEARANCE -> WorkspaceState.APPEARANCE_EDIT;
+                case VOICE -> WorkspaceState.VOICE_EDIT;
+                case NONE -> WorkspaceState.READY;
+            };
+        }
+        trace("NPC_AUTHORING_SESSION_COMMIT_FAILED", "reason=" + safe(reason));
     }
 
     public synchronized boolean isDirty(EditorKind editor) {

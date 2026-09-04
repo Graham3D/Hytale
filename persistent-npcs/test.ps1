@@ -219,6 +219,11 @@ if ($LASTEXITCODE -ne 0) {
     throw "R132 NPC Authoring Studio A3 gear/stats tests failed with exit code $LASTEXITCODE"
 }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R133NpcAuthoringStudioA4ProfileEditorTest
+if ($LASTEXITCODE -ne 0) {
+    throw "R133 NPC Authoring Studio A4 profile-editor tests failed with exit code $LASTEXITCODE"
+}
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.training.R125OrbisDistillationBlock1Test
 if ($LASTEXITCODE -ne 0) {
     throw "R125 Orbis Distillation Block 1 D0-D3 tests failed with exit code $LASTEXITCODE"

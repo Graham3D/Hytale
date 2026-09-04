@@ -28,6 +28,8 @@ import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringEventEnvelope;
 import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringPermissions;
 import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringSession;
 import com.inigmasgames.persistentnpcs.profile.NpcProfileEditorService;
+import com.inigmasgames.persistentnpcs.profile.NpcProfileDraft;
+import com.inigmasgames.persistentnpcs.profile.NpcProfileGenerationService;
 import com.inigmasgames.persistentnpcs.profile.NpcProfileEditorService.ProfileFileField;
 import com.inigmasgames.persistentnpcs.profile.NpcInventoryRepository;
 import com.inigmasgames.persistentnpcs.profile.NpcEquipmentMovePolicy;
@@ -69,7 +71,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             "BROWSER_EVENT", "INFINITE_AMMO", "ARMOR_VISIBILITY",
             "VOICE_RESCAN", "OPEN_PROFILE_EDITOR", "OPEN_APPEARANCE_EDITOR",
             "OPEN_VOICE_EDITOR", "CLOSE_EDITOR", "DIRTY_SAVE",
-            "DIRTY_DISCARD", "DIRTY_STAY");
+            "DIRTY_DISCARD", "DIRTY_STAY", "PROFILE_FIELD", "PROFILE_SAVE",
+            "PROFILE_RESET", "PROFILE_CANCEL", "PROFILE_GENERATE",
+            "PROFILE_SCOPE",
+            "PROFILE_PROPOSAL_ACCEPT", "PROFILE_PROPOSAL_ACCEPT_SELECTED",
+            "PROFILE_PROPOSAL_DISCARD");
     private final String npcName;
     private final boolean update;
     private final NpcProfileEditorService editor;
@@ -104,6 +110,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private NpcStatsSnapshot statsSnapshot;
     private String statsFailure = "LIVE_NPC_UNAVAILABLE";
     private boolean initialEquipmentStateApplied;
+    private NpcProfileDraft profileDraft;
+    private NpcProfileGenerationService.Handle profileGeneration;
+    private String profileEditorStatus = "Draft valid.";
+    private boolean profileEditorError;
+    private String profileGenerationScope = "BIOGRAPHY";
 
     public NpcProfilePage(
             PlayerRef playerRef,
@@ -171,6 +182,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         authoringSession.addCleanup("viewer-preview-restoration", this::closePreview);
         authoringSession.addCleanup("inventory-persistence-flush", inventory::close);
         authoringSession.addCleanup("stats-refresh", this::closeStatsRefresh);
+        authoringSession.addCleanup("profile-generation", this::cancelProfileGeneration);
     }
 
     public ContainerWindow[] windows() {
@@ -306,6 +318,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 "#VoiceRecorderButton", authoringEvent("OPEN_VOICE_EDITOR"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#ContextCloseButton", authoringEvent("CLOSE_EDITOR"));
+        bindProfileEditorEvents(events);
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#DirtySaveButton", authoringEvent("DIRTY_SAVE"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
@@ -329,8 +342,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#StatusText.Text", status);
         commands.set("#StatusText.Visible", !status.isBlank());
         commands.set("#StatusText.Style.TextColor", error ? "#e76f6f" : "#9ed7a6");
+        boolean profileEditor = authoringSession.activeEditor()
+                == NpcAuthoringSession.EditorKind.PROFILE;
         boolean contextualEditor = authoringSession.activeEditor()
-                != NpcAuthoringSession.EditorKind.NONE;
+                != NpcAuthoringSession.EditorKind.NONE && !profileEditor;
+        commands.set("#ProfileEditorPage.Visible", profileEditor);
+        if (profileEditor && profileDraft != null) setProfileEditorUi(commands);
         commands.set("#ContextEditorPage.Visible", contextualEditor);
         if (contextualEditor) {
             String title = switch (authoringSession.activeEditor()) {
@@ -431,7 +448,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 return;
             }
             if ("OPEN_PROFILE_EDITOR".equals(authoringAction)) {
-                authoringSession.openEditor(NpcAuthoringSession.EditorKind.PROFILE);
+                long generation = authoringSession.openEditor(
+                        NpcAuthoringSession.EditorKind.PROFILE);
+                profileDraft = editor.authoring().begin(npcName,
+                        authoringSession.sessionId(), generation);
+                profileEditorStatus = "Draft valid. Unknown profile fields are preserved.";
+                profileEditorError = false;
                 rebuild();
                 return;
             }
@@ -453,19 +475,24 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     return;
                 }
                 authoringSession.closeEditor(false);
+                clearProfileDraft();
                 rebuild();
                 return;
             }
             if ("DIRTY_SAVE".equals(authoringAction)) {
-                // A1 editors are deliberately inert placeholders. Later domain editors
-                // must perform their authoritative save before calling markSaved.
-                authoringSession.markSaved(authoringSession.activeEditor());
+                if (authoringSession.activeEditor() == NpcAuthoringSession.EditorKind.PROFILE) {
+                    saveProfileDraft();
+                } else {
+                    authoringSession.markSaved(authoringSession.activeEditor());
+                }
                 authoringSession.closeEditor(false);
+                clearProfileDraft();
                 rebuild();
                 return;
             }
             if ("DIRTY_DISCARD".equals(authoringAction)) {
                 authoringSession.closeEditor(true);
+                clearProfileDraft();
                 rebuild();
                 return;
             }
@@ -473,6 +500,93 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 UICommandBuilder commands = new UICommandBuilder();
                 commands.set("#DirtyEditorConfirmPage.Visible", false);
                 sendUpdate(commands, false);
+                return;
+            }
+            if ("PROFILE_FIELD".equals(authoringAction)) {
+                requireProfileDraft();
+                NpcProfileDraft.Field field = NpcProfileDraft.Field.valueOf(
+                        data.profileField.toUpperCase(Locale.ROOT));
+                profileDraft.update(field, data.profileFieldValue);
+                authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
+                profileEditorStatus = "Draft changed. Save Profile commits it to canon.";
+                profileEditorError = false;
+                refreshProfileEditorUi();
+                return;
+            }
+            if ("PROFILE_RESET".equals(authoringAction)) {
+                requireProfileDraft();
+                cancelProfileGeneration();
+                profileDraft.reset();
+                authoringSession.markSaved(NpcAuthoringSession.EditorKind.PROFILE);
+                profileEditorStatus = "Draft reset to the persisted profile.";
+                profileEditorError = false;
+                rebuild();
+                return;
+            }
+            if ("PROFILE_CANCEL".equals(authoringAction)) {
+                requireProfileDraft();
+                if (profileDraft.dirty()) {
+                    UICommandBuilder commands = new UICommandBuilder();
+                    commands.set("#DirtyEditorConfirmPage.Visible", true);
+                    sendUpdate(commands, false);
+                } else {
+                    authoringSession.closeEditor(false);
+                    clearProfileDraft();
+                    rebuild();
+                }
+                return;
+            }
+            if ("PROFILE_SAVE".equals(authoringAction)) {
+                saveProfileDraft();
+                profileEditorStatus = "Profile saved atomically. Draft is now current.";
+                profileEditorError = false;
+                long generation = authoringSession.editorGeneration();
+                profileDraft = editor.authoring().begin(npcName,
+                        authoringSession.sessionId(), generation);
+                rebuild();
+                return;
+            }
+            if ("PROFILE_GENERATE".equals(authoringAction)) {
+                startProfileGeneration(store, data);
+                return;
+            }
+            if ("PROFILE_SCOPE".equals(authoringAction)) {
+                profileGenerationScope = NpcProfileGenerationService.Scope.parse(
+                        data.profileGenerateScope).name();
+                profileEditorStatus = "Generation scope: " + profileGenerationScope
+                        + ". Generate creates a review-only proposal.";
+                profileEditorError = false;
+                refreshProfileEditorUi();
+                return;
+            }
+            if ("PROFILE_PROPOSAL_ACCEPT".equals(authoringAction)) {
+                requireProfileDraft();
+                profileDraft.acceptProposal(Set.of());
+                authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
+                profileEditorStatus = "Proposal accepted into the draft. Review, then Save Profile.";
+                profileEditorError = false;
+                rebuild();
+                return;
+            }
+            if ("PROFILE_PROPOSAL_ACCEPT_SELECTED".equals(authoringAction)) {
+                requireProfileDraft();
+                Set<NpcProfileDraft.Field> selected = parseProfileFields(
+                        data.profileProposalSelection);
+                if (selected.isEmpty()) throw new IllegalArgumentException(
+                        "Enter at least one proposed field to accept.");
+                profileDraft.acceptProposal(selected);
+                authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
+                profileEditorStatus = "Selected proposal fields accepted into the draft. Review, then Save Profile.";
+                profileEditorError = false;
+                rebuild();
+                return;
+            }
+            if ("PROFILE_PROPOSAL_DISCARD".equals(authoringAction)) {
+                requireProfileDraft();
+                profileDraft.discardProposal();
+                profileEditorStatus = "Generated proposal discarded; canonical profile unchanged.";
+                profileEditorError = false;
+                rebuild();
                 return;
             }
             if (data.open != null) {
@@ -558,11 +672,16 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             }
         } catch (RuntimeException failure) {
             if (authoringSession.state() == NpcAuthoringSession.WorkspaceState.COMMITTING) {
-                authoringSession.degraded(failure.getMessage());
+                authoringSession.commitFailed(authoringSession.activeEditor(),
+                        failure.getMessage());
             }
             status = failure.getMessage() == null ? "Profile operation failed."
                     : failure.getMessage();
             error = true;
+            if (authoringSession.activeEditor() == NpcAuthoringSession.EditorKind.PROFILE) {
+                profileEditorStatus = status;
+                profileEditorError = true;
+            }
             if (activeField != null) {
                 activeField = null;
                 browser = null;
@@ -577,6 +696,216 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         browser.buildFileList(commands, events);
         browser.buildCurrentPath(commands);
         sendUpdate(commands, events, false);
+    }
+
+    private void bindProfileEditorEvents(UIEventBuilder events) {
+        for (NpcProfileDraft.Field field : NpcProfileDraft.Field.values()) {
+            String selector = "#" + profileFieldControl(field);
+            events.addEventBinding(CustomUIEventBindingType.ValueChanged, selector,
+                    authoringEvent("PROFILE_FIELD")
+                            .append("ProfileField", field.name())
+                            .append("ProfileFieldValue", selector + ".Value"));
+        }
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#ProfileSaveButton", authoringEvent("PROFILE_SAVE"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#ProfileResetButton", authoringEvent("PROFILE_RESET"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#ProfileCancelButton", authoringEvent("PROFILE_CANCEL"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#ProfileGenerateButton", authoringEvent("PROFILE_GENERATE")
+                        .append("ProfileGenerateScope", "#ProfileGenerateScopeInput.Value"));
+        events.addEventBinding(CustomUIEventBindingType.ValueChanged,
+                "#ProfileGenerateScopeInput", authoringEvent("PROFILE_SCOPE")
+                        .append("ProfileGenerateScope", "#ProfileGenerateScopeInput.Value"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#ProfileAcceptProposalButton", authoringEvent("PROFILE_PROPOSAL_ACCEPT"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#ProfileAcceptSelectedProposalButton",
+                authoringEvent("PROFILE_PROPOSAL_ACCEPT_SELECTED")
+                        .append("ProfileProposalSelection",
+                                "#ProfileProposalSelectionInput.Value"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#ProfileDiscardProposalButton", authoringEvent("PROFILE_PROPOSAL_DISCARD"));
+    }
+
+    private void setProfileEditorUi(UICommandBuilder commands) {
+        commands.set("#ProfileDraftMeta.Text", "Draft " + profileDraft.draftId()
+                + "  |  base r" + profileDraft.baseRevision()
+                + "  |  " + profileDraft.provenance());
+        commands.set("#ProfileStableIdentity.Text", "Stable ID (immutable)\n"
+                + profileDraft.stableNpcId());
+        commands.set("#ProfileDisplayName.Text", "Display name (read-only): "
+                + profileDraft.profileName());
+        for (NpcProfileDraft.Field field : NpcProfileDraft.Field.values()) {
+            commands.set("#" + profileFieldControl(field) + ".Value",
+                    profileDraft.value(field));
+        }
+        commands.set("#ProfileValidationStatus.Text", profileEditorStatus);
+        commands.set("#ProfileValidationStatus.Style.TextColor",
+                profileEditorError ? "#e76f6f" : "#9ed7a6");
+        boolean generating = profileGeneration != null;
+        commands.set("#ProfileGenerateButton.Disabled", generating);
+        commands.set("#ProfileGenerationStatus.Text", generating
+                ? "Generating a structured proposal at low priority..."
+                : profileEditorStatus + " Scopes: BIOGRAPHY, PERSONALITY_VALUES, "
+                        + "MOTIVATIONS_GOALS, SPEECH_MANNERISMS, FILL_MISSING, REFINE_SELECTED.");
+        commands.set("#ProfileGenerateScopeInput.Value", profileGenerationScope);
+        NpcProfileDraft.Proposal proposal = profileDraft.proposal();
+        commands.set("#ProfileProposalPanel.Visible", proposal != null);
+        if (proposal != null) {
+            StringBuilder diff = new StringBuilder();
+            proposal.changes().forEach((field, value) -> diff.append(field.name())
+                    .append("\n  CURRENT: ").append(compact(profileDraft.value(field), 90))
+                    .append("\n  PROPOSED: ").append(compact(value, 130)).append("\n\n"));
+            if (!proposal.warnings().isEmpty()) {
+                diff.append("WARNINGS\n").append(String.join("\n", proposal.warnings()));
+            }
+            commands.set("#ProfileProposalDiff.Text", diff.toString());
+        }
+        editor.currentProfile(npcName).ifPresent(profile -> commands.set(
+                "#ProfileRelationshipsSummary.Text", "Relationships (read-only): "
+                        + profile.relationships().size()
+                        + ". Managed by the authoritative relationship subsystem."));
+    }
+
+    private void refreshProfileEditorUi() {
+        UICommandBuilder commands = new UICommandBuilder();
+        setProfileEditorUi(commands);
+        sendUpdate(commands, false);
+    }
+
+    private void saveProfileDraft() {
+        requireProfileDraft();
+        cancelProfileGeneration();
+        authoringSession.beginCommit();
+        try {
+            var result = editor.authoring().save(profileDraft, playerRef.getUuid());
+            committed.accept(result.profile());
+            authoringSession.markSaved(NpcAuthoringSession.EditorKind.PROFILE);
+            status = "Profile saved at revision " + result.revision() + ".";
+            error = false;
+        } catch (RuntimeException failure) {
+            authoringSession.commitFailed(NpcAuthoringSession.EditorKind.PROFILE,
+                    failure.getMessage());
+            profileEditorStatus = failure.getMessage() == null
+                    ? "Profile save failed; draft preserved." : failure.getMessage();
+            profileEditorError = true;
+            throw failure;
+        }
+    }
+
+    private void startProfileGeneration(Store<EntityStore> store, PageData data) {
+        requireProfileDraft();
+        cancelProfileGeneration();
+        NpcProfileGenerationService service = editor.generation().orElseThrow(() ->
+                new IllegalStateException("Generation provider is unavailable; manual editing remains available."));
+        NpcProfileGenerationService.Scope scope = NpcProfileGenerationService.Scope.parse(
+                data.profileGenerateScope == null ? profileGenerationScope
+                        : data.profileGenerateScope);
+        profileGenerationScope = scope.name();
+        String expectedHash = profileDraft.draftHash();
+        UUID expectedDraft = profileDraft.draftId();
+        long expectedGeneration = authoringSession.editorGeneration();
+        profileEditorStatus = "Generation queued at low priority; canonical profile is unchanged.";
+        profileEditorError = false;
+        profileGeneration = service.generate(new NpcProfileGenerationService.Request(
+                authoringSession.sessionId(), expectedGeneration, profileDraft.baseRevision(),
+                expectedHash, profileDraft.stableNpcId(), playerRef.getUuid(), scope,
+                profileDraft.dirtyFields(), profileDraft));
+        NpcProfileGenerationService.Handle handle = profileGeneration;
+        handle.future().whenComplete((proposal, failure) ->
+                store.getExternalData().getWorld().execute(() -> {
+                    if (profileGeneration != handle) return;
+                    profileGeneration = null;
+                    if (profileDraft == null || !profileDraft.draftId().equals(expectedDraft)
+                            || authoringSession.activeEditor()
+                                    != NpcAuthoringSession.EditorKind.PROFILE
+                            || authoringSession.editorGeneration() != expectedGeneration
+                            || !profileDraft.draftHash().equals(expectedHash)) {
+                        diagnostics.accept("NPC_PROFILE_GENERATION_STALE_REJECTED timestamp="
+                                + Instant.now() + " requestId=" + handle.requestId());
+                        return;
+                    }
+                    if (failure != null) {
+                        profileEditorStatus = "Generation unavailable: " + rootMessage(failure)
+                                + ". Manual editing remains available.";
+                        profileEditorError = true;
+                    } else {
+                        profileDraft.setProposal(proposal);
+                        profileEditorStatus = "Proposal ready. Review the field-level diff; canon is unchanged.";
+                        profileEditorError = false;
+                    }
+                    rebuild();
+                }));
+        rebuild();
+    }
+
+    private void requireProfileDraft() {
+        if (profileDraft == null
+                || authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.PROFILE
+                || profileDraft.editorGeneration() != authoringSession.editorGeneration()
+                || !profileDraft.sessionId().equals(authoringSession.sessionId())) {
+            throw new IllegalStateException("Profile draft is missing or stale.");
+        }
+    }
+
+    private void clearProfileDraft() {
+        cancelProfileGeneration();
+        profileDraft = null;
+        profileEditorStatus = "Draft valid.";
+        profileEditorError = false;
+    }
+
+    private void cancelProfileGeneration() {
+        NpcProfileGenerationService.Handle handle = profileGeneration;
+        profileGeneration = null;
+        if (handle != null) handle.close();
+    }
+
+    private static String profileFieldControl(NpcProfileDraft.Field field) {
+        return switch (field) {
+            case ROLE -> "ProfileRoleInput";
+            case SELF_IDENTITY -> "ProfileSelfIdentityInput";
+            case SPECIES_ARCHETYPE -> "ProfileSpeciesInput";
+            case AGE_CATEGORY -> "ProfileAgeInput";
+            case HOME -> "ProfileHomeInput";
+            case WORKPLACE -> "ProfileWorkplaceInput";
+            case PERSONALITY -> "ProfilePersonalityInput";
+            case PERSONALITY_TRAITS -> "ProfileTraitsInput";
+            case VALUES -> "ProfileValuesInput";
+            case LIKES -> "ProfileLikesInput";
+            case DISLIKES -> "ProfileDislikesInput";
+            case FEARS -> "ProfileFearsInput";
+            case BIOGRAPHY -> "ProfileBiographyInput";
+            case PURPOSE -> "ProfilePurposeInput";
+            case GOALS -> "ProfileGoalsInput";
+            case SPEAKING_STYLE -> "ProfileSpeakingInput";
+            case KNOWLEDGE_DOMAINS -> "ProfileKnowledgeInput";
+        };
+    }
+
+    private static String compact(String text, int maximum) {
+        String value = text == null ? "" : text.replaceAll("\\s+", " ").strip();
+        return value.length() <= maximum ? value : value.substring(0, maximum - 1) + "…";
+    }
+
+    private static String rootMessage(Throwable failure) {
+        Throwable current = failure;
+        while (current.getCause() != null) current = current.getCause();
+        return current.getMessage() == null ? current.getClass().getSimpleName()
+                : current.getMessage();
+    }
+
+    private static Set<NpcProfileDraft.Field> parseProfileFields(String value) {
+        if (value == null || value.isBlank()) return Set.of();
+        java.util.EnumSet<NpcProfileDraft.Field> fields = java.util.EnumSet.noneOf(
+                NpcProfileDraft.Field.class);
+        for (String token : value.split("[,\\s]+")) {
+            if (!token.isBlank()) fields.add(NpcProfileDraft.Field.valueOf(
+                    token.strip().toUpperCase(Locale.ROOT)));
+        }
+        return Set.copyOf(fields);
     }
 
     private boolean isInventoryDrop(PageData data) {
@@ -758,7 +1087,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             case "INFINITE_AMMO", "ARMOR_VISIBILITY" -> NpcAuthoringPermissions.GEAR;
             case "VOICE_RESCAN", "OPEN_VOICE_EDITOR" -> NpcAuthoringPermissions.VOICE;
             case "OPEN_APPEARANCE_EDITOR" -> NpcAuthoringPermissions.APPEARANCE;
-            case "OPEN_PROFILE_EDITOR", "ENTER" -> NpcAuthoringPermissions.PROFILE;
+            case "OPEN_PROFILE_EDITOR", "PROFILE_FIELD", "PROFILE_SAVE",
+                    "PROFILE_RESET", "PROFILE_CANCEL", "PROFILE_PROPOSAL_ACCEPT",
+                    "PROFILE_PROPOSAL_ACCEPT_SELECTED", "PROFILE_PROPOSAL_DISCARD",
+                    "ENTER" -> NpcAuthoringPermissions.PROFILE;
+            case "PROFILE_GENERATE" -> NpcAuthoringPermissions.GENERATE;
+            case "PROFILE_SCOPE" -> NpcAuthoringPermissions.PROFILE;
             case "ADVANCED_FILE_OPEN", "BROWSER_EVENT", "DELETE_PROMPT",
                     "DELETE_CANCEL", "DELETE_CONFIRM" -> NpcAuthoringPermissions.ADVANCED;
             case "CANCEL", "CLOSE_EDITOR", "DIRTY_SAVE", "DIRTY_DISCARD",
@@ -1255,6 +1589,18 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append(new KeyedCodec<>("AuthoringAction", Codec.STRING),
                         (data, value) -> data.authoringAction = value,
                         data -> data.authoringAction).add()
+                .append(new KeyedCodec<>("ProfileField", Codec.STRING),
+                        (data, value) -> data.profileField = value,
+                        data -> data.profileField).add()
+                .append(new KeyedCodec<>("ProfileFieldValue", Codec.STRING),
+                        (data, value) -> data.profileFieldValue = value,
+                        data -> data.profileFieldValue).add()
+                .append(new KeyedCodec<>("ProfileGenerateScope", Codec.STRING),
+                        (data, value) -> data.profileGenerateScope = value,
+                        data -> data.profileGenerateScope).add()
+                .append(new KeyedCodec<>("ProfileProposalSelection", Codec.STRING),
+                        (data, value) -> data.profileProposalSelection = value,
+                        data -> data.profileProposalSelection).add()
                 .build();
 
         private String open;
@@ -1286,5 +1632,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         private String authoringEditor;
         private String authoringEditorGeneration;
         private String authoringAction;
+        private String profileField;
+        private String profileFieldValue;
+        private String profileGenerateScope;
+        private String profileProposalSelection;
     }
 }

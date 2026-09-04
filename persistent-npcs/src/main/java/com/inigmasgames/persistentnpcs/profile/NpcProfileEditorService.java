@@ -21,6 +21,8 @@ public final class NpcProfileEditorService {
     private final AppearanceRepository appearances;
     private final NpcInventoryRepository inventories;
     private final VoicePresetRepository voices;
+    private final NpcProfileAuthoringService authoring;
+    private final NpcProfileGenerationService generation;
 
     public NpcProfileEditorService(
             ProfileRepository profiles,
@@ -45,11 +47,26 @@ public final class NpcProfileEditorService {
             AppearanceRepository appearances,
             NpcInventoryRepository inventories,
             VoicePresetRepository voices) {
+        this(profiles, registry, appearances, inventories, voices,
+                new NpcProfileAuthoringService(profiles, registry, ignored -> { }), null);
+    }
+
+    public NpcProfileEditorService(
+            ProfileRepository profiles,
+            NpcProfileRegistry registry,
+            AppearanceRepository appearances,
+            NpcInventoryRepository inventories,
+            VoicePresetRepository voices,
+            NpcProfileAuthoringService authoring,
+            NpcProfileGenerationService generation) {
         this.profiles = profiles;
         this.registry = registry;
         this.appearances = appearances;
         this.inventories = inventories;
         this.voices = voices;
+        this.authoring = authoring == null
+                ? new NpcProfileAuthoringService(profiles, registry, ignored -> { }) : authoring;
+        this.generation = generation;
     }
 
     public Path beginCreate(String name) {
@@ -81,6 +98,12 @@ public final class NpcProfileEditorService {
 
     public NpcInventoryRepository inventories() {
         return inventories;
+    }
+
+    public NpcProfileAuthoringService authoring() { return authoring; }
+
+    public java.util.Optional<NpcProfileGenerationService> generation() {
+        return java.util.Optional.ofNullable(generation);
     }
 
     /** Immutable open-time revision/hash snapshot for the unified authoring lease. */
