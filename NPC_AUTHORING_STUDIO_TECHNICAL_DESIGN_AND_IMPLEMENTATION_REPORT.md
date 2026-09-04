@@ -24,7 +24,7 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | A3 — gear/loadout/live stats | Complete in R132 | PASS | PASS | PASS |
 | A4 — profile editor/generate | Complete in R133.1 | PASS | PASS: operator confirmed editor and workspace behavior | PASS |
 | A5 — appearance editor | Complete in R134.2 | PASS | PASS | PASS |
-| A6 — voice recorder | R136 connected-validation repair candidate | PASS | Pending R136 connected validation | HOLD FOR CONNECTED PASS |
+| A6 — voice recorder | R137 event-binding hotfix candidate | PASS | Pending R137 connected validation | HOLD FOR CONNECTED PASS |
 | A7 — integration/polish | Not activated | Not run | Not run | BLOCKED |
 
 The model-distillation subsystem remains paused and isolated. No D6/D7, training,
@@ -713,4 +713,37 @@ The R136 connected-test candidate is:
   directory under `C:\HytaleRollback`.
 
 A6 automated hotfix status: **PASS**. Connected-client validation status: **PENDING**.
+A7 remains unauthorized and was not started.
+
+### R137 A6 compact-recorder event-binding hotfix
+
+The first R136 connected open failed before interaction because
+`bindVoiceRecorderEvents` still registered the removed legacy selector
+`#VoiceDeleteSavedButton`. The R136 compact presentation had consolidated that action
+into `#VoiceDeleteButton`; Hytale therefore rejected the complete event-binding packet
+with `Target element in CustomUI event binding was not found`. R137 removes only that
+stale registration. The saved-sample confirmation overlay and its Confirm/Cancel event
+bindings remain intact, so the consolidated Delete control still preserves recoverable
+saved-sample deletion.
+
+The R137 regression enumerates every selector declaration in the recorder-binding
+method, expands the seven dynamic emotion selectors, and proves each target exists in
+the packaged UI document. It also rejects any return of the removed legacy selector.
+The full deterministic suite passes, including R135, R136, R137, and the 8,100-scenario
+conversation matrix.
+
+The R137 connected-test candidate is:
+
+- source artifact:
+  `C:\HytaleMigration\persistent-npcs\dist\ImmersiveNPCs-0.6.3-R137-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-BINDING-HOTFIX.jar`;
+- deployed artifact:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R137-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-BINDING-HOTFIX.jar`;
+- size: `3,004,030` bytes;
+- SHA-256: `9FE965B65F27250FEDDD10DC46C26A0292AE8F9D5250F395FDDFCF9E74CF4198`;
+- source/deployed hash equality: verified;
+- installed Immersive NPC JAR count: exactly one;
+- failed R136 artifact: preserved independently at
+  `C:\HytaleRollback\NpcAuthoringStudio-A6-R136-FAILED-BINDING-2026-09-04`.
+
+A6 R137 automated status: **PASS**. Connected-client validation status: **PENDING**.
 A7 remains unauthorized and was not started.

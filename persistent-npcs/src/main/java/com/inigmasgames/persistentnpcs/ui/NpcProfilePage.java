@@ -955,8 +955,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#VoiceSaveButton", voiceEvent("VOICE_SAVE"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#VoiceDeleteSavedButton", voiceEvent("VOICE_DELETE_SAVED_PROMPT"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#VoiceDeleteSavedConfirmButton", voiceEvent("VOICE_DELETE_SAVED_CONFIRM"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#VoiceDeleteSavedCancelButton", voiceEvent("VOICE_DELETE_SAVED_CANCEL"));
