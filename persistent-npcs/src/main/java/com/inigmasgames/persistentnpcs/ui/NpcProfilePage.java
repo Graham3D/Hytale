@@ -953,6 +953,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void bindVoiceRecorderEvents(UIEventBuilder events) {
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceBackButton", authoringEvent("CLOSE_EDITOR"));
         for (VoiceSampleType type : VoiceSampleType.values()) {
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#VoiceEmotion" + type.name(), voiceEvent("VOICE_SELECT")

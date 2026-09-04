@@ -16,10 +16,10 @@ public final class R139NpcAuthoringStudioP1VoicePolishTest {
         assert start >= 0 && end > start : "Voice Recorder UI block was not found";
         String recorder = ui.substring(start, end);
 
-        assert recorder.contains("Anchor: (Width: 520, Height: 720)")
+        assert recorder.contains("Anchor: (Width: 520, Height: 600)")
                 : "P1 recorder frame must remain bounded";
         for (int[] resolution : List.of(new int[] {1920, 1080}, new int[] {2560, 1440})) {
-            assert 520 <= resolution[0] && 720 <= resolution[1]
+            assert 520 <= resolution[0] && 600 <= resolution[1]
                     : "Recorder must fit required connected-test resolution";
         }
         for (String selector : List.of("#VoiceRecordButton", "#VoicePlayStopButton",
@@ -29,7 +29,7 @@ public final class R139NpcAuthoringStudioP1VoicePolishTest {
             assert recorder.contains(selector) : "Missing P1 recorder selector " + selector;
         }
         for (String asset : List.of("NpcIconRecord.png", "NpcIconPlay.png",
-                "NpcIconStop.png", "NpcIconDelete.png", "NpcIconSelectSample.png")) {
+                "NpcIconStop.png", "NpcIconDelete.png", "NpcIconSave.png")) {
             assert recorder.contains(asset) : "Missing P1 recorder icon " + asset;
         }
         assert recorder.contains("Background: @PanelBackground")

@@ -1,7 +1,7 @@
 {
   "Group": "InigmasGames",
   "Name": "ImmersiveNPCs",
-  "Version": "0.6.3-R143-npc-authoring-studio-a6-voice-recorder-default-skin-hotfix",
+  "Version": "0.6.3-R144-npc-authoring-studio-a6-voice-recorder-p1-compact-controls",
   "Description": "Immersive AI: persistent Hytale NPCs with replaceable local or remote inference providers and server-authoritative cognition.",
   "Authors": [
     {

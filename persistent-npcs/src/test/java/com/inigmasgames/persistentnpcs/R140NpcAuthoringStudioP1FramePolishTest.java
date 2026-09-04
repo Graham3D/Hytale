@@ -16,7 +16,7 @@ public final class R140NpcAuthoringStudioP1FramePolishTest {
         String recorder = ui.substring(start, end);
 
         assert recorder.contains("$C.@DecoratedContainer")
-                && recorder.contains("#Title { $C.@Title #VoiceRecorderTitle")
+                && recorder.contains("$C.@Title #VoiceRecorderTitle")
                 && recorder.contains("#Content {")
                 : "Recorder must use the proven Hytale decorated-window hierarchy";
         assert recorder.contains("Background: #09141e")
@@ -50,7 +50,7 @@ public final class R140NpcAuthoringStudioP1FramePolishTest {
                 "#VoiceDeleteButton", "#VoiceSaveButton"}) {
             assert recorder.contains(selector) : "Compact control missing: " + selector;
         }
-        assert recorder.contains("Anchor: (Width: 520, Height: 720)")
+        assert recorder.contains("Anchor: (Width: 520, Height: 600)")
                 : "Recorder must remain safe at both required resolutions";
 
         String page = Files.readString(Path.of("src/main/java/com/inigmasgames/"

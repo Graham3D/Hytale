@@ -39,7 +39,7 @@ public final class R137NpcAuthoringStudioA6VoiceBindingTest {
             }
             checked++;
         }
-        assert checked == 8 : "Unexpected recorder event-binding declaration count: " + checked;
+        assert checked == 9 : "Unexpected recorder event-binding declaration count: " + checked;
         assert !bindings.contains("#VoiceDeleteSavedButton")
                 : "Removed legacy delete button must not retain an event binding";
         assert bindings.contains("#VoiceDeleteButton")

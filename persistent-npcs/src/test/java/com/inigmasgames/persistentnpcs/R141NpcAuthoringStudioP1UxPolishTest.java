@@ -15,7 +15,7 @@ public final class R141NpcAuthoringStudioP1UxPolishTest {
         assert start >= 0 && end > start : "Voice Recorder UI block was not found";
         String recorder = ui.substring(start, end);
 
-        assert recorder.contains("Anchor: (Width: 520, Height: 720)")
+        assert recorder.contains("Anchor: (Width: 520, Height: 600)")
                 : "Recorder must fit tightly at 1080p and 1440p";
         assert recorder.contains("#VoiceRecordButton")
                 && recorder.contains("Style: $C.@CancelButtonStyle")
@@ -35,7 +35,9 @@ public final class R141NpcAuthoringStudioP1UxPolishTest {
                 : "Waveform must use the subdued blue-gray palette";
         assert !recorder.contains("#VoiceCloseButton")
                 && !recorder.contains("RETURN TO STUDIO")
-                : "Recorder must use native Back navigation, not an in-panel return button";
+                && recorder.contains("#VoiceBackButton")
+                && recorder.contains("Text: \"BACK\"")
+                : "Recorder must expose the compact header Back control";
         assert ui.contains("BackButton #AuthoringBackButton")
                 : "The page must expose exactly one native Back control";
 
@@ -44,6 +46,7 @@ public final class R141NpcAuthoringStudioP1UxPolishTest {
         assert page.contains("CustomPageLifetime.CantClose")
                 && page.contains("CustomPageLifetime.CanDismiss")
                 && page.contains("\"#AuthoringBackButton\", authoringEvent(\"CLOSE_EDITOR\")")
+                && page.contains("\"#VoiceBackButton\", authoringEvent(\"CLOSE_EDITOR\")")
                 : "Recorder Back must route to the child-editor close path";
         assert page.contains("quiesceVoiceRecorderForBack()")
                 && page.contains("current.stop()")

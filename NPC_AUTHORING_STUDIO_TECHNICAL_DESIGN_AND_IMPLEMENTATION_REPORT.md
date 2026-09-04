@@ -1001,3 +1001,49 @@ connected Hoit creation/reopening and R143 HUD confirmation remain pending.
 - R142 moved into `C:\HytaleRollback\NpcAuthoringStudio-P1-R142-2026-09-04`; hash `589CA0232818FBAA766CB6E4FE6CE6C4B2268BC8240537582F283F82F5E47DC9`.
 
 P1 remains pending connected approval. P2 and P3 have not begun.
+
+### R144 P1 compact action row and explicit header Back
+
+R144 places Record, Play/Stop, Delete, and Save in one equal-height, equal-width row.
+Save uses the user's `NpcIconSave.png`, copied unchanged from the synced Hytale Taverns
+Drive folder into `Common/UI/Custom/Pages/ImmersiveNpcInventory`. Its source and packaged
+file SHA-256 is `70FCAE051ABE9CF56636AF79118E543B3DF88E7CB5CA52CE8DEA765C85756D82`;
+the PNG is 64-by-64 with alpha. All four controls retain the shipped Custom UI button
+styles and their default, hover, pressed, and disabled backgrounds. Existing intent IDs,
+Play/Stop policy, and READY-only Save eligibility are unchanged.
+
+The frame is reduced from 520-by-720 to 520-by-600. A secondary 64-by-24 `BACK` button
+sits at the upper-left of the title bar and invokes the existing `CLOSE_EDITOR` handler.
+The native `BackButton` event remains bound to that same handler when Voice Recorder is
+active. Controller delivery of that event still requires connected confirmation; no
+global Escape binding or input interception was added. Capture/playback quiescence,
+unsaved-draft confirmation, and final handle closure still use the existing cleanup path.
+If an unsaved draft exists, returning to Studio retains the normal save/discard decision.
+
+The real waveform generation, geometry, and restrained blue-gray palette are unchanged.
+Emotion selection retains its gold marker/arrow; saved/invalid/missing labels now use End
+alignment in their existing right-hand columns. The format footer remains unchanged.
+
+Validation: the full deterministic suite passed, including voice state/lease/cleanup,
+waveform, persistence, binding, and P1 gates plus the 8,100-scenario matrix. The existing
+binding gate was updated for the new ninth declaration. All referenced Custom Common.ui
+exports were checked against the installed assets. Static layout calculations place the
+frame at (700,240) on 1920-by-1080 and (1020,420) on 2560-by-1440, with four 113.5-by-44
+buttons and 6-pixel gaps. These are layout/asset checks, not connected render captures;
+visual clipping, icon appearance, mouse states, and controller delivery remain pending
+the user's in-game review. Live local-model tests were skipped.
+
+- Deployed JAR: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R144-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-COMPACT-CONTROLS.jar`
+- Size: `3,007,760` bytes; SHA-256: `9B8036A737D0430B3D051660A31FF8189BE05E625A91BCDFF4E3B99F36D58B53`.
+- Source/deployed hashes match; exactly one active JAR. HUD and manifest identify R144.
+- R143 rollback: `C:\HytaleRollback\NpcAuthoringStudio-P1-R143-2026-09-04`, hash `4A30743AC398B2CE8032DE75E965483A19B4FC613AA1B1AF067A8226B381E69F`.
+
+Connected checklist (repeat visual checks at 1080p and 1440p): verify all four action
+buttons and icons, hover/pressed/disabled states, READY-only Save, Play changing to Stop,
+emotion selection/status alignment, waveform containment, and tight footer spacing.
+Use header Back while idle, recording, and playing; complete the unsaved-draft decision
+when shown, confirm Studio returns, and reopen the recorder to verify capture/playback
+can start again. Test controller Back if available; confirm Escape still opens Hytale's
+own menu and normal Studio exit still works. Existing saved NPC audio was not modified.
+
+P1 R144 awaits connected approval. P2 and P3 remain unstarted.
