@@ -1,0 +1,31 @@
+@ProbeGridStyle = ItemGridStyle(
+  SlotSpacing: 2,
+  SlotSize: 48,
+  SlotIconSize: 42,
+  SlotBackground: "../ImmersiveNpcInventory/Slot.png",
+  QuantityPopupSlotOverlay: "../ImmersiveNpcInventory/QuantityPopupSlotOverlay.png",
+  BrokenSlotBackgroundOverlay: "../ImmersiveNpcInventory/SlotItemBrokenCracksOverlay.png",
+  BrokenSlotIconOverlay: "../ImmersiveNpcInventory/SlotItemBrokenIconOverlay.png",
+  DefaultItemIcon: "../ImmersiveNpcInventory/UnknownItemIcon.png",
+  DurabilityBar: "../ImmersiveNpcInventory/DurabilityBar.png",
+  DurabilityBarBackground: "../ImmersiveNpcInventory/DurabilityBarBackground.png",
+  DurabilityBarAnchor: (Bottom: 6, Left: 9, Width: 30, Height: 2),
+  DurabilityBarColorStart: #a63232,
+  DurabilityBarColorEnd: #63b649,
+  CursedIconPatch: "../ImmersiveNpcInventory/CursedSpiral.png",
+  CursedIconAnchor: (Bottom: 51, Left: 34, Width: 16, Height: 16)
+);
+
+@ProbeGrid = ItemGrid {
+  Anchor: (Width: 504, Height: 204);
+  SlotsPerRow: 10;
+  Style: @ProbeGridStyle;
+  Background: #000000(0);
+  Padding: 2;
+  ShowScrollbar: false;
+  AreItemsDraggable: true;
+  AllowMaxStackDraggableItems: true;
+  DisplayItemQuantity: true;
+  RenderItemQualityBackground: true;
+  RenderEmptySlots: true;
+};

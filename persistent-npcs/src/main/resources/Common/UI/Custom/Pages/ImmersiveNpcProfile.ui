@@ -73,7 +73,7 @@ $Sounds = "../Sounds.ui";
   FlexWeight: 1;
   LayoutMode: Top;
   Anchor: (Right: 3, Left: 3);
-  Background: #101a24;
+  Background: @PanelBackground;
   Padding: (Full: 7);
   Label { Anchor: (Height: 16); Text: @Label; Style: (...$C.@DefaultLabelStyle, FontSize: 9, RenderBold: true, TextColor: @Accent, HorizontalAlignment: Center); }
   Label #Value { FlexWeight: 1; Text: "—"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, RenderBold: true, TextColor: #e7edf3, HorizontalAlignment: Center, VerticalAlignment: Center); }
@@ -82,9 +82,8 @@ $Sounds = "../Sounds.ui";
 $C.@PageOverlay #ProfilePage {
   LayoutMode: Middle;
   Group #AuthoringWorkspace {
-    Anchor: (Width: 1520, Height: 960);
+    Anchor: (Width: 1180, Height: 890);
     LayoutMode: Top;
-
     Label #AuthoringSessionValue { Visible: false; Text: ""; }
     Label #AuthoringViewerValue { Visible: false; Text: ""; }
     Label #AuthoringNpcValue { Visible: false; Text: ""; }
@@ -92,73 +91,117 @@ $C.@PageOverlay #ProfilePage {
     Label #AuthoringEditorValue { Visible: false; Text: "NONE"; }
     Label #AuthoringEditorGeneration { Visible: false; Text: "1"; }
 
-    Group #WorkspaceHeader {
-      Anchor: (Height: 42, Bottom: @Gap);
-      Background: #152536;
-      Padding: (Horizontal: 14);
-      LayoutMode: Left;
-      Label #ProfileTitle { FlexWeight: 1; Text: "NPC AUTHORING STUDIO"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, RenderUppercase: true, TextColor: #d9e6ef, VerticalAlignment: Center); }
-      Label { Anchor: (Width: 390); Text: "LIVE INVENTORY · EXPLICIT DRAFT SAVES"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, TextColor: #7fa2b8, HorizontalAlignment: End, VerticalAlignment: Center); }
-    }
 
-    Group #TopWorkspace {
-      LayoutMode: Left;
-      Anchor: (Height: 452, Bottom: @Gap);
-      Group #GearPanel {
-        LayoutMode: Top;
-        Anchor: (Width: 724, Right: @HalfGap);
-        Background: @PanelBackground;
-        Padding: (Full: @Padding);
-        Label { Anchor: (Height: 30, Bottom: 6); Text: "NPC GEAR + LIVE STATS"; Style: (...$C.@DefaultLabelStyle, FontSize: 17, RenderBold: true, TextColor: @Gold, HorizontalAlignment: Center); }
-        Group #GearWorkspace {
-          LayoutMode: Left;
-          Anchor: (Height: 294, Bottom: 8);
-          Group #ArmorSlotColumn {
-            Anchor: (Width: 156, Height: @GearRowsHeight, Right: 4, Top: 16);
-            ItemGrid #ArmorGrid { Anchor: (Width: 58, Height: @GearRowsHeight, Left: 44); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
-            Group #HeadEmptyIcon { HitTestVisible: false; Anchor: (Width: 40, Height: 40, Left: 53, Top: 7); Background: "ImmersiveNpcInventory/ArmorSlotIconHead.png"; }
-            Group #ChestEmptyIcon { HitTestVisible: false; Anchor: (Width: 40, Height: 40, Left: 53, Top: 75); Background: "ImmersiveNpcInventory/ArmorSlotIconChest.png"; }
-            Group #HandsEmptyIcon { HitTestVisible: false; Anchor: (Width: 40, Height: 40, Left: 53, Top: 143); Background: "ImmersiveNpcInventory/ArmorSlotIconHands.png"; }
-            Group #LegsEmptyIcon { HitTestVisible: false; Anchor: (Width: 40, Height: 40, Left: 53, Top: 211); Background: "ImmersiveNpcInventory/ArmorSlotIconLegs.png"; }
-            Button #ToggleHelmetVisibilityButton { Anchor: (Width: 26, Height: 26, Left: 108, Top: 14); TextTooltipStyle: $C.@DefaultTextTooltipStyle; Group #HelmetArmorVisible { Background: "ImmersiveNpcInventory/ArmorVisibilityOn.png"; } Group #HelmetArmorHidden { Background: "ImmersiveNpcInventory/ArmorVisibilityOff.png"; Visible: false; } }
-            Button #ToggleCuirassVisibilityButton { Anchor: (Width: 26, Height: 26, Left: 108, Top: 82); TextTooltipStyle: $C.@DefaultTextTooltipStyle; Group #CuirassArmorVisible { Background: "ImmersiveNpcInventory/ArmorVisibilityOn.png"; } Group #CuirassArmorHidden { Background: "ImmersiveNpcInventory/ArmorVisibilityOff.png"; Visible: false; } }
-            Button #ToggleGauntletsVisibilityButton { Anchor: (Width: 26, Height: 26, Left: 108, Top: 150); TextTooltipStyle: $C.@DefaultTextTooltipStyle; Group #GauntletsArmorVisible { Background: "ImmersiveNpcInventory/ArmorVisibilityOn.png"; } Group #GauntletsArmorHidden { Background: "ImmersiveNpcInventory/ArmorVisibilityOff.png"; Visible: false; } }
-            Button #TogglePantsVisibilityButton { Anchor: (Width: 26, Height: 26, Left: 108, Top: 218); TextTooltipStyle: $C.@DefaultTextTooltipStyle; Group #PantsArmorVisible { Background: "ImmersiveNpcInventory/ArmorVisibilityOn.png"; } Group #PantsArmorHidden { Background: "ImmersiveNpcInventory/ArmorVisibilityOff.png"; Visible: false; } }
-          }
-          Group #NpcAppearancePanel {
-            LayoutMode: Top;
-            Anchor: (Width: 300, Height: 294, Left: 6, Right: 6);
-            Background: @GoldPanel;
-            Padding: (Full: 8);
-            Label #NpcPreviewName { Anchor: (Height: 26); Text: "NPC"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, FontSize: 15, TextColor: #f1dfae, HorizontalAlignment: Center); }
-            Group #NpcPreviewContainer { FlexWeight: 1; LayoutMode: CenterMiddle; Background: "ImmersiveNpcInventory/NPCBackground.png";
-              CharacterPreviewComponent #NpcCharacterPreview { Anchor: (Width: 250, Height: 248); }
-              Label #NpcPreviewUnavailable { Anchor: (Width: 230, Height: 80); Text: "Save a profile and appearance to enable preview."; Visible: false; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 10, TextColor: #d7c28c, HorizontalAlignment: Center, VerticalAlignment: Center); }
+    $C.@DecoratedContainer #TopWorkspace {
+      Anchor: (Height: 494, Bottom: 12);
+      #Title { $C.@Title #ProfileTitle { @Text = "NPC PROFILE"; } }
+      #Content {
+        LayoutMode: Left;
+        Padding: (Full: 17);
+        Group #ProfileNavigation { Anchor: (Width: 210, Right: 16); LayoutMode: Top; Background: #0d1822; Padding: (Top: 8);
+          Group { Anchor: (Height: 52, Bottom: 8);
+            Button #OverviewButton { Style: $C.@SecondaryButtonStyle;
+              Group { HitTestVisible: false; Anchor: (Left: 12, Top: 14, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavOverview.png"; }
+              Label { HitTestVisible: false; Anchor: (Left: 46, Right: 6); Text: "Overview"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, VerticalAlignment: Center); }
             }
+            Group #OverviewSelected { HitTestVisible: false; Visible: true; Background: #b58a38; Padding: (Full: 1);
+              Group { Background: #253548;
+                Group { Anchor: (Left: 0, Width: 3); Background: @Gold; }
+                Group { Anchor: (Left: 11, Top: 13, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavOverview.png"; }
+                Label { Anchor: (Left: 45, Right: 5); Text: "Overview"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, TextColor: @Gold, VerticalAlignment: Center); }
+              }
+            }
+          }
+          Group { Anchor: (Height: 52, Bottom: 8);
+            Button #InventoryButton { Style: $C.@SecondaryButtonStyle;
+              Group { HitTestVisible: false; Anchor: (Left: 12, Top: 14, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavInventory.png"; }
+              Label { HitTestVisible: false; Anchor: (Left: 46, Right: 6); Text: "Inventory"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, VerticalAlignment: Center); }
+            }
+            Group #InventorySelected { HitTestVisible: false; Visible: false; Background: #b58a38; Padding: (Full: 1);
+              Group { Background: #253548;
+                Group { Anchor: (Left: 0, Width: 3); Background: @Gold; }
+                Group { Anchor: (Left: 11, Top: 13, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavInventory.png"; }
+                Label { Anchor: (Left: 45, Right: 5); Text: "Inventory"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, TextColor: @Gold, VerticalAlignment: Center); }
+              }
+            }
+          }
+          Group { Anchor: (Height: 52, Bottom: 8);
+            Button #AppearanceEditorButton { Style: $C.@SecondaryButtonStyle;
+              Group { HitTestVisible: false; Anchor: (Left: 12, Top: 14, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavAppearance.png"; }
+              Label { HitTestVisible: false; Anchor: (Left: 46, Right: 6); Text: "Appearance"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, VerticalAlignment: Center); }
+            }
+          }
+          Group { Anchor: (Height: 52, Bottom: 8);
+            Button #ProfileEditorButton { Style: $C.@SecondaryButtonStyle;
+              Group { HitTestVisible: false; Anchor: (Left: 12, Top: 14, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavEditor.png"; }
+              Label { HitTestVisible: false; Anchor: (Left: 46, Right: 6); Text: "Profile Editor"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, VerticalAlignment: Center); }
+            }
+          }
+          Group { Anchor: (Height: 52, Bottom: 8);
+            Button #VoiceRecorderButton { Style: $C.@SecondaryButtonStyle;
+              Group { HitTestVisible: false; Anchor: (Left: 12, Top: 14, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavVoice.png"; }
+              Label { HitTestVisible: false; Anchor: (Left: 46, Right: 6); Text: "Voice Recorder"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, VerticalAlignment: Center); }
+            }
+          }
+
+        }
+        Group #GearPanel { LayoutMode: Left; FlexWeight: 1; Background: #0d1822;
+          Group #NpcAppearancePanel { Anchor: (Width: 440, Right: 16); LayoutMode: Top;
+            Label #NpcPreviewName { Anchor: (Height: 30); Text: "NPC"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, FontSize: 16, TextColor: #f1dfae, HorizontalAlignment: Center); }
+            Group #NpcPreviewContainer { Anchor: (Height: 312, Bottom: 8); LayoutMode: CenterMiddle; Background: "ImmersiveNpcInventory/NPCBackground.png";
+              CharacterPreviewComponent #NpcCharacterPreview { Anchor: (Width: 310, Height: 308); }
+              Label #NpcPreviewUnavailable { Anchor: (Width: 270, Height: 80); Text: "Appearance preview is temporarily unavailable."; Visible: false; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 10, TextColor: @Muted, HorizontalAlignment: Center, VerticalAlignment: Center); }
+            }
+            Group #StatsStrip { LayoutMode: Left; Anchor: (Height: 64);
+              @StatCell #HealthStat { @Label = "HEALTH"; @Accent = #e76f6f; }
+              @StatCell #StaminaStat { @Label = "STAMINA"; @Accent = #e7c45e; }
+              @StatCell #ManaStat { @Label = "MANA"; @Accent = #66a8df; }
+              @StatCell #DefenseStat { @Label = "DEFENSE"; @Accent = #a8bbc9; }
+            }
+          }
+          Group #EquipmentPanel { LayoutMode: Top; FlexWeight: 1;
+            Label { Anchor: (Height: 30); Text: "EQUIPMENT"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, RenderBold: true, TextColor: @Gold); }
+            Group #GearWorkspace { LayoutMode: Left; Anchor: (Height: 262, Bottom: 18);
+          Group #ArmorSlotColumn {
+            Anchor: (Width: 190, Height: @GearRowsHeight, Right: 12);
+            Label { HitTestVisible: false; Anchor: (Left: 0, Top: 0, Width: 60, Height: 58); Text: "HEAD"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: @Muted, VerticalAlignment: Center); }
+            Label { HitTestVisible: false; Anchor: (Left: 0, Top: 68, Width: 60, Height: 58); Text: "CHEST"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: @Muted, VerticalAlignment: Center); }
+            Label { HitTestVisible: false; Anchor: (Left: 0, Top: 136, Width: 60, Height: 58); Text: "HANDS"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: @Muted, VerticalAlignment: Center); }
+            Label { HitTestVisible: false; Anchor: (Left: 0, Top: 204, Width: 60, Height: 58); Text: "LEGS"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: @Muted, VerticalAlignment: Center); }
+            ItemGrid #ArmorGrid { Anchor: (Width: 58, Height: @GearRowsHeight, Left: 64); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
+            Group #HeadEmptyIcon { HitTestVisible: false; Anchor: (Width: 40, Height: 40, Left: 73, Top: 7); Background: "ImmersiveNpcInventory/ArmorSlotIconHead.png"; }
+            Group #ChestEmptyIcon { HitTestVisible: false; Anchor: (Width: 40, Height: 40, Left: 73, Top: 75); Background: "ImmersiveNpcInventory/ArmorSlotIconChest.png"; }
+            Group #HandsEmptyIcon { HitTestVisible: false; Anchor: (Width: 40, Height: 40, Left: 73, Top: 143); Background: "ImmersiveNpcInventory/ArmorSlotIconHands.png"; }
+            Group #LegsEmptyIcon { HitTestVisible: false; Anchor: (Width: 40, Height: 40, Left: 73, Top: 211); Background: "ImmersiveNpcInventory/ArmorSlotIconLegs.png"; }
+            Button #ToggleHelmetVisibilityButton { Anchor: (Width: 26, Height: 26, Left: 128, Top: 14); TextTooltipStyle: $C.@DefaultTextTooltipStyle; Group #HelmetArmorVisible { Background: "ImmersiveNpcInventory/ArmorVisibilityOn.png"; } Group #HelmetArmorHidden { Background: "ImmersiveNpcInventory/ArmorVisibilityOff.png"; Visible: false; } }
+            Button #ToggleCuirassVisibilityButton { Anchor: (Width: 26, Height: 26, Left: 128, Top: 82); TextTooltipStyle: $C.@DefaultTextTooltipStyle; Group #CuirassArmorVisible { Background: "ImmersiveNpcInventory/ArmorVisibilityOn.png"; } Group #CuirassArmorHidden { Background: "ImmersiveNpcInventory/ArmorVisibilityOff.png"; Visible: false; } }
+            Button #ToggleGauntletsVisibilityButton { Anchor: (Width: 26, Height: 26, Left: 128, Top: 150); TextTooltipStyle: $C.@DefaultTextTooltipStyle; Group #GauntletsArmorVisible { Background: "ImmersiveNpcInventory/ArmorVisibilityOn.png"; } Group #GauntletsArmorHidden { Background: "ImmersiveNpcInventory/ArmorVisibilityOff.png"; Visible: false; } }
+            Button #TogglePantsVisibilityButton { Anchor: (Width: 26, Height: 26, Left: 128, Top: 218); TextTooltipStyle: $C.@DefaultTextTooltipStyle; Group #PantsArmorVisible { Background: "ImmersiveNpcInventory/ArmorVisibilityOn.png"; } Group #PantsArmorHidden { Background: "ImmersiveNpcInventory/ArmorVisibilityOff.png"; Visible: false; } }
           }
           Group #LoadoutSlotColumn {
-            Anchor: (Width: 208, Height: @GearRowsHeight, Left: 4, Top: 16);
-            ItemGrid #PrimaryWeaponGrid { Anchor: (Width: 58, Height: 58, Left: 34, Top: 0); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
-            ItemGrid #OffhandGrid { Anchor: (Width: 58, Height: 58, Left: 34, Top: 68); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
-            ItemGrid #AmmunitionGrid { Anchor: (Width: 58, Height: 58, Left: 34, Top: 136); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
-            Group #PrimaryWeaponEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 10); Background: "ImmersiveNpcInventory/WeaponSlotIconSword.png"; }
-            Group #OffhandEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 78); Background: "ImmersiveNpcInventory/WeaponSlotIconShield.png"; }
-            Group #AmmoEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 146); Background: "ImmersiveNpcInventory/WeaponSlotIconAmmo.png"; }
-            Group { LayoutMode: Top; Anchor: (Top: 204, Height: 58, Left: 6);
-              Group { LayoutMode: Left; Anchor: (Height: 26); $C.@CheckBox #InfiniteAmmoCheckBox { Value: false; TooltipText: "Toggle for infinite ammunition."; } Label { Anchor: (Left: 6); Text: "Infinite Ammo"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, VerticalAlignment: Center); } }
-              Label #InfiniteAmmoHint { Anchor: (Top: 2); Text: "Requires compatible ammunition."; Style: (...$C.@DefaultLabelStyle, FontSize: 8, Wrap: true, TextColor: @Muted); }
+            Anchor: (Width: 210, Height: @GearRowsHeight);
+            Label { HitTestVisible: false; Anchor: (Left: 0, Top: 0, Width: 60, Height: 58); Text: "WEAPON"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: @Muted, VerticalAlignment: Center); }
+            Label { HitTestVisible: false; Anchor: (Left: 0, Top: 68, Width: 60, Height: 58); Text: "SHIELD"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: @Muted, VerticalAlignment: Center); }
+            Label { HitTestVisible: false; Anchor: (Left: 0, Top: 136, Width: 60, Height: 58); Text: "AMMO"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: @Muted, VerticalAlignment: Center); }
+            ItemGrid #PrimaryWeaponGrid { Anchor: (Width: 58, Height: 58, Left: 68, Top: 0); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
+            ItemGrid #OffhandGrid { Anchor: (Width: 58, Height: 58, Left: 68, Top: 68); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
+            ItemGrid #AmmunitionGrid { Anchor: (Width: 58, Height: 58, Left: 68, Top: 136); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
+            Group #PrimaryWeaponEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 79, Top: 10); Background: "ImmersiveNpcInventory/WeaponSlotIconSword.png"; }
+            Group #OffhandEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 79, Top: 78); Background: "ImmersiveNpcInventory/WeaponSlotIconShield.png"; }
+            Group #AmmoEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 79, Top: 146); Background: "ImmersiveNpcInventory/WeaponSlotIconAmmo.png"; }
+          }
+
+            }
+            Group { LayoutMode: Top; Anchor: (Height: 68);
+              Group { LayoutMode: Left; Anchor: (Height: 26); $C.@CheckBox #InfiniteAmmoCheckBox { Value: false; TooltipText: "Toggle for infinite ammunition."; } Label { Anchor: (Left: 8); Text: "Infinite Ammo"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, VerticalAlignment: Center); } }
+              Label #InfiniteAmmoHint { Anchor: (Top: 5, Height: 32, Right: 12); Text: "Requires compatible ammunition."; Style: (...$C.@DefaultLabelStyle, FontSize: 10, Wrap: true, TextColor: @Muted); }
             }
           }
         }
-        Group #StatsStrip { LayoutMode: Left; FlexWeight: 1;
-          @StatCell #HealthStat { @Label = "HEALTH"; @Accent = #e76f6f; }
-          @StatCell #StaminaStat { @Label = "STAMINA"; @Accent = #e7c45e; }
-          @StatCell #ManaStat { @Label = "MANA"; @Accent = #66a8df; }
-          @StatCell #DefenseStat { @Label = "DEFENSE"; @Accent = #a8bbc9; }
-        }
       }
-
+    }
       Group #ProfileAssetsPanel {
+        Visible: false;
         LayoutMode: Top;
         FlexWeight: 1;
         Anchor: (Left: @HalfGap);
@@ -170,11 +213,6 @@ $C.@PageOverlay #ProfilePage {
           Group { LayoutMode: Left; Anchor: (Height: 22); Label { Anchor: (Width: 86); Text: "ROLE"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, RenderBold: true, TextColor: @Gold, VerticalAlignment: Center); } Label #ProfileRoleValue { FlexWeight: 1; Text: "Unassigned"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, VerticalAlignment: Center); } }
           Label #ProfileBiographyValue { Anchor: (Height: 46, Top: 4); Text: "Biography not authored yet."; Style: (...$C.@DefaultLabelStyle, FontSize: 10, Wrap: true, TextColor: #b8c7d4); }
           Label #ProfileReadinessValue { Anchor: (Height: 18); Text: "PROFILE STATUS"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, RenderBold: true, TextColor: #d0a65a); }
-        }
-        Group #EditorButtons { LayoutMode: Left; Anchor: (Height: 36, Bottom: 6);
-          $C.@TextButton #ProfileEditorButton { @Anchor = (Right: 4); Text: "Profile Editor"; FlexWeight: 1; }
-          $C.@SecondaryTextButton #AppearanceEditorButton { @Anchor = (Left: 4, Right: 4); Text: "NPC Appearance"; FlexWeight: 1; }
-          $C.@SecondaryTextButton #VoiceRecorderButton { @Anchor = (Left: 4); Text: "Voice Recorder"; FlexWeight: 1; }
         }
         Group #AdvancedFileControls { LayoutMode: Left; Anchor: (Height: 28, Bottom: 6);
           Label { Anchor: (Width: 76); Text: "ADVANCED"; Style: (...$C.@DefaultLabelStyle, FontSize: 8, RenderBold: true, TextColor: #75899a, VerticalAlignment: Center); }
@@ -195,34 +233,41 @@ $C.@PageOverlay #ProfilePage {
           $C.@SecondaryTextButton #VoiceRescanButton { @Anchor = (Top: 3, Height: 24); Text: "Rescan"; }
         }
       }
-    }
 
-    Group #InventoriesPanel {
-      LayoutMode: Top;
-      Anchor: (Height: 350, Bottom: 8);
-      Background: @PanelBackground;
-      Padding: (Full: @Padding);
-      Label { Anchor: (Height: 28, Bottom: 4); Text: "COUPLED INVENTORIES"; Style: (...$C.@DefaultLabelStyle, FontSize: 16, RenderBold: true, TextColor: #f1f5f9, HorizontalAlignment: Center); }
-      Group { LayoutMode: Left; FlexWeight: 1;
-        Group #NpcInventoryPanel { LayoutMode: Top; FlexWeight: 1; Anchor: (Right: 4);
-          Label #NpcInventoryTitle { Anchor: (Height: 24, Bottom: 2); Text: "NPC INVENTORY"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, RenderBold: true, TextColor: @Gold, HorizontalAlignment: Center); }
-          Group #NpcGridHost { LayoutMode: Center; FlexWeight: 1; Background: #101a24; }
+    $C.@DecoratedContainer #InventoriesPanel {
+      Anchor: (Height: 310, Bottom: 10);
+      #Title {
+        $C.@Title { @Text = "INVENTORIES"; }
+        Group #InventoryFocusAccent { HitTestVisible: false; Visible: false; Anchor: (Bottom: 0, Left: 50, Right: 50, Height: 2); Background: @Gold; }
+      }
+      #Content { LayoutMode: Left; Padding: (Full: 17);
+        Group #NpcInventoryPanel { LayoutMode: Top; FlexWeight: 1; Background: #0d1822;
+          Label #NpcInventoryTitle { Anchor: (Height: 28); Text: "NPC INVENTORY"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, RenderUppercase: true, TextColor: @Gold, HorizontalAlignment: Center); }
+          Group #NpcGridHost { LayoutMode: Center; FlexWeight: 1; }
         }
-        Group #TransferRail { LayoutMode: CenterMiddle; Anchor: (Width: 58, Left: 4, Right: 4); Background: #101a24;
-          Label { Text: "↔"; Style: (...$C.@DefaultLabelStyle, FontSize: 24, RenderBold: true, TextColor: #6f879a, HorizontalAlignment: Center, VerticalAlignment: Center); }
+        Group #TransferRail { HitTestVisible: false; LayoutMode: CenterMiddle; Anchor: (Width: 62);
+          Group { Anchor: (Width: 34, Height: 80); LayoutMode: Top;
+            Group { Anchor: (Height: 34, Bottom: 12); Background: #9a7739; Padding: (Full: 1);
+              Group { Background: #172636; LayoutMode: CenterMiddle; Group { Anchor: (Width: 16, Height: 16); Background: "ImmersiveNpcInventory/DefaultDropdownCaret.png"; } }
+            }
+            Group { Anchor: (Height: 34); Background: #9a7739; Padding: (Full: 1);
+              Group { Background: #172636; LayoutMode: CenterMiddle; Group { Anchor: (Width: 16, Height: 16); Background: "ImmersiveNpcInventory/DefaultDropdownCaretLeft.png"; } }
+            }
+          }
         }
-        Group #PlayerInventoryPanel { LayoutMode: Top; FlexWeight: 1; Anchor: (Left: 4);
-          Label #PlayerInventoryTitle { Anchor: (Height: 24, Bottom: 2); Text: "PLAYER STORAGE"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, RenderBold: true, TextColor: @Cyan, HorizontalAlignment: Center); }
-          Group #PlayerGridHost { LayoutMode: Center; FlexWeight: 1; Background: #101a24; }
+        Group #PlayerInventoryPanel { LayoutMode: Top; FlexWeight: 1; Background: #0d1822;
+          Label #PlayerInventoryTitle { Anchor: (Height: 28); Text: "PLAYER INVENTORY"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, RenderUppercase: true, TextColor: #a8bbc9, HorizontalAlignment: Center); }
+          Group #PlayerGridHost { LayoutMode: Center; FlexWeight: 1; }
         }
       }
     }
-
     Label #StatusText { Anchor: (Height: 24, Bottom: 6); Visible: false; Text: ""; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 11, HorizontalAlignment: Center); }
-    Group #WorkspaceFooter { LayoutMode: Left; Anchor: (Height: 38);
-      $C.@SecondaryTextButton #CancelButton { @Sounds = $Sounds.@ButtonsCancel; @Anchor = (Right: 5); Text: "Cancel"; FlexWeight: 1; }
-      Button #DeleteButton { Anchor: (Width: 240, Left: 5, Right: 5); Background: #8f3038; Label { Text: "DELETE"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-      $C.@TextButton #EnterButton { @Sounds = $Sounds.@SaveSettings; @Anchor = (Left: 5); Text: "Enter"; FlexWeight: 1; }
+    Group #WorkspaceFooter { LayoutMode: Center; Anchor: (Height: 34);
+      $C.@SecondaryTextButton #CancelButton { @Sounds = $Sounds.@ButtonsCancel; @Anchor = (Width: 220, Height: 34); Text: "Close Profile"; }
+    }
+    Group #LegacyProfileActions { Visible: false;
+      Button #DeleteButton {}
+      $C.@TextButton #EnterButton { @Sounds = $Sounds.@SaveSettings; Text: "Enter"; }
     }
   }
 }

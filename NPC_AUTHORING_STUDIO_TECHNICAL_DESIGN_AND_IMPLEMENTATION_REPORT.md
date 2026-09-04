@@ -24,8 +24,8 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | A3 — gear/loadout/live stats | Complete in R132 | PASS | PASS | PASS |
 | A4 — profile editor/generate | Complete in R133.1 | PASS | PASS: operator confirmed editor and workspace behavior | PASS |
 | A5 — appearance editor | Complete in R134.2 | PASS | PASS | PASS |
-| A6 / P1 — voice recorder polish | R141 focused UX connected-validation candidate | PASS | R139/R140 not approved; R141 pending | HOLD FOR P1 APPROVAL |
-| A7 — integration/polish | P1 only; P2/P3 not activated | P1 PASS | P1 pending; P2/P3 not run | BLOCKED AFTER P1 |
+| A6 / P1 — voice recorder polish | R145 recorder retained unchanged in R146 | PASS | No additional connected approval inferred | Recorder not modified by main-menu milestone |
+| Main Profile polish | R146 compact main-menu candidate, explicitly authorized by latest request | PASS | PENDING | HOLD FOR CONNECTED APPROVAL; Appearance Editor polish not begun |
 
 The model-distillation subsystem remains paused and isolated. No D6/D7, training,
 adapter, model-download, environment, promotion, or runtime-model work was performed.
@@ -1067,3 +1067,87 @@ All release counters identify R145. P2 and P3 remain unstarted.
 - R144 retained in `C:\HytaleRollback\NpcAuthoringStudio-P1-R144-2026-09-04`; earlier R143 rollback remains available.
 - Retest: restart the world, confirm server entry and R145 HUD, open Voice Recorder,
   confirm header Back and all four actions, then continue the R144 connected checklist.
+
+### R146 compact NPC Profile main-menu polish
+
+Scope is the user's new main-menu milestone, not a continuation into Appearance
+Editor polish or an implicit approval of earlier recorder candidates. Baseline:
+`601e9bb1b2d7a594533a086799deb43290134f6f` on clean `main`.
+
+The overview is now a centered 1180-by-890 composition with two native decorated
+containers: Profile above, Inventories below. The integrated title is
+`<NPC NAME>'S NPC PROFILE`. The left rail contains Overview, Inventory, Appearance,
+Profile Editor, and Voice Recorder. The two local selection actions pass the existing
+session/envelope/permission gate; they update only selected-state visibility and never
+rebuild inventories or execute transfers. Child-editor buttons keep their existing
+actions and cleanup/draft lifecycle.
+
+The central NPCBackground preview retains authoritative rendering. Four compact framed
+stats sit below it; unresolved values are a quiet dash. Gear sits entirely to its right
+in two labeled columns, retaining the original 58-pixel slots, row ordering, armor
+visibility toggles, section IDs, filters, and drop bindings. Infinite Ammo remains nearby.
+Overview metadata, file controls, profile summary, and voice table are hidden under
+`ProfileAssetsPanel`, not deleted. Delete/Enter remain behind a hidden ancestor.
+The sole visible footer action is secondary `CLOSE PROFILE`, using the existing
+Cancel/close cleanup. Main Profile shows no unverified Escape/controller hint.
+
+Both inventory grids use Profile-specific documents with 48-pixel square slots
+(504-by-204 grid bounds). They retain the exact prior construction-time section
+bindings, 10-column ordering, native drag flags, ContainerWindow, and server-authoritative
+bridge. All IDs 1–1024 are packaged; player storage remains section -2. Probe documents
+are unchanged. The two framed gold carets are hit-test-disabled Groups with no event
+bindings or transfer logic.
+
+Native artwork was copied unchanged from the installed release client Interface tree:
+Common/DefaultDropdownCaret and DefaultDropdownCaretLeft; MyAvatar category
+BodyCharacteristic and Head; AvatarPreset/IconEdit; Hud/InputBindingIconInventory;
+Hud/Voice/VoiceMicOn. These are packaged under the existing ImmersiveNpcInventory
+asset directory, with ProfileNav names for the rail. Existing NPCBackground and
+corrected equipment artwork are reused.
+
+Validation:
+
+- Full `test.ps1 -SkipLive` passed, including inventory/gear/persistence, session
+  authority, appearance, profile, recorder/privacy/cleanup, and the 8,100-scenario matrix.
+- R146 gate checks hidden metadata/actions, unique navigation controls, selection-only
+  navigation, decorative arrows, resource signatures, section documents 1–1024, and
+  identical compact/probe grid behavior after excluding geometry.
+- Older UI tests were adjusted only for the new document paths, frame/title layout,
+  quiet unavailable-stat presentation, and revision naming. The recorder packaging
+  check now matches the current revision and verifies the voice worker remains packaged.
+- Release build passed. Neutral cosmetics were checked against the exact installed
+  registry; all 16 referenced Custom Common.ui exports were found. Child editor
+  document content is unchanged from R145. R145 title parameter ordering has regression
+  coverage. No actual Hytale client parser or connected renderer was run.
+- Static bounds: main frame starts at (370,95) at 1920x1080 and (690,275) at
+  2560x1440. Top preview/stat stack uses 414 of 422 available pixels; lower
+  inventory label/grid stack uses 232 of 238. Each 504-pixel grid fits a 542-pixel
+  column. These calculations do not prove rendering under client UI scaling.
+
+Deployment:
+
+- Sole active JAR: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R146-NPC-PROFILE-MAIN-MENU-POLISH.jar`
+- Size: 3,312,226 bytes; matching source/deployed SHA-256:
+  `38D97B3FFD0143A2282A496DF01C1855C18B9242865F93F41A516BC931A253A3`.
+- R145 moved intact to `C:\HytaleRollback\NpcAuthoringStudio-Profile-R145-2026-09-04`;
+  SHA-256 `0818ADE5E2BCEA48DAAD8542147FDBFA441FEB0A4D5606C91EAFBD67705E4AD4`.
+- HUD, manifest, build, and installer all identify R146. No NPC runtime files,
+  established voice samples, archival backups, or distillation files were changed.
+
+Connected acceptance (repeat visual checks at 1080p and 1440p):
+
+1. Restart the NPC world, verify R146 in the HUD, and open `/npc update Mara`
+   and a spawned NPC. Check centered frames, integrated title, opacity, slot labels,
+   preview, stats, all inventory rows, and no overlap/clipping.
+2. Select Inventory, then Overview. Check gold selection/focus treatment and that
+   the same inventories remain. Open all three child editors, return, and close/reopen.
+3. Move items both directions and within each inventory; test merging, occupied-slot
+   swaps, quick movement, invalid/full destinations, valid/invalid gear, visibility,
+   and ammo dependencies. Confirm preview/live-NPC parity and authoritative stats.
+4. Click both decorative arrows: nothing should happen. Verify item counts before
+   and after transactions. Close/reopen and restart to check persistence.
+5. Confirm player appearance/equipment is restored, including after child editors,
+   and existing profile, appearance, and voice data is intact.
+
+STOP: R146 is deployed for connected approval. No further polish milestone or QA
+promotion is started by this pass.

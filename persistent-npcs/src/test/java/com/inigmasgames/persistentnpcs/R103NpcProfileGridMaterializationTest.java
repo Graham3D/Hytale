@@ -25,7 +25,7 @@ public final class R103NpcProfileGridMaterializationTest {
         }
         assert page.contains("boundNpcGridDocument(storageWindow.getId())")
                 : "NPC storage must receive its native section during ItemGrid construction";
-        assert page.contains("Pages/NativeInventoryProbe/PlayerStorage.ui")
+        assert page.contains("Pages/ProfileInventory/PlayerStorage.ui")
                 : "Player Storage must receive its built-in section during ItemGrid construction";
         assert NpcProfilePage.itemGridSlots(new SimpleItemContainer((short) 4)).length == 4;
         assert NpcProfilePage.itemGridSlots(new SimpleItemContainer((short) 3)).length == 3;

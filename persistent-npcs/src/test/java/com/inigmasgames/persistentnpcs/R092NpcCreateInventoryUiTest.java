@@ -40,7 +40,7 @@ public final class R092NpcCreateInventoryUiTest {
         String command = Files.readString(Path.of(
                 "src/main/java/com/inigmasgames/persistentnpcs/command/AbstractImmersiveNpcProfileCommand.java"));
         String storageGrid = Files.readString(Path.of(
-                "src/main/resources/Common/UI/Custom/Pages/NativeInventoryProbe/GridCommon.ui"));
+                "src/main/resources/Common/UI/Custom/Pages/ProfileInventory/GridCommon.ui"));
         assert ui.contains("CharacterPreviewComponent #NpcCharacterPreview")
                 : "The connected-validated client-local preview target must remain present";
         assert ui.contains("Group #NpcAppearancePanel");
@@ -64,7 +64,7 @@ public final class R092NpcCreateInventoryUiTest {
                 : "Player storage must receive the proven R118 presentation snapshot";
         assert page.contains("#NpcInventoryGrid.Slots")
                 : "NPC storage must receive the proven R118 presentation snapshot";
-        assert page.contains("Pages/NativeInventoryProbe/PlayerStorage.ui")
+        assert page.contains("Pages/ProfileInventory/PlayerStorage.ui")
                 : "Player storage needs its section-bound construction document";
         assert page.contains("InventoryComponent.STORAGE_SECTION_ID")
                 : "Player transfers must target the viewing player's Storage component";

@@ -23,7 +23,7 @@ if (-not (Test-Path -LiteralPath $ServerJar)) {
 
 $classes = Join-Path $projectRoot 'build\classes'
 $dist = Join-Path $projectRoot 'dist'
-$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.3-R145-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-HEADER-HOTFIX.jar'
+$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.3-R146-NPC-PROFILE-MAIN-MENU-POLISH.jar'
 & (Join-Path $projectRoot 'validate-release-resources.ps1') -ServerJar $ServerJar -ArtifactName ([IO.Path]::GetFileName($outputJar))
 $resolvedClasses = [IO.Path]::GetFullPath($classes)
 $resolvedBuildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot 'build'))
@@ -76,6 +76,11 @@ for ($sectionId = 9; $sectionId -le 1024; $sectionId++) {
 "@
     $sectionPath = Join-Path $sectionDocumentDirectory "NpcSection$sectionId.ui"
     [IO.File]::WriteAllText($sectionPath, $sectionDocument,
+        [Text.UTF8Encoding]::new($false))
+    # Profile-only compact style; identical literal section binding. Keep probe
+    # resources unchanged so existing native differential tests remain isolated.
+    $profileSectionPath = Join-Path $classes "Common\UI\Custom\Pages\ProfileInventory\NpcSection$sectionId.ui"
+    [IO.File]::WriteAllText($profileSectionPath, $sectionDocument,
         [Text.UTF8Encoding]::new($false))
 }
 & $jarTool --create --file $outputJar -C $classes .

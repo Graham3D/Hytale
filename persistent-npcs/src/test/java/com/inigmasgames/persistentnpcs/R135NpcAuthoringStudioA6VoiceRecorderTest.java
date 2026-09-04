@@ -270,8 +270,10 @@ public final class R135NpcAuthoringStudioA6VoiceRecorderTest {
             }
             String manifest = source("src/main/resources/manifest.json");
             String installer = source("install.ps1");
-            assert manifest.contains("npc-authoring-studio-a6-voice-recorder");
-            assert installer.contains("NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER");
+            assert manifest.toUpperCase(java.util.Locale.ROOT)
+                    .contains("0.6.3-" + PersistentNpcsPlugin.REVISION);
+            assert installer.contains("0.6.3-" + PersistentNpcsPlugin.REVISION + ".jar");
+            assert Files.isRegularFile(Path.of("build/classes/tools/immersive_voice_worker.py"));
             System.out.println("R135 NPC Authoring Studio A6 Voice Recorder gate passed.");
         } finally {
             deleteTree(root);

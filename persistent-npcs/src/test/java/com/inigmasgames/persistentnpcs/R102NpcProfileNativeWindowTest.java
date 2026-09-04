@@ -23,7 +23,7 @@ public final class R102NpcProfileNativeWindowTest {
         String command = source("src/main/java/com/inigmasgames/persistentnpcs/command/AbstractImmersiveNpcProfileCommand.java");
         String repository = source("src/main/java/com/inigmasgames/persistentnpcs/profile/NpcInventoryRepository.java");
         String ui = source("src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcProfile.ui");
-        String grid = source("src/main/resources/Common/UI/Custom/Pages/NativeInventoryProbe/GridCommon.ui");
+        String grid = source("src/main/resources/Common/UI/Custom/Pages/ProfileInventory/GridCommon.ui");
 
         assert command.contains("openCustomPageWithWindows");
         assert repository.contains("new ContainerWindow(armor)");
@@ -99,10 +99,10 @@ public final class R102NpcProfileNativeWindowTest {
         assert !ui.contains("#NpcPreviewGearState");
         assert !page.contains("#NpcPreviewSkin.Text");
         assert !page.contains("#NpcPreviewPreset.Text");
-        assert ui.contains("Anchor: (Width: 1520, Height: 960);")
+        assert ui.contains("Anchor: (Width: 1180, Height: 890);")
                 : "The unified Authoring Studio must use its bounded base workspace";
-        assert ui.contains("Group #TopWorkspace")
-                && ui.contains("Group #InventoriesPanel")
+        assert ui.contains("$C.@DecoratedContainer #TopWorkspace")
+                && ui.contains("$C.@DecoratedContainer #InventoriesPanel")
                 : "Gear/Profile and coupled inventory regions must remain distinct";
         assert ui.contains("SlotSize: 58") && ui.contains("SlotSize: 62")
                 : "Gear and inventory cells must remain square";

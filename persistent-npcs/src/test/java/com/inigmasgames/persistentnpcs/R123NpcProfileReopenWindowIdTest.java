@@ -10,7 +10,7 @@ import java.nio.file.Path;
 /** Regression gate for monotonically increasing WindowManager IDs across Profile reopens. */
 public final class R123NpcProfileReopenWindowIdTest {
     private static final Path GENERATED_DOCUMENTS = Path.of(
-            "build/classes/Common/UI/Custom/Pages/NativeInventoryProbe");
+            "build/classes/Common/UI/Custom/Pages/ProfileInventory");
 
     private R123NpcProfileReopenWindowIdTest() { }
 
@@ -20,7 +20,7 @@ public final class R123NpcProfileReopenWindowIdTest {
         resolver.setAccessible(true);
 
         for (int id : new int[] {1, 8, 10, 13, 16, 19, 22, 1024}) {
-            String expected = "Pages/NativeInventoryProbe/NpcSection" + id + ".ui";
+            String expected = "Pages/ProfileInventory/NpcSection" + id + ".ui";
             assert expected.equals(resolver.invoke(null, id))
                     : "Profile must accept allocator-issued window ID " + id;
             Path document = GENERATED_DOCUMENTS.resolve("NpcSection" + id + ".ui");

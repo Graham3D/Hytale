@@ -81,7 +81,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
      */
     private static final int MAX_PACKAGED_NPC_SECTION_ID = 1024;
     private static final Set<String> ALLOWED_ACTIONS = Set.of(
-            "INVENTORY_DROP", "CANCEL", "ENTER", "DELETE_PROMPT",
+            "INVENTORY_DROP", "NAV_OVERVIEW", "NAV_INVENTORY", "CANCEL", "ENTER", "DELETE_PROMPT",
             "DELETE_CANCEL", "DELETE_CONFIRM", "ADVANCED_FILE_OPEN",
             "BROWSER_EVENT", "INFINITE_AMMO", "ARMOR_VISIBILITY",
             "VOICE_RESCAN", "OPEN_PROFILE_EDITOR", "OPEN_APPEARANCE_EDITOR",
@@ -124,6 +124,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private boolean error;
     private VoicePresetRepository.VoiceSampleScan voiceSamples;
     private boolean built;
+    private boolean inventoryNavigationSelected;
     private final NpcStatsSnapshotService statsService = new NpcStatsSnapshotService();
     private final ScheduledExecutorService statsScheduler =
             Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -300,16 +301,23 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 : CustomPageLifetime.CanDismiss);
         commands.append("Pages/ImmersiveNpcProfile.ui");
         // R120: ItemGrid rejects .Slots if its inventory section was not present
-        // during construction. Reuse the connected-proven R118 child documents so
+        // during construction. The compact Profile documents retain the R118
+        // section-bound construction and flags; only cell geometry differs:
         // each grid is born section-bound before any slot snapshot is sent.
         commands.append("#NpcGridHost",
                 boundNpcGridDocument(storageWindow.getId()));
         commands.append("#PlayerGridHost",
-                "Pages/NativeInventoryProbe/PlayerStorage.ui");
-        commands.set("#ProfileTitle.Text", npcName + "'s Profile");
+                "Pages/ProfileInventory/PlayerStorage.ui");
+        commands.set("#ProfileTitle.Text", npcName + "'s NPC Profile");
         commands.set("#ProfilePanelTitle.Text", npcName + "'s Profile");
         commands.set("#NpcInventoryTitle.Text", npcName + "'s Inventory");
-        commands.set("#PlayerInventoryTitle.Text", playerRef.getUsername() + "'s Storage");
+        commands.set("#PlayerInventoryTitle.Text", playerRef.getUsername() + "'s Inventory");
+        commands.set("#AuthoringBackNavigation.Visible", voiceEditor);
+        setOverviewNavigationUi(commands);
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#OverviewButton", authoringEvent("NAV_OVERVIEW"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#InventoryButton", authoringEvent("NAV_INVENTORY"));
         commands.set("#AuthoringSessionValue.Text", authoringSession.sessionId().toString());
         commands.set("#AuthoringViewerValue.Text", authoringSession.viewerPlayerId().toString());
         commands.set("#AuthoringNpcValue.Text", authoringSession.npcStableId().toString());
@@ -467,6 +475,18 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             String authoringAction = resolveAuthoringAction(data);
             authoringSession.validate(authoringEnvelope(data, authoringAction),
                     ALLOWED_ACTIONS, permissionFor(authoringAction, data));
+            if ("NAV_OVERVIEW".equals(authoringAction)
+                    || "NAV_INVENTORY".equals(authoringAction)) {
+                if (authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.NONE) {
+                    throw new IllegalStateException("Return to the Profile before navigating.");
+                }
+                inventoryNavigationSelected = "NAV_INVENTORY".equals(authoringAction);
+                UICommandBuilder commands = new UICommandBuilder();
+                setOverviewNavigationUi(commands);
+                // Selection only: never rebuild section-bound grids or move items.
+                sendUpdate(commands, false);
+                return;
+            }
             if (isInventoryDrop(data)) {
                 handleInventoryDrop(ref, store, data);
                 return;
@@ -1923,7 +1943,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 case VOICE -> NpcAuthoringPermissions.VOICE;
                 case NONE -> NpcAuthoringPermissions.OPEN;
             };
-            case "CANCEL", "CLOSE_EDITOR", "DIRTY_DISCARD", "DIRTY_STAY"
+            case "NAV_OVERVIEW", "NAV_INVENTORY", "CANCEL", "CLOSE_EDITOR", "DIRTY_DISCARD", "DIRTY_STAY"
                     -> NpcAuthoringPermissions.OPEN;
             default -> throw new IllegalArgumentException("Unknown authoring action.");
         };
@@ -1955,7 +1975,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     + "; actual ID was " + sectionId
                     + ". Reconnect to reset the per-player WindowManager allocator.");
         }
-        return "Pages/NativeInventoryProbe/NpcSection" + sectionId + ".ui";
+        return "Pages/ProfileInventory/NpcSection" + sectionId + ".ui";
+    }
+
+    private void setOverviewNavigationUi(UICommandBuilder commands) {
+        commands.set("#OverviewSelected.Visible", !inventoryNavigationSelected);
+        commands.set("#InventorySelected.Visible", inventoryNavigationSelected);
+        commands.set("#InventoryFocusAccent.Visible", inventoryNavigationSelected);
     }
 
     private static int value(Integer value, int fallback) {
@@ -2218,13 +2244,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#ManaStat #Value.Text", statText(
                 statsSnapshot == null ? null : statsSnapshot.mana().orElse(null)));
         String defense = statsSnapshot == null || statsSnapshot.defense().isEmpty()
-                ? "Unavailable"
+                ? "—"
                 : format(statsSnapshot.defense().get().value()) + " base";
         commands.set("#DefenseStat #Value.Text", defense);
     }
 
     private static String statText(NpcStatsSnapshotService.StatValue value) {
-        return value == null ? "Unavailable"
+        return value == null ? "—"
                 : format(value.current()) + " / " + format(value.maximum());
     }
 

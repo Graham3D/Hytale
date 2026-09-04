@@ -61,12 +61,12 @@ public final class R101NpcProfileTargetedRepairTest {
         String repository = Files.readString(Path.of(
                 "src/main/java/com/inigmasgames/persistentnpcs/profile/NpcInventoryRepository.java"));
         String grid = Files.readString(Path.of(
-                "src/main/resources/Common/UI/Custom/Pages/NativeInventoryProbe/GridCommon.ui"));
+                "src/main/resources/Common/UI/Custom/Pages/ProfileInventory/GridCommon.ui"));
 
         assert page.contains("boundNpcGridDocument(storageWindow.getId())");
         assert page.contains("inventory.inventorySectionId()")
                 : "NPC transfers must resolve through its opened ContainerWindow";
-        assert page.contains("Pages/NativeInventoryProbe/PlayerStorage.ui");
+        assert page.contains("Pages/ProfileInventory/PlayerStorage.ui");
         assert page.contains("InventoryComponent.STORAGE_SECTION_ID");
         assert InventoryComponent.STORAGE_SECTION_ID < 0
                 : "Native player inventory sections are ECS section identifiers";

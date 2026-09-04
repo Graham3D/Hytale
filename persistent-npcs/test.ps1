@@ -602,6 +602,11 @@ if ($LASTEXITCODE -ne 0) {
     throw "Orbis conversational hardening Gate 1 matrix failed with exit code $LASTEXITCODE"
 }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R146NpcProfileMainMenuPolishTest
+if ($LASTEXITCODE -ne 0) {
+    throw "R146 Profile main-menu polish tests failed with exit code $LASTEXITCODE"
+}
+
 if ($SkipLive) {
     Write-Host 'All deterministic Persistent NPC tests passed; live local-model tests skipped.'
     exit 0

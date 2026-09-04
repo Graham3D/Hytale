@@ -10,7 +10,7 @@ public final class R120NpcProfileBoundGridHotfixTest {
     public static void main(String[] arguments) throws Exception {
         String page = read("src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java");
         String ui = read("src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcProfile.ui");
-        String player = read("src/main/resources/Common/UI/Custom/Pages/NativeInventoryProbe/PlayerStorage.ui");
+        String player = read("src/main/resources/Common/UI/Custom/Pages/ProfileInventory/PlayerStorage.ui");
 
         assert ui.contains("Group #NpcGridHost");
         assert ui.contains("Group #PlayerGridHost");
@@ -29,11 +29,11 @@ public final class R120NpcProfileBoundGridHotfixTest {
                 : "Both section-bound grid documents must exist before .Slots";
 
         assert page.contains("boundNpcGridDocument(storageWindow.getId())");
-        assert page.contains("Pages/NativeInventoryProbe/NpcSection");
-        assert page.contains("Pages/NativeInventoryProbe/PlayerStorage.ui");
+        assert page.contains("Pages/ProfileInventory/NpcSection");
+        assert page.contains("Pages/ProfileInventory/PlayerStorage.ui");
         assert player.contains("InventorySectionId: -2;");
         for (int id = 1; id <= 8; id++) {
-            String bound = read("src/main/resources/Common/UI/Custom/Pages/NativeInventoryProbe/NpcSection"
+            String bound = read("src/main/resources/Common/UI/Custom/Pages/ProfileInventory/NpcSection"
                     + id + ".ui");
             assert bound.contains("InventorySectionId: " + id + ";");
         }
