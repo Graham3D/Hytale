@@ -195,6 +195,18 @@ Status: **PENDING**. Static tests cannot prove the current client's Custom UI pa
 ItemGrid hit testing/cursor reconciliation, preview restoration, or resolution layout.
 The R129 JAR is a connected-test candidate only.
 
+Deployed test candidate:
+
+- Path: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.0-pre.13.1-R129-NPC-AUTHORING-STUDIO-A1.jar`
+- Size: `2,666,118` bytes
+- SHA-256: `01F30F324F73D6FCD9F5B1564BCA8F1765905426CCCF0E09E6F55DC733C004AE`
+- Installed NPC mod JAR count: exactly one
+- Build/deployed hash equality: verified
+- Rollback remains the exact R124 binary at the A0 path with SHA-256
+  `BBAE9340409853EB8F5BD1661B7A7F43AEFA64E29714E241F9DF7EE417E3C830`.
+- The formerly active R124 copy was moved out of `mods` into the rollback directory's
+  `retired-from-mods` subdirectory; it was not deleted.
+
 Required connected checks:
 
 1. At 1920×1080, open `/npc update Jonalith` for a spawned NPC.
