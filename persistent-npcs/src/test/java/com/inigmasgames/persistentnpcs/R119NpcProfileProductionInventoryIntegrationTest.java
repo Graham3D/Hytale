@@ -34,7 +34,7 @@ public final class R119NpcProfileProductionInventoryIntegrationTest {
         assert bridgeUi.contains("CustomUIEventBindingType.Dropped");
         assert !profile.contains("SlotMouseDragCompleted");
         assert !profile.contains("SlotClickReleaseWhileDragging");
-        assert bridge.contains("InventoryUtils.moveItem(ref,");
+        assert bridge.contains("moveItemStackFromSlotToSlot(");
         assert !bridge.contains("setItemStackForSlot(");
         assert !bridge.contains("removeItemStackFromSlot(");
         assert !bridge.contains("addItemStack(");
@@ -54,7 +54,7 @@ public final class R119NpcProfileProductionInventoryIntegrationTest {
         assert controller.contains("NPC_RUNTIME_PROFILE_ID_MISMATCH");
         assert bridge.contains("AUTHORITY_INVALID_");
         assert bridge.indexOf("authorityValidator.invalidReason")
-                < bridge.indexOf("InventoryUtils.moveItem(ref,");
+                < bridge.indexOf("moveItemStackFromSlotToSlot(");
         assert profileClosePrecedesPersistenceClose();
     }
 
@@ -93,8 +93,10 @@ public final class R119NpcProfileProductionInventoryIntegrationTest {
         String bridgeUi = read("src/main/java/com/inigmasgames/persistentnpcs/ui/CustomInventoryBridgeUi.java");
         assert profile.contains("authoritativeQuantityAtIntent(");
         assert profile.contains("stack.getQuantity()");
-        assert bridge.contains("requestedQuantity() != sourceBefore.getQuantity()")
-                : "The server must reject a quantity that differs from authority";
+        assert bridge.contains("requestedQuantity() > sourceBefore.getQuantity()")
+                : "The server must bound requested quantity to authoritative source state";
+        assert profile.contains("mouseButton == 2 ? 1 : stack.getQuantity()")
+                : "A2 derives one-item/full-stack intent without trusting client quantity";
         assert bridgeUi.contains("new ItemGridSlot(stack)")
                 : "The full ItemStack, including quantity metadata, must be encoded";
     }

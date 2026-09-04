@@ -41,7 +41,7 @@ public final class CustomInventoryTransactionBridge {
         DUPLICATE
     }
 
-    /** Immutable, server-bounded intent for the one operation Probe 11 supports. */
+    /** Immutable, server-bounded intent. Client item fields remain diagnostic only. */
     public record InventoryMoveIntent(
             UUID sessionId,
             long pageGeneration,
@@ -77,6 +77,11 @@ public final class CustomInventoryTransactionBridge {
     private final Consumer<String> diagnostics;
     private final AtomicBoolean active = new AtomicBoolean(true);
     private final AtomicLong operationSequence = new AtomicLong();
+    private final AtomicLong committedOperations = new AtomicLong();
+    private final AtomicLong rejectedOperations = new AtomicLong();
+    private final AtomicLong staleOperations = new AtomicLong();
+    private final AtomicLong duplicateOperations = new AtomicLong();
+    private final AtomicLong invariantViolations = new AtomicLong();
     private final Map<String, Long> recentFingerprints = new HashMap<>();
 
     public CustomInventoryTransactionBridge(UUID sessionId, long pageGeneration,
@@ -142,7 +147,12 @@ public final class CustomInventoryTransactionBridge {
                 + " sessionId=" + sessionId
                 + " pageGeneration=" + pageGeneration
                 + " wasActive=" + wasActive
-                + " acceptedOperationCount=" + operationSequence.get());
+                + " observedOperationCount=" + operationSequence.get()
+                + " committedOperationCount=" + committedOperations.get()
+                + " rejectedOperationCount=" + rejectedOperations.get()
+                + " staleOperationCount=" + staleOperations.get()
+                + " duplicateOperationCount=" + duplicateOperations.get()
+                + " invariantViolationCount=" + invariantViolations.get());
     }
 
     private BridgeResult execute(long operationId, Ref<EntityStore> ref,
@@ -199,7 +209,7 @@ public final class CustomInventoryTransactionBridge {
             return reject(operationId, intent, ResultType.NO_OP,
                     "SOURCE_EQUALS_DESTINATION", null, null);
         }
-        if (intent.mouseButton() != 1) {
+        if (intent.mouseButton() != 1 && intent.mouseButton() != 2) {
             return reject(operationId, intent, ResultType.INVALID,
                     "OPERATION_NOT_ENABLED_MOUSE_BUTTON", null, null);
         }
@@ -215,17 +225,17 @@ public final class CustomInventoryTransactionBridge {
             return reject(operationId, intent, ResultType.STALE,
                     "AUTHORITATIVE_QUANTITY_BOUNDS", sourceBefore, targetBefore);
         }
-        if (intent.requestedQuantity() != sourceBefore.getQuantity()) {
+        boolean targetOccupied = !ItemStack.isEmpty(targetBefore);
+        boolean compatibleMerge = targetOccupied
+                && sourceBefore.isStackableWith(targetBefore);
+        boolean swap = targetOccupied && !compatibleMerge;
+        if (swap && intent.requestedQuantity() != sourceBefore.getQuantity()) {
             return reject(operationId, intent, ResultType.INVALID,
-                    "OPERATION_NOT_ENABLED_PARTIAL_STACK", sourceBefore, targetBefore);
-        }
-        if (!ItemStack.isEmpty(targetBefore)) {
-            return reject(operationId, intent, ResultType.INVALID,
-                    "OPERATION_NOT_ENABLED_OCCUPIED_DESTINATION",
+                    "PARTIAL_STACK_CANNOT_SWAP_OCCUPIED_DESTINATION",
                     sourceBefore, targetBefore);
         }
 
-        String fingerprint = fingerprint(intent);
+        String fingerprint = fingerprint(intent, sourceBefore, targetBefore);
         long now = System.nanoTime();
         recentFingerprints.entrySet().removeIf(entry ->
                 now - entry.getValue() > DUPLICATE_WINDOW_NANOS);
@@ -233,6 +243,7 @@ public final class CustomInventoryTransactionBridge {
         if (prior != null && now - prior <= DUPLICATE_WINDOW_NANOS) {
             diagnostics.accept(marker("CUSTOM_BRIDGE_DUPLICATE_SUPPRESSED",
                     operationId, intent) + " fingerprint=" + quoted(fingerprint));
+            duplicateOperations.incrementAndGet();
             return new BridgeResult(operationId, ResultType.DUPLICATE,
                     "DUPLICATE_RELEASE", stack(sourceBefore), stack(targetBefore),
                     stack(sourceBefore), stack(targetBefore));
@@ -244,23 +255,51 @@ public final class CustomInventoryTransactionBridge {
                 + " targetIdentity=" + identity(target, npcSection)
                 + " authoritativeSourceBefore=" + stack(sourceBefore)
                 + " authoritativeTargetBefore=" + stack(targetBefore)
+                + " operation=" + (swap ? "SWAP" : compatibleMerge ? "MERGE" : "MOVE")
                 + " mutationThreadVerified=" + store.isInThread());
+        boolean nativeSucceeded;
+        String nativeApi;
+        try {
+            if (swap) {
+                nativeApi = "ItemContainer.swapItems";
+                nativeSucceeded = source.swapItems(
+                        (short) intent.sourceSlotId(), target,
+                        (short) intent.targetSlotId(), (short) 1).succeeded();
+            } else {
+                nativeApi = "ItemContainer.moveItemStackFromSlotToSlot";
+                nativeSucceeded = source.moveItemStackFromSlotToSlot(
+                        (short) intent.sourceSlotId(), intent.requestedQuantity(),
+                        target, (short) intent.targetSlotId()).succeeded();
+            }
+        } catch (RuntimeException failure) {
+            diagnostics.accept(marker("CUSTOM_BRIDGE_NATIVE_EXCEPTION", operationId, intent)
+                    + " operation=" + (swap ? "SWAP" : compatibleMerge ? "MERGE" : "MOVE")
+                    + " exception=" + quoted(failure.toString()));
+            return reject(operationId, intent, ResultType.REJECTED,
+                    "NATIVE_TRANSACTION_EXCEPTION", sourceBefore, targetBefore);
+        }
         diagnostics.accept(marker("CUSTOM_BRIDGE_NATIVE_MOVE", operationId, intent)
-                + " api=InventoryUtils.moveItem"
+                + " api=" + nativeApi
+                + " nativeTransactionSucceeded=" + nativeSucceeded
                 + " manualStackMutation=false");
-
-        InventoryUtils.moveItem(ref,
-                intent.sourceSectionId(), intent.sourceSlotId(),
-                intent.requestedQuantity(), intent.targetSectionId(),
-                intent.targetSlotId(), store);
 
         ItemStack sourceAfter = source.getItemStack((short) intent.sourceSlotId());
         ItemStack targetAfter = target.getItemStack((short) intent.targetSlotId());
-        boolean committed = ItemStack.isEmpty(sourceAfter)
-                && Objects.equals(sourceBefore, targetAfter);
+        boolean committed = nativeSucceeded && (swap
+                ? validSwap(sourceBefore, targetBefore, sourceAfter, targetAfter)
+                : validMove(sourceBefore, targetBefore, sourceAfter, targetAfter,
+                        intent.requestedQuantity()));
         ResultType type = committed ? ResultType.COMMITTED : ResultType.REJECTED;
-        String reason = committed ? "AUTHORITATIVE_MOVE_COMMITTED"
-                : "NATIVE_MOVE_DID_NOT_MATCH_REQUEST";
+        String reason = committed
+                ? "AUTHORITATIVE_" + (swap ? "SWAP" : compatibleMerge ? "MERGE" : "MOVE")
+                        + "_COMMITTED"
+                : "NATIVE_TRANSACTION_REJECTED_OR_POSTSTATE_MISMATCH";
+        if (committed) {
+            committedOperations.incrementAndGet();
+        } else {
+            rejectedOperations.incrementAndGet();
+            if (nativeSucceeded) invariantViolations.incrementAndGet();
+        }
         diagnostics.accept(marker("CUSTOM_BRIDGE_NATIVE_RESULT", operationId, intent)
                 + " nativeResult=" + type
                 + " reason=" + reason
@@ -275,6 +314,10 @@ public final class CustomInventoryTransactionBridge {
 
     private BridgeResult reject(long operationId, InventoryMoveIntent intent,
             ResultType type, String reason, ItemStack source, ItemStack target) {
+        if (type == ResultType.STALE) staleOperations.incrementAndGet();
+        else if (type != ResultType.NO_OP && type != ResultType.DUPLICATE) {
+            rejectedOperations.incrementAndGet();
+        }
         diagnostics.accept(marker("CUSTOM_BRIDGE_REJECTED", operationId, intent)
                 + " result=" + type
                 + " reason=" + reason
@@ -307,11 +350,44 @@ public final class CustomInventoryTransactionBridge {
         return slot >= 0 && slot < container.getCapacity();
     }
 
-    private static String fingerprint(InventoryMoveIntent intent) {
+    private static String fingerprint(InventoryMoveIntent intent,
+            ItemStack sourceBefore, ItemStack targetBefore) {
         return intent.pageGeneration() + ":" + intent.sourceSectionId() + ':'
                 + intent.sourceSlotId() + ':' + intent.targetSectionId() + ':'
                 + intent.targetSlotId() + ':' + intent.requestedQuantity() + ':'
-                + intent.mouseButton();
+                + intent.mouseButton() + ':' + stack(sourceBefore) + ':'
+                + stack(targetBefore);
+    }
+
+    private static boolean validMove(ItemStack sourceBefore, ItemStack targetBefore,
+            ItemStack sourceAfter, ItemStack targetAfter, int requestedQuantity) {
+        int sourceAfterQuantity = compatibleQuantity(sourceBefore, sourceAfter);
+        if (sourceAfterQuantity < 0 || sourceAfterQuantity > sourceBefore.getQuantity()) {
+            return false;
+        }
+        int moved = sourceBefore.getQuantity() - sourceAfterQuantity;
+        if (moved <= 0 || moved > requestedQuantity) return false;
+
+        if (ItemStack.isEmpty(targetBefore)) {
+            return !ItemStack.isEmpty(targetAfter)
+                    && sourceBefore.isStackableWith(targetAfter)
+                    && targetAfter.getQuantity() == moved;
+        }
+        return sourceBefore.isStackableWith(targetBefore)
+                && !ItemStack.isEmpty(targetAfter)
+                && sourceBefore.isStackableWith(targetAfter)
+                && targetAfter.getQuantity() - targetBefore.getQuantity() == moved;
+    }
+
+    private static boolean validSwap(ItemStack sourceBefore, ItemStack targetBefore,
+            ItemStack sourceAfter, ItemStack targetAfter) {
+        return Objects.equals(sourceBefore, targetAfter)
+                && Objects.equals(targetBefore, sourceAfter);
+    }
+
+    private static int compatibleQuantity(ItemStack expected, ItemStack actual) {
+        if (ItemStack.isEmpty(actual)) return 0;
+        return expected.isStackableWith(actual) ? actual.getQuantity() : -1;
     }
 
     private static String marker(String marker, long operationId,

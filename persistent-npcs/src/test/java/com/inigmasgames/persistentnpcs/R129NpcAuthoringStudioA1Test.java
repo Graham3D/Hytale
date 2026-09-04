@@ -83,7 +83,7 @@ public final class R129NpcAuthoringStudioA1Test {
                 && page.contains("authoringSession.validate")
                 && page.contains("authoringSession.close()")
                 && !page.contains("InventoryUtils.moveItem(ref,");
-        assert bridge.contains("InventoryUtils.moveItem")
+        assert bridge.contains("moveItemStackFromSlotToSlot")
                 : "existing inventory mutation authority must remain intact";
         assert ui.contains("#GearPanel") && ui.contains("#StatsStrip")
                 && ui.contains("#ProfileAssetsPanel")

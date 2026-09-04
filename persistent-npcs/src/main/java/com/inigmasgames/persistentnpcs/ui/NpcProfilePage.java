@@ -219,8 +219,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     + " npcWindowId=" + storageWindow.getId()
                     + " playerStorageSectionId="
                     + InventoryComponent.STORAGE_SECTION_ID
-                    + " supportedOperation=LEFT_CLICK_FULL_STACK_TO_EMPTY_SLOT_CROSS_OR_INTERNAL"
-                    + " mutationAuthority=InventoryUtils.moveItem"
+                    + " supportedOperation=DROP_FULL_OR_ONE_MOVE_MERGE_SWAP_CROSS_OR_INTERNAL"
+                    + " mutationAuthority=NATIVE_ITEM_CONTAINER_TRANSACTIONS"
                     + " persistenceAuthority=NpcInventoryRepository_RUNTIME_PIPELINE");
         }
         events.addEventBinding(CustomUIEventBindingType.ValueChanged,
@@ -533,8 +533,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         int targetSection = parseSection(data.section);
         int targetSlot = value(data.slotIndex, -1);
         int clientQuantity = value(data.itemStackQuantity, -1);
+        int mouseButton = value(data.pressedMouseButton, -1);
         int requestedQuantity = authoritativeQuantityAtIntent(
-                sourceSection, sourceSlot, clientQuantity);
+                sourceSection, sourceSlot, mouseButton, clientQuantity);
         var intent = new CustomInventoryTransactionBridge.InventoryMoveIntent(
                 authoringSession.sessionId(),
                 authoringSession.pageGeneration(),
@@ -543,7 +544,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 targetSection,
                 targetSlot,
                 requestedQuantity,
-                value(data.pressedMouseButton, -1),
+                mouseButton,
                 inventoryEventSequence.incrementAndGet(),
                 data.itemStackId,
                 clientQuantity);
@@ -552,7 +553,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private int authoritativeQuantityAtIntent(int sectionId, int slot,
-            int clientQuantityDiagnostic) {
+            int mouseButton, int clientQuantityDiagnostic) {
         ItemContainer container;
         if (sectionId == InventoryComponent.STORAGE_SECTION_ID) {
             container = playerInventory;
@@ -563,8 +564,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         }
         if (slot < 0 || slot >= container.getCapacity()) return clientQuantityDiagnostic;
         ItemStack stack = container.getItemStack((short) slot);
-        return ItemStack.isEmpty(stack)
-                ? clientQuantityDiagnostic : stack.getQuantity();
+        if (ItemStack.isEmpty(stack)) return clientQuantityDiagnostic;
+        // The client-reported ItemStack quantity remains diagnostic only. The server
+        // derives the allowed amount from authoritative state and the input gesture.
+        return mouseButton == 2 ? 1 : stack.getQuantity();
     }
 
     private void reconcileInventoryFromAuthority(
@@ -624,8 +627,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append("AuthoringNpcStableId", authoringSession.npcStableId().toString())
                 .append("AuthoringPageGeneration",
                         Long.toString(authoringSession.pageGeneration()))
-                .append("AuthoringEditor", "#AuthoringEditorValue.Text")
-                .append("AuthoringEditorGeneration", "#AuthoringEditorGeneration.Text")
+                // Dropped ItemGrid events do not resolve arbitrary Text selectors in
+                // EventData. Embed the server-owned values that were current when this
+                // binding was built; stale editor bindings then fail generation checks.
+                .append("AuthoringEditor", authoringSession.activeEditor().name())
+                .append("AuthoringEditorGeneration",
+                        Long.toString(authoringSession.editorGeneration()))
                 .append("AuthoringAction", action);
     }
 

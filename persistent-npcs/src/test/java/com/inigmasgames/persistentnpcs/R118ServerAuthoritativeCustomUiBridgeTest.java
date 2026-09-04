@@ -39,7 +39,8 @@ public final class R118ServerAuthoritativeCustomUiBridgeTest {
             assert bridge.contains(field) : field;
         }
         assert bridge.contains("InventoryUtils.getSectionById(");
-        assert bridge.contains("InventoryUtils.moveItem(ref,");
+        assert bridge.contains("moveItemStackFromSlotToSlot(")
+                : "A2 may use the native transaction-returning ItemContainer API";
         assert bridge.contains("value == playerStorage");
         assert bridge.contains("value == npcInventory");
         assert bridge.contains("getCustomPage() != expectedPage");

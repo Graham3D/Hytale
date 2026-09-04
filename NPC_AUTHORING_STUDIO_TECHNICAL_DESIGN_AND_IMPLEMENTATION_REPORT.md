@@ -19,8 +19,8 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | Stage | Implementation | Automated gate | Connected gate | Promotion state |
 |---|---|---|---|---|
 | A0 — audit/freeze | Complete | PASS | Prior R124 connected evidence retained | PASS |
-| A1 — session/workspace shell | Complete test candidate | PASS | PENDING operator validation | STOPPED AT GATE |
-| A2 — complete coupled inventory | Not activated | Not run | Not run | BLOCKED by A1 connected gate |
+| A1 — session/workspace shell | Complete | PASS | PASS: stable Jonalith/Mara open-close at available 1080p/720p modes | PASS; inventory limitation carried into A2 |
+| A2 — complete coupled inventory | Complete in R131 | PASS | PASS: full operator transaction matrix | PASS |
 | A3 — gear/loadout/live stats | Not activated | Not run | Not run | BLOCKED |
 | A4 — profile editor/generate | Not activated | Not run | Not run | BLOCKED |
 | A5 — appearance editor | Not activated | Not run | Not run | BLOCKED |
@@ -226,8 +226,67 @@ Required connected checks:
 
 A1 implementation/automated status: **PASS**.
 
-A1 connected status: **PENDING**.
+A1 connected status: **PASS for the shared shell/session gate**. The operator confirmed
+reliable open/close and both Jonalith and Mara profiles at the client-supported display
+modes. Custom-grid item pickup succeeded but placement did not; that transaction defect
+is the first bounded A2 repair rather than an A1 shell regression.
 
-Next allowed stage after an operator-reported connected PASS: **A2**.
+Next active stage: **A2**.
 
-No A2+ functionality may be activated before that report.
+No A3+ functionality may be activated before the complete A2 connected matrix is green.
+
+## A2 — Complete coupled inventory
+
+### R130 connected finding
+
+The client emitted valid `Dropped` events for all three essential routes: NPC internal,
+NPC to Player Storage, and Player Storage to NPC. However, the bridge session closed with
+zero observed operations. The payload showed why: `AuthoringEditor` and
+`AuthoringEditorGeneration` were transmitted literally as UI selector strings. The
+current client does not resolve arbitrary `.Text` selectors inside an ItemGrid `Dropped`
+binding, so the authoring envelope rejected the event before the inventory bridge ran.
+
+### R131 repair and transaction expansion
+
+- Event bindings now embed the server-owned editor and editor-generation values that
+  were current when the binding was created. Old bindings remain safely rejectable by
+  the existing generation check.
+- Client item ID and quantity remain diagnostic only. The server re-reads the source
+  slot and derives a full-stack operation for primary-button drops or a one-item
+  operation for secondary-button drops.
+- Empty-slot moves and compatible merges use Hytale's native
+  `ItemContainer.moveItemStackFromSlotToSlot` transaction.
+- Occupied incompatible destinations use the native one-slot `ItemContainer.swapItems`
+  transaction only for the already-authorized Player Storage/NPC Storage identities.
+- Every mutation is followed by an authoritative source/destination reread. A commit is
+  reported only when the native transaction succeeds and its post-state proves a
+  quantity-conserving move/merge or an exact swap.
+- Full destinations, stale sources, unsupported partial swaps, malformed sections,
+  duplicate releases, late events, and authority mismatches fail closed and trigger a
+  complete two-grid authoritative refresh.
+- Replay fingerprints now include authoritative source and destination pre-state.
+- Session-close diagnostics report observed, committed, rejected, stale, duplicate, and
+  post-state invariant-violation counters.
+- No hand-authored remove/add/set stack mutation was introduced.
+
+Automated gate: `persistent-npcs/test.ps1 -SkipLive` — **PASS**, including the new R131
+structural/safety gate and the complete existing deterministic suite. Live model tests
+remain intentionally skipped because A2 does not change inference behavior.
+
+Connected gate: **PASS** on 2026-09-04. The operator completed the full R131 acceptance
+matrix, including Player→NPC, NPC→Player, NPC-internal, Player-internal, compatible merge,
+occupied swap, secondary-button one-item placement, shift-click/quick-move,
+full-destination rejection, close/reopen persistence, repeated Jonalith/Mara cycles, and
+the mixed-operation soak with no loss, duplication, stale cursor, wrong-slot, or wrong-NPC
+mutation observed.
+
+The exact deployed A2 authority retained for A3 rollback is:
+
+- JAR: `ImmersiveNPCs-0.6.0-pre.13.1-R131-NPC-AUTHORING-STUDIO-A2-INVENTORY-BRIDGE.jar`
+- SHA-256: `C6FB298934E5B1FA96DFB54FF4DF7D0373F1741645D9F44DAF929AA989840C18`
+- Size: `2,667,348` bytes
+- Rollback copy: `C:\HytaleRollback\NpcAuthoringStudio-A3-2026-09-04\ImmersiveNPCs-0.6.0-pre.13.1-R131-NPC-AUTHORING-STUDIO-A2-INVENTORY-BRIDGE.jar`
+
+The complete deterministic suite was rerun from the R131 source immediately before the
+A3 checkpoint and passed. Stage A3 may now activate gear, loadout, and live stats; A4+
+remains unauthorized.

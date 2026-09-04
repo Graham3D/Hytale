@@ -209,6 +209,11 @@ if ($LASTEXITCODE -ne 0) {
     throw "R129 NPC Authoring Studio A1 tests failed with exit code $LASTEXITCODE"
 }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R131NpcAuthoringStudioA2InventoryBridgeTest
+if ($LASTEXITCODE -ne 0) {
+    throw "R131 NPC Authoring Studio A2 inventory bridge tests failed with exit code $LASTEXITCODE"
+}
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.training.R125OrbisDistillationBlock1Test
 if ($LASTEXITCODE -ne 0) {
     throw "R125 Orbis Distillation Block 1 D0-D3 tests failed with exit code $LASTEXITCODE"
