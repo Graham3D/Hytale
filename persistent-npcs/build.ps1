@@ -23,7 +23,7 @@ if (-not (Test-Path -LiteralPath $ServerJar)) {
 
 $classes = Join-Path $projectRoot 'build\classes'
 $dist = Join-Path $projectRoot 'dist'
-$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.0-pre.13.1-R133-NPC-AUTHORING-STUDIO-A4-PROFILE-GENERATE.jar'
+$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.0-pre.13.1-R133.1-NPC-AUTHORING-STUDIO-A4-UI-PARSER-HOTFIX.jar'
 $resolvedClasses = [IO.Path]::GetFullPath($classes)
 $resolvedBuildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot 'build'))
 if (-not $resolvedClasses.StartsWith($resolvedBuildRoot, [StringComparison]::OrdinalIgnoreCase)) {

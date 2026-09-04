@@ -224,7 +224,7 @@ $C.@PageOverlay #ProfileEditorPage {
   Group { Anchor: (Width: 1520, Height: 960); LayoutMode: Top; Background: @PanelBackground; Padding: (Full: 18);
     Group { Anchor: (Height: 42, Bottom: 10); LayoutMode: Left;
       Label { Text: "PROFILE EDITOR"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 22, RenderBold: true, TextColor: #f1f5f9, VerticalAlignment: Center); }
-      Label #ProfileDraftMeta { Anchor: (Width: 760); Text: "Draft"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #6f879a, HorizontalAlignment: Right, VerticalAlignment: Center); }
+      Label #ProfileDraftMeta { Anchor: (Width: 760); Text: "Draft"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #6f879a, HorizontalAlignment: End, VerticalAlignment: Center); }
     }
     Group { LayoutMode: Left; FlexWeight: 1;
       Group { Anchor: (Width: 210, Right: 10); LayoutMode: Top; Background: #101a24; Padding: (Full: 12);

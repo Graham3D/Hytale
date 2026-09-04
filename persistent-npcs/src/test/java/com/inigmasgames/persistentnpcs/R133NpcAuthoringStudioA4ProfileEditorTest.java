@@ -76,6 +76,8 @@ public final class R133NpcAuthoringStudioA4ProfileEditorTest {
             String generation = source("src/main/java/com/inigmasgames/persistentnpcs/profile/"
                     + "NpcProfileGenerationService.java");
             assert ui.contains("#ProfileEditorPage") && ui.contains("#ProfileSaveButton");
+            assert !ui.contains("HorizontalAlignment: Right")
+                    : "Current client LabelAlignment uses End, not Right";
             int generate = ui.indexOf("#ProfileGenerateButton");
             int reset = ui.indexOf("#ProfileResetButton");
             int cancel = ui.indexOf("#ProfileCancelButton");
