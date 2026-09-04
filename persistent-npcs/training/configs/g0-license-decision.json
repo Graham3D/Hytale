@@ -36,6 +36,6 @@
     "Do not distribute the base, adapter, or merged copy in Block 3.",
     "Before any later distribution, preserve the license, applicable notices, and required NOTICE attribution and review all bundled component terms."
   ],
-  "requiredNotice": "Licensed by NVIDIA Corporation under the NVIDIA Open Model License",
+  "requiredNotice": "Licensed by NVIDIA Corporation under the NVIDIA Nemotron Model License.",
   "decisionBasis": "The official terms grant use, reproduction, modification, derivative-work, and distribution rights subject to conditions. Block 3 is a local, non-distributed experiment. The separate exact BF16 lineage is authorized by Technical Design section 8.1. This is an engineering gate, not legal advice."
 }
