@@ -1282,3 +1282,137 @@ registry; in-game restart/asset hydration remains in the connected checklist.
 
 STOP after candidate deployment and GitHub push. Await connected approval; no
 Appearance Editor polish, preview expansion, or next milestone is authorized here.
+
+## R148 — native-size paging, typed armor resistance, configured unspawned vitals
+
+**2026-09-04 — IMPLEMENTED / DETERMINISTIC PASS / DEPLOYED CANDIDATE. Connected approval pending.**
+
+Source started clean on `main` at R147 commit `233a48da24149744c10ec50d98eec44f62d3d819`.
+The accepted rollback baseline remains **R146**, not R147. This section supersedes
+R147's scrolling and base-only Defense behavior; it does not declare R147 accepted.
+
+### Inventory presentation and authority
+
+- Both grids use native 74px cells, 2px spacing and 64px item icons. Each viewport
+  is 534×306: seven columns and four rows. NPC pages show authoritative slots
+  **0–27** and **28–39**, respectively. Capacity remains **40**. Player storage is
+  independently paged using its actual capacity (36 here: 28 + 8).
+- Each pane has bounded `< PAGE 1 / 2 >` controls; first/last navigation disables
+  at the boundary. The last page contains only valid slots, not fake empty targets.
+- The same existing native window IDs, container objects, session identity and
+  transaction bridge remain in use. Paging remounts presentation/bindings only.
+  No migration, container slicing/replacement, reduced capacity or item copy occurs.
+- `InventorySlotIndex` and drag `SourceSlotId` stay absolute. The target grid's
+  visual `SlotIndex` is mapped through the current page offset, bounds-checked,
+  then submitted to the unchanged authoritative bridge. Source IDs are **not**
+  offset twice. An embedded inventory-view revision rejects stale page/drop events
+  before submission; out-of-page targets fail closed.
+- Existing transaction/swap/merge/quick-move policies remain unchanged. Native
+  hit-testing and client page-two event delivery are explicitly connected gates,
+  not proven by the headless mapping tests alone.
+
+### Armor resistance and vitals
+
+- Replaced the base-only Defense model with **typed equipped-armor protection**.
+  Production calls the installed SDK's
+  `DamageSystems.ArmorDamageReduction.getResistanceModifiers(null, armor, false, null)`.
+  This is its equipment-only path: no world lookup/broken-item penalty calculation
+  and no live effect controller. Thus it works without a spawned entity.
+- Native aggregation adds Flat amounts and Percent fractions within each damage
+  type, including each applicable item's BaseDamageResistance in that type's flat
+  term. Types are never added into one invented scalar. Native damage application
+  uses `max(0, damage - flat) × max(0, 1 - percent)`, then inherited type entries.
+  Inheritance and bypass markers are retained in the tooltip. Effects and broken-item
+  penalties are explicitly excluded from this equipment-only summary, not claimed
+  as a complete effective combat calculation.
+- The compact DEFENSE card prefers Physical (otherwise the first available type);
+  hover its value for every typed flat/percent contribution and the formula.
+  An empty resistance map says **No armor**, not misleading `0 base`.
+- Release Trork assets were checked directly: Head .05, Chest .09, Hands .04,
+  Legs .07 Percent for both Physical and Projectile, with base zero. The full-set
+  card now reads **25% Physical**; removing Head produces **20% Physical**.
+  Projectile remains a separate tooltip entry. Nonzero base still participates.
+- Existing gear-commit refresh recomputes resistance immediately and on reopen;
+  hidden cosmetic armor still contributes. No changes to item persistence.
+- Unspawned NPC cards read explicit `MaxHealth`, `MaxStamina`, `MaxMana` fields
+  from that NPC's existing `native-role/<canonical name>.json`. Hoit's explicit
+  MaxHealth 100 becomes **MAX 100**, never fabricated `100 / 100`. Missing Stamina
+  or Mana maxima stay **—**. These are configured values, not inferred inherited
+  role defaults, armor-adjusted live maxima, or current health.
+- Configured Invulnerable is disclosed in the unspawned stat tooltip, not Defense.
+  Missing/unreadable configuration does not write or repair a runtime file.
+  Spawned NPCs continue reading current/min/max from their live EntityStatMap;
+  missing live stats do not fall back to fabricated current values.
+
+### Safe visual cleanup and unchanged preview limitation
+
+- Kept canonical NPC casing, `NPC GEAR & STATS`, compact gear labels, tooltip-only
+  Infinite Ammo help, and no permanent success diagnostics. Navigation remains
+  Overview / Appearance / Profile Editor / Voice Recorder; no Inventory entry.
+- Rebalanced the top/inventory panels to 506/438px while retaining the 1180×1030
+  outer footprint. Grid title, four native rows and pagination fit the calculated
+  content bounds at 1920×1080 and 2560×1440 document-space viewports.
+- Character viewport remains moderately larger than R146 (340×326). Ground art
+  stays at an exact 205×198 quarter-scale of the 820×792 image, horizontally centered.
+  Its bottom offset now compensates for the texture's transparent lower margin,
+  moving the luminous ground 50px downward. Final feet alignment needs connected review.
+- Existing compact vertical native-carets rail remains decorative and non-hit-testable;
+  pagination controls are distinct, with no transfer actions attached to the rail.
+- **Preview authority is unchanged.** CharacterPreviewComponent consumes the local
+  client's player representation, not an independently targetable NPC entity.
+  Native hotbar/equipment updates can overwrite temporary visual equipment, and
+  viewer armor-hide settings can suppress armor. Exact independent NPC equipment
+  rendering/restoration is **not proven**. R148 does not claim to fix the reported
+  held-weapon bleed/missing armor. No further preview research, hide-setting edits,
+  authoritative player mutations, fake containers or packet rewrite loops occurred.
+
+### Verification and deployment
+
+- Complete `test.ps1 -SkipLive`: **PASS**. Live model tests skipped as requested by
+  that deterministic mode; existing SDK deprecation/Unsafe warnings remain.
+  Initial new-test fixture mistakes were corrected before the passing full run.
+- Added executable R148 tests: all 40 wire indices across 28/12 pages, last-slot
+  reachability, stale/out-of-bounds rejection, native Player↔NPC and internal
+  page-two moves with exact quantities, slot-39 JSON reopen/restart reconstruction,
+  real SDK typed armor aggregation, installed Trork JSON verification, removal,
+  nonzero typed base participation, read-only configured MAX 100/missing vitals.
+  Existing R132/R146/R147 assertions were updated for the superseding typed/paged
+  contracts without removing their identity/persistence/navigation coverage.
+- Release `build.ps1`: **PASS**. R148, R147, R146 layout and R132 gear/stats tests
+  also passed against the installed **release** SDK after the release build.
+- HUD revision, manifest, build and installer all identify **R148-NPC-PROFILE-REPAIR**.
+- With Hytale/Java stopped, deployed exactly one active project JAR:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R148-NPC-PROFILE-REPAIR.jar`.
+  Size **3,320,861 bytes**. Source/staged/deployed SHA-256:
+  `C4D464BA7735C3EE7F312CF407BAC83F63EEB03D7B405F643E2078C3026450C3`.
+- R146 rollback preserved unchanged at
+  `C:\HytaleRollback\NpcAuthoringStudio-Profile-R146-2026-09-04\ImmersiveNPCs-0.6.3-R146-NPC-PROFILE-MAIN-MENU-POLISH.jar`;
+  SHA-256 `38D97B3FFD0143A2282A496DF01C1855C18B9242865F93F41A516BC931A253A3`.
+- R147 candidate moved intact out of active mods into
+  `C:\HytaleRollback\NpcAuthoringStudio-Profile-R147-2026-09-04\ImmersiveNPCs-0.6.3-R147-NPC-PROFILE-REPAIR.jar`;
+  SHA-256 `23011E529135BB82A3D5737209E80C5217CF10209CA8B58562DCBF785A375175`.
+  The unrelated SkinSwap JAR is unchanged. No runtime NPC, voice, player settings,
+  migration archive or distillation source/state was modified by deployment.
+
+### Connected approval checklist — R148 only
+
+1. Start the NPC world; confirm **R148** in the HUD. Open `/npc update hoit`.
+   Confirm canonical Hoit, Health **MAX 100**, Stamina/Mana **—**, and the tooltip's
+   configured invulnerability. Check a spawned NPC still displays live current/max.
+2. At **1920×1080 and 2560×1440**, verify four full native-size rows, no overflow,
+   all page controls and child navigation, gear layout and ground-art placement.
+3. Reach NPC page two; put an item in its last valid cell (absolute slot39), move
+   it internally and to/from player storage (also test player page two). Exercise
+   swap/merge/split/quick-move and invalid/full rejection. Check counts, switch pages,
+   close/reopen and restart; confirm every position/count persists without duplication.
+4. Equip all four Trork pieces; expect **25% Physical** and separate Physical /
+   Projectile tooltip entries. Remove Head: **20% Physical** immediately. Repeat on
+   an unspawned NPC and after reopening/restarting. Do not use shared-preview armor
+   visibility as proof that authoritative armor is absent.
+5. Open/return from each child editor without modifying established samples. Check
+   Infinite Ammo behavior and decorative carets. Compare actual player inventory
+   before/after intentional moves; known client preview bleed remains a limitation.
+
+Source, tests and this report belong to the R148 candidate commit pushed to `main`;
+the exact commit hash is supplied in the handoff. **STOP for connected approval.**
+No Appearance Editor polish or new milestone was started.

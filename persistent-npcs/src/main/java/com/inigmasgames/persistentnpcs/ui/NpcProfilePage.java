@@ -81,7 +81,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
      */
     private static final int MAX_PACKAGED_NPC_SECTION_ID = 1024;
     private static final Set<String> ALLOWED_ACTIONS = Set.of(
-            "INVENTORY_DROP", "NAV_OVERVIEW", "CANCEL", "ENTER", "DELETE_PROMPT",
+            "INVENTORY_DROP", "NPC_PAGE_PREV", "NPC_PAGE_NEXT", "PLAYER_PAGE_PREV", "PLAYER_PAGE_NEXT",
+            "NAV_OVERVIEW", "CANCEL", "ENTER", "DELETE_PROMPT",
             "DELETE_CANCEL", "DELETE_CONFIRM", "ADVANCED_FILE_OPEN",
             "BROWSER_EVENT", "INFINITE_AMMO", "ARMOR_VISIBILITY",
             "VOICE_RESCAN", "OPEN_PROFILE_EDITOR", "OPEN_APPEARANCE_EDITOR",
@@ -111,6 +112,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private final ContainerWindow storageWindow;
     private final NpcAuthoringSession authoringSession;
     private final AtomicLong inventoryEventSequence = new AtomicLong();
+    private int npcInventoryPage;
+    private int playerInventoryPage;
+    private long inventoryViewRevision;
+    private com.inigmasgames.persistentnpcs.profile.NpcConfiguredVitals configuredVitals =
+            com.inigmasgames.persistentnpcs.profile.NpcConfiguredVitals.EMPTY;
     private final AtomicLong inventoryRefreshGeneration = new AtomicLong();
     private final CustomInventoryTransactionBridge inventoryBridge;
     private final Consumer<String> diagnostics;
@@ -318,6 +324,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         setOverviewNavigationUi(commands);
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#OverviewButton", authoringEvent("NAV_OVERVIEW"));
+        for (String side : new String[] { "Npc", "Player" }) {
+            events.addEventBinding(CustomUIEventBindingType.Activating, "#" + side + "PagePrev",
+                    authoringEvent(side.toUpperCase(Locale.ROOT) + "_PAGE_PREV"));
+            events.addEventBinding(CustomUIEventBindingType.Activating, "#" + side + "PageNext",
+                    authoringEvent(side.toUpperCase(Locale.ROOT) + "_PAGE_NEXT"));
+        }
         commands.set("#AuthoringSessionValue.Text", authoringSession.sessionId().toString());
         commands.set("#AuthoringViewerValue.Text", authoringSession.viewerPlayerId().toString());
         commands.set("#AuthoringNpcValue.Text", authoringSession.npcStableId().toString());
@@ -475,6 +487,18 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             String authoringAction = resolveAuthoringAction(data);
             authoringSession.validate(authoringEnvelope(data, authoringAction),
                     ALLOWED_ACTIONS, permissionFor(authoringAction, data));
+            if (authoringAction.startsWith("NPC_PAGE_") || authoringAction.startsWith("PLAYER_PAGE_")) {
+                ProfileInventoryPaging.requireRevision(data.inventoryViewRevision, inventoryViewRevision);
+                if (authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.NONE)
+                    throw new IllegalStateException("Return to the Profile before changing inventory pages.");
+                int delta = authoringAction.endsWith("NEXT") ? 1 : -1;
+                if (authoringAction.startsWith("NPC_")) npcInventoryPage = npcPaging().shifted(delta);
+                else playerInventoryPage = playerPaging().shifted(delta);
+                inventoryViewRevision++;
+                // Remount presentation/bindings only, retaining the same native window and containers.
+                rebuild();
+                return;
+            }
             if ("NAV_OVERVIEW".equals(authoringAction)) {
                 if (authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.NONE) {
                     throw new IllegalStateException("Return to the Profile before navigating.");
@@ -1741,10 +1765,15 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
 
     private void handleInventoryDrop(Ref<EntityStore> ref,
             Store<EntityStore> store, PageData data) {
+        ProfileInventoryPaging.requireRevision(data.inventoryViewRevision, inventoryViewRevision);
         int sourceSection = value(data.sourceInventorySectionId, Integer.MIN_VALUE);
         int sourceSlot = value(data.sourceSlotId, -1);
         int targetSection = parseSection(data.section);
         int targetSlot = value(data.slotIndex, -1);
+        // SourceSlotId is already absolute (InventorySlotIndex). Dropped SlotIndex is visual.
+        if (targetSection == storageWindow.getId()) targetSlot = npcPaging().targetSlot(targetSlot);
+        else if (targetSection == InventoryComponent.STORAGE_SECTION_ID)
+            targetSlot = playerPaging().targetSlot(targetSlot);
         int clientQuantity = value(data.itemStackQuantity, -1);
         int mouseButton = value(data.pressedMouseButton, -1);
         int requestedQuantity = authoritativeQuantityAtIntent(
@@ -1869,6 +1898,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append("AuthoringEditor", authoringSession.activeEditor().name())
                 .append("AuthoringEditorGeneration",
                         Long.toString(authoringSession.editorGeneration()))
+                .append("InventoryViewRevision", Long.toString(inventoryViewRevision))
                 .append("AuthoringAction", action);
     }
 
@@ -1941,7 +1971,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 case VOICE -> NpcAuthoringPermissions.VOICE;
                 case NONE -> NpcAuthoringPermissions.OPEN;
             };
-            case "NAV_OVERVIEW", "CANCEL", "CLOSE_EDITOR", "DIRTY_DISCARD", "DIRTY_STAY"
+            case "NPC_PAGE_PREV", "NPC_PAGE_NEXT", "PLAYER_PAGE_PREV", "PLAYER_PAGE_NEXT",
+                    "NAV_OVERVIEW", "CANCEL", "CLOSE_EDITOR", "DIRTY_DISCARD", "DIRTY_STAY"
                     -> NpcAuthoringPermissions.OPEN;
             default -> throw new IllegalArgumentException("Unknown authoring action.");
         };
@@ -2072,6 +2103,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private void captureStats(Store<EntityStore> store, boolean refreshUi) {
         String before = statsKey();
         if (liveStorageAuthority == null) {
+            try {
+                configuredVitals = com.inigmasgames.persistentnpcs.profile.NpcConfiguredVitals.read(
+                        editor.profileDirectoryForBrowsing(npcName).resolve("native-role").resolve(npcName + ".json"));
+            } catch (RuntimeException unavailable) {
+                configuredVitals = com.inigmasgames.persistentnpcs.profile.NpcConfiguredVitals.EMPTY;
+                diagnostics.accept("NPC_CONFIGURED_VITALS_UNAVAILABLE npc=" + npcName + " reason=" + unavailable);
+            }
             statsSnapshot = statsService.captureEquipmentOnly(authoringSession.npcStableId(),
                     inventory.armor(), authoringSession.sessionId(),
                     authoringSession.pageGeneration(), inventory.equipmentRevision());
@@ -2177,9 +2215,19 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                         inventory.loadoutItem(NpcInventoryRepository.Session.PRIMARY_SLOT))
                                 .compatible());
         CustomInventoryBridgeUi.setNativeSlots(
-                commands, "#NpcInventoryGrid.Slots", inventory.inventory());
+                commands, "#NpcInventoryGrid.Slots", inventory.inventory(), npcPaging().firstSlot(), npcPaging().slotCount());
         CustomInventoryBridgeUi.setNativeSlots(
-                commands, "#PlayerInventoryGrid.Slots", playerInventory);
+                commands, "#PlayerInventoryGrid.Slots", playerInventory, playerPaging().firstSlot(), playerPaging().slotCount());
+        setPagingUi(commands, "Npc", npcPaging());
+        setPagingUi(commands, "Player", playerPaging());
+    }
+
+    private ProfileInventoryPaging npcPaging() { return new ProfileInventoryPaging(inventory.inventory().getCapacity(), npcInventoryPage); }
+    private ProfileInventoryPaging playerPaging() { return new ProfileInventoryPaging(playerInventory.getCapacity(), playerInventoryPage); }
+    private static void setPagingUi(UICommandBuilder commands, String side, ProfileInventoryPaging paging) {
+        commands.set("#" + side + "PageLabel.Text", paging.label());
+        commands.set("#" + side + "PagePrev.Disabled", paging.page() == 0);
+        commands.set("#" + side + "PageNext.Disabled", paging.page() + 1 == paging.pageCount());
     }
 
     private void setProfileFilesUi(UICommandBuilder commands) {
@@ -2236,19 +2284,24 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
 
     private void setStatsUi(UICommandBuilder commands) {
         commands.set("#HealthStat #Value.Text", statText(
-                statsSnapshot == null ? null : statsSnapshot.health().orElse(null)));
+                statsSnapshot == null ? null : statsSnapshot.health().orElse(null), "Health"));
         commands.set("#StaminaStat #Value.Text", statText(
-                statsSnapshot == null ? null : statsSnapshot.stamina().orElse(null)));
+                statsSnapshot == null ? null : statsSnapshot.stamina().orElse(null), "Stamina"));
         commands.set("#ManaStat #Value.Text", statText(
-                statsSnapshot == null ? null : statsSnapshot.mana().orElse(null)));
+                statsSnapshot == null ? null : statsSnapshot.mana().orElse(null), "Mana"));
         String defense = statsSnapshot == null || statsSnapshot.defense().isEmpty()
                 ? "—"
-                : format(statsSnapshot.defense().get().value()) + " base";
+                : statsSnapshot.defense().get().summary();
         commands.set("#DefenseStat #Value.Text", defense);
+        commands.set("#DefenseStat #Value.TooltipText", statsSnapshot == null || statsSnapshot.defense().isEmpty()
+                ? "Armor resistance unavailable." : statsSnapshot.defense().get().details());
+        for (String stat : new String[] { "Health", "Stamina", "Mana" })
+            commands.set("#" + stat + "Stat #Value.TooltipText", liveStorageAuthority == null
+                    ? configuredVitals.tooltip() : "Live authoritative NPC EntityStatMap current / maximum.");
     }
 
-    private static String statText(NpcStatsSnapshotService.StatValue value) {
-        return value == null ? "—"
+    private String statText(NpcStatsSnapshotService.StatValue value, String id) {
+        return value == null ? (liveStorageAuthority == null ? configuredVitals.text(id) : "—")
                 : format(value.current()) + " / " + format(value.maximum());
     }
 
@@ -2364,6 +2417,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     public static final class PageData {
         static final BuilderCodec<PageData> CODEC = BuilderCodec
                 .builder(PageData.class, PageData::new)
+                .append(new KeyedCodec<>("InventoryViewRevision", Codec.STRING),
+                        (data, value) -> data.inventoryViewRevision = value, data -> data.inventoryViewRevision).add()
                 .append(new KeyedCodec<>("Open", Codec.STRING),
                         (data, value) -> data.open = value, data -> data.open).add()
                 .append(new KeyedCodec<>("Cancel", Codec.STRING),
@@ -2508,6 +2563,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         private String authoringEditor;
         private String authoringEditorGeneration;
         private String authoringAction;
+        private String inventoryViewRevision;
         private String profileField;
         private String profileFieldValue;
         private String profileGenerateScope;

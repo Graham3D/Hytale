@@ -76,7 +76,7 @@ $Sounds = "../Sounds.ui";
   Background: @PanelBackground;
   Padding: (Full: 7);
   Label { Anchor: (Height: 16); Text: @Label; Style: (...$C.@DefaultLabelStyle, FontSize: 9, RenderBold: true, TextColor: @Accent, HorizontalAlignment: Center); }
-  Label #Value { FlexWeight: 1; Text: "—"; Style: (...$C.@DefaultLabelStyle, FontSize: 15, RenderBold: true, TextColor: #e7edf3, HorizontalAlignment: Center, VerticalAlignment: Center); }
+  Label #Value { FlexWeight: 1; Text: "—"; TextTooltipStyle: $C.@DefaultTextTooltipStyle; Style: (...$C.@DefaultLabelStyle, FontSize: 11, RenderBold: true, TextColor: #e7edf3, HorizontalAlignment: Center, VerticalAlignment: Center); }
 };
 
 $C.@PageOverlay #ProfilePage {
@@ -93,7 +93,7 @@ $C.@PageOverlay #ProfilePage {
 
 
     $C.@DecoratedContainer #TopWorkspace {
-      Anchor: (Height: 534, Bottom: 12);
+      Anchor: (Height: 506, Bottom: 12);
       #Title { $C.@Title #ProfileTitle { @Text = "NPC PROFILE"; } }
       #Content {
         LayoutMode: Left;
@@ -134,19 +134,20 @@ $C.@PageOverlay #ProfilePage {
         }
         Group #GearPanel { LayoutMode: Left; FlexWeight: 1; Background: #0d1822;
           Group #NpcAppearancePanel { Anchor: (Width: 440, Right: 16); LayoutMode: Top;
-            Label #NpcPreviewName { Anchor: (Height: 30); Text: "NPC"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, FontSize: 16, TextColor: #f1dfae, HorizontalAlignment: Center); }
-            Group #NpcPreviewContainer { Anchor: (Height: 330, Bottom: 4);
-              // Native artwork is 820x792. One-quarter scale, bottom-centered; never stretched to the viewport.
-              Group #NpcPreviewGround { HitTestVisible: false; Anchor: (Left: 117, Bottom: 0, Width: 205, Height: 198); Background: "ImmersiveNpcInventory/NPCBackground.png"; }
+            Label #NpcPreviewName { Anchor: (Height: 24); Text: "NPC"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, FontSize: 16, TextColor: #f1dfae, HorizontalAlignment: Center); }
+            Group #NpcPreviewContainer { Anchor: (Height: 326, Bottom: 4);
+              // 820x792 artwork at exact quarter scale. Compensate its transparent lower margin
+              // so the luminous ground, rather than the texture canvas, sits beneath the feet.
+              Group #NpcPreviewGround { HitTestVisible: false; Anchor: (Left: 117, Bottom: -50, Width: 205, Height: 198); Background: "ImmersiveNpcInventory/NPCBackground.png"; }
               Group { LayoutMode: CenterMiddle;
-                CharacterPreviewComponent #NpcCharacterPreview { Anchor: (Width: 340, Height: 330); }
+                CharacterPreviewComponent #NpcCharacterPreview { Anchor: (Width: 340, Height: 326); }
                 Label #NpcPreviewUnavailable { Anchor: (Width: 270, Height: 80); Text: "Appearance preview is temporarily unavailable."; Visible: false; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 10, TextColor: @Muted, HorizontalAlignment: Center, VerticalAlignment: Center); }
               }
             }
-            Group #InfiniteAmmoRow { LayoutMode: Center; Anchor: (Height: 26, Bottom: 4);
+            Group #InfiniteAmmoRow { LayoutMode: Center; Anchor: (Height: 22, Bottom: 4);
               Group { LayoutMode: Left; Anchor: (Width: 144); $C.@CheckBox #InfiniteAmmoCheckBox { Value: false; TooltipText: "Toggle for infinite ammunition."; } Label { Anchor: (Left: 8); Text: "Infinite Ammo"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, VerticalAlignment: Center); } }
             }
-            Group #StatsStrip { LayoutMode: Left; Anchor: (Height: 64);
+            Group #StatsStrip { LayoutMode: Left; Anchor: (Height: 50);
               @StatCell #HealthStat { @Label = "HEALTH"; @Accent = #e76f6f; }
               @StatCell #StaminaStat { @Label = "STAMINA"; @Accent = #e7c45e; }
               @StatCell #ManaStat { @Label = "MANA"; @Accent = #66a8df; }
@@ -225,14 +226,21 @@ $C.@PageOverlay #ProfilePage {
       }
 
     $C.@DecoratedContainer #InventoriesPanel {
-      Anchor: (Height: 410, Bottom: 10);
+      Anchor: (Height: 438, Bottom: 10);
       #Title {
         $C.@Title { @Text = "INVENTORIES"; }
       }
       #Content { LayoutMode: Left; Padding: (Full: 17);
         Group #NpcInventoryPanel { LayoutMode: Top; FlexWeight: 1; Background: #0d1822;
           Label #NpcInventoryTitle { Anchor: (Height: 28); Text: "NPC INVENTORY"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, RenderUppercase: true, TextColor: @Gold, HorizontalAlignment: Center); }
-          Group #NpcGridHost { LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; FlexWeight: 1; }
+          Group #NpcGridHost { LayoutMode: Center; Anchor: (Height: 306); }
+          Group { LayoutMode: Center; Anchor: (Height: 28, Top: 4);
+            Group { LayoutMode: Left; Anchor: (Width: 240);
+              $C.@SecondaryTextButton #NpcPagePrev { @Anchor = (Width: 40, Height: 28); Text: "<"; }
+              Label #NpcPageLabel { FlexWeight: 1; Text: "PAGE 1 / 2"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, HorizontalAlignment: Center, VerticalAlignment: Center); }
+              $C.@SecondaryTextButton #NpcPageNext { @Anchor = (Width: 40, Height: 28); Text: ">"; }
+            }
+          }
         }
         Group #TransferRail { HitTestVisible: false; LayoutMode: CenterMiddle; Anchor: (Width: 40);
           Group { Anchor: (Width: 34, Height: 80); LayoutMode: Top;
@@ -246,7 +254,14 @@ $C.@PageOverlay #ProfilePage {
         }
         Group #PlayerInventoryPanel { LayoutMode: Top; FlexWeight: 1; Background: #0d1822;
           Label #PlayerInventoryTitle { Anchor: (Height: 28); Text: "PLAYER INVENTORY"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, RenderUppercase: true, TextColor: #a8bbc9, HorizontalAlignment: Center); }
-          Group #PlayerGridHost { LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; FlexWeight: 1; }
+          Group #PlayerGridHost { LayoutMode: Center; Anchor: (Height: 306); }
+          Group { LayoutMode: Center; Anchor: (Height: 28, Top: 4);
+            Group { LayoutMode: Left; Anchor: (Width: 240);
+              $C.@SecondaryTextButton #PlayerPagePrev { @Anchor = (Width: 40, Height: 28); Text: "<"; }
+              Label #PlayerPageLabel { FlexWeight: 1; Text: "PAGE 1 / 2"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, HorizontalAlignment: Center, VerticalAlignment: Center); }
+              $C.@SecondaryTextButton #PlayerPageNext { @Anchor = (Width: 40, Height: 28); Text: ">"; }
+            }
+          }
         }
       }
     }

@@ -17,7 +17,7 @@
 );
 
 @ProbeGrid = ItemGrid {
-  Anchor: (Width: 534, Height: 458);
+  Anchor: (Width: 534, Height: 306);
   SlotsPerRow: 7;
   Style: @ProbeGridStyle;
   Background: #000000(0);

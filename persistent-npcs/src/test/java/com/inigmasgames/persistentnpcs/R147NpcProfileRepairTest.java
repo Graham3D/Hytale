@@ -21,7 +21,7 @@ public final class R147NpcProfileRepairTest {
         UUID npc = UUID.randomUUID();
         UUID session = UUID.randomUUID();
         var empty = service.captureEquipmentOnly(npc, new SimpleItemContainer((short) 4), session, 7, 0);
-        assert empty.defense().orElseThrow().value() == 0;
+        assert empty.defense().orElseThrow().types().isEmpty();
         assert empty.health().isEmpty() && empty.stamina().isEmpty() && empty.mana().isEmpty();
         assert empty.npcEntityUuid() == null && empty.npcStableId().equals(npc);
         assert empty.sessionId().equals(session) && empty.pageGeneration() == 7;
@@ -34,8 +34,7 @@ public final class R147NpcProfileRepairTest {
         var state = new NpcInventoryState(2, npc, armor, List.of(), List.of(), false,
                 true, true, true, true);
         var equipped = service.captureEquipmentOnly(npc, fixture(state, resistance), session, 7, 1);
-        assert equipped.defense().orElseThrow().value() == 24.0;
-        assert equipped.defense().orElseThrow().authority().equals("AUTHORITATIVE_ARMOR_BASE_DAMAGE_RESISTANCE");
+        assert equipped.defense().orElseThrow().types().get("Physical").flat() == 24.0;
         assert equipped.equipmentRevision() == 1;
         assert equipped.health().isEmpty() && equipped.stamina().isEmpty() && equipped.mana().isEmpty();
 
@@ -47,10 +46,10 @@ public final class R147NpcProfileRepairTest {
             var reopened = JsonFiles.read(saved, NpcInventoryState.class);
             var restart = new NpcStatsSnapshotService().captureEquipmentOnly(npc,
                     fixture(reopened, resistance), UUID.randomUUID(), 1, 0);
-            assert restart.defense().orElseThrow().value() == 24.0;
+            assert restart.defense().orElseThrow().types().get("Physical").flat() == 24.0;
             var removed = new NpcInventoryState(2, npc, armor.subList(1, 4), List.of(), List.of(), false);
             var refreshed = service.captureEquipmentOnly(npc, fixture(removed, resistance), session, 7, 2);
-            assert refreshed.defense().orElseThrow().value() == 20.5;
+            assert refreshed.defense().orElseThrow().types().get("Physical").flat() == 20.5;
             assert refreshed.equipmentRevision() == 2;
         } finally {
             Files.deleteIfExists(saved);
@@ -58,7 +57,7 @@ public final class R147NpcProfileRepairTest {
         var nonArmor = new NpcInventoryState(2, npc, List.of(persisted(0, "Test_NonArmor")),
                 List.of(), List.of(), false);
         assert service.captureEquipmentOnly(npc, fixture(nonArmor, resistance), session, 7, 3)
-                .defense().orElseThrow().value() == 0;
+                .defense().orElseThrow().types().isEmpty();
 
         String page = Files.readString(Path.of("src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java"));
         String ui = Files.readString(Path.of("src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcProfile.ui"));
@@ -69,12 +68,12 @@ public final class R147NpcProfileRepairTest {
         assert !page.contains("#InfiniteAmmoHint") && !ui.contains("#InfiniteAmmoHint");
         assert page.contains("if (!failure) return;") && page.contains("NPC_PROFILE_INITIAL_STATUS");
         assert ui.contains("Text: \"NPC GEAR & STATS\"");
-        assert ui.contains("Bottom: 0, Width: 205, Height: 198");
+        assert ui.contains("Bottom: -50, Width: 205, Height: 198");
         assert 205 * 792 == 198 * 820 : "Ground artwork must retain its aspect ratio";
-        assert ui.contains("Width: 340, Height: 330");
+        assert ui.contains("Width: 340, Height: 326");
         assert page.contains("commands.set(\"#NpcCharacterPreview.Visible\", preview != null)");
         assert page.contains("commands, \"#NpcInventoryGrid.Slots\", inventory.inventory()");
-        assert page.contains("commands, \"#PlayerInventoryGrid.Slots\", playerInventory)");
+        assert page.contains("commands, \"#PlayerInventoryGrid.Slots\", playerInventory,");
         System.out.println("R147 native-grid/cleanup and unspawned armor Defense regressions passed; connected validation pending.");
     }
 
@@ -86,7 +85,12 @@ public final class R147NpcProfileRepairTest {
         ItemStack[] slots = new ItemStack[4];
         for (var entry : state.armor()) {
             Double value = resistance.get(entry.itemId());
-            ItemArmor fixtureArmor = value == null ? null : new ItemArmor(ItemArmorSlot.VALUES[entry.slot()], value, null, null);
+            ItemArmor fixtureArmor = value == null ? null : new ItemArmor(ItemArmorSlot.VALUES[entry.slot()], value, null, null) {
+                @Override public Map<com.hypixel.hytale.server.core.modules.entity.damage.DamageCause,
+                        com.hypixel.hytale.server.core.modules.entity.damage.ResistanceModifier[]> getDamageResistanceValues() {
+                    return Map.of(PHYSICAL, new com.hypixel.hytale.server.core.modules.entity.damage.ResistanceModifier[0]);
+                }
+            };
             Item item = new Item(entry.itemId()) {
                 @Override public ItemArmor getArmor() { return fixtureArmor; }
             };
@@ -97,6 +101,8 @@ public final class R147NpcProfileRepairTest {
         };
     }
 
+    private static final com.hypixel.hytale.server.core.modules.entity.damage.DamageCause PHYSICAL =
+            new com.hypixel.hytale.server.core.modules.entity.damage.DamageCause("Physical");
     private static final class FixtureStack extends ItemStack {
         private final Item asset;
         FixtureStack(String id, Item asset) {

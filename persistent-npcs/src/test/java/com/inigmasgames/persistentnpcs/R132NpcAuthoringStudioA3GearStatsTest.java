@@ -144,9 +144,9 @@ public final class R132NpcAuthoringStudioA3GearStatsTest {
         assert stats.contains("npcStableId") && stats.contains("npcEntityUuid")
                 && stats.contains("capturedAt") && stats.contains("equipmentRevision")
                 && stats.contains("sessionId") && stats.contains("pageGeneration");
-        assert stats.contains("EntityStatMap") && stats.contains("getBaseDamageResistance")
-                : "Stats must come from live ECS state and labeled base armor defense";
-        assert page.contains("\"—\"") && page.contains(" + \" base\"")
+        assert stats.contains("EntityStatMap") && stats.contains("getResistanceModifiers")
+                : "Stats must come from live ECS state and native typed armor aggregation";
+        assert page.contains("\"—\"") && !page.contains(" + \" base\"")
                 : "Unavailable stats must not be shown as fake zero values";
         assert page.contains("scheduleAtFixedRate") && page.contains("STALE_IDENTITY_OR_GENERATION");
     }

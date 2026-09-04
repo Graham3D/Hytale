@@ -602,6 +602,11 @@ if ($LASTEXITCODE -ne 0) {
     throw "Orbis conversational hardening Gate 1 matrix failed with exit code $LASTEXITCODE"
 }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R148NpcProfilePagingResistanceTest
+if ($LASTEXITCODE -ne 0) {
+    throw "R148 paging/resistance tests failed with exit code $LASTEXITCODE"
+}
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R147NpcProfileRepairTest
 if ($LASTEXITCODE -ne 0) {
     throw "R147 Profile repair tests failed with exit code $LASTEXITCODE"

@@ -5,6 +5,7 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.persistentnpcs.ui.NativeNpcInventoryController;
 import java.time.Instant;
@@ -16,7 +17,28 @@ import java.util.function.Consumer;
 /** Read-only, generation-bound snapshot: live ECS vitals and independently authoritative armor. */
 public final class NpcStatsSnapshotService {
     public record StatValue(float current, float minimum, float maximum) { }
-    public record DefenseSnapshot(double value, String authority) { }
+    public record Protection(double flat, double percent, String inheritedParent, boolean bypassed) { }
+    public record DefenseSnapshot(Map<String, Protection> types) {
+        public DefenseSnapshot { types = java.util.Collections.unmodifiableMap(new java.util.TreeMap<>(types)); }
+        public String summary() {
+            if (types.isEmpty()) return "No armor";
+            String type = types.containsKey("Physical") ? "Physical" : types.keySet().iterator().next();
+            var value = types.get(type);
+            if (value.bypassed()) return type + ": bypass";
+            return (value.percent() != 0 ? NpcConfiguredVitals.number(value.percent() * 100) + "%"
+                    : NpcConfiguredVitals.number(value.flat()) + " flat") + " " + type;
+        }
+        public String details() {
+            StringBuilder text = new StringBuilder("Equipped armor resistance (before effects/broken-item penalties):");
+            types.forEach((type, value) -> text.append("\n").append(type).append(": ")
+                    .append(NpcConfiguredVitals.number(value.flat())).append(" flat + ")
+                    .append(NpcConfiguredVitals.number(value.percent() * 100)).append("%")
+                    .append(value.inheritedParent() == null ? "" : "; then parent " + value.inheritedParent())
+                    .append(value.bypassed() ? "; damage bypasses resistance" : ""));
+            if (types.isEmpty()) text.append("\nNo typed armor resistance.");
+            return text.append("\nPer type: max(0, damage - flat) × max(0, 1 - percent); inherited types apply afterward. Types are not summed together.").toString();
+        }
+    }
     public record NpcStatsSnapshot(
             UUID npcStableId,
             UUID npcEntityUuid,
@@ -41,12 +63,10 @@ public final class NpcStatsSnapshotService {
         if (invalid != null) throw new IllegalStateException(invalid);
         EntityStatMap stats = store.getComponent(
                 authority.npcRef(), EntityStatMap.getComponentType());
-        double baseDefense = armorDefense(authority.armor());
         NpcStatsSnapshot snapshot = new NpcStatsSnapshot(
                 authority.profile().stableId(), authority.npcEntityId(), Instant.now(),
                 stat(stats, "Health"), stat(stats, "Stamina"), stat(stats, "Mana"),
-                Optional.of(new DefenseSnapshot(baseDefense,
-                        "AUTHORITATIVE_ARMOR_BASE_DAMAGE_RESISTANCE")),
+                Optional.of(armorProtection(authority.armor())),
                 Map.of(), equipmentRevision, sessionId, pageGeneration);
         if (diagnostics != null) diagnostics.accept("NPC_STATS_SNAPSHOT"
                 + " npc=" + authority.profile().name()
@@ -59,7 +79,7 @@ public final class NpcStatsSnapshotService {
                 + " health=" + shown(snapshot.health())
                 + " stamina=" + shown(snapshot.stamina())
                 + " mana=" + shown(snapshot.mana())
-                + " defenseBase=" + baseDefense);
+                + " armorProtection=" + snapshot.defense());
         return snapshot;
     }
 
@@ -68,21 +88,20 @@ public final class NpcStatsSnapshotService {
             UUID sessionId, long pageGeneration, long equipmentRevision) {
         return new NpcStatsSnapshot(npcStableId, null, Instant.now(),
                 Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.of(new DefenseSnapshot(armorDefense(armor),
-                        "AUTHORITATIVE_ARMOR_BASE_DAMAGE_RESISTANCE")),
+                Optional.of(armorProtection(armor)),
                 Map.of(), equipmentRevision, sessionId, pageGeneration);
     }
 
-    private static double armorDefense(ItemContainer armor) {
-        double defense = 0.0;
-        for (short slot = 0; slot < Math.min(4, armor.getCapacity()); slot++) {
-            ItemStack stack = armor.getItemStack(slot);
-            if (!ItemStack.isEmpty(stack) && stack.getItem() != null
-                    && stack.getItem().getArmor() != null) {
-                defense += stack.getItem().getArmor().getBaseDamageResistance();
-            }
-        }
-        return defense;
+    public static DefenseSnapshot armorProtection(ItemContainer armor) {
+        var types = new java.util.TreeMap<String, Protection>();
+        // Installed SDK: world is accessed only when penalties are enabled; null effects
+        // explicitly means equipment-only. Native aggregation includes base in each typed flat value.
+        DamageSystems.ArmorDamageReduction.getResistanceModifiers(null, armor, false, null)
+                .forEach((cause, modifiers) -> types.put(cause.getId(), new Protection(
+                        modifiers.flatModifier, modifiers.multiplierModifier,
+                        modifiers.inheritedParentId == null ? null : modifiers.inheritedParentId.getId(),
+                        cause.doesBypassResistances())));
+        return new DefenseSnapshot(types);
     }
 
     private static Optional<StatValue> stat(EntityStatMap map, String id) {

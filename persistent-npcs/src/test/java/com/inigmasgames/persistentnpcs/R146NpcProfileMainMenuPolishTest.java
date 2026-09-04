@@ -57,11 +57,11 @@ public final class R146NpcProfileMainMenuPolishTest {
         }
         String compact = Files.readString(PAGES.resolve("ProfileInventory/GridCommon.ui"));
         String probe = Files.readString(PAGES.resolve("NativeInventoryProbe/GridCommon.ui"));
-        assert compact.contains("SlotSize: 74,") && compact.contains("Width: 534, Height: 458");
+        assert compact.contains("SlotSize: 74,") && compact.contains("Width: 534, Height: 306");
         assert compact.contains("SlotsPerRow: 7;");
         for (String host : new String[] {"NpcGridHost", "PlayerGridHost"}) {
-            assert block(overview, "Group #" + host).contains("LayoutMode: TopScrolling;");
-            assert block(overview, "Group #" + host).contains("ScrollbarStyle: $C.@DefaultScrollbarStyle;");
+            assert block(overview, "Group #" + host).contains("LayoutMode: Center;");
+            assert block(overview, "Group #" + host).contains("Height: 306");
         }
         assert probe.contains("SlotSize: 62,") : "Do not resize isolated probe resources";
         assert behaviorOnly(compact).equals(behaviorOnly(probe))
@@ -80,17 +80,16 @@ public final class R146NpcProfileMainMenuPolishTest {
             assert (viewport[0] - 1180) / 2 >= 0;
             assert (viewport[1] - 1030) / 2 >= 0;
         }
-        assert 534 + 12 + 410 + 10 + 24 + 6 + 34 <= 1030;
-        assert 30 + 330 + 4 + 26 + 4 + 64 <= 534 - 38 - 34;
+        assert 506 + 12 + 438 + 10 + 24 + 6 + 34 <= 1030;
+        assert 24 + 326 + 4 + 22 + 4 + 50 <= 506 - 38 - 34;
         assert 210 + 16 + 440 + 16 + 190 + 12 + 210 <= 1180 - 34;
-        assert 534 + 18 <= (1180 - 34 - 40) / 2; // Grid plus scrollbar clearance.
-        assert 306 + 28 <= 410 - 38 - 34; // Four full native rows visible.
+        assert 534 <= (1180 - 34 - 40) / 2;
+        assert 306 + 28 + 28 + 4 <= 438 - 38 - 34; // Title, four rows, bounded page controls.
         assert 7 * 74 + 6 * 2 + 4 == 534;
-        assert 6 * 74 + 5 * 2 + 4 == 458; // Full 40-slot content, not a capacity change.
+        assert 4 * 74 + 3 * 2 + 4 == 306;
         for (int slot = 0; slot < 40; slot++) {
-            int top = 2 + (slot / 7) * 76;
-            assert top + 74 <= 458;
-            assert Math.max(0, top + 74 - 310) <= 458 - 310;
+            int top = 2 + ((slot % 28) / 7) * 76;
+            assert top + 74 <= 306;
         }
         // Parameters cannot follow ordinary properties in a Hytale template.
         assert !Pattern.compile("\\$C\\.@Title[^{}]*\\{[^{}]*Anchor:[^{}]*@Text\\s*=")
