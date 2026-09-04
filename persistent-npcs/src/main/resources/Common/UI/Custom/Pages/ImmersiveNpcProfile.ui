@@ -79,7 +79,7 @@ $C.@PageOverlay #ProfilePage {
       Padding: (Horizontal: 14);
       LayoutMode: Left;
       Label #ProfileTitle { FlexWeight: 1; Text: "NPC AUTHORING STUDIO"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, RenderUppercase: true, TextColor: #d9e6ef, VerticalAlignment: Center); }
-      Label { Anchor: (Width: 390); Text: "LIVE INVENTORY · EXPLICIT DRAFT SAVES"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, TextColor: #7fa2b8, HorizontalAlignment: Right, VerticalAlignment: Center); }
+      Label { Anchor: (Width: 390); Text: "LIVE INVENTORY · EXPLICIT DRAFT SAVES"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, TextColor: #7fa2b8, HorizontalAlignment: End, VerticalAlignment: Center); }
     }
 
     Group #TopWorkspace {
