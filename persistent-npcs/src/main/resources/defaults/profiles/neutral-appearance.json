@@ -1,8 +1,8 @@
 {
   "bodyCharacteristic": "Default.02",
-  "face": "Face",
+  "face": "Face_Neutral",
   "ears": "Default",
   "eyes": "Plain_Eyes.Black",
   "mouth": "Mouth_Default",
-  "underwear": "Boxer.Red"
+  "underwear": "Suit.Red"
 }

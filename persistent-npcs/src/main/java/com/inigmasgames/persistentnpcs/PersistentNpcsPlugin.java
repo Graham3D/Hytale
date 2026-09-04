@@ -142,7 +142,7 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R135-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER";
+    public static final String REVISION = "R143-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-DEFAULT-SKIN-HOTFIX";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;

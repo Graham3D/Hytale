@@ -962,6 +962,42 @@ The R142 connected-test candidate is:
   `C:\HytaleRollback\NpcAuthoringStudio-P1-R141-2026-09-04` with SHA-256
   `6BA00DBC16CEBA031EEAF4FA3274FE601E8E3EC28D1CE591B1B280F4337A835D`.
 
-P1 R142 automated status: **PASS**. Connected-client validation status: **PENDING**.
+P1 R142 automated status: **PASS**. Connected-client validation: server entry restored,
+but Hoit update failed with `Unknown face: Face`; superseded by R143 below.
 P2 Appearance Editor polish and P3 Main Studio polish remain blocked pending explicit P1
 approval.
+
+### R143 neutral appearance registry repair and accurate revision display
+
+The September 4 15:15 client log confirms that the plugin and asset pack loaded the R142
+JAR. The HUD nevertheless displayed R135 because `PersistentNpcsPlugin.REVISION` was
+stale; the manifest still reported R140. R143 aligns the HUD, log revision, manifest,
+builder, and installer. A new build gate rejects disagreement between these identifiers.
+
+Hoit's update failure was a real defect in the packaged default: `Face` is not a face ID
+in the installed cosmetics registry. The previous mock validator checked only field
+presence, so the earlier claim that the template had been validated against Hytale was
+too strong. The corrected face is `Face_Neutral`, as listed in
+`Cosmetics/CharacterCreator/Faces.json`. Underwear is now `Suit.Red`, the red base garment
+shown in the user's reset-avatar screenshot. The template remains bald and barefoot.
+
+`validate-release-resources.ps1` runs on every build and checks all six neutral appearance
+selections, their explicit gradient values, and their model/texture files against the
+Assets.zip adjacent to the selected server installation. The corrected template passed
+against both installed release and pre-release registries. A deliberate stale artifact
+name was rejected by the version gate. Existing create, reopen, restart, and malformed
+appearance preservation coverage also passed. Hoit's missing skin will be materialized
+through the normal update path; no runtime profile, appearance, or voice file was edited
+during deployment.
+
+The first full-suite run hit an existing `ConcurrentModificationException` in
+`R046OrbisInterruptionTest` while iterating its asynchronous event list. A full rerun
+passed, including the 8,100-scenario conversation matrix. Live model tests were skipped;
+connected Hoit creation/reopening and R143 HUD confirmation remain pending.
+
+- Deployed JAR: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R143-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-DEFAULT-SKIN-HOTFIX.jar`
+- Size: `3,004,927` bytes; SHA-256: `4A30743AC398B2CE8032DE75E965483A19B4FC613AA1B1AF067A8226B381E69F`.
+- Source/deployed hashes match; exactly one active ImmersiveNPCs JAR.
+- R142 moved into `C:\HytaleRollback\NpcAuthoringStudio-P1-R142-2026-09-04`; hash `589CA0232818FBAA766CB6E4FE6CE6C4B2268BC8240537582F283F82F5E47DC9`.
+
+P1 remains pending connected approval. P2 and P3 have not begun.

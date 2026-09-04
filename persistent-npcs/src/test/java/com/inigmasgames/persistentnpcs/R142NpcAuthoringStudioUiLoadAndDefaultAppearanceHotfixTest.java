@@ -27,8 +27,8 @@ public final class R142NpcAuthoringStudioUiLoadAndDefaultAppearanceHotfixTest {
 
         String neutral = Files.readString(Path.of(
                 "src/main/resources/defaults/profiles/neutral-appearance.json"));
-        assert neutral.contains("\"underwear\": \"Boxer.Red\"")
-                && neutral.contains("\"face\": \"Face\"")
+        assert neutral.contains("\"underwear\": \"Suit.Red\"")
+                && neutral.contains("\"face\": \"Face_Neutral\"")
                 && !neutral.contains("haircut")
                 && !neutral.contains("overtop")
                 : "Neutral NPC template must be valid, bald, and free of authored clothing";

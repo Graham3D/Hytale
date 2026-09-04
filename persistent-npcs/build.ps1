@@ -23,7 +23,8 @@ if (-not (Test-Path -LiteralPath $ServerJar)) {
 
 $classes = Join-Path $projectRoot 'build\classes'
 $dist = Join-Path $projectRoot 'dist'
-$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.3-R142-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-UI-LOAD-DEFAULT-APPEARANCE-HOTFIX.jar'
+$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.3-R143-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-DEFAULT-SKIN-HOTFIX.jar'
+& (Join-Path $projectRoot 'validate-release-resources.ps1') -ServerJar $ServerJar -ArtifactName ([IO.Path]::GetFileName($outputJar))
 $resolvedClasses = [IO.Path]::GetFullPath($classes)
 $resolvedBuildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot 'build'))
 if (-not $resolvedClasses.StartsWith($resolvedBuildRoot, [StringComparison]::OrdinalIgnoreCase)) {
