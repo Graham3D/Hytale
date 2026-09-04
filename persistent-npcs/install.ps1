@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
-$artifactName = 'ImmersiveNPCs-0.6.3-R138-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-WAVEFORM-HOTFIX.jar'
+$artifactName = 'ImmersiveNPCs-0.6.3-R139-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-POLISH.jar'
 $sourceJar = Join-Path $projectRoot (Join-Path 'dist' $artifactName)
 if (-not (Test-Path -LiteralPath $sourceJar)) {
     & (Join-Path $projectRoot 'build.ps1')

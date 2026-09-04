@@ -1111,9 +1111,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     type, VoicePresetRepository.SampleState.MISSING);
             String selector = "#VoiceSaved" + type.name();
             commands.set(selector + ".Text", switch (state) {
-                case FOUND -> "Found";
-                case MISSING -> "Missing";
-                case INVALID -> "Invalid";
+                case FOUND -> "SAVED";
+                case MISSING -> type == VoiceSampleType.REFERENCE ? "REQUIRED" : "—";
+                case INVALID -> "INVALID";
             });
             commands.set(selector + ".Style.TextColor", switch (state) {
                 case FOUND -> "#72d58b";

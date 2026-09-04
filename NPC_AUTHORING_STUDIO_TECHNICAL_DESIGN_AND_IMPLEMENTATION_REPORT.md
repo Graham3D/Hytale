@@ -24,8 +24,8 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | A3 — gear/loadout/live stats | Complete in R132 | PASS | PASS | PASS |
 | A4 — profile editor/generate | Complete in R133.1 | PASS | PASS: operator confirmed editor and workspace behavior | PASS |
 | A5 — appearance editor | Complete in R134.2 | PASS | PASS | PASS |
-| A6 — voice recorder | R138 waveform-property hotfix candidate | PASS | Pending R138 connected validation | HOLD FOR CONNECTED PASS |
-| A7 — integration/polish | Not activated | Not run | Not run | BLOCKED |
+| A6 / P1 — voice recorder polish | R139 connected-validation candidate | PASS | Pending R139 P1 connected validation | HOLD FOR P1 APPROVAL |
+| A7 — integration/polish | P1 only; P2/P3 not activated | P1 PASS | P1 pending; P2/P3 not run | BLOCKED AFTER P1 |
 
 The model-distillation subsystem remains paused and isolated. No D6/D7, training,
 adapter, model-download, environment, promotion, or runtime-model work was performed.
@@ -779,3 +779,46 @@ The R138 connected-test candidate is:
 
 A6 R138 automated status: **PASS**. Connected-client validation status: **PENDING**.
 A7 remains unauthorized and was not started.
+
+### R139 P1 Voice Recorder polish
+
+R139 is a bounded presentation-only polish pass over the accepted R138 recorder
+behavior. It does not change voice capture, privacy, transaction, persistence,
+waveform-analysis, playback, deletion, rollback, inventory, gear, profile, or
+appearance authority. The recorder is now a centered, bounded 520-by-780 panel with a
+framed header, stronger world-background separation, a compact framed emotion list,
+aligned selected-sample and elapsed-time metadata, and a double-framed waveform well.
+The real 32-bucket waveform and its codec-backed Anchor updates are unchanged.
+
+The visible controls remain exactly the approved compact set: Record, state-aware
+Play/Stop, Delete, full-width Save Sample, and Return to Studio. The packaged
+record/play/stop/delete icon assets remain in use. Saved emotion states now read
+`SAVED`, an unsaved required Reference reads `REQUIRED`, optional missing samples use a
+quiet em dash, and invalid samples remain conspicuously red. Typography, spacing,
+padding, row heights, and button hierarchy were tightened without changing event IDs or
+control behavior.
+
+The R139 gate verifies the recorder's bounded geometry against both 1920-by-1080 and
+2560-by-1440 canvases, the complete compact-control and icon contract, waveform framing,
+privacy copy, status vocabulary, absence of legacy redundant controls, and preservation
+of all four recorder event intents. The full deterministic suite passes with live model
+tests intentionally skipped. An incidental unrequested live-model benchmark run reached
+the local model but failed on a nondeterministic dialogue response; it is unrelated to
+this UI-only change and is not part of the deterministic promotion gate.
+
+The R139 P1 connected-test candidate is:
+
+- source artifact:
+  `C:\HytaleMigration\persistent-npcs\dist\ImmersiveNPCs-0.6.3-R139-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-POLISH.jar`;
+- deployed artifact:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R139-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-POLISH.jar`;
+- size: `3,004,466` bytes;
+- SHA-256: `ECC6C5CB73A2B27039D9C7AB9E3F7667905125302634386B1B843C5F1E035120`;
+- source/deployed hash equality: verified;
+- installed Immersive NPC JAR count: exactly one;
+- R138 artifact: preserved independently at
+  `C:\HytaleRollback\NpcAuthoringStudio-A6-R138-WAVEFORM-HOTFIX-2026-09-04`.
+
+P1 automated status: **PASS**. P1 connected-client validation status: **PENDING**.
+P2 Appearance Editor polish and P3 Main Studio polish were not started and remain
+blocked pending explicit P1 connected approval.
