@@ -1,10 +1,17 @@
 # Orbis NPC Authoring Studio — Technical Design and Implementation Report
 
-Updated: 2026-09-03 (America/New_York)  
-Program: A0–A7, stage-gated  
-Authoritative design: `hytale-taverns/Orbis NPC Authoring Studio Technical Design.docx`  
-Design SHA-256: `7F1FD4FE5E7C37B90A2CF79B2DBD09CBC7C565002FD5F6052E5C388809F0FDC9`  
-Repository baseline: `5ea4c424bb9e754c1a081e31dc9176b2d8674eaf`  
+Updated: 2026-09-03 (America/New_York)
+
+Program: A0–A7, stage-gated
+
+Authoritative design: `hytale-taverns/Orbis NPC Authoring Studio Technical Design.docx`
+
+Design SHA-256: `7F1FD4FE5E7C37B90A2CF79B2DBD09CBC7C565002FD5F6052E5C388809F0FDC9`
+
+Repository baseline: `5ea4c424bb9e754c1a081e31dc9176b2d8674eaf`
+
+A1 source checkpoint: `4f32daff921eb6d5cec8f5c34981b454ae0a0584`
+
 Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 
 ## Program status
@@ -205,7 +212,10 @@ Required connected checks:
 
 ### Gate decision
 
-A1 implementation/automated status: **PASS**.  
-A1 connected status: **PENDING**.  
-Next allowed stage after an operator-reported connected PASS: **A2**.  
+A1 implementation/automated status: **PASS**.
+
+A1 connected status: **PENDING**.
+
+Next allowed stage after an operator-reported connected PASS: **A2**.
+
 No A2+ functionality may be activated before that report.
