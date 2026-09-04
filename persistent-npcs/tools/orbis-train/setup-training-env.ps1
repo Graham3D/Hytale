@@ -1,4 +1,4 @@
-param([string]$OfflineRoot = 'G:\My Drive\Inigmas Games\Orbis Offline Training',[switch]$Install)
+param([string]$OfflineRoot = 'C:\HytaleTraining\Orbis',[switch]$Install)
 $ErrorActionPreference = 'Stop'
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $lockPath = Join-Path $projectRoot 'training\configs\d6-environment-lock.json'

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "offlineRoot": "G:\\My Drive\\Inigmas Games\\Orbis Offline Training",
+  "offlineRoot": "C:\\HytaleTraining\\Orbis",
   "activeSaveRoot": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\UserData\\Saves\\NPC",
   "g0BaseManifest": "training/configs/g0-training-base.json",
   "g0LicenseDecision": "training/configs/g0-license-decision.json",

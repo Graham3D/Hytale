@@ -1,4 +1,4 @@
-param([string]$OfflineRoot='G:\My Drive\Inigmas Games\Orbis Offline Training',[string]$ActiveSaveRoot="$env:APPDATA\Hytale\UserData\Saves\NPC")
+param([string]$OfflineRoot='C:\HytaleTraining\Orbis',[string]$ActiveSaveRoot="$env:APPDATA\Hytale\UserData\Saves\NPC")
 $ErrorActionPreference = 'Stop'
 $projectRoot=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'));$offline=[IO.Path]::GetFullPath($OfflineRoot);$save=[IO.Path]::GetFullPath($ActiveSaveRoot);$separator=[IO.Path]::DirectorySeparatorChar
 if(($offline.TrimEnd($separator)+$separator).StartsWith(($save.TrimEnd($separator)+$separator),[StringComparison]::OrdinalIgnoreCase)-or($save.TrimEnd($separator)+$separator).StartsWith(($offline.TrimEnd($separator)+$separator),[StringComparison]::OrdinalIgnoreCase)){throw 'Offline root must not overlap the active Hytale save.'}
