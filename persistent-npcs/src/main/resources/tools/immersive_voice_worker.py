@@ -549,6 +549,44 @@ class VoiceWorker:
         return {"frames": [base64.b64encode(value).decode("ascii") for value in frames],
                 "workerPid": os.getpid()}
 
+    def analyze_saved_wav(self, request):
+        """Build a bounded amplitude envelope from a saved WAV; loads no speech model."""
+        started = time.perf_counter()
+        source = Path(str(request.get("path", ""))).resolve()
+        if not source.is_file():
+            raise ValueError("saved WAV is missing")
+        chunks = []
+        with self.av.open(str(source)) as container:
+            resampler = self.av.AudioResampler(format="s16", layout="mono", rate=48000)
+            for frame in container.decode(audio=0):
+                for converted in resampler.resample(frame):
+                    chunks.append(converted.to_ndarray().reshape(-1)
+                                  .astype(self.np.int16, copy=False))
+            for converted in resampler.resample(None):
+                chunks.append(converted.to_ndarray().reshape(-1)
+                              .astype(self.np.int16, copy=False))
+        pcm = self.np.concatenate(chunks) if chunks else self.np.zeros(0, dtype=self.np.int16)
+        if pcm.size == 0:
+            raise ValueError("saved WAV contains no audio")
+        absolute = self.np.abs(pcm.astype(self.np.int32))
+        normalized = pcm.astype(self.np.float32) / 32768.0
+        peak = float(self.np.max(self.np.abs(normalized)))
+        rms = float(self.np.sqrt(self.np.mean(
+            self.np.square(normalized, dtype=self.np.float64))))
+        bucket_count = max(8, min(64, int(request.get("waveformBuckets", 32))))
+        waveform = [round(float(bucket.max()) / 32768.0, 4) if bucket.size else 0.0
+                    for bucket in self.np.array_split(absolute, bucket_count)]
+        return {
+            "durationMillis": round(pcm.size * 1000 / 48000),
+            "peakDbfs": round(dbfs(peak), 2),
+            "rmsDbfs": round(dbfs(rms), 2),
+            "clippingRatio": round(float(self.np.mean(absolute >= 32112)), 6),
+            "silenceRatio": round(float(self.np.mean(absolute <= 328)), 6),
+            "waveform": waveform,
+            "decodeMs": round((time.perf_counter() - started) * 1000),
+            "workerPid": os.getpid(),
+        }
+
     def invalidate_conditioning(self, request):
         """New content hashes prevent stale reuse; clear resident aliases immediately too."""
         cleared = len(self.voice_conditionals)
@@ -1003,6 +1041,8 @@ def main():
                 result = worker.decode_recording(request)
             elif operation == "encode_saved_wav":
                 result = worker.encode_saved_wav(request)
+            elif operation == "analyze_saved_wav":
+                result = worker.analyze_saved_wav(request)
             elif operation == "invalidate_conditioning":
                 result = worker.invalidate_conditioning(request)
             elif operation == "stt_stream_start":

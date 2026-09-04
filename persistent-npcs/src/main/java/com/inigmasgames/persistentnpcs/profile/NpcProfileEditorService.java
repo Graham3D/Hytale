@@ -97,13 +97,16 @@ public final class NpcProfileEditorService {
     public Path beginCreate(String name) {
         String safe = ProfileRepository.sanitizeProfileName(name);
         NpcProfile template = profiles.createTemplate(safe);
+        appearances.materializePackagedDefaultIfMissing(safe);
         inventories.save(safe, NpcInventoryState.empty().withStableNpcId(template.stableId()));
         return profiles.profileDirectory(safe);
     }
 
     public Path requireExisting(String name) {
-        profiles.load(name);
-        return profiles.profileDirectory(name);
+        String safe = ProfileRepository.sanitizeProfileName(name);
+        profiles.load(safe);
+        appearances.materializeDefaultIfMissing(safe, skinCodec);
+        return profiles.profileDirectory(safe);
     }
 
     public NpcInventoryRepository.Session openInventory(String name) {
@@ -180,6 +183,25 @@ public final class NpcProfileEditorService {
         if (named.isPresent()) return named;
         return appearances.resolvePreviewAppearance(profile.appearancePreset());
     }
+
+    /** Studio-safe preview: appearance state is repaired/materialized before preview is consumed. */
+    public StudioAppearance previewAppearanceForStudio(String name) {
+        String safe = ProfileRepository.sanitizeProfileName(name);
+        profiles.load(safe);
+        AppearanceRepository.AppearanceReadiness readiness =
+                appearances.materializeDefaultIfMissing(safe, skinCodec);
+        if (readiness.degraded()) {
+            return new StudioAppearance(appearances.defaultPreviewAppearance(skinCodec), true,
+                    readiness.message());
+        }
+        AppearanceRepository.PreviewAppearance preview = appearances
+                .resolvePreviewAppearance(safe)
+                .orElseGet(() -> appearances.defaultPreviewAppearance(skinCodec));
+        return new StudioAppearance(preview, false, readiness.message());
+    }
+
+    public record StudioAppearance(AppearanceRepository.PreviewAppearance preview,
+            boolean degraded, String message) { }
 
     /** Authoritative profile-local visible equipment for the isolated preview probe. */
     public PreviewEquipment previewEquipment(String name) {

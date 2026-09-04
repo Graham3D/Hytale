@@ -259,6 +259,24 @@ public final class TurboVoiceWorker implements AutoCloseable {
         });
     }
 
+    public CompletableFuture<VoiceDraftAudio> analyzeSavedWave(Path path,
+            int waveformBuckets) {
+        JsonObject request = baseRequest("analyze_saved_wav");
+        request.addProperty("path", path.toAbsolutePath().normalize().toString());
+        request.addProperty("waveformBuckets", Math.max(8, Math.min(64, waveformBuckets)));
+        return submitWhenReady(request).thenApply(response -> {
+            JsonArray envelope = response.getAsJsonArray("waveform");
+            List<Double> waveform = new ArrayList<>(envelope.size());
+            envelope.forEach(value -> waveform.add(value.getAsDouble()));
+            return new VoiceDraftAudio(new byte[0], longValue(response, "durationMillis"),
+                    response.get("peakDbfs").getAsDouble(),
+                    response.get("rmsDbfs").getAsDouble(),
+                    response.get("clippingRatio").getAsDouble(),
+                    response.get("silenceRatio").getAsDouble(), waveform,
+                    longValue(response, "decodeMs"));
+        });
+    }
+
     public CompletableFuture<Integer> invalidateConditioning() {
         return submitWhenReady(baseRequest("invalidate_conditioning"))
                 .thenApply(response -> (int) longValue(response, "cleared"));

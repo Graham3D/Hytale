@@ -384,57 +384,67 @@ $C.@PageOverlay #AppearanceEditorPage {
 $C.@PageOverlay #VoiceRecorderPage {
   LayoutMode: Middle;
   Visible: false;
-  Group { Anchor: (Width: 1320, Height: 780); LayoutMode: Top; Background: @PanelBackground; Padding: (Full: 18);
-    Group { Anchor: (Height: 44, Bottom: 10); LayoutMode: Left;
-      Label #VoiceRecorderTitle { Text: "VOICE RECORDER"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 22, RenderBold: true, TextColor: #f1f5f9, VerticalAlignment: Center); }
-      Label #VoiceRecorderMeta { Anchor: (Width: 650); Text: "Private creator-only capture"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: #6f879a, HorizontalAlignment: End, VerticalAlignment: Center); }
-    }
-    Group { LayoutMode: Left; FlexWeight: 1;
-      Group { Anchor: (Width: 300, Right: 8); LayoutMode: Top; Background: #101a24; Padding: (Full: 12);
-        Label { Anchor: (Height: 28, Bottom: 8); Text: "EMOTION / SAVED STATUS"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
-        Group { LayoutMode: Left; Anchor: (Height: 46, Bottom: 6); $C.@SecondaryTextButton #VoiceEmotionREFERENCE { @Anchor = (Right: 4); Text: "Reference"; FlexWeight: 1; } Label #VoiceSavedREFERENCE { Anchor: (Width: 68, Left: 4); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-        Group { LayoutMode: Left; Anchor: (Height: 46, Bottom: 6); $C.@SecondaryTextButton #VoiceEmotionAFFECTIONATE { @Anchor = (Right: 4); Text: "Affectionate"; FlexWeight: 1; } Label #VoiceSavedAFFECTIONATE { Anchor: (Width: 68, Left: 4); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-        Group { LayoutMode: Left; Anchor: (Height: 46, Bottom: 6); $C.@SecondaryTextButton #VoiceEmotionAMUSED { @Anchor = (Right: 4); Text: "Amused"; FlexWeight: 1; } Label #VoiceSavedAMUSED { Anchor: (Width: 68, Left: 4); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-        Group { LayoutMode: Left; Anchor: (Height: 46, Bottom: 6); $C.@SecondaryTextButton #VoiceEmotionEXCITED { @Anchor = (Right: 4); Text: "Excited"; FlexWeight: 1; } Label #VoiceSavedEXCITED { Anchor: (Width: 68, Left: 4); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-        Group { LayoutMode: Left; Anchor: (Height: 46, Bottom: 6); $C.@SecondaryTextButton #VoiceEmotionANGRY { @Anchor = (Right: 4); Text: "Angry"; FlexWeight: 1; } Label #VoiceSavedANGRY { Anchor: (Width: 68, Left: 4); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-        Group { LayoutMode: Left; Anchor: (Height: 46, Bottom: 6); $C.@SecondaryTextButton #VoiceEmotionSAD { @Anchor = (Right: 4); Text: "Sad"; FlexWeight: 1; } Label #VoiceSavedSAD { Anchor: (Width: 68, Left: 4); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-        Group { LayoutMode: Left; Anchor: (Height: 46); $C.@SecondaryTextButton #VoiceEmotionSCARED { @Anchor = (Right: 4); Text: "Scared"; FlexWeight: 1; } Label #VoiceSavedSCARED { Anchor: (Width: 68, Left: 4); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-        Group { FlexWeight: 1; }
-        Label #VoiceProfileReadiness { Anchor: (Height: 60); Text: "Reference required"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #e76f6f); }
-      }
-      Group { LayoutMode: Top; FlexWeight: 1; Background: #101a24; Padding: (Full: 18);
-        Label #VoiceSelectedEmotion { Anchor: (Height: 34); Text: "REFERENCE"; Style: (...$C.@DefaultLabelStyle, FontSize: 20, RenderBold: true, TextColor: @Cyan, HorizontalAlignment: Center); }
-        Group { LayoutMode: Left; Anchor: (Height: 44, Bottom: 12);
-          Label #VoiceRecordingIndicator { Anchor: (Width: 220); Visible: false; Text: "● RECORDING"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #ef4444, VerticalAlignment: Center); }
-          Label #VoiceRecorderState { Text: "IDLE"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 16, RenderBold: true, TextColor: #aebdcb, HorizontalAlignment: Center, VerticalAlignment: Center); }
-          Label #VoiceElapsed { Anchor: (Width: 220); Text: "0.0 / 30.0 sec"; Style: (...$C.@DefaultLabelStyle, FontSize: 14, TextColor: #dce8f3, HorizontalAlignment: End, VerticalAlignment: Center); }
-        }
-        Group { Anchor: (Height: 210, Bottom: 12); LayoutMode: CenterMiddle; Background: #142331; Padding: (Full: 16);
-          Label #VoiceWaveformText { Text: "▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁"; Style: (...$C.@DefaultLabelStyle, FontSize: 24, TextColor: #55c7d9, Wrap: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
-        }
-        Label #VoiceQualityMetrics { Anchor: (Height: 74, Bottom: 8); Text: "Record at least five seconds of natural speech."; Style: (...$C.@DefaultLabelStyle, FontSize: 12, Wrap: true, TextColor: #aebdcb, HorizontalAlignment: Center, VerticalAlignment: Center); }
-        Label #VoiceRecorderStatus { Anchor: (Height: 58, Bottom: 12); Text: "Select an emotion, then press Record."; Style: (...$C.@DefaultLabelStyle, FontSize: 14, Wrap: true, TextColor: #9ed7a6, HorizontalAlignment: Center, VerticalAlignment: Center); }
-        Group { LayoutMode: Left; Anchor: (Height: 46, Bottom: 8);
-          Button #VoiceRecordButton { Anchor: (Right: 4); FlexWeight: 1; Background: #9f2636; Label { Text: "RECORD"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-          $C.@SecondaryTextButton #VoiceStopButton { @Anchor = (Left: 4, Right: 4); Text: "Stop"; FlexWeight: 1; }
-          $C.@TextButton #VoicePlayDraftButton { @Anchor = (Left: 4, Right: 4); Text: "Play Draft"; FlexWeight: 1; }
-          $C.@SecondaryTextButton #VoiceStopPlaybackButton { @Anchor = (Left: 4); Text: "Stop Playback"; FlexWeight: 1; }
-        }
-        Group { LayoutMode: Left; Anchor: (Height: 46);
-          $C.@SecondaryTextButton #VoiceRecordAgainButton { @Anchor = (Right: 4); Text: "Record Again"; FlexWeight: 1; }
-          Button #VoiceDeleteDraftButton { Anchor: (Left: 4, Right: 4); FlexWeight: 1; Background: #7d3038; Label { Text: "DELETE DRAFT"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-          $C.@TextButton #VoicePlaySavedButton { @Anchor = (Left: 4, Right: 4); Text: "Play Saved"; FlexWeight: 1; }
-          $C.@TextButton #VoiceSaveButton { @Sounds = $Sounds.@SaveSettings; @Anchor = (Left: 4); Text: "Save Sample"; FlexWeight: 1; }
-        }
-      }
-      Group { Anchor: (Width: 250, Left: 8); LayoutMode: Top; Background: #101a24; Padding: (Full: 12);
-        Label { Anchor: (Height: 28); Text: "SAVED SAMPLE"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
-        Label { Anchor: (Height: 110); Text: "Save Sample atomically replaces the selected canonical WAV. Optional samples fall back to Reference."; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #aebdcb); }
-        Group { FlexWeight: 1; }
-        Button #VoiceDeleteSavedButton { Anchor: (Height: 44, Bottom: 10); Background: #8f3038; Label { Text: "DELETE SAVED"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #ffffff, HorizontalAlignment: Center, VerticalAlignment: Center); } }
-        $C.@SecondaryTextButton #VoiceCloseButton { @Sounds = $Sounds.@ButtonsCancel; @Anchor = (Height: 44); Text: "Return to Studio"; }
+  Group { Anchor: (Width: 500, Height: 760); LayoutMode: Top; Background: @PanelBackground; Padding: (Full: 18);
+    Label #VoiceRecorderTitle { Anchor: (Height: 34); Text: "VOICE RECORDER"; Style: (...$C.@DefaultLabelStyle, FontSize: 18, RenderBold: true, TextColor: #f1f5f9, HorizontalAlignment: Center); }
+    Label #VoiceRecorderMeta { Anchor: (Height: 38, Bottom: 8); Text: "Private creator-only capture"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, Wrap: true, TextColor: #6f879a, HorizontalAlignment: Center); }
+    Label { Anchor: (Height: 22); Text: "SELECT EMOTION"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #aebdcb); }
+    Button #VoiceEmotionREFERENCE { Anchor: (Height: 38); LayoutMode: Left; Background: #223850; Group #VoiceSelectedREFERENCE { Anchor: (Width: 20, Height: 20, Right: 6); Background: "ImmersiveNpcInventory/NpcIconSelectSample.png"; } Label { Text: "Reference"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, RenderBold: true, VerticalAlignment: Center); } Label #VoiceSavedREFERENCE { Anchor: (Width: 64); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+    Button #VoiceEmotionAFFECTIONATE { Anchor: (Height: 34); LayoutMode: Left; Background: #162535; Group #VoiceSelectedAFFECTIONATE { Visible: false; Anchor: (Width: 20, Height: 20, Right: 6); Background: "ImmersiveNpcInventory/NpcIconSelectSample.png"; } Label { Text: "Affectionate"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center); } Label #VoiceSavedAFFECTIONATE { Anchor: (Width: 64); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+    Button #VoiceEmotionAMUSED { Anchor: (Height: 34); LayoutMode: Left; Background: #162535; Group #VoiceSelectedAMUSED { Visible: false; Anchor: (Width: 20, Height: 20, Right: 6); Background: "ImmersiveNpcInventory/NpcIconSelectSample.png"; } Label { Text: "Amused"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center); } Label #VoiceSavedAMUSED { Anchor: (Width: 64); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+    Button #VoiceEmotionEXCITED { Anchor: (Height: 34); LayoutMode: Left; Background: #162535; Group #VoiceSelectedEXCITED { Visible: false; Anchor: (Width: 20, Height: 20, Right: 6); Background: "ImmersiveNpcInventory/NpcIconSelectSample.png"; } Label { Text: "Excited"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center); } Label #VoiceSavedEXCITED { Anchor: (Width: 64); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+    Button #VoiceEmotionANGRY { Anchor: (Height: 34); LayoutMode: Left; Background: #162535; Group #VoiceSelectedANGRY { Visible: false; Anchor: (Width: 20, Height: 20, Right: 6); Background: "ImmersiveNpcInventory/NpcIconSelectSample.png"; } Label { Text: "Angry"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center); } Label #VoiceSavedANGRY { Anchor: (Width: 64); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+    Button #VoiceEmotionSAD { Anchor: (Height: 34); LayoutMode: Left; Background: #162535; Group #VoiceSelectedSAD { Visible: false; Anchor: (Width: 20, Height: 20, Right: 6); Background: "ImmersiveNpcInventory/NpcIconSelectSample.png"; } Label { Text: "Sad"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center); } Label #VoiceSavedSAD { Anchor: (Width: 64); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+    Button #VoiceEmotionSCARED { Anchor: (Height: 34, Bottom: 8); LayoutMode: Left; Background: #162535; Group #VoiceSelectedSCARED { Visible: false; Anchor: (Width: 20, Height: 20, Right: 6); Background: "ImmersiveNpcInventory/NpcIconSelectSample.png"; } Label { Text: "Scared"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center); } Label #VoiceSavedSCARED { Anchor: (Width: 64); Text: "Missing"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+    Group { LayoutMode: Left; Anchor: (Height: 30); Label #VoiceSelectedEmotion { Text: "REFERENCE"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Cyan, VerticalAlignment: Center); } Label #VoiceElapsed { Anchor: (Width: 110); Text: "0.0 / 30.0 sec"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, HorizontalAlignment: End, VerticalAlignment: Center); } }
+    Group { Anchor: (Height: 126, Bottom: 8); LayoutMode: CenterMiddle; Background: #142331; Padding: (Full: 8);
+      Group { Anchor: (Width: 430, Height: 1); Background: #35536a; }
+      Group { Anchor: (Width: 430, Height: 116); LayoutMode: Left;
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar0 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar1 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar2 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar3 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar4 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar5 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar6 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar7 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar8 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar9 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar10 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar11 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar12 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar13 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar14 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar15 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar16 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar17 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar18 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar19 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar20 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar21 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar22 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar23 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar24 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar25 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar26 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar27 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar28 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar29 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar30 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
+        Group { FlexWeight: 1; LayoutMode: CenterMiddle; Group #VoiceWaveformBar31 { Anchor: (Width: 5, Height: 2); Background: #55c7d9; } }
       }
     }
+    Label #VoiceRecorderState { Visible: false; Text: "IDLE"; }
+    Label #VoiceRecordingIndicator { Visible: false; Text: "RECORDING"; }
+    Label #VoiceQualityMetrics { Anchor: (Height: 42); Text: "Record at least five seconds of natural speech."; Style: (...$C.@DefaultLabelStyle, FontSize: 9, Wrap: true, TextColor: #aebdcb, HorizontalAlignment: Center); }
+    Label #VoiceRecorderStatus { Anchor: (Height: 38); Text: "Select an emotion, then press Record."; Style: (...$C.@DefaultLabelStyle, FontSize: 10, Wrap: true, TextColor: #9ed7a6, HorizontalAlignment: Center); }
+    Group { LayoutMode: Left; Anchor: (Height: 44, Bottom: 6);
+      Button #VoiceRecordButton { Anchor: (Right: 4); FlexWeight: 1; LayoutMode: Left; Background: #9f2636; Group { Anchor: (Width: 24, Height: 24, Left: 12); Background: "ImmersiveNpcInventory/NpcIconRecord.png"; } Label { Text: "RECORD"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+      Button #VoicePlayStopButton { Anchor: (Left: 4, Right: 4); FlexWeight: 1; LayoutMode: Left; Background: #223850; Group #VoicePlayIcon { Anchor: (Width: 24, Height: 24, Left: 12); Background: "ImmersiveNpcInventory/NpcIconPlay.png"; } Group #VoiceStopIcon { Visible: false; Anchor: (Width: 24, Height: 24, Left: 12); Background: "ImmersiveNpcInventory/NpcIconStop.png"; } Label #VoicePlayStopLabel { Text: "PLAY"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+      Button #VoiceDeleteButton { Anchor: (Left: 4); FlexWeight: 1; LayoutMode: Left; Background: #7d3038; Group { Anchor: (Width: 24, Height: 24, Left: 12); Background: "ImmersiveNpcInventory/NpcIconDelete.png"; } Label { Text: "DELETE"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+    }
+    Button #VoiceSaveButton { Anchor: (Height: 44, Bottom: 6); LayoutMode: Left; Background: #31669a; Group { Anchor: (Width: 24, Height: 24, Left: 120); Background: "ImmersiveNpcInventory/NpcIconSelectSample.png"; } Label { Text: "SAVE SAMPLE"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+    Label #VoiceProfileReadiness { Anchor: (Height: 30); Text: "Reference required"; Style: (...$C.@DefaultLabelStyle, FontSize: 9, Wrap: true, TextColor: #e76f6f, HorizontalAlignment: Center); }
+    $C.@SecondaryTextButton #VoiceCloseButton { @Sounds = $Sounds.@ButtonsCancel; @Anchor = (Height: 38); Text: "Return to Studio"; }
   }
 }
 

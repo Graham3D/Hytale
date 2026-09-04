@@ -13,11 +13,16 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.StandardCopyOption;
 import java.util.function.Consumer;
 import java.util.Optional;
+import com.inigmasgames.persistentnpcs.appearance.NpcSkinCodecAdapter;
 
 /** Resolves Skin Swap-compatible exports without linking to or modifying Skin Swap. */
 public final class AppearanceRepository {
+    public static final String DEFAULT_APPEARANCE_RESOURCE =
+            "/defaults/profiles/neutral-appearance.json";
     private final Path saveRoot;
     private final Path profilesDirectory;
     private final Consumer<String> diagnostics;
@@ -131,13 +136,114 @@ public final class AppearanceRepository {
 
     /** Canonical profile-local skin authority used by the Authoring Studio. */
     public Path requireAuthoritativeSkinFile(String profileName) {
-        Path canonical = canonicalProfileDirectory(profileName)
-                .resolve("SS_Skin_Character.json");
+        Path canonical = authoritativeSkinFile(profileName);
         if (!Files.isRegularFile(canonical)) {
             throw new IllegalStateException("Authoritative profile-local skin is missing: "
                     + canonical.getFileName());
         }
         return canonical;
+    }
+
+    public Path authoritativeSkinFile(String profileName) {
+        return canonicalProfileDirectory(profileName).resolve("SS_Skin_Character.json");
+    }
+
+    /**
+     * Materializes the project-owned, entitlement-free neutral skin only when the canonical
+     * profile skin is absent. Existing bytes are never changed here, including malformed data.
+     */
+    public synchronized AppearanceReadiness materializeDefaultIfMissing(
+            String profileName, NpcSkinCodecAdapter adapter) {
+        Path canonical = authoritativeSkinFile(profileName);
+        if (Files.isRegularFile(canonical)) {
+            try {
+                NpcSkinCodecAdapter.SkinDocument document = adapter.readValidated(canonical);
+                return new AppearanceReadiness(canonical, AppearanceState.EXISTING_VALID,
+                        document, "Authoritative NPC appearance is valid.");
+            } catch (RuntimeException invalid) {
+                diagnostics.accept("NPC_AUTHORING_APPEARANCE_MALFORMED_PRESERVED path="
+                        + canonical + " reason=" + safe(invalid));
+                return new AppearanceReadiness(canonical, AppearanceState.MALFORMED_PRESERVED,
+                        null, "Authored appearance is malformed and was preserved. "
+                                + "A temporary neutral preview is active until repaired.");
+            }
+        }
+        NpcSkinCodecAdapter.SkinDocument neutral = defaultSkinDocument(adapter);
+        Path temporary = canonical.resolveSibling(canonical.getFileName() + ".default.tmp");
+        try {
+            Files.createDirectories(canonical.getParent());
+            Files.writeString(temporary, NpcSkinCodecAdapter.serialized(neutral),
+                    StandardCharsets.UTF_8);
+            adapter.readValidated(temporary);
+            try {
+                Files.move(temporary, canonical, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException ignored) {
+                Files.move(temporary, canonical);
+            }
+            diagnostics.accept("NPC_AUTHORING_DEFAULT_APPEARANCE_MATERIALIZED path="
+                    + canonical + " source=" + DEFAULT_APPEARANCE_RESOURCE);
+            return new AppearanceReadiness(canonical, AppearanceState.DEFAULT_MATERIALIZED,
+                    neutral, "Neutral default appearance created; edit it when ready.");
+        } catch (IOException failure) {
+            throw new IllegalStateException("Could not materialize the neutral NPC appearance.",
+                    failure);
+        } finally {
+            try { Files.deleteIfExists(temporary); } catch (IOException ignored) { }
+        }
+    }
+
+    /** Creates the immutable packaged scaffold without requiring a bootstrapped cosmetics module. */
+    public synchronized Path materializePackagedDefaultIfMissing(String profileName) {
+        Path canonical = authoritativeSkinFile(profileName);
+        if (Files.exists(canonical)) return canonical;
+        Path temporary = canonical.resolveSibling(canonical.getFileName() + ".default.tmp");
+        try (var input = AppearanceRepository.class.getResourceAsStream(
+                DEFAULT_APPEARANCE_RESOURCE)) {
+            if (input == null) throw new IllegalStateException(
+                    "Packaged neutral NPC appearance is missing.");
+            Files.createDirectories(canonical.getParent());
+            Files.write(temporary, input.readAllBytes());
+            try {
+                Files.move(temporary, canonical, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException ignored) {
+                Files.move(temporary, canonical);
+            }
+            return canonical;
+        } catch (IOException failure) {
+            throw new IllegalStateException("Could not create the neutral NPC appearance.",
+                    failure);
+        } finally {
+            try { Files.deleteIfExists(temporary); } catch (IOException ignored) { }
+        }
+    }
+
+    public NpcSkinCodecAdapter.SkinDocument defaultSkinDocument(NpcSkinCodecAdapter adapter) {
+        try (var input = AppearanceRepository.class.getResourceAsStream(
+                DEFAULT_APPEARANCE_RESOURCE)) {
+            if (input == null) throw new IllegalStateException(
+                    "Packaged neutral NPC appearance is missing.");
+            Path temporary = Files.createTempFile("immersive-npc-neutral-", ".json");
+            try {
+                Files.write(temporary, input.readAllBytes());
+                return adapter.readValidated(temporary);
+            } finally {
+                Files.deleteIfExists(temporary);
+            }
+        } catch (IOException failure) {
+            throw new IllegalStateException("Could not read the neutral NPC appearance.", failure);
+        }
+    }
+
+    public PreviewAppearance defaultPreviewAppearance(NpcSkinCodecAdapter adapter) {
+        NpcSkinCodecAdapter.SkinDocument document = defaultSkinDocument(adapter);
+        return new PreviewAppearance(document.skin(), adapter.createModel(document.skin()));
+    }
+
+    private static String safe(Throwable failure) {
+        String message = failure == null ? null : failure.getMessage();
+        return message == null || message.isBlank()
+                ? (failure == null ? "UNKNOWN" : failure.getClass().getSimpleName())
+                : message.replaceAll("\\s+", "_");
     }
 
     public Optional<Path> resolveModelFile(String preset) {
@@ -204,5 +310,14 @@ public final class AppearanceRepository {
         public PreviewAppearance {
             if (model == null) throw new IllegalArgumentException("Preview model is required");
         }
+    }
+
+    public enum AppearanceState {
+        EXISTING_VALID, DEFAULT_MATERIALIZED, MALFORMED_PRESERVED
+    }
+
+    public record AppearanceReadiness(Path path, AppearanceState state,
+            NpcSkinCodecAdapter.SkinDocument document, String message) {
+        public boolean degraded() { return state == AppearanceState.MALFORMED_PRESERVED; }
     }
 }

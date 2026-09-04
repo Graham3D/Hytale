@@ -23,6 +23,7 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings;
 import com.inigmasgames.persistentnpcs.profile.NpcProfile;
 import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringEventEnvelope;
 import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringPermissions;
@@ -41,6 +42,9 @@ import com.inigmasgames.persistentnpcs.voice.VoicePresetRepository;
 import com.inigmasgames.persistentnpcs.voice.VoiceSampleType;
 import com.inigmasgames.persistentnpcs.voice.NpcVoiceRecordingService;
 import com.inigmasgames.persistentnpcs.voice.NpcVoiceRecordingService.Snapshot;
+import com.inigmasgames.persistentnpcs.voice.VoiceClientCaptureContract;
+import com.inigmasgames.persistentnpcs.voice.VoiceRecorderControlPolicy;
+import com.inigmasgames.persistentnpcs.voice.VoiceWaveformPresentation;
 import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceAuthoringService;
 import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService;
 import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService.Category;
@@ -94,7 +98,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             "VOICE_RECORD", "VOICE_STOP", "VOICE_PLAY_DRAFT", "VOICE_PLAY_SAVED",
             "VOICE_STOP_PLAYBACK", "VOICE_RECORD_AGAIN", "VOICE_DELETE_DRAFT",
             "VOICE_SAVE", "VOICE_DELETE_SAVED_PROMPT", "VOICE_DELETE_SAVED_CONFIRM",
-            "VOICE_DELETE_SAVED_CANCEL");
+            "VOICE_DELETE_SAVED_CANCEL", "VOICE_PLAY_STOP", "VOICE_DELETE");
     private final String npcName;
     private final boolean update;
     private final NpcProfileEditorService editor;
@@ -226,6 +230,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
 
     public ContainerWindow[] windows() {
         return inventory.windows();
+    }
+
+    /** Open-time lifecycle status; a degraded appearance never prevents Studio access. */
+    public void setInitialStatus(String message, boolean failure) {
+        if (message == null || message.isBlank()) return;
+        status = message;
+        error = failure;
     }
 
     /** Connected-validation evidence after WindowManager has assigned window IDs. */
@@ -539,7 +550,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 try {
                     voiceRecording = voiceRecorder.open(playerRef.getUuid(),
                             authoringSession.sessionId(), authoringSession.npcStableId(),
-                            npcName, authoringSession.pageGeneration(), generation);
+                            npcName, authoringSession.pageGeneration(), generation,
+                            new VoiceClientCaptureContract(java.util.Optional.ofNullable(
+                                    store.getComponent(ref,
+                                            PlayerSettings.getComponentType()))
+                                    .map(PlayerSettings::voiceSettings)
+                                    .map(value -> value.voiceInputMode()).orElse(null)));
                     voiceSnapshot = voiceRecording.snapshot();
                 } catch (RuntimeException failure) {
                     authoringSession.closeEditor(false);
@@ -933,17 +949,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#VoiceRecordButton", voiceEvent("VOICE_RECORD"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#VoiceStopButton", voiceEvent("VOICE_STOP"));
+                "#VoicePlayStopButton", voiceEvent("VOICE_PLAY_STOP"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#VoicePlayDraftButton", voiceEvent("VOICE_PLAY_DRAFT"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#VoicePlaySavedButton", voiceEvent("VOICE_PLAY_SAVED"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#VoiceStopPlaybackButton", voiceEvent("VOICE_STOP_PLAYBACK"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#VoiceRecordAgainButton", voiceEvent("VOICE_RECORD_AGAIN"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#VoiceDeleteDraftButton", voiceEvent("VOICE_DELETE_DRAFT"));
+                "#VoiceDeleteButton", voiceEvent("VOICE_DELETE"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#VoiceSaveButton", voiceEvent("VOICE_SAVE"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
@@ -984,21 +992,40 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 voiceRecording.deleteDraft();
                 authoringSession.markSaved(NpcAuthoringSession.EditorKind.VOICE);
             }
+            case "VOICE_PLAY_STOP" -> {
+                Snapshot snapshot = voiceRecording.snapshot();
+                if (snapshot.state() == NpcVoiceRecordingService.State.ARMED
+                        || snapshot.state() == NpcVoiceRecordingService.State.RECORDING) {
+                    voiceRecording.stop();
+                } else if (snapshot.state() == NpcVoiceRecordingService.State.PLAYING) {
+                    voiceRecording.stopPlayback();
+                } else if (snapshot.draftAvailable()) {
+                    voiceRecording.playDraft();
+                } else {
+                    voiceRecording.playSaved();
+                }
+            }
+            case "VOICE_DELETE" -> {
+                Snapshot snapshot = voiceRecording.snapshot();
+                if (snapshot.draftAvailable()) {
+                    voiceRecording.deleteDraft();
+                    authoringSession.markSaved(NpcAuthoringSession.EditorKind.VOICE);
+                } else if (snapshot.savedStates().getOrDefault(snapshot.selected(),
+                        VoicePresetRepository.SampleState.MISSING)
+                        != VoicePresetRepository.SampleState.MISSING) {
+                    showVoiceDeleteConfirmation(snapshot);
+                    return;
+                } else {
+                    throw new IllegalStateException("No draft or saved sample is available to delete.");
+                }
+            }
             case "VOICE_SAVE" -> {
                 voiceRecording.save();
                 authoringSession.markSaved(NpcAuthoringSession.EditorKind.VOICE);
                 voiceSamples = editor.rescanVoiceSamples(npcName);
             }
             case "VOICE_DELETE_SAVED_PROMPT" -> {
-                UICommandBuilder commands = new UICommandBuilder();
-                Snapshot snapshot = voiceRecording.snapshot();
-                commands.set("#VoiceDeleteWarning.Text", snapshot.selected()
-                        == VoiceSampleType.REFERENCE
-                                ? "Deleting Reference makes this NPC voice profile invalid until a new Reference is saved. The current file will be moved to recoverable trash."
-                                : "Delete saved " + snapshot.selected().label()
-                                        + "? The NPC will fall back to Reference. The file is moved to recoverable trash.");
-                commands.set("#VoiceDeleteConfirmPage.Visible", true);
-                sendUpdate(commands, false);
+                showVoiceDeleteConfirmation(voiceRecording.snapshot());
                 return;
             }
             case "VOICE_DELETE_SAVED_CONFIRM" -> {
@@ -1023,6 +1050,17 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         sendUpdate(commands, false);
     }
 
+    private void showVoiceDeleteConfirmation(Snapshot snapshot) {
+        UICommandBuilder commands = new UICommandBuilder();
+        commands.set("#VoiceDeleteWarning.Text", snapshot.selected()
+                == VoiceSampleType.REFERENCE
+                        ? "Deleting Reference makes this NPC voice profile invalid until a new Reference is saved. The current file will be moved to recoverable trash."
+                        : "Delete saved " + snapshot.selected().label()
+                                + "? The NPC will fall back to Reference. The file is moved to recoverable trash.");
+        commands.set("#VoiceDeleteConfirmPage.Visible", true);
+        sendUpdate(commands, false);
+    }
+
     private void requireVoiceRecorder() {
         if (authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.VOICE
                 || voiceRecording == null) {
@@ -1035,7 +1073,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         voiceSnapshot = snapshot;
         commands.set("#VoiceRecorderTitle.Text", "VOICE RECORDER - " + npcName.toUpperCase(Locale.ROOT));
         commands.set("#VoiceRecorderMeta.Text", "Recording generation "
-                + snapshot.recordingGeneration() + " · private creator-only playback");
+                + snapshot.recordingGeneration() + " · " + snapshot.captureContract());
         commands.set("#VoiceSelectedEmotion.Text", snapshot.selected().label().toUpperCase(Locale.ROOT));
         commands.set("#VoiceRecorderState.Text", snapshot.state().name());
         boolean recording = snapshot.state() == NpcVoiceRecordingService.State.ARMED
@@ -1046,7 +1084,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                         ? "● ARMED" : "● RECORDING");
         commands.set("#VoiceElapsed.Text", String.format(Locale.ROOT, "%.1f / %.1f sec",
                 snapshot.elapsedMillis() / 1000.0, snapshot.maximumMillis() / 1000.0));
-        commands.set("#VoiceWaveformText.Text", waveformText(snapshot.waveform()));
+        List<Integer> waveformHeights = VoiceWaveformPresentation.heights(snapshot.waveform());
+        for (int index = 0; index < waveformHeights.size(); index++) {
+            commands.set("#VoiceWaveformBar" + index + ".Anchor.Height",
+                    waveformHeights.get(index));
+        }
         commands.set("#VoiceRecorderStatus.Text", snapshot.message());
         commands.set("#VoiceRecorderStatus.Style.TextColor",
                 snapshot.error() ? "#e76f6f" : "#9ed7a6");
@@ -1076,40 +1118,20 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 case MISSING -> type == VoiceSampleType.REFERENCE ? "#e76f6f" : "#d0a65a";
                 case INVALID -> "#e76f6f";
             });
+            commands.set("#VoiceSelected" + type.name() + ".Visible",
+                    type == snapshot.selected());
         }
-        boolean busy = recording || snapshot.state() == NpcVoiceRecordingService.State.FINALIZING
-                || snapshot.state() == NpcVoiceRecordingService.State.SAVING;
-        commands.set("#VoiceRecordButton.Disabled", busy);
-        commands.set("#VoiceStopButton.Disabled", !recording);
-        commands.set("#VoicePlayDraftButton.Disabled", !snapshot.draftAvailable()
-                || snapshot.state() == NpcVoiceRecordingService.State.PLAYING);
-        commands.set("#VoiceStopPlaybackButton.Disabled",
-                snapshot.state() != NpcVoiceRecordingService.State.PLAYING);
-        commands.set("#VoiceRecordAgainButton.Disabled", busy);
-        commands.set("#VoiceDeleteDraftButton.Disabled", !snapshot.draftAvailable());
-        commands.set("#VoiceSaveButton.Disabled", !snapshot.draftAvailable()
-                || snapshot.state() != NpcVoiceRecordingService.State.READY);
-        VoicePresetRepository.SampleState selectedState = snapshot.savedStates().getOrDefault(
-                snapshot.selected(), VoicePresetRepository.SampleState.MISSING);
-        commands.set("#VoicePlaySavedButton.Disabled",
-                selectedState != VoicePresetRepository.SampleState.FOUND || busy);
-        commands.set("#VoiceDeleteSavedButton.Disabled",
-                selectedState == VoicePresetRepository.SampleState.MISSING || busy);
-    }
-
-    private static String waveformText(List<Double> waveform) {
-        if (waveform == null || waveform.isEmpty()) {
-            return "▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁";
-        }
-        String levels = "▁▂▃▄▅▆▇█";
-        StringBuilder result = new StringBuilder();
-        for (double amplitude : waveform) {
-            int index = Math.max(0, Math.min(levels.length() - 1,
-                    (int) Math.round(amplitude * (levels.length() - 1))));
-            if (!result.isEmpty()) result.append(' ');
-            result.append(levels.charAt(index));
-        }
-        return result.toString();
+        VoiceRecorderControlPolicy.Controls controls =
+                VoiceRecorderControlPolicy.forSnapshot(snapshot);
+        commands.set("#VoiceRecordButton.Disabled", controls.recordDisabled());
+        commands.set("#VoicePlayStopButton.Disabled", controls.playDisabled());
+        commands.set("#VoicePlayStopLabel.Text", controls.playMode().name());
+        commands.set("#VoicePlayIcon.Visible",
+                controls.playMode() == VoiceRecorderControlPolicy.PlayMode.PLAY);
+        commands.set("#VoiceStopIcon.Visible",
+                controls.playMode() == VoiceRecorderControlPolicy.PlayMode.STOP);
+        commands.set("#VoiceDeleteButton.Disabled", controls.deleteDisabled());
+        commands.set("#VoiceSaveButton.Disabled", controls.saveDisabled());
     }
 
     private void startVoiceRefresh(Store<EntityStore> store) {
@@ -1838,7 +1860,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     "VOICE_STOP", "VOICE_PLAY_DRAFT", "VOICE_PLAY_SAVED",
                     "VOICE_STOP_PLAYBACK", "VOICE_RECORD_AGAIN", "VOICE_DELETE_DRAFT",
                     "VOICE_SAVE", "VOICE_DELETE_SAVED_PROMPT",
-                    "VOICE_DELETE_SAVED_CONFIRM", "VOICE_DELETE_SAVED_CANCEL"
+                    "VOICE_DELETE_SAVED_CONFIRM", "VOICE_DELETE_SAVED_CANCEL",
+                    "VOICE_PLAY_STOP", "VOICE_DELETE"
                     -> NpcAuthoringPermissions.VOICE;
             case "OPEN_APPEARANCE_EDITOR", "APPEARANCE_PRIMARY",
                     "APPEARANCE_CATEGORY", "APPEARANCE_SEARCH",

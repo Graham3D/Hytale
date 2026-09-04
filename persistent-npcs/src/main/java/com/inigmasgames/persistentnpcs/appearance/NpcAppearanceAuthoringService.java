@@ -15,6 +15,8 @@ import java.time.Instant;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.security.MessageDigest;
+import java.util.HexFormat;
 
 /** Atomic, optimistic save transaction for the profile-local Hytale skin JSON. */
 public final class NpcAppearanceAuthoringService {
@@ -38,15 +40,29 @@ public final class NpcAppearanceAuthoringService {
         String safe = ProfileRepository.sanitizeProfileName(npcName);
         catalog.snapshot(); // Hard A5 preflight: enumerate the live registry before editing.
         Path path = appearances.requireAuthoritativeSkinFile(safe);
-        NpcSkinCodecAdapter.SkinDocument document = adapter.read(path);
+        NpcSkinCodecAdapter.SkinDocument document;
+        String baseHash;
+        boolean repairDraft = false;
+        try {
+            document = adapter.read(path);
+            baseHash = document.canonicalHash();
+        } catch (RuntimeException malformed) {
+            document = appearances.defaultSkinDocument(adapter);
+            baseHash = malformedHash(path);
+            repairDraft = true;
+            diagnostics.accept("NPC_AUTHORING_APPEARANCE_REPAIR_DRAFT timestamp="
+                    + Instant.now() + " npc=" + safe + " malformedPreserved=true reason="
+                    + safe(malformed.getMessage()));
+        }
         long revision = readRevision(path);
         diagnostics.accept("NPC_AUTHORING_APPEARANCE_DRAFT_OPENED timestamp=" + Instant.now()
                 + " sessionId=" + sessionId + " stableNpcId=" + stableNpcId
                 + " npc=" + safe + " baseRevision=" + revision
-                + " baseHash=" + document.canonicalHash()
+                + " baseHash=" + baseHash
+                + " repairDraft=" + repairDraft
                 + " preservedRootFields=" + document.raw().size());
         return new NpcAppearanceDraft(sessionId, stableNpcId, safe, editorGeneration,
-                revision, document.canonicalHash(), document);
+                revision, baseHash, document);
     }
 
     public SelectionResult select(NpcAppearanceDraft draft,
@@ -84,10 +100,13 @@ public final class NpcAppearanceAuthoringService {
         requireDraft(draft);
         synchronized (commitLock) {
             Path path = appearances.requireAuthoritativeSkinFile(draft.npcName());
-            NpcSkinCodecAdapter.SkinDocument current = adapter.read(path);
+            boolean repairDraft = draft.baseHash().startsWith("MALFORMED_SHA256:");
+            NpcSkinCodecAdapter.SkinDocument current = repairDraft
+                    ? appearances.defaultSkinDocument(adapter) : adapter.read(path);
             long currentRevision = readRevision(path);
             if (currentRevision != draft.baseRevision()
-                    || !current.canonicalHash().equals(draft.baseHash())) {
+                    || !(repairDraft ? malformedHash(path).equals(draft.baseHash())
+                            : current.canonicalHash().equals(draft.baseHash()))) {
                 throw new RevisionConflictException("Appearance changed while this draft was open. "
                         + "Draft preserved; reload the editor before saving.");
             }
@@ -118,7 +137,8 @@ public final class NpcAppearanceAuthoringService {
                 revision.addProperty("hash", committed.canonicalHash());
                 revision.addProperty("updatedAt", Instant.now().toString());
                 JsonFiles.writeAtomic(revisionPath(path), revision);
-                appendAudit(path, draft, writerPlayerId, current.canonicalHash(),
+                appendAudit(path, draft, writerPlayerId,
+                        repairDraft ? draft.baseHash() : current.canonicalHash(),
                         committed.canonicalHash(), nextRevision);
                 diagnostics.accept("NPC_AUTHORING_APPEARANCE_COMMITTED timestamp=" + Instant.now()
                         + " draftId=" + draft.draftId() + " stableNpcId="
@@ -188,6 +208,18 @@ public final class NpcAppearanceAuthoringService {
 
     private static String safe(String value) {
         return value == null ? "NONE" : value.replaceAll("\\s+", "_");
+    }
+
+    private static String malformedHash(Path path) {
+        try {
+            return "MALFORMED_SHA256:" + HexFormat.of().withUpperCase().formatHex(
+                    MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(path)));
+        } catch (java.security.NoSuchAlgorithmException impossible) {
+            throw new IllegalStateException("SHA-256 unavailable", impossible);
+        } catch (IOException failure) {
+            throw new IllegalStateException("Could not fingerprint malformed NPC appearance.",
+                    failure);
+        }
     }
 
     public record SelectionResult(

@@ -120,15 +120,20 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
             NpcAuthoringSession authoringSession = null;
             NpcProfilePage page = null;
             try {
-                if (update) {
-                    var appearance = editor.previewAppearance(name).orElseThrow(() ->
-                            new IllegalStateException("No valid NPC appearance is available for preview."));
+                NpcProfileEditorService.StudioAppearance studioAppearance =
+                        editor.previewAppearanceForStudio(name);
+                try {
+                    var appearance = studioAppearance.preview();
                     var equipment = editor.previewEquipment(name);
                     preview = NpcMeshPreviewSession.begin(
                             playerRef, playerEntityRef, store, name, appearance.model(),
                             appearance.playerSkin(), new EquipmentUpdate(
                                     equipment.visibleArmorIds(), equipment.rightHandItemId(),
                                     equipment.leftHandItemId()), diagnostics);
+                } catch (RuntimeException previewFailure) {
+                    diagnostics.accept("NPC_AUTHORING_PREVIEW_DEGRADED npc=" + name
+                            + " reason=" + safeMessage(previewFailure)
+                            + " studioOpenContinues=true");
                 }
                 authoringSession = NpcAuthoringSessionRegistry.shared().acquire(
                         playerRef.getUuid(), selectedProfile.stableId(),
@@ -145,6 +150,7 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
                         (viewerRef, eventStore) -> delete(
                                 eventStore, selectedProfile),
                         diagnostics);
+                page.setInitialStatus(studioAppearance.message(), studioAppearance.degraded());
                 if (!player.getPageManager().openCustomPageWithWindows(
                         playerEntityRef, store, page, page.windows())) {
                     page.onDismiss(playerEntityRef, store);

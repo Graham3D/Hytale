@@ -97,6 +97,13 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
 
     public Handle open(UUID playerId, UUID authoringSessionId, UUID stableNpcId,
             String npcName, long pageGeneration, long editorGeneration) {
+        return open(playerId, authoringSessionId, stableNpcId, npcName, pageGeneration,
+                editorGeneration, VoiceClientCaptureContract.unknown());
+    }
+
+    public Handle open(UUID playerId, UUID authoringSessionId, UUID stableNpcId,
+            String npcName, long pageGeneration, long editorGeneration,
+            VoiceClientCaptureContract captureContract) {
         if (closed.get()) throw new IllegalStateException("Voice Recorder is shutting down.");
         if (voiceModule == null || !voiceModule.isVoiceEnabled() || interceptor == null
                 || !interceptor.isRegistered()) {
@@ -107,9 +114,11 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
         }
         persistence.cleanupStaleDrafts(npcName, MAX_DRAFT_AGE_MILLIS);
         RecorderSession created = new RecorderSession(playerId, authoringSessionId,
-                stableNpcId, npcName, pageGeneration, editorGeneration);
+                stableNpcId, npcName, pageGeneration, editorGeneration,
+                captureContract == null ? VoiceClientCaptureContract.unknown() : captureContract);
         RecorderSession prior = byPlayer.put(playerId, created);
         if (prior != null) cleanup(prior, "REOPENED");
+        requestSavedWaveform(created);
         diagnostics.accept("NPC_AUTHORING_VOICE_OPEN timestamp=" + Instant.now()
                 + " playerId=" + playerId + " npcStableId=" + stableNpcId
                 + " sessionId=" + authoringSessionId + " pageGeneration=" + pageGeneration
@@ -168,7 +177,7 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
             } else if (state == State.ARMED && elapsed(session.armedNanos, now)
                     >= ARMED_TIMEOUT_MILLIS) {
                 failCapture(session,
-                        "No microphone audio was received. Check Hytale voice input.",
+                        noMicrophoneMessage(session),
                         "ARMED_TIMEOUT");
             } else if (state == State.RECORDING && elapsed(session.firstFrameNanos, now)
                     >= MAX_DURATION_MILLIS) {
@@ -192,6 +201,7 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
         session.message = "Selected " + type.label() + ". Press Record when ready.";
         session.error = false;
         session.recordingGeneration.incrementAndGet();
+        requestSavedWaveform(session);
         diagnostics.accept("NPC_AUTHORING_VOICE_SELECT_EMOTION timestamp=" + Instant.now()
                 + " npcStableId=" + session.stableNpcId + " emotion=" + type
                 + " revision=" + session.openRevision);
@@ -223,7 +233,9 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
         session.firstFrameNanos = 0;
         session.lease = leases.acquireRecording(session.playerId, session.recordingId);
         session.state.set(State.ARMED);
-        session.message = "Waiting for microphone...";
+        session.message = session.captureContract.speakWithoutPushToTalk()
+                ? "Recording armed. Speak normally."
+                : "Recording armed. Hytale 0.6.3 cannot activate this client's microphone.";
         session.error = false;
         diagnostics.accept("NPC_AUTHORING_VOICE_ARMED timestamp=" + Instant.now()
                 + " recordingId=" + session.recordingId + " npcStableId="
@@ -235,7 +247,7 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
         requireCurrent(session);
         State state = session.state.get();
         if (state == State.ARMED) {
-            failCapture(session, "No microphone audio was received. Check Hytale voice input.",
+            failCapture(session, noMicrophoneMessage(session),
                     "STOP_WITHOUT_FRAMES");
             return;
         }
@@ -266,7 +278,7 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
                 + session.outOfOrder);
         if (ordered.isEmpty()) {
             failFinalization(session, generation,
-                    "No microphone audio was received. Check Hytale voice input.", "NO_FRAMES");
+                    noMicrophoneMessage(session), "NO_FRAMES");
             return;
         }
         ai.decodeVoiceDraft(session.recordingId, session.finalFrames, WAVEFORM_BUCKETS)
@@ -422,6 +434,9 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
         persistence.deleteSaved(session.npcName, session.stableNpcId,
                 session.selected, session.openRevision);
         session.openRevision = "MISSING";
+        session.recordingGeneration.incrementAndGet();
+        session.audio = null;
+        session.finalFrames = List.of();
         session.state.set(State.IDLE);
         session.message = session.selected == VoiceSampleType.REFERENCE
                 ? "Reference deleted. This NPC voice is not ready until Reference is recorded."
@@ -569,6 +584,13 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
                 ? current.getClass().getSimpleName() : message;
     }
 
+    private static String noMicrophoneMessage(RecorderSession session) {
+        return session.captureContract.speakWithoutPushToTalk()
+                ? "No microphone audio was received by the server."
+                : "No audio arrived: Hytale 0.6.3 cannot activate client microphone capture "
+                        + "independently of its current Push-to-Talk mode.";
+    }
+
     private void refreshSavedState(RecorderSession session) {
         var scan = presets.scan(session.npcName);
         EnumMap<VoiceSampleType, VoicePresetRepository.SampleState> saved =
@@ -580,6 +602,44 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
                 + " npcStableId=" + session.stableNpcId + " ready=" + scan.ready()
                 + " found=" + saved.values().stream()
                         .filter(value -> value == VoicePresetRepository.SampleState.FOUND).count());
+    }
+
+    private void requestSavedWaveform(RecorderSession session) {
+        if (ai == null || session.cleaned.get() || session.draft != null) return;
+        java.nio.file.Path path = presets.canonicalSamplePath(
+                session.npcName, session.selected);
+        if (!Files.isRegularFile(path) || !VoicePresetRepository.validWave(path)) return;
+        long generation = session.recordingGeneration.get();
+        VoiceSampleType selected = session.selected;
+        String revision = presets.sampleRevision(session.npcName, selected);
+        ai.analyzeSavedVoice(path, WAVEFORM_BUCKETS).whenComplete((audio, failure) -> {
+            if (!savedAnalysisIsCurrent(session.recordingGeneration.get(), generation,
+                    session.selected, selected, session.draft == null,
+                    presets.sampleRevision(session.npcName, selected), revision)) {
+                diagnostics.accept("NPC_AUTHORING_VOICE_WAVEFORM_STALE_REJECTED timestamp="
+                        + Instant.now() + " npcStableId=" + session.stableNpcId
+                        + " emotion=" + selected + " generation=" + generation);
+                return;
+            }
+            if (failure != null) {
+                diagnostics.accept("NPC_AUTHORING_VOICE_WAVEFORM_ANALYSIS_FAILED timestamp="
+                        + Instant.now() + " npcStableId=" + session.stableNpcId
+                        + " emotion=" + selected + " reason=" + root(failure));
+                return;
+            }
+            session.audio = audio;
+            diagnostics.accept("NPC_AUTHORING_VOICE_WAVEFORM_READY timestamp=" + Instant.now()
+                    + " npcStableId=" + session.stableNpcId + " emotion=" + selected
+                    + " buckets=" + audio.waveform().size() + " source=SAVED_WAV");
+        });
+    }
+
+    public static boolean savedAnalysisIsCurrent(long currentGeneration,
+            long requestedGeneration, VoiceSampleType currentSelection,
+            VoiceSampleType requestedSelection, boolean noDraft,
+            String currentRevision, String requestedRevision) {
+        return currentGeneration == requestedGeneration && currentSelection == requestedSelection
+                && noDraft && java.util.Objects.equals(currentRevision, requestedRevision);
     }
 
     public void closeForPlayer(UUID playerId) {
@@ -633,15 +693,18 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
         private volatile Map<VoiceSampleType, VoicePresetRepository.SampleState> savedStates =
                 Map.of();
         private volatile boolean profileReady;
+        private final VoiceClientCaptureContract captureContract;
 
         private RecorderSession(UUID playerId, UUID authoringSessionId, UUID stableNpcId,
-                String npcName, long pageGeneration, long editorGeneration) {
+                String npcName, long pageGeneration, long editorGeneration,
+                VoiceClientCaptureContract captureContract) {
             this.playerId = playerId;
             this.authoringSessionId = authoringSessionId;
             this.stableNpcId = stableNpcId;
             this.npcName = npcName;
             this.pageGeneration = pageGeneration;
             this.editorGeneration = editorGeneration;
+            this.captureContract = captureContract;
             this.openRevision = presets.sampleRevision(npcName, selected);
             refreshSavedState(this);
         }
@@ -664,6 +727,7 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
         public void deleteDraft() {
             discardDraft(session); session.recordingGeneration.incrementAndGet();
             session.state.set(State.IDLE); session.message = "Draft deleted."; session.error = false;
+            requestSavedWaveform(session);
         }
         public void save() { NpcVoiceRecordingService.this.save(session); }
         public void deleteSaved() { NpcVoiceRecordingService.this.deleteSaved(session); }
@@ -684,7 +748,8 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
                     audio == null ? 0 : audio.clippingRatio(),
                     audio == null ? 0 : audio.silenceRatio(),
                     session.sequenceGaps, session.droppedFrames.get(), session.savedStates,
-                    session.profileReady, session.draft != null);
+                    session.profileReady, session.draft != null,
+                    session.captureContract.display());
         }
         @Override public void close() { cleanup(session, "EDITOR_CLOSED"); }
     }
@@ -694,5 +759,5 @@ public final class NpcVoiceRecordingService implements AutoCloseable {
             List<Double> waveform, long durationMillis, double peakDbfs, double rmsDbfs,
             double clippingRatio, double silenceRatio, int sequenceGaps, int droppedFrames,
             Map<VoiceSampleType, VoicePresetRepository.SampleState> savedStates,
-            boolean profileReady, boolean draftAvailable) { }
+            boolean profileReady, boolean draftAvailable, String captureContract) { }
 }

@@ -24,7 +24,7 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | A3 — gear/loadout/live stats | Complete in R132 | PASS | PASS | PASS |
 | A4 — profile editor/generate | Complete in R133.1 | PASS | PASS: operator confirmed editor and workspace behavior | PASS |
 | A5 — appearance editor | Complete in R134.2 | PASS | PASS | PASS |
-| A6 — voice recorder | Complete in R135 | PASS | Pending R135 connected validation | HOLD FOR CONNECTED PASS |
+| A6 — voice recorder | R136 connected-validation repair candidate | PASS | Pending R136 connected validation | HOLD FOR CONNECTED PASS |
 | A7 — integration/polish | Not activated | Not run | Not run | BLOCKED |
 
 The model-distillation subsystem remains paused and isolated. No D6/D7, training,
@@ -651,3 +651,66 @@ The R135 connected-test candidate is:
 
 A6 automated status: **PASS**. Connected-client status: **PENDING**. A7 remains
 unauthorized and was not started.
+
+### R136 bounded A6 connected-validation repair
+
+R136 preserves the R135 privacy, capture-lease, persistence, rollback, inventory,
+gear, profile, and appearance authorities while repairing the connected-validation
+findings. The recorder presentation is now the approved compact arrangement:
+`Record | Play/Stop | Delete`, followed by a full-width `Save Sample`. The Play control
+becomes Stop while capture is armed/recording or private playback is active. Delete
+removes a draft immediately and retains the existing recoverable confirmation before
+deleting a canonical saved sample. The five project-owned recorder icons are packaged
+with the UI, and the corrected alpha versions of the sword and shield slot assets replace
+the prior copies without changing slot behavior.
+
+The Unicode waveform approximation is removed. The existing model-free Opus decode now
+feeds its real bounded 32-bucket PCM peak envelope into 32 centered UI bars. Silence is a
+two-pixel center line and larger decoded peaks yield proportionally taller, clamped bars.
+Selecting a canonical saved sample starts a model-free WAV analysis in the STT-role
+worker; it does not invoke Moonshine transcription or Chatterbox. The callback is guarded
+by recording generation, emotion identity, draft absence, and canonical sample revision,
+so late analysis is rejected and can never repaint a newer draft. Raw Opus, PCM, and WAV
+remain outside Custom UI.
+
+The installed Hytale 0.6.3 contract was decompiled before this repair. Client-to-server
+microphone media is `VoiceData`; server-to-client `VoiceConfig` exposes server enablement,
+codec/rate/channel and distance limits but no capture/start or input-mode command.
+`PlayerVoiceSettings` is a client-reported ECS snapshot whose modes are `VoiceActivity`,
+`PushToTalk`, and `PushToTalkToggle`. `VoiceModule` can intercept frames already sent and
+can suppress/reroute them, but it cannot activate the client microphone. Therefore the
+requested independent PTT bypass is not implementable in 0.6.3 without changing client
+settings or requiring the client PTT control. R136 does neither: it reads the mode only,
+states the exact limitation, preserves final-interceptor dropping/no-broadcast behavior,
+and restores all prior voice behavior because no client setting is ever mutated.
+
+`/npc create <name>` now creates a project-owned neutral, mostly-undressed, registry-valid
+skin scaffold with the stable profile and inventory. Missing legacy skins receive the
+same canonical scaffold. Existing malformed authored skin bytes are never overwritten at
+open: Studio continues in a degraded state with a temporary neutral preview, and a repair
+draft fingerprints the original bytes so an explicit Save remains optimistic and creates
+a rollback before replacement. Preview creation failure is logged but is no longer a
+prerequisite for opening Studio. No creator appearance is read or copied.
+
+The R136 deterministic gate covers recorder control transitions, bounded waveform height
+propagation, stale waveform rejection, read-only PTT/Open-Mic contract interpretation,
+recorder-to-conversation isolation, missing-skin creation/reopen, malformed-byte
+preservation, packaged assets, and preview-as-consumer behavior. The full deterministic
+suite, including the 8,100-scenario conversation matrix, passes with live model tests
+intentionally skipped. A7 was not started.
+
+The R136 connected-test candidate is:
+
+- source artifact:
+  `C:\HytaleMigration\persistent-npcs\dist\ImmersiveNPCs-0.6.3-R136-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-HOTFIX.jar`;
+- deployed artifact:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R136-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-HOTFIX.jar`;
+- size: `3,004,042` bytes;
+- SHA-256: `1841F365F108345984FC0C4BDF2E4D5C1B84140546179FEF030610C17E0538D0`;
+- source/deployed hash equality: verified;
+- installed Immersive NPC JAR count: exactly one;
+- accepted R134.2 rollback and pre-hotfix R135 snapshot: preserved outside the game
+  directory under `C:\HytaleRollback`.
+
+A6 automated hotfix status: **PASS**. Connected-client validation status: **PENDING**.
+A7 remains unauthorized and was not started.

@@ -106,6 +106,15 @@ public final class AiServiceRouter implements AutoCloseable {
                 "The configured STT provider does not expose the local Opus encoder."));
     }
 
+    public CompletableFuture<com.inigmasgames.persistentnpcs.voice.VoiceDraftAudio>
+            analyzeSavedVoice(Path path, int waveformBuckets) {
+        if (stt.primary instanceof LocalWorkerSpeechToTextProvider local) {
+            return local.analyzeSavedWave(path, waveformBuckets);
+        }
+        return CompletableFuture.failedFuture(new IllegalStateException(
+                "The configured STT provider does not expose saved-WAV analysis."));
+    }
+
     public CompletableFuture<Integer> invalidateVoiceConditioning(Path changedSample) {
         if (tts.primary instanceof LocalWorkerTextToSpeechProvider local) {
             return local.invalidateConditioningCache();

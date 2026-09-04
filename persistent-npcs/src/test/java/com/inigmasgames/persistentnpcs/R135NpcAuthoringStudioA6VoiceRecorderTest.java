@@ -256,10 +256,10 @@ public final class R135NpcAuthoringStudioA6VoiceRecorderTest {
             String page = source("src/main/java/com/inigmasgames/persistentnpcs/ui/"
                     + "NpcProfilePage.java");
             for (String selector : List.of("#VoiceRecorderPage", "#VoiceRecordButton",
-                    "#VoiceStopButton", "#VoicePlayDraftButton", "#VoiceSaveButton",
-                    "#VoiceDeleteSavedButton", "#VoiceDeleteConfirmPage",
+                    "#VoicePlayStopButton", "#VoiceDeleteButton", "#VoiceSaveButton",
+                    "#VoiceDeleteConfirmPage",
                     "#VoiceRecordingIndicator", "#VoiceQualityMetrics",
-                    "#VoiceWaveformText")) {
+                    "#VoiceWaveformBar0")) {
                 assert ui.contains(selector) : "Missing A6 UI selector " + selector;
             }
             assert page.contains("#VoiceDeleteConfirmPage.Visible\", false")
@@ -270,8 +270,8 @@ public final class R135NpcAuthoringStudioA6VoiceRecorderTest {
             }
             String manifest = source("src/main/resources/manifest.json");
             String installer = source("install.ps1");
-            assert manifest.contains("R135-npc-authoring-studio-a6-voice-recorder");
-            assert installer.contains("R135-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER.jar");
+            assert manifest.contains("npc-authoring-studio-a6-voice-recorder");
+            assert installer.contains("NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER");
             System.out.println("R135 NPC Authoring Studio A6 Voice Recorder gate passed.");
         } finally {
             deleteTree(root);

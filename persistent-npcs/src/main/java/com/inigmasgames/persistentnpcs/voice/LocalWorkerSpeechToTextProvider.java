@@ -86,6 +86,12 @@ public final class LocalWorkerSpeechToTextProvider implements SpeechToTextProvid
     public CompletableFuture<List<byte[]>> encodeSavedWave(java.nio.file.Path path) {
         return bootstrapMoonshine().thenCompose(ignored -> worker().encodeSavedWave(path));
     }
+
+    public CompletableFuture<VoiceDraftAudio> analyzeSavedWave(
+            java.nio.file.Path path, int waveformBuckets) {
+        return bootstrapMoonshine().thenCompose(ignored -> worker().analyzeSavedWave(
+                path, waveformBuckets));
+    }
     @Override public String providerId() { return "moonshine-faster-whisper-local-worker"; }
     @Override public AiServiceKind serviceKind() { return AiServiceKind.SPEECH_TO_TEXT; }
     @Override public ProviderExecutionMode executionMode() { return ProviderExecutionMode.LOCAL; }
