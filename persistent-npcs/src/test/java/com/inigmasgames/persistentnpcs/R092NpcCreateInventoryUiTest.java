@@ -49,8 +49,10 @@ public final class R092NpcCreateInventoryUiTest {
         assert !ui.contains("#NpcPreviewPreset");
         assert ui.contains("ItemGrid #ArmorGrid")
                 : "Armor must use the native window-backed ItemGrid drag target";
-        assert ui.contains("ItemGrid #LoadoutGrid")
-                : "Loadout must use the native window-backed ItemGrid drag target";
+        for (String grid : List.of("PrimaryWeaponGrid", "OffhandGrid", "AmmunitionGrid")) {
+            assert ui.contains("ItemGrid #" + grid)
+                    : grid + " must use an exact native equipment section/slot";
+        }
         assert ui.contains("Group #NpcGridHost");
         assert ui.contains("Group #PlayerGridHost")
                 : "The profile page must expose the player's authoritative inventory beside the NPC inventory";
@@ -101,8 +103,10 @@ public final class R092NpcCreateInventoryUiTest {
         }
         assert ui.contains("ItemGrid #ArmorGrid")
                 : "NPC armor must be a real native drag target";
-        assert ui.contains("ItemGrid #LoadoutGrid")
-                : "NPC loadout must be a real native drag target";
+        assert ui.contains("ItemGrid #PrimaryWeaponGrid")
+                && ui.contains("ItemGrid #OffhandGrid")
+                && ui.contains("ItemGrid #AmmunitionGrid")
+                : "NPC loadout endpoints must be distinct native drag targets";
         for (String armor : List.of("Helmet", "Cuirass", "Gauntlets", "Pants")) {
             assert ui.contains("#Toggle" + armor + "VisibilityButton");
             assert ui.contains("#" + armor + "ArmorVisible");
@@ -145,7 +149,9 @@ public final class R092NpcCreateInventoryUiTest {
         assert page.contains("CustomInventoryTransactionBridge")
                 : "Update mode must route untrusted drop intent through the shared bridge";
         assert page.contains("#ArmorGrid.InventorySectionId");
-        assert page.contains("#LoadoutGrid.InventorySectionId");
+        assert page.contains("#PrimaryWeaponGrid.InventorySectionId");
+        assert page.contains("#OffhandGrid.InventorySectionId");
+        assert page.contains("#AmmunitionGrid.InventorySectionId");
         assert page.contains("#NpcCharacterPreview.Visible\", preview != null")
                 : "Create mode must hide the viewer-backed preview until an NPC exists";
         assert command.contains("if (update)")
@@ -207,15 +213,16 @@ public final class R092NpcCreateInventoryUiTest {
         String repository = Files.readString(Path.of(
                 "src/main/java/com/inigmasgames/persistentnpcs/profile/NpcInventoryRepository.java"));
         assert repository.contains("new ContainerWindow(armor)");
-        assert repository.contains("new ContainerWindow(loadout)");
+        assert repository.contains("new ContainerWindow(hotbar)");
+        assert repository.contains("new ContainerWindow(utility)");
         assert repository.contains("new ContainerWindow(inventory)");
         assert repository.contains("ItemContainerUtil.trySetArmorFilters(armor)");
-        assert repository.contains("setSlotFilter(FilterActionType.ADD, PRIMARY_SLOT");
-        assert repository.contains("setSlotFilter(FilterActionType.ADD, OFFHAND_SLOT");
-        assert repository.contains("setSlotFilter(FilterActionType.ADD, AMMUNITION_SLOT");
+        assert repository.contains("setSlotFilter(FilterActionType.ADD, (short) 0, primary)");
+        assert repository.contains("setSlotFilter(FilterActionType.ADD, (short) 0, offhand)");
+        assert repository.contains("setSlotFilter(FilterActionType.ADD, (short) 1, ammunition)");
         assert repository.contains("inventory.swapItems")
                 : "Equipping must use the SDK ItemContainer transaction path";
-        assert repository.contains("target.moveItemStackFromSlot(targetSlot, inventory)")
+        assert repository.contains("target.moveItemStackFromSlot(physicalTarget, inventory)")
                 : "Unequipping must return items to the authoritative NPC inventory";
         assert repository.contains("restoreOne(hotbar, (short) 1")
                 : "Preferred ammunition must occupy native hotbar slot 1 ahead of storage ammo";

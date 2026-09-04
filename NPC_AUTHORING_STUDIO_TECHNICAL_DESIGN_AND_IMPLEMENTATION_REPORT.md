@@ -290,3 +290,104 @@ The exact deployed A2 authority retained for A3 rollback is:
 The complete deterministic suite was rerun from the R131 source immediately before the
 A3 checkpoint and passed. Stage A3 may now activate gear, loadout, and live stats; A4+
 remains unauthorized.
+
+## A3 — Gear, loadout, and live stats
+
+### Installed API evidence
+
+A3 was implemented against the installed Update 6 pre-release server binary, not an
+assumed SDK. The audited binary was:
+
+- `C:\Users\Zemio\AppData\Roaming\Hytale\install\pre-release\package\game\latest\Server\HytaleServer.jar`
+- SHA-256: `337E47E2A4AD931DFCAE227F75F9E84D2CF3D1DAC35ADCB916316F2E0819FC7E`
+- size: `110,437,983` bytes
+
+The inspected contracts include `ItemArmor.getArmorSlot()`,
+`ItemArmor.getBaseDamageResistance()`, `Item.getWeapon()`, `Item.getArmor()`,
+`Item.getUtility()`, `AssetExtraInfo.Data.getRawTags()`,
+`ActiveSlotInventoryComponent.getActiveSlot()/setActiveSlot()`,
+`EntityStatMap.get(String)`, and `InventoryUtils.createEquipmentUpdate(...)`.
+Shipped item assets establish the authoritative `Family=Arrow` and `Family=Shield`
+tags and bow/crossbow item families used by the resolver.
+
+### Authoritative equipment ownership
+
+Spawned NPC authoring now opens the exact live ECS `Armor`, `Hotbar`, `Utility`, and
+`Storage` `ItemContainer` objects. Every one is wrapped in its own registered
+`ContainerWindow`; section and object identity are revalidated for every transaction.
+Unspawned NPCs retain repository-owned bounded containers and the same persisted state
+shape.
+
+The semantic endpoints are:
+
+- armor: live `InventoryComponent.Armor`, slots 0–3;
+- primary weapon: live `InventoryComponent.Hotbar`, physical slot 0;
+- shield/offhand: live `InventoryComponent.Utility`, physical slot 0;
+- preferred ammunition: live `InventoryComponent.Hotbar`, physical slot 1;
+- NPC storage: live `InventoryComponent.Storage`, 40 slots;
+- Player storage: the viewer's built-in negative Storage section.
+
+Allowed movement is explicitly limited to Player/NPC Storage ↔ Armor and
+Player/NPC Storage ↔ Loadout, plus existing internal storage movement. Direct
+Armor↔Loadout moves fail closed. Occupied endpoints use the already-proven atomic native
+swap; a displaced item must validate for the source equipment endpoint or the whole
+operation is rejected. Partial occupied swaps, full-destination failures, stale intent,
+unknown sections, inactive windows, identity drift, and unknown compatibility all reject
+without manual item copying, deletion, dropping, or rollback reconstruction.
+
+### Compatibility and dependent-state policy
+
+`NpcEquipmentCompatibilityResolver` returns a typed `COMPATIBLE`, `INCOMPATIBLE`,
+`UNKNOWN`, or `REQUIRES_REVIEW` verdict with evidence. Armor uses only the exact
+`ItemArmor.armorSlot` contract. Primary weapon, shield, and ammunition use installed item
+metadata and raw asset tags; filename-prefix heuristics are not accepted as authority.
+Unknown and review-required verdicts fail closed.
+
+Preferred ammunition uses **model A: a physical stack** in Hotbar slot 1. A primary
+weapon change re-evaluates that stack. An incompatible dependent item remains in its
+authoritative slot, is rendered incompatible, and disables the infinite-ammunition
+effect; it is never silently moved or deleted.
+
+Infinite ammunition is persisted as policy only and never manufactures stacks. Its
+effective state additionally requires compatible physical weapon/ammunition state, the
+Gear permission envelope, and the server configuration boundary
+`immersive.npcs.infiniteAmmunition.enabled` (default `true`).
+
+### Visibility, world state, preview, and commit ordering
+
+Armor visibility controls are only exposed for occupied slots. The four persisted flags
+are applied to the NPC's native `PlayerSettings`, never the viewer. After an equipment
+commit the implementation authoritatively rereads, synchronously flushes persistence,
+selects the authored Hotbar/Utility active cells, marks native equipment outdated,
+creates the current SDK `EquipmentUpdate`, refreshes the NPC preview, captures stats, and
+sends one coalesced Custom UI update. Preview failure is explicitly degraded and does not
+roll back an item transaction.
+
+The viewer remains a transport/render target for the already-proven preview session only;
+the A3 mutation and visibility paths address the NPC ECS reference and exact NPC
+containers exclusively. Existing preview restoration safeguards remain unchanged.
+
+### Live-stat snapshot semantics
+
+Health, Stamina, and Mana are read from the live NPC `EntityStatMap` and display current
+and maximum values. Defense is deliberately labeled `base` and is the authoritative sum
+of equipped `ItemArmor.baseDamageResistance`; no unsupported derived aggregate is
+invented. Missing components or values render `Unavailable`, never fake zero.
+
+Every snapshot carries NPC stable ID, live entity UUID, capture time, equipment revision,
+authoring session UUID, and page generation. Identity/generation drift rejects the
+snapshot. Snapshots are captured on open, after gear or visibility changes, and on a
+bounded two-second refresh; unchanged values do not emit UI traffic. Stats failure
+degrades only the stats strip and leaves inventory/profile authoring usable.
+
+### Automated gate and connected stop
+
+`persistent-npcs/test.ps1 -SkipLive` passes the complete deterministic suite, including
+the new R132 A3 gate, all R092–R131 inventory/profile/persistence/preview regressions,
+the 8,100-scenario conversation matrix, and the existing Orbis/Sentinel/evaluation gates.
+The only compiler warning remains the pre-existing deprecated `WorldChunk.getFluidId`
+use. Live model tests remain intentionally skipped because A3 does not alter inference.
+
+A3 automated status: **PASS**. Connected-client status: **PENDING**. The R132 JAR is a
+validation candidate only. Work must stop after deployment for the operator's connected
+acceptance; A4 and later stages remain unauthorized.

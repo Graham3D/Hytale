@@ -81,7 +81,8 @@ public final class R119NpcProfileProductionInventoryIntegrationTest {
         assert repository.contains("state.inventory().equals(snapshotContainer(inventory))");
         assert repository.contains("if (ownsInventory) inventory.registerChangeEvent")
                 : "The live container already has the runtime persistence listener";
-        assert profile.contains("editor.inventories().openWithLiveStorage(");
+        assert profile.contains("editor.inventories().openWithLiveInventory(")
+                : "A3 must preserve Storage while adding exact live equipment authorities";
         assert profile.contains("persistenceAuthority=NpcInventoryRepository_RUNTIME_PIPELINE");
         assert !profile.contains("nativeInventoryOpener.accept(ref, store)")
                 : "The redundant native-inventory Profile button must remain removed";

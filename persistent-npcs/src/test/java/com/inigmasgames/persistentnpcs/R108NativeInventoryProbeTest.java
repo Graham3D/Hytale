@@ -120,7 +120,8 @@ public final class R108NativeInventoryProbeTest {
         }
 
         for (String preserved : new String[] {"CharacterPreviewComponent #NpcCharacterPreview",
-                "ItemGrid #ArmorGrid", "ItemGrid #LoadoutGrid", "VOICE SAMPLES",
+                "ItemGrid #ArmorGrid", "ItemGrid #PrimaryWeaponGrid",
+                "ItemGrid #OffhandGrid", "ItemGrid #AmmunitionGrid", "VOICE SAMPLES",
                 "Group #NpcGridHost", "Group #PlayerGridHost"}) {
             assert profileUi.contains(preserved) : "Production UI lost: " + preserved;
         }

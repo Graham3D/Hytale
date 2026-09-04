@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -62,7 +63,7 @@ public final class NpcInventoryRepository implements AutoCloseable {
 
     public Session open(String npcName) {
         profiles.createProfileDirectory(npcName);
-        return new Session(npcName, load(npcName), null);
+        return new Session(npcName, load(npcName), null, null, null, null);
     }
 
     /**
@@ -72,7 +73,18 @@ public final class NpcInventoryRepository implements AutoCloseable {
      */
     public Session openWithLiveStorage(String npcName, ItemContainer liveStorage) {
         profiles.createProfileDirectory(npcName);
+        return new Session(npcName, load(npcName), null, null, null,
+                java.util.Objects.requireNonNull(liveStorage, "liveStorage"));
+    }
+
+    /** Opens A3 over the exact live NPC Armor, Hotbar, Utility, and Storage authorities. */
+    public Session openWithLiveInventory(String npcName, ItemContainer liveArmor,
+            ItemContainer liveHotbar, ItemContainer liveUtility, ItemContainer liveStorage) {
+        profiles.createProfileDirectory(npcName);
         return new Session(npcName, load(npcName),
+                java.util.Objects.requireNonNull(liveArmor, "liveArmor"),
+                java.util.Objects.requireNonNull(liveHotbar, "liveHotbar"),
+                java.util.Objects.requireNonNull(liveUtility, "liveUtility"),
                 java.util.Objects.requireNonNull(liveStorage, "liveStorage"));
     }
 
@@ -322,6 +334,7 @@ public final class NpcInventoryRepository implements AutoCloseable {
             ItemContainer storage) {
         if (!runtimePersistenceBindings.add(storage)) return false;
         Runnable persist = () -> {
+            NpcInventoryState policy = find(npcName).orElse(authored);
             List<NpcInventoryState.PersistedItemStack> loadout = new ArrayList<>();
             addRuntimeSlot(loadout, hotbar, (short) 0, Session.PRIMARY_SLOT);
             addRuntimeSlot(loadout, utility, (short) 0, Session.OFFHAND_SLOT);
@@ -332,9 +345,9 @@ public final class NpcInventoryRepository implements AutoCloseable {
                     snapshotContainer(armor),
                     List.copyOf(loadout),
                     snapshotContainer(storage),
-                    authored.infiniteAmmunition(),
-                    authored.hideHelmet(), authored.hideCuirass(),
-                    authored.hideGauntlets(), authored.hidePants());
+                    policy.infiniteAmmunition(),
+                    policy.hideHelmet(), policy.hideCuirass(),
+                    policy.hideGauntlets(), policy.hidePants());
             writer.execute(() -> save(npcName, snapshot));
         };
         armor.registerChangeEvent(ignored -> persist.run());
@@ -395,12 +408,15 @@ public final class NpcInventoryRepository implements AutoCloseable {
         public static final short AMMUNITION_SLOT = 2;
 
         private final String npcName;
-        private final SimpleItemContainer armor;
-        private final SimpleItemContainer loadout;
+        private final ItemContainer armor;
+        private final ItemContainer hotbar;
+        private final ItemContainer utility;
         private final ItemContainer inventory;
         private final ContainerWindow armorWindow;
-        private final ContainerWindow loadoutWindow;
+        private final ContainerWindow hotbarWindow;
+        private final ContainerWindow utilityWindow;
         private final ContainerWindow inventoryWindow;
+        private final boolean ownsEquipment;
         private final boolean ownsInventory;
         private final AtomicReference<NpcInventoryState> pending = new AtomicReference<>();
         private final AtomicBoolean writeScheduled = new AtomicBoolean();
@@ -410,14 +426,22 @@ public final class NpcInventoryRepository implements AutoCloseable {
         private volatile boolean hideCuirass;
         private volatile boolean hideGauntlets;
         private volatile boolean hidePants;
+        private final AtomicLong equipmentRevision = new AtomicLong();
         private volatile Runnable changedCallback = () -> { };
         private volatile boolean restoring = true;
 
         private Session(String npcName, NpcInventoryState state,
-                ItemContainer liveStorage) {
+                ItemContainer liveArmor, ItemContainer liveHotbar,
+                ItemContainer liveUtility, ItemContainer liveStorage) {
             this.npcName = npcName;
-            this.armor = new SimpleItemContainer(NpcInventoryState.ARMOR_CAPACITY);
-            this.loadout = new SimpleItemContainer(NpcInventoryState.LOADOUT_CAPACITY);
+            this.ownsEquipment = liveArmor == null;
+            if (ownsEquipment != (liveHotbar == null) || ownsEquipment != (liveUtility == null)) {
+                throw new IllegalArgumentException("Live NPC equipment authorities must be supplied together.");
+            }
+            this.armor = ownsEquipment
+                    ? new SimpleItemContainer(NpcInventoryState.ARMOR_CAPACITY) : liveArmor;
+            this.hotbar = ownsEquipment ? new SimpleItemContainer((short) 2) : liveHotbar;
+            this.utility = ownsEquipment ? new SimpleItemContainer((short) 1) : liveUtility;
             this.ownsInventory = liveStorage == null;
             this.inventory = ownsInventory
                     ? new SimpleItemContainer(NpcInventoryState.INVENTORY_CAPACITY)
@@ -427,50 +451,89 @@ public final class NpcInventoryRepository implements AutoCloseable {
                         + inventory.getCapacity() + "; expected "
                         + NpcInventoryState.INVENTORY_CAPACITY + '.');
             }
+            if (armor.getCapacity() != NpcInventoryState.ARMOR_CAPACITY
+                    || hotbar.getCapacity() < 2 || utility.getCapacity() < 1) {
+                throw new IllegalStateException("NPC live equipment capacities are incomplete.");
+            }
             this.armorWindow = new ContainerWindow(armor);
-            this.loadoutWindow = new ContainerWindow(loadout);
+            this.hotbarWindow = new ContainerWindow(hotbar);
+            this.utilityWindow = new ContainerWindow(utility);
             this.inventoryWindow = new ContainerWindow(inventory);
             stableNpcId = state.stableNpcId();
             ItemContainerUtil.trySetArmorFilters(armor);
-            restore(armor, state.armor(), "armor");
-            restore(loadout, state.loadout(), "loadout");
+            if (ownsEquipment) {
+                restore(armor, state.armor(), "armor");
+                state.loadout().stream().filter(value -> value.slot() == PRIMARY_SLOT)
+                        .findFirst().ifPresent(value -> restoreOne(hotbar, (short) 0,
+                                value.toItemStack(), "primary weapon"));
+                state.loadout().stream().filter(value -> value.slot() == AMMUNITION_SLOT)
+                        .findFirst().ifPresent(value -> restoreOne(hotbar, (short) 1,
+                                value.toItemStack(), "preferred ammunition"));
+                state.loadout().stream().filter(value -> value.slot() == OFFHAND_SLOT)
+                        .findFirst().ifPresent(value -> restoreOne(utility, (short) 0,
+                                value.toItemStack(), "offhand"));
+            }
             if (ownsInventory) {
                 restore(inventory, state.inventory(), "inventory");
             } else if (!state.inventory().equals(snapshotContainer(inventory))) {
                 throw new IllegalStateException(
                         "Live NPC Storage does not match persisted NPC inventory.");
             }
+            if (!ownsEquipment && (!canonicalItems(state.armor()).equals(
+                    canonicalItems(snapshotContainer(armor)))
+                    || !canonicalItems(state.loadout()).equals(
+                            canonicalItems(snapshotLoadout())))) {
+                throw new IllegalStateException("Live NPC equipment does not match persisted state.");
+            }
             installLoadoutFilters();
             validateRestoredLoadout();
-            infiniteAmmunition = state.infiniteAmmunition() && ammunitionPolicyRelevant();
+            infiniteAmmunition = state.infiniteAmmunition();
             hideHelmet = state.hideHelmet();
             hideCuirass = state.hideCuirass();
             hideGauntlets = state.hideGauntlets();
             hidePants = state.hidePants();
             armor.registerChangeEvent(ignored -> changed());
-            loadout.registerChangeEvent(ignored -> changed());
+            hotbar.registerChangeEvent(ignored -> changed());
+            utility.registerChangeEvent(ignored -> changed());
             // Live Storage is already observed by installRuntimePersistence(). The
             // bridge performs its own UI reconciliation; registering this authoring
             // listener too would create a competing persistence callback.
             if (ownsInventory) inventory.registerChangeEvent(ignored -> changed());
             armorWindow.registerCloseEvent(ignored -> flush());
-            loadoutWindow.registerCloseEvent(ignored -> flush());
+            hotbarWindow.registerCloseEvent(ignored -> flush());
+            utilityWindow.registerCloseEvent(ignored -> flush());
             inventoryWindow.registerCloseEvent(ignored -> flush());
             restoring = false;
         }
 
         public ContainerWindow[] windows() {
-            return new ContainerWindow[] { armorWindow, loadoutWindow, inventoryWindow };
+            return new ContainerWindow[] {
+                    armorWindow, hotbarWindow, utilityWindow, inventoryWindow };
         }
 
         public int armorSectionId() { return armorWindow.getId(); }
-        public int loadoutSectionId() { return loadoutWindow.getId(); }
+        public int primarySectionId() { return hotbarWindow.getId(); }
+        public int ammunitionSectionId() { return hotbarWindow.getId(); }
+        public int offhandSectionId() { return utilityWindow.getId(); }
         public int inventorySectionId() { return inventoryWindow.getId(); }
         public ItemContainer armor() { return armor; }
-        public ItemContainer loadout() { return loadout; }
+        public ItemContainer hotbar() { return hotbar; }
+        public ItemContainer utility() { return utility; }
         public ItemContainer inventory() { return inventory; }
+        public ContainerWindow armorWindow() { return armorWindow; }
+        public ContainerWindow hotbarWindow() { return hotbarWindow; }
+        public ContainerWindow utilityWindow() { return utilityWindow; }
+        public ContainerWindow inventoryWindow() { return inventoryWindow; }
+        public boolean usesLiveEquipment() { return !ownsEquipment; }
         public boolean usesLiveStorage() { return !ownsInventory; }
         public boolean infiniteAmmunition() { return infiniteAmmunition; }
+        public boolean infiniteAmmunitionEffective() {
+            return infiniteAmmunition
+                    && NpcEquipmentRules.infiniteAmmunitionFeatureEnabled()
+                    && ammunitionPolicyRelevant();
+        }
+        public long equipmentRevision() { return equipmentRevision.get(); }
+        public long markEquipmentCommitted() { return equipmentRevision.incrementAndGet(); }
 
         public ItemStack armorItem(short slot) {
             requireSlot(slot, armor.getCapacity(), "armor");
@@ -478,8 +541,12 @@ public final class NpcInventoryRepository implements AutoCloseable {
         }
 
         public ItemStack loadoutItem(short slot) {
-            requireSlot(slot, loadout.getCapacity(), "loadout");
-            return loadout.getItemStack(slot);
+            return switch (slot) {
+                case PRIMARY_SLOT -> hotbar.getItemStack((short) 0);
+                case OFFHAND_SLOT -> utility.getItemStack((short) 0);
+                case AMMUNITION_SLOT -> hotbar.getItemStack((short) 1);
+                default -> throw new IllegalArgumentException("Invalid loadout slot: " + slot);
+            };
         }
 
         /**
@@ -491,27 +558,35 @@ public final class NpcInventoryRepository implements AutoCloseable {
          */
         public String activateEquipmentSlot(
                 boolean armorSection, short targetSlot, int selectedInventorySlot) {
-            ItemContainer target = armorSection ? armor : loadout;
-            requireSlot(targetSlot, target.getCapacity(),
-                    armorSection ? "armor" : "loadout");
+            ItemContainer target = armorSection ? armor : switch (targetSlot) {
+                case PRIMARY_SLOT, AMMUNITION_SLOT -> hotbar;
+                case OFFHAND_SLOT -> utility;
+                default -> throw new IllegalArgumentException("Invalid loadout slot: " + targetSlot);
+            };
+            short physicalTarget = armorSection ? targetSlot : switch (targetSlot) {
+                case PRIMARY_SLOT, OFFHAND_SLOT -> (short) 0;
+                case AMMUNITION_SLOT -> (short) 1;
+                default -> throw new IllegalArgumentException("Invalid loadout slot: " + targetSlot);
+            };
+            requireSlot(physicalTarget, target.getCapacity(), armorSection ? "armor" : "loadout");
 
             boolean selected = selectedInventorySlot >= 0
                     && selectedInventorySlot < inventory.getCapacity()
                     && !ItemStack.isEmpty(inventory.getItemStack((short) selectedInventorySlot));
             if (selected) {
                 if (!inventory.swapItems((short) selectedInventorySlot, target,
-                        targetSlot, (short) 1).succeeded()) {
+                        physicalTarget, (short) 1).succeeded()) {
                     throw new IllegalArgumentException(
                             "That item is not compatible with the selected equipment slot.");
                 }
                 return "Equipped selected NPC inventory item.";
             }
 
-            if (ItemStack.isEmpty(target.getItemStack(targetSlot))) {
+            if (ItemStack.isEmpty(target.getItemStack(physicalTarget))) {
                 throw new IllegalArgumentException(
                         "Select an occupied NPC inventory slot, then choose an equipment slot.");
             }
-            if (!target.moveItemStackFromSlot(targetSlot, inventory).succeeded()) {
+            if (!target.moveItemStackFromSlot(physicalTarget, inventory).succeeded()) {
                 throw new IllegalStateException("NPC inventory is full; the item was not removed.");
             }
             return "Returned equipment to the NPC inventory.";
@@ -541,23 +616,29 @@ public final class NpcInventoryRepository implements AutoCloseable {
                 default -> throw new IllegalArgumentException("Invalid armor slot: " + slot);
             }
             changed();
+            flush();
         }
 
         public boolean ammunitionPolicyRelevant() {
-            ItemStack weapon = loadout.getItemStack(PRIMARY_SLOT);
-            ItemStack ammunition = loadout.getItemStack(AMMUNITION_SLOT);
+            ItemStack weapon = loadoutItem(PRIMARY_SLOT);
+            ItemStack ammunition = loadoutItem(AMMUNITION_SLOT);
             return NpcEquipmentRules.requiresAmmunition(weapon)
                     && !ItemStack.isEmpty(ammunition)
                     && NpcEquipmentRules.isCompatibleAmmunition(weapon, ammunition);
         }
 
         public void setInfiniteAmmunition(boolean value) {
+            if (value && !NpcEquipmentRules.infiniteAmmunitionFeatureEnabled()) {
+                throw new IllegalArgumentException(
+                        "Infinite ammunition is disabled by server policy.");
+            }
             if (value && !ammunitionPolicyRelevant()) {
                 throw new IllegalArgumentException(
                         "Select a compatible ranged weapon and preferred ammunition first.");
             }
             infiniteAmmunition = value;
             changed();
+            flush();
         }
 
         public void bindStableIdentity(UUID stableId) {
@@ -571,8 +652,8 @@ public final class NpcInventoryRepository implements AutoCloseable {
 
         public NpcInventoryState snapshot() {
             return new NpcInventoryState(NpcInventoryState.CURRENT_SCHEMA_VERSION, stableNpcId,
-                    snapshot(armor), snapshot(loadout), snapshot(inventory),
-                    infiniteAmmunition && ammunitionPolicyRelevant(),
+                    snapshot(armor), snapshotLoadout(), snapshot(inventory),
+                    infiniteAmmunition,
                     hideHelmet, hideCuirass, hideGauntlets, hidePants);
         }
 
@@ -600,7 +681,7 @@ public final class NpcInventoryRepository implements AutoCloseable {
             SlotFilter primary = (action, container, slot, stack) -> {
                 if (action != FilterActionType.ADD || ItemStack.isEmpty(stack)) return true;
                 if (!NpcEquipmentRules.isPrimaryWeapon(stack)) return false;
-                ItemStack ammunition = loadout.getItemStack(AMMUNITION_SLOT);
+                ItemStack ammunition = hotbar.getItemStack((short) 1);
                 return ItemStack.isEmpty(ammunition)
                         || NpcEquipmentRules.isCompatibleAmmunition(stack, ammunition);
             };
@@ -608,10 +689,14 @@ public final class NpcInventoryRepository implements AutoCloseable {
                     || NpcEquipmentRules.isShieldOrOffhand(stack);
             SlotFilter ammunition = (action, container, slot, stack) -> action != FilterActionType.ADD
                     || NpcEquipmentRules.isCompatibleAmmunition(
-                            loadout.getItemStack(PRIMARY_SLOT), stack);
-            loadout.setSlotFilter(FilterActionType.ADD, PRIMARY_SLOT, primary);
-            loadout.setSlotFilter(FilterActionType.ADD, OFFHAND_SLOT, offhand);
-            loadout.setSlotFilter(FilterActionType.ADD, AMMUNITION_SLOT, ammunition);
+                            hotbar.getItemStack((short) 0), stack);
+            if (hotbar instanceof SimpleItemContainer simpleHotbar) {
+                simpleHotbar.setSlotFilter(FilterActionType.ADD, (short) 0, primary);
+                simpleHotbar.setSlotFilter(FilterActionType.ADD, (short) 1, ammunition);
+            }
+            if (utility instanceof SimpleItemContainer simpleUtility) {
+                simpleUtility.setSlotFilter(FilterActionType.ADD, (short) 0, offhand);
+            }
         }
 
         private static void requireSlot(short slot, short capacity, String section) {
@@ -621,23 +706,14 @@ public final class NpcInventoryRepository implements AutoCloseable {
         }
 
         private void validateRestoredLoadout() {
-            ItemStack primary = loadout.getItemStack(PRIMARY_SLOT);
-            ItemStack offhand = loadout.getItemStack(OFFHAND_SLOT);
-            ItemStack ammunition = loadout.getItemStack(AMMUNITION_SLOT);
-            if (!NpcEquipmentRules.isPrimaryWeapon(primary)) {
-                throw new IllegalStateException("Persisted NPC primary weapon is incompatible");
-            }
-            if (!NpcEquipmentRules.isShieldOrOffhand(offhand)) {
-                throw new IllegalStateException("Persisted NPC offhand item is incompatible");
-            }
-            if (!NpcEquipmentRules.isCompatibleAmmunition(primary, ammunition)) {
-                throw new IllegalStateException("Persisted NPC preferred ammunition is incompatible");
-            }
+            // Historical or externally-mutated equipment is never silently moved or
+            // deleted. Compatibility is re-evaluated at each transaction and render;
+            // invalid dependent state remains physically present but fail-closed for
+            // gameplay policies such as infinite ammunition.
         }
 
         private void changed() {
             if (restoring) return;
-            if (!ammunitionPolicyRelevant()) infiniteAmmunition = false;
             pending.set(snapshot());
             changedCallback.run();
             if (writeScheduled.compareAndSet(false, true)) writer.execute(this::drainWrites);
@@ -663,6 +739,14 @@ public final class NpcInventoryRepository implements AutoCloseable {
                     values.add(NpcInventoryState.PersistedItemStack.from(slot, stack));
                 }
             }
+            return List.copyOf(values);
+        }
+
+        private List<NpcInventoryState.PersistedItemStack> snapshotLoadout() {
+            List<NpcInventoryState.PersistedItemStack> values = new ArrayList<>();
+            addRuntimeSlot(values, hotbar, (short) 0, PRIMARY_SLOT);
+            addRuntimeSlot(values, utility, (short) 0, OFFHAND_SLOT);
+            addRuntimeSlot(values, hotbar, (short) 1, AMMUNITION_SLOT);
             return List.copyOf(values);
         }
     }

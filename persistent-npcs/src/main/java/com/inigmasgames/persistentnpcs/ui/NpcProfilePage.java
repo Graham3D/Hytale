@@ -30,6 +30,11 @@ import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringSession;
 import com.inigmasgames.persistentnpcs.profile.NpcProfileEditorService;
 import com.inigmasgames.persistentnpcs.profile.NpcProfileEditorService.ProfileFileField;
 import com.inigmasgames.persistentnpcs.profile.NpcInventoryRepository;
+import com.inigmasgames.persistentnpcs.profile.NpcEquipmentMovePolicy;
+import com.inigmasgames.persistentnpcs.profile.NpcEquipmentCompatibilityResolver;
+import com.inigmasgames.persistentnpcs.profile.NpcEquipmentRules;
+import com.inigmasgames.persistentnpcs.profile.NpcStatsSnapshotService;
+import com.inigmasgames.persistentnpcs.profile.NpcStatsSnapshotService.NpcStatsSnapshot;
 import com.inigmasgames.persistentnpcs.voice.VoicePresetRepository;
 import com.inigmasgames.persistentnpcs.voice.VoiceSampleType;
 import java.nio.file.Files;
@@ -40,7 +45,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -83,6 +93,17 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private boolean error;
     private VoicePresetRepository.VoiceSampleScan voiceSamples;
     private boolean built;
+    private final NpcStatsSnapshotService statsService = new NpcStatsSnapshotService();
+    private final ScheduledExecutorService statsScheduler =
+            Executors.newSingleThreadScheduledExecutor(runnable -> {
+                Thread thread = new Thread(runnable, "immersive-npc-stats-refresh");
+                thread.setDaemon(true);
+                return thread;
+            });
+    private ScheduledFuture<?> statsRefreshTask;
+    private NpcStatsSnapshot statsSnapshot;
+    private String statsFailure = "LIVE_NPC_UNAVAILABLE";
+    private boolean initialEquipmentStateApplied;
 
     public NpcProfilePage(
             PlayerRef playerRef,
@@ -116,22 +137,40 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 } : deleted;
         this.inventory = liveStorageAuthority == null
                 ? editor.openInventory(npcName)
-                : editor.inventories().openWithLiveStorage(
-                        npcName, liveStorageAuthority.storage());
-        this.inventory.onChanged(this::onInventoryChanged);
-        this.storageWindow = inventory.windows()[2];
+                : editor.inventories().openWithLiveInventory(
+                        npcName, liveStorageAuthority.armor(),
+                        liveStorageAuthority.hotbar(), liveStorageAuthority.utility(),
+                        liveStorageAuthority.storage());
+        this.inventory.onChanged(() -> { });
+        this.storageWindow = inventory.inventoryWindow();
         this.inventoryBridge = !update ? null
                 : new CustomInventoryTransactionBridge(
                         authoringSession.sessionId(), authoringSession.pageGeneration(), playerRef,
-                        this, storageWindow, inventory.inventory(), playerInventory,
+                        this, List.of(
+                                new CustomInventoryTransactionBridge.SectionBinding(
+                                        inventory.inventoryWindow(), inventory.inventory(),
+                                        CustomInventoryTransactionBridge.SectionRole.NPC_STORAGE),
+                                new CustomInventoryTransactionBridge.SectionBinding(
+                                        inventory.armorWindow(), inventory.armor(),
+                                        CustomInventoryTransactionBridge.SectionRole.NPC_ARMOR),
+                                new CustomInventoryTransactionBridge.SectionBinding(
+                                        inventory.hotbarWindow(), inventory.hotbar(),
+                                        CustomInventoryTransactionBridge.SectionRole.NPC_HOTBAR),
+                                new CustomInventoryTransactionBridge.SectionBinding(
+                                        inventory.utilityWindow(), inventory.utility(),
+                                        CustomInventoryTransactionBridge.SectionRole.NPC_UTILITY)),
+                        playerInventory,
                         liveStorageAuthority == null
                                 ? (ignoredRef, ignoredStore) -> null
                                 : liveStorageAuthority::invalidReason,
+                        new NpcEquipmentMovePolicy(() -> inventory.loadoutItem(
+                                NpcInventoryRepository.Session.PRIMARY_SLOT)),
                         this.diagnostics);
         this.voiceSamples = editor.rescanVoiceSamples(npcName);
         authoringSession.addCleanup("inventory-event-bridge", this::closeInventoryBridge);
         authoringSession.addCleanup("viewer-preview-restoration", this::closePreview);
         authoringSession.addCleanup("inventory-persistence-flush", inventory::close);
+        authoringSession.addCleanup("stats-refresh", this::closeStatsRefresh);
     }
 
     public ContainerWindow[] windows() {
@@ -200,6 +239,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#AuthoringEditorValue.Text", authoringSession.activeEditor().name());
         commands.set("#AuthoringEditorGeneration.Text",
                 Long.toString(authoringSession.editorGeneration()));
+        if (!initialEquipmentStateApplied) {
+            applyEquipmentAndStats(store, "PROFILE_OPEN");
+            initialEquipmentStateApplied = true;
+        } else {
+            captureStats(store, false);
+        }
         setNpcProfileUi(commands);
         if (inventoryBridge != null) {
             CustomInventoryBridgeUi.bindDrop(events, "#NpcInventoryGrid",
@@ -207,6 +252,14 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             CustomInventoryBridgeUi.bindDrop(events, "#PlayerInventoryGrid",
                     InventoryComponent.STORAGE_SECTION_ID,
                     authoringEvent("INVENTORY_DROP"));
+            CustomInventoryBridgeUi.bindDrop(events, "#ArmorGrid",
+                    inventory.armorSectionId(), authoringEvent("INVENTORY_DROP"));
+            CustomInventoryBridgeUi.bindDrop(events, "#PrimaryWeaponGrid",
+                    inventory.primarySectionId(), authoringEvent("INVENTORY_DROP"));
+            CustomInventoryBridgeUi.bindDrop(events, "#OffhandGrid",
+                    inventory.offhandSectionId(), authoringEvent("INVENTORY_DROP"));
+            CustomInventoryBridgeUi.bindDrop(events, "#AmmunitionGrid",
+                    inventory.ammunitionSectionId(), authoringEvent("INVENTORY_DROP"));
             diagnostics.accept("NPC_PROFILE_INVENTORY_BRIDGE_BUILD"
                     + " timestamp=" + Instant.now()
                     + " npc=" + npcName
@@ -217,6 +270,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     + " sessionId=" + authoringSession.sessionId()
                     + " pageGeneration=" + authoringSession.pageGeneration()
                     + " npcWindowId=" + storageWindow.getId()
+                    + " armorWindowId=" + inventory.armorSectionId()
+                    + " hotbarWindowId=" + inventory.primarySectionId()
+                    + " utilityWindowId=" + inventory.offhandSectionId()
                     + " playerStorageSectionId="
                     + InventoryComponent.STORAGE_SECTION_ID
                     + " supportedOperation=DROP_FULL_OR_ONE_MOVE_MERGE_SWAP_CROSS_OR_INTERNAL"
@@ -299,6 +355,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                             .append("BrowserCancel", "true"));
         }
         built = true;
+        startStatsRefresh(store);
     }
 
     @Override
@@ -321,7 +378,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         try {
             String authoringAction = resolveAuthoringAction(data);
             authoringSession.validate(authoringEnvelope(data, authoringAction),
-                    ALLOWED_ACTIONS, permissionFor(authoringAction));
+                    ALLOWED_ACTIONS, permissionFor(authoringAction, data));
             if (isInventoryDrop(data)) {
                 handleInventoryDrop(ref, store, data);
                 return;
@@ -443,7 +500,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 status = inventory.infiniteAmmunition()
                         ? "Infinite ammunition enabled." : "Infinite ammunition disabled.";
                 error = false;
-                rebuild();
+                applyEquipmentAndStats(store, "INFINITE_AMMUNITION_POLICY");
+                refreshNpcProfileUi();
                 return;
             }
             if (data.armorVisibility != null) {
@@ -453,7 +511,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                         ? " armor hidden; character skin is visible."
                         : " armor visible.");
                 error = false;
-                rebuild();
+                applyEquipmentAndStats(store, "ARMOR_VISIBILITY");
+                refreshNpcProfileUi();
                 return;
             }
             if (action(data.rescanVoice)) {
@@ -549,7 +608,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 data.itemStackId,
                 clientQuantity);
         inventoryBridge.submit(ref, store, intent,
-                this::reconcileInventoryFromAuthority);
+                result -> reconcileInventoryFromAuthority(ref, store, intent, result));
     }
 
     private int authoritativeQuantityAtIntent(int sectionId, int slot,
@@ -559,6 +618,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             container = playerInventory;
         } else if (sectionId == storageWindow.getId()) {
             container = inventory.inventory();
+        } else if (sectionId == inventory.armorSectionId()) {
+            container = inventory.armor();
+        } else if (sectionId == inventory.primarySectionId()) {
+            container = inventory.hotbar();
+        } else if (sectionId == inventory.offhandSectionId()) {
+            container = inventory.utility();
         } else {
             return clientQuantityDiagnostic;
         }
@@ -570,15 +635,23 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         return mouseButton == 2 ? 1 : stack.getQuantity();
     }
 
-    private void reconcileInventoryFromAuthority(
+    private void reconcileInventoryFromAuthority(Ref<EntityStore> ref,
+            Store<EntityStore> store,
+            CustomInventoryTransactionBridge.InventoryMoveIntent intent,
             CustomInventoryTransactionBridge.BridgeResult result) {
         if (!built || inventoryBridge == null) return;
         long refresh = inventoryRefreshGeneration.incrementAndGet();
+        boolean equipmentChanged = result.type()
+                == CustomInventoryTransactionBridge.ResultType.COMMITTED
+                && (isEquipmentSection(intent.sourceSectionId())
+                        || isEquipmentSection(intent.targetSectionId()));
+        if (equipmentChanged) {
+            inventory.markEquipmentCommitted();
+            inventory.flush();
+            applyEquipmentAndStats(store, "GEAR_TRANSACTION");
+        }
         UICommandBuilder commands = new UICommandBuilder();
-        CustomInventoryBridgeUi.setNativeSlots(
-                commands, "#NpcInventoryGrid.Slots", inventory.inventory());
-        CustomInventoryBridgeUi.setNativeSlots(
-                commands, "#PlayerInventoryGrid.Slots", playerInventory);
+        setNpcProfileUi(commands);
         if (result.type() != CustomInventoryTransactionBridge.ResultType.COMMITTED) {
             status = "Inventory move rejected: " + result.reason();
             error = result.type() != CustomInventoryTransactionBridge.ResultType.NO_OP;
@@ -588,7 +661,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     error ? "#e76f6f" : "#9ed7a6");
         }
         sendUpdate(commands, false);
-        if (result.type() == CustomInventoryTransactionBridge.ResultType.COMMITTED
+        if (!equipmentChanged
+                && result.type() == CustomInventoryTransactionBridge.ResultType.COMMITTED
                 && preview != null && preview.targetApplied()) {
             preview.refreshEquipment();
             diagnostics.accept("NPC_PROFILE_PREVIEW_REASSERT_AFTER_INVENTORY_MOVE"
@@ -612,7 +686,15 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 + " targetAfter=" + result.targetAfter()
                 + " mechanism=ATOMIC_FIXED_CAPACITY_SLOTS_REPLACEMENT"
                 + " authoritativeReread=true"
+                + " equipmentChanged=" + equipmentChanged
+                + " equipmentRevision=" + inventory.equipmentRevision()
                 + " persistencePath=" + editor.inventories().path(npcName));
+    }
+
+    private boolean isEquipmentSection(int sectionId) {
+        return sectionId == inventory.armorSectionId()
+                || sectionId == inventory.primarySectionId()
+                || sectionId == inventory.offhandSectionId();
     }
 
     private void closeInventoryBridge() {
@@ -666,9 +748,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 parseLong(data.authoringEditorGeneration), action);
     }
 
-    private static String permissionFor(String action) {
+    private String permissionFor(String action, PageData data) {
         return switch (action) {
-            case "INVENTORY_DROP" -> NpcAuthoringPermissions.INVENTORY;
+            case "INVENTORY_DROP" -> data != null
+                    && (isEquipmentSection(value(data.sourceInventorySectionId,
+                                    Integer.MIN_VALUE))
+                            || isEquipmentSection(parseSection(data.section)))
+                    ? NpcAuthoringPermissions.GEAR : NpcAuthoringPermissions.INVENTORY;
             case "INFINITE_AMMO", "ARMOR_VISIBILITY" -> NpcAuthoringPermissions.GEAR;
             case "VOICE_RESCAN", "OPEN_VOICE_EDITOR" -> NpcAuthoringPermissions.VOICE;
             case "OPEN_APPEARANCE_EDITOR" -> NpcAuthoringPermissions.APPEARANCE;
@@ -760,6 +846,109 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         if (preview != null) preview.close();
     }
 
+    private void applyEquipmentAndStats(Store<EntityStore> store, String trigger) {
+        var authoritative = inventory.snapshot();
+        EquipmentUpdate equipment = liveStorageAuthority == null
+                ? equipmentFrom(authoritative)
+                : liveStorageAuthority.applyEquipmentState(store, authoritative);
+        boolean previewUpdated = false;
+        if (preview != null && preview.targetApplied()) {
+            try {
+                preview.refreshEquipment(equipment);
+                previewUpdated = true;
+            } catch (RuntimeException failure) {
+                diagnostics.accept("NPC_EQUIPMENT_PREVIEW_DEGRADED"
+                        + " timestamp=" + Instant.now()
+                        + " npc=" + npcName
+                        + " trigger=" + trigger
+                        + " equipmentRevision=" + inventory.equipmentRevision()
+                        + " reason=" + quoted(failure.toString())
+                        + " itemStateRolledBack=false");
+            }
+        }
+        captureStats(store, false);
+        diagnostics.accept("NPC_EQUIPMENT_APPLIED"
+                + " timestamp=" + Instant.now()
+                + " npc=" + npcName
+                + " trigger=" + trigger
+                + " equipmentRevision=" + inventory.equipmentRevision()
+                + " liveNpcApplied=" + (liveStorageAuthority != null)
+                + " previewUpdated=" + previewUpdated
+                + " persistenceFlushed=true"
+                + " uiRefresh=COALESCED");
+    }
+
+    private static EquipmentUpdate equipmentFrom(
+            com.inigmasgames.persistentnpcs.profile.NpcInventoryState state) {
+        var equipment = NpcProfileEditorService.previewEquipmentFrom(state);
+        return new EquipmentUpdate(equipment.visibleArmorIds(),
+                equipment.rightHandItemId(), equipment.leftHandItemId());
+    }
+
+    private void captureStats(Store<EntityStore> store, boolean refreshUi) {
+        String before = statsKey();
+        if (liveStorageAuthority == null) {
+            statsSnapshot = null;
+            statsFailure = "LIVE_NPC_UNAVAILABLE";
+        } else {
+            try {
+                NpcStatsSnapshot candidate = statsService.capture(store,
+                        liveStorageAuthority, authoringSession.sessionId(),
+                        authoringSession.pageGeneration(), inventory.equipmentRevision(),
+                        diagnostics);
+                if (!candidate.npcStableId().equals(authoringSession.npcStableId())
+                        || !candidate.npcEntityUuid().equals(
+                                liveStorageAuthority.npcEntityId())
+                        || candidate.equipmentRevision() != inventory.equipmentRevision()
+                        || !candidate.sessionId().equals(authoringSession.sessionId())
+                        || candidate.pageGeneration() != authoringSession.pageGeneration()) {
+                    diagnostics.accept("NPC_STATS_SNAPSHOT_REJECTED npc=" + npcName
+                            + " reason=STALE_IDENTITY_OR_GENERATION");
+                    return;
+                }
+                statsSnapshot = candidate;
+                statsFailure = "";
+            } catch (RuntimeException failure) {
+                statsSnapshot = null;
+                statsFailure = failure.getMessage() == null
+                        ? failure.getClass().getSimpleName() : failure.getMessage();
+                diagnostics.accept("NPC_STATS_DEGRADED"
+                        + " timestamp=" + Instant.now()
+                        + " npc=" + npcName
+                        + " reason=" + quoted(statsFailure)
+                        + " inventoryAvailable=true profileAvailable=true");
+            }
+        }
+        if (refreshUi && built && !before.equals(statsKey())) {
+            UICommandBuilder commands = new UICommandBuilder();
+            setStatsUi(commands);
+            sendUpdate(commands, false);
+        }
+    }
+
+    private String statsKey() {
+        return statsSnapshot == null ? "UNAVAILABLE:" + statsFailure
+                : statsSnapshot.health() + ":" + statsSnapshot.stamina() + ":"
+                        + statsSnapshot.mana() + ":" + statsSnapshot.defense() + ":"
+                        + statsSnapshot.equipmentRevision();
+    }
+
+    private void startStatsRefresh(Store<EntityStore> store) {
+        if (liveStorageAuthority == null || statsRefreshTask != null) return;
+        var world = store.getExternalData().getWorld();
+        statsRefreshTask = statsScheduler.scheduleAtFixedRate(() -> {
+            if (!built) return;
+            world.execute(() -> {
+                if (built) captureStats(store, true);
+            });
+        }, 2, 2, TimeUnit.SECONDS);
+    }
+
+    private void closeStatsRefresh() {
+        if (statsRefreshTask != null) statsRefreshTask.cancel(false);
+        statsScheduler.shutdownNow();
+    }
+
     private void refreshNpcProfileUi() {
         if (!built) return;
         UICommandBuilder commands = new UICommandBuilder();
@@ -772,13 +961,35 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         setEquipmentUi(commands);
         setAppearanceUi(commands);
         setVoiceSampleUi(commands);
+        setStatsUi(commands);
         // Equipment retains bounded snapshots for its icon/visibility presentation.
         // Storage uses the exact R118 bridge presentation: fixed-capacity snapshots
         // are UI only; InventoryUtils remains the sole mutation authority.
-        commands.set("#ArmorGrid.Slots", itemGridSlots(inventory.armor()));
-        commands.set("#LoadoutGrid.Slots", itemGridSlots(inventory.loadout()));
         commands.set("#ArmorGrid.InventorySectionId", inventory.armorSectionId());
-        commands.set("#LoadoutGrid.InventorySectionId", inventory.loadoutSectionId());
+        commands.set("#PrimaryWeaponGrid.InventorySectionId", inventory.primarySectionId());
+        commands.set("#OffhandGrid.InventorySectionId", inventory.offhandSectionId());
+        commands.set("#AmmunitionGrid.InventorySectionId", inventory.ammunitionSectionId());
+        CustomInventoryBridgeUi.setNativeSlots(
+                commands, "#ArmorGrid.Slots", inventory.armor(), 0, 4,
+                slot -> !new NpcEquipmentCompatibilityResolver().validateArmor(
+                        inventory.armorItem((short) slot), (short) slot).compatible());
+        CustomInventoryBridgeUi.setNativeSlots(
+                commands, "#PrimaryWeaponGrid.Slots", inventory.hotbar(), 0, 1,
+                slot -> !new NpcEquipmentCompatibilityResolver()
+                        .validatePrimaryWeapon(inventory.loadoutItem(
+                                NpcInventoryRepository.Session.PRIMARY_SLOT)).compatible());
+        CustomInventoryBridgeUi.setNativeSlots(
+                commands, "#OffhandGrid.Slots", inventory.utility(), 0, 1,
+                slot -> !new NpcEquipmentCompatibilityResolver().validateOffhand(
+                        inventory.loadoutItem(NpcInventoryRepository.Session.OFFHAND_SLOT),
+                        inventory.loadoutItem(NpcInventoryRepository.Session.PRIMARY_SLOT))
+                                .compatible());
+        CustomInventoryBridgeUi.setNativeSlots(
+                commands, "#AmmunitionGrid.Slots", inventory.hotbar(), 1, 1,
+                slot -> !new NpcEquipmentCompatibilityResolver().validateAmmunition(
+                        inventory.loadoutItem(NpcInventoryRepository.Session.AMMUNITION_SLOT),
+                        inventory.loadoutItem(NpcInventoryRepository.Session.PRIMARY_SLOT))
+                                .compatible());
         CustomInventoryBridgeUi.setNativeSlots(
                 commands, "#NpcInventoryGrid.Slots", inventory.inventory());
         CustomInventoryBridgeUi.setNativeSlots(
@@ -837,6 +1048,29 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         setArmorVisibilityUi(commands);
     }
 
+    private void setStatsUi(UICommandBuilder commands) {
+        commands.set("#HealthStat #Value.Text", statText(
+                statsSnapshot == null ? null : statsSnapshot.health().orElse(null)));
+        commands.set("#StaminaStat #Value.Text", statText(
+                statsSnapshot == null ? null : statsSnapshot.stamina().orElse(null)));
+        commands.set("#ManaStat #Value.Text", statText(
+                statsSnapshot == null ? null : statsSnapshot.mana().orElse(null)));
+        String defense = statsSnapshot == null || statsSnapshot.defense().isEmpty()
+                ? "Unavailable"
+                : format(statsSnapshot.defense().get().value()) + " base";
+        commands.set("#DefenseStat #Value.Text", defense);
+    }
+
+    private static String statText(NpcStatsSnapshotService.StatValue value) {
+        return value == null ? "Unavailable"
+                : format(value.current()) + " / " + format(value.maximum());
+    }
+
+    private static String format(double value) {
+        if (Math.rint(value) == value) return Long.toString((long) value);
+        return String.format(Locale.ROOT, "%.1f", value);
+    }
+
     private void setAppearanceUi(UICommandBuilder commands) {
         commands.set("#NpcPreviewName.Text", npcName);
         commands.set("#NpcCharacterPreview.Visible", preview != null);
@@ -845,11 +1079,17 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
 
     private void setAmmunitionUi(UICommandBuilder commands) {
         boolean relevant = inventory.ammunitionPolicyRelevant();
+        boolean featureEnabled = NpcEquipmentRules.infiniteAmmunitionFeatureEnabled();
         commands.set("#InfiniteAmmoCheckBox.Value", inventory.infiniteAmmunition());
-        commands.set("#InfiniteAmmoCheckBox.Disabled", !relevant);
-        commands.set("#InfiniteAmmoHint.Text", relevant
-                ? "Selected ammunition is authoritative."
-                : "Requires a ranged weapon and compatible preferred ammunition.");
+        commands.set("#InfiniteAmmoCheckBox.Disabled", !featureEnabled || !relevant);
+        commands.set("#InfiniteAmmoHint.Text", !featureEnabled
+                ? "Disabled by server policy (" + NpcEquipmentRules.INFINITE_AMMUNITION_CONFIG + ")."
+                : relevant
+                ? "Physical ammo stack selected; policy is "
+                        + (inventory.infiniteAmmunitionEffective() ? "active." : "off.")
+                : inventory.infiniteAmmunition()
+                        ? "Saved policy is inactive: loadout compatibility must be resolved."
+                        : "Requires a ranged weapon and compatible preferred ammunition.");
     }
 
     private void setArmorVisibilityUi(UICommandBuilder commands) {

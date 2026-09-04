@@ -42,9 +42,11 @@ public final class R118ServerAuthoritativeCustomUiBridgeTest {
         assert bridge.contains("moveItemStackFromSlotToSlot(")
                 : "A2 may use the native transaction-returning ItemContainer API";
         assert bridge.contains("value == playerStorage");
-        assert bridge.contains("value == npcInventory");
+        assert bridge.contains("value == binding.container()")
+                : "Each external section must retain exact container identity";
         assert bridge.contains("getCustomPage() != expectedPage");
-        assert bridge.contains("getWindow(npcSection) != npcWindow");
+        assert bridge.contains("getWindow(binding.window().getId())")
+                : "Each external section must retain an active registered window";
         assert bridge.contains("store.isInThread()");
         assert bridge.contains("getWorld().execute(task)");
         assert bridge.contains("DUPLICATE_WINDOW_NANOS");

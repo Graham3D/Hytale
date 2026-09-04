@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -26,6 +27,29 @@ import java.util.function.Consumer;
  * the only mutation authority.
  */
 public final class CustomInventoryTransactionBridge {
+    public enum SectionRole {
+        PLAYER_STORAGE, NPC_STORAGE, NPC_ARMOR, NPC_HOTBAR, NPC_UTILITY
+    }
+
+    public record SectionBinding(
+            ContainerWindow window, ItemContainer container, SectionRole role) {
+        public SectionBinding {
+            Objects.requireNonNull(window, "window");
+            Objects.requireNonNull(container, "container");
+            Objects.requireNonNull(role, "role");
+        }
+    }
+
+    public record Endpoint(SectionRole role, int sectionId, int slotId,
+            ItemContainer container) { }
+
+    /** Returns null when this exact move/swap is semantically allowed. */
+    @FunctionalInterface
+    public interface MovePolicy {
+        String invalidReason(Endpoint source, ItemStack sourceStack,
+                Endpoint target, ItemStack targetStack, boolean swap);
+    }
+
     /** Returns {@code null} when the captured external authority is still valid. */
     @FunctionalInterface
     public interface AuthorityValidator {
@@ -70,10 +94,10 @@ public final class CustomInventoryTransactionBridge {
     private final long pageGeneration;
     private final PlayerRef viewer;
     private final CustomUIPage expectedPage;
-    private final ContainerWindow npcWindow;
-    private final ItemContainer npcInventory;
+    private final List<SectionBinding> externalSections;
     private final ItemContainer playerStorage;
     private final AuthorityValidator authorityValidator;
+    private final MovePolicy movePolicy;
     private final Consumer<String> diagnostics;
     private final AtomicBoolean active = new AtomicBoolean(true);
     private final AtomicLong operationSequence = new AtomicLong();
@@ -97,15 +121,31 @@ public final class CustomInventoryTransactionBridge {
             PlayerRef viewer, CustomUIPage expectedPage, ContainerWindow npcWindow,
             ItemContainer npcInventory, ItemContainer playerStorage,
             AuthorityValidator authorityValidator, Consumer<String> diagnostics) {
+        this(sessionId, pageGeneration, viewer, expectedPage,
+                List.of(new SectionBinding(npcWindow, npcInventory,
+                        SectionRole.NPC_STORAGE)),
+                playerStorage, authorityValidator,
+                (source, sourceStack, target, targetStack, swap) -> null,
+                diagnostics);
+    }
+
+    public CustomInventoryTransactionBridge(UUID sessionId, long pageGeneration,
+            PlayerRef viewer, CustomUIPage expectedPage,
+            List<SectionBinding> externalSections, ItemContainer playerStorage,
+            AuthorityValidator authorityValidator, MovePolicy movePolicy,
+            Consumer<String> diagnostics) {
         this.sessionId = Objects.requireNonNull(sessionId, "sessionId");
         this.pageGeneration = pageGeneration;
         this.viewer = Objects.requireNonNull(viewer, "viewer");
         this.expectedPage = Objects.requireNonNull(expectedPage, "expectedPage");
-        this.npcWindow = Objects.requireNonNull(npcWindow, "npcWindow");
-        this.npcInventory = Objects.requireNonNull(npcInventory, "npcInventory");
+        this.externalSections = List.copyOf(externalSections);
+        if (this.externalSections.isEmpty()) {
+            throw new IllegalArgumentException("At least one external section is required.");
+        }
         this.playerStorage = Objects.requireNonNull(playerStorage, "playerStorage");
         this.authorityValidator = Objects.requireNonNull(
                 authorityValidator, "authorityValidator");
+        this.movePolicy = Objects.requireNonNull(movePolicy, "movePolicy");
         this.diagnostics = diagnostics == null ? ignored -> { } : diagnostics;
     }
 
@@ -180,14 +220,14 @@ public final class CustomInventoryTransactionBridge {
             return reject(operationId, intent, ResultType.INVALID,
                     "AUTHORITY_INVALID_" + authorityFailure, null, null);
         }
-        int npcSection = npcWindow.getId();
-        if (npcSection < 0
-                || player.getWindowManager().getWindow(npcSection) != npcWindow) {
+        SectionBinding sourceBinding = binding(intent.sourceSectionId());
+        SectionBinding targetBinding = binding(intent.targetSectionId());
+        if (!activeBinding(player, sourceBinding) || !activeBinding(player, targetBinding)) {
             return reject(operationId, intent, ResultType.INVALID,
                     "CONTAINER_WINDOW_NOT_ACTIVE", null, null);
         }
-        if (!allowedSection(intent.sourceSectionId(), npcSection)
-                || !allowedSection(intent.targetSectionId(), npcSection)) {
+        if (!allowedSection(intent.sourceSectionId(), sourceBinding)
+                || !allowedSection(intent.targetSectionId(), targetBinding)) {
             return reject(operationId, intent, ResultType.INVALID,
                     "SECTION_NOT_ALLOWED", null, null);
         }
@@ -195,8 +235,8 @@ public final class CustomInventoryTransactionBridge {
                 ref, intent.sourceSectionId(), store);
         ItemContainer target = InventoryUtils.getSectionById(
                 ref, intent.targetSectionId(), store);
-        if (!expectedIdentity(source, intent.sourceSectionId(), npcSection)
-                || !expectedIdentity(target, intent.targetSectionId(), npcSection)) {
+        if (!expectedIdentity(source, intent.sourceSectionId(), sourceBinding)
+                || !expectedIdentity(target, intent.targetSectionId(), targetBinding)) {
             return reject(operationId, intent, ResultType.INVALID,
                     "SECTION_OBJECT_IDENTITY_MISMATCH", null, null);
         }
@@ -234,6 +274,16 @@ public final class CustomInventoryTransactionBridge {
                     "PARTIAL_STACK_CANNOT_SWAP_OCCUPIED_DESTINATION",
                     sourceBefore, targetBefore);
         }
+        Endpoint sourceEndpoint = endpoint(intent.sourceSectionId(),
+                intent.sourceSlotId(), source, sourceBinding);
+        Endpoint targetEndpoint = endpoint(intent.targetSectionId(),
+                intent.targetSlotId(), target, targetBinding);
+        String policyFailure = movePolicy.invalidReason(sourceEndpoint, sourceBefore,
+                targetEndpoint, targetBefore, swap);
+        if (policyFailure != null) {
+            return reject(operationId, intent, ResultType.REJECTED,
+                    "POLICY_" + policyFailure, sourceBefore, targetBefore);
+        }
 
         String fingerprint = fingerprint(intent, sourceBefore, targetBefore);
         long now = System.nanoTime();
@@ -251,8 +301,8 @@ public final class CustomInventoryTransactionBridge {
 
         diagnostics.accept(marker("CUSTOM_BRIDGE_VALIDATED", operationId, intent)
                 + " player=" + viewer.getUuid()
-                + " sourceIdentity=" + identity(source, npcSection)
-                + " targetIdentity=" + identity(target, npcSection)
+                + " sourceIdentity=" + identity(source, sourceBinding)
+                + " targetIdentity=" + identity(target, targetBinding)
                 + " authoritativeSourceBefore=" + stack(sourceBefore)
                 + " authoritativeTargetBefore=" + stack(targetBefore)
                 + " operation=" + (swap ? "SWAP" : compatibleMerge ? "MERGE" : "MOVE")
@@ -327,23 +377,46 @@ public final class CustomInventoryTransactionBridge {
                 stack(source), stack(target), stack(source), stack(target));
     }
 
-    private boolean expectedIdentity(ItemContainer value, int section, int npcSection) {
+    private boolean expectedIdentity(ItemContainer value, int section,
+            SectionBinding binding) {
         if (section == InventoryComponent.STORAGE_SECTION_ID) {
             return value == playerStorage;
         }
-        return section == npcSection && value == npcInventory;
+        return binding != null && section == binding.window().getId()
+                && value == binding.container();
     }
 
-    private String identity(ItemContainer value, int npcSection) {
+    private String identity(ItemContainer value, SectionBinding binding) {
         if (value == playerStorage) return "PLAYER_STORAGE_-2";
-        if (value == npcInventory) return "NPC_WINDOW_" + npcSection;
+        if (binding != null && value == binding.container()) {
+            return binding.role() + "_WINDOW_" + binding.window().getId();
+        }
         return value == null ? "null" : value.getClass().getName()
                 + '@' + Integer.toHexString(System.identityHashCode(value));
     }
 
-    private static boolean allowedSection(int section, int npcSection) {
+    private static boolean allowedSection(int section, SectionBinding binding) {
         return section == InventoryComponent.STORAGE_SECTION_ID
-                || section == npcSection;
+                || binding != null;
+    }
+
+    private SectionBinding binding(int sectionId) {
+        for (SectionBinding binding : externalSections) {
+            if (binding.window().getId() == sectionId) return binding;
+        }
+        return null;
+    }
+
+    private static boolean activeBinding(Player player, SectionBinding binding) {
+        return binding == null || (binding.window().getId() >= 0
+                && player.getWindowManager().getWindow(binding.window().getId())
+                        == binding.window());
+    }
+
+    private static Endpoint endpoint(int section, int slot, ItemContainer container,
+            SectionBinding binding) {
+        return new Endpoint(section == InventoryComponent.STORAGE_SECTION_ID
+                ? SectionRole.PLAYER_STORAGE : binding.role(), section, slot, container);
     }
 
     private static boolean validSlot(int slot, ItemContainer container) {

@@ -70,8 +70,8 @@ public final class R101NpcProfileTargetedRepairTest {
         assert page.contains("InventoryComponent.STORAGE_SECTION_ID");
         assert InventoryComponent.STORAGE_SECTION_ID < 0
                 : "Native player inventory sections are ECS section identifiers";
-        assert count(ui, "AreItemsDraggable: true;") == 2;
-        assert count(ui, "AllowMaxStackDraggableItems: true;") == 2;
+        assert count(ui, "AreItemsDraggable: true;") == 4;
+        assert count(ui, "AllowMaxStackDraggableItems: true;") == 4;
         assert grid.contains("AreItemsDraggable: true;")
                 && grid.contains("AllowMaxStackDraggableItems: true;");
         assert page.contains("#NpcInventoryGrid.Slots")

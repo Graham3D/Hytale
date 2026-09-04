@@ -110,7 +110,9 @@ public final class R104NpcMeshPreviewProbeSafetyTest {
         assert productionUi.contains("CharacterPreviewComponent #NpcCharacterPreview")
                 : "The A/B/C-connected-validated sequence must target the production preview";
         assert productionUi.contains("Group #NpcGridHost")
-                && productionUi.contains("ItemGrid #LoadoutGrid")
+                && productionUi.contains("ItemGrid #PrimaryWeaponGrid")
+                && productionUi.contains("ItemGrid #OffhandGrid")
+                && productionUi.contains("ItemGrid #AmmunitionGrid")
                 : "Preview integration must preserve every authoritative NPC grid";
 
         System.out.println("R105 NPC Profile mesh preview integration tests passed.");

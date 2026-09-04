@@ -7,11 +7,15 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.InventoryComponent;
+import com.hypixel.hytale.server.core.inventory.InventoryUtils;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
+import com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings;
+import com.hypixel.hytale.protocol.EquipmentUpdate;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.persistentnpcs.hytale.HytaleNpcAdapter;
 import com.inigmasgames.persistentnpcs.profile.NpcInventoryRepository;
+import com.inigmasgames.persistentnpcs.profile.NpcInventoryState;
 import com.inigmasgames.persistentnpcs.profile.NpcProfile;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,18 +35,34 @@ public final class NativeNpcInventoryController {
         private final NpcInventoryRepository inventories;
         private final Ref<EntityStore> npcRef;
         private final UUID npcEntityId;
+        private final InventoryComponent.Armor armorComponent;
+        private final InventoryComponent.Hotbar hotbarComponent;
+        private final InventoryComponent.Utility utilityComponent;
+        private final ItemContainer armor;
+        private final ItemContainer hotbar;
+        private final ItemContainer utility;
         private final ItemContainer storage;
         private final boolean persistenceBindingAdded;
 
         private LiveStorageAuthority(NpcProfile profile, HytaleNpcAdapter adapter,
                 NpcInventoryRepository inventories, Ref<EntityStore> npcRef,
-                UUID npcEntityId, ItemContainer storage,
+                UUID npcEntityId, InventoryComponent.Armor armorComponent,
+                InventoryComponent.Hotbar hotbarComponent,
+                InventoryComponent.Utility utilityComponent,
+                ItemContainer armor, ItemContainer hotbar, ItemContainer utility,
+                ItemContainer storage,
                 boolean persistenceBindingAdded) {
             this.profile = profile;
             this.adapter = adapter;
             this.inventories = inventories;
             this.npcRef = npcRef;
             this.npcEntityId = npcEntityId;
+            this.armorComponent = armorComponent;
+            this.hotbarComponent = hotbarComponent;
+            this.utilityComponent = utilityComponent;
+            this.armor = armor;
+            this.hotbar = hotbar;
+            this.utility = utility;
             this.storage = storage;
             this.persistenceBindingAdded = persistenceBindingAdded;
         }
@@ -50,6 +70,9 @@ public final class NativeNpcInventoryController {
         public NpcProfile profile() { return profile; }
         public Ref<EntityStore> npcRef() { return npcRef; }
         public UUID npcEntityId() { return npcEntityId; }
+        public ItemContainer armor() { return armor; }
+        public ItemContainer hotbar() { return hotbar; }
+        public ItemContainer utility() { return utility; }
         public ItemContainer storage() { return storage; }
         public boolean persistenceBindingAdded() { return persistenceBindingAdded; }
 
@@ -66,6 +89,21 @@ public final class NativeNpcInventoryController {
             if (currentStorage == null || currentStorage.getInventory() != storage) {
                 return "NPC_ECS_STORAGE_IDENTITY_MISMATCH";
             }
+            InventoryComponent.Armor currentArmor = store.getComponent(
+                    npcRef, InventoryComponent.Armor.getComponentType());
+            InventoryComponent.Hotbar currentHotbar = store.getComponent(
+                    npcRef, InventoryComponent.Hotbar.getComponentType());
+            InventoryComponent.Utility currentUtility = store.getComponent(
+                    npcRef, InventoryComponent.Utility.getComponentType());
+            if (currentArmor != armorComponent || currentArmor.getInventory() != armor) {
+                return "NPC_ECS_ARMOR_IDENTITY_MISMATCH";
+            }
+            if (currentHotbar != hotbarComponent || currentHotbar.getInventory() != hotbar) {
+                return "NPC_ECS_HOTBAR_IDENTITY_MISMATCH";
+            }
+            if (currentUtility != utilityComponent || currentUtility.getInventory() != utility) {
+                return "NPC_ECS_UTILITY_IDENTITY_MISMATCH";
+            }
             var persisted = inventories.load(profile.name());
             if (!Objects.equals(profile.id(), profile.stableId())
                     || !Objects.equals(profile.id(), persisted.stableNpcId())) {
@@ -80,6 +118,36 @@ public final class NativeNpcInventoryController {
                 return "NPC_RUNTIME_PROFILE_ID_MISMATCH";
             }
             return null;
+        }
+
+        /** Applies visibility and publishes the installed build's authoritative equipment state. */
+        public EquipmentUpdate applyEquipmentState(Store<EntityStore> store,
+                NpcInventoryState state) {
+            String invalid = invalidReason(null, store);
+            if (invalid != null) {
+                throw new IllegalStateException("Live NPC equipment authority failed: " + invalid);
+            }
+            PlayerSettings base = java.util.Optional.ofNullable(store.getComponent(
+                    npcRef, PlayerSettings.getComponentType())).orElseGet(PlayerSettings::defaults);
+            PlayerSettings settings = new PlayerSettings(
+                    base.showEntityMarkers(), base.armorItemsPreferredPickupLocation(),
+                    base.weaponAndToolItemsPreferredPickupLocation(),
+                    base.usableItemsItemsPreferredPickupLocation(),
+                    base.solidBlockItemsPreferredPickupLocation(),
+                    base.miscItemsPreferredPickupLocation(), base.creativeSettings(),
+                    state.hideHelmet(), state.hideCuirass(), state.hideGauntlets(),
+                    state.hidePants(), base.voiceSettings());
+            store.putComponent(npcRef, PlayerSettings.getComponentType(), settings);
+            // Authored primary/offhand endpoints are the first physical Hotbar and
+            // Utility cells. Make those exact cells active on the NPC authority so
+            // world rendering and createEquipmentUpdate agree with the profile.
+            hotbarComponent.setActiveSlot((byte) 0, npcRef, store);
+            utilityComponent.setActiveSlot((byte) 0, npcRef, store);
+            armorComponent.setOutdatedEquipment(true);
+            hotbarComponent.setOutdatedEquipment(true);
+            utilityComponent.setOutdatedEquipment(true);
+            return InventoryUtils.createEquipmentUpdate(
+                    npcRef, store, settings, armorComponent, utilityComponent);
         }
     }
 
@@ -113,12 +181,26 @@ public final class NativeNpcInventoryController {
                 profile.name(), store, npcRef, diagnostics);
         InventoryComponent.Storage npcStorage = store.getComponent(
                 npcRef, InventoryComponent.Storage.getComponentType());
+        InventoryComponent.Armor npcArmor = store.getComponent(
+                npcRef, InventoryComponent.Armor.getComponentType());
+        InventoryComponent.Hotbar npcHotbar = store.getComponent(
+                npcRef, InventoryComponent.Hotbar.getComponentType());
+        InventoryComponent.Utility npcUtility = store.getComponent(
+                npcRef, InventoryComponent.Utility.getComponentType());
         if (npcStorage == null || npcStorage.getInventory() == null) {
             throw new IllegalStateException(profile.name()
                     + " has no live InventoryComponent.Storage.");
         }
+        if (npcArmor == null || npcArmor.getInventory() == null
+                || npcHotbar == null || npcHotbar.getInventory() == null
+                || npcUtility == null || npcUtility.getInventory() == null) {
+            throw new IllegalStateException(profile.name()
+                    + " has incomplete live equipment inventory components.");
+        }
         LiveStorageAuthority authority = new LiveStorageAuthority(
                 profile, adapter, inventories, npcRef, uuid.getUuid(),
+                npcArmor, npcHotbar, npcUtility,
+                npcArmor.getInventory(), npcHotbar.getInventory(), npcUtility.getInventory(),
                 npcStorage.getInventory(), persistenceBindingAdded);
         String invalid = authority.invalidReason(playerRef.getReference(), store);
         if (invalid != null) {

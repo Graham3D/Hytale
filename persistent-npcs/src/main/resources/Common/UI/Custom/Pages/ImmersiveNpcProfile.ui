@@ -119,7 +119,9 @@ $C.@PageOverlay #ProfilePage {
           }
           Group #LoadoutSlotColumn {
             Anchor: (Width: 208, Height: @GearRowsHeight, Left: 4, Top: 16);
-            ItemGrid #LoadoutGrid { Anchor: (Width: 58, Height: 194, Left: 34); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
+            ItemGrid #PrimaryWeaponGrid { Anchor: (Width: 58, Height: 58, Left: 34, Top: 0); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
+            ItemGrid #OffhandGrid { Anchor: (Width: 58, Height: 58, Left: 34, Top: 68); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
+            ItemGrid #AmmunitionGrid { Anchor: (Width: 58, Height: 58, Left: 34, Top: 136); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
             Group #PrimaryWeaponEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 10); Background: "ImmersiveNpcInventory/SpecialSlot.png"; }
             Group #OffhandEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 78); Background: "ImmersiveNpcInventory/SpecialSlot.png"; }
             Group #AmmoEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 146); Background: "ImmersiveNpcInventory/SpecialSlot.png"; }

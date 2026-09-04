@@ -12,7 +12,8 @@ public final class R103NpcProfileGridMaterializationTest {
     public static void main(String[] args) throws Exception {
         String page = Files.readString(Path.of(
                 "src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java"));
-        for (String grid : new String[] {"ArmorGrid", "LoadoutGrid"}) {
+        for (String grid : new String[] {"ArmorGrid", "PrimaryWeaponGrid",
+                "OffhandGrid", "AmmunitionGrid"}) {
             assert page.contains("#" + grid + ".Slots")
                     : grid + " keeps its bounded equipment presentation payload";
             assert page.contains("#" + grid + ".InventorySectionId")

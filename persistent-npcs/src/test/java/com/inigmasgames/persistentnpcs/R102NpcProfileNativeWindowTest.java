@@ -27,28 +27,36 @@ public final class R102NpcProfileNativeWindowTest {
 
         assert command.contains("openCustomPageWithWindows");
         assert repository.contains("new ContainerWindow(armor)");
-        assert repository.contains("new ContainerWindow(loadout)");
+        assert repository.contains("new ContainerWindow(hotbar)");
+        assert repository.contains("new ContainerWindow(utility)");
         assert repository.contains("new ContainerWindow(inventory)");
-        assert repository.contains("return new ContainerWindow[] { armorWindow, loadoutWindow, inventoryWindow }");
+        assert repository.contains("armorWindow, hotbarWindow, utilityWindow, inventoryWindow");
         assert page.contains("#ArmorGrid.InventorySectionId\", inventory.armorSectionId()")
                 : "ArmorGrid must bind to the armor ContainerWindow ID";
-        assert page.contains("#LoadoutGrid.InventorySectionId\", inventory.loadoutSectionId()")
-                : "LoadoutGrid must bind to the loadout ContainerWindow ID";
+        assert page.contains("#PrimaryWeaponGrid.InventorySectionId\", inventory.primarySectionId()")
+                : "Primary weapon must bind to the live Hotbar window";
+        assert page.contains("#OffhandGrid.InventorySectionId\", inventory.offhandSectionId()")
+                : "Offhand must bind to the live Utility window";
+        assert page.contains("#AmmunitionGrid.InventorySectionId\", inventory.ammunitionSectionId()")
+                : "Ammo must bind to the live Hotbar window";
         assert page.contains("boundNpcGridDocument(storageWindow.getId())")
                 : "NPC grid must be constructed with the storage ContainerWindow ID";
         assert page.contains("InventoryComponent.STORAGE_SECTION_ID")
                 : "Player grid must bind to the ECS Storage section";
         assert InventoryComponent.STORAGE_SECTION_ID < 0;
-        for (String equipmentGrid : new String[] {"ArmorGrid", "LoadoutGrid"}) {
+        for (String equipmentGrid : new String[] {"ArmorGrid", "PrimaryWeaponGrid",
+                "OffhandGrid", "AmmunitionGrid"}) {
             assert ui.contains("ItemGrid #" + equipmentGrid);
         }
         assert ui.contains("Group #NpcGridHost") && ui.contains("Group #PlayerGridHost");
-        assert count(ui, "AreItemsDraggable: true;") == 2;
+        assert count(ui, "AreItemsDraggable: true;") == 4;
         assert grid.contains("AreItemsDraggable: true;");
         assert page.contains("#NpcInventoryGrid.Slots");
         assert page.contains("#PlayerInventoryGrid.Slots");
         assert page.contains("#ArmorGrid.Slots");
-        assert page.contains("#LoadoutGrid.Slots");
+        assert page.contains("#PrimaryWeaponGrid.Slots");
+        assert page.contains("#OffhandGrid.Slots");
+        assert page.contains("#AmmunitionGrid.Slots");
         assert page.contains("CustomInventoryBridgeUi.setNativeSlots")
                 : "R118 snapshots are presentation-only and must use the shared encoder";
         assert !command.contains("page.bindNativeStorageAfterWindowsOpen()")
@@ -68,11 +76,12 @@ public final class R102NpcProfileNativeWindowTest {
                 short.class, int.class, ItemContainer.class, short.class);
         assert ContainerWindow.class.getInterfaces().length > 0;
         assert repository.contains("ItemContainerUtil.trySetArmorFilters(armor)");
-        assert repository.contains("setSlotFilter(FilterActionType.ADD, PRIMARY_SLOT");
-        assert repository.contains("setSlotFilter(FilterActionType.ADD, OFFHAND_SLOT");
-        assert repository.contains("setSlotFilter(FilterActionType.ADD, AMMUNITION_SLOT");
+        assert repository.contains("setSlotFilter(FilterActionType.ADD, (short) 0, primary)");
+        assert repository.contains("setSlotFilter(FilterActionType.ADD, (short) 0, offhand)");
+        assert repository.contains("setSlotFilter(FilterActionType.ADD, (short) 1, ammunition)");
         assert repository.contains("armor.registerChangeEvent(ignored -> changed())");
-        assert repository.contains("loadout.registerChangeEvent(ignored -> changed())");
+        assert repository.contains("hotbar.registerChangeEvent(ignored -> changed())");
+        assert repository.contains("utility.registerChangeEvent(ignored -> changed())");
         assert repository.contains("inventory.registerChangeEvent(ignored -> changed())");
         assert !repository.contains("removeAllItemStacks()");
     }

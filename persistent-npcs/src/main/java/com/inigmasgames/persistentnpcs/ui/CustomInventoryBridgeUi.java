@@ -11,6 +11,7 @@ import org.bson.BsonArray;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
+import java.util.function.IntPredicate;
 
 /** Exact presentation/event contract shared by Probe 11 and the NPC Profile. */
 public final class CustomInventoryBridgeUi {
@@ -37,12 +38,31 @@ public final class CustomInventoryBridgeUi {
      */
     public static void setNativeSlots(UICommandBuilder commands, String selector,
             ItemContainer container) {
-        ItemGridSlot[] slots = new ItemGridSlot[container.getCapacity()];
-        for (short slot = 0; slot < container.getCapacity(); slot++) {
-            ItemStack stack = container.getItemStack(slot);
-            slots[slot] = ItemStack.isEmpty(stack)
+        setNativeSlots(commands, selector, container, 0, container.getCapacity());
+    }
+
+    /** Encodes a bounded visual range while retaining the authoritative source indexes. */
+    public static void setNativeSlots(UICommandBuilder commands, String selector,
+            ItemContainer container, int firstSlot, int slotCount) {
+        setNativeSlots(commands, selector, container, firstSlot, slotCount,
+                ignored -> false);
+    }
+
+    /** Encodes a bounded range and marks authoritative compatibility verdicts. */
+    public static void setNativeSlots(UICommandBuilder commands, String selector,
+            ItemContainer container, int firstSlot, int slotCount,
+            IntPredicate incompatibleSlot) {
+        if (firstSlot < 0 || slotCount < 0
+                || firstSlot + slotCount > container.getCapacity()) {
+            throw new IllegalArgumentException("Invalid ItemGrid slot range.");
+        }
+        ItemGridSlot[] slots = new ItemGridSlot[slotCount];
+        for (int visualSlot = 0; visualSlot < slotCount; visualSlot++) {
+            short inventorySlot = (short) (firstSlot + visualSlot);
+            ItemStack stack = container.getItemStack(inventorySlot);
+            slots[visualSlot] = ItemStack.isEmpty(stack)
                     ? new ItemGridSlot() : new ItemGridSlot(stack);
-            slots[slot].setActivatable(true);
+            slots[visualSlot].setActivatable(true);
         }
         int commandCount = commands.getCommands().length;
         commands.set(selector, slots);
@@ -56,11 +76,12 @@ public final class CustomInventoryBridgeUi {
         if (encodedSlots.size() != slots.length) {
             throw new IllegalStateException("Custom UI slot encoding changed shape.");
         }
-        for (int slot = 0; slot < encodedSlots.size(); slot++) {
-            BsonDocument encoded = encodedSlots.get(slot).asDocument();
-            encoded.put("InventorySlotIndex", new BsonInt32(slot));
+        for (int visualSlot = 0; visualSlot < encodedSlots.size(); visualSlot++) {
+            BsonDocument encoded = encodedSlots.get(visualSlot).asDocument();
+            encoded.put("InventorySlotIndex", new BsonInt32(firstSlot + visualSlot));
             encoded.put("IsActivatable", BsonBoolean.TRUE);
-            encoded.put("IsItemIncompatible", BsonBoolean.FALSE);
+            encoded.put("IsItemIncompatible", BsonBoolean.valueOf(
+                    incompatibleSlot.test(firstSlot + visualSlot)));
         }
         command.data = data.toJson();
     }
