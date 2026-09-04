@@ -19,7 +19,13 @@ public final class CustomInventoryBridgeUi {
     private CustomInventoryBridgeUi() { }
 
     public static void bindDrop(UIEventBuilder events, String selector, int targetSection) {
-        EventData data = EventData.of("Marker", DROP_MARKER)
+        bindDrop(events, selector, targetSection, new EventData());
+    }
+
+    public static void bindDrop(UIEventBuilder events, String selector, int targetSection,
+            EventData envelope) {
+        EventData data = envelope
+                .append("Marker", DROP_MARKER)
                 .append("Event", "Dropped")
                 .append("Section", Integer.toString(targetSection));
         events.addEventBinding(CustomUIEventBindingType.Dropped, selector, data, false);

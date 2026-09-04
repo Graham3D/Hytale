@@ -127,6 +127,8 @@ import com.inigmasgames.persistentnpcs.orbis.OrbisSpeechCoordinator;
 import com.inigmasgames.persistentnpcs.orbis.OrbisResourceConfig;
 import com.inigmasgames.persistentnpcs.orbis.OrbisResourceConfigRepository;
 import com.inigmasgames.persistentnpcs.orbis.OrbisResourceScheduler;
+import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringPermissions;
+import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringSessionRegistry;
 import com.inigmasgames.persistentnpcs.orbis.OrbisStartupCoordinator;
 import java.time.Duration;
 import java.time.Instant;
@@ -138,7 +140,7 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R124-NPC-PROFILE-POLISH";
+    public static final String REVISION = "R129-NPC-AUTHORING-STUDIO-A1";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
@@ -176,6 +178,7 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
     @Override
     protected void setup() {
         Instant setupStartedAt = Instant.now();
+        NpcAuthoringPermissions.registerAll();
         RuntimeApiCompatibility runtimeCompatibility = RuntimeApiCompatibility.detect();
         if (!runtimeCompatibility.update6NpcApi()) {
             getLogger().at(Level.SEVERE).log(
@@ -539,6 +542,7 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
         getEventRegistry().registerGlobal(
                 com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent.class,
                 event -> {
+                    NpcAuthoringSessionRegistry.shared().closeAll();
                     NpcMeshPreviewSession.closeAll();
                     orbisRuntime.worldUnloaded(event.getWorld().getWorldConfig().getUuid());
                 });
@@ -546,7 +550,10 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
                 com.hypixel.hytale.server.core.event.events.player.DrainPlayerFromWorldEvent.class,
                 event -> {
                     PlayerRef leaving = event.getHolder().getComponent(PlayerRef.getComponentType());
-                    if (leaving != null) NpcMeshPreviewSession.close(leaving.getUuid());
+                    if (leaving != null) {
+                        NpcAuthoringSessionRegistry.shared().closeForViewer(leaving.getUuid());
+                        NpcMeshPreviewSession.close(leaving.getUuid());
+                    }
                 });
         frameworkLog.accept("ORBIS_RUNTIME_READY authoritative=capture,stt,audience,"
                 + "cognition,llm,npc-decision,canonical-commit,tts,opus,spatial-playback,"

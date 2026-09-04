@@ -59,10 +59,14 @@ public final class R104NpcMeshPreviewProbeSafetyTest {
         assert count(plugin, "NpcMeshPreviewSession.closeAll()") >= 2
                 : "World removal and shutdown must close all previews";
         assert page.contains("applyPreviewAfterPageMount")
-                && page.contains("closePreview();")
+                && page.contains("addCleanup(\"viewer-preview-restoration\", this::closePreview)")
                 : "The NPC Profile must own apply and restoration lifecycle";
-        assert page.indexOf("closePreview();") < page.indexOf("\n                close();")
-                : "The explicit close path must restore before page dismissal";
+        assert page.indexOf("addCleanup(\"viewer-preview-restoration\", this::closePreview)")
+                < page.indexOf("addCleanup(\"inventory-persistence-flush\", inventory::close)")
+                : "Preview restoration must run before final persistence teardown";
+        assert page.indexOf("authoringSession.close();")
+                < page.indexOf("\n                close();")
+                : "Explicit close must run idempotent recovery before page dismissal";
         assert session.indexOf("send(target);") < session.indexOf("send(targetSkin);")
                 : "Probe B must send the validated skin immediately after the model";
         assert session.indexOf("send(baseline);") < session.indexOf("send(baselineSkin);")

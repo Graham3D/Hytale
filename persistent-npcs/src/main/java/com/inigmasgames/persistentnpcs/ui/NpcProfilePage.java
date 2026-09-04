@@ -24,6 +24,9 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.persistentnpcs.profile.NpcProfile;
+import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringEventEnvelope;
+import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringPermissions;
+import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringSession;
 import com.inigmasgames.persistentnpcs.profile.NpcProfileEditorService;
 import com.inigmasgames.persistentnpcs.profile.NpcProfileEditorService.ProfileFileField;
 import com.inigmasgames.persistentnpcs.profile.NpcInventoryRepository;
@@ -35,6 +38,7 @@ import java.time.Instant;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
@@ -49,8 +53,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
      * sufficient for repeated Profile opens.
      */
     private static final int MAX_PACKAGED_NPC_SECTION_ID = 1024;
-    private static final AtomicLong INVENTORY_GENERATIONS = new AtomicLong();
-
+    private static final Set<String> ALLOWED_ACTIONS = Set.of(
+            "INVENTORY_DROP", "CANCEL", "ENTER", "DELETE_PROMPT",
+            "DELETE_CANCEL", "DELETE_CONFIRM", "ADVANCED_FILE_OPEN",
+            "BROWSER_EVENT", "INFINITE_AMMO", "ARMOR_VISIBILITY",
+            "VOICE_RESCAN", "OPEN_PROFILE_EDITOR", "OPEN_APPEARANCE_EDITOR",
+            "OPEN_VOICE_EDITOR", "CLOSE_EDITOR", "DIRTY_SAVE",
+            "DIRTY_DISCARD", "DIRTY_STAY");
     private final String npcName;
     private final boolean update;
     private final NpcProfileEditorService editor;
@@ -59,8 +68,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private final ItemContainer playerInventory;
     private final NativeNpcInventoryController.LiveStorageAuthority liveStorageAuthority;
     private final ContainerWindow storageWindow;
-    private final UUID inventorySessionId = UUID.randomUUID();
-    private final long inventoryPageGeneration = INVENTORY_GENERATIONS.incrementAndGet();
+    private final NpcAuthoringSession authoringSession;
     private final AtomicLong inventoryEventSequence = new AtomicLong();
     private final AtomicLong inventoryRefreshGeneration = new AtomicLong();
     private final CustomInventoryTransactionBridge inventoryBridge;
@@ -83,6 +91,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             NpcProfileEditorService editor,
             ItemContainer playerInventory,
             NativeNpcInventoryController.LiveStorageAuthority liveStorageAuthority,
+            NpcAuthoringSession authoringSession,
             NpcMeshPreviewSession preview,
             Consumer<NpcProfile> committed,
             BiConsumer<Ref<EntityStore>, Store<EntityStore>> deleted,
@@ -96,6 +105,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         }
         this.playerInventory = playerInventory;
         this.liveStorageAuthority = liveStorageAuthority;
+        this.authoringSession = java.util.Objects.requireNonNull(
+                authoringSession, "Authoring session is required.");
         this.preview = preview;
         this.diagnostics = diagnostics == null ? ignored -> { } : diagnostics;
         this.committed = committed == null ? ignored -> { } : committed;
@@ -111,13 +122,16 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         this.storageWindow = inventory.windows()[2];
         this.inventoryBridge = !update ? null
                 : new CustomInventoryTransactionBridge(
-                        inventorySessionId, inventoryPageGeneration, playerRef,
+                        authoringSession.sessionId(), authoringSession.pageGeneration(), playerRef,
                         this, storageWindow, inventory.inventory(), playerInventory,
                         liveStorageAuthority == null
                                 ? (ignoredRef, ignoredStore) -> null
                                 : liveStorageAuthority::invalidReason,
                         this.diagnostics);
         this.voiceSamples = editor.rescanVoiceSamples(npcName);
+        authoringSession.addCleanup("inventory-event-bridge", this::closeInventoryBridge);
+        authoringSession.addCleanup("viewer-preview-restoration", this::closePreview);
+        authoringSession.addCleanup("inventory-persistence-flush", inventory::close);
     }
 
     public ContainerWindow[] windows() {
@@ -135,8 +149,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 + " profileId=" + profileId()
                 + " npcEntityId=" + (liveStorageAuthority == null
                         ? "NOT_SPAWNED" : liveStorageAuthority.npcEntityId())
-                + " inventorySessionId=" + inventorySessionId
-                + " inventoryPageGeneration=" + inventoryPageGeneration;
+                + " authoringSessionId=" + authoringSession.sessionId()
+                + " pageGeneration=" + authoringSession.pageGeneration();
     }
 
     public int nativeInventorySectionId() {
@@ -177,13 +191,22 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#ProfileTitle.Text", npcName + "'s Profile");
         commands.set("#ProfilePanelTitle.Text", npcName + "'s Profile");
         commands.set("#NpcInventoryTitle.Text", npcName + "'s Inventory");
-        commands.set("#PlayerInventoryTitle.Text", playerRef.getUsername() + "'s Inventory");
+        commands.set("#PlayerInventoryTitle.Text", playerRef.getUsername() + "'s Storage");
+        commands.set("#AuthoringSessionValue.Text", authoringSession.sessionId().toString());
+        commands.set("#AuthoringViewerValue.Text", authoringSession.viewerPlayerId().toString());
+        commands.set("#AuthoringNpcValue.Text", authoringSession.npcStableId().toString());
+        commands.set("#AuthoringPageGeneration.Text",
+                Long.toString(authoringSession.pageGeneration()));
+        commands.set("#AuthoringEditorValue.Text", authoringSession.activeEditor().name());
+        commands.set("#AuthoringEditorGeneration.Text",
+                Long.toString(authoringSession.editorGeneration()));
         setNpcProfileUi(commands);
         if (inventoryBridge != null) {
             CustomInventoryBridgeUi.bindDrop(events, "#NpcInventoryGrid",
-                    storageWindow.getId());
+                    storageWindow.getId(), authoringEvent("INVENTORY_DROP"));
             CustomInventoryBridgeUi.bindDrop(events, "#PlayerInventoryGrid",
-                    InventoryComponent.STORAGE_SECTION_ID);
+                    InventoryComponent.STORAGE_SECTION_ID,
+                    authoringEvent("INVENTORY_DROP"));
             diagnostics.accept("NPC_PROFILE_INVENTORY_BRIDGE_BUILD"
                     + " timestamp=" + Instant.now()
                     + " npc=" + npcName
@@ -191,8 +214,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     + " npcEntityId=" + (liveStorageAuthority == null
                             ? "NOT_SPAWNED" : liveStorageAuthority.npcEntityId())
                     + " viewerUuid=" + playerRef.getUuid()
-                    + " sessionId=" + inventorySessionId
-                    + " pageGeneration=" + inventoryPageGeneration
+                    + " sessionId=" + authoringSession.sessionId()
+                    + " pageGeneration=" + authoringSession.pageGeneration()
                     + " npcWindowId=" + storageWindow.getId()
                     + " playerStorageSectionId="
                     + InventoryComponent.STORAGE_SECTION_ID
@@ -202,34 +225,69 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         }
         events.addEventBinding(CustomUIEventBindingType.ValueChanged,
                 "#InfiniteAmmoCheckBox",
-                EventData.of("InfiniteAmmo", "#InfiniteAmmoCheckBox.Value"));
+                authoringEvent("INFINITE_AMMO")
+                        .append("InfiniteAmmo", "#InfiniteAmmoCheckBox.Value"));
         for (short slot = 0; slot < 4; slot++) {
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#" + armorToggleId(slot),
-                    EventData.of("ArmorVisibility", Short.toString(slot)));
+                    authoringEvent("ARMOR_VISIBILITY")
+                            .append("ArmorVisibility", Short.toString(slot)));
         }
         for (ProfileFileField field : ProfileFileField.values()) {
             String id = field.name();
             events.addEventBinding(CustomUIEventBindingType.Activating,
-                    "#" + id + "Open", EventData.of("Open", field.name()));
+                    "#" + id + "Open", authoringEvent("ADVANCED_FILE_OPEN")
+                            .append("Open", field.name()));
         }
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#VoiceRescanButton", EventData.of("RescanVoice", "true"));
+                "#VoiceRescanButton", authoringEvent("VOICE_RESCAN")
+                        .append("RescanVoice", "true"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#CancelButton", EventData.of("Cancel", "true"));
+                "#ProfileEditorButton", authoringEvent("OPEN_PROFILE_EDITOR"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#DeleteButton", EventData.of("Delete", "true"));
+                "#AppearanceEditorButton", authoringEvent("OPEN_APPEARANCE_EDITOR"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#EnterButton", EventData.of("Enter", "true"));
+                "#VoiceRecorderButton", authoringEvent("OPEN_VOICE_EDITOR"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#DeleteNoButton", EventData.of("DeleteNo", "true"));
+                "#ContextCloseButton", authoringEvent("CLOSE_EDITOR"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#DeleteYesButton", EventData.of("DeleteYes", "true"));
+                "#DirtySaveButton", authoringEvent("DIRTY_SAVE"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#DirtyDiscardButton", authoringEvent("DIRTY_DISCARD"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#DirtyStayButton", authoringEvent("DIRTY_STAY"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#CancelButton", authoringEvent("CANCEL").append("Cancel", "true"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#DeleteButton", authoringEvent("DELETE_PROMPT").append("Delete", "true"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#EnterButton", authoringEvent("ENTER").append("Enter", "true"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#DeleteNoButton", authoringEvent("DELETE_CANCEL")
+                        .append("DeleteNo", "true"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#DeleteYesButton", authoringEvent("DELETE_CONFIRM")
+                        .append("DeleteYes", "true"));
         commands.set("#DeleteButton.Visible", update);
         commands.set("#DeleteConfirmName.Text", "Delete " + npcName + "?");
         commands.set("#StatusText.Text", status);
         commands.set("#StatusText.Visible", !status.isBlank());
         commands.set("#StatusText.Style.TextColor", error ? "#e76f6f" : "#9ed7a6");
+        boolean contextualEditor = authoringSession.activeEditor()
+                != NpcAuthoringSession.EditorKind.NONE;
+        commands.set("#ContextEditorPage.Visible", contextualEditor);
+        if (contextualEditor) {
+            String title = switch (authoringSession.activeEditor()) {
+                case PROFILE -> "PROFILE EDITOR";
+                case APPEARANCE -> "NPC APPEARANCE";
+                case VOICE -> "VOICE RECORDER";
+                case NONE -> "NPC AUTHORING";
+            };
+            commands.set("#ContextEditorTitle.Text", title);
+            commands.set("#ContextEditorStatus.Text",
+                    title + " is reserved by the unified authoring session. "
+                            + "Its domain editor activates in its gated implementation stage.");
+        }
         boolean browsing = activeField != null && browser != null;
         commands.set("#ProfilePage.Visible", !browsing);
         commands.set("#BrowserPage.Visible", browsing);
@@ -237,7 +295,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             commands.set("#BrowserTitle.Text", "Select " + activeField.label());
             browser.buildUI(commands, events);
             events.addEventBinding(CustomUIEventBindingType.Activating,
-                    "#BrowserCancelButton", EventData.of("BrowserCancel", "true"));
+                    "#BrowserCancelButton", authoringEvent("BROWSER_EVENT")
+                            .append("BrowserCancel", "true"));
         }
         built = true;
     }
@@ -249,8 +308,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             diagnostics.accept("NPC_PROFILE_INVENTORY_RAW_EVENT"
                     + " timestamp=" + Instant.now()
                     + " npc=" + npcName
-                    + " sessionId=" + inventorySessionId
-                    + " pageGeneration=" + inventoryPageGeneration
+                    + " sessionId=" + authoringSession.sessionId()
+                    + " pageGeneration=" + authoringSession.pageGeneration()
                     + " payload=" + quoted(rawData));
         }
         super.handleDataEvent(ref, store, rawData);
@@ -260,23 +319,25 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     public void handleDataEvent(
             Ref<EntityStore> ref, Store<EntityStore> store, PageData data) {
         try {
+            String authoringAction = resolveAuthoringAction(data);
+            authoringSession.validate(authoringEnvelope(data, authoringAction),
+                    ALLOWED_ACTIONS, permissionFor(authoringAction));
             if (isInventoryDrop(data)) {
                 handleInventoryDrop(ref, store, data);
                 return;
             }
             if (action(data.cancel)) {
-                closeInventoryBridge();
-                closePreview();
+                authoringSession.close();
                 close();
                 return;
             }
             if (action(data.enter)) {
+                authoringSession.beginCommit();
                 NpcProfile profile = editor.commit(npcName, update, selections);
                 inventory.bindStableIdentity(profile.stableId());
                 inventory.flush();
                 committed.accept(profile);
-                closeInventoryBridge();
-                closePreview();
+                authoringSession.close();
                 close();
                 if (update) {
                     playerRef.sendMessage(Message.raw("NPC " + profile.name()
@@ -305,13 +366,56 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 return;
             }
             if (action(data.deleteYes)) {
-                closeInventoryBridge();
-                closePreview();
-                inventory.close();
+                authoringSession.close();
                 deleted.accept(ref, store);
                 close();
                 playerRef.sendMessage(Message.raw("NPC " + npcName
                         + " and its authored profile folder were deleted."));
+                return;
+            }
+            if ("OPEN_PROFILE_EDITOR".equals(authoringAction)) {
+                authoringSession.openEditor(NpcAuthoringSession.EditorKind.PROFILE);
+                rebuild();
+                return;
+            }
+            if ("OPEN_APPEARANCE_EDITOR".equals(authoringAction)) {
+                authoringSession.openEditor(NpcAuthoringSession.EditorKind.APPEARANCE);
+                rebuild();
+                return;
+            }
+            if ("OPEN_VOICE_EDITOR".equals(authoringAction)) {
+                authoringSession.openEditor(NpcAuthoringSession.EditorKind.VOICE);
+                rebuild();
+                return;
+            }
+            if ("CLOSE_EDITOR".equals(authoringAction)) {
+                if (authoringSession.isDirty(authoringSession.activeEditor())) {
+                    UICommandBuilder commands = new UICommandBuilder();
+                    commands.set("#DirtyEditorConfirmPage.Visible", true);
+                    sendUpdate(commands, false);
+                    return;
+                }
+                authoringSession.closeEditor(false);
+                rebuild();
+                return;
+            }
+            if ("DIRTY_SAVE".equals(authoringAction)) {
+                // A1 editors are deliberately inert placeholders. Later domain editors
+                // must perform their authoritative save before calling markSaved.
+                authoringSession.markSaved(authoringSession.activeEditor());
+                authoringSession.closeEditor(false);
+                rebuild();
+                return;
+            }
+            if ("DIRTY_DISCARD".equals(authoringAction)) {
+                authoringSession.closeEditor(true);
+                rebuild();
+                return;
+            }
+            if ("DIRTY_STAY".equals(authoringAction)) {
+                UICommandBuilder commands = new UICommandBuilder();
+                commands.set("#DirtyEditorConfirmPage.Visible", false);
+                sendUpdate(commands, false);
                 return;
             }
             if (data.open != null) {
@@ -394,6 +498,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 rebuild();
             }
         } catch (RuntimeException failure) {
+            if (authoringSession.state() == NpcAuthoringSession.WorkspaceState.COMMITTING) {
+                authoringSession.degraded(failure.getMessage());
+            }
             status = failure.getMessage() == null ? "Profile operation failed."
                     : failure.getMessage();
             error = true;
@@ -429,8 +536,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         int requestedQuantity = authoritativeQuantityAtIntent(
                 sourceSection, sourceSlot, clientQuantity);
         var intent = new CustomInventoryTransactionBridge.InventoryMoveIntent(
-                inventorySessionId,
-                inventoryPageGeneration,
+                authoringSession.sessionId(),
+                authoringSession.pageGeneration(),
                 sourceSection,
                 sourceSlot,
                 targetSection,
@@ -492,8 +599,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 + " profileId=" + profileId()
                 + " npcEntityId=" + (liveStorageAuthority == null
                         ? "NOT_SPAWNED" : liveStorageAuthority.npcEntityId())
-                + " sessionId=" + inventorySessionId
-                + " pageGeneration=" + inventoryPageGeneration
+                + " sessionId=" + authoringSession.sessionId()
+                + " pageGeneration=" + authoringSession.pageGeneration()
                 + " uiRefreshGeneration=" + refresh
                 + " BridgeOperationId=" + result.operationId()
                 + " result=" + result.type()
@@ -507,6 +614,74 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
 
     private void closeInventoryBridge() {
         if (inventoryBridge != null) inventoryBridge.close();
+    }
+
+    private EventData authoringEvent(String action) {
+        return EventData.of("AuthoringSchemaVersion",
+                        Integer.toString(NpcAuthoringEventEnvelope.CURRENT_SCHEMA_VERSION))
+                .append("AuthoringSessionId", authoringSession.sessionId().toString())
+                .append("AuthoringViewerPlayerId", authoringSession.viewerPlayerId().toString())
+                .append("AuthoringNpcStableId", authoringSession.npcStableId().toString())
+                .append("AuthoringPageGeneration",
+                        Long.toString(authoringSession.pageGeneration()))
+                .append("AuthoringEditor", "#AuthoringEditorValue.Text")
+                .append("AuthoringEditorGeneration", "#AuthoringEditorGeneration.Text")
+                .append("AuthoringAction", action);
+    }
+
+    private String resolveAuthoringAction(PageData data) {
+        if (data == null) throw new IllegalArgumentException("Missing authoring event.");
+        if (data.authoringAction != null && !data.authoringAction.isBlank()) {
+            return data.authoringAction.strip().toUpperCase(Locale.ROOT);
+        }
+        // ServerFileBrowser currently emits its own File/SearchQuery fields and
+        // cannot carry page-defined metadata. It is admitted only while the
+        // server-owned browser instance is active, then receives a synthesized
+        // current envelope and the ADVANCED permission check below.
+        if (browser != null && (data.file != null || data.searchQuery != null)) {
+            return "BROWSER_EVENT";
+        }
+        throw new IllegalArgumentException("Unknown Authoring Studio event schema/action.");
+    }
+
+    private NpcAuthoringEventEnvelope authoringEnvelope(PageData data, String action) {
+        if (data.authoringSessionId == null && "BROWSER_EVENT".equals(action)) {
+            return new NpcAuthoringEventEnvelope(
+                    NpcAuthoringEventEnvelope.CURRENT_SCHEMA_VERSION,
+                    authoringSession.sessionId(), authoringSession.viewerPlayerId(),
+                    authoringSession.npcStableId(), authoringSession.pageGeneration(),
+                    authoringSession.activeEditor(), authoringSession.editorGeneration(), action);
+        }
+        return NpcAuthoringEventEnvelope.parse(
+                parseInteger(data.authoringSchemaVersion), data.authoringSessionId,
+                data.authoringViewerPlayerId, data.authoringNpcStableId,
+                parseLong(data.authoringPageGeneration), data.authoringEditor,
+                parseLong(data.authoringEditorGeneration), action);
+    }
+
+    private static String permissionFor(String action) {
+        return switch (action) {
+            case "INVENTORY_DROP" -> NpcAuthoringPermissions.INVENTORY;
+            case "INFINITE_AMMO", "ARMOR_VISIBILITY" -> NpcAuthoringPermissions.GEAR;
+            case "VOICE_RESCAN", "OPEN_VOICE_EDITOR" -> NpcAuthoringPermissions.VOICE;
+            case "OPEN_APPEARANCE_EDITOR" -> NpcAuthoringPermissions.APPEARANCE;
+            case "OPEN_PROFILE_EDITOR", "ENTER" -> NpcAuthoringPermissions.PROFILE;
+            case "ADVANCED_FILE_OPEN", "BROWSER_EVENT", "DELETE_PROMPT",
+                    "DELETE_CANCEL", "DELETE_CONFIRM" -> NpcAuthoringPermissions.ADVANCED;
+            case "CANCEL", "CLOSE_EDITOR", "DIRTY_SAVE", "DIRTY_DISCARD",
+                    "DIRTY_STAY" -> NpcAuthoringPermissions.OPEN;
+            default -> throw new IllegalArgumentException("Unknown authoring action.");
+        };
+    }
+
+    private static Integer parseInteger(String value) {
+        try { return value == null ? null : Integer.valueOf(value); }
+        catch (NumberFormatException invalid) { return null; }
+    }
+
+    private static Long parseLong(String value) {
+        try { return value == null ? null : Long.valueOf(value); }
+        catch (NumberFormatException invalid) { return null; }
     }
 
     private static int parseSection(String value) {
@@ -559,9 +734,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     @Override
     public void onDismiss(Ref<EntityStore> ref, Store<EntityStore> store) {
         built = false;
-        closeInventoryBridge();
-        closePreview();
-        inventory.close();
+        authoringSession.close();
         super.onDismiss(ref, store);
     }
 
@@ -606,6 +779,18 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void setProfileFilesUi(UICommandBuilder commands) {
+        editor.currentProfile(npcName).ifPresent(profile -> {
+            commands.set("#ProfileNameValue.Text", profile.name());
+            commands.set("#ProfileRoleValue.Text", profile.role());
+            String biography = profile.biography() == null ? "" : profile.biography().strip();
+            commands.set("#ProfileBiographyValue.Text", biography.isBlank()
+                    ? "Biography not authored yet."
+                    : biography.length() > 180 ? biography.substring(0, 177) + "..." : biography);
+        });
+        commands.set("#ProfileReadinessValue.Text",
+                voiceSamples.ready() ? "PROFILE + VOICE READY" : "PROFILE READY · VOICE NEEDS REFERENCE");
+        commands.set("#ProfileReadinessValue.Style.TextColor",
+                voiceSamples.ready() ? "#72d58b" : "#d0a65a");
         for (ProfileFileField field : ProfileFileField.values()) {
             Path selected = selections.get(field);
             String shown = selected == null
@@ -635,6 +820,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void setEquipmentUi(UICommandBuilder commands) {
+        commands.set("#PrimaryWeaponEmptyIcon.Visible",
+                ItemStack.isEmpty(inventory.loadoutItem((short) 0)));
+        commands.set("#OffhandEmptyIcon.Visible",
+                ItemStack.isEmpty(inventory.loadoutItem((short) 1)));
+        commands.set("#AmmoEmptyIcon.Visible",
+                ItemStack.isEmpty(inventory.loadoutItem((short) 2)));
         setAmmunitionUi(commands);
         setArmorVisibilityUi(commands);
     }
@@ -793,6 +984,30 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append(new KeyedCodec<>("@SearchQuery", Codec.STRING),
                         (data, value) -> data.searchQuery = value,
                         data -> data.searchQuery).add()
+                .append(new KeyedCodec<>("AuthoringSchemaVersion", Codec.STRING),
+                        (data, value) -> data.authoringSchemaVersion = value,
+                        data -> data.authoringSchemaVersion).add()
+                .append(new KeyedCodec<>("AuthoringSessionId", Codec.STRING),
+                        (data, value) -> data.authoringSessionId = value,
+                        data -> data.authoringSessionId).add()
+                .append(new KeyedCodec<>("AuthoringViewerPlayerId", Codec.STRING),
+                        (data, value) -> data.authoringViewerPlayerId = value,
+                        data -> data.authoringViewerPlayerId).add()
+                .append(new KeyedCodec<>("AuthoringNpcStableId", Codec.STRING),
+                        (data, value) -> data.authoringNpcStableId = value,
+                        data -> data.authoringNpcStableId).add()
+                .append(new KeyedCodec<>("AuthoringPageGeneration", Codec.STRING),
+                        (data, value) -> data.authoringPageGeneration = value,
+                        data -> data.authoringPageGeneration).add()
+                .append(new KeyedCodec<>("AuthoringEditor", Codec.STRING),
+                        (data, value) -> data.authoringEditor = value,
+                        data -> data.authoringEditor).add()
+                .append(new KeyedCodec<>("AuthoringEditorGeneration", Codec.STRING),
+                        (data, value) -> data.authoringEditorGeneration = value,
+                        data -> data.authoringEditorGeneration).add()
+                .append(new KeyedCodec<>("AuthoringAction", Codec.STRING),
+                        (data, value) -> data.authoringAction = value,
+                        data -> data.authoringAction).add()
                 .build();
 
         private String open;
@@ -816,5 +1031,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         private Integer pressedMouseButton;
         private String file;
         private String searchQuery;
+        private String authoringSchemaVersion;
+        private String authoringSessionId;
+        private String authoringViewerPlayerId;
+        private String authoringNpcStableId;
+        private String authoringPageGeneration;
+        private String authoringEditor;
+        private String authoringEditorGeneration;
+        private String authoringAction;
     }
 }

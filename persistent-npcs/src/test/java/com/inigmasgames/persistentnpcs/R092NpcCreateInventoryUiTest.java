@@ -91,8 +91,10 @@ public final class R092NpcCreateInventoryUiTest {
         assert storageGrid.contains("AreItemsDraggable: true;")
                 : "All authoritative grids must use the installed native drag flow";
         assert storageGrid.contains("AllowMaxStackDraggableItems: true;");
-        assert ui.indexOf("#SKINFilename") < ui.indexOf("VOICE SAMPLES")
-                : "Skin must be directly below Profile and above Voice Samples";
+        assert ui.contains("Group #AdvancedFileControls")
+                : "Profile and skin file controls must remain available as secondary controls";
+        assert ui.contains("#PROFILEFilename") && ui.contains("#SKINFilename")
+                : "The Authoring Studio must retain both authoritative file identities";
         for (String slot : List.of("Head", "Chest", "Hands", "Legs")) {
             assert ui.contains("#" + slot + "EmptyIcon")
                     : "Missing native empty equipment artwork for " + slot;
@@ -127,12 +129,12 @@ public final class R092NpcCreateInventoryUiTest {
         }
         for (String type : List.of("REFERENCE", "AFFECTIONATE", "AMUSED", "EXCITED",
                 "ANGRY", "SAD", "SCARED")) {
-            assert ui.contains("@VoiceSampleRow #Voice" + type);
+            assert ui.contains("@VoiceSummaryRow #Voice" + type);
             assert !ui.contains("#" + type + "Open")
                     : "Voice samples must be discovered rather than manually assigned";
         }
-        assert ui.contains("@VoiceSampleRow = Group")
-                : "Voice statuses must use the reusable table row";
+        assert ui.contains("@VoiceSummaryRow = Group")
+                : "Voice statuses must use the reusable compact summary row";
         assert page.contains("#VoiceFilename.Text");
         assert page.contains("#VoiceState.Text");
         assert ui.contains("#VoiceRescanButton");

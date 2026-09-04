@@ -10,6 +10,9 @@ import java.util.EnumMap;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 /** Transaction boundary for the native profile page; delegates to existing profile/voice/skin systems. */
 public final class NpcProfileEditorService {
@@ -78,6 +81,26 @@ public final class NpcProfileEditorService {
 
     public NpcInventoryRepository inventories() {
         return inventories;
+    }
+
+    /** Immutable open-time revision/hash snapshot for the unified authoring lease. */
+    public Map<String, String> authoringRevisionSnapshot(String name) {
+        String safe = ProfileRepository.sanitizeProfileName(name);
+        NpcProfile profile = profiles.load(safe);
+        LinkedHashMap<String, String> revisions = new LinkedHashMap<>();
+        revisions.put("PROFILE", sha256(profiles.profilePath(safe)));
+        revisions.put("INVENTORY", sha256(inventories.path(safe)));
+        revisions.put("APPEARANCE", appearances.resolveSkinFile(profile.appearancePreset())
+                .map(NpcProfileEditorService::sha256).orElse("MISSING"));
+        VoicePresetRepository.VoiceSampleScan scan = voices.scan(safe);
+        StringBuilder voice = new StringBuilder();
+        for (var type : com.inigmasgames.persistentnpcs.voice.VoiceSampleType.values()) {
+            var sample = scan.samples().get(type);
+            voice.append(type.name()).append(':').append(sample.state()).append(':')
+                    .append(sha256(sample.path())).append(';');
+        }
+        revisions.put("VOICE", sha256(voice.toString().getBytes(StandardCharsets.UTF_8)));
+        return Map.copyOf(revisions);
     }
 
     public java.util.Optional<NpcProfile> currentProfile(String name) {
@@ -215,6 +238,21 @@ public final class NpcProfileEditorService {
             }
         } catch (IOException failure) {
             throw new IllegalStateException("Could not store " + destination.getFileName(), failure);
+        }
+    }
+
+    private static String sha256(Path path) {
+        if (path == null || !Files.isRegularFile(path)) return "MISSING";
+        try { return sha256(Files.readAllBytes(path)); }
+        catch (IOException failure) { return "UNREADABLE"; }
+    }
+
+    private static String sha256(byte[] bytes) {
+        try {
+            return java.util.HexFormat.of().withUpperCase()
+                    .formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));
+        } catch (java.security.NoSuchAlgorithmException impossible) {
+            throw new IllegalStateException("SHA-256 unavailable", impossible);
         }
     }
 

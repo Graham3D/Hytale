@@ -21,6 +21,9 @@ import com.inigmasgames.persistentnpcs.profile.NpcProfile;
 import com.inigmasgames.persistentnpcs.profile.NpcProfileEditorService;
 import com.inigmasgames.persistentnpcs.profile.NpcProfileRegistry;
 import com.inigmasgames.persistentnpcs.profile.ProfileRepository;
+import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringPermissions;
+import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringSession;
+import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringSessionRegistry;
 import com.inigmasgames.persistentnpcs.ui.NpcMeshPreviewSession;
 import com.inigmasgames.persistentnpcs.ui.NpcProfilePage;
 import com.inigmasgames.persistentnpcs.ui.NativeNpcInventoryController;
@@ -57,6 +60,7 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
         this.conversations = conversations;
         this.runtimeBlocker = runtimeBlocker == null ? () -> "" : runtimeBlocker;
         this.diagnostics = diagnostics == null ? ignored -> { } : diagnostics;
+        requirePermission(NpcAuthoringPermissions.OPEN);
         this.nameArg = withRequiredArg("name", "Immersive NPC profile name",
                 ArgTypes.GREEDY_STRING);
     }
@@ -86,7 +90,9 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
                 throw new IllegalStateException("Player storage inventory is unavailable.");
             }
             ItemContainer playerInventory = storage.getInventory();
-            NpcProfile selectedProfile = update ? profiles.requireName(name) : null;
+            NpcProfile selectedProfile = update ? profiles.requireName(name)
+                    : editor.currentProfile(name).orElseThrow(() ->
+                            new IllegalStateException("Created profile identity is unavailable."));
             NativeNpcInventoryController.LiveStorageAuthority resolvedStorage = null;
             if (update) {
                 try {
@@ -107,6 +113,7 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
             NativeNpcInventoryController.LiveStorageAuthority liveStorageAuthority =
                     resolvedStorage;
             NpcMeshPreviewSession preview = null;
+            NpcAuthoringSession authoringSession = null;
             NpcProfilePage page = null;
             try {
                 if (update) {
@@ -119,9 +126,16 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
                                     equipment.visibleArmorIds(), equipment.rightHandItemId(),
                                     equipment.leftHandItemId()), diagnostics);
                 }
+                authoringSession = NpcAuthoringSessionRegistry.shared().acquire(
+                        playerRef.getUuid(), selectedProfile.stableId(),
+                        liveStorageAuthority == null ? null : liveStorageAuthority.npcEntityId(),
+                        editor.authoringRevisionSnapshot(name),
+                        permission -> com.hypixel.hytale.server.core.permissions.PermissionsModule
+                                .get().hasPermission(playerRef.getUuid(), permission),
+                        diagnostics);
                 page = new NpcProfilePage(
                         playerRef, name, update, editor, playerInventory,
-                        liveStorageAuthority, preview,
+                        liveStorageAuthority, authoringSession, preview,
                         profile -> commit(store, playerRef, profile),
                         (viewerRef, eventStore) -> delete(
                                 eventStore, selectedProfile),
@@ -135,10 +149,14 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
                 }
                 diagnostics.accept("NPC_PROFILE_NATIVE_WINDOWS_BOUND npc=" + name
                         + " " + page.nativeInventoryDiagnostics());
+                authoringSession.ready();
                 page.applyPreviewAfterPageMount();
             } catch (RuntimeException failure) {
                 if (page != null) page.onDismiss(playerEntityRef, store);
-                else if (preview != null) preview.close();
+                else {
+                    if (preview != null) preview.close();
+                    if (authoringSession != null) authoringSession.close();
+                }
                 throw failure;
             }
         } catch (RuntimeException failure) {

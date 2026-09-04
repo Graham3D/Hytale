@@ -60,11 +60,16 @@ public final class R119NpcProfileProductionInventoryIntegrationTest {
 
     private static boolean profileClosePrecedesPersistenceClose() throws Exception {
         String profile = read("src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java");
+        int bridgeClose = profile.indexOf(
+                "addCleanup(\"inventory-event-bridge\", this::closeInventoryBridge)");
+        int persistenceClose = profile.indexOf(
+                "addCleanup(\"inventory-persistence-flush\", inventory::close)");
         int dismiss = profile.indexOf("public void onDismiss(");
-        int bridgeClose = profile.indexOf("closeInventoryBridge();", dismiss);
-        int inventoryClose = profile.indexOf("inventory.close();", dismiss);
-        assert dismiss >= 0 && bridgeClose > dismiss && inventoryClose > bridgeClose
+        int sessionClose = profile.indexOf("authoringSession.close();", dismiss);
+        assert bridgeClose >= 0 && persistenceClose > bridgeClose
                 : "Late inventory events must fail before persistent session teardown";
+        assert dismiss >= 0 && sessionClose > dismiss
+                : "Dismiss must run the idempotent ordered Authoring Studio cleanup";
         return true;
     }
 

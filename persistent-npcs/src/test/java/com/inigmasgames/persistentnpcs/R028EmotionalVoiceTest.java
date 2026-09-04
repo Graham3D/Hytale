@@ -172,7 +172,7 @@ public final class R028EmotionalVoiceTest {
                 "src/main/java/com/inigmasgames/persistentnpcs/persistence/ImmersiveNpcDataMigration.java"));
         for (String emotion : List.of("REFERENCE", "AFFECTIONATE", "AMUSED", "EXCITED",
                 "ANGRY", "SAD", "SCARED")) {
-            assert ui.contains("@VoiceSampleRow #Voice" + emotion);
+            assert ui.contains("@VoiceSummaryRow #Voice" + emotion);
             assert !ui.contains("#" + emotion + "Open");
         }
         assert ui.contains("Label #VoiceFilename");

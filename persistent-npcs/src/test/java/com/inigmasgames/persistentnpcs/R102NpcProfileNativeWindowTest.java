@@ -90,15 +90,15 @@ public final class R102NpcProfileNativeWindowTest {
         assert !ui.contains("#NpcPreviewGearState");
         assert !page.contains("#NpcPreviewSkin.Text");
         assert !page.contains("#NpcPreviewPreset.Text");
-        assert ui.contains("@PanelGap = 12;");
-        assert ui.contains("@HalfPanelGap = 6;");
-        assert ui.contains("@InternalPadding = 12;");
-        assert ui.contains("Anchor: (Width: 1420, Height: 990);");
-        assert ui.contains("Anchor: (Height: 330, Bottom: @FooterGap);");
-        assert ui.indexOf("#SKINFilename") < ui.indexOf("VOICE SAMPLES");
-        assert ui.contains("@GearRowHeight = 68;");
-        assert ui.contains("@GearRowGap = 26;");
-        assert ui.contains("@GearRowsHeight = 350;");
+        assert ui.contains("Anchor: (Width: 1520, Height: 960);")
+                : "The unified Authoring Studio must use its bounded base workspace";
+        assert ui.contains("Group #TopWorkspace")
+                && ui.contains("Group #InventoriesPanel")
+                : "Gear/Profile and coupled inventory regions must remain distinct";
+        assert ui.contains("SlotSize: 58") && ui.contains("SlotSize: 62")
+                : "Gear and inventory cells must remain square";
+        assert ui.contains("Group #AdvancedFileControls")
+                && ui.contains("#SKINFilename");
         assert ui.contains("Group #ArmorSlotColumn");
         assert ui.contains("Group #LoadoutSlotColumn");
         assert ui.contains("Group #NpcPreviewContainer");
