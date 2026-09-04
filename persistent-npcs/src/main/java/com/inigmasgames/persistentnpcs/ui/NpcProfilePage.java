@@ -81,7 +81,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
      */
     private static final int MAX_PACKAGED_NPC_SECTION_ID = 1024;
     private static final Set<String> ALLOWED_ACTIONS = Set.of(
-            "INVENTORY_DROP", "NAV_OVERVIEW", "NAV_INVENTORY", "CANCEL", "ENTER", "DELETE_PROMPT",
+            "INVENTORY_DROP", "NAV_OVERVIEW", "CANCEL", "ENTER", "DELETE_PROMPT",
             "DELETE_CANCEL", "DELETE_CONFIRM", "ADVANCED_FILE_OPEN",
             "BROWSER_EVENT", "INFINITE_AMMO", "ARMOR_VISIBILITY",
             "VOICE_RESCAN", "OPEN_PROFILE_EDITOR", "OPEN_APPEARANCE_EDITOR",
@@ -124,7 +124,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private boolean error;
     private VoicePresetRepository.VoiceSampleScan voiceSamples;
     private boolean built;
-    private boolean inventoryNavigationSelected;
     private final NpcStatsSnapshotService statsService = new NpcStatsSnapshotService();
     private final ScheduledExecutorService statsScheduler =
             Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -170,7 +169,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             BiConsumer<Ref<EntityStore>, Store<EntityStore>> deleted,
             Consumer<String> diagnostics) {
         super(playerRef, CustomPageLifetime.CanDismiss, PageData.CODEC);
-        this.npcName = npcName;
+        this.npcName = editor.currentProfile(npcName).map(NpcProfile::name).orElse(npcName);
         this.update = update;
         this.editor = editor;
         if (playerInventory == null) {
@@ -238,6 +237,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     /** Open-time lifecycle status; a degraded appearance never prevents Studio access. */
     public void setInitialStatus(String message, boolean failure) {
         if (message == null || message.isBlank()) return;
+        diagnostics.accept("NPC_PROFILE_INITIAL_STATUS npc=" + npcName
+                + " failure=" + failure + " message=" + quoted(message));
+        if (!failure) return; // Successful lifecycle diagnostics belong in logs, not the front page.
         status = message;
         error = failure;
     }
@@ -316,8 +318,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         setOverviewNavigationUi(commands);
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#OverviewButton", authoringEvent("NAV_OVERVIEW"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#InventoryButton", authoringEvent("NAV_INVENTORY"));
         commands.set("#AuthoringSessionValue.Text", authoringSession.sessionId().toString());
         commands.set("#AuthoringViewerValue.Text", authoringSession.viewerPlayerId().toString());
         commands.set("#AuthoringNpcValue.Text", authoringSession.npcStableId().toString());
@@ -475,12 +475,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             String authoringAction = resolveAuthoringAction(data);
             authoringSession.validate(authoringEnvelope(data, authoringAction),
                     ALLOWED_ACTIONS, permissionFor(authoringAction, data));
-            if ("NAV_OVERVIEW".equals(authoringAction)
-                    || "NAV_INVENTORY".equals(authoringAction)) {
+            if ("NAV_OVERVIEW".equals(authoringAction)) {
                 if (authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.NONE) {
                     throw new IllegalStateException("Return to the Profile before navigating.");
                 }
-                inventoryNavigationSelected = "NAV_INVENTORY".equals(authoringAction);
                 UICommandBuilder commands = new UICommandBuilder();
                 setOverviewNavigationUi(commands);
                 // Selection only: never rebuild section-bound grids or move items.
@@ -1943,7 +1941,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 case VOICE -> NpcAuthoringPermissions.VOICE;
                 case NONE -> NpcAuthoringPermissions.OPEN;
             };
-            case "NAV_OVERVIEW", "NAV_INVENTORY", "CANCEL", "CLOSE_EDITOR", "DIRTY_DISCARD", "DIRTY_STAY"
+            case "NAV_OVERVIEW", "CANCEL", "CLOSE_EDITOR", "DIRTY_DISCARD", "DIRTY_STAY"
                     -> NpcAuthoringPermissions.OPEN;
             default -> throw new IllegalArgumentException("Unknown authoring action.");
         };
@@ -1979,9 +1977,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void setOverviewNavigationUi(UICommandBuilder commands) {
-        commands.set("#OverviewSelected.Visible", !inventoryNavigationSelected);
-        commands.set("#InventorySelected.Visible", inventoryNavigationSelected);
-        commands.set("#InventoryFocusAccent.Visible", inventoryNavigationSelected);
+        commands.set("#OverviewSelected.Visible", true);
     }
 
     private static int value(Integer value, int fallback) {
@@ -2076,8 +2072,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private void captureStats(Store<EntityStore> store, boolean refreshUi) {
         String before = statsKey();
         if (liveStorageAuthority == null) {
-            statsSnapshot = null;
-            statsFailure = "LIVE_NPC_UNAVAILABLE";
+            statsSnapshot = statsService.captureEquipmentOnly(authoringSession.npcStableId(),
+                    inventory.armor(), authoringSession.sessionId(),
+                    authoringSession.pageGeneration(), inventory.equipmentRevision());
+            statsFailure = "";
         } else {
             try {
                 NpcStatsSnapshot candidate = statsService.capture(store,
@@ -2270,7 +2268,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         boolean featureEnabled = NpcEquipmentRules.infiniteAmmunitionFeatureEnabled();
         commands.set("#InfiniteAmmoCheckBox.Value", inventory.infiniteAmmunition());
         commands.set("#InfiniteAmmoCheckBox.Disabled", !featureEnabled || !relevant);
-        commands.set("#InfiniteAmmoHint.Text", !featureEnabled
+        commands.set("#InfiniteAmmoCheckBox.TooltipText", !featureEnabled
                 ? "Disabled by server policy (" + NpcEquipmentRules.INFINITE_AMMUNITION_CONFIG + ")."
                 : relevant
                 ? "Physical ammo stack selected; policy is "

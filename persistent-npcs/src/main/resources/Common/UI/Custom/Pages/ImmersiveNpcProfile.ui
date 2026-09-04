@@ -82,7 +82,7 @@ $Sounds = "../Sounds.ui";
 $C.@PageOverlay #ProfilePage {
   LayoutMode: Middle;
   Group #AuthoringWorkspace {
-    Anchor: (Width: 1180, Height: 890);
+    Anchor: (Width: 1180, Height: 1030);
     LayoutMode: Top;
     Label #AuthoringSessionValue { Visible: false; Text: ""; }
     Label #AuthoringViewerValue { Visible: false; Text: ""; }
@@ -93,7 +93,7 @@ $C.@PageOverlay #ProfilePage {
 
 
     $C.@DecoratedContainer #TopWorkspace {
-      Anchor: (Height: 494, Bottom: 12);
+      Anchor: (Height: 534, Bottom: 12);
       #Title { $C.@Title #ProfileTitle { @Text = "NPC PROFILE"; } }
       #Content {
         LayoutMode: Left;
@@ -109,19 +109,6 @@ $C.@PageOverlay #ProfilePage {
                 Group { Anchor: (Left: 0, Width: 3); Background: @Gold; }
                 Group { Anchor: (Left: 11, Top: 13, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavOverview.png"; }
                 Label { Anchor: (Left: 45, Right: 5); Text: "Overview"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, TextColor: @Gold, VerticalAlignment: Center); }
-              }
-            }
-          }
-          Group { Anchor: (Height: 52, Bottom: 8);
-            Button #InventoryButton { Style: $C.@SecondaryButtonStyle;
-              Group { HitTestVisible: false; Anchor: (Left: 12, Top: 14, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavInventory.png"; }
-              Label { HitTestVisible: false; Anchor: (Left: 46, Right: 6); Text: "Inventory"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, VerticalAlignment: Center); }
-            }
-            Group #InventorySelected { HitTestVisible: false; Visible: false; Background: #b58a38; Padding: (Full: 1);
-              Group { Background: #253548;
-                Group { Anchor: (Left: 0, Width: 3); Background: @Gold; }
-                Group { Anchor: (Left: 11, Top: 13, Width: 24, Height: 24); Background: "ImmersiveNpcInventory/ProfileNavInventory.png"; }
-                Label { Anchor: (Left: 45, Right: 5); Text: "Inventory"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, TextColor: @Gold, VerticalAlignment: Center); }
               }
             }
           }
@@ -148,9 +135,16 @@ $C.@PageOverlay #ProfilePage {
         Group #GearPanel { LayoutMode: Left; FlexWeight: 1; Background: #0d1822;
           Group #NpcAppearancePanel { Anchor: (Width: 440, Right: 16); LayoutMode: Top;
             Label #NpcPreviewName { Anchor: (Height: 30); Text: "NPC"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, FontSize: 16, TextColor: #f1dfae, HorizontalAlignment: Center); }
-            Group #NpcPreviewContainer { Anchor: (Height: 312, Bottom: 8); LayoutMode: CenterMiddle; Background: "ImmersiveNpcInventory/NPCBackground.png";
-              CharacterPreviewComponent #NpcCharacterPreview { Anchor: (Width: 310, Height: 308); }
-              Label #NpcPreviewUnavailable { Anchor: (Width: 270, Height: 80); Text: "Appearance preview is temporarily unavailable."; Visible: false; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 10, TextColor: @Muted, HorizontalAlignment: Center, VerticalAlignment: Center); }
+            Group #NpcPreviewContainer { Anchor: (Height: 330, Bottom: 4);
+              // Native artwork is 820x792. One-quarter scale, bottom-centered; never stretched to the viewport.
+              Group #NpcPreviewGround { HitTestVisible: false; Anchor: (Left: 117, Bottom: 0, Width: 205, Height: 198); Background: "ImmersiveNpcInventory/NPCBackground.png"; }
+              Group { LayoutMode: CenterMiddle;
+                CharacterPreviewComponent #NpcCharacterPreview { Anchor: (Width: 340, Height: 330); }
+                Label #NpcPreviewUnavailable { Anchor: (Width: 270, Height: 80); Text: "Appearance preview is temporarily unavailable."; Visible: false; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 10, TextColor: @Muted, HorizontalAlignment: Center, VerticalAlignment: Center); }
+              }
+            }
+            Group #InfiniteAmmoRow { LayoutMode: Center; Anchor: (Height: 26, Bottom: 4);
+              Group { LayoutMode: Left; Anchor: (Width: 144); $C.@CheckBox #InfiniteAmmoCheckBox { Value: false; TooltipText: "Toggle for infinite ammunition."; } Label { Anchor: (Left: 8); Text: "Infinite Ammo"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, VerticalAlignment: Center); } }
             }
             Group #StatsStrip { LayoutMode: Left; Anchor: (Height: 64);
               @StatCell #HealthStat { @Label = "HEALTH"; @Accent = #e76f6f; }
@@ -160,7 +154,7 @@ $C.@PageOverlay #ProfilePage {
             }
           }
           Group #EquipmentPanel { LayoutMode: Top; FlexWeight: 1;
-            Label { Anchor: (Height: 30); Text: "EQUIPMENT"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, RenderBold: true, TextColor: @Gold); }
+            Label { Anchor: (Height: 30); Text: "NPC GEAR & STATS"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, RenderBold: true, TextColor: @Gold); }
             Group #GearWorkspace { LayoutMode: Left; Anchor: (Height: 262, Bottom: 18);
           Group #ArmorSlotColumn {
             Anchor: (Width: 190, Height: @GearRowsHeight, Right: 12);
@@ -191,10 +185,6 @@ $C.@PageOverlay #ProfilePage {
             Group #AmmoEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 79, Top: 146); Background: "ImmersiveNpcInventory/WeaponSlotIconAmmo.png"; }
           }
 
-            }
-            Group { LayoutMode: Top; Anchor: (Height: 68);
-              Group { LayoutMode: Left; Anchor: (Height: 26); $C.@CheckBox #InfiniteAmmoCheckBox { Value: false; TooltipText: "Toggle for infinite ammunition."; } Label { Anchor: (Left: 8); Text: "Infinite Ammo"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, VerticalAlignment: Center); } }
-              Label #InfiniteAmmoHint { Anchor: (Top: 5, Height: 32, Right: 12); Text: "Requires compatible ammunition."; Style: (...$C.@DefaultLabelStyle, FontSize: 10, Wrap: true, TextColor: @Muted); }
             }
           }
         }
@@ -235,17 +225,16 @@ $C.@PageOverlay #ProfilePage {
       }
 
     $C.@DecoratedContainer #InventoriesPanel {
-      Anchor: (Height: 310, Bottom: 10);
+      Anchor: (Height: 410, Bottom: 10);
       #Title {
         $C.@Title { @Text = "INVENTORIES"; }
-        Group #InventoryFocusAccent { HitTestVisible: false; Visible: false; Anchor: (Bottom: 0, Left: 50, Right: 50, Height: 2); Background: @Gold; }
       }
       #Content { LayoutMode: Left; Padding: (Full: 17);
         Group #NpcInventoryPanel { LayoutMode: Top; FlexWeight: 1; Background: #0d1822;
           Label #NpcInventoryTitle { Anchor: (Height: 28); Text: "NPC INVENTORY"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, RenderUppercase: true, TextColor: @Gold, HorizontalAlignment: Center); }
-          Group #NpcGridHost { LayoutMode: Center; FlexWeight: 1; }
+          Group #NpcGridHost { LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; FlexWeight: 1; }
         }
-        Group #TransferRail { HitTestVisible: false; LayoutMode: CenterMiddle; Anchor: (Width: 62);
+        Group #TransferRail { HitTestVisible: false; LayoutMode: CenterMiddle; Anchor: (Width: 40);
           Group { Anchor: (Width: 34, Height: 80); LayoutMode: Top;
             Group { Anchor: (Height: 34, Bottom: 12); Background: #9a7739; Padding: (Full: 1);
               Group { Background: #172636; LayoutMode: CenterMiddle; Group { Anchor: (Width: 16, Height: 16); Background: "ImmersiveNpcInventory/DefaultDropdownCaret.png"; } }
@@ -257,7 +246,7 @@ $C.@PageOverlay #ProfilePage {
         }
         Group #PlayerInventoryPanel { LayoutMode: Top; FlexWeight: 1; Background: #0d1822;
           Label #PlayerInventoryTitle { Anchor: (Height: 28); Text: "PLAYER INVENTORY"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, RenderBold: true, RenderUppercase: true, TextColor: #a8bbc9, HorizontalAlignment: Center); }
-          Group #PlayerGridHost { LayoutMode: Center; FlexWeight: 1; }
+          Group #PlayerGridHost { LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; FlexWeight: 1; }
         }
       }
     }

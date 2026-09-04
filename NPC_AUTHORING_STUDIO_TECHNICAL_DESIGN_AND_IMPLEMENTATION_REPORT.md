@@ -1151,3 +1151,134 @@ Connected acceptance (repeat visual checks at 1080p and 1440p):
 
 STOP: R146 is deployed for connected approval. No further polish milestone or QA
 promotion is started by this pass.
+
+## R147 — bounded NPC Profile repair candidate (2026-09-04)
+
+Baseline: clean `main` at `44d21b1e47303dadab35988f8e5f83d81dd7522c`, verified
+against remote `main` before editing. The user's subsequent repair instructions
+authorize this candidate without further preview investigation or Appearance Editor polish.
+
+### Implemented scope
+
+- Both Profile storage grids use **74px cells, 2px spacing, 64px icons**, seven
+  columns, and a 534×458 full-content grid inside native `TopScrolling` hosts.
+  Each viewport has approximately four visible rows; scrolling reaches the last
+  two rows. All 40 NPC slots remain in the same section/index order. Player Storage
+  remains the original authoritative container/section. There is no pagination
+  index translation, capacity change, migration, synthetic container, or sliced
+  replacement authority. The native transaction bridge and literal section documents
+  remain unchanged. Isolated inventory-probe geometry is unchanged.
+- Removed Inventory navigation and its obsolete selection/binding state. Overview,
+  Appearance, Profile Editor and Voice Recorder remain; inventories stay on Overview.
+- The existing 820×792 NPC background now occupies a **205×198 bottom-centered**
+  decorative region rather than stretching across the whole preview. The character
+  viewport increases from 310×308 to 340×330 through layout only. Final visual foot/glow
+  placement remains a connected-review item; this is not a new preview renderer.
+- Restored `NPC GEAR & STATS`, retained aligned compact gear labels, and resolved
+  display-name casing from the canonical profile. Infinite Ammo sits beneath the
+  preview; its state-dependent explanation is a tooltip instead of permanent text.
+  Successful appearance lifecycle diagnostics go to logs, while degraded/error
+  messages remain available to the creator.
+- Unspawned Defense now sums the four authoritative session armor slots using
+  `ItemArmor.getBaseDamageResistance()`, independently of a live `EntityStatMap`.
+  Equip/remove uses the existing coalesced post-commit refresh. Reopen derives Defense
+  again from hydrated persisted armor, not a separately persisted derived number.
+  Armor-hide flags do not affect Defense. Unspawned Health/Stamina/Mana remain `—`:
+  there are no authoritative persisted vitals in the current NPC inventory schema.
+  Spawned vitals still use live `EntityStatMap`; missing live stat maps no longer
+  discard otherwise available armor Defense.
+- Both native directional caret assets remain decorative and non-hit-testable.
+  The compact rail has no button/event/transfer action.
+- Outer document-space bounds are 1180×1030, with 534px top workspace and 410px
+  inventory panel. Static geometry checks cover 1920×1080 and 2560×1440, including
+  scrollbar allowance and every NPC slot. These are not rendered-client QA claims.
+
+### Preserved preview contract — known limitation, not solved
+
+`CharacterPreviewComponent` shares the local player's client-side model/equipment
+representation; it is **not an independently targetable NPC equipment preview**.
+Native inventory/selection can reassert held-item presentation, and the viewer's
+four local armor-hide settings affect NPC armor visibility. Exact visual restoration
+of skin, armor, hands and selected-hotbar presentation is not proven.
+
+R147 leaves `NpcMeshPreviewSession` and its `ModelUpdate → PlayerSkinUpdate →
+EquipmentUpdate` architecture unchanged. The current NPC skin/model preview remains
+visible. No armor-hide settings, player inventory/gear/hotbar/ECS, fake inventory
+containers, or packet rewrite loops were introduced. Existing restoration behavior
+is preserved, not upgraded to a guarantee.
+
+The historical investigation report, two evidence extracts and read-only inspection
+script are now checked into `persistent-npcs/docs/R146-PreviewContract/` for GitHub
+review. Its original hold/next-experiment language is historical; this R147 section
+records the later bounded authorization. No client binaries or analysis dependencies
+were added, and no further investigation was performed.
+
+### Verification and deployment
+
+- Full deterministic suite: `persistent-npcs/test.ps1 -SkipLive` **PASS**, exit 0.
+  This includes the A0–A6 regressions, new R147 service/layout coverage and the
+  8,100-scenario conversation matrix (zero stale commits or leaked resources).
+  Live model tests were intentionally skipped; no distillation work was resumed.
+- One earlier full-suite attempt hit an intermittent `ConcurrentModificationException`
+  in unchanged `R053CompactResourceTraceTest.materialOwnershipChangeEmitsNewFullSnapshot`
+  at line 156. The complete rerun passed, including R053. No unrelated production
+  or test synchronization changes were made to suppress that failure.
+- Existing deprecated SDK/Unsafe warnings remain. Legacy layout assertions were
+  updated for the explicitly requested seven-column geometry and revised hierarchy;
+  transaction/persistence assertions were not removed.
+- Release-client `build.ps1`: **PASS**, compiled against the installed release
+  `HytaleServer.jar`; R147 stats and Profile layout/packaging tests also pass using
+  that release JAR. Release resource checks agree on HUD revision, manifest, build
+  and installer version.
+- Connected validation is **PENDING**; do not mark this candidate accepted based on
+  deterministic tests. Hytale UI parsing, native scroll hit testing, visual placement
+  and exact restoration still require the connected checklist.
+
+Deployment verified with Hytale/Java stopped:
+
+- Exactly one active **ImmersiveNPCs** JAR:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R147-NPC-PROFILE-REPAIR.jar`.
+  Size **3,312,293 bytes**; source/staged/deployed SHA-256:
+  `23011E529135BB82A3D5737209E80C5217CF10209CA8B58562DCBF785A375175`.
+- R146 moved intact to
+  `C:\HytaleRollback\NpcAuthoringStudio-Profile-R146-2026-09-04\ImmersiveNPCs-0.6.3-R146-NPC-PROFILE-MAIN-MENU-POLISH.jar`.
+  SHA-256 remains `38D97B3FFD0143A2282A496DF01C1855C18B9242865F93F41A516BC931A253A3`.
+  Existing R145 rollback and the unrelated SkinSwap JAR remain intact.
+- Deployment copied/moved only the project JARs; the broad installer was not run.
+  No runtime NPC profile, appearance, inventory, voice file, player setting,
+  migration archive or paused distillation state was changed.
+- This report and the historical R146 investigation evidence are included alongside
+  the repair source/tests in the R147 GitHub commit. The commit containing this
+  section is the candidate source checkpoint; its hash is reported in the handoff.
+
+Focused coverage added: real stats-service calls over SDK armor fixtures, empty and
+non-armor slots, hidden equipped armor, equip/remove revision changes, JSON armor
+round-trip with a fresh service, absent unspawned vitals, canonical name binding,
+tooltip-only help, visible unchanged preview, native grid geometry and complete
+40-slot scroll reachability. Fixture item lookup substitutes for a running asset
+registry; in-game restart/asset hydration remains in the connected checklist.
+
+### Connected approval checklist — repeat visual checks at both resolutions
+
+1. Restart the NPC world and verify **R147-NPC-PROFILE-REPAIR** in the HUD. Open
+   `/npc update mara` and a spawned NPC. Verify canonical name casing, frame bounds,
+   gear hierarchy, larger preview, grounded artwork and no clipping/overlap.
+2. Compare cells with native Inventory. Scroll both inventory panes; reach NPC slots
+   28–39 (zero-based), including the last occupied slot, with all 40 slots reachable.
+   Move an item into the last slot, scroll away/back, retrieve it and verify counts.
+3. Test Player↔NPC and internal moves, occupied swaps, stack merge/split, quick-move,
+   full/invalid rejection and valid/invalid gear moves. Close/reopen and restart;
+   verify item locations and counts. Scrolling must not alter transaction indices.
+4. For an unspawned NPC, equip/remove known armor and check immediate summed base
+   Defense, then close/reopen/restart. Health/Stamina/Mana should remain quiet `—`.
+   For a spawned NPC, verify authoritative live vitals still refresh.
+5. Confirm only four navigation entries. Open/return from all child editors without
+   touching established voice samples. Check Infinite Ammo tooltip/dependencies and
+   visibility toggles. Click the decorative carets: no action should occur.
+6. Compare authoritative player inventory/equipment before/after, allowing only the
+   transfers intentionally made. Check player visual restoration separately and
+   report mismatches against the documented preview limitation; do not infer exact
+   visual restoration from server-side inventory integrity.
+
+STOP after candidate deployment and GitHub push. Await connected approval; no
+Appearance Editor polish, preview expansion, or next milestone is authorized here.

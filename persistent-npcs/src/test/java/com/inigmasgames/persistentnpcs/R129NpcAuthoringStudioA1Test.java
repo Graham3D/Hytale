@@ -97,7 +97,7 @@ public final class R129NpcAuthoringStudioA1Test {
         assert ui.contains("Anchor: (Width: 1520, Height: 960)");
         assert ui.contains("SlotSize: 58") && ui.contains("SlotSize: 62");
         assert ui.contains("@Text = \"INVENTORIES\"")
-                && ui.contains("Text: \"EQUIPMENT\"");
+                && ui.contains("Text: \"NPC GEAR & STATS\"");
         assert !ui.contains("Anchor: (Width: 1420, Height: 990)")
                 : "legacy giant outer frame must not return";
 

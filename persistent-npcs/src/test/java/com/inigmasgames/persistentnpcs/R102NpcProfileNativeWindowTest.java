@@ -99,7 +99,7 @@ public final class R102NpcProfileNativeWindowTest {
         assert !ui.contains("#NpcPreviewGearState");
         assert !page.contains("#NpcPreviewSkin.Text");
         assert !page.contains("#NpcPreviewPreset.Text");
-        assert ui.contains("Anchor: (Width: 1180, Height: 890);")
+        assert ui.contains("Anchor: (Width: 1180, Height: 1030);")
                 : "The unified Authoring Studio must use its bounded base workspace";
         assert ui.contains("$C.@DecoratedContainer #TopWorkspace")
                 && ui.contains("$C.@DecoratedContainer #InventoriesPanel")

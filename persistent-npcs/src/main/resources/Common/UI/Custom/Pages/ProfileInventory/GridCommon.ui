@@ -1,7 +1,7 @@
 @ProbeGridStyle = ItemGridStyle(
   SlotSpacing: 2,
-  SlotSize: 48,
-  SlotIconSize: 42,
+  SlotSize: 74,
+  SlotIconSize: 64,
   SlotBackground: "../ImmersiveNpcInventory/Slot.png",
   QuantityPopupSlotOverlay: "../ImmersiveNpcInventory/QuantityPopupSlotOverlay.png",
   BrokenSlotBackgroundOverlay: "../ImmersiveNpcInventory/SlotItemBrokenCracksOverlay.png",
@@ -17,8 +17,8 @@
 );
 
 @ProbeGrid = ItemGrid {
-  Anchor: (Width: 504, Height: 204);
-  SlotsPerRow: 10;
+  Anchor: (Width: 534, Height: 458);
+  SlotsPerRow: 7;
   Style: @ProbeGridStyle;
   Background: #000000(0);
   Padding: 2;

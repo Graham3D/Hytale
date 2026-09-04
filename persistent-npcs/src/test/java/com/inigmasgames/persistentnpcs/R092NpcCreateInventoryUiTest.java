@@ -81,7 +81,7 @@ public final class R092NpcCreateInventoryUiTest {
                 : "Constant EventData values arrive as JSON strings in the installed SDK";
         assert !page.contains("new KeyedCodec<>(\"BrowserCancel\", Codec.BOOLEAN)")
                 : "A boolean codec rejects the native event payload and leaves Loading visible";
-        assert storageGrid.contains("SlotsPerRow: 10;");
+        assert storageGrid.contains("SlotsPerRow: 7;");
         assert storageGrid.contains("RenderEmptySlots: true;")
                 : "The authoritative 40-slot inventory must remain visible while empty";
         assert storageGrid.contains("@ProbeGridStyle = ItemGridStyle(");

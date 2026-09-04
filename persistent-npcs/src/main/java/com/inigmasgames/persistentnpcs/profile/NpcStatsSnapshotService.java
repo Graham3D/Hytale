@@ -2,6 +2,7 @@ package com.inigmasgames.persistentnpcs.profile;
 
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -12,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-/** Read-only, generation-bound snapshot of live NPC statistics. */
+/** Read-only, generation-bound snapshot: live ECS vitals and independently authoritative armor. */
 public final class NpcStatsSnapshotService {
     public record StatValue(float current, float minimum, float maximum) { }
     public record DefenseSnapshot(double value, String authority) { }
@@ -40,16 +41,7 @@ public final class NpcStatsSnapshotService {
         if (invalid != null) throw new IllegalStateException(invalid);
         EntityStatMap stats = store.getComponent(
                 authority.npcRef(), EntityStatMap.getComponentType());
-        if (stats == null) throw new IllegalStateException("ENTITY_STAT_MAP_MISSING");
-
-        double baseDefense = 0.0;
-        for (short slot = 0; slot < Math.min((short) 4, authority.armor().getCapacity()); slot++) {
-            ItemStack stack = authority.armor().getItemStack(slot);
-            if (!ItemStack.isEmpty(stack) && stack.getItem() != null
-                    && stack.getItem().getArmor() != null) {
-                baseDefense += stack.getItem().getArmor().getBaseDamageResistance();
-            }
-        }
+        double baseDefense = armorDefense(authority.armor());
         NpcStatsSnapshot snapshot = new NpcStatsSnapshot(
                 authority.profile().stableId(), authority.npcEntityId(), Instant.now(),
                 stat(stats, "Health"), stat(stats, "Stamina"), stat(stats, "Mana"),
@@ -71,7 +63,30 @@ public final class NpcStatsSnapshotService {
         return snapshot;
     }
 
+    /** Unspawned NPCs have no authoritative persisted vitals. Never invent them. */
+    public NpcStatsSnapshot captureEquipmentOnly(UUID npcStableId, ItemContainer armor,
+            UUID sessionId, long pageGeneration, long equipmentRevision) {
+        return new NpcStatsSnapshot(npcStableId, null, Instant.now(),
+                Optional.empty(), Optional.empty(), Optional.empty(),
+                Optional.of(new DefenseSnapshot(armorDefense(armor),
+                        "AUTHORITATIVE_ARMOR_BASE_DAMAGE_RESISTANCE")),
+                Map.of(), equipmentRevision, sessionId, pageGeneration);
+    }
+
+    private static double armorDefense(ItemContainer armor) {
+        double defense = 0.0;
+        for (short slot = 0; slot < Math.min(4, armor.getCapacity()); slot++) {
+            ItemStack stack = armor.getItemStack(slot);
+            if (!ItemStack.isEmpty(stack) && stack.getItem() != null
+                    && stack.getItem().getArmor() != null) {
+                defense += stack.getItem().getArmor().getBaseDamageResistance();
+            }
+        }
+        return defense;
+    }
+
     private static Optional<StatValue> stat(EntityStatMap map, String id) {
+        if (map == null) return Optional.empty();
         try {
             EntityStatValue value = map.get(id);
             return value == null ? Optional.empty()
