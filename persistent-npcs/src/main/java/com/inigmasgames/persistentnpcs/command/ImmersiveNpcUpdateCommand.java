@@ -7,6 +7,7 @@ import com.inigmasgames.persistentnpcs.profile.NpcProfileEditorService;
 import com.inigmasgames.persistentnpcs.profile.NpcProfileRegistry;
 import java.util.function.Supplier;
 import java.util.function.Consumer;
+import com.inigmasgames.persistentnpcs.voice.NpcVoiceRecordingService;
 
 /** Immersive extension installed under Hytale's parity-checked native /npc root. */
 public final class ImmersiveNpcUpdateCommand extends AbstractImmersiveNpcProfileCommand {
@@ -16,9 +17,10 @@ public final class ImmersiveNpcUpdateCommand extends AbstractImmersiveNpcProfile
             ImmersiveNpcRoleService roles,
             HytaleNpcAdapter adapter,
             HytaleConversationBridge conversations,
+            NpcVoiceRecordingService voiceRecorder,
             Supplier<String> runtimeBlocker,
             Consumer<String> diagnostics) {
-        super("update", true, editor, profiles, roles, adapter, conversations,
+        super("update", true, editor, profiles, roles, adapter, conversations, voiceRecorder,
                 runtimeBlocker, diagnostics);
     }
 }

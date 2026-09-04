@@ -4,6 +4,7 @@ import com.hypixel.hytale.registry.Registration;
 import com.hypixel.hytale.server.core.modules.voice.PlayerVoiceFrame;
 import com.hypixel.hytale.server.core.modules.voice.VoiceModule;
 import com.inigmasgames.persistentnpcs.voice.TranscribedPlayerUtterance;
+import com.inigmasgames.persistentnpcs.voice.VoiceCaptureLeaseManager;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -15,17 +16,24 @@ public final class OrbisRuntime implements AutoCloseable {
     private final OrbisTurnCoordinator coordinator;
     private final Registration interceptor;
     private final OrbisResourceScheduler resources;
+    private final VoiceCaptureLeaseManager captureLeases;
     private final AtomicBoolean closed = new AtomicBoolean();
 
     public OrbisRuntime(VoiceModule voiceModule, OrbisTurnCoordinator coordinator) {
-        this(voiceModule, coordinator, null);
+        this(voiceModule, coordinator, null, null);
     }
 
     public OrbisRuntime(VoiceModule voiceModule, OrbisTurnCoordinator coordinator,
             OrbisResourceScheduler resources) {
+        this(voiceModule, coordinator, resources, null);
+    }
+
+    public OrbisRuntime(VoiceModule voiceModule, OrbisTurnCoordinator coordinator,
+            OrbisResourceScheduler resources, VoiceCaptureLeaseManager captureLeases) {
         if (coordinator == null) throw new IllegalArgumentException("coordinator required");
         this.coordinator = coordinator;
         this.resources = resources;
+        this.captureLeases = captureLeases;
         interceptor = voiceModule == null || !voiceModule.isVoiceEnabled()
                 ? null : voiceModule.addPlayerVoiceInterceptor(this::acceptVoiceFrame);
     }
@@ -34,6 +42,8 @@ public final class OrbisRuntime implements AutoCloseable {
     private void acceptVoiceFrame(PlayerVoiceFrame frame) {
         if (frame == null || closed.get()) return;
         UUID playerId = frame.speaker().getUuid();
+        // Recorder ownership is decided before any byte copy or STT admission.
+        if (captureLeases != null && !captureLeases.admitConversationFrame(playerId)) return;
         UUID worldId = frame.worldId();
         Vector3dc position = frame.position();
         byte[] opus = frame.opus() == null ? new byte[0] : frame.opus().clone();

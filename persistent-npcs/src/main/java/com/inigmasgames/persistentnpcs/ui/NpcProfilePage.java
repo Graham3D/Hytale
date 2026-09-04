@@ -39,6 +39,8 @@ import com.inigmasgames.persistentnpcs.profile.NpcStatsSnapshotService;
 import com.inigmasgames.persistentnpcs.profile.NpcStatsSnapshotService.NpcStatsSnapshot;
 import com.inigmasgames.persistentnpcs.voice.VoicePresetRepository;
 import com.inigmasgames.persistentnpcs.voice.VoiceSampleType;
+import com.inigmasgames.persistentnpcs.voice.NpcVoiceRecordingService;
+import com.inigmasgames.persistentnpcs.voice.NpcVoiceRecordingService.Snapshot;
 import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceAuthoringService;
 import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService;
 import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService.Category;
@@ -88,7 +90,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             "APPEARANCE_COLOR_PREV", "APPEARANCE_COLOR_NEXT",
             "APPEARANCE_VARIANT", "APPEARANCE_VARIANT_PREV",
             "APPEARANCE_VARIANT_NEXT", "APPEARANCE_RANDOMIZE", "APPEARANCE_RESET",
-            "APPEARANCE_CANCEL", "APPEARANCE_SAVE");
+            "APPEARANCE_CANCEL", "APPEARANCE_SAVE", "VOICE_SELECT",
+            "VOICE_RECORD", "VOICE_STOP", "VOICE_PLAY_DRAFT", "VOICE_PLAY_SAVED",
+            "VOICE_STOP_PLAYBACK", "VOICE_RECORD_AGAIN", "VOICE_DELETE_DRAFT",
+            "VOICE_SAVE", "VOICE_DELETE_SAVED_PROMPT", "VOICE_DELETE_SAVED_CONFIRM",
+            "VOICE_DELETE_SAVED_CANCEL");
     private final String npcName;
     private final boolean update;
     private final NpcProfileEditorService editor;
@@ -138,6 +144,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private int appearanceVariantPage;
     private String appearanceEditorStatus = "Choose a registry-backed appearance option.";
     private boolean appearanceEditorError;
+    private final NpcVoiceRecordingService voiceRecorder;
+    private NpcVoiceRecordingService.Handle voiceRecording;
+    private ScheduledFuture<?> voiceRefreshTask;
+    private Snapshot voiceSnapshot;
 
     public NpcProfilePage(
             PlayerRef playerRef,
@@ -148,6 +158,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             NativeNpcInventoryController.LiveStorageAuthority liveStorageAuthority,
             NpcAuthoringSession authoringSession,
             NpcMeshPreviewSession preview,
+            NpcVoiceRecordingService voiceRecorder,
             Consumer<NpcProfile> committed,
             BiConsumer<Ref<EntityStore>, Store<EntityStore>> deleted,
             Consumer<String> diagnostics) {
@@ -163,6 +174,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         this.authoringSession = java.util.Objects.requireNonNull(
                 authoringSession, "Authoring session is required.");
         this.preview = preview;
+        this.voiceRecorder = voiceRecorder;
         this.diagnostics = diagnostics == null ? ignored -> { } : diagnostics;
         this.appearancePreview = new NpcAppearancePreviewService(
                 preview, editor.skinCodec(), this.diagnostics);
@@ -209,6 +221,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         authoringSession.addCleanup("inventory-persistence-flush", inventory::close);
         authoringSession.addCleanup("stats-refresh", this::closeStatsRefresh);
         authoringSession.addCleanup("profile-generation", this::cancelProfileGeneration);
+        authoringSession.addCleanup("voice-recorder", this::closeVoiceRecorder);
     }
 
     public ContainerWindow[] windows() {
@@ -346,6 +359,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 "#ContextCloseButton", authoringEvent("CLOSE_EDITOR"));
         bindProfileEditorEvents(events);
         bindAppearanceEditorEvents(events);
+        bindVoiceRecorderEvents(events);
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#DirtySaveButton", authoringEvent("DIRTY_SAVE"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
@@ -373,12 +387,17 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 == NpcAuthoringSession.EditorKind.PROFILE;
         boolean appearanceEditor = authoringSession.activeEditor()
                 == NpcAuthoringSession.EditorKind.APPEARANCE;
+        boolean voiceEditor = authoringSession.activeEditor()
+                == NpcAuthoringSession.EditorKind.VOICE;
         boolean contextualEditor = authoringSession.activeEditor()
-                != NpcAuthoringSession.EditorKind.NONE && !profileEditor && !appearanceEditor;
+                != NpcAuthoringSession.EditorKind.NONE && !profileEditor
+                && !appearanceEditor && !voiceEditor;
         commands.set("#ProfileEditorPage.Visible", profileEditor);
         if (profileEditor && profileDraft != null) setProfileEditorUi(commands);
         commands.set("#AppearanceEditorPage.Visible", appearanceEditor);
         if (appearanceEditor && appearanceDraft != null) setAppearanceEditorUi(commands);
+        commands.set("#VoiceRecorderPage.Visible", voiceEditor);
+        if (voiceEditor && voiceRecording != null) setVoiceRecorderUi(commands);
         commands.set("#ContextEditorPage.Visible", contextualEditor);
         if (contextualEditor) {
             String title = switch (authoringSession.activeEditor()) {
@@ -394,7 +413,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         }
         boolean browsing = activeField != null && browser != null;
         commands.set("#ProfilePage.Visible", !browsing && !profileEditor
-                && !appearanceEditor && !contextualEditor);
+                && !appearanceEditor && !voiceEditor && !contextualEditor);
         commands.set("#BrowserPage.Visible", browsing);
         if (browsing) {
             commands.set("#BrowserTitle.Text", "Select " + activeField.label());
@@ -405,6 +424,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         }
         built = true;
         startStatsRefresh(store);
+        startVoiceRefresh(store);
     }
 
     @Override
@@ -512,7 +532,19 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 return;
             }
             if ("OPEN_VOICE_EDITOR".equals(authoringAction)) {
-                authoringSession.openEditor(NpcAuthoringSession.EditorKind.VOICE);
+                if (voiceRecorder == null) throw new IllegalStateException(
+                        "Voice Recorder is unavailable in this server session.");
+                long generation = authoringSession.openEditor(
+                        NpcAuthoringSession.EditorKind.VOICE);
+                try {
+                    voiceRecording = voiceRecorder.open(playerRef.getUuid(),
+                            authoringSession.sessionId(), authoringSession.npcStableId(),
+                            npcName, authoringSession.pageGeneration(), generation);
+                    voiceSnapshot = voiceRecording.snapshot();
+                } catch (RuntimeException failure) {
+                    authoringSession.closeEditor(false);
+                    throw failure;
+                }
                 rebuild();
                 return;
             }
@@ -526,6 +558,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 if (authoringSession.activeEditor()
                         == NpcAuthoringSession.EditorKind.APPEARANCE) {
                     restoreAndClearAppearanceDraft();
+                } else if (authoringSession.activeEditor()
+                        == NpcAuthoringSession.EditorKind.VOICE) {
+                    closeVoiceRecorder();
                 }
                 authoringSession.closeEditor(false);
                 clearProfileDraft();
@@ -538,12 +573,18 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 } else if (authoringSession.activeEditor()
                         == NpcAuthoringSession.EditorKind.APPEARANCE) {
                     saveAppearanceDraft(store);
+                } else if (authoringSession.activeEditor()
+                        == NpcAuthoringSession.EditorKind.VOICE) {
+                    requireVoiceRecorder();
+                    voiceRecording.save();
+                    voiceSamples = editor.rescanVoiceSamples(npcName);
                 } else {
                     authoringSession.markSaved(authoringSession.activeEditor());
                 }
                 authoringSession.closeEditor(false);
                 clearProfileDraft();
                 clearAppearanceDraft(false);
+                closeVoiceRecorder();
                 rebuild();
                 return;
             }
@@ -551,6 +592,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 if (authoringSession.activeEditor()
                         == NpcAuthoringSession.EditorKind.APPEARANCE) {
                     restoreAndClearAppearanceDraft();
+                } else if (authoringSession.activeEditor()
+                        == NpcAuthoringSession.EditorKind.VOICE) {
+                    closeVoiceRecorder();
                 }
                 authoringSession.closeEditor(true);
                 clearProfileDraft();
@@ -565,6 +609,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             }
             if (authoringAction.startsWith("APPEARANCE_")) {
                 handleAppearanceAction(store, data, authoringAction);
+                return;
+            }
+            if (authoringAction.startsWith("VOICE_") && !"VOICE_RESCAN".equals(authoringAction)) {
+                handleVoiceAction(data, authoringAction);
                 return;
             }
             if ("PROFILE_FIELD".equals(authoringAction)) {
@@ -874,6 +922,227 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                                 .append("AppearanceVariantId", visibleVariants.get(index)));
             }
         }
+    }
+
+    private void bindVoiceRecorderEvents(UIEventBuilder events) {
+        for (VoiceSampleType type : VoiceSampleType.values()) {
+            events.addEventBinding(CustomUIEventBindingType.Activating,
+                    "#VoiceEmotion" + type.name(), voiceEvent("VOICE_SELECT")
+                            .append("VoiceEmotion", type.name()));
+        }
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceRecordButton", voiceEvent("VOICE_RECORD"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceStopButton", voiceEvent("VOICE_STOP"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoicePlayDraftButton", voiceEvent("VOICE_PLAY_DRAFT"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoicePlaySavedButton", voiceEvent("VOICE_PLAY_SAVED"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceStopPlaybackButton", voiceEvent("VOICE_STOP_PLAYBACK"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceRecordAgainButton", voiceEvent("VOICE_RECORD_AGAIN"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceDeleteDraftButton", voiceEvent("VOICE_DELETE_DRAFT"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceSaveButton", voiceEvent("VOICE_SAVE"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceDeleteSavedButton", voiceEvent("VOICE_DELETE_SAVED_PROMPT"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceDeleteSavedConfirmButton", voiceEvent("VOICE_DELETE_SAVED_CONFIRM"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceDeleteSavedCancelButton", voiceEvent("VOICE_DELETE_SAVED_CANCEL"));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#VoiceCloseButton", authoringEvent("CLOSE_EDITOR"));
+    }
+
+    private EventData voiceEvent(String action) {
+        EventData event = authoringEvent(action);
+        return voiceRecording == null ? event
+                : event.append("VoiceRecordingGeneration",
+                        Long.toString(voiceRecording.generation()));
+    }
+
+    private void handleVoiceAction(PageData data, String action) {
+        requireVoiceRecorder();
+        long suppliedGeneration = parseLong(data.voiceRecordingGeneration) == null
+                ? -1 : parseLong(data.voiceRecordingGeneration);
+        if (suppliedGeneration != voiceRecording.generation()) {
+            throw new IllegalStateException("Stale Voice Recorder action rejected.");
+        }
+        switch (action) {
+            case "VOICE_SELECT" -> voiceRecording.select(VoiceSampleType.valueOf(
+                    data.voiceEmotion == null ? "" : data.voiceEmotion
+                            .strip().toUpperCase(Locale.ROOT)));
+            case "VOICE_RECORD" -> voiceRecording.record();
+            case "VOICE_STOP" -> voiceRecording.stop();
+            case "VOICE_PLAY_DRAFT" -> voiceRecording.playDraft();
+            case "VOICE_PLAY_SAVED" -> voiceRecording.playSaved();
+            case "VOICE_STOP_PLAYBACK" -> voiceRecording.stopPlayback();
+            case "VOICE_RECORD_AGAIN" -> voiceRecording.recordAgain();
+            case "VOICE_DELETE_DRAFT" -> {
+                voiceRecording.deleteDraft();
+                authoringSession.markSaved(NpcAuthoringSession.EditorKind.VOICE);
+            }
+            case "VOICE_SAVE" -> {
+                voiceRecording.save();
+                authoringSession.markSaved(NpcAuthoringSession.EditorKind.VOICE);
+                voiceSamples = editor.rescanVoiceSamples(npcName);
+            }
+            case "VOICE_DELETE_SAVED_PROMPT" -> {
+                UICommandBuilder commands = new UICommandBuilder();
+                Snapshot snapshot = voiceRecording.snapshot();
+                commands.set("#VoiceDeleteWarning.Text", snapshot.selected()
+                        == VoiceSampleType.REFERENCE
+                                ? "Deleting Reference makes this NPC voice profile invalid until a new Reference is saved. The current file will be moved to recoverable trash."
+                                : "Delete saved " + snapshot.selected().label()
+                                        + "? The NPC will fall back to Reference. The file is moved to recoverable trash.");
+                commands.set("#VoiceDeleteConfirmPage.Visible", true);
+                sendUpdate(commands, false);
+                return;
+            }
+            case "VOICE_DELETE_SAVED_CONFIRM" -> {
+                voiceRecording.deleteSaved();
+                authoringSession.markSaved(NpcAuthoringSession.EditorKind.VOICE);
+                voiceSamples = editor.rescanVoiceSamples(npcName);
+                hideVoiceDeleteConfirmation();
+            }
+            case "VOICE_DELETE_SAVED_CANCEL" -> hideVoiceDeleteConfirmation();
+            default -> throw new IllegalArgumentException("Unknown Voice Recorder action.");
+        }
+        voiceSnapshot = voiceRecording.snapshot();
+        if (voiceSnapshot.draftAvailable()) {
+            authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.VOICE);
+        }
+        rebuild();
+    }
+
+    private void hideVoiceDeleteConfirmation() {
+        UICommandBuilder commands = new UICommandBuilder();
+        commands.set("#VoiceDeleteConfirmPage.Visible", false);
+        sendUpdate(commands, false);
+    }
+
+    private void requireVoiceRecorder() {
+        if (authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.VOICE
+                || voiceRecording == null) {
+            throw new IllegalStateException("Voice Recorder is not active.");
+        }
+    }
+
+    private void setVoiceRecorderUi(UICommandBuilder commands) {
+        Snapshot snapshot = voiceRecording.snapshot();
+        voiceSnapshot = snapshot;
+        commands.set("#VoiceRecorderTitle.Text", "VOICE RECORDER - " + npcName.toUpperCase(Locale.ROOT));
+        commands.set("#VoiceRecorderMeta.Text", "Recording generation "
+                + snapshot.recordingGeneration() + " · private creator-only playback");
+        commands.set("#VoiceSelectedEmotion.Text", snapshot.selected().label().toUpperCase(Locale.ROOT));
+        commands.set("#VoiceRecorderState.Text", snapshot.state().name());
+        boolean recording = snapshot.state() == NpcVoiceRecordingService.State.ARMED
+                || snapshot.state() == NpcVoiceRecordingService.State.RECORDING;
+        commands.set("#VoiceRecordingIndicator.Visible", recording);
+        commands.set("#VoiceRecordingIndicator.Text", snapshot.state()
+                == NpcVoiceRecordingService.State.ARMED
+                        ? "● ARMED" : "● RECORDING");
+        commands.set("#VoiceElapsed.Text", String.format(Locale.ROOT, "%.1f / %.1f sec",
+                snapshot.elapsedMillis() / 1000.0, snapshot.maximumMillis() / 1000.0));
+        commands.set("#VoiceWaveformText.Text", waveformText(snapshot.waveform()));
+        commands.set("#VoiceRecorderStatus.Text", snapshot.message());
+        commands.set("#VoiceRecorderStatus.Style.TextColor",
+                snapshot.error() ? "#e76f6f" : "#9ed7a6");
+        commands.set("#VoiceQualityMetrics.Text", snapshot.durationMillis() <= 0
+                ? "Record at least five seconds of natural speech."
+                : String.format(Locale.ROOT,
+                        "Duration %.2fs  ·  Peak %.1f dBFS  ·  RMS %.1f dBFS  ·  Clipping %.2f%%  ·  Silence %.1f%%  ·  Sequence gaps %d",
+                        snapshot.durationMillis() / 1000.0, snapshot.peakDbfs(),
+                        snapshot.rmsDbfs(), snapshot.clippingRatio() * 100.0,
+                        snapshot.silenceRatio() * 100.0, snapshot.sequenceGaps()));
+        commands.set("#VoiceProfileReadiness.Text", snapshot.profileReady()
+                ? "Voice profile READY. Missing optional emotions fall back to Reference."
+                : "Voice profile NOT READY. A valid Reference sample is required.");
+        commands.set("#VoiceProfileReadiness.Style.TextColor",
+                snapshot.profileReady() ? "#72d58b" : "#e76f6f");
+        for (VoiceSampleType type : VoiceSampleType.values()) {
+            VoicePresetRepository.SampleState state = snapshot.savedStates().getOrDefault(
+                    type, VoicePresetRepository.SampleState.MISSING);
+            String selector = "#VoiceSaved" + type.name();
+            commands.set(selector + ".Text", switch (state) {
+                case FOUND -> "Found";
+                case MISSING -> "Missing";
+                case INVALID -> "Invalid";
+            });
+            commands.set(selector + ".Style.TextColor", switch (state) {
+                case FOUND -> "#72d58b";
+                case MISSING -> type == VoiceSampleType.REFERENCE ? "#e76f6f" : "#d0a65a";
+                case INVALID -> "#e76f6f";
+            });
+        }
+        boolean busy = recording || snapshot.state() == NpcVoiceRecordingService.State.FINALIZING
+                || snapshot.state() == NpcVoiceRecordingService.State.SAVING;
+        commands.set("#VoiceRecordButton.Disabled", busy);
+        commands.set("#VoiceStopButton.Disabled", !recording);
+        commands.set("#VoicePlayDraftButton.Disabled", !snapshot.draftAvailable()
+                || snapshot.state() == NpcVoiceRecordingService.State.PLAYING);
+        commands.set("#VoiceStopPlaybackButton.Disabled",
+                snapshot.state() != NpcVoiceRecordingService.State.PLAYING);
+        commands.set("#VoiceRecordAgainButton.Disabled", busy);
+        commands.set("#VoiceDeleteDraftButton.Disabled", !snapshot.draftAvailable());
+        commands.set("#VoiceSaveButton.Disabled", !snapshot.draftAvailable()
+                || snapshot.state() != NpcVoiceRecordingService.State.READY);
+        VoicePresetRepository.SampleState selectedState = snapshot.savedStates().getOrDefault(
+                snapshot.selected(), VoicePresetRepository.SampleState.MISSING);
+        commands.set("#VoicePlaySavedButton.Disabled",
+                selectedState != VoicePresetRepository.SampleState.FOUND || busy);
+        commands.set("#VoiceDeleteSavedButton.Disabled",
+                selectedState == VoicePresetRepository.SampleState.MISSING || busy);
+    }
+
+    private static String waveformText(List<Double> waveform) {
+        if (waveform == null || waveform.isEmpty()) {
+            return "▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁";
+        }
+        String levels = "▁▂▃▄▅▆▇█";
+        StringBuilder result = new StringBuilder();
+        for (double amplitude : waveform) {
+            int index = Math.max(0, Math.min(levels.length() - 1,
+                    (int) Math.round(amplitude * (levels.length() - 1))));
+            if (!result.isEmpty()) result.append(' ');
+            result.append(levels.charAt(index));
+        }
+        return result.toString();
+    }
+
+    private void startVoiceRefresh(Store<EntityStore> store) {
+        if (voiceRefreshTask != null) return;
+        var world = store.getExternalData().getWorld();
+        voiceRefreshTask = statsScheduler.scheduleAtFixedRate(() -> {
+            if (!built || voiceRecording == null
+                    || authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.VOICE) {
+                return;
+            }
+            Snapshot before = voiceSnapshot;
+            Snapshot current;
+            try { current = voiceRecording.snapshot(); }
+            catch (RuntimeException ignored) { return; }
+            if (before != null && before.equals(current)) return;
+            voiceSnapshot = current;
+            if (current.draftAvailable()) {
+                authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.VOICE);
+            }
+            world.execute(() -> {
+                if (!built || voiceRecording == null) return;
+                UICommandBuilder commands = new UICommandBuilder();
+                setVoiceRecorderUi(commands);
+                sendUpdate(commands, false);
+            });
+        }, 100, 100, TimeUnit.MILLISECONDS);
+    }
+
+    private void closeVoiceRecorder() {
+        NpcVoiceRecordingService.Handle current = voiceRecording;
+        voiceRecording = null;
+        voiceSnapshot = null;
+        if (current != null) current.close();
     }
 
     private void handleAppearanceAction(Store<EntityStore> store, PageData data,
@@ -1565,7 +1834,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                             || isEquipmentSection(parseSection(data.section)))
                     ? NpcAuthoringPermissions.GEAR : NpcAuthoringPermissions.INVENTORY;
             case "INFINITE_AMMO", "ARMOR_VISIBILITY" -> NpcAuthoringPermissions.GEAR;
-            case "VOICE_RESCAN", "OPEN_VOICE_EDITOR" -> NpcAuthoringPermissions.VOICE;
+            case "VOICE_RESCAN", "OPEN_VOICE_EDITOR", "VOICE_SELECT", "VOICE_RECORD",
+                    "VOICE_STOP", "VOICE_PLAY_DRAFT", "VOICE_PLAY_SAVED",
+                    "VOICE_STOP_PLAYBACK", "VOICE_RECORD_AGAIN", "VOICE_DELETE_DRAFT",
+                    "VOICE_SAVE", "VOICE_DELETE_SAVED_PROMPT",
+                    "VOICE_DELETE_SAVED_CONFIRM", "VOICE_DELETE_SAVED_CANCEL"
+                    -> NpcAuthoringPermissions.VOICE;
             case "OPEN_APPEARANCE_EDITOR", "APPEARANCE_PRIMARY",
                     "APPEARANCE_CATEGORY", "APPEARANCE_SEARCH",
                     "APPEARANCE_PAGE_PREV", "APPEARANCE_PAGE_NEXT",
@@ -2114,6 +2388,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append(new KeyedCodec<>("AppearanceVariantId", Codec.STRING),
                         (data, value) -> data.appearanceVariantId = value,
                         data -> data.appearanceVariantId).add()
+                .append(new KeyedCodec<>("VoiceEmotion", Codec.STRING),
+                        (data, value) -> data.voiceEmotion = value,
+                        data -> data.voiceEmotion).add()
+                .append(new KeyedCodec<>("VoiceRecordingGeneration", Codec.STRING),
+                        (data, value) -> data.voiceRecordingGeneration = value,
+                        data -> data.voiceRecordingGeneration).add()
                 .build();
 
         private String open;
@@ -2155,5 +2435,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         private String appearanceOptionId;
         private String appearanceColorId;
         private String appearanceVariantId;
+        private String voiceEmotion;
+        private String voiceRecordingGeneration;
     }
 }

@@ -27,6 +27,7 @@ import com.inigmasgames.persistentnpcs.authoring.NpcAuthoringSessionRegistry;
 import com.inigmasgames.persistentnpcs.ui.NpcMeshPreviewSession;
 import com.inigmasgames.persistentnpcs.ui.NpcProfilePage;
 import com.inigmasgames.persistentnpcs.ui.NativeNpcInventoryController;
+import com.inigmasgames.persistentnpcs.voice.NpcVoiceRecordingService;
 import java.util.function.Supplier;
 import java.util.function.Consumer;
 
@@ -38,6 +39,7 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
     private final ImmersiveNpcRoleService roles;
     private final HytaleNpcAdapter adapter;
     private final HytaleConversationBridge conversations;
+    private final NpcVoiceRecordingService voiceRecorder;
     private final Supplier<String> runtimeBlocker;
     private final Consumer<String> diagnostics;
 
@@ -49,6 +51,7 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
             ImmersiveNpcRoleService roles,
             HytaleNpcAdapter adapter,
             HytaleConversationBridge conversations,
+            NpcVoiceRecordingService voiceRecorder,
             Supplier<String> runtimeBlocker,
             Consumer<String> diagnostics) {
         super(commandName, "Immersive NPC profile " + (update ? "update" : "creation"));
@@ -58,6 +61,7 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
         this.roles = roles;
         this.adapter = adapter;
         this.conversations = conversations;
+        this.voiceRecorder = voiceRecorder;
         this.runtimeBlocker = runtimeBlocker == null ? () -> "" : runtimeBlocker;
         this.diagnostics = diagnostics == null ? ignored -> { } : diagnostics;
         requirePermission(NpcAuthoringPermissions.OPEN);
@@ -136,6 +140,7 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
                 page = new NpcProfilePage(
                         playerRef, name, update, editor, playerInventory,
                         liveStorageAuthority, authoringSession, preview,
+                        voiceRecorder,
                         profile -> commit(store, playerRef, profile),
                         (viewerRef, eventStore) -> delete(
                                 eventStore, selectedProfile),

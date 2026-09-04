@@ -76,6 +76,16 @@ public final class LocalWorkerSpeechToTextProvider implements SpeechToTextProvid
         TurboVoiceWorker current = worker;
         if (current != null) current.cancel(requestOrSessionId);
     }
+
+    public CompletableFuture<VoiceDraftAudio> decodeRecording(
+            UUID requestId, List<byte[]> opusFrames, int waveformBuckets) {
+        return bootstrapMoonshine().thenCompose(ignored -> worker().decodeRecording(
+                requestId, immutableFrames(opusFrames), waveformBuckets));
+    }
+
+    public CompletableFuture<List<byte[]>> encodeSavedWave(java.nio.file.Path path) {
+        return bootstrapMoonshine().thenCompose(ignored -> worker().encodeSavedWave(path));
+    }
     @Override public String providerId() { return "moonshine-faster-whisper-local-worker"; }
     @Override public AiServiceKind serviceKind() { return AiServiceKind.SPEECH_TO_TEXT; }
     @Override public ProviderExecutionMode executionMode() { return ProviderExecutionMode.LOCAL; }

@@ -8,7 +8,7 @@ Authoritative design: `hytale-taverns/Orbis NPC Authoring Studio Technical Desig
 
 Design SHA-256: `7F1FD4FE5E7C37B90A2CF79B2DBD09CBC7C565002FD5F6052E5C388809F0FDC9`
 
-Repository baseline entering A5: `3bafb58cead0d314366bc8e756c87a5fa86e39dc`
+Repository baseline entering A6: `e4f8d67ca5b9fd829e17e430049ffb2975a1d8c4`
 
 A1 source checkpoint: `4f32daff921eb6d5cec8f5c34981b454ae0a0584`
 
@@ -23,8 +23,8 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | A2 — complete coupled inventory | Complete in R131 | PASS | PASS: full operator transaction matrix | PASS |
 | A3 — gear/loadout/live stats | Complete in R132 | PASS | PASS | PASS |
 | A4 — profile editor/generate | Complete in R133.1 | PASS | PASS: operator confirmed editor and workspace behavior | PASS |
-| A5 — appearance editor | Complete in R134 source | PASS | Pending R134 connected validation | HOLD FOR CONNECTED PASS |
-| A6 — voice recorder | Not activated | Not run | Not run | BLOCKED |
+| A5 — appearance editor | Complete in R134.2 | PASS | PASS | PASS |
+| A6 — voice recorder | Complete in R135 | PASS | Pending R135 connected validation | HOLD FOR CONNECTED PASS |
 | A7 — integration/polish | Not activated | Not run | Not run | BLOCKED |
 
 The model-distillation subsystem remains paused and isolated. No D6/D7, training,
@@ -542,3 +542,112 @@ The original R134 candidate is independently preserved at
 `C:\HytaleRollback\NpcAuthoringStudio-A5-R134-2026-09-04\ImmersiveNPCs-0.6.3-R134-NPC-AUTHORING-STUDIO-A5-APPEARANCE.jar`
 (2,788,451 bytes; SHA-256
 `DDDBDF6F575469476C934DE72AFFFF97DB7810A83C273089CEE96949E073DF5A`).
+
+### R134.2 connected acceptance and A6 rollback authority
+
+The operator confirmed the complete A5 connected matrix as PASS on R134.2. The exact
+accepted binary was reconciled before A6 work and preserved outside the active save:
+
+- accepted/deployed filename: `ImmersiveNPCs-0.6.3-R134.2-NPC-AUTHORING-STUDIO-A5-POLISH.jar`;
+- accepted binary size: `2,924,533` bytes;
+- accepted binary SHA-256:
+  `CABEB3D78BF88B9755498AEDD5F8EE29ED1711039F84EEBCC3721B9851631222`;
+- independent rollback:
+  `C:\HytaleRollback\NpcAuthoringStudio-A5-R134.2-CONNECTED-PASS-2026-09-04\ImmersiveNPCs-0.6.3-R134.2-NPC-AUTHORING-STUDIO-A5-POLISH.jar`;
+- source checkpoint: `e4f8d67ca5b9fd829e17e430049ffb2975a1d8c4`.
+
+## A6 — Voice Recorder
+
+### Current-build voice preflight
+
+The A6 implementation was reconciled against the installed Hytale 0.6.3 voice API and
+the current Orbis/Moonshine/Chatterbox paths. `VoiceModule` exposes priority-ordered
+`PlayerVoiceInterceptor` registration, callback-owned `PlayerVoiceFrame` Opus bytes,
+sequence/timestamp metadata, final delivery suppression through `drop()`, and creator-
+scoped playback through `openDirectVoice(Collection<UUID>)` plus `VoiceSpeaker.play`.
+The installed `VoiceSpeaker` enforces a maximum of 512 bytes per Opus frame; it does not
+impose a 512-frame clip limit. The existing local worker already owns PyAV/Opus and is
+therefore reused for model-free decode/encode instead of introducing a second codec
+stack.
+
+### Exclusive capture and privacy boundary
+
+`VoiceCaptureLeaseManager` is the single per-player authority for `NONE`,
+`ORBIS_CONVERSATION`, and `VOICE_SAMPLE_RECORDING`. Orbis now checks that lease before
+copying an Opus frame or admitting any STT work. The recorder is registered at
+`EventPriority.LAST`, after the Orbis interceptor, and drops accepted microphone frames
+before Hytale performs final routing. Its callback is limited to session/generation
+lookup, frame validation, a bounded opaque-byte copy, sequence/timestamp copy, drop,
+non-blocking queue offer, and return. Decode, analysis, disk access, UI work, Moonshine,
+and Chatterbox never run in the callback.
+
+Capture is bounded to one recorder per player, four concurrent sessions, 1,600 queued
+frames, 1 MiB, a five-second armed timeout, and thirty seconds. Queue overflow, no input,
+timeout, invalid frame sizes, stale generations, excessive gaps/out-of-order frames,
+short audio, silence, and clipping fail the recorder attempt visibly without modifying
+an authoritative sample. Stop releases the microphone lease before finalization.
+Page/editor close, disconnect, world/session cleanup, playback stop, and plugin shutdown
+invalidate late work and idempotently release frames, drafts, speakers, registrations,
+and leases.
+
+### Finalization, playback, persistence, and readiness
+
+After Stop, ordered Opus frames are decoded off-thread by the existing STT-role worker
+without calling transcription or warming a speech model. The worker produces 48 kHz
+mono PCM16 WAV plus duration, peak dBFS, RMS dBFS, clipping, silence, decode time, and a
+bounded waveform envelope. Raw Opus, PCM, and WAV data never crosses the Custom UI
+payload boundary and is never logged.
+
+Draft playback reuses the ordered captured Opus frames. Saved-sample playback uses the
+same worker only for WAV-to-Opus encoding and does not load Chatterbox. Both use a direct
+voice speaker whose audience is exactly the creator. Playback holds the recording lease,
+so its audio cannot enter Orbis capture, STT, NPC turns, memory, beliefs, relationships,
+tasks, actions, or the canonical speech ledger. Playback generation checks prevent a
+late saved-WAV encode from opening a speaker after Stop, editor close, disconnect, or
+session replacement.
+
+`NpcVoiceSamplePersistenceService` writes profile-local temporary drafts and retains
+`VoicePresetRepository` as canonical ownership. Save rechecks the per-emotion SHA-256,
+validates a temporary sibling WAV, preserves a rollback copy, atomically replaces the
+canonical sample, rereads and hashes it, appends a metadata-only audit event, rescans
+voice readiness, and invalidates resident Chatterbox conditioning aliases. Failure
+retains the prior canonical sample and, where safe, the draft. Delete moves a canonical
+sample to recoverable profile-local trash, rescans, and invalidates conditioning.
+Reference deletion has a stronger confirmation warning; missing optional emotions keep
+the existing Reference fallback semantics.
+
+### A6 UI and deterministic gate
+
+The Voice Recorder workspace now exposes the seven canonical emotions and their saved
+statuses, a conspicuous recording indicator, authoritative elapsed/max duration,
+bounded waveform, quality metrics, readiness feedback, Record, Stop, private draft and
+saved playback, Stop Playback, Record Again, Delete Draft, Save Sample, recoverable
+Delete Saved confirmation, and Return to Studio. `Save Sample` remains the final commit
+action. Every event is allowlisted and revalidates authoring session, viewer, stable NPC,
+page/editor/recording generations, active editor, and
+`immersivenpcs.authoring.voice` permission.
+
+The full deterministic suite passes against the installed API, including the new R135
+gate and every prior A0–A5 inventory, gear, profile, appearance, cognition, Sentinel,
+evaluation, and 8,100-scenario conversation regression. The R135 gate exercises capture
+exclusivity/no dual admission, frame bounds, sequence wrap/gaps/duplicates/order,
+short/silent/clipped/valid quality policy, all seven canonical emotion paths, atomic
+save/replacement, rollback, stale conflict rejection, injected draft-read failure,
+recoverable optional/Reference deletion, readiness/fallback, rescan, cache invalidation,
+path containment, temp cleanup, privacy/model-free source contracts, state machine,
+lifecycle cleanup markers, UI selectors, manifest, and installer identity. Live model
+tests remain intentionally skipped.
+
+The R135 connected-test candidate is:
+
+- source artifact:
+  `C:\HytaleMigration\persistent-npcs\dist\ImmersiveNPCs-0.6.3-R135-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER.jar`;
+- deployed artifact:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R135-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER.jar`;
+- size: `2,975,631` bytes;
+- SHA-256: `67D50B949F1CC260EAFAF4DDD9E83ED208FDF2E758B68444E10BD80BFDA237B2`;
+- source/deployed hash equality: verified;
+- installed Immersive NPC JAR count: exactly one.
+
+A6 automated status: **PASS**. Connected-client status: **PENDING**. A7 remains
+unauthorized and was not started.

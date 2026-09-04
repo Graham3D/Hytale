@@ -88,6 +88,30 @@ public final class AiServiceRouter implements AutoCloseable {
      * Provider lifetime remains owned by this router.
      */
     public SpeechToTextProvider authoritativeSpeechToText() { return stt.primary; }
+
+    public CompletableFuture<com.inigmasgames.persistentnpcs.voice.VoiceDraftAudio>
+            decodeVoiceDraft(UUID requestId, List<byte[]> frames, int waveformBuckets) {
+        if (stt.primary instanceof LocalWorkerSpeechToTextProvider local) {
+            return local.decodeRecording(requestId, frames, waveformBuckets);
+        }
+        return CompletableFuture.failedFuture(new IllegalStateException(
+                "The configured STT provider does not expose the local Opus decoder."));
+    }
+
+    public CompletableFuture<List<byte[]>> encodeSavedVoice(Path path) {
+        if (stt.primary instanceof LocalWorkerSpeechToTextProvider local) {
+            return local.encodeSavedWave(path);
+        }
+        return CompletableFuture.failedFuture(new IllegalStateException(
+                "The configured STT provider does not expose the local Opus encoder."));
+    }
+
+    public CompletableFuture<Integer> invalidateVoiceConditioning(Path changedSample) {
+        if (tts.primary instanceof LocalWorkerTextToSpeechProvider local) {
+            return local.invalidateConditioningCache();
+        }
+        return CompletableFuture.completedFuture(0);
+    }
     public LlmProvider languageModel() { return llm; }
     public TextToSpeechProvider textToSpeech() { return tts; }
     /** Orbis fail-closed TTS selection; no legacy/provider fallback is traversed. */

@@ -117,6 +117,8 @@ import com.inigmasgames.persistentnpcs.voice.VoiceRuntimeConfigRepository;
 import com.inigmasgames.persistentnpcs.voice.HytaleSpatialVoiceAdapter;
 import com.inigmasgames.persistentnpcs.voice.PlayerUtteranceAudienceService;
 import com.inigmasgames.persistentnpcs.voice.VoiceInteractionTraceStore;
+import com.inigmasgames.persistentnpcs.voice.VoiceCaptureLeaseManager;
+import com.inigmasgames.persistentnpcs.voice.NpcVoiceRecordingService;
 import com.inigmasgames.persistentnpcs.orbis.HytalePttBoundaryAdapter;
 import com.inigmasgames.persistentnpcs.orbis.OrbisAudienceGateway;
 import com.inigmasgames.persistentnpcs.orbis.OrbisDiagnostics;
@@ -140,7 +142,7 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R134.2-NPC-AUTHORING-STUDIO-A5-POLISH";
+    public static final String REVISION = "R135-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
@@ -161,6 +163,8 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
     private SourcedBeliefStore sourcedBeliefStore;
     private AiServiceRouter aiServices;
     private OrbisRuntime orbisRuntime;
+    private VoiceCaptureLeaseManager voiceCaptureLeases;
+    private NpcVoiceRecordingService voiceRecorder;
     private OrbisResourceScheduler resourceScheduler;
     private OrbisStartupCoordinator startupCoordinator;
     private OrbisDegradationSentinel degradationSentinel;
@@ -500,6 +504,7 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
                 return bridge.prefetchVoiceContext(playerId, worldId);
             }
         };
+        voiceCaptureLeases = new VoiceCaptureLeaseManager(frameworkLog);
         OrbisTurnCoordinator orbisCoordinator = OrbisRuntimeFactory.create(
                 new OrbisRuntimeFactory.Composition(
                         aiServices.authoritativeSpeechToText(), orbisAudience, bridge,
@@ -512,7 +517,10 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
                         frameworkLog));
         orbisRuntime = new OrbisRuntime(
                 com.hypixel.hytale.server.core.modules.voice.VoiceModule.get(),
-                orbisCoordinator, resourceScheduler);
+                orbisCoordinator, resourceScheduler, voiceCaptureLeases);
+        voiceRecorder = new NpcVoiceRecordingService(
+                com.hypixel.hytale.server.core.modules.voice.VoiceModule.get(),
+                voiceCaptureLeases, voicePresets, aiServices, frameworkLog);
         regressionCandidates.setIdleGate(() -> startupCoordinator.ready()
                 && resourceScheduler.conversationServiceable()
                 && resourceScheduler.snapshot().activeJobs() == 0
@@ -574,10 +582,10 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
         nativeNpcCommands.install(
                 new ImmersiveNpcCreateCommand(profileEditor, profileRegistry,
                         immersiveRoles, npcAdapter, bridge,
-                        runtimeCompatibility::blockerMessage, frameworkLog),
+                        voiceRecorder, runtimeCompatibility::blockerMessage, frameworkLog),
                 new ImmersiveNpcUpdateCommand(profileEditor, profileRegistry,
                         immersiveRoles, npcAdapter, bridge,
-                        runtimeCompatibility::blockerMessage, frameworkLog),
+                        voiceRecorder, runtimeCompatibility::blockerMessage, frameworkLog),
                 new ImmersiveNpcTraceCommand(profileRegistry, npcTraces));
         getCommandRegistry().registerCommand(
                 new CognitionInspectorCommand(profileRegistry, cognitionTraces,
@@ -599,6 +607,7 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
                 event -> {
                     UUID playerId = event.getPlayerRef().getUuid();
                     if (orbisRuntime != null) orbisRuntime.playerDisconnected(playerId);
+                    if (voiceRecorder != null) voiceRecorder.closeForPlayer(playerId);
                     bridge.disconnected(playerId);
                     npcTraces.disconnect(playerId);
                     NpcMeshPreviewSession.close(playerId);
@@ -659,6 +668,9 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
         }
         if (npcTraces != null) {
             npcTraces.close();
+        }
+        if (voiceRecorder != null) {
+            voiceRecorder.close();
         }
         if (orbisRuntime != null) {
             orbisRuntime.close();

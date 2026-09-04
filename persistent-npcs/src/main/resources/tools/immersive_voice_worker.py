@@ -17,6 +17,7 @@ import hashlib
 import tempfile
 import threading
 import importlib.metadata
+import wave
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -486,6 +487,76 @@ class VoiceWorker:
             raise RuntimeError(f"invalid Opus frame sizes (never truncated): {invalid[:8]}")
         return packet_bytes
 
+    def decode_recording(self, request):
+        """Decode bounded recorder Opus without invoking Moonshine or any model."""
+        started = time.perf_counter()
+        encoded = [base64.b64decode(value, validate=True)
+                   for value in request.get("frames", [])]
+        if not encoded:
+            raise ValueError("no microphone frames were supplied")
+        pcm = self.decode_opus(encoded, 48000)
+        if pcm.size == 0:
+            raise ValueError("Opus decoder produced no microphone audio")
+        absolute = self.np.abs(pcm.astype(self.np.int32))
+        normalized = pcm.astype(self.np.float32) / 32768.0
+        peak = float(self.np.max(self.np.abs(normalized))) if pcm.size else 0.0
+        rms = float(self.np.sqrt(self.np.mean(
+            self.np.square(normalized, dtype=self.np.float64)))) if pcm.size else 0.0
+        clipping = float(self.np.mean(absolute >= 32112))
+        silence = float(self.np.mean(absolute <= 328))
+        bucket_count = max(8, min(64, int(request.get("waveformBuckets", 32))))
+        waveform = []
+        for bucket in self.np.array_split(absolute, bucket_count):
+            waveform.append(round(float(bucket.max()) / 32768.0, 4)
+                            if bucket.size else 0.0)
+        output = io.BytesIO()
+        with wave.open(output, "wb") as wav:
+            wav.setnchannels(1)
+            wav.setsampwidth(2)
+            wav.setframerate(48000)
+            wav.writeframes(pcm.astype("<i2", copy=False).tobytes())
+        return {
+            "wav": base64.b64encode(output.getvalue()).decode("ascii"),
+            "durationMillis": round(pcm.size * 1000 / 48000),
+            "peakDbfs": round(dbfs(peak), 2),
+            "rmsDbfs": round(dbfs(rms), 2),
+            "clippingRatio": round(clipping, 6),
+            "silenceRatio": round(silence, 6),
+            "waveform": waveform,
+            "decodeMs": round((time.perf_counter() - started) * 1000),
+            "workerPid": os.getpid(),
+        }
+
+    def encode_saved_wav(self, request):
+        """Encode a repository-owned WAV for direct/private preview; no TTS load."""
+        source = Path(str(request.get("path", ""))).resolve()
+        if not source.is_file():
+            raise ValueError("saved WAV is missing")
+        chunks = []
+        with self.av.open(str(source)) as container:
+            resampler = self.av.AudioResampler(format="s16", layout="mono", rate=48000)
+            for frame in container.decode(audio=0):
+                for converted in resampler.resample(frame):
+                    chunks.append(converted.to_ndarray().reshape(-1)
+                                  .astype(self.np.int16, copy=False))
+            for converted in resampler.resample(None):
+                chunks.append(converted.to_ndarray().reshape(-1)
+                              .astype(self.np.int16, copy=False))
+        pcm = self.np.concatenate(chunks) if chunks else self.np.zeros(0, dtype=self.np.int16)
+        if pcm.size == 0:
+            raise ValueError("saved WAV contains no audio")
+        frames = self.encode_opus(pcm)
+        return {"frames": [base64.b64encode(value).decode("ascii") for value in frames],
+                "workerPid": os.getpid()}
+
+    def invalidate_conditioning(self, request):
+        """New content hashes prevent stale reuse; clear resident aliases immediately too."""
+        cleared = len(self.voice_conditionals)
+        self.voice_conditionals.clear()
+        self.reference_identity_cache.clear()
+        return {"cleared": cleared, "conditioningCacheEntries": 0,
+                "workerPid": os.getpid()}
+
     def transcribe(self, request):
         if not self.stt_enabled:
             raise RuntimeError("transcription is unavailable on the TTS worker")
@@ -928,6 +999,12 @@ def main():
                 result = worker.warm_stt(request)
             elif operation == "transcribe":
                 result = worker.transcribe(request)
+            elif operation == "decode_recording":
+                result = worker.decode_recording(request)
+            elif operation == "encode_saved_wav":
+                result = worker.encode_saved_wav(request)
+            elif operation == "invalidate_conditioning":
+                result = worker.invalidate_conditioning(request)
             elif operation == "stt_stream_start":
                 result = worker.start_streaming_stt(request)
             elif operation == "stt_stream_audio":

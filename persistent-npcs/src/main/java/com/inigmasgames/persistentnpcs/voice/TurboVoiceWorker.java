@@ -220,6 +220,50 @@ public final class TurboVoiceWorker implements AutoCloseable {
         return transcribe(UUID.randomUUID(), frames);
     }
 
+    /** Model-free Opus decode/normalization used only by the authoring recorder. */
+    public CompletableFuture<VoiceDraftAudio> decodeRecording(
+            UUID requestId, List<byte[]> frames, int waveformBuckets) {
+        JsonObject request = baseRequest(requestId, "decode_recording");
+        JsonArray encoded = new JsonArray();
+        for (byte[] frame : frames) {
+            if (frame == null || frame.length < 1 || frame.length > 512) {
+                return CompletableFuture.failedFuture(
+                        new IllegalArgumentException("Invalid recorder Opus frame."));
+            }
+            encoded.add(Base64.getEncoder().encodeToString(frame));
+        }
+        request.add("frames", encoded);
+        request.addProperty("waveformBuckets", Math.max(8, Math.min(64, waveformBuckets)));
+        return submitWhenReady(request).thenApply(response -> {
+            byte[] wav = Base64.getDecoder().decode(text(response, "wav"));
+            JsonArray envelope = response.getAsJsonArray("waveform");
+            List<Double> waveform = new ArrayList<>(envelope.size());
+            envelope.forEach(value -> waveform.add(value.getAsDouble()));
+            return new VoiceDraftAudio(wav, longValue(response, "durationMillis"),
+                    response.get("peakDbfs").getAsDouble(),
+                    response.get("rmsDbfs").getAsDouble(),
+                    response.get("clippingRatio").getAsDouble(),
+                    response.get("silenceRatio").getAsDouble(), waveform,
+                    longValue(response, "decodeMs"));
+        });
+    }
+
+    public CompletableFuture<List<byte[]>> encodeSavedWave(Path path) {
+        JsonObject request = baseRequest("encode_saved_wav");
+        request.addProperty("path", path.toAbsolutePath().normalize().toString());
+        return submitWhenReady(request).thenApply(response -> {
+            JsonArray encoded = response.getAsJsonArray("frames");
+            List<byte[]> frames = new ArrayList<>(encoded.size());
+            encoded.forEach(value -> frames.add(Base64.getDecoder().decode(value.getAsString())));
+            return List.copyOf(frames);
+        });
+    }
+
+    public CompletableFuture<Integer> invalidateConditioning() {
+        return submitWhenReady(baseRequest("invalidate_conditioning"))
+                .thenApply(response -> (int) longValue(response, "cleared"));
+    }
+
     public CompletableFuture<SpeechTranscript> transcribe(
             UUID requestId, List<byte[]> frames) {
         JsonObject request = baseRequest(requestId, "transcribe");

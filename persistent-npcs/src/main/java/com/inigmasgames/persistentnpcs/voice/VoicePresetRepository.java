@@ -226,6 +226,39 @@ public final class VoicePresetRepository {
     public Path voicesDirectory() { return voicesDirectory; }
     public Path workerScript() { return voicesDirectory.resolve("immersive_voice_worker.py"); }
 
+    /** Public, sanitizer-backed ownership boundary used by the in-game recorder. */
+    public Path profileVoiceDirectory(String profileName) {
+        return canonicalProfileDirectory(profileName);
+    }
+
+    public Path canonicalSamplePath(String profileName, VoiceSampleType type) {
+        Path root = canonicalProfileDirectory(profileName);
+        Path resolved = root.resolve(expectedFilename(profileName,
+                java.util.Objects.requireNonNull(type, "voice sample type"))).normalize();
+        if (!resolved.startsWith(root) || !root.equals(resolved.getParent())) {
+            throw new IllegalArgumentException("Unsafe canonical voice sample path");
+        }
+        return resolved;
+    }
+
+    /** Content revision, rather than timestamp identity, for stale-write protection. */
+    public String sampleRevision(String profileName, VoiceSampleType type) {
+        Path path = canonicalSamplePath(profileName, type);
+        if (!Files.isRegularFile(path)) return "MISSING";
+        try {
+            java.security.MessageDigest digest = java.security.MessageDigest
+                    .getInstance("SHA-256");
+            try (var input = Files.newInputStream(path)) {
+                byte[] buffer = new byte[8192];
+                int read;
+                while ((read = input.read(buffer)) >= 0) digest.update(buffer, 0, read);
+            }
+            return java.util.HexFormat.of().formatHex(digest.digest());
+        } catch (Exception failure) {
+            throw new IllegalStateException("Could not revise voice sample", failure);
+        }
+    }
+
     public void installWorkerScript() {
         JsonFiles.copyResourceReplacing(VoicePresetRepository.class,
                 "/tools/immersive_voice_worker.py", workerScript());

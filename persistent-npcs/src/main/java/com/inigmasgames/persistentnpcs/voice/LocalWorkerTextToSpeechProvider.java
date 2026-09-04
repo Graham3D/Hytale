@@ -67,6 +67,13 @@ public final class LocalWorkerTextToSpeechProvider implements TextToSpeechProvid
             java.util.List<java.nio.file.Path> references) {
         return worker().warmTtsModel(references);
     }
+
+    /** Does not start Chatterbox merely to invalidate a cache that is not resident. */
+    public CompletableFuture<Integer> invalidateConditioningCache() {
+        TurboVoiceWorker current = worker;
+        return current == null ? CompletableFuture.completedFuture(0)
+                : current.invalidateConditioning();
+    }
     @Override public String providerId() { return "chatterbox-turbo-local-worker"; }
     @Override public AiServiceKind serviceKind() { return AiServiceKind.TEXT_TO_SPEECH; }
     @Override public ProviderExecutionMode executionMode() { return ProviderExecutionMode.LOCAL; }
