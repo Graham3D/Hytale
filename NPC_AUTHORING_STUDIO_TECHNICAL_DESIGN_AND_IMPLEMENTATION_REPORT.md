@@ -517,8 +517,28 @@ The deployed connected-test candidate is:
 
 The accepted A4 rollback listed above remains outside the active save and is unchanged.
 
-A5 automated status: **PASS**. Connected-client status: **PENDING**. R134 must remain a
+A5 automated status: **PASS**. Connected-client status: **PENDING**. R134.1 must remain a
 validation candidate until the operator confirms registry browsing, preview changes,
 save/cancel/reset/randomize, spawned and unspawned persistence, close/reopen and restart
 behavior, stale/failure handling, equipment continuity, and viewer restoration. A6 is
 not authorized.
+
+### R134.1 current-client UI parser hotfix
+
+The first R134 connection attempt exposed a current-client parser rejection at
+`ImmersiveNpcProfile.ui (368:158)`: the fallback label contained a `\n` escape, while
+this UI grammar permits a backslash only before another backslash or a quote. R134.1
+replaces that text with parser-safe single-line content and adds a deterministic gate
+that rejects unsupported backslash escapes in the complete UI document.
+
+- deployed path: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R134.1-NPC-AUTHORING-STUDIO-A5-UI-PARSER-HOTFIX.jar`;
+- size: `2,788,471` bytes;
+- SHA-256: `6496AD7A18C63A161F9C4A732AC06892C5AB219545597EE2FA55E309CC80EB08`;
+- installed Immersive NPC JAR count: exactly one;
+- build/deployed hash equality: verified;
+- full deterministic suite: PASS against the installed `0.6.3` release server API.
+
+The original R134 candidate is independently preserved at
+`C:\HytaleRollback\NpcAuthoringStudio-A5-R134-2026-09-04\ImmersiveNPCs-0.6.3-R134-NPC-AUTHORING-STUDIO-A5-APPEARANCE.jar`
+(2,788,451 bytes; SHA-256
+`DDDBDF6F575469476C934DE72AFFFF97DB7810A83C273089CEE96949E073DF5A`).

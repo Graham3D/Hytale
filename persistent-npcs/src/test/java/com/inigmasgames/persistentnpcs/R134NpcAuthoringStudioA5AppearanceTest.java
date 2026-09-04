@@ -142,6 +142,8 @@ public final class R134NpcAuthoringStudioA5AppearanceTest {
                     && randomize < reset && reset < cancel && cancel < save;
             assert !ui.contains("Common/Cosmetics/")
                     : "The plugin must not copy or embed Hytale-owned cosmetics assets";
+            assert !ui.contains("\\")
+                    : "Custom UI text must not contain unsupported client escape sequences";
             String preview = source("src/main/java/com/inigmasgames/persistentnpcs/ui/"
                     + "NpcMeshPreviewSession.java");
             assert preview.contains("authoritativeViewerEcsMutation=false")

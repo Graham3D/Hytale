@@ -365,7 +365,7 @@ $C.@PageOverlay #AppearanceEditorPage {
         Label { Anchor: (Height: 28); Text: "LIVE DRAFT PREVIEW"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold, HorizontalAlignment: Center); }
         Group { Anchor: (Height: 560, Bottom: 10); LayoutMode: CenterMiddle; Background: @GoldPanel;
           CharacterPreviewComponent #AppearancePreviewCharacter { Anchor: (Width: 430, Height: 520); }
-          Group #AppearancePreviewFallback { Visible: false; Anchor: (Width: 250, Height: 250); LayoutMode: CenterMiddle; Background: #2b2417; Label { Text: "NPC\nPREVIEW"; Style: (...$C.@DefaultLabelStyle, FontSize: 24, RenderBold: true, TextColor: #d7c28c, HorizontalAlignment: Center, VerticalAlignment: Center); } }
+          Group #AppearancePreviewFallback { Visible: false; Anchor: (Width: 250, Height: 250); LayoutMode: CenterMiddle; Background: #2b2417; Label { Text: "NPC PREVIEW"; Style: (...$C.@DefaultLabelStyle, FontSize: 24, RenderBold: true, TextColor: #d7c28c, HorizontalAlignment: Center, VerticalAlignment: Center); } }
         }
         Label #AppearanceSelectionInfo { Anchor: (Height: 150); Text: "Selection"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #d8e5f2); }
         Label { FlexWeight: 1; Text: "No game-owned thumbnails are copied. This build uses bounded text tiles and the authoritative 3D preview."; Style: (...$C.@DefaultLabelStyle, FontSize: 9, Wrap: true, TextColor: #6f879a); }
