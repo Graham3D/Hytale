@@ -391,3 +391,16 @@ use. Live model tests remain intentionally skipped because A3 does not alter inf
 A3 automated status: **PASS**. Connected-client status: **PENDING**. The R132 JAR is a
 validation candidate only. Work must stop after deployment for the operator's connected
 acceptance; A4 and later stages remain unauthorized.
+
+Deployed connected-test candidate:
+
+- path: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.0-pre.13.1-R132-NPC-AUTHORING-STUDIO-A3-GEAR-STATS.jar`;
+- size: `2,698,580` bytes;
+- SHA-256: `9BE08F1F34211C7161DFB04955FD5C1197F06FE4E2C372EEDEFD9A597D72A949`;
+- installed Immersive NPC JAR count: exactly one;
+- build/deployed hash equality: verified.
+
+The independently preserved R131 rollback remains unchanged at
+`C:\HytaleRollback\NpcAuthoringStudio-A3-2026-09-04\ImmersiveNPCs-0.6.0-pre.13.1-R131-NPC-AUTHORING-STUDIO-A2-INVENTORY-BRIDGE.jar`
+(2,667,348 bytes; SHA-256
+`C6FB298934E5B1FA96DFB54FF4DF7D0373F1741645D9F44DAF929AA989840C18`).
