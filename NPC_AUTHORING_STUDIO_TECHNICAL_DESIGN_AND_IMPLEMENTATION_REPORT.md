@@ -918,3 +918,50 @@ The R141 P1 connected-test candidate is:
 P1 R141 automated status: **PASS**. Connected-client validation status: **PENDING**.
 P2 Appearance Editor polish and P3 Main Studio polish remain blocked pending explicit P1
 approval.
+
+### R142 P1 UI-load and neutral default-appearance hotfix
+
+R142 repairs the client-entry blocker introduced by R141 without changing recorder
+authority or beginning P2. The installed Hytale 0.6.3 Custom UI document exports the
+stateful button styles as `CancelButtonStyle`, `SecondaryButtonStyle`, and
+`DefaultButtonStyle`; it does not export the main-menu names `DestructiveButtonStyle` or
+`PrimaryButtonStyle`. The recorder now uses only the three Custom UI exports, preserving
+the red destructive, neutral, and primary hierarchy while allowing the UI documents to
+load.
+
+The missing-appearance lifecycle was re-verified for the connected Hoit report. New NPC
+creation materializes the packaged neutral appearance, and update/reopen materializes the
+same appearance only when a new or legacy NPC has no appearance file. The canonical
+template is a valid bald base character wearing only `Boxer.Red`, matching Hytale's reset
+avatar starting point. Existing authored appearances are not replaced; malformed authored
+files remain preserved and use only a temporary valid preview. Hoit's currently missing
+`SS_Skin_Character.json` is intentionally left untouched on disk before connected testing
+so `/npc update Hoit` proves the repair path itself.
+
+No voice sample was modified. Draft deletion remains limited to the unsaved draft. Saved
+sample deletion remains confirmation-gated and moves the prior WAV into recoverable
+`.voice-trash` storage rather than permanently deleting it. The R142 regression gate locks
+the valid Custom UI symbols, both missing-appearance materialization paths, the neutral
+template contract, and the saved-audio confirmation/recovery contract.
+
+The complete deterministic suite passed, including R135-R142, the 8,100-scenario
+conversation matrix, and all earlier inventory, gear, profile, appearance, persistence,
+and voice-isolation gates; live local-model tests were intentionally skipped.
+
+The R142 connected-test candidate is:
+
+- source artifact:
+  `C:\HytaleMigration\persistent-npcs\dist\ImmersiveNPCs-0.6.3-R142-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-UI-LOAD-DEFAULT-APPEARANCE-HOTFIX.jar`;
+- deployed artifact:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R142-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-UI-LOAD-DEFAULT-APPEARANCE-HOTFIX.jar`;
+- size: `3,004,872` bytes;
+- SHA-256: `589CA0232818FBAA766CB6E4FE6CE6C4B2268BC8240537582F283F82F5E47DC9`;
+- source/deployed hash equality: verified;
+- installed Immersive NPC JAR count: exactly one;
+- R141 rollback: preserved independently at
+  `C:\HytaleRollback\NpcAuthoringStudio-P1-R141-2026-09-04` with SHA-256
+  `6BA00DBC16CEBA031EEAF4FA3274FE601E8E3EC28D1CE591B1B280F4337A835D`.
+
+P1 R142 automated status: **PASS**. Connected-client validation status: **PENDING**.
+P2 Appearance Editor polish and P3 Main Studio polish remain blocked pending explicit P1
+approval.

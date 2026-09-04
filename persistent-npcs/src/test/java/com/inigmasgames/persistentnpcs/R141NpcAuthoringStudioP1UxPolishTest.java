@@ -18,11 +18,11 @@ public final class R141NpcAuthoringStudioP1UxPolishTest {
         assert recorder.contains("Anchor: (Width: 520, Height: 720)")
                 : "Recorder must fit tightly at 1080p and 1440p";
         assert recorder.contains("#VoiceRecordButton")
-                && recorder.contains("Style: $C.@DestructiveButtonStyle")
+                && recorder.contains("Style: $C.@CancelButtonStyle")
                 && recorder.contains("#VoicePlayStopButton")
                 && recorder.contains("Style: $C.@SecondaryButtonStyle")
                 && recorder.contains("#VoiceSaveButton")
-                && recorder.contains("Style: $C.@PrimaryButtonStyle")
+                && recorder.contains("Style: $C.@DefaultButtonStyle")
                 : "Recorder actions must use native stateful Hytale button chrome";
         assert recorder.contains("@VoiceSelectionMarker #VoiceSelectedREFERENCE")
                 && recorder.contains("TextColor: @Gold")
