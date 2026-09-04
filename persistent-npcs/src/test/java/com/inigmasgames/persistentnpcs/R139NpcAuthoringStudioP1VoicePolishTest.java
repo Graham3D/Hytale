@@ -16,14 +16,14 @@ public final class R139NpcAuthoringStudioP1VoicePolishTest {
         assert start >= 0 && end > start : "Voice Recorder UI block was not found";
         String recorder = ui.substring(start, end);
 
-        assert recorder.contains("Anchor: (Width: 520, Height: 780)")
+        assert recorder.contains("Anchor: (Width: 520, Height: 720)")
                 : "P1 recorder frame must remain bounded";
         for (int[] resolution : List.of(new int[] {1920, 1080}, new int[] {2560, 1440})) {
-            assert 520 <= resolution[0] && 780 <= resolution[1]
+            assert 520 <= resolution[0] && 720 <= resolution[1]
                     : "Recorder must fit required connected-test resolution";
         }
         for (String selector : List.of("#VoiceRecordButton", "#VoicePlayStopButton",
-                "#VoiceDeleteButton", "#VoiceSaveButton", "#VoiceCloseButton",
+                "#VoiceDeleteButton", "#VoiceSaveButton",
                 "#VoiceRecordingIndicator", "#VoiceWaveformBar0",
                 "#VoiceWaveformBar31")) {
             assert recorder.contains(selector) : "Missing P1 recorder selector " + selector;
@@ -37,7 +37,7 @@ public final class R139NpcAuthoringStudioP1VoicePolishTest {
                 && recorder.contains("Background: #08131d")
                 : "Recorder and waveform must remain framed over the world";
         assert recorder.contains("PRIVATE CREATOR-ONLY CAPTURE")
-                && recorder.contains("RETURN TO STUDIO");
+                && !recorder.contains("RETURN TO STUDIO");
         assert !recorder.contains("#VoicePlayDraftButton")
                 && !recorder.contains("#VoiceStopPlaybackButton")
                 && !recorder.contains("#VoiceRecordAgainButton")

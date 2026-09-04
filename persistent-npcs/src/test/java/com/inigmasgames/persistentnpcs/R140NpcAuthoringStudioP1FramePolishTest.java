@@ -28,7 +28,7 @@ public final class R140NpcAuthoringStudioP1FramePolishTest {
         assert viewport >= 0 && controls > viewport : "Bounded waveform viewport is missing";
         String waveform = recorder.substring(viewport, controls);
         assert waveform.contains("Anchor: (Width: 448, Height: 2, Top: 57)")
-                && waveform.contains("Background: #6b9fbd")
+                && waveform.contains("Background: @RecorderBaseline")
                 : "Waveform center line must be centered and light blue";
         assert waveform.contains("Anchor: (Width: 448, Height: 116); LayoutMode: Left")
                 && waveform.contains("#VoiceWaveformBar0")
@@ -47,10 +47,10 @@ public final class R140NpcAuthoringStudioP1FramePolishTest {
                     : "Superfluous recorder copy must remain hidden: " + selector;
         }
         for (String selector : new String[] {"#VoiceRecordButton", "#VoicePlayStopButton",
-                "#VoiceDeleteButton", "#VoiceSaveButton", "#VoiceCloseButton"}) {
+                "#VoiceDeleteButton", "#VoiceSaveButton"}) {
             assert recorder.contains(selector) : "Compact control missing: " + selector;
         }
-        assert recorder.contains("Anchor: (Width: 520, Height: 780)")
+        assert recorder.contains("Anchor: (Width: 520, Height: 720)")
                 : "Recorder must remain safe at both required resolutions";
 
         String page = Files.readString(Path.of("src/main/java/com/inigmasgames/"

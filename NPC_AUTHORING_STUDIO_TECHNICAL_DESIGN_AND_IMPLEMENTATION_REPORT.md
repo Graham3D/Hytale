@@ -24,7 +24,7 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | A3 — gear/loadout/live stats | Complete in R132 | PASS | PASS | PASS |
 | A4 — profile editor/generate | Complete in R133.1 | PASS | PASS: operator confirmed editor and workspace behavior | PASS |
 | A5 — appearance editor | Complete in R134.2 | PASS | PASS | PASS |
-| A6 / P1 — voice recorder polish | R140 second connected-validation candidate | PASS | R139 not approved; R140 pending | HOLD FOR P1 APPROVAL |
+| A6 / P1 — voice recorder polish | R141 focused UX connected-validation candidate | PASS | R139/R140 not approved; R141 pending | HOLD FOR P1 APPROVAL |
 | A7 — integration/polish | P1 only; P2/P3 not activated | P1 PASS | P1 pending; P2/P3 not run | BLOCKED AFTER P1 |
 
 The model-distillation subsystem remains paused and isolated. No D6/D7, training,
@@ -867,3 +867,54 @@ The R140 P1 connected-test candidate is:
 
 P1 R140 automated status: **PASS**. Connected-client validation status: **PENDING**.
 P2 Appearance Editor polish and P3 Main Studio polish remain blocked.
+
+### R141 P1 action chrome, Back navigation, and selected-state polish
+
+R141 is the third bounded P1 candidate and changes only Voice Recorder presentation and
+child-editor navigation. Capture, playback, waveform derivation, persistence, validation,
+privacy isolation, and every existing recorder intent remain unchanged. Record, Play/Stop,
+Delete, and Save Sample now use Hytale's shipped destructive, secondary, and primary
+`ButtonStyle` definitions. Those definitions supply the same framed normal, hover, pressed,
+and disabled states used by first-party UI while retaining the project-owned recorder icons
+and the equal three-button control row.
+
+The large `RETURN TO STUDIO` control was removed. The page now exposes one native
+`BackButton`. While Voice Recorder is active, the page lifetime is `CantClose` and that
+button routes to the existing `CLOSE_EDITOR` event; the handler stops active recording or
+playback before applying the existing unsaved-draft decision and returning to Studio. When
+no child Voice editor is active, lifetime returns to `CanDismiss`, so Back from the main
+Studio closes the page normally. This preserves the existing session and recorder cleanup
+owners rather than adding a second navigation path.
+
+The recorder frame is reduced from 520-by-780 to 520-by-720 after removing the obsolete
+return row. The fixed waveform geometry remains 448-by-116 with 32 genuine amplitude
+buckets, but bars and baseline now use restrained blue-gray colors (`#6d8798` and
+`#496274`). Emotion selection now moves a gold framed marker and arrow with the selected
+emotion, while the selected name receives a gold accent and SAVED/INVALID/required state
+copy remains smaller and right-aligned. The sole visible informational footer remains
+`Format: WAV • 16bit • 48kHz`, with slightly improved contrast and no added status noise.
+
+The R141 deterministic gate checks the tightened 1080p/1440p-safe frame, native stateful
+button styles, preserved icon/control contract, moving selected-emotion treatment, subdued
+waveform palette, removal of the in-panel return button, child-editor Back routing, and
+capture/playback quiescence before navigation. The complete deterministic suite passed,
+including R135–R141 and the 8,100-scenario conversation matrix; live local-model tests were
+intentionally skipped. P2 and P3 were not started.
+
+The R141 P1 connected-test candidate is:
+
+- source artifact:
+  `C:\HytaleMigration\persistent-npcs\dist\ImmersiveNPCs-0.6.3-R141-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-UX-POLISH.jar`;
+- deployed artifact:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R141-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-UX-POLISH.jar`;
+- size: `3,004,880` bytes;
+- SHA-256: `6BA00DBC16CEBA031EEAF4FA3274FE601E8E3EC28D1CE591B1B280F4337A835D`;
+- source/deployed hash equality: verified;
+- installed Immersive NPC JAR count: exactly one;
+- R140 rollback: preserved independently at
+  `C:\HytaleRollback\NpcAuthoringStudio-P1-R140-2026-09-04` with SHA-256
+  `73973E7B09AE6FBBCA5523C9617E5186CFFF62062BFD5200A47A9DEC1E2FD9CB`.
+
+P1 R141 automated status: **PASS**. Connected-client validation status: **PENDING**.
+P2 Appearance Editor polish and P3 Main Studio polish remain blocked pending explicit P1
+approval.

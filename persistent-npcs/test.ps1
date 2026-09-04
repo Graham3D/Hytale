@@ -259,6 +259,11 @@ if ($LASTEXITCODE -ne 0) {
     throw "R140 NPC Authoring Studio P1 frame-polish tests failed with exit code $LASTEXITCODE"
 }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R141NpcAuthoringStudioP1UxPolishTest
+if ($LASTEXITCODE -ne 0) {
+    throw "R141 NPC Authoring Studio P1 UX-polish tests failed with exit code $LASTEXITCODE"
+}
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.training.R125OrbisDistillationBlock1Test
 if ($LASTEXITCODE -ne 0) {
     throw "R125 Orbis Distillation Block 1 D0-D3 tests failed with exit code $LASTEXITCODE"

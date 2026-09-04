@@ -283,6 +283,21 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             UICommandBuilder commands,
             UIEventBuilder events,
             Store<EntityStore> store) {
+        boolean profileEditor = authoringSession.activeEditor()
+                == NpcAuthoringSession.EditorKind.PROFILE;
+        boolean appearanceEditor = authoringSession.activeEditor()
+                == NpcAuthoringSession.EditorKind.APPEARANCE;
+        boolean voiceEditor = authoringSession.activeEditor()
+                == NpcAuthoringSession.EditorKind.VOICE;
+        boolean contextualEditor = authoringSession.activeEditor()
+                != NpcAuthoringSession.EditorKind.NONE && !profileEditor
+                && !appearanceEditor && !voiceEditor;
+        // The recorder is a child editor. Prevent the native Back action from
+        // dismissing the whole page; its BackButton is bound below to the normal
+        // CLOSE_EDITOR path. The Studio itself retains native page dismissal.
+        setLifetime(voiceEditor
+                ? CustomPageLifetime.CantClose
+                : CustomPageLifetime.CanDismiss);
         commands.append("Pages/ImmersiveNpcProfile.ui");
         // R120: ItemGrid rejects .Slots if its inventory section was not present
         // during construction. Reuse the connected-proven R118 child documents so
@@ -396,15 +411,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#StatusText.Text", status);
         commands.set("#StatusText.Visible", !status.isBlank());
         commands.set("#StatusText.Style.TextColor", error ? "#e76f6f" : "#9ed7a6");
-        boolean profileEditor = authoringSession.activeEditor()
-                == NpcAuthoringSession.EditorKind.PROFILE;
-        boolean appearanceEditor = authoringSession.activeEditor()
-                == NpcAuthoringSession.EditorKind.APPEARANCE;
-        boolean voiceEditor = authoringSession.activeEditor()
-                == NpcAuthoringSession.EditorKind.VOICE;
-        boolean contextualEditor = authoringSession.activeEditor()
-                != NpcAuthoringSession.EditorKind.NONE && !profileEditor
-                && !appearanceEditor && !voiceEditor;
         commands.set("#ProfileEditorPage.Visible", profileEditor);
         if (profileEditor && profileDraft != null) setProfileEditorUi(commands);
         commands.set("#AppearanceEditorPage.Visible", appearanceEditor);
@@ -567,6 +573,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 return;
             }
             if ("CLOSE_EDITOR".equals(authoringAction)) {
+                if (authoringSession.activeEditor()
+                        == NpcAuthoringSession.EditorKind.VOICE) {
+                    quiesceVoiceRecorderForBack();
+                }
                 if (authoringSession.isDirty(authoringSession.activeEditor())) {
                     UICommandBuilder commands = new UICommandBuilder();
                     commands.set("#DirtyEditorConfirmPage.Visible", true);
@@ -960,8 +970,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 "#VoiceDeleteSavedConfirmButton", voiceEvent("VOICE_DELETE_SAVED_CONFIRM"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#VoiceDeleteSavedCancelButton", voiceEvent("VOICE_DELETE_SAVED_CANCEL"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#VoiceCloseButton", authoringEvent("CLOSE_EDITOR"));
+        if (authoringSession.activeEditor() == NpcAuthoringSession.EditorKind.VOICE) {
+            events.addEventBinding(CustomUIEventBindingType.Activating,
+                    "#AuthoringBackButton", authoringEvent("CLOSE_EDITOR"));
+        }
     }
 
     private EventData voiceEvent(String action) {
@@ -1171,6 +1183,22 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         voiceRecording = null;
         voiceSnapshot = null;
         if (current != null) current.close();
+    }
+
+    private void quiesceVoiceRecorderForBack() {
+        NpcVoiceRecordingService.Handle current = voiceRecording;
+        if (current == null) return;
+        Snapshot before = current.snapshot();
+        if (before.state() == NpcVoiceRecordingService.State.ARMED
+                || before.state() == NpcVoiceRecordingService.State.RECORDING) {
+            current.stop();
+        } else if (before.state() == NpcVoiceRecordingService.State.PLAYING) {
+            current.stopPlayback();
+        }
+        voiceSnapshot = current.snapshot();
+        if (voiceSnapshot.draftAvailable()) {
+            authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.VOICE);
+        }
     }
 
     private void handleAppearanceAction(Store<EntityStore> store, PageData data,
