@@ -244,6 +244,11 @@ if ($LASTEXITCODE -ne 0) {
     throw "R137 NPC Authoring Studio A6 voice-binding tests failed with exit code $LASTEXITCODE"
 }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R138NpcAuthoringStudioA6WaveformBindingTest
+if ($LASTEXITCODE -ne 0) {
+    throw "R138 NPC Authoring Studio A6 waveform-binding tests failed with exit code $LASTEXITCODE"
+}
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.training.R125OrbisDistillationBlock1Test
 if ($LASTEXITCODE -ne 0) {
     throw "R125 Orbis Distillation Block 1 D0-D3 tests failed with exit code $LASTEXITCODE"

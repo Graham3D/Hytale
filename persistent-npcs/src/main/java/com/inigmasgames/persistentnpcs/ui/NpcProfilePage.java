@@ -15,6 +15,8 @@ import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.ui.ItemGridSlot;
+import com.hypixel.hytale.server.core.ui.Anchor;
+import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.browser.FileBrowserConfig;
 import com.hypixel.hytale.server.core.ui.browser.FileBrowserEventData;
 import com.hypixel.hytale.server.core.ui.browser.ServerFileBrowser;
@@ -1084,8 +1086,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 snapshot.elapsedMillis() / 1000.0, snapshot.maximumMillis() / 1000.0));
         List<Integer> waveformHeights = VoiceWaveformPresentation.heights(snapshot.waveform());
         for (int index = 0; index < waveformHeights.size(); index++) {
-            commands.set("#VoiceWaveformBar" + index + ".Anchor.Height",
-                    waveformHeights.get(index));
+            Anchor waveformAnchor = new Anchor();
+            waveformAnchor.setWidth(Value.of(5));
+            waveformAnchor.setHeight(Value.of(waveformHeights.get(index)));
+            commands.setObject("#VoiceWaveformBar" + index + ".Anchor", waveformAnchor);
         }
         commands.set("#VoiceRecorderStatus.Text", snapshot.message());
         commands.set("#VoiceRecorderStatus.Style.TextColor",

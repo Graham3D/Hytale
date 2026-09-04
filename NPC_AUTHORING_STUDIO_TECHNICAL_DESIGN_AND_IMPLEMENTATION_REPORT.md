@@ -24,7 +24,7 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | A3 — gear/loadout/live stats | Complete in R132 | PASS | PASS | PASS |
 | A4 — profile editor/generate | Complete in R133.1 | PASS | PASS: operator confirmed editor and workspace behavior | PASS |
 | A5 — appearance editor | Complete in R134.2 | PASS | PASS | PASS |
-| A6 — voice recorder | R137 event-binding hotfix candidate | PASS | Pending R137 connected validation | HOLD FOR CONNECTED PASS |
+| A6 — voice recorder | R138 waveform-property hotfix candidate | PASS | Pending R138 connected validation | HOLD FOR CONNECTED PASS |
 | A7 — integration/polish | Not activated | Not run | Not run | BLOCKED |
 
 The model-distillation subsystem remains paused and isolated. No D6/D7, training,
@@ -746,4 +746,36 @@ The R137 connected-test candidate is:
   `C:\HytaleRollback\NpcAuthoringStudio-A6-R136-FAILED-BINDING-2026-09-04`.
 
 A6 R137 automated status: **PASS**. Connected-client validation status: **PENDING**.
+A7 remains unauthorized and was not started.
+
+### R138 A6 waveform-property hotfix
+
+R137 allowed the Studio to open, but entering Voice Recorder disconnected the client
+because `#VoiceWaveformBar0.Anchor.Height` is not a mutable Hytale Custom UI markup
+property. The installed 0.6.3 server API exposes `Anchor.CODEC`, registers `Anchor` in
+`UICommandBuilder.setObject`, and accepts the complete `Anchor` property as a command
+target. R138 therefore sends each real waveform height by replacing
+`#VoiceWaveformBarN.Anchor` atomically with a codec-backed Anchor that preserves the
+five-pixel width and carries the bounded dynamic height. No synthetic waveform or raw
+audio is introduced.
+
+The R138 installed-API gate constructs and serializes the exact Anchor update, verifies
+the emitted selector and width/height payload, and rejects any return of nested
+`.Anchor.Height`. The full deterministic suite passes, including R135–R138 and the
+8,100-scenario conversation matrix.
+
+The R138 connected-test candidate is:
+
+- source artifact:
+  `C:\HytaleMigration\persistent-npcs\dist\ImmersiveNPCs-0.6.3-R138-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-WAVEFORM-HOTFIX.jar`;
+- deployed artifact:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R138-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-WAVEFORM-HOTFIX.jar`;
+- size: `3,004,183` bytes;
+- SHA-256: `72000DE6FEB642DFB524E162EE00DBC3A89DCA64D1DA342A29F7C23B954A999A`;
+- source/deployed hash equality: verified;
+- installed Immersive NPC JAR count: exactly one;
+- R137 artifact: preserved independently at
+  `C:\HytaleRollback\NpcAuthoringStudio-A6-R137-BINDING-HOTFIX-2026-09-04`.
+
+A6 R138 automated status: **PASS**. Connected-client validation status: **PENDING**.
 A7 remains unauthorized and was not started.
