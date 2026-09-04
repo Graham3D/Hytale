@@ -393,7 +393,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                             + "Its domain editor activates in its gated implementation stage.");
         }
         boolean browsing = activeField != null && browser != null;
-        commands.set("#ProfilePage.Visible", !browsing);
+        commands.set("#ProfilePage.Visible", !browsing && !profileEditor
+                && !appearanceEditor && !contextualEditor);
         commands.set("#BrowserPage.Visible", browsing);
         if (browsing) {
             commands.set("#BrowserTitle.Text", "Select " + activeField.label());

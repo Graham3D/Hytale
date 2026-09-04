@@ -133,20 +133,48 @@ public final class NpcInventoryRepository implements AutoCloseable {
         // attaching listeners or exposing a ContainerWindow; replacing the component here
         // would invalidate the window/section identity proven by the native control.
         if (!runtimeMatches(authored, liveArmor, liveHotbar, liveUtility, liveStorage)) {
+            boolean armorMismatch = !canonicalItems(authored.armor()).equals(
+                    canonicalItems(snapshotContainer(liveArmor)));
+            List<NpcInventoryState.PersistedItemStack> liveLoadout = snapshotLoadout(
+                    liveHotbar, liveUtility);
+            boolean loadoutMismatch = !canonicalItems(authored.loadout()).equals(
+                    canonicalItems(liveLoadout));
+            boolean storageMismatch = !canonicalItems(authored.inventory()).equals(
+                    canonicalItems(snapshotContainer(liveStorage)));
             log.accept("NPC_INVENTORY_HYDRATION_NORMALIZATION"
                     + " npc=" + npcName
                     + " persistedEmptyMetadataCanonicalized=true"
-                    + " liveStorageInitiallyEmpty=" + liveStorage.isEmpty());
+                    + " liveStorageInitiallyEmpty=" + liveStorage.isEmpty()
+                    + " armorMismatch=" + armorMismatch
+                    + " loadoutMismatch=" + loadoutMismatch
+                    + " storageMismatch=" + storageMismatch);
             if (!liveArmor.isEmpty() || !liveHotbar.isEmpty()
                     || !liveUtility.isEmpty() || !liveStorage.isEmpty()) {
-                log.accept("NPC_INVENTORY_HYDRATION_REFUSED npc=" + npcName
-                        + " reason=NON_EMPTY_DIVERGENT_RUNTIME");
-                throw new IllegalStateException("Live NPC inventory differs from persisted state for "
-                        + npcName + "; refusing to overwrite non-empty runtime containers.");
+                NpcInventoryState runtimeSnapshot = new NpcInventoryState(
+                        NpcInventoryState.CURRENT_SCHEMA_VERSION,
+                        authored.stableNpcId(),
+                        snapshotContainer(liveArmor),
+                        liveLoadout,
+                        snapshotContainer(liveStorage),
+                        authored.infiniteAmmunition(),
+                        authored.hideHelmet(), authored.hideCuirass(),
+                        authored.hideGauntlets(), authored.hidePants());
+                Path conflict = profiles.profileDirectory(npcName).resolve(
+                        "npc-inventory.runtime-conflict-" + System.currentTimeMillis() + ".json");
+                JsonFiles.writeAtomic(conflict, runtimeSnapshot);
+                log.accept("NPC_INVENTORY_RUNTIME_CONFLICT_PRESERVED npc=" + npcName
+                        + " path=" + conflict.toAbsolutePath().normalize()
+                        + " armorMismatch=" + armorMismatch
+                        + " loadoutMismatch=" + loadoutMismatch
+                        + " storageMismatch=" + storageMismatch);
             }
             hydrateRollbackSafe(npcName,
                     List.of(liveArmor, liveHotbar, liveUtility, liveStorage),
                     () -> {
+                        clearForHydration(liveArmor, "armor");
+                        clearSlotsForHydration(liveHotbar, "hotbar", (short) 0, (short) 1);
+                        clearSlotsForHydration(liveUtility, "utility", (short) 0);
+                        clearForHydration(liveStorage, "storage");
                         ItemContainerUtil.trySetArmorFilters(liveArmor);
                         restore(liveArmor, authored.armor(), "armor");
                         restore(liveStorage, authored.inventory(), "inventory");
@@ -183,13 +211,38 @@ public final class NpcInventoryRepository implements AutoCloseable {
             ItemContainer hotbar,
             ItemContainer utility,
             ItemContainer storage) {
+        List<NpcInventoryState.PersistedItemStack> loadout = snapshotLoadout(hotbar, utility);
+        return canonicalItems(authored.armor()).equals(canonicalItems(snapshotContainer(armor)))
+                && canonicalItems(authored.loadout()).equals(canonicalItems(List.copyOf(loadout)))
+                && canonicalItems(authored.inventory()).equals(canonicalItems(snapshotContainer(storage)));
+    }
+
+    private static List<NpcInventoryState.PersistedItemStack> snapshotLoadout(
+            ItemContainer hotbar, ItemContainer utility) {
         List<NpcInventoryState.PersistedItemStack> loadout = new ArrayList<>();
         addRuntimeSlot(loadout, hotbar, (short) 0, Session.PRIMARY_SLOT);
         addRuntimeSlot(loadout, utility, (short) 0, Session.OFFHAND_SLOT);
         addRuntimeSlot(loadout, hotbar, (short) 1, Session.AMMUNITION_SLOT);
-        return canonicalItems(authored.armor()).equals(canonicalItems(snapshotContainer(armor)))
-                && canonicalItems(authored.loadout()).equals(canonicalItems(List.copyOf(loadout)))
-                && canonicalItems(authored.inventory()).equals(canonicalItems(snapshotContainer(storage)));
+        return List.copyOf(loadout);
+    }
+
+    private static void clearForHydration(ItemContainer container, String section) {
+        if (!container.clear().succeeded()) {
+            throw new IllegalStateException("Could not clear live NPC " + section
+                    + " while reconciling persisted inventory authority.");
+        }
+    }
+
+    private static void clearSlotsForHydration(
+            ItemContainer container, String section, short... slots) {
+        for (short slot : slots) {
+            if (!ItemStack.isEmpty(container.getItemStack(slot))
+                    && !container.removeItemStackFromSlot(slot).succeeded()) {
+                throw new IllegalStateException("Could not clear live NPC " + section
+                        + " slot " + slot
+                        + " while reconciling persisted inventory authority.");
+            }
+        }
     }
 
     private static List<NpcInventoryState.PersistedItemStack> canonicalItems(

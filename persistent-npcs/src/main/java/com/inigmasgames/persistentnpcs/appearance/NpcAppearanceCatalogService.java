@@ -257,8 +257,7 @@ public final class NpcAppearanceCatalogService {
         } else {
             choices.put("", colors(registry, part, part.getTextures()));
         }
-        String display = part.getName() == null || part.getName().isBlank()
-                ? part.getId() : part.getName();
+        String display = displayName(part.getName(), part.getId());
         List<String> tags = part.getTags() == null ? List.of() : List.of(part.getTags());
         Set<String> compatibility = new LinkedHashSet<>();
         if (part.getHairType() != null) compatibility.add("hair=" + part.getHairType());
@@ -311,6 +310,17 @@ public final class NpcAppearanceCatalogService {
             case FACE_ACCESSORY -> registry.getFaceAccessories();
             case EAR_ACCESSORY -> registry.getEarAccessories();
         };
+    }
+
+    private static String displayName(String registryName, String id) {
+        String candidate = registryName == null || registryName.isBlank()
+                || registryName.contains(".") ? id : registryName;
+        if (candidate == null || candidate.isBlank()) return "Unnamed option";
+        String separated = candidate.replace('_', ' ').replace('-', ' ')
+                .replaceAll("(?<=[a-z0-9])(?=[A-Z])", " ")
+                .replaceAll("\\s+", " ").strip();
+        if (separated.isBlank()) return "Unnamed option";
+        return Character.toUpperCase(separated.charAt(0)) + separated.substring(1);
     }
 
     private static String sha256(String value) {

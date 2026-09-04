@@ -140,6 +140,22 @@ public final class R134NpcAuthoringStudioA5AppearanceTest {
             assert ui.contains("#AppearanceEditorPage")
                     && ui.contains("#AppearancePreviewCharacter")
                     && randomize < reset && reset < cancel && cancel < save;
+            assert ui.contains("ImmersiveNpcInventory/NPCBackground.png")
+                    : "The authored NPC preview background must be used by both previews";
+            assert count(ui, "ImmersiveNpcInventory/NPCBackground.png") == 2;
+            for (String asset : List.of("NPCBackground@2x.png",
+                    "WeaponSlotIconSword@2x.png", "WeaponSlotIconShield@2x.png",
+                    "WeaponSlotIconAmmo@2x.png")) {
+                assert Files.isRegularFile(Path.of("src/main/resources/Common/UI/Custom/Pages/"
+                        + "ImmersiveNpcInventory/" + asset)) : "Missing authored UI asset " + asset;
+            }
+            var displayName = NpcAppearanceCatalogService.class.getDeclaredMethod(
+                    "displayName", String.class, String.class);
+            displayName.setAccessible(true);
+            assert displayName.invoke(null,
+                    "avatarCustomization.haircuts.BantuKnots.name", "BantuKnots")
+                    .equals("Bantu Knots")
+                    : "Localization keys must not leak into appearance option labels";
             assert !ui.contains("Common/Cosmetics/")
                     : "The plugin must not copy or embed Hytale-owned cosmetics assets";
             assert !ui.contains("\\")
@@ -183,6 +199,10 @@ public final class R134NpcAuthoringStudioA5AppearanceTest {
 
     private static String source(String path) throws Exception {
         return Files.readString(Path.of(path));
+    }
+
+    private static int count(String value, String token) {
+        return (value.length() - value.replace(token, "").length()) / token.length();
     }
 
     private static void deleteTree(Path root) throws Exception {

@@ -112,7 +112,7 @@ $C.@PageOverlay #ProfilePage {
             Background: @GoldPanel;
             Padding: (Full: 8);
             Label #NpcPreviewName { Anchor: (Height: 26); Text: "NPC"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, FontSize: 15, TextColor: #f1dfae, HorizontalAlignment: Center); }
-            Group #NpcPreviewContainer { FlexWeight: 1; LayoutMode: CenterMiddle; Background: #2b2417;
+            Group #NpcPreviewContainer { FlexWeight: 1; LayoutMode: CenterMiddle; Background: "ImmersiveNpcInventory/NPCBackground.png";
               CharacterPreviewComponent #NpcCharacterPreview { Anchor: (Width: 250, Height: 248); }
               Label #NpcPreviewUnavailable { Anchor: (Width: 230, Height: 80); Text: "Save a profile and appearance to enable preview."; Visible: false; Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 10, TextColor: #d7c28c, HorizontalAlignment: Center, VerticalAlignment: Center); }
             }
@@ -122,9 +122,9 @@ $C.@PageOverlay #ProfilePage {
             ItemGrid #PrimaryWeaponGrid { Anchor: (Width: 58, Height: 58, Left: 34, Top: 0); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
             ItemGrid #OffhandGrid { Anchor: (Width: 58, Height: 58, Left: 34, Top: 68); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
             ItemGrid #AmmunitionGrid { Anchor: (Width: 58, Height: 58, Left: 34, Top: 136); SlotsPerRow: 1; Style: @EquipmentItemGridStyle; Background: #000000(0); Padding: 0; ShowScrollbar: false; AreItemsDraggable: true; AllowMaxStackDraggableItems: true; DisplayItemQuantity: true; RenderItemQualityBackground: true; RenderEmptySlots: true; }
-            Group #PrimaryWeaponEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 10); Background: "ImmersiveNpcInventory/SpecialSlot.png"; }
-            Group #OffhandEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 78); Background: "ImmersiveNpcInventory/SpecialSlot.png"; }
-            Group #AmmoEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 146); Background: "ImmersiveNpcInventory/SpecialSlot.png"; }
+            Group #PrimaryWeaponEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 10); Background: "ImmersiveNpcInventory/WeaponSlotIconSword.png"; }
+            Group #OffhandEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 78); Background: "ImmersiveNpcInventory/WeaponSlotIconShield.png"; }
+            Group #AmmoEmptyIcon { HitTestVisible: false; Anchor: (Width: 36, Height: 36, Left: 45, Top: 146); Background: "ImmersiveNpcInventory/WeaponSlotIconAmmo.png"; }
             Group { LayoutMode: Top; Anchor: (Top: 204, Height: 58, Left: 6);
               Group { LayoutMode: Left; Anchor: (Height: 26); $C.@CheckBox #InfiniteAmmoCheckBox { Value: false; TooltipText: "Toggle for infinite ammunition."; } Label { Anchor: (Left: 6); Text: "Infinite Ammo"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, VerticalAlignment: Center); } }
               Label #InfiniteAmmoHint { Anchor: (Top: 2); Text: "Requires compatible ammunition."; Style: (...$C.@DefaultLabelStyle, FontSize: 8, Wrap: true, TextColor: @Muted); }
@@ -363,7 +363,7 @@ $C.@PageOverlay #AppearanceEditorPage {
       }
       Group { Anchor: (Width: 490, Left: 4); LayoutMode: Top; Background: #101a24; Padding: (Full: 12);
         Label { Anchor: (Height: 28); Text: "LIVE DRAFT PREVIEW"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold, HorizontalAlignment: Center); }
-        Group { Anchor: (Height: 560, Bottom: 10); LayoutMode: CenterMiddle; Background: @GoldPanel;
+        Group { Anchor: (Height: 560, Bottom: 10); LayoutMode: CenterMiddle; Background: "ImmersiveNpcInventory/NPCBackground.png";
           CharacterPreviewComponent #AppearancePreviewCharacter { Anchor: (Width: 430, Height: 520); }
           Group #AppearancePreviewFallback { Visible: false; Anchor: (Width: 250, Height: 250); LayoutMode: CenterMiddle; Background: #2b2417; Label { Text: "NPC PREVIEW"; Style: (...$C.@DefaultLabelStyle, FontSize: 24, RenderBold: true, TextColor: #d7c28c, HorizontalAlignment: Center, VerticalAlignment: Center); } }
         }

@@ -22,8 +22,10 @@ public final class R115NativeNpcInventoryProfileIntegrationTest {
         assert repository.indexOf("restore(liveStorage, authored.inventory()")
                 < repository.indexOf("installRuntimePersistence(npcName, authored, liveArmor")
                 : "Hydration must happen before persistence listeners are registered";
-        assert repository.contains("refusing to overwrite non-empty runtime containers")
-                : "Divergent non-empty live state must fail closed";
+        assert repository.contains("NPC_INVENTORY_RUNTIME_CONFLICT_PRESERVED")
+                && repository.indexOf("NPC_INVENTORY_RUNTIME_CONFLICT_PRESERVED")
+                        < repository.indexOf("hydrateRollbackSafe(npcName")
+                : "Divergent non-empty live state must be preserved before reconciliation";
 
         assert controller.contains("Page.Bench")
                 && controller.contains("setPageWithWindows")

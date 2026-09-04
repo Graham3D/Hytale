@@ -26,7 +26,7 @@ public final class R122NpcInventoryPersistenceNormalizationTest {
         meaningfulMetadataRemainsDistinct();
         jonalithLegacyFixtureMatchesRuntime();
         failedHydrationRollsBackAndCanRetry();
-        protectiveRefusalAndStructuredLoggingRemainPresent();
+        divergentRuntimeIsPreservedBeforeRollbackSafeReconciliation();
         System.out.println("R122 NPC inventory persistence normalization gate passed.");
     }
 
@@ -111,14 +111,21 @@ public final class R122NpcInventoryPersistenceNormalizationTest {
         }
     }
 
-    private static void protectiveRefusalAndStructuredLoggingRemainPresent() throws Exception {
+    private static void divergentRuntimeIsPreservedBeforeRollbackSafeReconciliation()
+            throws Exception {
         String repository = Files.readString(Path.of(
                 "src/main/java/com/inigmasgames/persistentnpcs/profile/NpcInventoryRepository.java"));
         int divergence = repository.indexOf("if (!runtimeMatches(authored");
-        int refusal = repository.indexOf("refusing to overwrite non-empty runtime containers");
+        int preservation = repository.indexOf("NPC_INVENTORY_RUNTIME_CONFLICT_PRESERVED");
         int hydration = repository.indexOf("hydrateRollbackSafe(npcName");
-        assert divergence >= 0 && refusal > divergence && hydration > refusal
-                : "Non-empty divergent Storage must still fail before hydration";
+        assert divergence >= 0 && preservation > divergence && hydration > preservation
+                : "Divergent live state must be archived before authoritative hydration";
+        assert !repository.contains("NPC_INVENTORY_HYDRATION_REFUSED");
+        assert repository.contains("npc-inventory.runtime-conflict-");
+        assert repository.contains("clearForHydration(liveArmor");
+        assert repository.contains("clearForHydration(liveStorage");
+        assert repository.contains("clearSlotsForHydration(liveHotbar")
+                : "Unrelated NPC hotbar slots must not be erased during reconciliation";
         assert repository.contains("NPC_INVENTORY_HYDRATION_NORMALIZATION");
         assert repository.contains("NPC_INVENTORY_HYDRATION_VALIDATION");
         assert repository.contains("NPC_INVENTORY_HYDRATION_ROLLBACK");
