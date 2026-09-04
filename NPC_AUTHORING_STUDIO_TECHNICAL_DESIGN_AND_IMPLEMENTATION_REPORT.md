@@ -24,7 +24,7 @@ Branch/remote: `main` / `https://github.com/Graham3D/Hytale.git`
 | A3 — gear/loadout/live stats | Complete in R132 | PASS | PASS | PASS |
 | A4 — profile editor/generate | Complete in R133.1 | PASS | PASS: operator confirmed editor and workspace behavior | PASS |
 | A5 — appearance editor | Complete in R134.2 | PASS | PASS | PASS |
-| A6 / P1 — voice recorder polish | R139 connected-validation candidate | PASS | Pending R139 P1 connected validation | HOLD FOR P1 APPROVAL |
+| A6 / P1 — voice recorder polish | R140 second connected-validation candidate | PASS | R139 not approved; R140 pending | HOLD FOR P1 APPROVAL |
 | A7 — integration/polish | P1 only; P2/P3 not activated | P1 PASS | P1 pending; P2/P3 not run | BLOCKED AFTER P1 |
 
 The model-distillation subsystem remains paused and isolated. No D6/D7, training,
@@ -822,3 +822,48 @@ The R139 P1 connected-test candidate is:
 P1 automated status: **PASS**. P1 connected-client validation status: **PENDING**.
 P2 Appearance Editor polish and P3 Main Studio polish were not started and remain
 blocked pending explicit P1 connected approval.
+
+### R140 P1 decorated-frame and waveform-containment polish
+
+R139's functional layout was retained but was not accepted visually. R140 is a second
+P1-only presentation pass using the approved compact mockup as the direct composition
+target. The raw panel shell is replaced by Hytale's proven `DecoratedContainer` with its
+native integrated title/header, ornamental outer frame, and content hierarchy. A fully
+opaque project-owned inner surface separates the recorder from the world while retaining
+the Hytale frame around it. Emotion rows now use quieter unselected treatment, consistent
+bullets, a right-side selected-sample marker, tighter padding, and concise saved states.
+
+The waveform defect was caused by placing the center line and bar layer as two siblings
+inside a centering layout, which arranged them beside one another. R140 places both in a
+single fixed 448-by-116 canvas inside a framed 468-by-124 viewport. The two-pixel center
+line is fixed at vertical offset 57 and uses light blue over a dark blue background. All
+32 five-pixel waveform bars remain centered within that same canvas, and the existing
+bounded 2–116 pixel Anchor heights fit entirely inside it. Audio-derived amplitude data,
+waveform analysis, codec-backed updates, and recorder behavior are unchanged.
+
+The generation/capture-contract line, quality diagnostics, generic action message, and
+profile-readiness sentence are no longer exposed. Their selectors remain hidden so the
+existing server update packet stays valid. The only informational footer copy is
+`Format: WAV • 16bit • 48kHz`. Record, state-aware Play/Stop, Delete, Save Sample, and
+Return to Studio retain their existing selectors, events, icons, and authority.
+
+The new R140 gate verifies the decorated hierarchy, opaque surfaces, fixed waveform
+viewport and centered line, all 32 contained buckets, hidden legacy status targets,
+approved format footer, compact controls, and unchanged recorder event intents. The full
+deterministic suite passes with live local-model tests skipped. P2 and P3 remain untouched.
+
+The R140 P1 connected-test candidate is:
+
+- source artifact:
+  `C:\HytaleMigration\persistent-npcs\dist\ImmersiveNPCs-0.6.3-R140-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-FRAME-POLISH.jar`;
+- deployed artifact:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R140-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-FRAME-POLISH.jar`;
+- size: `3,004,534` bytes;
+- SHA-256: `73973E7B09AE6FBBCA5523C9617E5186CFFF62062BFD5200A47A9DEC1E2FD9CB`;
+- source/deployed hash equality: verified;
+- installed Immersive NPC JAR count: exactly one;
+- R139 rollback: preserved independently at
+  `C:\HytaleRollback\NpcAuthoringStudio-P1-R139-2026-09-04`.
+
+P1 R140 automated status: **PASS**. Connected-client validation status: **PENDING**.
+P2 Appearance Editor polish and P3 Main Studio polish remain blocked.

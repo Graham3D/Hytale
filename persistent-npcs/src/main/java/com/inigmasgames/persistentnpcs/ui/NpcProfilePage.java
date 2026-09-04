@@ -1082,8 +1082,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#VoiceRecordingIndicator.Text", snapshot.state()
                 == NpcVoiceRecordingService.State.ARMED
                         ? "● ARMED" : "● RECORDING");
-        commands.set("#VoiceElapsed.Text", String.format(Locale.ROOT, "%.1f / %.1f sec",
-                snapshot.elapsedMillis() / 1000.0, snapshot.maximumMillis() / 1000.0));
+        long elapsedSeconds = snapshot.elapsedMillis() / 1000L;
+        long maximumSeconds = snapshot.maximumMillis() / 1000L;
+        commands.set("#VoiceElapsed.Text", String.format(Locale.ROOT,
+                "%02d:%02d / %02d:%02d",
+                elapsedSeconds / 60L, elapsedSeconds % 60L,
+                maximumSeconds / 60L, maximumSeconds % 60L));
         List<Integer> waveformHeights = VoiceWaveformPresentation.heights(snapshot.waveform());
         for (int index = 0; index < waveformHeights.size(); index++) {
             Anchor waveformAnchor = new Anchor();
