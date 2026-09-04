@@ -1047,3 +1047,23 @@ can start again. Test controller Back if available; confirm Escape still opens H
 own menu and normal Studio exit still works. Existing saved NPC audio was not modified.
 
 P1 R144 awaits connected approval. P2 and P3 remain unstarted.
+
+### R145 P1 header parser hotfix
+
+R144 connected testing failed at server entry. Client log
+`2026-09-04_15-57-47_client.log` reports `Pages/ImmersiveNpcProfile.ui (409:75) –
+Expected {, found =`. The title template instance placed `@Text` after its `Anchor`
+property. R145 moves the positioning into an enclosing Group and leaves the title
+instance with its template parameter only. This uses the existing title template
+syntax while preserving the compact header Back and four-action layout.
+
+The full deterministic suite passed, including the recorder and 8,100-scenario matrix.
+Those tests do not run the Hytale client document parser; connected loading and P1
+visual approval remain pending. No recorder/audio/appearance/persistence behavior changed.
+All release counters identify R145. P2 and P3 remain unstarted.
+
+- Sole deployed JAR: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R145-NPC-AUTHORING-STUDIO-A6-VOICE-RECORDER-P1-HEADER-HOTFIX.jar`
+- Size: `3,007,761` bytes; source/deployed SHA-256: `0818ADE5E2BCEA48DAAD8542147FDBFA441FEB0A4D5606C91EAFBD67705E4AD4`.
+- R144 retained in `C:\HytaleRollback\NpcAuthoringStudio-P1-R144-2026-09-04`; earlier R143 rollback remains available.
+- Retest: restart the world, confirm server entry and R145 HUD, open Voice Recorder,
+  confirm header Back and all four actions, then continue the R144 connected checklist.
