@@ -1620,3 +1620,142 @@ are explicit diagnostics, not silent success. Keep rollback until connected PASS
 
 **STOP at this S1 candidate. Do not begin Appearance Editor polish, P2, RPG work,
 or another stage without explicit approval.**
+
+## R150 — NPC Appearance Editor visual-polish candidate
+
+Date: 2026-09-04. The operator explicitly authorized this Appearance-only polish pass,
+superseding the preceding stop for this scope only. Baseline was clean `main` at
+`33e535a79c7b90c7e27784db428e3bafed5f191e` (R149). No Profile Editor polish or other
+stage is included. R149 connected acceptance is not inferred from this authorization.
+
+### Presentation implementation
+
+- Replaced the oversized 1520×960 editor surface with one 1380×910 native
+  `DecoratedContainer`, integrated title, opaque navy panels and restrained gold
+  selection treatment. The main Profile is not duplicated behind the editor.
+- Added normal/selected native MyAvatar category artwork to the six existing primary
+  categories and every secondary category. Existing category semantics are unchanged.
+  Icon aspect ratios are preserved. Category labels remain visible alongside icons.
+- Reflowed the same twelve reusable options into three columns/four rows. Cards have
+  native stateful button framing, gold selected borders, bounded readable labels and
+  full-name tooltips. Removed repeated pack/debug metadata from the visible surface;
+  compatibility details remain available on the selection tooltip.
+- Search uses a packaged native search icon; all existing search, option, color and
+  variant paging events remain bound. Explicit no-results messaging replaces blank
+  search output. Six variant choices use two rows, avoiding the former cramped strip.
+- Added native circular color masks/frames/selection rings. Swatches read actual
+  `PlayerSkinPartTexture.BaseColor` values from the installed registry, selecting
+  variant textures first and the part's gradient set as fallback. Up to two actual
+  colors are displayed. Missing/invalid palette data displays a question marker and
+  the original color-name tooltip rather than inventing a palette. The current color
+  name remains above the swatches. Color IDs and validation are unchanged.
+- Enlarged the preview allocation, retained the actual 440×520 native live preview,
+  framed it in an opaque navy panel and used the existing project NPC ground artwork
+  at its intended aspect ratio. Missing-preview and retained-invalid-selection states
+  remain readable and repairable.
+- Kept Randomize, Reset, Discard/Back and Save Appearance, now as consistently framed
+  actions with Save as the primary action. Discard/Back uses the existing Cancel event
+  and dirty-discard confirmation, not a new navigation or persistence path. Normal
+  status text is reduced to saved/unsaved state; actual validation errors remain visible.
+
+The only catalog addition is a read-only swatch lookup; `AppearanceEditorPresentation`
+contains pure icon/label mappings. Appearance event handlers, draft authority, catalog
+admission, randomization, save/discard, codec, repository, model materialization and
+preview/restoration implementation were not rewritten. No persisted data format changed.
+R149 stats classes/lifecycle hooks, inventory/gear, Profile Editor, Voice Recorder and
+player authoritative state are unchanged. No established voice samples were deleted.
+
+The native MyAvatar card thumbnails are client-generated previews, not a static
+thumbnail set imported by this pass. Option cards remain honest text choices plus
+the real large live preview; no fabricated cosmetic imagery is shown.
+
+### Native assets and packaging
+
+Inspected installed Hytale 0.6.3 `MyAvatarPage.ui`, `ColorOption.ui`, CategoryIcons and
+Custom UI `Common.ui`. Used the Custom UI-exported native button styles (including
+hovered/pressed/disabled states), not incompatible main-menu-only style names.
+Native `UIGalleryPage`/`PluginListPage` bytecode confirmed the `Value.ref` document/name
+contract used for selected-icon patches. Swatch updates use the whole `PatchStyle`
+codec rather than unsupported nested property assignments.
+
+46 native PNGs (124,867 bytes) are packaged under
+`Common/UI/Custom/Pages/ImmersiveNpcAppearance/`; every copy was SHA-256 compared with
+the installed original. Asset-by-asset provenance/hashes are in
+`persistent-npcs/docs/R150_APPEARANCE_ASSET_PROVENANCE.md`.
+There are no runtime absolute installation-path dependencies. The deployed JAR was
+inspected and contains all 46 assets. HUD revision, manifest, builder and installer
+artifact name all agree on R150.
+
+### Deterministic verification
+
+Full installed-release suite: **PASS**, including the 8,100-scenario conversation
+matrix, prior appearance migration/save/conflict/unknown-field tests, inventory,
+gear, recorder/isolation, R146–R148 repair gates and R149 persistent vanilla stats.
+The final source/resource build was rerun through the complete suite before deployment:
+
+```powershell
+.\test.ps1 -SkipLive -ServerJar 'C:/Users/Zemio/AppData/Roaming/Hytale/install/release/package/game/latest/Server/HytaleServer.jar'
+```
+
+New `R150NpcAppearancePolishTest` checks every category-to-asset mapping, PNG decoding,
+normal/selected patch references, bounded labels/swatches, unknown-palette handling,
+SDK serialization of selection/icon/color commands, retained event names, and worst-case
+layout budgets at 1920×1080 and 2560×1440. All twelve options plus both paged color and
+variant sections fit simultaneously. Native title height was verified as 38px.
+`git diff --check` passed. Existing SDK deprecated/Unsafe warnings remain unchanged.
+
+**Connected rendering, hit testing and gameplay validation remain PENDING.** Layout
+budgets and deterministic tests are not screenshots or a native-client render test.
+Live local-model tests were intentionally skipped; no inference behavior changed.
+Existing native preview architecture limitations are not claimed fixed by this polish.
+
+### Deployment and rollback verification
+
+- Active: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R150-NPC-APPEARANCE-POLISH.jar`
+- Size: **3,501,307 bytes**.
+- SHA-256: `A33CDB8F82D311B52029BDE184FE11F84DF2581605E7D3A7646758A35BA63DB7`.
+- Build, staging and deployed hashes matched; exactly **one active project JAR**.
+- Prior R149 preserved at
+  `C:\HytaleRollback\NpcAuthoringStudio-Appearance-R149-2026-09-04\ImmersiveNPCs-0.6.3-R149-PERSISTENT-VANILLA-NPC-STATS.jar`,
+  SHA-256 `5E4BEB960C98826C76095B3209508B7D81E917AA6EE65E8D21E168C40C5BEA24`.
+- Accepted R146 rollback remains untouched, SHA-256
+  `38D97B3FFD0143A2282A496DF01C1855C18B9242865F93F41A516BC931A253A3`.
+- SkinSwap remains untouched, SHA-256
+  `0444550F8B84E21AF6D1A991512E748BA7946AAAC47314B902BAE61018C76E77`.
+- Hytale/Java were stopped for deployment. Only the project JAR was replaced;
+  the broad installer was not run. The live profile tree stayed **70 files /
+  50,331,816 bytes**, with identical before/after sorted relative-path + file-SHA-256
+  aggregate `FE55EE0CA6E779A58D2D368E4FEB89416D23491397E8734105A9BB2106C0E554`.
+  NPC profiles, stats, appearance and voice files were not modified by deployment.
+
+### Connected approval checklist
+
+Perform the following at both **1920×1080** and **2560×1440**. Confirm HUD shows
+`R150-NPC-APPEARANCE-POLISH`, then open `/npc update Hoit` (also Mara/Jonalith as appropriate)
+and choose Appearance.
+
+1. Inspect frame/header, preview centering, category labels/icons, option cards,
+   search, swatches, variants, status and footer. Nothing should clip or overlap;
+   check normal/hovered/pressed/disabled paging buttons and gold selection changes.
+2. Visit all six primary categories and every subcategory. Navigate multiple pages,
+   select options, search for a known choice, search for no matches and clear search.
+   Verify selection follows the correct item and paging does not lose functionality.
+3. Choose hair/clothing colors, including a later color page and a multi-color option
+   if available. Confirm swatch/name/preview agreement. Exercise variants and their
+   paging where the active registry supplies enough variants.
+4. Randomize, inspect, then Reset: the open-time persisted appearance must return.
+   Make another change, choose Discard/Back and test both staying and confirming discard.
+   Reopen: unsaved changes must not have persisted.
+5. Make a deliberate appearance change, Save Appearance, close and reopen the Studio,
+   then restart the save/server and reopen. Confirm the same NPC identity/appearance
+   and the unchanged stats/inventory/gear persist.
+6. Check a new `/npc create` NPC reopens with its valid default. Use only an existing
+   designated invalid/degraded fixture (or a disposable backed-up test NPC) to verify
+   retained invalid data and safe recovery. Do not corrupt established NPC files.
+7. Compare the player's skin, armor, held item/offhand and selected hotbar before/after
+   preview, Randomize, Reset, Save, discard, close and reopen. No authoritative player
+   changes are permitted; restoration must behave as before this pass.
+8. Briefly smoke-test coupled inventory moves, gear/stat cards, Profile Editor and
+   non-destructive Voice Recorder playback. Do not delete established voice samples.
+
+**STOP for connected approval. Do not begin Profile Editor visual polish or another stage.**

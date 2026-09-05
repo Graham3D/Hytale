@@ -610,6 +610,9 @@ if ($LASTEXITCODE -ne 0) {
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.stats.R149PersistentVanillaStatsTest
 if ($LASTEXITCODE -ne 0) { throw "R149 persistent vanilla stats tests failed with exit code $LASTEXITCODE" }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R150NpcAppearancePolishTest
+if ($LASTEXITCODE -ne 0) { throw "R150 appearance polish tests failed with exit code $LASTEXITCODE" }
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R147NpcProfileRepairTest
 if ($LASTEXITCODE -ne 0) {
     throw "R147 Profile repair tests failed with exit code $LASTEXITCODE"

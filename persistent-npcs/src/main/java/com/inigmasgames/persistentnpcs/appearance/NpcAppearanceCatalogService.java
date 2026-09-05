@@ -286,6 +286,35 @@ public final class NpcAppearanceCatalogService {
                 .sorted().toList();
     }
 
+    /** Presentation-only native swatches; no guessed palette and no persisted format changes. */
+    public List<String> swatchColors(Category category, String cosmeticId,
+            String variantId, String colorId) {
+        CosmeticsModule module = CosmeticsModule.get();
+        if (module == null || module.getRegistry() == null) return List.of();
+        CosmeticRegistry registry = module.getRegistry();
+        PlayerSkinPart part = registryParts(registry, category).get(cosmeticId);
+        if (part == null) return List.of();
+        Map<String, PlayerSkinPartTexture> textures = part.getTextures();
+        if (variantId != null && part.getVariants() != null && part.getVariants().containsKey(variantId)) {
+            textures = part.getVariants().get(variantId).getTextures();
+        }
+        PlayerSkinPartTexture texture = textures == null ? null : textures.get(colorId);
+        if (texture == null && part.getGradientSet() != null) {
+            var gradients = registry.getGradientSets().get(part.getGradientSet());
+            if (gradients != null && gradients.getGradients() != null) {
+                texture = gradients.getGradients().get(colorId);
+            }
+        }
+        return validSwatchColors(texture == null ? null : texture.getBaseColor());
+    }
+
+    public static List<String> validSwatchColors(String[] colors) {
+        if (colors == null) return List.of();
+        return java.util.Arrays.stream(colors)
+                .filter(color -> color != null && color.matches("#[0-9a-fA-F]{6}"))
+                .limit(2).toList();
+    }
+
     private static Map<String, PlayerSkinPart> registryParts(
             CosmeticRegistry registry, Category category) {
         return switch (category) {
