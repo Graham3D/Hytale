@@ -77,7 +77,7 @@ class CategoryRigTest(unittest.TestCase):
             self.assertEqual(provenance["entryRigHashes"][key], rig_hash(key.split(":")[0]))
             self.assertEqual(hashlib.sha256((THUMBS / filename).read_bytes()).hexdigest(), digest)
             with Image.open(THUMBS / filename) as im:
-                self.assertEqual(im.size, (184, 298))
+                self.assertEqual(im.size, (92, 149))
         self.assertEqual(set(provenance["entryRigHashes"]), keys)
         covered = []
         for sheet in json.loads((SHEETS / "index.json").read_text()):

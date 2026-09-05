@@ -237,7 +237,10 @@ def main():
         for part in (parts[:args.limit] if args.limit else parts):
             key=category+":"+part["Id"]; name=hashlib.sha256(key.encode()).hexdigest()[:24]+".png"
             try:
-                im=baker.render(category,part); im.save(args.output/name)
+                im=baker.render(category,part)
+                # R154: keep the 2x geometry bake, but only upload display-sized
+                # references to the client's shared UI atlas (quarter the texels).
+                im.resize((W//2,H//2), Image.Resampling.BOX).save(args.output/name)
                 records.append((key,name,hashlib.sha256((args.output/name).read_bytes()).hexdigest()))
                 entry_rigs[key]=rig_hash(category)
                 category_samples.append((part["Id"],im))
@@ -263,7 +266,8 @@ def main():
     if args.ui_index:
         args.ui_index.write_text("\n".join('@T'+name[:-4]+' = PatchStyle(TexturePath: "ImmersiveNpcAppearance/Thumbnails/'+name+'");'
             for key,name,sha in sorted(records))+"\n",encoding="utf-8")
-    (args.output/"provenance.json").write_text(json.dumps({"renderer":"R152 fixed category rigs v2","size":[W,H],
+    (args.output/"provenance.json").write_text(json.dumps({"renderer":"R152 fixed category rigs v2","size":[W//2,H//2],
+        "bakeSize":[W,H],"clientSampling":"R154 display-resolution BOX; shared UI atlas budget",
         "rendererSha256":hashlib.sha256(Path(__file__).read_text(encoding="utf-8").encode()).hexdigest(),
         "rendererHashEncoding":"UTF-8 with LF newlines",
         "pythonLibraries":{"Pillow":PIL.__version__,"numpy":np.__version__},

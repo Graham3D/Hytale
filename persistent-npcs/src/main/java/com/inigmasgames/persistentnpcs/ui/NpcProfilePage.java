@@ -1543,6 +1543,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 if (!batch.cards().isEmpty()) sendUpdate(update, false);
                 diagnostics.accept("NPC_APPEARANCE_PRIVATE_CARDS generation=" + batch.generation()
                         + " count=" + batch.cards().size() + " residentNames=" + appearanceCardAssets.residentNames()
+                        + " uploaded=" + appearanceCardAssets.lastUploaded() + " removed=" + appearanceCardAssets.lastRemoved()
+                        + " atlasRebuild=" + appearanceCardAssets.lastRebuild() + " liveTexels=" + appearanceCardAssets.residentTexels()
+                        + " clientCard=92x149 coalesceMs=" + AppearanceCardJobs.COALESCE_MILLIS
                         + " color=" + color + " private=true clientReadyAck=false");
             } catch (RuntimeException failure) {
                 diagnostics.accept("NPC_APPEARANCE_PRIVATE_CARDS_FAILED " + failure.getMessage());

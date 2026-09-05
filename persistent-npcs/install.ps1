@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
-$artifactName = 'ImmersiveNPCs-0.6.3-R153-NPC-APPEARANCE-LIVE-COLOR-CARDS.jar'
+$artifactName = 'ImmersiveNPCs-0.6.3-R154-NPC-APPEARANCE-ATLAS-REPAIR.jar'
 $sourceJar = Join-Path $projectRoot (Join-Path 'dist' $artifactName)
 if (-not (Test-Path -LiteralPath $sourceJar)) {
     & (Join-Path $projectRoot 'build.ps1')

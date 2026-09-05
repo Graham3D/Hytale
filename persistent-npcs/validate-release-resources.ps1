@@ -54,6 +54,9 @@ try {
     $thumbnailRoot = Join-Path $PSScriptRoot 'src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcAppearance/Thumbnails'
     $provenance = Get-Content -Raw -LiteralPath (Join-Path $thumbnailRoot 'provenance.json') | ConvertFrom-Json
     if (@($provenance.unavailable).Count -ne 0) { throw 'Pinned cosmetic thumbnail coverage is incomplete.' }
+    if (($provenance.size -join ',') -ne '92,149' -or ($provenance.bakeSize -join ',') -ne '184,298') {
+        throw 'Client thumbnail atlas budget or high-resolution bake contract drift.'
+    }
     $rendererSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'tools/bake_appearance_thumbnails.py')).Replace("`r`n", "`n")
     $rendererHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($rendererSource)))
     if ($provenance.renderer -cne 'R152 fixed category rigs v2' -or $rendererHash -ine $provenance.rendererSha256) {
@@ -81,6 +84,12 @@ try {
         if ($fields.Count -ne 3 -or $fields[1] -cnotmatch '^[a-f0-9]{24}\.png$') { throw 'Invalid thumbnail index entry.' }
         if ((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $thumbnailRoot $fields[1])).Hash -ine $fields[2]) {
             throw "Packaged thumbnail hash mismatch: $($fields[0])"
+        }
+        $thumbnailBytes = [IO.File]::ReadAllBytes((Join-Path $thumbnailRoot $fields[1]))
+        $thumbnailWidth = $thumbnailBytes[16]*16777216 + $thumbnailBytes[17]*65536 + $thumbnailBytes[18]*256 + $thumbnailBytes[19]
+        $thumbnailHeight = $thumbnailBytes[20]*16777216 + $thumbnailBytes[21]*65536 + $thumbnailBytes[22]*256 + $thumbnailBytes[23]
+        if ($thumbnailWidth -ne 92 -or $thumbnailHeight -ne 149) {
+            throw "Oversized client thumbnail: $($fields[0])"
         }
     }
     $materialRoot = Join-Path $PSScriptRoot 'src/main/resources/appearance-color-sources'

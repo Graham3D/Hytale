@@ -14,6 +14,7 @@ import javax.imageio.stream.MemoryCacheImageOutputStream;
 /** Closed packaged material catalog. No NPC/player data, file writes or client access. */
 public final class AppearanceColorCards {
     public static final int WIDTH = 184, HEIGHT = 298, MAX_CARD_BYTES = 128 * 1024;
+    public static final int CLIENT_WIDTH = 92, CLIENT_HEIGHT = 149;
     public static final int SOURCE_CACHE_LIMIT = 32, PNG_CACHE_LIMIT = 128;
     public static final long PNG_BYTE_LIMIT = 12 * 1024 * 1024;
     private static final String ROOT = "/appearance-color-sources/";
@@ -90,8 +91,7 @@ public final class AppearanceColorCards {
             }
         }
         try {
-            BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-            image.setRGB(0, 0, WIDTH, HEIGHT, rgb, 0, WIDTH);
+            BufferedImage image = displayImage(rgb);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             try (var memory = new MemoryCacheImageOutputStream(out)) {
                 if (!ImageIO.write(image, "png", memory)) throw new IOException("PNG encoder missing");
@@ -110,6 +110,26 @@ public final class AppearanceColorCards {
     public synchronized int cachedSources() { return sources.size(); }
     public synchronized long cachedBytes() { return cachedBytes; }
     public int catalogSize() { return entries.size(); }
+
+    /** Alpha-weighted 2x2 box reduction AFTER material recoloring, never of tint masks. */
+    private static BufferedImage displayImage(int[] pixels) {
+        int[] reduced = new int[CLIENT_WIDTH * CLIENT_HEIGHT];
+        for (int y = 0; y < CLIENT_HEIGHT; y++) for (int x = 0; x < CLIENT_WIDTH; x++) {
+            int alpha = 0, red = 0, green = 0, blue = 0;
+            for (int dy = 0; dy < 2; dy++) for (int dx = 0; dx < 2; dx++) {
+                int pixel = pixels[(y*2+dy)*WIDTH+x*2+dx], a = pixel >>> 24;
+                alpha += a;
+                red += ((pixel >>> 16) & 255) * a;
+                green += ((pixel >>> 8) & 255) * a;
+                blue += (pixel & 255) * a;
+            }
+            if (alpha > 0) reduced[y*CLIENT_WIDTH+x] = ((alpha+2)/4 << 24)
+                    | ((red+alpha/2)/alpha << 16) | ((green+alpha/2)/alpha << 8) | ((blue+alpha/2)/alpha);
+        }
+        BufferedImage image = new BufferedImage(CLIENT_WIDTH, CLIENT_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        image.setRGB(0, 0, CLIENT_WIDTH, CLIENT_HEIGHT, reduced, 0, CLIENT_WIDTH);
+        return image;
+    }
 
     private static int[] pixels(JsonObject row, String key) {
         String file = row.get(key).getAsString();

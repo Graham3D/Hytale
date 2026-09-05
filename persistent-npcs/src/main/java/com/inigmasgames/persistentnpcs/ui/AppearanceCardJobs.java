@@ -8,11 +8,13 @@ import java.util.function.*;
 /** One running and one latest pending render per viewer; one queued world delivery. */
 public final class AppearanceCardJobs implements AutoCloseable {
     public static final int MAX_CARDS = 128;
+    public static final int COALESCE_MILLIS = 180;
     private static final class Renderer { static final AppearanceColorCards INSTANCE = new AppearanceColorCards(); }
     private final AtomicLong generation = new AtomicLong();
     private final AtomicReference<Batch> pending = new AtomicReference<>();
     private final AtomicBoolean deliveryQueued = new AtomicBoolean();
-    private final ThreadPoolExecutor worker;
+    private final ScheduledThreadPoolExecutor worker;
+    private ScheduledFuture<?> scheduled;
     private final Function<AppearanceColorCards.Request, AppearanceColorCards.Rendered> renderer;
     private volatile boolean closed;
     public record Card(int slot, AppearanceColorCards.Rendered image) { }
@@ -21,21 +23,27 @@ public final class AppearanceCardJobs implements AutoCloseable {
     public AppearanceCardJobs() { this(request -> Renderer.INSTANCE.render(request)); }
     public AppearanceCardJobs(Function<AppearanceColorCards.Request, AppearanceColorCards.Rendered> renderer) {
         this.renderer = renderer;
-        worker = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1), r -> {
+        worker = new ScheduledThreadPoolExecutor(1, r -> {
             Thread thread = new Thread(r, "npc-private-color-cards"); thread.setDaemon(true); return thread;
-        }, new ThreadPoolExecutor.DiscardOldestPolicy());
+        });
+        worker.setRemoveOnCancelPolicy(true);
+        worker.setKeepAliveTime(10, TimeUnit.SECONDS);
         worker.allowCoreThreadTimeOut(true);
     }
     public boolean current(long token) { return !closed && generation.get() == token; }
-    public void invalidate() { generation.incrementAndGet(); pending.set(null); worker.getQueue().clear(); }
-    public void request(List<AppearanceColorCards.Request> input, Executor world, Consumer<Batch> receiver) {
+    public synchronized void invalidate() {
+        generation.incrementAndGet(); pending.set(null);
+        if (scheduled != null) scheduled.cancel(false);
+        scheduled = null;
+    }
+    public synchronized void request(List<AppearanceColorCards.Request> input, Executor world, Consumer<Batch> receiver) {
         invalidate();
         if (closed) return;
         long token = generation.get();
         List<AppearanceColorCards.Request> requests = List.copyOf(input);
         if (requests.size() > MAX_CARDS || requests.stream().anyMatch(r -> r.slot() < 0 || r.slot() >= MAX_CARDS))
             throw new IllegalArgumentException("Private card budget exceeded");
-        worker.execute(() -> {
+        scheduled = worker.schedule(() -> {
             List<Card> cards = new ArrayList<>();
             String failure = "";
             try {
@@ -56,7 +64,7 @@ public final class AppearanceCardJobs implements AutoCloseable {
                     if (batch != null && current(batch.generation())) receiver.accept(batch);
                 }); } catch (RuntimeException stopped) { deliveryQueued.set(false); pending.set(null); }
             }
-        });
+        }, COALESCE_MILLIS, TimeUnit.MILLISECONDS);
     }
-    @Override public void close() { closed = true; invalidate(); worker.shutdownNow(); }
+    @Override public synchronized void close() { closed = true; invalidate(); worker.shutdownNow(); }
 }

@@ -2,7 +2,28 @@
 
 Updated: 2026-09-05 (America/New_York)
 
-Latest candidate: **R153 — private on-demand appearance color cards, deployed**. See the
+Latest candidate: **R154 — appearance shared-atlas repair, deployed**. See the
+[R154 diagnosis / implementation / connected checklist](persistent-npcs/docs/R154_APPEARANCE_ATLAS_REPAIR.md).
+R153 connected validation **FAILED**: the client reported an atlas size of
+4096×32768 against a 4096×16384 maximum and dropped 194 of 1093 UI images. The
+screenshots show corrupt white/blue chrome, icons, swatches and buttons.
+
+R154 retains the 184×298 source bake but uploads 92×149 display-sized references
+and colored cards; one live slot bank replaces two, unused category textures are
+removed, unchanged batches skip asset rebuilds, and rapid selections coalesce for
+180ms. Maximum card texels are approximately 79% lower. Full deterministic suite,
+new client-budget/rebuild-churn regressions and offline source/rig checks **PASS**.
+Native connected approval remains **PENDING**; if this fails, stop for alternatives.
+
+Active R154: **16,428,537 bytes**, SHA-256
+`AEE75003EF5D0332D62C89EC1237DE037AA8154CE29A2F851D8BB4774378CB9E`.
+Exactly one active project JAR. Failed R153 retained separately; R152 and accepted
+R146 rollback remain intact. Runtime profiles unchanged: **76 files / 50,335,199
+bytes**, aggregate `93DC68D4FEB07DA5EED0036FCA09B685C53672E974A253031DBE683EFF4DF58F`.
+No appearance/backend authority, UI layout, inventory/gear, stats, voice or Profile
+Editor changes. **STOP for connected testing; no Profile Editor polish.**
+
+Historical R153 candidate follows. See the
 [R153 implementation / connected-validation report](persistent-npcs/docs/R153_APPEARANCE_LIVE_COLOR_CARDS.md).
 Connected private asset refresh is **pending**, not inferred from deterministic
 tests. The operator explicitly selected this bounded-cache fallback. No Profile

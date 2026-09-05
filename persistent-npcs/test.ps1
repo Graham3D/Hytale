@@ -619,6 +619,9 @@ if ($LASTEXITCODE -ne 0) { throw "R151 appearance native cards tests failed with
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R153AppearanceColorCardsTest
 if ($LASTEXITCODE -ne 0) { throw "R153 private appearance color cards tests failed with exit code $LASTEXITCODE" }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R154AppearanceAtlasBudgetTest
+if ($LASTEXITCODE -ne 0) { throw "R154 appearance client atlas budget tests failed with exit code $LASTEXITCODE" }
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R147NpcProfileRepairTest
 if ($LASTEXITCODE -ne 0) {
     throw "R147 Profile repair tests failed with exit code $LASTEXITCODE"

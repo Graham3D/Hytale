@@ -1,5 +1,10 @@
 # R153 — private, on-demand appearance color cards
 
+**Subsequent connected result: FAILED.** Client atlas overflow dropped 194 images,
+corrupting chrome/swatches. R154 is the bounded repair candidate; see
+[diagnosis, changes and connected checklist](R154_APPEARANCE_ATLAS_REPAIR.md).
+The original R153 deployment/automated evidence below is historical, not approval.
+
 Date: 2026-09-05. Baseline: clean main / origin main at
 `8d602a4a3313783cecb69c99c4309b2b2dd584dc` (R152).
 Status: **implemented, full deterministic PASS, deployed; connected approval pending**.

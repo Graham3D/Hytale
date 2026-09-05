@@ -1,10 +1,15 @@
 {
   "renderer": "R152 fixed category rigs v2",
   "size": [
+    92,
+    149
+  ],
+  "bakeSize": [
     184,
     298
   ],
-  "rendererSha256": "9824683285f7d4089b1da0253fa255c83cd888a4d1311bfa27fd1a6a4733a5c0",
+  "clientSampling": "R154 display-resolution BOX; shared UI atlas budget",
+  "rendererSha256": "eb4b8b1331c9fe51c8a86d84c1024bc619c985d39def41d43593465b879de92f",
   "rendererHashEncoding": "UTF-8 with LF newlines",
   "pythonLibraries": {
     "Pillow": "12.3.0",

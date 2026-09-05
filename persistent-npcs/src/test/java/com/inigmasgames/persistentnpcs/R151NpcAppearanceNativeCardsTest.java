@@ -82,7 +82,7 @@ public final class R151NpcAppearanceNativeCardsTest {
             byte[] bytes=Files.readAllBytes(thumbs.resolve(f[1]));
             String sha=HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));
             assert sha.equals(f[2]) : f[0]; hashes.add(sha);
-            var png=ImageIO.read(thumbs.resolve(f[1]).toFile()); assert png.getWidth()==184 && png.getHeight()==298;
+            var png=ImageIO.read(thumbs.resolve(f[1]).toFile()); assert png.getWidth()==92 && png.getHeight()==149;
             String[] key=f[0].split(":",2);
             String texture=AppearanceEditorPresentation.thumbnail(Category.valueOf(key[0]),key[1]);
             assert texture != null && patches.contains("@T"+texture+" = PatchStyle(");

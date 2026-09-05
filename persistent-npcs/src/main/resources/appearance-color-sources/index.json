@@ -9596,6 +9596,6 @@
     "Cosmetics/CharacterCreator/Underwear.json": "1fef4c8dc9ba7ca65c3f9922da4df9edab52ae92fc8ac8acdb12907f1b71b064"
   },
   "bakerSha256": "7dc7088e1da8f2f3d48bb7fcfcc1bbc7f01c8067c343bcd8d190d8ecc04c7781",
-  "geometrySha256": "9824683285f7d4089b1da0253fa255c83cd888a4d1311bfa27fd1a6a4733a5c0",
+  "geometrySha256": "eb4b8b1331c9fe51c8a86d84c1024bc619c985d39def41d43593465b879de92f",
   "materialRule": "Exact grayscale only; 256-column native gradient; byte lighting error <= 1 RGB level; fixed context"
 }

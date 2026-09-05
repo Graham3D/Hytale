@@ -25,7 +25,7 @@ public final class R153AppearanceColorCardsTest {
         assert renderer.render(new AppearanceColorCards.Request(0,"OVERTOP","LongBeltedJacket","BadVariant","Purple")) == null;
         assert renderer.render(new AppearanceColorCards.Request(0,"../", "../", "", "")) == null;
         var image = ImageIO.read(new ByteArrayInputStream(p.png()));
-        assert image.getWidth() == 184 && image.getHeight() == 298;
+        assert image.getWidth() == 92 && image.getHeight() == 149;
         // Renderer cache pressure with actual catalog choices, never arbitrary generated RGB.
         var index = com.google.gson.JsonParser.parseString(Files.readString(Path.of("src/main/resources/appearance-color-sources/index.json"))).getAsJsonObject();
         int rendered = 0;
@@ -52,7 +52,7 @@ public final class R153AppearanceColorCardsTest {
         other.release(); assert other.residentNames() == 0;
         assert other.publish(List.of(new AppearanceCardJobs.Card(0,g))).size() == 1 : "Reopen after Back";
         for (int i=0;i<500;i++) assets.publish(List.of(new AppearanceCardJobs.Card(i%128, i%2==0?p:g)));
-        assert assets.residentNames() <= 256;
+        assert assets.residentNames() <= 128;
         int before = packets.size();
         assets.close(); assets.close();
         assert assets.residentNames() == 0 && packets.size() == before+2;
