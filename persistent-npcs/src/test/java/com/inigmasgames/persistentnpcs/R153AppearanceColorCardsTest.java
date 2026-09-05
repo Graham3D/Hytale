@@ -20,7 +20,7 @@ public final class R153AppearanceColorCardsTest {
                 "new RequestCommonAssetsRebuild(")) assert !all.contains(retired):retired;
         Path jar;
         try(var files=Files.list(Path.of("dist"))) {
-            jar=files.filter(path -> path.getFileName().toString().contains("R157"))
+            jar=files.filter(path -> path.getFileName().toString().contains("R158"))
                     .findFirst().orElseThrow();
         }
         try(JarFile archive=new JarFile(jar.toFile())) {

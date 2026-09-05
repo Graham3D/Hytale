@@ -1320,6 +1320,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceEditorStatus = "Browsing " + appearancePrimary.name()
                         + " from the pinned live registry snapshot.";
                 appearanceEditorError = false;
+                scheduleAppearancePreview(store, event);
                 refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_CATEGORY" -> {
@@ -1341,6 +1342,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceEditorStatus = "Choose " + category.label()
                         + ". Existing missing values remain retained until Save.";
                 appearanceEditorError = false;
+                scheduleAppearancePreview(store, event);
                 refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_SEARCH" -> {
@@ -1432,7 +1434,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceDraft.reset();
                 authoringSession.markSaved(NpcAuthoringSession.EditorKind.APPEARANCE);
                 appearancePreview.restore(appearanceDraft);
-                appearancePreviewHash = AppearanceUiState.skinHash(appearanceDraft.currentSkin());
+                appearancePreviewHash = "";
+                scheduleAppearancePreview(store, event);
                 appearanceEditorStatus = "Draft reset to the persisted appearance.";
                 appearanceEditorError = false;
                 refreshAppearanceEditorUi(event);
@@ -1461,6 +1464,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 long generation = authoringSession.editorGeneration();
                 appearanceDraft = editor.appearanceAuthoring().begin(npcName,
                         authoringSession.npcStableId(), authoringSession.sessionId(), generation);
+                scheduleAppearancePreview(store, event);
                 refreshAppearanceEditorUi(event);
             }
             default -> throw new IllegalArgumentException("Unknown appearance action.");
@@ -1670,7 +1674,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void scheduleAppearancePreview(Store<EntityStore> store, AppearanceEventTrace event) {
-        String hash = AppearanceUiState.skinHash(appearanceDraft.currentSkin());
+        Category focusCategory = appearanceCategory;
+        String hash = AppearanceUiState.hash(
+                AppearanceUiState.skinHash(appearanceDraft.currentSkin())
+                        + "|focus=" + focusCategory.name());
         if (hash.equals(appearanceRequestedPreviewHash) || hash.equals(appearancePreviewHash)) {
             // Returning to the applied skin must also cancel a queued different skin.
             if (hash.equals(appearancePreviewHash)) cancelAppearancePreview();
@@ -1684,11 +1691,14 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         boolean coalesced = appearancePreviewGate.request(store.getExternalData().getWorld()::execute, generation -> {
             if (!built || appearanceDraft == null || !appearanceDraft.draftId().equals(draftId)
                     || authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.APPEARANCE
+                    || appearanceCategory != focusCategory
                     || !appearancePreviewGate.current(generation)
-                    || !hash.equals(AppearanceUiState.skinHash(appearanceDraft.currentSkin()))) return;
+                    || !hash.equals(AppearanceUiState.hash(
+                            AppearanceUiState.skinHash(appearanceDraft.currentSkin())
+                                    + "|focus=" + focusCategory.name()))) return;
             long started = System.nanoTime();
             try {
-                appearancePreview.show(appearanceDraft);
+                appearancePreview.show(appearanceDraft, focusCategory);
                 appearancePreviewHash = hash;
                 appearanceUiState.updateHashes(appearanceCatalogPage(), appearanceDraft.currentSkin(), hash);
                 appearanceTelemetry("APPEARANCE_PREVIEW_APPLIED", 0, started, "previewGeneration=" + generation);
@@ -1880,6 +1890,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             NpcAppearanceAuthoringService.SaveResult result =
                     editor.appearanceAuthoring().save(appearanceDraft, playerRef.getUuid());
             appearancePreview.commit(appearanceDraft, result);
+            appearancePreviewHash = "";
             boolean liveApplied = liveStorageAuthority == null || editor.applyAppearanceLive(
                     npcName, liveStorageAuthority.npcRef(), store);
             authoringSession.markSaved(NpcAuthoringSession.EditorKind.APPEARANCE);

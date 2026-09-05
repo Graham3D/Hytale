@@ -21,12 +21,15 @@ public final class NpcAppearancePreviewService implements AutoCloseable {
         this.diagnostics = diagnostics == null ? ignored -> { } : diagnostics;
     }
 
-    public synchronized void show(NpcAppearanceDraft draft) {
+    public synchronized void show(NpcAppearanceDraft draft,
+            NpcAppearanceCatalogService.Category focusCategory) {
         requireOpen();
         if (draft == null) throw new IllegalArgumentException("Appearance draft is required.");
         activeDraftId = draft.draftId();
         newestGeneration = draft.previewGeneration();
-        var model = adapter.createModel(draft.currentSkin());
+        var focusedSkin = NpcSkinCodecAdapter.focusedPreviewSkin(
+                draft.currentSkin(), focusCategory);
+        var model = adapter.createModel(focusedSkin);
         if (!draft.draftId().equals(activeDraftId)
                 || draft.previewGeneration() != newestGeneration) {
             diagnostics.accept("NPC_AUTHORING_APPEARANCE_PREVIEW_STALE_REJECTED timestamp="
@@ -34,10 +37,12 @@ public final class NpcAppearancePreviewService implements AutoCloseable {
                     + " previewGeneration=" + draft.previewGeneration());
             return;
         }
-        if (preview != null) preview.applyAppearanceDraft(model, draft.currentSkin(),
+        if (preview != null) preview.applyAppearanceDraft(model, focusedSkin,
                 draft.draftId(), newestGeneration);
         diagnostics.accept("NPC_AUTHORING_APPEARANCE_PREVIEW_READY timestamp=" + Instant.now()
                 + " draftId=" + draft.draftId() + " previewGeneration=" + newestGeneration
+                + " focusCategory=" + focusCategory
+                + " outerLayersSuppressed=PREVIEW_ONLY"
                 + " coalescing=NEWEST_GENERATION_ONLY viewerEcsMutation=false");
     }
 

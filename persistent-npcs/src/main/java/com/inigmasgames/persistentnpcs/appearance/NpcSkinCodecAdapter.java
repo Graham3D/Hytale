@@ -168,6 +168,35 @@ public final class NpcSkinCodecAdapter {
         return candidate;
     }
 
+    /**
+     * Produces a client-preview-only skin that reveals a cosmetic hidden by an
+     * outer authored layer. The authoritative draft is never mutated: changing
+     * categories or leaving the editor restores the complete composition.
+     */
+    public static com.hypixel.hytale.protocol.PlayerSkin focusedPreviewSkin(
+            com.hypixel.hytale.protocol.PlayerSkin source,
+            NpcAppearanceCatalogService.Category category) {
+        if (source == null) throw new IllegalArgumentException("Skin is required.");
+        com.hypixel.hytale.protocol.PlayerSkin preview =
+                new com.hypixel.hytale.protocol.PlayerSkin(source);
+        if (category == null) return preview;
+        switch (category) {
+            case UNDERWEAR -> {
+                preview.pants = null;
+                preview.overpants = null;
+                preview.undertop = null;
+                preview.overtop = null;
+            }
+            case PANTS -> preview.overpants = null;
+            case UNDERTOP -> preview.overtop = null;
+            case HAIRCUT -> preview.headAccessory = null;
+            case FACE, EYES, MOUTH, EYEBROWS, FACIAL_HAIR ->
+                    preview.faceAccessory = null;
+            default -> { }
+        }
+        return preview;
+    }
+
     public static String selection(com.hypixel.hytale.protocol.PlayerSkin skin,
             NpcAppearanceCatalogService.Category category) {
         return skin == null || category == null ? null : field(skin, category.skinField());
