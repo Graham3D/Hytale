@@ -628,6 +628,9 @@ if ($LASTEXITCODE -ne 0) { throw "R155 appearance static safety tests failed wit
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R156AppearanceInteractionLifecycleTest
 if ($LASTEXITCODE -ne 0) { throw "R156 appearance interaction lifecycle tests failed with exit code $LASTEXITCODE" }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R157AppearanceEventPayloadHotfixTest
+if ($LASTEXITCODE -ne 0) { throw "R157 appearance event payload hotfix tests failed with exit code $LASTEXITCODE" }
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R147NpcProfileRepairTest
 if ($LASTEXITCODE -ne 0) {
     throw "R147 Profile repair tests failed with exit code $LASTEXITCODE"

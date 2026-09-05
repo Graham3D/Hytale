@@ -973,7 +973,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         }
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#AppearanceSearchButton", authoringEvent("APPEARANCE_SEARCH")
-                        .append("AppearanceSearch", "#AppearanceSearchInput.Value"), false);
+                        .append("@AppearanceSearch", "#AppearanceSearchInput.Value"), false);
+        events.addEventBinding(CustomUIEventBindingType.ValueChanged,
+                "#AppearanceSearchInput", authoringEvent("APPEARANCE_SEARCH")
+                        .append("@AppearanceSearch", "#AppearanceSearchInput.Value"), false);
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#AppearanceVariantPreviousButton", authoringEvent("APPEARANCE_VARIANT_PREV"), false);
         events.addEventBinding(CustomUIEventBindingType.Activating,
@@ -988,45 +991,51 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 "#AppearanceSaveButton", authoringEvent("APPEARANCE_SAVE"), true);
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#AppearanceBackButton", authoringEvent("APPEARANCE_CANCEL"), true);
-        if (appearanceDraft == null) return;
-        for (int index = 0; index < 7; index++) {
+    }
+
+    private void bindAppearanceCatalogEvents(UIEventBuilder events, String pageHash,
+            List<Category> categories, List<String> optionIds, String currentId,
+            String currentColor, List<String> visibleVariants) {
+        for (int index = 0; index < categories.size(); index++) {
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#AppearanceCategory" + index,
                     authoringEvent("APPEARANCE_CATEGORY")
-                            .append("AppearanceCategory", "#AppearanceCategory" + index + " #Id.Text"), false);
+                            .append("AppearanceCategory", categories.get(index).name()), false);
         }
-        for (int index = 0; index < AppearanceUiAssetBudget.MAX_VISIBLE_CARDS; index++) {
+        for (int index = 0; index < optionIds.size(); index++) {
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#AppearanceOption" + index + " #Choice",
                     authoringEvent("APPEARANCE_OPTION")
-                            .append("AppearanceCatalogHash", "#AppearanceCatalogHash.Text")
-                            .append("AppearanceOptionId", "#AppearanceOption" + index + " #Id.Text"), false);
+                            .append("AppearanceCatalogHash", pageHash)
+                            .append("AppearanceOptionId", optionIds.get(index)), false);
         }
         for (String direction : new String[] { "PREV", "NEXT" }) {
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#AppearancePage" + direction,
                     authoringEvent("APPEARANCE_PAGE_" + direction)
-                            .append("AppearanceCatalogHash", "#AppearanceCatalogHash.Text"), false);
+                            .append("AppearanceCatalogHash", pageHash), false);
         }
-        for (int index = 0; index < 6; index++) {
-            events.addEventBinding(CustomUIEventBindingType.Activating, "#AppearanceVariant" + index,
+        for (int index = 0; index < visibleVariants.size(); index++) {
+            events.addEventBinding(CustomUIEventBindingType.Activating,
+                    "#AppearanceVariant" + index,
                     authoringEvent("APPEARANCE_VARIANT")
-                            .append("AppearanceCatalogHash", "#AppearanceCatalogHash.Text")
-                            .append("AppearanceOptionId", "#AppearanceCurrentId.Text")
-                            .append("AppearanceColorId", "#AppearanceCurrentColor.Text")
-                            .append("AppearanceVariantId", "#AppearanceVariant" + index + " #Id.Text"), false);
+                            .append("AppearanceCatalogHash", pageHash)
+                            .append("AppearanceOptionId", currentId)
+                            .append("AppearanceColorId", currentColor)
+                            .append("AppearanceVariantId", visibleVariants.get(index)), false);
         }
     }
 
-    private void bindAppearanceColors(UIEventBuilder events, List<String> colors) {
+    private void bindAppearanceColors(UIEventBuilder events, List<String> colors,
+            String pageHash, String currentId, String currentVariant) {
         for (int index = 0; index < colors.size(); index++) {
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#AppearanceColor" + index + " #Choice",
                     authoringEvent("APPEARANCE_COLOR")
-                            .append("AppearanceCatalogHash", "#AppearanceCatalogHash.Text")
-                            .append("AppearanceOptionId", "#AppearanceCurrentId.Text")
+                            .append("AppearanceCatalogHash", pageHash)
+                            .append("AppearanceOptionId", currentId)
                             .append("AppearanceColorId", colors.get(index))
-                            .append("AppearanceVariantId", "#AppearanceCurrentVariant.Text"), false);
+                            .append("AppearanceVariantId", currentVariant), false);
         }
     }
 
@@ -1538,7 +1547,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             AppearanceEditorPresentation.appendGrid(commands, "#AppearanceColorGrid", "AppearanceColor",
                     colors.size(), AppearanceEditorPresentation.COLOR_COLUMNS, 38, 38, 0,
                     "Pages/ImmersiveNpcAppearanceSwatch.ui");
-            bindAppearanceColors(events, colors);
+            bindAppearanceColors(events, colors, pageHash, currentId,
+                    NpcSkinCodecAdapter.variantId(current));
             appearancePaletteKey = paletteKey;
         }
         var paletteAnchor = new com.hypixel.hytale.server.core.ui.Anchor();
@@ -1590,6 +1600,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceVariantPage + 1 >= variantPages);
         commands.set("#AppearanceColorSection.Visible", !colors.isEmpty());
         commands.set("#AppearanceVariantSection.Visible", !variants.isEmpty());
+        bindAppearanceCatalogEvents(events, pageHash, categories,
+                options.stream().map(option -> option.cosmeticId()).toList(),
+                currentId, NpcSkinCodecAdapter.colorId(current), visibleVariants);
         boolean missing = descriptor == null && current != null && !current.isBlank();
         commands.set("#AppearanceSelectionInfo.Visible", missing);
         commands.set("#AppearanceSelectionInfo.Text", "Unavailable saved option");
@@ -2879,7 +2892,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append(new KeyedCodec<>("AppearanceCategory", Codec.STRING),
                         (data, value) -> data.appearanceCategory = value,
                         data -> data.appearanceCategory).add()
-                .append(new KeyedCodec<>("AppearanceSearch", Codec.STRING),
+                .append(new KeyedCodec<>("@AppearanceSearch", Codec.STRING),
                         (data, value) -> data.appearanceSearch = value,
                         data -> data.appearanceSearch).add()
                 .append(new KeyedCodec<>("AppearanceCatalogHash", Codec.STRING),

@@ -28,27 +28,22 @@ public final class R156AppearanceInteractionLifecycleTest {
     private R156AppearanceInteractionLifecycleTest() { }
 
     public static void main(String[] arguments) throws Exception {
-        explicitBindingLockPolicyAndSelectorPayloads();
+        explicitBindingLockPolicy();
         actualHandlerAcknowledgesNoopAndRejectedCurrentPageEvents();
         actualHandlerDoesNotAcknowledgeReplacedPageEvents();
         sourceAndResourceBoundaryRemainNarrow();
         System.out.println("R156 PASS: Appearance interactions are non-locking, no-op/rejected current-page events acknowledge, and replaced-page events cannot affect a newer page.");
     }
 
-    private static void explicitBindingLockPolicyAndSelectorPayloads() throws Exception {
+    private static void explicitBindingLockPolicy() throws Exception {
         Fixture fixture = fixture();
         try {
             UIEventBuilder events = new UIEventBuilder();
             invoke(fixture.page, "bindAppearanceEditorEvents",
                     new Class<?>[] { UIEventBuilder.class }, events);
-            invoke(fixture.page, "bindAppearanceColors",
-                    new Class<?>[] { UIEventBuilder.class, List.class },
-                    events, List.of("BLUE", "GOLD"));
 
             int appearanceBindings = 0;
-            boolean catalogSelector = false;
-            boolean optionSelector = false;
-            boolean currentSelectionSelector = false;
+            boolean searchUsesSdkOutputKey = false;
             for (CustomUIEventBinding binding : events.getEvents()) {
                 if (binding.data == null || !binding.data.contains("APPEARANCE_")) continue;
                 appearanceBindings++;
@@ -56,14 +51,12 @@ public final class R156AppearanceInteractionLifecycleTest {
                         || binding.data.contains("APPEARANCE_SAVE");
                 assert binding.locksInterface == transition
                         : "Unexpected lock policy for " + binding.selector + " data=" + binding.data;
-                catalogSelector |= binding.data.contains("#AppearanceCatalogHash.Text");
-                optionSelector |= binding.data.contains("#AppearanceOption0 #Id.Text");
-                currentSelectionSelector |= binding.data.contains("#AppearanceCurrentId.Text");
+                searchUsesSdkOutputKey |= binding.data.contains("@AppearanceSearch")
+                        && binding.data.contains("#AppearanceSearchInput.Value");
             }
-            assert appearanceBindings > 30 : "Expected the real production appearance bindings";
-            assert catalogSelector : "Catalog events must carry the rendered page hash";
-            assert optionSelector : "Option events must resolve the clicked option ID";
-            assert currentSelectionSelector : "Color/variant events must resolve current selection";
+            assert appearanceBindings > 10 : "Expected the real production appearance bindings";
+            assert searchUsesSdkOutputKey
+                    : "Client-derived search text must use Hytale's @ output-binding contract";
         } finally {
             fixture.session.close();
         }
