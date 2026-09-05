@@ -42,7 +42,7 @@ Group #SectionBackground { LayoutMode: Top; Anchor: (Height: 490, Bottom: 18); P
   $C.@TextField #ProfileKnowledgeInput { @Anchor = (Height: 40); MaxLength: 900; }
 }
 
-Group #SectionPersonality { LayoutMode: Top; Anchor: (Height: 370, Bottom: 18); Padding: (Right: 8);
+Group #SectionPersonality { LayoutMode: Top; Anchor: (Height: 420, Bottom: 18); Padding: (Right: 8);
   Label { Anchor: (Height: 34, Bottom: 10); Text: "PERSONALITY"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
   Label { Anchor: (Height: 22); Text: "Temperament"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
   MultilineTextField #ProfilePersonalityInput { Anchor: (Height: 120, Bottom: 10); Background: $C.@InputBoxBackground; MaxVisibleLines: 6; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
@@ -54,7 +54,7 @@ Group #SectionPersonality { LayoutMode: Top; Anchor: (Height: 370, Bottom: 18); 
   $C.@TextField #ProfileDislikesInput { @Anchor = (Height: 40); MaxLength: 700; }
 }
 
-Group #SectionValues { LayoutMode: Top; Anchor: (Height: 320, Bottom: 18); Padding: (Right: 8);
+Group #SectionValues { LayoutMode: Top; Anchor: (Height: 350, Bottom: 18); Padding: (Right: 8);
   Label { Anchor: (Height: 34, Bottom: 10); Text: "VALUES & BELIEFS"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
   Label { Anchor: (Height: 22); Text: "Values, beliefs, and moral outlook"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
   MultilineTextField #ProfileValuesInput { Anchor: (Height: 220); Background: $C.@InputBoxBackground; MaxVisibleLines: 10; AutoGrow: false; MaxLength: 700; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }

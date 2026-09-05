@@ -161,12 +161,18 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private String profileGenerationScope = "BIOGRAPHY";
 
     private enum ProfileCategory {
-        BASIC_INFO("BasicInfo"), BACKGROUND("Background"), PERSONALITY("Personality"),
-        VALUES_BELIEFS("ValuesBeliefs"), MOTIVATIONS("Motivations"),
-        RELATIONSHIPS("Relationships"), SPEECH_STYLE("SpeechStyle"), NOTES("Notes");
+        BASIC_INFO("BasicInfo", 0), BACKGROUND("Background", 1),
+        PERSONALITY("Personality", 2), VALUES_BELIEFS("ValuesBeliefs", 3),
+        MOTIVATIONS("Motivations", 4), RELATIONSHIPS("Relationships", 5),
+        SPEECH_STYLE("SpeechStyle", 6), NOTES("Notes", 7);
 
         private final String resourceName;
-        ProfileCategory(String resourceName) { this.resourceName = resourceName; }
+        private final int scrollChildIndex;
+
+        ProfileCategory(String resourceName, int scrollChildIndex) {
+            this.resourceName = resourceName;
+            this.scrollChildIndex = scrollChildIndex;
+        }
         String resource() { return "Pages/ProfileEditor/" + resourceName + ".ui"; }
     }
     private NpcAppearanceDraft appearanceDraft;
@@ -752,11 +758,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 }
                 profileCategory = ProfileCategory.valueOf(
                         data.profileSection.toUpperCase(Locale.ROOT));
-                // The installed 0.6.3 Custom UI contract exposes normal vertical
-                // scrolling but no verified programmatic anchor/offset mutation.
-                // The rail is navigation/position context only and never rebuilds
-                // or mutates the mounted form.
-                refreshProfileEditorUi();
+                // Use the installed client's native scroll-to-child contract. The
+                // mounted form and its unsaved input remain intact during navigation.
+                navigateProfileEditorSection();
                 return;
             }
             if ("PROFILE_FIELD".equals(authoringAction)) {
@@ -2102,18 +2106,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#ProfileValidationStatus.Style.TextColor",
                 profileEditorError ? "#e76f6f" : "#9ed7a6");
         for (ProfileCategory category : ProfileCategory.values()) {
-            String label = switch (category) {
-                case BASIC_INFO -> "Basic Info";
-                case BACKGROUND -> "Background";
-                case PERSONALITY -> "Personality";
-                case VALUES_BELIEFS -> "Values & Beliefs";
-                case MOTIVATIONS -> "Motivations";
-                case RELATIONSHIPS -> "Relationships";
-                case SPEECH_STYLE -> "Speech Style";
-                case NOTES -> "Notes";
-            };
-            commands.set("#ProfileCategory" + category.resourceName + ".Text",
-                    category == profileCategory ? "▶ " + label : label);
             commands.set("#ProfileCategory" + category.resourceName + "Selected.Visible",
                     category == profileCategory);
         }
@@ -2123,6 +2115,15 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         UICommandBuilder commands = new UICommandBuilder();
         setProfileEditorUi(commands);
         setProfileCategoryStatus(commands);
+        sendUpdate(commands, false);
+    }
+
+    private void navigateProfileEditorSection() {
+        UICommandBuilder commands = new UICommandBuilder();
+        setProfileEditorUi(commands);
+        setProfileCategoryStatus(commands);
+        commands.set("#ProfileForm.ScrollChildIndexIntoView",
+                profileCategory.scrollChildIndex);
         sendUpdate(commands, false);
     }
 
