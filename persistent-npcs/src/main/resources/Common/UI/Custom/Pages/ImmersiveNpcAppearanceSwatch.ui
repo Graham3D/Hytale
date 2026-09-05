@@ -1,0 +1,12 @@
+$C = "../Common.ui";
+
+Button #Choice {
+  TextTooltipStyle: $C.@DefaultTextTooltipStyle;
+  Group #Selected { HitTestVisible: false; Anchor: (Left: 1, Top: 1, Width: 36, Height: 36); Background: "ImmersiveNpcAppearance/ColorOptionSelected.png"; Visible: false; }
+  Group { HitTestVisible: false; Anchor: (Left: 4, Top: 4, Width: 30, Height: 30); MaskTexturePath: "ImmersiveNpcAppearance/ColorOptionMask.png";
+    Group #ColorA { Anchor: (Left: 0, Width: 15); Background: #293547; }
+    Group #ColorB { Anchor: (Right: 0, Width: 15); Background: #293547; }
+  }
+  Group { HitTestVisible: false; Anchor: (Left: 4, Top: 4, Width: 30, Height: 30); Background: "ImmersiveNpcAppearance/ColorOptionFrame.png"; }
+  Label #Unknown { HitTestVisible: false; Visible: false; Text: "?"; Style: (...$C.@DefaultLabelStyle, HorizontalAlignment: Center, VerticalAlignment: Center); }
+}

@@ -1759,3 +1759,149 @@ and choose Appearance.
    non-destructive Voice Recorder playback. Do not delete established voice samples.
 
 **STOP for connected approval. Do not begin Profile Editor visual polish or another stage.**
+
+## R151 — Appearance Editor native cards, rails and full palette (2026-09-05)
+
+**Status: implemented and deployed; deterministic suite PASS; connected visual/function approval PENDING. STOP.**
+Baseline: clean main `b122dbca1e321a215c7bdf9202e3fecfc7085518` (R150).
+Scope is Appearance Editor refinement only. Profile Editor polish, other stages,
+distillation, migration and archival backup work were not started.
+
+### Presentation architecture
+
+- Native decorated 1380×910 window retained; two 62px icon-only primary/secondary rails
+  replace wide text columns. Tooltips retain names. Selected icons use native gold
+  artwork, with a restrained rail accent. Packaged native ContainerVerticalSeparator
+  textures frame both rails; ContainerTitleArrow forms the CATEGORY > SUBCATEGORY
+  breadcrumb.
+- Five 92×149 graphical cards per row in a native TopScrolling viewport, with native
+  masks/frames, hover/pressed/disabled states, restrained selected underline, and
+  KeepScrollPosition. Cosmetic paging controls and page state are removed. All matching
+  options—including None for optional categories—are returned by the same pinned
+  catalog filter through `queryAll`; the old paged query API still delegates to that
+  filter and retains its compatibility tests.
+- Every valid color ID is bound/rendered simultaneously, thirteen 38px swatches per
+  row; palette height grows by whole rows. All color Previous/Next controls, labels,
+  allowlist actions and page state are removed. Native circular swatches and gold
+  selected rings remain; palette colors still come from the existing live registry
+  lookup. No guessed color IDs or authority changes.
+- Variants retain their six-choice controls and paging. A stale presentation-page
+  offset is clamped **before** event binding when Randomize/category changes reduce
+  the variant count, matching the existing displayed clamp.
+- Search uses the installed MyAvatar field decoration and the short placeholder
+  “Search”. Its native icon property is `Texture`, not `TexturePath`; this exact
+  markup distinction is regression-tested.
+- Preview panel gives the existing NPC preview a 590×690 region and the existing
+  authored ground artwork. Permanent “Appearance Preview”, preview-only footer,
+  cosmetic-name caption and dirty-state prose are removed. Missing saved cosmetics
+  retain an inline compact unavailable indicator/tooltip; errors remain contextual.
+- Footer: separate BACK; compact native Randomize/Reset utility icons; DISCARD CHANGES;
+  SAVE. Back routes through the existing guarded cancel flow (dirty confirmation,
+  clean return). Discard also uses that existing confirmation/cleanup flow and is
+  disabled when clean. Reset/Save reflect dirty state. No Escape interception.
+- Dynamic cards/swatches are appended with numeric-only container selectors; exact
+  cosmetic/color IDs remain event values behind the unchanged authoring-session,
+  identity, generation and draft guards. Rebuilds regenerate bindings with nodes.
+
+### Cosmetic thumbnail contract and limits
+
+Native MyAvatar's `PartPreviewComponent` is populated by client code. Inspection
+found no verified server Custom UI part-preview contract or static native thumbnail
+library. No undocumented preview component is used and no player representation is
+borrowed to generate cards.
+
+The explicitly authorized fallback is a deterministic offline software renderer:
+**590 packaged reference cards covering all pinned installed cosmetic entries**, using
+actual blockymodel geometry, UV textures and gradients on a canonical neutral mannequin.
+Cards show representative reference colors/first variants, not the current NPC draft
+or exact native animated/shader presentation; tooltips identify this distinction.
+The existing live preview remains responsible for the selected appearance.
+
+A future catalog entry absent from the packaged index is still reachable/selectable
+with a clear unavailable-thumbnail placeholder. No generic category icon is passed
+off as its cosmetic image. Native resources remain owned by Hytale/Hypixel.
+No absolute install paths, Python, renderer service, model requests or player data
+are required at runtime.
+
+See [asset provenance and reproduction instructions](persistent-npcs/docs/R151_APPEARANCE_ASSET_PROVENANCE.md),
+[renderer contact sheet](persistent-npcs/docs/R151_APPEARANCE_THUMBNAIL_CONTACT_SHEET.png),
+and the packaged [per-card hash index](persistent-npcs/src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcAppearance/Thumbnails/index.tsv).
+The contact sheet is an offline renderer check, **not a connected Appearance UI screenshot**.
+
+### Safety and deterministic verification
+
+Full final suite passed using the installed release Server SDK:
+
+```powershell
+.\test.ps1 -SkipLive -ServerJar 'C:/Users/Zemio/AppData/Roaming/Hytale/install/release/package/game/latest/Server/HytaleServer.jar'
+```
+
+Includes the 8,100-scenario conversation matrix (zero stale commits, malformed action
+executions or leaked resources), A5 draft/save/conflict/unknown-field tests, voice
+privacy/isolation, inventory/gear, R146–R148 repair tests and **R149 persistent vanilla
+stats S1**. New R151 tests cover 113 filtered cosmetics plus None, 73 exact color IDs,
+dynamic SDK command rows, every packaged PNG/hash/reference, malformed/unknown
+thumbnail lookup, separated Back/Discard controls, contextual errors, and logical
+1080p/1440p layout budgets. Only obsolete R150 fixed-grid/paging expectations were
+updated; its icon/swatch/authority checks remain.
+
+Two independent full thumbnail bakes matched **all 590 PNG hashes**:
+index SHA-256 `516237E45943A7F6A82A7F8054E68B1D2E9E436B1FE9952825403A6C2D7ED6AB`.
+Release validation verifies consumed installed source hashes and packaged PNG hashes,
+failing closed if rebaking is needed. Existing SDK deprecation/Unsafe warnings remain.
+`git diff --check` passed. No system dependencies were installed.
+
+Connected client parsing/rendering/hit testing, scroll retention and gameplay checks
+remain **pending**, including both requested resolutions. Arithmetic and SDK
+serialization tests do not claim native-client render validation. No existing preview
+architecture limitation is claimed repaired by this presentation pass.
+
+### Deployment verification
+
+- Active: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R151-NPC-APPEARANCE-NATIVE-CARDS.jar`.
+- Size: **11,347,935 bytes**; packaged thumbnails: **590**.
+- SHA-256: `B7B328F2DFF926BB4BADF72435A59EE76F5764CE85B1E7F9E0A0EBE7C5F23A98`.
+- Manifest, build/installer artifact names and HUD counter all identify R151.
+- Build/staging/deployed hashes matched; exactly **one active project JAR**.
+- R150 preserved at `C:\HytaleRollback\NpcAuthoringStudio-Appearance-R150-2026-09-05\ImmersiveNPCs-0.6.3-R150-NPC-APPEARANCE-POLISH.jar`,
+  SHA-256 `A33CDB8F82D311B52029BDE184FE11F84DF2581605E7D3A7646758A35BA63DB7`.
+- Accepted R146 rollback remains untouched:
+  `38D97B3FFD0143A2282A496DF01C1855C18B9242865F93F41A516BC931A253A3`.
+- R149 rollback remains untouched:
+  `5E4BEB960C98826C76095B3209508B7D81E917AA6EE65E8D21E168C40C5BEA24`.
+- SkinSwap remains untouched:
+  `0444550F8B84E21AF6D1A991512E748BA7946AAAC47314B902BAE61018C76E77`.
+- Hytale and Java were stopped. The broad installer was not run. Runtime profile tree
+  before/after: **76 files / 50,335,199 bytes**, same sorted relative-path + SHA-256
+  aggregate `93DC68D4FEB07DA5EED0036FCA09B685C53672E974A253031DBE683EFF4DF58F`.
+  Existing NPC stats, appearances, profiles and voice recordings were not modified.
+
+### Connected approval checklist — 1920×1080 and 2560×1440
+
+1. Confirm HUD R151; enter server, run `/npc update Hoit`, open Appearance. Repeat
+   with Mara/Jonalith as useful. Confirm UI documents load without disconnect.
+2. Inspect native frame, icon-only rails/dividers, breadcrumb, search, graphical
+   cards, subdued selection, full palette and dominant preview. No controls or
+   palette rows should clip/overlap. Scrolling cards should remain inside their viewport.
+3. Visit **every primary/subcategory**, including empty Skin Features if applicable.
+   Scroll to the last cosmetic, select it, verify correct selected underline and
+   live preview; check scroll retention. Hover for cosmetic/category names.
+4. Search a known late-list cosmetic, no-match text, then clear search. Confirm all
+   catalog entries remain reachable and no stale events select the previous category.
+5. Select colors from the first and last swatch rows, including previously paged
+   colors. No color paging UI should exist. Exercise multi-color swatches and every
+   available variant; Randomize then switch to a cosmetic with fewer variants.
+6. Randomize → Reset must restore open-time saved appearance. Change → Back, test
+   staying and confirming discard. Change → Discard Changes, confirm, reopen and
+   verify no unsaved changes persisted. Clean Back must return to Studio.
+7. Change → Save → close/reopen → restart/reopen: verify appearance and stable NPC
+   identity persist. Verify new `/npc create` characters still reopen validly.
+8. Use only a designated disposable/degraded fixture for unavailable cosmetic
+   recovery; preserve its malformed data until an explicit valid save. Do not corrupt
+   established NPC files or delete established voice recordings.
+9. Compare player skin/equipment/held item/offhand/selected hotbar before and after
+   selecting, saving, discarding and closing. Restoration and authority must remain
+   unchanged. Smoke-test R149 stats, coupled inventory/gear moves, Profile Editor,
+   and non-destructive Voice Recorder playback.
+
+**STOP for connected visual approval. Do not begin Profile Editor polish or another stage.**

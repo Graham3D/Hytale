@@ -1,0 +1,12 @@
+$C = "../Common.ui";
+
+Button #Choice {
+  Style: (Default: (Background: #2f3a4f), Hovered: (Background: #39455d), Pressed: (Background: #253548), Disabled: (Background: #202b3b));
+  TextTooltipStyle: $C.@DefaultTextTooltipStyle;
+  MaskTexturePath: "ImmersiveNpcAppearance/PartMask.png";
+  Group #Thumbnail { HitTestVisible: false; }
+  Group { HitTestVisible: false; Background: "ImmersiveNpcAppearance/PartFrame.png"; }
+  Group #None { HitTestVisible: false; Visible: false; Anchor: (Left: 24, Top: 52, Width: 44, Height: 44); Background: "ImmersiveNpcAppearance/EmptyPartIcon.png"; }
+  Label #Unavailable { HitTestVisible: false; Visible: false; Text: "?"; Style: (...$C.@DefaultLabelStyle, FontSize: 28, TextColor: #9aa9b8, HorizontalAlignment: Center, VerticalAlignment: Center); }
+  Group #Selected { HitTestVisible: false; Visible: false; Anchor: (Left: 2, Right: 2, Bottom: 0, Height: 3); Background: #e4bc60; }
+}

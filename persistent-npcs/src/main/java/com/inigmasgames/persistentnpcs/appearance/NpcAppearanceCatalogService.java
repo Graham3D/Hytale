@@ -187,6 +187,18 @@ public final class NpcAppearanceCatalogService {
     }
 
     public CatalogPage query(Category category, String query, int requestedPage) {
+        List<CosmeticOptionDescriptor> matches = queryAll(category, query);
+        String normalized = query == null ? "" : query.strip().toLowerCase(Locale.ROOT);
+        int pageCount = Math.max(1, (matches.size() + PAGE_SIZE - 1) / PAGE_SIZE);
+        int page = Math.max(0, Math.min(requestedPage, pageCount - 1));
+        int from = Math.min(matches.size(), page * PAGE_SIZE);
+        int to = Math.min(matches.size(), from + PAGE_SIZE);
+        return new CatalogPage(category, normalized, page, pageCount, matches.size(),
+                matches.subList(from, to));
+    }
+
+    /** Same pinned catalog and filtering, exposed in full for the native scrolling grid. */
+    public List<CosmeticOptionDescriptor> queryAll(Category category, String query) {
         String normalized = query == null ? "" : query.strip().toLowerCase(Locale.ROOT);
         List<CosmeticOptionDescriptor> matches = new ArrayList<>();
         if (category != null && !category.required() && normalized.isBlank()) {
@@ -199,12 +211,7 @@ public final class NpcAppearanceCatalogService {
                             .toLowerCase(Locale.ROOT);
             if (normalized.isBlank() || haystack.contains(normalized)) matches.add(option);
         }
-        int pageCount = Math.max(1, (matches.size() + PAGE_SIZE - 1) / PAGE_SIZE);
-        int page = Math.max(0, Math.min(requestedPage, pageCount - 1));
-        int from = Math.min(matches.size(), page * PAGE_SIZE);
-        int to = Math.min(matches.size(), from + PAGE_SIZE);
-        return new CatalogPage(category, normalized, page, pageCount, matches.size(),
-                matches.subList(from, to));
+        return List.copyOf(matches);
     }
 
     private Snapshot capture() {

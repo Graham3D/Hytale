@@ -29,19 +29,8 @@ public final class R150NpcAppearancePolishTest {
         assert !appearance.contains("No game-owned thumbnails") && !appearance.contains("REGISTRY OPTIONS");
         assert appearance.contains("#AppearanceEmptyState") && appearance.contains("#AppearancePreviewFallback");
 
-        // Unscaled native UI coordinates: include title/chrome, content padding and footer.
-        // Both option-dependent sections visible simultaneously is the worst case.
-        int title = 38, padding = 32, footer = 46 + 48;
-        int bodyHeight = 910 - title - padding - footer;
-        int allOptionsHeight = 28 + 48 + 42 + 242 + 120 + 138;
-        assert allOptionsHeight <= bodyHeight - 20;
-        assert 4 * (52 + 6) == 232 : "Twelve cards must fit their viewport";
-        assert 3 * 148 + 2 * 10 == 484 - 20;
-        assert 8 * (54 + 4) == 484 - 20;
-        assert 24 + 2 * (34 + 6) + 30 <= 138;
-        int previewWidth = 1380 - 32 - (104 + 10) - (142 + 12) - (484 + 16) - 24;
-        assert previewWidth >= 440;
-        assert bodyHeight - 24 - 28 - 78 - 24 >= 520;
+        // R151 supersedes the R150 fixed-grid/rail proportions; retain the shared
+        // native frame, asset, selection, swatch and authority contracts below.
         for (int[] viewport : List.of(new int[] {1920, 1080}, new int[] {2560, 1440})) {
             assert 1380 + 24 < viewport[0] && 910 + 24 < viewport[1];
         }
@@ -53,18 +42,18 @@ public final class R150NpcAppearancePolishTest {
         for (Category category : Category.values()) {
             checkIcon(pages, ui, AppearanceEditorPresentation.icon(category));
         }
-        for (var spec : List.of(new Object[] {"Category", 7}, new Object[] {"Option", 12},
-                new Object[] {"Color", 8}, new Object[] {"Variant", 6})) {
+        for (var spec : List.of(new Object[] {"Category", 7}, new Object[] {"Variant", 6})) {
             for (int i = 0; i < (int) spec[1]; i++) assert appearance.contains("#Appearance" + spec[0] + i);
         }
         var textures = Pattern.compile("\"(ImmersiveNpcAppearance/[^\"]+\\.png)\"").matcher(ui);
         while (textures.find()) {
             Path path = pages.resolve(textures.group(1).replace(".png", "@2x.png"));
+            if (!Files.exists(path)) path = pages.resolve(textures.group(1));
             assert Files.isRegularFile(path) : path;
             assert ImageIO.read(path.toFile()) != null : "Unreadable packaged PNG " + path;
         }
         assert !appearance.contains("C:") && !appearance.contains("Client/Data");
-        assert ui.contains("MaskTexturePath: \"ImmersiveNpcAppearance/ColorOptionMask.png\"");
+        assert Files.readString(pages.resolve("ImmersiveNpcAppearanceSwatch.ui")).contains("MaskTexturePath: \"ImmersiveNpcAppearance/ColorOptionMask.png\"");
         assert ui.contains("@AppearanceAction = Button") && ui.contains("@Style = $C.@SecondaryButtonStyle");
         assert appearance.contains("@Style = $C.@DefaultButtonStyle");
 
@@ -97,7 +86,7 @@ public final class R150NpcAppearancePolishTest {
         assert page.contains("setAppearanceSelection(commands, selector,")
                 && page.contains("#AppearanceEmptyState.Visible");
         for (String action : List.of("APPEARANCE_PRIMARY", "APPEARANCE_CATEGORY", "APPEARANCE_SEARCH",
-                "APPEARANCE_PAGE_PREV", "APPEARANCE_PAGE_NEXT", "APPEARANCE_COLOR", "APPEARANCE_VARIANT",
+                "APPEARANCE_COLOR", "APPEARANCE_VARIANT",
                 "APPEARANCE_RANDOMIZE", "APPEARANCE_RESET", "APPEARANCE_CANCEL", "APPEARANCE_SAVE")) {
             assert page.contains("authoringEvent(\"" + action + "\")");
         }

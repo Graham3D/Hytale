@@ -51,5 +51,23 @@ try {
             }
         }
     }
-    Write-Host "Release resources validated: $revision; neutral skin IDs, gradients, and assets match $assetsPath"
+    $thumbnailRoot = Join-Path $PSScriptRoot 'src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcAppearance/Thumbnails'
+    $provenance = Get-Content -Raw -LiteralPath (Join-Path $thumbnailRoot 'provenance.json') | ConvertFrom-Json
+    if (@($provenance.unavailable).Count -ne 0) { throw 'Pinned cosmetic thumbnail coverage is incomplete.' }
+    foreach ($source in $provenance.sourceHashes.PSObject.Properties) {
+        $entry = $archive.GetEntry($source.Name)
+        if ($null -eq $entry) { throw "Thumbnail source no longer exists: $($source.Name)" }
+        $stream = $entry.Open()
+        try { $actual = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($stream)) }
+        finally { $stream.Dispose() }
+        if ($actual -ine $source.Value) { throw "Rebake cosmetic thumbnails against changed installed source: $($source.Name)" }
+    }
+    foreach ($line in Get-Content -LiteralPath (Join-Path $thumbnailRoot 'index.tsv')) {
+        $fields = $line.Split("`t")
+        if ($fields.Count -ne 3 -or $fields[1] -cnotmatch '^[a-f0-9]{24}\.png$') { throw 'Invalid thumbnail index entry.' }
+        if ((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $thumbnailRoot $fields[1])).Hash -ine $fields[2]) {
+            throw "Packaged thumbnail hash mismatch: $($fields[0])"
+        }
+    }
+    Write-Host "Release resources validated: $revision; neutral skin and hashed cosmetic thumbnails match $assetsPath"
 } finally { $archive.Dispose() }
