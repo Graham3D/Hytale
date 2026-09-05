@@ -116,6 +116,29 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
             }
             NativeNpcInventoryController.LiveStorageAuthority liveStorageAuthority =
                     resolvedStorage;
+            var prepared = editor.persistentStats() == null ? java.util.concurrent.CompletableFuture.completedFuture(null)
+                    : editor.persistentStats().prepare(selectedProfile, store,
+                            liveStorageAuthority == null ? null : liveStorageAuthority.npcRef(), !update);
+            prepared.whenComplete((ignored, statsError) -> world.execute(() -> {
+                if (!playerEntityRef.isValid()) return;
+                if (statsError != null) {
+                    diagnostics.accept("NPC_STATS_PROFILE_PREPARATION_FAILED npc=" + name + " reason=" + statsError);
+                    context.sendMessage(Message.raw("NPC stats unavailable: " + safeMessage(statsError)
+                            + ". Profile data is preserved; no current values were invented."));
+                }
+                try { openPrepared(store, playerEntityRef, playerRef, player, playerInventory, name,
+                        selectedProfile, liveStorageAuthority); }
+                catch (RuntimeException failure) { context.sendMessage(Message.raw("NPC Profile failed: " + safeMessage(failure))); }
+            }));
+        } catch (RuntimeException failure) {
+            context.sendMessage(Message.raw("NPC " + (update ? "update" : "create")
+                    + " failed: " + safeMessage(failure)));
+        }
+    }
+
+    private void openPrepared(Store<EntityStore> store, Ref<EntityStore> playerEntityRef,
+            PlayerRef playerRef, Player player, ItemContainer playerInventory, String name,
+            NpcProfile selectedProfile, NativeNpcInventoryController.LiveStorageAuthority liveStorageAuthority) {
             NpcMeshPreviewSession preview = null;
             NpcAuthoringSession authoringSession = null;
             NpcProfilePage page = null;
@@ -148,7 +171,7 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
                         voiceRecorder,
                         profile -> commit(store, playerRef, profile),
                         (viewerRef, eventStore) -> delete(
-                                eventStore, selectedProfile),
+                                eventStore, selectedProfile, playerRef),
                         diagnostics);
                 page.setInitialStatus(studioAppearance.message(), studioAppearance.degraded());
                 if (!player.getPageManager().openCustomPageWithWindows(
@@ -170,10 +193,6 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
                 }
                 throw failure;
             }
-        } catch (RuntimeException failure) {
-            context.sendMessage(Message.raw("NPC " + (update ? "update" : "create")
-                    + " failed: " + safeMessage(failure)));
-        }
     }
 
     private void commit(Store<EntityStore> store, PlayerRef playerRef, NpcProfile profile) {
@@ -190,15 +209,33 @@ abstract class AbstractImmersiveNpcProfileCommand extends AbstractPlayerCommand 
         }
     }
 
-    private void delete(Store<EntityStore> store, NpcProfile profile) {
+    private void delete(Store<EntityStore> store, NpcProfile profile, PlayerRef viewer) {
         if (!update || profile == null) {
             throw new IllegalStateException("Only an existing NPC profile can be deleted.");
         }
-        try {
-            adapter.removeNpc(store, profile);
-        } catch (IllegalStateException notActive) {
-            if (!safeMessage(notActive).contains("not spawned")) throw notActive;
-        }
+        adapter.removeNpcAsync(store, profile).handle((count, failure) -> {
+            Throwable cause = failure instanceof java.util.concurrent.CompletionException ? failure.getCause() : failure;
+            if (cause != null && !safeMessage(cause).contains("not spawned"))
+                throw new java.util.concurrent.CompletionException(cause);
+            return count;
+        }).thenCompose(ignored -> editor.persistentStats() == null
+                ? java.util.concurrent.CompletableFuture.completedFuture(null)
+                : editor.persistentStats().repository().retire(profile))
+                .whenComplete((ignored, failure) -> store.getExternalData().getWorld().execute(() -> {
+                    if (failure != null) {
+                        diagnostics.accept("NPC_PROFILE_DELETE_REFUSED npc=" + profile.name() + " reason=" + failure);
+                        viewer.sendMessage(Message.raw("NPC deletion safely refused: " + safeMessage(failure)));
+                        return;
+                    }
+                    try { finishDelete(profile); }
+                    catch (RuntimeException deleteFailure) {
+                        diagnostics.accept("NPC_PROFILE_DELETE_FAILED npc=" + profile.name() + " reason=" + deleteFailure);
+                        viewer.sendMessage(Message.raw("NPC folder deletion failed: " + safeMessage(deleteFailure)));
+                    }
+                }));
+    }
+
+    private void finishDelete(NpcProfile profile) {
         conversations.entityRemoved(profile.id());
         roles.unregister(profile);
         profiles.unregister(profile);

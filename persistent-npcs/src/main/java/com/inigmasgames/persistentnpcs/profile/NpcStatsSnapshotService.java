@@ -83,13 +83,28 @@ public final class NpcStatsSnapshotService {
         return snapshot;
     }
 
-    /** Unspawned NPCs have no authoritative persisted vitals. Never invent them. */
+    /** Equipment-only fallback when stat authority is unavailable. Never invent currents. */
     public NpcStatsSnapshot captureEquipmentOnly(UUID npcStableId, ItemContainer armor,
             UUID sessionId, long pageGeneration, long equipmentRevision) {
         return new NpcStatsSnapshot(npcStableId, null, Instant.now(),
                 Optional.empty(), Optional.empty(), Optional.empty(),
                 Optional.of(armorProtection(armor)),
                 Map.of(), equipmentRevision, sessionId, pageGeneration);
+    }
+
+    public NpcStatsSnapshot captureSaved(UUID npcStableId, ItemContainer armor,
+            com.inigmasgames.persistentnpcs.stats.NpcStatState saved,
+            UUID sessionId, long pageGeneration, long equipmentRevision) {
+        if (saved == null || !saved.stableNpcId().equals(npcStableId))
+            return captureEquipmentOnly(npcStableId, armor, sessionId, pageGeneration, equipmentRevision);
+        return new NpcStatsSnapshot(npcStableId, null, Instant.now(),
+                savedStat(saved, "Health"), savedStat(saved, "Stamina"), savedStat(saved, "Mana"),
+                Optional.of(armorProtection(armor)), Map.of(), equipmentRevision, sessionId, pageGeneration);
+    }
+    public static Optional<StatValue> savedStat(com.inigmasgames.persistentnpcs.stats.NpcStatState state, String id) {
+        var stat = state.stats().get(id);
+        return stat == null ? Optional.empty() : Optional.of(new StatValue((float) stat.current(),
+                (float) stat.baseMin(), (float) stat.baseMax()));
     }
 
     public static DefenseSnapshot armorProtection(ItemContainer armor) {
@@ -107,7 +122,10 @@ public final class NpcStatsSnapshotService {
     private static Optional<StatValue> stat(EntityStatMap map, String id) {
         if (map == null) return Optional.empty();
         try {
-            EntityStatValue value = map.get(id);
+            int index = com.inigmasgames.persistentnpcs.stats.VanillaNpcStats.index(id);
+            EntityStatValue value = index < 0 ? null : map.get(index);
+            if (value != null && (!id.equals(value.getId()) || !Float.isFinite(value.get()) || !Float.isFinite(value.getMin())
+                    || !Float.isFinite(value.getMax()) || value.getMin() > value.getMax())) return Optional.empty();
             return value == null ? Optional.empty()
                     : Optional.of(new StatValue(value.get(), value.getMin(), value.getMax()));
         } catch (RuntimeException unavailable) {

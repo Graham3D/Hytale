@@ -1416,3 +1416,207 @@ R147's scrolling and base-only Defense behavior; it does not declare R147 accept
 Source, tests and this report belong to the R148 candidate commit pushed to `main`;
 the exact commit hash is supplied in the handoff. **STOP for connected approval.**
 No Appearance Editor polish or new milestone was started.
+
+## R149 — S1 Persistent Vanilla NPC Stats Foundation
+
+Authoritative specification: **Orbis Persistent NPC Vanilla Stats Technical Design.docx**,
+provided 2026-09-04, SHA-256
+`9343E0B579C8734A65F3D033B923D30A47B3897F1230112C68508634DE82F034`.
+Implementation baseline: clean `main` at R148 commit
+`84a5580e2be0c4f240f1afaef8e92210886e554d` (also verified on remote `main`).
+This is S1 only: Health, Stamina, Mana and existing independent typed armor
+resistance. No attributes, levels, classes, perks, RPG/Mercenary formulas, stat
+editing UI, offline regeneration, appearance polish, or distillation changes.
+
+### Authority and architecture
+
+- `VanillaNpcStats` resolves Health/Stamina/Mana through the installed
+  `DefaultEntityStatTypes` integer indexes each time; no serialized numeric indexes
+  and no production deprecated `EntityStatMap.get(String)` calls. Native value IDs
+  are checked against the requested string ID before reads or hydration.
+- `VanillaNpcStatBaselineResolver` reads installed `EntityStatType` definitions
+  and the actual native role's MaxHealth/Invulnerable policy. The spawn adapter now
+  selects the same registered per-profile native role used for unspawned baseline
+  resolution. Existing native-role JSON is preserved, not replaced with a template.
+  Unchanged Profile commits no longer reload/reinitialize an unchanged native role.
+- Installed release definitions are **Health 100, 0..100; Stamina 10, -4..10;
+  Mana 0, 0..0**. These are verified asset facts, not production constants. In
+  particular, the document's illustrative Stamina minimum of zero is not copied
+  over the installed native minimum of **-4**. Role MaxHealth affects the resolved
+  Health range; initial is clamped into that range, not unconditionally set to max.
+- While spawned, **the native EntityStatMap owns current values and effective
+  bounds**. Hytale continues to own regeneration, damage, death, effects, modifiers,
+  interactions and stat networking. S1 does not create a replacement map, tick a
+  parallel simulation, apply custom stat modifiers, or reset zero Health.
+- While unspawned, **the profile-local stat record owns current values**. Those
+  values remain frozen offline. Last observed effective bounds are historical
+  observations; saved cards use current/base maximum and disclose that distinction.
+- The dormant `NpcStatModifierContributor` interface exposes source-keyed native
+  modifier contributions for a later authorized stage. There are no active
+  contributors and no serialized modifier stacks in S1.
+
+### Persistence and migration
+
+Runtime path: `mods/ImmersiveNPCs/profiles/<canonical NPC name>/npc-stats.json`.
+For this test world the root is
+`C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs\profiles`.
+No existing runtime NPC files were manually rewritten during this implementation.
+Migration occurs through the deployed lifecycle when the world is started.
+
+Schema 1 contains `stableNpcId`, monotonic successful-save `revision`, `savedAt`,
+`captureReason`, and a string-keyed `stats` map. Each known entry has `current`,
+`baseInitial`, `baseMin`, `baseMax`, `lastKnownEffectiveMin`,
+`lastKnownEffectiveMax`, and `source`. Armor resistance/Defense is **not** stored
+in this file. Unknown future stat-ID records and top-level fields are retained
+without applying them to the vanilla map. Known records require finite
+native-range numbers, ordered bounds, complete fields and valid provenance.
+
+- `/npc create <name>` initializes persistent stats alongside the existing stable
+  profile/appearance/inventory lifecycle. A retry after partial creation preserves
+  the existing identity and authored files; an already-complete profile still
+  rejects duplicate creation. The command asynchronously awaits stat preparation
+  before opening Studio, without blocking the world thread on stat disk I/O.
+- First attachment with a missing/corrupt file migrates **live currents**, including
+  injured Health and negative Stamina. Native changes occurring while the first
+  save is being written are not overwritten by that migration snapshot.
+- Existing unspawned profiles are initialized from installed baselines after the
+  initial world scan, or lazily when opened. Loaded entities are scanned first;
+  failure to scan a world aborts background unspawned migration.
+- Corrupt/empty/identity-mismatched originals are copied byte-for-byte to
+  `npc-stats.conflict-<timestamp>-<uuid>.json` before reconstruction. Foreign
+  identity values are rejected, never reassigned; reconstruction uses the correct
+  profile's live map or its baseline. Unsupported future schema versions and
+  unreadable authority fail closed instead of being downgraded or fabricated.
+- On world-restored attachment with an existing record, that record wins as the
+  design specifies. Unexpected native currents are first preserved as
+  `npc-stats.runtime-conflict-<timestamp>-<uuid>.json`. A proven fresh SPAWN does
+  not require that conflict file. Evidence failure prevents hydration.
+- Each successful write uses a unique same-directory temporary file, forced file
+  contents, and atomic replacement. There is no non-atomic truncate/overwrite
+  fallback. Cache/revision update only after success. One serialized writer lane
+  coalesces backlogs to one pending snapshot/completion per NPC, rejects stale
+  attachment tokens, retains failed dirty captures for retry, and drains on close.
+
+### Lifecycle integration
+
+1. `NpcStatRemovalCaptureSystem` records native SPAWN/LOAD add reasons and reads
+   immutable snapshots during REMOVE/UNLOAD callbacks while the ref is still
+   valid. Identity resolution requires a managed role plus an exact role/name
+   profile binding; it never falls back to the default NPC. Player components are
+   explicitly excluded. A duplicate entity cannot steal an active stat attachment.
+2. `NpcStatHydrationSystem` runs after native `EntityStatsSystems.Recalculate`;
+   native Holder Setup/Balancing has already completed. It implements
+   `EntityStatsSystems.StatModifyingSystem`, so native `Changes` orders after it.
+   `Predictable.NONE` writes clamp persistent current into actual live bounds.
+   Hydration is once per stable NPC/live entity/attachment, with the source
+   repository revision recorded. Checkpoint revisions and Profile refreshes never
+   trigger repeat hydration. Readiness retry is bounded at 600 ticks.
+3. Read-only `NpcStatCheckpointSystem` runs after hydration/native Changes and
+   samples at most once per second per attached NPC. Unchanged values do not
+   rewrite disk or increment revision. World refs/maps never enter writer tasks.
+4. Controlled adapter removal queues the final capture and waits asynchronously
+   for durability, rechecking current values before removal. A persistently
+   changing map, unavailable authority, or failing disk safely refuses removal.
+   User-confirmed profile deletion waits for this barrier, then retires pending
+   writers before invoking the existing whole-profile deletion path.
+5. SDK REMOVE/UNLOAD hooks cover native removals outside the adapter. Reattachment
+   waits for an outstanding prior removal capture. Plugin shutdown schedules
+   final reads on the owning world threads and drains removal/writer work with
+   bounded waits. No stat disk writes run on the world thread.
+
+### NPC Profile cards and preserved systems
+
+Spawned cards read **LIVE current/effective maximum**. Unspawned cards read
+**SAVED current/base maximum** from the immutable repository cache, with source,
+revision and last-observed bounds in the tooltip. Unavailable values remain `—`.
+Invulnerability is reported separately as Yes/No/Unknown native role policy.
+R148 native typed armor aggregation remains independent of vitals and works for
+unspawned equipment. No preview packets, player inventory/equipment, gear rules,
+voice recordings, capture leases, cognition, or UI layout assets were changed.
+The pre-existing client preview weapon/armor bleed is **not repaired by S1**.
+
+### Verification and candidate deployment
+
+- **PASS:** complete pre-edit deterministic suite at clean R148, then complete
+  `test.ps1 -SkipLive` on the pre-release SDK and the final complete suite using
+  `test.ps1 -SkipLive -ServerJar <installed release HytaleServer.jar>`.
+  The final deployable JAR is built against the **release** SDK. Existing SDK
+  deprecation/Unsafe warnings remain; live model tests were not run.
+- Added `R149PersistentVanillaStatsTest`: installed asset/role baseline verification,
+  actual create/close/update/restart preparation, stable IDs, injured live migration,
+  zero Health, negative Stamina, native indexed `EntityStatMap` set/subtract behavior,
+  effective-bound clamps, one-time hydration, independent NPC/player maps, saved
+  display and unavailable authority, exact conflict backups, future-record retention,
+  identity mismatch/future-schema safety, disk failure and dirty retry, shutdown
+  flush, stale reattachment rejection, and retirement. A blocked-writer test sends
+  1,000 captures and verifies one coalesced completion/save with the latest values.
+  Lifecycle registration/order/cleanup also has deterministic wiring guards;
+  actual connected entity/world callbacks remain on the checklist below.
+- Full suite retained the 8,100-scenario conversation matrix and existing A0-A6,
+  recorder, appearance, gear, native container/paging, typed resistance and UI
+  packaging tests. R147's source assertions now recognize the saved-vitals argument
+  while retaining the independent armor/session checks. Initial test-fixture setup
+  and superseded source-assertion failures were corrected before the passing runs.
+- HUD revision, manifest, build and installer identify
+  **R149-PERSISTENT-VANILLA-NPC-STATS**. With Hytale/Java stopped, deployed exactly
+  one active project JAR:
+  `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R149-PERSISTENT-VANILLA-NPC-STATS.jar`.
+  Size **3,369,904 bytes**; source/staged/deployed SHA-256:
+  `5E4BEB960C98826C76095B3209508B7D81E917AA6EE65E8D21E168C40C5BEA24`.
+- Previous active R148 preserved intact at
+  `C:\HytaleRollback\NpcAuthoringStudio-Stats-R148-2026-09-04\ImmersiveNPCs-0.6.3-R148-NPC-PROFILE-REPAIR.jar`;
+  SHA-256 `C4D464BA7735C3EE7F312CF407BAC83F63EEB03D7B405F643E2078C3026450C3`.
+- Accepted R146 rollback remains unchanged at
+  `C:\HytaleRollback\NpcAuthoringStudio-Profile-R146-2026-09-04\ImmersiveNPCs-0.6.3-R146-NPC-PROFILE-MAIN-MENU-POLISH.jar`;
+  SHA-256 `38D97B3FFD0143A2282A496DF01C1855C18B9242865F93F41A516BC931A253A3`.
+  SkinSwap remains unchanged (SHA-256
+  `0444550F8B84E21AF6D1A991512E748BA7946AAAC47314B902BAE61018C76E77`).
+- All **61 runtime profile-tree files / 50,323,360 bytes** matched their pre-deploy
+  path+SHA-256 snapshot after deployment. Aggregate digest:
+  `9EC0E0D7832DE162E3BE514AF8BAA6EA7DE8F78EC26FDE7E4917B2F555CCE73A`.
+  No existing NPC, inventory, appearance or voice data was altered by deployment.
+  No migration archive or distillation state was touched. The game was not launched
+  on the user's behalf; first connected S1 migration is pending user testing.
+
+Source, tests and this report are included together in the R149 candidate commit
+on `main`; its exact commit hash is provided in the final handoff.
+
+### Connected S1 approval checklist — use a disposable test NPC
+
+1. Start the NPC world and verify **R149-PERSISTENT-VANILLA-NPC-STATS** in the HUD/log.
+   Confirm no stat-system registration/order errors or `NPC_STATS_*_FAILED` messages.
+2. `/npc create S1Test`: verify a stable folder, valid default appearance, and
+   `npc-stats.json` with that profile's stable UUID. Expect the installed native
+   vanilla values (normally 100/100, 10/10, 0/0), not invented RPG stats. Close and
+   `/npc update S1Test`; identity and values must be unchanged. Restart and repeat.
+3. Check an existing **spawned** NPC with legitimate injured/current values on its
+   first S1 migration. Verify `MIGRATION_FROM_LIVE`, no heal/reset, LIVE cards, and
+   a matching saved checkpoint after at least one second. Do not assume an
+   invulnerable NPC can be injured by attacks; inspect the separate policy tooltip.
+4. On a disposable damageable NPC, exercise native Health changes and available
+   native Stamina/Mana changes. Native regeneration remains native. Test zero
+   Health without a reset-to-max, and negative Stamina if supported by native play.
+5. Despawn/remove without deleting the profile, then reopen while unspawned.
+   SAVED currents must reflect the final live capture and stay frozen offline.
+   Respawn/restart: hydrate once, clamp to actual bounds, then resume native updates.
+6. Close/reopen Profile and save unrelated Profile/appearance changes while live;
+   they must not reset vitals. Test world unload/reload and graceful server shutdown.
+   Inspect runtime-conflict evidence if the world-restored map differs from the file.
+7. Equip/remove armor while spawned and unspawned. Typed Physical/Projectile
+   resistance should refresh independently; stat JSON must never gain Defense or
+   armor-resistance fields. Check invulnerability stays separate from armor.
+8. Verify Hoit, Mara, Jonalith and the player have independent vitals. Repeat an
+   inventory transfer, gear move, child editor navigation and non-destructive voice
+   playback check. No established voice samples need to be deleted for S1 testing.
+9. Confirm stat cards/tooltips at 1920×1080 and 2560×1440. Layout is unchanged;
+   connected rendering and native hit testing remain part of this approval gate.
+
+Native entity/world lifecycle ordering and gameplay behavior require this connected
+checklist: deterministic native-map tests are not a claim of connected PASS.
+Uncontrolled native removals cannot wait for disk in the engine callback; they
+queue a final immutable capture. Abrupt process/OS failure can lose the bounded
+checkpoint/write interval. Shutdown capture timeouts and persistent disk failures
+are explicit diagnostics, not silent success. Keep rollback until connected PASS.
+
+**STOP at this S1 candidate. Do not begin Appearance Editor polish, P2, RPG work,
+or another stage without explicit approval.**

@@ -115,8 +115,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private int npcInventoryPage;
     private int playerInventoryPage;
     private long inventoryViewRevision;
-    private com.inigmasgames.persistentnpcs.profile.NpcConfiguredVitals configuredVitals =
-            com.inigmasgames.persistentnpcs.profile.NpcConfiguredVitals.EMPTY;
+    private com.inigmasgames.persistentnpcs.stats.NpcStatState savedVitals;
+    private java.util.Optional<Boolean> statInvulnerable = java.util.Optional.empty();
     private final AtomicLong inventoryRefreshGeneration = new AtomicLong();
     private final CustomInventoryTransactionBridge inventoryBridge;
     private final Consumer<String> diagnostics;
@@ -2102,16 +2102,14 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
 
     private void captureStats(Store<EntityStore> store, boolean refreshUi) {
         String before = statsKey();
+        statInvulnerable = editor.persistentStats() == null ? java.util.Optional.empty()
+                : editor.persistentStats().invulnerable(authoringSession.npcStableId(), store,
+                        liveStorageAuthority == null ? null : liveStorageAuthority.npcRef());
         if (liveStorageAuthority == null) {
-            try {
-                configuredVitals = com.inigmasgames.persistentnpcs.profile.NpcConfiguredVitals.read(
-                        editor.profileDirectoryForBrowsing(npcName).resolve("native-role").resolve(npcName + ".json"));
-            } catch (RuntimeException unavailable) {
-                configuredVitals = com.inigmasgames.persistentnpcs.profile.NpcConfiguredVitals.EMPTY;
-                diagnostics.accept("NPC_CONFIGURED_VITALS_UNAVAILABLE npc=" + npcName + " reason=" + unavailable);
-            }
-            statsSnapshot = statsService.captureEquipmentOnly(authoringSession.npcStableId(),
-                    inventory.armor(), authoringSession.sessionId(),
+            savedVitals = editor.persistentStats() == null ? null
+                    : editor.persistentStats().repository().cached(authoringSession.npcStableId()).orElse(null);
+            statsSnapshot = statsService.captureSaved(authoringSession.npcStableId(),
+                    inventory.armor(), savedVitals, authoringSession.sessionId(),
                     authoringSession.pageGeneration(), inventory.equipmentRevision());
             statsFailure = "";
         } else {
@@ -2154,7 +2152,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         return statsSnapshot == null ? "UNAVAILABLE:" + statsFailure
                 : statsSnapshot.health() + ":" + statsSnapshot.stamina() + ":"
                         + statsSnapshot.mana() + ":" + statsSnapshot.defense() + ":"
-                        + statsSnapshot.equipmentRevision();
+                        + statsSnapshot.equipmentRevision() + ":invulnerable=" + statInvulnerable;
     }
 
     private void startStatsRefresh(Store<EntityStore> store) {
@@ -2296,13 +2294,25 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#DefenseStat #Value.TooltipText", statsSnapshot == null || statsSnapshot.defense().isEmpty()
                 ? "Armor resistance unavailable." : statsSnapshot.defense().get().details());
         for (String stat : new String[] { "Health", "Stamina", "Mana" })
-            commands.set("#" + stat + "Stat #Value.TooltipText", liveStorageAuthority == null
-                    ? configuredVitals.tooltip() : "Live authoritative NPC EntityStatMap current / maximum.");
+            commands.set("#" + stat + "Stat #Value.TooltipText", (liveStorageAuthority == null
+                    ? savedStatTooltip(stat) : "LIVE: native NPC EntityStatMap current / effective maximum.")
+                    + "\nInvulnerable: " + statInvulnerable.map(flag -> flag ? "Yes" : "No").orElse("Unknown")
+                    + " (separate native role policy; not armor resistance).");
     }
 
     private String statText(NpcStatsSnapshotService.StatValue value, String id) {
-        return value == null ? (liveStorageAuthority == null ? configuredVitals.text(id) : "—")
+        return value == null ? "—"
                 : format(value.current()) + " / " + format(value.maximum());
+    }
+
+    private String savedStatTooltip(String id) {
+        var value = savedVitals == null ? null : savedVitals.stats().get(id);
+        return value == null ? "NPC stat authority unavailable. No current value is assumed."
+                : "SAVED: persistent current / native base maximum; frozen while unspawned."
+                    + "\nLast observed effective range: " + format(value.lastKnownEffectiveMin()) + " to "
+                    + format(value.lastKnownEffectiveMax()) + "; not a recalculated offline maximum."
+                    + "\nSource: " + value.source() + "; revision " + savedVitals.revision()
+                    + ". Invulnerability is a separate role policy.";
     }
 
     private static String format(double value) {

@@ -62,8 +62,9 @@ public final class R147NpcProfileRepairTest {
         String page = Files.readString(Path.of("src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java"));
         String ui = Files.readString(Path.of("src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcProfile.ui"));
         assert page.contains("map(NpcProfile::name).orElse(npcName)");
-        assert page.contains("statsService.captureEquipmentOnly(authoringSession.npcStableId(),");
-        assert page.contains("inventory.armor(), authoringSession.sessionId()");
+        assert page.contains("statsService.captureSaved(authoringSession.npcStableId(),")
+                : "S1 adds saved vitals without changing independent armor aggregation";
+        assert page.contains("inventory.armor(), savedVitals, authoringSession.sessionId()");
         assert page.contains("commands.set(\"#InfiniteAmmoCheckBox.TooltipText\"");
         assert !page.contains("#InfiniteAmmoHint") && !ui.contains("#InfiniteAmmoHint");
         assert page.contains("if (!failure) return;") && page.contains("NPC_PROFILE_INITIAL_STATUS");

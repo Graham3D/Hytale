@@ -47,6 +47,13 @@ public final class HytaleNpcAdapter {
     private final RuntimeApiCompatibility compatibility;
     private final NpcHomeBehaviorController homeBehavior;
     private final NpcInventoryRepository authoredInventories;
+    private ImmersiveNpcRoleService nativeRoles;
+    private com.inigmasgames.persistentnpcs.stats.NpcStatRuntimeBridge statBridge;
+
+    public void configurePersistentStats(ImmersiveNpcRoleService roles,
+            com.inigmasgames.persistentnpcs.stats.NpcStatRuntimeBridge stats) {
+        this.nativeRoles = roles; this.statBridge = stats;
+    }
 
     /** Component registrations exist only after the Update 6 NPC plugin lifecycle begins. */
     private static Query<EntityStore> testNpcQuery() {
@@ -143,7 +150,7 @@ public final class HytaleNpcAdapter {
         Rotation3f rotation = rotationFacing(
                 new Vector3d(playerPosition).sub(spawnPosition));
         Pair<Ref<EntityStore>, INonPlayerCharacter> spawned = NPCPlugin.get().spawnNPC(
-                store, TEST_ROLE_ID, null, spawnPosition, rotation);
+                store, nativeRoles == null ? TEST_ROLE_ID : nativeRoles.spawnRole(currentProfile), null, spawnPosition, rotation);
         if (spawned == null || spawned.first() == null
                 || !(spawned.second() instanceof NPCEntity)) {
             throw new IllegalStateException("Hytale rejected the test NPC spawn");
@@ -231,6 +238,10 @@ public final class HytaleNpcAdapter {
         if (found.isEmpty()) {
             throw new IllegalStateException(currentProfile.name() + " is not spawned.");
         }
+        if (statBridge != null) for (LocatedNpc npc : found) {
+            if (!statBridge.durableForRemoval(currentProfile, npc.ref(), store))
+                throw new StatSavePending();
+        }
         store.forEachChunk(testNpcQuery(), (chunk, commandBuffer) -> {
             for (int index = 0; index < chunk.size(); index++) {
                 NPCEntity npc = chunk.getComponent(index, NPCEntity.getComponentType());
@@ -246,6 +257,27 @@ public final class HytaleNpcAdapter {
         diagnostics.accept("NPC world entity removed profile=" + currentProfile.id()
                 + " count=" + found.size() + " persistentDataPreserved=true");
         return found.size();
+    }
+
+    /** Nonblocking durable removal. If native values keep changing or disk fails, no entity is removed. */
+    public java.util.concurrent.CompletableFuture<Integer> removeNpcAsync(Store<EntityStore> store, NpcProfile profile) {
+        var result = new java.util.concurrent.CompletableFuture<Integer>();
+        attemptDurableRemoval(store, profile, result, 0);
+        return result;
+    }
+    private void attemptDurableRemoval(Store<EntityStore> store, NpcProfile profile,
+            java.util.concurrent.CompletableFuture<Integer> result, int attempt) {
+        try { result.complete(removeNpc(store, profile)); }
+        catch (StatSavePending pending) {
+            if (attempt >= 100) result.completeExceptionally(new IllegalStateException(
+                    "NPC stats are still changing or saving; removal safely refused. Try again when settled."));
+            else store.getExternalData().getWorld().scheduleAfter(
+                    () -> attemptDurableRemoval(store, profile, result, attempt + 1), 25,
+                    java.util.concurrent.TimeUnit.MILLISECONDS);
+        } catch (RuntimeException failure) { result.completeExceptionally(failure); }
+    }
+    private static final class StatSavePending extends IllegalStateException {
+        StatSavePending() { super("NPC stats save pending; entity retained"); }
     }
 
     /**

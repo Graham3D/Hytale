@@ -30,6 +30,9 @@ public final class NpcProfileEditorService {
     private final NpcAppearanceCatalogService appearanceCatalog;
     private final NpcSkinCodecAdapter skinCodec;
     private final NpcAppearanceAuthoringService appearanceAuthoring;
+    private com.inigmasgames.persistentnpcs.stats.NpcStatRuntimeBridge persistentStats;
+    public void configurePersistentStats(com.inigmasgames.persistentnpcs.stats.NpcStatRuntimeBridge stats) { persistentStats = stats; }
+    public com.inigmasgames.persistentnpcs.stats.NpcStatRuntimeBridge persistentStats() { return persistentStats; }
 
     public NpcProfileEditorService(
             ProfileRepository profiles,
@@ -96,9 +99,15 @@ public final class NpcProfileEditorService {
 
     public Path beginCreate(String name) {
         String safe = ProfileRepository.sanitizeProfileName(name);
-        NpcProfile template = profiles.createTemplate(safe);
+        // Idempotent retry after a partially completed create; never replace existing authored state.
+        boolean existing = profiles.find(safe).isPresent();
+        if (existing && (persistentStats == null || Files.exists(profiles.profileDirectory(safe).resolve("npc-stats.json"))))
+            throw new IllegalArgumentException("NPC profile already exists: " + safe);
+        NpcProfile template = existing ? profiles.load(safe) : profiles.createTemplate(safe);
         appearances.materializePackagedDefaultIfMissing(safe);
-        inventories.save(safe, NpcInventoryState.empty().withStableNpcId(template.stableId()));
+        if (!existing) inventories.save(safe, NpcInventoryState.empty().withStableNpcId(template.stableId()));
+        registry.register(template);
+        if (persistentStats != null) persistentStats.initializeCreated(template);
         return profiles.profileDirectory(safe);
     }
 

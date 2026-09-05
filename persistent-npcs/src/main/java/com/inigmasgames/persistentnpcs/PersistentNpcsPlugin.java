@@ -142,11 +142,12 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R148-NPC-PROFILE-REPAIR";
+    public static final String REVISION = "R149-PERSISTENT-VANILLA-NPC-STATS";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
     private com.inigmasgames.persistentnpcs.profile.NpcInventoryRepository npcInventories;
+    private com.inigmasgames.persistentnpcs.stats.NpcStatRuntimeBridge npcStats;
     private NpcProfileRegistry profileRegistry;
     private ConversationSessionManager sessions;
     private ConversationService conversations;
@@ -456,10 +457,17 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
                 runtimeCompatibility, homeBehavior, npcInventories);
         immersiveRoles = ImmersiveNpcRoleService.update6(
                 dataDirectory, profileRegistry, frameworkLog);
+        npcStats = new com.inigmasgames.persistentnpcs.stats.NpcStatRuntimeBridge(
+                new com.inigmasgames.persistentnpcs.stats.NpcStatStateRepository(profiles, frameworkLog),
+                profileRegistry, immersiveRoles, runtimes, frameworkLog);
+        npcAdapter.configurePersistentStats(immersiveRoles, npcStats);
         NpcTaskScheduler taskScheduler = new NpcTaskScheduler(
                 taskStore, memories, actionService::resumeTask, eventBus, frameworkLog,
                 runtimes, agentOperations, sharedPlans);
         if (runtimeCompatibility.update6NpcApi()) {
+            getEntityStoreRegistry().registerSystem(new com.inigmasgames.persistentnpcs.stats.NpcStatHydrationSystem(npcStats));
+            getEntityStoreRegistry().registerSystem(new com.inigmasgames.persistentnpcs.stats.NpcStatCheckpointSystem(npcStats));
+            getEntityStoreRegistry().registerSystem(new com.inigmasgames.persistentnpcs.stats.NpcStatRemovalCaptureSystem(npcStats));
             getEntityStoreRegistry().registerSystem(new NpcIntelligenceTickSystem(
                     profileRegistry, attention, taskScheduler, spatialVoice,
                     runtimes, homeBehavior, appearances, autonomousCognition,
@@ -536,6 +544,7 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
             startupCoordinator.trigger("StartWorldEvent");
         });
         getEventRegistry().registerGlobal(AllWorldsLoadedEvent.class, event -> {
+            npcStats.initializeUnspawned();
             startupCoordinator.lifecycle("AllWorldsLoadedEvent", "all-worlds-loaded");
             startupCoordinator.trigger("AllWorldsLoadedEvent");
             startupCoordinator.worldReady("all authoritative worlds loaded");
@@ -579,6 +588,7 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
                         aiServices::pinLanguageModel, resourceScheduler, frameworkLog),
                 frameworkLog);
         nativeNpcCommands = new NativeNpcCommandCompatibility(frameworkLog);
+        profileEditor.configurePersistentStats(npcStats);
         nativeNpcCommands.install(
                 new ImmersiveNpcCreateCommand(profileEditor, profileRegistry,
                         immersiveRoles, npcAdapter, bridge,
@@ -648,6 +658,10 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
 
     @Override
     protected void shutdown() {
+        if (npcStats != null) {
+            try { npcStats.close(); }
+            catch (RuntimeException failure) { getLogger().at(Level.SEVERE).withCause(failure).log("NPC_STATS_SHUTDOWN_FAILED"); }
+        }
         if (customGridInboundWatcher != null) {
             PacketAdapters.deregisterInbound(customGridInboundWatcher);
             customGridInboundWatcher = null;

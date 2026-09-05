@@ -30,6 +30,8 @@ public final class ImmersiveNpcRoleService {
     private final NativeRoleRegistrar registrar;
     private final Consumer<String> diagnostics;
     private final Map<String, String> profileNameByRole = new ConcurrentHashMap<>();
+    private final Map<String, String> registeredContent = new ConcurrentHashMap<>();
+    private final Map<String, com.inigmasgames.persistentnpcs.stats.VanillaNpcStatBaselineResolver.RolePolicy> statPolicies = new ConcurrentHashMap<>();
 
     public ImmersiveNpcRoleService(
             Path dataDirectory,
@@ -58,11 +60,21 @@ public final class ImmersiveNpcRoleService {
         NpcProfile validated = profile.validated();
         String roleName = ProfileRepository.sanitizeProfileName(validated.name());
         Path roleFile = roleFile(validated.name());
-        JsonObject role = loadTemplate();
-        role.addProperty("NameTranslationKey",
-                "server.npcRoles.ImmersiveNPCs_" + safeTranslationKey(roleName) + ".name");
-        JsonFiles.writeAtomic(roleFile, role);
-        registrar.registerOrUpdate(roleName, roleFile);
+        JsonObject role;
+        if (Files.exists(roleFile)) role = JsonFiles.read(roleFile, JsonObject.class);
+        else {
+            role = loadTemplate();
+            role.addProperty("NameTranslationKey",
+                    "server.npcRoles.ImmersiveNPCs_" + safeTranslationKey(roleName) + ".name");
+            JsonFiles.writeAtomic(roleFile, role);
+        }
+        String content = role.toString();
+        // A Profile save must not reload the NPC role and reinitialize its live balancing/stats.
+        if (!content.equals(registeredContent.get(key(roleName)))) {
+            registrar.registerOrUpdate(roleName, roleFile);
+            registeredContent.put(key(roleName), content);
+        }
+        statPolicies.put(key(roleName), statPolicy(roleName, role));
         profileNameByRole.put(key(roleName), validated.name());
         ManagedNpcRoles.register(roleName);
         diagnostics.accept("IMMERSIVE_NPC_NATIVE_ROLE_READY role=" + roleName
@@ -74,6 +86,8 @@ public final class ImmersiveNpcRoleService {
         if (profile == null) return;
         String roleName = ProfileRepository.sanitizeProfileName(profile.name());
         profileNameByRole.remove(key(roleName));
+        registeredContent.remove(key(roleName));
+        statPolicies.remove(key(roleName));
         ManagedNpcRoles.unregister(roleName);
         diagnostics.accept("IMMERSIVE_NPC_NATIVE_ROLE_RETIRED role=" + roleName
                 + " profile=" + profile.id()
@@ -87,6 +101,28 @@ public final class ImmersiveNpcRoleService {
 
     public boolean isManagedRole(String roleName) {
         return profileNameByRole.containsKey(key(roleName));
+    }
+
+    /** The adapter and baseline resolver share this exact registered per-profile role. */
+    public String spawnRole(NpcProfile profile) {
+        String name = ProfileRepository.sanitizeProfileName(profile.name());
+        return isManagedRole(name) ? name : registerOrUpdate(profile);
+    }
+
+    public com.inigmasgames.persistentnpcs.stats.VanillaNpcStatBaselineResolver.RolePolicy statPolicy(
+            NpcProfile profile, String actualRole) {
+        var policy = statPolicies.get(key(actualRole));
+        if (policy != null) return policy;
+        if (HytaleNpcAdapter.TEST_ROLE_ID.equals(actualRole)) return statPolicy(actualRole, loadTemplate());
+        // Unknown/legacy roles cannot silently borrow another role's health policy.
+        return new com.inigmasgames.persistentnpcs.stats.VanillaNpcStatBaselineResolver.RolePolicy(actualRole, null, null);
+    }
+
+    private static com.inigmasgames.persistentnpcs.stats.VanillaNpcStatBaselineResolver.RolePolicy statPolicy(
+            String role, JsonObject json) {
+        return new com.inigmasgames.persistentnpcs.stats.VanillaNpcStatBaselineResolver.RolePolicy(role,
+                json.has("MaxHealth") ? json.get("MaxHealth").getAsDouble() : null,
+                json.has("Invulnerable") ? json.get("Invulnerable").getAsBoolean() : null);
     }
 
     public Path roleFile(String profileName) {
