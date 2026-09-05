@@ -1905,3 +1905,52 @@ architecture limitation is claimed repaired by this presentation pass.
    and non-destructive Voice Recorder playback.
 
 **STOP for connected visual approval. Do not begin Profile Editor polish or another stage.**
+
+## R152 — Appearance category-rig thumbnail repair (2026-09-05)
+
+**Implemented, full deterministic PASS, deployed; connected approval pending.**
+Baseline: clean main/remote `d7780c47e8bbcbe9b60c7f5e9bfdfd7dca7f8d9d` (R151).
+This pass changes only offline reference-card composition, generated assets,
+provenance/regression gates, reports and monotonic release/HUD counters.
+No UI layout or appearance/backend authority rewrite. No Profile Editor polish.
+
+The baker no longer measures each cosmetic's AABB to choose center/scale. Nine
+fixed rigs cover all twenty categories: head/shoulders, tight face, three-quarter
+ears, torso, lower body, feet, torso/hands, rear body and full body. Each rig pins
+camera angles, world target, orthographic span, crop and neutral context mask.
+No per-item safety expansion is used. Clothing context excludes head and facial
+features; Overtop/Undertop use identical neck-to-thigh composition, preserving
+fixed landmarks across small shirts, coats, straps and large tunics.
+
+All **590** cards rebaked at **184×298**, retaining the unchanged **92×149** UI
+pipeline, cosmetic IDs, lookup/fallback, search/scroll, palette and selection.
+The thumbnails still use **baked representative colors, not active draft colors**.
+No all-colors asset expansion. Full rig/mask table, provenance, reproduction steps,
+deployment evidence and connected checklist are in the
+[R152 implementation report](persistent-npcs/docs/R152_APPEARANCE_CATEGORY_RIGS.md).
+[Forty grouped contact sheets](persistent-npcs/docs/R152_CATEGORY_CONTACT_SHEETS/README.md)
+cover every entry. All 105 Overtop cards were visually reviewed against the native
+MyAvatar screenshot; other category rigs were reviewed using grouped sheets.
+
+Validation: full `test.ps1 -SkipLive` suite passed, including R149 S1, inventory,
+gear, voice isolation, appearance authority and the 8,100-case conversation matrix.
+Four new offline renderer tests passed, including actual render equality after
+injecting enormous outlying geometry, context masks, all PNG/rig hashes and exact
+contact-sheet coverage. Two independent full bakes matched all images, provenance
+and sheets. SDK build/resource gates and `git diff --check` passed. Native-client
+rendering/hit testing at 1080p/1440p remains pending connected approval.
+
+Deployment:
+
+- Active: `C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\NPC\mods\ImmersiveNPCs-0.6.3-R152-NPC-APPEARANCE-CATEGORY-RIGS.jar`.
+- **8,451,441 bytes**, exactly **one active project JAR**, 590 packaged thumbnails.
+- SHA-256: `DB6B87CFD9B49A813AC7E25C392AB9C13666B1990FF81C4616EDC3D93946F3F3`.
+- R151 rollback: `C:\HytaleRollback\NpcAuthoringStudio-Appearance-R151-2026-09-05\ImmersiveNPCs-0.6.3-R151-NPC-APPEARANCE-NATIVE-CARDS.jar`.
+- R151 SHA-256: `B7B328F2DFF926BB4BADF72435A59EE76F5764CE85B1E7F9E0A0EBE7C5F23A98`.
+- Existing accepted R146, retained R149/R150, SkinSwap and HYTALEDEVLIB unchanged.
+- Runtime profiles: **76 files / 50,335,199 bytes** before/after; identical aggregate
+  `93DC68D4FEB07DA5EED0036FCA09B685C53672E974A253031DBE683EFF4DF58F`.
+- HUD/build/installer/manifest counters identify R152. No broad installer or runtime
+  data migration ran. No existing audio, NPC state, worlds or archives were changed.
+
+**STOP for connected approval. Do not begin Profile Editor polish.**

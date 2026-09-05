@@ -22,6 +22,51 @@ CATEGORIES = dict(BODY_CHARACTERISTIC="BodyCharacteristics", UNDERWEAR="Underwea
     FACE_ACCESSORY="FaceAccessory", EAR_ACCESSORY="EarAccessory")
 W, H = 184, 298
 
+# Pinned neutral Player.blockymodel landmarks: head centre y=88, neck=75,
+# chest=71, pelvis=51, hands=45, thighs=39, feet=27. These are category
+# composition constants, NEVER bounds measured from the selected cosmetic.
+TORSO = ("Neck", "Chest", "Belly", "Pelvis", "R-Arm", "L-Arm",
+    "R-Forearm", "L-Forearm", "R-Hand", "L-Hand", "R-Thigh", "L-Thigh")
+LOWER = ("Pelvis", "R-Thigh", "L-Thigh", "R-Calf", "L-Calf", "R-Foot", "L-Foot")
+FACE_CONTEXT = ("BODY_CHARACTERISTIC", "FACE", "EARS", "MOUTH", "EYES", "EYEBROWS")
+
+def rig(yaw, pitch, target, vertical_span, body_nodes, context):
+    return dict(yaw=yaw, pitch=pitch, target=target, verticalSpan=vertical_span,
+        cropPixels=[0, 0, W, H], bodyNodes=body_nodes, context=context,
+        pose="pinned-neutral-Player.blockymodel", safetyExpansion=0)
+
+RIGS = {
+    "head_shoulders": rig(-8, 0, [0, 86, 0], 70, ["Head", "Neck", "Chest", "R-Arm", "L-Arm"], FACE_CONTEXT),
+    "face": rig(0, 0, [0, 88, 0], 55, ["Head", "Neck"], FACE_CONTEXT),
+    "ear": rig(-35, 0, [0, 87, 0], 66, ["Head", "Neck"], FACE_CONTEXT),
+    "torso": rig(0, 0, [0, 54, 0], 62, TORSO, ["BODY_CHARACTERISTIC", "UNDERWEAR"]),
+    "lower_body": rig(-5, 0, [0, 36, 0], 54, LOWER, ["BODY_CHARACTERISTIC", "UNDERWEAR"]),
+    "feet": rig(-20, 12, [0, 29, 3], 54, ["R-Calf", "L-Calf", "R-Foot", "L-Foot"], ["BODY_CHARACTERISTIC"]),
+    "hands": rig(-8, 0, [0, 55, 0], 84, TORSO, ["BODY_CHARACTERISTIC", "UNDERWEAR"]),
+    "rear_body": rig(165, 0, [0, 61, 0], 110, None, ["BODY_CHARACTERISTIC", "UNDERWEAR"]),
+    "body": rig(-8, 0, [0, 62, 0], 100, None, [*FACE_CONTEXT, "UNDERWEAR"]),
+}
+CATEGORY_RIG = {
+    "BODY_CHARACTERISTIC":"body", "UNDERWEAR":"lower_body", "SKIN_FEATURE":"body",
+    "FACE":"face", "EARS":"ear", "MOUTH":"face", "EYEBROWS":"face",
+    "FACIAL_HAIR":"face", "HAIRCUT":"head_shoulders", "EYES":"face",
+    "PANTS":"lower_body", "OVERPANTS":"lower_body", "UNDERTOP":"torso", "OVERTOP":"torso",
+    "SHOES":"feet", "GLOVES":"hands", "CAPE":"rear_body", "HEAD_ACCESSORY":"head_shoulders",
+    "FACE_ACCESSORY":"face", "EAR_ACCESSORY":"ear",
+}
+
+def projection(category):
+    """Pure category contract: no selected geometry or item identity accepted."""
+    config = RIGS[CATEGORY_RIG[category]]
+    yaw, pitch = math.radians(config["yaw"]), math.radians(config["pitch"])
+    camera = np.array([[math.cos(yaw),0,-math.sin(yaw)],
+        [math.sin(yaw)*math.sin(pitch),math.cos(pitch),math.cos(yaw)*math.sin(pitch)],
+        [math.sin(yaw)*math.cos(pitch),-math.sin(pitch),math.cos(yaw)*math.cos(pitch)]])
+    return camera, np.array(config["target"]) @ camera.T, H / config["verticalSpan"]
+
+def rig_hash(category):
+    return hashlib.sha256(json.dumps(RIGS[CATEGORY_RIG[category]], sort_keys=True).encode()).hexdigest()
+
 def vec(d, default=0):
     return np.array([d.get(k, default) for k in "xyz"], dtype=float)
 
@@ -75,7 +120,7 @@ class Baker:
             pixels[:,:,:3] = lut[lut.shape[0]//2, np.minimum(lut.shape[1]-1,(gray*(lut.shape[1]-1)).astype(int))]
         return pixels,spec
 
-    def geometry(self, part, remember=False):
+    def geometry(self, part, remember=False, body_nodes=None):
         tex,spec = self.texture(part)
         model = self.json("Common/"+spec["Model"])
         result=[]
@@ -91,7 +136,7 @@ class Baker:
                 # facial/hair pieces use that socket, not the neck pivot.
                 socket_p = p + r @ vec(shape.get("offset",{})) if not attachment else p
                 if remember: self.bones[node["name"]] = (r,socket_p)
-                if shape.get("visible",True) and shape.get("type") in ("box","quad"):
+                if (body_nodes is None or node["name"] in body_nodes) and shape.get("visible",True) and shape.get("type") in ("box","quad"):
                     size=vec(shape.get("settings",{}).get("size",{}))
                     stretch=vec(shape.get("stretch",{}),1)
                     offset=vec(shape.get("offset",{}))
@@ -136,24 +181,14 @@ class Baker:
     def render(self, category, part):
         chosen=self.geometry(part)
         context=[]
-        # Canonical mannequin only; never consume a player/NPC appearance file.
-        for c in ("BODY_CHARACTERISTIC","FACE","EARS","MOUTH","EYES","EYEBROWS","UNDERWEAR"):
+        config = RIGS[CATEGORY_RIG[category]]
+        # Traverse the full skeleton for sockets, but emit ONLY masked context
+        # shapes. No head, eyes, eyebrows, mouth or ears on clothing cards.
+        for c in config["context"]:
             if c!=category:
                 neutral = next((p for p in self.parts[c] if c=="UNDERWEAR" and p["Id"]=="Boxer"),self.parts[c][0])
-                context+=self.geometry(neutral)
-        yaw=math.radians(165 if category=="CAPE" else -15)
-        pitch=math.radians(5)
-        camera=np.array([[math.cos(yaw),0,-math.sin(yaw)],
-            [math.sin(yaw)*math.sin(pitch),math.cos(pitch),math.cos(yaw)*math.sin(pitch)],
-            [math.sin(yaw)*math.cos(pitch),-math.sin(pitch),math.cos(yaw)*math.cos(pitch)]])
-        points=np.concatenate([f[0]@camera.T for f in chosen])
-        low,high=points.min(axis=0),points.max(axis=0)
-        # Head accessories and small facial details need recognizable head context.
-        if category in ("FACE","EARS","MOUTH","EYES","EYEBROWS","FACIAL_HAIR","HAIRCUT","HEAD_ACCESSORY","FACE_ACCESSORY","EAR_ACCESSORY"):
-            head=np.array([[-23,69,-20],[23,111,20]])@camera.T
-            low=np.minimum(low,head.min(axis=0)); high=np.maximum(high,head.max(axis=0))
-        center=(low+high)/2
-        scale=min((W-16)/max(1,high[0]-low[0]),(H-20)/max(1,high[1]-low[1]))
+                context+=self.geometry(neutral, body_nodes=config["bodyNodes"] if c=="BODY_CHARACTERISTIC" else None)
+        camera,center,scale = projection(category)
         image=np.zeros((H,W,4),dtype=np.uint8)
         depth=np.full((H,W),-np.inf)
         for world,uv,tex in context+chosen:
@@ -187,26 +222,50 @@ class Baker:
 def main():
     parser=argparse.ArgumentParser(); parser.add_argument("assets",type=Path); parser.add_argument("output",type=Path)
     parser.add_argument("--limit",type=int,default=0)
-    parser.add_argument("--ui-index",type=Path); args=parser.parse_args()
+    parser.add_argument("--ui-index",type=Path)
+    parser.add_argument("--contact-dir",type=Path,default=Path("build/category-contact-sheets"))
+    args=parser.parse_args()
     baker=Baker(args.assets); args.output.mkdir(parents=True,exist_ok=True)
-    records=[]; samples=[]; failures=[]
+    records=[]; samples=[]; failures=[]; entry_rigs={}; sheets=[]
     for category,parts in baker.parts.items():
+        category_samples=[]
         for part in (parts[:args.limit] if args.limit else parts):
             key=category+":"+part["Id"]; name=hashlib.sha256(key.encode()).hexdigest()[:24]+".png"
             try:
                 im=baker.render(category,part); im.save(args.output/name)
                 records.append((key,name,hashlib.sha256((args.output/name).read_bytes()).hexdigest()))
+                entry_rigs[key]=rig_hash(category)
+                category_samples.append((part["Id"],im))
                 if len(samples)<100 and (len(samples)<3 or part in parts[:3]): samples.append((category+" / "+part["Id"],im))
             except (KeyError,ValueError) as e: failures.append({"key":key,"error":str(e)})
         print(category,len(parts),"processed",flush=True)
+        # Every baked entry, grouped and paginated. Native-resolution cards,
+        # fixed cell origins, labels outside the crop; no per-card sheet fit.
+        args.contact_dir.mkdir(parents=True,exist_ok=True)
+        for start in range(0,len(category_samples),20):
+            page=category_samples[start:start+20]
+            sheet=Image.new("RGB",(W*5,(H+32)*math.ceil(len(page)/5)+32),"#2f3a4f")
+            draw=ImageDraw.Draw(sheet)
+            draw.text((8,8),category+" / "+CATEGORY_RIG[category]+" / "+str(start+1)+"-"+str(start+len(page)),fill="white")
+            for i,(label,im) in enumerate(page):
+                x=i%5*W; y=32+i//5*(H+32)
+                sheet.paste(im,(x,y),im); draw.text((x+4,y+H+4),label[:28],fill="white")
+            name=category+"-"+str(start//20+1).zfill(2)+".png"
+            sheet.save(args.contact_dir/name)
+            sheets.append(dict(file=name,sha256=hashlib.sha256((args.contact_dir/name).read_bytes()).hexdigest(),
+                keys=[category+":"+label for label,im in page]))
     (args.output/"index.tsv").write_text("\n".join("\t".join(r) for r in sorted(records))+"\n",encoding="utf-8")
     if args.ui_index:
         args.ui_index.write_text("\n".join('@T'+name[:-4]+' = PatchStyle(TexturePath: "ImmersiveNpcAppearance/Thumbnails/'+name+'");'
             for key,name,sha in sorted(records))+"\n",encoding="utf-8")
-    (args.output/"provenance.json").write_text(json.dumps({"renderer":"R151 orthographic software v1","size":[W,H],
-        "rendererSha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+    (args.output/"provenance.json").write_text(json.dumps({"renderer":"R152 fixed category rigs v2","size":[W,H],
+        "rendererSha256":hashlib.sha256(Path(__file__).read_text(encoding="utf-8").encode()).hexdigest(),
+        "rendererHashEncoding":"UTF-8 with LF newlines",
         "pythonLibraries":{"Pillow":PIL.__version__,"numpy":np.__version__},
-        "referenceColors":True,"sourceHashes":dict(sorted(baker.sources.items())),"unavailable":failures},indent=2)+"\n")
+        "referenceColors":True,"colorPolicy":"Baked representative native gradients, not active draft colors",
+        "rigs":RIGS,"categoryRigs":CATEGORY_RIG,"entryRigHashes":dict(sorted(entry_rigs.items())),
+        "sourceHashes":dict(sorted(baker.sources.items())),"unavailable":failures},indent=2)+"\n")
+    (args.contact_dir/"index.json").write_text(json.dumps(sheets,indent=2)+"\n",encoding="utf-8")
     sheet=Image.new("RGB",(W*8,(H+32)*math.ceil(len(samples)/8)),"#2f3a4f"); draw=ImageDraw.Draw(sheet)
     for i,(name,im) in enumerate(samples):
         x=i%8*W;y=i//8*(H+32);sheet.paste(im,(x,y),im);draw.text((x+4,y+H+4),name[:27],fill="white")

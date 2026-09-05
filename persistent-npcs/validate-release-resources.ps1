@@ -54,6 +54,20 @@ try {
     $thumbnailRoot = Join-Path $PSScriptRoot 'src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcAppearance/Thumbnails'
     $provenance = Get-Content -Raw -LiteralPath (Join-Path $thumbnailRoot 'provenance.json') | ConvertFrom-Json
     if (@($provenance.unavailable).Count -ne 0) { throw 'Pinned cosmetic thumbnail coverage is incomplete.' }
+    $rendererSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'tools/bake_appearance_thumbnails.py')).Replace("`r`n", "`n")
+    $rendererHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($rendererSource)))
+    if ($provenance.renderer -cne 'R152 fixed category rigs v2' -or $rendererHash -ine $provenance.rendererSha256) {
+        throw 'Rebake thumbnails: category rig renderer provenance mismatch.'
+    }
+    $categoryHashes = @{}
+    if (@($provenance.entryRigHashes.PSObject.Properties).Count -ne 590) { throw 'Incomplete category rig provenance.' }
+    foreach ($entry in $provenance.entryRigHashes.PSObject.Properties) {
+        $category = $entry.Name.Split(':')[0]
+        if ($categoryHashes.ContainsKey($category) -and $categoryHashes[$category] -cne $entry.Value) {
+            throw "Per-item camera drift in category $category"
+        }
+        $categoryHashes[$category] = $entry.Value
+    }
     foreach ($source in $provenance.sourceHashes.PSObject.Properties) {
         $entry = $archive.GetEntry($source.Name)
         if ($null -eq $entry) { throw "Thumbnail source no longer exists: $($source.Name)" }
