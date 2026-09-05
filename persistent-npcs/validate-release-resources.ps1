@@ -56,7 +56,8 @@ try {
     foreach ($forbidden in @('appearance-color-sources', 'Common/UI/Custom/Pages/ImmersiveNpcAppearance/Thumbnails', 'Common/UI/Custom/Pages/ImmersiveNpcAppearanceThumbnails.ui')) {
         if (Test-Path -LiteralPath (Join-Path $resourceRoot $forbidden)) { throw "Unsafe appearance resource returned: $forbidden" }
     }
-    # Checkpoint 2 permits exactly two immutable, source-hashed probe images.
+    # Checkpoint 3 retains the two connected-proven probe files and expands the
+    # same immutable canonical-image contract to the complete installed catalog.
     $probeRoot = Join-Path $resourceRoot 'Common/UI/Custom/Pages/ImmersiveNpcAppearance/Probe'
     $expectedProbeHashes = @{
         'UNDERTOP-FarmerTop.png' = '059DC8C47AFE08AAC235EF33EFF22F216751B046103CC208200CB3E3523CC219'
@@ -73,9 +74,54 @@ try {
             throw "Checkpoint 2 probe hash mismatch: $($probeFile.Name)"
         }
     }
+    $catalogRoot = Join-Path $resourceRoot 'Common/UI/Custom/Pages/ImmersiveNpcAppearance/Catalog'
+    $catalogImageRoot = Join-Path $catalogRoot 'Thumbnails'
+    $catalogIndex = Join-Path $catalogRoot 'index.tsv'
+    $catalogLines = @(Get-Content -LiteralPath $catalogIndex | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    if ($catalogLines.Count -ne 590) { throw "Checkpoint 3 requires 590 catalog references; found $($catalogLines.Count)" }
+    $catalogFiles = @(Get-ChildItem -LiteralPath $catalogImageRoot -File -Filter '*.png' -ErrorAction Stop)
+    if ($catalogFiles.Count -ne 588) { throw "Checkpoint 3 requires 588 added catalog images; found $($catalogFiles.Count)" }
+
+    $registryByCategory = [ordered]@{
+        BODY_CHARACTERISTIC='BodyCharacteristics'; CAPE='Capes'; EAR_ACCESSORY='EarAccessory'
+        EARS='Ears'; EYEBROWS='Eyebrows'; EYES='Eyes'; FACE='Faces'
+        FACE_ACCESSORY='FaceAccessory'; FACIAL_HAIR='FacialHair'; GLOVES='Gloves'
+        HAIRCUT='Haircuts'; HEAD_ACCESSORY='HeadAccessory'; MOUTH='Mouths'
+        OVERPANTS='Overpants'; OVERTOP='Overtops'; PANTS='Pants'; SHOES='Shoes'
+        SKIN_FEATURE='SkinFeatures'; UNDERTOP='Undertops'; UNDERWEAR='Underwear'
+    }
+    $expectedKeys = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($category in $registryByCategory.Keys) {
+        foreach ($entry in @(Read-Registry $registryByCategory[$category])) {
+            if (-not $expectedKeys.Add("${category}:$($entry.Id)")) {
+                throw "Duplicate installed cosmetic ID: ${category}:$($entry.Id)"
+            }
+        }
+    }
+    $actualKeys = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    $referencedFiles = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($line in $catalogLines) {
+        $parts = $line.Split("`t")
+        if ($parts.Count -ne 5) { throw "Malformed Checkpoint 3 index row: $line" }
+        $key = "$($parts[0]):$($parts[1])"
+        if (-not $actualKeys.Add($key)) { throw "Duplicate Checkpoint 3 reference: $key" }
+        if (-not $expectedKeys.Contains($key)) { throw "Unknown Checkpoint 3 installed cosmetic: $key" }
+        if ($parts[2] -notmatch '^ImmersiveNpcAppearance/(Probe|Catalog/Thumbnails)/[A-Za-z0-9_.-]+\.png$') {
+            throw "Unsafe Checkpoint 3 UI path: $($parts[2])"
+        }
+        $asset = Join-Path $resourceRoot $parts[3]
+        if (-not (Test-Path -LiteralPath $asset -PathType Leaf)) { throw "Missing Checkpoint 3 image: $asset" }
+        if (-not $referencedFiles.Add([IO.Path]::GetFullPath($asset))) { throw "Duplicate image path in Checkpoint 3 index: $asset" }
+        $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $asset).Hash.ToLowerInvariant()
+        if ($actualHash -cne $parts[4]) { throw "Checkpoint 3 image hash mismatch: $key" }
+    }
+    if ($actualKeys.Count -ne $expectedKeys.Count) {
+        $missing = @($expectedKeys | Where-Object { -not $actualKeys.Contains($_) })
+        throw "Checkpoint 3 catalog does not exactly cover installed registry; expected $($expectedKeys.Count), actual $($actualKeys.Count), missing $($missing -join ', ')"
+    }
     $pageSource = Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot 'src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java')
     if ($pageSource -match 'AppearanceCardJobs|AppearanceColorCards|PrivateAppearanceCardAssets|queueAppearanceColorCards') {
         throw 'Unsafe runtime appearance image pipeline returned.'
     }
-    Write-Host "Release resources validated: $revision; neutral skin, two immutable probe cards, and zero-runtime-image safety policy"
+    Write-Host "Release resources validated: $revision; neutral skin, 590 immutable canonical cards, exact installed-registry coverage, and zero-runtime-image safety policy"
 } finally { $archive.Dispose() }

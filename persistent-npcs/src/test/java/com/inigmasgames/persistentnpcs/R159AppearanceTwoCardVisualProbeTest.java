@@ -2,12 +2,12 @@ package com.inigmasgames.persistentnpcs;
 
 import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService.Category;
 import com.inigmasgames.persistentnpcs.ui.AppearanceThumbnailProbe;
+import com.inigmasgames.persistentnpcs.ui.AppearanceThumbnailCatalog;
 import java.awt.image.BufferedImage;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.HexFormat;
-import java.util.jar.JarFile;
 import javax.imageio.ImageIO;
 
 /** Deterministic boundary for the immutable two-card Checkpoint-2 probe. */
@@ -40,36 +40,22 @@ public final class R159AppearanceTwoCardVisualProbeTest {
             assert hash.equals(reference.sourceSha256()) : reference.cosmeticId() + " " + hash;
         }
 
-        String card = Files.readString(RESOURCES.resolve(
-                "Common/UI/Custom/Pages/ImmersiveNpcAppearanceCard.ui"));
         for (var reference : references) {
-            assert card.contains("AssetImage #" + reference.elementId());
-            assert card.contains("FallbackTexturePath: \"" + reference.uiTexturePath() + "\"");
+            var catalogReference = AppearanceThumbnailCatalog.find(
+                    reference.category(), reference.cosmeticId()).orElseThrow();
+            assert catalogReference.uiTexturePath().equals(reference.uiTexturePath());
+            assert catalogReference.sourceSha256().equals(reference.sourceSha256());
         }
         String page = Files.readString(Path.of(
                 "src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java"));
         assert page.contains("APPEARANCE_THUMBNAIL_REFERENCE");
-        assert page.contains("APPEARANCE_THUMBNAIL_CARD_BUILT");
-        assert page.contains("dynamicThumbnailCreates=");
+        assert page.contains("AppearanceThumbnailCatalog.find");
+        assert page.contains("runtimeThumbnailCreates=");
         assert page.contains("runtimeThumbnailWrites=");
         for (String forbidden : java.util.List.of("AppearanceCardJobs", "AppearanceColorCards",
                 "PrivateAppearanceCardAssets", "AssetInitialize", "AssetUpdate")) {
             assert !page.contains(forbidden) : forbidden;
         }
-        Path jar;
-        try (var files = Files.list(Path.of("dist"))) {
-            jar = files.filter(path -> path.getFileName().toString().contains("R159"))
-                    .findFirst().orElseThrow();
-        }
-        try (JarFile archive = new JarFile(jar.toFile())) {
-            var probeEntries = archive.stream().map(java.util.zip.ZipEntry::getName)
-                    .filter(name -> name.startsWith(
-                            "Common/UI/Custom/Pages/ImmersiveNpcAppearance/Probe/"))
-                    .filter(name -> !name.endsWith("/"))
-                    .toList();
-            assert probeEntries.size() == 2 : probeEntries;
-            assert archive.getEntry("Common/UI/Custom/Pages/ImmersiveNpcAppearance/Thumbnails/") == null;
-        }
-        System.out.println("R159 PASS: exactly two immutable Undertop AssetImage cards; stable hashes; zero runtime creates/writes.");
+        System.out.println("R159 retained: the two connected-proven immutable Undertop assets and hashes are unchanged in the full catalog.");
     }
 }

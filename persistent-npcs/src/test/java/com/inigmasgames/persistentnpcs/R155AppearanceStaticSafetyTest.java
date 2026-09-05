@@ -31,16 +31,17 @@ public final class R155AppearanceStaticSafetyTest {
         assert page.contains("appearanceUiState.filter(commands)")
                 && page.contains("scheduleAppearancePreview(store, event)");
         assert card.contains("#Name") && card.contains("#Icon")
-                && card.contains("AssetImage #FarmerTopThumbnail")
-                && card.contains("AssetImage #FlowerShirtThumbnail");
+                && card.contains("Group #ThumbnailHost");
         assert ui.contains("#AppearancePagePREV") && ui.contains("#AppearancePageNEXT")
                 && ui.contains("#AppearanceCatalogHash");
         assert Files.notExists(Path.of("src/main/resources/appearance-color-sources"));
         assert Files.notExists(Path.of("src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcAppearance/Thumbnails"));
         assert Files.list(Path.of("src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcAppearance/Probe"))
                 .filter(Files::isRegularFile).count()==2 : "Checkpoint 2 permits exactly two immutable images";
+        assert Files.list(Path.of("src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcAppearance/Catalog/Thumbnails"))
+                .filter(Files::isRegularFile).count()==588 : "Checkpoint 3 packages the other 588 immutable images";
         for(String other:java.util.List.of("InventoryComponent", "NpcProfileDraft", "NpcVoiceRecordingService"))
             assert !Files.readString(Path.of("src/main/java/com/inigmasgames/persistentnpcs/ui/AppearanceUiAssetBudget.java")).contains(other);
-        System.out.println("R155 PASS: static named selectors, <=20 page, zero generated card assets, state diffs, newest-preview gate and production-resource quarantine.");
+        System.out.println("R155 PASS: static named selectors, <=20 page, zero runtime-generated card assets, state diffs, newest-preview gate and dynamic-resource quarantine.");
     }
 }

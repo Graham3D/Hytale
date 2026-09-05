@@ -5,18 +5,7 @@ Button #Choice {
   TextTooltipStyle: $C.@DefaultTextTooltipStyle;
   Label #Id { Visible: false; Text: ""; }
   Group #Icon { HitTestVisible: false; Anchor: (Left: 22, Top: 10, Width: 48, Height: 36); }
-  AssetImage #FarmerTopThumbnail {
-    HitTestVisible: false;
-    Visible: false;
-    Anchor: (Left: 15, Right: 15, Top: 1, Bottom: 1);
-    FallbackTexturePath: "ImmersiveNpcAppearance/Probe/UNDERTOP-FarmerTop.png";
-  }
-  AssetImage #FlowerShirtThumbnail {
-    HitTestVisible: false;
-    Visible: false;
-    Anchor: (Left: 15, Right: 15, Top: 1, Bottom: 1);
-    FallbackTexturePath: "ImmersiveNpcAppearance/Probe/UNDERTOP-FlowerShirt.png";
-  }
+  Group #ThumbnailHost { HitTestVisible: false; Anchor: (Left: 15, Right: 15, Top: 1, Bottom: 1); }
   Label #Name { HitTestVisible: false; Anchor: (Left: 5, Right: 5, Top: 49, Bottom: 6); Text: ""; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #c7d5e1, HorizontalAlignment: Center, VerticalAlignment: Center); }
   Group #ThumbnailNamePlate { HitTestVisible: false; Visible: false; Anchor: (Left: 3, Right: 3, Bottom: 3, Height: 25); Background: #0b1520(0.82); }
   Label #ThumbnailName { HitTestVisible: false; Visible: false; Anchor: (Left: 5, Right: 5, Bottom: 4, Height: 23); Text: ""; Style: (...$C.@DefaultLabelStyle, FontSize: 10, Wrap: true, TextColor: #d7e2eb, HorizontalAlignment: Center, VerticalAlignment: Center); }

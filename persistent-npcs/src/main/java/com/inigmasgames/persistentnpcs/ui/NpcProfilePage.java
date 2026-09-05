@@ -159,12 +159,19 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private String appearanceRequestedPreviewHash = "";
     private boolean appearanceGridMounted;
     private final Set<String> appearanceThumbnailReferencesLogged = new java.util.HashSet<>();
-    private final Set<String> appearanceThumbnailCardsBuilt = new java.util.HashSet<>();
     private long appearanceThumbnailCardBuildCount;
+    private long appearanceThumbnailGridRebuildCount;
+    private long appearancePreviewJobsScheduled;
+    private long appearancePreviewJobsCoalesced;
+    private long appearancePreviewJobsApplied;
+    private ScheduledFuture<?> appearanceSearchTask;
+    private long appearanceSearchGeneration;
+    private String appearanceCatalogRefreshReason = "INITIAL";
     private final NpcAppearancePreviewService appearancePreview;
     private PrimaryCategory appearancePrimary = PrimaryCategory.BODY;
     private Category appearanceCategory = Category.BODY_CHARACTERISTIC;
     private String appearanceSearch = "";
+    private String appearancePendingSearch = "";
     private int appearanceVariantPage;
     private String appearanceEditorStatus = "Choose a registry-backed appearance option.";
     private boolean appearanceEditorError;
@@ -610,6 +617,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceCategory = Category.BODY_CHARACTERISTIC;
                 appearancePage = 0;
                 appearanceSearch = "";
+                appearancePendingSearch = "";
 
 
                 appearanceVariantPage = 0;
@@ -1311,11 +1319,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     acknowledgeAppearanceNoop(event, "alreadySelectedPrimary=true");
                     return;
                 }
+                cancelAppearanceSearch();
                 appearancePrimary = primary;
                 List<Category> categories = editor.appearanceCatalog()
                         .categories(appearancePrimary);
                 appearanceCategory = categories.getFirst();
                 appearanceSearch = "";
+                appearancePendingSearch = "";
                 appearancePage = 0;
 
 
@@ -1323,6 +1333,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceEditorStatus = "Browsing " + appearancePrimary.name()
                         + " from the pinned live registry snapshot.";
                 appearanceEditorError = false;
+                appearanceCatalogRefreshReason = "PRIMARY_CATEGORY";
                 scheduleAppearancePreview(store, event);
                 refreshAppearanceEditorUi(event);
             }
@@ -1336,8 +1347,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     acknowledgeAppearanceNoop(event, "alreadySelectedCategory=true");
                     return;
                 }
+                cancelAppearanceSearch();
                 appearanceCategory = category;
                 appearanceSearch = "";
+                appearancePendingSearch = "";
                 appearancePage = 0;
 
 
@@ -1345,21 +1358,19 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceEditorStatus = "Choose " + category.label()
                         + ". Existing missing values remain retained until Save.";
                 appearanceEditorError = false;
+                appearanceCatalogRefreshReason = "SECONDARY_CATEGORY";
                 scheduleAppearancePreview(store, event);
                 refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_SEARCH" -> {
                 String query = data.appearanceSearch == null ? "" : data.appearanceSearch.strip();
-                if (appearanceSearch.equalsIgnoreCase(query)) {
+                if (appearancePendingSearch.equalsIgnoreCase(query)) {
                     acknowledgeAppearanceNoop(event, "unchangedSearch=true");
                     return;
                 }
-                appearanceSearch = query;
-                appearancePage = 0;
-
-                appearanceEditorStatus = "Registry search applied locally; no model request was made.";
-                appearanceEditorError = false;
-                refreshAppearanceEditorUi(event);
+                appearancePendingSearch = query;
+                scheduleAppearanceSearch(store, query);
+                acknowledgeAppearanceEvent(event, "debouncedSearch=true");
             }
             case "APPEARANCE_PAGE_PREV", "APPEARANCE_PAGE_NEXT" -> {
                 var page = appearanceCatalogPage();
@@ -1370,6 +1381,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     return;
                 }
                 appearancePage = next;
+                appearanceCatalogRefreshReason = "PAGE";
                 refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_VARIANT_PREV" -> {
@@ -1517,11 +1529,15 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         var options = appearanceCatalogOptions();
         String currentId = currentAppearanceCosmeticId();
         commands.set("#AppearanceEmptyState.Visible", options.isEmpty());
-        if (!appearanceGridMounted) {
+        boolean rebuildCards = !appearanceGridMounted || pageChanged;
+        if (rebuildCards) {
+            appearanceUiState.forget("#AppearanceOption");
             AppearanceEditorPresentation.appendGrid(commands, "#AppearanceOptionGrid", "AppearanceOption",
                     AppearanceUiAssetBudget.MAX_VISIBLE_CARDS, AppearanceEditorPresentation.CARD_COLUMNS, 92, 100, 10,
                     "Pages/ImmersiveNpcAppearanceCard.ui");
             appearanceGridMounted = true;
+            appearanceThumbnailGridRebuildCount++;
+            appearanceThumbnailCardBuildCount += options.size();
         }
         for (int index = 0; index < AppearanceUiAssetBudget.MAX_VISIBLE_CARDS; index++) {
             String host = "#AppearanceOption" + index;
@@ -1535,7 +1551,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     AppearanceEditorPresentation.label(option.displayName(), 26));
             commands.set(selector + ".TooltipText", option.displayName() + " — Select for live preview");
             setAppearanceIcon(commands, selector, AppearanceEditorPresentation.icon(appearanceCategory), false);
-            setAppearanceThumbnailProbe(commands, host, selector, option.cosmeticId());
+            setAppearanceThumbnail(commands, host, selector, option.cosmeticId(), rebuildCards);
             setAppearanceSelection(commands, selector, option.cosmeticId().equals(currentId));
         }
         commands.set("#AppearancePagePREV.Disabled", page.pageIndex() == 0);
@@ -1626,15 +1642,15 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#AppearancePreviewCharacter.Visible", preview != null);
         commands.set("#AppearancePreviewFallback.Visible", preview == null);
         appearanceUiState.updateHashes(page, appearanceDraft.currentSkin(), appearancePreviewHash);
-        appearanceTelemetry("APPEARANCE_PAGE_RENDERED", options.size(), started, "pageChanged=" + pageChanged);
+        appearanceTelemetry("APPEARANCE_PAGE_RENDERED", options.size(), started,
+                "pageChanged=" + pageChanged + " rebuildReason=" + appearanceCatalogRefreshReason);
+        appearanceCatalogRefreshReason = "SELECTION";
         if (pageChanged && !options.isEmpty()) {
             appearanceTelemetry("APPEARANCE_UI_ASSET_CREATED", 0, started,
                     "created=0 policy=RUNTIME_GENERATION_DISABLED");
             appearanceTelemetry("APPEARANCE_UI_ASSET_REUSED", options.size(), started,
-                    "assetId=ImmersiveNpcAppearance/" + AppearanceEditorPresentation.icon(appearanceCategory)
-                            + ".png sourceCosmetic=CATEGORY_SELECTOR colorVariant=STATIC"
-                            + " dimensions=PACKAGED_RESOURCE encodedBytes=PACKAGED_RESOURCE"
-                            + " creationTime=PACKAGED_RESOURCE lastUse=" + Instant.now()
+                    "source=IMMUTABLE_CANONICAL_CATALOG colorVariant=CANONICAL_ONLY"
+                            + " dimensions=92x149 creationTime=BUILD_TIME lastUse=" + Instant.now()
                             + " owningPage=" + authoringSession.sessionId() + " sentNewAsset=false");
         }
     }
@@ -1650,39 +1666,61 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 "Pages/ImmersiveNpcProfile.ui", "AppearanceIcon" + icon + (selected ? "Selected" : "")));
     }
 
-    private void setAppearanceThumbnailProbe(UICommandBuilder commands, String host,
-            String selector, String cosmeticId) {
-        var reference = AppearanceThumbnailProbe.find(appearanceCategory, cosmeticId).orElse(null);
+    private void setAppearanceThumbnail(UICommandBuilder commands, String host,
+            String selector, String cosmeticId, boolean mountImage) {
+        var reference = AppearanceThumbnailCatalog.find(appearanceCategory, cosmeticId).orElse(null);
         commands.set(selector + " #Icon.Visible", reference == null);
         commands.set(selector + " #Name.Visible", reference == null);
         commands.set(selector + " #ThumbnailNamePlate.Visible", reference != null);
         commands.set(selector + " #ThumbnailName.Visible", reference != null);
-        for (var candidate : AppearanceThumbnailProbe.references()) {
-            commands.set(selector + " #" + candidate.elementId() + ".Visible",
-                    candidate == reference);
-        }
         if (reference == null) return;
+
+        if (mountImage) {
+            commands.appendInline(selector + " #ThumbnailHost", "AssetImage #Thumbnail {"
+                    + " HitTestVisible: false; Anchor: (Left: 0, Right: 0, Top: 0, Bottom: 0);"
+                    + " FallbackTexturePath: \"" + reference.uiTexturePath() + "\"; }");
+        }
 
         if (appearanceThumbnailReferencesLogged.add(reference.key())) {
             diagnostics.accept("APPEARANCE_THUMBNAIL_REFERENCE cosmeticId="
                     + reference.key() + " assetPath=" + reference.packagedAssetPath()
                     + " dimensions=" + reference.width() + "x" + reference.height()
                     + " packagedStatic=true dynamicThumbnailCreates="
-                    + AppearanceThumbnailProbe.DYNAMIC_THUMBNAIL_CREATES
+                    + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_CREATES
                     + " runtimeThumbnailWrites="
-                    + AppearanceThumbnailProbe.RUNTIME_THUMBNAIL_WRITES);
+                    + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_WRITES
+                    + " runtimeThumbnailRecolors="
+                    + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_RECOLORS);
         }
-        if (appearanceThumbnailCardsBuilt.add(host + "|" + reference.key())) {
-            appearanceThumbnailCardBuildCount++;
-            diagnostics.accept("APPEARANCE_THUMBNAIL_CARD_BUILT cosmeticId="
-                    + reference.key() + " assetPath=" + reference.packagedAssetPath()
-                    + " dimensions=" + reference.width() + "x" + reference.height()
-                    + " packagedStatic=true cardBuildCount=" + appearanceThumbnailCardBuildCount
-                    + " dynamicThumbnailCreates="
-                    + AppearanceThumbnailProbe.DYNAMIC_THUMBNAIL_CREATES
-                    + " runtimeThumbnailWrites="
-                    + AppearanceThumbnailProbe.RUNTIME_THUMBNAIL_WRITES);
-        }
+    }
+
+    private void scheduleAppearanceSearch(Store<EntityStore> store, String query) {
+        long request = ++appearanceSearchGeneration;
+        ScheduledFuture<?> previous = appearanceSearchTask;
+        if (previous != null) previous.cancel(false);
+        UUID draftId = appearanceDraft.draftId();
+        long editorGeneration = authoringSession.editorGeneration();
+        var world = store.getExternalData().getWorld();
+        appearanceSearchTask = statsScheduler.schedule(() -> world.execute(() -> {
+            if (!built || appearanceDraft == null || !appearanceDraft.draftId().equals(draftId)
+                    || authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.APPEARANCE
+                    || authoringSession.editorGeneration() != editorGeneration
+                    || request != appearanceSearchGeneration || !appearancePendingSearch.equals(query)) return;
+            appearanceSearchTask = null;
+            appearanceSearch = query;
+            appearancePage = 0;
+            appearanceEditorStatus = "Registry search applied locally; no model request was made.";
+            appearanceEditorError = false;
+            appearanceCatalogRefreshReason = "SEARCH";
+            refreshAppearanceEditorUi();
+        }), 180, TimeUnit.MILLISECONDS);
+    }
+
+    private void cancelAppearanceSearch() {
+        appearanceSearchGeneration++;
+        ScheduledFuture<?> current = appearanceSearchTask;
+        appearanceSearchTask = null;
+        if (current != null) current.cancel(false);
     }
 
     private void refreshAppearanceEditorUi() {
@@ -1722,6 +1760,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         if (hash.equals(appearanceRequestedPreviewHash) || hash.equals(appearancePreviewHash)) {
             // Returning to the applied skin must also cancel a queued different skin.
             if (hash.equals(appearancePreviewHash)) cancelAppearancePreview();
+            appearancePreviewJobsCoalesced++;
             appearanceTelemetry("APPEARANCE_PREVIEW_COALESCED", 0, 0, "unchangedSkin=true");
             appearanceEventTelemetry("APPEARANCE_PREVIEW_REQUESTED", event,
                     "coalesced=true unchangedSkin=true");
@@ -1741,6 +1780,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             try {
                 appearancePreview.show(appearanceDraft, focusCategory);
                 appearancePreviewHash = hash;
+                appearancePreviewJobsApplied++;
                 appearanceUiState.updateHashes(appearanceCatalogPage(), appearanceDraft.currentSkin(), hash);
                 appearanceTelemetry("APPEARANCE_PREVIEW_APPLIED", 0, started, "previewGeneration=" + generation);
                 appearanceEventTelemetry("APPEARANCE_PREVIEW_APPLIED", event,
@@ -1752,6 +1792,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 refreshAppearanceEditorUi();
             } finally { appearanceRequestedPreviewHash = ""; }
         });
+        if (coalesced) appearancePreviewJobsCoalesced++;
+        else appearancePreviewJobsScheduled++;
         appearanceTelemetry(coalesced ? "APPEARANCE_PREVIEW_COALESCED" : "APPEARANCE_PREVIEW_SCHEDULED",
                 0, 0, "generationBounded=true");
         appearanceEventTelemetry("APPEARANCE_PREVIEW_REQUESTED", event,
@@ -1887,6 +1929,19 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 + " previewJobsActive=" + appearancePreviewGate.active()
                 + " previewJobsPending=" + appearancePreviewGate.pending()
                 + " previewJobsCancelled=" + appearancePreviewGate.cancelled()
+                + " previewJobsScheduled=" + appearancePreviewJobsScheduled
+                + " previewJobsCoalesced=" + appearancePreviewJobsCoalesced
+                + " previewJobsApplied=" + appearancePreviewJobsApplied
+                + " realizedCardCount=" + visible
+                + " staticThumbnailReferencesThisCategory="
+                + AppearanceThumbnailCatalog.count(appearanceCategory)
+                + " totalThumbnailReferencesUsedThisSession="
+                + appearanceThumbnailReferencesLogged.size()
+                + " cardRebuildCount=" + appearanceThumbnailCardBuildCount
+                + " gridRebuildCount=" + appearanceThumbnailGridRebuildCount
+                + " runtimeThumbnailCreates=" + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_CREATES
+                + " runtimeThumbnailWrites=" + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_WRITES
+                + " runtimeThumbnailRecolors=" + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_RECOLORS
                 + " durationMs=" + (start == 0 ? 0 : (System.nanoTime() - start) / 1_000_000.0)
                 + " degraded=" + appearanceUiState.degraded() + " " + extra);
     }
@@ -1976,6 +2031,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
 
     private void clearAppearanceDraft(boolean closeService) {
         cancelAppearancePreview();
+        cancelAppearanceSearch();
         if (appearanceDraft != null) {
             appearanceTelemetry("APPEARANCE_UI_ASSET_RELEASE_REQUESTED", 0, 0, "ownedDynamicAssets=0 clientAtlasReleaseClaim=false");
             appearanceTelemetry("APPEARANCE_PAGE_UNLOADED", 0, 0, "reason=EDITOR_EXIT");
@@ -1987,6 +2043,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         appearancePage = 0;
         appearanceDraft = null;
         appearanceSearch = "";
+        appearancePendingSearch = "";
 
 
         appearanceVariantPage = 0;

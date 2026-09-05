@@ -20,8 +20,9 @@ public final class R153AppearanceColorCardsTest {
                 "new RequestCommonAssetsRebuild(")) assert !all.contains(retired):retired;
         Path jar;
         try(var files=Files.list(Path.of("dist"))) {
-            jar=files.filter(path -> path.getFileName().toString().contains("R159"))
-                    .findFirst().orElseThrow();
+            jar=files.filter(path -> path.getFileName().toString().endsWith(".jar"))
+                    .max(java.util.Comparator.comparingLong(path -> path.toFile().lastModified()))
+                    .orElseThrow();
         }
         try(JarFile archive=new JarFile(jar.toFile())) {
             List<String> entries=archive.stream().map(java.util.zip.ZipEntry::getName).toList();
@@ -33,6 +34,6 @@ public final class R153AppearanceColorCardsTest {
                         && !name.endsWith("PrivateAppearanceCardAssets.class"):name;
             }
         }
-        System.out.println("R153 superseded safely: private PNG generation/upload classes and all catalog thumbnail resources are absent from production.");
+        System.out.println("R153 superseded safely: private PNG generation/upload classes and retired dynamic-color resources remain absent.");
     }
 }

@@ -1,6 +1,6 @@
 # R159 Appearance Two-Card Visual Probe
 
-Status: deployed connected-validation candidate; not yet approved.
+Status: connected-approved prerequisite for R160 on 2026-09-05.
 
 R159 implements only the documented Appearance recovery Checkpoint 2. The version is R159 rather than the brief's original R157 filename because R157 and R158 were already consumed by the event-payload and focused-preview repairs. No full-catalog thumbnail restoration has begun.
 
@@ -125,4 +125,4 @@ Fully exit Hytale before starting this test so the client resource atlas is rebu
 
 Required connected result: zero permanent loading, atlas overflow, dropped images, unrelated UI corruption, progressive lag, new runtime image resources, stale preview, or player appearance mutation. Both thumbnails must remain stable and the central preview must remain authoritative.
 
-Client atlas/log evidence for R159 is intentionally pending this connected run; the deterministic suite cannot truthfully establish client rendering or atlas behavior. Stop after reporting the result. Do not restore additional thumbnails until R159 is explicitly approved.
+Connected result supplied by the operator: Farmer Top and Flower Shirt rendered correctly through repeated selection, color changes, category changes, and reopening, with no atlas overflow, dropped images, progressive lag, Loading regression, or loss of appearance interaction. That approval opened only the bounded R160 Checkpoint 3 catalog expansion.
