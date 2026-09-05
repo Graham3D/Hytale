@@ -73,6 +73,16 @@ import java.util.function.Consumer;
 
 /** Update 6 native NPC Profile screen composed with the server-side file browser. */
 public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage.PageData> {
+    private static final String APPEARANCE_NATIVE_ICON_RESOLVED =
+            "APPEARANCE_NATIVE_ICON_RESOLVED";
+    private static final String APPEARANCE_NATIVE_ICON_MISSING =
+            "APPEARANCE_NATIVE_ICON_MISSING";
+    private static final String APPEARANCE_ICON_FRAMING_RESOLVED =
+            "APPEARANCE_ICON_FRAMING_RESOLVED";
+    private static final String APPEARANCE_COLOR_ICON_STATE_CHANGED =
+            "APPEARANCE_COLOR_ICON_STATE_CHANGED";
+    private static final String APPEARANCE_COLOR_ICON_STATE_UNCHANGED =
+            "APPEARANCE_COLOR_ICON_STATE_UNCHANGED";
     /**
      * ItemGrid must receive a literal positive window section in its construction
      * document. WindowManager allocates monotonically increasing positive IDs for
@@ -1406,6 +1416,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_OPTION", "APPEARANCE_COLOR", "APPEARANCE_VARIANT" -> {
+                String priorSelection = currentAppearanceSelection();
                 var descriptor = editor.appearanceCatalog().require(appearanceCategory, data.appearanceOptionId);
                 if (action.equals("APPEARANCE_OPTION")
                         && appearanceCatalogOptions().stream().noneMatch(option -> option.cosmeticId().equals(data.appearanceOptionId))) {
@@ -1434,6 +1445,27 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceEditorStatus = "Previewing " + selected.option().displayName()
                         + ". Save Appearance commits; Cancel restores persisted appearance.";
                 appearanceEditorError = false;
+                if ("APPEARANCE_COLOR".equals(action)) {
+                    String currentSelection = currentAppearanceSelection();
+                    var nativeIcon = editor.appearanceCatalog().nativeIconPresentation(
+                            appearanceCategory, data.appearanceOptionId,
+                            NpcSkinCodecAdapter.variantId(currentSelection),
+                            NpcSkinCodecAdapter.colorId(currentSelection));
+                    boolean galleryPresentationChanged = nativeIcon.nativeIconAvailable();
+                    diagnostics.accept((galleryPresentationChanged
+                            ? APPEARANCE_COLOR_ICON_STATE_CHANGED
+                            : APPEARANCE_COLOR_ICON_STATE_UNCHANGED)
+                            + " cosmeticId=" + nativeIcon.cosmeticId()
+                            + " modelVariant=" + nativeIcon.modelVariant()
+                            + " iconPath=" + nativeIcon.iconPath()
+                            + " framing=" + nativeIcon.framing()
+                            + " textureGradient=" + nativeIcon.textureGradient().replace(' ', '_')
+                            + " colorBefore=" + NpcSkinCodecAdapter.colorId(priorSelection)
+                            + " colorAfter=" + NpcSkinCodecAdapter.colorId(currentSelection)
+                            + " colorChanged=true galleryPresentationChanged="
+                            + galleryPresentationChanged
+                            + " centralPreviewChanged=true reason=CLIENT_PART_PREVIEW_NOT_EXPOSED");
+                }
                 refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_RANDOMIZE" -> {
@@ -1533,7 +1565,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         if (rebuildCards) {
             appearanceUiState.forget("#AppearanceOption");
             AppearanceEditorPresentation.appendGrid(commands, "#AppearanceOptionGrid", "AppearanceOption",
-                    AppearanceUiAssetBudget.MAX_VISIBLE_CARDS, AppearanceEditorPresentation.CARD_COLUMNS, 92, 100, 10,
+                    AppearanceUiAssetBudget.MAX_VISIBLE_CARDS, AppearanceEditorPresentation.CARD_COLUMNS, 92, 149, 10,
                     "Pages/ImmersiveNpcAppearanceCard.ui");
             appearanceGridMounted = true;
             appearanceThumbnailGridRebuildCount++;
@@ -1550,8 +1582,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             String selector = host + " #Choice";
             commands.set(host + " #Id.Text", option.cosmeticId());
             commands.set(selector + " #Name.Text", AppearanceEditorPresentation.label(option.displayName(), 48));
-            commands.set(selector + " #ThumbnailName.Text",
-                    AppearanceEditorPresentation.label(option.displayName(), 26));
             commands.set(selector + ".TooltipText", option.displayName() + " — Select for live preview");
             setAppearanceIcon(commands, selector, AppearanceEditorPresentation.icon(appearanceCategory), false);
             setAppearanceThumbnail(commands, selector, option.cosmeticId(), index, rebuildCards);
@@ -1674,8 +1704,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         var reference = AppearanceThumbnailCatalog.find(appearanceCategory, cosmeticId).orElse(null);
         commands.set(selector + " #Icon.Visible", reference == null);
         commands.set(selector + " #Name.Visible", reference == null);
-        commands.set(selector + " #ThumbnailNamePlate.Visible", reference != null);
-        commands.set(selector + " #ThumbnailName.Visible", reference != null);
         String thumbnailSelector = selector + " #Thumbnail";
         commands.set(thumbnailSelector + ".Visible", reference != null);
         if (reference == null) {
@@ -1699,6 +1727,24 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     + " packagedAssetPresent=" + packagedAssetPresent);
         }
         if (appearanceThumbnailReferencesLogged.add(reference.key())) {
+            var nativeIcon = editor.appearanceCatalog().nativeIconPresentation(
+                    appearanceCategory, cosmeticId, "", "");
+            diagnostics.accept((nativeIcon.nativeIconAvailable()
+                    ? APPEARANCE_NATIVE_ICON_RESOLVED : APPEARANCE_NATIVE_ICON_MISSING)
+                    + " cosmeticId=" + nativeIcon.cosmeticId()
+                    + " modelVariant=" + nativeIcon.modelVariant()
+                    + " iconPath=" + nativeIcon.iconPath()
+                    + " framing=" + nativeIcon.framing()
+                    + " textureGradient=" + nativeIcon.textureGradient().replace(' ', '_')
+                    + " nativeIconAvailable=" + nativeIcon.nativeIconAvailable());
+            diagnostics.accept(APPEARANCE_ICON_FRAMING_RESOLVED
+                    + " cosmeticId=" + nativeIcon.cosmeticId()
+                    + " modelVariant=" + nativeIcon.modelVariant()
+                    + " iconPath=" + reference.uiTexturePath()
+                    + " framing=" + nativeIcon.framing()
+                    + " textureGradient=" + nativeIcon.textureGradient().replace(' ', '_')
+                    + " sourceDimensions=" + reference.width() + "x" + reference.height()
+                    + " hostDimensions=92x149 aspectPreserved=true categoryFallback=true");
             diagnostics.accept("APPEARANCE_THUMBNAIL_REFERENCE cosmeticId=" + reference.key()
                     + " assetPath=" + reference.packagedAssetPath()
                     + " dimensions=" + reference.width() + "x" + reference.height()

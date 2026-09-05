@@ -132,5 +132,11 @@ try {
             $pageSource.Contains('appendInline(selector + " #ThumbnailHost"')) {
         throw 'R161 native AssetImage.AssetPath card binding contract is missing.'
     }
-    Write-Host "Release resources validated: $revision; neutral skin, 590 immutable canonical cards, native AssetPath binding, exact installed-registry coverage, and zero-runtime-image safety policy"
+    if (-not $cardSource.Contains('Anchor: (Left: 0, Right: 0, Top: 0, Bottom: 0)') -or
+            -not $pageSource.Contains('CARD_COLUMNS, 92, 149, 10') -or
+            $cardSource.Contains('#ThumbnailNamePlate') -or
+            $cardSource.Contains('#ThumbnailName')) {
+        throw 'R162 native 92x149 aspect-preserving card geometry is missing.'
+    }
+    Write-Host "Release resources validated: $revision; neutral skin, 590 immutable canonical cards, native 92x149 AssetPath binding, exact installed-registry coverage, and zero-runtime-image safety policy"
 } finally { $archive.Dispose() }

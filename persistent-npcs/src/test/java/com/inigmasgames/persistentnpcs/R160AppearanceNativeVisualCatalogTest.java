@@ -95,7 +95,7 @@ public final class R160AppearanceNativeVisualCatalogTest {
 
         Path jar;
         try (var files = Files.list(Path.of("dist"))) {
-            jar = files.filter(path -> path.getFileName().toString().contains("R161"))
+            jar = files.filter(path -> path.getFileName().toString().contains("R162"))
                     .findFirst().orElseThrow();
         }
         try (JarFile archive = new JarFile(jar.toFile())) {

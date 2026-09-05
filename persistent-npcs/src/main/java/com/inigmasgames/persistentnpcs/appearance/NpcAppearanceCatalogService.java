@@ -128,6 +128,15 @@ public final class NpcAppearanceCatalogService {
     public record CatalogIdentity(String hytaleBuildId, String registryHash,
             String enabledAssetPackSetHash, String adapterVersion, Instant capturedAt) { }
 
+    /**
+     * Presentation-only audit of the native cosmetic icon inputs. Hytale 0.6.3
+     * exposes no server-side icon property on PlayerSkinPart, so iconPath is
+     * intentionally NONE while model/material/framing inputs remain observable.
+     */
+    public record NativeIconPresentation(String cosmeticId, String modelVariant,
+            String iconPath, String framing, String textureGradient,
+            boolean nativeIconAvailable) { }
+
     public record CatalogPage(Category category, String query, int pageIndex,
             int pageCount, int totalMatches, List<CosmeticOptionDescriptor> options) {
         public CatalogPage {
@@ -319,6 +328,79 @@ public final class NpcAppearanceCatalogService {
             }
         }
         return validSwatchColors(texture == null ? null : texture.getBaseColor());
+    }
+
+    public NativeIconPresentation nativeIconPresentation(Category category,
+            String cosmeticId, String requestedVariant, String requestedColor) {
+        CosmeticsModule module = CosmeticsModule.get();
+        if (module == null || module.getRegistry() == null || category == null
+                || cosmeticId == null || cosmeticId.isBlank()) {
+            return new NativeIconPresentation(cosmeticId == null ? "" : cosmeticId,
+                    "NONE", "NONE", categoryFraming(category), "NONE", false);
+        }
+        CosmeticRegistry registry = module.getRegistry();
+        PlayerSkinPart part = registryParts(registry, category).get(cosmeticId);
+        if (part == null) {
+            return new NativeIconPresentation(cosmeticId, "NONE", "NONE",
+                    categoryFraming(category), "NONE", false);
+        }
+
+        String variantId = requestedVariant == null ? "" : requestedVariant;
+        PlayerSkinPart.Variant variant = null;
+        if (part.getVariants() != null && !part.getVariants().isEmpty()) {
+            variant = part.getVariants().get(variantId);
+            if (variant == null) {
+                variantId = part.getVariants().keySet().stream().sorted().findFirst().orElse("");
+                variant = part.getVariants().get(variantId);
+            }
+        }
+        String model = variant != null && variant.getModel() != null
+                ? variant.getModel() : part.getModel();
+        String greyscale = variant != null && variant.getGreyscaleTexture() != null
+                ? variant.getGreyscaleTexture() : part.getGreyscaleTexture();
+        Map<String, PlayerSkinPartTexture> textures = variant == null
+                ? part.getTextures() : variant.getTextures();
+        String colorId = requestedColor == null ? "" : requestedColor;
+        PlayerSkinPartTexture texture = textures == null ? null : textures.get(colorId);
+        if (texture == null && textures != null && !textures.isEmpty()) {
+            colorId = textures.keySet().stream().sorted().findFirst().orElse("");
+            texture = textures.get(colorId);
+        }
+        String material;
+        if (texture != null && texture.getTexture() != null) {
+            material = "texture=" + texture.getTexture() + " colorId=" + colorId;
+        } else if (part.getGradientSet() != null && greyscale != null) {
+            if (colorId.isBlank()) {
+                PlayerSkinGradientSet gradients = registry.getGradientSets().get(part.getGradientSet());
+                if (gradients != null && gradients.getGradients() != null) {
+                    colorId = gradients.getGradients().keySet().stream().sorted()
+                            .findFirst().orElse("");
+                }
+            }
+            material = "greyscale=" + greyscale + " gradientSet=" + part.getGradientSet()
+                    + " gradientId=" + colorId;
+        } else {
+            material = "NONE";
+        }
+        return new NativeIconPresentation(cosmeticId,
+                (model == null ? "NONE" : model) + (variantId.isBlank() ? "" : "#" + variantId),
+                "NONE", categoryFraming(category), material, false);
+    }
+
+    public static String categoryFraming(Category category) {
+        if (category == null) return "UNKNOWN";
+        return switch (category) {
+            case PANTS, OVERPANTS -> "92x149:WAIST_TO_FEET";
+            case UNDERTOP, OVERTOP -> "92x149:SHOULDERS_TO_WAIST";
+            case SHOES -> "92x149:LOWER_LEGS_TO_FEET";
+            case HAIRCUT, HEAD_ACCESSORY -> "92x149:HEAD_AND_SHOULDERS";
+            case FACE, EYES, EYEBROWS, MOUTH, FACIAL_HAIR, FACE_ACCESSORY ->
+                    "92x149:HEAD_CLOSEUP";
+            case EARS, EAR_ACCESSORY -> "92x149:HEAD_THREE_QUARTER";
+            case GLOVES -> "92x149:TORSO_ARMS_HANDS";
+            case CAPE -> "92x149:REAR_BODY";
+            default -> "92x149:FULL_BODY";
+        };
     }
 
     public static List<String> validSwatchColors(String[] colors) {

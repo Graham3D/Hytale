@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
-$artifactName = 'ImmersiveNPCs-0.6.3-R161-NPC-APPEARANCE-NATIVE-CARD-BINDING.jar'
+$artifactName = 'ImmersiveNPCs-0.6.3-R162-NPC-APPEARANCE-NATIVE-PROPORTIONS.jar'
 $sourceJar = Join-Path $projectRoot (Join-Path 'dist' $artifactName)
 if (-not (Test-Path -LiteralPath $sourceJar)) {
     & (Join-Path $projectRoot 'build.ps1')
