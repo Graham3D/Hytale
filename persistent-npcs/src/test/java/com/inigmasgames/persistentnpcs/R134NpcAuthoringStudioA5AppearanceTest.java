@@ -129,7 +129,8 @@ public final class R134NpcAuthoringStudioA5AppearanceTest {
             System.out.println("R134 stage=bounded-catalog-and-ui-contract");
             var page1 = catalog.query(NpcAppearanceCatalogService.Category.FACE, "", 0);
             var page2 = catalog.query(NpcAppearanceCatalogService.Category.FACE, "", 1);
-            assert page1.options().size() == 12 && page2.options().size() == 2;
+            assert page1.options().size() == 14 && page2.options().size() == 14;
+            assert page1.pageSize() == 20 && page1.pageCount() == 1;
             assert catalog.query(NpcAppearanceCatalogService.Category.FACE,
                     "Face13", 0).totalMatches() == 1;
             String ui = source("src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcProfile.ui");

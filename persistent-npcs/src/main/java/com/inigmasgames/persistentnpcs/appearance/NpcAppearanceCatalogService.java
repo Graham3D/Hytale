@@ -28,7 +28,7 @@ public final class NpcAppearanceCatalogService {
     public static final String AUDITED_HYTALE_BUILD =
             "0.6.3/ff802bf5a538f7e4b1df43a575c72f9d2bebb504";
     public static final String ADAPTER_VERSION = "R134-SKIN-CODEC-V1";
-    public static final int PAGE_SIZE = 12;
+    public static final int PAGE_SIZE = 20;
 
     public enum PrimaryCategory { BODY, FACE, HAIR, EYES, CLOTHING, ACCESSORIES }
 
@@ -130,7 +130,13 @@ public final class NpcAppearanceCatalogService {
 
     public record CatalogPage(Category category, String query, int pageIndex,
             int pageCount, int totalMatches, List<CosmeticOptionDescriptor> options) {
-        public CatalogPage { options = List.copyOf(options); }
+        public CatalogPage {
+            options = List.copyOf(options);
+            if (options.size() > PAGE_SIZE) throw new IllegalArgumentException("Appearance page exceeds 20 choices");
+        }
+        public int pageSize() { return PAGE_SIZE; }
+        public int totalCount() { return totalMatches; }
+        public List<CosmeticOptionDescriptor> descriptors() { return options; }
     }
 
     public record Snapshot(CatalogIdentity identity,
@@ -197,7 +203,7 @@ public final class NpcAppearanceCatalogService {
                 matches.subList(from, to));
     }
 
-    /** Same pinned catalog and filtering, exposed in full for the native scrolling grid. */
+    /** Descriptor-only filtering. Never instantiate UI nodes or model/image objects here. */
     public List<CosmeticOptionDescriptor> queryAll(Category category, String query) {
         String normalized = query == null ? "" : query.strip().toLowerCase(Locale.ROOT);
         List<CosmeticOptionDescriptor> matches = new ArrayList<>();

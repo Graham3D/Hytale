@@ -1,5 +1,10 @@
 # R154 — bounded client-atlas repair
 
+> **Superseded by R155.** Connected testing exposed that R154's private,
+> color-responsive card textures could still exhaust or destabilize Hytale's
+> shared Custom UI atlas. R154 is retained only as rollback/audit history and
+> must not be used as the production Appearance Editor architecture.
+
 2026-09-05. Baseline: R153 / `dd68cac5fb50ba38a0d57d2caf63b64168f3dd18`.
 Status: **implemented, deterministic PASS, deployed; connected approval pending**.
 R153 connected validation **FAILED**. No Profile Editor polish or backend rewrite.

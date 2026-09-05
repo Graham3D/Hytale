@@ -7,30 +7,7 @@ import com.inigmasgames.persistentnpcs.appearance.NpcAppearanceCatalogService.Pr
 public final class AppearanceEditorPresentation {
     public static final int CARD_COLUMNS = 5;
     public static final int COLOR_COLUMNS = 13;
-    private static final java.util.Map<String, String> THUMBNAILS = loadThumbnails();
     private AppearanceEditorPresentation() { }
-
-    /** Closed packaged index: no raw cosmetic IDs or filesystem paths become UI markup. */
-    public static String thumbnail(Category category, String cosmeticId) {
-        return THUMBNAILS.get(category.name() + ":" + cosmeticId);
-    }
-
-    private static java.util.Map<String, String> loadThumbnails() {
-        var result = new java.util.HashMap<String, String>();
-        try (var stream = AppearanceEditorPresentation.class.getResourceAsStream(
-                "/Common/UI/Custom/Pages/ImmersiveNpcAppearance/Thumbnails/index.tsv")) {
-            if (stream == null) return java.util.Map.of();
-            for (String line : new String(stream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).lines().toList()) {
-                String[] fields = line.split("\t");
-                if (fields.length == 3 && fields[1].matches("[a-f0-9]{24}\\.png")) {
-                    result.put(fields[0], fields[1].substring(0, 24));
-                }
-            }
-        } catch (java.io.IOException failure) {
-            throw new IllegalStateException("Packaged appearance thumbnail index is unreadable", failure);
-        }
-        return java.util.Map.copyOf(result);
-    }
 
     public static int paletteHeight(int colors) {
         return 24 + ((colors + COLOR_COLUMNS - 1) / COLOR_COLUMNS) * 38;

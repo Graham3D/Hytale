@@ -134,13 +134,15 @@ $Sounds = "../Sounds.ui";
   Anchor: @Anchor;
   Style: $C.@SecondaryButtonStyle;
   TextTooltipStyle: $C.@DefaultTextTooltipStyle;
+  Label #Id { Visible: false; Text: ""; }
   Group #Selected { HitTestVisible: false; Visible: false; Background: #b58a38; Padding: (Full: 1); Group { Background: #253548; Group { Anchor: (Left: 0, Width: 3); Background: @Gold; } } }
   Label #Name { HitTestVisible: false; Anchor: (Left: 10, Right: 10, Top: 3, Bottom: 3); Text: "Option"; Style: (...$C.@DefaultLabelStyle, FontSize: 12, Wrap: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
 };
 @AppearanceCategoryButton = Button {
   Anchor: (Width: 54, Height: 52, Bottom: 4);
-  Style: (Default: (Background: "ImmersiveNpcAppearance/CategoryIconBackground.png"), Hovered: (Background: #2f3a4f), Pressed: (Background: #253548));
+  Style: $C.@SecondaryButtonStyle;
   TextTooltipStyle: $C.@DefaultTextTooltipStyle;
+  Label #Id { Visible: false; Text: ""; }
   Group #Selected { HitTestVisible: false; Visible: false; Anchor: (Left: 0, Width: 3); Background: @Gold; }
   Group #Icon { HitTestVisible: false; Anchor: (Left: 3, Top: 8, Width: 48, Height: 36); Background: @AppearanceIconGeneral; }
 };
@@ -447,6 +449,10 @@ $C.@PageOverlay #AppearanceEditorPage {
       Padding: (Full: 16);
       Label #AppearanceDraftMeta { Visible: false; Text: ""; }
       Label #AppearanceRegistryMeta { Visible: false; Text: ""; }
+      Label #AppearanceCatalogHash { Visible: false; Text: ""; }
+      Label #AppearanceCurrentId { Visible: false; Text: ""; }
+      Label #AppearanceCurrentColor { Visible: false; Text: ""; }
+      Label #AppearanceCurrentVariant { Visible: false; Text: ""; }
       Group #AppearanceBody { LayoutMode: Left; FlexWeight: 1; Background: #17212d;
         Group #AppearancePrimaryRail { Anchor: (Width: 62); LayoutMode: Top; Padding: (Full: 4);
           @AppearanceCategoryButton #AppearancePrimaryBODY { TooltipText: "BODY"; }
@@ -484,8 +490,13 @@ $C.@PageOverlay #AppearanceEditorPage {
             }
           }
           Group #AppearanceOptionViewport { FlexWeight: 1; Anchor: (Bottom: 12);
-            Group #AppearanceOptionGrid { LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; KeepScrollPosition: true; }
+            Group #AppearanceOptionGrid { LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; }
             Label #AppearanceEmptyState { Visible: false; Anchor: (Left: 24, Right: 24, Top: 30, Height: 60); Text: "No matching options"; Style: (...$C.@DefaultLabelStyle, FontSize: 13, Wrap: true, TextColor: @Muted, HorizontalAlignment: Center, VerticalAlignment: Center); }
+          }
+          Group { LayoutMode: Left; Anchor: (Height: 28, Bottom: 8);
+            @AppearanceAction #AppearancePagePREV { @Anchor = (Width: 70); @Text = "Prev"; }
+            Label #AppearancePageLabel { FlexWeight: 1; Text: ""; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: @Muted, HorizontalAlignment: Center, VerticalAlignment: Center); }
+            @AppearanceAction #AppearancePageNEXT { @Anchor = (Width: 70); @Text = "Next"; }
           }
           Label #AppearanceSelectionInfo { Visible: false; Anchor: (Height: 22); Text: "Unavailable saved option"; TextTooltipStyle: $C.@DefaultTextTooltipStyle; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #d0a65a); }
           Group #AppearanceColorSection { LayoutMode: Top; Anchor: (Height: 138, Bottom: 8);
