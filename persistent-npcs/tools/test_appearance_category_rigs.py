@@ -10,7 +10,7 @@ from bake_appearance_thumbnails import Baker, CATEGORIES, CATEGORY_RIG, RIGS, W,
 
 ROOT = Path(__file__).resolve().parents[1]
 THUMBS = ROOT / "src/main/resources/Common/UI/Custom/Pages/ImmersiveNpcAppearance/Thumbnails"
-SHEETS = ROOT / "docs/R152_CATEGORY_CONTACT_SHEETS"
+SHEETS = ROOT / "docs/R153_CATEGORY_CONTACT_SHEETS"
 
 
 class CategoryRigTest(unittest.TestCase):

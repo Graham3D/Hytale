@@ -146,6 +146,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private boolean profileEditorError;
     private String profileGenerationScope = "BIOGRAPHY";
     private NpcAppearanceDraft appearanceDraft;
+    private final AppearanceCardJobs appearanceCardJobs = new AppearanceCardJobs();
+    private final PrivateAppearanceCardAssets appearanceCardAssets;
     private final NpcAppearancePreviewService appearancePreview;
     private PrimaryCategory appearancePrimary = PrimaryCategory.BODY;
     private Category appearanceCategory = Category.BODY_CHARACTERISTIC;
@@ -185,6 +187,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         this.preview = preview;
         this.voiceRecorder = voiceRecorder;
         this.diagnostics = diagnostics == null ? ignored -> { } : diagnostics;
+        this.appearanceCardAssets = new PrivateAppearanceCardAssets(
+                packet -> playerRef.getPacketHandler().writeNoCache(packet));
         this.appearancePreview = new NpcAppearancePreviewService(
                 preview, editor.skinCodec(), this.diagnostics);
         this.committed = committed == null ? ignored -> { } : committed;
@@ -231,6 +235,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         authoringSession.addCleanup("stats-refresh", this::closeStatsRefresh);
         authoringSession.addCleanup("profile-generation", this::cancelProfileGeneration);
         authoringSession.addCleanup("voice-recorder", this::closeVoiceRecorder);
+        authoringSession.addCleanup("private-appearance-cards", this::closeAppearanceCards);
     }
 
     public ContainerWindow[] windows() {
@@ -461,6 +466,19 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         built = true;
         startStatsRefresh(store);
         startVoiceRefresh(store);
+        if (appearanceEditor && appearanceDraft != null) queueAppearanceColorCards(store);
+        else {
+            appearanceCardJobs.invalidate();
+            // Queue behind this replacement page build, after thumbnail nodes are gone.
+            store.getExternalData().getWorld().execute(() -> {
+                if (built && authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.APPEARANCE) {
+                    try { appearanceCardAssets.release(); }
+                    catch (RuntimeException disconnected) {
+                        diagnostics.accept("NPC_APPEARANCE_PRIVATE_CARDS_RELEASE " + disconnected.getMessage());
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -1395,7 +1413,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             commands.set(selector + " #Unavailable.Visible", !none && thumbnail == null);
             commands.set(selector + ".TooltipText", option.displayName()
                     + (none ? "" : thumbnail == null ? " — Thumbnail unavailable; select for live preview"
-                            : " — Reference color; select for live preview"));
+                            : " — Reference while colored cards load"));
             if (thumbnail != null) commands.set(selector + " #Thumbnail.Background",
                     com.hypixel.hytale.server.core.ui.Value.ref(
                             "Pages/ImmersiveNpcAppearanceThumbnails.ui", "T" + thumbnail));
@@ -1486,6 +1504,61 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         rebuild();
     }
 
+    private void queueAppearanceColorCards(Store<EntityStore> store) {
+        // Snapshot only closed cosmetic IDs/color/variant, never an avatar, equipment or PCM.
+        var options = appearanceCatalogOptions();
+        String selectedId = currentAppearanceCosmeticId();
+        String selected = currentAppearanceSelection();
+        String color = NpcSkinCodecAdapter.colorId(selected);
+        var requests = new java.util.ArrayList<AppearanceColorCards.Request>();
+        for (int index = 0; index < Math.min(options.size(), AppearanceCardJobs.MAX_CARDS); index++) {
+            var option = options.get(index);
+            if (option.cosmeticId().isBlank()) continue;
+            requests.add(new AppearanceColorCards.Request(index, appearanceCategory.name(),
+                    option.cosmeticId(), option.cosmeticId().equals(selectedId)
+                            ? NpcSkinCodecAdapter.variantId(selected) : "", color));
+        }
+        var world = store.getExternalData().getWorld();
+        appearanceCardJobs.request(requests, world::execute, batch -> {
+            if (!built || appearanceDraft == null
+                    || authoringSession.activeEditor() != NpcAuthoringSession.EditorKind.APPEARANCE
+                    || !appearanceCardJobs.current(batch.generation())) return;
+            try {
+                if (!batch.failure().isEmpty()) throw new IllegalStateException(batch.failure());
+                var paths = appearanceCardAssets.publish(batch.cards());
+                UICommandBuilder update = new UICommandBuilder();
+                for (var card : batch.cards()) {
+                    String selector = "#AppearanceOption" + card.slot() + " #Choice";
+                    update.setObject(selector + " #Thumbnail.Background",
+                            new com.hypixel.hytale.server.core.ui.PatchStyle().setTexturePath(
+                                    Value.of(paths.get(card.slot()))));
+                    update.set(selector + " #Unavailable.Visible", false);
+                    update.set(selector + ".TooltipText", options.get(card.slot()).displayName()
+                            + (card.image().selectedColor() ? " — " + card.image().resolvedColor()
+                                    : color.isEmpty() ? " — Reference color"
+                                            : " — Selected color unavailable for this option; reference color"));
+                }
+                // Native asset initialize/part/finalize/rebuild packets precede this update.
+                // There is no verified per-asset ready ACK: connected review must confirm refresh.
+                if (!batch.cards().isEmpty()) sendUpdate(update, false);
+                diagnostics.accept("NPC_APPEARANCE_PRIVATE_CARDS generation=" + batch.generation()
+                        + " count=" + batch.cards().size() + " residentNames=" + appearanceCardAssets.residentNames()
+                        + " color=" + color + " private=true clientReadyAck=false");
+            } catch (RuntimeException failure) {
+                diagnostics.accept("NPC_APPEARANCE_PRIVATE_CARDS_FAILED " + failure.getMessage());
+                // Packaged references remain a truthful fallback; no appearance authority change.
+            }
+        });
+    }
+
+    private void closeAppearanceCards() {
+        appearanceCardJobs.close();
+        try { appearanceCardAssets.close(); }
+        catch (RuntimeException disconnected) {
+            diagnostics.accept("NPC_APPEARANCE_PRIVATE_CARDS_CLEANUP " + disconnected.getMessage());
+        }
+    }
+
     private List<NpcAppearanceCatalogService.CosmeticOptionDescriptor> appearanceCatalogOptions() {
         return editor.appearanceCatalog().queryAll(appearanceCategory, appearanceSearch);
     }
@@ -1562,6 +1635,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void clearAppearanceDraft(boolean closeService) {
+        appearanceCardJobs.invalidate();
         appearanceDraft = null;
         appearanceSearch = "";
 

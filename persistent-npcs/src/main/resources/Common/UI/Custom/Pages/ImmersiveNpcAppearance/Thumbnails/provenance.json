@@ -4,7 +4,7 @@
     184,
     298
   ],
-  "rendererSha256": "106534b4a44bded9510348dc7034de28c7447600eacaa87cd1ca0268a071e479",
+  "rendererSha256": "9824683285f7d4089b1da0253fa255c83cd888a4d1311bfa27fd1a6a4733a5c0",
   "rendererHashEncoding": "UTF-8 with LF newlines",
   "pythonLibraries": {
     "Pillow": "12.3.0",

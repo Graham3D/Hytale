@@ -115,9 +115,11 @@ class Baker:
             preferred = {"Skin":"02", "Hair":"BrownLight", "Colored_Cotton":"Blue"}.get(spec.get("GradientSet"))
             key = preferred if preferred in gradient else list(gradient)[min(3,len(gradient)-1)]
             lut = np.array(Image.open(io.BytesIO(self.read("Common/"+gradient[key]["Texture"]))).convert("RGB"))
-            # Native greyscale tint gradients are horizontal lookup textures.
-            gray = pixels[:,:,0].astype(float)/255
-            pixels[:,:,:3] = lut[lut.shape[0]//2, np.minimum(lut.shape[1]-1,(gray*(lut.shape[1]-1)).astype(int))]
+            # Installed native shader: only exact grayscale texels use the LUT.
+            # Colored trim (leather, metal, embroidery) is not a tint mask.
+            gray = (pixels[:,:,0] == pixels[:,:,1]) & (pixels[:,:,1] == pixels[:,:,2])
+            if lut.shape[1] != 256: raise ValueError("Expected native 256-column gradient")
+            pixels[:,:,:3][gray] = lut[lut.shape[0]//2, pixels[:,:,0][gray]]
         return pixels,spec
 
     def geometry(self, part, remember=False, body_nodes=None):
@@ -216,6 +218,9 @@ class Baker:
                 dst=depth[ymin:ymax+1,xmin:xmax+1]
                 mask=(wa>=-1e-7)&(wb>=-1e-7)&(wc>=-1e-7)&(z>=dst-1e-6)&(pixels[:,:,3]>127)
                 image[ymin:ymax+1,xmin:xmax+1][mask]=pixels[mask]; dst[mask]=z[mask]
+                # Optional offline material capture; no change to projection/depth.
+                capture = getattr(self, "capture_material", None)
+                if capture is not None: capture(tex, u, v, light, mask, xmin, ymin)
         if np.count_nonzero(image[:,:,3])<100: raise ValueError("Empty thumbnail "+part["Id"])
         return Image.fromarray(image)
 

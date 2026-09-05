@@ -1,6 +1,32 @@
 # Orbis NPC Authoring Studio — Technical Design and Implementation Report
 
-Updated: 2026-09-04 (America/New_York)
+Updated: 2026-09-05 (America/New_York)
+
+Latest candidate: **R153 — private on-demand appearance color cards, deployed**. See the
+[R153 implementation / connected-validation report](persistent-npcs/docs/R153_APPEARANCE_LIVE_COLOR_CARDS.md).
+Connected private asset refresh is **pending**, not inferred from deterministic
+tests. The operator explicitly selected this bounded-cache fallback. No Profile
+Editor polish or appearance-authority rewrite is included.
+
+R153 summary: native shader inspection verifies exact-gray-only 256-column
+gradient lookup; the previous baker incorrectly tinted fixed-color trim. All
+590 fallback cards now preserve trim, and 685 compact variant/texture material
+sources support private on-demand recoloring. The current color refreshes all
+compatible category cards without per-item camera fitting or a huge color atlas.
+Bounded caches, latest-generation jobs, private packet delivery and Back/close
+cleanup are regression-tested. Full deterministic suite and offline material/rig
+tests **PASS**. Native open-page asset rebuild timing is explicitly **unverified
+until connected testing**; no guessed readiness delay or public part-preview claim.
+
+Active R153: **16,675,973 bytes**, SHA-256
+`1B2BEF774DA98DD65046A2A7A078393FA563775B9B436691C9DB77F3DC457B54`.
+Exactly one active project JAR; R152 rollback saved independently, accepted R146
+and retained R149–R151 unchanged. Runtime profiles before/after: **76 files /
+50,335,199 bytes**, aggregate
+`93DC68D4FEB07DA5EED0036FCA09B685C53672E974A253031DBE683EFF4DF58F`.
+See the linked R153 report for exact paths, architecture, evidence and connected
+checklist. Earlier sections below are historical checkpoints, not promotion of
+R153 connected status.
 
 Program: A0–A7, stage-gated
 

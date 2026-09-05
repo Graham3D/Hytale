@@ -83,5 +83,41 @@ try {
             throw "Packaged thumbnail hash mismatch: $($fields[0])"
         }
     }
-    Write-Host "Release resources validated: $revision; neutral skin and hashed cosmetic thumbnails match $assetsPath"
+    $materialRoot = Join-Path $PSScriptRoot 'src/main/resources/appearance-color-sources'
+    $materials = Get-Content -Raw -LiteralPath (Join-Path $materialRoot 'index.json') | ConvertFrom-Json
+    if ($materials.version -ne 1 -or $materials.sourceCount -ne 685 -or @($materials.entries.PSObject.Properties).Count -ne 590) {
+        throw 'Incomplete private color material catalog.'
+    }
+    $bakerSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'tools/bake_appearance_color_sources.py')).Replace("`r`n", "`n")
+    $bakerHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($bakerSource)))
+    if ($bakerHash -ine $materials.bakerSha256 -or $rendererHash -ine $materials.geometrySha256) {
+        throw 'Rebake private color materials: renderer provenance mismatch.'
+    }
+    if ((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $materialRoot 'palettes.json')).Hash -ine $materials.paletteSha256) {
+        throw 'Native palette hash mismatch.'
+    }
+    $materialCount = 0
+    foreach ($cosmetic in $materials.entries.PSObject.Properties) {
+        if ($cosmetic.Value.rigHash -cne $categoryHashes[$cosmetic.Name.Split(':')[0]]) { throw 'Color card category rig drift.' }
+        foreach ($row in $cosmetic.Value.sources.PSObject.Properties) {
+            $materialCount++
+            foreach ($kind in @('base','mask')) {
+                $file = $row.Value.$kind
+                if ($file -cnotmatch '^[a-f0-9]{24}(-mask)?\.png$') { throw 'Unsafe material path.' }
+                if ((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $materialRoot $file)).Hash -ine $row.Value.($kind+'Sha256')) {
+                    throw "Private material hash mismatch: $file"
+                }
+            }
+        }
+    }
+    if ($materialCount -ne 685) { throw 'Private material source count mismatch.' }
+    foreach ($source in $materials.sourceHashes.PSObject.Properties) {
+        $entry = $archive.GetEntry($source.Name)
+        if ($null -eq $entry) { throw "Private card source missing: $($source.Name)" }
+        $stream = $entry.Open()
+        try { $actual = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($stream)) }
+        finally { $stream.Dispose() }
+        if ($actual -ine $source.Value) { throw "Rebake private color materials against changed installed source: $($source.Name)" }
+    }
+    Write-Host "Release resources validated: $revision; neutral skin, reference cards and 685 color materials match $assetsPath"
 } finally { $archive.Dispose() }

@@ -142,7 +142,7 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R152-NPC-APPEARANCE-CATEGORY-RIGS";
+    public static final String REVISION = "R153-NPC-APPEARANCE-LIVE-COLOR-CARDS";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
