@@ -23,7 +23,7 @@ if (-not (Test-Path -LiteralPath $ServerJar)) {
 
 $classes = Join-Path $projectRoot 'build\classes'
 $dist = Join-Path $projectRoot 'dist'
-$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.3-R155-NPC-APPEARANCE-STATIC-SAFETY.jar'
+$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.3-R156-NPC-APPEARANCE-EVENT-LIFECYCLE.jar'
 & (Join-Path $projectRoot 'validate-release-resources.ps1') -ServerJar $ServerJar -ArtifactName ([IO.Path]::GetFileName($outputJar))
 $resolvedClasses = [IO.Path]::GetFullPath($classes)
 $resolvedBuildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot 'build'))

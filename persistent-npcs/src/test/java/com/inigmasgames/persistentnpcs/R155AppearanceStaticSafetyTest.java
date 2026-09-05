@@ -29,7 +29,7 @@ public final class R155AppearanceStaticSafetyTest {
         assert page.contains("appearanceCatalogPage().descriptors()")
                 && !page.contains("queryAll(appearanceCategory");
         assert page.contains("appearanceUiState.filter(commands)")
-                && page.contains("scheduleAppearancePreview(store)");
+                && page.contains("scheduleAppearancePreview(store, event)");
         assert card.contains("#Name") && card.contains("#Icon") && !card.contains("#Thumbnail");
         assert ui.contains("#AppearancePagePREV") && ui.contains("#AppearancePageNEXT")
                 && ui.contains("#AppearanceCatalogHash");

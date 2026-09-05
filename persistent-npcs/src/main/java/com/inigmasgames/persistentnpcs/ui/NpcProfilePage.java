@@ -101,6 +101,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             "VOICE_STOP_PLAYBACK", "VOICE_RECORD_AGAIN", "VOICE_DELETE_DRAFT",
             "VOICE_SAVE", "VOICE_DELETE_SAVED_PROMPT", "VOICE_DELETE_SAVED_CONFIRM",
             "VOICE_DELETE_SAVED_CANCEL", "VOICE_PLAY_STOP", "VOICE_DELETE");
+    private static final Set<String> NON_LOCKING_APPEARANCE_ACTIONS = Set.of(
+            "APPEARANCE_PRIMARY", "APPEARANCE_CATEGORY", "APPEARANCE_SEARCH",
+            "APPEARANCE_PAGE_PREV", "APPEARANCE_PAGE_NEXT", "APPEARANCE_OPTION",
+            "APPEARANCE_COLOR", "APPEARANCE_VARIANT", "APPEARANCE_VARIANT_PREV",
+            "APPEARANCE_VARIANT_NEXT", "APPEARANCE_RANDOMIZE", "APPEARANCE_RESET");
     private final String npcName;
     private final boolean update;
     private final NpcProfileEditorService editor;
@@ -496,8 +501,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     @Override
     public void handleDataEvent(
             Ref<EntityStore> ref, Store<EntityStore> store, PageData data) {
+        AppearanceEventTrace appearanceEvent = null;
         try {
             String authoringAction = resolveAuthoringAction(data);
+            if (authoringAction.startsWith("APPEARANCE_")) {
+                appearanceEvent = beginAppearanceEvent(authoringAction, data);
+            }
             authoringSession.validate(authoringEnvelope(data, authoringAction),
                     ALLOWED_ACTIONS, permissionFor(authoringAction, data));
             if (authoringAction.startsWith("NPC_PAGE_") || authoringAction.startsWith("PLAYER_PAGE_")) {
@@ -692,7 +701,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 return;
             }
             if (authoringAction.startsWith("APPEARANCE_")) {
-                handleAppearanceAction(store, data, authoringAction);
+                handleAppearanceAction(store, data, authoringAction, appearanceEvent);
+                if (!appearanceEvent.terminal && appearanceEvent.currentAtReceive) {
+                    acknowledgeAppearanceEvent(appearanceEvent, "handlerFallback=true");
+                }
                 return;
             }
             if (authoringAction.startsWith("VOICE_") && !"VOICE_RESCAN".equals(authoringAction)) {
@@ -868,6 +880,25 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 rebuild();
             }
         } catch (RuntimeException failure) {
+            if (appearanceEvent != null) {
+                rejectAppearanceEvent(appearanceEvent, failure.getMessage());
+                if (!appearanceEvent.currentAtReceive) return;
+                status = failure.getMessage() == null ? "Appearance operation failed."
+                        : failure.getMessage();
+                error = true;
+                if (authoringSession.activeEditor()
+                        == NpcAuthoringSession.EditorKind.APPEARANCE
+                        && appearanceDraft != null) {
+                    appearanceUiState.observeFailure(status);
+                    appearanceEditorStatus = status;
+                    appearanceEditorError = true;
+                    refreshAppearanceEditorUi(appearanceEvent);
+                } else if (!appearanceEvent.terminal) {
+                    acknowledgeAppearanceEvent(appearanceEvent,
+                            "handlerStateChanged=true error=" + quoted(status));
+                }
+                return;
+            }
             if (authoringSession.state() == NpcAuthoringSession.WorkspaceState.COMMITTING) {
                 authoringSession.commitFailed(authoringSession.activeEditor(),
                         failure.getMessage());
@@ -938,44 +969,44 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#AppearancePrimary" + primary.name(),
                     authoringEvent("APPEARANCE_PRIMARY")
-                            .append("AppearancePrimary", primary.name()));
+                            .append("AppearancePrimary", primary.name()), false);
         }
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#AppearanceSearchButton", authoringEvent("APPEARANCE_SEARCH")
-                        .append("AppearanceSearch", "#AppearanceSearchInput.Value"));
+                        .append("AppearanceSearch", "#AppearanceSearchInput.Value"), false);
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#AppearanceVariantPreviousButton", authoringEvent("APPEARANCE_VARIANT_PREV"));
+                "#AppearanceVariantPreviousButton", authoringEvent("APPEARANCE_VARIANT_PREV"), false);
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#AppearanceVariantNextButton", authoringEvent("APPEARANCE_VARIANT_NEXT"));
+                "#AppearanceVariantNextButton", authoringEvent("APPEARANCE_VARIANT_NEXT"), false);
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#AppearanceRandomizeButton", authoringEvent("APPEARANCE_RANDOMIZE"));
+                "#AppearanceRandomizeButton", authoringEvent("APPEARANCE_RANDOMIZE"), false);
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#AppearanceResetButton", authoringEvent("APPEARANCE_RESET"));
+                "#AppearanceResetButton", authoringEvent("APPEARANCE_RESET"), false);
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#AppearanceCancelButton", authoringEvent("APPEARANCE_CANCEL"));
+                "#AppearanceCancelButton", authoringEvent("APPEARANCE_CANCEL"), true);
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#AppearanceSaveButton", authoringEvent("APPEARANCE_SAVE"));
+                "#AppearanceSaveButton", authoringEvent("APPEARANCE_SAVE"), true);
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#AppearanceBackButton", authoringEvent("APPEARANCE_CANCEL"));
+                "#AppearanceBackButton", authoringEvent("APPEARANCE_CANCEL"), true);
         if (appearanceDraft == null) return;
         for (int index = 0; index < 7; index++) {
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#AppearanceCategory" + index,
                     authoringEvent("APPEARANCE_CATEGORY")
-                            .append("AppearanceCategory", "#AppearanceCategory" + index + " #Id.Text"));
+                            .append("AppearanceCategory", "#AppearanceCategory" + index + " #Id.Text"), false);
         }
         for (int index = 0; index < AppearanceUiAssetBudget.MAX_VISIBLE_CARDS; index++) {
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#AppearanceOption" + index + " #Choice",
                     authoringEvent("APPEARANCE_OPTION")
                             .append("AppearanceCatalogHash", "#AppearanceCatalogHash.Text")
-                            .append("AppearanceOptionId", "#AppearanceOption" + index + " #Id.Text"));
+                            .append("AppearanceOptionId", "#AppearanceOption" + index + " #Id.Text"), false);
         }
         for (String direction : new String[] { "PREV", "NEXT" }) {
             events.addEventBinding(CustomUIEventBindingType.Activating,
                     "#AppearancePage" + direction,
                     authoringEvent("APPEARANCE_PAGE_" + direction)
-                            .append("AppearanceCatalogHash", "#AppearanceCatalogHash.Text"));
+                            .append("AppearanceCatalogHash", "#AppearanceCatalogHash.Text"), false);
         }
         for (int index = 0; index < 6; index++) {
             events.addEventBinding(CustomUIEventBindingType.Activating, "#AppearanceVariant" + index,
@@ -983,7 +1014,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                             .append("AppearanceCatalogHash", "#AppearanceCatalogHash.Text")
                             .append("AppearanceOptionId", "#AppearanceCurrentId.Text")
                             .append("AppearanceColorId", "#AppearanceCurrentColor.Text")
-                            .append("AppearanceVariantId", "#AppearanceVariant" + index + " #Id.Text"));
+                            .append("AppearanceVariantId", "#AppearanceVariant" + index + " #Id.Text"), false);
         }
     }
 
@@ -995,7 +1026,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                             .append("AppearanceCatalogHash", "#AppearanceCatalogHash.Text")
                             .append("AppearanceOptionId", "#AppearanceCurrentId.Text")
                             .append("AppearanceColorId", colors.get(index))
-                            .append("AppearanceVariantId", "#AppearanceCurrentVariant.Text"));
+                            .append("AppearanceVariantId", "#AppearanceCurrentVariant.Text"), false);
         }
     }
 
@@ -1251,19 +1282,23 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void handleAppearanceAction(Store<EntityStore> store, PageData data,
-            String action) {
+            String action, AppearanceEventTrace event) {
         requireAppearanceDraft();
         if (action.equals("APPEARANCE_OPTION") || action.equals("APPEARANCE_COLOR")
                 || action.equals("APPEARANCE_VARIANT") || action.startsWith("APPEARANCE_PAGE_")) {
-            if (!AppearanceUiState.pageHash(appearanceCatalogPage()).equals(data.appearanceCatalogHash)) {
-                appearanceTelemetry("APPEARANCE_FULL_REBUILD_SUPPRESSED", 0, 0, "staleCatalogEvent=true");
+            if (!expectedAppearanceCatalogHash().equals(data.appearanceCatalogHash)) {
+                rejectAppearanceEvent(event, "STALE_CATALOG_HASH");
+                acknowledgeAppearanceEvent(event, "staleCatalogHash=true");
                 return;
             }
         }
         switch (action) {
             case "APPEARANCE_PRIMARY" -> {
                 var primary = PrimaryCategory.valueOf(data.appearancePrimary.toUpperCase(Locale.ROOT));
-                if (primary == appearancePrimary) { suppressAppearanceRefresh(); return; }
+                if (primary == appearancePrimary) {
+                    acknowledgeAppearanceNoop(event, "alreadySelectedPrimary=true");
+                    return;
+                }
                 appearancePrimary = primary;
                 List<Category> categories = editor.appearanceCatalog()
                         .categories(appearancePrimary);
@@ -1276,7 +1311,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceEditorStatus = "Browsing " + appearancePrimary.name()
                         + " from the pinned live registry snapshot.";
                 appearanceEditorError = false;
-                refreshAppearanceEditorUi();
+                refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_CATEGORY" -> {
                 Category category = Category.valueOf(
@@ -1284,7 +1319,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 if (category.primary() != appearancePrimary) {
                     throw new IllegalArgumentException("Appearance category is stale.");
                 }
-                if (appearanceCategory == category) { suppressAppearanceRefresh(); return; }
+                if (appearanceCategory == category) {
+                    acknowledgeAppearanceNoop(event, "alreadySelectedCategory=true");
+                    return;
+                }
                 appearanceCategory = category;
                 appearanceSearch = "";
                 appearancePage = 0;
@@ -1294,36 +1332,52 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceEditorStatus = "Choose " + category.label()
                         + ". Existing missing values remain retained until Save.";
                 appearanceEditorError = false;
-                refreshAppearanceEditorUi();
+                refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_SEARCH" -> {
                 String query = data.appearanceSearch == null ? "" : data.appearanceSearch.strip();
-                if (appearanceSearch.equalsIgnoreCase(query)) { suppressAppearanceRefresh(); return; }
+                if (appearanceSearch.equalsIgnoreCase(query)) {
+                    acknowledgeAppearanceNoop(event, "unchangedSearch=true");
+                    return;
+                }
                 appearanceSearch = query;
                 appearancePage = 0;
 
                 appearanceEditorStatus = "Registry search applied locally; no model request was made.";
                 appearanceEditorError = false;
-                refreshAppearanceEditorUi();
+                refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_PAGE_PREV", "APPEARANCE_PAGE_NEXT" -> {
                 var page = appearanceCatalogPage();
                 int next = Math.max(0, Math.min(page.pageCount() - 1, appearancePage
                         + (action.endsWith("NEXT") ? 1 : -1)));
-                if (next == appearancePage) { suppressAppearanceRefresh(); return; }
+                if (next == appearancePage) {
+                    acknowledgeAppearanceNoop(event, "pageBoundary=true");
+                    return;
+                }
                 appearancePage = next;
-                refreshAppearanceEditorUi();
+                refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_VARIANT_PREV" -> {
-                appearanceVariantPage = Math.max(0, appearanceVariantPage - 1);
-                refreshAppearanceEditorUi();
+                int next = Math.max(0, appearanceVariantPage - 1);
+                if (next == appearanceVariantPage) {
+                    acknowledgeAppearanceNoop(event, "variantPageBoundary=true");
+                    return;
+                }
+                appearanceVariantPage = next;
+                refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_VARIANT_NEXT" -> {
                 var descriptor = currentAppearanceDescriptor();
                 int count = descriptor == null ? 0 : descriptor.variants().size();
                 int pages = Math.max(1, (count + 5) / 6);
-                appearanceVariantPage = Math.min(pages - 1, appearanceVariantPage + 1);
-                refreshAppearanceEditorUi();
+                int next = Math.min(pages - 1, appearanceVariantPage + 1);
+                if (next == appearanceVariantPage) {
+                    acknowledgeAppearanceNoop(event, "variantPageBoundary=true");
+                    return;
+                }
+                appearanceVariantPage = next;
+                refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_OPTION", "APPEARANCE_COLOR", "APPEARANCE_VARIANT" -> {
                 var descriptor = editor.appearanceCatalog().require(appearanceCategory, data.appearanceOptionId);
@@ -1332,18 +1386,21 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     throw new IllegalArgumentException("Cosmetic is not on the current page.");
                 }
                 if (!action.equals("APPEARANCE_OPTION") && !data.appearanceOptionId.equals(currentAppearanceCosmeticId())) {
-                    suppressAppearanceRefresh(); return;
+                    rejectAppearanceEvent(event, "STALE_SELECTED_COSMETIC");
+                    acknowledgeAppearanceEvent(event, "staleSelectedCosmetic=true");
+                    return;
                 }
                 if (action.equals("APPEARANCE_OPTION") && data.appearanceOptionId.equals(currentAppearanceCosmeticId())
                         || java.util.Objects.equals(currentAppearanceSelection(),
                                 descriptor.encoded(data.appearanceColorId, data.appearanceVariantId))) {
-                    suppressAppearanceRefresh(); return;
+                    acknowledgeAppearanceNoop(event, "unchangedSelection=true");
+                    return;
                 }
                 var selected = editor.appearanceAuthoring().select(appearanceDraft,
                         appearanceCategory, data.appearanceOptionId,
                         data.appearanceColorId, data.appearanceVariantId);
                 authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.APPEARANCE);
-                scheduleAppearancePreview(store);
+                scheduleAppearancePreview(store, event);
                 if ("APPEARANCE_OPTION".equals(action)) {
 
                     appearanceVariantPage = 0;
@@ -1351,15 +1408,15 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearanceEditorStatus = "Previewing " + selected.option().displayName()
                         + ". Save Appearance commits; Cancel restores persisted appearance.";
                 appearanceEditorError = false;
-                refreshAppearanceEditorUi();
+                refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_RANDOMIZE" -> {
                 editor.appearanceAuthoring().randomize(appearanceDraft);
                 authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.APPEARANCE);
-                scheduleAppearancePreview(store);
+                scheduleAppearancePreview(store, event);
                 appearanceEditorStatus = "Randomized from Hytale's current registry. Review before saving.";
                 appearanceEditorError = false;
-                refreshAppearanceEditorUi();
+                refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_RESET" -> {
                 cancelAppearancePreview();
@@ -1369,31 +1426,33 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearancePreviewHash = AppearanceUiState.skinHash(appearanceDraft.currentSkin());
                 appearanceEditorStatus = "Draft reset to the persisted appearance.";
                 appearanceEditorError = false;
-                refreshAppearanceEditorUi();
+                refreshAppearanceEditorUi(event);
             }
             case "APPEARANCE_CANCEL" -> {
                 if (appearanceDraft.dirty()) {
                     UICommandBuilder commands = new UICommandBuilder();
                     commands.set("#DirtyEditorConfirmPage.Visible", true);
                     sendUpdate(commands, false);
+                    markAppearanceUpdateSent(event, "dirtyConfirmation=true");
                 } else {
                     restoreAndClearAppearanceDraft();
                     authoringSession.closeEditor(false);
                     rebuild();
+                    markAppearanceUpdateSent(event, "pageTransition=STUDIO");
                 }
             }
             case "APPEARANCE_SAVE" -> {
                 if (!appearanceDraft.dirty()) {
                     appearanceEditorStatus = "No appearance changes to save.";
                     appearanceEditorError = false;
-                    refreshAppearanceEditorUi();
+                    refreshAppearanceEditorUi(event);
                     return;
                 }
                 saveAppearanceDraft(store);
                 long generation = authoringSession.editorGeneration();
                 appearanceDraft = editor.appearanceAuthoring().begin(npcName,
                         authoringSession.npcStableId(), authoringSession.sessionId(), generation);
-                refreshAppearanceEditorUi();
+                refreshAppearanceEditorUi(event);
             }
             default -> throw new IllegalArgumentException("Unknown appearance action.");
         }
@@ -1569,30 +1628,42 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void refreshAppearanceEditorUi() {
+        refreshAppearanceEditorUi(null);
+    }
+
+    private void refreshAppearanceEditorUi(AppearanceEventTrace event) {
         if (appearanceDraft == null || !built) return;
         UICommandBuilder commands = new UICommandBuilder();
         UIEventBuilder events = new UIEventBuilder();
         setAppearanceEditorUi(commands, events);
         UICommandBuilder changed = appearanceUiState.filter(commands);
         if (changed.getCommands().length == 0 && events.getEvents().length == 0) {
-            suppressAppearanceRefresh();
+            appearanceTelemetry("APPEARANCE_FULL_REBUILD_SUPPRESSED", 0, 0,
+                    "unchanged=true acknowledgement=EMPTY_UPDATE");
+            sendUpdate();
+            markAppearanceUpdateSent(event, "emptyAcknowledgement=true");
             return;
         }
         sendUpdate(changed, events, false);
+        markAppearanceUpdateSent(event, "partialCommands=" + changed.getCommands().length
+                + " reboundEvents=" + events.getEvents().length);
         appearanceTelemetry("APPEARANCE_FULL_REBUILD_SUPPRESSED", 0, 0,
                 "partialCommands=" + changed.getCommands().length);
     }
 
-    private void suppressAppearanceRefresh() {
-        appearanceTelemetry("APPEARANCE_FULL_REBUILD_SUPPRESSED", 0, 0, "unchanged=true");
+    private void acknowledgeAppearanceNoop(AppearanceEventTrace event, String reason) {
+        appearanceEventTelemetry("APPEARANCE_EVENT_NOOP", event, reason);
+        acknowledgeAppearanceEvent(event, reason);
     }
 
-    private void scheduleAppearancePreview(Store<EntityStore> store) {
+    private void scheduleAppearancePreview(Store<EntityStore> store, AppearanceEventTrace event) {
         String hash = AppearanceUiState.skinHash(appearanceDraft.currentSkin());
         if (hash.equals(appearanceRequestedPreviewHash) || hash.equals(appearancePreviewHash)) {
             // Returning to the applied skin must also cancel a queued different skin.
             if (hash.equals(appearancePreviewHash)) cancelAppearancePreview();
             appearanceTelemetry("APPEARANCE_PREVIEW_COALESCED", 0, 0, "unchangedSkin=true");
+            appearanceEventTelemetry("APPEARANCE_PREVIEW_REQUESTED", event,
+                    "coalesced=true unchangedSkin=true");
             return;
         }
         appearanceRequestedPreviewHash = hash;
@@ -1608,6 +1679,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 appearancePreviewHash = hash;
                 appearanceUiState.updateHashes(appearanceCatalogPage(), appearanceDraft.currentSkin(), hash);
                 appearanceTelemetry("APPEARANCE_PREVIEW_APPLIED", 0, started, "previewGeneration=" + generation);
+                appearanceEventTelemetry("APPEARANCE_PREVIEW_APPLIED", event,
+                        "previewGeneration=" + generation + " newestGeneration=true");
             } catch (RuntimeException failure) {
                 appearanceUiState.observeFailure(failure.getMessage());
                 appearanceEditorError = true;
@@ -1617,11 +1690,127 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         });
         appearanceTelemetry(coalesced ? "APPEARANCE_PREVIEW_COALESCED" : "APPEARANCE_PREVIEW_SCHEDULED",
                 0, 0, "generationBounded=true");
+        appearanceEventTelemetry("APPEARANCE_PREVIEW_REQUESTED", event,
+                "coalesced=" + coalesced + " generationBounded=true");
     }
 
     private void cancelAppearancePreview() {
         appearancePreviewGate.cancel();
         appearanceRequestedPreviewHash = "";
+    }
+
+    private AppearanceEventTrace beginAppearanceEvent(String action, PageData data) {
+        boolean locksInterface = !NON_LOCKING_APPEARANCE_ACTIONS.contains(action);
+        boolean current = built && appearanceDraft != null
+                && authoringSession.activeEditor() == NpcAuthoringSession.EditorKind.APPEARANCE
+                && java.util.Objects.equals(data.authoringSchemaVersion,
+                        Integer.toString(NpcAuthoringEventEnvelope.CURRENT_SCHEMA_VERSION))
+                && java.util.Objects.equals(data.authoringSessionId,
+                        authoringSession.sessionId().toString())
+                && java.util.Objects.equals(data.authoringViewerPlayerId,
+                        authoringSession.viewerPlayerId().toString())
+                && java.util.Objects.equals(data.authoringNpcStableId,
+                        authoringSession.npcStableId().toString())
+                && java.util.Objects.equals(data.authoringPageGeneration,
+                        Long.toString(authoringSession.pageGeneration()))
+                && java.util.Objects.equals(data.authoringEditor,
+                        NpcAuthoringSession.EditorKind.APPEARANCE.name())
+                && java.util.Objects.equals(data.authoringEditorGeneration,
+                        Long.toString(authoringSession.editorGeneration()));
+        AppearanceEventTrace event = new AppearanceEventTrace(action, locksInterface, current,
+                data.authoringSessionId, data.authoringPageGeneration,
+                data.authoringEditorGeneration, expectedAppearanceCatalogHash(),
+                data.appearanceCatalogHash, data.appearanceOptionId);
+        boolean selectorsResolved = selectorResolved(data.appearanceCatalogHash)
+                && selectorResolved(data.appearanceOptionId)
+                && selectorResolved(data.appearanceColorId)
+                && selectorResolved(data.appearanceVariantId)
+                && selectorResolved(data.appearanceSearch);
+        appearanceEventTelemetry("APPEARANCE_EVENT_RECEIVED", event,
+                "payloadSelectorsResolved=" + selectorsResolved);
+        return event;
+    }
+
+    private static boolean selectorResolved(String value) {
+        return value == null || !value.stripLeading().startsWith("#");
+    }
+
+    private String expectedAppearanceCatalogHash() {
+        AppearanceUiState.Hashes hashes = appearanceUiState.hashes();
+        // Event admission must be read-only. A stale event from a dismissed or
+        // replaced page may arrive after the editor has changed; never query the
+        // live catalog (which normalizes page state) merely to trace/reject it.
+        return hashes == null ? "" : hashes.catalogPageHash();
+    }
+
+    private void acknowledgeAppearanceEvent(AppearanceEventTrace event, String reason) {
+        if (event == null || event.terminal || !event.currentAtReceive) return;
+        sendUpdate();
+        markAppearanceUpdateSent(event, "emptyAcknowledgement=true " + reason);
+    }
+
+    private void markAppearanceUpdateSent(AppearanceEventTrace event, String disposition) {
+        if (event != null) {
+            event.updateSent = true;
+            event.terminal = true;
+        }
+        appearanceEventTelemetry("APPEARANCE_UPDATE_SENT", event, disposition);
+    }
+
+    private void rejectAppearanceEvent(AppearanceEventTrace event, String reason) {
+        if (event == null || event.rejected) return;
+        event.rejected = true;
+        appearanceEventTelemetry("APPEARANCE_EVENT_REJECTED", event,
+                "reason=" + quoted(reason == null ? "unspecified" : reason));
+    }
+
+    private void appearanceEventTelemetry(String marker, AppearanceEventTrace event,
+            String extra) {
+        diagnostics.accept(marker + " timestamp=" + Instant.now()
+                + " eventType=" + (event == null ? "ASYNC_PREVIEW" : event.action)
+                + " session=" + authoringSession.sessionId()
+                + " pageGeneration=" + authoringSession.pageGeneration()
+                + " editorGeneration=" + authoringSession.editorGeneration()
+                + " suppliedSession=" + quoted(event == null ? null : event.suppliedSession)
+                + " suppliedPageGeneration=" + quoted(event == null ? null : event.suppliedPageGeneration)
+                + " suppliedEditorGeneration=" + quoted(event == null ? null : event.suppliedEditorGeneration)
+                + " locksInterface=" + (event != null && event.locksInterface)
+                + " updateSent=" + (event != null && event.updateSent)
+                + " currentAtReceive=" + (event == null || event.currentAtReceive)
+                + " expectedCatalogHash=" + quoted(event == null ? null : event.expectedCatalogHash)
+                + " suppliedCatalogHash=" + quoted(event == null ? null : event.suppliedCatalogHash)
+                + " optionId=" + quoted(event == null ? null : event.optionId)
+                + " " + (extra == null ? "" : extra));
+    }
+
+    private static final class AppearanceEventTrace {
+        private final String action;
+        private final boolean locksInterface;
+        private final boolean currentAtReceive;
+        private final String suppliedSession;
+        private final String suppliedPageGeneration;
+        private final String suppliedEditorGeneration;
+        private final String expectedCatalogHash;
+        private final String suppliedCatalogHash;
+        private final String optionId;
+        private boolean updateSent;
+        private boolean terminal;
+        private boolean rejected;
+
+        private AppearanceEventTrace(String action, boolean locksInterface,
+                boolean currentAtReceive, String suppliedSession,
+                String suppliedPageGeneration, String suppliedEditorGeneration,
+                String expectedCatalogHash, String suppliedCatalogHash, String optionId) {
+            this.action = action;
+            this.locksInterface = locksInterface;
+            this.currentAtReceive = currentAtReceive;
+            this.suppliedSession = suppliedSession;
+            this.suppliedPageGeneration = suppliedPageGeneration;
+            this.suppliedEditorGeneration = suppliedEditorGeneration;
+            this.expectedCatalogHash = expectedCatalogHash;
+            this.suppliedCatalogHash = suppliedCatalogHash;
+            this.optionId = optionId;
+        }
     }
 
     private void appearanceTelemetry(String event, int reused, long start, String extra) {
