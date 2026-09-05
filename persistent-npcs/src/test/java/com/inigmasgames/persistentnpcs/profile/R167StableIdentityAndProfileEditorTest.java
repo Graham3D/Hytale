@@ -137,7 +137,7 @@ public final class R167StableIdentityAndProfileEditorTest {
             assert all.contains("#" + section) : section + " must be mounted";
         }
         assert page.contains("authoringEvent(\"PROFILE_SECTION\")")
-                && page.contains(".append(\"@ProfileSection\", category.name())");
+                && page.contains(".append(\"ProfileSection\", category.name())");
         assert !page.contains("authoringEvent(\"PROFILE_CATEGORY\")")
                 && !page.contains("commands.clear(\"#ProfileForm\")");
         assert page.contains(".append(\"@ProfileFieldValue\", selector + \".Value\")");

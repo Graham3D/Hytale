@@ -951,7 +951,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             String selector = "#ProfileCategory" + category.resourceName;
             events.addEventBinding(CustomUIEventBindingType.Activating, selector,
                     authoringEvent("PROFILE_SECTION")
-                            .append("@ProfileSection", category.name()));
+                            .append("ProfileSection", category.name()));
         }
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#ProfileSaveButton", profileSaveEvent());
@@ -3146,7 +3146,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append(new KeyedCodec<>("@ProfileFieldValue", Codec.STRING),
                         (data, value) -> data.profileFieldValue = value,
                         data -> data.profileFieldValue).add()
-                .append(new KeyedCodec<>("@ProfileSection", Codec.STRING),
+                .append(new KeyedCodec<>("ProfileSection", Codec.STRING),
                         (data, value) -> data.profileSection = value,
                         data -> data.profileSection).add()
                 .append(new KeyedCodec<>("@ProfileRole", Codec.STRING),

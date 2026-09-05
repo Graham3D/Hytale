@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
-$artifactName = 'ImmersiveNPCs-0.6.3-R167-IDENTITY-PROFILE-EDITOR-REPAIR.jar'
+$artifactName = 'ImmersiveNPCs-0.6.3-R168-PROFILE-SECTION-EVENT-HOTFIX.jar'
 $sourceJar = Join-Path $projectRoot (Join-Path 'dist' $artifactName)
 if (-not (Test-Path -LiteralPath $sourceJar)) {
     & (Join-Path $projectRoot 'build.ps1')
