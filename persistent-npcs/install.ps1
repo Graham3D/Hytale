@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
-$artifactName = 'ImmersiveNPCs-0.6.3-R165-OFFLINE-EQUIPMENT-HYDRATION.jar'
+$artifactName = 'ImmersiveNPCs-0.6.3-R166-CUSTOM-UI-LOAD-HOTFIX.jar'
 $sourceJar = Join-Path $projectRoot (Join-Path 'dist' $artifactName)
 if (-not (Test-Path -LiteralPath $sourceJar)) {
     & (Join-Path $projectRoot 'build.ps1')

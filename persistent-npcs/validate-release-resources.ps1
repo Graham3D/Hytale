@@ -17,6 +17,36 @@ if (-not $installer.Contains("`$artifactName = '$ArtifactName'")) {
     throw 'Installer artifact does not match the release version.'
 }
 
+# Custom UI fragments are parsed client-side while joining. A malformed packaged
+# document disconnects the player before world entry, so reject unbalanced blocks
+# at build time instead of relying on page-level connected testing to discover it.
+$uiRoot = Join-Path $PSScriptRoot 'src/main/resources/Common/UI/Custom'
+foreach ($uiFile in @(Get-ChildItem -LiteralPath $uiRoot -Recurse -File -Filter '*.ui')) {
+    $depth = 0
+    $line = 1
+    $inString = $false
+    $escaped = $false
+    foreach ($character in (Get-Content -Raw -LiteralPath $uiFile.FullName).ToCharArray()) {
+        if ($character -eq "`n") { $line++ }
+        if ($inString) {
+            if ($escaped) { $escaped = $false; continue }
+            if ($character -eq '\') { $escaped = $true; continue }
+            if ($character -eq '"') { $inString = $false }
+            continue
+        }
+        if ($character -eq '"') { $inString = $true; continue }
+        if ($character -eq '{') { $depth++ }
+        elseif ($character -eq '}') {
+            $depth--
+            if ($depth -lt 0) {
+                throw "Custom UI block closes before it opens: $($uiFile.FullName):$line"
+            }
+        }
+    }
+    if ($inString) { throw "Custom UI string is unterminated: $($uiFile.FullName)" }
+    if ($depth -ne 0) { throw "Custom UI blocks are unbalanced ($depth): $($uiFile.FullName)" }
+}
+
 # Read the registry shipped with the exact server used for this build. No guessed IDs.
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $assetsPath = Join-Path (Split-Path (Split-Path $ServerJar -Parent) -Parent) 'Assets.zip'

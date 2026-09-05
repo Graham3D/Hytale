@@ -20,7 +20,7 @@ Group { LayoutMode: Left; Anchor: (Height: 64, Bottom: 10);
 }
 Label { Anchor: (Height: 22); Text: "Location / Home"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
 $C.@TextField #ProfileHomeInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 200; }
-Group { LayoutMode: Left; Anchor: (Height: 22); }
+Group { LayoutMode: Left; Anchor: (Height: 22);
   Label { FlexWeight: 1; Text: "Summary"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
   Label #ProfileSummaryCounter { Anchor: (Width: 90); Text: "0 / 500"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #6f879a, HorizontalAlignment: End); }
 }

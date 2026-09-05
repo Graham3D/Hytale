@@ -142,7 +142,7 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R165-OFFLINE-EQUIPMENT-HYDRATION";
+    public static final String REVISION = "R166-CUSTOM-UI-LOAD-HOTFIX";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
