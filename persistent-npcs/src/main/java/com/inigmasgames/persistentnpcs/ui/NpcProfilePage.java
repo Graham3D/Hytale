@@ -1542,7 +1542,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         for (int index = 0; index < AppearanceUiAssetBudget.MAX_VISIBLE_CARDS; index++) {
             String host = "#AppearanceOption" + index;
             commands.set(host + ".Visible", index < options.size());
-            if (index >= options.size()) continue;
+            if (index >= options.size()) {
+                if (rebuildCards) commands.setNull(host + " #Choice #Thumbnail.AssetPath");
+                continue;
+            }
             var option = options.get(index);
             String selector = host + " #Choice";
             commands.set(host + " #Id.Text", option.cosmeticId());
@@ -1551,7 +1554,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     AppearanceEditorPresentation.label(option.displayName(), 26));
             commands.set(selector + ".TooltipText", option.displayName() + " — Select for live preview");
             setAppearanceIcon(commands, selector, AppearanceEditorPresentation.icon(appearanceCategory), false);
-            setAppearanceThumbnail(commands, host, selector, option.cosmeticId(), rebuildCards);
+            setAppearanceThumbnail(commands, selector, option.cosmeticId(), index, rebuildCards);
             setAppearanceSelection(commands, selector, option.cosmeticId().equals(currentId));
         }
         commands.set("#AppearancePagePREV.Disabled", page.pageIndex() == 0);
@@ -1666,31 +1669,43 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 "Pages/ImmersiveNpcProfile.ui", "AppearanceIcon" + icon + (selected ? "Selected" : "")));
     }
 
-    private void setAppearanceThumbnail(UICommandBuilder commands, String host,
-            String selector, String cosmeticId, boolean mountImage) {
+    private void setAppearanceThumbnail(UICommandBuilder commands, String selector,
+            String cosmeticId, int cardIndex, boolean rebuildCards) {
         var reference = AppearanceThumbnailCatalog.find(appearanceCategory, cosmeticId).orElse(null);
         commands.set(selector + " #Icon.Visible", reference == null);
         commands.set(selector + " #Name.Visible", reference == null);
         commands.set(selector + " #ThumbnailNamePlate.Visible", reference != null);
         commands.set(selector + " #ThumbnailName.Visible", reference != null);
-        if (reference == null) return;
-
-        if (mountImage) {
-            commands.appendInline(selector + " #ThumbnailHost", "AssetImage #Thumbnail {"
-                    + " HitTestVisible: false; Anchor: (Left: 0, Right: 0, Top: 0, Bottom: 0);"
-                    + " FallbackTexturePath: \"" + reference.uiTexturePath() + "\"; }");
+        String thumbnailSelector = selector + " #Thumbnail";
+        commands.set(thumbnailSelector + ".Visible", reference != null);
+        if (reference == null) {
+            if (rebuildCards) commands.setNull(thumbnailSelector + ".AssetPath");
+            if (cosmeticId != null && !cosmeticId.isBlank()) {
+                diagnostics.accept("APPEARANCE_THUMBNAIL_MISSING cosmeticId=" + cosmeticId
+                        + " thumbnailAssetPath=NONE cardIndex=" + cardIndex
+                        + " selector=" + thumbnailSelector + ".AssetPath"
+                        + " packagedAssetPresent=false");
+            }
+            return;
         }
 
+        boolean packagedAssetPresent = AppearanceThumbnailCatalog.packagedAssetPresent(reference);
+        commands.set(thumbnailSelector + ".AssetPath", reference.uiTexturePath());
+        if (rebuildCards) {
+            diagnostics.accept("APPEARANCE_THUMBNAIL_BOUND cosmeticId=" + cosmeticId
+                    + " thumbnailAssetPath=" + reference.uiTexturePath()
+                    + " cardIndex=" + cardIndex
+                    + " selector=" + thumbnailSelector + ".AssetPath"
+                    + " packagedAssetPresent=" + packagedAssetPresent);
+        }
         if (appearanceThumbnailReferencesLogged.add(reference.key())) {
-            diagnostics.accept("APPEARANCE_THUMBNAIL_REFERENCE cosmeticId="
-                    + reference.key() + " assetPath=" + reference.packagedAssetPath()
+            diagnostics.accept("APPEARANCE_THUMBNAIL_REFERENCE cosmeticId=" + reference.key()
+                    + " assetPath=" + reference.packagedAssetPath()
                     + " dimensions=" + reference.width() + "x" + reference.height()
-                    + " packagedStatic=true dynamicThumbnailCreates="
-                    + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_CREATES
-                    + " runtimeThumbnailWrites="
-                    + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_WRITES
-                    + " runtimeThumbnailRecolors="
-                    + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_RECOLORS);
+                    + " packagedStatic=" + packagedAssetPresent
+                    + " dynamicThumbnailCreates=" + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_CREATES
+                    + " runtimeThumbnailWrites=" + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_WRITES
+                    + " runtimeThumbnailRecolors=" + AppearanceThumbnailCatalog.RUNTIME_THUMBNAIL_RECOLORS);
         }
     }
 

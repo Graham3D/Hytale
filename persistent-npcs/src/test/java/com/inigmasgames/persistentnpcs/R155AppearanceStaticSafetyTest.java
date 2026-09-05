@@ -31,7 +31,7 @@ public final class R155AppearanceStaticSafetyTest {
         assert page.contains("appearanceUiState.filter(commands)")
                 && page.contains("scheduleAppearancePreview(store, event)");
         assert card.contains("#Name") && card.contains("#Icon")
-                && card.contains("Group #ThumbnailHost");
+                && card.contains("AssetImage #Thumbnail");
         assert ui.contains("#AppearancePagePREV") && ui.contains("#AppearancePageNEXT")
                 && ui.contains("#AppearanceCatalogHash");
         assert Files.notExists(Path.of("src/main/resources/appearance-color-sources"));

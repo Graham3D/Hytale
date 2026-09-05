@@ -34,12 +34,12 @@ public final class AppearanceThumbnailProbe {
 
     private static final List<Reference> REFERENCES = List.of(
             new Reference(Category.UNDERTOP, "FarmerTop", "FarmerTopThumbnail",
-                    "ImmersiveNpcAppearance/Probe/UNDERTOP-FarmerTop.png",
+                    "UI/Custom/Pages/ImmersiveNpcAppearance/Probe/UNDERTOP-FarmerTop.png",
                     "Common/UI/Custom/Pages/ImmersiveNpcAppearance/Probe/UNDERTOP-FarmerTop.png",
                     92, 149,
                     "059dc8c47afe08aac235ef33eff22f216751b046103cc208200cb3e3523cc219"),
             new Reference(Category.UNDERTOP, "FlowerShirt", "FlowerShirtThumbnail",
-                    "ImmersiveNpcAppearance/Probe/UNDERTOP-FlowerShirt.png",
+                    "UI/Custom/Pages/ImmersiveNpcAppearance/Probe/UNDERTOP-FlowerShirt.png",
                     "Common/UI/Custom/Pages/ImmersiveNpcAppearance/Probe/UNDERTOP-FlowerShirt.png",
                     92, 149,
                     "fb59f44840be4de56c2bdfe82221889e18308669a409f54d3c009d27a02df559"));

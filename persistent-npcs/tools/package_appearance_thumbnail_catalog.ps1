@@ -25,8 +25,8 @@ if (Test-Path -LiteralPath $catalogRoot) {
 New-Item -ItemType Directory -Force -Path $thumbnailRoot | Out-Null
 
 $probePaths = @{
-    'UNDERTOP:FarmerTop' = 'ImmersiveNpcAppearance/Probe/UNDERTOP-FarmerTop.png'
-    'UNDERTOP:FlowerShirt' = 'ImmersiveNpcAppearance/Probe/UNDERTOP-FlowerShirt.png'
+    'UNDERTOP:FarmerTop' = 'UI/Custom/Pages/ImmersiveNpcAppearance/Probe/UNDERTOP-FarmerTop.png'
+    'UNDERTOP:FlowerShirt' = 'UI/Custom/Pages/ImmersiveNpcAppearance/Probe/UNDERTOP-FlowerShirt.png'
 }
 $records = [Collections.Generic.List[string]]::new()
 $keys = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
@@ -45,11 +45,11 @@ foreach ($line in Get-Content -LiteralPath $indexSource) {
 
     if ($probePaths.ContainsKey($key)) {
         $uiPath = $probePaths[$key]
-        $packagedPath = 'Common/UI/Custom/Pages/' + $uiPath
+        $packagedPath = 'Common/' + $uiPath
     } else {
         Copy-Item -LiteralPath $source -Destination (Join-Path $thumbnailRoot $sourceFile)
-        $uiPath = "ImmersiveNpcAppearance/Catalog/Thumbnails/$sourceFile"
-        $packagedPath = "Common/UI/Custom/Pages/$uiPath"
+        $uiPath = "UI/Custom/Pages/ImmersiveNpcAppearance/Catalog/Thumbnails/$sourceFile"
+        $packagedPath = "Common/$uiPath"
     }
     $category, $cosmeticId = $key -split ':', 2
     $records.Add("$category`t$cosmeticId`t$uiPath`t$packagedPath`t$hash")

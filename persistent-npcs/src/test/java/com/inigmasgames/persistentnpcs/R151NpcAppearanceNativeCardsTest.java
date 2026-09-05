@@ -29,7 +29,7 @@ public final class R151NpcAppearanceNativeCardsTest {
         assert !appearance.contains("Icon: (TexturePath:");
         String card = Files.readString(pages.resolve("ImmersiveNpcAppearanceCard.ui"));
         assert card.contains("#Icon") && card.contains("#Name") && card.contains("#Id");
-        assert card.contains("Group #ThumbnailHost") && !card.contains("AssetImage #FarmerTopThumbnail");
+        assert card.contains("AssetImage #Thumbnail") && !card.contains("AssetImage #FarmerTopThumbnail");
         assert card.contains("$C.@SecondaryButtonStyle") && card.contains("#Selected");
 
         List<CosmeticOptionDescriptor> options = new ArrayList<>();

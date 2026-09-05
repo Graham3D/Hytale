@@ -70,13 +70,13 @@ public final class R160AppearanceNativeVisualCatalogTest {
         }
         String card = Files.readString(RESOURCES.resolve(
                 "Common/UI/Custom/Pages/ImmersiveNpcAppearanceCard.ui"));
-        assert card.contains("Group #ThumbnailHost") && !card.contains("FarmerTopThumbnail");
+        assert card.contains("AssetImage #Thumbnail") && !card.contains("FarmerTopThumbnail");
 
         String page = Files.readString(Path.of(
                 "src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java"));
-        assert page.contains("appendInline(selector + \" #ThumbnailHost\"")
-                && page.contains("AssetImage #Thumbnail")
-                && page.contains("FallbackTexturePath:");
+        assert page.contains("#Thumbnail.AssetPath")
+                && page.contains("commands.set(thumbnailSelector + \".AssetPath\"")
+                && !page.contains("appendInline(selector + \" #ThumbnailHost\"");
         assert page.contains("scheduleAppearanceSearch(store, query)")
                 && page.contains("180, TimeUnit.MILLISECONDS");
         String searchCase = page.substring(page.indexOf("case \"APPEARANCE_SEARCH\""),
@@ -95,7 +95,7 @@ public final class R160AppearanceNativeVisualCatalogTest {
 
         Path jar;
         try (var files = Files.list(Path.of("dist"))) {
-            jar = files.filter(path -> path.getFileName().toString().contains("R160"))
+            jar = files.filter(path -> path.getFileName().toString().contains("R161"))
                     .findFirst().orElseThrow();
         }
         try (JarFile archive = new JarFile(jar.toFile())) {

@@ -640,6 +640,9 @@ if ($LASTEXITCODE -ne 0) { throw "R159 Appearance two-card visual probe tests fa
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R160AppearanceNativeVisualCatalogTest
 if ($LASTEXITCODE -ne 0) { throw "R160 Appearance native visual catalog tests failed with exit code $LASTEXITCODE" }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R161AppearanceNativeCardBindingTest
+if ($LASTEXITCODE -ne 0) { throw "R161 Appearance native card binding tests failed with exit code $LASTEXITCODE" }
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R147NpcProfileRepairTest
 if ($LASTEXITCODE -ne 0) {
     throw "R147 Profile repair tests failed with exit code $LASTEXITCODE"

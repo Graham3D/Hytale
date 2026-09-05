@@ -106,8 +106,11 @@ try {
         $key = "$($parts[0]):$($parts[1])"
         if (-not $actualKeys.Add($key)) { throw "Duplicate Checkpoint 3 reference: $key" }
         if (-not $expectedKeys.Contains($key)) { throw "Unknown Checkpoint 3 installed cosmetic: $key" }
-        if ($parts[2] -notmatch '^ImmersiveNpcAppearance/(Probe|Catalog/Thumbnails)/[A-Za-z0-9_.-]+\.png$') {
+        if ($parts[2] -notmatch '^UI/Custom/Pages/ImmersiveNpcAppearance/(Probe|Catalog/Thumbnails)/[A-Za-z0-9_.-]+\.png$') {
             throw "Unsafe Checkpoint 3 UI path: $($parts[2])"
+        }
+        if ($parts[3] -cne ('Common/' + $parts[2])) {
+            throw "Checkpoint 3 UI/package path drift: $key"
         }
         $asset = Join-Path $resourceRoot $parts[3]
         if (-not (Test-Path -LiteralPath $asset -PathType Leaf)) { throw "Missing Checkpoint 3 image: $asset" }
@@ -123,5 +126,11 @@ try {
     if ($pageSource -match 'AppearanceCardJobs|AppearanceColorCards|PrivateAppearanceCardAssets|queueAppearanceColorCards') {
         throw 'Unsafe runtime appearance image pipeline returned.'
     }
-    Write-Host "Release resources validated: $revision; neutral skin, 590 immutable canonical cards, exact installed-registry coverage, and zero-runtime-image safety policy"
+    $cardSource = Get-Content -Raw -LiteralPath (Join-Path $resourceRoot 'Common/UI/Custom/Pages/ImmersiveNpcAppearanceCard.ui')
+    if (-not $cardSource.Contains('AssetImage #Thumbnail') -or
+            -not $pageSource.Contains('#Thumbnail.AssetPath') -or
+            $pageSource.Contains('appendInline(selector + " #ThumbnailHost"')) {
+        throw 'R161 native AssetImage.AssetPath card binding contract is missing.'
+    }
+    Write-Host "Release resources validated: $revision; neutral skin, 590 immutable canonical cards, native AssetPath binding, exact installed-registry coverage, and zero-runtime-image safety policy"
 } finally { $archive.Dispose() }

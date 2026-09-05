@@ -33,7 +33,7 @@ public final class AppearanceThumbnailCatalog {
         public Reference {
             if (category == null || cosmeticId == null || cosmeticId.isBlank()
                     || uiTexturePath == null || uiTexturePath.isBlank()
-                    || !uiTexturePath.matches("ImmersiveNpcAppearance/(Probe|Catalog/Thumbnails)/[A-Za-z0-9_.-]+\\.png")
+                    || !uiTexturePath.matches("UI/Custom/Pages/ImmersiveNpcAppearance/(Probe|Catalog/Thumbnails)/[A-Za-z0-9_.-]+\\.png")
                     || packagedAssetPath == null || packagedAssetPath.isBlank()
                     || width != WIDTH || height != HEIGHT || sourceSha256 == null
                     || !sourceSha256.matches("[0-9a-f]{64}")) {
@@ -93,5 +93,11 @@ public final class AppearanceThumbnailCatalog {
 
     public static int count(Category category) {
         return category == null ? 0 : COUNTS.getOrDefault(category, 0);
+    }
+
+    /** True only when the indexed immutable image is present in this exact plugin artifact. */
+    public static boolean packagedAssetPresent(Reference reference) {
+        return reference != null && AppearanceThumbnailCatalog.class.getResource(
+                "/" + reference.packagedAssetPath()) != null;
     }
 }
