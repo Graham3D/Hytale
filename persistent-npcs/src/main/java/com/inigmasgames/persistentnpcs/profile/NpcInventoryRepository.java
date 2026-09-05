@@ -33,10 +33,18 @@ import java.util.function.Consumer;
 
 /** Profile-local persistence and native container composition for NPC authoring. */
 public final class NpcInventoryRepository implements AutoCloseable {
+    @FunctionalInterface
+    public interface EquipmentStatsSync {
+        void synchronize(UUID stableId, Ref<EntityStore> ref,
+                Store<EntityStore> store, String trigger);
+    }
+
     public static final String FILENAME = "npc-inventory.json";
     private final ProfileRepository profiles;
     private final Set<ItemContainer> runtimePersistenceBindings = Collections.synchronizedSet(
             Collections.newSetFromMap(new WeakHashMap<>()));
+    private volatile EquipmentStatsSync equipmentStatsSync =
+            (stableId, ref, store, trigger) -> { };
     private final ExecutorService writer = Executors.newSingleThreadExecutor(runnable -> {
         Thread thread = new Thread(runnable, "immersive-npc-inventory-writer");
         thread.setDaemon(true);
@@ -45,6 +53,11 @@ public final class NpcInventoryRepository implements AutoCloseable {
 
     public NpcInventoryRepository(ProfileRepository profiles) {
         this.profiles = profiles;
+    }
+
+    public void configureEquipmentStatsSync(EquipmentStatsSync sync) {
+        equipmentStatsSync = sync == null
+                ? (stableId, ref, store, trigger) -> { } : sync;
     }
 
     public Path path(String npcName) {
@@ -201,8 +214,10 @@ public final class NpcInventoryRepository implements AutoCloseable {
         log.accept("NPC_INVENTORY_HYDRATION_VALIDATION npc=" + npcName
                 + " authoritativeMatch=true"
                 + " liveStorageCapacity=" + liveStorage.getCapacity());
+        synchronizeEquipmentStats(authored.stableNpcId(), npcRef, store,
+                "PERSISTED_INVENTORY_HYDRATION");
         return installRuntimePersistence(npcName, authored, liveArmor,
-                liveHotbar, liveUtility, liveStorage);
+                liveHotbar, liveUtility, liveStorage, npcRef, store);
     }
 
     private static boolean runtimeMatches(
@@ -369,7 +384,9 @@ public final class NpcInventoryRepository implements AutoCloseable {
                 base.creativeSettings(),
                 state.hideHelmet(), state.hideCuirass(), state.hideGauntlets(), state.hidePants(),
                 base.voiceSettings()));
-        installRuntimePersistence(npcName, state, armor, hotbar, utility, storage);
+        synchronizeEquipmentStats(state.stableNpcId(), npcRef, store, "NPC_SPAWN");
+        installRuntimePersistence(npcName, state, armor, hotbar, utility, storage,
+                npcRef, store);
         return true;
     }
 
@@ -384,7 +401,9 @@ public final class NpcInventoryRepository implements AutoCloseable {
             ItemContainer armor,
             ItemContainer hotbar,
             ItemContainer utility,
-            ItemContainer storage) {
+            ItemContainer storage,
+            Ref<EntityStore> npcRef,
+            Store<EntityStore> store) {
         if (!runtimePersistenceBindings.add(storage)) return false;
         Runnable persist = () -> {
             NpcInventoryState policy = find(npcName).orElse(authored);
@@ -403,11 +422,28 @@ public final class NpcInventoryRepository implements AutoCloseable {
                     policy.hideGauntlets(), policy.hidePants());
             writer.execute(() -> save(npcName, snapshot));
         };
-        armor.registerChangeEvent(ignored -> persist.run());
-        hotbar.registerChangeEvent(ignored -> persist.run());
-        utility.registerChangeEvent(ignored -> persist.run());
+        armor.registerChangeEvent(ignored -> {
+            persist.run();
+            synchronizeEquipmentStats(authored.stableNpcId(), npcRef, store,
+                    "ARMOR_CONTAINER_CHANGE");
+        });
+        hotbar.registerChangeEvent(ignored -> {
+            persist.run();
+            synchronizeEquipmentStats(authored.stableNpcId(), npcRef, store,
+                    "HOTBAR_CONTAINER_CHANGE");
+        });
+        utility.registerChangeEvent(ignored -> {
+            persist.run();
+            synchronizeEquipmentStats(authored.stableNpcId(), npcRef, store,
+                    "UTILITY_CONTAINER_CHANGE");
+        });
         storage.registerChangeEvent(ignored -> persist.run());
         return true;
+    }
+
+    private void synchronizeEquipmentStats(UUID stableId, Ref<EntityStore> npcRef,
+            Store<EntityStore> store, String trigger) {
+        if (stableId != null) equipmentStatsSync.synchronize(stableId, npcRef, store, trigger);
     }
 
     private static void addRuntimeSlot(

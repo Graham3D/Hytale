@@ -646,6 +646,9 @@ if ($LASTEXITCODE -ne 0) { throw "R161 Appearance native card binding tests fail
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R162AppearanceNativeProportionsAuditTest
 if ($LASTEXITCODE -ne 0) { throw "R162 Appearance native proportions/audit tests failed with exit code $LASTEXITCODE" }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.stats.R163NpcEquipmentStatsSyncTest
+if ($LASTEXITCODE -ne 0) { throw "R163 authoritative NPC equipment stat sync tests failed with exit code $LASTEXITCODE" }
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R147NpcProfileRepairTest
 if ($LASTEXITCODE -ne 0) {
     throw "R147 Profile repair tests failed with exit code $LASTEXITCODE"

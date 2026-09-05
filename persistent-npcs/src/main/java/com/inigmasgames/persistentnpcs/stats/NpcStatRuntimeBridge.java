@@ -24,6 +24,7 @@ public final class NpcStatRuntimeBridge implements AutoCloseable {
     private final ImmersiveNpcRoleService roles;
     private final NpcRuntimeRegistry runtimes;
     private final VanillaNpcStatBaselineResolver baselines;
+    private final NpcEquipmentStatSynchronizer equipmentStats;
     private final Consumer<String> log;
     private final Map<UUID, Attachment> active = new ConcurrentHashMap<>();
     private final Map<UUID, AddReason> additions = new ConcurrentHashMap<>();
@@ -54,8 +55,13 @@ public final class NpcStatRuntimeBridge implements AutoCloseable {
             ImmersiveNpcRoleService roles, NpcRuntimeRegistry runtimes, Consumer<String> log) {
         this.repository = repository; this.profiles = profiles; this.roles = roles; this.runtimes = runtimes;
         this.log = log; this.baselines = new VanillaNpcStatBaselineResolver(log);
+        this.equipmentStats = new NpcEquipmentStatSynchronizer(log);
     }
     public NpcStatStateRepository repository() { return repository; }
+    public void syncEquipment(UUID stableId, Ref<EntityStore> ref,
+            Store<EntityStore> store, String trigger) {
+        equipmentStats.synchronize(stableId, ref, store, trigger);
+    }
     public static Query<EntityStore> query() {
         return Query.and(NPCEntity.getComponentType(), UUIDComponent.getComponentType(), Query.not(Player.getComponentType()));
     }
@@ -129,6 +135,11 @@ public final class NpcStatRuntimeBridge implements AutoCloseable {
             if (!repository.owns(lease)) return;
             var map = store.getComponent(ref, EntityStatMap.getComponentType());
             if (map == null) return;
+            // Reconcile native equipment before restoring the persistent current
+            // value so Hytale clamps it against the same effective bounds used by
+            // combat and the Profile snapshot.
+            equipmentStats.synchronize(a.profile.stableId(), ref, store,
+                    a.fresh ? "FRESH_SPAWN_HYDRATION" : "WORLD_RESTORE_HYDRATION");
             if (NpcStatHydration.sample(map).isEmpty() && !loaded.state().stats().isEmpty()) return;
             if (loaded.migratedFromLive()) {
                 // Preserve any native damage/regen that occurred while the first migration was written.

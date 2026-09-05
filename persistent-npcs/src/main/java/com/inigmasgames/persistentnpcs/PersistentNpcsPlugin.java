@@ -142,7 +142,7 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R162-NPC-APPEARANCE-NATIVE-PROPORTIONS";
+    public static final String REVISION = "R163-NPC-AUTHORITATIVE-ARMOR-STATS";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
@@ -460,6 +460,7 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
         npcStats = new com.inigmasgames.persistentnpcs.stats.NpcStatRuntimeBridge(
                 new com.inigmasgames.persistentnpcs.stats.NpcStatStateRepository(profiles, frameworkLog),
                 profileRegistry, immersiveRoles, runtimes, frameworkLog);
+        npcInventories.configureEquipmentStatsSync(npcStats::syncEquipment);
         npcAdapter.configurePersistentStats(immersiveRoles, npcStats);
         NpcTaskScheduler taskScheduler = new NpcTaskScheduler(
                 taskStore, memories, actionService::resumeTask, eventBus, frameworkLog,
