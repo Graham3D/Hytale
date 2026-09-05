@@ -63,7 +63,8 @@ public final class R164ProfileEditorPolishTest {
             assert basic.contains("MaxLength: 500") && basic.contains("#ProfileSummaryCounter");
             String page = Files.readString(Path.of(
                     "src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java"));
-            assert page.contains("commands.clear(\"#ProfileForm\")")
+            assert page.contains("Pages/ProfileEditor/AllSections.ui")
+                    && !page.contains("commands.clear(\"#ProfileForm\")")
                     && page.contains("profileCategory = ProfileCategory.BACKGROUND");
             String generation = Files.readString(Path.of(
                     "src/main/java/com/inigmasgames/persistentnpcs/profile/"

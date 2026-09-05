@@ -99,9 +99,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             "OPEN_VOICE_EDITOR", "CLOSE_EDITOR", "DIRTY_SAVE",
             "DIRTY_DISCARD", "DIRTY_STAY", "PROFILE_FIELD", "PROFILE_SAVE",
             "PROFILE_RESET", "PROFILE_CANCEL", "PROFILE_GENERATE",
-            "PROFILE_CATEGORY", "PROFILE_SCOPE",
-            "PROFILE_PROPOSAL_ACCEPT", "PROFILE_PROPOSAL_ACCEPT_SELECTED",
-            "PROFILE_PROPOSAL_DISCARD", "APPEARANCE_PRIMARY",
+            "PROFILE_SECTION", "APPEARANCE_PRIMARY",
             "APPEARANCE_CATEGORY", "APPEARANCE_SEARCH", "APPEARANCE_PAGE_PREV", "APPEARANCE_PAGE_NEXT",
             "APPEARANCE_OPTION", "APPEARANCE_COLOR",
             "APPEARANCE_VARIANT", "APPEARANCE_VARIANT_PREV",
@@ -447,7 +445,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 "#VoiceRecorderButton", authoringEvent("OPEN_VOICE_EDITOR"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#ContextCloseButton", authoringEvent("CLOSE_EDITOR"));
-        bindProfileEditorEvents(events);
 
         bindVoiceRecorderEvents(events);
         events.addEventBinding(CustomUIEventBindingType.Activating,
@@ -477,6 +474,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         if (profileEditor && profileDraft != null) {
             setProfileEditorUi(commands);
             mountProfileEditorForm(commands, events, false);
+            bindProfileEditorEvents(events);
         }
         commands.set("#AppearanceEditorPage.Visible", appearanceEditor);
         appearanceGridMounted = false;
@@ -747,12 +745,18 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 handleVoiceAction(data, authoringAction);
                 return;
             }
-            if ("PROFILE_CATEGORY".equals(authoringAction)) {
+            if ("PROFILE_SECTION".equals(authoringAction)) {
                 requireProfileDraft();
-                validateProfileCategory(profileCategory);
+                if (data.profileSection == null || data.profileSection.isBlank()) {
+                    throw new IllegalArgumentException("Profile section is required.");
+                }
                 profileCategory = ProfileCategory.valueOf(
-                        data.profileCategory.toUpperCase(Locale.ROOT));
-                refreshProfileEditorForm();
+                        data.profileSection.toUpperCase(Locale.ROOT));
+                // The installed 0.6.3 Custom UI contract exposes normal vertical
+                // scrolling but no verified programmatic anchor/offset mutation.
+                // The rail is navigation/position context only and never rebuilds
+                // or mutates the mounted form.
+                refreshProfileEditorUi();
                 return;
             }
             if ("PROFILE_FIELD".equals(authoringAction)) {
@@ -790,6 +794,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 return;
             }
             if ("PROFILE_SAVE".equals(authoringAction)) {
+                applySubmittedProfileForm(data);
+                for (ProfileCategory category : ProfileCategory.values()) {
+                    validateProfileCategory(category);
+                }
                 saveProfileDraft();
                 profileEditorStatus = "Profile saved atomically. Draft is now current.";
                 profileEditorError = false;
@@ -801,45 +809,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             }
             if ("PROFILE_GENERATE".equals(authoringAction)) {
                 startProfileGeneration(store, data);
-                return;
-            }
-            if ("PROFILE_SCOPE".equals(authoringAction)) {
-                profileGenerationScope = NpcProfileGenerationService.Scope.parse(
-                        data.profileGenerateScope).name();
-                profileEditorStatus = "Generation scope: " + profileGenerationScope
-                        + ". Generate creates a review-only proposal.";
-                profileEditorError = false;
-                refreshProfileEditorUi();
-                return;
-            }
-            if ("PROFILE_PROPOSAL_ACCEPT".equals(authoringAction)) {
-                requireProfileDraft();
-                profileDraft.acceptProposal(Set.of(NpcProfileDraft.Field.BIOGRAPHY));
-                authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
-                profileEditorStatus = "Proposal accepted into the draft. Review, then Save Profile.";
-                profileEditorError = false;
-                refreshProfileEditorForm();
-                return;
-            }
-            if ("PROFILE_PROPOSAL_ACCEPT_SELECTED".equals(authoringAction)) {
-                requireProfileDraft();
-                Set<NpcProfileDraft.Field> selected = parseProfileFields(
-                        data.profileProposalSelection);
-                if (selected.isEmpty()) throw new IllegalArgumentException(
-                        "Enter at least one proposed field to accept.");
-                profileDraft.acceptProposal(selected);
-                authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
-                profileEditorStatus = "Selected proposal fields accepted into the draft. Review, then Save Profile.";
-                profileEditorError = false;
-                refreshProfileEditorForm();
-                return;
-            }
-            if ("PROFILE_PROPOSAL_DISCARD".equals(authoringAction)) {
-                requireProfileDraft();
-                profileDraft.discardProposal();
-                profileEditorStatus = "Generated proposal discarded; canonical profile unchanged.";
-                profileEditorError = false;
-                refreshProfileEditorForm();
                 return;
             }
             if (data.open != null) {
@@ -981,11 +950,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         for (ProfileCategory category : ProfileCategory.values()) {
             String selector = "#ProfileCategory" + category.resourceName;
             events.addEventBinding(CustomUIEventBindingType.Activating, selector,
-                    authoringEvent("PROFILE_CATEGORY")
-                            .append("ProfileCategory", category.name()));
+                    authoringEvent("PROFILE_SECTION")
+                            .append("@ProfileSection", category.name()));
         }
         events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#ProfileSaveButton", authoringEvent("PROFILE_SAVE"));
+                "#ProfileSaveButton", profileSaveEvent());
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#ProfileResetButton", authoringEvent("PROFILE_RESET"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
@@ -2159,60 +2128,48 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
 
     private void refreshProfileEditorForm() {
         UICommandBuilder commands = new UICommandBuilder();
-        UIEventBuilder events = new UIEventBuilder();
         setProfileEditorUi(commands);
-        mountProfileEditorForm(commands, events, true);
-        sendUpdate(commands, events, false);
+        setProfileFormValues(commands);
+        sendUpdate(commands, false);
     }
 
     private void mountProfileEditorForm(UICommandBuilder commands, UIEventBuilder events,
-            boolean clear) {
-        if (clear) commands.clear("#ProfileForm");
-        commands.append("#ProfileForm", profileCategory.resource());
-        for (NpcProfileDraft.Field field : profileFields(profileCategory)) {
+            boolean ignoredClear) {
+        commands.append("#ProfileForm", "Pages/ProfileEditor/AllSections.ui");
+        for (NpcProfileDraft.Field field : NpcProfileDraft.Field.values()) {
             String selector = "#" + profileFieldControl(field);
             events.addEventBinding(CustomUIEventBindingType.ValueChanged, selector,
                     authoringEvent("PROFILE_FIELD")
                             .append("ProfileField", field.name())
-                            .append("ProfileFieldValue", selector + ".Value"));
-            commands.set(selector + ".Value", profileDraft.value(field));
+                            .append("@ProfileFieldValue", selector + ".Value"));
         }
-        if (profileCategory == ProfileCategory.BASIC_INFO) {
-            commands.set("#ProfileDisplayName.Text", profileDraft.profileName());
-            events.addEventBinding(CustomUIEventBindingType.Activating,
-                    "#ProfileGenerateButton", authoringEvent("PROFILE_GENERATE")
-                            .append("ProfileGenerateScope", "BIOGRAPHY"));
-        } else if (profileCategory == ProfileCategory.BACKGROUND) {
-            events.addEventBinding(CustomUIEventBindingType.Activating,
-                    "#ProfileAcceptProposalButton", authoringEvent("PROFILE_PROPOSAL_ACCEPT"));
-            events.addEventBinding(CustomUIEventBindingType.Activating,
-                    "#ProfileDiscardProposalButton", authoringEvent("PROFILE_PROPOSAL_DISCARD"));
-            NpcProfileDraft.Proposal proposal = profileDraft.proposal();
-            commands.set("#ProfileProposalPanel.Visible", proposal != null);
-            if (proposal != null) {
-                String proposed = proposal.changes().getOrDefault(
-                        NpcProfileDraft.Field.BIOGRAPHY, "No biography was returned.");
-                commands.set("#ProfileProposalDiff.Text", proposed);
-            }
-        } else if (profileCategory == ProfileCategory.RELATIONSHIPS) {
-            editor.currentProfile(npcName).ifPresent(profile -> commands.set(
-                    "#ProfileRelationshipsSummary.Text", profile.relationships().size()
-                            + " authored relationship"
-                            + (profile.relationships().size() == 1 ? "" : "s") + "."));
+        events.addEventBinding(CustomUIEventBindingType.Activating,
+                "#ProfileGenerateButton", authoringEvent("PROFILE_GENERATE")
+                        .append("ProfileGenerateScope", "BIOGRAPHY"));
+        setProfileFormValues(commands);
+    }
+
+    private void setProfileFormValues(UICommandBuilder commands) {
+        commands.set("#ProfileDisplayName.Text", profileDraft.profileName());
+        for (NpcProfileDraft.Field field : NpcProfileDraft.Field.values()) {
+            commands.set("#" + profileFieldControl(field) + ".Value",
+                    profileDraft.value(field));
         }
+        editor.currentProfile(npcName).ifPresent(profile -> commands.set(
+                "#ProfileRelationshipsSummary.Text", profile.relationships().size()
+                        + " authored relationship"
+                        + (profile.relationships().size() == 1 ? "" : "s") + "."));
         setProfileCategoryStatus(commands);
     }
 
     private void setProfileCategoryStatus(UICommandBuilder commands) {
-        if (profileCategory == ProfileCategory.BASIC_INFO) {
-            int count = profileDraft.value(NpcProfileDraft.Field.SUMMARY).length();
-            commands.set("#ProfileSummaryCounter.Text", count + " / 500");
-            boolean generating = profileGeneration != null;
-            commands.set("#ProfileGenerateButton.Disabled", generating || !basicInfoValid());
-            commands.set("#ProfileGenerationStatus.Text", generating
-                    ? "Generating biography proposal..."
-                    : "Generate a biography with AI after filling out all basic information.");
-        }
+        int count = profileDraft.value(NpcProfileDraft.Field.SUMMARY).length();
+        commands.set("#ProfileSummaryCounter.Text", count + " / 500");
+        boolean generating = profileGeneration != null;
+        commands.set("#ProfileGenerateButton.Disabled", generating || !basicInfoValid());
+        commands.set("#ProfileGenerationStatus.Text", generating
+                ? "Generating biography..."
+                : "Generate a biography with AI after filling out all basic information.");
     }
 
     private boolean basicInfoValid() {
@@ -2314,7 +2271,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                         profileEditorError = true;
                     } else {
                         profileDraft.setProposal(proposal);
-                        profileEditorStatus = "Biography proposal ready. Review it before applying.";
+                        profileDraft.acceptProposal(Set.of(NpcProfileDraft.Field.BIOGRAPHY));
+                        authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
+                        profileEditorStatus = "Biography generated into the draft. Save Profile commits it to canon.";
                         profileEditorError = false;
                         profileCategory = ProfileCategory.BACKGROUND;
                     }
@@ -2379,17 +2338,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         while (current.getCause() != null) current = current.getCause();
         return current.getMessage() == null ? current.getClass().getSimpleName()
                 : current.getMessage();
-    }
-
-    private static Set<NpcProfileDraft.Field> parseProfileFields(String value) {
-        if (value == null || value.isBlank()) return Set.of();
-        java.util.EnumSet<NpcProfileDraft.Field> fields = java.util.EnumSet.noneOf(
-                NpcProfileDraft.Field.class);
-        for (String token : value.split("[,\\s]+")) {
-            if (!token.isBlank()) fields.add(NpcProfileDraft.Field.valueOf(
-                    token.strip().toUpperCase(Locale.ROOT)));
-        }
-        return Set.copyOf(fields);
     }
 
     private boolean isInventoryDrop(PageData data) {
@@ -2537,6 +2485,57 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append("AuthoringAction", action);
     }
 
+    /** Captures the mounted form at the commit boundary; ValueChanged is advisory. */
+    private EventData profileSaveEvent() {
+        return authoringEvent("PROFILE_SAVE")
+                .append("@ProfileRole", "#ProfileRoleInput.Value")
+                .append("@ProfileSelfIdentity", "#ProfileSelfIdentityInput.Value")
+                .append("@ProfileSpecies", "#ProfileSpeciesInput.Value")
+                .append("@ProfileAge", "#ProfileAgeInput.Value")
+                .append("@ProfileHome", "#ProfileHomeInput.Value")
+                .append("@ProfileSummary", "#ProfileSummaryInput.Value")
+                .append("@ProfileWorkplace", "#ProfileWorkplaceInput.Value")
+                .append("@ProfilePersonality", "#ProfilePersonalityInput.Value")
+                .append("@ProfileTraits", "#ProfileTraitsInput.Value")
+                .append("@ProfileValues", "#ProfileValuesInput.Value")
+                .append("@ProfileLikes", "#ProfileLikesInput.Value")
+                .append("@ProfileDislikes", "#ProfileDislikesInput.Value")
+                .append("@ProfileFears", "#ProfileFearsInput.Value")
+                .append("@ProfileBiography", "#ProfileBiographyInput.Value")
+                .append("@ProfilePurpose", "#ProfilePurposeInput.Value")
+                .append("@ProfileGoals", "#ProfileGoalsInput.Value")
+                .append("@ProfileSpeaking", "#ProfileSpeakingInput.Value")
+                .append("@ProfileKnowledge", "#ProfileKnowledgeInput.Value")
+                .append("@ProfileNotes", "#ProfileNotesInput.Value");
+    }
+
+    private void applySubmittedProfileForm(PageData data) {
+        updateSubmitted(NpcProfileDraft.Field.ROLE, data.profileRole);
+        updateSubmitted(NpcProfileDraft.Field.SELF_IDENTITY, data.profileSelfIdentity);
+        updateSubmitted(NpcProfileDraft.Field.SPECIES_ARCHETYPE, data.profileSpecies);
+        updateSubmitted(NpcProfileDraft.Field.AGE_CATEGORY, data.profileAge);
+        updateSubmitted(NpcProfileDraft.Field.HOME, data.profileHome);
+        updateSubmitted(NpcProfileDraft.Field.SUMMARY, data.profileSummary);
+        updateSubmitted(NpcProfileDraft.Field.WORKPLACE, data.profileWorkplace);
+        updateSubmitted(NpcProfileDraft.Field.PERSONALITY, data.profilePersonality);
+        updateSubmitted(NpcProfileDraft.Field.PERSONALITY_TRAITS, data.profileTraits);
+        updateSubmitted(NpcProfileDraft.Field.VALUES, data.profileValues);
+        updateSubmitted(NpcProfileDraft.Field.LIKES, data.profileLikes);
+        updateSubmitted(NpcProfileDraft.Field.DISLIKES, data.profileDislikes);
+        updateSubmitted(NpcProfileDraft.Field.FEARS, data.profileFears);
+        updateSubmitted(NpcProfileDraft.Field.BIOGRAPHY, data.profileBiography);
+        updateSubmitted(NpcProfileDraft.Field.PURPOSE, data.profilePurpose);
+        updateSubmitted(NpcProfileDraft.Field.GOALS, data.profileGoals);
+        updateSubmitted(NpcProfileDraft.Field.SPEAKING_STYLE, data.profileSpeaking);
+        updateSubmitted(NpcProfileDraft.Field.KNOWLEDGE_DOMAINS, data.profileKnowledge);
+        updateSubmitted(NpcProfileDraft.Field.CREATOR_NOTES, data.profileNotes);
+        authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
+    }
+
+    private void updateSubmitted(NpcProfileDraft.Field field, String value) {
+        if (value != null) profileDraft.update(field, value);
+    }
+
     private String resolveAuthoringAction(PageData data) {
         if (data == null) throw new IllegalArgumentException("Missing authoring event.");
         if (data.authoringAction != null && !data.authoringAction.isBlank()) {
@@ -2591,11 +2590,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                     "APPEARANCE_CANCEL", "APPEARANCE_SAVE"
                     -> NpcAuthoringPermissions.APPEARANCE;
             case "OPEN_PROFILE_EDITOR", "PROFILE_FIELD", "PROFILE_SAVE",
-                    "PROFILE_RESET", "PROFILE_CANCEL", "PROFILE_PROPOSAL_ACCEPT",
-                    "PROFILE_PROPOSAL_ACCEPT_SELECTED", "PROFILE_PROPOSAL_DISCARD",
+                    "PROFILE_RESET", "PROFILE_CANCEL", "PROFILE_SECTION",
                     "ENTER" -> NpcAuthoringPermissions.PROFILE;
             case "PROFILE_GENERATE" -> NpcAuthoringPermissions.GENERATE;
-            case "PROFILE_SCOPE" -> NpcAuthoringPermissions.PROFILE;
             case "ADVANCED_FILE_OPEN", "BROWSER_EVENT", "DELETE_PROMPT",
                     "DELETE_CANCEL", "DELETE_CONFIRM" -> NpcAuthoringPermissions.ADVANCED;
             case "DIRTY_SAVE" -> switch (authoringSession.activeEditor()) {
@@ -3146,18 +3143,53 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append(new KeyedCodec<>("ProfileField", Codec.STRING),
                         (data, value) -> data.profileField = value,
                         data -> data.profileField).add()
-                .append(new KeyedCodec<>("ProfileFieldValue", Codec.STRING),
+                .append(new KeyedCodec<>("@ProfileFieldValue", Codec.STRING),
                         (data, value) -> data.profileFieldValue = value,
                         data -> data.profileFieldValue).add()
-                .append(new KeyedCodec<>("ProfileCategory", Codec.STRING),
-                        (data, value) -> data.profileCategory = value,
-                        data -> data.profileCategory).add()
+                .append(new KeyedCodec<>("@ProfileSection", Codec.STRING),
+                        (data, value) -> data.profileSection = value,
+                        data -> data.profileSection).add()
+                .append(new KeyedCodec<>("@ProfileRole", Codec.STRING),
+                        (data, value) -> data.profileRole = value, data -> data.profileRole).add()
+                .append(new KeyedCodec<>("@ProfileSelfIdentity", Codec.STRING),
+                        (data, value) -> data.profileSelfIdentity = value, data -> data.profileSelfIdentity).add()
+                .append(new KeyedCodec<>("@ProfileSpecies", Codec.STRING),
+                        (data, value) -> data.profileSpecies = value, data -> data.profileSpecies).add()
+                .append(new KeyedCodec<>("@ProfileAge", Codec.STRING),
+                        (data, value) -> data.profileAge = value, data -> data.profileAge).add()
+                .append(new KeyedCodec<>("@ProfileHome", Codec.STRING),
+                        (data, value) -> data.profileHome = value, data -> data.profileHome).add()
+                .append(new KeyedCodec<>("@ProfileSummary", Codec.STRING),
+                        (data, value) -> data.profileSummary = value, data -> data.profileSummary).add()
+                .append(new KeyedCodec<>("@ProfileWorkplace", Codec.STRING),
+                        (data, value) -> data.profileWorkplace = value, data -> data.profileWorkplace).add()
+                .append(new KeyedCodec<>("@ProfilePersonality", Codec.STRING),
+                        (data, value) -> data.profilePersonality = value, data -> data.profilePersonality).add()
+                .append(new KeyedCodec<>("@ProfileTraits", Codec.STRING),
+                        (data, value) -> data.profileTraits = value, data -> data.profileTraits).add()
+                .append(new KeyedCodec<>("@ProfileValues", Codec.STRING),
+                        (data, value) -> data.profileValues = value, data -> data.profileValues).add()
+                .append(new KeyedCodec<>("@ProfileLikes", Codec.STRING),
+                        (data, value) -> data.profileLikes = value, data -> data.profileLikes).add()
+                .append(new KeyedCodec<>("@ProfileDislikes", Codec.STRING),
+                        (data, value) -> data.profileDislikes = value, data -> data.profileDislikes).add()
+                .append(new KeyedCodec<>("@ProfileFears", Codec.STRING),
+                        (data, value) -> data.profileFears = value, data -> data.profileFears).add()
+                .append(new KeyedCodec<>("@ProfileBiography", Codec.STRING),
+                        (data, value) -> data.profileBiography = value, data -> data.profileBiography).add()
+                .append(new KeyedCodec<>("@ProfilePurpose", Codec.STRING),
+                        (data, value) -> data.profilePurpose = value, data -> data.profilePurpose).add()
+                .append(new KeyedCodec<>("@ProfileGoals", Codec.STRING),
+                        (data, value) -> data.profileGoals = value, data -> data.profileGoals).add()
+                .append(new KeyedCodec<>("@ProfileSpeaking", Codec.STRING),
+                        (data, value) -> data.profileSpeaking = value, data -> data.profileSpeaking).add()
+                .append(new KeyedCodec<>("@ProfileKnowledge", Codec.STRING),
+                        (data, value) -> data.profileKnowledge = value, data -> data.profileKnowledge).add()
+                .append(new KeyedCodec<>("@ProfileNotes", Codec.STRING),
+                        (data, value) -> data.profileNotes = value, data -> data.profileNotes).add()
                 .append(new KeyedCodec<>("ProfileGenerateScope", Codec.STRING),
                         (data, value) -> data.profileGenerateScope = value,
                         data -> data.profileGenerateScope).add()
-                .append(new KeyedCodec<>("ProfileProposalSelection", Codec.STRING),
-                        (data, value) -> data.profileProposalSelection = value,
-                        data -> data.profileProposalSelection).add()
                 .append(new KeyedCodec<>("AppearancePrimary", Codec.STRING),
                         (data, value) -> data.appearancePrimary = value,
                         data -> data.appearancePrimary).add()
@@ -3219,9 +3251,27 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         private String inventoryViewRevision;
         private String profileField;
         private String profileFieldValue;
-        private String profileCategory;
+        private String profileSection;
+        private String profileRole;
+        private String profileSelfIdentity;
+        private String profileSpecies;
+        private String profileAge;
+        private String profileHome;
+        private String profileSummary;
+        private String profileWorkplace;
+        private String profilePersonality;
+        private String profileTraits;
+        private String profileValues;
+        private String profileLikes;
+        private String profileDislikes;
+        private String profileFears;
+        private String profileBiography;
+        private String profilePurpose;
+        private String profileGoals;
+        private String profileSpeaking;
+        private String profileKnowledge;
+        private String profileNotes;
         private String profileGenerateScope;
-        private String profileProposalSelection;
         private String appearancePrimary;
         private String appearanceCategory;
         private String appearanceSearch;

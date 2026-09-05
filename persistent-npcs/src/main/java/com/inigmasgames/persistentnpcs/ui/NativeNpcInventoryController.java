@@ -185,8 +185,27 @@ public final class NativeNpcInventoryController {
         if (uuid == null || uuid.getUuid() == null) {
             throw new IllegalStateException(profile.name() + " has no live UUIDComponent.");
         }
+        UUID runtimeProfileId = adapter.profileIdForEntity(uuid.getUuid()).orElse(null);
+        UUID storageOwnerBefore = inventories.load(profile.name()).stableNpcId();
+        diagnostics.accept("NPC_PROFILE_IDENTITY_TRACE"
+                + " stage=RESOLVED_BEFORE_STORAGE_BIND"
+                + " requestedName=" + profile.name()
+                + " requestedProfileStableId=" + profile.stableId()
+                + " resolvedEntityUuid=" + uuid.getUuid()
+                + " resolvedEntityStableProfileId=" + runtimeProfileId
+                + " storageOwnerStableId=" + storageOwnerBefore
+                + " entityProfileRegistryMapping=" + runtimeProfileId);
         boolean persistenceBindingAdded = inventories.ensureRuntimePersistence(
                 profile.name(), store, npcRef, diagnostics);
+        UUID storageOwnerAfter = inventories.load(profile.name()).stableNpcId();
+        diagnostics.accept("NPC_PROFILE_IDENTITY_TRACE"
+                + " stage=STORAGE_AUTHORITY_READY"
+                + " requestedName=" + profile.name()
+                + " requestedProfileStableId=" + profile.stableId()
+                + " resolvedEntityUuid=" + uuid.getUuid()
+                + " resolvedEntityStableProfileId=" + runtimeProfileId
+                + " storageOwnerStableId=" + storageOwnerAfter
+                + " entityProfileRegistryMapping=" + runtimeProfileId);
         InventoryComponent.Storage npcStorage = store.getComponent(
                 npcRef, InventoryComponent.Storage.getComponentType());
         InventoryComponent.Armor npcArmor = store.getComponent(

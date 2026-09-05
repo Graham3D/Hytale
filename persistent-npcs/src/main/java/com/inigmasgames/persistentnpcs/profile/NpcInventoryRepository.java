@@ -79,9 +79,51 @@ public final class NpcInventoryRepository implements AutoCloseable {
         return find(npcName).orElseGet(NpcInventoryState::empty);
     }
 
+    /**
+     * Binds a legacy inventory document that predates stableNpcId to its already
+     * resolved profile identity. A non-null conflicting owner is never rebound.
+     */
+    public NpcInventoryState loadForProfile(String npcName, UUID profileStableId,
+            Consumer<String> diagnosticSink) {
+        if (profileStableId == null) {
+            throw new IllegalArgumentException("Profile stable identity is required.");
+        }
+        Consumer<String> log = diagnosticSink == null ? ignored -> { } : diagnosticSink;
+        NpcInventoryState state = load(npcName);
+        if (state.stableNpcId() == null) {
+            NpcInventoryState migrated = state.withStableNpcId(profileStableId);
+            save(npcName, migrated);
+            NpcInventoryState reread = JsonFiles.read(path(npcName), NpcInventoryState.class);
+            if (!profileStableId.equals(reread.stableNpcId())) {
+                throw new IllegalStateException("NPC inventory stable identity migration did not persist.");
+            }
+            log.accept("NPC_INVENTORY_STABLE_ID_MIGRATED"
+                    + " npc=" + npcName
+                    + " previousStableId=NONE"
+                    + " profileStableId=" + profileStableId
+                    + " persistedSource=" + path(npcName).toAbsolutePath().normalize());
+            return reread;
+        }
+        if (!profileStableId.equals(state.stableNpcId())) {
+            log.accept("NPC_INVENTORY_STABLE_ID_CONFLICT"
+                    + " npc=" + npcName
+                    + " storageOwnerStableId=" + state.stableNpcId()
+                    + " profileStableId=" + profileStableId
+                    + " action=FAIL_CLOSED");
+            throw new IllegalStateException("NPC_STABLE_PROFILE_ID_MISMATCH");
+        }
+        return state;
+    }
+
+    private NpcInventoryState loadForResolvedProfile(String npcName) {
+        NpcProfile profile = profiles.load(npcName);
+        return loadForProfile(profile.name(), profile.stableId(), diagnostics);
+    }
+
     public Session open(String npcName) {
         profiles.createProfileDirectory(npcName);
-        Session session = new Session(npcName, load(npcName), null, null, null, null);
+        Session session = new Session(npcName, loadForResolvedProfile(npcName),
+                null, null, null, null);
         auditSession(npcName, "PROFILE_OPEN_ABSENT", "OFFLINE_DURABLE", session);
         return session;
     }
@@ -93,7 +135,7 @@ public final class NpcInventoryRepository implements AutoCloseable {
      */
     public Session openWithLiveStorage(String npcName, ItemContainer liveStorage) {
         profiles.createProfileDirectory(npcName);
-        return new Session(npcName, load(npcName), null, null, null,
+        return new Session(npcName, loadForResolvedProfile(npcName), null, null, null,
                 java.util.Objects.requireNonNull(liveStorage, "liveStorage"));
     }
 
@@ -101,7 +143,7 @@ public final class NpcInventoryRepository implements AutoCloseable {
     public Session openWithLiveInventory(String npcName, ItemContainer liveArmor,
             ItemContainer liveHotbar, ItemContainer liveUtility, ItemContainer liveStorage) {
         profiles.createProfileDirectory(npcName);
-        return new Session(npcName, load(npcName),
+        return new Session(npcName, loadForResolvedProfile(npcName),
                 java.util.Objects.requireNonNull(liveArmor, "liveArmor"),
                 java.util.Objects.requireNonNull(liveHotbar, "liveHotbar"),
                 java.util.Objects.requireNonNull(liveUtility, "liveUtility"),
@@ -133,8 +175,9 @@ public final class NpcInventoryRepository implements AutoCloseable {
             String npcName, Store<EntityStore> store, Ref<EntityStore> npcRef,
             Consumer<String> diagnostics, String stage) {
         Consumer<String> log = diagnostics == null ? ignored -> { } : diagnostics;
-        NpcInventoryState authored = find(npcName).orElseThrow(() ->
-                new IllegalStateException("No persisted NPC inventory exists for " + npcName));
+        NpcProfile profile = profiles.load(npcName);
+        NpcInventoryState authored = loadForProfile(
+                profile.name(), profile.stableId(), log);
         LiveContainers components = ensureLiveInventoryComponents(
                 npcName, store, npcRef, stage + "_INITIALIZATION", log);
         InventoryComponent.Armor armor = components.armorComponent();

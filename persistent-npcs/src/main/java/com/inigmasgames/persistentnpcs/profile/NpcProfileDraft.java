@@ -94,6 +94,10 @@ public final class NpcProfileDraft {
         this.baseDocument = document.deepCopy();
         for (Field field : Field.values()) {
             String value = displayValue(document.get(field.jsonName()), field.list());
+            // R164 could persist an unresolved Custom UI selector as literal text.
+            // Expose that invalid legacy value as an empty repairable draft field;
+            // canon remains unchanged unless the creator explicitly saves.
+            if (isUiSelectorLiteral(value)) value = "";
             initial.put(field, value);
             values.put(field, value);
         }
@@ -116,6 +120,10 @@ public final class NpcProfileDraft {
     public void update(Field field, String value) {
         if (field == null) throw new IllegalArgumentException("Profile field is required.");
         String clean = value == null ? "" : value.strip();
+        if (isUiSelectorLiteral(clean)) {
+            throw new IllegalArgumentException(
+                    "Profile values cannot contain unresolved UI selectors.");
+        }
         if (clean.length() > field.maxLength()) {
             throw new IllegalArgumentException(field.name() + " exceeds "
                     + field.maxLength() + " characters.");
@@ -192,6 +200,12 @@ public final class NpcProfileDraft {
             if (item != null && item.isJsonPrimitive()) values.add(item.getAsString());
         }
         return String.join("\n", values);
+    }
+
+    static boolean isUiSelectorLiteral(String value) {
+        if (value == null) return false;
+        String clean = value.strip();
+        return clean.startsWith("#Profile") && clean.endsWith("Input.Value");
     }
 
     static List<String> parseList(String text) {

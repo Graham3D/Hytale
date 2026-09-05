@@ -1,7 +1,7 @@
 {
   "Group": "InigmasGames",
   "Name": "ImmersiveNPCs",
-  "Version": "0.6.3-R166-custom-ui-load-hotfix",
+  "Version": "0.6.3-R167-identity-profile-editor-repair",
   "Description": "Immersive AI: persistent Hytale NPCs with replaceable local or remote inference providers and server-authoritative cognition.",
   "Authors": [
     {

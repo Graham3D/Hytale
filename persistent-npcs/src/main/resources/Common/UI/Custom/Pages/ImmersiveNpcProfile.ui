@@ -379,7 +379,14 @@ $C.@PageOverlay #ProfileEditorPage {
           Group { LayoutMode: Left; Anchor: (Height: 44); Group #ProfileCategoryNotesSelected { Anchor: (Width: 4, Right: 4); Background: #d5a842; Visible: false; } $C.@SecondaryTextButton #ProfileCategoryNotes { Text: "Notes"; FlexWeight: 1; } }
           Group { FlexWeight: 1; }
         }
-        Group #ProfileForm { LayoutMode: Top; FlexWeight: 1; Background: #0b1620; Padding: (Full: 18); }
+        Group #ProfileForm {
+          LayoutMode: TopScrolling;
+          FlexWeight: 1;
+          Background: #0b1620;
+          Padding: (Full: 18, Right: 10);
+          ScrollbarStyle: $C.@DefaultScrollbarStyle;
+          KeepScrollPosition: true;
+        }
       }
       Label #ProfileValidationStatus { Anchor: (Height: 28, Top: 8); Text: "Draft valid"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #9ed7a6, HorizontalAlignment: Center); }
       Group { LayoutMode: Left; Anchor: (Height: 44, Top: 6);

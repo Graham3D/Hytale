@@ -1,0 +1,93 @@
+$C = "../../Common.ui";
+
+Group #SectionBasicInfo { LayoutMode: Top; Anchor: (Height: 590, Bottom: 18); Padding: (Right: 8);
+  Label { Anchor: (Height: 34, Bottom: 10); Text: "BASIC INFO"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+  Label { Anchor: (Height: 22); Text: "Name"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  Group { Anchor: (Height: 40, Bottom: 10); Background: #162536; Padding: (Horizontal: 11); LayoutMode: Left;
+    Label #ProfileDisplayName { FlexWeight: 1; Text: ""; Style: (...$C.@DefaultLabelStyle, TextColor: #d9e4ed, VerticalAlignment: Center); }
+    Label { Anchor: (Width: 90); Text: "READ ONLY"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: #6f879a, HorizontalAlignment: End, VerticalAlignment: Center); }
+  }
+  Label { Anchor: (Height: 22); Text: "Title / Role"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  $C.@TextField #ProfileRoleInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 160; }
+  Group { LayoutMode: Left; Anchor: (Height: 64, Bottom: 10);
+    Group { LayoutMode: Top; FlexWeight: 1; Anchor: (Right: 5);
+      Label { Anchor: (Height: 22); Text: "Race / Species"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+      $C.@TextField #ProfileSpeciesInput { @Anchor = (Height: 40); MaxLength: 80; }
+    }
+    Group { LayoutMode: Top; FlexWeight: 1; Anchor: (Left: 5);
+      Label { Anchor: (Height: 22); Text: "Age"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+      $C.@TextField #ProfileAgeInput { @Anchor = (Height: 40); MaxLength: 40; }
+    }
+  }
+  Label { Anchor: (Height: 22); Text: "Location / Home"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  $C.@TextField #ProfileHomeInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 200; }
+  Group { LayoutMode: Left; Anchor: (Height: 22);
+    Label { FlexWeight: 1; Text: "Summary"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+    Label #ProfileSummaryCounter { Anchor: (Width: 90); Text: "0 / 500"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #6f879a, HorizontalAlignment: End); }
+  }
+  MultilineTextField #ProfileSummaryInput { Anchor: (Height: 126, Bottom: 12); Background: $C.@InputBoxBackground; MaxVisibleLines: 6; AutoGrow: false; MaxLength: 500; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+  $C.@TextButton #ProfileGenerateButton { @Anchor = (Height: 44, Bottom: 7); Text: "Generate Biography"; }
+  Label #ProfileGenerationStatus { Anchor: (Height: 42); Text: "Generate a biography with AI after filling out all basic information."; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #768b9e, HorizontalAlignment: Center); }
+}
+
+Group #SectionBackground { LayoutMode: Top; Anchor: (Height: 490, Bottom: 18); Padding: (Right: 8);
+  Label { Anchor: (Height: 34, Bottom: 10); Text: "BACKGROUND"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+  Label { Anchor: (Height: 22); Text: "Biography"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  MultilineTextField #ProfileBiographyInput { Anchor: (Height: 180, Bottom: 10); Background: $C.@InputBoxBackground; MaxVisibleLines: 9; AutoGrow: false; MaxLength: 1800; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+  Label { Anchor: (Height: 22); Text: "Self Identity"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  $C.@TextField #ProfileSelfIdentityInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 400; }
+  Label { Anchor: (Height: 22); Text: "Workplace"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  $C.@TextField #ProfileWorkplaceInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 200; }
+  Label { Anchor: (Height: 22); Text: "Knowledge Domains"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  $C.@TextField #ProfileKnowledgeInput { @Anchor = (Height: 40); MaxLength: 900; }
+}
+
+Group #SectionPersonality { LayoutMode: Top; Anchor: (Height: 370, Bottom: 18); Padding: (Right: 8);
+  Label { Anchor: (Height: 34, Bottom: 10); Text: "PERSONALITY"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+  Label { Anchor: (Height: 22); Text: "Temperament"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  MultilineTextField #ProfilePersonalityInput { Anchor: (Height: 120, Bottom: 10); Background: $C.@InputBoxBackground; MaxVisibleLines: 6; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+  Label { Anchor: (Height: 22); Text: "Personality Traits"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  $C.@TextField #ProfileTraitsInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 700; }
+  Label { Anchor: (Height: 22); Text: "Likes"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  $C.@TextField #ProfileLikesInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 700; }
+  Label { Anchor: (Height: 22); Text: "Dislikes"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  $C.@TextField #ProfileDislikesInput { @Anchor = (Height: 40); MaxLength: 700; }
+}
+
+Group #SectionValues { LayoutMode: Top; Anchor: (Height: 320, Bottom: 18); Padding: (Right: 8);
+  Label { Anchor: (Height: 34, Bottom: 10); Text: "VALUES & BELIEFS"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+  Label { Anchor: (Height: 22); Text: "Values, beliefs, and moral outlook"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  MultilineTextField #ProfileValuesInput { Anchor: (Height: 220); Background: $C.@InputBoxBackground; MaxVisibleLines: 10; AutoGrow: false; MaxLength: 700; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+  Label { Anchor: (Height: 36, Top: 9); Text: "Separate entries with commas or new lines."; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #6f879a); }
+}
+
+Group #SectionMotivations { LayoutMode: Top; Anchor: (Height: 450, Bottom: 18); Padding: (Right: 8);
+  Label { Anchor: (Height: 34, Bottom: 10); Text: "MOTIVATIONS"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+  Label { Anchor: (Height: 22); Text: "Purpose"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  MultilineTextField #ProfilePurposeInput { Anchor: (Height: 120, Bottom: 10); Background: $C.@InputBoxBackground; MaxVisibleLines: 6; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+  Label { Anchor: (Height: 22); Text: "Goals, desires, and ambitions"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  MultilineTextField #ProfileGoalsInput { Anchor: (Height: 100, Bottom: 10); Background: $C.@InputBoxBackground; MaxVisibleLines: 5; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+  Label { Anchor: (Height: 22); Text: "Fears and obligations"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  MultilineTextField #ProfileFearsInput { Anchor: (Height: 100); Background: $C.@InputBoxBackground; MaxVisibleLines: 5; AutoGrow: false; MaxLength: 700; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+}
+
+Group #SectionRelationships { LayoutMode: Top; Anchor: (Height: 230, Bottom: 18); Padding: (Right: 8);
+  Label { Anchor: (Height: 34, Bottom: 10); Text: "RELATIONSHIPS"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+  Group { Anchor: (Height: 110); Background: #142535; Padding: (Full: 14); LayoutMode: Top;
+    Label #ProfileRelationshipsSummary { FlexWeight: 1; Text: ""; Style: (...$C.@DefaultLabelStyle, FontSize: 14, Wrap: true, TextColor: #dce8f3); }
+    Label { Anchor: (Height: 28); Text: "READ ONLY"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: #6f879a); }
+  }
+  Label { Anchor: (Height: 54, Top: 10); Text: "Relationships are managed by the authoritative relationship subsystem and cannot be edited here."; Style: (...$C.@DefaultLabelStyle, Wrap: true, TextColor: #768b9e); }
+}
+
+Group #SectionSpeechStyle { LayoutMode: Top; Anchor: (Height: 300, Bottom: 18); Padding: (Right: 8);
+  Label { Anchor: (Height: 34, Bottom: 10); Text: "SPEECH STYLE"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+  Label { Anchor: (Height: 22); Text: "Behavior, speech, and mannerisms"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  MultilineTextField #ProfileSpeakingInput { Anchor: (Height: 220); Background: $C.@InputBoxBackground; MaxVisibleLines: 10; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+}
+
+Group #SectionNotes { LayoutMode: Top; Anchor: (Height: 410); Padding: (Right: 8);
+  Label { Anchor: (Height: 34, Bottom: 10); Text: "NOTES"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+  Label { Anchor: (Height: 45, Bottom: 8); Text: "Private authoring notes. These do not enter NPC prompts, memories, beliefs, speech, or world truth."; Style: (...$C.@DefaultLabelStyle, FontSize: 12, Wrap: true, TextColor: #768b9e); }
+  MultilineTextField #ProfileNotesInput { Anchor: (Height: 300); Background: $C.@InputBoxBackground; MaxVisibleLines: 14; AutoGrow: false; MaxLength: 3000; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+}
