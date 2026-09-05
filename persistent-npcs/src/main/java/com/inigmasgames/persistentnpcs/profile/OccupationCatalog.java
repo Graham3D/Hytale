@@ -56,7 +56,7 @@ public final class OccupationCatalog {
                 profile.voicePreset(), profile.voiceEffectPreset(), profile.modelTier(),
                 profile.riskTolerance(),
                 profile.sociability(), profile.curiosity(), profile.trustDisposition(),
-                profile.relationships()).validated();
+                profile.relationships(), profile.summary(), profile.creatorNotes()).validated();
     }
 
     public Map<String, OccupationDefinition> definitions() {

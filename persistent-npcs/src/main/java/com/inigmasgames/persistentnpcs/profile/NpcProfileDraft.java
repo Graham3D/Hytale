@@ -24,6 +24,7 @@ public final class NpcProfileDraft {
         SPECIES_ARCHETYPE("speciesArchetype", 80, false, false),
         AGE_CATEGORY("ageCategory", 40, false, false),
         HOME("home", 200, false, false),
+        SUMMARY("summary", 500, false, false),
         WORKPLACE("workplace", 200, false, false),
         PERSONALITY("personality", 900, false, true),
         PERSONALITY_TRAITS("personalityTraits", 700, true, true),
@@ -35,7 +36,8 @@ public final class NpcProfileDraft {
         PURPOSE("purpose", 900, false, true),
         GOALS("goals", 900, true, true),
         SPEAKING_STYLE("speakingStyle", 900, false, true),
-        KNOWLEDGE_DOMAINS("knowledgeDomains", 900, true, false);
+        KNOWLEDGE_DOMAINS("knowledgeDomains", 900, true, false),
+        CREATOR_NOTES("creatorNotes", 3000, false, false);
 
         private final String jsonName;
         private final int maxLength;

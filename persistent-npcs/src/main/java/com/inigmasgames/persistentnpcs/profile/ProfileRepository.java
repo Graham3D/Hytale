@@ -53,7 +53,14 @@ public final class ProfileRepository {
                     "A small room in the village", "Village workshop",
                     List.of("honest people", "practical solutions", "quiet mornings"),
                     List.of("boasting", "being ignored", "being rushed"),
-                    roleIds, capabilities, loaded.defaultDisposition()).validated();
+                    roleIds, capabilities, loaded.defaultDisposition(), loaded.schemaVersion(),
+                    loaded.selfIdentity(), loaded.ageCategory(), loaded.speakingStyle(),
+                    loaded.knowledgeDomains(), loaded.defaultSchedule(), loaded.appearancePreset(),
+                    loaded.stableId(), loaded.speciesArchetype(), loaded.personalityTraits(),
+                    loaded.values(), loaded.fears(), loaded.goals(), loaded.voicePreset(),
+                    loaded.voiceEffectPreset(), loaded.modelTier(), loaded.riskTolerance(),
+                    loaded.sociability(), loaded.curiosity(), loaded.trustDisposition(),
+                    loaded.relationships(), loaded.summary(), loaded.creatorNotes()).validated();
             JsonFiles.writeAtomic(path, loaded);
         }
         if (mara && !loaded.capabilities().containsAll(MARA_FRAMEWORK_CAPABILITIES)) {
@@ -71,7 +78,7 @@ public final class ProfileRepository {
                     loaded.voicePreset(), loaded.voiceEffectPreset(), loaded.modelTier(),
                     loaded.riskTolerance(),
                     loaded.sociability(), loaded.curiosity(), loaded.trustDisposition(),
-                    loaded.relationships()).validated();
+                    loaded.relationships(), loaded.summary(), loaded.creatorNotes()).validated();
             JsonFiles.writeAtomic(path, loaded);
         }
         if (mara && !"Mara".equals(loaded.appearancePreset())) {
@@ -85,7 +92,8 @@ public final class ProfileRepository {
                     loaded.fears(), loaded.goals(), loaded.voicePreset(),
                     loaded.voiceEffectPreset(), loaded.modelTier(),
                     loaded.riskTolerance(), loaded.sociability(), loaded.curiosity(),
-                    loaded.trustDisposition(), loaded.relationships()).validated();
+                    loaded.trustDisposition(), loaded.relationships(), loaded.summary(),
+                    loaded.creatorNotes()).validated();
             JsonFiles.writeAtomic(path, loaded);
         }
         if (mara && (loaded.values().isEmpty() || loaded.fears().isEmpty()
@@ -117,7 +125,8 @@ public final class ProfileRepository {
                                     "be useful without being taken for granted")
                             : loaded.goals(),
                     loaded.voicePreset(), loaded.voiceEffectPreset(), loaded.modelTier(),
-                    0.32, 0.58, 0.72, 0.38, loaded.relationships())
+                    0.32, 0.58, 0.72, 0.38, loaded.relationships(), loaded.summary(),
+                    loaded.creatorNotes())
                     .validated();
             JsonFiles.writeAtomic(path, loaded);
         }
@@ -132,7 +141,8 @@ public final class ProfileRepository {
                     loaded.stableId(), loaded.speciesArchetype(), loaded.personalityTraits(),
                     loaded.values(), loaded.fears(), loaded.goals(), "mara", "none",
                     loaded.modelTier(), loaded.riskTolerance(), loaded.sociability(),
-                    loaded.curiosity(), loaded.trustDisposition(), loaded.relationships())
+                    loaded.curiosity(), loaded.trustDisposition(), loaded.relationships(),
+                    loaded.summary(), loaded.creatorNotes())
                     .validated();
             JsonFiles.writeAtomic(path, loaded);
         }
@@ -337,7 +347,7 @@ public final class ProfileRepository {
                 source.fears(), source.goals(), source.voicePreset(),
                 source.voiceEffectPreset(), source.modelTier(), source.riskTolerance(),
                 source.sociability(), source.curiosity(), source.trustDisposition(),
-                source.relationships());
+                source.relationships(), source.summary(), source.creatorNotes());
     }
 
     private static void validateExtension(Path path, String required) {

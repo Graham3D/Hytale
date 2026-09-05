@@ -361,79 +361,33 @@ $C.@PageOverlay #ContextEditorPage {
 $C.@PageOverlay #ProfileEditorPage {
   LayoutMode: Middle;
   Visible: false;
-  Group { Anchor: (Width: 1520, Height: 960); LayoutMode: Top; Background: @PanelBackground; Padding: (Full: 18);
-    Group { Anchor: (Height: 42, Bottom: 10); LayoutMode: Left;
-      Label { Text: "PROFILE EDITOR"; FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 22, RenderBold: true, TextColor: #f1f5f9, VerticalAlignment: Center); }
-      Label #ProfileDraftMeta { Anchor: (Width: 760); Text: "Draft"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #6f879a, HorizontalAlignment: End, VerticalAlignment: Center); }
-    }
-    Group { LayoutMode: Left; FlexWeight: 1;
-      Group { Anchor: (Width: 210, Right: 10); LayoutMode: Top; Background: #101a24; Padding: (Full: 12);
-        Label { Anchor: (Height: 28); Text: "CATEGORIES"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
-        Label { Anchor: (Height: 30); Text: "Identity"; Style: (...$C.@DefaultLabelStyle, TextColor: #dce8f3); }
-        Label { Anchor: (Height: 30); Text: "Personality"; Style: (...$C.@DefaultLabelStyle, TextColor: #dce8f3); }
-        Label { Anchor: (Height: 30); Text: "Biography"; Style: (...$C.@DefaultLabelStyle, TextColor: #dce8f3); }
-        Label { Anchor: (Height: 30); Text: "Motivations"; Style: (...$C.@DefaultLabelStyle, TextColor: #dce8f3); }
-        Label { Anchor: (Height: 30); Text: "Behavior & Speech"; Style: (...$C.@DefaultLabelStyle, TextColor: #dce8f3); }
-        Label { Anchor: (Height: 30); Text: "Relationships (read-only)"; Style: (...$C.@DefaultLabelStyle, TextColor: #6f879a); }
-        Label { Anchor: (Height: 30); Text: "Advanced"; Style: (...$C.@DefaultLabelStyle, TextColor: #6f879a); }
+  $C.@DecoratedContainer #ProfileEditorWindow {
+    Anchor: (Width: 1080, Height: 760);
+    #Title { $C.@Title #ProfileEditorTitle { @Text = "PROFILE EDITOR"; } }
+    #Content { LayoutMode: Top; Padding: (Full: 16);
+      Label #ProfileDraftMeta { Visible: false; Text: ""; }
+      Group { LayoutMode: Left; FlexWeight: 1; Background: #111b27;
+        Group { Anchor: (Width: 224, Right: 12); LayoutMode: Top; Background: #0c1721; Padding: (Full: 8);
+          Label { Anchor: (Height: 30, Bottom: 6); Text: "PROFILE SECTIONS"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #c99b3d); }
+          Group { LayoutMode: Left; Anchor: (Height: 44, Bottom: 5); Group #ProfileCategoryBasicInfoSelected { Anchor: (Width: 4, Right: 4); Background: #d5a842; } $C.@SecondaryTextButton #ProfileCategoryBasicInfo { Text: "Basic Info"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 44, Bottom: 5); Group #ProfileCategoryBackgroundSelected { Anchor: (Width: 4, Right: 4); Background: #d5a842; Visible: false; } $C.@SecondaryTextButton #ProfileCategoryBackground { Text: "Background"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 44, Bottom: 5); Group #ProfileCategoryPersonalitySelected { Anchor: (Width: 4, Right: 4); Background: #d5a842; Visible: false; } $C.@SecondaryTextButton #ProfileCategoryPersonality { Text: "Personality"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 44, Bottom: 5); Group #ProfileCategoryValuesBeliefsSelected { Anchor: (Width: 4, Right: 4); Background: #d5a842; Visible: false; } $C.@SecondaryTextButton #ProfileCategoryValuesBeliefs { Text: "Values & Beliefs"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 44, Bottom: 5); Group #ProfileCategoryMotivationsSelected { Anchor: (Width: 4, Right: 4); Background: #d5a842; Visible: false; } $C.@SecondaryTextButton #ProfileCategoryMotivations { Text: "Motivations"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 44, Bottom: 5); Group #ProfileCategoryRelationshipsSelected { Anchor: (Width: 4, Right: 4); Background: #d5a842; Visible: false; } $C.@SecondaryTextButton #ProfileCategoryRelationships { Text: "Relationships"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 44, Bottom: 5); Group #ProfileCategorySpeechStyleSelected { Anchor: (Width: 4, Right: 4); Background: #d5a842; Visible: false; } $C.@SecondaryTextButton #ProfileCategorySpeechStyle { Text: "Speech Style"; FlexWeight: 1; } }
+          Group { LayoutMode: Left; Anchor: (Height: 44); Group #ProfileCategoryNotesSelected { Anchor: (Width: 4, Right: 4); Background: #d5a842; Visible: false; } $C.@SecondaryTextButton #ProfileCategoryNotes { Text: "Notes"; FlexWeight: 1; } }
+          Group { FlexWeight: 1; }
+        }
+        Group #ProfileForm { LayoutMode: Top; FlexWeight: 1; Background: #0b1620; Padding: (Full: 18); }
+      }
+      Label #ProfileValidationStatus { Anchor: (Height: 28, Top: 8); Text: "Draft valid"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #9ed7a6, HorizontalAlignment: Center); }
+      Group { LayoutMode: Left; Anchor: (Height: 44, Top: 6);
         Group { FlexWeight: 1; }
-        Label #ProfileStableIdentity { Anchor: (Height: 70); Text: "Stable ID"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, Wrap: true, TextColor: #6f879a); }
+        $C.@SecondaryTextButton #ProfileResetButton { @Anchor = (Width: 170, Right: 5); Text: "Reset"; }
+        $C.@SecondaryTextButton #ProfileCancelButton { @Sounds = $Sounds.@ButtonsCancel; @Anchor = (Width: 170, Left: 5, Right: 5); Text: "Cancel"; }
+        $C.@TextButton #ProfileSaveButton { @Sounds = $Sounds.@SaveSettings; @Anchor = (Width: 210, Left: 5); Text: "Save Profile"; }
       }
-      Group { LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; FlexWeight: 1; Background: #101a24; Padding: (Full: 14);
-        Label { Anchor: (Height: 26); Text: "IDENTITY"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
-        Label #ProfileDisplayName { Anchor: (Height: 24); Text: "Display name (identity-safe, read-only)"; Style: (...$C.@DefaultLabelStyle, TextColor: #aebdcb); }
-        $C.@TextField #ProfileRoleInput { @Anchor = (Height: 38, Bottom: 8); PlaceholderText: "Role"; MaxLength: 160; }
-        $C.@TextField #ProfileSelfIdentityInput { @Anchor = (Height: 38, Bottom: 8); PlaceholderText: "Self identity"; MaxLength: 400; }
-        Group { LayoutMode: Left; Anchor: (Height: 38, Bottom: 12);
-          $C.@TextField #ProfileSpeciesInput { @Anchor = (Right: 4); PlaceholderText: "Species archetype"; MaxLength: 80; FlexWeight: 1; }
-          $C.@TextField #ProfileAgeInput { @Anchor = (Left: 4); PlaceholderText: "Age category"; MaxLength: 40; FlexWeight: 1; }
-        }
-        Group { LayoutMode: Left; Anchor: (Height: 38, Bottom: 12);
-          $C.@TextField #ProfileHomeInput { @Anchor = (Right: 4); PlaceholderText: "Home"; MaxLength: 200; FlexWeight: 1; }
-          $C.@TextField #ProfileWorkplaceInput { @Anchor = (Left: 4); PlaceholderText: "Workplace"; MaxLength: 200; FlexWeight: 1; }
-        }
-        Label { Anchor: (Height: 26); Text: "PERSONALITY"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
-        MultilineTextField #ProfilePersonalityInput { Anchor: (Height: 92, Bottom: 8); Background: $C.@InputBoxBackground; MaxVisibleLines: 5; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; PlaceholderText: "Personality summary"; }
-        $C.@TextField #ProfileTraitsInput { @Anchor = (Height: 38, Bottom: 8); PlaceholderText: "Traits (comma or line separated)"; MaxLength: 700; }
-        $C.@TextField #ProfileValuesInput { @Anchor = (Height: 38, Bottom: 8); PlaceholderText: "Values (comma or line separated)"; MaxLength: 700; }
-        Group { LayoutMode: Left; Anchor: (Height: 38, Bottom: 12);
-          $C.@TextField #ProfileLikesInput { @Anchor = (Right: 4); PlaceholderText: "Likes"; MaxLength: 700; FlexWeight: 1; }
-          $C.@TextField #ProfileDislikesInput { @Anchor = (Left: 4); PlaceholderText: "Dislikes"; MaxLength: 700; FlexWeight: 1; }
-        }
-        $C.@TextField #ProfileFearsInput { @Anchor = (Height: 38, Bottom: 12); PlaceholderText: "Fears"; MaxLength: 700; }
-        Label { Anchor: (Height: 26); Text: "BIOGRAPHY"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
-        MultilineTextField #ProfileBiographyInput { Anchor: (Height: 130, Bottom: 12); Background: $C.@InputBoxBackground; MaxVisibleLines: 7; AutoGrow: false; MaxLength: 1800; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; PlaceholderText: "Biography"; }
-        Label { Anchor: (Height: 26); Text: "MOTIVATIONS"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
-        MultilineTextField #ProfilePurposeInput { Anchor: (Height: 82, Bottom: 8); Background: $C.@InputBoxBackground; MaxVisibleLines: 4; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; PlaceholderText: "Purpose"; }
-        $C.@TextField #ProfileGoalsInput { @Anchor = (Height: 38, Bottom: 12); PlaceholderText: "Goals (comma or line separated)"; MaxLength: 900; }
-        Label { Anchor: (Height: 26); Text: "BEHAVIOR & SPEECH"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Gold); }
-        MultilineTextField #ProfileSpeakingInput { Anchor: (Height: 82, Bottom: 8); Background: $C.@InputBoxBackground; MaxVisibleLines: 4; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; PlaceholderText: "Speech and mannerisms"; }
-        $C.@TextField #ProfileKnowledgeInput { @Anchor = (Height: 38, Bottom: 8); PlaceholderText: "Knowledge domains"; MaxLength: 900; }
-        Label #ProfileRelationshipsSummary { Anchor: (Height: 42, Bottom: 8); Text: "Relationships are managed by their authoritative subsystem."; Style: (...$C.@DefaultLabelStyle, Wrap: true, TextColor: #6f879a); }
-      }
-      Group { Anchor: (Width: 330, Left: 10); LayoutMode: Top; Background: #101a24; Padding: (Full: 12);
-        Label { Anchor: (Height: 28); Text: "GENERATE PROPOSAL"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: @Cyan); }
-        Label { Anchor: (Height: 54); Text: "Low-priority and proposal-only. Nothing becomes canon until reviewed and saved."; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #aebdcb); }
-        $C.@TextField #ProfileGenerateScopeInput { @Anchor = (Height: 38, Bottom: 8); PlaceholderText: "BIOGRAPHY / PERSONALITY_VALUES / ..."; MaxLength: 40; }
-        Label #ProfileGenerationStatus { Anchor: (Height: 64, Bottom: 8); Text: "Choose a scope."; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #aebdcb); }
-        Group #ProfileProposalPanel { Visible: false; LayoutMode: Top; FlexWeight: 1; Background: #142331; Padding: (Full: 8);
-          Label { Anchor: (Height: 24); Text: "FIELD-LEVEL DIFF"; Style: (...$C.@DefaultLabelStyle, RenderBold: true, TextColor: #9ed7a6); }
-          Label #ProfileProposalDiff { FlexWeight: 1; Text: ""; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #dce8f3); }
-          $C.@TextField #ProfileProposalSelectionInput { @Anchor = (Height: 34, Top: 6); PlaceholderText: "Optional fields: BIOGRAPHY, GOALS"; MaxLength: 240; }
-          Group { LayoutMode: Left; Anchor: (Height: 38, Top: 8);
-            $C.@TextButton #ProfileAcceptProposalButton { @Anchor = (Right: 4); Text: "Accept All"; FlexWeight: 1; }
-            $C.@TextButton #ProfileAcceptSelectedProposalButton { @Anchor = (Left: 4, Right: 4); Text: "Accept Selected"; FlexWeight: 1; }
-            $C.@SecondaryTextButton #ProfileDiscardProposalButton { @Anchor = (Left: 4); Text: "Discard"; FlexWeight: 1; }
-          }
-        }
-      }
-    }
-    Label #ProfileValidationStatus { Anchor: (Height: 30, Top: 8); Text: "Draft valid"; Style: (...$C.@DefaultLabelStyle, Wrap: true, TextColor: #9ed7a6, HorizontalAlignment: Center); }
-    Group { LayoutMode: Left; Anchor: (Height: 42, Top: 8);
-      $C.@TextButton #ProfileGenerateButton { @Anchor = (Right: 5); Text: "Generate"; FlexWeight: 1; }
-      $C.@SecondaryTextButton #ProfileResetButton { @Anchor = (Left: 5, Right: 5); Text: "Reset"; FlexWeight: 1; }
-      $C.@SecondaryTextButton #ProfileCancelButton { @Sounds = $Sounds.@ButtonsCancel; @Anchor = (Left: 5, Right: 5); Text: "Cancel"; FlexWeight: 1; }
-      $C.@TextButton #ProfileSaveButton { @Sounds = $Sounds.@SaveSettings; @Anchor = (Left: 5); Text: "Save Profile"; FlexWeight: 1; }
     }
   }
 }

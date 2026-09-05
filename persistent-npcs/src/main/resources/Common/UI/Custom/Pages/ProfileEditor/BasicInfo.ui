@@ -1,0 +1,30 @@
+$C = "../../Common.ui";
+
+Label { Anchor: (Height: 34, Bottom: 10); Text: "BASIC INFO"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+Label { Anchor: (Height: 22); Text: "Name"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+Group { Anchor: (Height: 40, Bottom: 10); Background: #162536; Padding: (Horizontal: 11); LayoutMode: Left;
+  Label #ProfileDisplayName { FlexWeight: 1; Text: ""; Style: (...$C.@DefaultLabelStyle, TextColor: #d9e4ed, VerticalAlignment: Center); }
+  Label { Anchor: (Width: 90); Text: "READ ONLY"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: #6f879a, HorizontalAlignment: End, VerticalAlignment: Center); }
+}
+Label { Anchor: (Height: 22); Text: "Title / Role"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+$C.@TextField #ProfileRoleInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 160; }
+Group { LayoutMode: Left; Anchor: (Height: 64, Bottom: 10);
+  Group { LayoutMode: Top; FlexWeight: 1; Anchor: (Right: 5);
+    Label { Anchor: (Height: 22); Text: "Race / Species"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+    $C.@TextField #ProfileSpeciesInput { @Anchor = (Height: 40); MaxLength: 80; }
+  }
+  Group { LayoutMode: Top; FlexWeight: 1; Anchor: (Left: 5);
+    Label { Anchor: (Height: 22); Text: "Age"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+    $C.@TextField #ProfileAgeInput { @Anchor = (Height: 40); MaxLength: 40; }
+  }
+}
+Label { Anchor: (Height: 22); Text: "Location / Home"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+$C.@TextField #ProfileHomeInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 200; }
+Group { LayoutMode: Left; Anchor: (Height: 22); }
+  Label { FlexWeight: 1; Text: "Summary"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+  Label #ProfileSummaryCounter { Anchor: (Width: 90); Text: "0 / 500"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #6f879a, HorizontalAlignment: End); }
+}
+MultilineTextField #ProfileSummaryInput { Anchor: (Height: 126, Bottom: 12); Background: $C.@InputBoxBackground; MaxVisibleLines: 6; AutoGrow: false; MaxLength: 500; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+$C.@TextButton #ProfileGenerateButton { @Anchor = (Height: 44, Bottom: 7); Text: "Generate Biography"; }
+Label #ProfileGenerationStatus { Anchor: (Height: 42); Text: "Generate a biography with AI after filling out all basic information."; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #768b9e, HorizontalAlignment: Center); }
+Group { FlexWeight: 1; }

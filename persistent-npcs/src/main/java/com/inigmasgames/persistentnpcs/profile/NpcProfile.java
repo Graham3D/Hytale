@@ -37,7 +37,30 @@ public record NpcProfile(
         Double sociability,
         Double curiosity,
         Double trustDisposition,
-        List<AuthoredNpcRelationship> relationships) {
+        List<AuthoredNpcRelationship> relationships,
+        String summary,
+        String creatorNotes) {
+
+    /** Backward-compatible constructor for Profile Schema v1 callers. */
+    public NpcProfile(
+            UUID id, String name, String role, String personality, String biography,
+            String purpose, String home, String workplace, List<String> likes,
+            List<String> dislikes, List<String> roleIds, List<String> capabilities,
+            int defaultDisposition, Integer schemaVersion, String selfIdentity,
+            String ageCategory, String speakingStyle, List<String> knowledgeDomains,
+            List<NpcScheduleEntry> defaultSchedule, String appearancePreset, UUID stableId,
+            String speciesArchetype, List<String> personalityTraits, List<String> values,
+            List<String> fears, List<String> goals, String voicePreset,
+            String voiceEffectPreset, String modelTier, Double riskTolerance,
+            Double sociability, Double curiosity, Double trustDisposition,
+            List<AuthoredNpcRelationship> relationships) {
+        this(id, name, role, personality, biography, purpose, home, workplace, likes,
+                dislikes, roleIds, capabilities, defaultDisposition, schemaVersion,
+                selfIdentity, ageCategory, speakingStyle, knowledgeDomains, defaultSchedule,
+                appearancePreset, stableId, speciesArchetype, personalityTraits, values, fears,
+                goals, voicePreset, voiceEffectPreset, modelTier, riskTolerance, sociability,
+                curiosity, trustDisposition, relationships, "", "");
+    }
 
     /** Backward-compatible constructor for pre-R031 profile callers. */
     public NpcProfile(
@@ -56,7 +79,7 @@ public record NpcProfile(
                 selfIdentity, ageCategory, speakingStyle, knowledgeDomains, defaultSchedule,
                 appearancePreset, stableId, speciesArchetype, personalityTraits, values, fears,
                 goals, voicePreset, voiceEffectPreset, modelTier, riskTolerance, sociability,
-                curiosity, trustDisposition, List.of());
+                curiosity, trustDisposition, List.of(), "", "");
     }
 
     public NpcProfile(
@@ -217,7 +240,9 @@ public record NpcProfile(
                 relationships == null ? List.of() : relationships.stream()
                         .filter(java.util.Objects::nonNull)
                         .map(AuthoredNpcRelationship::normalized)
-                        .filter(AuthoredNpcRelationship::identifiesTarget).toList());
+                        .filter(AuthoredNpcRelationship::identifiesTarget).toList(),
+                summary == null ? "" : summary.strip(),
+                creatorNotes == null ? "" : creatorNotes.strip());
     }
 
     public boolean hasCapability(String capability) {
@@ -235,7 +260,7 @@ public record NpcProfile(
                 defaultSchedule, appearancePreset, stableId, speciesArchetype,
                 personalityTraits, values, fears, goals, voicePreset, voiceEffectPreset,
                 modelTier, riskTolerance, sociability, curiosity, trustDisposition,
-                authored).validated();
+                authored, summary, creatorNotes).validated();
     }
 
     private static String normalize(String value) {

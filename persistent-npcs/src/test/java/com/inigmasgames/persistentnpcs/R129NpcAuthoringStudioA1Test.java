@@ -94,7 +94,8 @@ public final class R129NpcAuthoringStudioA1Test {
                 && ui.contains("#DirtySaveButton")
                 && ui.contains("#DirtyDiscardButton")
                 && ui.contains("#DirtyStayButton");
-        assert ui.contains("Anchor: (Width: 1520, Height: 960)");
+        assert ui.contains("Anchor: (Width: 1180, Height: 1030)")
+                : "The established Studio workspace frame must remain present";
         assert ui.contains("SlotSize: 58") && ui.contains("SlotSize: 62");
         assert ui.contains("@Text = \"INVENTORIES\"")
                 && ui.contains("Text: \"NPC GEAR & STATS\"");

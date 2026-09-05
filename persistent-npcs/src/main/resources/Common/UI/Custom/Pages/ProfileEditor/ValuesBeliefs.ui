@@ -1,0 +1,6 @@
+$C = "../../Common.ui";
+Label { Anchor: (Height: 34, Bottom: 10); Text: "VALUES & BELIEFS"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+Label { Anchor: (Height: 22); Text: "Values, beliefs, and moral outlook"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+MultilineTextField #ProfileValuesInput { Anchor: (Height: 220); Background: $C.@InputBoxBackground; MaxVisibleLines: 10; AutoGrow: false; MaxLength: 700; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+Label { Anchor: (Height: 36, Top: 9); Text: "Separate entries with commas or new lines."; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #6f879a); }
+Group { FlexWeight: 1; }

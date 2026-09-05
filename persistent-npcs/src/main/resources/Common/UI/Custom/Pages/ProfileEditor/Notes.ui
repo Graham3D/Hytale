@@ -1,0 +1,5 @@
+$C = "../../Common.ui";
+Label { Anchor: (Height: 34, Bottom: 10); Text: "CREATOR NOTES"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+Label { Anchor: (Height: 45, Bottom: 8); Text: "Private authoring notes. These do not enter NPC prompts, memories, beliefs, speech, or world truth."; Style: (...$C.@DefaultLabelStyle, FontSize: 12, Wrap: true, TextColor: #768b9e); }
+MultilineTextField #ProfileNotesInput { Anchor: (Height: 300); Background: $C.@InputBoxBackground; MaxVisibleLines: 14; AutoGrow: false; MaxLength: 3000; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+Group { FlexWeight: 1; }

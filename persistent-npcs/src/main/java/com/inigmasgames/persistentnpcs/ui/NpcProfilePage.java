@@ -99,7 +99,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             "OPEN_VOICE_EDITOR", "CLOSE_EDITOR", "DIRTY_SAVE",
             "DIRTY_DISCARD", "DIRTY_STAY", "PROFILE_FIELD", "PROFILE_SAVE",
             "PROFILE_RESET", "PROFILE_CANCEL", "PROFILE_GENERATE",
-            "PROFILE_SCOPE",
+            "PROFILE_CATEGORY", "PROFILE_SCOPE",
             "PROFILE_PROPOSAL_ACCEPT", "PROFILE_PROPOSAL_ACCEPT_SELECTED",
             "PROFILE_PROPOSAL_DISCARD", "APPEARANCE_PRIMARY",
             "APPEARANCE_CATEGORY", "APPEARANCE_SEARCH", "APPEARANCE_PAGE_PREV", "APPEARANCE_PAGE_NEXT",
@@ -157,9 +157,20 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private boolean initialEquipmentStateApplied;
     private NpcProfileDraft profileDraft;
     private NpcProfileGenerationService.Handle profileGeneration;
+    private ProfileCategory profileCategory = ProfileCategory.BASIC_INFO;
     private String profileEditorStatus = "Draft valid.";
     private boolean profileEditorError;
     private String profileGenerationScope = "BIOGRAPHY";
+
+    private enum ProfileCategory {
+        BASIC_INFO("BasicInfo"), BACKGROUND("Background"), PERSONALITY("Personality"),
+        VALUES_BELIEFS("ValuesBeliefs"), MOTIVATIONS("Motivations"),
+        RELATIONSHIPS("Relationships"), SPEECH_STYLE("SpeechStyle"), NOTES("Notes");
+
+        private final String resourceName;
+        ProfileCategory(String resourceName) { this.resourceName = resourceName; }
+        String resource() { return "Pages/ProfileEditor/" + resourceName + ".ui"; }
+    }
     private NpcAppearanceDraft appearanceDraft;
     private final AppearanceUiState appearanceUiState = new AppearanceUiState();
     private final AppearancePreviewGate appearancePreviewGate = new AppearancePreviewGate();
@@ -463,7 +474,10 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         commands.set("#StatusText.Visible", !status.isBlank());
         commands.set("#StatusText.Style.TextColor", error ? "#e76f6f" : "#9ed7a6");
         commands.set("#ProfileEditorPage.Visible", profileEditor);
-        if (profileEditor && profileDraft != null) setProfileEditorUi(commands);
+        if (profileEditor && profileDraft != null) {
+            setProfileEditorUi(commands);
+            mountProfileEditorForm(commands, events, false);
+        }
         commands.set("#AppearanceEditorPage.Visible", appearanceEditor);
         appearanceGridMounted = false;
         appearancePaletteKey = "";
@@ -609,6 +623,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                         authoringSession.sessionId(), generation);
                 profileEditorStatus = "Draft valid. Unknown profile fields are preserved.";
                 profileEditorError = false;
+                profileCategory = ProfileCategory.BASIC_INFO;
                 rebuild();
                 return;
             }
@@ -732,6 +747,14 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 handleVoiceAction(data, authoringAction);
                 return;
             }
+            if ("PROFILE_CATEGORY".equals(authoringAction)) {
+                requireProfileDraft();
+                validateProfileCategory(profileCategory);
+                profileCategory = ProfileCategory.valueOf(
+                        data.profileCategory.toUpperCase(Locale.ROOT));
+                refreshProfileEditorForm();
+                return;
+            }
             if ("PROFILE_FIELD".equals(authoringAction)) {
                 requireProfileDraft();
                 NpcProfileDraft.Field field = NpcProfileDraft.Field.valueOf(
@@ -750,7 +773,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 authoringSession.markSaved(NpcAuthoringSession.EditorKind.PROFILE);
                 profileEditorStatus = "Draft reset to the persisted profile.";
                 profileEditorError = false;
-                rebuild();
+                refreshProfileEditorForm();
                 return;
             }
             if ("PROFILE_CANCEL".equals(authoringAction)) {
@@ -773,7 +796,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 long generation = authoringSession.editorGeneration();
                 profileDraft = editor.authoring().begin(npcName,
                         authoringSession.sessionId(), generation);
-                rebuild();
+                refreshProfileEditorForm();
                 return;
             }
             if ("PROFILE_GENERATE".equals(authoringAction)) {
@@ -791,11 +814,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             }
             if ("PROFILE_PROPOSAL_ACCEPT".equals(authoringAction)) {
                 requireProfileDraft();
-                profileDraft.acceptProposal(Set.of());
+                profileDraft.acceptProposal(Set.of(NpcProfileDraft.Field.BIOGRAPHY));
                 authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
                 profileEditorStatus = "Proposal accepted into the draft. Review, then Save Profile.";
                 profileEditorError = false;
-                rebuild();
+                refreshProfileEditorForm();
                 return;
             }
             if ("PROFILE_PROPOSAL_ACCEPT_SELECTED".equals(authoringAction)) {
@@ -808,7 +831,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
                 profileEditorStatus = "Selected proposal fields accepted into the draft. Review, then Save Profile.";
                 profileEditorError = false;
-                rebuild();
+                refreshProfileEditorForm();
                 return;
             }
             if ("PROFILE_PROPOSAL_DISCARD".equals(authoringAction)) {
@@ -816,7 +839,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 profileDraft.discardProposal();
                 profileEditorStatus = "Generated proposal discarded; canonical profile unchanged.";
                 profileEditorError = false;
-                rebuild();
+                refreshProfileEditorForm();
                 return;
             }
             if (data.open != null) {
@@ -955,12 +978,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void bindProfileEditorEvents(UIEventBuilder events) {
-        for (NpcProfileDraft.Field field : NpcProfileDraft.Field.values()) {
-            String selector = "#" + profileFieldControl(field);
-            events.addEventBinding(CustomUIEventBindingType.ValueChanged, selector,
-                    authoringEvent("PROFILE_FIELD")
-                            .append("ProfileField", field.name())
-                            .append("ProfileFieldValue", selector + ".Value"));
+        for (ProfileCategory category : ProfileCategory.values()) {
+            String selector = "#ProfileCategory" + category.resourceName;
+            events.addEventBinding(CustomUIEventBindingType.Activating, selector,
+                    authoringEvent("PROFILE_CATEGORY")
+                            .append("ProfileCategory", category.name()));
         }
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#ProfileSaveButton", authoringEvent("PROFILE_SAVE"));
@@ -968,21 +990,6 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 "#ProfileResetButton", authoringEvent("PROFILE_RESET"));
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#ProfileCancelButton", authoringEvent("PROFILE_CANCEL"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#ProfileGenerateButton", authoringEvent("PROFILE_GENERATE")
-                        .append("ProfileGenerateScope", "#ProfileGenerateScopeInput.Value"));
-        events.addEventBinding(CustomUIEventBindingType.ValueChanged,
-                "#ProfileGenerateScopeInput", authoringEvent("PROFILE_SCOPE")
-                        .append("ProfileGenerateScope", "#ProfileGenerateScopeInput.Value"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#ProfileAcceptProposalButton", authoringEvent("PROFILE_PROPOSAL_ACCEPT"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#ProfileAcceptSelectedProposalButton",
-                authoringEvent("PROFILE_PROPOSAL_ACCEPT_SELECTED")
-                        .append("ProfileProposalSelection",
-                                "#ProfileProposalSelectionInput.Value"));
-        events.addEventBinding(CustomUIEventBindingType.Activating,
-                "#ProfileDiscardProposalButton", authoringEvent("PROFILE_PROPOSAL_DISCARD"));
     }
 
     private void bindAppearanceEditorEvents(UIEventBuilder events) {
@@ -2119,49 +2126,134 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     }
 
     private void setProfileEditorUi(UICommandBuilder commands) {
-        commands.set("#ProfileDraftMeta.Text", "Draft " + profileDraft.draftId()
-                + "  |  base r" + profileDraft.baseRevision()
-                + "  |  " + profileDraft.provenance());
-        commands.set("#ProfileStableIdentity.Text", "Stable ID (immutable)\n"
-                + profileDraft.stableNpcId());
-        commands.set("#ProfileDisplayName.Text", "Display name (read-only): "
-                + profileDraft.profileName());
-        for (NpcProfileDraft.Field field : NpcProfileDraft.Field.values()) {
-            commands.set("#" + profileFieldControl(field) + ".Value",
-                    profileDraft.value(field));
-        }
+        commands.set("#ProfileEditorTitle.Text", "PROFILE EDITOR - "
+                + profileDraft.profileName().toUpperCase(Locale.ROOT));
+        commands.set("#ProfileDraftMeta.Text", profileDraft.draftId().toString());
         commands.set("#ProfileValidationStatus.Text", profileEditorStatus);
         commands.set("#ProfileValidationStatus.Style.TextColor",
                 profileEditorError ? "#e76f6f" : "#9ed7a6");
-        boolean generating = profileGeneration != null;
-        commands.set("#ProfileGenerateButton.Disabled", generating);
-        commands.set("#ProfileGenerationStatus.Text", generating
-                ? "Generating a structured proposal at low priority..."
-                : profileEditorStatus + " Scopes: BIOGRAPHY, PERSONALITY_VALUES, "
-                        + "MOTIVATIONS_GOALS, SPEECH_MANNERISMS, FILL_MISSING, REFINE_SELECTED.");
-        commands.set("#ProfileGenerateScopeInput.Value", profileGenerationScope);
-        NpcProfileDraft.Proposal proposal = profileDraft.proposal();
-        commands.set("#ProfileProposalPanel.Visible", proposal != null);
-        if (proposal != null) {
-            StringBuilder diff = new StringBuilder();
-            proposal.changes().forEach((field, value) -> diff.append(field.name())
-                    .append("\n  CURRENT: ").append(compact(profileDraft.value(field), 90))
-                    .append("\n  PROPOSED: ").append(compact(value, 130)).append("\n\n"));
-            if (!proposal.warnings().isEmpty()) {
-                diff.append("WARNINGS\n").append(String.join("\n", proposal.warnings()));
-            }
-            commands.set("#ProfileProposalDiff.Text", diff.toString());
+        for (ProfileCategory category : ProfileCategory.values()) {
+            String label = switch (category) {
+                case BASIC_INFO -> "Basic Info";
+                case BACKGROUND -> "Background";
+                case PERSONALITY -> "Personality";
+                case VALUES_BELIEFS -> "Values & Beliefs";
+                case MOTIVATIONS -> "Motivations";
+                case RELATIONSHIPS -> "Relationships";
+                case SPEECH_STYLE -> "Speech Style";
+                case NOTES -> "Notes";
+            };
+            commands.set("#ProfileCategory" + category.resourceName + ".Text",
+                    category == profileCategory ? "▶ " + label : label);
+            commands.set("#ProfileCategory" + category.resourceName + "Selected.Visible",
+                    category == profileCategory);
         }
-        editor.currentProfile(npcName).ifPresent(profile -> commands.set(
-                "#ProfileRelationshipsSummary.Text", "Relationships (read-only): "
-                        + profile.relationships().size()
-                        + ". Managed by the authoritative relationship subsystem."));
     }
 
     private void refreshProfileEditorUi() {
         UICommandBuilder commands = new UICommandBuilder();
         setProfileEditorUi(commands);
+        setProfileCategoryStatus(commands);
         sendUpdate(commands, false);
+    }
+
+    private void refreshProfileEditorForm() {
+        UICommandBuilder commands = new UICommandBuilder();
+        UIEventBuilder events = new UIEventBuilder();
+        setProfileEditorUi(commands);
+        mountProfileEditorForm(commands, events, true);
+        sendUpdate(commands, events, false);
+    }
+
+    private void mountProfileEditorForm(UICommandBuilder commands, UIEventBuilder events,
+            boolean clear) {
+        if (clear) commands.clear("#ProfileForm");
+        commands.append("#ProfileForm", profileCategory.resource());
+        for (NpcProfileDraft.Field field : profileFields(profileCategory)) {
+            String selector = "#" + profileFieldControl(field);
+            events.addEventBinding(CustomUIEventBindingType.ValueChanged, selector,
+                    authoringEvent("PROFILE_FIELD")
+                            .append("ProfileField", field.name())
+                            .append("ProfileFieldValue", selector + ".Value"));
+            commands.set(selector + ".Value", profileDraft.value(field));
+        }
+        if (profileCategory == ProfileCategory.BASIC_INFO) {
+            commands.set("#ProfileDisplayName.Text", profileDraft.profileName());
+            events.addEventBinding(CustomUIEventBindingType.Activating,
+                    "#ProfileGenerateButton", authoringEvent("PROFILE_GENERATE")
+                            .append("ProfileGenerateScope", "BIOGRAPHY"));
+        } else if (profileCategory == ProfileCategory.BACKGROUND) {
+            events.addEventBinding(CustomUIEventBindingType.Activating,
+                    "#ProfileAcceptProposalButton", authoringEvent("PROFILE_PROPOSAL_ACCEPT"));
+            events.addEventBinding(CustomUIEventBindingType.Activating,
+                    "#ProfileDiscardProposalButton", authoringEvent("PROFILE_PROPOSAL_DISCARD"));
+            NpcProfileDraft.Proposal proposal = profileDraft.proposal();
+            commands.set("#ProfileProposalPanel.Visible", proposal != null);
+            if (proposal != null) {
+                String proposed = proposal.changes().getOrDefault(
+                        NpcProfileDraft.Field.BIOGRAPHY, "No biography was returned.");
+                commands.set("#ProfileProposalDiff.Text", proposed);
+            }
+        } else if (profileCategory == ProfileCategory.RELATIONSHIPS) {
+            editor.currentProfile(npcName).ifPresent(profile -> commands.set(
+                    "#ProfileRelationshipsSummary.Text", profile.relationships().size()
+                            + " authored relationship"
+                            + (profile.relationships().size() == 1 ? "" : "s") + "."));
+        }
+        setProfileCategoryStatus(commands);
+    }
+
+    private void setProfileCategoryStatus(UICommandBuilder commands) {
+        if (profileCategory == ProfileCategory.BASIC_INFO) {
+            int count = profileDraft.value(NpcProfileDraft.Field.SUMMARY).length();
+            commands.set("#ProfileSummaryCounter.Text", count + " / 500");
+            boolean generating = profileGeneration != null;
+            commands.set("#ProfileGenerateButton.Disabled", generating || !basicInfoValid());
+            commands.set("#ProfileGenerationStatus.Text", generating
+                    ? "Generating biography proposal..."
+                    : "Generate a biography with AI after filling out all basic information.");
+        }
+    }
+
+    private boolean basicInfoValid() {
+        return !profileDraft.profileName().isBlank()
+                && !profileDraft.value(NpcProfileDraft.Field.ROLE).isBlank()
+                && !profileDraft.value(NpcProfileDraft.Field.SPECIES_ARCHETYPE).isBlank()
+                && !profileDraft.value(NpcProfileDraft.Field.AGE_CATEGORY).isBlank()
+                && !profileDraft.value(NpcProfileDraft.Field.HOME).isBlank()
+                && !profileDraft.value(NpcProfileDraft.Field.SUMMARY).isBlank()
+                && profileDraft.value(NpcProfileDraft.Field.SUMMARY).length() <= 500;
+    }
+
+    private void validateProfileCategory(ProfileCategory category) {
+        for (NpcProfileDraft.Field field : profileFields(category)) {
+            if (profileDraft.value(field).length() > field.maxLength()) {
+                throw new IllegalArgumentException(field.name() + " exceeds "
+                        + field.maxLength() + " characters.");
+            }
+        }
+    }
+
+    private static Set<NpcProfileDraft.Field> profileFields(ProfileCategory category) {
+        return switch (category) {
+            case BASIC_INFO -> Set.of(NpcProfileDraft.Field.ROLE,
+                    NpcProfileDraft.Field.SPECIES_ARCHETYPE,
+                    NpcProfileDraft.Field.AGE_CATEGORY, NpcProfileDraft.Field.HOME,
+                    NpcProfileDraft.Field.SUMMARY);
+            case BACKGROUND -> Set.of(NpcProfileDraft.Field.BIOGRAPHY,
+                    NpcProfileDraft.Field.SELF_IDENTITY,
+                    NpcProfileDraft.Field.WORKPLACE,
+                    NpcProfileDraft.Field.KNOWLEDGE_DOMAINS);
+            case PERSONALITY -> Set.of(NpcProfileDraft.Field.PERSONALITY,
+                    NpcProfileDraft.Field.PERSONALITY_TRAITS,
+                    NpcProfileDraft.Field.LIKES, NpcProfileDraft.Field.DISLIKES);
+            case VALUES_BELIEFS -> Set.of(NpcProfileDraft.Field.VALUES);
+            case MOTIVATIONS -> Set.of(NpcProfileDraft.Field.PURPOSE,
+                    NpcProfileDraft.Field.GOALS, NpcProfileDraft.Field.FEARS);
+            case RELATIONSHIPS -> Set.of();
+            case SPEECH_STYLE -> Set.of(NpcProfileDraft.Field.SPEAKING_STYLE);
+            case NOTES -> Set.of(NpcProfileDraft.Field.CREATOR_NOTES);
+        };
     }
 
     private void saveProfileDraft() {
@@ -2186,12 +2278,12 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
 
     private void startProfileGeneration(Store<EntityStore> store, PageData data) {
         requireProfileDraft();
+        if (!basicInfoValid()) throw new IllegalArgumentException(
+                "Complete all Basic Info fields before generating a biography.");
         cancelProfileGeneration();
         NpcProfileGenerationService service = editor.generation().orElseThrow(() ->
                 new IllegalStateException("Generation provider is unavailable; manual editing remains available."));
-        NpcProfileGenerationService.Scope scope = NpcProfileGenerationService.Scope.parse(
-                data.profileGenerateScope == null ? profileGenerationScope
-                        : data.profileGenerateScope);
+        NpcProfileGenerationService.Scope scope = NpcProfileGenerationService.Scope.BIOGRAPHY;
         profileGenerationScope = scope.name();
         String expectedHash = profileDraft.draftHash();
         UUID expectedDraft = profileDraft.draftId();
@@ -2222,12 +2314,13 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                         profileEditorError = true;
                     } else {
                         profileDraft.setProposal(proposal);
-                        profileEditorStatus = "Proposal ready. Review the field-level diff; canon is unchanged.";
+                        profileEditorStatus = "Biography proposal ready. Review it before applying.";
                         profileEditorError = false;
+                        profileCategory = ProfileCategory.BACKGROUND;
                     }
-                    rebuild();
+                    refreshProfileEditorForm();
                 }));
-        rebuild();
+        refreshProfileEditorUi();
     }
 
     private void requireProfileDraft() {
@@ -2259,6 +2352,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             case SPECIES_ARCHETYPE -> "ProfileSpeciesInput";
             case AGE_CATEGORY -> "ProfileAgeInput";
             case HOME -> "ProfileHomeInput";
+            case SUMMARY -> "ProfileSummaryInput";
             case WORKPLACE -> "ProfileWorkplaceInput";
             case PERSONALITY -> "ProfilePersonalityInput";
             case PERSONALITY_TRAITS -> "ProfileTraitsInput";
@@ -2271,6 +2365,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             case GOALS -> "ProfileGoalsInput";
             case SPEAKING_STYLE -> "ProfileSpeakingInput";
             case KNOWLEDGE_DOMAINS -> "ProfileKnowledgeInput";
+            case CREATOR_NOTES -> "ProfileNotesInput";
         };
     }
 
@@ -3050,6 +3145,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 .append(new KeyedCodec<>("ProfileFieldValue", Codec.STRING),
                         (data, value) -> data.profileFieldValue = value,
                         data -> data.profileFieldValue).add()
+                .append(new KeyedCodec<>("ProfileCategory", Codec.STRING),
+                        (data, value) -> data.profileCategory = value,
+                        data -> data.profileCategory).add()
                 .append(new KeyedCodec<>("ProfileGenerateScope", Codec.STRING),
                         (data, value) -> data.profileGenerateScope = value,
                         data -> data.profileGenerateScope).add()
@@ -3117,6 +3215,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         private String inventoryViewRevision;
         private String profileField;
         private String profileFieldValue;
+        private String profileCategory;
         private String profileGenerateScope;
         private String profileProposalSelection;
         private String appearancePrimary;

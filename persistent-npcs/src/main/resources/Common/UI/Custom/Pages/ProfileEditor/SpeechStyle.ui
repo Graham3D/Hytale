@@ -1,0 +1,5 @@
+$C = "../../Common.ui";
+Label { Anchor: (Height: 34, Bottom: 10); Text: "SPEECH STYLE"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+Label { Anchor: (Height: 22); Text: "Behavior, speech, and mannerisms"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+MultilineTextField #ProfileSpeakingInput { Anchor: (Height: 220); Background: $C.@InputBoxBackground; MaxVisibleLines: 10; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+Group { FlexWeight: 1; }

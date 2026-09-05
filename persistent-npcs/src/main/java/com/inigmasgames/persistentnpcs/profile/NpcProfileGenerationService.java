@@ -149,6 +149,7 @@ public final class NpcProfileGenerationService {
                 .append("\nNPC stable ID: ").append(request.stableNpcId())
                 .append("\nExisting author-controlled profile fields:\n");
         for (NpcProfileDraft.Field field : NpcProfileDraft.Field.values()) {
+            if (field == NpcProfileDraft.Field.CREATOR_NOTES) continue;
             text.append(field.name()).append(": ").append(request.draft().value(field)).append('\n');
         }
         text.append("\nReturn changes only for: ").append(allowed);
