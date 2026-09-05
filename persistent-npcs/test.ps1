@@ -652,6 +652,9 @@ if ($LASTEXITCODE -ne 0) { throw "R163 authoritative NPC equipment stat sync tes
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R164ProfileEditorPolishTest
 if ($LASTEXITCODE -ne 0) { throw "R164 Profile Editor polish tests failed with exit code $LASTEXITCODE" }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.profile.R165OfflineEquipmentHydrationTest
+if ($LASTEXITCODE -ne 0) { throw "R165 offline NPC equipment/spawn hydration tests failed with exit code $LASTEXITCODE" }
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R147NpcProfileRepairTest
 if ($LASTEXITCODE -ne 0) {
     throw "R147 Profile repair tests failed with exit code $LASTEXITCODE"

@@ -45,6 +45,7 @@ public final class NpcInventoryRepository implements AutoCloseable {
             Collections.newSetFromMap(new WeakHashMap<>()));
     private volatile EquipmentStatsSync equipmentStatsSync =
             (stableId, ref, store, trigger) -> { };
+    private volatile Consumer<String> diagnostics = ignored -> { };
     private final ExecutorService writer = Executors.newSingleThreadExecutor(runnable -> {
         Thread thread = new Thread(runnable, "immersive-npc-inventory-writer");
         thread.setDaemon(true);
@@ -58,6 +59,10 @@ public final class NpcInventoryRepository implements AutoCloseable {
     public void configureEquipmentStatsSync(EquipmentStatsSync sync) {
         equipmentStatsSync = sync == null
                 ? (stableId, ref, store, trigger) -> { } : sync;
+    }
+
+    public void configureDiagnostics(Consumer<String> diagnostics) {
+        this.diagnostics = diagnostics == null ? ignored -> { } : diagnostics;
     }
 
     public Path path(String npcName) {
@@ -76,7 +81,9 @@ public final class NpcInventoryRepository implements AutoCloseable {
 
     public Session open(String npcName) {
         profiles.createProfileDirectory(npcName);
-        return new Session(npcName, load(npcName), null, null, null, null);
+        Session session = new Session(npcName, load(npcName), null, null, null, null);
+        auditSession(npcName, "PROFILE_OPEN_ABSENT", "OFFLINE_DURABLE", session);
+        return session;
     }
 
     /**
@@ -118,23 +125,22 @@ public final class NpcInventoryRepository implements AutoCloseable {
     public boolean ensureRuntimePersistence(
             String npcName, Store<EntityStore> store, Ref<EntityStore> npcRef,
             Consumer<String> diagnostics) {
+        return ensureRuntimePersistence(npcName, store, npcRef, diagnostics,
+                "PROFILE_OPEN_LIVE");
+    }
+
+    private boolean ensureRuntimePersistence(
+            String npcName, Store<EntityStore> store, Ref<EntityStore> npcRef,
+            Consumer<String> diagnostics, String stage) {
         Consumer<String> log = diagnostics == null ? ignored -> { } : diagnostics;
         NpcInventoryState authored = find(npcName).orElseThrow(() ->
                 new IllegalStateException("No persisted NPC inventory exists for " + npcName));
-        InventoryComponent.Armor armor = store.getComponent(
-                npcRef, InventoryComponent.Armor.getComponentType());
-        InventoryComponent.Hotbar hotbar = store.getComponent(
-                npcRef, InventoryComponent.Hotbar.getComponentType());
-        InventoryComponent.Utility utility = store.getComponent(
-                npcRef, InventoryComponent.Utility.getComponentType());
-        InventoryComponent.Storage storage = store.getComponent(
-                npcRef, InventoryComponent.Storage.getComponentType());
-        if (armor == null || hotbar == null || utility == null || storage == null
-                || armor.getInventory() == null || hotbar.getInventory() == null
-                || utility.getInventory() == null || storage.getInventory() == null) {
-            throw new IllegalStateException("Live NPC inventory components are incomplete for "
-                    + npcName);
-        }
+        LiveContainers components = ensureLiveInventoryComponents(
+                npcName, store, npcRef, stage + "_INITIALIZATION", log);
+        InventoryComponent.Armor armor = components.armorComponent();
+        InventoryComponent.Hotbar hotbar = components.hotbarComponent();
+        InventoryComponent.Utility utility = components.utilityComponent();
+        InventoryComponent.Storage storage = components.storageComponent();
         ItemContainer liveArmor = armor.getInventory();
         ItemContainer liveHotbar = hotbar.getInventory();
         ItemContainer liveUtility = utility.getInventory();
@@ -211,11 +217,14 @@ public final class NpcInventoryRepository implements AutoCloseable {
                             liveUtility, liveStorage),
                     log);
         }
+        auditLiveContainers(npcName, stage + "_HYDRATED", "LIVE", components,
+                path(npcName), log);
         log.accept("NPC_INVENTORY_HYDRATION_VALIDATION npc=" + npcName
                 + " authoritativeMatch=true"
                 + " liveStorageCapacity=" + liveStorage.getCapacity());
-        synchronizeEquipmentStats(authored.stableNpcId(), npcRef, store,
-                "PERSISTED_INVENTORY_HYDRATION");
+        synchronizeEquipmentStats(npcName, authored.stableNpcId(), npcRef, store,
+                stage.startsWith("SPAWN") ? "NPC_SPAWN"
+                        : "PERSISTED_INVENTORY_HYDRATION");
         return installRuntimePersistence(npcName, authored, liveArmor,
                 liveHotbar, liveUtility, liveStorage, npcRef, store);
     }
@@ -251,6 +260,7 @@ public final class NpcInventoryRepository implements AutoCloseable {
     private static void clearSlotsForHydration(
             ItemContainer container, String section, short... slots) {
         for (short slot : slots) {
+            requireContainerSlot(container, slot, section + " hydration clear");
             if (!ItemStack.isEmpty(container.getItemStack(slot))
                     && !container.removeItemStackFromSlot(slot).succeeded()) {
                 throw new IllegalStateException("Could not clear live NPC " + section
@@ -345,33 +355,17 @@ public final class NpcInventoryRepository implements AutoCloseable {
         Optional<NpcInventoryState> existing = find(npcName);
         if (existing.isEmpty()) return false;
         NpcInventoryState state = existing.get();
-        SimpleItemContainer armor = new SimpleItemContainer(NpcInventoryState.ARMOR_CAPACITY);
-        ItemContainerUtil.trySetArmorFilters(armor);
-        restore(armor, state.armor(), "armor");
-        SimpleItemContainer storage = new SimpleItemContainer(NpcInventoryState.INVENTORY_CAPACITY);
-        restore(storage, state.inventory(), "inventory");
-        SimpleItemContainer hotbar = new SimpleItemContainer((short) 8);
-        state.loadout().stream().filter(value -> value.slot() == Session.PRIMARY_SLOT)
-                .findFirst().ifPresent(value -> restoreOne(hotbar, (short) 0, value.toItemStack(), "primary weapon"));
-        state.loadout().stream().filter(value -> value.slot() == Session.AMMUNITION_SLOT)
-                .findFirst().ifPresent(value -> restoreOne(hotbar, (short) 1, value.toItemStack(), "preferred ammunition"));
-        SimpleItemContainer utility = new SimpleItemContainer((short) 1);
-        state.loadout().stream().filter(value -> value.slot() == Session.OFFHAND_SLOT)
-                .findFirst().ifPresent(value -> restoreOne(utility, (short) 0, value.toItemStack(), "offhand"));
-        InventoryComponent.Armor armorComponent = new InventoryComponent.Armor(armor);
-        InventoryComponent.Storage storageComponent = new InventoryComponent.Storage(storage);
-        InventoryComponent.Hotbar hotbarComponent = new InventoryComponent.Hotbar(hotbar, (byte) 0);
-        InventoryComponent.Utility utilityComponent = new InventoryComponent.Utility(utility, (byte) 0);
+        LiveContainers live = ensureLiveInventoryComponents(
+                npcName, store, npcRef, "SPAWN_COMPONENT_CREATION", diagnostics);
+        InventoryComponent.Armor armorComponent = live.armorComponent();
+        InventoryComponent.Storage storageComponent = live.storageComponent();
+        InventoryComponent.Hotbar hotbarComponent = live.hotbarComponent();
+        InventoryComponent.Utility utilityComponent = live.utilityComponent();
+        hotbarComponent.setActiveSlot((byte) 0, npcRef, store);
+        utilityComponent.setActiveSlot((byte) 0, npcRef, store);
         armorComponent.setOutdatedEquipment(true);
         hotbarComponent.setOutdatedEquipment(true);
         utilityComponent.setOutdatedEquipment(true);
-        store.putComponent(npcRef, InventoryComponent.Armor.getComponentType(), armorComponent);
-        store.putComponent(npcRef, InventoryComponent.Storage.getComponentType(),
-                storageComponent);
-        store.putComponent(npcRef, InventoryComponent.Hotbar.getComponentType(),
-                hotbarComponent);
-        store.putComponent(npcRef, InventoryComponent.Utility.getComponentType(),
-                utilityComponent);
         PlayerSettings base = Optional.ofNullable(store.getComponent(
                 npcRef, PlayerSettings.getComponentType())).orElseGet(PlayerSettings::defaults);
         store.putComponent(npcRef, PlayerSettings.getComponentType(), new PlayerSettings(
@@ -384,10 +378,96 @@ public final class NpcInventoryRepository implements AutoCloseable {
                 base.creativeSettings(),
                 state.hideHelmet(), state.hideCuirass(), state.hideGauntlets(), state.hidePants(),
                 base.voiceSettings()));
-        synchronizeEquipmentStats(state.stableNpcId(), npcRef, store, "NPC_SPAWN");
-        installRuntimePersistence(npcName, state, armor, hotbar, utility, storage,
-                npcRef, store);
+        ensureRuntimePersistence(npcName, store, npcRef, diagnostics, "SPAWN_HYDRATION");
         return true;
+    }
+
+    private record LiveContainers(
+            InventoryComponent.Armor armorComponent,
+            InventoryComponent.Hotbar hotbarComponent,
+            InventoryComponent.Utility utilityComponent,
+            InventoryComponent.Storage storageComponent) { }
+
+    /**
+     * Owns the managed-NPC native inventory schema. Existing valid components and
+     * containers are retained; absent/zero-capacity native defaults are initialized
+     * before any slot read, write, equipment publication, or stat synchronization.
+     */
+    private LiveContainers ensureLiveInventoryComponents(String npcName,
+            Store<EntityStore> store, Ref<EntityStore> npcRef, String stage,
+            Consumer<String> log) {
+        InventoryComponent.Armor armor = store.getComponent(
+                npcRef, InventoryComponent.Armor.getComponentType());
+        auditContainer(npcName, stage + "_BEFORE", "LIVE", "ARMOR", armor,
+                armor == null ? null : armor.getInventory(), path(npcName), false, log);
+        boolean armorCreated = armor == null || armor.getInventory() == null;
+        if (armorCreated) {
+            armor = new InventoryComponent.Armor(NpcInventoryState.ARMOR_CAPACITY);
+            store.putComponent(npcRef, InventoryComponent.Armor.getComponentType(), armor);
+        }
+        ensureMinimumCapacity(armor, NpcInventoryState.ARMOR_CAPACITY, "armor");
+
+        InventoryComponent.Hotbar hotbar = store.getComponent(
+                npcRef, InventoryComponent.Hotbar.getComponentType());
+        auditContainer(npcName, stage + "_BEFORE", "LIVE", "HOTBAR", hotbar,
+                hotbar == null ? null : hotbar.getInventory(), path(npcName), false, log);
+        boolean hotbarCreated = hotbar == null || hotbar.getInventory() == null;
+        if (hotbarCreated) {
+            hotbar = new InventoryComponent.Hotbar((short) 8);
+            store.putComponent(npcRef, InventoryComponent.Hotbar.getComponentType(), hotbar);
+        }
+        ensureMinimumCapacity(hotbar, (short) 8, "hotbar");
+
+        InventoryComponent.Utility utility = store.getComponent(
+                npcRef, InventoryComponent.Utility.getComponentType());
+        auditContainer(npcName, stage + "_BEFORE", "LIVE", "UTILITY", utility,
+                utility == null ? null : utility.getInventory(), path(npcName), false, log);
+        boolean utilityCreated = utility == null || utility.getInventory() == null;
+        if (utilityCreated) {
+            utility = new InventoryComponent.Utility((short) 1);
+            store.putComponent(npcRef, InventoryComponent.Utility.getComponentType(), utility);
+        }
+        ensureMinimumCapacity(utility, (short) 1, "utility");
+
+        InventoryComponent.Storage storage = store.getComponent(
+                npcRef, InventoryComponent.Storage.getComponentType());
+        auditContainer(npcName, stage + "_BEFORE", "LIVE", "STORAGE", storage,
+                storage == null ? null : storage.getInventory(), path(npcName), false, log);
+        boolean storageCreated = storage == null || storage.getInventory() == null;
+        if (storageCreated) {
+            storage = new InventoryComponent.Storage(NpcInventoryState.INVENTORY_CAPACITY);
+            store.putComponent(npcRef, InventoryComponent.Storage.getComponentType(), storage);
+        }
+        ensureMinimumCapacity(storage, NpcInventoryState.INVENTORY_CAPACITY, "storage");
+
+        LiveContainers result = new LiveContainers(armor, hotbar, utility, storage);
+        auditLiveContainers(npcName, stage, "LIVE", result, path(npcName), log,
+                armorCreated, hotbarCreated, utilityCreated, storageCreated);
+        return result;
+    }
+
+    static void ensureMinimumCapacity(InventoryComponent component,
+            short requiredCapacity, String domain) {
+        if (component == null || component.getInventory() == null) {
+            throw new IllegalStateException("Managed NPC " + domain
+                    + " component has no inventory container.");
+        }
+        short before = component.getInventory().getCapacity();
+        if (before < requiredCapacity) {
+            List<ItemStack> overflow = new ArrayList<>();
+            component.ensureCapacity(requiredCapacity, overflow);
+            if (!overflow.isEmpty()) {
+                throw new IllegalStateException("Managed NPC " + domain
+                        + " capacity initialization produced overflow.");
+            }
+        }
+        if (component.getInventory() == null
+                || component.getInventory().getCapacity() < requiredCapacity) {
+            throw new IllegalStateException("Managed NPC " + domain + " capacity is "
+                    + (component.getInventory() == null ? "unavailable"
+                            : component.getInventory().getCapacity())
+                    + "; requires at least " + requiredCapacity + '.');
+        }
     }
 
     /**
@@ -424,26 +504,118 @@ public final class NpcInventoryRepository implements AutoCloseable {
         };
         armor.registerChangeEvent(ignored -> {
             persist.run();
-            synchronizeEquipmentStats(authored.stableNpcId(), npcRef, store,
+            synchronizeEquipmentStats(npcName, authored.stableNpcId(), npcRef, store,
                     "ARMOR_CONTAINER_CHANGE");
         });
         hotbar.registerChangeEvent(ignored -> {
             persist.run();
-            synchronizeEquipmentStats(authored.stableNpcId(), npcRef, store,
+            synchronizeEquipmentStats(npcName, authored.stableNpcId(), npcRef, store,
                     "HOTBAR_CONTAINER_CHANGE");
         });
         utility.registerChangeEvent(ignored -> {
             persist.run();
-            synchronizeEquipmentStats(authored.stableNpcId(), npcRef, store,
+            synchronizeEquipmentStats(npcName, authored.stableNpcId(), npcRef, store,
                     "UTILITY_CONTAINER_CHANGE");
         });
         storage.registerChangeEvent(ignored -> persist.run());
         return true;
     }
 
-    private void synchronizeEquipmentStats(UUID stableId, Ref<EntityStore> npcRef,
+    private void auditSession(String npcName, String stage, String liveState,
+            Session session) {
+        Path persisted = path(npcName);
+        auditContainer(npcName, stage, liveState, "ARMOR", "PROFILE_SESSION",
+                session.armor, persisted, false, diagnostics);
+        auditContainer(npcName, stage, liveState, "HOTBAR", "PROFILE_SESSION",
+                session.hotbar, persisted, false, diagnostics);
+        auditContainer(npcName, stage, liveState, "UTILITY", "PROFILE_SESSION",
+                session.utility, persisted, false, diagnostics);
+        auditContainer(npcName, stage, liveState, "STORAGE", "PROFILE_SESSION",
+                session.inventory, persisted, false, diagnostics);
+    }
+
+    private static void auditLiveContainers(String npcName, String stage,
+            String liveState, LiveContainers containers, Path persistedSource,
+            Consumer<String> diagnostics) {
+        auditLiveContainers(npcName, stage, liveState, containers, persistedSource,
+                diagnostics, false, false, false, false);
+    }
+
+    private static void auditLiveContainers(String npcName, String stage,
+            String liveState, LiveContainers containers, Path persistedSource,
+            Consumer<String> diagnostics, boolean armorCreated, boolean hotbarCreated,
+            boolean utilityCreated, boolean storageCreated) {
+        auditContainer(npcName, stage, liveState, "ARMOR",
+                containers.armorComponent(), containers.armorComponent().getInventory(),
+                persistedSource, armorCreated, diagnostics);
+        auditContainer(npcName, stage, liveState, "HOTBAR",
+                containers.hotbarComponent(), containers.hotbarComponent().getInventory(),
+                persistedSource, hotbarCreated, diagnostics);
+        auditContainer(npcName, stage, liveState, "UTILITY",
+                containers.utilityComponent(), containers.utilityComponent().getInventory(),
+                persistedSource, utilityCreated, diagnostics);
+        auditContainer(npcName, stage, liveState, "STORAGE",
+                containers.storageComponent(), containers.storageComponent().getInventory(),
+                persistedSource, storageCreated, diagnostics);
+    }
+
+    private static void auditContainer(String npcName, String stage, String liveState,
+            String domain, Object component, ItemContainer container, Path persistedSource,
+            boolean initialized, Consumer<String> diagnostics) {
+        Consumer<String> log = diagnostics == null ? ignored -> { } : diagnostics;
+        short capacity = container == null ? 0 : container.getCapacity();
+        int occupied = 0;
+        if (container != null) {
+            for (short slot = 0; slot < capacity; slot++) {
+                if (!ItemStack.isEmpty(container.getItemStack(slot))) occupied++;
+            }
+        }
+        log.accept("NPC_INVENTORY_CONTAINER_AUDIT"
+                + " npc=" + npcName
+                + " stage=" + stage
+                + " domain=" + domain
+                + " componentIdentity=" + identity(component)
+                + " containerIdentity=" + identity(container)
+                + " capacity=" + capacity
+                + " slotCount=" + capacity
+                + " occupiedSlots=" + occupied
+                + " owningComponent=" + (component == null ? "NONE"
+                        : component instanceof String label ? label
+                                : component.getClass().getName())
+                + " persistedSource=" + (persistedSource == null ? "NONE"
+                        : persistedSource.toAbsolutePath().normalize())
+                + " liveState=" + liveState
+                + " initialized=" + initialized);
+    }
+
+    private static String identity(Object value) {
+        return value == null ? "NONE" : value.getClass().getSimpleName() + '@'
+                + Integer.toHexString(System.identityHashCode(value));
+    }
+
+    private void synchronizeEquipmentStats(String npcName, UUID stableId, Ref<EntityStore> npcRef,
             Store<EntityStore> store, String trigger) {
-        if (stableId != null) equipmentStatsSync.synchronize(stableId, npcRef, store, trigger);
+        if (stableId == null) return;
+        auditStoreContainer(npcName, "STAT_MODIFIERS_SYNC_" + trigger, "ARMOR",
+                store.getComponent(npcRef, InventoryComponent.Armor.getComponentType()),
+                path(npcName));
+        auditStoreContainer(npcName, "STAT_MODIFIERS_SYNC_" + trigger, "HOTBAR",
+                store.getComponent(npcRef, InventoryComponent.Hotbar.getComponentType()),
+                path(npcName));
+        auditStoreContainer(npcName, "STAT_MODIFIERS_SYNC_" + trigger, "UTILITY",
+                store.getComponent(npcRef, InventoryComponent.Utility.getComponentType()),
+                path(npcName));
+        auditStoreContainer(npcName, "STAT_MODIFIERS_SYNC_" + trigger, "STORAGE",
+                store.getComponent(npcRef, InventoryComponent.Storage.getComponentType()),
+                path(npcName));
+        equipmentStatsSync.synchronize(stableId, npcRef, store, trigger);
+    }
+
+    private void auditStoreContainer(String npcName, String stage, String domain,
+            InventoryComponent component, Path persistedSource) {
+        auditContainer(npcName, stage, "LIVE", domain, component,
+                component == null ? null : component.getInventory(), persistedSource,
+                false, diagnostics);
     }
 
     private static void addRuntimeSlot(
@@ -451,6 +623,7 @@ public final class NpcInventoryRepository implements AutoCloseable {
             ItemContainer source,
             short sourceSlot,
             short persistedSlot) {
+        if (source == null || sourceSlot < 0 || sourceSlot >= source.getCapacity()) return;
         ItemStack stack = source.getItemStack(sourceSlot);
         if (!ItemStack.isEmpty(stack)) {
             target.add(NpcInventoryState.PersistedItemStack.from(persistedSlot, stack));
@@ -485,9 +658,19 @@ public final class NpcInventoryRepository implements AutoCloseable {
 
     private static void restoreOne(
             ItemContainer container, short slot, ItemStack stack, String section) {
+        requireContainerSlot(container, slot, section + " restore");
         if (!container.setItemStackForSlot(slot, stack).succeeded()) {
             throw new IllegalStateException("Persisted NPC " + section
                     + " item is incompatible with slot " + slot + ": " + stack.getItemId());
+        }
+    }
+
+    private static void requireContainerSlot(
+            ItemContainer container, short slot, String operation) {
+        short capacity = container == null ? 0 : container.getCapacity();
+        if (container == null || slot < 0 || slot >= capacity) {
+            throw new IllegalStateException("Refusing managed NPC " + operation
+                    + " slot " + slot + " against capacity " + capacity + '.');
         }
     }
 
@@ -803,6 +986,8 @@ public final class NpcInventoryRepository implements AutoCloseable {
 
         private void changed() {
             if (restoring) return;
+            auditSession(npcName, "PERSISTED_EQUIPMENT_MUTATION",
+                    ownsEquipment ? "OFFLINE_DURABLE" : "LIVE", this);
             pending.set(snapshot());
             changedCallback.run();
             if (writeScheduled.compareAndSet(false, true)) writer.execute(this::drainWrites);

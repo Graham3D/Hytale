@@ -157,11 +157,12 @@ public final class HytaleNpcAdapter {
         }
         Ref<EntityStore> ref = spawned.first();
         initializeIdleState(store, ref);
-        ensureInventory(store, ref);
         if (authoredInventories != null
                 && authoredInventories.applyToSpawnedNpc(currentProfile.name(), store, ref)) {
             diagnostics.accept("NPC authored inventory applied profile=" + currentProfile.id()
                     + " storageCapacity=" + NpcInventoryState.INVENTORY_CAPACITY);
+        } else {
+            ensureInventory(store, ref);
         }
         if (appearances != null) {
             if (!appearances.apply(currentProfile.name(), ref,
@@ -385,13 +386,42 @@ public final class HytaleNpcAdapter {
     }
 
     private static void ensureInventory(Store<EntityStore> store, Ref<EntityStore> ref) {
-        if (store.getComponent(ref, InventoryComponent.Hotbar.getComponentType()) == null) {
+        InventoryComponent.Armor armor = store.getComponent(
+                ref, InventoryComponent.Armor.getComponentType());
+        if (armor == null || armor.getInventory() == null) {
+            armor = new InventoryComponent.Armor(NpcInventoryState.ARMOR_CAPACITY);
+            store.putComponent(ref, InventoryComponent.Armor.getComponentType(), armor);
+        } else if (armor.getInventory().getCapacity() < NpcInventoryState.ARMOR_CAPACITY) {
+            armor.ensureCapacity(NpcInventoryState.ARMOR_CAPACITY, new java.util.ArrayList<>());
+        }
+        InventoryComponent.Hotbar hotbar = store.getComponent(
+                ref, InventoryComponent.Hotbar.getComponentType());
+        if (hotbar == null || hotbar.getInventory() == null) {
             store.putComponent(ref, InventoryComponent.Hotbar.getComponentType(),
                     new InventoryComponent.Hotbar((short) 8));
+        } else {
+            if (hotbar.getInventory().getCapacity() < 8) {
+                hotbar.ensureCapacity((short) 8, new java.util.ArrayList<>());
+            }
         }
-        if (store.getComponent(ref, InventoryComponent.Storage.getComponentType()) == null) {
+        InventoryComponent.Utility utility = store.getComponent(
+                ref, InventoryComponent.Utility.getComponentType());
+        if (utility == null || utility.getInventory() == null) {
+            utility = new InventoryComponent.Utility((short) 1);
+            store.putComponent(ref, InventoryComponent.Utility.getComponentType(), utility);
+        } else if (utility.getInventory().getCapacity() < 1) {
+            utility.ensureCapacity((short) 1, new java.util.ArrayList<>());
+        }
+        InventoryComponent.Storage storage = store.getComponent(
+                ref, InventoryComponent.Storage.getComponentType());
+        if (storage == null || storage.getInventory() == null) {
             store.putComponent(ref, InventoryComponent.Storage.getComponentType(),
-                    new InventoryComponent.Storage((short) 24));
+                    new InventoryComponent.Storage(NpcInventoryState.INVENTORY_CAPACITY));
+        } else {
+            if (storage.getInventory().getCapacity() < NpcInventoryState.INVENTORY_CAPACITY) {
+                storage.ensureCapacity(NpcInventoryState.INVENTORY_CAPACITY,
+                        new java.util.ArrayList<>());
+            }
         }
     }
 

@@ -104,6 +104,14 @@ public final class NativeNpcInventoryController {
             if (currentUtility != utilityComponent || currentUtility.getInventory() != utility) {
                 return "NPC_ECS_UTILITY_IDENTITY_MISMATCH";
             }
+            if (armor.getCapacity() < NpcInventoryState.ARMOR_CAPACITY) {
+                return "NPC_ECS_ARMOR_CAPACITY_INCOMPLETE";
+            }
+            if (hotbar.getCapacity() < 2) return "NPC_ECS_HOTBAR_CAPACITY_INCOMPLETE";
+            if (utility.getCapacity() < 1) return "NPC_ECS_UTILITY_CAPACITY_INCOMPLETE";
+            if (storage.getCapacity() < NpcInventoryState.INVENTORY_CAPACITY) {
+                return "NPC_ECS_STORAGE_CAPACITY_INCOMPLETE";
+            }
             var persisted = inventories.load(profile.name());
             if (!Objects.equals(profile.id(), profile.stableId())
                     || !Objects.equals(profile.id(), persisted.stableNpcId())) {

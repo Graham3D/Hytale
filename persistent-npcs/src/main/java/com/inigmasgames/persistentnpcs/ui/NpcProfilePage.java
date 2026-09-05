@@ -2925,7 +2925,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                 : statsSnapshot.defense().get().summary();
         commands.set("#DefenseStat #Value.Text", defense);
         commands.set("#DefenseStat #Value.TooltipText", statsSnapshot == null || statsSnapshot.defense().isEmpty()
-                ? "Armor resistance unavailable." : statsSnapshot.defense().get().details());
+                ? "Armor resistance unavailable."
+                : (liveStorageAuthority == null
+                        ? "SAVED: resistance calculated from durable offline equipment."
+                        : "LIVE: resistance calculated from authoritative NPC equipment.")
+                        + "\n" + statsSnapshot.defense().get().details());
         for (String stat : new String[] { "Health", "Stamina", "Mana" })
             commands.set("#" + stat + "Stat #Value.TooltipText", (liveStorageAuthority == null
                     ? savedStatTooltip(stat) : "LIVE: native NPC EntityStatMap current / effective maximum.")

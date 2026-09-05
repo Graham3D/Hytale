@@ -226,8 +226,8 @@ public final class R092NpcCreateInventoryUiTest {
                 : "Unequipping must return items to the authoritative NPC inventory";
         assert repository.contains("restoreOne(hotbar, (short) 1")
                 : "Preferred ammunition must occupy native hotbar slot 1 ahead of storage ammo";
-        assert repository.contains("new InventoryComponent.Utility(utility, (byte) 0)")
-                : "Shield/offhand must use Hytale's active Utility slot";
+        assert repository.contains("utilityComponent.setActiveSlot((byte) 0, npcRef, store)")
+                : "Shield/offhand must use Hytale's active Utility slot without replacing a valid component";
         assert repository.contains("PlayerSettings.getComponentType()")
                 : "Armor visibility must use the native ECS PlayerSettings component";
         assert repository.contains("storage.registerChangeEvent")

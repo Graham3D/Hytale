@@ -142,7 +142,7 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R164-PROFILE-EDITOR-POLISH";
+    public static final String REVISION = "R165-OFFLINE-EQUIPMENT-HYDRATION";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
@@ -203,6 +203,7 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
                 + " packetConsumed=false directions=INBOUND_AND_OUTBOUND");
         profiles = new ProfileRepository(dataDirectory);
         npcInventories = new com.inigmasgames.persistentnpcs.profile.NpcInventoryRepository(profiles);
+        npcInventories.configureDiagnostics(frameworkLog);
         profileRegistry = new NpcProfileRegistry(profiles);
         reloadProfile();
 
