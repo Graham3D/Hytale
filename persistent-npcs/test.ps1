@@ -634,6 +634,9 @@ if ($LASTEXITCODE -ne 0) { throw "R157 appearance event payload hotfix tests fai
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R158AppearanceFocusedPreviewTest
 if ($LASTEXITCODE -ne 0) { throw "R158 Appearance focused-preview tests failed with exit code $LASTEXITCODE" }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R159AppearanceTwoCardVisualProbeTest
+if ($LASTEXITCODE -ne 0) { throw "R159 Appearance two-card visual probe tests failed with exit code $LASTEXITCODE" }
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R147NpcProfileRepairTest
 if ($LASTEXITCODE -ne 0) {
     throw "R147 Profile repair tests failed with exit code $LASTEXITCODE"

@@ -158,6 +158,9 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private String appearancePreviewHash = "";
     private String appearanceRequestedPreviewHash = "";
     private boolean appearanceGridMounted;
+    private final Set<String> appearanceThumbnailReferencesLogged = new java.util.HashSet<>();
+    private final Set<String> appearanceThumbnailCardsBuilt = new java.util.HashSet<>();
+    private long appearanceThumbnailCardBuildCount;
     private final NpcAppearancePreviewService appearancePreview;
     private PrimaryCategory appearancePrimary = PrimaryCategory.BODY;
     private Category appearanceCategory = Category.BODY_CHARACTERISTIC;
@@ -1528,8 +1531,11 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             String selector = host + " #Choice";
             commands.set(host + " #Id.Text", option.cosmeticId());
             commands.set(selector + " #Name.Text", AppearanceEditorPresentation.label(option.displayName(), 48));
+            commands.set(selector + " #ThumbnailName.Text",
+                    AppearanceEditorPresentation.label(option.displayName(), 26));
             commands.set(selector + ".TooltipText", option.displayName() + " — Select for live preview");
             setAppearanceIcon(commands, selector, AppearanceEditorPresentation.icon(appearanceCategory), false);
+            setAppearanceThumbnailProbe(commands, host, selector, option.cosmeticId());
             setAppearanceSelection(commands, selector, option.cosmeticId().equals(currentId));
         }
         commands.set("#AppearancePagePREV.Disabled", page.pageIndex() == 0);
@@ -1642,6 +1648,41 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
             String icon, boolean selected) {
         commands.set(selector + " #Icon.Background", com.hypixel.hytale.server.core.ui.Value.ref(
                 "Pages/ImmersiveNpcProfile.ui", "AppearanceIcon" + icon + (selected ? "Selected" : "")));
+    }
+
+    private void setAppearanceThumbnailProbe(UICommandBuilder commands, String host,
+            String selector, String cosmeticId) {
+        var reference = AppearanceThumbnailProbe.find(appearanceCategory, cosmeticId).orElse(null);
+        commands.set(selector + " #Icon.Visible", reference == null);
+        commands.set(selector + " #Name.Visible", reference == null);
+        commands.set(selector + " #ThumbnailNamePlate.Visible", reference != null);
+        commands.set(selector + " #ThumbnailName.Visible", reference != null);
+        for (var candidate : AppearanceThumbnailProbe.references()) {
+            commands.set(selector + " #" + candidate.elementId() + ".Visible",
+                    candidate == reference);
+        }
+        if (reference == null) return;
+
+        if (appearanceThumbnailReferencesLogged.add(reference.key())) {
+            diagnostics.accept("APPEARANCE_THUMBNAIL_REFERENCE cosmeticId="
+                    + reference.key() + " assetPath=" + reference.packagedAssetPath()
+                    + " dimensions=" + reference.width() + "x" + reference.height()
+                    + " packagedStatic=true dynamicThumbnailCreates="
+                    + AppearanceThumbnailProbe.DYNAMIC_THUMBNAIL_CREATES
+                    + " runtimeThumbnailWrites="
+                    + AppearanceThumbnailProbe.RUNTIME_THUMBNAIL_WRITES);
+        }
+        if (appearanceThumbnailCardsBuilt.add(host + "|" + reference.key())) {
+            appearanceThumbnailCardBuildCount++;
+            diagnostics.accept("APPEARANCE_THUMBNAIL_CARD_BUILT cosmeticId="
+                    + reference.key() + " assetPath=" + reference.packagedAssetPath()
+                    + " dimensions=" + reference.width() + "x" + reference.height()
+                    + " packagedStatic=true cardBuildCount=" + appearanceThumbnailCardBuildCount
+                    + " dynamicThumbnailCreates="
+                    + AppearanceThumbnailProbe.DYNAMIC_THUMBNAIL_CREATES
+                    + " runtimeThumbnailWrites="
+                    + AppearanceThumbnailProbe.RUNTIME_THUMBNAIL_WRITES);
+        }
     }
 
     private void refreshAppearanceEditorUi() {

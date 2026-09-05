@@ -16,7 +16,7 @@ public final class R151NpcAppearanceNativeCardsTest {
                 ui.indexOf("$C.@PageOverlay #VoiceRecorderPage"));
         String source = Files.readString(Path.of("src/main/java/com/inigmasgames/persistentnpcs/ui/NpcProfilePage.java"));
         for (String removed : List.of("appearanceColorPage", "APPEARANCE_COLOR_PREV", "APPEARANCE_COLOR_NEXT",
-                "AppearanceColorPageText", "#Thumbnail", "#Unavailable")) {
+                "AppearanceColorPageText", "#Unavailable")) {
             assert !source.contains(removed) && !appearance.contains(removed) : removed;
         }
         assert appearance.contains("LayoutMode: TopScrolling") && !appearance.contains("KeepScrollPosition: true");
@@ -29,6 +29,8 @@ public final class R151NpcAppearanceNativeCardsTest {
         assert !appearance.contains("Icon: (TexturePath:");
         String card = Files.readString(pages.resolve("ImmersiveNpcAppearanceCard.ui"));
         assert card.contains("#Icon") && card.contains("#Name") && card.contains("#Id");
+        assert card.contains("AssetImage #FarmerTopThumbnail")
+                && card.contains("AssetImage #FlowerShirtThumbnail");
         assert card.contains("$C.@SecondaryButtonStyle") && card.contains("#Selected");
 
         List<CosmeticOptionDescriptor> options = new ArrayList<>();
