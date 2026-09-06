@@ -4,7 +4,7 @@ import com.inigmasgames.canvasui.runtime.CanvasService;
 
 /** Stable entry point used by consuming mods after the CanvasUI plugin is enabled. */
 public final class CanvasUI {
-    public static final String REVISION = "R003";
+    public static final String REVISION = "R004";
     private static volatile CanvasService service;
 
     private CanvasUI() { }

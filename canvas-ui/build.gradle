@@ -15,6 +15,11 @@ java {
     withJavadocJar()
 }
 
+sourceSets.main.java {
+    srcDir rootProject.file('canvas-ui-demo/src/main/java')
+    exclude 'com/inigmasgames/canvasui/demo/CanvasUIDemoPlugin.java'
+}
+
 repositories { mavenCentral() }
 
 dependencies {

@@ -140,7 +140,6 @@ public final class HytaleCustomUiBackend {
 
     private void appendTopology(UICommandBuilder commands) {
         nodeSelectors.clear(); edgeSelectors.clear();
-        StringBuilder markup = new StringBuilder();
         Canvas canvas = session.canvas();
         int edgeIndex = 0;
         for (CanvasEdge edge : canvas.edges()) {
@@ -149,8 +148,10 @@ public final class HytaleCustomUiBackend {
             for (int i = 0; i < segments.size(); i++) {
                 String id = "CanvasEdge_" + edgeIndex + '_' + i;
                 selectors.add("#" + id);
-                markup.append("Group #").append(id).append(" { Anchor: ").append(segmentMarkup(segments.get(i), edge.style().thickness()))
-                        .append("; Background: (Color: ").append(safeColor(edge.style().color())).append("); }");
+                String markup = "Group #" + id + " { Anchor: "
+                        + segmentMarkup(segments.get(i), edge.style().thickness())
+                        + "; Background: (Color: " + safeColor(edge.style().color()) + "); }";
+                commands.appendInline("#CanvasContents", markup);
             }
             edgeSelectors.put(edge.edgeId(), selectors);
             edgeIndex++;
@@ -166,6 +167,7 @@ public final class HytaleCustomUiBackend {
                     : node.nodeId().equals(hoveredNodeId) ? NodeVisualState.HOVERED : NodeVisualState.NORMAL;
             NodeVisual visual = type.renderer().render(new NodeRenderContext(node, state));
             CanvasPoint screen = renderer.nodeScreenPoint(canvas, node);
+            StringBuilder markup = new StringBuilder();
             markup.append("Group #").append(id).append(" { Anchor: ").append(anchorMarkup(screen, type.width(), type.height()))
                     .append("; Background: (Color: ").append(safeColor(visual.backgroundColor())).append(");")
                     .append(" Label { Anchor: (Left: 8, Top: 8, Width: ").append(Math.max(4, type.width() - 16)).append(", Height: 25); Text: \"")
@@ -180,8 +182,8 @@ public final class HytaleCustomUiBackend {
                         .append(", Width: 14, Height: 14); Background: (Color: ").append(color).append("); }");
             }
             markup.append(" }");
+            commands.appendInline("#CanvasContents", markup.toString());
         }
-        commands.appendInline("#CanvasContents", markup.toString());
     }
 
     private void updateEdge(UICommandBuilder commands, CanvasEdge edge) {

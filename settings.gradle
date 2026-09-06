@@ -1,2 +1,2 @@
 rootProject.name = 'HytaleRPG'
-include 'canvas-ui', 'canvas-ui-demo'
+include 'canvas-ui'

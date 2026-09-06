@@ -1,0 +1,24 @@
+{
+  "verifiedAtUtc": "2026-09-06T15:55:00.2460561Z",
+  "revision": "R004",
+  "hytale": "0.7.0-pre.1",
+  "branch": "RPG",
+  "commit": "3bfd6e891f8f21f7d272b924be203d552e0a7b91",
+  "tests": {
+    "total": 16,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": true
+  },
+  "libraryJar": {
+    "path": "G:\\My Drive\\Inigmas Games\\Hytale Taverns\\HytaleRPG\\canvas-ui\\build\\libs\\CanvasUI-0.1.0.jar",
+    "bytes": 94022,
+    "sha256": "B040DA4A9819AADBAD609675ED42DAAA4439808F129E490FD8AD68838470C3D7",
+    "missingEntries": []
+  },
+  "demoBundledInLibraryJar": true,
+  "libraryForbiddenRpgTermsAbsent": true,
+  "forbiddenTermsFound": [],
+  "demoImportsInternalPackages": false
+}

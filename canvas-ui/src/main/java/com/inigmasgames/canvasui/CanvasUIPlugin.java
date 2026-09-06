@@ -9,8 +9,10 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.inigmasgames.canvasui.runtime.CanvasService;
+import com.inigmasgames.canvasui.demo.CanvasDemoCommand;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 
 public final class CanvasUIPlugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -30,8 +32,13 @@ public final class CanvasUIPlugin extends JavaPlugin {
             PlayerRef playerRef = event.getHolder().getComponent(PlayerRef.getComponentType());
             if (playerRef != null) service.close(playerRef.getUuid(), "WORLD_TRANSITION");
         });
+        Path demoLayouts = getDataDirectory().resolve("demo-layouts");
+        getCommandRegistry().registerCommand(new CanvasDemoCommand(demoLayouts, false));
+        getCommandRegistry().registerCommand(new CanvasDemoCommand(demoLayouts, true));
         LOGGER.atInfo().log("CANVASUI_SETUP revision=%s version=%s hytale=0.7.0-pre.1 fixedZoom=1.0 input=PlayerMouseEvents",
                 CanvasUI.REVISION, getManifest().getVersion());
+        LOGGER.atInfo().log("CANVASUI_DEMO_SETUP revision=%s bundled=true commands=/canvasui-demo,/canvasui-topology-proof",
+                CanvasUI.REVISION);
     }
 
     @Override

@@ -7,18 +7,21 @@ session cleanup, and instrumentation. Consumers own node meaning, policy,
 metadata, persistence location, and gameplay authority.
 
 CanvasUI has no HytaleRPG or HTDevLib dependency. The current development build
-is `0.1.0`, revision `R002`.
+is `0.1.0`, revision `R004`.
 
 ## Build and artifacts
 
 ```powershell
-.\gradlew.bat :canvas-ui:clean :canvas-ui:test :canvas-ui:jar :canvas-ui-demo:jar
+.\gradlew.bat :canvas-ui:clean :canvas-ui:test :canvas-ui:jar
 ```
 
 - `canvas-ui/build/libs/CanvasUI-0.1.0.jar` — reusable library/plugin
 - `canvas-ui/build/libs/CanvasUI-0.1.0-sources.jar` — sources
 - `canvas-ui/build/libs/CanvasUI-0.1.0-javadoc.jar` — API documentation
-- `canvas-ui-demo/build/libs/CanvasUI-Demo-0.1.0.jar` — development-only consumer
+
+The R004 development JAR also contains the public-API-only generic demo and
+topology-proof commands. They remain isolated under the demo source tree so the
+consumer boundary is testable, but there is no second installed mod.
 
 Install the CanvasUI jar in the save's `mods` directory. A consuming plugin
 declares `"InigmasGames:CanvasUI": "*"` in its manifest and compiles against

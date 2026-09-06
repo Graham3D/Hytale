@@ -116,7 +116,9 @@ final class MouseProbePage extends CustomUIPage {
 
     private void render(UICommandBuilder commands) {
         commands.clear("#CanvasContents");
-        commands.appendInline("#CanvasContents", connectionMarkup());
+        for (String element : connectionMarkup()) {
+            commands.appendInline("#CanvasContents", element);
+        }
         commands.set("#MouseStatus.TextSpans", Message.raw(latest));
         double seconds = Math.max(0.001, (System.nanoTime() - openedNanos) / 1_000_000_000.0);
         commands.set("#Counters.TextSpans", Message.raw("buttons=" + buttonEvents + " moves=" + motionEvents
@@ -125,7 +127,7 @@ final class MouseProbePage extends CustomUIPage {
                 + " node=" + nodeX + ',' + nodeY + " pan=" + panX + ',' + panY));
     }
 
-    private String connectionMarkup() {
+    private java.util.List<String> connectionMarkup() {
         int ax = 155 + panX;
         int ay = 195 + panY;
         int nx = nodeX + panX;
@@ -137,18 +139,20 @@ final class MouseProbePage extends CustomUIPage {
         int vHeight = Math.max(2, Math.abs(ny - ay));
         int h2Left = Math.min(elbow, nx);
         int h2Width = Math.max(2, Math.abs(nx - elbow));
-        return "Group { Anchor: (Left: " + (ax - 56) + ", Top: " + (ay - 22)
-                + ", Width: 112, Height: 44); Background: (Color: #37516eee);"
-                + " Label { Text: \"ROOT\"; Style: (FontSize: 14, TextColor: #dce6ed, Alignment: Center); } }"
-                + " Group { Anchor: (Left: " + h1Left + ", Top: " + ay + ", Width: " + h1Width
-                + ", Height: 3); Background: (Color: #78c6d0); }"
-                + " Group { Anchor: (Left: " + elbow + ", Top: " + vTop + ", Width: 3, Height: " + vHeight
-                + "); Background: (Color: #78c6d0); }"
-                + " Group { Anchor: (Left: " + h2Left + ", Top: " + ny + ", Width: " + h2Width
-                + ", Height: 3); Background: (Color: #78c6d0); }"
-                + " Group { Anchor: (Left: " + (nx - 70) + ", Top: " + (ny - 28)
-                + ", Width: 140, Height: 56); Background: (Color: #6b4f28ee);"
-                + " Label { Text: \"DRAG NODE\"; Style: (FontSize: 14, TextColor: #f2d488, Alignment: Center); } }";
+        return java.util.List.of(
+                "Group { Anchor: (Left: " + (ax - 56) + ", Top: " + (ay - 22)
+                        + ", Width: 112, Height: 44); Background: (Color: #37516eee);"
+                        + " Label { Text: \"ROOT\"; Style: (FontSize: 14, TextColor: #dce6ed, Alignment: Center); } }",
+                "Group { Anchor: (Left: " + h1Left + ", Top: " + ay + ", Width: " + h1Width
+                        + ", Height: 3); Background: (Color: #78c6d0); }",
+                "Group { Anchor: (Left: " + elbow + ", Top: " + vTop + ", Width: 3, Height: " + vHeight
+                        + "); Background: (Color: #78c6d0); }",
+                "Group { Anchor: (Left: " + h2Left + ", Top: " + ny + ", Width: " + h2Width
+                        + ", Height: 3); Background: (Color: #78c6d0); }",
+                "Group { Anchor: (Left: " + (nx - 70) + ", Top: " + (ny - 28)
+                        + ", Width: 140, Height: 56); Background: (Color: #6b4f28ee);"
+                        + " Label { Text: \"DRAG NODE\"; Style: (FontSize: 14, TextColor: #f2d488, Alignment: Center); } }"
+        );
     }
 
     @Override

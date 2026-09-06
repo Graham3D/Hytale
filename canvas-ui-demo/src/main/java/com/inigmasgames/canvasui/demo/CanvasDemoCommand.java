@@ -16,11 +16,11 @@ import com.inigmasgames.canvasui.api.CanvasDefinition;
 
 import java.nio.file.Path;
 
-final class CanvasDemoCommand extends AbstractPlayerCommand {
+public final class CanvasDemoCommand extends AbstractPlayerCommand {
     private final Path layouts;
     private final boolean topologyProof;
 
-    CanvasDemoCommand(Path layouts, boolean topologyProof) {
+    public CanvasDemoCommand(Path layouts, boolean topologyProof) {
         super(topologyProof ? "canvasui-topology-proof" : "canvasui-demo",
                 topologyProof ? "Open the generic 12-node routing topology proof." : "Open the generic six-node CanvasUI demo.");
         this.layouts = layouts; this.topologyProof = topologyProof;
