@@ -21,7 +21,7 @@ Group {
       Anchor: (Height: 42);
     }
 
-    Label #Revision { Text: "R004"; Style: (FontSize: 14, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 28); }
+    Label #Revision { Text: "R005"; Style: (FontSize: 14, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 28); }
 
     Group {
       Anchor: (Height: 420);

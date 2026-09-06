@@ -1,0 +1,18 @@
+Group {
+  Anchor: (Left: -100, Top: -100, Width: 120, Height: 72);
+  Background: (Color: #24354aee);
+
+  Label #Title {
+    Anchor: (Left: 8, Top: 8, Width: 104, Height: 25);
+    Text: "Node";
+    Style: (FontSize: 15, TextColor: #78c6d0, Alignment: Center);
+  }
+
+  Label #Subtitle {
+    Anchor: (Left: 8, Top: 35, Width: 104, Height: 20);
+    Text: "Type";
+    Style: (FontSize: 11, TextColor: #b8c7d8, Alignment: Center);
+  }
+
+  Group #Ports { Anchor: (Full: 0); }
+}

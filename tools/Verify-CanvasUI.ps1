@@ -3,7 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path "$PSScriptRoot\..").Path
-$evidence = Join-Path $root 'evidence\canvas-ui\R004'
+$evidence = Join-Path $root 'evidence\canvas-ui\R005'
 New-Item -ItemType Directory -Force -Path $evidence | Out-Null
 Push-Location $root
 try {
@@ -16,6 +16,7 @@ try {
     )
     $libraryEntries = @(& jar tf $library)
     $requiredLibrary = @('manifest.json','canvasui-build.properties','Common/UI/Custom/CanvasUIPage.ui',
+        'Common/UI/Custom/CanvasEdge.ui','Common/UI/Custom/CanvasNode.ui','Common/UI/Custom/CanvasPort.ui',
         'com/inigmasgames/canvasui/CanvasUI.class','com/inigmasgames/canvasui/runtime/CanvasService.class',
         'com/inigmasgames/canvasui/api/Canvas.class','com/inigmasgames/canvasui/api/CanvasSnapshotCodec.class',
         'com/inigmasgames/canvasui/demo/CanvasDemoCommand.class','com/inigmasgames/canvasui/demo/DemoDefinitions.class')
@@ -31,13 +32,15 @@ try {
     $demoSource = Get-ChildItem -LiteralPath (Join-Path $root 'canvas-ui-demo\src\main\java') -Recurse -Filter '*.java' | Get-Content -Raw
     $forbiddenLibraryTerms = @('hytalerpg','skill rule','passive rule','progression rule')
     $forbiddenFound = @($forbiddenLibraryTerms | Where-Object { $librarySource -match [regex]::Escape($_) })
+    $usesAppendInline = [bool]($librarySource -match '\.appendInline\s*\(')
     $result = [ordered]@{
         verifiedAtUtc = [DateTime]::UtcNow.ToString('o')
-        revision = 'R004'; hytale = '0.7.0-pre.1'
+        revision = 'R005'; hytale = '0.7.0-pre.1'
         branch = (& git branch --show-current).Trim(); commit = (& git rev-parse HEAD).Trim()
         tests = [ordered]@{ total = $tests; failures = $failures; errors = $errors; skipped = $skipped; passed = ($tests -gt 0 -and $failures -eq 0 -and $errors -eq 0) }
         libraryJar = [ordered]@{ path = $library; bytes = (Get-Item $library).Length; sha256 = (Get-FileHash $library -Algorithm SHA256).Hash; missingEntries = $missingLibrary }
         demoBundledInLibraryJar = $true
+        libraryUsesAppendInline = $usesAppendInline
         libraryForbiddenRpgTermsAbsent = $forbiddenFound.Count -eq 0
         forbiddenTermsFound = $forbiddenFound
         demoImportsInternalPackages = [bool]($demoSource -match 'com\.inigmasgames\.canvasui\.internal')
@@ -45,6 +48,7 @@ try {
     $result | ConvertTo-Json -Depth 7 | Set-Content -LiteralPath (Join-Path $evidence 'verification.json') -Encoding utf8
     $result | ConvertTo-Json -Depth 5
     if (-not $result.tests.passed -or $missingLibrary.Count -or
-        -not $result.libraryForbiddenRpgTermsAbsent -or $result.demoImportsInternalPackages) { throw 'CanvasUI static gate failed.' }
+        $result.libraryUsesAppendInline -or -not $result.libraryForbiddenRpgTermsAbsent -or
+        $result.demoImportsInternalPackages) { throw 'CanvasUI static gate failed.' }
 }
 finally { Pop-Location }
