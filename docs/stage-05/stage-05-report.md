@@ -185,8 +185,15 @@ exit code `9` is expected and is not an RPG startup failure.
 
 ## Deployment and rollback
 
-The RPG save contains exactly the established three JARs. Final hashes are recorded in
-`installation.json`; R014 preserves the deployed R013 RPG JAR in
+The RPG save contains exactly the established three JARs:
+
+| Mod | SHA-256 |
+|---|---|
+| `CanvasUI-0.1.0.jar` | `218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6` |
+| `HYTALEDEVLIB-0.5.0.jar` | `DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230` |
+| `HytaleRPG-0.0.7.jar` | `071356081AB3052E9E6320CBF1E373DB4F8A18C43AB823E7728367A97EBA24FB` |
+
+The complete installation record is `installation.json`; R014 preserves the deployed R013 RPG JAR in
 `evidence/stage-05/R014/rollback/HytaleRPG-0.0.6.jar`.
 
 Rollback: fully stop the RPG world, remove `HytaleRPG-0.0.7.jar`, restore that retained
