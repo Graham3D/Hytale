@@ -429,6 +429,7 @@ none exists in R006.
 ### R008 — safe binding matrix and correct EventData semantics
 
 - Implementation commit: `82cf726c393e54541b193503f758038b9515345e`.
+- Initial evidence/report commit: `019a0cc2bf0bbc9c2420797593987be74cf9567b`.
 - Hytale build: `0.7.0-pre.1`, revision
   `e8b4d191fc98a977bf5546a951a7b25473d323e3`.
 - Kept only the five Button event types accepted before the R007 compatibility
