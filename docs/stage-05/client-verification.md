@@ -1,31 +1,35 @@
-# Stage 05 R014 — Connected Client Verification
+# Stage 05 R015 — Connected Client Verification
 
 ## Setup
 
-1. Fully restart the `RPG` world and rejoin. Confirm the HUD badge is `R014`, then run
-   `/rpg loadout` and `/rpg stats`.
-2. Keep one ordinary damageable NPC available. Record its Health before each hit.
-3. Watch the newest records in
+1. Fully restart the `RPG` world and rejoin. Confirm the HUD badge is `R015`.
+2. Run `/rpg loadout` and `/rpg stats`. Keep one ordinary damageable, non-boss NPC
+   available and record its Health before each test.
+3. Preserve the newest server/client logs and
    `Saves/RPG/mods/InigmasGames_HytaleRPGPhase00Audit/logs/rpg/skill-trace.jsonl`.
-   One activation must retain one `rootCastId`, `skillInstanceId`, and `correlationId`.
-
-Use `/rpg equip skill01 "Fire Bolt"` or `/rpg equip skill01 "Snipe"`; confirm each
-change with `/rpg loadout`, then activate skill01 with Ability1.
+   Every activation must keep one `rootCastId`, `skillInstanceId`, and
+   `correlationId`; every projectile adds one stable `projectileInstanceId`.
+4. Equip a test skill with `/rpg equip skill01 "Skill Name"`, confirm with
+   `/rpg loadout`, then activate it with Ability1.
 
 ## Required checks
 
-| # | Action | Required evidence |
+| # | Action | Required proof |
 |---|---|---|
-| 1 | Hold a Staff or Wand, equip Fire Bolt, face a valid NPC within 24 m, and press Ability1 once. | One projectile at about 24 m/s; 8 Mana and one cooldown; exactly one target hit; actual Health loss; `PROJECTILE_SPAWNED` -> `PROJECTILE_HIT` -> native Gather/Filter/Apply/Inspect with continuous IDs. |
-| 2 | Repeat Fire Bolt into solid terrain, then once into open space with no target. | Terrain contact records `PROJECTILE_TERRAIN_IMPACT`; open flight records `PROJECTILE_EXPIRED` at about 24 m/1.0 s. Neither path damages a target or leaves a carrier. |
-| 3 | Review the valid Fire Bolt hit for four seconds. | Burn applies only after the damaging hit and emits exactly four `BURN_TICK` events about 1 s apart. Each tick uses coefficient 0.10, cannot crit, follows native Gather/Filter/Apply/Inspect, reduces Health, and retains the activation IDs. No separate stock-Burn damage appears. |
-| 4 | Equip Snipe, hold a Bow, count crude arrows, and press Ability1 once at a valid NPC within 48 m. | Immediate fully charged-looking release at about 45 m/s; exactly 12 Stamina and one crude arrow consumed; exactly one 2.00x uncharged Weapon-Power hit and actual Health loss; one full native damage chain with continuous IDs. |
-| 5 | Fire Snipe without an eligible arrow, then fire with one arrow into terrain/open space. | Missing ammo rejects before Stamina/cooldown/world effect. Terrain/open attempts consume exactly one arrow and one cost, terminate distinctly, and do not create an extra hit or retained carrier. |
-| 6 | Search the Snipe root ID in the trace and compare resources before/after. | No `RESOURCE_RECOVERY` is attributed to Snipe; its fully charged metadata does not grant the 12% charged-basic recovery. Native passive regeneration may continue independently. |
-| 7 | Try Fire Bolt with a non-Staff/Wand and Snipe with a non-Bow; immediately retry a successful cast during cooldown. | Each invalid attempt rejects before resource, cooldown, ammo, projectile, or damage. Cooldown retry consumes nothing more. |
-| 8 | Recheck all four HUD slots, disconnect/rejoin, fully restart, rejoin again, and run `/rpg loadout` plus `/rpg stats`. | No RPG-scoped exception; no owned projectile/Burn leak; HUD remains healthy; Stage 01B loadout/graph and Stage 03 attributes/presentation persist. |
+| 1 | Hold a Staff or Wand. Equip `Fire Bolt`; hit the NPC within 24 m. | Visible travel; exactly 8 Mana and one 1.4 s cooldown; one 0.95x Magic hit; actual Health loss; spawn -> native Gather/Filter/Apply/Inspect -> entity hit -> termination with continuous IDs. |
+| 2 | Observe the same Fire Bolt hit for 4 s. | Burn applies only after Health loss; exactly four roughly 1 s `BURN_TICK` submissions at 0.10 snapshot power; no stock duplicate damage. |
+| 3 | Equip `Frost Bolt` with Staff/Wand; hit a fresh valid NPC once. | Visible 22 m/s travel; 8 Mana; 1.5 s cooldown; one 0.85x Magic hit; exactly one Chill stack request/result. |
+| 4 | Equip `Arcane Bolt` with Wand/Spellbook; hit once. | Visible 26 m/s travel to at most 26 m; 7 Mana; 1.2 s cooldown; one plain 0.90x Magic hit; no status/control payload. |
+| 5 | Equip `Stone Bolt` with Staff/Wand; hit once. | Visible 17 m/s travel to at most 20 m; 8 Mana; 2.2 s cooldown; one 1.20x Magic hit; 1.5 m knockback requested/applied and visibly authoritative on an eligible target. |
+| 6 | Count crude arrows. Equip `Quick Shot`, hold a Bow, and hit once; repeat with a Crossbow after cooldown. | Exactly 4 Stamina and one real `Weapon_Arrow_Crude` each cast; native 0.075 arrow bounds/behavior; Bow about 30 m/s, Crossbow about 40 m/s; one 0.80x Light hit each; no duplicate native damage. |
+| 7 | Try Quick Shot with no crude arrow, then with the wrong weapon. Try each magic skill and Axe Toss with a wrong weapon. | `PROJECTILE_SPAWN_REJECTED` before resource, cooldown, ammo, or world effect; inventory is never minted; immediate valid retry works. |
+| 8 | Equip `Axe Toss`, hold a Battleaxe, and hit once. | Visible 18 m/s axe representation to at most 20 m; exactly 8 Stamina and one 5 s cooldown; one 1.20x Heavy hit; equipped Battleaxe remains in inventory. |
+| 9 | Fire Fire Bolt or Arcane Bolt into solid terrain, then across open space. | Terrain emits `PROJECTILE_TERRAIN_HIT` then `PROJECTILE_TERMINATED`; open flight emits `PROJECTILE_MAX_RANGE` or `PROJECTILE_EXPIRED` at its bound. No target damage and no carrier remains. |
+| 10 | For a valid non-critical hit and a valid critical hit, inspect the trace and target Health. | Each has one Stage 02 Gather -> Filter -> Apply -> Inspect chain, records pre-mitigation and actual Health loss, and uses only the Stage 02 crit decision. |
+| 11 | Attempt repeated contact if practical, disconnect during flight, and rejoin. | No target receives a duplicate hit from one projectile; owner teardown emits cancel/terminate; no orphan projectile or registry state affects the next cast. |
+| 12 | Link Fork to Fire Bolt with `/rpg link passive06 skill01`, verify `/rpg loadout`, and cast once. | Compile remains PASS and Link metadata is preserved, but only one generation-zero projectile spawns. No Fork child appears before Stage 07. |
+| 13 | Watch Stage 03 HUD while casting, then disconnect/rejoin and fully restart/rejoin. Run `/rpg loadout` and `/rpg stats` again. | Resource/cooldown HUD updates match commits; all four slots and Link graph persist; no CustomUI/RPG exception; no projectile/status leak after either restart. |
 
-Retain the server/client logs, `skill-trace.jsonl`, before/after target Health and player
-resources, arrow counts, `/rpg loadout`, `/rpg stats`, and screenshots/video of both
-projectiles and terminal paths. Record the earliest failed event boundary exactly. Do
-not mark Stage 05 `PASS` until every row succeeds.
+For each failure, retain the relevant trace slice and record the earliest missing or
+incorrect event. Do not mark Stage 05 `PASS` until every row succeeds. Do not begin
+Stage 06 from this checklist.

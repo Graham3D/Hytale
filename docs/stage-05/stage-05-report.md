@@ -1,4 +1,4 @@
-# Stage 05 R014 — Projectile Family Pilot Runtime
+# Stage 05 R015 — Representative Projectile Cohort
 
 ## Status
 
@@ -7,220 +7,242 @@ Stage03 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION
 Stage04 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION
 Stage05 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION
 Stage05Pass = false
-Revision = R014
-Version = 0.0.7
+Revision = R015
+Version = 0.0.8
 TargetHytaleVersion = 0.7.0-pre.1
 PlayerStateSchema = 2
-EarliestUnprovedBoundary = CONNECTED_ABILITY_INPUT_TO_NATIVE_PROJECTILE_IMPACT
+EarliestUnprovedBoundary = CONNECTED_NATIVE_PROJECTILE_FLIGHT_TO_IMPACT_CALLBACK
+Stage06SafeToBegin = false
 ```
 
-R014 implements, tests, smoke-tests, and deploys the first shared Projectile-family
-cohort. It does not mark Stage 05 `PASS`: native connected-client flight, collision,
-impact, damage, inventory, rendered presentation, and cleanup observations remain
-required. Stage 03 and Stage 04 retain their prior non-PASS statuses.
+R015 implements the complete, bounded six-skill Stage 05 cohort. The clean build,
+118-test regression suite, current-build API/asset audit, JAR inspection, CustomUI
+validation, and isolated three-mod server smoke all pass. Stage 05 is not marked
+`PASS`, because a real connected client still needs to prove native flight, collision,
+payload application, presentation, inventory mutation, and teardown behavior.
 
-Phase 05 normally enters after the Phase 04 core outcome contract passes connected
-testing. The owner's explicit provisional exception authorizes this revision because
-R013 has a successful build, complete regression suite, bare-server startup, no known
-non-client blocker, and is waiting only on connected evidence.
+Stage 04 is allowed to remain `IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION` under the
+owner-unavailable exception: its automated and smoke gates pass and no engineering
+blocker is known. This revision does not begin Stage 06.
 
-## Bounded scope
+## Revision boundary
 
-Only two Phase 05 pilots become executable:
+- Starting commit: `e5fc9d3e0f85db75bb44a70a44f671739b38c793` (R014 evidence).
+- Ending implementation commit: `78b314a1fe1ed7046a398462769e00b2254eb3b5`.
+- RPG artifact: `HytaleRPG-0.0.8.jar`.
+- RPG artifact SHA-256: `6A6917C1AD363DAC7FE3E0BEBFE1DD0A74BDC288A3E8140A3EE60A97DBEC4504`.
+- Target: Hytale `0.7.0-pre.1`; pinned server JAR SHA-256
+  `EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3`.
 
-| Skill | Authoritative profile |
+R014 was a provisional two-projectile pass based on the earlier Fire Bolt/Snipe scope.
+The later, authoritative Stage 05 brief defines six different representatives and
+explicitly excludes Snipe. R015 removes Snipe from the executable runtime while
+preserving it in the canonical 87-skill catalog.
+
+## Implemented cohort
+
+| Skill | Exact executable contract |
 |---|---|
-| Fire Bolt | Staff/Wand; 8 Mana; instant; 1.4 s cooldown; 24 m; 24 m/s; 0.30 m radius; 0.95x Magic Power; Burn for four 1 s ticks at 0.10 resolved offensive power each |
-| Snipe | Bow; 12 Stamina; instant fully charged release; 10 s cooldown; audited-development fallback 48 m, 45 m/s, 0.10 m radius, gravity 0; 2.00x uncharged Weapon Power; consumes one `Weapon_Arrow_Crude`; no charged-basic recovery |
+| Fire Bolt | Staff/Wand; 8 Mana; 1.4 s cooldown; 24 m at 24 m/s; 0.30 m radius; 0.95x Magic Power; Burn for 4 s with four 0.10 snapshot-power ticks |
+| Frost Bolt | Staff/Wand; 8 Mana; 1.5 s cooldown; 24 m at 22 m/s; 0.30 m radius; 0.85x Magic Power; exactly one Chill stack request |
+| Arcane Bolt | Wand/Spellbook; 7 Mana; 1.2 s cooldown; 26 m at 26 m/s; 0.28 m radius; plain 0.90x Magic Power hit |
+| Stone Bolt | Staff/Wand; 8 Mana; 2.2 s cooldown; 20 m at 17 m/s; 0.45 m radius; 1.20x Magic Power; 1.5 m minor knockback request |
+| Quick Shot | Bow/Crossbow; 4 Stamina; 0.9 s cooldown; 28 m; native 0.075 m arrow bounds; audited 30 m/s Bow or 40 m/s Crossbow launch; 0.80x Light Power; one `Weapon_Arrow_Crude` |
+| Axe Toss | Battleaxe; 8 Stamina; 5 s cooldown; 20 m at 18 m/s; 0.45 m radius; 1.20x Heavy Power; projectile representation only—no weapon inventory transfer |
 
-The canonical catalogs remain exactly 87 skills and 66 passives. The six R013 pilots
-remain executable through the same registry. Remaining Phase 05 skills remain
-unavailable. CanvasUI source and its deployed R008 JAR are unchanged.
+The total catalogs remain exactly 87 skills and 66 passives. The six Stage 04 pilots
+also remain executable. Fireball, Arcane Missiles, Blunderbuss Shot, Explosive Flask,
+Bomb Toss, Cold Blast, Snipe, and all other unselected projectiles remain unavailable.
 
-## Shared runtime and authority
+## Executor architecture and authority
 
-R014 extends the existing common execution path rather than adding skill-specific
-executor classes:
+The implementation uses one data-driven `ProjectileFamilyExecutor`, not six
+skill-specific executors:
 
 ```text
-Ability input
-  -> equipped SkillId and current CompiledSkillPlan
-  -> actor/equipment/family/ammo/resource/cooldown validation
-  -> immutable CombatSnapshot and stable correlation IDs
-  -> one resource commit and one cooldown start
-  -> shared PROJECTILE executor
-  -> native ProjectileModule carrier and StandardPhysicsProvider collision
-  -> RPG-owned terminal decision
+Ability1..Ability4
+  -> equipped skill + CompiledSkillPlan
+  -> actor/equipment/config/live-budget/ammo/resource/cooldown validation
+  -> immutable equipment + CombatSnapshot capture
+  -> resource commit + cooldown start
+  -> ProjectileFamilyExecutor
+  -> RpgProjectileService builds ProjectileExecutionPlan
+  -> Hytale ProjectileModule creates native carrier
+  -> StandardPhysicsProvider supplies authoritative entity/terrain contact
+  -> RPG validates/deduplicates target and resolves snapshot payload
+  -> Hytale DamageSystems runs Gather -> Filter -> Apply -> Inspect
+  -> optional status/control payload
+  -> explicit terminal result and registry cleanup
+```
+
+`ProjectileExecutionPlan` carries the original `rootCastId`, `skillInstanceId`, a
+stable generation-zero `projectileInstanceId`, owner UUID, SkillId, compiled-plan
+hash, immutable `CombatSnapshot`, generation, continuation-budget map, remaining root
+budgets, spawn timestamp, config, origin, normalized velocity, radius, maximum range,
+and derived maximum lifetime. An equipment change after commit cannot mutate any
+in-flight calculation or Quick Shot carrier selection.
+
+`ProjectileLifecycleRegistry` rejects duplicate IDs and plans exceeding the canonical
+limits (`maxDerivedGeneration=3`, `maxSpawnedEffectsPerRootCast=48`,
+`maxTriggeredSecondariesPerRootCast=16`). `ProjectileInstance` owns total-path travel,
+elapsed lifetime, hit-target deduplication, and its single terminal record.
+`RpgProjectileService` exposes the requested spawn, enemy-contact, terrain-contact,
+forward-termination, and owner-cancellation seams. Death/logout/unload removes every
+owned carrier, emits cancellation/termination, and leaves no registry entry.
+
+## Native API and installed-asset audit
+
+R015 inspected the installed `0.7.0-pre.1` server and `Assets.zip`, rather than
+guessing identifiers. The automated audit proves:
+
+- `ProjectileModule.spawnProjectile`, the StandardPhysicsProvider component, and its
+  native impact callback are present;
+- `InventoryComponent.getCombined(HOTBAR_STORAGE_BACKPACK)` plus transactional
+  `removeItemStack`/`addItemStack` are present;
+- `Projectile_Config_Arrow_Base` has launch force 30, the Crossbow arrow config has
+  launch force 40, and `Arrow_Crude` has native +/-0.075 hit-box bounds;
+- Skeleton Scout's shot selects `Skeleton_Scout_Arrow`, whose parent is
+  `Arrow_FullCharge`, preserving the authored Signature source lineage;
+- all referenced particle systems exist: `Fire_Charged1`, `Block_Gem_Sparks`,
+  `Dust_Sparkles_Fine`, `Block_Break_Stone`,
+  `Bow_Signature_Projectile_Sparks`, and `Impact_Blade_01`;
+- the Fireball, Ice Bolt, Stone, crude-arrow, and Trork stone-axe model sources exist.
+
+Fire, Frost, Arcane, Stone, Quick Shot Bow/Crossbow, and Axe Toss each have an owned
+RPG `ProjectileConfig`. All use Hytale's Standard physics and impact callback. Their
+`Interactions` maps are empty on purpose: native movement/collision remains
+authoritative, while the RPG submits the only damage payload. This prevents a native
+weapon interaction and an RPG snapshot payload from damaging the same contact twice.
+
+Quick Shot reuses the installed crude-arrow model, hit box, Bow/Crossbow launch speeds,
+standard physics, and authoritative inventory container. It consumes exactly one real
+crude arrow and never mints ammo. Axe Toss uses a projectile visual derived from the
+installed Trork stone-axe model but only reads the equipped Battleaxe for validation
+and Heavy power; it does not transfer or destroy the equipped item.
+
+## Collision, payload, and cleanup behavior
+
+Every valid entity contact follows:
+
+```text
+native contact
+  -> candidate validation/protection check
+  -> per-projectile target dedup
+  -> snapshot-owned DamageCalculationService result
   -> HytaleDamageAdapter / DamageSystems.executeDamage
-  -> bounded status schedules and cleanup
-  -> automatic trace
+  -> actual Health inspection
+  -> Burn, Chill, or knockback request when authored and damage landed
+  -> ordinary first-contact termination
 ```
 
-`Stage04SkillProfiles` is retained as the public class name to avoid needless API
-churn, but now loads the versioned Stage 04 and Stage 05 runtime data sets. The
-`SkillExecutorRegistry` has one forwarding executor per mechanical family, including
-one `PROJECTILE` entry. There is no per-skill executor or growing 87-skill switch.
+Crit chance and result come only from the Stage 02 snapshot/calculation. There is no
+projectile crit formula. Fire Bolt schedules the existing bounded RPG Burn only after
+actual Health loss. Frost Bolt uses `StatusService` for one Chill stack. Stone Bolt
+uses Hytale's `KnockbackComponent` and declines control for protected or boss targets.
 
-The profile's projectile identity, collision bounds, speed, range, damage coefficient,
-status payload, and ammo rule are captured at activation. The carrier map retains the
-same `rootCastId`, `skillInstanceId`, `correlationId`, `CombatSnapshot`, and
-`CompiledSkillPlan` until impact, expiry, cancellation, or fizzle.
+Terrain contact emits its own result and terminates. Total observed path reaching the
+range cap emits `PROJECTILE_MAX_RANGE`; derived lifetime expiry emits
+`PROJECTILE_EXPIRED`. Native carrier disappearance, payload exceptions, actor death,
+logout, and world teardown cancel explicitly and clean both maps. There is no
+per-frame trace spam.
 
-## Native projectile audit and collision design
+Spawn is ordered as required: feasibility and ammo availability are checked before
+snapshot/cost commit; resource and cooldown commit precede native creation. A
+synchronous native dispatch failure uses the existing explicit transaction rollback:
+ammo is restored, the pending cost is refunded, cooldown is cleared, any carrier is
+removed, and `PROJECTILE_SPAWN_REJECTED` records the failure class. Nothing is silently
+left half-committed.
 
-The pinned server exposes:
+## Stage 07 continuation seam
 
-- `ProjectileModule.spawnProjectile` with creator, command buffer, config, origin,
-  and direction;
-- `ProjectileModule.getStandardPhysicsProviderComponentType`;
-- `StandardPhysicsProvider.setImpactConsumer` and the six-argument native impact
-  callback;
-- server-authoritative combined inventory and transactional item removal/addition;
-- installed crude-arrow, fire-projectile particle, fireball model, arrow model, Burn
-  particle, and Burn model assets.
+Every generation-zero plan contains explicit zero budgets for Split, Pierce, Fork,
+Chain, Ricochet, and Return. Compiled Link metadata remains attached to the plan, but
+Stage 05 never executes it. Ordinary entity or terrain contact forwards directly to
+terminal cleanup. `onForwardTermination` and the collision/payload adapter contracts
+are the deliberate Stage 07 interception points; no continuation ordering or child
+creation is implemented here.
 
-R014 packages two native projectile configs and two exact-bound model records. Their
-native `Interactions` objects are deliberately empty. Native standard physics owns
-swept block/entity collision and movement, while the RPG callback owns the one allowed
-damage submission. This avoids a native interaction hit plus an RPG hit for the same
-contact. A terrain hit, valid target hit, invalid/protected target fizzle, range expiry,
-lifetime expiry, actor teardown, and unexplained native removal are distinct terminal
-paths.
+## Trace contract
 
-`ProjectileFlight` sums the observed path segments rather than measuring only straight
-line displacement. Maximum lifetime is derived from `maxDistance / speed` (1.0 s for
-Fire Bolt, 48/45 s for Snipe), so both distance and time are bounded. Per-plan live
-projectile admission is checked before cost.
-
-## Damage and Burn
-
-A valid target hit is limited to one target and submits the snapshot-owned calculation
-through the Stage 02 adapter. It preserves the native:
+R015 adds the exact bounded lifecycle events:
 
 ```text
-DAMAGE_GATHERED -> DAMAGE_FILTERED -> DAMAGE_APPLIED -> DAMAGE_INSPECTED
-```
-
-chain and records pre-mitigation amount plus actual authoritative Health loss.
-
-Fire Bolt applies Burn only after a valid damaging hit with actual Health loss. The
-packaged `RPG_Burn_Visual` inherits Hytale's water/immunity application conditions and
-uses verified native visuals, but intentionally contains no `DamageCalculator`. RPG
-authority schedules exactly four one-second, non-critical damage submissions at 0.10
-snapshot-resolved offensive power each. That separation prevents Hytale's stock fixed
-Burn damage from becoming an uncorrelated second damage source. Reapplication refreshes
-the owned schedule and snapshot rather than stacking unbounded timers.
-
-## Ammo, cost, and rollback
-
-Snipe checks and consumes exactly one `Weapon_Arrow_Crude` from the authoritative
-hotbar/storage/backpack combined inventory. It neither removes the equipped Bow nor
-uses a visual-item copy as authority. A changed/missing arrow rejects before dispatch;
-if native projectile creation fails after arrow consumption, the arrow transaction is
-refunded and the projectile carrier is removed.
-
-R014 also hardens the common commit boundary. A deterministic executor-throw test
-found that R013's post-commit exception path terminated without clearing its cooldown
-or refunding committed resource. R014 keeps the Stage 02 cost token pending until
-successful family dispatch; a synchronous dispatch error now refunds the resource and
-clears the cooldown. The R013 report was amended to state that boundary factually.
-
-Snipe's `fullyCharged` flag is metadata for compatible future interactions only. The
-projectile hit path never calls the basic-attack recovery service, so it cannot grant
-the 12% charged basic recovery.
-
-## Automatic trace contract
-
-R014 retains all Stage 01B–04 and damage events and adds:
-
-```text
-AMMO_CHECK
-AMMO_COMMITTED
-AMMO_REJECTED
+PROJECTILE_SPAWN_REQUEST
 PROJECTILE_SPAWNED
-PROJECTILE_TARGET_REJECTED
-PROJECTILE_HIT
-PROJECTILE_TERRAIN_IMPACT
+PROJECTILE_SPAWN_REJECTED
+PROJECTILE_ENTITY_HIT
+PROJECTILE_TARGET_DEDUP
+PROJECTILE_TERRAIN_HIT
+PROJECTILE_MAX_RANGE
 PROJECTILE_EXPIRED
 PROJECTILE_CANCELLED
-BURN_TICK
+PROJECTILE_TERMINATED
 ```
 
-Every derived direct hit and Burn tick uses the original three IDs. No `/rpg trace`
-command is required; records are written to
-`mods/InigmasGames_HytaleRPGPhase00Audit/logs/rpg/skill-trace.jsonl`.
+An extra `PROJECTILE_TARGET_REJECTED` distinguishes non-damageable/protected contact.
+Projectile events include the three correlation IDs, `projectileInstanceId`,
+generation, caster, SkillId, and compiled-plan hash; terminal/hit events add target,
+position where available, travelled distance, damage, Health loss, status, knockback,
+or reason. The native damage trace retains Gather -> Filter -> Apply -> Inspect with
+the same cast/skill/correlation IDs.
 
-## Verification results
+The deterministic trace assertions prove singular family dispatch, correlation
+continuity, spawn rejection, Stage 02 crit integration, and the no-Fork-before-Stage-07
+rule. The isolated server log proves automatic trace-path registration and the R015
+ready marker. No connected projectile trace is claimed yet.
+
+## Verification
 
 | Gate | Result |
 |---|---|
-| Clean Gradle build | PASS |
-| Complete RPG + CanvasUI tests | PASS — 110 tests, 0 failures, 0 errors, 0 skipped |
-| CustomUI source/package validation | PASS |
+| Clean RPG + CanvasUI Gradle build | PASS |
+| CustomUI validation | PASS — 13 documents |
+| Complete retained test suite | PASS — 118 tests, 0 failures, 0 errors, 0 skipped |
+| Stage 05 projectile tests | PASS — 17 deterministic tests |
+| Catalog/profile gate | PASS — 87 skills, 66 passives, 6 retained Stage 04 pilots, exactly 6 Stage 05 pilots |
+| Exact projectile data and Snipe exclusion | PASS |
 | Required JAR entries | PASS |
-| Catalogs and retained profiles | PASS — 87 skills, 66 passives, 6 Stage 04 pilots |
-| Stage 05 data | PASS — 2 pilots with exact authored bounds |
-| Pinned projectile/inventory API audit | PASS |
-| Installed asset-ID audit | PASS |
-| Bare-server startup | PASS — exact three mods discovered and enabled; R014 ready marker; no RPG/Stage-05 asset failure |
-| Player persistence schema | PASS — schema 2 unchanged |
+| Pinned native API/asset audit | PASS |
+| Isolated server smoke | PASS — exactly three mods discovered, R015 ready, plugin manager started, clean operator shutdown, no RPG/asset failure |
+| Player schema | PASS — v2 unchanged |
+| CanvasUI source | PASS — unchanged |
 | Connected client | PENDING |
 
-Deterministic tests cover profile values, supported/invalid weapons, insufficient
-resource no-consume behavior, ammo precondition rejection, one family dispatch, magic
-and physical base-power snapshots, total-path distance and derived lifetime, target cap,
-Burn tick contract, stable trace identity, dispatch rollback, native API signatures,
-no native damage interactions in owned assets, and every retained regression suite.
-
-Evidence:
-
-- `evidence/stage-05/R014/verification.json`
-- `evidence/stage-05/R014/api-audit.json`
-- `evidence/stage-05/R014/server-smoke-summary.json`
-- `evidence/stage-05/R014/server-smoke.txt`
-- `evidence/stage-05/R014/installation.json`
-
-The smoke harness intentionally stops the healthy bare server. Its established process
-exit code `9` is expected and is not an RPG startup failure.
+Evidence is retained in `evidence/stage-05/R015/verification.json`,
+`api-audit.json`, `server-smoke-summary.json`, `server-smoke.txt`, and
+`installation.json`. The smoke harness seeds a valid permissions profile to avoid the
+engine's first-run asynchronous permissions-writer race, waits for normal plugin
+startup, sends `stop`, and now observes exit code 0 plus `Shutdown completed!`.
 
 ## Deployment and rollback
 
-The RPG save contains exactly the established three JARs:
+The RPG save is constrained to exactly these three mod JARs:
 
 | Mod | SHA-256 |
 |---|---|
 | `CanvasUI-0.1.0.jar` | `218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6` |
 | `HYTALEDEVLIB-0.5.0.jar` | `DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230` |
-| `HytaleRPG-0.0.7.jar` | `071356081AB3052E9E6320CBF1E373DB4F8A18C43AB823E7728367A97EBA24FB` |
+| `HytaleRPG-0.0.8.jar` | `6A6917C1AD363DAC7FE3E0BEBFE1DD0A74BDC288A3E8140A3EE60A97DBEC4504` |
 
-The complete installation record is `installation.json`; R014 preserves the deployed R013 RPG JAR in
-`evidence/stage-05/R014/rollback/HytaleRPG-0.0.6.jar`.
+R015 preserves `HytaleRPG-0.0.7.jar` in
+`evidence/stage-05/R015/rollback`. Earlier Stage 02/03/04 rollback evidence remains
+untouched. To roll back, fully stop the RPG world, remove `HytaleRPG-0.0.8.jar`, copy
+the retained `HytaleRPG-0.0.7.jar` into `Saves/RPG/mods`, and leave CanvasUI,
+HytaleDevLib, and player schema v2 unchanged.
 
-Rollback: fully stop the RPG world, remove `HytaleRPG-0.0.7.jar`, restore that retained
-`HytaleRPG-0.0.6.jar` to the save's `mods` directory, and leave CanvasUI and HytaleDevLib
-unchanged. Player schema remains v2; do not downgrade or replace player state.
+## Known limitations and decision
 
-## Connected evidence still required
-
-Local and bare-server evidence cannot prove live input delivery, equipped-item power,
-actual arrow inventory transactions, rendered trajectories, world collision order,
-native target/terrain impacts, authoritative target Health loss, Burn timing, cleanup
-during connected teardown, or restart persistence. The exact checklist is in
-`client-verification.md`.
-
-Stage 05 may become `PASS` only after connected proof shows both pilots, all terminal
-paths, one-cost/one-arrow behavior, full damage correlation, no Snipe recovery, healthy
-HUD/state persistence, and no RPG-scoped exception.
-
-## Closure decision
+Automated and bare-server checks cannot prove a connected Ability input reaches a
+rendered projectile, that the native callback reports the expected live entity/block,
+that actual Health/inventory/HUD state changes correctly, or that connected teardown
+is leak-free. Those are evidence gaps, not known implementation failures. The concise
+owner checklist is in `client-verification.md`.
 
 ```ini
 Stage05 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION
 Stage05Pass = false
-EarliestUnprovedBoundary = CONNECTED_ABILITY_INPUT_TO_NATIVE_PROJECTILE_IMPACT
+EarliestUnprovedBoundary = CONNECTED_NATIVE_PROJECTILE_FLIGHT_TO_IMPACT_CALLBACK
 Stage06SafeToBegin = false
 ```
 
-R014 has no known automated, server-startup, architectural, persistence, asset, or
-RPG-scoped exception blocker. Work stops at the Stage 05 connected gate; Stage 06 does
-not begin.
+Work stops at this gate. Stage 06 has not begun.
