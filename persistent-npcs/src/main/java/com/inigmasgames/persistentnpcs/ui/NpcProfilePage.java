@@ -158,7 +158,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private ProfileCategory profileCategory = ProfileCategory.BASIC_INFO;
     private String profileEditorStatus = "Draft valid.";
     private boolean profileEditorError;
-    private String profileGenerationScope = "BIOGRAPHY";
+    private String profileGenerationScope = "FILL_MISSING_ALLOWED_FIELDS";
 
     private enum ProfileCategory {
         BASIC_INFO("BasicInfo", 0), BACKGROUND("Background", 1),
@@ -2146,7 +2146,7 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         }
         events.addEventBinding(CustomUIEventBindingType.Activating,
                 "#ProfileGenerateButton", authoringEvent("PROFILE_GENERATE")
-                        .append("ProfileGenerateScope", "BIOGRAPHY"));
+                        .append("ProfileGenerateScope", "FILL_MISSING_ALLOWED_FIELDS"));
         setProfileFormValues(commands);
     }
 
@@ -2169,8 +2169,8 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
         boolean generating = profileGeneration != null;
         commands.set("#ProfileGenerateButton.Disabled", generating || !basicInfoValid());
         commands.set("#ProfileGenerationStatus.Text", generating
-                ? "Generating biography..."
-                : "Generate a biography with AI after filling out all basic information.");
+                ? "Generating a coherent full profile..."
+                : "Generate missing profile fields with AI after completing Basic Info.");
     }
 
     private boolean basicInfoValid() {
@@ -2237,30 +2237,38 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
     private void startProfileGeneration(Store<EntityStore> store, PageData data) {
         requireProfileDraft();
         if (!basicInfoValid()) throw new IllegalArgumentException(
-                "Complete all Basic Info fields before generating a biography.");
+                "Complete all Basic Info fields before generating the profile.");
         cancelProfileGeneration();
         NpcProfileGenerationService service = editor.generation().orElseThrow(() ->
                 new IllegalStateException("Generation provider is unavailable; manual editing remains available."));
-        NpcProfileGenerationService.Scope scope = NpcProfileGenerationService.Scope.BIOGRAPHY;
+        NpcProfileGenerationService.Scope scope =
+                NpcProfileGenerationService.Scope.FILL_MISSING_ALLOWED_FIELDS;
         profileGenerationScope = scope.name();
         String expectedHash = profileDraft.draftHash();
         UUID expectedDraft = profileDraft.draftId();
+        UUID expectedStableId = profileDraft.stableNpcId();
+        long expectedPageGeneration = authoringSession.pageGeneration();
         long expectedGeneration = authoringSession.editorGeneration();
+        long expectedBaseRevision = profileDraft.baseRevision();
         profileEditorStatus = "Generation queued at low priority; canonical profile is unchanged.";
         profileEditorError = false;
         profileGeneration = service.generate(new NpcProfileGenerationService.Request(
-                authoringSession.sessionId(), expectedGeneration, profileDraft.baseRevision(),
-                expectedHash, profileDraft.stableNpcId(), playerRef.getUuid(), scope,
-                profileDraft.dirtyFields(), profileDraft));
+                authoringSession.sessionId(), expectedPageGeneration, expectedGeneration,
+                expectedBaseRevision, expectedHash, expectedStableId, playerRef.getUuid(), scope,
+                profileDraft.dirtyFields(), profileDraft, editor.approvedLoreFor(profileDraft),
+                NpcProfileGenerationService.PATCH_SCHEMA_VERSION));
         NpcProfileGenerationService.Handle handle = profileGeneration;
         handle.future().whenComplete((proposal, failure) ->
                 store.getExternalData().getWorld().execute(() -> {
                     if (profileGeneration != handle) return;
                     profileGeneration = null;
                     if (profileDraft == null || !profileDraft.draftId().equals(expectedDraft)
+                            || authoringSession.pageGeneration() != expectedPageGeneration
                             || authoringSession.activeEditor()
                                     != NpcAuthoringSession.EditorKind.PROFILE
                             || authoringSession.editorGeneration() != expectedGeneration
+                            || profileDraft.baseRevision() != expectedBaseRevision
+                            || !profileDraft.stableNpcId().equals(expectedStableId)
                             || !profileDraft.draftHash().equals(expectedHash)) {
                         diagnostics.accept("NPC_PROFILE_GENERATION_STALE_REJECTED timestamp="
                                 + Instant.now() + " requestId=" + handle.requestId());
@@ -2271,10 +2279,20 @@ public final class NpcProfilePage extends InteractiveCustomUIPage<NpcProfilePage
                                 + ". Manual editing remains available.";
                         profileEditorError = true;
                     } else {
-                        profileDraft.setProposal(proposal);
-                        profileDraft.acceptProposal(Set.of(NpcProfileDraft.Field.BIOGRAPHY));
+                        if (!proposal.requestId().equals(handle.requestId())
+                                || !proposal.npcStableId().equals(expectedStableId)
+                                || proposal.baseProfileRevision() != expectedBaseRevision
+                                || !proposal.sourceDraftHash().equals(expectedHash)
+                                || !NpcProfileGenerationService.PATCH_SCHEMA_VERSION.equals(
+                                        proposal.schemaVersion())) {
+                            diagnostics.accept("NPC_PROFILE_GENERATION_STALE_REJECTED timestamp="
+                                    + Instant.now() + " requestId=" + handle.requestId()
+                                    + " reason=PATCH_IDENTITY_MISMATCH");
+                            return;
+                        }
+                        profileDraft.acceptGeneratedPatch(proposal);
                         authoringSession.markDirty(NpcAuthoringSession.DirtyDomain.PROFILE);
-                        profileEditorStatus = "Biography generated into the draft. Save Profile commits it to canon.";
+                        profileEditorStatus = "Profile fields generated into the draft. Review them; Save Profile commits canon.";
                         profileEditorError = false;
                         profileCategory = ProfileCategory.BACKGROUND;
                     }

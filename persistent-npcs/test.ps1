@@ -664,6 +664,9 @@ if ($LASTEXITCODE -ne 0) { throw "R168 Profile section event hotfix tests failed
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R169ProfileDocumentTabsTest
 if ($LASTEXITCODE -ne 0) { throw "R169 Profile document-tab tests failed with exit code $LASTEXITCODE" }
 
+& $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.profile.R170CreativeProfileGenerationTest
+if ($LASTEXITCODE -ne 0) { throw "R170 creative full-profile generation tests failed with exit code $LASTEXITCODE" }
+
 & $java --add-modules jdk.httpserver -ea -classpath $runtimeClasspath com.inigmasgames.persistentnpcs.R147NpcProfileRepairTest
 if ($LASTEXITCODE -ne 0) {
     throw "R147 Profile repair tests failed with exit code $LASTEXITCODE"

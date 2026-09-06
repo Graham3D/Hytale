@@ -25,6 +25,6 @@ Group { LayoutMode: Left; Anchor: (Height: 22);
   Label #ProfileSummaryCounter { Anchor: (Width: 90); Text: "0 / 500"; Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #6f879a, HorizontalAlignment: End); }
 }
 MultilineTextField #ProfileSummaryInput { Anchor: (Height: 126, Bottom: 12); Background: $C.@InputBoxBackground; MaxVisibleLines: 6; AutoGrow: false; MaxLength: 500; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
-$C.@TextButton #ProfileGenerateButton { @Anchor = (Height: 44, Bottom: 7); Text: "Generate Biography"; }
-Label #ProfileGenerationStatus { Anchor: (Height: 42); Text: "Generate a biography with AI after filling out all basic information."; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #768b9e, HorizontalAlignment: Center); }
+  $C.@TextButton #ProfileGenerateButton { @Anchor = (Height: 44, Bottom: 7); Text: "Generate Profile"; }
+  Label #ProfileGenerationStatus { Anchor: (Height: 42); Text: "Generate missing profile fields with AI after completing Basic Info."; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #768b9e, HorizontalAlignment: Center); }
 Group { FlexWeight: 1; }

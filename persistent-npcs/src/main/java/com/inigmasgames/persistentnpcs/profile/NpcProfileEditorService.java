@@ -143,6 +143,12 @@ public final class NpcProfileEditorService {
         return java.util.Optional.ofNullable(generation);
     }
 
+    /** Approved, bounded authored context for one Profile Editor generation request. */
+    public java.util.Optional<NpcProfileAuthoringLore.WorldLorePacket> approvedLoreFor(
+            NpcProfileDraft draft) {
+        return NpcProfileAuthoringLore.relevantTo(draft, registry.profiles());
+    }
+
     public NpcAppearanceCatalogService appearanceCatalog() { return appearanceCatalog; }
     public NpcSkinCodecAdapter skinCodec() { return skinCodec; }
     public NpcAppearanceAuthoringService appearanceAuthoring() {

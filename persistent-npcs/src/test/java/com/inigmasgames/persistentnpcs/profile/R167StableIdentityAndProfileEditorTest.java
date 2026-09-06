@@ -149,6 +149,7 @@ public final class R167StableIdentityAndProfileEditorTest {
                     : field + " must be captured on Save";
         }
         assert !all.contains("Apply to Draft") && !all.contains("Discard Proposal");
-        assert page.contains("profileDraft.acceptProposal(Set.of(NpcProfileDraft.Field.BIOGRAPHY))");
+        assert page.contains("profileDraft.acceptGeneratedPatch(proposal)")
+                : "Validated generation must populate the mounted draft without a second Apply action";
     }
 }

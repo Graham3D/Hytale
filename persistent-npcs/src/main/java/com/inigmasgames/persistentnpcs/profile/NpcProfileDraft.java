@@ -19,24 +19,24 @@ import java.util.UUID;
 /** Server-owned, revision-bound profile draft. Custom UI values are intent only. */
 public final class NpcProfileDraft {
     public enum Field {
-        ROLE("role", 160, false, true),
-        SELF_IDENTITY("selfIdentity", 400, false, false),
+        ROLE("role", 160, false, false),
+        SELF_IDENTITY("selfIdentity", 400, false, true),
         SPECIES_ARCHETYPE("speciesArchetype", 80, false, false),
         AGE_CATEGORY("ageCategory", 40, false, false),
         HOME("home", 200, false, false),
         SUMMARY("summary", 500, false, false),
-        WORKPLACE("workplace", 200, false, false),
+        WORKPLACE("workplace", 200, false, true),
         PERSONALITY("personality", 900, false, true),
         PERSONALITY_TRAITS("personalityTraits", 700, true, true),
         VALUES("values", 700, true, true),
-        LIKES("likes", 700, true, false),
-        DISLIKES("dislikes", 700, true, false),
-        FEARS("fears", 700, true, false),
+        LIKES("likes", 700, true, true),
+        DISLIKES("dislikes", 700, true, true),
+        FEARS("fears", 700, true, true),
         BIOGRAPHY("biography", 1800, false, true),
         PURPOSE("purpose", 900, false, true),
         GOALS("goals", 900, true, true),
         SPEAKING_STYLE("speakingStyle", 900, false, true),
-        KNOWLEDGE_DOMAINS("knowledgeDomains", 900, true, false),
+        KNOWLEDGE_DOMAINS("knowledgeDomains", 900, true, true),
         CREATOR_NOTES("creatorNotes", 3000, false, false);
 
         private final String jsonName;
@@ -117,6 +117,26 @@ public final class NpcProfileDraft {
     public Proposal acceptedProposal() { return acceptedProposal; }
     public Provenance provenance() { return provenance; }
 
+    /** Template scaffolding is missing authoring content, not creator-written canon. */
+    public boolean generationMissing(Field field) {
+        if (field == null || !field.generated() || dirty.contains(field)) return false;
+        String value = value(field);
+        if (value.isBlank()) return true;
+        return switch (field) {
+            case SELF_IDENTITY -> value.equalsIgnoreCase(profileName);
+            case PERSONALITY -> value.equalsIgnoreCase(
+                    "Describe " + profileName + "'s personality.");
+            case PERSONALITY_TRAITS -> value.equalsIgnoreCase(
+                    "Describe " + profileName + "'s personality.");
+            case BIOGRAPHY -> value.equalsIgnoreCase(
+                    "Describe " + profileName + "'s biography.");
+            case PURPOSE -> value.equalsIgnoreCase(
+                    "Describe " + profileName + "'s purpose.");
+            case SPEAKING_STYLE -> value.equalsIgnoreCase("Natural and concise");
+            default -> false;
+        };
+    }
+
     public void update(Field field, String value) {
         if (field == null) throw new IllegalArgumentException("Profile field is required.");
         String clean = value == null ? "" : value.strip();
@@ -170,6 +190,20 @@ public final class NpcProfileDraft {
                 proposal.provider(), proposal.model(), proposal.createdAt(),
                 acceptedChanges, proposal.warnings());
         proposal = null;
+    }
+
+    /** Applies an already validated patch to this draft only; canonical storage is untouched. */
+    public void acceptGeneratedPatch(
+            NpcProfileGenerationService.GeneratedProfilePatch patch) {
+        if (patch == null || !stableNpcId.equals(patch.npcStableId())
+                || baseRevision != patch.baseProfileRevision()
+                || !draftHash().equals(patch.sourceDraftHash())) {
+            throw new IllegalArgumentException("Generated profile patch identity is stale.");
+        }
+        setProposal(new Proposal(patch.requestId(), patch.schemaVersion(),
+                patch.metadata().provider(), patch.metadata().model(),
+                patch.metadata().createdAt(), patch.allowedChanges(), patch.warnings()));
+        acceptProposal(patch.allowedChanges().keySet());
     }
 
     public JsonObject candidateDocument() {
