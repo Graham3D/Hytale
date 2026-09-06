@@ -318,4 +318,6 @@ EarliestUnprovedBoundary = CONNECTED_JOIN_RPG_HUD_CREATE
 Stage04SafeToBegin = true
 ```
 
-No Stage 04 family implementation was started.
+Stage 04 began later under the owner's explicit provisional authorization. This does
+not change the Stage 03 status or manufacture connected evidence for it; see
+`docs/stage-04/stage-04-report.md` for the separate R013 revision.
