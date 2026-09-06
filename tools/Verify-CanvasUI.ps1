@@ -11,6 +11,11 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'CanvasUI build/test failed.' }
     $library = Join-Path $root 'canvas-ui\build\libs\CanvasUI-0.1.0.jar'
     $demo = Join-Path $root 'canvas-ui-demo\build\libs\CanvasUI-Demo-0.1.0.jar'
+    & (Join-Path $PSScriptRoot 'Test-CustomUIDocuments.ps1') -Path @(
+        (Join-Path $root 'src\main\resources'),
+        $library,
+        $demo
+    )
     $libraryEntries = @(& jar tf $library)
     $demoEntries = @(& jar tf $demo)
     $requiredLibrary = @('manifest.json','canvasui-build.properties','Common/UI/Custom/CanvasUIPage.ui',

@@ -6,6 +6,7 @@ $root = (Resolve-Path "$PSScriptRoot\..").Path; $evidence = Join-Path $root 'evi
 $library = Join-Path $root 'canvas-ui\build\libs\CanvasUI-0.1.0.jar'; $demo = Join-Path $root 'canvas-ui-demo\build\libs\CanvasUI-Demo-0.1.0.jar'
 if (-not (Test-Path -LiteralPath $SaveModsDirectory -PathType Container)) { throw "Save mods directory missing: $SaveModsDirectory" }
 if (-not (Test-Path -LiteralPath $library) -or -not (Test-Path -LiteralPath $demo)) { throw 'Build CanvasUI and the demo first.' }
+& (Join-Path $PSScriptRoot 'Test-CustomUIDocuments.ps1') -Path @($library, $demo)
 $libraryTarget = Join-Path $SaveModsDirectory 'CanvasUI-0.1.0.jar'; $demoTarget = Join-Path $SaveModsDirectory 'CanvasUI-Demo-0.1.0.jar'
 Copy-Item -LiteralPath $library -Destination $libraryTarget -Force; Copy-Item -LiteralPath $demo -Destination $demoTarget -Force
 New-Item -ItemType Directory -Force -Path $evidence | Out-Null

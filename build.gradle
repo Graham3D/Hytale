@@ -24,6 +24,19 @@ dependencies {
     compileOnly files(htDevLibJar)
 }
 
+tasks.register('validateCustomUi', Exec) {
+    group = 'verification'
+    description = 'Rejects malformed CustomUI documents before resources are packaged.'
+    commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+        file('tools/Test-CustomUIDocuments.ps1'), '-Path', projectDir
+}
+
+allprojects {
+    tasks.matching { it.name == 'processResources' }.configureEach {
+        dependsOn rootProject.tasks.named('validateCustomUi')
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }

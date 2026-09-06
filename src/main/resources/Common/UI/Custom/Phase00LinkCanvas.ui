@@ -30,7 +30,7 @@ Group {
         Background: (Color: #385d73ff);
         LayoutMode: Center;
         Label {
-          Text: "SKILL\nNODE";
+          Text: "SKILL NODE";
           Style: (FontSize: 20, TextColor: #ffffff, Alignment: Center);
         }
       }
@@ -53,4 +53,3 @@ Group {
     }
   }
 }
-
