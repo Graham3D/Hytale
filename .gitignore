@@ -5,3 +5,4 @@ config.json
 telemetry/
 *.log
 evidence/stage-01b/*/rollback/*.jar
+evidence/stage-02/*/rollback/*.jar
