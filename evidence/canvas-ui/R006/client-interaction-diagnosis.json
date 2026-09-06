@@ -1,0 +1,38 @@
+{
+  "capturedFromRevision": "R006",
+  "hytaleVersion": "0.7.0-pre.1",
+  "hytaleRevision": "e8b4d191fc98a977bf5546a951a7b25473d323e3",
+  "clientLog": "2026-09-06_12-14-50_client.log",
+  "serverLog": "2026-09-06_12-14-56_server.log",
+  "command": "/canvasui-demo",
+  "openedAtUtc": "2026-09-06T16:15:11Z",
+  "closedAtUtc": "2026-09-06T16:20:18Z",
+  "clientEnteredUiContext": true,
+  "renderedInitialTopology": true,
+  "clientDisconnectedOnOpen": false,
+  "commandException": false,
+  "sessionCloseMetrics": {
+    "pointerEvents": 0,
+    "uiUpdates": 0,
+    "pageRebuilds": 1,
+    "commandsAfterInitialBuild": 0,
+    "pointerEventsPerSecond": 0.0,
+    "uiUpdatesPerSecond": 0.0,
+    "averageProcessingLatencyMillis": 0.0,
+    "peakProcessingLatencyMillis": 0.0
+  },
+  "sourceFindings": {
+    "pageBaseClass": "CustomUIPage",
+    "customUiEventBindingsRegistered": 0,
+    "renderedNodeElementTypes": ["Group", "Label"],
+    "inputTransport": ["PlayerMouseButtonEvent", "PlayerMouseMotionEvent"],
+    "edgeRemovalModelApiExists": true,
+    "edgeRemovalInteractionCallerExists": false,
+    "edgeHitTestingExists": false
+  },
+  "diagnosis": [
+    "The client UI context delivered no global gameplay mouse events to the active CanvasUI session.",
+    "The CanvasUI page registers no client-owned CustomUI event bindings as an alternative input route.",
+    "Existing-edge removal is not wired to any gesture even if pointer delivery is later solved."
+  ]
+}

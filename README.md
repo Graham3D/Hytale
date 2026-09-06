@@ -20,3 +20,7 @@ The single deployable CanvasUI artifact is
 `canvas-ui/build/libs/CanvasUI-0.1.0.jar`. Its R006 development build includes
 the `/canvasui-demo` and `/canvasui-topology-proof` commands; no second demo mod
 is installed.
+
+The canonical revision-by-revision engineering record is
+[`docs/canvas-ui/development-report.md`](docs/canvas-ui/development-report.md).
+It must be updated after every deployed CanvasUI revision.

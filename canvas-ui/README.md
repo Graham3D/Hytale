@@ -23,6 +23,10 @@ The R006 development JAR also contains the public-API-only generic demo and
 topology-proof commands. They remain isolated under the demo source tree so the
 consumer boundary is testable, but there is no second installed mod.
 
+See the living
+[`development report`](../docs/canvas-ui/development-report.md) for the exact
+per-revision client evidence, decisions, blockers, and next probe.
+
 Install the CanvasUI jar in the save's `mods` directory. A consuming plugin
 declares `"InigmasGames:CanvasUI": "*"` in its manifest and compiles against
 the jar:
