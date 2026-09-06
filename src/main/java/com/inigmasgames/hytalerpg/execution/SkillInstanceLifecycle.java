@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-/** Idempotent ownership of wind-up, movement, and reaction state for an actor. */
+/** Idempotent ownership of bounded active execution state for an actor. */
 public final class SkillInstanceLifecycle {
     private final Map<UUID, Active> active = new HashMap<>();
     public synchronized boolean begin(UUID actor, String instanceId, Phase phase) {
@@ -23,6 +23,6 @@ public final class SkillInstanceLifecycle {
     }
     public synchronized Optional<Active> cancel(UUID actor) { return Optional.ofNullable(active.remove(actor)); }
     public synchronized Optional<Active> active(UUID actor) { return Optional.ofNullable(active.get(actor)); }
-    public enum Phase { WINDUP, COMMITTED, STRIKE_REPEAT, MOVEMENT, REACTION }
+    public enum Phase { WINDUP, COMMITTED, STRIKE_REPEAT, MOVEMENT, REACTION, PROJECTILE }
     public record Active(String instanceId, Phase phase) { }
 }

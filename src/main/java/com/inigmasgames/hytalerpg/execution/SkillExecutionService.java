@@ -101,6 +101,8 @@ public final class SkillExecutionService {
             emit(request, RpgTraceEventType.MOVEMENT_CANCELLED, root, instance, Map.of("reason", reason));
         else if (cancelled.get().phase() == SkillInstanceLifecycle.Phase.REACTION)
             emit(request, RpgTraceEventType.REACTION_CANCELLED, root, instance, Map.of("reason", reason));
+        else if (cancelled.get().phase() == SkillInstanceLifecycle.Phase.PROJECTILE)
+            emit(request, RpgTraceEventType.PROJECTILE_CANCELLED, root, instance, Map.of("reason", reason));
         emit(request, RpgTraceEventType.SKILL_TERMINATED, root, instance,
                 Map.of("reason", reason, "phase", cancelled.get().phase().name()));
         return true;
@@ -130,7 +132,7 @@ public final class SkillExecutionService {
                 && !plan.finalTags().contains(profile.family().name()))
             throw new Rejection("COMPILED_FAMILY_UNSUPPORTED", instance);
         validateEquipment(profile, port.equipment(), instance);
-        SkillExecutionPort.Validation family = port.familyPrerequisites(profile);
+        SkillExecutionPort.Validation family = port.familyPrerequisites(profile, plan);
         if (!family.accepted()) throw new Rejection(family.code(), instance);
         ResourceCost declared = new ResourceCost(ResourceType.valueOf(profile.resourceType()), profile.resourceCost());
         ResourceCost cost = kernel.resources().evaluate(declared, plan.kernelModifiers());
@@ -151,15 +153,14 @@ public final class SkillExecutionService {
             BasePowerResolver.Resolution power = resolvePower(prepared.profile, port.equipment());
             var cooldown = kernel.cooldowns().calculate(prepared.profile.cooldownSeconds(), 1.0,
                     attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
-            Map<String, Double> status = prepared.profile.strike() == null || prepared.profile.strike().statusId().isBlank()
-                    ? Map.of() : Map.of(prepared.profile.strike().statusId(), prepared.profile.strike().statusSeconds());
+            Map<String, Double> status = prepared.profile.authoredStatuses();
             ModifierBuckets modifiers = new ModifierBuckets(
                     prepared.plan.kernelModifiers().scalablePayloadIncreased() > 0.0
                             ? java.util.List.of(prepared.plan.kernelModifiers().scalablePayloadIncreased())
                             : java.util.List.of(), java.util.List.of(), java.util.List.of(), java.util.List.of());
             var snapshot = kernel.snapshots().capture(prepared.rootCastId, prepared.instanceId,
                     prepared.request.actorId(), attributes, power, prepared.plan,
-                    prepared.profile.strike() == null ? 0.0 : prepared.profile.strike().coefficient(),
+                    prepared.profile.damageCoefficient(),
                     modifiers, prepared.cost, cooldown.finalSeconds(), status);
             context = new SkillExecutionContext(prepared.request, prepared.rootCastId, prepared.instanceId,
                     prepared.profile, prepared.plan, snapshot);
@@ -167,7 +168,6 @@ public final class SkillExecutionService {
             kernel.cooldowns().startCooldown(prepared.request.actorId(), prepared.profile.skillId(),
                     prepared.profile.cooldownSeconds(), 1.0, attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
             cooldownStarted = true;
-            kernel.resources().finish(token);
         } catch (RuntimeException error) {
             if (cooldownStarted) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
             try {
@@ -185,8 +185,14 @@ public final class SkillExecutionService {
         emit(prepared.request, RpgTraceEventType.EXECUTOR_DISPATCH, prepared.rootCastId, prepared.instanceId,
                 Map.of("family", prepared.profile.family().name()));
         SkillExecutionResult result;
-        try { result = executors.require(prepared.profile.family()).execute(context, port); }
+        try {
+            result = executors.require(prepared.profile.family()).execute(context, port);
+            kernel.resources().finish(token);
+        }
         catch (RuntimeException error) {
+            if (cooldownStarted) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
+            try { if (resourceCommitted) kernel.resources().refundCommittedCost(token, port.resources()); }
+            catch (RuntimeException ignored) { }
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());
             return new SkillExecutionResult(SkillExecutionResult.Status.TERMINATED,
                     "EXECUTOR_ERROR", true, 0, 0.0);
@@ -208,6 +214,11 @@ public final class SkillExecutionService {
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.REACTION))
                 throw new IllegalStateException("Reaction lifecycle transition failed");
             synchronized (activeContexts) { activeContexts.put(prepared.request.actorId(), context); }
+        } else if (prepared.profile.family() == Stage04SkillProfile.Family.PROJECTILE) {
+            if (!lifecycle.transition(prepared.request.actorId(), prepared.instanceId,
+                    SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.PROJECTILE))
+                throw new IllegalStateException("Projectile lifecycle transition failed");
+            synchronized (activeContexts) { activeContexts.put(prepared.request.actorId(), context); }
         } else terminate(context, "STRIKE_COMPLETE");
         return result;
     }
@@ -227,6 +238,8 @@ public final class SkillExecutionService {
                     profile.innateBasePower()));
             case "OFFHAND_WEAPON" -> kernel.basePower().resolve(new BasePowerResolver.Request(BasePowerSource.WEAPON,
                     equipment.offHand().power(), null));
+            case "MAGIC_WEAPON" -> kernel.basePower().resolve(new BasePowerResolver.Request(BasePowerSource.MAGIC_WEAPON,
+                    equipment.mainHand().power(), null));
             case "WEAPON" -> kernel.basePower().resolve(new BasePowerResolver.Request(BasePowerSource.WEAPON,
                     equipment.mainHand().power(), null));
             default -> throw new IllegalArgumentException("Unsupported power source " + profile.basePowerSource());

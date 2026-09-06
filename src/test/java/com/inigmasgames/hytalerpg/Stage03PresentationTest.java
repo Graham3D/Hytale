@@ -126,8 +126,8 @@ class Stage03PresentationTest {
         bundle.service().equipSkill(player, SkillSlot.SKILL02, new SkillId("fire_bolt"));
         var equipped = projection.hud(player, nativeResources, null).skills().get(1);
         assertEquals("Fire Bolt", equipped.name());
-        assertEquals(SkillSlotView.State.UNAVAILABLE, equipped.state());
-        assertEquals("EXECUTOR_NOT_IMPLEMENTED", equipped.unavailableReason());
+        assertEquals(SkillSlotView.State.READY, equipped.state());
+        assertEquals("", equipped.unavailableReason());
         bundle.service().equipSkill(player, SkillSlot.SKILL01, new SkillId("quick_slash"));
         assertEquals(SkillSlotView.State.READY,
                 projection.hud(player, nativeResources, null).skills().getFirst().state());

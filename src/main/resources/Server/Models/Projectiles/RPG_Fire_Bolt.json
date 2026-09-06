@@ -1,0 +1,14 @@
+{
+  "Model": "Items/Projectiles/Fireball.blockymodel",
+  "Texture": "Items/Projectiles/Fireball.png",
+  "HitBox": {
+    "Max": { "X": 0.30, "Y": 0.30, "Z": 0.30 },
+    "Min": { "X": -0.30, "Y": -0.30, "Z": -0.30 }
+  },
+  "MinScale": 1,
+  "MaxScale": 1,
+  "Particles": [
+    { "PositionOffset": { "X": 0, "Y": 0, "Z": 0 }, "SystemId": "Fire_Projectile", "TargetNodeName": "" }
+  ],
+  "Light": { "Color": "#ffbb88" }
+}

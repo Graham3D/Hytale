@@ -13,6 +13,8 @@ public record Vec3(double x, double y, double z) {
     public Vec3 multiply(double value) { return new Vec3(x * value, y * value, z * value); }
     public double horizontalLengthSquared() { return x * x + z * z; }
     public double horizontalLength() { return Math.sqrt(horizontalLengthSquared()); }
+    public double lengthSquared() { return x * x + y * y + z * z; }
+    public double length() { return Math.sqrt(lengthSquared()); }
     public double distanceSquared(Vec3 other) {
         double dx = x - other.x, dy = y - other.y, dz = z - other.z;
         return dx * dx + dy * dy + dz * dz;
@@ -20,5 +22,9 @@ public record Vec3(double x, double y, double z) {
     public Vec3 horizontalNormalized() {
         double length = horizontalLength();
         return length < 1.0e-9 ? new Vec3(0, 0, 1) : new Vec3(x / length, 0, z / length);
+    }
+    public Vec3 normalized() {
+        double length = length();
+        return length < 1.0e-9 ? FORWARD : new Vec3(x / length, y / length, z / length);
     }
 }

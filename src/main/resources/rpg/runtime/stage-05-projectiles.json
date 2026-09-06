@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "fire_bolt", "family": "PROJECTILE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["STAFF", "WAND"], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 8.0, "cooldownSeconds": 1.4, "windupSeconds": 0.0,
+      "basePowerSource": "MAGIC_WEAPON", "innateBasePower": 0.0, "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Fire_Bolt", "speed": 24.0,
+        "maxDistance": 24.0, "radius": 0.30, "gravity": 0.0, "targetCap": 1,
+        "coefficient": 0.95, "statusId": "BURN", "statusSeconds": 4.0,
+        "periodicCoefficient": 0.10, "periodicTicks": 4, "periodicIntervalSeconds": 1.0,
+        "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false
+      }
+    },
+    {
+      "skillId": "snipe", "family": "PROJECTILE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["BOW"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 12.0, "cooldownSeconds": 10.0, "windupSeconds": 0.0,
+      "basePowerSource": "WEAPON", "innateBasePower": 0.0, "scaling": "LIGHT",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Snipe", "speed": 45.0,
+        "maxDistance": 48.0, "radius": 0.10, "gravity": 0.0, "targetCap": 1,
+        "coefficient": 2.00, "statusId": "", "statusSeconds": 0.0,
+        "periodicCoefficient": 0.0, "periodicTicks": 0, "periodicIntervalSeconds": 0.0,
+        "ammoItemId": "Weapon_Arrow_Crude", "ammoQuantity": 1, "fullyCharged": true
+      }
+    }
+  ]
+}

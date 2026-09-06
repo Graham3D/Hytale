@@ -23,8 +23,9 @@ public final class HytaleEquipmentAdapter {
         if (stack == null || stack.isEmpty() || !stack.isValid()) return null;
         String kind = kind(stack.getItemId());
         Set<String> tags = switch (kind) {
-            case "SWORD", "DAGGER" -> Set.of("RPG_WEAPON_LIGHT");
+            case "SWORD", "DAGGER", "BOW", "CROSSBOW" -> Set.of("RPG_WEAPON_LIGHT");
             case "LONGSWORD", "MACE", "BATTLEAXE", "SHIELD" -> Set.of("RPG_WEAPON_HEAVY");
+            case "STAFF", "WAND", "SPELLBOOK" -> Set.of("RPG_WEAPON_MAGIC");
             default -> Set.of();
         };
         Double power = null;
@@ -34,15 +35,21 @@ public final class HytaleEquipmentAdapter {
             power = item.getWeapon().getBasicDamageBreakdown().entries().stream()
                     .mapToDouble(entry -> (entry.min() + entry.max()) * 0.5).sum();
         }
+        boolean magic = kind.equals("STAFF") || kind.equals("WAND") || kind.equals("SPELLBOOK");
         return new SkillExecutionPort.Item(stack.getItemId(), kind,
-                new ItemPowerDescriptor(stack.getItemId(), tags, power, null));
+                new ItemPowerDescriptor(stack.getItemId(), tags, magic ? null : power, magic ? power : null));
     }
 
     static String kind(String itemId) {
         if (itemId == null) return "UNKNOWN";
         String id = itemId.toUpperCase(Locale.ROOT);
         if (id.contains("LONGSWORD")) return "LONGSWORD";
+        if (id.contains("CROSSBOW")) return "CROSSBOW";
+        if (id.contains("SHORTBOW") || id.contains("BOW")) return "BOW";
         if (id.contains("BATTLEAXE")) return "BATTLEAXE";
+        if (id.contains("SPELLBOOK")) return "SPELLBOOK";
+        if (id.contains("STAFF")) return "STAFF";
+        if (id.contains("WAND")) return "WAND";
         if (id.contains("DAGGER")) return "DAGGER";
         if (id.contains("SHIELD")) return "SHIELD";
         if (id.contains("MACE")) return "MACE";

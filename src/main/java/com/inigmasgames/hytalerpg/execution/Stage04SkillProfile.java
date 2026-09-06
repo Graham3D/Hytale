@@ -1,9 +1,10 @@
 package com.inigmasgames.hytalerpg.execution;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-/** Data-only configuration consumed by shared family executors. */
+/** Data-only runtime configuration consumed by shared family executors. */
 public record Stage04SkillProfile(
         String skillId,
         Family family,
@@ -19,7 +20,8 @@ public record Stage04SkillProfile(
         String scaling,
         Strike strike,
         Movement movement,
-        Reaction reaction) {
+        Reaction reaction,
+        Projectile projectile) {
 
     public Stage04SkillProfile {
         secondaryFamilies = Set.copyOf(secondaryFamilies == null ? Set.of() : secondaryFamilies);
@@ -27,14 +29,28 @@ public record Stage04SkillProfile(
         requiredOffHandKinds = Set.copyOf(requiredOffHandKinds == null ? Set.of() : requiredOffHandKinds);
         if (skillId == null || skillId.isBlank() || family == null || resourceCost < 0.0
                 || cooldownSeconds < 0.0 || windupSeconds < 0.0)
-            throw new IllegalArgumentException("Invalid Stage 04 skill profile");
+            throw new IllegalArgumentException("Invalid runtime skill profile");
     }
 
     public boolean hasFamily(Family candidate) {
         return family == candidate || secondaryFamilies.contains(candidate.name());
     }
 
-    public enum Family { STRIKE, MOVEMENT, REACTION }
+    public double damageCoefficient() {
+        if (strike != null) return strike.coefficient();
+        if (projectile != null) return projectile.coefficient();
+        return 0.0;
+    }
+
+    public Map<String, Double> authoredStatuses() {
+        if (strike != null && !strike.statusId().isBlank())
+            return Map.of(strike.statusId(), strike.statusSeconds());
+        if (projectile != null && !projectile.statusId().isBlank())
+            return Map.of(projectile.statusId(), projectile.statusSeconds());
+        return Map.of();
+    }
+
+    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE }
     public enum Geometry { ARC, LINE, ASSIST_CONE, RADIUS }
     public enum MovementKind { DASH, LEAP }
 
@@ -63,5 +79,29 @@ public record Stage04SkillProfile(
             if (windowSeconds <= 0.0) throw new IllegalArgumentException("Reaction window must be positive");
             qualifyingSignals = List.copyOf(qualifyingSignals == null ? List.of() : qualifyingSignals);
         }
+    }
+
+    public record Projectile(String configId, double speed, double maxDistance, double radius,
+                             double gravity, int targetCap, double coefficient,
+                             String statusId, double statusSeconds, double periodicCoefficient,
+                             int periodicTicks, double periodicIntervalSeconds,
+                             String ammoItemId, int ammoQuantity, boolean fullyCharged) {
+        public Projectile {
+            configId = configId == null ? "" : configId;
+            statusId = statusId == null ? "" : statusId;
+            ammoItemId = ammoItemId == null ? "" : ammoItemId;
+            if (configId.isBlank() || speed <= 0.0 || maxDistance <= 0.0 || radius <= 0.0
+                    || !Double.isFinite(gravity) || targetCap < 1 || coefficient < 0.0
+                    || statusSeconds < 0.0 || periodicCoefficient < 0.0 || periodicTicks < 0
+                    || periodicIntervalSeconds < 0.0 || ammoQuantity < 0)
+                throw new IllegalArgumentException("Invalid projectile profile");
+            if ((ammoItemId.isBlank()) != (ammoQuantity == 0))
+                throw new IllegalArgumentException("Projectile ammunition ID and quantity must be declared together");
+            if ((periodicTicks == 0) != (periodicCoefficient == 0.0 || periodicIntervalSeconds == 0.0))
+                throw new IllegalArgumentException("Projectile periodic payload must be fully declared or absent");
+        }
+        public double maximumLifetimeSeconds() { return maxDistance / speed; }
+        public boolean requiresAmmo() { return ammoQuantity > 0; }
+        public boolean hasPeriodicStatus() { return periodicTicks > 0; }
     }
 }

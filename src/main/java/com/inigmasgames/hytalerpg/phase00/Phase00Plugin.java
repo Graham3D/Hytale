@@ -50,7 +50,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-/** RPG plugin entrypoint. Stage 00 probes remain available while Stage 01B adds no combat behavior. */
+/** RPG plugin entrypoint for the retained staged runtime and diagnostics. */
 public final class Phase00Plugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private PacketFilter inboundWatcher;
@@ -87,10 +87,10 @@ public final class Phase00Plugin extends JavaPlugin {
         var uiProjection = new RpgUiProjectionService(catalog, loadouts, combatKernel.derivedStats(), combatKernel.cooldowns());
         var allocation = new AttributeAllocationService(loadouts);
         abilityInputs = new HytaleAbilitySkillInputAdapter();
-        var stage04Profiles = Stage04SkillProfiles.loadCanonical(catalog);
+        var runtimeProfiles = Stage04SkillProfiles.loadCanonical(catalog);
         var reactions = new ReactionWindowService(System::nanoTime);
-        var executions = new SkillExecutionService(loadouts, stage04Profiles, combatKernel,
-                SkillExecutorRegistry.stage04(), new SkillInstanceLifecycle(), skillTrace);
+        var executions = new SkillExecutionService(loadouts, runtimeProfiles, combatKernel,
+                SkillExecutorRegistry.runtime(), new SkillInstanceLifecycle(), skillTrace);
         var vfx = new LinkTreeVfxService(new HtDevLibVfxAdapter(), Map.of());
         var bosses = new HytaleBossBarTracker();
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
@@ -107,9 +107,9 @@ public final class Phase00Plugin extends JavaPlugin {
                 combatKernel.hostileCombat(), combatKernel.resources()));
         getEntityStoreRegistry().registerSystem(new RpgHudTickSystem(rpgHud));
         getEntityStoreRegistry().registerSystem(skillExecutionSystem);
-        LOGGER.atInfo().log("RPG_STAGE04_READY revision=%s skills=%d passives=%d pilots=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability1..Ability4 uiOpen=%s entitlementMode=%s",
+        LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability1..Ability4 uiOpen=%s entitlementMode=%s",
                 BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
-                stage04Profiles.all().size(),
+                runtimeProfiles.all().size(), Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS,
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,
                 combatKernel.balance().profileId, skillTrace.path(), uiTrace.path(),
                 new CommandOnlyRpgUiOpenInputAdapter().availability(),

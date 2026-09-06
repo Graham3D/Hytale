@@ -21,10 +21,14 @@ public final class SkillExecutorRegistry {
         return executor;
     }
     public static SkillExecutorRegistry stage04() {
+        return runtime();
+    }
+    public static SkillExecutorRegistry runtime() {
         return new SkillExecutorRegistry(List.of(
                 forwarding(Stage04SkillProfile.Family.STRIKE, SkillExecutionPort::executeStrike),
                 forwarding(Stage04SkillProfile.Family.MOVEMENT, SkillExecutionPort::executeMovement),
-                forwarding(Stage04SkillProfile.Family.REACTION, SkillExecutionPort::executeReaction)));
+                forwarding(Stage04SkillProfile.Family.REACTION, SkillExecutionPort::executeReaction),
+                forwarding(Stage04SkillProfile.Family.PROJECTILE, SkillExecutionPort::executeProjectile)));
     }
     private static SkillFamilyExecutor forwarding(Stage04SkillProfile.Family family, Dispatch dispatch) {
         return new SkillFamilyExecutor() {

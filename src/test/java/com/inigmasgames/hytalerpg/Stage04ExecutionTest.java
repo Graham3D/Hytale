@@ -43,8 +43,9 @@ class Stage04ExecutionTest {
         var profiles = Stage04SkillProfiles.loadCanonical(catalog);
         assertEquals(87, catalog.skills().size());
         assertEquals(66, catalog.passives().size());
-        assertEquals(Set.of("quick_slash", "heavy_swing", "shield_bash", "quickstep", "pounce", "riposte"),
-                profiles.all().keySet());
+        assertTrue(profiles.all().keySet().containsAll(Set.of(
+                "quick_slash", "heavy_swing", "shield_bash", "quickstep", "pounce", "riposte")));
+        assertEquals(8, profiles.all().size());
         assertEquals("INNATE", profiles.require("pounce").basePowerSource());
         assertEquals(20.0, profiles.require("pounce").innateBasePower());
         var pounce = catalog.skill(new SkillId("pounce")).orElseThrow();
@@ -283,12 +284,18 @@ class Stage04ExecutionTest {
         @Override public boolean actorAliveAndUsable() { return true; }
         @Override public Equipment equipment() { return equipment; }
         @Override public NativeResourcePort resources() { return resources; }
-        @Override public Validation familyPrerequisites(Stage04SkillProfile profile) { return validation; }
+        @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
+                                                        com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
+            return validation;
+        }
         @Override public SkillExecutionResult executeStrike(SkillExecutionContext value) { return dispatched(value, 1, 0); }
         @Override public SkillExecutionResult executeMovement(SkillExecutionContext value) {
             return dispatched(value, 0, value.profile().movement().maxDistance());
         }
         @Override public SkillExecutionResult executeReaction(SkillExecutionContext value) { return dispatched(value, 0, 0); }
+        @Override public SkillExecutionResult executeProjectile(SkillExecutionContext value) {
+            return dispatched(value, 1, 0);
+        }
         private SkillExecutionResult dispatched(SkillExecutionContext value, int targets, double distance) {
             context = value; dispatches++; onDispatch.run();
             return SkillExecutionResult.committed("DISPATCHED", targets, distance);

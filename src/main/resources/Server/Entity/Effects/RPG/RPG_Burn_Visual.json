@@ -1,0 +1,14 @@
+{
+  "Parent": "Burn_Template",
+  "ApplicationEffects": {
+    "EntityBottomTint": "#100600",
+    "EntityTopTint": "#cf2302",
+    "Particles": [ { "SystemId": "Effect_Fire" } ],
+    "ModelVFXId": "Burn"
+  },
+  "OverlapBehavior": "Overwrite",
+  "Infinite": false,
+  "Debuff": true,
+  "StatusEffectIcon": "UI/StatusEffects/Burn.png",
+  "Duration": 4
+}

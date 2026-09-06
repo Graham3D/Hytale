@@ -15,6 +15,6 @@
   "IncludesAssetPack": true,
   "Metadata": {
     "RpgRevision": "${rpgRevision}",
-    "Stage": "04"
+    "Stage": "05"
   }
 }
