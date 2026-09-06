@@ -19,6 +19,14 @@ import com.inigmasgames.hytalerpg.links.RpgLinkGraphService;
 import com.inigmasgames.hytalerpg.progress.FileRpgPlayerStateRepository;
 import com.inigmasgames.hytalerpg.progress.OwnershipEntitlementPolicy;
 import com.inigmasgames.hytalerpg.progress.RpgLoadoutService;
+import com.inigmasgames.hytalerpg.combat.RpgCombatKernel;
+import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
+import com.inigmasgames.hytalerpg.combat.diagnostics.CombatTrace;
+import com.inigmasgames.hytalerpg.combat.hytale.DerivedStatEntityAdapter;
+import com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageLifecycleSystems;
+import com.inigmasgames.hytalerpg.combat.hytale.HomeRestorationTickSystem;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import java.util.EnumMap;
 
 import javax.annotation.Nonnull;
 
@@ -28,6 +36,7 @@ public final class Phase00Plugin extends JavaPlugin {
     private PacketFilter inboundWatcher;
     private RpgSkillTraceService skillTrace;
     private RpgLoadoutService loadouts;
+    private RpgCombatKernel combatKernel;
 
     public Phase00Plugin(@Nonnull JavaPluginInit init) {
         super(init);
@@ -35,7 +44,7 @@ public final class Phase00Plugin extends JavaPlugin {
 
     @Override
     protected void setup() {
-        LOGGER.atInfo().log("HYTALE_RPG_SETUP revision=%s version=%s hytale=%s stage=%s combatEnabled=false",
+        LOGGER.atInfo().log("HYTALE_RPG_SETUP revision=%s version=%s hytale=%s stage=%s combatEnabled=true",
                 BuildIdentity.REVISION, BuildIdentity.VERSION, BuildIdentity.HYTALE_VERSION,
                 BuildIdentity.STAGE);
         RpgCatalog catalog = RpgCatalog.loadCanonical();
@@ -47,11 +56,20 @@ public final class Phase00Plugin extends JavaPlugin {
         var compiler = new LinkCompiler(catalog, graphService, compatibility);
         loadouts = new RpgLoadoutService(catalog, repository, graphService, compiler,
                 new OwnershipEntitlementPolicy(configuration.developmentEntitlements()), skillTrace);
-        getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts));
-        LOGGER.atInfo().log("RPG_STAGE01B_READY revision=%s skills=%d passives=%d schema=%d trace=%s entitlementMode=%s",
+        combatKernel = RpgCombatKernel.createProduction();
+        CombatTrace combatTrace = new CombatTrace(skillTrace);
+        getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace));
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace));
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Filter(combatTrace));
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace));
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Inspect(combatTrace, combatKernel.hostileCombat()));
+        getEntityStoreRegistry().registerSystem(new HomeRestorationTickSystem(combatKernel.homeRestoration(),
+                combatKernel.hostileCombat(), combatKernel.resources()));
+        LOGGER.atInfo().log("RPG_STAGE02_READY revision=%s skills=%d passives=%d schema=%d balance=%s trace=%s entitlementMode=%s",
                 BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,
-                skillTrace.path(), configuration.developmentEntitlements() ? "DEVELOPMENT" : "PRODUCTION");
+                combatKernel.balance().profileId, skillTrace.path(),
+                configuration.developmentEntitlements() ? "DEVELOPMENT" : "PRODUCTION");
         MouseProbeService.initialize(getDataDirectory());
         inboundWatcher = PacketAdapters.registerInbound((PlayerPacketWatcher) (playerRef, packet) -> {
             AbilityInputObserver.observe(playerRef, packet);
@@ -68,7 +86,16 @@ public final class Phase00Plugin extends JavaPlugin {
                 LOGGER.atInfo().log("PHASE00_REVISION_HUD revision=%s player=%s readyId=%d",
                         BuildIdentity.REVISION, playerRef.getUuid(), event.getReadyId());
             }
-            if (playerRef != null) loadouts.getLoadout(playerRef.getUuid());
+            if (playerRef != null) {
+                var view = loadouts.getLoadout(playerRef.getUuid());
+                EntityStatMap statMap = ref.getStore().getComponent(ref, EntityStatMap.getComponentType());
+                if (statMap != null) {
+                    EnumMap<RpgAttribute, Integer> raw = new EnumMap<>(RpgAttribute.class);
+                    for (RpgAttribute attribute : RpgAttribute.values())
+                        raw.put(attribute, view.state().attributes.getOrDefault(attribute.name(), 10));
+                    new DerivedStatEntityAdapter().apply(statMap, combatKernel.derivedStats().derive(raw));
+                }
+            }
         });
         getCommandRegistry().registerCommand(new CharacterProbeCommand());
         getCommandRegistry().registerCommand(new LinkCanvasProbeCommand());
@@ -89,6 +116,7 @@ public final class Phase00Plugin extends JavaPlugin {
         }
         MouseProbeService.clear();
         if (skillTrace != null) { skillTrace.close(); skillTrace = null; }
+        combatKernel = null;
         LOGGER.atInfo().log("HYTALE_RPG_SHUTDOWN revision=%s stage=%s", BuildIdentity.REVISION, BuildIdentity.STAGE);
     }
 }

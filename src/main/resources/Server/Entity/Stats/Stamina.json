@@ -1,0 +1,32 @@
+{
+  "InitialValue": 100,
+  "Min": -4,
+  "Max": 100,
+  "Shared": false,
+  "ResetType": "MaxValue",
+  "Regenerating": [
+    {
+      "$Comment": "RPG player baseline: 1.5% maximum Stamina per second",
+      "Interval": 1.0,
+      "Amount": 0.015,
+      "RegenType": "Percentage",
+      "Conditions": [{ "Id": "Alive" }, { "Id": "IsPlayer" }]
+    },
+    {
+      "$Comment": "Retain vanilla non-player positive regeneration",
+      "Interval": 0.1, "Amount": 0.3, "RegenType": "Additive",
+      "Conditions": [{ "Id": "IsPlayer", "Inverse": true }, { "Id": "Stat", "Stat": "StaminaRegenDelay", "Amount": 0 },
+        { "Id": "Wielding", "Inverse": true }, { "Id": "Sprinting", "Inverse": true }, { "Id": "Gliding", "Inverse": true }]
+    },
+    { "Interval": 0.1, "Amount": -0.1, "ClampAtZero": true, "RegenType": "Additive", "Conditions": [{ "Id": "Sprinting" }] },
+    { "Interval": 0.1, "Amount": -0.1, "ClampAtZero": true, "RegenType": "Additive", "Conditions": [{ "Id": "Gliding" }] }
+  ],
+  "MinValueEffects": {
+    "TriggerAtZero": true,
+    "Interactions": { "Interactions": ["Stamina_Bar_Flash", "Stamina_Broken_Check",
+      { "Type": "ChangeStat", "Behaviour": "Set", "StatModifiers": { "StaminaRegenDelay": -0.5 } }] }
+  },
+  "MaxValueEffects": { "Interactions": { "Interactions": [
+    { "Type": "ClearEntityEffect", "EntityEffectId": "Stamina_Broken" }
+  ] } }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "registryId": "rpg.item-power.audit.r010",
+  "items": [
+    {
+      "itemId": "HytaleRPG_Development_Light",
+      "tags": ["RPG_WEAPON_LIGHT"],
+      "weaponPower": 20.0
+    },
+    {
+      "itemId": "HytaleRPG_Development_Heavy",
+      "tags": ["RPG_WEAPON_HEAVY"],
+      "weaponPower": 20.0
+    },
+    {
+      "itemId": "HytaleRPG_Development_Magic",
+      "tags": ["RPG_WEAPON_MAGIC"],
+      "magicPower": 20.0
+    }
+  ]
+}

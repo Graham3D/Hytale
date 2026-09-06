@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
 
 /** Single transaction boundary for all loadout and gameplay graph mutations. */
 public final class RpgLoadoutService implements RpgLoadoutOperations {
@@ -206,6 +207,34 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         }
     }
 
+    @Override public MutationResult setDevelopmentAttribute(UUID player, RpgAttribute attribute, int rawValue) {
+        if (rawValue < 0) throw new IllegalArgumentException("Raw attribute cannot be negative");
+        String correlation = reference(); Holder holder = holder(player);
+        synchronized (holder) {
+            trace(player, RpgTraceEventType.ATTRIBUTE_SNAPSHOT, correlation,
+                    details("operation", "DEV_SET_REQUEST", "attribute", attribute.name(), "raw", rawValue));
+            MutationResult result = mutate(holder, player, correlation,
+                    candidate -> candidate.attributes.put(attribute.name(), rawValue));
+            if (result.success()) trace(player, RpgTraceEventType.ATTRIBUTE_SNAPSHOT, correlation,
+                    details("operation", "DEV_SET_COMMITTED", "attribute", attribute.name(), "raw", rawValue,
+                            "RPG revision", result.revision(), "validationResult", "PASS"));
+            return result.success() ? withMessage(result, attribute + " raw value set to " + rawValue + ".") : result;
+        }
+    }
+
+    @Override public MutationResult resetDevelopmentAttributes(UUID player) {
+        String correlation = reference(); Holder holder = holder(player);
+        synchronized (holder) {
+            MutationResult result = mutate(holder, player, correlation, candidate -> {
+                for (RpgAttribute attribute : RpgAttribute.values()) candidate.attributes.put(attribute.name(), 10);
+            });
+            if (result.success()) trace(player, RpgTraceEventType.ATTRIBUTE_SNAPSHOT, correlation,
+                    details("operation", "DEV_RESET_COMMITTED", "raw", holder.state.attributes,
+                            "RPG revision", result.revision(), "validationResult", "PASS"));
+            return result.success() ? withMessage(result, "Development attributes reset to 10.") : result;
+        }
+    }
+
     private MutationResult mutate(Holder holder, UUID player, String correlation, Consumer<RpgPlayerState> mutation) {
         RpgPlayerState candidate = holder.state.copy();
         try { mutation.accept(candidate); }
@@ -338,6 +367,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
                 "compiledGeometry", plan.geometryModifiers(), "compiledMultiplicity", plan.multiplicity(),
                 "compiledContinuation", plan.continuation(), "compiledResourceCost", plan.resourceCooldownModifiers(),
                 "compiledCooldown", plan.resourceCooldownModifiers(), "compiledPowerModifiers", plan.powerModifiers(),
+                "kernelModifiers", plan.kernelModifiers(),
                 "triggerHooks", plan.triggerHooks(), "VfxRecipeId", plan.vfxRecipeId(),
                 "SoundRecipeId", plan.soundRecipeId(), "recursionSpawnBudgets", plan.safetyBudgets(),
                 "validationResult", result);

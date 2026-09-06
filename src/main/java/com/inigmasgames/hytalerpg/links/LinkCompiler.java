@@ -94,6 +94,9 @@ public final class LinkCompiler {
         List<String> triggers = new ArrayList<>();
         Map<PassiveId, List<LinkNodeId>> routes = new LinkedHashMap<>();
         int spawnCost = 0;
+        double scalablePayloadIncreased = 0.0;
+        double resourceCostMultiplier = 1.0;
+        double cooldownRecoveryBonus = 0.0;
 
         for (PassiveBinding binding : bindings) {
             PassiveDefinition passive = binding.definition();
@@ -118,6 +121,13 @@ public final class LinkCompiler {
             else power.add(operation);
             if (!passive.triggerHook().isBlank()) triggers.add(passive.triggerHook() + ':' + passive.id().value());
             spawnCost += passive.spawnBudgetCost();
+            // R010 kernel contract. Swift Recovery is schema-capable but is not added to the canonical 66-passive catalog.
+            switch (passive.id().value()) {
+                case "potency" -> scalablePayloadIncreased += 0.10;
+                case "efficiency" -> resourceCostMultiplier *= 0.85;
+                case "swift_recovery" -> cooldownRecoveryBonus += 0.12;
+                default -> { }
+            }
             if (passive.id().value().equals("expanded_radius")) {
                 geometry.add("RADIUS_MULTIPLIER=1.25");
                 power.add("MAGNITUDE_MULTIPLIER=0.90");
@@ -127,9 +137,12 @@ public final class LinkCompiler {
         List<PassiveId> order = bindings.stream().map(binding -> binding.definition().id()).toList();
         String canonical = slot + "|" + skill.id().value() + "|" + family + "|" + sorted(finalTags)
                 + "|" + order + "|" + targeting + "|" + geometry + "|" + multiplicity + "|" + continuation
-                + "|" + resource + "|" + power + "|" + triggers + "|" + spawnCost;
+                + "|" + resource + "|" + power + "|" + triggers + "|" + spawnCost
+                + "|" + scalablePayloadIncreased + "|" + resourceCostMultiplier + "|" + cooldownRecoveryBonus;
+        var kernelModifiers = new CompiledSkillPlan.KernelModifiers(scalablePayloadIncreased,
+                resourceCostMultiplier, cooldownRecoveryBonus);
         return new CompiledSkillPlan(CompiledSkillPlan.CURRENT_SCHEMA, slot, skill.id(), hash(canonical), family,
-                finalTags, order, routes, targeting, geometry, multiplicity, continuation, resource, power, triggers,
+                finalTags, order, routes, targeting, geometry, multiplicity, continuation, resource, power, kernelModifiers, triggers,
                 skill.vfxRecipeId(), skill.soundRecipeId(), CompiledSkillPlan.SafetyBudgets.baseline(spawnCost), false, List.of());
     }
 
@@ -173,7 +186,8 @@ public final class LinkCompiler {
     private static CompiledSkillPlan degradedPlan(SkillSlot slot, SkillId id, String reason) {
         return new CompiledSkillPlan(CompiledSkillPlan.CURRENT_SCHEMA, slot, id, hash(slot + "|" + id.value() + "|DEGRADED"),
                 "UNKNOWN", Set.of("DEGRADED"), List.of(), Map.of(), List.of(), List.of(), List.of(), List.of(),
-                List.of(), List.of(), List.of(), "", "", CompiledSkillPlan.SafetyBudgets.baseline(0), true, List.of(reason));
+                List.of(), List.of(), CompiledSkillPlan.KernelModifiers.NONE, List.of(), "", "",
+                CompiledSkillPlan.SafetyBudgets.baseline(0), true, List.of(reason));
     }
 
     private record PassiveBinding(PassiveSlot slot, PassiveDefinition definition, List<LinkNodeId> route) {}

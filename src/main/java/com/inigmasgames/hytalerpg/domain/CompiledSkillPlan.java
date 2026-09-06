@@ -20,13 +20,14 @@ public record CompiledSkillPlan(
         List<String> continuation,
         List<String> resourceCooldownModifiers,
         List<String> powerModifiers,
+        KernelModifiers kernelModifiers,
         List<String> triggerHooks,
         String vfxRecipeId,
         String soundRecipeId,
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 1;
+    public static final int CURRENT_SCHEMA = 2;
     public CompiledSkillPlan {
         finalTags = Set.copyOf(finalTags);
         passiveOrder = List.copyOf(passiveOrder);
@@ -39,6 +40,21 @@ public record CompiledSkillPlan(
         powerModifiers = List.copyOf(powerModifiers);
         triggerHooks = List.copyOf(triggerHooks);
         degradedReasons = List.copyOf(degradedReasons);
+        if (kernelModifiers == null) kernelModifiers = KernelModifiers.NONE;
+    }
+
+    /** Typed subset consumed by the Stage 02 kernel. Descriptive operations remain for later executors. */
+    public record KernelModifiers(double scalablePayloadIncreased, double resourceCostMultiplier,
+                                  double cooldownRecoveryBonus) {
+        public static final KernelModifiers NONE = new KernelModifiers(0.0, 1.0, 0.0);
+        public KernelModifiers {
+            if (!Double.isFinite(scalablePayloadIncreased) || scalablePayloadIncreased < 0.0)
+                throw new IllegalArgumentException("scalablePayloadIncreased must be finite and non-negative");
+            if (!Double.isFinite(resourceCostMultiplier) || resourceCostMultiplier < 0.0)
+                throw new IllegalArgumentException("resourceCostMultiplier must be finite and non-negative");
+            if (!Double.isFinite(cooldownRecoveryBonus) || cooldownRecoveryBonus < 0.0)
+                throw new IllegalArgumentException("cooldownRecoveryBonus must be finite and non-negative");
+        }
     }
 
     public record SafetyBudgets(int maxGeneration, int maxSpawnedEffects, int maxTriggeredSecondaries,

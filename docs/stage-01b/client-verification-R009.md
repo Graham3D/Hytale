@@ -74,8 +74,11 @@ trace write must not change the gameplay transaction result.
 
 ## Result record
 
-- Connected-client command sequence: **PENDING**
-- Rejected-link rollback: **PENDING**
-- Full world restart/rejoin persistence: **PENDING**
+- Connected-client command sequence: **PASS**
+- Rejected-link rollback: **PASS**
+- Full world restart/rejoin persistence: **PASS**
+- Closure evidence: automatic trace loads at `2026-09-06T18:20:25Z` and
+  `2026-09-06T18:27:03Z`; second load retained RPG state revision 4 with no
+  warnings, followed by a successful connected compile at `18:27:57Z`.
 - Client crash or CustomUI dependency: not expected; these commands do not
   open or depend on CanvasUI.

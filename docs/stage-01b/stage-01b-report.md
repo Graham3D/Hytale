@@ -17,8 +17,8 @@ awards, or any other Stage 02 behavior. Canvas coordinates and widgets are not
 part of the persisted graph contract.
 
 The backend is suitable for continued data, graph, compiler, persistence, and
-diagnostic development. Stage 01B is not being declared complete until the
-required connected-client command and restart/rejoin sequence is observed.
+diagnostic development. The required connected-client command and full
+restart/rejoin sequence was subsequently observed and Stage 01B is closed.
 
 ## Canonical content model
 
@@ -241,19 +241,17 @@ downgrade schema-v2 player state files in place.
 
 ## Connected-client and restart result
 
-The automated suite proves the required mutation sequence and a service-level
-restart/reload. The actual save startup proves real plugin discovery and
-lifecycle. This environment cannot join a player to the native Hytale client,
-so it cannot honestly claim the following observations yet:
+Connected player `73f9b698-2494-480d-8406-2943e4a7505b` completed the R009
+sequence. The automatic JSONL trace records the valid Fire Bolt/Fork compile,
+the typed Quick Slash/Fork rejection with rollback, and persisted state
+revision 4. A second world process started at `2026-09-06T18:26:52Z`; its
+trace records a fresh `LOAD` at `2026-09-06T18:27:03Z` with state revision 4
+and no warnings, followed by a connected-client compile at
+`2026-09-06T18:27:57Z`. The route still ended at `skill02`, Fork still compiled
+as two children at -20/+20 degrees, and the invalid route remained absent.
 
-- commands accepted from a connected player's chat;
-- the valid Fire Bolt/Fork loadout printed in the client;
-- the invalid Quick Slash/Fork link rejected in the client without mutation;
-- the same real player's state surviving a complete world stop, start, and
-  rejoin;
-- matching JSONL trace events from that connected-player session.
-
-The exact closure procedure is in
+Evidence is retained in the RPG save's server logs and automatic trace. This
+closes the native client/restart gap described in
 [`client-verification-R009.md`](client-verification-R009.md).
 
 ## Files changed
@@ -275,7 +273,6 @@ CanvasUI implementation files were not changed in R009.
 
 ## Known limitations and stage gate
 
-- Connected-client commands and a real-player restart/rejoin remain unverified.
 - Development entitlements intentionally bypass the future ownership pipeline.
 - Missing linked content fails validation; missing unlinked equipped skill
   content produces a non-crashing degraded plan.
@@ -285,11 +282,10 @@ CanvasUI implementation files were not changed in R009.
 - CanvasUI continuous pointer interaction remains separately blocked and is
   not a dependency of these commands or services.
 
-**Stage 01B result: BLOCKED only on connected-client/restart evidence.**
+**Stage 01B result: PASS.**
 
-**Safe to begin Stage 02: NO.** Do not begin Stage 02 until the R009 client
-checklist is completed and this report is revised to PASS. No Stage 02 work was
-started in this revision.
+**Safe to begin Stage 02: YES.** The Stage 02 authorization was issued only
+after the connected-client and restart evidence above was captured.
 
 ## Evidence index
 

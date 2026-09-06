@@ -2,7 +2,7 @@
   "Group": "InigmasGames",
   "Name": "HytaleRPGPhase00Audit",
   "Version": "${version}",
-  "Description": "Server-authoritative Hytale RPG loadout, Link graph, compiler, persistence, and diagnostics foundation.",
+  "Description": "Server-authoritative Hytale RPG loadout, Link graph, and shared combat kernel.",
   "Authors": [{ "Name": "Inigmas Games" }],
   "Website": "https://github.com/inigmas-games",
   "ServerVersion": "=0.7.0-pre.1",
@@ -15,6 +15,6 @@
   "IncludesAssetPack": true,
   "Metadata": {
     "RpgRevision": "${rpgRevision}",
-    "Stage": "01B"
+    "Stage": "02"
   }
 }

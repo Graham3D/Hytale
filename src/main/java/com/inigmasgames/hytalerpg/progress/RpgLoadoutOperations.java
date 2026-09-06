@@ -11,6 +11,7 @@ import com.inigmasgames.hytalerpg.links.CompilationResult;
 
 import java.util.Map;
 import java.util.UUID;
+import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
 
 /** Stable backend seam for command UI and future CanvasUI/Noesis adapters. */
 public interface RpgLoadoutOperations {
@@ -24,4 +25,6 @@ public interface RpgLoadoutOperations {
     CompilationResult compile(UUID player);
     RpgLoadoutView getLoadout(UUID player);
     Map<LinkNodeId, CompatibilityResult> getCompatibleTargets(UUID player, LinkNodeId source);
+    MutationResult setDevelopmentAttribute(UUID player, RpgAttribute attribute, int rawValue);
+    MutationResult resetDevelopmentAttributes(UUID player);
 }
