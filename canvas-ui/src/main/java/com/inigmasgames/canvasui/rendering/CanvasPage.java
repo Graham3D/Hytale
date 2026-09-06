@@ -41,7 +41,9 @@ public final class CanvasPage extends InteractiveCustomUIPage<CanvasPage.Data> {
 
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, Data data) {
-        backend.handleEvent(data.event, data.targetKind, data.targetId, data.value);
+        String value = "zoom-slider".equals(data.targetKind)
+                ? Float.toString(data.zoomValue) : data.value;
+        backend.handleEvent(data.event, data.targetKind, data.targetId, value);
     }
 
     @Override
@@ -51,14 +53,16 @@ public final class CanvasPage extends InteractiveCustomUIPage<CanvasPage.Data> {
 
     static final class Data {
         static final BuilderCodec<Data> CODEC = BuilderCodec.builder(Data.class, Data::new)
-                .append(new KeyedCodec<>("@Event", Codec.STRING), (d, v) -> d.event = v, d -> d.event).add()
-                .append(new KeyedCodec<>("@TargetKind", Codec.STRING), (d, v) -> d.targetKind = v, d -> d.targetKind).add()
-                .append(new KeyedCodec<>("@TargetId", Codec.STRING), (d, v) -> d.targetId = v, d -> d.targetId).add()
+                .append(new KeyedCodec<>("Event", Codec.STRING), (d, v) -> d.event = v, d -> d.event).add()
+                .append(new KeyedCodec<>("TargetKind", Codec.STRING), (d, v) -> d.targetKind = v, d -> d.targetKind).add()
+                .append(new KeyedCodec<>("TargetId", Codec.STRING), (d, v) -> d.targetId = v, d -> d.targetId).add()
                 .append(new KeyedCodec<>("@Value", Codec.STRING), (d, v) -> d.value = v, d -> d.value).add()
+                .append(new KeyedCodec<>("@ZoomValue", Codec.FLOAT), (d, v) -> d.zoomValue = v, d -> d.zoomValue).add()
                 .build();
         private String event = "";
         private String targetKind = "";
         private String targetId = "";
         private String value = "";
+        private float zoomValue;
     }
 }

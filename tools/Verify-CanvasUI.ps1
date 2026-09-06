@@ -3,7 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path "$PSScriptRoot\..").Path
-$evidence = Join-Path $root 'evidence\canvas-ui\R007'
+$evidence = Join-Path $root 'evidence\canvas-ui\R008'
 New-Item -ItemType Directory -Force -Path $evidence | Out-Null
 Push-Location $root
 try {
@@ -35,15 +35,17 @@ try {
     $forbiddenFound = @($forbiddenLibraryTerms | Where-Object { $librarySource -match [regex]::Escape($_) })
     $usesAppendInline = [bool]($librarySource -match '\.appendInline\s*\(')
     $usesDirectValueSet = [bool](($librarySource -replace '\s+', ' ') -match '\.set\s*\([^;]*Value\.of\s*\(')
+    $usesDynamicPrefixForStaticEventData = [bool]($librarySource -match '\.append\s*\(\s*"@(Event|Target|TargetKind|TargetId)"')
     $result = [ordered]@{
         verifiedAtUtc = [DateTime]::UtcNow.ToString('o')
-        revision = 'R007'; hytale = '0.7.0-pre.1'
+        revision = 'R008'; hytale = '0.7.0-pre.1'
         branch = (& git branch --show-current).Trim(); commit = (& git rev-parse HEAD).Trim()
         tests = [ordered]@{ total = $tests; failures = $failures; errors = $errors; skipped = $skipped; passed = ($tests -gt 0 -and $failures -eq 0 -and $errors -eq 0) }
         libraryJar = [ordered]@{ path = $library; bytes = (Get-Item $library).Length; sha256 = (Get-FileHash $library -Algorithm SHA256).Hash; missingEntries = $missingLibrary }
         demoBundledInLibraryJar = $true
         libraryUsesAppendInline = $usesAppendInline
         libraryUsesDirectValueSet = $usesDirectValueSet
+        libraryUsesDynamicPrefixForStaticEventData = $usesDynamicPrefixForStaticEventData
         libraryForbiddenRpgTermsAbsent = $forbiddenFound.Count -eq 0
         forbiddenTermsFound = $forbiddenFound
         demoImportsInternalPackages = [bool]($demoSource -match 'com\.inigmasgames\.canvasui\.internal')
@@ -51,7 +53,7 @@ try {
     $result | ConvertTo-Json -Depth 7 | Set-Content -LiteralPath (Join-Path $evidence 'verification.json') -Encoding utf8
     $result | ConvertTo-Json -Depth 5
     if (-not $result.tests.passed -or $missingLibrary.Count -or
-        $result.libraryUsesAppendInline -or $result.libraryUsesDirectValueSet -or
+        $result.libraryUsesAppendInline -or $result.libraryUsesDirectValueSet -or $result.libraryUsesDynamicPrefixForStaticEventData -or
         -not $result.libraryForbiddenRpgTermsAbsent -or
         $result.demoImportsInternalPackages) { throw 'CanvasUI static gate failed.' }
 }

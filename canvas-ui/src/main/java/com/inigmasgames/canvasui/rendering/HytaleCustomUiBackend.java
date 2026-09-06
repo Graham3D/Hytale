@@ -71,7 +71,9 @@ public final class HytaleCustomUiBackend implements CanvasRenderBackend {
         commands.set("#CanvasRevision.TextSpans", Message.raw(CanvasUI.REVISION));
         appendTopology(commands, events);
         bind(events, CustomUIEventBindingType.ValueChanged, "#SearchInput", "search", "", "#SearchInput.Value");
-        bind(events, CustomUIEventBindingType.ValueChanged, "#ZoomSlider", "zoom-slider", "", "#ZoomSlider.Value");
+        events.addEventBinding(CustomUIEventBindingType.ValueChanged, "#ZoomSlider",
+                new EventData().append("Event", "ValueChanged").append("TargetKind", "zoom-slider")
+                        .append("TargetId", "").append("@ZoomValue", "#ZoomSlider.Value"), false);
         bind(events, CustomUIEventBindingType.Activating, "#DisconnectYes", "dialog", "yes", "");
         bind(events, CustomUIEventBindingType.Activating, "#DisconnectNo", "dialog", "no", "");
         session.recordPageRebuild();
@@ -252,7 +254,10 @@ public final class HytaleCustomUiBackend implements CanvasRenderBackend {
                     && session.canvas().edge(pendingDisconnectEdgeId) != null) {
                 String removed = pendingDisconnectEdgeId; pendingDisconnectEdgeId = null;
                 session.removeEdge(removed);
-                status("Disconnected " + removed); return;
+                UICommandBuilder commands = new UICommandBuilder();
+                commands.set("#DisconnectModal.Visible", false);
+                commands.set("#CanvasStatus.TextSpans", Message.raw("Disconnected " + removed));
+                page.flush(commands); session.recordUiUpdate(count(commands)); return;
             }
             pendingDisconnectEdgeId = null;
             UICommandBuilder commands = new UICommandBuilder(); commands.set("#DisconnectModal.Visible", false);
@@ -267,8 +272,9 @@ public final class HytaleCustomUiBackend implements CanvasRenderBackend {
 
     private static void bind(UIEventBuilder events, CustomUIEventBindingType type, String selector,
                              String kind, String id, String dynamicValue) {
-        EventData data = new EventData().append("@Event", type.name()).append("@TargetKind", kind)
-                .append("@TargetId", id).append("@Value", dynamicValue);
+        EventData data = new EventData().append("Event", type.name()).append("TargetKind", kind)
+                .append("TargetId", id);
+        if (!dynamicValue.isBlank()) data.append("@Value", dynamicValue);
         events.addEventBinding(type, selector, data, false);
     }
 

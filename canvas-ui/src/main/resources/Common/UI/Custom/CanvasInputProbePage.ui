@@ -10,7 +10,7 @@ Group {
   Group { Anchor: (Left: 25, Top: 20, Width: 820, Height: 650); Background: (Color: #111c2bf5); LayoutMode: Top; Padding: (Full: 20);
     Group { Anchor: (Height: 50); LayoutMode: Left;
       Label { Text: "CANVASUI INPUT PROBE"; Anchor: (Width: 280); Style: (FontSize: 20, TextColor: #78c6d0); }
-      Label #ProbeRevision { Text: "R007"; Anchor: (Width: 80); Style: (FontSize: 16, TextColor: #f2d488); }
+      Label #ProbeRevision { Text: "R008"; Anchor: (Width: 80); Style: (FontSize: 16, TextColor: #f2d488); }
       Label #ProbeEventCount { Text: "0 total server events"; Anchor: (Width: 220); Style: (FontSize: 13, TextColor: #d4e0ec); }
     }
     Label { Text: "Try left click, right click, double click, hover, release, drag, keys, sliders, typing, and wheel."; Anchor: (Height: 42); Style: (FontSize: 13, TextColor: #b8c7d8); }

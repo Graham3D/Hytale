@@ -26,7 +26,7 @@ Group {
     Padding: (Full: 8);
     LayoutMode: Left;
     Label { Text: "CANVAS UI"; Style: (FontSize: 19, TextColor: #78c6d0); Anchor: (Width: 150); }
-    Label #CanvasRevision { Text: "R007"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Anchor: (Width: 64); }
+    Label #CanvasRevision { Text: "R008"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Anchor: (Width: 64); }
     Label #ZoomValue { Text: "ZOOM 1.00"; Style: (FontSize: 12, TextColor: #93a4b6, Alignment: Center); Anchor: (Width: 90); }
     $Common.@FloatSlider #ZoomSlider { Anchor: (Width: 150, Height: 20); Min: 0.35; Max: 2.0; Value: 1.0; }
     Group { Anchor: (Width: 12); }

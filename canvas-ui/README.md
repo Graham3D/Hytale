@@ -7,7 +7,7 @@ session cleanup, and instrumentation. Consumers own node meaning, policy,
 metadata, persistence location, and gameplay authority.
 
 CanvasUI has no HytaleRPG or HTDevLib dependency. The current development build
-is `0.1.0`, revision `R007`.
+is `0.1.0`, revision `R008`.
 
 ## Build and artifacts
 
@@ -19,7 +19,7 @@ is `0.1.0`, revision `R007`.
 - `canvas-ui/build/libs/CanvasUI-0.1.0-sources.jar` — sources
 - `canvas-ui/build/libs/CanvasUI-0.1.0-javadoc.jar` — API documentation
 
-The R007 development JAR also contains the public-API-only generic demo and
+The R008 development JAR also contains the public-API-only generic demo and
 topology-proof commands. They remain isolated under the demo source tree so the
 consumer boundary is testable, but there is no second installed mod.
 
