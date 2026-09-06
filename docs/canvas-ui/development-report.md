@@ -21,24 +21,140 @@ This report distinguishes three different kinds of claims:
 
 ## Current status
 
-- CanvasUI version: `0.1.0`, development revision `R006`.
+- CanvasUI version: `0.1.0`, development revision `R007`.
 - Hytale target: `0.7.0-pre.1`, revision
   `e8b4d191fc98a977bf5546a951a7b25473d323e3`.
 - Branch: `RPG`.
-- R006 implementation commit: `04834b9096cbd896db20674fc99265728ae01fbd`.
-- R006 evidence commit: `cb5cf2a`.
-- R006 CanvasUI JAR SHA-256:
-  `653AFEAFA1D55781DC21E1B74FECC6EFEA1EAB00EC98912E5193425148C35D4C`.
+- R007 implementation commit: `60cc3e8f610a9823e302d7d0114227f05c7d3c45`.
+- R007 CanvasUI JAR SHA-256:
+  `004FDD78666C045A05497DEA3E693BB4375E56C1DD59B3EF1CA1FFE51EDA698E`.
+- Deployed mod set: `CanvasUI-0.1.0.jar`, `HYTALEDEVLIB-0.5.0.jar`, and
+  `HytaleRPG-0.0.2.jar`; the demo remains bundled in CanvasUI.
 - Rendering gate: **PROVEN**.
 - Custom page lifecycle/open gate: **PROVEN**.
-- Node dragging and canvas panning: **BLOCKED by the current input route**.
-- Interactive link removal: **NOT IMPLEMENTED**.
+- Node dragging and canvas panning: **BLOCKED by the audited public input surface**.
+- Zoom model/rendering/persistence: **IMPLEMENTED AND HEADLESS-PROVEN**.
+- Text search/highlighting: **IMPLEMENTED; R007 CLIENT CONFIRMATION PENDING**.
+- Right-click link removal: **IMPLEMENTED; R007 CLIENT CONFIRMATION PENDING**.
 - Production Link Tree approval: **NOT APPROVED**.
 
-R006 is the first major milestone because it proves that a generic graph with
+R006 remains the first rendering milestone because it proves that a generic graph with
 multiple node types, ports, and attached orthogonal connections can be rendered
 by a standalone CanvasUI JAR in the real client. It is not yet a FigJam-like
 canvas: the displayed graph is presently passive.
+
+## R007 capability milestone
+
+R007 converts the production CanvasUI page to
+`InteractiveCustomUIPage<CanvasPage.Data>` and adds a separate
+`/canvasui-input-probe`. The probe logs the raw serialized client payload before
+typed decoding, then logs independent counters and rates per event type. It
+contains interactive background, node, port, and edge hit areas, TextField,
+Slider, FloatSlider, and a full-height `TopScrolling` surface. Interactive
+buttons are intrinsically hit-testable; the installed CustomUI documents do not
+expose a `HitTestVisible` property to copy safely, so R007 does not invent one.
+
+The production demo now includes:
+
+- wide transparent Button hit regions over thin rendered edge segments;
+- `RightClicking` bindings carrying a static edge ID;
+- a `Disconnect this link?` Yes/No dialog whose Yes path calls
+  `CanvasSession.removeEdge`, rebuilds, and persists;
+- a TextField `ValueChanged` binding with interface locking disabled;
+- locale-stable substring search over `searchName`, `searchDescription`, and
+  `searchTags`, with match count, strong matching color, and dimmed nonmatches;
+- zoom in `CanvasViewport`, using `screen = canvas * zoom + offset` and its
+  inverse, clamped to 0.35–2.00, persisted in snapshot format 2, and backward
+  compatible with format 1 at zoom 1.0;
+- a FloatSlider zoom fallback centered on the viewport's nominal center. It is
+  intentionally not described as mouse-wheel zoom or cursor-centered UI zoom;
+  the model itself supports cursor-centered zoom when a future backend supplies
+  the cursor coordinate;
+- public `CanvasInputBackend`, `CanvasRenderBackend`, and
+  `CanvasInputCapabilities` contracts.
+
+Twenty-one tests pass. They cover round-trip transforms at 0.35, 0.5, 0.75,
+1.0, 1.5, and 2.0; cursor-point invariance during zoom; bound clamping; format-2
+zoom persistence and format-1 migration; non-unit node hit testing, dragging
+math and edge anchors; and search by name, description, tag, capitalization,
+partial word, empty query, and multiple matches.
+
+### API and installed-widget audit
+
+The pinned `CustomUIEventBindingType` exposes:
+
+```text
+Activating, RightClicking, DoubleClicking, MouseEntered, MouseExited,
+ValueChanged, ElementReordered, Validating, Dismissing, FocusGained,
+FocusLost, KeyDown, MouseButtonReleased, SlotClicking, SlotDoubleClicking,
+SlotMouseEntered, SlotMouseExited, DragCancelled, Dropped,
+SlotMouseDragCompleted, SlotMouseDragExited,
+SlotClickReleaseWhileDragging, SlotClickPressWhileDragging,
+SelectedTabChanged
+```
+
+It exposes no `Scrolled` event, pointer-move event, pointer capture, wheel
+delta, or modifier-key event. `UIEventBuilder` only binds a type, selector,
+string EventData map, and interface-lock flag. `CustomPageEvent` contains the
+event type plus that serialized map. R007 therefore binds only documented
+control values (`TextField.Value`, `Slider.Value`, and `FloatSlider.Value`) and
+does not fabricate selectors for pointer coordinates that the API does not
+define.
+
+The 168 installed server CustomUI documents were scanned. `Common.ui` defines
+TextField, Slider, FloatSlider, SliderNumberField, ColorPicker, and scrollbar
+styles; `TopScrolling` is used by shipped pages. ReorderableList,
+ReorderableListGrip, and DynamicPane were not found in those installed CustomUI
+documents. Slider and FloatSlider expose one scalar Value, which is useful for
+a zoom control but not a legitimate two-dimensional freeform drag primitive.
+ItemGrid events describe inventory-slot drag semantics and expose no arbitrary
+screen position. No production widget abuse was adopted.
+
+The machine-readable audit is
+[`evidence/canvas-ui/R007/api-capability-audit.json`](../../evidence/canvas-ui/R007/api-capability-audit.json).
+The official pre-release API documents
+[`InteractiveCustomUIPage`](https://pre-release.docs.hytale.com/api/com/hypixel/hytale/server/core/entity/entities/player/pages/InteractiveCustomUIPage).
+Hytale's own [modding strategy](https://hytale.com/news/2025/11/hytale-modding-strategy-and-status)
+states that its UI frameworks are being consolidated onto NoesisGUI. CanvasUI's
+backend seams are intended to survive that transition rather than make today's
+server markup permanent.
+
+### Definitive capability matrix for the pinned public API
+
+| Behavior | R007 status | Evidence and decision |
+|---|---|---|
+| Free node drag | **BLOCKED** | No coordinate-bearing pointer move or capture; R006's global gameplay route delivered zero events in UI context. |
+| Left-background pan | **BLOCKED** | Requires the same missing pointer down/move/up/capture stream. |
+| Middle-mouse pan | **BLOCKED** | CustomUI exposes neither a middle-button payload nor continuous move. |
+| Wheel zoom | **BLOCKED AT INPUT** | No `Scrolled`/wheel binding or wheel delta exists in the pinned enum. Zoom model/render/persistence are implemented; FloatSlider is a visible fallback, not a wheel backend. |
+| Right-click edge disconnect | **IMPLEMENTED, CLIENT-PROVISIONAL** | `RightClicking` exists, wide hit regions and confirmation flow are deployed; real-client R007 execution is still required. |
+| Ctrl+left-click disconnect | **BLOCKED** | No modifier-key state is exposed; it is not faked or polled. |
+| Text search/highlighting | **IMPLEMENTED, CLIENT-PROVISIONAL** | TextField ValueChanged and dynamic `.Value` are documented and deployed; exact R007 client payload/visual result is pending. |
+
+The matrix is definitive about what the pinned public API contains. The two
+implemented UI rows remain client-provisional because server startup cannot
+parse or exercise a client-owned page. Run `/canvasui-input-probe`, interact
+with every labeled control, close it, then run `/canvasui-demo` and test search,
+the zoom slider, and right-clicking a link. Those results will be appended to
+this report without rewriting the API conclusion.
+
+### Stage 01 gate and minimum Hytale capability request
+
+Stage 01 is **BLOCKED**. A future supported backend needs, at minimum:
+
+1. pointer down with screen coordinates and button identity;
+2. pointer move with screen coordinates or delta;
+3. pointer up;
+4. pointer capture across element bounds;
+5. wheel delta; and
+6. modifier-key state.
+
+That stream would be routed with priority `port > node > edge > background`,
+with middle drag independently starting pan. Until Hytale exposes it through a
+supported Noesis, client-extension, or server API, CanvasUI will preserve the
+working graph, rendering, search, disconnect, and zoom model without claiming
+FigJam-style free interaction. Modified client binaries will not be patched or
+redistributed.
 
 ## R006 real-client result and diagnosis
 
@@ -142,7 +258,7 @@ The strongest current conclusion is therefore:
 This is a conclusion about the pinned public server API and tested architecture,
 not about hypothetical future Hytale APIs or a separately installed client mod.
 
-## Recommended next milestone: input capability probe
+## Historical R006 recommendation: input capability probe
 
 The next revision should be a deliberately small feasibility probe, not another
 full interaction implementation. Its purpose is to determine exactly which
@@ -219,6 +335,10 @@ none exists in R006.
 
 ### R006 — rendering milestone and input diagnosis
 
+- Implementation commit: `04834b9096cbd896db20674fc99265728ae01fbd`.
+- Evidence commit: `cb5cf2a`.
+- CanvasUI JAR SHA-256:
+  `653AFEAFA1D55781DC21E1B74FECC6EFEA1EAB00EC98912E5193425148C35D4C`.
 - Changed every Anchor command update to Hytale's registered object codec via
   `setObject` and added a gate against direct `Value.of(...)` setter misuse.
 - Proved the full initial demo topology renders in the real client.
@@ -227,12 +347,30 @@ none exists in R006.
 - Confirmed that existing-edge removal has no interaction path.
 - Outcome: rendering milestone achieved; FigJam-style input remains blocked.
 
+### R007 — capability abstraction, zoom, search, and discrete interaction
+
+- Audited the complete pinned CustomUI event enum and installed widget
+  templates; found no supported continuous two-dimensional or wheel event.
+- Added the typed raw-payload input probe and bundled command.
+- Added inspectable input/render backend contracts.
+- Implemented and tested zoom transform, rendering geometry, hit testing,
+  persistence migration, and a visible FloatSlider fallback.
+- Implemented searchable node presentation metadata and live highlighting.
+- Implemented wide edge hit areas and right-click confirmation removal.
+- Deployed the exact three-mod set and passed 21 tests, CustomUI static
+  validation, artifact checks, and bare-server startup.
+- Real-client observation: pending; no R007 event counts or interaction latency
+  are claimed before the user runs the deployed commands.
+- Outcome: Stage 01 remains **BLOCKED** on public continuous pointer input.
+
 ## Evidence and reproducibility
 
 - Per-revision verification, installation, and smoke records:
   [`evidence/canvas-ui/`](../../evidence/canvas-ui/).
 - R006 interaction diagnosis:
   [`client-interaction-diagnosis.json`](../../evidence/canvas-ui/R006/client-interaction-diagnosis.json).
+- R007 verification, installation, startup smoke, and API audit:
+  [`evidence/canvas-ui/R007/`](../../evidence/canvas-ui/R007/).
 - Original Stage 00 feasibility report:
   [`docs/phase-00/phase-00-report.md`](../phase-00/phase-00-report.md).
 - R002 client checklist:

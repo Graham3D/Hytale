@@ -1,0 +1,36 @@
+{
+  "revision": "R007",
+  "implementationCommit": "60cc3e8f610a9823e302d7d0114227f05c7d3c45",
+  "hytaleVersion": "0.7.0-pre.1",
+  "hytaleRevision": "e8b4d191fc98a977bf5546a951a7b25473d323e3",
+  "publicCustomUiEvents": [
+    "Activating", "RightClicking", "DoubleClicking", "MouseEntered", "MouseExited",
+    "ValueChanged", "ElementReordered", "Validating", "Dismissing", "FocusGained",
+    "FocusLost", "KeyDown", "MouseButtonReleased", "SlotClicking", "SlotDoubleClicking",
+    "SlotMouseEntered", "SlotMouseExited", "DragCancelled", "Dropped",
+    "SlotMouseDragCompleted", "SlotMouseDragExited", "SlotClickReleaseWhileDragging",
+    "SlotClickPressWhileDragging", "SelectedTabChanged"
+  ],
+  "missingGenericEvents": [
+    "pointer-down with screen coordinates", "pointer move", "pointer capture",
+    "mouse wheel or Scrolled callback", "modifier-key state"
+  ],
+  "installedCustomUiTemplateAudit": {
+    "uiDocumentCount": 168,
+    "present": ["TextField", "Slider", "FloatSlider", "SliderNumberField", "ColorPicker", "TopScrolling"],
+    "notFound": ["ReorderableList", "ReorderableListGrip", "DynamicPane"],
+    "conclusion": "Slider controls expose scalar ValueChanged data. No documented arbitrary two-dimensional draggable control or wheel event payload was found. ItemGrid drag callbacks are slot-semantic, not freeform screen coordinates."
+  },
+  "declaredBackendCapabilities": {
+    "supportsPointerMove": false,
+    "supportsPointerCapture": false,
+    "supportsPrimaryDrag": false,
+    "supportsMiddleDrag": false,
+    "supportsWheel": false,
+    "supportsRightClick": true,
+    "supportsModifierKeys": false,
+    "supportsTextInput": true
+  },
+  "realClientR007Observation": "pending user execution of /canvasui-input-probe and /canvasui-demo",
+  "stage01": "BLOCKED pending a supported continuous 2D pointer input surface"
+}

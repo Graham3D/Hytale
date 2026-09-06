@@ -1,12 +1,12 @@
-{
-  "installedAtUtc": "2026-09-06T16:14:07.9074004Z",
-  "patchline": "pre-release",
-  "save": "RPG",
-  "revision": "R006",
-  "sourceCommit": "04834b9096cbd896db20674fc99265728ae01fbd",
-  "installed": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.2.jar",
-  "sha256": "74165CDBFC208FA7478992B0B6120CC85BE2E53B8887B75E11874EC34064B706",
-  "htDevLib": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HYTALEDEVLIB-0.5.0.jar",
-  "htDevLibSha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230",
-  "rollback": "Run tools/Uninstall-Phase00Probe.ps1; it removes only the current Phase 00 development jar."
+﻿{
+    "installedAtUtc":  "2026-09-06T16:58:05.3484681Z",
+    "patchline":  "pre-release",
+    "save":  "RPG",
+    "revision":  "R007",
+    "sourceCommit":  "60cc3e8f610a9823e302d7d0114227f05c7d3c45",
+    "installed":  "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.2.jar",
+    "sha256":  "946F8B84740E982E7169495A9C29BDFC9080C38BB0DC203EDA5D4A8ECB3A7F9C",
+    "htDevLib":  "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HYTALEDEVLIB-0.5.0.jar",
+    "htDevLibSha256":  "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230",
+    "rollback":  "Run tools/Uninstall-Phase00Probe.ps1; it removes only the current Phase 00 development jar."
 }
