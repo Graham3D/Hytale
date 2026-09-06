@@ -19,9 +19,15 @@ java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
 }
 
+repositories { mavenCentral() }
+
 dependencies {
     compileOnly files(serverJar)
     compileOnly files(htDevLibJar)
+    testImplementation files(serverJar)
+    testImplementation platform('org.junit:junit-bom:5.12.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.register('validateCustomUi', Exec) {
@@ -40,6 +46,8 @@ allprojects {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
+
+tasks.test { useJUnitPlatform() }
 
 tasks.processResources {
     inputs.property('version', project.version)

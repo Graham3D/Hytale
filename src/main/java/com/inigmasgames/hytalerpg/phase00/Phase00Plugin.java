@@ -9,13 +9,25 @@ import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.inigmasgames.hytalerpg.commands.RpgCommand;
+import com.inigmasgames.hytalerpg.content.RpgCatalog;
+import com.inigmasgames.hytalerpg.diagnostics.RpgSkillTraceService;
+import com.inigmasgames.hytalerpg.diagnostics.SkillTraceConfiguration;
+import com.inigmasgames.hytalerpg.links.CompatibilityService;
+import com.inigmasgames.hytalerpg.links.LinkCompiler;
+import com.inigmasgames.hytalerpg.links.RpgLinkGraphService;
+import com.inigmasgames.hytalerpg.progress.FileRpgPlayerStateRepository;
+import com.inigmasgames.hytalerpg.progress.OwnershipEntitlementPolicy;
+import com.inigmasgames.hytalerpg.progress.RpgLoadoutService;
 
 import javax.annotation.Nonnull;
 
-/** Audit-only plugin. It intentionally contains no RPG gameplay systems. */
+/** RPG plugin entrypoint. Stage 00 probes remain available while Stage 01B adds no combat behavior. */
 public final class Phase00Plugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private PacketFilter inboundWatcher;
+    private RpgSkillTraceService skillTrace;
+    private RpgLoadoutService loadouts;
 
     public Phase00Plugin(@Nonnull JavaPluginInit init) {
         super(init);
@@ -23,9 +35,23 @@ public final class Phase00Plugin extends JavaPlugin {
 
     @Override
     protected void setup() {
-        LOGGER.atInfo().log("PHASE00_SETUP revision=%s version=%s hytale=%s stage=%s observationOnly=true",
+        LOGGER.atInfo().log("HYTALE_RPG_SETUP revision=%s version=%s hytale=%s stage=%s combatEnabled=false",
                 BuildIdentity.REVISION, BuildIdentity.VERSION, BuildIdentity.HYTALE_VERSION,
                 BuildIdentity.STAGE);
+        RpgCatalog catalog = RpgCatalog.loadCanonical();
+        SkillTraceConfiguration configuration = SkillTraceConfiguration.load();
+        skillTrace = new RpgSkillTraceService(getDataDirectory().resolve("logs").resolve("rpg").resolve("skill-trace.jsonl"), configuration);
+        var repository = new FileRpgPlayerStateRepository(getDataDirectory().resolve("players"));
+        var compatibility = new CompatibilityService();
+        var graphService = new RpgLinkGraphService(catalog, compatibility);
+        var compiler = new LinkCompiler(catalog, graphService, compatibility);
+        loadouts = new RpgLoadoutService(catalog, repository, graphService, compiler,
+                new OwnershipEntitlementPolicy(configuration.developmentEntitlements()), skillTrace);
+        getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts));
+        LOGGER.atInfo().log("RPG_STAGE01B_READY revision=%s skills=%d passives=%d schema=%d trace=%s entitlementMode=%s",
+                BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
+                com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,
+                skillTrace.path(), configuration.developmentEntitlements() ? "DEVELOPMENT" : "PRODUCTION");
         MouseProbeService.initialize(getDataDirectory());
         inboundWatcher = PacketAdapters.registerInbound((PlayerPacketWatcher) (playerRef, packet) -> {
             AbilityInputObserver.observe(playerRef, packet);
@@ -42,6 +68,7 @@ public final class Phase00Plugin extends JavaPlugin {
                 LOGGER.atInfo().log("PHASE00_REVISION_HUD revision=%s player=%s readyId=%d",
                         BuildIdentity.REVISION, playerRef.getUuid(), event.getReadyId());
             }
+            if (playerRef != null) loadouts.getLoadout(playerRef.getUuid());
         });
         getCommandRegistry().registerCommand(new CharacterProbeCommand());
         getCommandRegistry().registerCommand(new LinkCanvasProbeCommand());
@@ -61,6 +88,7 @@ public final class Phase00Plugin extends JavaPlugin {
             inboundWatcher = null;
         }
         MouseProbeService.clear();
-        LOGGER.atInfo().log("PHASE00_SHUTDOWN revision=%s", BuildIdentity.REVISION);
+        if (skillTrace != null) { skillTrace.close(); skillTrace = null; }
+        LOGGER.atInfo().log("HYTALE_RPG_SHUTDOWN revision=%s stage=%s", BuildIdentity.REVISION, BuildIdentity.STAGE);
     }
 }

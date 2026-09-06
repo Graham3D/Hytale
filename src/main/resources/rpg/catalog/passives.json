@@ -1,0 +1,2800 @@
+[
+  {
+    "schemaVersion": 1,
+    "id": "potency",
+    "passiveId": "rpg.passive.potency",
+    "name": "Potency",
+    "description": "Increase the linked skill's damage, healing, or barrier magnitude by 15%.",
+    "tier": "FOUNDATION",
+    "phase": 6,
+    "compatibleTags": [
+      "BARRIER",
+      "DAMAGE",
+      "HEAL"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "BARRIER",
+      "DAMAGE",
+      "HEAL"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Payload: Damage, Heal, or Barrier; scalable magnitude.",
+    "modifierOps": [
+      "Increase the linked skill's damage, healing, or barrier magnitude by 15%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Uses the normal Increased modifier bucket. Does not change status duration, radius, resource cost, or control strength unless those values are derived directly from the affected payload.",
+    "safetyNotes": "Magnitude whitelist: direct damage, DoT DPS, healing and absorb capacity only; no cooldown, reservation, CC or Emanatism/Pedanticism utility coefficients.",
+    "fixture": "accept Quick Slash; reject Emanatism (No scalable damage/healing/barrier payload). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Potency",
+      "potency",
+      "rpg.passive.potency"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "efficiency",
+    "passiveId": "rpg.passive.efficiency",
+    "name": "Efficiency",
+    "description": "Reduce the linked skill's declared spend cost or continuous upkeep by 15%.",
+    "tier": "FOUNDATION",
+    "phase": 11,
+    "compatibleTags": [],
+    "requiredFamilies": [],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "PURE_MANA_RESERVATION"
+    ],
+    "compatibilityExpression": "Finite Mana/Stamina cost or continuous Mana upkeep; excludes pure Mana Reservation.",
+    "modifierOps": [
+      "Reduce the linked skill's declared spend cost or continuous upkeep by 15%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 600,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Never reduces Mana Reservation percentages. Cost floors at 1 for non-zero integer costs. Reservation Auras use Conservation instead.",
+    "safetyNotes": "Integer upfront cost = max(1, ceil(baseCost\\*factor)); upkeep retains fractional precision with 0.25 s quanta. Zero remains zero.",
+    "fixture": "accept Fireball; reject Managuard (Reservation is not an upfront spend). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Efficiency",
+      "efficiency",
+      "rpg.passive.efficiency"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "long_reach",
+    "passiveId": "rpg.passive.long_reach",
+    "name": "Long Reach",
+    "description": "Increase target range, projectile maximum travel distance, beam/line/tether reach, or movement destination range by 25%.",
+    "tier": "FOUNDATION",
+    "phase": 11,
+    "compatibleTags": [
+      "HAS_RANGE"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "HAS_RANGE"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: HasRange.",
+    "modifierOps": [
+      "Increase target range, projectile maximum travel distance, beam/line/tether reach, or movement destination range by 25%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 200,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Does not increase radius, cone angle, line width, Aura radius, or projectile collision size. A skill must expose a range parameter to qualify.",
+    "safetyNotes": "Each declared range field gets 1.25 once. Placement distance is distinct from radius and collision extents; no multiplying nested same field twice.",
+    "fixture": "accept Frost Bolt; reject Managuard (No range field). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Long Reach",
+      "long_reach",
+      "rpg.passive.long_reach"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "rapid_invocation",
+    "passiveId": "rpg.passive.rapid_invocation",
+    "name": "Rapid Invocation",
+    "description": "Reduce pre-execution cast/activation time by 20%.",
+    "tier": "FOUNDATION",
+    "phase": 11,
+    "compatibleTags": [
+      "HAS_CAST_TIME"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "HAS_CAST_TIME"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "INSTANT_ONLY",
+      "REACTION_ONLY_SKILLS",
+      "TOGGLE_ONLY"
+    ],
+    "compatibilityExpression": "Capability: HasCastTime; excludes Instant-only, Toggle-only, and Reaction-only skills.",
+    "modifierOps": [
+      "Reduce pre-execution cast/activation time by 20%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 600,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Does not accelerate channel tick rate, projectile travel, delayed payload timing, cooldown, or animation playback after the cast commits.",
+    "safetyNotes": "Wind-up multiplier 0.80; minimum 0.05 s for nonzero wind-up. Cannot accelerate Skill Delay or telegraph warning below its declared duration.",
+    "fixture": "accept Heavy Swing; reject Quick Slash (No nonzero cast time). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Rapid Invocation",
+      "rapid_invocation",
+      "rpg.passive.rapid_invocation"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "second_wind",
+    "passiveId": "rpg.passive.second_wind",
+    "name": "Second Wind",
+    "description": "Grant the linked skill one additional stored charge, but increase recharge/cooldown time by 30%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DISCRETE_ACTIVATION",
+      "HAS_COOLDOWN"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "DISCRETE_ACTIVATION",
+      "HAS_COOLDOWN"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "AURA",
+      "CHANNEL",
+      "INDEFINITE_TOGGLE_SKILLS",
+      "STANCE",
+      "TRANSFORMATION"
+    ],
+    "compatibilityExpression": "Capability: HasCooldown \\+ DiscreteActivation; excludes Aura, Channel, Stance, Transformation, and indefinite Toggle skills.",
+    "modifierOps": [
+      "Grant the linked skill one additional stored charge, but increase recharge/cooldown time by 30%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 600,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Each charge pays the normal resource cost. Charge recharge is server-authoritative. The passive is invalid for skills whose state is maintained continuously rather than activated discretely.",
+    "safetyNotes": "Base charges 1-\\>2; one serial recharge queue; recharge begins when a charge is spent. Persist charge recovery time; swapping/relogging never refills charges.",
+    "fixture": "accept Quickstep; reject Emanatism (Indefinite toggle cannot store charges). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Second Wind",
+      "second_wind",
+      "rpg.passive.second_wind"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "overcharge",
+    "passiveId": "rpg.passive.overcharge",
+    "name": "Overcharge",
+    "description": "Increase linked effect magnitude by 25%, but increase its spend cost or continuous upkeep by 20%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "BARRIER",
+      "DAMAGE",
+      "HEAL"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "BARRIER",
+      "DAMAGE",
+      "HEAL"
+    ],
+    "incompatibleTags": [
+      "PURE_MANA_RESERVATION"
+    ],
+    "compatibilityExpression": "Payload: Damage, Heal, or Barrier AND finite spend/upkeep cost; excludes pure Mana Reservation.",
+    "modifierOps": [
+      "Increase linked effect magnitude by 25%, but increase its spend cost or continuous upkeep by 20%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Cost is modified before affordability validation. Pure reservation skills do not qualify because their resource commitment is governed by Aura-specific passives.",
+    "safetyNotes": "Effect uses Increased bucket+0.25; cost/upkeep multiplier 1.20; exclude reservation-only payloads.",
+    "fixture": "accept Fireball; reject Pedanticism (Pure reservation/utility effect). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Overcharge",
+      "overcharge",
+      "rpg.passive.overcharge"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "concentration",
+    "passiveId": "rpg.passive.concentration",
+    "name": "Concentration",
+    "description": "Increase linked damage/healing/barrier effect by 30%, but reduce its affected geometry scale by 30%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "HAS_AREA_GEOMETRY",
+      "SCALABLE_PAYLOAD"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "HAS_AREA_GEOMETRY",
+      "SCALABLE_PAYLOAD"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: HasAreaGeometry \\+ scalable payload.",
+    "modifierOps": [
+      "Increase linked damage/healing/barrier effect by 30%, but reduce its affected geometry scale by 30%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Applies to Burst, Ground Zone, Area of Effect, Aura, Vortex/Pull, Cone, Line, Wall, and other explicitly area-capable families. Geometry reduction uses the family's authored radius/width/length rule rather than blindly scaling every number.",
+    "safetyNotes": "Increased magnitude+0.30. Scale exactly one authored footprint dimension set: radial radii\\*.70; cone angle\\*.70; line/wall width\\*.70. Never scale placement reach, height and collision radius together.",
+    "fixture": "accept Ground Slam; reject Snipe (No area payload). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Concentration",
+      "concentration",
+      "rpg.passive.concentration"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "expanded_radius",
+    "passiveId": "rpg.passive.expanded_radius",
+    "name": "Expanded Radius",
+    "description": "Increase the linked skill's radius by 25%, but reduce its damage/healing/barrier magnitude by 10%.",
+    "tier": "FOUNDATION",
+    "phase": 6,
+    "compatibleTags": [
+      "HAS_RADIUS"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "HAS_RADIUS"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: HasRadius.",
+    "modifierOps": [
+      "Increase the linked skill's radius by 25%, but reduce its damage/healing/barrier magnitude by 10%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 300,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Works across any family that exposes a radius, including Burst/Area of Effect, Ground Zone, Aura, Vortex/Pull, Orb pulse, and radial Trap/Glyph effects. It does not apply to a projectile merely because that projectile has a collision radius.",
+    "safetyNotes": "Multiply declared effect radii by 1.25 once, including Fireball splash and Trap trigger/blast; never change projectile collision radius. Pure utility Auras qualify when their radius changes, even if no damage/healing/barrier reduction applies.",
+    "fixture": "accept Pedanticism; reject Frost Bolt (Collision radius is not effect radius). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Expanded Radius",
+      "expanded_radius",
+      "rpg.passive.expanded_radius",
+      "Expanded Area",
+      "expanded_area"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "lingering",
+    "passiveId": "rpg.passive.lingering",
+    "name": "Lingering",
+    "description": "Increase finite effect duration by 40%, but increase spend cost or upkeep attributable to that finite effect by 15%.",
+    "tier": "FOUNDATION",
+    "phase": 11,
+    "compatibleTags": [
+      "HAS_FINITE_DURATION"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "HAS_FINITE_DURATION"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "INDEFINITE_AURA",
+      "STANCE_STATES",
+      "TOGGLE"
+    ],
+    "compatibilityExpression": "Capability: HasFiniteDuration; excludes indefinite Aura/Toggle/Stance states.",
+    "modifierOps": [
+      "Increase finite effect duration by 40%, but increase spend cost or upkeep attributable to that finite effect by 15%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 300,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Applies to timed zones, buffs/debuffs, temporary summons, barriers, marks, traps, and similar duration-bearing effects. It cannot turn an instant skill into a persistent one.",
+    "safetyNotes": "Effect duration*1.40, cost*1.15. Duration does not scale projectile flight, wind-up, CC durations, cooldown or warning time. Finite summon/zone/buff duration only.",
+    "fixture": "accept Wolf Summon; reject Emanatism (Indefinite state lacks finite duration). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Lingering",
+      "lingering",
+      "rpg.passive.lingering"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "echo",
+    "passiveId": "rpg.passive.echo",
+    "name": "Echo",
+    "description": "After the primary execution, automatically execute the linked spell a second time after 0.45 seconds at 70% effect. The echo pays no additional resource cost and does not start another cooldown.",
+    "tier": "ADVANCED",
+    "phase": 6,
+    "compatibleTags": [
+      "DISCRETE_ACTIVATION",
+      "SPELL_CAST"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "DISCRETE_ACTIVATION",
+      "SPELL_CAST"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "AURA",
+      "CHANNEL",
+      "DEPLOYABLE",
+      "MOVEMENT",
+      "REACTION",
+      "STANCE",
+      "STRIKE",
+      "SUMMON",
+      "TRANSFORMATION",
+      "TRIGGERED",
+      "WEAPON_ATTACKS"
+    ],
+    "compatibilityExpression": "Capability: SpellCast \\+ DiscreteActivation; excludes Strike/weapon attacks, Aura, Channel, Stance, Reaction, Triggered, Transformation, Movement, Summon, and Deployable.",
+    "modifierOps": [
+      "After the primary execution, automatically execute the linked spell a second time after 0.45 seconds at 70% effect. The echo pays no additional resource cost and does not start another cooldown."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 400,
+    "stackingGroup": "EXCLUSIVE_REPEAT_CONTROLLER",
+    "maxCopies": 1,
+    "spawnBudgetCost": 1,
+    "childProjectileCount": 0,
+    "executionNotes": "The echo reuses the committed target solution when still valid and inherits the compiled non-trigger modifiers. It cannot Echo itself. If Skill Delay is also linked, the primary execution is delayed first; Echo schedules 0.45 seconds after that primary execution and does not re-apply Skill Delay.",
+    "safetyNotes": "One repeat group per skill: conflicts with Barrage, Multistrike, Retaliation, Critical Trigger, Kill Trigger. Exclude corpse/summon consumers and collision-wall creators. Repeat uses original world target; revalidate target/range/LOS and cancel if invalid.",
+    "fixture": "accept Frost Bolt; reject Quick Slash (Weapon Strike is not eligible discrete SpellCast). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Echo",
+      "echo",
+      "rpg.passive.echo"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "piercing",
+    "passiveId": "rpg.passive.piercing",
+    "name": "Piercing",
+    "description": "Allow each projectile to pierce 2 additional enemy contacts.",
+    "tier": "ADVANCED",
+    "phase": 7,
+    "compatibleTags": [
+      "CAN_PIERCE",
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [
+      "CAN_PIERCE"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; capability: CanPierce.",
+    "modifierOps": [
+      "Allow each projectile to pierce 2 additional enemy contacts."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 520,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Pierce consumes the enemy-contact continuation budget before Fork or Chain. A target may be damaged only once per outbound phase unless another modifier explicitly creates a new phase.",
+    "safetyNotes": "Contacts consume 2 continuation credits; same entity ignored for 0.10 s and recorded for outbound leg. Root event order preserves hit payload before continuation.",
+    "fixture": "accept Snipe; reject Wind Cutter (Line is not Projectile). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Piercing",
+      "piercing",
+      "rpg.passive.piercing"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "fork",
+    "passiveId": "rpg.passive.fork",
+    "name": "Fork",
+    "description": "When forward Pierce is exhausted, fork the projectile into 2 child projectiles at the next valid enemy contact.",
+    "tier": "ADVANCED",
+    "phase": 7,
+    "compatibleTags": [
+      "CAN_FORK",
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [
+      "CAN_FORK"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; capability: CanFork.",
+    "modifierOps": [
+      "When forward Pierce is exhausted, fork the projectile into 2 child projectiles at the next valid enemy contact."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 530,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 2,
+    "childProjectileCount": 2,
+    "executionNotes": "Child projectiles inherit legal projectile modifiers, consume root-cast spawn budgets, and cannot Fork again unless a future passive explicitly raises fork generation. Continuation order remains Split -\\> Pierce -\\> Fork -\\> Chain -\\> Return.",
+    "safetyNotes": "Branches at-20/+20 degrees around incoming horizontal direction; effect factor 1.0 each, same remaining distance budget, each child records the hit target as already visited. Fork depth 1\\.",
+    "fixture": "accept Fire Bolt; reject Quick Slash (Wrong delivery family). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Fork",
+      "fork",
+      "rpg.passive.fork"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "chain",
+    "passiveId": "rpg.passive.chain",
+    "name": "Chain",
+    "description": "After its current enemy-contact continuation resolves, redirect the projectile/effect to up to 2 additional nearby enemies.",
+    "tier": "ADVANCED",
+    "phase": 7,
+    "compatibleTags": [
+      "CAN_CHAIN",
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [
+      "CAN_CHAIN"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; capability: CanChain.",
+    "modifierOps": [
+      "After its current enemy-contact continuation resolves, redirect the projectile/effect to up to 2 additional nearby enemies."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 540,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Each chained target must be unique within that chain sequence. Chain selection is server-authoritative and range-bounded. Chain occurs after Fork and before Return.",
+    "safetyNotes": "Nearest unvisited enemy within 8 mLOS, deterministic distance then stable-ID tie break; no distance budget reset. Native DirectTarget Chain Lightning cannot accept this Projectile-only passive.",
+    "fixture": "accept Fire Bolt; reject Chain Lightning (DirectTarget native chain is not Projectile). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Chain",
+      "chain",
+      "rpg.passive.chain"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "ricochet",
+    "passiveId": "rpg.passive.ricochet",
+    "name": "Ricochet",
+    "description": "Allow up to 2 terrain ricochets before the projectile terminates.",
+    "tier": "ADVANCED",
+    "phase": 7,
+    "compatibleTags": [
+      "CAN_TERRAIN_BOUNCE",
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [
+      "CAN_TERRAIN_BOUNCE"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; capability: CanTerrainBounce.",
+    "modifierOps": [
+      "Allow up to 2 terrain ricochets before the projectile terminates."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 510,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Uses server collision normals and a dedicated terrain-bounce budget. Ricochet does not count as enemy Chain. Return begins only after the forward terrain/enemy continuation path is exhausted.",
+    "safetyNotes": "vNew = v-2\\*dot(v, n)\\*n; speed preserved, offset 0.03 m from surface, maximum 2; minimum bounce interval 0.05 s. Never phase through terrain.",
+    "fixture": "accept Fire Bolt; reject Frost Nova (No terrain-bouncing projectile). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Ricochet",
+      "ricochet",
+      "rpg.passive.ricochet"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "return",
+    "passiveId": "rpg.passive.return",
+    "name": "Return",
+    "description": "After the projectile exhausts its normal forward path, send it back toward the caster.",
+    "tier": "ADVANCED",
+    "phase": 7,
+    "compatibleTags": [
+      "CAN_RETURN",
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [
+      "CAN_RETURN"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; capability: CanReturn.",
+    "modifierOps": [
+      "After the projectile exhausts its normal forward path, send it back toward the caster."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 550,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Outbound and return phases maintain separate hit ledgers so a target may be hit once on the outbound path and once on the return path. Return does not restart Fork/Chain/Ricochet budgets.",
+    "safetyNotes": "Return speed equals compiled outgoing speed; return travel budget = compiled max distance, safety lifetime distance/speed+0.1 s. Chase live caster but terminate at first solid obstacle or within 0.5 m of caster.",
+    "fixture": "accept Snipe; reject Void Beam (Beam has no return leg). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Return",
+      "return",
+      "rpg.passive.return"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "volley",
+    "passiveId": "rpg.passive.volley",
+    "name": "Volley",
+    "description": "Fire 2 additional projectiles in a symmetric spread; all projectiles deal 75% of the linked skill's normal effect.",
+    "tier": "ADVANCED",
+    "phase": 7,
+    "compatibleTags": [
+      "PROJECTILE",
+      "SUPPORTS_MULTIPLE_PROJECTILES"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [
+      "SUPPORTS_MULTIPLE_PROJECTILES"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; capability: SupportsMultipleProjectiles.",
+    "modifierOps": [
+      "Fire 2 additional projectiles in a symmetric spread; all projectiles deal 75% of the linked skill's normal effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 400,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 1,
+    "childProjectileCount": 0,
+    "executionNotes": "One player activation pays one cost/cooldown. All projectiles share the same root SkillInstanceId and consume spawn budgets. Spread angle is content data.",
+    "safetyNotes": "Offsets-12, 0,+12 degrees per original projectile. All component magnitudes\\*0.75. Effective projectile count is checked before spawn, not silently dropped after cost.",
+    "fixture": "accept Snipe; reject Minor Heal (No projectile multiplicity). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Volley",
+      "volley",
+      "rpg.passive.volley"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "barrage",
+    "passiveId": "rpg.passive.barrage",
+    "name": "Barrage",
+    "description": "Fire the linked projectile 3 times sequentially at 60% effect per projectile.",
+    "tier": "ADVANCED",
+    "phase": 7,
+    "compatibleTags": [
+      "DISCRETE_ACTIVATION",
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [
+      "DISCRETE_ACTIVATION"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; capability: DiscreteActivation.",
+    "modifierOps": [
+      "Fire the linked projectile 3 times sequentially at 60% effect per projectile."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 400,
+    "stackingGroup": "EXCLUSIVE_REPEAT_CONTROLLER",
+    "maxCopies": 1,
+    "spawnBudgetCost": 1,
+    "childProjectileCount": 0,
+    "executionNotes": "One activation pays one cost/cooldown. Sequential shots originate from the committed cast and do not recursively trigger Barrage. Barrage may combine with Volley, but global/root spawn limits remain authoritative.",
+    "safetyNotes": "Three launches at 0, 0.18, 0.36 s per original projectile batch; each\\*0.60. Origin/current caster location validated each launch, aim solution stays snapshotted; mutually exclusive repeat group.",
+    "fixture": "accept Fire Bolt; reject Ground Slam (No projectile carrier). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Barrage",
+      "barrage",
+      "rpg.passive.barrage"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "homing",
+    "passiveId": "rpg.passive.homing",
+    "name": "Homing",
+    "description": "Allow projectiles to steer toward the committed valid target or a server-selected nearby target, with 10% reduced effect.",
+    "tier": "SPECIALIST",
+    "phase": 7,
+    "compatibleTags": [
+      "PROJECTILE",
+      "SUPPORTS_STEERING"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [
+      "SUPPORTS_STEERING"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; capability: SupportsSteering.",
+    "modifierOps": [
+      "Allow projectiles to steer toward the committed valid target or a server-selected nearby target, with 10% reduced effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 200,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Steering strength and reacquisition cone are data-driven. Homing cannot turn through solid terrain and never grants target information the server has not validated.",
+    "safetyNotes": "Turn cap 120 degrees/s; reacquire within 8 m and 60-degree half-cone of velocity every 0.10 s; solidLOS required; keep trajectory if none. Magnitude\\*.90.",
+    "fixture": "accept Frost Bolt; reject Lightning Bolt (Instant Line cannot steer). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Homing",
+      "homing",
+      "rpg.passive.homing"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "accelerant",
+    "passiveId": "rpg.passive.accelerant",
+    "name": "Accelerant",
+    "description": "Increase projectile speed by 40% and maximum projectile travel distance by 20%.",
+    "tier": "SPECIALIST",
+    "phase": 7,
+    "compatibleTags": [
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile.",
+    "modifierOps": [
+      "Increase projectile speed by 40% and maximum projectile travel distance by 20%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 300,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Does not alter cast time, range validation for non-projectile targeting, or effect magnitude. Lifetime may be extended only as needed to realize the added travel distance.",
+    "safetyNotes": "Speed*1.40 and flight-distance*1.20; recalculate distance/speed lifetime, honour an explicit independent base time cap.",
+    "fixture": "accept Frost Bolt; reject Chilling Aura (No projectile speed). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Accelerant",
+      "accelerant",
+      "rpg.passive.accelerant"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "ballistics",
+    "passiveId": "rpg.passive.ballistics",
+    "name": "Ballistics",
+    "description": "Reduce projectile speed by 35% but increase projectile effect magnitude by 30%.",
+    "tier": "SPECIALIST",
+    "phase": 7,
+    "compatibleTags": [
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile.",
+    "modifierOps": [
+      "Reduce projectile speed by 35% but increase projectile effect magnitude by 30%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 300,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Travel lifetime is adjusted so the original maximum travel distance remains reachable unless the base projectile intentionally expires earlier for gameplay reasons.",
+    "safetyNotes": "Speed\\*.65; Increased magnitude+.30. Recompute lifetime by remaining range/speed; ballistic-gravity trajectories are excluded unless executor supports retargeted ballistic solution.",
+    "fixture": "accept Arcane Bolt; reject Void Beam (No travelling projectile). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Ballistics",
+      "ballistics",
+      "rpg.passive.ballistics"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "shrapnel",
+    "passiveId": "rpg.passive.shrapnel",
+    "name": "Shrapnel",
+    "description": "On the first damaging enemy impact of each projectile, create a 2.5 m radial secondary hit at 50% of the projectile's effect.",
+    "tier": "SPECIALIST",
+    "phase": 7,
+    "compatibleTags": [
+      "DAMAGE",
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; payload: Damage.",
+    "modifierOps": [
+      "On the first damaging enemy impact of each projectile, create a 2.5 m radial secondary hit at 50% of the projectile's effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "The secondary hit is tagged Area/Burst and can receive compatible geometry/magnitude modifiers during compile. It occurs once per projectile and cannot itself create another Shrapnel event.",
+    "safetyNotes": "Secondary component has 2.5 m radius, 0.50 coefficient multiplier; direct victim can also receive burst once. Inherits magnitude once, no crit-based repeated explosions; CanProc=false.",
+    "fixture": "accept Snipe; reject Quick Slash (Wrong delivery family). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Shrapnel",
+      "shrapnel",
+      "rpg.passive.shrapnel"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "splinterburst",
+    "passiveId": "rpg.passive.splinterburst",
+    "name": "Splinterburst",
+    "description": "When a projectile reaches terminal termination, release 3 secondary projectiles at 35% effect each.",
+    "tier": "SPECIALIST",
+    "phase": 7,
+    "compatibleTags": [
+      "HAS_TERMINATION",
+      "PROJECTILE"
+    ],
+    "requiredFamilies": [
+      "PROJECTILE"
+    ],
+    "requiredCapabilities": [
+      "HAS_TERMINATION"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile; capability: HasTermination.",
+    "modifierOps": [
+      "When a projectile reaches terminal termination, release 3 secondary projectiles at 35% effect each."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Secondary projectiles inherit legal projectile continuation modifiers but not Splinterburst itself. They consume derived-generation and spawn budgets and use a bounded outward spread.",
+    "safetyNotes": "Terminal branches at-25/0/+25 degrees, 50% original max distance, 0.35 effect. One burst per outbound+return lifetime; no bursts for cancellation, budget rejection or world unload.",
+    "fixture": "accept Frost Bolt; reject Minor Heal (No projectile termination). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Splinterburst",
+      "splinterburst",
+      "rpg.passive.splinterburst"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "cleaving_edge",
+    "passiveId": "rpg.passive.cleaving_edge",
+    "name": "Cleaving Edge",
+    "description": "Preserve the primary strike at full effect and add an 80-degree, 3 m frontal cleave that hits additional valid enemies at 60% effect.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DAMAGE",
+      "STRIKE"
+    ],
+    "requiredFamilies": [
+      "STRIKE"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Strike; payload: Damage.",
+    "modifierOps": [
+      "Preserve the primary strike at full effect and add an 80-degree, 3 m frontal cleave that hits additional valid enemies at 60% effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "The primary target is excluded from the cleave query to prevent duplicate damage. Uses the strike's weapon arc/origin and server-side target query.",
+    "safetyNotes": "Use the approved 80-degree, 3 m cleave. The primary target retains full effect and is excluded from the secondary query. Up to four secondary targets receive 60% effect.",
+    "fixture": "accept Shield Bash; reject Ground Slam (Already radial rather than single-target Strike). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Cleaving Edge",
+      "cleaving_edge",
+      "rpg.passive.cleaving_edge"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "multistrike",
+    "passiveId": "rpg.passive.multistrike",
+    "name": "Multistrike",
+    "description": "Repeat the linked strike twice after the primary attack, each repeat dealing 65% effect.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DISCRETE_ACTIVATION",
+      "STRIKE"
+    ],
+    "requiredFamilies": [
+      "STRIKE"
+    ],
+    "requiredCapabilities": [
+      "DISCRETE_ACTIVATION"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "REACTION_ONLY_STRIKES"
+    ],
+    "compatibilityExpression": "Family: Strike; capability: DiscreteActivation; excludes Reaction-only strikes.",
+    "modifierOps": [
+      "Repeat the linked strike twice after the primary attack, each repeat dealing 65% effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 400,
+    "stackingGroup": "EXCLUSIVE_REPEAT_CONTROLLER",
+    "maxCopies": 1,
+    "spawnBudgetCost": 1,
+    "childProjectileCount": 0,
+    "executionNotes": "One activation pays one cost/cooldown. Repeats preserve the committed facing/target logic where possible, use derived SkillInstance children, and cannot Multistrike themselves.",
+    "safetyNotes": "Keep the primary at full power; repeats at 0.25 s and 0.50 s each receive 65% effect. Lock the root action until its final repeat. Revalidate live geometry; exclude already authored multi-hit sequences.",
+    "fixture": "accept Quick Slash; reject Dagger Flurry (Already an authored multi-hit sequence). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Multistrike",
+      "multistrike",
+      "rpg.passive.multistrike"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "ruthless",
+    "passiveId": "rpg.passive.ruthless",
+    "name": "Ruthless",
+    "description": "Every third committed use of the linked skill deals 60% increased damage and 50% increased stagger contribution.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DAMAGE",
+      "STRIKE"
+    ],
+    "requiredFamilies": [
+      "STRIKE"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Strike; payload: Damage.",
+    "modifierOps": [
+      "Every third committed use of the linked skill deals 60% increased damage and 50% increased stagger contribution."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Counter is stored per player \\+ linked skill slot/passive identity and advances only on successful cast commit. Misses still consume the Ruthless use because the attack was committed.",
+    "safetyNotes": "Count successful manual root commits, including attacks that later miss. Every third commit gains 60% Increased damage and 50% increased stagger contribution before control caps. Derived executions do not count.",
+    "fixture": "accept Heavy Swing; reject Managuard (Not a discrete Strike). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Ruthless",
+      "ruthless",
+      "rpg.passive.ruthless"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "shockwave",
+    "passiveId": "rpg.passive.shockwave",
+    "name": "Shockwave",
+    "description": "A successful damaging strike releases a 3 m radial Physical shockwave at 40% of the strike's effect.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DAMAGE",
+      "STRIKE"
+    ],
+    "requiredFamilies": [
+      "STRIKE"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Strike; payload: Damage.",
+    "modifierOps": [
+      "A successful damaging strike releases a 3 m radial Physical shockwave at 40% of the strike's effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Triggers once per root strike, not once per target hit by a cleave/multistrike child unless that child is explicitly its own strike execution. The shockwave is tagged Burst/Area for downstream compatible modifiers.",
+    "safetyNotes": "One 3 m PHYSICAL burst at first successful strike contact/root, 0.40 of resolved strike pre-mitigation effect. Child cannot create Shockwave or other derived proc loops.",
+    "fixture": "accept Heavy Swing; reject Frost Bolt (Wrong delivery family). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Shockwave",
+      "shockwave",
+      "rpg.passive.shockwave"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "phantom_reach",
+    "passiveId": "rpg.passive.phantom_reach",
+    "name": "Phantom Reach",
+    "description": "Also strike one additional valid enemy within 3 m of the primary target at 60% effect.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DAMAGE",
+      "STRIKE"
+    ],
+    "requiredFamilies": [
+      "STRIKE"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Strike; payload: Damage.",
+    "modifierOps": [
+      "Also strike one additional valid enemy within 3 m of the primary target at 60% effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 200,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Secondary target is chosen server-side by nearest-valid target rules and cannot be the primary target. Does not convert the skill into Projectile.",
+    "safetyNotes": "Select nearest additional hostile within 3 m of initial hit, LOS from impact; 0.60 effect direct packet; no duplicate damage to primary or secondary proc chains.",
+    "fixture": "accept Shield Bash; reject Fireball (Not a single-target Strike). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Phantom Reach",
+      "phantom_reach",
+      "rpg.passive.phantom_reach"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "momentum",
+    "passiveId": "rpg.passive.momentum",
+    "name": "Momentum",
+    "description": "Increase linked damage by 5% per meter of actual displacement before impact, capped at \\+50%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DAMAGING_CHARGE",
+      "MOVEMENT"
+    ],
+    "requiredFamilies": [
+      "MOVEMENT"
+    ],
+    "requiredCapabilities": [
+      "DAMAGING_CHARGE"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Movement OR capability: DamagingCharge.",
+    "modifierOps": [
+      "Increase linked damage by 5% per meter of actual displacement before impact, capped at \\+50%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Uses server-authoritative distance actually traveled, not requested destination distance. Teleports with zero traversed path do not qualify unless explicitly tagged DamagingCharge.",
+    "safetyNotes": "Distance is actual validated player displacement during this skill, cap 10 m. Increased damage+.05\\*min(distance, 10); no bonus for panning, teleports, prior movement or failed travel.",
+    "fixture": "accept Charge; reject Quick Shot (Caster does not travel before impact). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Momentum",
+      "momentum",
+      "rpg.passive.momentum"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "executioner",
+    "passiveId": "rpg.passive.executioner",
+    "name": "Executioner",
+    "description": "Deal 35% increased damage to targets below 30% current Health at the instant the damage event is gathered.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DAMAGE"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Payload: Damage.",
+    "modifierOps": [
+      "Deal 35% increased damage to targets below 30% current Health at the instant the damage event is gathered."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Cross-family passive: valid for any damaging skill. Health threshold is evaluated per target and per hit; it does not snapshot at cast time.",
+    "safetyNotes": "At damagegather immediately before native mitigation, iftarget HPfraction\\<0.30 add+.35 Increased damage; applies any damaging payload. No instantkill.",
+    "fixture": "accept Snipe; reject Minor Heal (No damage payload). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Executioner",
+      "executioner",
+      "rpg.passive.executioner"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "opportunist",
+    "passiveId": "rpg.passive.opportunist",
+    "name": "Opportunist",
+    "description": "Deal 25% increased damage to targets currently Rooted, Frozen, Stunned, or Feared.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DAMAGE"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Payload: Damage.",
+    "modifierOps": [
+      "Deal 25% increased damage to targets currently Rooted, Frozen, Stunned, or Feared."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Cross-family passive. Only authoritative server status state qualifies. Boss substitutions such as Slow do not count as the named hard-control state unless explicitly tagged as equivalent.",
+    "safetyNotes": "\\+.25 Increased damage while victim has actual ROOT/FROZEN/STUN/FEAR state, not an immune boss substitute Slow; check at hit.",
+    "fixture": "accept Frost Bolt; reject Emanatism (No damage payload). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Opportunist",
+      "opportunist",
+      "rpg.passive.opportunist"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "reversal",
+    "passiveId": "rpg.passive.reversal",
+    "name": "Reversal",
+    "description": "Increase the linked reaction/counter window by 30% and retaliation effect by 25%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "REACTION"
+    ],
+    "requiredFamilies": [
+      "REACTION"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Reaction OR tag: Counter/Riposte.",
+    "modifierOps": [
+      "Increase the linked reaction/counter window by 30% and retaliation effect by 25%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Does not create a reaction window on ordinary attacks. Timing extension is applied before network grace/latency handling.",
+    "safetyNotes": "Counter window\\*1.30, retaliation magnitude+.25 Increased; no window extension for arbitrary active blocks.",
+    "fixture": "accept Riposte; reject Quick Slash (No reaction window). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Reversal",
+      "reversal",
+      "rpg.passive.reversal"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "impact_force",
+    "passiveId": "rpg.passive.impact_force",
+    "name": "Impact Force",
+    "description": "Increase knockback distance/force and stagger contribution by 75%, but reduce damage magnitude by 10%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "APPLIES_KNOCKBACK",
+      "APPLIES_STAGGER"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "APPLIES_KNOCKBACK",
+      "APPLIES_STAGGER"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: AppliesKnockback OR AppliesStagger.",
+    "modifierOps": [
+      "Increase knockback distance/force and stagger contribution by 75%, but reduce damage magnitude by 10%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Cannot be linked to a skill that has no knockback/stagger payload or capability. Control immunity and boss resistance remain authoritative.",
+    "safetyNotes": "Knockback distance and authored Stagger duration*1.75 before displacement/CCcaps; direct magnitude*.90; needs an existing controllable impact field.",
+    "fixture": "accept Ground Slam; reject Arcane Bolt (No displacement or stagger field). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Impact Force",
+      "impact_force",
+      "rpg.passive.impact_force"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "mobile_domain",
+    "passiveId": "rpg.passive.mobile_domain",
+    "name": "Mobile Domain",
+    "description": "Convert the linked terrain-anchored Ground Zone into a caster-attached Mobile Zone while preserving its finite duration, payload, and pulse rules, at 80% effect.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "GROUND_ZONE",
+      "HAS_FINITE_DURATION"
+    ],
+    "requiredFamilies": [
+      "GROUND_ZONE"
+    ],
+    "requiredCapabilities": [
+      "HAS_FINITE_DURATION"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "AURA",
+      "GLYPH",
+      "TRAP"
+    ],
+    "compatibilityExpression": "Family: Ground Zone; capability: HasFiniteDuration; excludes Aura and Trap/Glyph.",
+    "modifierOps": [
+      "Convert the linked terrain-anchored Ground Zone into a caster-attached Mobile Zone while preserving its finite duration, payload, and pulse rules, at 80% effect."
+    ],
+    "addedTags": [
+      "CASTER_ATTACHED_ZONE",
+      "MOBILE_ZONE"
+    ],
+    "removedTags": [],
+    "familyConversion": "MOBILE_ZONE",
+    "triggerHook": "",
+    "priority": 100,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "This does NOT convert the skill into an Aura because Auras require Mana drain/reservation. The result gains CasterAttachedZone/MobileZone tags and remains a finite zone. Cancel/cleanup follows owner lifecycle.",
+    "safetyNotes": "Only finite ground zones without collision walls/corpses/placement-only ownership. Zone attaches to caster after release; effect\\*.80; duration unchanged. Does not acquire Aura or reservation gates.",
+    "fixture": "accept Poison Cloud; reject Thorns Aura (Already Aura rather than finite terrain zone). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Mobile Domain",
+      "mobile_domain",
+      "rpg.passive.mobile_domain"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "rapid_pulse",
+    "passiveId": "rpg.passive.rapid_pulse",
+    "name": "Rapid Pulse",
+    "description": "Reduce pulse interval by 30%; each pulse resolves at 80% of normal effect for the same total duration.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "PERIODIC_PULSE"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "PERIODIC_PULSE"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: PeriodicPulse.",
+    "modifierOps": [
+      "Reduce pulse interval by 30%; each pulse resolves at 80% of normal effect for the same total duration."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 300,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Pulse scheduling uses one persistent SkillInstance. The final partial interval does not create an extra pulse beyond the authored duration. Applicable to zones, Auras, orbs, deployables, and other periodic families.",
+    "safetyNotes": "Multiply pulse interval by 0.70 and per-pulse effect by 0.80. Duration is unchanged. Do not normalize back to the old DPS; throughput becomes 0.80/0.70 before endpoint effects. Schedule no final partial pulse.",
+    "fixture": "accept Chilling Aura; reject Snipe (No periodic component). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Rapid Pulse",
+      "rapid_pulse",
+      "rpg.passive.rapid_pulse"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "cascade",
+    "passiveId": "rpg.passive.cascade",
+    "name": "Cascade",
+    "description": "Create two secondary zones/impact areas offset to either side of the primary location. Each secondary uses 60% radius and 45% effect.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "AREA_OF_EFFECT",
+      "GROUND_TARGETED",
+      "GROUND_ZONE"
+    ],
+    "requiredFamilies": [
+      "AREA_OF_EFFECT",
+      "GROUND_ZONE"
+    ],
+    "requiredCapabilities": [
+      "GROUND_TARGETED"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "AURA"
+    ],
+    "compatibilityExpression": "Family: Ground Zone OR Area of Effect; capability: GroundTargeted; excludes Aura.",
+    "modifierOps": [
+      "Create two secondary zones/impact areas offset to either side of the primary location. Each secondary uses 60% radius and 45% effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Secondary locations are validated against loaded/permitted terrain. Cascade occurs once per root cast and cannot recursively Cascade. Secondary effects inherit compatible status and duration rules.",
+    "safetyNotes": "Children offset along aim-right by 1.2*base radius each side, radius*.60, magnitude\\*.45, same duration. Exclude corpse zones and collision walls; allthree share per-root status/proc limits.",
+    "fixture": "accept Blizzard; reject Corpse Burst (Would duplicate consumed-corpse operation). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Cascade",
+      "cascade",
+      "rpg.passive.cascade"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "skill_delay",
+    "passiveId": "rpg.passive.skill_delay",
+    "name": "Skill Delay",
+    "description": "The linked skill activates after a short 2.0 second delay, but deals/heals/shields at 135% of normal effect.",
+    "tier": "ADVANCED",
+    "phase": 6,
+    "compatibleTags": [
+      "DISCRETE_ACTIVATION"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "DISCRETE_ACTIVATION"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "AURA",
+      "CHANNEL",
+      "REACTION",
+      "STANCE",
+      "TRANSFORMATION",
+      "TRIGGERED"
+    ],
+    "compatibilityExpression": "Capability: DiscreteActivation; excludes Aura, Channel, Stance, Reaction, Triggered, and Transformation.",
+    "modifierOps": [
+      "The linked skill activates after a short 2.0 second delay, but deals/heals/shields at 135% of normal effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Resource payment, cooldown start, stats/equipment/passive snapshot, and target solution occur at cast commit. The scheduled execution is cancelled on owner death/logout/world unload; committed resource/cooldown are not refunded. Echo, if present, occurs 0.45 s after the delayed primary execution.",
+    "safetyNotes": "Add 2.0 s between COMMIT and RELEASE; multiply eligible magnitude by 1.35. Pay the resource and start cooldown at commit. Permit at most one pending primary per slot. Echo starts after release, and cancellation does not refund.",
+    "fixture": "accept Meteor; reject Managuard (Indefinite reservation toggle). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Skill Delay",
+      "skill_delay",
+      "rpg.passive.skill_delay"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "vacuum",
+    "passiveId": "rpg.passive.vacuum",
+    "name": "Vacuum",
+    "description": "Pull susceptible enemies up to 2 m toward the effect center when the linked area resolves or pulses; reduce linked damage by 10%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "CAN_AFFECT_ENEMY_POSITION",
+      "HAS_AREA_GEOMETRY"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "CAN_AFFECT_ENEMY_POSITION",
+      "HAS_AREA_GEOMETRY"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: HasAreaGeometry \\+ CanAffectEnemyPosition.",
+    "modifierOps": [
+      "Pull susceptible enemies up to 2 m toward the effect center when the linked area resolves or pulses; reduce linked damage by 10%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 300,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Each target is moved at most once per pulse/resolve. Collision, immunity, boss control resistance, and navigability checks are server-authoritative. Auras qualify only when they expose PeriodicPulse/area-control capability.",
+    "safetyNotes": "Eachresolve/pulse requests 2 m pull; capone displacement per targetper rootper 1 s, control policy/nav collision apply, damage\\*.90. Conflicts Repulsion. Persistent roots use ticking allowance, not unbounded callbacks.",
+    "fixture": "accept Frost Nova; reject Snipe (No resolving area). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Vacuum",
+      "vacuum",
+      "rpg.passive.vacuum"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "repulsion",
+    "passiveId": "rpg.passive.repulsion",
+    "name": "Repulsion",
+    "description": "Push susceptible enemies up to 2.5 m away from the effect center when the linked area resolves or pulses; reduce linked damage by 10%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "CAN_AFFECT_ENEMY_POSITION",
+      "HAS_AREA_GEOMETRY"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "CAN_AFFECT_ENEMY_POSITION",
+      "HAS_AREA_GEOMETRY"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: HasAreaGeometry \\+ CanAffectEnemyPosition.",
+    "modifierOps": [
+      "Push susceptible enemies up to 2.5 m away from the effect center when the linked area resolves or pulses; reduce linked damage by 10%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 300,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Same control/terrain safeguards as Vacuum. Does not affect protected/story entities when movement control is prohibited.",
+    "safetyNotes": "Eachresolve/pulse requests 2.5 m push; capone displacement per targetper rootper 1 s, control policy/nav collision apply, damage\\*.90. Conflicts Vacuum.",
+    "fixture": "accept Ground Slam; reject Minor Heal (No area-control payload). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Repulsion",
+      "repulsion",
+      "rpg.passive.repulsion"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "orbit",
+    "passiveId": "rpg.passive.orbit",
+    "name": "Orbit",
+    "description": "Convert the linked projectile/orb payload into an orbiting effect around the caster for 4 seconds at 70% effect.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "ORB",
+      "ORBIT_CONVERTIBLE",
+      "PROJECTILE",
+      "SATELLITE"
+    ],
+    "requiredFamilies": [
+      "ORB",
+      "PROJECTILE",
+      "SATELLITE"
+    ],
+    "requiredCapabilities": [
+      "ORBIT_CONVERTIBLE"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Projectile OR Orb/Satellite; capability: OrbitConvertible.",
+    "modifierOps": [
+      "Convert the linked projectile/orb payload into an orbiting effect around the caster for 4 seconds at 70% effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "ORBIT",
+    "triggerHook": "",
+    "priority": 100,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Orbit radius and angular speed are data-driven. Each orbiting instance may affect the same target no more than once every 0.75 s. Orbit uses the caster as spatial owner and consumes persistent-effect budgets.",
+    "safetyNotes": "Use approved duration 4 s and effect factor 0.70. Initial radius 2.5 m, height 1.3 m and speed 120 degrees/s; maximum three orbs, with a shared 0.75 s target hit interval. Remove projectile continuation capabilities after conversion.",
+    "fixture": "accept Fire Bolt; reject Quick Slash (No projectile/orb conversion input). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Orbit",
+      "orbit",
+      "rpg.passive.orbit"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "widening",
+    "passiveId": "rpg.passive.widening",
+    "name": "Widening",
+    "description": "Increase beam/line width by 50%, but reduce effect magnitude by 15%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "BEAM",
+      "HAS_WIDTH",
+      "LINE"
+    ],
+    "requiredFamilies": [
+      "BEAM",
+      "LINE"
+    ],
+    "requiredCapabilities": [
+      "HAS_WIDTH"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Beam OR Line; capability: HasWidth.",
+    "modifierOps": [
+      "Increase beam/line width by 50%, but reduce effect magnitude by 15%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 300,
+    "stackingGroup": "FOCUSED_CHANNEL",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Length/range is unchanged. Server hit geometry, not visual particle width, remains authoritative.",
+    "safetyNotes": "Use approved full width multiplier 1.50 and effect multiplier 0.85. Reach and height are unchanged. Conflicts with Focused Channel; minimum full width is 0.10 m.",
+    "fixture": "accept Wind Cutter; reject Frost Nova (No beam/line width). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Widening",
+      "widening",
+      "rpg.passive.widening"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "focused_channel",
+    "passiveId": "rpg.passive.focused_channel",
+    "name": "Focused Channel",
+    "description": "Reduce beam/line width by 35% and increase effect magnitude by 30%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "BEAM",
+      "HAS_WIDTH",
+      "LINE"
+    ],
+    "requiredFamilies": [
+      "BEAM",
+      "LINE"
+    ],
+    "requiredCapabilities": [
+      "HAS_WIDTH"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Beam OR Line; capability: HasWidth.",
+    "modifierOps": [
+      "Reduce beam/line width by 35% and increase effect magnitude by 30%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 300,
+    "stackingGroup": "WIDENING",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Does not require the skill to be continuously channeled despite the name; it is a geometry support for Beam/Line families. Cannot reduce width below the configured minimum collision width.",
+    "safetyNotes": "Use approved full width multiplier 0.65 and 30% Increased magnitude. Line and Beam are both eligible, including non-channelled Lines. Reach is unchanged; minimum width 0.10 m. Conflicts with Widening.",
+    "fixture": "accept Void Beam; reject Fire Bolt (No beam/line width). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Focused Channel",
+      "focused_channel",
+      "rpg.passive.focused_channel"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "aftermath",
+    "passiveId": "rpg.passive.aftermath",
+    "name": "Aftermath",
+    "description": "When the linked persistent effect expires normally, leave a secondary effect with 60% geometry, 40% of the original duration, and 50% effect.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "HAS_AREA_GEOMETRY",
+      "PERSISTENT_FINITE_EFFECT"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "HAS_AREA_GEOMETRY",
+      "PERSISTENT_FINITE_EFFECT"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "COLLISION_WALLS"
+    ],
+    "compatibilityExpression": "Capability: PersistentFiniteEffect \\+ HasAreaGeometry.",
+    "modifierOps": [
+      "When the linked persistent effect expires normally, leave a secondary effect with 60% geometry, 40% of the original duration, and 50% effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Aftermath does not trigger on forced cancellation unless the SkillDefinition explicitly allows termination payloads. The secondary effect cannot create another Aftermath.",
+    "safetyNotes": "On natural expiry create one child at 60% geometry, 40% duration and 50% effect. Retain the tick interval without adding a partial final tick. Exclude collision walls; child expiry and forced cancellation cannot create another Aftermath.",
+    "fixture": "accept Poison Cloud; reject Snipe (No expiring persistent area). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Aftermath",
+      "aftermath",
+      "rpg.passive.aftermath"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "combustion",
+    "passiveId": "rpg.passive.combustion",
+    "name": "Combustion",
+    "description": "Reduce direct hit damage by 15%, but increase Burn magnitude by 50% and Burn duration by 25%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "APPLIES_BURN"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "APPLIES_BURN"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Element: Fire; capability: AppliesBurn.",
+    "modifierOps": [
+      "Reduce direct hit damage by 15%, but increase Burn magnitude by 50% and Burn duration by 25%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Only modifies Burn applied by the linked skill. It does not add Burn to a Fire skill that has no Burn application unless the skill explicitly exposes CanIgnite.",
+    "safetyNotes": "Use the approved direct-hit factor 0.85, Burn DPS factor 1.50 and Burn duration factor 1.25. Require a Burn payload or CanIgnite; FIRE by itself does not grant Burn.",
+    "fixture": "accept Fire Bolt; reject Spark (Fire damage alone does not grant Burn). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Combustion",
+      "combustion",
+      "rpg.passive.combustion"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "deep_freeze",
+    "passiveId": "rpg.passive.deep_freeze",
+    "name": "Deep Freeze",
+    "description": "Apply \\+1 additional Chill stack per successful Chill application, but reduce direct hit damage by 10%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "APPLIES_CHILL"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "APPLIES_CHILL"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Element: Cold; capability: AppliesChill.",
+    "modifierOps": [
+      "Apply \\+1 additional Chill stack per successful Chill application, but reduce direct hit damage by 10%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Normal Chill cap and Frozen threshold remain authoritative. If an application would exceed the cap, the existing Chill -\\> Frozen rule resolves normally.",
+    "safetyNotes": "Add 1 Chill to eligible application, hit magnitude\\*.90. Shared per-target/root/1 spayload ICD prevents shotgun or pulse stacking exploits.",
+    "fixture": "accept Frost Bolt; reject Arcane Bolt (No Chill application). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Deep Freeze",
+      "deep_freeze",
+      "rpg.passive.deep_freeze"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "shatter",
+    "passiveId": "rpg.passive.shatter",
+    "name": "Shatter",
+    "description": "When the linked skill kills a Frozen enemy, create a 3 m Cold explosion at 50% of the killing hit's pre-mitigation effect.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "CAN_KILL",
+      "DAMAGE"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "CAN_KILL"
+    ],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Element: Cold; payload: Damage; capability: CanKill.",
+    "modifierOps": [
+      "When the linked skill kills a Frozen enemy, create a 3 m Cold explosion at 50% of the killing hit's pre-mitigation effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Triggers once per killed target and consumes trigger budgets. Shatter explosions cannot trigger Shatter again, but may apply other legal on-hit/status effects if allowed.",
+    "safetyNotes": "At each qualifying Frozen kill, create one 3 m COLD explosion at 50% of the killing hit's pre-mitigation effect. No recursive Shatter. A boss Slow substitute is not Frozen.",
+    "fixture": "accept Frost Nova; reject Minor Heal (Cannot kill a Frozen enemy). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Shatter",
+      "shatter",
+      "rpg.passive.shatter"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "virulence",
+    "passiveId": "rpg.passive.virulence",
+    "name": "Virulence",
+    "description": "Increase Poison duration by 30% and apply \\+1 Poison stack on each successful Poison application.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "APPLIES_POISON"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "APPLIES_POISON"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: AppliesPoison.",
+    "modifierOps": [
+      "Increase Poison duration by 30% and apply \\+1 Poison stack on each successful Poison application."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Respects the target's maximum Poison stack cap and refresh rules. Direct hit damage is unchanged.",
+    "safetyNotes": "Multiply Poison duration by 1.30 and add one extra stack to each legal application. The default cap remains three before other modifiers. Virulence does not raise the cap.",
+    "fixture": "accept Venom Spray; reject Fireball (No Poison application). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Virulence",
+      "virulence",
+      "rpg.passive.virulence"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "concentrated_venom",
+    "passiveId": "rpg.passive.concentrated_venom",
+    "name": "Concentrated Venom",
+    "description": "Reduce the linked skill's maximum effective Poison stack count by 40% (minimum 1), but increase each Poison stack's magnitude by 75%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "APPLIES_POISON",
+      "STACKABLE_POISON"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "APPLIES_POISON",
+      "STACKABLE_POISON"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: AppliesPoison \\+ StackablePoison.",
+    "modifierOps": [
+      "Reduce the linked skill's maximum effective Poison stack count by 40% (minimum 1), but increase each Poison stack's magnitude by 75%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "The reduced cap is scoped to Poison stacks sourced from the linked skill/passive identity so unrelated Poison sources retain their own cap.",
+    "safetyNotes": "Source-skill Poison cap is max(1, floor(baseCap\\*0.60)); each stack gains a 1.75 DPS multiplier. With base cap three, the effective cap is one. Other sources are unchanged; Virulence cannot bypass this cap.",
+    "fixture": "accept Poison Cloud; reject Frost Bolt (No Poison application). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Concentrated Venom",
+      "concentrated_venom",
+      "rpg.passive.concentrated_venom"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "hemorrhage",
+    "passiveId": "rpg.passive.hemorrhage",
+    "name": "Hemorrhage",
+    "description": "Direct hits gain a 25% chance to apply Bleed for 4 seconds, dealing 12% of the triggering pre-mitigation Physical hit per second.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DIRECT_HIT"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "DIRECT_HIT"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Damage Type: Physical; capability: DirectHit.",
+    "modifierOps": [
+      "Direct hits gain a 25% chance to apply Bleed for 4 seconds, dealing 12% of the triggering pre-mitigation Physical hit per second."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Bleed periodic damage cannot crit and does not retrigger on-hit effects. Reapplication refreshes duration and keeps the stronger magnitude unless a future Bleed stacking rule replaces this baseline.",
+    "safetyNotes": "Use approved 25% chance per direct Physical hit, weighted by proc Coefficient. Bleed DPS is 12% of the triggering pre-mitigation Physical hit for 4 s. Refresh strongest; DoT cannot crit or create hit procs.",
+    "fixture": "accept Quick Slash; reject Fire Bolt (No direct Physical hit). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Hemorrhage",
+      "hemorrhage",
+      "rpg.passive.hemorrhage"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "terror",
+    "passiveId": "rpg.passive.terror",
+    "name": "Terror",
+    "description": "Direct hits gain a 15% chance to Fear susceptible non-boss enemies for 1.5 seconds.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DAMAGE",
+      "DIRECT_HIT"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "DAMAGE",
+      "DIRECT_HIT"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: DirectHit \\+ Damage.",
+    "modifierOps": [
+      "Direct hits gain a 15% chance to Fear susceptible non-boss enemies for 1.5 seconds."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Elite/control-resistant enemies use their normal resistance conversion or reduced duration; bosses/protected targets do not receive illegal hard Fear. Periodic/DoT ticks cannot roll Terror.",
+    "safetyNotes": "15% proc chance weightedby component proc Coefficient; Fear 1.5 s, 8 s target ICDpercaster. No bosses/players; existing Fear CCpolicy anddamage-break rule apply.",
+    "fixture": "accept Snipe; reject Minor Heal (No hostile direct hit). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Terror",
+      "terror",
+      "rpg.passive.terror"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "proliferation",
+    "passiveId": "rpg.passive.proliferation",
+    "name": "Proliferation",
+    "description": "When an enemy dies carrying an eligible status applied by the linked skill, spread the strongest eligible status to valid enemies within 4 m at 70% of its remaining magnitude/duration.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "APPLIES_BURN",
+      "APPLIES_CHILL",
+      "APPLIES_POISON"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "APPLIES_BURN",
+      "APPLIES_CHILL",
+      "APPLIES_POISON"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: AppliesBurn OR AppliesPoison OR AppliesChill.",
+    "modifierOps": [
+      "When an enemy dies carrying an eligible status applied by the linked skill, spread the strongest eligible status to valid enemies within 4 m at 70% of its remaining magnitude/duration."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "A death can proliferate at most one Burn, one Poison package, and one Chill state from this linked skill. Proliferated statuses cannot recursively Proliferate on the same root trigger chain.",
+    "safetyNotes": "At eligible death, transfer the strongest source-owned Burn, Poison package and Chill state to at most three nearest valid enemies within 4 m and LOS. Magnitude and remaining duration each multiply by 0.70. Chill stacks floor after scaling, minimum one; never transfer Frozen.",
+    "fixture": "accept Poison Cloud; reject Minor Heal (No eligible harmful status). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Proliferation",
+      "proliferation",
+      "rpg.passive.proliferation"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "selflessness",
+    "passiveId": "rpg.passive.selflessness",
+    "name": "Selflessness",
+    "description": "The Aura no longer affects the caster, but its beneficial effect on allies is increased by 35%.",
+    "tier": "SPECIALIST",
+    "phase": 9,
+    "compatibleTags": [
+      "AFFECTS_CASTER",
+      "AURA",
+      "BENEFICIAL_TO_ALLIES"
+    ],
+    "requiredFamilies": [
+      "AURA"
+    ],
+    "requiredCapabilities": [
+      "AFFECTS_CASTER",
+      "BENEFICIAL_TO_ALLIES"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Aura; capability: BeneficialToAllies \\+ AffectsCaster.",
+    "modifierOps": [
+      "The Aura no longer affects the caster, but its beneficial effect on allies is increased by 35%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Hostile/debuff portions are unchanged unless explicitly part of the same beneficial magnitude field. Selflessness is invalid on self-only Auras such as Managuard.",
+    "safetyNotes": "Only beneficial radiusAura with ally recipients; remove caster recipient, eligible magnitude\\*1.35. Invalid Managuard and hostile-only Chilling Aura/ReapingStorm.",
+    "fixture": "accept Emanatism; reject Managuard (Self-only Aura has no ally recipients). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Selflessness",
+      "selflessness",
+      "rpg.passive.selflessness"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "conservation",
+    "passiveId": "rpg.passive.conservation",
+    "name": "Conservation",
+    "description": "Reduce Mana reservation or continuous upkeep by 20%, but reduce Aura effect magnitude by 10%.",
+    "tier": "SPECIALIST",
+    "phase": 9,
+    "compatibleTags": [
+      "AURA"
+    ],
+    "requiredFamilies": [
+      "AURA"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Aura; resource mode: Mana Reservation OR continuous Mana drain.",
+    "modifierOps": [
+      "Reduce Mana reservation or continuous upkeep by 20%, but reduce Aura effect magnitude by 10%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 600,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "For reservation Auras, multiply the authored reservation by 0.80 before reservation-fit validation. Does not reduce unrelated one-time activation/toggle costs.",
+    "safetyNotes": "Reservation/upkeep*0.80, scalable Auraeffect*.90. Managuard capacity=actual reserved Mana\\*.90 after conservation; not original pretend reservation value.",
+    "fixture": "accept Managuard; reject Quick Slash (No Aura commitment). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Conservation",
+      "conservation",
+      "rpg.passive.conservation"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "resonance",
+    "passiveId": "rpg.passive.resonance",
+    "name": "Resonance",
+    "description": "Increase Aura radius by 40%, but increase reservation/upkeep by 15%.",
+    "tier": "SPECIALIST",
+    "phase": 9,
+    "compatibleTags": [
+      "AURA",
+      "HAS_RADIUS"
+    ],
+    "requiredFamilies": [
+      "AURA"
+    ],
+    "requiredCapabilities": [
+      "HAS_RADIUS"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Aura; capability: HasRadius; resource mode: Mana Reservation OR continuous Mana drain.",
+    "modifierOps": [
+      "Increase Aura radius by 40%, but increase reservation/upkeep by 15%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Reservation/upkeep is modified before affordability validation. Does not alter self-only Aura effects that have no radius.",
+    "safetyNotes": "Auraradius*1.40, reservation/upkeep*1.15. No Radius Managuard rejects. Radius benefit andcost both must compute before activation.",
+    "fixture": "accept Pedanticism; reject Managuard (Self-only Aura has no radius). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Resonance",
+      "resonance",
+      "rpg.passive.resonance"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "overflow",
+    "passiveId": "rpg.passive.overflow",
+    "name": "Overflow",
+    "description": "Healing in excess of the target's missing Health becomes a temporary barrier, capped at 20% of that target's maximum Health and lasting 6 seconds.",
+    "tier": "SPECIALIST",
+    "phase": 9,
+    "compatibleTags": [
+      "HEAL"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "HEAL"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Payload: Heal.",
+    "modifierOps": [
+      "Healing in excess of the target's missing Health becomes a temporary barrier, capped at 20% of that target's maximum Health and lasting 6 seconds."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Overflow barrier strength is based only on actual overheal after final healing modifiers. Repeated Overflow refreshes/replaces up to the cap rather than stacking unbounded barriers.",
+    "safetyNotes": "All actual overheal creates a barrier, capped at 20% of target maximum HP for 6 s. Refresh/replace the stronger result within the cap; no unbounded stacking or mastery credit from overheal.",
+    "fixture": "accept Minor Heal; reject Spirit Shield (Barrier creation is not healing). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Overflow",
+      "overflow",
+      "rpg.passive.overflow"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "triage",
+    "passiveId": "rpg.passive.triage",
+    "name": "Triage",
+    "description": "Increase healing by 35% when the recipient is below 35% current Health at heal resolution.",
+    "tier": "SPECIALIST",
+    "phase": 9,
+    "compatibleTags": [
+      "HEAL"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "HEAL"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Payload: Heal.",
+    "modifierOps": [
+      "Increase healing by 35% when the recipient is below 35% current Health at heal resolution."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Threshold is checked per recipient at resolution time, so one area heal can receive the bonus on some allies but not others.",
+    "safetyNotes": "Below 35%targetHP before healing gives+.35 Increased healing, not shield or leech rate.",
+    "fixture": "accept Minor Heal; reject Emanatism (Mana regen is not healing). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Triage",
+      "triage",
+      "rpg.passive.triage"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "shared_aegis",
+    "passiveId": "rpg.passive.shared_aegis",
+    "name": "Shared Aegis",
+    "description": "When the linked self-barrier is created, grant the nearest valid ally within 8 m a barrier equal to 50% of the caster's created barrier.",
+    "tier": "SPECIALIST",
+    "phase": 9,
+    "compatibleTags": [
+      "BARRIER",
+      "SELF_TARGETED_BARRIER",
+      "SHIELD"
+    ],
+    "requiredFamilies": [
+      "BARRIER",
+      "SHIELD"
+    ],
+    "requiredCapabilities": [
+      "SELF_TARGETED_BARRIER"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Barrier/Shield; capability: SelfTargetedBarrier.",
+    "modifierOps": [
+      "When the linked self-barrier is created, grant the nearest valid ally within 8 m a barrier equal to 50% of the caster's created barrier."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Secondary ally barrier is a derived effect and cannot trigger Shared Aegis again. If no ally is valid, no secondary barrier is created.",
+    "safetyNotes": "Require self-target absorb payload withCanShare. Nearest ally within 8 mLOS receives 50%created capacity for same duration; maxone. Managuard share tracks its capacity/deficit and does not mint fresh shield on membership swap.",
+    "fixture": "accept Managuard; reject Frost Nova (No self-target absorb barrier). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Shared Aegis",
+      "shared_aegis",
+      "rpg.passive.shared_aegis"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "reflective_ward",
+    "passiveId": "rpg.passive.reflective_ward",
+    "name": "Reflective Ward",
+    "description": "Reduce barrier capacity by 20%, but reflect 20% of damage actually absorbed back to the attacker.",
+    "tier": "SPECIALIST",
+    "phase": 9,
+    "compatibleTags": [
+      "ABSORBS_DAMAGE",
+      "BARRIER",
+      "SHIELD"
+    ],
+    "requiredFamilies": [
+      "BARRIER",
+      "SHIELD"
+    ],
+    "requiredCapabilities": [
+      "ABSORBS_DAMAGE"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Barrier/Shield; capability: AbsorbsDamage.",
+    "modifierOps": [
+      "Reduce barrier capacity by 20%, but reflect 20% of damage actually absorbed back to the attacker."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Reflected damage cannot itself be reflected or trigger recursive retaliation. Reflection uses the final absorbed amount after barrier rules and obeys PvP/world damage permissions.",
+    "safetyNotes": "Barrier capacity\\*.80; reflect 20%actually absorbed damage as original damage channel, CanProc=false, CanCrit=false; prevent reflect-on-reflect.",
+    "fixture": "accept Spirit Shield; reject Reflective Hide (Reflection alone is not absorption). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Reflective Ward",
+      "reflective_ward",
+      "rpg.passive.reflective_ward"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "swarm",
+    "passiveId": "rpg.passive.swarm",
+    "name": "Swarm",
+    "description": "Create \\+1 additional summon; every summon created by the linked skill has 25% reduced Health and damage/effect.",
+    "tier": "SPECIALIST",
+    "phase": 10,
+    "compatibleTags": [
+      "PROXY",
+      "SUMMON"
+    ],
+    "requiredFamilies": [
+      "PROXY",
+      "SUMMON"
+    ],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Summon/Proxy.",
+    "modifierOps": [
+      "Create \\+1 additional summon; every summon created by the linked skill has 25% reduced Health and damage/effect."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 400,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 1,
+    "childProjectileCount": 0,
+    "executionNotes": "All summons share the root cast ownership and count against per-caster/global summon budgets. Does not duplicate story/boss entities.",
+    "safetyNotes": "Static temporary combat summons only, notRevive/Simulacrum/Dominate. Count+1, all created summons HPanddamage\\*.75; no duplicated corpse token.",
+    "fixture": "accept Wolf Summon; reject Revive Fallen (Cannot duplicate one corpse claim). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Swarm",
+      "swarm",
+      "rpg.passive.swarm"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "minion_empowerment",
+    "passiveId": "rpg.passive.minion_empowerment",
+    "name": "Minion Empowerment",
+    "description": "Increase linked summons' maximum Health and damage/effect by 30%, but reduce their duration by 25%.",
+    "tier": "SPECIALIST",
+    "phase": 10,
+    "compatibleTags": [
+      "PROXY",
+      "SUMMON",
+      "TEMPORARY_SUMMON"
+    ],
+    "requiredFamilies": [
+      "PROXY",
+      "SUMMON"
+    ],
+    "requiredCapabilities": [
+      "TEMPORARY_SUMMON"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Summon/Proxy; capability: TemporarySummon.",
+    "modifierOps": [
+      "Increase linked summons' maximum Health and damage/effect by 30%, but reduce their duration by 25%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Duration reduction cannot push a summon below the configured minimum lifetime. Permanent/persistent authored companions are not eligible.",
+    "safetyNotes": "SummonHP/damage*1.30, duration*.75. Revive works after its base clamps; hardfamily ceiling 8 active summons/caster still applies.",
+    "fixture": "accept Revive Fallen; reject Dominate (Conversion is not a temporary created summon). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Minion Empowerment",
+      "minion_empowerment",
+      "rpg.passive.minion_empowerment"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "death_pact",
+    "passiveId": "rpg.passive.death_pact",
+    "name": "Death Pact",
+    "description": "When a linked summon dies or expires, it explodes in a 3 m radius for 60% of the linked summon skill's normal damage-effect power.",
+    "tier": "SPECIALIST",
+    "phase": 10,
+    "compatibleTags": [
+      "PROXY",
+      "SUMMON",
+      "TEMPORARY_COMBAT_SUMMON"
+    ],
+    "requiredFamilies": [
+      "PROXY",
+      "SUMMON"
+    ],
+    "requiredCapabilities": [
+      "TEMPORARY_COMBAT_SUMMON"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Family: Summon/Proxy; capability: TemporaryCombatSummon.",
+    "modifierOps": [
+      "When a linked summon dies or expires, it explodes in a 3 m radius for 60% of the linked summon skill's normal damage-effect power."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Explosion inherits the summon skill's primary damage element when defined. It cannot trigger another Death Pact, and forced cleanup on logout/world unload does not deal damage.",
+    "safetyNotes": "Natural expiry or enemy kill causesone 3 m burst at.60 caster-snapshot ted offensive power. Voluntary sacrifice/logout/unload/replace never explodes. No lootrewards, repeatproc or extra summon.",
+    "fixture": "accept Wolf Summon; reject Simulacrum (Noncombat decoy excluded). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Death Pact",
+      "death_pact",
+      "rpg.passive.death_pact"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "lifeblood",
+    "passiveId": "rpg.passive.lifeblood",
+    "name": "Lifeblood",
+    "description": "Pay Health instead of the linked skill's normal Mana/Stamina cost. Health cost is 150% of the original numeric resource cost, and linked effect magnitude is increased by 10%.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [],
+    "requiredFamilies": [],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "AURA",
+      "CHANNEL",
+      "INDEFINITE_TOGGLE_SKILLS",
+      "REACTION",
+      "RESERVATION",
+      "TRIGGERED"
+    ],
+    "compatibilityExpression": "Finite upfront Mana or Stamina cost; excludes Aura, Reservation, Channel, Reaction, Triggered, and indefinite Toggle skills.",
+    "modifierOps": [
+      "Pay Health instead of the linked skill's normal Mana/Stamina cost. Health cost is 150% of the original numeric resource cost, and linked effect magnitude is increased by 10%."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 600,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Cast fails if payment would reduce the player below 1 Health. It never converts continuous upkeep or Mana Reservation to Health.",
+    "safetyNotes": "Explicit exception toMana/Stamina-onlyspending: nonlethal Health cost ce il(1.50\\*compiled numeric cost); require current HP\\>cost. Damage/heal/barrier+.10 Increased; noLeeching pairing, no Health reservation.",
+    "fixture": "accept Quick Slash; reject Void Beam (Channel upkeep is not an upfront-only cost). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Lifeblood",
+      "lifeblood",
+      "rpg.passive.lifeblood"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "attunement",
+    "passiveId": "rpg.passive.attunement",
+    "name": "Attunement",
+    "description": "Successful repeated uses within 4 seconds build up to 5 Attunement stacks. Each stack grants \\+3% effect magnitude and -3% resource cost to the linked skill.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DISCRETE_ACTIVATION",
+      "FINITE_RESOURCE_COST"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "DISCRETE_ACTIVATION",
+      "FINITE_RESOURCE_COST"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Capability: DiscreteActivation \\+ finite resource cost.",
+    "modifierOps": [
+      "Successful repeated uses within 4 seconds build up to 5 Attunement stacks. Each stack grants \\+3% effect magnitude and -3% resource cost to the linked skill."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 600,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Using another skill does not clear stacks; only 4 seconds without committing this linked skill clears them. Maximum at 5 stacks: \\+15% effect, -15% cost.",
+    "safetyNotes": "Benefit uses existing stacks at commit; that successful manual commit then adds one stack, maximum five. Each stack adds 3% Increased magnitude and reduces base cost additively by 3%. Clear after 4 s without this skill, or a loadout change; other skills do not clear it.",
+    "fixture": "accept Quick Slash; reject Managuard (Not discrete finite-cost use). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Attunement",
+      "attunement",
+      "rpg.passive.attunement"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "leeching",
+    "passiveId": "rpg.passive.leeching",
+    "name": "Leeching",
+    "description": "Restore the linked skill's declared resource equal to 3% of final damage dealt, capped at 8% of maximum resource per root cast.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DAMAGE"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [
+      "COSTS",
+      "OVERKILL",
+      "REFLECTION",
+      "SHIELD_ABSORPTION"
+    ],
+    "compatibilityExpression": "Payload: Damage; ResourceType: Mana or Stamina.",
+    "modifierOps": [
+      "Restore the linked skill's declared resource equal to 3% of final damage dealt, capped at 8% of maximum resource per root cast."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 700,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Only damage actually applied after Hytale mitigation contributes. Damage to invalid/friendly/immune targets restores nothing. Periodic hits share the same root-cast cap.",
+    "safetyNotes": "Return 3% of actual HP damage to the linked skill's resource, capped at 8% of spendable maximum per root. Exclude overkill, shield absorption, reflection and costs. All descendants share the cap. Incompatible with Lifeblood.",
+    "fixture": "accept Fireball; reject Emanatism (No damage or spend resource). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Leeching",
+      "leeching",
+      "rpg.passive.leeching"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "retaliation",
+    "passiveId": "rpg.passive.retaliation",
+    "name": "Retaliation",
+    "description": "Disable manual activation. After the player accumulates incoming damage equal to 15% of maximum Health, automatically execute the linked skill at 70% effect, then reset the damage accumulator.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "DISCRETE_ACTIVATION"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "DISCRETE_ACTIVATION"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "AURA",
+      "CHANNEL",
+      "INDEFINITE_TOGGLE",
+      "MOVEMENT",
+      "REACTION",
+      "STANCE",
+      "TRANSFORMATION",
+      "TRIGGERED"
+    ],
+    "compatibilityExpression": "Capability: DiscreteActivation; excludes Aura, Channel, Stance, Movement, Reaction, Triggered, Transformation, and indefinite Toggle.",
+    "modifierOps": [
+      "Disable manual activation. After the player accumulates incoming damage equal to 15% of maximum Health, automatically execute the linked skill at 70% effect, then reset the damage accumulator."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "ON_DAMAGE_TAKEN",
+    "priority": 750,
+    "stackingGroup": "EXCLUSIVE_REPEAT_CONTROLLER",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Trigger respects the linked skill cooldown, target requirements, and resource cost unless the SkillDefinition explicitly supports self-triggering without a target. Damage caused by reflected/recursive trigger chains does not advance the accumulator. Triggered execution cannot trigger Retaliation again.",
+    "safetyNotes": "Accumulate actual hostile HP loss over a rolling 10 s window against 15% maximum HP. Queue at most one cast and attempt no more than once per second. Recheck resources, cooldown and target; failed attempts retain at most one threshold. Manual activation is disabled.",
+    "fixture": "accept Frost Nova; reject Corpse Burst (Cannot automatically select/consume a corpse). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Retaliation",
+      "retaliation",
+      "rpg.passive.retaliation"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "critical_trigger",
+    "passiveId": "rpg.passive.critical_trigger",
+    "name": "Critical Trigger",
+    "description": "When the linked skill scores a critical hit, repeat its primary execution once at 50% effect after 0.20 seconds. Internal cooldown: 1.5 seconds.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "CAN_CRIT",
+      "DISCRETE_ACTIVATION"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "CAN_CRIT",
+      "DISCRETE_ACTIVATION"
+    ],
+    "compatibleAnyPayloads": [],
+    "incompatibleTags": [
+      "AURA",
+      "CHANNEL",
+      "INDEFINITE_TOGGLE",
+      "REACTION",
+      "TRANSFORMATION",
+      "TRIGGERED"
+    ],
+    "compatibilityExpression": "Capability: CanCrit \\+ DiscreteActivation; excludes Aura, Channel, Reaction, Triggered, Transformation, and indefinite Toggle.",
+    "modifierOps": [
+      "When the linked skill scores a critical hit, repeat its primary execution once at 50% effect after 0.20 seconds. Internal cooldown: 1.5 seconds."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "ON_CRITICAL_HIT",
+    "priority": 750,
+    "stackingGroup": "EXCLUSIVE_REPEAT_CONTROLLER",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "The derived repeat pays no additional resource/cooldown and cannot trigger Critical Trigger. It reuses the same target/location when still valid; otherwise the trigger is discarded rather than silently retargeted.",
+    "safetyNotes": "Only a root direct critical result schedules one repeat, after 0.20 s at 50% effect with 1.5 s internal cooldown. Exclude Movement, Summon, Corpse, Barrier, Aura, Channel and other repeat controllers. Invalid original target cancels the repeat.",
+    "fixture": "accept Snipe; reject Chilling Aura (Periodic Aura excluded). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Critical Trigger",
+      "critical_trigger",
+      "rpg.passive.critical_trigger"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "kill_trigger",
+    "passiveId": "rpg.passive.kill_trigger",
+    "name": "Kill Trigger",
+    "description": "When the linked skill kills an enemy, repeat the primary execution at 50% effect toward the nearest valid enemy within 12 m. Internal cooldown: 1.0 second.",
+    "tier": "SPECIALIST",
+    "phase": 11,
+    "compatibleTags": [
+      "CAN_ACQUIRE_ENEMY_TARGET",
+      "DAMAGE",
+      "DISCRETE_ACTIVATION"
+    ],
+    "requiredFamilies": [],
+    "requiredCapabilities": [
+      "CAN_ACQUIRE_ENEMY_TARGET",
+      "DISCRETE_ACTIVATION"
+    ],
+    "compatibleAnyPayloads": [
+      "DAMAGE"
+    ],
+    "incompatibleTags": [
+      "AURA",
+      "CHANNEL",
+      "INDEFINITE_TOGGLE",
+      "REACTION",
+      "TRANSFORMATION",
+      "TRIGGERED"
+    ],
+    "compatibilityExpression": "Payload: Damage; capability: DiscreteActivation \\+ CanAcquireEnemyTarget; excludes Aura, Channel, Reaction, Triggered, Transformation, and indefinite Toggle.",
+    "modifierOps": [
+      "When the linked skill kills an enemy, repeat the primary execution at 50% effect toward the nearest valid enemy within 12 m. Internal cooldown: 1.0 second."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "ON_KILL",
+    "priority": 750,
+    "stackingGroup": "EXCLUSIVE_REPEAT_CONTROLLER",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "The derived repeat pays no additional resource/cooldown and cannot trigger Kill Trigger. For ground-targeted skills, the new target's location becomes the derived ground point. If no valid target exists, nothing is spawned.",
+    "safetyNotes": "One repeat per root at 50% effect, aimed at the nearest valid enemy within 12 m of the killed target and within legal caster reach; internal cooldown 1 s. Exclude corpse, summon and movement consumers. Derived kills cannot repeat again.",
+    "fixture": "accept Fireball; reject Wolf Summon (Summon operation cannot be replayed generically). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
+    "aliases": [
+      "Kill Trigger",
+      "kill_trigger",
+      "rpg.passive.kill_trigger"
+    ]
+  }
+]

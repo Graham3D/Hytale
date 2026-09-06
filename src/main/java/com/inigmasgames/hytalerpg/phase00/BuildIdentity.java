@@ -5,13 +5,13 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /** Build metadata generated from gradle.properties. */
-final class BuildIdentity {
+public final class BuildIdentity {
     private static final Properties VALUES = load();
 
-    static final String REVISION = required("rpg.revision");
-    static final String VERSION = required("rpg.version");
-    static final String STAGE = required("rpg.stage");
-    static final String HYTALE_VERSION = required("hytale.version");
+    public static final String REVISION = required("rpg.revision");
+    public static final String VERSION = required("rpg.version");
+    public static final String STAGE = required("rpg.stage");
+    public static final String HYTALE_VERSION = required("hytale.version");
 
     private BuildIdentity() {
     }
