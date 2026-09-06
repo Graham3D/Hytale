@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.modules.projectile.ProjectileModule;
 import com.hypixel.hytale.server.core.modules.projectile.config.ImpactConsumer;
 import com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig;
 import com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider;
+import com.hypixel.hytale.server.core.entity.knockback.KnockbackComponent;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
@@ -32,12 +33,19 @@ class Stage05NativeApiTest {
                 .anyMatch(method -> method.getName().equals("removeItemStack") && method.getParameterCount() == 3));
         assertTrue(Arrays.stream(ItemContainer.class.getMethods())
                 .anyMatch(method -> method.getName().equals("addItemStack") && method.getParameterCount() == 4));
+        assertTrue(Arrays.stream(KnockbackComponent.class.getMethods())
+                .anyMatch(method -> method.getName().equals("setVelocity") && method.getParameterCount() == 1));
     }
 
     @Test void ownedProjectileAssetsContainNoNativeDamageInteraction() throws Exception {
         for (String path : new String[] {
                 "/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Fire_Bolt.json",
-                "/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Snipe.json" }) {
+                "/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Frost_Bolt.json",
+                "/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Arcane_Bolt.json",
+                "/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Stone_Bolt.json",
+                "/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Quick_Shot_Bow.json",
+                "/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Quick_Shot_Crossbow.json",
+                "/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Axe_Toss.json" }) {
             try (var stream = Stage05NativeApiTest.class.getResourceAsStream(path)) {
                 assertNotNull(stream, path);
                 String json = new String(stream.readAllBytes(), StandardCharsets.UTF_8);

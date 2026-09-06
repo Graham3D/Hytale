@@ -3,6 +3,7 @@ package com.inigmasgames.hytalerpg.execution;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import com.inigmasgames.hytalerpg.execution.projectile.ProjectileFamilyExecutor;
 
 /** One executor per mechanical family, never one executor per fantasy skill. */
 public final class SkillExecutorRegistry {
@@ -28,7 +29,7 @@ public final class SkillExecutorRegistry {
                 forwarding(Stage04SkillProfile.Family.STRIKE, SkillExecutionPort::executeStrike),
                 forwarding(Stage04SkillProfile.Family.MOVEMENT, SkillExecutionPort::executeMovement),
                 forwarding(Stage04SkillProfile.Family.REACTION, SkillExecutionPort::executeReaction),
-                forwarding(Stage04SkillProfile.Family.PROJECTILE, SkillExecutionPort::executeProjectile)));
+                new ProjectileFamilyExecutor()));
     }
     private static SkillFamilyExecutor forwarding(Stage04SkillProfile.Family family, Dispatch dispatch) {
         return new SkillFamilyExecutor() {

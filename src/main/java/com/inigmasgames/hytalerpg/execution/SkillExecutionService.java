@@ -101,8 +101,6 @@ public final class SkillExecutionService {
             emit(request, RpgTraceEventType.MOVEMENT_CANCELLED, root, instance, Map.of("reason", reason));
         else if (cancelled.get().phase() == SkillInstanceLifecycle.Phase.REACTION)
             emit(request, RpgTraceEventType.REACTION_CANCELLED, root, instance, Map.of("reason", reason));
-        else if (cancelled.get().phase() == SkillInstanceLifecycle.Phase.PROJECTILE)
-            emit(request, RpgTraceEventType.PROJECTILE_CANCELLED, root, instance, Map.of("reason", reason));
         emit(request, RpgTraceEventType.SKILL_TERMINATED, root, instance,
                 Map.of("reason", reason, "phase", cancelled.get().phase().name()));
         return true;
@@ -131,16 +129,28 @@ public final class SkillExecutionService {
         if (!profile.family().name().equals(plan.finalFamily())
                 && !plan.finalTags().contains(profile.family().name()))
             throw new Rejection("COMPILED_FAMILY_UNSUPPORTED", instance);
-        validateEquipment(profile, port.equipment(), instance);
+        SkillExecutionPort.Equipment equipment = port.equipment();
+        try { validateEquipment(profile, equipment, instance); }
+        catch (Rejection rejection) {
+            emitProjectileRejection(request, root, instance, profile, rejection.code);
+            throw rejection;
+        }
         SkillExecutionPort.Validation family = port.familyPrerequisites(profile, plan);
-        if (!family.accepted()) throw new Rejection(family.code(), instance);
+        if (!family.accepted()) {
+            emitProjectileRejection(request, root, instance, profile, family.code());
+            throw new Rejection(family.code(), instance);
+        }
         ResourceCost declared = new ResourceCost(ResourceType.valueOf(profile.resourceType()), profile.resourceCost());
         ResourceCost cost = kernel.resources().evaluate(declared, plan.kernelModifiers());
-        if (!kernel.resources().canAfford(request.actorId(), cost, port.resources()))
+        if (!kernel.resources().canAfford(request.actorId(), cost, port.resources())) {
+            emitProjectileRejection(request, root, instance, profile, "INSUFFICIENT_RESOURCE");
             throw new Rejection("INSUFFICIENT_RESOURCE", instance);
-        if (!kernel.cooldowns().canActivate(request.actorId(), profile.skillId()))
+        }
+        if (!kernel.cooldowns().canActivate(request.actorId(), profile.skillId())) {
+            emitProjectileRejection(request, root, instance, profile, "COOLDOWN_ACTIVE");
             throw new Rejection("COOLDOWN_ACTIVE", instance);
-        return new Prepared(request, root, instance, profile, plan, cost);
+        }
+        return new Prepared(request, root, instance, profile, plan, cost, equipment);
     }
 
     private SkillExecutionResult commitAndDispatch(Prepared prepared, SkillExecutionPort port) {
@@ -150,7 +160,7 @@ public final class SkillExecutionService {
         SkillExecutionContext context;
         try {
             DerivedStats attributes = derive(prepared.request.actorId());
-            BasePowerResolver.Resolution power = resolvePower(prepared.profile, port.equipment());
+            BasePowerResolver.Resolution power = resolvePower(prepared.profile, prepared.equipment);
             var cooldown = kernel.cooldowns().calculate(prepared.profile.cooldownSeconds(), 1.0,
                     attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
             Map<String, Double> status = prepared.profile.authoredStatuses();
@@ -163,7 +173,7 @@ public final class SkillExecutionService {
                     prepared.profile.damageCoefficient(),
                     modifiers, prepared.cost, cooldown.finalSeconds(), status);
             context = new SkillExecutionContext(prepared.request, prepared.rootCastId, prepared.instanceId,
-                    prepared.profile, prepared.plan, snapshot);
+                    prepared.profile, prepared.plan, snapshot, prepared.equipment);
             kernel.resources().commitCost(token, port.resources()); resourceCommitted = true;
             kernel.cooldowns().startCooldown(prepared.request.actorId(), prepared.profile.skillId(),
                     prepared.profile.cooldownSeconds(), 1.0, attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
@@ -262,6 +272,13 @@ public final class SkillExecutionService {
         emit(request, RpgTraceEventType.SKILL_ACTIVATION_REJECTED, root, id, Map.of("failureCode", code));
         return SkillExecutionResult.rejected(code);
     }
+    private void emitProjectileRejection(SkillExecutionRequest request, String root, String instance,
+                                          Stage04SkillProfile profile, String code) {
+        if (profile.family() != Stage04SkillProfile.Family.PROJECTILE) return;
+        emit(request, RpgTraceEventType.PROJECTILE_SPAWN_REJECTED, root, instance,
+                Map.of("projectileInstanceId", instance + "-projectile-0", "skillId", profile.skillId(),
+                        "generation", 0, "caster", request.actorId().toString(), "reason", code));
+    }
     private void emit(SkillExecutionRequest request, RpgTraceEventType type, String root, String instance,
                       Map<String, ?> values) {
         Map<String, Object> details = new LinkedHashMap<>(); details.put("rootCastId", root);
@@ -270,7 +287,8 @@ public final class SkillExecutionService {
         catch (Throwable ignored) { }
     }
     private record Prepared(SkillExecutionRequest request, String rootCastId, String instanceId,
-                            Stage04SkillProfile profile, CompiledSkillPlan plan, ResourceCost cost) { }
+                            Stage04SkillProfile profile, CompiledSkillPlan plan, ResourceCost cost,
+                            SkillExecutionPort.Equipment equipment) { }
     private static final class Rejection extends RuntimeException {
         private final String code; private final String skillInstanceId;
         private Rejection(String code, String skillInstanceId) { super(code); this.code = code; this.skillInstanceId = skillInstanceId; }

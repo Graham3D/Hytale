@@ -45,7 +45,8 @@ class Stage04ExecutionTest {
         assertEquals(66, catalog.passives().size());
         assertTrue(profiles.all().keySet().containsAll(Set.of(
                 "quick_slash", "heavy_swing", "shield_bash", "quickstep", "pounce", "riposte")));
-        assertEquals(8, profiles.all().size());
+        assertEquals(Stage04SkillProfiles.EXPECTED_STAGE04_PILOTS
+                + Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS, profiles.all().size());
         assertEquals("INNATE", profiles.require("pounce").basePowerSource());
         assertEquals(20.0, profiles.require("pounce").innateBasePower());
         var pounce = catalog.skill(new SkillId("pounce")).orElseThrow();

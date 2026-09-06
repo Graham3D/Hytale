@@ -13,7 +13,7 @@ import java.util.Map;
 /** Versioned runtime profile registry; adding a skill is a data change, not a new executor. */
 public final class Stage04SkillProfiles {
     public static final int EXPECTED_STAGE04_PILOTS = 6;
-    public static final int EXPECTED_STAGE05_PILOTS = 2;
+    public static final int EXPECTED_STAGE05_PILOTS = 6;
     private final Map<String, Stage04SkillProfile> profiles;
 
     public Stage04SkillProfiles(List<Stage04SkillProfile> profiles) {

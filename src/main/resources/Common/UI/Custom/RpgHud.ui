@@ -1,7 +1,7 @@
 $Common = "Common.ui";
 
 Group {
-  Group { Anchor: (Right: 18, Top: 18, Width: 94, Height: 30); Background: (Color: #090d14dd); Label #RpgRevision { Text: "R014"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); } }
+  Group { Anchor: (Right: 18, Top: 18, Width: 94, Height: 30); Background: (Color: #090d14dd); Label #RpgRevision { Text: "R015"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); } }
   Label #LevelUpNotice { Anchor: (Horizontal: 0, Top: 70, Width: 410, Height: 34); Background: (Color: #3b2a12e8); Text: "LEVEL UP - ATTRIBUTE POINTS"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Visible: false; }
   Group { Anchor: (Horizontal: 0, Bottom: 116, Width: 620, Height: 62); Background: (Color: #08101be8); Padding: (Full: 8); LayoutMode: Top;
     Group { Anchor: (Height: 28); LayoutMode: Left;

@@ -8,7 +8,7 @@
   "MinScale": 1,
   "MaxScale": 1,
   "Particles": [
-    { "PositionOffset": { "X": 0, "Y": 0, "Z": 0 }, "SystemId": "Fire_Projectile", "TargetNodeName": "" }
+    { "PositionOffset": { "X": 0, "Y": 0, "Z": 0 }, "SystemId": "Fire_Charged1", "TargetNodeName": "" }
   ],
   "Light": { "Color": "#ffbb88" }
 }

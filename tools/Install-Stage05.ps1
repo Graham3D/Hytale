@@ -3,9 +3,9 @@ param([string]$SaveModsDirectory = "$env:APPDATA\Hytale\data\pre-release\Saves\R
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
-$sourceJar = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.7.jar'
-$targetJar = Join-Path $SaveModsDirectory 'HytaleRPG-0.0.7.jar'
-$evidenceDirectory = Join-Path $projectRoot 'evidence\stage-05\R014'
+$sourceJar = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.8.jar'
+$targetJar = Join-Path $SaveModsDirectory 'HytaleRPG-0.0.8.jar'
+$evidenceDirectory = Join-Path $projectRoot 'evidence\stage-05\R015'
 $rollbackDirectory = Join-Path $evidenceDirectory 'rollback'
 
 if (-not (Test-Path -LiteralPath $sourceJar -PathType Leaf)) { throw "Build Stage 05 first: $sourceJar" }
@@ -29,7 +29,7 @@ foreach ($prior in $priorRpgJars) {
 }
 
 $deployedJars = @(Get-ChildItem -LiteralPath $resolvedSaveMods -Filter '*.jar' -File | Sort-Object Name)
-$expectedNames = @('CanvasUI-0.1.0.jar', 'HYTALEDEVLIB-0.5.0.jar', 'HytaleRPG-0.0.7.jar')
+$expectedNames = @('CanvasUI-0.1.0.jar', 'HYTALEDEVLIB-0.5.0.jar', 'HytaleRPG-0.0.8.jar')
 $actualNames = @($deployedJars.Name)
 if ((Compare-Object $expectedNames $actualNames).Count -ne 0) {
     throw "Deployment must contain exactly the established three JARs. Found: $($actualNames -join ', ')"
@@ -39,7 +39,7 @@ $result = [ordered]@{
     patchline = 'pre-release'
     hytaleVersion = '0.7.0-pre.1'
     save = 'RPG'
-    revision = 'R014'
+    revision = 'R015'
     sourceCommit = (& git -C $projectRoot rev-parse HEAD).Trim()
     installed = $targetJar
     sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $targetJar).Hash
@@ -49,7 +49,7 @@ $result = [ordered]@{
     canvasUiFrozenRevision = 'R008'
     rollbackJars = @((Get-ChildItem -LiteralPath $rollbackDirectory -Filter 'HytaleRPG-*.jar' -File | Sort-Object Name).Name)
     rollbackDirectory = $rollbackDirectory
-    rollback = 'Stop the RPG world, remove HytaleRPG-0.0.7.jar, and restore HytaleRPG-0.0.6.jar from evidence/stage-05/R014/rollback into Saves/RPG/mods. Player schema remains v2.'
+    rollback = 'Stop the RPG world, remove HytaleRPG-0.0.8.jar, and restore HytaleRPG-0.0.7.jar from evidence/stage-05/R015/rollback into Saves/RPG/mods. Player schema remains v2.'
 }
 $result | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $evidenceDirectory 'installation.json') -Encoding utf8
 [pscustomobject]$result | Format-List

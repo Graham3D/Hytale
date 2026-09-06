@@ -1,0 +1,5 @@
+{
+  "Model": "RPG_Frost_Bolt", "UseModelScale": true,
+  "Physics": { "Type": "Standard", "Gravity": 0, "TerminalVelocityAir": 22, "TerminalVelocityWater": 22, "RotationMode": "Velocity", "Bounciness": 0.0 },
+  "LaunchForce": 22, "SpawnOffset": { "X": 0, "Y": 0, "Z": 0 }, "Interactions": {}
+}

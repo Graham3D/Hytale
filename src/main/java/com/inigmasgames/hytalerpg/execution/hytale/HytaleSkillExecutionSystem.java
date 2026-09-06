@@ -13,6 +13,7 @@ import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.entity.knockback.KnockbackComponent;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
@@ -33,6 +34,7 @@ import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntitySta
 import com.hypixel.hytale.server.core.modules.projectile.ProjectileModule;
 import com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig;
 import com.hypixel.hytale.server.core.modules.projectile.system.StandardPhysicsTickSystem;
+import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
@@ -56,6 +58,10 @@ import com.inigmasgames.hytalerpg.execution.Stage04SkillProfile;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import com.inigmasgames.hytalerpg.execution.movement.MovementPlanner;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileFlight;
+import com.inigmasgames.hytalerpg.execution.projectile.ProjectileExecutionPlan;
+import com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance;
+import com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry;
+import com.inigmasgames.hytalerpg.execution.projectile.RpgProjectileService;
 import com.inigmasgames.hytalerpg.execution.reaction.ReactionWindowService;
 import com.inigmasgames.hytalerpg.execution.strike.SkillHitLedger;
 import com.inigmasgames.hytalerpg.execution.strike.StrikeGeometryService;
@@ -93,6 +99,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final Map<UUID, Counter> counters = new HashMap<>();
     private final Map<UUID, RepeatingStrike> repeatingStrikes = new HashMap<>();
     private final Map<String, ProjectileCarrier> projectiles = new HashMap<>();
+    private final RpgProjectileService projectileService =
+            new RpgProjectileService(new ProjectileLifecycleRegistry());
     private final Map<BurnKey, BurnState> burns = new HashMap<>();
 
     public HytaleSkillExecutionSystem(HytaleAbilitySkillInputAdapter inputs, SkillExecutionService executions,
@@ -255,7 +263,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     || reactions.active(playerRef.getUuid()).isPresent()) return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
             if (profile.family() == Stage04SkillProfile.Family.PROJECTILE) {
                 if (profile.projectile() == null) return Validation.reject("PROJECTILE_PROFILE_MISSING");
-                if (ProjectileConfig.getAssetMap().getAsset(profile.projectile().configId()) == null)
+                boolean configMissing = java.util.stream.Stream.concat(
+                                java.util.stream.Stream.of(profile.projectile().configId()),
+                                profile.projectile().configIdsByWeaponKind().values().stream())
+                        .distinct().anyMatch(id -> ProjectileConfig.getAssetMap().getAsset(id) == null);
+                if (configMissing)
                     return Validation.reject("PROJECTILE_CONFIG_MISSING");
                 long owned = projectiles.values().stream().filter(value -> value.actorId.equals(playerRef.getUuid())).count();
                 if (owned >= plan.safetyBudgets().maxLiveProjectiles())
@@ -342,7 +354,22 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             Stage04SkillProfile.Projectile authored = context.profile().projectile();
             HytaleAmmoAdapter.Token ammo = HytaleAmmoAdapter.Token.NONE;
             Ref<EntityStore> spawned = null;
+            ProjectileInstance instance = null;
             try {
+                String weaponKind = context.equipment().mainHand().weaponKind();
+                String configId = authored.configIdFor(weaponKind);
+                double speed = authored.speedFor(weaponKind);
+                Vec3 direction = aim(store, actor);
+                Vec3 actorPosition = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
+                Vec3 origin = new Vec3(actorPosition.x(), actorPosition.y() + 1.35, actorPosition.z())
+                        .add(direction.multiply(0.65));
+                ProjectileExecutionPlan plan = projectileService.buildPlan(context, playerRef.getUuid(),
+                        origin, direction, configId, speed, System.nanoTime());
+                emit(context, RpgTraceEventType.PROJECTILE_SPAWN_REQUEST, Map.of(
+                        "projectileInstanceId", plan.projectileInstanceId(), "skillId", plan.skillId(),
+                        "generation", plan.generation(), "caster", plan.ownerId().toString(),
+                        "compiledPlanHash", plan.compiledPlanHash(), "configId", configId,
+                        "originX", origin.x(), "originY", origin.y(), "originZ", origin.z()));
                 emit(context, RpgTraceEventType.AMMO_CHECK,
                         Map.of("required", authored.requiresAmmo(), "itemId", authored.ammoItemId(),
                                 "quantity", authored.ammoQuantity(), "available", true));
@@ -350,37 +377,45 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if (authored.requiresAmmo()) emit(context, RpgTraceEventType.AMMO_COMMITTED,
                         Map.of("itemId", ammo.itemId(), "quantity", ammo.quantity(),
                                 "fullyCharged", authored.fullyCharged()));
-                ProjectileConfig config = ProjectileConfig.getAssetMap().getAsset(authored.configId());
+                ProjectileConfig config = ProjectileConfig.getAssetMap().getAsset(configId);
                 if (config == null) throw new IllegalStateException("Projectile config disappeared before dispatch");
-                Vec3 direction = aim(store, actor);
-                Vec3 actorPosition = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
-                Vec3 origin = new Vec3(actorPosition.x(), actorPosition.y() + 1.35, actorPosition.z())
-                        .add(direction.multiply(0.65));
                 spawned = ProjectileModule.get().spawnProjectile(actor, buffer, config,
                         vector(origin), vector(direction));
                 var physics = buffer.getComponent(spawned,
                         ProjectileModule.get().getStandardPhysicsProviderComponentType());
                 if (physics == null) throw new IllegalStateException("Native projectile has no StandardPhysicsProvider");
-                ProjectileCarrier carrier = new ProjectileCarrier(context, actor, playerRef.getUuid(), spawned,
-                        new ProjectileFlight(origin, authored.speed(), authored.maxDistance()));
-                projectiles.put(context.skillInstanceId(), carrier);
+                instance = projectileService.onProjectileSpawn(plan);
+                ProjectileCarrier carrier = new ProjectileCarrier(context, actor, playerRef.getUuid(), spawned, instance);
+                projectiles.put(plan.projectileInstanceId(), carrier);
                 physics.setImpactConsumer((projectileRef, position, blockPosition, hitEntity, interaction, commandBuffer) ->
                         onProjectileImpact(carrier, projectileRef, position, blockPosition, hitEntity, commandBuffer));
                 emit(context, RpgTraceEventType.PROJECTILE_SPAWNED,
-                        Map.of("configId", authored.configId(), "speed", authored.speed(),
-                                "maxDistance", authored.maxDistance(), "maximumLifetimeSeconds",
-                                authored.maximumLifetimeSeconds(), "radius", authored.radius(),
-                                "gravity", authored.gravity(), "nativeProjectileRef", spawned.toString()));
+                        Map.ofEntries(Map.entry("projectileInstanceId", plan.projectileInstanceId()),
+                                Map.entry("skillId", plan.skillId()), Map.entry("generation", plan.generation()),
+                                Map.entry("caster", plan.ownerId().toString()),
+                                Map.entry("compiledPlanHash", plan.compiledPlanHash()),
+                                Map.entry("configId", configId), Map.entry("speed", speed),
+                                Map.entry("maxDistance", authored.maxDistance()),
+                                Map.entry("maximumLifetimeSeconds", authored.maximumLifetimeSeconds(weaponKind)),
+                                Map.entry("radius", authored.radius()), Map.entry("gravity", authored.gravity()),
+                                Map.entry("nativeProjectileRef", spawned.toString())));
                 vfx.present(store.getExternalData().getWorld(), player, context.compiledPlan().vfxRecipeId());
                 return SkillExecutionResult.committed("PROJECTILE_STARTED", 0, 0.0);
             } catch (RuntimeException error) {
-                projectiles.remove(context.skillInstanceId());
+                if (instance != null) {
+                    projectiles.remove(instance.plan().projectileInstanceId());
+                    projectileService.onForwardTermination(instance, "SPAWN_REJECTED", instance.plan().origin());
+                }
                 if (spawned != null && spawned.isValid()) buffer.tryRemoveEntity(spawned, RemoveReason.REMOVE);
                 if (ammo.quantity() > 0) ammunition.refund(actor, store, ammo);
                 if (authored.requiresAmmo()) emit(context, RpgTraceEventType.AMMO_REJECTED,
                         Map.of("reason", "PROJECTILE_DISPATCH_ROLLBACK", "error", error.getClass().getSimpleName()));
-                emit(context, RpgTraceEventType.PROJECTILE_CANCELLED,
-                        Map.of("reason", "DISPATCH_ROLLBACK", "error", error.getClass().getSimpleName()));
+                Map<String, Object> rejection = new HashMap<>();
+                rejection.put("reason", "DISPATCH_ROLLBACK");
+                rejection.put("error", error.getClass().getSimpleName());
+                rejection.put("skillId", context.profile().skillId());
+                rejection.put("projectileInstanceId", context.skillInstanceId() + "-projectile-0");
+                emit(context, RpgTraceEventType.PROJECTILE_SPAWN_REJECTED, rejection);
                 throw error;
             }
         }
@@ -518,7 +553,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
 
         private boolean applyBurn(SkillExecutionContext context,
-                                  StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
+                                   StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
             Stage04SkillProfile.Projectile projectile = context.profile().projectile();
             UUID targetId = UUID.fromString(target.stableId());
             emit(context, RpgTraceEventType.STATUS_REQUEST, Map.of("targetId", target.stableId(),
@@ -544,6 +579,45 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             trace.emit(playerRef.getUuid(), event, ids(context), Map.of("targetId", target.stableId(),
                     "status", "BURN", "durationSeconds", result.remainingSeconds(), "detail", result.detail()));
             return true;
+        }
+
+        private String applyProjectileStatus(SkillExecutionContext context,
+                                             StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
+            Stage04SkillProfile.Projectile projectile = context.profile().projectile();
+            RpgStatusType type = RpgStatusType.valueOf(projectile.statusId());
+            UUID targetId = UUID.fromString(target.stableId());
+            emit(context, RpgTraceEventType.STATUS_REQUEST, Map.of("targetId", target.stableId(),
+                    "status", type.name(), "durationSeconds", projectile.statusSeconds()));
+            var control = new ControlProfile(target.protectedTarget(), target.boss(), false);
+            var result = projectile.statusSeconds() > 0.0
+                    ? kernel.statuses().apply(targetId, type, control, projectile.statusSeconds())
+                    : kernel.statuses().apply(targetId, type, control);
+            RpgTraceEventType event = switch (result.outcome()) {
+                case APPLIED -> RpgTraceEventType.STATUS_APPLIED;
+                case REFRESHED -> RpgTraceEventType.STATUS_REFRESHED;
+                case THRESHOLD -> RpgTraceEventType.STATUS_THRESHOLD;
+                case REJECTED -> RpgTraceEventType.STATUS_REJECTED;
+            };
+            trace.emit(playerRef.getUuid(), event, ids(context), Map.of("targetId", target.stableId(),
+                    "status", result.type().name(), "stacks", result.stacks(),
+                    "durationSeconds", result.remainingSeconds(), "detail", result.detail()));
+            return result.outcome().name() + ':' + result.type().name() + ":stacks=" + result.stacks();
+        }
+
+        private double applyProjectileKnockback(SkillExecutionContext context,
+                                                StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
+            double requested = context.profile().projectile().knockbackDistance();
+            if (requested <= 0.0 || target.protectedTarget() || target.boss() || buffer == null) return 0.0;
+            TransformComponent sourceTransform = store.getComponent(actor, TransformComponent.getComponentType());
+            TransformComponent targetTransform = store.getComponent(target.handle(), TransformComponent.getComponentType());
+            if (sourceTransform == null || targetTransform == null) return 0.0;
+            Vec3 away = vec(targetTransform.getPosition()).subtract(vec(sourceTransform.getPosition())).horizontalNormalized();
+            KnockbackComponent knockback = buffer.ensureAndGetComponent(target.handle(), KnockbackComponent.getComponentType());
+            if (knockback == null) return 0.0;
+            knockback.setVelocity(new Vector3d(away.x() * requested, 0.15, away.z() * requested));
+            knockback.setVelocityType(ChangeVelocityType.Add);
+            knockback.setDuration(0.25f);
+            return requested;
         }
     }
 
@@ -583,42 +657,81 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private void onProjectileImpact(ProjectileCarrier expected, Ref<EntityStore> projectileRef,
                                     Vector3d position, Vector3i blockPosition, Ref<EntityStore> hitEntity,
                                     CommandBuffer<EntityStore> buffer) {
-        ProjectileCarrier carrier = projectiles.remove(expected.context.skillInstanceId());
-        if (carrier != expected) return;
-        if (projectileRef != null && projectileRef.isValid()) buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
+        String projectileId = expected.instance.plan().projectileInstanceId();
+        ProjectileCarrier carrier = projectiles.get(projectileId);
+        if (carrier != expected) {
+            if (hitEntity != null && hitEntity.isValid()) {
+                UUIDComponent uuid = buffer.getStore().getComponent(hitEntity, UUIDComponent.getComponentType());
+                String targetId = uuid == null ? hitEntity.toString() : uuid.getUuid().toString();
+                if (expected.instance.previouslyHit(targetId))
+                    emitProjectile(expected, RpgTraceEventType.PROJECTILE_TARGET_DEDUP,
+                            Map.of("targetId", targetId, "reason", "ALREADY_HIT"));
+            }
+            return;
+        }
         Store<EntityStore> store = buffer.getStore();
         if (!carrier.actor.isValid()) {
-            emit(carrier.context, RpgTraceEventType.PROJECTILE_CANCELLED, Map.of("reason", "ACTOR_REMOVED"));
-            executions.terminate(carrier.context, "PROJECTILE_ACTOR_REMOVED");
+            cancelProjectile(carrier, "ACTOR_REMOVED", position == null ? null : vec(position), buffer);
             return;
         }
         PlayerRef playerRef = store.getComponent(carrier.actor, PlayerRef.getComponentType());
         Player player = store.getComponent(carrier.actor, Player.getComponentType());
         EntityStatMap stats = store.getComponent(carrier.actor, EntityStatMap.getComponentType());
         if (playerRef == null || player == null || stats == null) {
-            emit(carrier.context, RpgTraceEventType.PROJECTILE_CANCELLED, Map.of("reason", "ACTOR_COMPONENTS_MISSING"));
-            executions.terminate(carrier.context, "PROJECTILE_ACTOR_UNUSABLE");
+            cancelProjectile(carrier, "ACTOR_COMPONENTS_MISSING", position == null ? null : vec(position), buffer);
             return;
         }
         Port port = new Port(store, carrier.actor, playerRef, player, stats, hitEntity, buffer);
         if (hitEntity != null && hitEntity.isValid()) {
             StrikeGeometryService.Candidate<Ref<EntityStore>> target = port.candidate(hitEntity);
             if (target == null || target.protectedTarget()) {
-                emit(carrier.context, RpgTraceEventType.PROJECTILE_TARGET_REJECTED,
+                emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TARGET_REJECTED,
                         Map.of("target", hitEntity.toString(), "reason",
                                 target == null ? "INVALID_OR_NON_DAMAGEABLE" : "PROTECTED_TARGET"));
-                executions.terminate(carrier.context, "PROJECTILE_TARGET_REJECTED");
+                terminateProjectile(carrier, "TARGET_REJECTED", vec(position), buffer);
                 return;
             }
-            Stage04SkillProfile.Projectile authored = carrier.context.profile().projectile();
-            DamageOutcome outcome = port.damage(carrier.context, target, 0, authored.coefficient(),
-                    carrier.context.snapshot().criticalChance(), DamageCause.PROJECTILE);
-            emit(carrier.context, RpgTraceEventType.PROJECTILE_HIT,
-                    Map.of("targetId", target.stableId(), "preMitigationDamage", outcome.preMitigationDamage(),
-                            "actualHealthLoss", outcome.actualHealthLoss(), "targetCap", authored.targetCap(),
-                            "impactX", position.x, "impactY", position.y, "impactZ", position.z));
-            if (authored.hasPeriodicStatus() && outcome.actualHealthLoss() > 0.0) port.applyBurn(carrier.context, target);
-            executions.terminate(carrier.context, "PROJECTILE_HIT");
+            if (!projectileService.onEnemyContact(carrier.instance, target.stableId())) {
+                emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TARGET_DEDUP,
+                        Map.of("targetId", target.stableId(), "reason", "ALREADY_HIT"));
+                return;
+            }
+            projectiles.remove(projectileId, carrier);
+            if (projectileRef != null && projectileRef.isValid()) buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
+            try {
+                Stage04SkillProfile.Projectile authored = carrier.context.profile().projectile();
+                DamageOutcome outcome = port.damage(carrier.context, target, 0, authored.coefficient(),
+                        carrier.context.snapshot().criticalChance(), DamageCause.PROJECTILE);
+                String statusResult = "NONE";
+                if (outcome.actualHealthLoss() > 0.0 && !authored.statusId().isBlank())
+                    statusResult = authored.hasPeriodicStatus()
+                            ? (port.applyBurn(carrier.context, target) ? "BURN_APPLIED" : "BURN_REJECTED")
+                            : port.applyProjectileStatus(carrier.context, target);
+                double appliedKnockback = outcome.actualHealthLoss() > 0.0
+                        ? port.applyProjectileKnockback(carrier.context, target) : 0.0;
+                Map<String, Object> hit = new HashMap<>();
+                hit.put("targetId", target.stableId());
+                hit.put("preMitigationDamage", outcome.preMitigationDamage());
+                hit.put("actualHealthLoss", outcome.actualHealthLoss());
+                hit.put("statusResult", statusResult);
+                hit.put("requestedKnockback", authored.knockbackDistance());
+                hit.put("appliedKnockback", appliedKnockback);
+                hit.put("targetCap", authored.targetCap());
+                hit.put("impactX", position.x); hit.put("impactY", position.y); hit.put("impactZ", position.z);
+                hit.put("travelledDistance", carrier.instance.flight().travelled());
+                emitProjectile(carrier, RpgTraceEventType.PROJECTILE_ENTITY_HIT, hit);
+                projectileService.onForwardTermination(carrier.instance, "ENTITY_HIT", vec(position));
+                emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
+                        Map.of("reason", "ENTITY_HIT", "travelledDistance", carrier.instance.flight().travelled()));
+                executions.terminate(carrier.context, "PROJECTILE_ENTITY_HIT");
+            } catch (RuntimeException error) {
+                projectileService.onForwardTermination(carrier.instance, "PAYLOAD_FAILURE", vec(position));
+                emitProjectile(carrier, RpgTraceEventType.PROJECTILE_CANCELLED,
+                        Map.of("reason", "PAYLOAD_FAILURE", "error", error.getClass().getSimpleName()));
+                emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
+                        Map.of("reason", "PAYLOAD_FAILURE"));
+                executions.terminate(carrier.context, "PROJECTILE_PAYLOAD_FAILURE");
+            }
             return;
         }
         Map<String, Object> details = new HashMap<>();
@@ -627,8 +740,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         if (blockPosition != null) {
             details.put("blockX", blockPosition.x); details.put("blockY", blockPosition.y); details.put("blockZ", blockPosition.z);
         }
-        emit(carrier.context, RpgTraceEventType.PROJECTILE_TERRAIN_IMPACT, details);
-        executions.terminate(carrier.context, "PROJECTILE_TERRAIN_IMPACT");
+        details.put("travelledDistance", carrier.instance.flight().travelled());
+        emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERRAIN_HIT, details);
+        projectiles.remove(projectileId, carrier);
+        if (projectileRef != null && projectileRef.isValid()) buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
+        projectileService.onTerrainContact(carrier.instance, vec(position));
+        emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
+                Map.of("reason", "TERRAIN_HIT", "travelledDistance", carrier.instance.flight().travelled()));
+        executions.terminate(carrier.context, "PROJECTILE_TERRAIN_HIT");
     }
 
     private void advanceProjectiles(UUID actorId, float deltaSeconds, Store<EntityStore> store,
@@ -636,9 +755,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         List<ProjectileCarrier> owned = projectiles.values().stream()
                 .filter(value -> value.actorId.equals(actorId)).toList();
         for (ProjectileCarrier carrier : owned) {
+            String projectileId = carrier.instance.plan().projectileInstanceId();
             if (!carrier.projectile.isValid()) {
-                if (projectiles.remove(carrier.context.skillInstanceId(), carrier)) {
-                    emit(carrier.context, RpgTraceEventType.PROJECTILE_CANCELLED,
+                if (projectiles.remove(projectileId, carrier)) {
+                    projectileService.onForwardTermination(carrier.instance,
+                            "NATIVE_PROJECTILE_REMOVED_WITHOUT_IMPACT", carrier.instance.flight().lastPosition());
+                    emitProjectile(carrier, RpgTraceEventType.PROJECTILE_CANCELLED,
+                            Map.of("reason", "NATIVE_PROJECTILE_REMOVED_WITHOUT_IMPACT"));
+                    emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
                             Map.of("reason", "NATIVE_PROJECTILE_REMOVED_WITHOUT_IMPACT"));
                     executions.terminate(carrier.context, "PROJECTILE_NATIVE_REMOVAL");
                 }
@@ -646,17 +770,22 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             TransformComponent transform = store.getComponent(carrier.projectile, TransformComponent.getComponentType());
             if (transform == null) continue;
-            ProjectileFlight.Observation observation = carrier.flight.observe(Math.max(0.0, deltaSeconds),
+            ProjectileFlight.Observation observation = carrier.instance.observe(Math.max(0.0, deltaSeconds),
                     vec(transform.getPosition()));
-            if (!observation.expired() || !projectiles.remove(carrier.context.skillInstanceId(), carrier)) continue;
+            if (!observation.expired() || !projectiles.remove(projectileId, carrier)) continue;
             buffer.tryRemoveEntity(carrier.projectile, RemoveReason.REMOVE);
-            emit(carrier.context, RpgTraceEventType.PROJECTILE_EXPIRED,
-                    Map.of("reason", observation.travelled() + 1.0e-6 >= observation.maxDistance()
-                                    ? "MAX_DISTANCE" : "MAX_LIFETIME",
-                            "travelled", observation.travelled(), "elapsed", observation.elapsed(),
-                            "maxDistance", observation.maxDistance(),
-                            "maximumLifetimeSeconds", observation.maxLifetimeSeconds()));
-            executions.terminate(carrier.context, "PROJECTILE_EXPIRED");
+            boolean range = observation.travelled() + 1.0e-6 >= observation.maxDistance();
+            String reason = range ? "MAX_RANGE" : "MAX_LIFETIME";
+            projectileService.onForwardTermination(carrier.instance, reason, observation.position());
+            emitProjectile(carrier, range ? RpgTraceEventType.PROJECTILE_MAX_RANGE : RpgTraceEventType.PROJECTILE_EXPIRED,
+                    Map.of("reason", reason, "travelledDistance", observation.travelled(),
+                            "elapsed", observation.elapsed(), "maxDistance", observation.maxDistance(),
+                            "maximumLifetimeSeconds", observation.maxLifetimeSeconds(),
+                            "positionX", observation.position().x(), "positionY", observation.position().y(),
+                            "positionZ", observation.position().z()));
+            emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
+                    Map.of("reason", reason, "travelledDistance", observation.travelled()));
+            executions.terminate(carrier.context, "PROJECTILE_" + reason);
         }
     }
 
@@ -704,11 +833,16 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         List<ProjectileCarrier> owned = projectiles.values().stream()
                 .filter(value -> value.actorId.equals(actorId)).toList();
         for (ProjectileCarrier carrier : owned) {
-            if (!projectiles.remove(carrier.context.skillInstanceId(), carrier)) continue;
+            if (!projectiles.remove(carrier.instance.plan().projectileInstanceId(), carrier)) continue;
+            projectileService.onForwardTermination(carrier.instance, "OWNER_CANCELLED", carrier.instance.flight().lastPosition());
             if (carrier.projectile.isValid()) {
                 if (buffer != null) buffer.tryRemoveEntity(carrier.projectile, RemoveReason.REMOVE);
                 else carrier.projectile.getStore().removeEntity(carrier.projectile, RemoveReason.REMOVE);
             }
+            emitProjectile(carrier, RpgTraceEventType.PROJECTILE_CANCELLED,
+                    Map.of("reason", "OWNER_CANCELLED", "travelledDistance", carrier.instance.flight().travelled()));
+            emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
+                    Map.of("reason", "OWNER_CANCELLED", "travelledDistance", carrier.instance.flight().travelled()));
         }
     }
 
@@ -749,6 +883,35 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private void emit(SkillExecutionContext context, RpgTraceEventType event, Map<String, ?> details) {
         trace.emit(context.request().actorId(), event, ids(context), details);
     }
+    private void emitProjectile(ProjectileCarrier carrier, RpgTraceEventType event, Map<String, ?> details) {
+        Map<String, Object> values = new HashMap<>();
+        ProjectileExecutionPlan plan = carrier.instance.plan();
+        values.put("projectileInstanceId", plan.projectileInstanceId());
+        values.put("generation", plan.generation());
+        values.put("caster", plan.ownerId().toString());
+        values.put("skillId", plan.skillId());
+        values.put("compiledPlanHash", plan.compiledPlanHash());
+        values.putAll(details);
+        emit(carrier.context, event, values);
+    }
+    private void cancelProjectile(ProjectileCarrier carrier, String reason, Vec3 position,
+                                  CommandBuffer<EntityStore> buffer) {
+        projectiles.remove(carrier.instance.plan().projectileInstanceId(), carrier);
+        if (carrier.projectile.isValid()) buffer.tryRemoveEntity(carrier.projectile, RemoveReason.REMOVE);
+        projectileService.onForwardTermination(carrier.instance, reason, position);
+        emitProjectile(carrier, RpgTraceEventType.PROJECTILE_CANCELLED, Map.of("reason", reason));
+        emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED, Map.of("reason", reason));
+        executions.terminate(carrier.context, "PROJECTILE_" + reason);
+    }
+    private void terminateProjectile(ProjectileCarrier carrier, String reason, Vec3 position,
+                                     CommandBuffer<EntityStore> buffer) {
+        projectiles.remove(carrier.instance.plan().projectileInstanceId(), carrier);
+        if (carrier.projectile.isValid()) buffer.tryRemoveEntity(carrier.projectile, RemoveReason.REMOVE);
+        projectileService.onForwardTermination(carrier.instance, reason, position);
+        emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
+                Map.of("reason", reason, "travelledDistance", carrier.instance.flight().travelled()));
+        executions.terminate(carrier.context, "PROJECTILE_" + reason);
+    }
     private static CombatTrace.Context ids(SkillExecutionContext context) {
         return new CombatTrace.Context(context.rootCastId(), context.skillInstanceId(), context.request().correlationId());
     }
@@ -761,7 +924,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private record Counter(SkillExecutionContext context, Ref<EntityStore> attacker, String eventId) { }
     private record RepeatingStrike(SkillExecutionContext context, StrikeRepeatSchedule schedule) { }
     private record ProjectileCarrier(SkillExecutionContext context, Ref<EntityStore> actor, UUID actorId,
-                                     Ref<EntityStore> projectile, ProjectileFlight flight) { }
+                                     Ref<EntityStore> projectile, ProjectileInstance instance) { }
     private record BurnKey(UUID actorId, UUID targetId) { }
     private static final class BurnState {
         final SkillExecutionContext context;

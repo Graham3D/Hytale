@@ -11,20 +11,83 @@
         "maxDistance": 24.0, "radius": 0.30, "gravity": 0.0, "targetCap": 1,
         "coefficient": 0.95, "statusId": "BURN", "statusSeconds": 4.0,
         "periodicCoefficient": 0.10, "periodicTicks": 4, "periodicIntervalSeconds": 1.0,
-        "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false
+        "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false,
+        "knockbackDistance": 0.0, "configIdsByWeaponKind": {}, "speedsByWeaponKind": {}
       }
     },
     {
-      "skillId": "snipe", "family": "PROJECTILE", "secondaryFamilies": [],
-      "allowedMainHandKinds": ["BOW"], "requiredOffHandKinds": [],
-      "resourceType": "STAMINA", "resourceCost": 12.0, "cooldownSeconds": 10.0, "windupSeconds": 0.0,
+      "skillId": "frost_bolt", "family": "PROJECTILE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["STAFF", "WAND"], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 8.0, "cooldownSeconds": 1.5, "windupSeconds": 0.0,
+      "basePowerSource": "MAGIC_WEAPON", "innateBasePower": 0.0, "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Frost_Bolt", "speed": 22.0,
+        "maxDistance": 24.0, "radius": 0.30, "gravity": 0.0, "targetCap": 1,
+        "coefficient": 0.85, "statusId": "CHILL", "statusSeconds": 0.0,
+        "periodicCoefficient": 0.0, "periodicTicks": 0, "periodicIntervalSeconds": 0.0,
+        "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false,
+        "knockbackDistance": 0.0, "configIdsByWeaponKind": {}, "speedsByWeaponKind": {}
+      }
+    },
+    {
+      "skillId": "arcane_bolt", "family": "PROJECTILE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["WAND", "SPELLBOOK"], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 7.0, "cooldownSeconds": 1.2, "windupSeconds": 0.0,
+      "basePowerSource": "MAGIC_WEAPON", "innateBasePower": 0.0, "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Arcane_Bolt", "speed": 26.0,
+        "maxDistance": 26.0, "radius": 0.28, "gravity": 0.0, "targetCap": 1,
+        "coefficient": 0.90, "statusId": "", "statusSeconds": 0.0,
+        "periodicCoefficient": 0.0, "periodicTicks": 0, "periodicIntervalSeconds": 0.0,
+        "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false,
+        "knockbackDistance": 0.0, "configIdsByWeaponKind": {}, "speedsByWeaponKind": {}
+      }
+    },
+    {
+      "skillId": "stone_bolt", "family": "PROJECTILE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["STAFF", "WAND"], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 8.0, "cooldownSeconds": 2.2, "windupSeconds": 0.0,
+      "basePowerSource": "MAGIC_WEAPON", "innateBasePower": 0.0, "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Stone_Bolt", "speed": 17.0,
+        "maxDistance": 20.0, "radius": 0.45, "gravity": 0.0, "targetCap": 1,
+        "coefficient": 1.20, "statusId": "", "statusSeconds": 0.0,
+        "periodicCoefficient": 0.0, "periodicTicks": 0, "periodicIntervalSeconds": 0.0,
+        "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false,
+        "knockbackDistance": 1.5, "configIdsByWeaponKind": {}, "speedsByWeaponKind": {}
+      }
+    },
+    {
+      "skillId": "quick_shot", "family": "PROJECTILE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["BOW", "CROSSBOW"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 4.0, "cooldownSeconds": 0.9, "windupSeconds": 0.0,
       "basePowerSource": "WEAPON", "innateBasePower": 0.0, "scaling": "LIGHT",
       "projectile": {
-        "configId": "Projectile_Config_RPG_Snipe", "speed": 45.0,
-        "maxDistance": 48.0, "radius": 0.10, "gravity": 0.0, "targetCap": 1,
-        "coefficient": 2.00, "statusId": "", "statusSeconds": 0.0,
+        "configId": "Projectile_Config_RPG_Quick_Shot_Bow", "speed": 30.0,
+        "maxDistance": 28.0, "radius": 0.075, "gravity": 0.0, "targetCap": 1,
+        "coefficient": 0.80, "statusId": "", "statusSeconds": 0.0,
         "periodicCoefficient": 0.0, "periodicTicks": 0, "periodicIntervalSeconds": 0.0,
-        "ammoItemId": "Weapon_Arrow_Crude", "ammoQuantity": 1, "fullyCharged": true
+        "ammoItemId": "Weapon_Arrow_Crude", "ammoQuantity": 1, "fullyCharged": false,
+        "knockbackDistance": 0.0,
+        "configIdsByWeaponKind": {
+          "BOW": "Projectile_Config_RPG_Quick_Shot_Bow",
+          "CROSSBOW": "Projectile_Config_RPG_Quick_Shot_Crossbow"
+        },
+        "speedsByWeaponKind": { "BOW": 30.0, "CROSSBOW": 40.0 }
+      }
+    },
+    {
+      "skillId": "axe_toss", "family": "PROJECTILE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["BATTLEAXE"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 8.0, "cooldownSeconds": 5.0, "windupSeconds": 0.0,
+      "basePowerSource": "WEAPON", "innateBasePower": 0.0, "scaling": "HEAVY",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Axe_Toss", "speed": 18.0,
+        "maxDistance": 20.0, "radius": 0.45, "gravity": 0.0, "targetCap": 1,
+        "coefficient": 1.20, "statusId": "", "statusSeconds": 0.0,
+        "periodicCoefficient": 0.0, "periodicTicks": 0, "periodicIntervalSeconds": 0.0,
+        "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false,
+        "knockbackDistance": 0.0, "configIdsByWeaponKind": {}, "speedsByWeaponKind": {}
       }
     }
   ]
