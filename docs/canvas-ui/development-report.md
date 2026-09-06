@@ -445,6 +445,25 @@ none exists in R006.
 - Outcome: R007 crash trigger corrected; Stage 01 remains **BLOCKED** on the
   separate continuous-pointer capability gap.
 
+### R009 — CanvasUI paused; RPG Stage 01B backend milestone
+
+- RPG implementation commit:
+  `8a933e7894cf0c8264451d2f0cd51dbf39fbc6bb`.
+- CanvasUI implementation and deployed CanvasUI JAR are unchanged from R008.
+- Per the project decision, continuous-pointer probing is paused while work
+  proceeds on the server-authoritative RPG backend.
+- Implemented and deployed typed catalogs, slots, graph validation,
+  compatibility, deterministic compilation, transactional persistence,
+  commands, migrations, and bounded diagnostics for RPG Stage 01B.
+- Automated result: 38 aggregate tests pass; the 21 CanvasUI regression tests
+  remain green. The actual RPG save discovers and enables all three intended
+  mods and shuts down cleanly.
+- Full technical record:
+  [`Stage 01B R009 report`](../stage-01b/stage-01b-report.md).
+- Outcome: CanvasUI Stage 01 remains **BLOCKED** on public continuous-pointer
+  input; RPG Stage 01B is separately **BLOCKED** only on the connected-client
+  command and restart/rejoin evidence gate.
+
 ## Evidence and reproducibility
 
 - Per-revision verification, installation, and smoke records:

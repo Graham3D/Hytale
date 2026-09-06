@@ -4,3 +4,4 @@ run/
 config.json
 telemetry/
 *.log
+evidence/stage-01b/*/rollback/*.jar

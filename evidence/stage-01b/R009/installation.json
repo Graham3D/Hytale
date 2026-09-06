@@ -1,0 +1,12 @@
+{
+  "installedAtUtc": "2026-09-06T18:09:34.7336538Z",
+  "patchline": "pre-release",
+  "hytaleVersion": "0.7.0-pre.1",
+  "save": "RPG",
+  "revision": "R009",
+  "sourceCommit": "8a933e7894cf0c8264451d2f0cd51dbf39fbc6bb",
+  "installed": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.2.jar",
+  "sha256": "98E1DFC00620A3C15D6BA5DC08294F99CB0DCEF3A98F1BCF6522F45E54446BD5",
+  "rollbackJar": "G:\\My Drive\\Inigmas Games\\Hytale Taverns\\HytaleRPG\\evidence\\stage-01b\\R009\\rollback\\HytaleRPG-0.0.2-R008.jar",
+  "rollback": "Stop the RPG world, then restore rollback/HytaleRPG-0.0.2-R008.jar as Saves/RPG/mods/HytaleRPG-0.0.2.jar. Never downgrade player schema files in place."
+}
