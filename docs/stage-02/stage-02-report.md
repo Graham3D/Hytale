@@ -3,57 +3,67 @@
 Status date: 2026-09-06  
 Branch: `RPG`  
 Starting commit: `8539d8fc3e84386fc70d0326b4f9a47d0c4ea0f2`  
-Ending implementation commit: `9f1fe9a91f710b36465cf1729eb7b3dbb3153f33`  
-RPG revision: `R010`  
+R010 implementation commit: `9f1fe9a91f710b36465cf1729eb7b3dbb3153f33`
+R011 implementation commit: `fceaed0d48678194c2fa43634bd58869d6bfa155`
+RPG revision: `R011`
 Hytale target: `0.7.0-pre.1`  
-RPG version: `0.0.3`  
-Built JAR: `HytaleRPG-0.0.3.jar`  
-JAR SHA-256: `E1F6A0F048D1E1D54F45BC09FB7D0FAB16C07FF7E1B9752981CD655A5671B7D6`
+RPG version: `0.0.4`
+Built JAR: `HytaleRPG-0.0.4.jar`
+JAR SHA-256: `9C6A2C39B3B4B94A6AC200181683A5AD9E78BE66CFB92AC7C5443A68350B26E6`
 
 ## Result and scope boundary
 
-R010 introduces the shared Stage 02 combat kernel. It does not implement a
+R010 introduced the shared Stage 02 combat kernel. R011 is a Stage 02-only
+closure pass. Neither revision implements a
 Strike, Projectile, Beam, Aura, Summon, or other skill-family executor and it
 does not begin Stage 03 UI work. The existing Stage 01B loadout, graph,
 persistence, rollback, and trace paths remain intact.
 
-The automated suite and isolated three-mod bare-server startup pass. The exact
-JAR is deployed to the RPG save, but the required post-deployment connected
-client checklist has not yet been run. Therefore:
+R010 connected testing passed STR scaling/reset, compilation, Mana spending,
+crit math, status thresholding, and command stability. It exposed two evidence gaps:
+self-target damage stopped after `DAMAGE_GATHERED`, and native regeneration
+made the recovery amounts zero before they could be measured. R011 corrects
+the diagnostic design and the two content inconsistencies. Its automated suite
+and isolated three-mod bare-server startup pass, and the exact R011 JAR is
+deployed. The R011 connected closure commands remain pending. Therefore:
 
-**Stage 02 result: BLOCKED on connected-client verification.**
+**Stage 02 result: BLOCKED at the first unobserved R011 connected boundary,
+`DAMAGE_FILTERED`.**
+
+```ini
+Stage02 = BLOCKED
+EarliestUnprovenBoundary = DAMAGE_FILTERED
+```
 
 **Safe to begin Stage 03: NO.**
 
 ## Reconciliation decisions
 
-The Master Specification v1.1 is authoritative over the older design and
-technical records. R010 records the following deliberate resolutions:
+The Master Specification v1.1 and canonical catalogs are authoritative over
+older or contradictory implementation instructions. R011 records:
 
 - Level-1 resource maxima subtract the effective value of the starting raw 10
   points. The correct formula is `100 + coefficient × (E(A) - E(10))`, not
   `100 + coefficient × E(A)`.
 - Cooldown recovery is a recovery-rate divisor, as closed by the Master:
   `max(0.25, BaseCooldown × DurationFactors / (1 + clamp(totalRecovery,0,0.75)))`.
-- The newer Stage 02 request explicitly requires Potency `+10% Increased`; R010
-  uses `+10%` even though the current master/catalog text says `+15%`. This is
-  a versioned R010 override, not a silent rewrite of the canonical catalog.
+- Potency is `+15% Increased` scalable magnitude. R011 removes R010's incorrect
+  `+10%` override and reads `0.15` from the versioned balance profile.
 - Efficiency follows the Master integer spend rule: zero remains zero;
   otherwise `max(1, ceil(baseCost × 0.85))`.
-- `Swift Recovery` is not one of the canonical 66 passives. R010 implements its
-  typed `+12%` cooldown-recovery capability and tests it, but does not invent a
-  67th catalog passive. Content owners must reconcile the missing catalog entry
-  before a player can equip it.
+- The kernel retains a generic typed cooldown-recovery modifier. No compiler
+  branch or content assumption exists for a named noncanonical passive; the
+  catalog remains exactly 66 passives.
 - The RPG `LIGHT`, `HEAVY`, and `MAGIC` classifications are separate from
   Hytale's attack-mode `DamageClass`.
 
 ## Versioned balance and registry data
 
-Balance profile `rpg.combat-kernel.r010`, schema 1, is packaged at
+Balance profile `rpg.combat-kernel.r011`, schema 1, is packaged at
 `rpg/balance/combat-kernel-v1.json`. It owns every Stage 02 breakpoint,
 coefficient, cap, recovery fraction, timer, and status constant.
 
-Item power registry `rpg.item-power.audit.r010`, schema 1, is packaged at
+Item power registry `rpg.item-power.audit.r011`, schema 1, is packaged at
 `rpg/balance/item-power-registry-v1.json`. It contains three explicit 20-power
 development fixtures (Light, Heavy, Magic). Unknown production items fail
 closed. Resolver decisions use explicit tags or exact registry ItemIds; display
@@ -179,15 +189,24 @@ Four registered `DamageEventSystem` hooks observe the native lifecycle:
 RPG Gather observer
 -> Hytale gather systems
 -> Hytale filters / armor / resistance / immunity / PvP rules
--> RPG pre-Apply observer
+-> RPG post-filter boundary observer
 -> Hytale DamageSystems.ApplyDamage (the only Health mutation)
+-> RPG post-Apply observer
 -> RPG Inspect observer using actual Health delta
 ```
 
 The metadata carries actor, rootCastId, skillInstanceId, correlationId,
 pre-mitigation amount, and Health-before. Inspect records the filtered amount,
-Health-after, and actual authoritative loss. R010 adds no RPG armor or
+Health-after, and actual authoritative loss. R011 adds no RPG armor or
 resistance layer.
+
+R010's self-target command was legitimately cancelled by Hytale's
+`PlayerDamageFilterSystem`: with PvP disabled, any player-sourced damage to a
+player is cancelled, and Hytale's cancellable event dispatcher does not invoke
+later systems. R011 rejects self/non-NPC targets before submission and resolves
+the entity under the player's crosshair through Hytale `TargetUtil`. It requires
+a living `NPCEntity` with positive native Health, then submits that real target
+through `HytaleDamageAdapter` and `DamageSystems.executeDamage`.
 
 ## Status framework
 
@@ -220,8 +239,10 @@ resampling equipment mid-cast.
 
 `CompiledSkillPlan` moves from schema 1 to schema 2 and adds typed
 `KernelModifiers`. The descriptive Stage 01B operations remain compatible.
-The compiler now emits Potency, Efficiency, and the schema-capable Swift
-Recovery values consumed by snapshot, resource, damage, and cooldown services.
+The compiler emits Potency and Efficiency values consumed by snapshot,
+resource, and damage services. `KernelModifiers.cooldownRecoveryBonus` remains
+a generic typed capability consumed by the cooldown service, independent of
+any catalog name.
 The persisted `RpgPlayerState` stays schema 2; no migration or current resource
 pool was added.
 
@@ -235,6 +256,8 @@ The temporary command frontend adds:
 /rpg dev reset
 /rpg dev resource <mana|stamina> <spend|regen> <amount-or-seconds>
 /rpg dev recovery <normal|charged> <root-id>
+/rpg dev recovery-proof
+/rpg dev potency-proof
 /rpg dev damage <never|force|seeded> <base-power>
 /rpg dev status <chill|burn|poison|root|fear|taunt|stagger>
 ```
@@ -245,10 +268,15 @@ cooldown recovery, learn rate, upgrade success, and Magic Find. Attribute
 overrides are persisted through the existing transactional loadout authority;
 `/rpg dev reset` restores all five to raw 10.
 
-The damage command uses the real shared resolver/calculator and native Hytale
-pipeline. Its target is deliberately the invoking player so the command cannot
-select or grief another entity. Hytale can still filter the self-hit; the trace
-is the authority for whether final Health changed.
+`recovery-proof` sets live native Mana and Stamina to zero, then synchronously
+uses the real recovery service for normal, duplicate normal, charged, and
+duplicate charged root IDs. One correlation ID joins the setup and four result
+records. Production regeneration is unchanged.
+
+`potency-proof` compiles an isolated Fire Bolt + canonical Potency graph through
+the real `LinkCompiler`, records the typed modifier, and does not mutate the
+player loadout. The damage command requires an aimed living NPC and uses the
+real shared resolver/calculator and native Hytale pipeline.
 
 The always-on trace vocabulary now includes attribute, derived-stat, resource,
 reservation, cooldown, numeric damage stages, all four Hytale lifecycle stages,
@@ -262,7 +290,7 @@ emitted.
 `tools/Verify-Stage02.ps1` performs a clean multi-project build, validates all
 CustomUI files retained from earlier stages, inspects required JAR resources
 and classes, checks both data schemas, confirms the canonical passive count is
-still 66, confirms Swift Recovery was not silently added, and aggregates the
+still 66, confirms the noncanonical name is absent, verifies Potency `0.15`, and aggregates the
 RPG plus CanvasUI regression tests.
 
 Final automated result:
@@ -278,7 +306,7 @@ The Stage 02 tests cover every requested curve breakpoint and continuity,
 E(500)=320, all five attributes, level-1 maxima, primary/secondary equations,
 caps, modifier buckets, seeded/direct/periodic crit, all four power-source
 contracts, Mana/Stamina/NONE and dual-resource rejection, transactional holds,
-insufficient-resource no-consume, Efficiency, Potency, Swift Recovery, passive
+insufficient-resource no-consume, Efficiency, Potency, generic cooldown recovery, passive
 regen, normal/charged recovery deduplication, bed/Home restoration,
 reservations, cooldown state and cap/floor, Chill-to-Frozen, protected
 substitution, Burn/Poison/control refresh, Frozen immunity, snapshot defensive
@@ -286,7 +314,7 @@ copying, native adapter signatures, trace failure isolation, and all Stage 01B
 regressions.
 
 `tools/Run-Stage02Smoke.ps1` starts the installed Hytale server API against an
-isolated directory containing exactly HytaleDevLib, CanvasUI, and the R010 RPG
+isolated directory containing exactly HytaleDevLib, CanvasUI, and the R011 RPG
 JAR. Hytale discovered all three, loaded the RPG asset pack, registered the
 combat systems, logged `RPG_STAGE02_READY`, enabled the plugin, and produced no
 RPG-scoped exception. Exit code 9 is the established immediate
@@ -295,58 +323,53 @@ warning remains present as in prior smoke runs.
 
 Evidence:
 
+- `evidence/stage-02/R010/connected-client-summary.json`
 - `evidence/stage-02/R010/verification.json`
 - `evidence/stage-02/R010/server-smoke-summary.json`
 - `evidence/stage-02/R010/server-smoke.txt`
 - `evidence/stage-02/R010/installation.json`
+- `evidence/stage-02/R011/verification.json`
+- `evidence/stage-02/R011/server-smoke-summary.json`
+- `evidence/stage-02/R011/server-smoke.txt`
+- `evidence/stage-02/R011/installation.json`
 
 ## Connected-client checklist
 
-The following is pending against the deployed R010 JAR:
+Only the following R011 closure checks remain:
 
-1. Run `/rpg stats`; verify raw 10 for all attributes, effective 10, and native
-   maxima Health/Mana/Stamina = 100/100/100.
-2. Run `/rpg dev attribute str 500`, then `/rpg stats`; verify effective STR
-   320, Health max 720, and Heavy multiplier 1.96x.
-3. Repeat for DEX and INT; verify Stamina max 255, Mana max 332.5, and their
-   1.96x primary multipliers. Test WIS/LUCK displayed secondary values.
-4. Run `/rpg dev reset`, then `/rpg stats`; verify raw/effective values and all
-   maxima return to their starting values.
-5. Use `/rpg dev resource mana spend 10` and the Stamina equivalent. Attempt a
-   cost above current and verify rejection leaves current unchanged. Use
-   `regen 1` to invoke one second of the shared recovery calculation, then
-   observe native passive regeneration.
-6. Use `/rpg dev recovery normal root-a` twice and verify only the first applies;
-   repeat charged with a new root ID.
-7. Use `/rpg dev damage never 5`, `/rpg dev damage force 5`, and repeated
-   `seeded` calls. Confirm no disconnect, inspect final Health, and confirm
-   Gather/Filter/Apply/Inspect trace records share all three IDs.
-8. Run `/rpg dev status chill` five times and verify the fifth reports the
-   Frozen threshold; verify Burn/Poison reapplication reports refresh.
-9. Re-run the Stage 01B loadout/compile commands, fully stop the world, rejoin,
-   and confirm state revision 4, Fire Bolt/Fork, and the valid route remain.
-10. Inspect `mods/InigmasGames_HytaleRPGPhase00Audit/logs/rpg/skill-trace.jsonl`
-    and retain the newest server log.
+1. Aim at a living NPC within 20 blocks and run `/rpg dev damage never 5`.
+   Confirm the NPC visibly loses Health and the trace contains the same
+   rootCastId, skillInstanceId, and correlationId across calculation,
+   `DAMAGE_GATHERED`, `DAMAGE_FILTERED`, `DAMAGE_APPLIED`, and
+   `DAMAGE_INSPECTED`; Inspect must report Health-before, filtered amount,
+   Health-after, and positive actual loss.
+2. Run `/rpg dev recovery-proof`. Confirm the message reports normal `4/4`,
+   normal duplicate rejected, charged `12/12`, and charged duplicate rejected.
+3. Run `/rpg dev potency-proof`. Confirm it reports `15.00%`, 66 passives, and
+   an unchanged loadout.
+4. Fully stop the world, rejoin, run `/rpg loadout`, and confirm the existing
+   Fire Bolt/Fork graph and revision remain. Retain the newest trace and server
+   log.
 
 ## Known limitations and rollback
 
-- Connected-client Stage 02 evidence is pending, so this revision is not PASS.
+- R011 connected closure evidence is pending, so this revision is not PASS.
 - The three item records are development fixtures. Production vanilla ItemIds
   remain unsupported until their authored RPG base powers are audited; the
   resolver deliberately does not mine post-mitigation native damage.
-- Swift Recovery has executable schema support but no canonical content record.
+- Generic typed cooldown-recovery support exists without a named content assumption.
 - Bed restoration is exposed in the shared service, but no public,
   ownership-verified bed-rest event was found in the audited API. It is not
   attached to an inferred block interaction.
 - Status lifecycle is implemented and traceable; native movement/effect visuals
   will be attached by later legal skill/status executors, not guessed by Stage
   02 diagnostic commands.
-- Native asset override and full damage ordering require the connected-client
+- Full damage ordering requires the connected-client
   run because a bare server has no live player EntityStatMap or damage target.
 
 The installer retains the previous RPG JAR beneath
-`evidence/stage-02/R010/rollback`. To roll back, stop the RPG world, remove
-`HytaleRPG-0.0.3.jar`, restore the retained R009 `HytaleRPG-0.0.2.jar` to the
+`evidence/stage-02/R011/rollback`. To roll back, stop the RPG world, remove
+`HytaleRPG-0.0.4.jar`, restore the retained R010 `HytaleRPG-0.0.3.jar` to the
 save's mods directory, and leave player state files in place. Both revisions
 use player schema 2.
 

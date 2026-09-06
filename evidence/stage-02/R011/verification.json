@@ -1,0 +1,28 @@
+﻿{
+    "verifiedAtUtc":  "2026-09-06T19:38:32.3052870Z",
+    "targetHytaleVersion":  "0.7.0-pre.1",
+    "rpgRevision":  "R011",
+    "branch":  "RPG",
+    "sourceCommit":  "fceaed0d48678194c2fa43634bd58869d6bfa155",
+    "buildSucceeded":  true,
+    "jarPath":  "G:\\My Drive\\Inigmas Games\\Hytale Taverns\\HytaleRPG\\build\\libs\\HytaleRPG-0.0.4.jar",
+    "jarSha256":  "9C6A2C39B3B4B94A6AC200181683A5AD9E78BE66CFB92AC7C5443A68350B26E6",
+    "requiredJarEntriesPresent":  true,
+    "missingJarEntries":  [
+
+                          ],
+    "balanceProfile":  "rpg.combat-kernel.r011",
+    "balanceSchema":  1,
+    "potencyIncreased":  0.15,
+    "itemRegistry":  "rpg.item-power.audit.r011",
+    "itemRegistrySchema":  1,
+    "developmentItemPowerRecords":  3,
+    "canonicalPassiveCount":  66,
+    "noncanonicalSwiftRecoveryAbsent":  true,
+    "tests":  65,
+    "failures":  0,
+    "errors":  0,
+    "skipped":  0,
+    "playerStateSchema":  2,
+    "compiledPlanSchema":  2
+}

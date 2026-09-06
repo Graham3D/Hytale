@@ -17,6 +17,8 @@ $priorRpgJars = @(Get-ChildItem -LiteralPath $SaveModsDirectory -Filter 'HytaleR
 foreach ($prior in $priorRpgJars) {
     Copy-Item -LiteralPath $prior.FullName -Destination (Join-Path $rollbackDirectory $prior.Name) -Force
 }
+$availableRollbackJars = @(Get-ChildItem -LiteralPath $rollbackDirectory -Filter 'HytaleRPG-*.jar' -File |
+    Where-Object Name -ne (Split-Path -Leaf $targetJar) | Sort-Object Name)
 Copy-Item -LiteralPath $sourceJar -Destination $targetJar -Force
 foreach ($prior in $priorRpgJars) {
     if ($prior.FullName -ne $targetJar) { Remove-Item -LiteralPath $prior.FullName -Force }
@@ -39,7 +41,7 @@ $result = [ordered]@{
     installed = $targetJar
     sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $targetJar).Hash
     deployedJars = $actualNames
-    rollbackJars = @($priorRpgJars.Name)
+    rollbackJars = @($availableRollbackJars.Name)
     rollbackDirectory = $rollbackDirectory
     rollback = 'Stop the RPG world, remove HytaleRPG-0.0.4.jar, and restore the retained R010 HytaleRPG-0.0.3.jar into Saves/RPG/mods. Player schema remains v2.'
 }
