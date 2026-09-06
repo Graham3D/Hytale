@@ -15,7 +15,9 @@ New-Item -ItemType Directory -Force -Path $evidenceDirectory, $rollbackDirectory
 
 $priorRpgJars = @(Get-ChildItem -LiteralPath $SaveModsDirectory -Filter 'HytaleRPG-*.jar' -File)
 foreach ($prior in $priorRpgJars) {
-    Copy-Item -LiteralPath $prior.FullName -Destination (Join-Path $rollbackDirectory $prior.Name) -Force
+    if ($prior.FullName -ne $targetJar) {
+        Copy-Item -LiteralPath $prior.FullName -Destination (Join-Path $rollbackDirectory $prior.Name) -Force
+    }
 }
 Copy-Item -LiteralPath $sourceJar -Destination $targetJar -Force
 foreach ($prior in $priorRpgJars) {
@@ -41,7 +43,8 @@ $result = [ordered]@{
     deployedJars = $actualNames
     canvasUiSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $canvasJar).Hash
     canvasUiFrozenRevision = 'R008'
-    rollbackJars = @((Get-ChildItem -LiteralPath $rollbackDirectory -Filter 'HytaleRPG-*.jar' -File | Sort-Object Name).Name)
+    rollbackJars = @((Get-ChildItem -LiteralPath $rollbackDirectory -Filter 'HytaleRPG-*.jar' -File |
+        Where-Object Name -ne 'HytaleRPG-0.0.5.jar' | Sort-Object Name).Name)
     rollbackDirectory = $rollbackDirectory
     rollback = 'Stop the RPG world, remove HytaleRPG-0.0.5.jar, and restore HytaleRPG-0.0.4.jar from rollback into Saves/RPG/mods. Player schema remains v2.'
 }
