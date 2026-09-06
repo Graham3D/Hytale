@@ -1,14 +1,12 @@
 {
-  "installedAtUtc": "2026-09-06T02:47:30Z",
-  "scope": "RPG save only",
-  "installedFile": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\UserData\\Saves\\RPG\\mods\\HytaleRPG-Phase00-Audit-0.0.1.jar",
-  "sha256": "7F0D82D026D395473DA37164696B360F695D3293EB570BDE12A29CE2424D3370",
-  "preexistingFilesPreserved": [
-    "HYTALEDEVLIB-0.5.0.jar",
-    "Hytale_HytaleGenerator/biome_editor.json",
-    "Hytale_Shop/barter_shop_state.json"
-  ],
-  "rollbackScript": "tools/Uninstall-Phase00Probe.ps1",
-  "rollbackTargetOnly": "HytaleRPG-Phase00-Audit-0.0.1.jar"
+  "installedAtUtc": "2026-09-06T12:32:08.8038069Z",
+  "patchline": "pre-release",
+  "save": "RPG",
+  "revision": "R001",
+  "sourceCommit": "eaeb93d84565f3ac4677c47c4463d66fbc51fc51",
+  "installed": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-Phase00-Audit-0.0.2.jar",
+  "sha256": "6D928E821CDA28ACA8B9E31FB192F319FEC10CC9A1078CFA087AC3EED8E8752F",
+  "htDevLib": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HYTALEDEVLIB-0.5.0.jar",
+  "htDevLibSha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230",
+  "rollback": "Run tools/Uninstall-Phase00Probe.ps1; it removes only the R001 audit jar."
 }
-
