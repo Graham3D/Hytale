@@ -4,6 +4,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerMouseMotionEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher;
@@ -27,6 +28,15 @@ import com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageLifecycleSystems;
 import com.inigmasgames.hytalerpg.combat.hytale.HomeRestorationTickSystem;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import java.util.EnumMap;
+import java.util.UUID;
+import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
+import com.inigmasgames.hytalerpg.input.HytaleAbilitySkillInputAdapter;
+import com.inigmasgames.hytalerpg.input.RpgSkillActivationService;
+import com.inigmasgames.hytalerpg.input.CommandOnlyRpgUiOpenInputAdapter;
+import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
+import com.inigmasgames.hytalerpg.ui.hud.RpgHudCoordinator;
+import com.inigmasgames.hytalerpg.ui.hud.RpgHudTickSystem;
+import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
 
 import javax.annotation.Nonnull;
 
@@ -37,6 +47,9 @@ public final class Phase00Plugin extends JavaPlugin {
     private RpgSkillTraceService skillTrace;
     private RpgLoadoutService loadouts;
     private RpgCombatKernel combatKernel;
+    private RpgUiTraceService uiTrace;
+    private RpgHudCoordinator rpgHud;
+    private HytaleAbilitySkillInputAdapter abilityInputs;
 
     public Phase00Plugin(@Nonnull JavaPluginInit init) {
         super(init);
@@ -58,21 +71,31 @@ public final class Phase00Plugin extends JavaPlugin {
         loadouts = new RpgLoadoutService(catalog, repository, graphService, compiler,
                 new OwnershipEntitlementPolicy(configuration.developmentEntitlements()), skillTrace);
         CombatTrace combatTrace = new CombatTrace(skillTrace);
-        getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace));
+        uiTrace = new RpgUiTraceService(getDataDirectory().resolve("logs").resolve("rpg").resolve("ui-trace.jsonl"));
+        var uiProjection = new RpgUiProjectionService(catalog, loadouts, combatKernel.derivedStats(), combatKernel.cooldowns());
+        var allocation = new AttributeAllocationService(loadouts);
+        abilityInputs = new HytaleAbilitySkillInputAdapter();
+        var activations = new RpgSkillActivationService(loadouts, skillTrace);
+        rpgHud = new RpgHudCoordinator(uiProjection, uiTrace, abilityInputs, activations);
+        getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
+                uiProjection, allocation, uiTrace, rpgHud));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Filter(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Inspect(combatTrace, combatKernel.hostileCombat()));
         getEntityStoreRegistry().registerSystem(new HomeRestorationTickSystem(combatKernel.homeRestoration(),
                 combatKernel.hostileCombat(), combatKernel.resources()));
-        LOGGER.atInfo().log("RPG_STAGE02_READY revision=%s skills=%d passives=%d schema=%d balance=%s trace=%s entitlementMode=%s",
+        getEntityStoreRegistry().registerSystem(new RpgHudTickSystem(rpgHud));
+        LOGGER.atInfo().log("RPG_STAGE03_READY revision=%s skills=%d passives=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability1..Ability4 uiOpen=%s entitlementMode=%s",
                 BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,
-                combatKernel.balance().profileId, skillTrace.path(),
+                combatKernel.balance().profileId, skillTrace.path(), uiTrace.path(),
+                new CommandOnlyRpgUiOpenInputAdapter().availability(),
                 configuration.developmentEntitlements() ? "DEVELOPMENT" : "PRODUCTION");
         MouseProbeService.initialize(getDataDirectory());
         inboundWatcher = PacketAdapters.registerInbound((PlayerPacketWatcher) (playerRef, packet) -> {
             AbilityInputObserver.observe(playerRef, packet);
+            abilityInputs.observe(playerRef, packet);
             MouseProbeService.observeRaw(playerRef, packet);
         });
         getEventRegistry().registerGlobal(PlayerMouseButtonEvent.class, MouseProbeService::onButton);
@@ -81,11 +104,6 @@ public final class Phase00Plugin extends JavaPlugin {
             var ref = event.getPlayerRef();
             var playerRef = ref.getStore().getComponent(ref,
                     com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
-            if (playerRef != null && event.getPlayer().getHudManager().getCustomHud(RevisionHud.KEY) == null) {
-                event.getPlayer().getHudManager().addCustomHud(playerRef, new RevisionHud(playerRef));
-                LOGGER.atInfo().log("PHASE00_REVISION_HUD revision=%s player=%s readyId=%d",
-                        BuildIdentity.REVISION, playerRef.getUuid(), event.getReadyId());
-            }
             if (playerRef != null) {
                 var view = loadouts.getLoadout(playerRef.getUuid());
                 EntityStatMap statMap = ref.getStore().getComponent(ref, EntityStatMap.getComponentType());
@@ -94,8 +112,24 @@ public final class Phase00Plugin extends JavaPlugin {
                     for (RpgAttribute attribute : RpgAttribute.values())
                         raw.put(attribute, view.state().attributes.getOrDefault(attribute.name(), 10));
                     new DerivedStatEntityAdapter().apply(statMap, combatKernel.derivedStats().derive(raw));
+                    try {
+                        rpgHud.install(playerRef, event.getPlayer(), statMap);
+                        LOGGER.atInfo().log("RPG_HUD_INSTALLED revision=%s player=%s readyId=%d",
+                                BuildIdentity.REVISION, playerRef.getUuid(), event.getReadyId());
+                    } catch (RuntimeException error) {
+                        LOGGER.atWarning().withCause(error).log("RPG HUD install failed after native visibility rollback player=%s",
+                                playerRef.getUuid());
+                    }
                 }
             }
+        });
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, event -> {
+            UUID player = event.getPlayerRef().getUuid();
+            try { rpgHud.teardown(player, "PLAYER_DISCONNECT"); }
+            catch (RuntimeException error) {
+                LOGGER.atWarning().withCause(error).log("RPG HUD disconnect teardown failed player=%s", player);
+            }
+            combatKernel.cooldowns().clear(player);
         });
         getCommandRegistry().registerCommand(new CharacterProbeCommand());
         getCommandRegistry().registerCommand(new LinkCanvasProbeCommand());
@@ -115,6 +149,9 @@ public final class Phase00Plugin extends JavaPlugin {
             inboundWatcher = null;
         }
         MouseProbeService.clear();
+        if (rpgHud != null) { rpgHud.close(); rpgHud = null; }
+        abilityInputs = null;
+        if (uiTrace != null) { uiTrace.close(); uiTrace = null; }
         if (skillTrace != null) { skillTrace.close(); skillTrace = null; }
         combatKernel = null;
         LOGGER.atInfo().log("HYTALE_RPG_SHUTDOWN revision=%s stage=%s", BuildIdentity.REVISION, BuildIdentity.STAGE);

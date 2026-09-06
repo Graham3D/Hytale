@@ -53,6 +53,10 @@ import com.inigmasgames.hytalerpg.links.CompatibilityService;
 import com.inigmasgames.hytalerpg.links.LinkCompiler;
 import com.inigmasgames.hytalerpg.links.RpgLinkGraphService;
 import com.inigmasgames.hytalerpg.progress.RpgPlayerState;
+import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
+import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
+import com.inigmasgames.hytalerpg.ui.hud.RpgHudCoordinator;
+import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
 
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -62,8 +66,11 @@ import java.util.UUID;
 /** Temporary command editing frontend. Authority remains in RpgLoadoutOperations. */
 public final class RpgCommand extends AbstractCommandCollection {
     public RpgCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts,
-                      RpgCombatKernel kernel, CombatTrace combatTrace) {
+                      RpgCombatKernel kernel, CombatTrace combatTrace,
+                      RpgUiProjectionService uiProjection, AttributeAllocationService allocation,
+                      RpgUiTraceService uiTrace, RpgHudCoordinator hud) {
         super("rpg", "Configure and inspect the server-authoritative RPG Link Tree.");
+        addSubCommand(new RpgCharacterCommand(uiProjection, allocation, uiTrace));
         addSubCommand(new EquipCommand(catalog, loadouts));
         addSubCommand(new UnequipCommand(loadouts));
         addSubCommand(new LinkCommand(loadouts));
@@ -71,7 +78,7 @@ public final class RpgCommand extends AbstractCommandCollection {
         addSubCommand(new LoadoutCommand(catalog, loadouts));
         addSubCommand(new CompileCommand(loadouts));
         addSubCommand(new StatsCommand(loadouts, kernel, combatTrace));
-        addSubCommand(new DevCommand(catalog, loadouts, kernel, combatTrace));
+        addSubCommand(new DevCommand(catalog, loadouts, kernel, combatTrace, allocation, uiTrace, hud));
     }
 
     private abstract static class PlayerSubcommand extends AbstractPlayerCommand {
@@ -206,8 +213,11 @@ public final class RpgCommand extends AbstractCommandCollection {
     }
 
     private static final class DevCommand extends AbstractCommandCollection {
-        DevCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts, RpgCombatKernel kernel, CombatTrace trace) {
-            super("dev", "Development-only Stage 02 kernel fixtures.");
+        DevCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts, RpgCombatKernel kernel, CombatTrace trace,
+                   AttributeAllocationService allocation, RpgUiTraceService uiTrace, RpgHudCoordinator hud) {
+            super("dev", "Development-only RPG fixtures.");
+            addSubCommand(new RpgDevPointsCommand(allocation, uiTrace));
+            addSubCommand(new RpgDevXpDisplayCommand(hud));
             addSubCommand(new AttributeCommand(loadouts));
             addSubCommand(new ResetCommand(loadouts));
             addSubCommand(new ResourceCommand(loadouts, kernel, trace));

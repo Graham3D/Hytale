@@ -24,6 +24,7 @@ public interface RpgLoadoutOperations {
     MutationResult unlinkSource(UUID player, LinkNodeId source);
     CompilationResult compile(UUID player);
     RpgLoadoutView getLoadout(UUID player);
+    default RpgLoadoutView getPresentationView(UUID player) { return getLoadout(player); }
     Map<LinkNodeId, CompatibilityResult> getCompatibleTargets(UUID player, LinkNodeId source);
     MutationResult setDevelopmentAttribute(UUID player, RpgAttribute attribute, int rawValue);
     MutationResult resetDevelopmentAttributes(UUID player);

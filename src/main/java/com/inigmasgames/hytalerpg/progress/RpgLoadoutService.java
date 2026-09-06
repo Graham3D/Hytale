@@ -179,6 +179,19 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         }
     }
 
+    /** Read-only hot presentation path; unlike command inspection it emits no compile trace. */
+    @Override public RpgLoadoutView getPresentationView(UUID player) {
+        Holder holder = holder(player);
+        synchronized (holder) {
+            CompilationResult compiled = compiler.compile(holder.state);
+            GraphValidationResult graph = graphService.validate(holder.state);
+            List<String> warnings = new ArrayList<>(holder.state.degradedReasons);
+            if (!compiled.success()) warnings.add(compiled.code() + ": " + compiled.message());
+            return new RpgLoadoutView(holder.state, compiled.plans(),
+                    graph.valid() ? graph.routes() : Map.of(), warnings);
+        }
+    }
+
     @Override public Map<LinkNodeId, CompatibilityResult> getCompatibleTargets(UUID player, LinkNodeId source) {
         Holder holder = holder(player);
         synchronized (holder) {
@@ -232,6 +245,20 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
                     details("operation", "DEV_RESET_COMMITTED", "raw", holder.state.attributes,
                             "RPG revision", result.revision(), "validationResult", "PASS"));
             return result.success() ? withMessage(result, "Development attributes reset to 10.") : result;
+        }
+    }
+
+    /** Revision-checked transaction seam for non-loadout progression mutations. */
+    public MutationResult mutateProgress(UUID player, long expectedRevision, String correlation,
+                                         Consumer<RpgPlayerState> mutation) {
+        Holder holder = holder(player);
+        synchronized (holder) {
+            if (holder.state.revision != expectedRevision) {
+                return MutationResult.failure(ValidationCode.STALE_REVISION,
+                        "Expected RPG revision " + expectedRevision + " but authoritative revision is "
+                                + holder.state.revision + '.', correlation, holder.state.revision);
+            }
+            return mutate(holder, player, correlation, mutation);
         }
     }
 

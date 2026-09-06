@@ -1,0 +1,42 @@
+$Common = "Common.ui";
+
+Group {
+  LayoutMode: Center;
+  Group {
+    Anchor: (Width: 1180, Height: 760);
+    Background: (Color: #0b1320f2);
+    Padding: (Full: 30);
+    LayoutMode: Top;
+    Group { Anchor: (Height: 62); LayoutMode: Left;
+      Label { Text: "CHARACTER"; Style: (FontSize: 30, TextColor: #f2d488); Anchor: (Width: 260); }
+      Label #CharacterName { Text: "Player"; Style: (FontSize: 24, TextColor: #dce6ed, Alignment: Center); Anchor: (Width: 560); }
+      Label #Revision { Text: "R012"; Style: (FontSize: 15, TextColor: #78c6d0, Alignment: Center); Anchor: (Width: 300); }
+    }
+    Group { Anchor: (Height: 72); LayoutMode: Left;
+      Label #LevelValue { Text: "Level 1"; Style: (FontSize: 22, TextColor: #f2d488); Anchor: (Width: 180); }
+      Label #XpValue { Text: "0 / 100 [..........]"; Style: (FontSize: 18, TextColor: #78c6d0); Anchor: (Width: 520); }
+      Label #PointsValue { Text: "Unspent: 0"; Style: (FontSize: 18, TextColor: #e4b861); Anchor: (Width: 420); }
+    }
+    Group { Anchor: (Height: 390); LayoutMode: Left;
+      Group { Anchor: (Width: 510); Background: (Color: #162336e8); Padding: (Full: 20); LayoutMode: Top;
+        Label { Text: "ATTRIBUTES"; Style: (FontSize: 21, TextColor: #78c6d0); Anchor: (Height: 46); }
+        Group { Anchor: (Height: 58); LayoutMode: Left; Label { Text: "Strength"; Style: (FontSize: 18, TextColor: #dce6ed); Anchor: (Width: 130); } Label #StrValue { Text: "Raw 10 Effective 10.0"; Style: (FontSize: 16, TextColor: #b6c2cf); Anchor: (Width: 280); } TextButton #StrPlus { Text: "+"; Anchor: (Width: 52, Height: 42); } }
+        Group { Anchor: (Height: 58); LayoutMode: Left; Label { Text: "Dexterity"; Style: (FontSize: 18, TextColor: #dce6ed); Anchor: (Width: 130); } Label #DexValue { Text: "Raw 10 Effective 10.0"; Style: (FontSize: 16, TextColor: #b6c2cf); Anchor: (Width: 280); } TextButton #DexPlus { Text: "+"; Anchor: (Width: 52, Height: 42); } }
+        Group { Anchor: (Height: 58); LayoutMode: Left; Label { Text: "Intelligence"; Style: (FontSize: 18, TextColor: #dce6ed); Anchor: (Width: 130); } Label #IntValue { Text: "Raw 10 Effective 10.0"; Style: (FontSize: 16, TextColor: #b6c2cf); Anchor: (Width: 280); } TextButton #IntPlus { Text: "+"; Anchor: (Width: 52, Height: 42); } }
+        Group { Anchor: (Height: 58); LayoutMode: Left; Label { Text: "Wisdom"; Style: (FontSize: 18, TextColor: #dce6ed); Anchor: (Width: 130); } Label #WisValue { Text: "Raw 10 Effective 10.0"; Style: (FontSize: 16, TextColor: #b6c2cf); Anchor: (Width: 280); } TextButton #WisPlus { Text: "+"; Anchor: (Width: 52, Height: 42); } }
+        Group { Anchor: (Height: 58); LayoutMode: Left; Label { Text: "Luck"; Style: (FontSize: 18, TextColor: #dce6ed); Anchor: (Width: 130); } Label #LuckValue { Text: "Raw 10 Effective 10.0"; Style: (FontSize: 16, TextColor: #b6c2cf); Anchor: (Width: 280); } TextButton #LuckPlus { Text: "+"; Anchor: (Width: 52, Height: 42); } }
+      }
+      Group { Anchor: (Width: 24); }
+      Group { Anchor: (Width: 586); Background: (Color: #162336e8); Padding: (Full: 20); LayoutMode: Top;
+        Label { Text: "DERIVED VALUES"; Style: (FontSize: 21, TextColor: #78c6d0); Anchor: (Height: 46); }
+        Label #Pools { Text: "Max pools"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 54); }
+        Label #Resources { Text: "Live native"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 54); }
+        Label #Damage { Text: "Damage"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 54); }
+        Label #Support { Text: "Healing / Crit / CDR"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 54); }
+        Label #Utility { Text: "Learn / Upgrade / Magic Find"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 54); }
+      }
+    }
+    Label #Status { Text: ""; Style: (FontSize: 16, TextColor: #e4b861, Alignment: Center); Anchor: (Height: 50); }
+    Label { Text: "Authoritative +1 allocation - Escape closes - Link Tree frontend remains deferred"; Style: (FontSize: 15, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 42); }
+  }
+}
