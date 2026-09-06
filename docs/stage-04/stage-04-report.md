@@ -68,8 +68,12 @@ plan validity, supported family/profile, equipment, family prerequisites, resour
 cooldown, and incompatible active state. A pre-commit rejection consumes no resource,
 starts no cooldown, and creates no world effect. A successful activation captures the
 snapshot and stable `rootCastId`/`skillInstanceId`/`correlationId`, commits resource and
-cooldown, then dispatches. A synchronous dispatch failure uses the Stage 02 committed
-resource refund and cooldown rollback boundary.
+cooldown, then dispatches. R013 correctly rolled back validation/commit failures. During
+the later R014 projectile hardening pass, a deterministic fault test exposed that R013's
+post-commit executor-throw path terminated without refunding the already committed cost
+or clearing its cooldown. R014 repairs that shared boundary with the Stage 02 committed
+resource refund plus cooldown clear. The six R013 executors had no known throw after
+successful validation, but the stronger rollback claim applies from R014 onward.
 
 ### Strike
 
