@@ -30,7 +30,7 @@ final class DemoDefinitions {
                 .port(CanvasPort.input("in-a", "data", 2, 0, 30)).port(CanvasPort.input("in-b", "data", 2, 0, 70))
                 .port(CanvasPort.output("out", "data", 4, 125, 50))
                 .renderer(context -> visual(context, "Router", "#6a4d27ee")).build();
-        return CanvasDefinition.builder(id).fixedZoom(true).pannable(true).panGesture(PanGesture.MIDDLE_BUTTON)
+        return CanvasDefinition.builder(id).zoomable(true).pannable(true).panGesture(PanGesture.MIDDLE_BUTTON)
                 .registerNodeType(source).registerNodeType(transform).registerNodeType(output).registerNodeType(router)
                 .connectionPolicy((s, sp, t, tp) -> s.nodeId().equals(t.nodeId())
                         ? ConnectionResult.reject(ConnectionCode.REJECT_SELF_CONNECTION, "self-connections are disabled by this demo")
@@ -97,7 +97,10 @@ final class DemoDefinitions {
             default -> normal;
         };
         String subtitle = context.node().type().equals("router") ? "3 ports" : context.node().type();
-        return new NodeVisual(context.node().metadata().getOrDefault("label", fallback), subtitle,
-                color, "#78c6d0", "#eef6ff");
+        String title = context.node().metadata().getOrDefault("label", fallback);
+        return new NodeVisual(title, subtitle, color, "#78c6d0", "#eef6ff")
+                .withSearchMetadata(title,
+                        "Generic " + subtitle + " node used by the CanvasUI routing demonstration.",
+                        java.util.List.of(context.node().type(), subtitle, "routing"));
     }
 }

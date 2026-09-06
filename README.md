@@ -17,7 +17,7 @@ save with `./tools/Install-Phase00Probe.ps1`; roll back with
 `./tools/Uninstall-Phase00Probe.ps1`.
 
 The single deployable CanvasUI artifact is
-`canvas-ui/build/libs/CanvasUI-0.1.0.jar`. Its R006 development build includes
+`canvas-ui/build/libs/CanvasUI-0.1.0.jar`. Its R007 development build includes
 the `/canvasui-demo` and `/canvasui-topology-proof` commands; no second demo mod
 is installed.
 

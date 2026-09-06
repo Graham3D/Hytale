@@ -38,7 +38,7 @@ $summary = [pscustomobject]@{
     htDevLibSetup = [bool]($plain -match 'HytaleDevLib v0\.5\.0 loaded - Helper library ready!')
     htDevLibEnabled = [bool]($plain -match 'Enabled plugin HytaleDevLib:HytaleDevLib')
     probeDiscovered = [bool]($plain -match 'InigmasGames:HytaleRPGPhase00Audit from path HytaleRPG-0\.0\.2\.jar')
-    probeSetup = [bool]($plain -match 'PHASE00_SETUP revision=R006 version=0\.0\.2 hytale=0\.7\.0-pre\.1 stage=00 observationOnly=true')
+    probeSetup = [bool]($plain -match 'PHASE00_SETUP revision=R007 version=0\.0\.2 hytale=0\.7\.0-pre\.1 stage=00 observationOnly=true')
     probeEnabled = [bool]($plain -match 'Enabled plugin InigmasGames:HytaleRPGPhase00Audit')
     pluginExceptionObserved = [bool]($plain -match '(?i)(HytaleRPGPhase00Audit|PHASE00).{0,160}(exception|error|failed)')
     note = 'Bare shutdown may emit unrelated core transport/dependency noise. Gate on target/version/plugin markers and plugin-scoped exceptions.'

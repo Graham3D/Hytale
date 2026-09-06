@@ -10,6 +10,7 @@ import java.util.Objects;
 public final class CanvasDefinition {
     private final String canvasId;
     private final boolean pannable;
+    private final boolean zoomable;
     private final PanGesture panGesture;
     private final boolean allowCycles;
     private final boolean allowDuplicateEdges;
@@ -22,6 +23,7 @@ public final class CanvasDefinition {
     private CanvasDefinition(Builder builder) {
         canvasId = builder.canvasId;
         pannable = builder.pannable;
+        zoomable = builder.zoomable;
         panGesture = builder.panGesture;
         allowCycles = builder.allowCycles;
         allowDuplicateEdges = builder.allowDuplicateEdges;
@@ -34,7 +36,11 @@ public final class CanvasDefinition {
 
     public static Builder builder(String canvasId) { return new Builder(canvasId); }
     public String canvasId() { return canvasId; }
-    public boolean fixedZoom() { return true; }
+    /** Legacy compatibility accessor. */
+    public boolean fixedZoom() { return !zoomable; }
+    public boolean zoomable() { return zoomable; }
+    public double minimumZoom() { return CanvasViewport.MIN_ZOOM; }
+    public double maximumZoom() { return CanvasViewport.MAX_ZOOM; }
     public boolean pannable() { return pannable; }
     public PanGesture panGesture() { return panGesture; }
     public boolean allowCycles() { return allowCycles; }
@@ -49,6 +55,7 @@ public final class CanvasDefinition {
     public static final class Builder {
         private final String canvasId;
         private boolean pannable = true;
+        private boolean zoomable = true;
         private PanGesture panGesture = PanGesture.MIDDLE_BUTTON;
         private boolean allowCycles = true;
         private boolean allowDuplicateEdges;
@@ -59,8 +66,9 @@ public final class CanvasDefinition {
         private com.inigmasgames.canvasui.rendering.EdgeRenderer edgeRenderer = new com.inigmasgames.canvasui.rendering.OrthogonalEdgeRenderer();
 
         private Builder(String canvasId) { this.canvasId = Objects.requireNonNull(canvasId); }
-        /** Compatibility marker: false is rejected because CanvasUI never implements zoom. */
-        public Builder fixedZoom(boolean value) { if (!value) throw new IllegalArgumentException("CanvasUI zoom is fixed at 1.0"); return this; }
+        /** Legacy compatibility setter. Prefer {@link #zoomable(boolean)}. */
+        public Builder fixedZoom(boolean value) { zoomable = !value; return this; }
+        public Builder zoomable(boolean value) { zoomable = value; return this; }
         public Builder pannable(boolean value) { pannable = value; return this; }
         public Builder panGesture(PanGesture value) { panGesture = Objects.requireNonNull(value); return this; }
         public Builder allowCycles(boolean value) { allowCycles = value; return this; }

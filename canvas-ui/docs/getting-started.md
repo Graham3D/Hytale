@@ -23,7 +23,7 @@ NodeDefinition output = NodeDefinition.builder("output")
     .build();
 
 CanvasDefinition definition = CanvasDefinition.builder("quest-editor")
-    .fixedZoom(true)
+    .zoomable(true)
     .pannable(true)
     .panGesture(PanGesture.MIDDLE_BUTTON)
     .registerNodeType(source)

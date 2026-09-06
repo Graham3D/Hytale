@@ -75,4 +75,22 @@ class CoordinateAndDragTest {
         assertEquals(CanvasPoint.of(100, 100), canvas.node("a").position());
         assertEquals(CanvasPoint.of(400, 100), canvas.node("b").position());
     }
+
+    @Test void hitTestingDraggingAndEdgeAnchorsRemainCorrectAtNonUnitZoom() {
+        var canvas = canvas();
+        canvas.setViewport(new CanvasViewport(25, 40, 0.5));
+        CanvasPoint nodeInterior = canvas.viewport().toScreen(CanvasPoint.of(150, 130));
+        CanvasHitTester.Hit hit = new CanvasHitTester().hit(canvas, nodeInterior);
+        assertEquals("a", hit.nodeId()); assertFalse(hit.port());
+
+        CanvasDragController drag = new CanvasDragController();
+        drag.begin(canvas.node("a"), nodeInterior, canvas.viewport());
+        CanvasPoint moved = drag.update(nodeInterior.add(50, 25), canvas.viewport());
+        assertEquals(CanvasPoint.of(200, 150), moved);
+
+        var renderer = new com.inigmasgames.canvasui.rendering.CanvasRenderer(
+                new com.inigmasgames.canvasui.rendering.OrthogonalEdgeRenderer());
+        assertEquals(canvas.viewport().toScreen(CanvasPoint.of(200, 130)),
+                renderer.portScreenPoint(canvas, "a", "out"));
+    }
 }

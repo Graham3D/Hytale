@@ -17,9 +17,10 @@ public final class CanvasSnapshotCodec {
     public static String encode(CanvasSnapshot snapshot) {
         try {
             Properties p = new Properties();
-            p.setProperty("format", "1"); p.setProperty("canvas", enc(snapshot.canvasId()));
+            p.setProperty("format", "2"); p.setProperty("canvas", enc(snapshot.canvasId()));
             p.setProperty("vx", Double.toString(snapshot.viewport().offsetX()));
             p.setProperty("vy", Double.toString(snapshot.viewport().offsetY()));
+            p.setProperty("vz", Double.toString(snapshot.viewport().zoom()));
             p.setProperty("selected", enc(snapshot.selectedNodeId() == null ? "" : snapshot.selectedNodeId()));
             p.setProperty("nodes", Integer.toString(snapshot.nodes().size()));
             for (int i = 0; i < snapshot.nodes().size(); i++) {
@@ -45,7 +46,8 @@ public final class CanvasSnapshotCodec {
     public static CanvasSnapshot decode(String encoded) {
         try {
             Properties p = new Properties(); p.load(new StringReader(encoded));
-            if (!"1".equals(p.getProperty("format"))) throw new IllegalArgumentException("unsupported snapshot format");
+            String format = p.getProperty("format");
+            if (!"1".equals(format) && !"2".equals(format)) throw new IllegalArgumentException("unsupported snapshot format");
             List<CanvasSnapshot.NodeState> nodes = new ArrayList<>();
             for (int i = 0; i < integer(p, "nodes"); i++) {
                 String k = "n." + i + '.';
@@ -62,7 +64,8 @@ public final class CanvasSnapshotCodec {
                                 dec(p.getProperty(k + "semantic")), dec(p.getProperty(k + "material")), dec(p.getProperty(k + "state")))));
             }
             String selected = dec(p.getProperty("selected", ""));
-            return new CanvasSnapshot(dec(p.getProperty("canvas")), new CanvasViewport(number(p, "vx"), number(p, "vy")),
+            double zoom = "2".equals(format) ? number(p, "vz") : 1.0;
+            return new CanvasSnapshot(dec(p.getProperty("canvas")), new CanvasViewport(number(p, "vx"), number(p, "vy"), zoom),
                     nodes, edges, selected.isBlank() ? null : selected);
         } catch (RuntimeException error) { throw error; }
         catch (Exception error) { throw new IllegalArgumentException("Unable to decode CanvasUI snapshot", error); }

@@ -89,6 +89,15 @@ public final class Canvas {
         return viewport;
     }
 
+    /** Changes zoom while keeping the canvas point under the supplied screen point stationary. */
+    public synchronized CanvasViewport zoom(double zoom, CanvasPoint cursorScreenPoint) {
+        CanvasViewport before = viewport;
+        viewport = viewport.zoomAround(Objects.requireNonNull(cursorScreenPoint), zoom);
+        fire(CanvasEventType.VIEWPORT_CHANGED, null, null, before, viewport, null);
+        changed();
+        return viewport;
+    }
+
     public synchronized void setViewport(CanvasViewport value) {
         CanvasViewport before = viewport;
         viewport = Objects.requireNonNull(value);

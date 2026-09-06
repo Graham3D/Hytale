@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.inigmasgames.canvasui.runtime.CanvasService;
 import com.inigmasgames.canvasui.demo.CanvasDemoCommand;
+import com.inigmasgames.canvasui.demo.CanvasInputProbeCommand;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
@@ -35,9 +36,10 @@ public final class CanvasUIPlugin extends JavaPlugin {
         Path demoLayouts = getDataDirectory().resolve("demo-layouts");
         getCommandRegistry().registerCommand(new CanvasDemoCommand(demoLayouts, false));
         getCommandRegistry().registerCommand(new CanvasDemoCommand(demoLayouts, true));
-        LOGGER.atInfo().log("CANVASUI_SETUP revision=%s version=%s hytale=0.7.0-pre.1 fixedZoom=1.0 input=PlayerMouseEvents",
-                CanvasUI.REVISION, getManifest().getVersion());
-        LOGGER.atInfo().log("CANVASUI_DEMO_SETUP revision=%s bundled=true commands=/canvasui-demo,/canvasui-topology-proof",
+        getCommandRegistry().registerCommand(new CanvasInputProbeCommand());
+        LOGGER.atInfo().log("CANVASUI_SETUP revision=%s version=%s hytale=0.7.0-pre.1 inputBackend=%s capabilities=%s",
+                CanvasUI.REVISION, getManifest().getVersion(), service.inputBackend().id(), service.inputBackend().capabilities());
+        LOGGER.atInfo().log("CANVASUI_DEMO_SETUP revision=%s bundled=true commands=/canvasui-demo,/canvasui-topology-proof,/canvasui-input-probe",
                 CanvasUI.REVISION);
     }
 

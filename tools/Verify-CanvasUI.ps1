@@ -3,7 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path "$PSScriptRoot\..").Path
-$evidence = Join-Path $root 'evidence\canvas-ui\R006'
+$evidence = Join-Path $root 'evidence\canvas-ui\R007'
 New-Item -ItemType Directory -Force -Path $evidence | Out-Null
 Push-Location $root
 try {
@@ -16,10 +16,11 @@ try {
     )
     $libraryEntries = @(& jar tf $library)
     $requiredLibrary = @('manifest.json','canvasui-build.properties','Common/UI/Custom/CanvasUIPage.ui',
-        'Common/UI/Custom/CanvasEdge.ui','Common/UI/Custom/CanvasNode.ui','Common/UI/Custom/CanvasPort.ui',
+        'Common/UI/Custom/CanvasEdge.ui','Common/UI/Custom/CanvasEdgeHit.ui','Common/UI/Custom/CanvasNode.ui','Common/UI/Custom/CanvasPort.ui','Common/UI/Custom/CanvasInputProbePage.ui',
         'com/inigmasgames/canvasui/CanvasUI.class','com/inigmasgames/canvasui/runtime/CanvasService.class',
         'com/inigmasgames/canvasui/api/Canvas.class','com/inigmasgames/canvasui/api/CanvasSnapshotCodec.class',
-        'com/inigmasgames/canvasui/demo/CanvasDemoCommand.class','com/inigmasgames/canvasui/demo/DemoDefinitions.class')
+        'com/inigmasgames/canvasui/api/CanvasInputBackend.class','com/inigmasgames/canvasui/api/CanvasRenderBackend.class',
+        'com/inigmasgames/canvasui/demo/CanvasDemoCommand.class','com/inigmasgames/canvasui/demo/CanvasInputProbeCommand.class','com/inigmasgames/canvasui/demo/DemoDefinitions.class')
     $missingLibrary = @($requiredLibrary | Where-Object { $_ -notin $libraryEntries })
     $testSuites = @(Get-ChildItem -LiteralPath (Join-Path $root 'canvas-ui\build\test-results\test') -Filter '*.xml')
     $tests = 0; $failures = 0; $errors = 0; $skipped = 0
@@ -36,7 +37,7 @@ try {
     $usesDirectValueSet = [bool](($librarySource -replace '\s+', ' ') -match '\.set\s*\([^;]*Value\.of\s*\(')
     $result = [ordered]@{
         verifiedAtUtc = [DateTime]::UtcNow.ToString('o')
-        revision = 'R006'; hytale = '0.7.0-pre.1'
+        revision = 'R007'; hytale = '0.7.0-pre.1'
         branch = (& git branch --show-current).Trim(); commit = (& git rev-parse HEAD).Trim()
         tests = [ordered]@{ total = $tests; failures = $failures; errors = $errors; skipped = $skipped; passed = ($tests -gt 0 -and $failures -eq 0 -and $errors -eq 0) }
         libraryJar = [ordered]@{ path = $library; bytes = (Get-Item $library).Length; sha256 = (Get-FileHash $library -Algorithm SHA256).Hash; missingEntries = $missingLibrary }

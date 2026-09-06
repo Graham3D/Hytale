@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerMouseMotionEvent
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.canvasui.api.CanvasDefinition;
+import com.inigmasgames.canvasui.api.CanvasInputBackend;
 import com.inigmasgames.canvasui.rendering.CanvasPage;
 import com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend;
 
@@ -55,6 +56,7 @@ public final class CanvasService implements AutoCloseable {
     public CanvasSession activeSession(UUID playerId) { return sessions.get(playerId); }
     public int activeSessionCount() { return sessions.size(); }
     public Collection<CanvasSession> activeSessions() { return sessions.snapshot(); }
+    public CanvasInputBackend inputBackend() { return com.inigmasgames.canvasui.rendering.HytaleCustomUiInputBackend.INSTANCE; }
 
     public void route(PlayerMouseButtonEvent event) {
         PlayerRef playerRef = event.getPlayerRefComponent();

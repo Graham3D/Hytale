@@ -1,0 +1,45 @@
+$Common = "Common.ui";
+
+Group {
+  Anchor: (Full: 0);
+  Background: (Color: #090e17f8);
+  Button #ProbeBackground {
+    Anchor: (Full: 0);
+    Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #0d172455), Pressed: (Background: #17283b66));
+  }
+  Group { Anchor: (Left: 25, Top: 20, Width: 820, Height: 650); Background: (Color: #111c2bf5); LayoutMode: Top; Padding: (Full: 20);
+    Group { Anchor: (Height: 50); LayoutMode: Left;
+      Label { Text: "CANVASUI INPUT PROBE"; Anchor: (Width: 280); Style: (FontSize: 20, TextColor: #78c6d0); }
+      Label #ProbeRevision { Text: "R007"; Anchor: (Width: 80); Style: (FontSize: 16, TextColor: #f2d488); }
+      Label #ProbeEventCount { Text: "0 total server events"; Anchor: (Width: 220); Style: (FontSize: 13, TextColor: #d4e0ec); }
+    }
+    Label { Text: "Try left click, right click, double click, hover, release, drag, keys, sliders, typing, and wheel."; Anchor: (Height: 42); Style: (FontSize: 13, TextColor: #b8c7d8); }
+    Group { Anchor: (Height: 130); LayoutMode: Left;
+      TextButton #ProbeNode { Text: "NODE HIT AREA"; Anchor: (Width: 170, Height: 90); Style: $Common.@DefaultTextButtonStyle; }
+      Group { Anchor: (Width: 30); }
+      TextButton #ProbePort { Text: "PORT"; Anchor: (Width: 70, Height: 54); Style: $Common.@DefaultTextButtonStyle; }
+      Group { Anchor: (Width: 30); }
+      TextButton #ProbeEdge { Text: "EDGE HIT REGION"; Anchor: (Width: 260, Height: 32); Style: $Common.@DefaultTextButtonStyle; }
+    }
+    $Common.@TextField #ProbeText { Anchor: (Width: 520, Height: 38); PlaceholderText: "Type to test ValueChanged..."; }
+    Group { Anchor: (Height: 25); }
+    Label { Text: "Integer Slider ValueChanged"; Anchor: (Height: 28); Style: (FontSize: 13, TextColor: #d4e0ec); }
+    $Common.@Slider #ProbeSlider { Anchor: (Width: 520, Height: 20); Min: 0; Max: 100; Value: 50; }
+    Group { Anchor: (Height: 25); }
+    Label { Text: "FloatSlider ValueChanged"; Anchor: (Height: 28); Style: (FontSize: 13, TextColor: #d4e0ec); }
+    $Common.@FloatSlider #ProbeFloatSlider { Anchor: (Width: 520, Height: 20); Min: 0.0; Max: 1.0; Value: 0.5; }
+    Group #ScrollProbe { Anchor: (Width: 520, Height: 120); LayoutMode: TopScrolling; ScrollbarStyle: $Common.@DefaultScrollbarStyle;
+      Label { Text: "SCROLL PROBE"; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+      Label { Text: "Wheel over this area."; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+      Label { Text: "The installed enum has no Scrolled binding."; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+      Label { Text: "This tall content checks native scrolling only."; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+      Label { Text: "Scroll marker 5"; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+      Label { Text: "Scroll marker 6"; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+      Label { Text: "Scroll marker 7"; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+      Label { Text: "Scroll marker 8"; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+      Label { Text: "Scroll marker 9"; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+      Label { Text: "Scroll marker 10"; Anchor: (Height: 32); Style: (FontSize: 13, TextColor: #93a4b6); }
+    }
+    Label #ProbeLastEvent { Text: "No server event received yet"; Anchor: (Height: 42); Style: (FontSize: 14, TextColor: #f2d488); }
+  }
+}

@@ -39,6 +39,7 @@ public final class CanvasSession implements AutoCloseable {
     private long latencySamples;
     private long processingLatencyNanos;
     private long peakLatencyNanos;
+    private String searchQuery = "";
 
     CanvasSession(CanvasService owner, Player player, PlayerRef playerRef, CanvasDefinition definition,
                   java.util.function.Consumer<Canvas> initializer) {
@@ -79,6 +80,11 @@ public final class CanvasSession implements AutoCloseable {
     }
     public void removeEdge(String id) { ensureOpen(); canvas.removeEdge(id); backend.topologyChanged(); persist(); }
     public void pan(double dx, double dy) { ensureOpen(); canvas.pan(dx, dy); backend.updateViewport(); persist(); }
+    public void zoom(double zoom, CanvasPoint cursorScreenPoint) {
+        ensureOpen(); canvas.zoom(zoom, cursorScreenPoint); backend.updateViewport(); persist();
+    }
+    public String searchQuery() { return searchQuery; }
+    public void search(String query) { ensureOpen(); searchQuery = query == null ? "" : query; backend.topologyChanged(); }
     public ConnectionResult validateConnection(String sn, String sp, String tn, String tp) {
         return canvas.validateConnection(sn, sp, tn, tp);
     }
