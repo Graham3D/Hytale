@@ -17,10 +17,14 @@ import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.ui.hud.HudVisibilityLease;
 import com.inigmasgames.hytalerpg.ui.model.NativeResourceView;
 import com.inigmasgames.hytalerpg.ui.model.SkillSlotView;
+import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.UUID;
@@ -29,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage03PresentationTest {
     private final CharacterXpProjectionService xp = new CharacterXpProjectionService();
+    @TempDir Path temporary;
 
     @Test void allNinetyEightXpTransitionsUseCanonicalRoundHalfUpToTenFormula() {
         long cumulative = 0;
@@ -123,6 +128,49 @@ class Stage03PresentationTest {
         assertEquals("Fire Bolt", equipped.name());
         assertEquals(SkillSlotView.State.UNAVAILABLE, equipped.state());
         assertEquals("EXECUTOR_NOT_IMPLEMENTED", equipped.unavailableReason());
+        bundle.service().unequipSkill(player, SkillSlot.SKILL02);
+        assertEquals(SkillSlotView.State.EMPTY,
+                projection.hud(player, nativeResources, null).skills().get(1).state());
+    }
+
+    @Test void characterProjectionContainsAllAttributesDerivedStatsAndNativePools() {
+        var bundle = Stage01BTestSupport.bundle();
+        RpgCombatKernel kernel = RpgCombatKernel.createProduction();
+        var projection = new RpgUiProjectionService(bundle.catalog(), bundle.service(),
+                kernel.derivedStats(), kernel.cooldowns());
+        UUID player = UUID.randomUUID();
+        bundle.service().setDevelopmentAttribute(player, RpgAttribute.STR, 151);
+        bundle.service().setDevelopmentAttribute(player, RpgAttribute.DEX, 251);
+        bundle.service().setDevelopmentAttribute(player, RpgAttribute.INT, 351);
+        bundle.service().setDevelopmentAttribute(player, RpgAttribute.WIS, 451);
+        bundle.service().setDevelopmentAttribute(player, RpgAttribute.LUCK, 500);
+        var view = projection.character(player, "Tester", new HytaleResourceViewAdapter.Snapshot(
+                new NativeResourceView(80, 140), new NativeResourceView(90, 180), new NativeResourceView(70, 150)));
+        assertEquals(5, view.derivedStats().rawAttributes().size());
+        assertEquals(5, view.derivedStats().effectiveAttributes().size());
+        assertTrue(view.derivedStats().maxHealth() > 100);
+        assertTrue(view.derivedStats().heavyDamageMultiplier() > 1);
+        assertTrue(view.derivedStats().cooldownRecovery() > 0);
+        assertEquals(80, view.mana().current());
+        assertEquals("Tester", view.displayName());
+    }
+
+    @Test void persistentIndicatorFollowsPendingPointsUntilFinalAllocation() {
+        var bundle = Stage01BTestSupport.bundle();
+        var allocation = new AttributeAllocationService(bundle.service());
+        RpgCombatKernel kernel = RpgCombatKernel.createProduction();
+        var projection = new RpgUiProjectionService(bundle.catalog(), bundle.service(),
+                kernel.derivedStats(), kernel.cooldowns());
+        UUID player = UUID.randomUUID();
+        var nativeResources = new HytaleResourceViewAdapter.Snapshot(
+                new NativeResourceView(100, 100), new NativeResourceView(100, 100), new NativeResourceView(100, 100));
+        allocation.grantDevelopmentPoints(player, 2, "grant");
+        assertTrue(projection.hud(player, nativeResources, null).showLevelUpNotice());
+        for (int index = 0; index < 2; index++) {
+            long revision = bundle.service().getPresentationView(player).state().revision;
+            assertTrue(allocation.allocate(player, RpgAttribute.STR, revision, "spend" + index).success());
+        }
+        assertFalse(projection.hud(player, nativeResources, null).showLevelUpNotice());
     }
 
     @Test void abilityActivationStopsTypedBeforeResourceOrCooldownMutation() {
@@ -170,5 +218,13 @@ class Stage03PresentationTest {
     @Test void uiOpenAdapterHonestlyReportsCommandOnlyOnInstalledBuild() {
         assertEquals(com.inigmasgames.hytalerpg.input.RpgUiOpenInputAdapter.Availability.COMMAND_ONLY,
                 new CommandOnlyRpgUiOpenInputAdapter().availability());
+    }
+
+    @Test void uiTraceFailureIsIsolatedFromCaller() throws Exception {
+        Path parentIsFile = temporary.resolve("not-a-directory");
+        Files.writeString(parentIsFile, "occupied");
+        RpgUiTraceService trace = new RpgUiTraceService(parentIsFile.resolve("ui-trace.jsonl"));
+        assertDoesNotThrow(() -> trace.trace(UUID.randomUUID(), "TEST", "correlation", java.util.Map.of("value", 1)));
+        assertDoesNotThrow(trace::close);
     }
 }

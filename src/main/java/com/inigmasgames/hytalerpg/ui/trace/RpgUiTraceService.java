@@ -2,7 +2,6 @@ package com.inigmasgames.hytalerpg.ui.trace;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.inigmasgames.hytalerpg.phase00.BuildIdentity;
 
 import java.nio.charset.StandardCharsets;
@@ -19,10 +18,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Bounded, asynchronous UI diagnostics. UI tracing can never become gameplay authority. */
 public final class RpgUiTraceService implements AutoCloseable {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final Logger LOGGER = Logger.getLogger(RpgUiTraceService.class.getName());
     private static final long MAX_BYTES = 4L * 1024L * 1024L;
     private static final int RETAINED_FILES = 4;
     private final Path path;
@@ -42,8 +43,8 @@ public final class RpgUiTraceService implements AutoCloseable {
     public void trace(UUID player, String event, String correlationId, Map<String, ?> details) {
         Record record = new Record(Instant.now().toString(), BuildIdentity.REVISION, BuildIdentity.VERSION,
                 BuildIdentity.HYTALE_VERSION, player, event, correlationId, new LinkedHashMap<>(details));
-        LOGGER.atInfo().log("RPG_UI_TRACE revision=%s event=%s player=%s correlation=%s",
-                BuildIdentity.REVISION, event, player, correlationId);
+        LOGGER.log(Level.INFO, "RPG_UI_TRACE revision={0} event={1} player={2} correlation={3}",
+                new Object[]{BuildIdentity.REVISION, event, player, correlationId});
         try { writer.execute(() -> write(record)); }
         catch (RejectedExecutionException error) { logFailureOnce(error); }
     }
@@ -71,7 +72,7 @@ public final class RpgUiTraceService implements AutoCloseable {
     private Path rotated(int index) { return path.resolveSibling(path.getFileName() + "." + index); }
     private void logFailureOnce(Throwable error) {
         if (failureLogged.compareAndSet(false, true))
-            LOGGER.atWarning().withCause(error).log("RPG UI diagnostics unavailable; gameplay remains active path=%s", path);
+            LOGGER.log(Level.WARNING, "RPG UI diagnostics unavailable; gameplay remains active path=" + path, error);
     }
     public Path path() { return path; }
 
