@@ -1,0 +1,13 @@
+{
+  "Group": "InigmasGames",
+  "Name": "CanvasUIDemo",
+  "Version": "${version}",
+  "Description": "Development-only generic CanvasUI demonstration and topology proof.",
+  "Authors": [{ "Name": "Inigmas Games" }],
+  "ServerVersion": "=0.7.0-pre.1",
+  "Dependencies": { "InigmasGames:CanvasUI": "*" },
+  "DisabledByDefault": false,
+  "Main": "com.inigmasgames.canvasui.demo.CanvasUIDemoPlugin",
+  "IncludesAssetPack": false,
+  "Metadata": { "DevelopmentRevision": "${rpgRevision}", "DevelopmentOnly": "true" }
+}

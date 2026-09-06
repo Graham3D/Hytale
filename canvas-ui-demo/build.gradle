@@ -1,0 +1,19 @@
+plugins { id 'java' }
+
+group = 'com.inigmasgames.canvasui'
+version = canvas_ui_version
+
+def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
+def serverJar = file("${hytaleHome}/install/${patchline}/package/game/latest/Server/HytaleServer.jar")
+
+java { toolchain.languageVersion = JavaLanguageVersion.of(java_version) }
+dependencies {
+    compileOnly project(':canvas-ui')
+    compileOnly files(serverJar)
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+tasks.jar { archiveBaseName = 'CanvasUI-Demo' }
+tasks.processResources {
+    inputs.properties(version: project.version, rpgRevision: rpg_revision)
+    filesMatching('manifest.json') { expand(version: project.version, rpgRevision: rpg_revision) }
+}

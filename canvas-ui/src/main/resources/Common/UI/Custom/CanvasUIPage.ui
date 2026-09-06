@@ -1,0 +1,38 @@
+$Common = "Common.ui";
+
+Group {
+  Anchor: (Full: 0);
+  Background: (Color: #090e17f5);
+  Group #CanvasContents { Anchor: (Full: 0); }
+  Group #CanvasPreview0 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview1 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview2 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview3 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview4 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview5 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview6 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview7 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview8 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview9 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview10 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview11 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview12 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview13 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview14 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group #CanvasPreview15 { Anchor: (Left: -100, Top: -100, Width: 2, Height: 2); Background: (Color: #f2d488); }
+  Group {
+    Anchor: (Left: 18, Top: 16, Width: 340, Height: 54);
+    Background: (Color: #111c2bea);
+    Padding: (Full: 8);
+    LayoutMode: Left;
+    Label { Text: "CANVAS UI"; Style: (FontSize: 19, TextColor: #78c6d0); Anchor: (Width: 150); }
+    Label #CanvasRevision { Text: "R002"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Anchor: (Width: 76); }
+    Label { Text: "ZOOM 1.0"; Style: (FontSize: 12, TextColor: #93a4b6, Alignment: Center); Anchor: (Width: 90); }
+  }
+  Label #CanvasStatus {
+    Anchor: (Left: 20, Bottom: 18, Width: 900, Height: 34);
+    Text: "Drag a node or port; pan with the configured background gesture. Escape closes.";
+    Background: (Color: #111c2bea);
+    Style: (FontSize: 13, TextColor: #d4e0ec, Alignment: Center);
+  }
+}
