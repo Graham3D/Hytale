@@ -25,17 +25,16 @@ self-target damage stopped after `DAMAGE_GATHERED`, and native regeneration
 made the recovery amounts zero before they could be measured. R011 corrects
 the diagnostic design and the two content inconsistencies. Its automated suite
 and isolated three-mod bare-server startup pass, and the exact R011 JAR is
-deployed. The R011 connected closure commands remain pending. Therefore:
+deployed. R011 connected testing now closes both remaining evidence gaps and
+the restart/rejoin persistence gate. Therefore:
 
-**Stage 02 result: BLOCKED at the first unobserved R011 connected boundary,
-`DAMAGE_FILTERED`.**
+**Stage 02 result: PASS.**
 
 ```ini
-Stage02 = BLOCKED
-EarliestUnprovenBoundary = DAMAGE_FILTERED
+Stage02 = PASS
 ```
 
-**Safe to begin Stage 03: NO.**
+**Safe to begin Stage 03: YES; no Stage 03 work was begun in R011.**
 
 ## Reconciliation decisions
 
@@ -332,28 +331,31 @@ Evidence:
 - `evidence/stage-02/R011/server-smoke-summary.json`
 - `evidence/stage-02/R011/server-smoke.txt`
 - `evidence/stage-02/R011/installation.json`
+- `evidence/stage-02/R011/connected-client-summary.json`
 
 ## Connected-client checklist
 
-Only the following R011 closure checks remain:
+The R011 closure checks passed:
 
-1. Aim at a living NPC within 20 blocks and run `/rpg dev damage never 5`.
-   Confirm the NPC visibly loses Health and the trace contains the same
+1. `/rpg dev damage never 5` against a living NPC produced the same
    rootCastId, skillInstanceId, and correlationId across calculation,
    `DAMAGE_GATHERED`, `DAMAGE_FILTERED`, `DAMAGE_APPLIED`, and
-   `DAMAGE_INSPECTED`; Inspect must report Health-before, filtered amount,
-   Health-after, and positive actual loss.
-2. Run `/rpg dev recovery-proof`. Confirm the message reports normal `4/4`,
-   normal duplicate rejected, charged `12/12`, and charged duplicate rejected.
-3. Run `/rpg dev potency-proof`. Confirm it reports `15.00%`, 66 passives, and
-   an unchanged loadout.
-4. Fully stop the world, rejoin, run `/rpg loadout`, and confirm the existing
-   Fire Bolt/Fork graph and revision remain. Retain the newest trace and server
-   log.
+   `DAMAGE_INSPECTED`. Filter accepted `5.15`, native Apply rounded to `5.0`,
+   and Inspect recorded Health `124 -> 119`, actual loss `5.0`.
+2. `/rpg dev recovery-proof` depleted both pools to zero. Normal recovery
+   restored Mana/Stamina `4/4`; its duplicate restored `0/0` with
+   `deduplicated=true`. Charged recovery restored `12/12`; its duplicate also
+   restored `0/0` with `deduplicated=true`.
+3. `/rpg dev potency-proof` compiled Fire Bolt + Potency through the real
+   compiler and recorded `scalablePayloadIncreased=0.15`, expected `0.15`,
+   compile PASS, and 66 canonical passives.
+4. The first server logged a clean R011 shutdown. The second server loaded
+   player schema 2, RPG revision 6 with validation PASS. `/rpg loadout` then
+   compiled successfully and displayed Quick Slash plus Fire Bolt with the
+   Fork route intact.
 
 ## Known limitations and rollback
 
-- R011 connected closure evidence is pending, so this revision is not PASS.
 - The three item records are development fixtures. Production vanilla ItemIds
   remain unsupported until their authored RPG base powers are audited; the
   resolver deliberately does not mine post-mitigation native damage.
@@ -364,8 +366,6 @@ Only the following R011 closure checks remain:
 - Status lifecycle is implemented and traceable; native movement/effect visuals
   will be attached by later legal skill/status executors, not guessed by Stage
   02 diagnostic commands.
-- Full damage ordering requires the connected-client
-  run because a bare server has no live player EntityStatMap or damage target.
 
 The installer retains the previous RPG JAR beneath
 `evidence/stage-02/R011/rollback`. To roll back, stop the RPG world, remove
@@ -373,5 +373,5 @@ The installer retains the previous RPG JAR beneath
 save's mods directory, and leave player state files in place. Both revisions
 use player schema 2.
 
-No Stage 03 or skill-family work may begin until the connected-client checklist
-passes and this report is revised from BLOCKED to PASS.
+Stage 02 is closed by R011. No Stage 03 or skill-family work was begun during
+this closure pass.
