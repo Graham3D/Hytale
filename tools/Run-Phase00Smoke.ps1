@@ -23,7 +23,7 @@ try {
 finally { Pop-Location }
 
 $plain = ($output -join [Environment]::NewLine) -replace "`e\[[0-9;]*[A-Za-z]", ''
-$plain | Set-Content -LiteralPath (Join-Path $evidenceDirectory 'server-smoke.log') -Encoding utf8
+$plain | Set-Content -LiteralPath (Join-Path $evidenceDirectory 'server-smoke.txt') -Encoding utf8
 
 $summary = [pscustomobject]@{
     capturedAtUtc = [DateTime]::UtcNow.ToString('o')
@@ -44,4 +44,3 @@ if (-not ($summary.serverVersionObserved -and $summary.htDevLibDiscovered -and $
           $summary.htDevLibEnabled -and $summary.probeDiscovered -and $summary.probeSetup -and $summary.probeEnabled)) {
     throw 'One or more required server smoke markers were absent.'
 }
-
