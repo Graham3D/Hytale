@@ -3,8 +3,8 @@
 ## Status
 
 ```ini
-Stage03 = BLOCKED
-Stage04SafeToBegin = false
+Stage03 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION
+Stage04SafeToBegin = true
 RpgRevision = R012
 RpgVersion = 0.0.5
 HytaleTarget = 0.7.0-pre.1
@@ -12,13 +12,13 @@ ProductionLinkTreeFrontend = DEFERRED_PENDING_HYTALE_NOESIS_SERVER_UI
 ```
 
 R012 is implemented, tested, bare-server-smoked, and deployed. Stage 03 remains
-`BLOCKED` because no connected client has yet exercised the R012 CustomUI documents,
+`IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION` because no connected client has yet exercised the R012 CustomUI documents,
 HUD positioning, attribute buttons, native Ability inputs, teardown, or restart/rejoin.
 The earliest unproved boundary is a normal connected join that successfully creates
 `RpgHud.ui`. This status is evidence discipline, not an implementation failure and
 not a consequence of the owner-approved Link Tree deferral.
 
-Stage 04 has not begun and is not safe to begin until the connected checklist closes.
+The owner authorized provisional Stage 04 work while this is the only missing evidence.
 
 ## Revision and artifact identity
 
@@ -259,7 +259,8 @@ HUD, Character page, and commands do not require opening CanvasUI.
 
 `PENDING`. No claim of connected CustomUI success, correct screen positioning,
 native action delivery, measured live update rate, state persistence across the R012
-restart, or visibility restoration is made yet. Stage 03 must remain `BLOCKED` until
+restart, or visibility restoration is made yet. Stage 03 must remain
+`IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION` until
 these observations and the relevant UI/server trace records are captured.
 
 ## Connected closure checklist
@@ -312,9 +313,9 @@ do not downgrade or replace player JSON files.
 ## Closure decision
 
 ```ini
-Stage03 = BLOCKED
+Stage03 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION
 EarliestUnprovedBoundary = CONNECTED_JOIN_RPG_HUD_CREATE
-Stage04SafeToBegin = false
+Stage04SafeToBegin = true
 ```
 
 No Stage 04 family implementation was started.
