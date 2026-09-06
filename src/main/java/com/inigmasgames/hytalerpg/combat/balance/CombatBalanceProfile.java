@@ -16,6 +16,7 @@ public final class CombatBalanceProfile {
     public double staminaPerEffectiveDexterity;
     public double manaPerEffectiveIntelligence;
     public double primaryScalingPerEffectivePoint;
+    public double potencyIncreased;
     public double wisdomCooldownNumerator;
     public double wisdomCooldownDenominator;
     public double wisdomLearnPerPoint;
@@ -65,6 +66,8 @@ public final class CombatBalanceProfile {
                 throw new IllegalStateException("Attribute breakpoints must be strictly increasing");
         if (Arrays.stream(attributeCurve.slopes).anyMatch(value -> !Double.isFinite(value) || value < 0.0))
             throw new IllegalStateException("Attribute slopes must be finite and non-negative");
+        if (!Double.isFinite(potencyIncreased) || potencyIncreased < 0.0)
+            throw new IllegalStateException("Potency increased magnitude must be finite and non-negative");
     }
 
     public static final class AttributeCurve {

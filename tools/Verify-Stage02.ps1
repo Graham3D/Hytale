@@ -3,7 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
-$evidenceDirectory = Join-Path $projectRoot 'evidence\stage-02\R010'
+$evidenceDirectory = Join-Path $projectRoot 'evidence\stage-02\R011'
 New-Item -ItemType Directory -Force -Path $evidenceDirectory | Out-Null
 
 Push-Location $projectRoot
@@ -11,7 +11,7 @@ try {
     & .\gradlew.bat clean build
     if ($LASTEXITCODE -ne 0) { throw 'Stage 02 Gradle build failed.' }
 
-    $jarPath = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.3.jar'
+    $jarPath = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.4.jar'
     $entries = @(& jar tf $jarPath)
     $requiredEntries = @(
         'manifest.json', 'rpg-build.properties', 'rpg-skill-trace.properties',
@@ -45,7 +45,7 @@ try {
     $result = [ordered]@{
         verifiedAtUtc = [DateTime]::UtcNow.ToString('o')
         targetHytaleVersion = '0.7.0-pre.1'
-        rpgRevision = 'R010'
+        rpgRevision = 'R011'
         branch = (& git branch --show-current).Trim()
         sourceCommit = (& git rev-parse HEAD).Trim()
         buildSucceeded = $true
@@ -55,11 +55,12 @@ try {
         missingJarEntries = $missing
         balanceProfile = $balance.profileId
         balanceSchema = $balance.schemaVersion
+        potencyIncreased = $balance.potencyIncreased
         itemRegistry = $registry.registryId
         itemRegistrySchema = $registry.schemaVersion
         developmentItemPowerRecords = @($registry.items).Count
         canonicalPassiveCount = $passives.Count
-        swiftRecoveryAddedToCatalog = @($passives | Where-Object id -eq 'swift_recovery').Count -gt 0
+        noncanonicalSwiftRecoveryAbsent = @($passives | Where-Object id -eq 'swift_recovery').Count -eq 0
         tests = $tests
         failures = $failures
         errors = $errors
@@ -70,7 +71,8 @@ try {
     $result | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $evidenceDirectory 'verification.json') -Encoding utf8
     [pscustomobject]$result | Format-List
     if ($missing.Count -ne 0 -or $balance.schemaVersion -ne 1 -or $registry.schemaVersion -ne 1 -or
-        $passives.Count -ne 66 -or $result.swiftRecoveryAddedToCatalog -or $failures -ne 0 -or $errors -ne 0) {
+        $passives.Count -ne 66 -or -not $result.noncanonicalSwiftRecoveryAbsent -or
+        [math]::Abs($balance.potencyIncreased - 0.15) -gt 1.0e-12 -or $failures -ne 0 -or $errors -ne 0) {
         throw 'Stage 02 verification gate failed.'
     }
 }

@@ -7,14 +7,14 @@ $gamePackage = "$env:APPDATA\Hytale\install\pre-release\package\game\latest"
 $serverJar = Join-Path $gamePackage 'Server\HytaleServer.jar'
 $assetsZip = Join-Path $gamePackage 'Assets.zip'
 $saveMods = "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\mods"
-$rpgJar = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.3.jar'
+$rpgJar = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.4.jar'
 $runDirectory = Join-Path $projectRoot 'run\stage-02-smoke'
 $modsDirectory = Join-Path $runDirectory 'mods'
-$evidenceDirectory = Join-Path $projectRoot 'evidence\stage-02\R010'
+$evidenceDirectory = Join-Path $projectRoot 'evidence\stage-02\R011'
 
 New-Item -ItemType Directory -Force -Path $modsDirectory, $evidenceDirectory | Out-Null
 Get-ChildItem -LiteralPath $modsDirectory -Filter '*.jar' -File -ErrorAction SilentlyContinue | Remove-Item -Force
-Copy-Item -LiteralPath $rpgJar -Destination (Join-Path $modsDirectory 'HytaleRPG-0.0.3.jar') -Force
+Copy-Item -LiteralPath $rpgJar -Destination (Join-Path $modsDirectory 'HytaleRPG-0.0.4.jar') -Force
 Copy-Item -LiteralPath (Join-Path $saveMods 'HYTALEDEVLIB-0.5.0.jar') -Destination $modsDirectory -Force
 Copy-Item -LiteralPath (Join-Path $saveMods 'CanvasUI-0.1.0.jar') -Destination $modsDirectory -Force
 
@@ -35,11 +35,11 @@ $summary = [ordered]@{
     processExitCode = $exitCode
     targetVersion = '0.7.0-pre.1'
     serverVersionObserved = [bool]($plain -match 'Version: 0\.7\.0-pre\.1')
-    rpgDiscovered = [bool]($plain -match 'InigmasGames:HytaleRPGPhase00Audit from path HytaleRPG-0\.0\.3\.jar')
+    rpgDiscovered = [bool]($plain -match 'InigmasGames:HytaleRPGPhase00Audit from path HytaleRPG-0\.0\.4\.jar')
     canvasUiDiscovered = [bool]($plain -match 'InigmasGames:CanvasUI from path CanvasUI-0\.1\.0\.jar')
     hytaleDevLibDiscovered = [bool]($plain -match 'HytaleDevLib:HytaleDevLib from path HYTALEDEVLIB-0\.5\.0\.jar')
-    rpgSetup = [bool]($plain -match 'HYTALE_RPG_SETUP revision=R010 version=0\.0\.3 hytale=0\.7\.0-pre\.1 stage=02 combatEnabled=true')
-    stageReady = [bool]($plain -match 'RPG_STAGE02_READY revision=R010 skills=87 passives=66 schema=2 balance=rpg\.combat-kernel\.r010')
+    rpgSetup = [bool]($plain -match 'HYTALE_RPG_SETUP revision=R011 version=0\.0\.4 hytale=0\.7\.0-pre\.1 stage=02 combatEnabled=true')
+    stageReady = [bool]($plain -match 'RPG_STAGE02_READY revision=R011 skills=87 passives=66 schema=2 balance=rpg\.combat-kernel\.r011')
     rpgEnabled = [bool]($plain -match 'Enabled plugin InigmasGames:HytaleRPGPhase00Audit')
     rpgFailureObserved = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|Exception while enabling.*HytaleRPG|HytaleRPGPhase00Audit.*(fatal|exception))')
 }

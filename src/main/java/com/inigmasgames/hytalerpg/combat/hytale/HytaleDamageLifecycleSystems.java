@@ -46,7 +46,10 @@ public final class HytaleDamageLifecycleSystems {
     }
     public static final class Filter extends TraceSystem {
         public Filter(CombatTrace trace) { super(trace); }
-        @Override public SystemGroup<EntityStore> getGroup() { return DamageModule.get().getFilterDamageGroup(); }
+        @Override public Set<Dependency<EntityStore>> getDependencies() {
+            return Set.of(new SystemGroupDependency<>(Order.AFTER, DamageModule.get().getFilterDamageGroup()),
+                    new SystemDependency<>(Order.BEFORE, DamageSystems.ApplyDamage.class));
+        }
         @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer, Damage damage) {
             emit(damage, RpgTraceEventType.DAMAGE_FILTERED,
@@ -56,13 +59,13 @@ public final class HytaleDamageLifecycleSystems {
     public static final class Application extends TraceSystem {
         public Application(CombatTrace trace) { super(trace); }
         @Override public Set<Dependency<EntityStore>> getDependencies() {
-            return Set.of(new SystemGroupDependency<>(Order.AFTER, DamageModule.get().getFilterDamageGroup()),
-                    new SystemDependency<>(Order.BEFORE, DamageSystems.ApplyDamage.class));
+            return Set.of(new SystemDependency<>(Order.AFTER, DamageSystems.ApplyDamage.class),
+                    new SystemGroupDependency<>(Order.BEFORE, DamageModule.get().getInspectDamageGroup()));
         }
         @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer, Damage damage) {
             emit(damage, RpgTraceEventType.DAMAGE_APPLIED,
-                    Map.of("submittedAmount", damage.getAmount(), "cancelled", damage.isCancelled()));
+                    Map.of("nativeAmount", damage.getAmount(), "cancelled", damage.isCancelled()));
         }
     }
     public static final class Inspect extends TraceSystem {

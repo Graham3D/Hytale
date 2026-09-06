@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "profileId": "rpg.combat-kernel.r010",
+  "profileId": "rpg.combat-kernel.r011",
   "attributeCurve": {
     "breakpoints": [150.0, 250.0, 350.0, 450.0],
     "slopes": [1.0, 0.75, 0.50, 0.35, 0.20]
@@ -11,6 +11,7 @@
   "staminaPerEffectiveDexterity": 0.5,
   "manaPerEffectiveIntelligence": 0.75,
   "primaryScalingPerEffectivePoint": 0.003,
+  "potencyIncreased": 0.15,
   "wisdomCooldownNumerator": 0.30,
   "wisdomCooldownDenominator": 160.0,
   "wisdomLearnPerPoint": 0.0015,

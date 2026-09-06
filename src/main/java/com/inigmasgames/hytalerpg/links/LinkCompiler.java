@@ -1,6 +1,7 @@
 package com.inigmasgames.hytalerpg.links;
 
 import com.inigmasgames.hytalerpg.content.RpgCatalog;
+import com.inigmasgames.hytalerpg.combat.balance.CombatBalanceProfile;
 import com.inigmasgames.hytalerpg.domain.CompiledSkillPlan;
 import com.inigmasgames.hytalerpg.domain.LinkNodeId;
 import com.inigmasgames.hytalerpg.domain.PassiveDefinition;
@@ -28,11 +29,18 @@ public final class LinkCompiler {
     private final RpgCatalog catalog;
     private final RpgLinkGraphService graphService;
     private final CompatibilityService compatibility;
+    private final CombatBalanceProfile balance;
 
     public LinkCompiler(RpgCatalog catalog, RpgLinkGraphService graphService, CompatibilityService compatibility) {
+        this(catalog, graphService, compatibility, CombatBalanceProfile.loadCanonical());
+    }
+
+    public LinkCompiler(RpgCatalog catalog, RpgLinkGraphService graphService, CompatibilityService compatibility,
+                        CombatBalanceProfile balance) {
         this.catalog = catalog;
         this.graphService = graphService;
         this.compatibility = compatibility;
+        this.balance = balance;
     }
 
     public CompilationResult compile(RpgPlayerState state) {
@@ -121,11 +129,9 @@ public final class LinkCompiler {
             else power.add(operation);
             if (!passive.triggerHook().isBlank()) triggers.add(passive.triggerHook() + ':' + passive.id().value());
             spawnCost += passive.spawnBudgetCost();
-            // R010 kernel contract. Swift Recovery is schema-capable but is not added to the canonical 66-passive catalog.
             switch (passive.id().value()) {
-                case "potency" -> scalablePayloadIncreased += 0.10;
+                case "potency" -> scalablePayloadIncreased += balance.potencyIncreased;
                 case "efficiency" -> resourceCostMultiplier *= 0.85;
-                case "swift_recovery" -> cooldownRecoveryBonus += 0.12;
                 default -> { }
             }
             if (passive.id().value().equals("expanded_radius")) {

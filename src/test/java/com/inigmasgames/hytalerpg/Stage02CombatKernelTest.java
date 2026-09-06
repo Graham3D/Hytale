@@ -66,7 +66,7 @@ class Stage02CombatKernelTest {
 
     @Test void balanceProfileIsVersionedAndCurveBreakpointsAreExact() {
         assertEquals(1, profile.schemaVersion);
-        assertEquals("rpg.combat-kernel.r010", profile.profileId);
+        assertEquals("rpg.combat-kernel.r011", profile.profileId);
         assertAll(
                 () -> assertEquals(150.0, effective.effective(150), 1e-12),
                 () -> assertEquals(225.0, effective.effective(250), 1e-12),
@@ -200,9 +200,16 @@ class Stage02CombatKernelTest {
         assertEquals(1.5, service.regenerate(actor, ResourceType.MANA, 1, port), 1e-12);
         var normal = service.recoverHostileWeaponHit(actor, "root-a", false, port);
         assertTrue(normal.applied()); assertEquals(4.0, normal.manaRecovered(), 1e-12);
-        assertFalse(service.recoverHostileWeaponHit(actor, "root-a", false, port).applied());
+        assertEquals(4.0, normal.staminaRecovered(), 1e-12);
+        var normalDuplicate = service.recoverHostileWeaponHit(actor, "root-a", false, port);
+        assertFalse(normalDuplicate.applied()); assertEquals(0.0, normalDuplicate.manaRecovered(), 1e-12);
+        assertEquals(0.0, normalDuplicate.staminaRecovered(), 1e-12);
         var charged = service.recoverHostileWeaponHit(actor, "root-b", true, port);
-        assertTrue(charged.applied()); assertEquals(12.0, charged.staminaRecovered(), 1e-12);
+        assertTrue(charged.applied()); assertEquals(12.0, charged.manaRecovered(), 1e-12);
+        assertEquals(12.0, charged.staminaRecovered(), 1e-12);
+        var chargedDuplicate = service.recoverHostileWeaponHit(actor, "root-b", true, port);
+        assertFalse(chargedDuplicate.applied()); assertEquals(0.0, chargedDuplicate.manaRecovered(), 1e-12);
+        assertEquals(0.0, chargedDuplicate.staminaRecovered(), 1e-12);
     }
 
     @Test void reservationsSumClampRegenerationRejectOversubscriptionAndReleaseWithoutMinting() {
@@ -235,7 +242,7 @@ class Stage02CombatKernelTest {
         assertEquals(75, port.current(ResourceType.MANA)); assertEquals(100, port.current(ResourceType.STAMINA));
     }
 
-    @Test void cooldownUsesMasterRecoveryRateFormulaSwiftCapabilityAndRuntimeState() {
+    @Test void cooldownUsesGenericRecoveryModifierCapabilityAndRuntimeState() {
         AtomicLong clock = new AtomicLong(); UUID actor = UUID.randomUUID();
         var service = new RpgCooldownService(profile, clock::get);
         var modifiers = new CompiledSkillPlan.KernelModifiers(0, 1, .12);
@@ -254,7 +261,7 @@ class Stage02CombatKernelTest {
         assertEquals(.75, calculation.appliedRecovery()); assertEquals(.25, calculation.finalSeconds());
     }
 
-    @Test void potencyAndEfficiencyCompileIntoTypedKernelModifiersWithoutAddingACatalogPassive() {
+    @Test void canonicalPotencyAndEfficiencyCompileIntoTypedKernelModifiersWithoutInventedContent() {
         var bundle = Stage01BTestSupport.bundle(); UUID player = UUID.randomUUID();
         assertEquals(66, bundle.catalog().passives().size());
         assertTrue(bundle.catalog().passive(new PassiveId("swift_recovery")).isEmpty());
@@ -264,17 +271,18 @@ class Stage02CombatKernelTest {
         assertTrue(bundle.service().link(player, LinkNodeId.PASSIVE01, LinkNodeId.SKILL01).success());
         assertTrue(bundle.service().link(player, LinkNodeId.PASSIVE02, LinkNodeId.SKILL01).success());
         var modifiers = bundle.service().compile(player).plans().get(SkillSlot.SKILL01).kernelModifiers();
-        assertEquals(.10, modifiers.scalablePayloadIncreased(), 1e-12);
+        assertEquals(.15, profile.potencyIncreased, 1e-12);
+        assertEquals(.15, modifiers.scalablePayloadIncreased(), 1e-12);
         assertEquals(.85, modifiers.resourceCostMultiplier(), 1e-12);
         assertEquals(0, modifiers.cooldownRecoveryBonus(), 1e-12);
     }
 
     @Test void potencyTypedModifierFeedsDamageIncreasedBucket() {
         var service = new DamageCalculationService(new SkillScalingService(profile), new CriticalRoller(() -> 1));
-        var planModifier = new CompiledSkillPlan.KernelModifiers(.10, 1, 0);
+        var planModifier = new CompiledSkillPlan.KernelModifiers(.15, 1, 0);
         var result = service.calculate(DamageCalculationService.Request.direct(100, 0, 1,
                 new ModifierBuckets(List.of(planModifier.scalablePayloadIncreased()), List.of(), List.of(), List.of()), 0, 1.5));
-        assertEquals(110, result.preMitigationDamage(), 1e-12);
+        assertEquals(115, result.preMitigationDamage(), 1e-12);
     }
 
     @Test void chillStacksRefreshAndFifthStackConsumesIntoFrozen() {

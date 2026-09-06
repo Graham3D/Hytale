@@ -12,12 +12,17 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.TargetUtil;
+import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import com.inigmasgames.hytalerpg.content.CatalogResolution;
 import com.inigmasgames.hytalerpg.content.RpgCatalog;
 import com.inigmasgames.hytalerpg.domain.LinkNodeId;
+import com.inigmasgames.hytalerpg.domain.LinkEdge;
 import com.inigmasgames.hytalerpg.domain.PassiveDefinition;
+import com.inigmasgames.hytalerpg.domain.PassiveId;
 import com.inigmasgames.hytalerpg.domain.PassiveSlot;
 import com.inigmasgames.hytalerpg.domain.SkillDefinition;
+import com.inigmasgames.hytalerpg.domain.SkillId;
 import com.inigmasgames.hytalerpg.domain.SkillSlot;
 import com.inigmasgames.hytalerpg.progress.MutationResult;
 import com.inigmasgames.hytalerpg.progress.RpgLoadoutOperations;
@@ -44,6 +49,10 @@ import com.inigmasgames.hytalerpg.combat.status.ControlProfile;
 import com.inigmasgames.hytalerpg.combat.status.RpgStatusType;
 import com.inigmasgames.hytalerpg.diagnostics.RpgTraceEventType;
 import com.inigmasgames.hytalerpg.domain.CompiledSkillPlan;
+import com.inigmasgames.hytalerpg.links.CompatibilityService;
+import com.inigmasgames.hytalerpg.links.LinkCompiler;
+import com.inigmasgames.hytalerpg.links.RpgLinkGraphService;
+import com.inigmasgames.hytalerpg.progress.RpgPlayerState;
 
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -62,7 +71,7 @@ public final class RpgCommand extends AbstractCommandCollection {
         addSubCommand(new LoadoutCommand(catalog, loadouts));
         addSubCommand(new CompileCommand(loadouts));
         addSubCommand(new StatsCommand(loadouts, kernel, combatTrace));
-        addSubCommand(new DevCommand(loadouts, kernel, combatTrace));
+        addSubCommand(new DevCommand(catalog, loadouts, kernel, combatTrace));
     }
 
     private abstract static class PlayerSubcommand extends AbstractPlayerCommand {
@@ -191,18 +200,20 @@ public final class RpgCommand extends AbstractCommandCollection {
                         Map.of("raw", derived.rawAttributes(), "effective", derived.effectiveAttributes()));
                 trace.emit(playerRef.getUuid(), RpgTraceEventType.DERIVED_STATS,
                         new CombatTrace.Context("stats", "stats", correlation), derivedDetails(derived));
-                context.sendMessage(Message.raw(formatStats(derived, stats)));
+                context.sendMessage(Message.raw(formatStats(derived, stats, kernel.balance().profileId)));
             } catch (RuntimeException error) { error(context, error); }
         }
     }
 
     private static final class DevCommand extends AbstractCommandCollection {
-        DevCommand(RpgLoadoutOperations loadouts, RpgCombatKernel kernel, CombatTrace trace) {
+        DevCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts, RpgCombatKernel kernel, CombatTrace trace) {
             super("dev", "Development-only Stage 02 kernel fixtures.");
             addSubCommand(new AttributeCommand(loadouts));
             addSubCommand(new ResetCommand(loadouts));
             addSubCommand(new ResourceCommand(loadouts, kernel, trace));
             addSubCommand(new RecoveryCommand(loadouts, kernel, trace));
+            addSubCommand(new RecoveryProofCommand(loadouts, kernel, trace));
+            addSubCommand(new PotencyProofCommand(catalog, loadouts, kernel, trace));
             addSubCommand(new DamageCommand(loadouts, kernel, trace));
             addSubCommand(new StatusCommand(loadouts, kernel, trace));
         }
@@ -308,16 +319,117 @@ public final class RpgCommand extends AbstractCommandCollection {
         }
     }
 
+    private static final class RecoveryProofCommand extends KernelCommand {
+        RecoveryProofCommand(RpgLoadoutOperations loadouts, RpgCombatKernel kernel, CombatTrace trace) {
+            super("recovery-proof", "Deterministically prove normal/charged recovery and root-hit deduplication.",
+                    loadouts, kernel, trace);
+        }
+        @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
+                                         PlayerRef playerRef, World world) {
+            try {
+                UUID actor = playerRef.getUuid();
+                EntityStatResourcePort port = resources(store, ref, actor);
+                port.setCurrent(ResourceType.MANA, 0.0);
+                port.setCurrent(ResourceType.STAMINA, 0.0);
+                String correlation = shortId();
+                String normalRoot = "r011-normal-" + shortId();
+                String chargedRoot = "r011-charged-" + shortId();
+                trace.emit(actor, RpgTraceEventType.RESOURCE_PROOF_SETUP,
+                        new CombatTrace.Context("r011-recovery-proof", "dev-recovery-proof", correlation),
+                        Map.of("mana", port.current(ResourceType.MANA), "stamina", port.current(ResourceType.STAMINA),
+                                "maxMana", port.maximum(ResourceType.MANA), "maxStamina", port.maximum(ResourceType.STAMINA),
+                                "normalFraction", kernel.balance().normalHostileHitRecovery,
+                                "chargedFraction", kernel.balance().chargedHostileHitRecovery));
+                var normal = recoveryProofStep(actor, normalRoot, false, correlation, port);
+                var normalDuplicate = recoveryProofStep(actor, normalRoot, false, correlation, port);
+                var charged = recoveryProofStep(actor, chargedRoot, true, correlation, port);
+                var chargedDuplicate = recoveryProofStep(actor, chargedRoot, true, correlation, port);
+                context.sendMessage(Message.raw("Recovery proof: normal=" + f2(normal.manaRecovered()) + "/"
+                        + f2(normal.staminaRecovered()) + ", normal duplicate rejected=" + !normalDuplicate.applied()
+                        + ", charged=" + f2(charged.manaRecovered()) + "/" + f2(charged.staminaRecovered())
+                        + ", charged duplicate rejected=" + !chargedDuplicate.applied()
+                        + ". Final Mana/Stamina=" + f2(port.current(ResourceType.MANA)) + "/"
+                        + f2(port.current(ResourceType.STAMINA))));
+            } catch (RuntimeException error) { error(context, error); }
+        }
+        private com.inigmasgames.hytalerpg.combat.resource.RpgResourceService.RecoveryResult recoveryProofStep(
+                UUID actor, String root, boolean charged, String correlation, EntityStatResourcePort port) {
+            double beforeMana = port.current(ResourceType.MANA);
+            double beforeStamina = port.current(ResourceType.STAMINA);
+            var result = kernel.resources().recoverHostileWeaponHit(actor, root, charged, port);
+            trace.emit(actor, RpgTraceEventType.RESOURCE_RECOVERY,
+                    new CombatTrace.Context(root, "dev-recovery-proof", correlation),
+                    Map.of("mode", charged ? "CHARGED" : "NORMAL",
+                            "expectedFraction", charged ? kernel.balance().chargedHostileHitRecovery
+                                    : kernel.balance().normalHostileHitRecovery,
+                            "applied", result.applied(), "deduplicated", !result.applied(),
+                            "beforeMana", beforeMana, "afterMana", port.current(ResourceType.MANA),
+                            "beforeStamina", beforeStamina, "afterStamina", port.current(ResourceType.STAMINA),
+                            "manaRecovered", result.manaRecovered(), "staminaRecovered", result.staminaRecovered()));
+            return result;
+        }
+    }
+
+    private static final class PotencyProofCommand extends KernelCommand {
+        private final RpgCatalog catalog;
+        PotencyProofCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts, RpgCombatKernel kernel,
+                            CombatTrace trace) {
+            super("potency-proof", "Compile an isolated canonical Potency fixture without changing the loadout.",
+                    loadouts, kernel, trace);
+            this.catalog = catalog;
+        }
+        @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
+                                         PlayerRef playerRef, World world) {
+            try {
+                RpgPlayerState fixture = RpgPlayerState.create(playerRef.getUuid());
+                fixture.skill(SkillSlot.SKILL01, new SkillId("fire_bolt"));
+                fixture.passive(PassiveSlot.PASSIVE01, new PassiveId("potency"));
+                fixture.linkEdges(java.util.List.of(LinkEdge.create(LinkNodeId.PASSIVE01, LinkNodeId.SKILL01)));
+                CompatibilityService compatibility = new CompatibilityService();
+                RpgLinkGraphService graph = new RpgLinkGraphService(catalog, compatibility);
+                var compilation = new LinkCompiler(catalog, graph, compatibility, kernel.balance()).compile(fixture);
+                if (!compilation.success())
+                    throw new IllegalStateException("Potency proof compile failed: " + compilation.code() + " "
+                            + compilation.message());
+                double increased = compilation.plans().get(SkillSlot.SKILL01).kernelModifiers()
+                        .scalablePayloadIncreased();
+                String correlation = shortId();
+                trace.emit(playerRef.getUuid(), RpgTraceEventType.POTENCY_PROOF,
+                        new CombatTrace.Context("r011-potency-proof", "fire-bolt-potency", correlation),
+                        Map.of("skill", "fire_bolt", "passive", "potency", "scalablePayloadIncreased", increased,
+                                "expected", kernel.balance().potencyIncreased, "catalogPassiveCount", catalog.passives().size(),
+                                "compileResult", "PASS"));
+                context.sendMessage(Message.raw("Potency proof: compiler scalable magnitude Increased="
+                        + pct(increased) + " (expected " + pct(kernel.balance().potencyIncreased)
+                        + "); canonical passives=" + catalog.passives().size() + ". Loadout unchanged."));
+            } catch (RuntimeException error) { error(context, error); }
+        }
+    }
+
     private static final class DamageCommand extends KernelCommand {
         private final RequiredArg<String> mode, basePower;
         DamageCommand(RpgLoadoutOperations loadouts, RpgCombatKernel kernel, CombatTrace trace) {
-            super("damage", "Submit bounded self-target damage through Hytale's native pipeline.", loadouts, kernel, trace);
+            super("damage", "Submit bounded damage to the aimed non-player entity through Hytale's native pipeline.",
+                    loadouts, kernel, trace);
             mode = withRequiredArg("mode", "never, force, or seeded", ArgTypes.STRING);
             basePower = withRequiredArg("basePower", "non-negative test base power", ArgTypes.STRING);
         }
         @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
                                          PlayerRef playerRef, World world) {
             try {
+                Ref<EntityStore> target = TargetUtil.getTargetEntity(ref, 20.0f, store);
+                if (target == null || !target.isValid())
+                    throw new IllegalStateException("Aim at a living, damageable NPC within 20 blocks.");
+                if (target == ref || target.equals(ref))
+                    throw new IllegalStateException("The Stage 02 damage diagnostic rejects self targets.");
+                NPCEntity npc = store.getComponent(target, NPCEntity.getComponentType());
+                if (npc == null)
+                    throw new IllegalStateException("The aimed entity is not a controlled non-player damage target.");
+                EntityStatMap targetStats = store.getComponent(target, EntityStatMap.getComponentType());
+                if (targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
+                        || targetStats.get(DefaultEntityStatTypes.getHealth()).get()
+                        <= targetStats.get(DefaultEntityStatTypes.getHealth()).getMin())
+                    throw new IllegalStateException("The aimed NPC has no positive native Health to damage.");
                 double power = Double.parseDouble(context.get(basePower));
                 String modeValue = context.get(mode).toLowerCase(java.util.Locale.ROOT);
                 double chance = switch (modeValue) { case "never" -> 0.0; case "force" -> 1.0; case "seeded" -> 0.5;
@@ -343,11 +455,12 @@ public final class RpgCommand extends AbstractCommandCollection {
                         Map.of("modifierFactor", result.modifierFactor(), "preCritDamage", result.preCritDamage()));
                 trace.emit(playerRef.getUuid(), RpgTraceEventType.CRIT_ROLL, ids,
                         Map.of("chance", chance, "critical", result.critical(), "multiplier", derived.criticalMultiplier()));
-                new HytaleDamageAdapter().apply(ref, store, ref, DamageCause.COMMAND,
+                new HytaleDamageAdapter().apply(target, store, ref, DamageCause.COMMAND,
                         new HytaleDamageMetadata(playerRef.getUuid(), root, root + "-1", correlation,
                                 result.preMitigationDamage(), Double.NaN), result);
-                context.sendMessage(Message.raw("Submitted " + result.preMitigationDamage() + " pre-mitigation damage; critical="
-                        + result.critical() + ". Inspect automatic trace for native result."));
+                context.sendMessage(Message.raw("Submitted " + result.preMitigationDamage() + " pre-mitigation damage to NPC "
+                        + npc.getRoleName() + "; critical=" + result.critical()
+                        + ". Inspect automatic trace for native Health loss."));
             } catch (RuntimeException error) { error(context, error); }
         }
     }
@@ -398,8 +511,8 @@ public final class RpgCommand extends AbstractCommandCollection {
         result.put("critChance", value.criticalChance()); result.put("cooldownRecovery", value.cooldownRecovery());
         return result;
     }
-    private static String formatStats(DerivedStats d, EntityStatMap stats) {
-        StringBuilder out = new StringBuilder("RPG Stage 02 stats (balance rpg.combat-kernel.r010):");
+    private static String formatStats(DerivedStats d, EntityStatMap stats, String balanceProfile) {
+        StringBuilder out = new StringBuilder("RPG Stage 02 stats (balance ").append(balanceProfile).append("):");
         for (RpgAttribute attribute : RpgAttribute.values()) out.append("\n").append(attribute).append(" raw=")
                 .append(d.rawAttributes().get(attribute)).append(" effective=").append(f2(d.effective(attribute)));
         out.append("\nHealth=").append(nativeStat(stats, DefaultEntityStatTypes.getHealth()));

@@ -53,10 +53,10 @@ public final class Phase00Plugin extends JavaPlugin {
         var repository = new FileRpgPlayerStateRepository(getDataDirectory().resolve("players"));
         var compatibility = new CompatibilityService();
         var graphService = new RpgLinkGraphService(catalog, compatibility);
-        var compiler = new LinkCompiler(catalog, graphService, compatibility);
+        combatKernel = RpgCombatKernel.createProduction();
+        var compiler = new LinkCompiler(catalog, graphService, compatibility, combatKernel.balance());
         loadouts = new RpgLoadoutService(catalog, repository, graphService, compiler,
                 new OwnershipEntitlementPolicy(configuration.developmentEntitlements()), skillTrace);
-        combatKernel = RpgCombatKernel.createProduction();
         CombatTrace combatTrace = new CombatTrace(skillTrace);
         getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace));
