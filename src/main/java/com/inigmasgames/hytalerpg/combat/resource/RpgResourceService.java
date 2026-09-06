@@ -50,6 +50,15 @@ public final class RpgResourceService {
         pending.remove(token.tokenId());
         return true;
     }
+    /** Explicit activation-transaction rollback. Never used for gameplay cancellation after dispatch. */
+    public synchronized boolean refundCommittedCost(CostToken token, NativeResourcePort resources) {
+        PendingCost hold = require(token);
+        if (!hold.committed) return false;
+        if (hold.cost.type() != ResourceType.NONE)
+            addCapped(hold.cost.type(), hold.cost.amount(), resources.maximum(hold.cost.type()), resources);
+        pending.remove(token.tokenId());
+        return true;
+    }
     public synchronized void finish(CostToken token) { pending.remove(token.tokenId()); }
 
     public double regenerate(UUID actor, ResourceType type, double seconds, NativeResourcePort resources) {

@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "quick_slash", "family": "STRIKE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["SWORD", "LONGSWORD", "DAGGER"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 5.0, "cooldownSeconds": 0.8, "windupSeconds": 0.0,
+      "basePowerSource": "WEAPON", "innateBasePower": 0.0, "scaling": "WEAPON_CLASS",
+      "strike": {"geometry":"ARC", "range":2.6, "angleDegrees":120.0, "lineHalfWidth":0.0,
+        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":16, "coefficient":0.85,
+        "statusId":"", "statusSeconds":0.0}
+    },
+    {
+      "skillId": "heavy_swing", "family": "STRIKE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["LONGSWORD", "MACE", "BATTLEAXE"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 9.0, "cooldownSeconds": 1.8, "windupSeconds": 0.45,
+      "basePowerSource": "WEAPON", "innateBasePower": 0.0, "scaling": "HEAVY",
+      "strike": {"geometry":"ARC", "range":3.0, "angleDegrees":140.0, "lineHalfWidth":0.0,
+        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":16, "coefficient":1.45,
+        "statusId":"", "statusSeconds":0.0}
+    },
+    {
+      "skillId": "shield_bash", "family": "STRIKE", "secondaryFamilies": [],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": ["SHIELD"],
+      "resourceType": "STAMINA", "resourceCost": 8.0, "cooldownSeconds": 5.0, "windupSeconds": 0.0,
+      "basePowerSource": "OFFHAND_WEAPON", "innateBasePower": 0.0, "scaling": "HEAVY",
+      "strike": {"geometry":"ASSIST_CONE", "range":2.2, "angleDegrees":60.0, "lineHalfWidth":0.0,
+        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":1, "coefficient":0.70,
+        "statusId":"STAGGER", "statusSeconds":0.6}
+    },
+    {
+      "skillId": "quickstep", "family": "MOVEMENT", "secondaryFamilies": [],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 8.0, "cooldownSeconds": 2.5, "windupSeconds": 0.0,
+      "basePowerSource": "NONE", "innateBasePower": 0.0, "scaling": "NONE",
+      "movement": {"kind":"DASH", "maxDistance":4.0, "minimumDurationSeconds":0.22,
+        "maximumDurationSeconds":0.22, "apexHeight":0.0, "landingRadius":0.0}
+    },
+    {
+      "skillId": "pounce", "family": "MOVEMENT", "secondaryFamilies": ["STRIKE"],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 8.0, "cooldownSeconds": 5.0, "windupSeconds": 0.0,
+      "basePowerSource": "INNATE", "innateBasePower": 20.0, "scaling": "LIGHT",
+      "strike": {"geometry":"RADIUS", "range":1.5, "angleDegrees":360.0, "lineHalfWidth":0.0,
+        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":16, "coefficient":1.05,
+        "statusId":"", "statusSeconds":0.0},
+      "movement": {"kind":"LEAP", "maxDistance":8.0, "minimumDurationSeconds":0.25,
+        "maximumDurationSeconds":0.8, "apexHeight":1.2, "landingRadius":1.5}
+    },
+    {
+      "skillId": "riposte", "family": "REACTION", "secondaryFamilies": ["STRIKE"],
+      "allowedMainHandKinds": ["SWORD", "LONGSWORD"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 8.0, "cooldownSeconds": 7.0, "windupSeconds": 0.0,
+      "basePowerSource": "WEAPON", "innateBasePower": 0.0, "scaling": "LIGHT",
+      "strike": {"geometry":"ASSIST_CONE", "range":3.0, "angleDegrees":120.0, "lineHalfWidth":0.0,
+        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":1, "coefficient":1.35,
+        "statusId":"", "statusSeconds":0.0},
+      "reaction": {"windowSeconds":0.8, "qualifyingSignals":["HYTALE_DAMAGE_BLOCKED"]}
+    }
+  ]
+}

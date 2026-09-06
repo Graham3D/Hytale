@@ -16,6 +16,12 @@ public final class StatusService {
     public StatusService(CombatBalanceProfile profile, LongSupplier nanoTime) { this.profile = profile; this.nanoTime = nanoTime; }
 
     public synchronized Result apply(UUID target, RpgStatusType type, ControlProfile control) {
+        return apply(target, type, control, Double.NaN);
+    }
+
+    /** Applies an authored runtime duration while retaining the canonical control-resistance policy. */
+    public synchronized Result apply(UUID target, RpgStatusType type, ControlProfile control,
+                                     double authoredDurationSeconds) {
         expire(target);
         if (type == RpgStatusType.CHILL) return applyChill(target, control);
         if (isHardControl(type) && control.blocksHardControl()) {
@@ -32,6 +38,8 @@ public final class StatusService {
             case ROOT, FEAR, TAUNT, STAGGER -> profile.frozenDurationSeconds;
             case CHILL -> profile.chillDurationSeconds;
         };
+        if (Double.isFinite(authoredDurationSeconds) && authoredDurationSeconds > 0.0)
+            duration = authoredDurationSeconds;
         return applySimple(target, type, duration, 1, true, "applied");
     }
     private Result applyChill(UUID target, ControlProfile control) {

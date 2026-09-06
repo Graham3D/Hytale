@@ -5,8 +5,6 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.HudManager;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.inigmasgames.hytalerpg.input.HytaleAbilitySkillInputAdapter;
-import com.inigmasgames.hytalerpg.input.RpgSkillActivationService;
 import com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService;
 import com.inigmasgames.hytalerpg.ui.HytaleResourceViewAdapter;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
@@ -19,21 +17,18 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Owns production HUD lifecycle, diff refresh, input dispatch, and exact native visibility restoration. */
+/** Owns production HUD lifecycle, diff refresh, and exact native visibility restoration. */
 public final class RpgHudCoordinator {
     private static final long POLL_NANOS = 250_000_000L;
     private static final long RATE_TRACE_NANOS = 5_000_000_000L;
     private final RpgUiProjectionService projection;
     private final HytaleResourceViewAdapter resources = new HytaleResourceViewAdapter();
     private final RpgUiTraceService trace;
-    private final HytaleAbilitySkillInputAdapter inputs;
-    private final RpgSkillActivationService activations;
     private final Map<UUID, Session> sessions = new ConcurrentHashMap<>();
     private final Map<UUID, XpView> xpFixtures = new ConcurrentHashMap<>();
 
-    public RpgHudCoordinator(RpgUiProjectionService projection, RpgUiTraceService trace,
-                             HytaleAbilitySkillInputAdapter inputs, RpgSkillActivationService activations) {
-        this.projection = projection; this.trace = trace; this.inputs = inputs; this.activations = activations;
+    public RpgHudCoordinator(RpgUiProjectionService projection, RpgUiTraceService trace) {
+        this.projection = projection; this.trace = trace;
     }
 
     public void install(PlayerRef playerRef, Player player, EntityStatMap stats) {
@@ -64,7 +59,6 @@ public final class RpgHudCoordinator {
     }
 
     public void tick(PlayerRef playerRef, EntityStatMap stats) {
-        inputs.drain(request -> activations.request(request), 32);
         Session session = sessions.get(playerRef.getUuid());
         if (session == null) return;
         long now = System.nanoTime();
@@ -109,7 +103,6 @@ public final class RpgHudCoordinator {
 
     public void teardown(UUID player, String reason) {
         Session session = sessions.remove(player);
-        inputs.clear(player);
         xpFixtures.remove(player);
         if (session == null) return;
         RuntimeException failure = null;

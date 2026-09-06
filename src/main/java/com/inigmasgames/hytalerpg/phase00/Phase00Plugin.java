@@ -5,6 +5,7 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent
 import com.hypixel.hytale.server.core.event.events.player.PlayerMouseMotionEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
+import com.hypixel.hytale.server.core.event.events.player.DrainPlayerFromWorldEvent;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher;
@@ -31,12 +32,20 @@ import java.util.EnumMap;
 import java.util.UUID;
 import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
 import com.inigmasgames.hytalerpg.input.HytaleAbilitySkillInputAdapter;
-import com.inigmasgames.hytalerpg.input.RpgSkillActivationService;
 import com.inigmasgames.hytalerpg.input.CommandOnlyRpgUiOpenInputAdapter;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.ui.hud.RpgHudCoordinator;
 import com.inigmasgames.hytalerpg.ui.hud.RpgHudTickSystem;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
+import com.inigmasgames.hytalerpg.execution.SkillExecutionService;
+import com.inigmasgames.hytalerpg.execution.SkillExecutorRegistry;
+import com.inigmasgames.hytalerpg.execution.SkillInstanceLifecycle;
+import com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles;
+import com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem;
+import com.inigmasgames.hytalerpg.execution.reaction.ReactionWindowService;
+import com.inigmasgames.hytalerpg.vfx.HtDevLibVfxAdapter;
+import com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -50,6 +59,7 @@ public final class Phase00Plugin extends JavaPlugin {
     private RpgUiTraceService uiTrace;
     private RpgHudCoordinator rpgHud;
     private HytaleAbilitySkillInputAdapter abilityInputs;
+    private HytaleSkillExecutionSystem skillExecutionSystem;
 
     public Phase00Plugin(@Nonnull JavaPluginInit init) {
         super(init);
@@ -75,19 +85,28 @@ public final class Phase00Plugin extends JavaPlugin {
         var uiProjection = new RpgUiProjectionService(catalog, loadouts, combatKernel.derivedStats(), combatKernel.cooldowns());
         var allocation = new AttributeAllocationService(loadouts);
         abilityInputs = new HytaleAbilitySkillInputAdapter();
-        var activations = new RpgSkillActivationService(loadouts, skillTrace);
-        rpgHud = new RpgHudCoordinator(uiProjection, uiTrace, abilityInputs, activations);
+        var stage04Profiles = Stage04SkillProfiles.loadCanonical(catalog);
+        var reactions = new ReactionWindowService(System::nanoTime);
+        var executions = new SkillExecutionService(loadouts, stage04Profiles, combatKernel,
+                SkillExecutorRegistry.stage04(), new SkillInstanceLifecycle(), skillTrace);
+        var vfx = new LinkTreeVfxService(new HtDevLibVfxAdapter(), Map.of());
+        skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
+                combatTrace, reactions, vfx);
+        rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
                 uiProjection, allocation, uiTrace, rpgHud));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Filter(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Inspect(combatTrace, combatKernel.hostileCombat()));
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.ReactionObserver(skillExecutionSystem));
         getEntityStoreRegistry().registerSystem(new HomeRestorationTickSystem(combatKernel.homeRestoration(),
                 combatKernel.hostileCombat(), combatKernel.resources()));
         getEntityStoreRegistry().registerSystem(new RpgHudTickSystem(rpgHud));
-        LOGGER.atInfo().log("RPG_STAGE03_READY revision=%s skills=%d passives=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability1..Ability4 uiOpen=%s entitlementMode=%s",
+        getEntityStoreRegistry().registerSystem(skillExecutionSystem);
+        LOGGER.atInfo().log("RPG_STAGE04_READY revision=%s skills=%d passives=%d pilots=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability1..Ability4 uiOpen=%s entitlementMode=%s",
                 BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
+                stage04Profiles.all().size(),
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,
                 combatKernel.balance().profileId, skillTrace.path(), uiTrace.path(),
                 new CommandOnlyRpgUiOpenInputAdapter().availability(),
@@ -105,6 +124,8 @@ public final class Phase00Plugin extends JavaPlugin {
             var playerRef = ref.getStore().getComponent(ref,
                     com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
             if (playerRef != null) {
+                abilityInputs.clear(playerRef.getUuid());
+                skillExecutionSystem.cancel(playerRef.getUuid(), "PLAYER_READY_RESET");
                 var view = loadouts.getLoadout(playerRef.getUuid());
                 EntityStatMap statMap = ref.getStore().getComponent(ref, EntityStatMap.getComponentType());
                 if (statMap != null) {
@@ -129,7 +150,17 @@ public final class Phase00Plugin extends JavaPlugin {
             catch (RuntimeException error) {
                 LOGGER.atWarning().withCause(error).log("RPG HUD disconnect teardown failed player=%s", player);
             }
+            abilityInputs.clear(player);
+            skillExecutionSystem.cancel(player, "PLAYER_DISCONNECT");
             combatKernel.cooldowns().clear(player);
+        });
+        getEventRegistry().registerGlobal(DrainPlayerFromWorldEvent.class, event -> {
+            var playerRef = event.getHolder().getComponent(
+                    com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
+            if (playerRef != null) {
+                abilityInputs.clear(playerRef.getUuid());
+                skillExecutionSystem.cancel(playerRef.getUuid(), "WORLD_DRAIN");
+            }
         });
         getCommandRegistry().registerCommand(new CharacterProbeCommand());
         getCommandRegistry().registerCommand(new LinkCanvasProbeCommand());
@@ -150,6 +181,7 @@ public final class Phase00Plugin extends JavaPlugin {
         }
         MouseProbeService.clear();
         if (rpgHud != null) { rpgHud.close(); rpgHud = null; }
+        skillExecutionSystem = null;
         abilityInputs = null;
         if (uiTrace != null) { uiTrace.close(); uiTrace = null; }
         if (skillTrace != null) { skillTrace.close(); skillTrace = null; }

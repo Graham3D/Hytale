@@ -4,6 +4,8 @@ import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.Packet;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains;
+import com.hypixel.hytale.protocol.packets.player.ClientMovement;
+import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.inigmasgames.hytalerpg.domain.SkillSlot;
 
@@ -16,8 +18,13 @@ import java.util.function.Consumer;
 public final class HytaleAbilitySkillInputAdapter {
     private final ConcurrentLinkedQueue<Request> requests = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<Key, Long> seen = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, Vec3> desiredMovement = new ConcurrentHashMap<>();
 
     public void observe(PlayerRef player, Packet packet) {
+        if (packet instanceof ClientMovement movement && movement.wishMovement != null) {
+            desiredMovement.put(player.getUuid(), new Vec3(movement.wishMovement.x, 0.0, movement.wishMovement.z));
+            return;
+        }
         if (!(packet instanceof SyncInteractionChains chains) || chains.updates == null) return;
         for (SyncInteractionChain chain : chains.updates) observe(player.getUuid(), chain);
     }
@@ -31,7 +38,7 @@ public final class HytaleAbilitySkillInputAdapter {
             seen.entrySet().removeIf(entry -> now - entry.getValue() > 10_000_000_000L);
             if (chain.initial && seen.putIfAbsent(key, now) == null)
                 requests.add(new Request(player, slot, chain.interactionType.name(),
-                    chain.chainId, UUID.randomUUID().toString()));
+                    chain.chainId, UUID.randomUUID().toString(), desiredMovement.getOrDefault(player, new Vec3(0, 0, 0))));
             if (!chain.initial && chain.state != null && switch (chain.state) {
                 case Finished, Skip, ItemChanged, Failed -> true;
                 default -> false;
@@ -51,9 +58,22 @@ public final class HytaleAbilitySkillInputAdapter {
         return count;
     }
 
+    /** Drains only this player's requests so entity tick order cannot dispatch on the wrong actor ref. */
+    public int drainFor(UUID player, Consumer<Request> consumer, int limit) {
+        int accepted = 0, scanned = 0, initial = requests.size();
+        while (accepted < limit && scanned++ < initial) {
+            Request request = requests.poll();
+            if (request == null) break;
+            if (request.player().equals(player)) { consumer.accept(request); accepted++; }
+            else requests.add(request);
+        }
+        return accepted;
+    }
+
     public void clear(UUID player) {
         requests.removeIf(request -> request.player().equals(player));
         seen.keySet().removeIf(key -> key.player().equals(player));
+        desiredMovement.remove(player);
     }
 
     public static SkillSlot slot(InteractionType type) {
@@ -67,6 +87,11 @@ public final class HytaleAbilitySkillInputAdapter {
         };
     }
 
-    public record Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId) { }
+    public record Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId,
+                          Vec3 desiredMovement) {
+        public Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId) {
+            this(player, slot, action, chainId, correlationId, new Vec3(0, 0, 0));
+        }
+    }
     private record Key(UUID player, int chainId, InteractionType action) { }
 }

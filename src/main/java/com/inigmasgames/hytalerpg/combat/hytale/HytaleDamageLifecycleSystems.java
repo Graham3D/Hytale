@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.inigmasgames.hytalerpg.combat.resource.HostileCombatTracker;
+import com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem;
 
 /** Evidence hooks around Hytale's native Gather -> Filter -> Apply -> Inspect sequence. */
 public final class HytaleDamageLifecycleSystems {
@@ -95,6 +96,28 @@ public final class HytaleDamageLifecycleSystems {
                             "actualHealthLoss", Double.isFinite(after) && Double.isFinite(metadata.targetHealthBefore())
                                     ? Math.max(0.0, metadata.targetHealthBefore() - after) : -1.0,
                             "cancelled", damage.isCancelled()));
+        }
+    }
+
+    /** Observes Hytale's authenticated block result after native stamina handling. */
+    public static final class ReactionObserver extends DamageEventSystem {
+        private final HytaleSkillExecutionSystem skills;
+        public ReactionObserver(HytaleSkillExecutionSystem skills) { this.skills = skills; }
+        @Override public SystemGroup<EntityStore> getGroup() { return DamageModule.get().getInspectDamageGroup(); }
+        @Override public Query<EntityStore> getQuery() { return PlayerRef.getComponentType(); }
+        @Override public Set<Dependency<EntityStore>> getDependencies() {
+            return Set.of(new SystemDependency<>(Order.AFTER, DamageSystems.DamageStamina.class));
+        }
+        @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
+                                     CommandBuffer<EntityStore> buffer, Damage damage) {
+            PlayerRef defender = chunk.getComponent(index, PlayerRef.getComponentType());
+            if (defender != null && !damage.isCancelled() && damage.getAmount() > 0.0f)
+                skills.onIncomingDamage(defender.getUuid());
+            if (!Boolean.TRUE.equals(damage.getIfPresentMetaObject(Damage.BLOCKED))
+                    || !(damage.getSource() instanceof Damage.EntitySource source)
+                    || source.getRef() == chunk.getReferenceTo(index)) return;
+            String eventId = Integer.toHexString(System.identityHashCode(damage)) + ':' + index;
+            skills.onNativeBlocked(chunk.getReferenceTo(index), source.getRef(), store, eventId);
         }
     }
 }

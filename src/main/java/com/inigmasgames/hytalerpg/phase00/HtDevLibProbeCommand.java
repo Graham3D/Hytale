@@ -9,8 +9,10 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import org.hytaledevlib.lib.ParticleHelper;
 import org.hytaledevlib.lib.StatsHelper;
+import com.inigmasgames.hytalerpg.vfx.HtDevLibVfxAdapter;
+import com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService;
+import java.util.Map;
 
 final class HtDevLibProbeCommand extends PlayerProbeCommand {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -27,7 +29,8 @@ final class HtDevLibProbeCommand extends PlayerProbeCommand {
             float health = StatsHelper.getHealth(player);
             float mana = StatsHelper.getMana(player);
             float stamina = StatsHelper.getStamina(player);
-            ParticleHelper.spawnParticleAtEntity(world, VERIFIED_EFFECT, player);
+            new LinkTreeVfxService(new HtDevLibVfxAdapter(), Map.of("rpg.vfx.probe.heal", VERIFIED_EFFECT))
+                    .present(world, player, "rpg.vfx.probe.heal");
             String message = "PHASE00_HTDEVLIB_PASS revision=" + BuildIdentity.REVISION
                     + " effect=" + VERIFIED_EFFECT + " stats=" + health + ',' + mana + ',' + stamina;
             LOGGER.atInfo().log("%s", message);

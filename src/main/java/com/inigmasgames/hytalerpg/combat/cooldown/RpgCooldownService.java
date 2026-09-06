@@ -20,11 +20,16 @@ public final class RpgCooldownService {
                                                   double durationFactor, double wisdomRecovery,
                                                   CompiledSkillPlan.KernelModifiers modifiers) {
         if (!canActivate(actor, skillId)) throw new IllegalStateException("Skill is already on cooldown");
+        Calculation calculation = calculate(baseSeconds, durationFactor, wisdomRecovery, modifiers);
+        endsAtNanos.put(new Key(actor, skillId), nanoTime.getAsLong() + Math.round(calculation.finalSeconds * 1_000_000_000.0));
+        return calculation;
+    }
+    public Calculation calculate(double baseSeconds, double durationFactor, double wisdomRecovery,
+                                 CompiledSkillPlan.KernelModifiers modifiers) {
         if (baseSeconds < 0.0 || durationFactor < 0.0) throw new IllegalArgumentException("Cooldown values cannot be negative");
         double passiveRecovery = modifiers == null ? 0.0 : modifiers.cooldownRecoveryBonus();
         double totalRecovery = clamp(wisdomRecovery + passiveRecovery, 0.0, profile.cooldownRecoveryCap);
         double seconds = Math.max(profile.minimumCooldownSeconds, baseSeconds * durationFactor / (1.0 + totalRecovery));
-        endsAtNanos.put(new Key(actor, skillId), nanoTime.getAsLong() + Math.round(seconds * 1_000_000_000.0));
         return new Calculation(baseSeconds, durationFactor, wisdomRecovery, passiveRecovery, totalRecovery, seconds);
     }
     public synchronized double remaining(UUID actor, String skillId) {
