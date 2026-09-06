@@ -37,7 +37,7 @@ try {
     $result = [pscustomobject]@{
         verifiedAtUtc = [DateTime]::UtcNow.ToString('o')
         targetHytaleVersion = '0.7.0-pre.1'
-        rpgRevision = 'R005'
+        rpgRevision = 'R006'
         branch = (& git branch --show-current).Trim()
         commit = (& git rev-parse HEAD).Trim()
         workingTreeDirty = [bool](& git status --porcelain)

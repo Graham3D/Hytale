@@ -81,8 +81,8 @@ public final class HytaleCustomUiBackend {
         String selector = nodeSelectors.get(nodeId);
         if (node != null && selector != null) {
             CanvasPoint screen = renderer.nodeScreenPoint(canvas, node);
-            commands.set(selector + ".Anchor", Value.of(anchor(screen, canvas.definition().nodeType(node.type()).width(),
-                    canvas.definition().nodeType(node.type()).height())));
+            commands.setObject(selector + ".Anchor", anchor(screen, canvas.definition().nodeType(node.type()).width(),
+                    canvas.definition().nodeType(node.type()).height()));
         }
         for (CanvasEdge edge : canvas.edges()) {
             if (edge.sourceNodeId().equals(nodeId) || edge.targetNodeId().equals(nodeId)) updateEdge(commands, edge);
@@ -99,7 +99,7 @@ public final class HytaleCustomUiBackend {
             String selector = nodeSelectors.get(node.nodeId());
             if (selector == null) continue;
             NodeDefinition type = canvas.definition().nodeType(node.type());
-            commands.set(selector + ".Anchor", Value.of(anchor(renderer.nodeScreenPoint(canvas, node), type.width(), type.height())));
+            commands.setObject(selector + ".Anchor", anchor(renderer.nodeScreenPoint(canvas, node), type.width(), type.height()));
         }
         for (CanvasEdge edge : canvas.edges()) updateEdge(commands, edge);
         page.flush(commands);
@@ -114,7 +114,7 @@ public final class HytaleCustomUiBackend {
         for (int i = 0; i < 16; i++) {
             Anchor value = i < segments.size() ? segmentAnchor(segments.get(i), 3)
                     : anchor(CanvasPoint.of(-100, -100), 2, 2);
-            commands.set("#CanvasPreview" + i + ".Anchor", Value.of(value));
+            commands.setObject("#CanvasPreview" + i + ".Anchor", value);
         }
         commands.set("#CanvasStatus.TextSpans", Message.raw(valid ? "Connection target allowed" : "Connection preview — target required/invalid"));
         page.flush(commands);
@@ -125,7 +125,7 @@ public final class HytaleCustomUiBackend {
         previewSource = null; previewTarget = null;
         if (page == null) return;
         UICommandBuilder commands = new UICommandBuilder();
-        for (int i = 0; i < 16; i++) commands.set("#CanvasPreview" + i + ".Anchor", Value.of(anchor(CanvasPoint.of(-100, -100), 2, 2)));
+        for (int i = 0; i < 16; i++) commands.setObject("#CanvasPreview" + i + ".Anchor", anchor(CanvasPoint.of(-100, -100), 2, 2));
         commands.set("#CanvasStatus.TextSpans", Message.raw(status));
         page.flush(commands);
         session.recordUiUpdate(count(commands));
@@ -151,7 +151,7 @@ public final class HytaleCustomUiBackend {
                 String selector = "#CanvasContents[" + childIndex++ + "]";
                 selectors.add(selector);
                 commands.append("#CanvasContents", "CanvasEdge.ui");
-                commands.set(selector + ".Anchor", Value.of(segmentAnchor(segments.get(i), edge.style().thickness())));
+                commands.setObject(selector + ".Anchor", segmentAnchor(segments.get(i), edge.style().thickness()));
                 commands.setObject(selector + ".Background", solid(safeColor(edge.style().color())));
             }
             edgeSelectors.put(edge.edgeId(), selectors);
@@ -168,19 +168,19 @@ public final class HytaleCustomUiBackend {
             NodeVisual visual = type.renderer().render(new NodeRenderContext(node, state));
             CanvasPoint screen = renderer.nodeScreenPoint(canvas, node);
             commands.append("#CanvasContents", "CanvasNode.ui");
-            commands.set(selector + ".Anchor", Value.of(anchor(screen, type.width(), type.height())));
+            commands.setObject(selector + ".Anchor", anchor(screen, type.width(), type.height()));
             commands.setObject(selector + ".Background", solid(safeColor(visual.backgroundColor())));
-            commands.set(selector + " #Title.Anchor", Value.of(titleAnchor(type.width())));
+            commands.setObject(selector + " #Title.Anchor", titleAnchor(type.width()));
             commands.set(selector + " #Title.TextSpans", Message.raw(text(visual.title())));
-            commands.set(selector + " #Subtitle.Anchor", Value.of(subtitleAnchor(type.width())));
+            commands.setObject(selector + " #Subtitle.Anchor", subtitleAnchor(type.width()));
             commands.set(selector + " #Subtitle.TextSpans", Message.raw(text(visual.subtitle())));
             int portIndex = 0;
             for (CanvasPort port : type.ports().values()) {
                 String color = switch (port.direction()) { case INPUT -> "#6cb9ff"; case OUTPUT -> "#efb65d"; case BIDIRECTIONAL -> "#bf83ff"; };
                 String portSelector = selector + " #Ports[" + portIndex++ + "]";
                 commands.append(selector + " #Ports", "CanvasPort.ui");
-                commands.set(portSelector + ".Anchor", Value.of(anchor(
-                        CanvasPoint.of(port.anchorPosition().x() - 7, port.anchorPosition().y() - 7), 14, 14)));
+                commands.setObject(portSelector + ".Anchor", anchor(
+                        CanvasPoint.of(port.anchorPosition().x() - 7, port.anchorPosition().y() - 7), 14, 14));
                 commands.setObject(portSelector + ".Background", solid(color));
             }
         }
@@ -191,7 +191,7 @@ public final class HytaleCustomUiBackend {
         if (selectors == null) return;
         List<EdgeSegment> segments = renderer.edgeSegments(session.canvas(), edge);
         for (int i = 0; i < Math.min(selectors.size(), segments.size()); i++) {
-            commands.set(selectors.get(i) + ".Anchor", Value.of(segmentAnchor(segments.get(i), edge.style().thickness())));
+            commands.setObject(selectors.get(i) + ".Anchor", segmentAnchor(segments.get(i), edge.style().thickness()));
         }
     }
 

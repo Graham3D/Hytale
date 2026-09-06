@@ -7,7 +7,7 @@ Group {
     Background: (Color: #0a1019f2);
     Padding: (Full: 20);
     LayoutMode: Top;
-    Label { Text: "R005 — LOW-LEVEL MOUSE FEASIBILITY"; Style: (FontSize: 25, TextColor: #f2d488, Alignment: Center); Anchor: (Height: 42); }
+    Label { Text: "R006 — LOW-LEVEL MOUSE FEASIBILITY"; Style: (FontSize: 25, TextColor: #f2d488, Alignment: Center); Anchor: (Height: 42); }
     Label { Text: "Hold left while moving to drag the node. Hold middle while moving to pan the fixed-zoom canvas."; Style: (FontSize: 15, TextColor: #c2cfdd, Alignment: Center); Anchor: (Height: 32); }
     Group #Canvas {
       Anchor: (Width: 1000, Height: 430);

@@ -2,7 +2,7 @@
 param([string]$SaveModsDirectory = "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\mods")
 
 $ErrorActionPreference = 'Stop'
-$root = (Resolve-Path "$PSScriptRoot\..").Path; $evidence = Join-Path $root 'evidence\canvas-ui\R005'
+$root = (Resolve-Path "$PSScriptRoot\..").Path; $evidence = Join-Path $root 'evidence\canvas-ui\R006'
 $library = Join-Path $root 'canvas-ui\build\libs\CanvasUI-0.1.0.jar'
 if (-not (Test-Path -LiteralPath $SaveModsDirectory -PathType Container)) { throw "Save mods directory missing: $SaveModsDirectory" }
 if (-not (Test-Path -LiteralPath $library)) { throw 'Build CanvasUI first.' }
@@ -13,7 +13,7 @@ $legacyDemoTarget = Join-Path $SaveModsDirectory 'CanvasUI-Demo-0.1.0.jar'
 if (Test-Path -LiteralPath $legacyDemoTarget) { Remove-Item -LiteralPath $legacyDemoTarget -Force }
 New-Item -ItemType Directory -Force -Path $evidence | Out-Null
 $result = [ordered]@{
-    installedAtUtc = [DateTime]::UtcNow.ToString('o'); revision = 'R005'; save = 'pre-release/RPG'
+    installedAtUtc = [DateTime]::UtcNow.ToString('o'); revision = 'R006'; save = 'pre-release/RPG'
     commit = (& git -C $root rev-parse HEAD).Trim()
     library = [ordered]@{ path = $libraryTarget; sha256 = (Get-FileHash $libraryTarget -Algorithm SHA256).Hash }
     demoBundledInLibraryJar = $true
