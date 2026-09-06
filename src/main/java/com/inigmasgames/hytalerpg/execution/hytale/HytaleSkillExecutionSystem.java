@@ -23,6 +23,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.Invulnerable;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
+import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -74,6 +75,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final SkillHitLedger hits = new SkillHitLedger();
     private final MovementPlanner movementPlanner = new MovementPlanner();
     private final LinkTreeVfxService vfx;
+    private final HytaleBossBarTracker bosses;
     private final Map<UUID, Long> windupEnds = new HashMap<>();
     private final Map<UUID, Motion> motions = new HashMap<>();
     private final Map<UUID, Counter> counters = new HashMap<>();
@@ -81,9 +83,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
 
     public HytaleSkillExecutionSystem(HytaleAbilitySkillInputAdapter inputs, SkillExecutionService executions,
                                       RpgCombatKernel kernel, CombatTrace trace,
-                                      ReactionWindowService reactions, LinkTreeVfxService vfx) {
+                                      ReactionWindowService reactions, LinkTreeVfxService vfx,
+                                      HytaleBossBarTracker bosses) {
         this.inputs = inputs; this.executions = executions; this.kernel = kernel;
-        this.trace = trace; this.reactions = reactions; this.vfx = vfx;
+        this.trace = trace; this.reactions = reactions; this.vfx = vfx; this.bosses = bosses;
     }
 
     @Override public Query<EntityStore> getQuery() {
@@ -404,8 +407,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                         || npc.getRole() != null && npc.getRole().isInvulnerable();
                 EffectControllerComponent effects = store.getComponent(target, EffectControllerComponent.getComponentType());
                 protectedTarget |= effects != null && effects.isInvulnerable();
+                NetworkId networkId = store.getComponent(target, NetworkId.getComponentType());
+                UUID worldId = playerRef.getWorldUuid();
+                boolean boss = networkId != null && bosses.isBoss(worldId, networkId.getId());
                 result.add(new StrikeGeometryService.Candidate<>(id.toString(), target,
-                        vec(targetTransform.getPosition()), true, protectedTarget, false));
+                        vec(targetTransform.getPosition()), true, protectedTarget, boss));
             }
             return result;
         }

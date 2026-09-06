@@ -42,6 +42,7 @@ import com.inigmasgames.hytalerpg.execution.SkillExecutorRegistry;
 import com.inigmasgames.hytalerpg.execution.SkillInstanceLifecycle;
 import com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles;
 import com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem;
+import com.inigmasgames.hytalerpg.execution.hytale.HytaleBossBarTracker;
 import com.inigmasgames.hytalerpg.execution.reaction.ReactionWindowService;
 import com.inigmasgames.hytalerpg.vfx.HtDevLibVfxAdapter;
 import com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService;
@@ -53,6 +54,7 @@ import javax.annotation.Nonnull;
 public final class Phase00Plugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private PacketFilter inboundWatcher;
+    private PacketFilter outboundWatcher;
     private RpgSkillTraceService skillTrace;
     private RpgLoadoutService loadouts;
     private RpgCombatKernel combatKernel;
@@ -90,8 +92,9 @@ public final class Phase00Plugin extends JavaPlugin {
         var executions = new SkillExecutionService(loadouts, stage04Profiles, combatKernel,
                 SkillExecutorRegistry.stage04(), new SkillInstanceLifecycle(), skillTrace);
         var vfx = new LinkTreeVfxService(new HtDevLibVfxAdapter(), Map.of());
+        var bosses = new HytaleBossBarTracker();
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
-                combatTrace, reactions, vfx);
+                combatTrace, reactions, vfx, bosses);
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
                 uiProjection, allocation, uiTrace, rpgHud));
@@ -117,6 +120,7 @@ public final class Phase00Plugin extends JavaPlugin {
             abilityInputs.observe(playerRef, packet);
             MouseProbeService.observeRaw(playerRef, packet);
         });
+        outboundWatcher = PacketAdapters.registerOutbound((PlayerPacketWatcher) bosses::observe);
         getEventRegistry().registerGlobal(PlayerMouseButtonEvent.class, MouseProbeService::onButton);
         getEventRegistry().registerGlobal(PlayerMouseMotionEvent.class, MouseProbeService::onMotion);
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
@@ -151,6 +155,7 @@ public final class Phase00Plugin extends JavaPlugin {
                 LOGGER.atWarning().withCause(error).log("RPG HUD disconnect teardown failed player=%s", player);
             }
             abilityInputs.clear(player);
+            bosses.clear(player);
             skillExecutionSystem.cancel(player, "PLAYER_DISCONNECT");
             combatKernel.cooldowns().clear(player);
         });
@@ -159,6 +164,7 @@ public final class Phase00Plugin extends JavaPlugin {
                     com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
             if (playerRef != null) {
                 abilityInputs.clear(playerRef.getUuid());
+                bosses.clear(playerRef.getUuid());
                 skillExecutionSystem.cancel(playerRef.getUuid(), "WORLD_DRAIN");
             }
         });
@@ -178,6 +184,10 @@ public final class Phase00Plugin extends JavaPlugin {
         if (inboundWatcher != null) {
             PacketAdapters.deregisterInbound(inboundWatcher);
             inboundWatcher = null;
+        }
+        if (outboundWatcher != null) {
+            PacketAdapters.deregisterOutbound(outboundWatcher);
+            outboundWatcher = null;
         }
         MouseProbeService.clear();
         if (rpgHud != null) { rpgHud.close(); rpgHud = null; }

@@ -22,6 +22,7 @@ import com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import com.inigmasgames.hytalerpg.execution.movement.MovementPlanner;
 import com.inigmasgames.hytalerpg.execution.reaction.ReactionWindowService;
+import com.inigmasgames.hytalerpg.execution.hytale.HytaleBossBarTracker;
 import com.inigmasgames.hytalerpg.execution.strike.SkillHitLedger;
 import com.inigmasgames.hytalerpg.execution.strike.StrikeGeometryService;
 import com.inigmasgames.hytalerpg.execution.strike.StrikeRepeatSchedule;
@@ -210,6 +211,17 @@ class Stage04ExecutionTest {
         for (Stage04SkillProfile.Family family : Stage04SkillProfile.Family.values()) assertEquals(family,
                 registry.require(family).family());
         assertThrows(IllegalArgumentException.class, () -> new SkillExecutorRegistry(List.of(executors.getFirst(), executors.getFirst())));
+    }
+
+    @Test void bossClassificationUsesWorldScopedNativeBossBarIdentity() {
+        HytaleBossBarTracker tracker = new HytaleBossBarTracker();
+        UUID player = UUID.randomUUID(), world = UUID.randomUUID(), otherWorld = UUID.randomUUID();
+        tracker.observe(player, world, 71, false);
+        assertTrue(tracker.isBoss(world, 71));
+        assertFalse(tracker.isBoss(otherWorld, 71));
+        assertFalse(tracker.isBoss(world, 72));
+        tracker.observe(player, world, 71, true);
+        assertFalse(tracker.isBoss(world, 71));
     }
 
     private static Harness harness(String skill, double stamina, SkillExecutionPort.Item main,

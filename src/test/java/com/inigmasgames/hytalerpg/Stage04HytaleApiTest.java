@@ -13,6 +13,10 @@ import com.hypixel.hytale.server.core.modules.collision.CollisionModule;
 import com.hypixel.hytale.server.core.modules.collision.CollisionResult;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.protocol.packets.interface_.UpdateBossBar;
+import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
+import com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher;
+import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import org.joml.Vector3d;
@@ -45,5 +49,12 @@ class Stage04HytaleApiTest {
         assertNotNull(EntityEffect.class.getMethod("getAssetMap"));
         assertNotNull(EffectControllerComponent.class.getMethod("addEffect", Ref.class, EntityEffect.class,
                 float.class, OverlapBehavior.class, ComponentAccessor.class, Ref.class));
+    }
+
+    @Test void pinnedBuildExposesAuthoritativeWorldScopedBossIdentity() throws Exception {
+        assertNotNull(UpdateBossBar.class.getField("entityNetworkId"));
+        assertNotNull(UpdateBossBar.class.getField("hide"));
+        assertNotNull(NetworkId.class.getMethod("getId"));
+        assertNotNull(PacketAdapters.class.getMethod("registerOutbound", PlayerPacketWatcher.class));
     }
 }

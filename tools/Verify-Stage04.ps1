@@ -23,6 +23,7 @@ try {
         'com/inigmasgames/hytalerpg/execution/SkillExecutorRegistry.class',
         'com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.class',
         'com/inigmasgames/hytalerpg/execution/hytale/HytaleEquipmentAdapter.class',
+        'com/inigmasgames/hytalerpg/execution/hytale/HytaleBossBarTracker.class',
         'com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService.class',
         'com/inigmasgames/hytalerpg/execution/strike/StrikeRepeatSchedule.class',
         'com/inigmasgames/hytalerpg/execution/movement/MovementPlanner.class',
@@ -49,6 +50,9 @@ try {
     $effectAsset = (& javap -classpath $serverJar com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect 2>&1) -join "`n"
     $utility = (& javap -classpath $serverJar com.hypixel.hytale.server.core.inventory.ActiveSlotInventoryComponent 2>&1) -join "`n"
     $npc = (& javap -classpath $serverJar com.hypixel.hytale.server.npc.role.Role 2>&1) -join "`n"
+    $bossBar = (& javap -classpath $serverJar com.hypixel.hytale.protocol.packets.interface_.UpdateBossBar 2>&1) -join "`n"
+    $packetAdapters = (& javap -classpath $serverJar com.hypixel.hytale.server.core.io.adapter.PacketAdapters 2>&1) -join "`n"
+    $networkId = (& javap -classpath $serverJar com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId 2>&1) -join "`n"
     $assetEntries = @(& jar tf $assetsZip)
     $stunPath = 'Server/Entity/Effects/Status/Stun.json'
     $stunJson = if ($stunPath -in $assetEntries) { (& tar -xOf $assetsZip $stunPath 2>&1) -join "`n" } else { '' }
@@ -64,9 +68,12 @@ try {
         entityEffectAssetMap = [bool]($effectAsset -match '\bgetAssetMap\(')
         authoritativeOffhand = [bool]($utility -match '\bgetActiveItem\(')
         npcProtectionFlag = [bool]($npc -match '\bisInvulnerable\(')
+        nativeBossBarEntityIdentity = [bool]($bossBar -match '\bentityNetworkId;' -and $bossBar -match '\bhide;')
+        outboundBossBarObservation = [bool]($packetAdapters -match 'registerOutbound\(.+PlayerPacketWatcher')
+        networkIdLookup = [bool]($networkId -match '\bgetId\(')
         verifiedStunAsset = [bool]($stunJson -match '"DisableAll"\s*:\s*true')
         stunAssetPath = $stunPath
-        bossClassificationBoundary = 'No explicit public per-NPC boss flag found; no role-name heuristic is used. Stage 02 boss policy remains enforced when an authoritative caller supplies boss=true.'
+        bossClassification = 'World-scoped UpdateBossBar.entityNetworkId matched to the target NetworkId; hidden bars and player/world teardown remove the identity. No role-name heuristic.'
     }
     $api | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $evidenceDirectory 'api-audit.json') -Encoding utf8
 
