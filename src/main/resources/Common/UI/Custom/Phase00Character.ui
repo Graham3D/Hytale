@@ -1,0 +1,71 @@
+$Common = "Common.ui";
+
+Group {
+  LayoutMode: Center;
+
+  Group #Panel {
+    Anchor: (Width: 920, Height: 640);
+    Background: (Color: #101722ee);
+    Padding: (Full: 36);
+    LayoutMode: Top;
+
+    Label {
+      Text: "PHASE 00 — CHARACTER SCREEN PROBE";
+      Style: (FontSize: 30, TextColor: #f2d488, Alignment: Center);
+      Anchor: (Height: 54);
+    }
+
+    Label {
+      Text: "Standalone CustomUIPage lifecycle only — no RPG state is written.";
+      Style: (FontSize: 17, TextColor: #c2cfdd, Alignment: Center);
+      Anchor: (Height: 42);
+    }
+
+    Group {
+      Anchor: (Height: 420);
+      LayoutMode: Left;
+
+      Group {
+        Anchor: (Width: 265);
+        Background: (Color: #1e2b3bee);
+        Padding: (Full: 20);
+        LayoutMode: Top;
+        Label { Text: "IDENTITY"; Style: (FontSize: 21, TextColor: #78c6d0); Anchor: (Height: 44); }
+        Label { Text: "Name: runtime player"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
+        Label { Text: "Level: not implemented"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
+        Label { Text: "XP: not implemented"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
+      }
+
+      Group { Anchor: (Width: 22); }
+
+      Group {
+        Anchor: (Width: 265);
+        Background: (Color: #1e2b3bee);
+        Padding: (Full: 20);
+        LayoutMode: Top;
+        Label { Text: "NATIVE STATS"; Style: (FontSize: 21, TextColor: #78c6d0); Anchor: (Height: 44); }
+        Label { Text: "Use /rpgp00-stats"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
+        Label { Text: "Read-only evidence"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
+      }
+
+      Group { Anchor: (Width: 22); }
+
+      Group {
+        Anchor: (Width: 265);
+        Background: (Color: #1e2b3bee);
+        Padding: (Full: 20);
+        LayoutMode: Top;
+        Label { Text: "EQUIPMENT"; Style: (FontSize: 21, TextColor: #78c6d0); Anchor: (Height: 44); }
+        Label { Text: "Inventory docking:"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
+        Label { Text: "blocked / unproven"; Style: (FontSize: 16, TextColor: #ef9c7a); Anchor: (Height: 34); }
+      }
+    }
+
+    Label {
+      Text: "Press Escape to dismiss";
+      Style: (FontSize: 16, TextColor: #93a4b6, Alignment: Center);
+      Anchor: (Height: 36);
+    }
+  }
+}
+

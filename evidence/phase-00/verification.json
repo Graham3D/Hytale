@@ -1,0 +1,11 @@
+{
+  "verifiedAtUtc": "2026-09-06T02:47:01.8264162Z",
+  "buildSucceeded": true,
+  "jarPath": "G:\\My Drive\\Inigmas Games\\Hytale Taverns\\HytaleRPG\\build\\libs\\HytaleRPG-0.0.1.jar",
+  "jarSha256": "7F0D82D026D395473DA37164696B360F695D3293EB570BDE12A29CE2424D3370",
+  "requiredJarEntriesPresent": true,
+  "missingJarEntries": [],
+  "forbiddenGameplayMutationPatternsAbsent": true,
+  "forbiddenGameplayMutationPatternsFound": [],
+  "sourceJavaFiles": 12
+}

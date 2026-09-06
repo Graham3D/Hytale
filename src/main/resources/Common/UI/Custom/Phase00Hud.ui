@@ -1,0 +1,19 @@
+$Common = "Common.ui";
+
+Group {
+  Anchor: (Left: 26, Bottom: 135, Width: 470, Height: 155);
+  Background: (Color: #0b111bd9);
+  Padding: (Full: 14);
+  LayoutMode: Top;
+
+  Label {
+    Text: "PHASE 00 HUD PROBE";
+    Style: (FontSize: 17, TextColor: #f2d488);
+    Anchor: (Height: 28);
+  }
+  Label { Text: "HEALTH  [ read-only visual ]"; Style: (FontSize: 15, TextColor: #ef7777); Anchor: (Height: 28); }
+  Label { Text: "MANA    [ read-only visual ]"; Style: (FontSize: 15, TextColor: #67aef0); Anchor: (Height: 28); }
+  Label { Text: "STAMINA [ read-only visual ]"; Style: (FontSize: 15, TextColor: #7ad58a); Anchor: (Height: 28); }
+  Label { Text: "/rpgp00-hud-clear restores the exact native HUD snapshot"; Style: (FontSize: 13, TextColor: #b6c2cf); Anchor: (Height: 24); }
+}
+

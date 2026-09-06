@@ -1,0 +1,56 @@
+$Common = "Common.ui";
+
+Group {
+  LayoutMode: Center;
+
+  Group #Panel {
+    Anchor: (Width: 1100, Height: 720);
+    Background: (Color: #0d1420f2);
+    Padding: (Full: 28);
+    LayoutMode: Top;
+
+    Label {
+      Text: "PHASE 00 — LINK CANVAS FEASIBILITY";
+      Style: (FontSize: 28, TextColor: #f2d488, Alignment: Center);
+      Anchor: (Height: 46);
+    }
+
+    Label #EventStatus {
+      Text: "No server UI event received yet.";
+      Style: (FontSize: 16, TextColor: #9fc5cc, Alignment: Center);
+      Anchor: (Height: 36);
+    }
+
+    Group #Canvas {
+      Anchor: (Height: 500);
+      Background: (Color: #182333ee);
+
+      Group #SkillNode {
+        Anchor: (Left: 460, Top: 190, Width: 150, Height: 150);
+        Background: (Color: #385d73ff);
+        LayoutMode: Center;
+        Label {
+          Text: "SKILL\nNODE";
+          Style: (FontSize: 20, TextColor: #ffffff, Alignment: Center);
+        }
+      }
+
+      Label {
+        Anchor: (Left: 40, Top: 30, Width: 430, Height: 56);
+        Text: "Fixed canvas renders. Pointer drag/pan/capture are not claimed.";
+        Style: (FontSize: 16, TextColor: #ef9c7a);
+      }
+    }
+
+    Group {
+      Anchor: (Height: 64);
+      LayoutMode: Center;
+      Button #PanLeft { Text: "Event: Pan Left"; Anchor: (Width: 190, Height: 46); }
+      Group { Anchor: (Width: 16); }
+      Button #MoveNode { Text: "Event: Move Node"; Anchor: (Width: 210, Height: 46); }
+      Group { Anchor: (Width: 16); }
+      Button #PanRight { Text: "Event: Pan Right"; Anchor: (Width: 190, Height: 46); }
+    }
+  }
+}
+

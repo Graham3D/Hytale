@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+}
+
+group = maven_group
+version = project.version
+
+def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
+def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")
+def serverJar = file("${gamePackage}/Server/HytaleServer.jar")
+def assetsZip = file("${gamePackage}/Assets.zip")
+def htDevLibJar = file("${hytaleHome}/UserData/Saves/RPG/mods/HYTALEDEVLIB-0.5.0.jar")
+
+if (!serverJar.exists()) {
+    throw new GradleException("Hytale server jar not found: ${serverJar}")
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+}
+
+dependencies {
+    compileOnly files(serverJar)
+    compileOnly files(htDevLibJar)
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.processResources {
+    inputs.property('version', project.version)
+    filesMatching('manifest.json') {
+        expand(version: project.version)
+    }
+}
+
+tasks.register('printAuditClasspath') {
+    doLast {
+        println "serverJar=${serverJar}"
+        println "assetsZip=${assetsZip}"
+        println "htDevLibJar=${htDevLibJar}"
+    }
+}
+
