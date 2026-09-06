@@ -21,27 +21,83 @@ This report distinguishes three different kinds of claims:
 
 ## Current status
 
-- CanvasUI version: `0.1.0`, development revision `R007`.
+- CanvasUI version: `0.1.0`, development revision `R008`.
 - Hytale target: `0.7.0-pre.1`, revision
   `e8b4d191fc98a977bf5546a951a7b25473d323e3`.
 - Branch: `RPG`.
-- R007 implementation commit: `60cc3e8f610a9823e302d7d0114227f05c7d3c45`.
-- R007 CanvasUI JAR SHA-256:
-  `004FDD78666C045A05497DEA3E693BB4375E56C1DD59B3EF1CA1FFE51EDA698E`.
+- R008 implementation commit: `82cf726c393e54541b193503f758038b9515345e`.
+- R008 CanvasUI JAR SHA-256:
+  `218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6`.
 - Deployed mod set: `CanvasUI-0.1.0.jar`, `HYTALEDEVLIB-0.5.0.jar`, and
   `HytaleRPG-0.0.2.jar`; the demo remains bundled in CanvasUI.
 - Rendering gate: **PROVEN**.
 - Custom page lifecycle/open gate: **PROVEN**.
 - Node dragging and canvas panning: **BLOCKED by the audited public input surface**.
 - Zoom model/rendering/persistence: **IMPLEMENTED AND HEADLESS-PROVEN**.
-- Text search/highlighting: **IMPLEMENTED; R007 CLIENT CONFIRMATION PENDING**.
-- Right-click link removal: **IMPLEMENTED; R007 CLIENT CONFIRMATION PENDING**.
+- Text search/highlighting: **IMPLEMENTED; R008 CLIENT CONFIRMATION PENDING**.
+- Right-click link removal: **IMPLEMENTED; R008 CLIENT CONFIRMATION PENDING**.
 - Production Link Tree approval: **NOT APPROVED**.
 
 R006 remains the first rendering milestone because it proves that a generic graph with
 multiple node types, ports, and attached orthogonal connections can be rendered
 by a standalone CanvasUI JAR in the real client. It is not yet a FigJam-like
 canvas: the displayed graph is presently passive.
+
+## R008 event-binding correction
+
+R008 is deployed specifically to correct the two R007 client failures reported
+on 2026-09-06. The failure evidence is preserved in
+[`client-event-binding-failures.json`](../../evidence/canvas-ui/R007/client-event-binding-failures.json).
+
+The input-probe failure was exact and deterministic:
+
+```text
+Failed to apply CustomUI event bindings
+Target element in CustomUI event binding has no compatible
+MouseButtonReleased event. Selector: #ProbeBackground
+```
+
+R007 bound every candidate event to every Button. Hytale validates event/control
+compatibility and rejected `MouseButtonReleased` on the background Button. The
+five bindings placed before it—Activating, RightClicking, DoubleClicking,
+MouseEntered, and MouseExited—were accepted. R008 keeps those accepted Button
+bindings and removes MouseButtonReleased, KeyDown, Dropped, DragCancelled, and
+ElementReordered from incompatible generic controls. This is a narrowed,
+evidence-based probe, not a claim that the removed event types do not work on
+their specialized controls.
+
+The production-demo failure was also exact:
+
+```text
+Failed to gather CustomUI event binding data
+Could not gather property value for CustomUI event binding. Key: @Event
+```
+
+Hytale uses ordinary EventData keys such as `Type` for static data. A key with
+an `@` prefix is a request to gather a dynamic property from the selector named
+by its value, as in `@Scale -> #Scale.Value`. R007 incorrectly used `@Event`,
+`@TargetKind`, and `@TargetId` for static identity, causing the client to treat
+`RightClicking` or similar literal values as property selectors. R008 changes
+those keys to `Event`, `TargetKind`, and `TargetId`; only actual control values
+retain the `@` prefix. Text values use `Codec.STRING`, Slider values use
+`Codec.INTEGER`, and FloatSlider/zoom values use `Codec.FLOAT`, matching the
+pinned server's own `ChangeModelPage` pattern.
+
+The later desktop exception—`Collection was modified; enumeration operation
+may not execute`—was logged after the binding-data failure, player disconnect,
+embedded-server shutdown, and a new UI-context push. No CanvasUI CustomUI event
+reached the server (`pointerEvents=0`, `uiUpdates=0`, `rebuilds=1`,
+`commands=0`). The timing therefore identifies it as a secondary client cleanup
+failure, not evidence of a Canvas graph collection being mutated during server
+enumeration. R008 prevents the initiating bad payload.
+
+R008 also adds a verification gate that rejects future static Event/Target keys
+using the dynamic `@` prefix, and closes the confirmation modal after a
+successful disconnect. Twenty-one tests, all CustomUI static checks, artifact
+inspection, and bare-server setup/enable pass. The exact deployed set remains
+three JARs. `HytaleRPG-0.0.2.jar` now has SHA-256
+`F683A81D4B3F60CCD60005059888DB98ACA1433904416EC1126A1803A8E44167`.
+R008 real-client confirmation is pending.
 
 ## R007 capability milestone
 
@@ -121,15 +177,15 @@ server markup permanent.
 
 ### Definitive capability matrix for the pinned public API
 
-| Behavior | R007 status | Evidence and decision |
+| Behavior | Current status | Evidence and decision |
 |---|---|---|
 | Free node drag | **BLOCKED** | No coordinate-bearing pointer move or capture; R006's global gameplay route delivered zero events in UI context. |
 | Left-background pan | **BLOCKED** | Requires the same missing pointer down/move/up/capture stream. |
 | Middle-mouse pan | **BLOCKED** | CustomUI exposes neither a middle-button payload nor continuous move. |
 | Wheel zoom | **BLOCKED AT INPUT** | No `Scrolled`/wheel binding or wheel delta exists in the pinned enum. Zoom model/render/persistence are implemented; FloatSlider is a visible fallback, not a wheel backend. |
-| Right-click edge disconnect | **IMPLEMENTED, CLIENT-PROVISIONAL** | `RightClicking` exists, wide hit regions and confirmation flow are deployed; real-client R007 execution is still required. |
+| Right-click edge disconnect | **IMPLEMENTED, CLIENT-PROVISIONAL** | The R007 client accepted `RightClicking` on Button hit regions, but static payload encoding then failed. R008 corrects it; action confirmation is pending. |
 | Ctrl+left-click disconnect | **BLOCKED** | No modifier-key state is exposed; it is not faked or polled. |
-| Text search/highlighting | **IMPLEMENTED, CLIENT-PROVISIONAL** | TextField ValueChanged and dynamic `.Value` are documented and deployed; exact R007 client payload/visual result is pending. |
+| Text search/highlighting | **IMPLEMENTED, CLIENT-PROVISIONAL** | The R007 page accepted the TextField binding, but shared static payload encoding failed when an event fired. R008 corrects it; visual confirmation is pending. |
 
 The matrix is definitive about what the pinned public API contains. The two
 implemented UI rows remain client-provisional because server startup cannot
@@ -349,6 +405,10 @@ none exists in R006.
 
 ### R007 — capability abstraction, zoom, search, and discrete interaction
 
+- Implementation commit: `60cc3e8f610a9823e302d7d0114227f05c7d3c45`.
+- Evidence/report commit: `2ad9b5912035b1467b3553e0984aa0c74e5d5c0c`.
+- CanvasUI JAR SHA-256:
+  `004FDD78666C045A05497DEA3E693BB4375E56C1DD59B3EF1CA1FFE51EDA698E`.
 - Audited the complete pinned CustomUI event enum and installed widget
   templates; found no supported continuous two-dimensional or wheel event.
 - Added the typed raw-payload input probe and bundled command.
@@ -359,9 +419,30 @@ none exists in R006.
 - Implemented wide edge hit areas and right-click confirmation removal.
 - Deployed the exact three-mod set and passed 21 tests, CustomUI static
   validation, artifact checks, and bare-server startup.
-- Real-client observation: pending; no R007 event counts or interaction latency
-  are claimed before the user runs the deployed commands.
+- Real-client observation: probe rejected MouseButtonReleased on a Button;
+  demo event gathering rejected static identity keys incorrectly prefixed with
+  `@`; zero CustomUI events reached the server. A later desktop collection
+  exception occurred during failure cleanup. These paths are rejected and
+  corrected in R008.
 - Outcome: Stage 01 remains **BLOCKED** on public continuous pointer input.
+
+### R008 — safe binding matrix and correct EventData semantics
+
+- Implementation commit: `82cf726c393e54541b193503f758038b9515345e`.
+- Hytale build: `0.7.0-pre.1`, revision
+  `e8b4d191fc98a977bf5546a951a7b25473d323e3`.
+- Kept only the five Button event types accepted before the R007 compatibility
+  failure and removed specialized events from generic controls.
+- Corrected static versus dynamic EventData keys and numeric slider codecs by
+  matching Hytale's shipped `ChangeModelPage` implementation.
+- Added a regression gate against `@Event`/`@Target*` static keys.
+- Deployed CanvasUI SHA-256
+  `218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6`.
+- Automated result: 21 tests pass; CustomUI validation, JAR inspection, and
+  bare-server setup/enable pass without CanvasUI-scoped errors.
+- Real-client observation/event counts/latency: pending the next user run.
+- Outcome: R007 crash trigger corrected; Stage 01 remains **BLOCKED** on the
+  separate continuous-pointer capability gap.
 
 ## Evidence and reproducibility
 

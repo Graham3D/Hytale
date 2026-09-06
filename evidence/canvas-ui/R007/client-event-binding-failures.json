@@ -1,0 +1,25 @@
+{
+  "revision": "R007",
+  "observedAtUtc": "2026-09-06T17:12:39Z through 2026-09-06T17:13:35Z",
+  "clientLog": "2026-09-06_13-11-43_client.log",
+  "serverLogs": ["2026-09-06_13-12-17_server.log", "2026-09-06_13-13-10_server.log"],
+  "probeFailure": {
+    "command": "/canvasui-input-probe",
+    "message": "Failed to apply CustomUI event bindings (Target element in CustomUI event binding has no compatible MouseButtonReleased event. Selector: #ProbeBackground)",
+    "serverProbeEventsReceived": 0,
+    "conclusion": "MouseButtonReleased is not compatible with the Button used for the background. Because Activating, RightClicking, DoubleClicking, MouseEntered and MouseExited preceded it in binding order, the client accepted those Button bindings before rejecting MouseButtonReleased."
+  },
+  "demoFailure": {
+    "command": "/canvasui-demo",
+    "message": "Failed to gather CustomUI event binding data (Could not gather property value for CustomUI event binding. Key: @Event)",
+    "serverCustomUiEventsReceived": 0,
+    "sessionCloseMetrics": "pointerEvents=0 uiUpdates=0 rebuilds=1 commands=0",
+    "conclusion": "R007 incorrectly prefixed static Event/Target identity keys with @. Hytale reserves @ keys for dynamic selector-property gathering."
+  },
+  "desktopException": {
+    "message": "System.InvalidOperationException: Collection was modified; enumeration operation may not execute.",
+    "timing": "logged after the binding-data failure, player disconnect, embedded-server shutdown, and UI-context push",
+    "assessment": "Secondary client cleanup exception by timing; no CanvasUI server collection mutation or handler execution preceded it."
+  },
+  "disposition": "Rejected unsafe binding matrix and static-key encoding; corrected in R008."
+}
