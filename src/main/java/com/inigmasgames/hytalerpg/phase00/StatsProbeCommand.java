@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.hytaledevlib.lib.StatsHelper;
 
@@ -20,7 +21,7 @@ final class StatsProbeCommand extends PlayerProbeCommand {
 
     @Override
     protected void executeProbe(CommandContext context, Store<EntityStore> store,
-                                Ref<EntityStore> ref, PlayerRef playerRef, Player player) {
+                                Ref<EntityStore> ref, PlayerRef playerRef, Player player, World world) {
         EntityStatMap stats = store.getComponent(ref, EntityStatMap.getComponentType());
         if (stats == null) {
             context.sendMessage(Message.raw("Phase 00: EntityStatMap unavailable."));

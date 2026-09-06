@@ -11,13 +11,16 @@ try {
     & .\gradlew.bat clean build
     if ($LASTEXITCODE -ne 0) { throw 'Gradle build failed.' }
 
-    $jarPath = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.1.jar'
+    $jarPath = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.2.jar'
     $entries = @(& jar tf $jarPath)
     $requiredEntries = @(
         'manifest.json',
+        'rpg-build.properties',
         'Common/UI/Custom/Phase00Character.ui',
         'Common/UI/Custom/Phase00LinkCanvas.ui',
+        'Common/UI/Custom/Phase00MouseProbe.ui',
         'Common/UI/Custom/Phase00Hud.ui',
+        'Common/UI/Custom/Phase00RevisionHud.ui',
         'com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class'
     )
     $missing = @($requiredEntries | Where-Object { $_ -notin $entries })
@@ -29,11 +32,18 @@ try {
         if ($sourceText -match $pattern) { $pattern }
     }
 
+    $manifest = & jar xf $jarPath manifest.json 2>$null
+    $jarHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $jarPath).Hash
     $result = [pscustomobject]@{
         verifiedAtUtc = [DateTime]::UtcNow.ToString('o')
+        targetHytaleVersion = '0.7.0-pre.1'
+        rpgRevision = 'R001'
+        branch = (& git branch --show-current).Trim()
+        commit = (& git rev-parse HEAD).Trim()
+        workingTreeDirty = [bool](& git status --porcelain)
         buildSucceeded = $true
         jarPath = $jarPath
-        jarSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $jarPath).Hash
+        jarSha256 = $jarHash
         requiredJarEntriesPresent = $missing.Count -eq 0
         missingJarEntries = $missing
         forbiddenGameplayMutationPatternsAbsent = @($forbiddenMatches).Count -eq 0
@@ -47,5 +57,7 @@ try {
         throw 'Phase 00 static verification failed.'
     }
 }
-finally { Pop-Location }
-
+finally {
+    Remove-Item -LiteralPath (Join-Path $projectRoot 'manifest.json') -Force -ErrorAction SilentlyContinue
+    Pop-Location
+}

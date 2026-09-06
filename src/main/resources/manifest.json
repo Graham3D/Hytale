@@ -5,12 +5,16 @@
   "Description": "Temporary, non-gameplay Phase 00 evidence and feasibility probes.",
   "Authors": [{ "Name": "Inigmas Games" }],
   "Website": "https://github.com/inigmas-games",
-  "ServerVersion": "=0.6.3",
+  "ServerVersion": "=0.7.0-pre.1",
   "Dependencies": {},
   "OptionalDependencies": {
     "HytaleDevLib:HytaleDevLib": "*"
   },
   "DisabledByDefault": false,
   "Main": "com.inigmasgames.hytalerpg.phase00.Phase00Plugin",
-  "IncludesAssetPack": true
+  "IncludesAssetPack": true,
+  "Metadata": {
+    "RpgRevision": "${rpgRevision}",
+    "Stage": "00"
+  }
 }

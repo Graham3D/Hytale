@@ -1,0 +1,18 @@
+{
+  "source": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\UserData\\Settings.json",
+  "formatVersion": 7,
+  "readOnlySnapshot": true,
+  "observedOverrides": {
+    "Ability1ItemAction": { "id": 12, "sourceType": 0, "scancode": 20, "sdlKey": "Q" },
+    "Ability2ItemAction": { "present": false, "meaning": "No user override was serialized; this does not prove the active default or that the action is unavailable." },
+    "Ability3ItemAction": { "id": 14, "sourceType": 0, "scancode": 21, "sdlKey": "R" },
+    "SwitchCameraMode": { "id": 30, "sourceType": 0, "keycode": 118, "key": "V" },
+    "OpenInventory": { "id": 51, "sourceType": 0, "scancode": 43, "sdlKey": "Tab" }
+  },
+  "cKeyOwnership": {
+    "status": "UNRESOLVED",
+    "reason": "No C binding is serialized in this settings file; client defaults not present in Assets.zip remain client-owned and no supported server-side global rebinding API was found."
+  },
+  "mutationPerformed": false
+}
+

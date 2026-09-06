@@ -1,0 +1,34 @@
+[
+  {
+    "category": "character-animations",
+    "count": 2309
+  },
+  {
+    "category": "item-animations",
+    "count": 146
+  },
+  {
+    "category": "items",
+    "count": 3672
+  },
+  {
+    "category": "npc-groups",
+    "count": 72
+  },
+  {
+    "category": "npc-roles",
+    "count": 1000
+  },
+  {
+    "category": "particle-spawners",
+    "count": 1762
+  },
+  {
+    "category": "particle-systems",
+    "count": 602
+  },
+  {
+    "category": "sound-definitions",
+    "count": 1803
+  }
+]

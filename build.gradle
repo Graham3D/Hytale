@@ -30,8 +30,10 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.processResources {
     inputs.property('version', project.version)
-    filesMatching('manifest.json') {
-        expand(version: project.version)
+    inputs.property('rpgRevision', rpg_revision)
+    inputs.property('hytaleVersion', hytale_version)
+    filesMatching(['manifest.json', 'rpg-build.properties']) {
+        expand(version: project.version, rpgRevision: rpg_revision, hytaleVersion: hytale_version)
     }
 }
 
@@ -40,6 +42,6 @@ tasks.register('printAuditClasspath') {
         println "serverJar=${serverJar}"
         println "assetsZip=${assetsZip}"
         println "htDevLibJar=${htDevLibJar}"
+        println "rpgRevision=${rpg_revision}"
     }
 }
-

@@ -1,0 +1,35 @@
+{
+  "serverJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\release\\package\\game\\latest\\Server\\HytaleServer.jar",
+  "sha256": "BB4ECBE2D1BC189C22E63491EB4078C95B42EF6CBE6650CCFA3E6160AAED7102",
+  "htDevLibJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\UserData\\Saves\\RPG\\mods\\HYTALEDEVLIB-0.5.0.jar",
+  "htDevLibSha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230",
+  "capturedAtUtc": "2026-09-06T02:46:30.7136946Z",
+  "classes": [
+    "com.hypixel.hytale.protocol.InteractionType",
+    "com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType",
+    "com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime",
+    "com.hypixel.hytale.protocol.packets.interface_.HudComponent",
+    "com.hypixel.hytale.protocol.packets.interface_.Page",
+    "com.hypixel.hytale.server.core.entity.entities.Player",
+    "com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud",
+    "com.hypixel.hytale.server.core.entity.entities.player.hud.HudManager",
+    "com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage",
+    "com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage",
+    "com.hypixel.hytale.server.core.entity.entities.player.pages.PageManager",
+    "com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent",
+    "com.hypixel.hytale.server.core.event.events.player.PlayerMouseMotionEvent",
+    "com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap",
+    "com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue",
+    "com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems",
+    "com.hypixel.hytale.server.core.ui.builder.UICommandBuilder",
+    "com.hypixel.hytale.server.core.ui.builder.UIEventBuilder"
+  ],
+  "htDevLibClasses": [
+    "org.hytaledevlib.lib.StatsHelper",
+    "org.hytaledevlib.lib.UIHelper",
+    "org.hytaledevlib.lib.ParticleHelper",
+    "org.hytaledevlib.lib.SoundHelper",
+    "org.hytaledevlib.lib.InventoryHelper",
+    "org.hytaledevlib.lib.DeathHelper"
+  ]
+}

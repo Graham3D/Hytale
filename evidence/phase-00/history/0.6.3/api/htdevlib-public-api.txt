@@ -1,0 +1,101 @@
+Compiled from "StatsHelper.java"
+public class org.hytaledevlib.lib.StatsHelper {
+  public org.hytaledevlib.lib.StatsHelper();
+  public static float getStat(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+  public static float getStat(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.lang.String);
+  public static float setStat(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, float);
+  public static float setStat(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.lang.String, float);
+  public static float addStat(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, float);
+  public static float addStat(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.lang.String, float);
+  public static float getHealth(com.hypixel.hytale.server.core.entity.Entity);
+  public static float setHealth(com.hypixel.hytale.server.core.entity.Entity, float);
+  public static float getStamina(com.hypixel.hytale.server.core.entity.Entity);
+  public static float setStamina(com.hypixel.hytale.server.core.entity.Entity, float);
+  public static float getMana(com.hypixel.hytale.server.core.entity.Entity);
+  public static float setMana(com.hypixel.hytale.server.core.entity.Entity, float);
+  public static float getOxygen(com.hypixel.hytale.server.core.entity.Entity);
+  public static float setOxygen(com.hypixel.hytale.server.core.entity.Entity, float);
+  public static float getStatMin(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+  public static float getStatMax(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+  public static float getStatPercentage(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+  public static float maximizeStat(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+  public static float minimizeStat(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+  public static float resetStat(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+  public static com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier addModifier(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier$ModifierTarget, com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier$CalculationType, float);
+  public static com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier addAdditiveModifier(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, java.lang.String, float);
+  public static com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier addMultiplicativeModifier(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, java.lang.String, float);
+  public static com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier removeModifier(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, java.lang.String);
+  public static com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier getModifier(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, java.lang.String);
+  public static boolean hasStat(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+}
+Compiled from "UIHelper.java"
+public class org.hytaledevlib.lib.UIHelper {
+  public org.hytaledevlib.lib.UIHelper();
+  public static boolean openCustomPage(com.hypixel.hytale.server.core.entity.Entity, com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime, java.util.function.BiConsumer<com.hypixel.hytale.server.core.ui.builder.UICommandBuilder, com.hypixel.hytale.server.core.ui.builder.UIEventBuilder>);
+  public static boolean closeCustomPage(com.hypixel.hytale.server.core.entity.Entity);
+  public static boolean setPage(com.hypixel.hytale.server.core.entity.Entity, com.hypixel.hytale.protocol.packets.interface_.Page);
+  public static boolean showHudComponents(com.hypixel.hytale.server.core.entity.Entity, com.hypixel.hytale.protocol.packets.interface_.HudComponent...);
+  public static boolean hideHudComponents(com.hypixel.hytale.server.core.entity.Entity, com.hypixel.hytale.protocol.packets.interface_.HudComponent...);
+  public static boolean setVisibleHudComponents(com.hypixel.hytale.server.core.entity.Entity, com.hypixel.hytale.protocol.packets.interface_.HudComponent...);
+  public static java.util.Set<com.hypixel.hytale.protocol.packets.interface_.HudComponent> getVisibleHudComponents(com.hypixel.hytale.server.core.entity.Entity);
+  public static boolean hasCustomPageOpen(com.hypixel.hytale.server.core.entity.Entity);
+  public static boolean hideAllHud(com.hypixel.hytale.server.core.entity.Entity);
+  public static boolean showDefaultHud(com.hypixel.hytale.server.core.entity.Entity);
+  public static void fadeElement(com.hypixel.hytale.server.core.universe.world.World, com.hypixel.hytale.server.core.entity.Entity, java.lang.String, float, float, int, int, org.hytaledevlib.lib.UIHelper$FadeCallback);
+  public static void fadeIn(com.hypixel.hytale.server.core.universe.world.World, com.hypixel.hytale.server.core.entity.Entity, java.lang.String, int, org.hytaledevlib.lib.UIHelper$FadeCallback);
+  public static void fadeOut(com.hypixel.hytale.server.core.universe.world.World, com.hypixel.hytale.server.core.entity.Entity, java.lang.String, int, org.hytaledevlib.lib.UIHelper$FadeCallback);
+}
+Compiled from "ParticleHelper.java"
+public class org.hytaledevlib.lib.ParticleHelper {
+  public org.hytaledevlib.lib.ParticleHelper();
+  public static void spawnParticle(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3i);
+  public static void spawnParticle(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3d);
+  public static void spawnParticle(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3d, float);
+  public static void spawnParticleAtEntity(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.server.core.entity.Entity);
+  public static void spawnParticleForPlayer(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3d, com.hypixel.hytale.server.core.entity.Entity);
+  public static void spawnParticleAtBlock(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3i);
+  public static void spawnParticleAtEntityFeet(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.server.core.entity.Entity);
+}
+Compiled from "SoundHelper.java"
+public class org.hytaledevlib.lib.SoundHelper {
+  public org.hytaledevlib.lib.SoundHelper();
+  public static void playSound2D(com.hypixel.hytale.server.core.universe.world.World, java.lang.String);
+  public static void playSound2D(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, float, float);
+  public static void playSound2D(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.protocol.SoundCategory, float, float);
+  public static void playSound2DToPlayer(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.server.core.entity.Entity);
+  public static void playSound2DToPlayer(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.server.core.entity.Entity, float, float);
+  public static void playSound2DToPlayer(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.server.core.entity.Entity, com.hypixel.hytale.protocol.SoundCategory, float, float);
+  public static void playSound3D(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3d);
+  public static void playSound3D(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3d, float, float);
+  public static void playSound3D(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3d, com.hypixel.hytale.protocol.SoundCategory, float, float);
+  public static void playSound3DAtBlock(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3i);
+  public static void playSound3DAtBlock(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3i, float, float);
+  public static void playSound3DAtEntity(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.server.core.entity.Entity);
+  public static void playSound3DAtEntity(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.server.core.entity.Entity, float, float);
+  public static void playSound3DToPlayer(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3d, com.hypixel.hytale.server.core.entity.Entity);
+  public static void playSound3DToPlayer(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3d, com.hypixel.hytale.server.core.entity.Entity, float, float);
+  public static void playSound3DToPlayer(com.hypixel.hytale.server.core.universe.world.World, java.lang.String, com.hypixel.hytale.math.vector.Vector3d, com.hypixel.hytale.server.core.entity.Entity, com.hypixel.hytale.protocol.SoundCategory, float, float);
+}
+Compiled from "InventoryHelper.java"
+public class org.hytaledevlib.lib.InventoryHelper {
+  public org.hytaledevlib.lib.InventoryHelper();
+  public static boolean giveItem(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, int);
+  public static boolean removeItem(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, int);
+  public static boolean hasItem(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, int);
+  public static int countItem(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+  public static java.util.List<com.hypixel.hytale.server.core.inventory.ItemStack> getAllItems(com.hypixel.hytale.server.core.entity.Entity);
+  public static com.hypixel.hytale.server.core.inventory.ItemStack getActiveHotbarItem(com.hypixel.hytale.server.core.entity.Entity);
+  public static boolean setHotbarSlot(com.hypixel.hytale.server.core.entity.Entity, int, com.hypixel.hytale.server.core.inventory.ItemStack);
+  public static boolean clearInventory(com.hypixel.hytale.server.core.entity.Entity);
+  public static boolean isInventoryFull(com.hypixel.hytale.server.core.entity.Entity);
+  public static int getEmptySlotCount(com.hypixel.hytale.server.core.entity.Entity);
+  public static byte getActiveHotbarSlotIndex(com.hypixel.hytale.server.core.entity.Entity);
+  public static boolean replaceItem(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, java.lang.String, int);
+  public static boolean changeItemStateInActiveHand(com.hypixel.hytale.server.core.entity.Entity, java.lang.String);
+  public static boolean changeItemState(com.hypixel.hytale.server.core.entity.Entity, java.lang.String, java.lang.String);
+}
+Compiled from "DeathHelper.java"
+public class org.hytaledevlib.lib.DeathHelper {
+  public org.hytaledevlib.lib.DeathHelper();
+  public static void onEntityDeath(com.hypixel.hytale.server.core.universe.world.World, java.util.function.Consumer<org.hytaledevlib.lib.DeathHelper$EntityDeath>);
+}

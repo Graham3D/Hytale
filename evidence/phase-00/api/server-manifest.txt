@@ -5,11 +5,11 @@ Build-Jdk-Spec: 25
 Main-Class: com.hypixel.hytale.Main
 Built-By: 
 Enable-Native-Access: ALL-UNNAMED
-Implementation-Branch: release/release
+Implementation-Branch: release/pre-release
 Implementation-Build: NoJar
-Implementation-Patchline: release
-Implementation-Revision-Id: ff802bf5a538f7e4b1df43a575c72f9d2bebb504
+Implementation-Patchline: pre-release
+Implementation-Revision-Id: e8b4d191fc98a977bf5546a951a7b25473d323e3
 Implementation-Title: Server
 Implementation-Vendor-Id: com.hypixel.hytale
-Implementation-Version: 0.6.3
+Implementation-Version: 0.7.0-pre.1
 

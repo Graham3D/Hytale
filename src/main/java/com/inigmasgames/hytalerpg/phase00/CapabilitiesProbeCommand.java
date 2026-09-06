@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.Arrays;
@@ -21,11 +22,10 @@ final class CapabilitiesProbeCommand extends PlayerProbeCommand {
 
     @Override
     protected void executeProbe(CommandContext context, Store<EntityStore> store,
-                                Ref<EntityStore> ref, PlayerRef playerRef, Player player) {
+                                Ref<EntityStore> ref, PlayerRef playerRef, Player player, World world) {
         context.sendMessage(Message.raw("InteractionType=" + Arrays.toString(InteractionType.values())));
         context.sendMessage(Message.raw("CustomUIEventBindingType=" + Arrays.toString(CustomUIEventBindingType.values())));
         context.sendMessage(Message.raw("HudComponent=" + Arrays.toString(HudComponent.values())));
         context.sendMessage(Message.raw("Page=" + Arrays.toString(Page.values())));
     }
 }
-

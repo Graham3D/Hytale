@@ -1,35 +1,46 @@
 {
-  "capturedAtUtc": "2026-09-06T02:47:10Z",
-  "patchline": "release",
+  "schemaVersion": 2,
+  "capturedAtUtc": "2026-09-06T12:30:05.5745103Z",
+  "patchline": "pre-release",
+  "repository": {
+    "path": "G:\\My Drive\\Inigmas Games\\Hytale Taverns\\HytaleRPG",
+    "branch": "RPG",
+    "commit": "39924ecbf6e62fd6a16b87ab3143712f3a3fb43d",
+    "originalEvidenceCommit": "39924ecbf6e62fd6a16b87ab3143712f3a3fb43d",
+    "originalEvidenceBranch": "phase-00/evidence-feasibility",
+    "workingTreeDirty": true
+  },
   "hytale": {
-    "version": "0.6.3",
-    "revision": "ff802bf5a538f7e4b1df43a575c72f9d2bebb504",
+    "version": "0.7.0-pre.1",
+    "revision": null,
+    "branch": "release/pre-release",
     "serverJar": {
-      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\release\\package\\game\\latest\\Server\\HytaleServer.jar",
-      "bytes": 110438908,
-      "sha256": "BB4ECBE2D1BC189C22E63491EB4078C95B42EF6CBE6650CCFA3E6160AAED7102"
-    },
-    "sdk": {
-      "source": "installed HytaleServer.jar public Java API",
-      "sha256": "BB4ECBE2D1BC189C22E63491EB4078C95B42EF6CBE6650CCFA3E6160AAED7102"
+      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\pre-release\\package\\game\\latest\\Server\\HytaleServer.jar",
+      "bytes": 110881650,
+      "sha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3"
     },
     "assets": {
-      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\release\\package\\game\\latest\\Assets.zip",
-      "bytes": 3476304064,
-      "sha256": "A9F21C8136304937E85C134B60EDFC460B77D208AFB016B2F60DF48F14C4148A"
+      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\pre-release\\package\\game\\latest\\Assets.zip",
+      "bytes": 3538907147,
+      "sha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39"
     },
     "client": {
-      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\release\\package\\game\\latest\\Client\\HytaleClient.exe",
-      "bytes": 58636136,
-      "sha256": "4947649CCFF38F37847F78250FC56226B4634FB9D1C4D362E14FCD18F93C55A5"
+      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\pre-release\\package\\game\\latest\\Client\\HytaleClient.exe",
+      "bytes": 59308896,
+      "sha256": "DB705396E0AC8E7540BE9BDD1904BE69EBDED30F3AB7C5856A4844A662F3B22F"
+    },
+    "sdk": {
+      "source": "installed pre-release HytaleServer.jar public Java API",
+      "sha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3"
     }
   },
-  "java": {
-    "runtime": "Temurin OpenJDK 25.0.4+7 LTS",
-    "compiler": "javac 25.0.4"
+  "toolchain": {
+    "java": "openjdk version \"25.0.4\" 2026-07-21 LTS OpenJDK Runtime Environment Temurin-25.0.4+7 (build 25.0.4+7-LTS) OpenJDK 64-Bit Server VM Temurin-25.0.4+7 (build 25.0.4+7-LTS, mixed mode, sharing)",
+    "javac": "javac 25.0.4",
+    "gradle": "9.2.0"
   },
   "masterSpecification": {
-    "path": "C:\\Users\\Zemio\\Downloads\\Hytale RPG Master Implementation Specification v1.1.docx.md",
+    "path": "G:\\My Drive\\Inigmas Games\\Hytale Taverns\\Hytale RPG Master Implementation Specification v1.1.docx.md",
     "bytes": 2638326,
     "sha256": "B58760111545585395178C5811E4506A8B9C18BF5A67630C431F4BCCC5967B14"
   },
@@ -37,15 +48,27 @@
     "installedJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\UserData\\Saves\\RPG\\mods\\HYTALEDEVLIB-0.5.0.jar",
     "version": "0.5.0",
     "declaredServerVersion": "2026.02.17-255364b8e",
-    "bytes": 265646,
-    "sha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230",
+    "fingerprint": {
+      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\UserData\\Saves\\RPG\\mods\\HYTALEDEVLIB-0.5.0.jar",
+      "bytes": 265646,
+      "sha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+    },
     "sourceCommit": "ac955f742da4fc174985ef7b36eac2f49a97b6ef",
-    "runtimeLoadOn063": true,
-    "compatibilityWarning": "pre-semver server target is treated as wildcard by 0.6.3"
+    "serverSmokeLoadOn070pre1": true,
+    "compatibilityNote": "Legacy pre-semver target logs the expected wildcard warning; setup and enable markers pass."
   },
-  "referenceSourceCommits": {
-    "HytaleExampleProject": "032072c5fc9cc25054747cf43c435b60e3463016",
-    "HytaleSandboxPluginUiBranch": "927b8756106c6e12b33a33edafb322d8a629153b"
-  }
+  "dependencies": [
+    {
+      "name": "HytaleServer",
+      "version": "0.7.0-pre.1",
+      "scope": "compileOnly",
+      "sha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3"
+    },
+    {
+      "name": "HTDevLib",
+      "version": "0.5.0",
+      "scope": "compileOnly/runtime save mod",
+      "sha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+    }
+  ]
 }
-

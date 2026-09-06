@@ -1,0 +1,10 @@
+$Common = "Common.ui";
+
+Group {
+  Anchor: (Right: 18, Top: 18, Width: 94, Height: 30);
+  Background: (Color: #090d14dd);
+  Label #BuildRevision {
+    Text: "R001";
+    Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center);
+  }
+}

@@ -21,6 +21,8 @@ Group {
       Anchor: (Height: 42);
     }
 
+    Label #Revision { Text: "R001"; Style: (FontSize: 14, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 28); }
+
     Group {
       Anchor: (Height: 420);
       LayoutMode: Left;
@@ -31,7 +33,7 @@ Group {
         Padding: (Full: 20);
         LayoutMode: Top;
         Label { Text: "IDENTITY"; Style: (FontSize: 21, TextColor: #78c6d0); Anchor: (Height: 44); }
-        Label { Text: "Name: runtime player"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
+        Label #PlayerName { Text: "Name: runtime player"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
         Label { Text: "Level: not implemented"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
         Label { Text: "XP: not implemented"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
       }
@@ -44,8 +46,9 @@ Group {
         Padding: (Full: 20);
         LayoutMode: Top;
         Label { Text: "NATIVE STATS"; Style: (FontSize: 21, TextColor: #78c6d0); Anchor: (Height: 44); }
-        Label { Text: "Use /rpgp00-stats"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
-        Label { Text: "Read-only evidence"; Style: (FontSize: 16, TextColor: #dce6ed); Anchor: (Height: 34); }
+        Label #HealthValue { Text: "Health: reading"; Style: (FontSize: 16, TextColor: #ef7777); Anchor: (Height: 34); }
+        Label #ManaValue { Text: "Mana: reading"; Style: (FontSize: 16, TextColor: #67aef0); Anchor: (Height: 34); }
+        Label #StaminaValue { Text: "Stamina: reading"; Style: (FontSize: 16, TextColor: #7ad58a); Anchor: (Height: 34); }
       }
 
       Group { Anchor: (Width: 22); }
@@ -68,4 +71,3 @@ Group {
     }
   }
 }
-

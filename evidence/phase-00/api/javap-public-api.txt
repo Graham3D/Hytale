@@ -5,6 +5,7 @@ public final class com.hypixel.hytale.protocol.InteractionType extends java.lang
   public static final com.hypixel.hytale.protocol.InteractionType Ability1;
   public static final com.hypixel.hytale.protocol.InteractionType Ability2;
   public static final com.hypixel.hytale.protocol.InteractionType Ability3;
+  public static final com.hypixel.hytale.protocol.InteractionType Ability4;
   public static final com.hypixel.hytale.protocol.InteractionType Use;
   public static final com.hypixel.hytale.protocol.InteractionType Pick;
   public static final com.hypixel.hytale.protocol.InteractionType Pickup;
@@ -32,6 +33,248 @@ public final class com.hypixel.hytale.protocol.InteractionType extends java.lang
   public static com.hypixel.hytale.protocol.InteractionType valueOf(java.lang.String);
   public int getValue();
   public static com.hypixel.hytale.protocol.InteractionType fromValue(int);
+}
+Compiled from "MouseButtonEvent.java"
+public class com.hypixel.hytale.protocol.MouseButtonEvent {
+  public static final int NULLABLE_BIT_FIELD_SIZE;
+  public static final int FIXED_BLOCK_SIZE;
+  public static final int VARIABLE_FIELD_COUNT;
+  public static final int VARIABLE_BLOCK_START;
+  public static final int MAX_SIZE;
+  public com.hypixel.hytale.protocol.MouseButtonType mouseButtonType;
+  public com.hypixel.hytale.protocol.MouseButtonState state;
+  public byte clicks;
+  public com.hypixel.hytale.protocol.MouseButtonEvent();
+  public com.hypixel.hytale.protocol.MouseButtonEvent(com.hypixel.hytale.protocol.MouseButtonType, com.hypixel.hytale.protocol.MouseButtonState, byte);
+  public com.hypixel.hytale.protocol.MouseButtonEvent(com.hypixel.hytale.protocol.MouseButtonEvent);
+  public static void requireBounds(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.MouseButtonType getMouseButtonType(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.MouseButtonType getMouseButtonType(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.MouseButtonState getState(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.MouseButtonState getState(java.lang.foreign.MemorySegment, int);
+  public static byte getClicks(java.lang.foreign.MemorySegment);
+  public static byte getClicks(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.MouseButtonEvent toObject(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.MouseButtonEvent toObject(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.MouseButtonEvent toObject(java.lang.foreign.MemorySegment, int, com.hypixel.hytale.protocol.io.ReadCursor);
+  public int serialize(java.lang.foreign.MemorySegment, int);
+  public int computeSize();
+  public com.hypixel.hytale.protocol.MouseButtonEvent clone();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}
+Compiled from "MouseMotionEvent.java"
+public class com.hypixel.hytale.protocol.MouseMotionEvent {
+  public static final int NULLABLE_BIT_FIELD_SIZE;
+  public static final int FIXED_BLOCK_SIZE;
+  public static final int VARIABLE_FIELD_COUNT;
+  public static final int VARIABLE_BLOCK_START;
+  public static final int MAX_SIZE;
+  public com.hypixel.hytale.protocol.MouseButtonType[] mouseButtonType;
+  public com.hypixel.hytale.protocol.Vector2i relativeMotion;
+  public com.hypixel.hytale.protocol.MouseMotionEvent();
+  public com.hypixel.hytale.protocol.MouseMotionEvent(com.hypixel.hytale.protocol.MouseButtonType[], com.hypixel.hytale.protocol.Vector2i);
+  public com.hypixel.hytale.protocol.MouseMotionEvent(com.hypixel.hytale.protocol.MouseMotionEvent);
+  public static void requireBounds(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.MouseButtonType[] getMouseButtonType(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.MouseButtonType[] getMouseButtonType(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.Vector2i getRelativeMotion(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.Vector2i getRelativeMotion(java.lang.foreign.MemorySegment, int);
+  public static boolean hasRelativeMotion(java.lang.foreign.MemorySegment, int);
+  public static boolean hasMouseButtonType(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.MouseMotionEvent toObject(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.MouseMotionEvent toObject(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.MouseMotionEvent toObject(java.lang.foreign.MemorySegment, int, com.hypixel.hytale.protocol.io.ReadCursor);
+  public int serialize(java.lang.foreign.MemorySegment, int);
+  public int computeSize();
+  public com.hypixel.hytale.protocol.MouseMotionEvent clone();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}
+Compiled from "MouseButtonType.java"
+public final class com.hypixel.hytale.protocol.MouseButtonType extends java.lang.Enum<com.hypixel.hytale.protocol.MouseButtonType> {
+  public static final com.hypixel.hytale.protocol.MouseButtonType Left;
+  public static final com.hypixel.hytale.protocol.MouseButtonType Middle;
+  public static final com.hypixel.hytale.protocol.MouseButtonType Right;
+  public static final com.hypixel.hytale.protocol.MouseButtonType X1;
+  public static final com.hypixel.hytale.protocol.MouseButtonType X2;
+  public static final com.hypixel.hytale.protocol.MouseButtonType[] VALUES;
+  public static com.hypixel.hytale.protocol.MouseButtonType[] values();
+  public static com.hypixel.hytale.protocol.MouseButtonType valueOf(java.lang.String);
+  public int getValue();
+  public static com.hypixel.hytale.protocol.MouseButtonType fromValue(int);
+}
+Compiled from "MouseButtonState.java"
+public final class com.hypixel.hytale.protocol.MouseButtonState extends java.lang.Enum<com.hypixel.hytale.protocol.MouseButtonState> {
+  public static final com.hypixel.hytale.protocol.MouseButtonState Pressed;
+  public static final com.hypixel.hytale.protocol.MouseButtonState Released;
+  public static final com.hypixel.hytale.protocol.MouseButtonState[] VALUES;
+  public static com.hypixel.hytale.protocol.MouseButtonState[] values();
+  public static com.hypixel.hytale.protocol.MouseButtonState valueOf(java.lang.String);
+  public int getValue();
+  public static com.hypixel.hytale.protocol.MouseButtonState fromValue(int);
+}
+Compiled from "SyncInteractionChain.java"
+public class com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain {
+  public static final int NULLABLE_BIT_FIELD_SIZE;
+  public static final int FIXED_BLOCK_SIZE;
+  public static final int VARIABLE_FIELD_COUNT;
+  public static final int VARIABLE_BLOCK_START;
+  public static final int MAX_SIZE;
+  public int activeHotbarSlot;
+  public int activeUtilitySlot;
+  public int activeToolsSlot;
+  public java.lang.String itemInHandId;
+  public java.lang.String utilityItemId;
+  public java.lang.String toolsItemId;
+  public boolean initial;
+  public boolean desync;
+  public int overrideRootInteraction;
+  public com.hypixel.hytale.protocol.InteractionType interactionType;
+  public int equipSlot;
+  public int chainId;
+  public com.hypixel.hytale.protocol.ForkedChainId forkedId;
+  public com.hypixel.hytale.protocol.InteractionChainData data;
+  public com.hypixel.hytale.protocol.InteractionState state;
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[] newForks;
+  public int operationBaseIndex;
+  public com.hypixel.hytale.protocol.InteractionSyncData[] interactionData;
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain();
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain(int, int, int, java.lang.String, java.lang.String, java.lang.String, boolean, boolean, int, com.hypixel.hytale.protocol.InteractionType, int, int, com.hypixel.hytale.protocol.ForkedChainId, com.hypixel.hytale.protocol.InteractionChainData, com.hypixel.hytale.protocol.InteractionState, com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[], int, com.hypixel.hytale.protocol.InteractionSyncData[]);
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain(com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain);
+  public static void requireBounds(java.lang.foreign.MemorySegment, int);
+  public static int getActiveHotbarSlot(java.lang.foreign.MemorySegment);
+  public static int getActiveHotbarSlot(java.lang.foreign.MemorySegment, int);
+  public static int getActiveUtilitySlot(java.lang.foreign.MemorySegment);
+  public static int getActiveUtilitySlot(java.lang.foreign.MemorySegment, int);
+  public static int getActiveToolsSlot(java.lang.foreign.MemorySegment);
+  public static int getActiveToolsSlot(java.lang.foreign.MemorySegment, int);
+  public static java.lang.String getItemInHandId(java.lang.foreign.MemorySegment);
+  public static java.lang.String getItemInHandId(java.lang.foreign.MemorySegment, int);
+  public static java.lang.String getUtilityItemId(java.lang.foreign.MemorySegment);
+  public static java.lang.String getUtilityItemId(java.lang.foreign.MemorySegment, int);
+  public static java.lang.String getToolsItemId(java.lang.foreign.MemorySegment);
+  public static java.lang.String getToolsItemId(java.lang.foreign.MemorySegment, int);
+  public static boolean getInitial(java.lang.foreign.MemorySegment);
+  public static boolean getInitial(java.lang.foreign.MemorySegment, int);
+  public static boolean getDesync(java.lang.foreign.MemorySegment);
+  public static boolean getDesync(java.lang.foreign.MemorySegment, int);
+  public static int getOverrideRootInteraction(java.lang.foreign.MemorySegment);
+  public static int getOverrideRootInteraction(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.InteractionType getInteractionType(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.InteractionType getInteractionType(java.lang.foreign.MemorySegment, int);
+  public static int getEquipSlot(java.lang.foreign.MemorySegment);
+  public static int getEquipSlot(java.lang.foreign.MemorySegment, int);
+  public static int getChainId(java.lang.foreign.MemorySegment);
+  public static int getChainId(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.ForkedChainId getForkedId(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.ForkedChainId getForkedId(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.InteractionChainData getData(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.InteractionChainData getData(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.InteractionState getState(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.InteractionState getState(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[] getNewForks(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[] getNewForks(java.lang.foreign.MemorySegment, int);
+  public static int getOperationBaseIndex(java.lang.foreign.MemorySegment);
+  public static int getOperationBaseIndex(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.InteractionSyncData[] getInteractionData(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.InteractionSyncData[] getInteractionData(java.lang.foreign.MemorySegment, int);
+  public static boolean hasItemInHandId(java.lang.foreign.MemorySegment, int);
+  public static boolean hasUtilityItemId(java.lang.foreign.MemorySegment, int);
+  public static boolean hasToolsItemId(java.lang.foreign.MemorySegment, int);
+  public static boolean hasForkedId(java.lang.foreign.MemorySegment, int);
+  public static boolean hasData(java.lang.foreign.MemorySegment, int);
+  public static boolean hasNewForks(java.lang.foreign.MemorySegment, int);
+  public static boolean hasInteractionData(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain toObject(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain toObject(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain toObject(java.lang.foreign.MemorySegment, int, com.hypixel.hytale.protocol.io.ReadCursor);
+  public int serialize(java.lang.foreign.MemorySegment, int);
+  public int computeSize();
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain clone();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}
+Compiled from "SyncInteractionChains.java"
+public class com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains implements com.hypixel.hytale.protocol.Packet,com.hypixel.hytale.protocol.ToServerPacket,com.hypixel.hytale.protocol.ToClientPacket {
+  public static final int PACKET_ID;
+  public static final boolean IS_COMPRESSED;
+  public static final int NULLABLE_BIT_FIELD_SIZE;
+  public static final int FIXED_BLOCK_SIZE;
+  public static final int VARIABLE_FIELD_COUNT;
+  public static final int VARIABLE_BLOCK_START;
+  public static final int MAX_SIZE;
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[] updates;
+  public int getId();
+  public com.hypixel.hytale.protocol.NetworkChannel getChannel();
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains();
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains(com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[]);
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains(com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains);
+  public static void requireBounds(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[] getUpdates(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[] getUpdates(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains toObject(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains toObject(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains toObject(java.lang.foreign.MemorySegment, int, com.hypixel.hytale.protocol.io.ReadCursor);
+  public int serialize(java.lang.foreign.MemorySegment, int);
+  public int computeSize();
+  public com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains clone();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}
+Compiled from "MouseInteraction.java"
+public class com.hypixel.hytale.protocol.packets.player.MouseInteraction implements com.hypixel.hytale.protocol.Packet,com.hypixel.hytale.protocol.ToServerPacket {
+  public static final int PACKET_ID;
+  public static final boolean IS_COMPRESSED;
+  public static final int NULLABLE_BIT_FIELD_SIZE;
+  public static final int FIXED_BLOCK_SIZE;
+  public static final int VARIABLE_FIELD_COUNT;
+  public static final int VARIABLE_BLOCK_START;
+  public static final int MAX_SIZE;
+  public long clientTimestamp;
+  public int activeSlot;
+  public java.lang.String itemInHandId;
+  public org.joml.Vector2fc screenPoint;
+  public com.hypixel.hytale.protocol.MouseButtonEvent mouseButton;
+  public com.hypixel.hytale.protocol.MouseMotionEvent mouseMotion;
+  public com.hypixel.hytale.protocol.WorldInteraction worldInteraction;
+  public int getId();
+  public com.hypixel.hytale.protocol.NetworkChannel getChannel();
+  public com.hypixel.hytale.protocol.packets.player.MouseInteraction();
+  public com.hypixel.hytale.protocol.packets.player.MouseInteraction(long, int, java.lang.String, org.joml.Vector2fc, com.hypixel.hytale.protocol.MouseButtonEvent, com.hypixel.hytale.protocol.MouseMotionEvent, com.hypixel.hytale.protocol.WorldInteraction);
+  public com.hypixel.hytale.protocol.packets.player.MouseInteraction(com.hypixel.hytale.protocol.packets.player.MouseInteraction);
+  public static void requireBounds(java.lang.foreign.MemorySegment, int);
+  public static long getClientTimestamp(java.lang.foreign.MemorySegment);
+  public static long getClientTimestamp(java.lang.foreign.MemorySegment, int);
+  public static int getActiveSlot(java.lang.foreign.MemorySegment);
+  public static int getActiveSlot(java.lang.foreign.MemorySegment, int);
+  public static java.lang.String getItemInHandId(java.lang.foreign.MemorySegment);
+  public static java.lang.String getItemInHandId(java.lang.foreign.MemorySegment, int);
+  public static org.joml.Vector2fc getScreenPoint(java.lang.foreign.MemorySegment);
+  public static org.joml.Vector2fc getScreenPoint(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.MouseButtonEvent getMouseButton(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.MouseButtonEvent getMouseButton(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.MouseMotionEvent getMouseMotion(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.MouseMotionEvent getMouseMotion(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.WorldInteraction getWorldInteraction(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.WorldInteraction getWorldInteraction(java.lang.foreign.MemorySegment, int);
+  public static boolean hasMouseButton(java.lang.foreign.MemorySegment, int);
+  public static boolean hasWorldInteraction(java.lang.foreign.MemorySegment, int);
+  public static boolean hasItemInHandId(java.lang.foreign.MemorySegment, int);
+  public static boolean hasMouseMotion(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.packets.player.MouseInteraction toObject(java.lang.foreign.MemorySegment);
+  public static com.hypixel.hytale.protocol.packets.player.MouseInteraction toObject(java.lang.foreign.MemorySegment, int);
+  public static com.hypixel.hytale.protocol.packets.player.MouseInteraction toObject(java.lang.foreign.MemorySegment, int, com.hypixel.hytale.protocol.io.ReadCursor);
+  public int serialize(java.lang.foreign.MemorySegment, int);
+  public int computeSize();
+  public com.hypixel.hytale.protocol.packets.player.MouseInteraction clone();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
 }
 Compiled from "CustomUIEventBindingType.java"
 public final class com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType extends java.lang.Enum<com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType> {
@@ -277,6 +520,112 @@ public class com.hypixel.hytale.server.core.event.events.player.PlayerMouseMotio
   public com.hypixel.hytale.protocol.MouseMotionEvent getMouseMotion();
   public java.lang.String toString();
 }
+Compiled from "PacketAdapters.java"
+public class com.hypixel.hytale.server.core.io.adapter.PacketAdapters {
+  public com.hypixel.hytale.server.core.io.adapter.PacketAdapters();
+  public static com.hypixel.hytale.server.core.io.adapter.PacketFilter registerInbound(com.hypixel.hytale.server.core.io.adapter.PacketWatcher);
+  public static void registerInbound(com.hypixel.hytale.server.core.io.adapter.PacketFilter);
+  public static com.hypixel.hytale.server.core.io.adapter.PacketFilter registerOutbound(com.hypixel.hytale.server.core.io.adapter.PacketWatcher);
+  public static void registerOutbound(com.hypixel.hytale.server.core.io.adapter.PacketFilter);
+  public static com.hypixel.hytale.server.core.io.adapter.PacketFilter registerInbound(com.hypixel.hytale.server.core.io.adapter.PlayerPacketFilter);
+  public static com.hypixel.hytale.server.core.io.adapter.PacketFilter registerOutbound(com.hypixel.hytale.server.core.io.adapter.PlayerPacketFilter);
+  public static com.hypixel.hytale.server.core.io.adapter.PacketFilter registerInbound(com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher);
+  public static com.hypixel.hytale.server.core.io.adapter.PacketFilter registerOutbound(com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher);
+  public static void deregisterInbound(com.hypixel.hytale.server.core.io.adapter.PacketFilter);
+  public static void deregisterOutbound(com.hypixel.hytale.server.core.io.adapter.PacketFilter);
+  public static boolean __handleInbound(com.hypixel.hytale.server.core.io.PacketHandler, com.hypixel.hytale.protocol.Packet);
+  public static boolean __handleOutbound(com.hypixel.hytale.server.core.io.PacketHandler, com.hypixel.hytale.protocol.Packet);
+}
+Compiled from "PlayerPacketWatcher.java"
+public interface com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher extends java.util.function.BiConsumer<com.hypixel.hytale.server.core.universe.PlayerRef, com.hypixel.hytale.protocol.Packet> {
+  public abstract void accept(com.hypixel.hytale.server.core.universe.PlayerRef, com.hypixel.hytale.protocol.Packet);
+  public default void accept(java.lang.Object, java.lang.Object);
+}
+Compiled from "InventoryComponent.java"
+public abstract class com.hypixel.hytale.server.core.inventory.InventoryComponent implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  public static final byte INACTIVE_SLOT_INDEX;
+  public static final short DEFAULT_HOTBAR_CAPACITY;
+  public static final short DEFAULT_UTILITY_CAPACITY;
+  public static final short DEFAULT_TOOLS_CAPACITY;
+  public static final short DEFAULT_ARMOR_CAPACITY;
+  public static final short DEFAULT_STORAGE_ROWS;
+  public static final short DEFAULT_STORAGE_COLUMNS;
+  public static final short DEFAULT_STORAGE_CAPACITY;
+  public static final short ABILITIES_LINE_WIDTH;
+  public static final short ABILITIES_LINES;
+  public static final short DEFAULT_ABILITIES_CAPACITY;
+  public static final short DEFAULT_RUNE_BAG_CAPACITY;
+  public static final int HOTBAR_SECTION_ID;
+  public static final int STORAGE_SECTION_ID;
+  public static final int ARMOR_SECTION_ID;
+  public static final int UTILITY_SECTION_ID;
+  public static final int TOOLS_SECTION_ID;
+  public static final int BACKPACK_SECTION_ID;
+  public static final int DUMMY_SECTION_ID;
+  public static final int ABILITIES_SECTION_ID;
+  public static final int RUNE_BAG_SECTION_ID;
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.inventory.InventoryComponent> CODEC;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>[] HOTBAR_STORAGE_BACKPACK;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>[] HOTBAR_FIRST;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>[] STORAGE_FIRST;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>[] BACKPACK_STORAGE_HOTBAR;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>[] BACKPACK_HOTBAR_STORAGE;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>[] STORAGE_HOTBAR_BACKPACK;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>[] ARMOR_HOTBAR_UTILITY_STORAGE;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>[] HOTBAR_UTILITY_CONSUMABLE_STORAGE;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>[] EVERYTHING;
+  public com.hypixel.hytale.server.core.inventory.InventoryComponent();
+  public com.hypixel.hytale.server.core.inventory.InventoryComponent(short);
+  public void ensureCapacity(short, java.util.List<com.hypixel.hytale.server.core.inventory.ItemStack>);
+  public void markDirty();
+  public boolean consumeIsDirty();
+  public boolean consumeNeedsSaving();
+  public com.hypixel.hytale.server.core.inventory.container.ItemContainer getInventory();
+  public java.util.concurrent.ConcurrentLinkedQueue<com.hypixel.hytale.server.core.inventory.container.ItemContainer$ItemContainerChangeEvent> getChangeEvents();
+  public abstract com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> clone();
+  public static void setupCombined(com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.inventory.InventoryComponent$Storage>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.inventory.InventoryComponent$Armor>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.inventory.InventoryComponent$Hotbar>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.inventory.InventoryComponent$Utility>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.inventory.InventoryComponent$Backpack>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.inventory.InventoryComponent$Tool>);
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent> getComponentTypeById(int);
+  public static com.hypixel.hytale.server.core.inventory.container.CombinedItemContainer getCombined(com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>...);
+  public static com.hypixel.hytale.server.core.inventory.container.CombinedItemContainer getCombined(com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, int, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, ? extends com.hypixel.hytale.server.core.inventory.InventoryComponent>...);
+  public static com.hypixel.hytale.server.core.inventory.ItemStack getItemInHand(com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public static com.hypixel.hytale.server.core.inventory.ItemStack getItemInHand(com.hypixel.hytale.component.Holder<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}
+Compiled from "AbilitySlotAddFilter.java"
+public class com.hypixel.hytale.server.core.inventory.container.filter.AbilitySlotAddFilter implements com.hypixel.hytale.server.core.inventory.container.filter.ItemSlotFilter {
+  public com.hypixel.hytale.server.core.inventory.container.filter.AbilitySlotAddFilter(com.hypixel.hytale.protocol.AbilitySlot);
+  public boolean test(com.hypixel.hytale.server.core.asset.type.item.config.Item);
+  public com.hypixel.hytale.protocol.AbilitySlot getAbilitySlot();
+}
+Compiled from "AbilitySupportSlotFilter.java"
+public class com.hypixel.hytale.server.core.inventory.container.filter.AbilitySupportSlotFilter implements com.hypixel.hytale.server.core.inventory.container.filter.SlotFilter {
+  public com.hypixel.hytale.server.core.inventory.container.filter.AbilitySupportSlotFilter(short);
+  public boolean test(com.hypixel.hytale.server.core.inventory.container.filter.FilterActionType, com.hypixel.hytale.server.core.inventory.container.ItemContainer, short, com.hypixel.hytale.server.core.inventory.ItemStack);
+}
+Error: class not found: com.hypixel.hytale.server.core.asset.type.item.config.AbilitySlot
+Compiled from "ItemAbility.java"
+public class com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility implements com.hypixel.hytale.server.core.io.NetworkSerializable<com.hypixel.hytale.protocol.ItemAbility> {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility> CODEC;
+  public com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility();
+  public boolean appliesToAbility(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+  public boolean canUseWith(com.hypixel.hytale.server.core.inventory.ItemStack);
+  public com.hypixel.hytale.protocol.AbilitySlot getSlot();
+  public float getCooldownS();
+  public float getCost();
+  public com.hypixel.hytale.protocol.AbilityCostType getCostType();
+  public java.lang.String[] getTags();
+  public int[] getExpandedTagIndexes();
+  public java.util.Map<java.lang.String, java.lang.Float> getAttributes();
+  public java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier[]> getAttributeModifiers();
+  public java.lang.String[] getOnHitEffects();
+  public java.lang.String getConvertElement();
+  public java.lang.String getCastRootId();
+  public com.hypixel.hytale.protocol.ItemAbility toPacket();
+  public java.lang.String toString();
+  public java.lang.Object toPacket();
+}
+Error: class not found: com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.OpenAbilityBenchInteraction
+Error: class not found: com.hypixel.hytale.server.core.modules.interaction.util.AbilityCastUtil
 Compiled from "EntityStatMap.java"
 public class com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
   public static final int VERSION;

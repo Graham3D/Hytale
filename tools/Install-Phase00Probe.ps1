@@ -1,24 +1,35 @@
 [CmdletBinding()]
 param(
-    [string]$SaveModsDirectory = "$env:APPDATA\Hytale\UserData\Saves\RPG\mods"
+    [string]$SaveModsDirectory = "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\mods"
 )
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
-$sourceJar = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.1.jar'
-$targetJar = Join-Path $SaveModsDirectory 'HytaleRPG-Phase00-Audit-0.0.1.jar'
+$sourceJar = Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.2.jar'
+$htDevLibSource = "$env:APPDATA\Hytale\UserData\Saves\RPG\mods\HYTALEDEVLIB-0.5.0.jar"
+$targetJar = Join-Path $SaveModsDirectory 'HytaleRPG-Phase00-Audit-0.0.2.jar'
+$htDevLibTarget = Join-Path $SaveModsDirectory 'HYTALEDEVLIB-0.5.0.jar'
+$evidencePath = Join-Path $projectRoot 'evidence\phase-00\installation.json'
 
-if (-not (Test-Path -LiteralPath $sourceJar)) {
-    throw "Build the probe first: $sourceJar"
-}
-if (-not (Test-Path -LiteralPath $SaveModsDirectory)) {
-    throw "RPG save mods directory not found: $SaveModsDirectory"
-}
+if (-not (Test-Path -LiteralPath $sourceJar)) { throw "Build the probe first: $sourceJar" }
+if (-not (Test-Path -LiteralPath $SaveModsDirectory)) { throw "Pre-release RPG save mods directory not found: $SaveModsDirectory" }
 
 Copy-Item -LiteralPath $sourceJar -Destination $targetJar -Force
-[pscustomobject]@{
+if (-not (Test-Path -LiteralPath $htDevLibTarget)) {
+    Copy-Item -LiteralPath $htDevLibSource -Destination $htDevLibTarget
+}
+
+$result = [pscustomobject]@{
+    installedAtUtc = [DateTime]::UtcNow.ToString('o')
+    patchline = 'pre-release'
+    save = 'RPG'
+    revision = 'R001'
+    sourceCommit = (& git -C $projectRoot rev-parse HEAD).Trim()
     installed = $targetJar
     sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $targetJar).Hash
-    rollback = "Run tools/Uninstall-Phase00Probe.ps1 or remove only this exact jar."
-} | Format-List
-
+    htDevLib = $htDevLibTarget
+    htDevLibSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $htDevLibTarget).Hash
+    rollback = 'Run tools/Uninstall-Phase00Probe.ps1; it removes only the R001 audit jar.'
+}
+$result | ConvertTo-Json | Set-Content -LiteralPath $evidencePath -Encoding utf8
+$result | Format-List

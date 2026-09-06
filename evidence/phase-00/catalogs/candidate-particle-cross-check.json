@@ -2,224 +2,353 @@
   {
     "candidateSystemId": "Alerted",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/NPC/Emotions/Alerted.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/NPC/Emotions/Alerted.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Angry",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/NPC/Emotions/Angry.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/NPC/Emotions/Angry.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Aura_Sphere",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Status_Effect/Heal/Aura_Sphere.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Status_Effect/Heal/Aura_Sphere.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Azure_Spiral",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Azure_Spiral/Azure_Spiral.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Azure_Spiral/Azure_Spiral.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Battleaxe_Signature_Whirlwind",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Battleaxe/Signature/Battleaxe_Signature_Whirlwind.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Battleaxe/Signature/Battleaxe_Signature_Whirlwind.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Beam_Heal_Red",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/HealBeams/Beam_Heal_Red.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/HealBeams/Beam_Heal_Red.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Beam_Lightning2",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Beam/Beam_Lightning2.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Beam/Beam_Lightning2.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Block_Break_Ice",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Block/Ice/Block_Break_Ice.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Block/Ice/Block_Break_Ice.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Block_Break_Stone",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Block/Stone/Block_Break_Stone.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Block/Stone/Block_Break_Stone.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Block_Gem_Sparks",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Block/Crystal/Block_Gem_Sparks.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Block/Crystal/Block_Gem_Sparks.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Block_Sprint_Dust",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Block/Dust/Block_Sprint_Dust.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Block/Dust/Block_Sprint_Dust.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Blue_Beam",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/BlueBeam/Blue_Beam.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/BlueBeam/Blue_Beam.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Bow_Signature_Launch",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weapon/Bow/Bow_Signature_Launch.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weapon/Bow/Bow_Signature_Launch.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Bow_Signature_Projectile_Sparks",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weapon/Bow/Bow_Signature_Projectile_Sparks.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weapon/Bow/Bow_Signature_Projectile_Sparks.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Dagger_Charging",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Daggers/Charged/Dagger_Charging.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Daggers/Charged/Dagger_Charging.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Daggers_Dash_Straight",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Daggers/Special/Daggers_Dash_Straight.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Daggers/Special/Daggers_Dash_Straight.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Daggers_Pounce_Flash",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Daggers/Charged/Daggers_Pounce_Flash.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Daggers/Charged/Daggers_Pounce_Flash.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Daggers_Stab_Trail",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Daggers/Basic/Daggers_Stab_Trail.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Daggers/Basic/Daggers_Stab_Trail.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Dust_Sparkles_Fine",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Dust_Sparkles_Fine.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Dust_Sparkles_Fine.particlesystem"
     ]
   },
   {
     "candidateSystemId": "E_Sphere",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Status_Effect/Shield/E_Sphere.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Status_Effect/Shield/E_Sphere.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Effect_Crown_Gold",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Status_Effect/Crown_Gold/Effect_Crown_Gold.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Status_Effect/Crown_Gold/Effect_Crown_Gold.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Effect_Death",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Status_Effect/Death/Effect_Death.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Status_Effect/Death/Effect_Death.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Effect_Heal",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Status_Effect/Heal/Effect_Heal.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Status_Effect/Heal/Effect_Heal.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Effect_Snow",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Status_Effect/Snow/Effect_Snow.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Status_Effect/Snow/Effect_Snow.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Effect_Snow_Impact",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Status_Effect/Snow/Effect_Snow_Impact.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Status_Effect/Snow/Effect_Snow_Impact.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Embers",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weather/Firelands/Embers.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weather/Firelands/Embers.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Explosion_Big",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Explosion/Explosion_Big/Explosion_Big.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Explosion/Explosion_Big/Explosion_Big.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Explosion_Medium",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Explosion/Explosion_Medium/Explosion_Medium.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Explosion/Explosion_Medium/Explosion_Medium.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Explosion_Small",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Explosion/Explosion_Small/Explosion_Small.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Explosion/Explosion_Small/Explosion_Small.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Eye_Void_Eye",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/NPC/Eye_Void/Eye_Void_Eye.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/NPC/Eye_Void/Eye_Void_Eye.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Eye_Void_Smoke_Teal",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/NPC/Eye_Void/Eye_Void_Smoke_Teal.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/NPC/Eye_Void/Eye_Void_Smoke_Teal.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Fire_AoE",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/Fire/Fire_AoE.particlesystem",
+      "Server/Particles/Combat/Fire_Stick/Fire_Trap/Fire_AoE.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/Fire/Fire_AoE.particlesystem",
       "Server/Particles/Combat/Fire_Stick/Fire_Trap/Fire_AoE.particlesystem"
     ]
@@ -227,7 +356,12 @@
   {
     "candidateSystemId": "Fire_Charged1",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/Fire/Fire_Charged1.particlesystem",
+      "Server/Particles/Combat/Fire_Stick/Fire_Charged1.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/Fire/Fire_Charged1.particlesystem",
       "Server/Particles/Combat/Fire_Stick/Fire_Charged1.particlesystem"
     ]
@@ -235,392 +369,617 @@
   {
     "candidateSystemId": "Fire_Projectile",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/Fire/Fire_Projectile.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/Fire/Fire_Projectile.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Fireball_Charge_To_4",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Fire_Stick/Fireball_Charge_To_4.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Fire_Stick/Fireball_Charge_To_4.particlesystem"
     ]
   },
   {
     "candidateSystemId": "FireSword",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weapon/Sword/FireSword.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weapon/Sword/FireSword.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Flamethrower",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Flamethrower/Flamethrower.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Flamethrower/Flamethrower.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Flying_Orb",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Flying_Orb.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Flying_Orb.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Fuse_Bomb",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Item/Fuse_Bomb/Fuse_Bomb.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Item/Fuse_Bomb/Fuse_Bomb.particlesystem"
     ]
   },
   {
     "candidateSystemId": "GreenOrbTrail",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/GreenOrb/GreenOrbTrail.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/GreenOrb/GreenOrbTrail.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Gun_Impact",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Explosion/Explosion_Fail/Gun_Impact.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Explosion/Explosion_Fail/Gun_Impact.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Heal_Stick_ThornsUp",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/Sticks/Heal_Stick_ThornsUp.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/Sticks/Heal_Stick_ThornsUp.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Hedera_Scream",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/NPC/Hedera/Hedera_Scream.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/NPC/Hedera/Hedera_Scream.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Ice_Blast",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Ice_Blast/Ice_Blast.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Ice_Blast/Ice_Blast.particlesystem"
     ]
   },
   {
     "candidateSystemId": "IceBall",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Projectile/Iceball/IceBall.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Projectile/Iceball/IceBall.particlesystem"
     ]
   },
   {
     "candidateSystemId": "IceBall_Explosion",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Projectile/Iceball/IceBall_Explosion.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Projectile/Iceball/IceBall_Explosion.particlesystem"
     ]
   },
   {
     "candidateSystemId": "IceBoulderTrail",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Projectile/Ice_Boulder/IceBoulderTrail.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Projectile/Ice_Boulder/IceBoulderTrail.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Blade_01",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Sword/Basic/Impact_Blade_01.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Sword/Basic/Impact_Blade_01.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Critical",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Impact/Critical/Impact_Critical.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Impact/Critical/Impact_Critical.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Dagger_Slash",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Daggers/Basic/Impact_Dagger_Slash.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Daggers/Basic/Impact_Dagger_Slash.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Dagger_Stab",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Daggers/Basic/Impact_Dagger_Stab.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Daggers/Basic/Impact_Dagger_Stab.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Fire",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Impact/Misc/Fire/Impact_Fire.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Impact/Misc/Fire/Impact_Fire.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Ice",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Impact/Misc/Ice/Impact_Ice.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Impact/Misc/Ice/Impact_Ice.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Mace_Basic",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Mace/Basic/Impact_Mace_Basic.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Mace/Basic/Impact_Mace_Basic.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Mace_Charged",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Mace/Charged/Impact_Mace_Charged.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Mace/Charged/Impact_Mace_Charged.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Poison",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Impact/Misc/Impact_Poison.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Impact/Misc/Impact_Poison.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Shield_Bash",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Shield/Bash/Impact_Shield_Bash.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Shield/Bash/Impact_Shield_Bash.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Sword_Basic",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Sword/Basic/Impact_Sword_Basic.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Sword/Basic/Impact_Sword_Basic.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Impact_Sword_Signature_Spin",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Sword/Signature/Impact_Sword_Signature_Spin.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Sword/Signature/Impact_Sword_Signature_Spin.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Item_Break_Glass",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Item/Potion/Item_Break_Glass.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Item/Potion/Item_Break_Glass.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Laser_Impact",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weapon/LaserRifle/Laser_Impact.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weapon/LaserRifle/Laser_Impact.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Lightning",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Lightning/Lightning.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Lightning/Lightning.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Mace_Signature_Ground_Hit",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Mace/Signature/Mace_Signature_Ground_Hit.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Mace/Signature/Mace_Signature_Ground_Hit.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Magic_Hit",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/MagicBlast/Magic_Hit.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/MagicBlast/Magic_Hit.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Magic_Sparks_GS",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weather/Magic_Sparks/Magic_Sparks_GS.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weather/Magic_Sparks/Magic_Sparks_GS.particlesystem"
     ]
   },
   {
     "candidateSystemId": "MagicPortal_Flat",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Portal/MagicPortal_Flat.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Portal/MagicPortal_Flat.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Nature_Buff_SpawnInstant",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/Sticks/Nature_Buff_SpawnInstant.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/Sticks/Nature_Buff_SpawnInstant.particlesystem"
     ]
   },
   {
     "candidateSystemId": "NatureBeam",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/NatureRnD/NatureBeam.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/NatureRnD/NatureBeam.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Portal_Ground_Hedera",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/Cinematic/Hedera/Portal_Ground_Hedera.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/Cinematic/Hedera/Portal_Ground_Hedera.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Portal_Purple",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Portal/Portal_Purple.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Portal/Portal_Purple.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Praetorian_Summon_Energy",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/NPC/Skeleton_Burnt_Praetorian/Praetorian_Summon_Energy.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/NPC/Skeleton_Burnt_Praetorian/Praetorian_Summon_Energy.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Praetorian_Summon_Ground",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/NPC/Skeleton_Burnt_Praetorian/Praetorian_Summon_Ground.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/NPC/Skeleton_Burnt_Praetorian/Praetorian_Summon_Ground.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Praetorian_Summon_Spawn",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/NPC/Skeleton_Burnt_Praetorian/Praetorian_Summon_Spawn.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/NPC/Skeleton_Burnt_Praetorian/Praetorian_Summon_Spawn.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Rings_Rings",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Rings/Rings_Rings.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Rings/Rings_Rings.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Rings_Rings_Ice",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Rings/Rings_Rings_Ice.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Rings/Rings_Rings_Ice.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Shield_Bash",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Shield/Bash/Shield_Bash.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Shield/Bash/Shield_Bash.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Shield_Block",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Sword/Special/Shield_Block.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Sword/Special/Shield_Block.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Shotgun",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weapon/Musket/Shotgun.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weapon/Musket/Shotgun.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Smoke_Black",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Item/Smoke/Smoke_Black.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Item/Smoke/Smoke_Black.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Snow_Storm",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weather/Snow/Snow_Storm.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weather/Snow/Snow_Storm.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Spear",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weapon/Spear/Spear.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weapon/Spear/Spear.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Status_Poisoned",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Projectile/Acid/Status_Poisoned.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Projectile/Acid/Status_Poisoned.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Stick_Slam_Ground",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/Sticks/Stick_Slam_Ground.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/Sticks/Stick_Slam_Ground.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Stick_Slam_Ground_Large",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/Sticks/Stick_Slam_Ground_Large.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/Sticks/Stick_Slam_Ground_Large.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Stick_Slam_Ground_Small",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/Sticks/Stick_Slam_Ground_Small.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/Sticks/Stick_Slam_Ground_Small.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Stone_Bounce",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Block/Stone/Stone_Bounce.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Block/Stone/Stone_Bounce.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Sword_Charged_Trail",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Sword/Charged/Sword_Charged_Trail.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Sword/Charged/Sword_Charged_Trail.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Teleport",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Spell/Teleport/Teleport.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Spell/Teleport/Teleport.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Totem_Heal_AoE",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/HealTotem/Totem_Heal_AoE.particlesystem",
+      "Server/Particles/Deployables/Healing_Totem/Totem_Heal_AoE.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/HealTotem/Totem_Heal_AoE.particlesystem",
       "Server/Particles/Deployables/Healing_Totem/Totem_Heal_AoE.particlesystem"
     ]
@@ -628,14 +987,23 @@
   {
     "candidateSystemId": "Totem_Heal_Extra",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Deployables/Healing_Totem/Totem_Heal_Extra.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Deployables/Healing_Totem/Totem_Heal_Extra.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Totem_Slow_AoE",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/_Test/SlowTotem/Totem_Slow_AoE.particlesystem",
+      "Server/Particles/Deployables/Slowness_Totem/Totem_Slow_AoE.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/_Test/SlowTotem/Totem_Slow_AoE.particlesystem",
       "Server/Particles/Deployables/Slowness_Totem/Totem_Slow_AoE.particlesystem"
     ]
@@ -643,28 +1011,44 @@
   {
     "candidateSystemId": "Undead_Digging",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/NPC/Undead_Digging/Undead_Digging.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/NPC/Undead_Digging/Undead_Digging.particlesystem"
     ]
   },
   {
     "candidateSystemId": "VoidImpact",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Combat/Impact/Misc/Void/VoidImpact.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Combat/Impact/Misc/Void/VoidImpact.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Weather_Posion_Smoke",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weather/Poison/Weather_Posion_Smoke.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weather/Poison/Weather_Posion_Smoke.particlesystem"
     ]
   },
   {
     "candidateSystemId": "Wind",
     "exactMatch": true,
+    "classification": "VERIFIED_INSTALLED",
     "matchingArchivePaths": [
+      "Server/Particles/Weather/Wind.particlesystem"
+    ],
+    "baselineMatchingArchivePaths": [
       "Server/Particles/Weather/Wind.particlesystem"
     ]
   }

@@ -25,10 +25,10 @@ abstract class PlayerProbeCommand extends AbstractPlayerCommand {
             context.sendMessage(Message.raw("Phase 00 probe failed: Player component unavailable."));
             return;
         }
-        executeProbe(context, store, ref, playerRef, player);
+        executeProbe(context, store, ref, playerRef, player, world);
     }
 
     protected abstract void executeProbe(CommandContext context, Store<EntityStore> store,
-                                         Ref<EntityStore> ref, PlayerRef playerRef, Player player);
+                                         Ref<EntityStore> ref, PlayerRef playerRef, Player player,
+                                         World world);
 }
-

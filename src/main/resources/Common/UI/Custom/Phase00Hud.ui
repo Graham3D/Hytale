@@ -1,19 +1,27 @@
 $Common = "Common.ui";
 
 Group {
-  Anchor: (Left: 26, Bottom: 135, Width: 470, Height: 155);
-  Background: (Color: #0b111bd9);
-  Padding: (Full: 14);
+  Anchor: (Horizontal: 0, Bottom: 38, Width: 760, Height: 132);
+  Background: (Color: #08101bdd);
+  Padding: (Full: 10);
   LayoutMode: Top;
-
-  Label {
-    Text: "PHASE 00 HUD PROBE";
-    Style: (FontSize: 17, TextColor: #f2d488);
-    Anchor: (Height: 28);
+  Group {
+    Anchor: (Height: 30);
+    LayoutMode: Left;
+    Label #Mana { Text: "MANA"; Style: (FontSize: 14, TextColor: #67aef0, Alignment: Center); Anchor: (Width: 245); }
+    Label #Health { Text: "HEALTH"; Style: (FontSize: 14, TextColor: #ef7777, Alignment: Center); Anchor: (Width: 250); }
+    Label #Stamina { Text: "STAMINA"; Style: (FontSize: 14, TextColor: #7ad58a, Alignment: Center); Anchor: (Width: 245); }
   }
-  Label { Text: "HEALTH  [ read-only visual ]"; Style: (FontSize: 15, TextColor: #ef7777); Anchor: (Height: 28); }
-  Label { Text: "MANA    [ read-only visual ]"; Style: (FontSize: 15, TextColor: #67aef0); Anchor: (Height: 28); }
-  Label { Text: "STAMINA [ read-only visual ]"; Style: (FontSize: 15, TextColor: #7ad58a); Anchor: (Height: 28); }
-  Label { Text: "/rpgp00-hud-clear restores the exact native HUD snapshot"; Style: (FontSize: 13, TextColor: #b6c2cf); Anchor: (Height: 24); }
+  Group {
+    Anchor: (Height: 44);
+    LayoutMode: Center;
+    Label { Text: "ABILITY 1"; Style: (FontSize: 13, TextColor: #f2d488, Alignment: Center); Background: (Color: #253249ee); Anchor: (Width: 130, Height: 38); }
+    Group { Anchor: (Width: 10); }
+    Label { Text: "ABILITY 2"; Style: (FontSize: 13, TextColor: #f2d488, Alignment: Center); Background: (Color: #253249ee); Anchor: (Width: 130, Height: 38); }
+    Group { Anchor: (Width: 10); }
+    Label { Text: "ABILITY 3"; Style: (FontSize: 13, TextColor: #f2d488, Alignment: Center); Background: (Color: #253249ee); Anchor: (Width: 130, Height: 38); }
+    Group { Anchor: (Width: 10); }
+    Label { Text: "ABILITY 4"; Style: (FontSize: 13, TextColor: #f2d488, Alignment: Center); Background: (Color: #253249ee); Anchor: (Width: 130, Height: 38); }
+  }
+  Label { Text: "XP  [|||.......]  30%     LEVEL UP notice below compass     /rpgp00-hud-clear restores native HUD"; Style: (FontSize: 12, TextColor: #b6c2cf, Alignment: Center); Anchor: (Height: 28); }
 }
-

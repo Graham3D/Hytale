@@ -7,6 +7,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 final class LinkCanvasProbeCommand extends PlayerProbeCommand {
@@ -16,10 +17,9 @@ final class LinkCanvasProbeCommand extends PlayerProbeCommand {
 
     @Override
     protected void executeProbe(CommandContext context, Store<EntityStore> store,
-                                Ref<EntityStore> ref, PlayerRef playerRef, Player player) {
+                                Ref<EntityStore> ref, PlayerRef playerRef, Player player, World world) {
         player.getPageManager().openCustomPage(ref, store,
                 new LinkCanvasProbePage(playerRef, CustomPageLifetime.CanDismiss));
         context.sendMessage(Message.raw("Phase 00: requested Link canvas probe. Buttons prove events; they do not claim pointer drag support."));
     }
 }
-

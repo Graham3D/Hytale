@@ -1,6 +1,8 @@
 {
-  "capturedAtUtc": "2026-09-06T02:50:16.4929139Z",
+  "capturedAtUtc": "2026-09-06T12:27:27.4888902Z",
   "processExitCode": 9,
+  "targetVersion": "0.7.0-pre.1",
+  "targetRevision": "e8b4d191fc98a977bf5546a951a7b25473d323e3",
   "serverVersionObserved": true,
   "htDevLibDiscovered": true,
   "htDevLibSetup": true,
@@ -8,5 +10,6 @@
   "probeDiscovered": true,
   "probeSetup": true,
   "probeEnabled": true,
-  "note": "Bare-mode shutdown emits core-plugin dependency/shutdown noise; evaluate the named plugin markers above, not unrelated core warnings."
+  "pluginExceptionObserved": false,
+  "note": "Bare shutdown may emit unrelated core transport/dependency noise. Gate on target/version/plugin markers and plugin-scoped exceptions."
 }

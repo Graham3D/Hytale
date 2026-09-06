@@ -1,8 +1,9 @@
 [CmdletBinding()]
 param(
-    [string]$AssetsZip = "$env:APPDATA\Hytale\install\release\package\game\latest\Assets.zip",
-    [string]$MasterSpecification = "C:\Users\Zemio\Downloads\Hytale RPG Master Implementation Specification v1.1.docx.md",
-    [string]$OutputDirectory = "$PSScriptRoot\..\evidence\phase-00\catalogs"
+    [string]$AssetsZip = "$env:APPDATA\Hytale\install\pre-release\package\game\latest\Assets.zip",
+    [string]$MasterSpecification = "$PSScriptRoot\..\..\Hytale RPG Master Implementation Specification v1.1.docx.md",
+    [string]$OutputDirectory = "$PSScriptRoot\..\evidence\phase-00\catalogs",
+    [string]$BaselineCatalog = "$PSScriptRoot\..\evidence\phase-00\history\0.6.3\catalogs\asset-catalog.json"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -80,15 +81,53 @@ try {
         }
         $candidateIds = @($candidateIds | Sort-Object -Unique)
         $particleRows = @($allRows | Where-Object category -eq 'particle-systems')
+        $baselineParticleRows = @()
+        if (Test-Path -LiteralPath $BaselineCatalog) {
+            $baselineParticleRows = @(Get-Content -LiteralPath $BaselineCatalog -Raw | ConvertFrom-Json |
+                Where-Object category -eq 'particle-systems')
+        }
         $crossCheck = foreach ($candidate in $candidateIds) {
             $matches = @($particleRows | Where-Object { $_.id -eq $candidate -or $_.relativeId -eq $candidate })
+            $baselineMatches = @($baselineParticleRows | Where-Object { $_.id -eq $candidate -or $_.relativeId -eq $candidate })
+            $classification = if ($matches.Count -gt 0) { 'VERIFIED_INSTALLED' }
+                elseif ($baselineMatches.Count -gt 0) { 'PUBLIC_OR_HISTORICAL_CANDIDATE' }
+                else { 'MISSING' }
             [pscustomobject]@{
                 candidateSystemId = $candidate
                 exactMatch = $matches.Count -gt 0
+                classification = $classification
                 matchingArchivePaths = @($matches.archivePath)
+                baselineMatchingArchivePaths = @($baselineMatches.archivePath)
             }
         }
         $crossCheck | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $OutputDirectory 'candidate-particle-cross-check.json') -Encoding utf8
+    }
+
+    if (Test-Path -LiteralPath $BaselineCatalog) {
+        $baselineRows = @(Get-Content -LiteralPath $BaselineCatalog -Raw | ConvertFrom-Json)
+        $baselineByKey = @{}
+        foreach ($row in $baselineRows) { $baselineByKey["$($row.category)|$($row.relativeId)"] = $row }
+        $currentByKey = @{}
+        foreach ($row in $allRows) { $currentByKey["$($row.category)|$($row.relativeId)"] = $row }
+        $allKeys = @($baselineByKey.Keys + $currentByKey.Keys | Sort-Object -Unique)
+        $deltaRows = foreach ($key in $allKeys) {
+            $before = $baselineByKey[$key]
+            $after = $currentByKey[$key]
+            $status = if ($null -eq $before) { 'ADDED' }
+                elseif ($null -eq $after) { 'REMOVED' }
+                elseif ($before.sha256 -ne $after.sha256) { 'CHANGED' }
+                else { 'UNCHANGED' }
+            [pscustomobject]@{
+                key = $key
+                status = $status
+                previousSha256 = if ($before) { $before.sha256 } else { $null }
+                currentSha256 = if ($after) { $after.sha256 } else { $null }
+            }
+        }
+        $deltaRows | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $OutputDirectory 'catalog-delta-from-0.6.3.json') -Encoding utf8
+        $deltaRows | Group-Object status | Sort-Object Name | ForEach-Object {
+            [pscustomobject]@{ status = $_.Name; count = $_.Count }
+        } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $OutputDirectory 'catalog-delta-summary.json') -Encoding utf8
     }
 }
 finally {
@@ -96,4 +135,3 @@ finally {
 }
 
 Get-ChildItem -LiteralPath $OutputDirectory | Select-Object Name, Length
-
