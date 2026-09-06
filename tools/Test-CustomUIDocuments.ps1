@@ -100,6 +100,13 @@ foreach ($document in $documents) {
         $opening = $delimiters.Pop()
         $errors.Add("$($document.Name) ($($opening.Line)`:$($opening.Column)): unclosed delimiter $($opening.Character).")
     }
+
+    foreach ($match in [regex]::Matches($text, '(?ms)\bButton(?:\s+#\w+)?\s*\{(?<body>[^{}]*)\}')) {
+        if ($match.Groups['body'].Value -match '(?m)^\s*Text\s*:') {
+            $matchLine = 1 + ([regex]::Matches($text.Substring(0, $match.Index), "`n")).Count
+            $errors.Add("$($document.Name) ($matchLine): Button does not accept Text; use TextButton for a labeled control.")
+        }
+    }
 }
 
 if ($documents.Count -eq 0) { throw 'No CustomUI .ui documents were found in the validation targets.' }

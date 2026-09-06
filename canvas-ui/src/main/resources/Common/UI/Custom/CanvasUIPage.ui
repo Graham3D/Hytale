@@ -26,7 +26,7 @@ Group {
     Padding: (Full: 8);
     LayoutMode: Left;
     Label { Text: "CANVAS UI"; Style: (FontSize: 19, TextColor: #78c6d0); Anchor: (Width: 150); }
-    Label #CanvasRevision { Text: "R002"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Anchor: (Width: 76); }
+    Label #CanvasRevision { Text: "R003"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Anchor: (Width: 76); }
     Label { Text: "ZOOM 1.0"; Style: (FontSize: 12, TextColor: #93a4b6, Alignment: Center); Anchor: (Width: 90); }
   }
   Label #CanvasStatus {

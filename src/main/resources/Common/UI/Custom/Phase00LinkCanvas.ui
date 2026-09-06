@@ -45,11 +45,23 @@ Group {
     Group {
       Anchor: (Height: 64);
       LayoutMode: Center;
-      Button #PanLeft { Text: "Event: Pan Left"; Anchor: (Width: 190, Height: 46); }
+      TextButton #PanLeft {
+        Text: "Event: Pan Left";
+        Anchor: (Width: 190, Height: 46);
+        Style: $Common.@DefaultTextButtonStyle;
+      }
       Group { Anchor: (Width: 16); }
-      Button #MoveNode { Text: "Event: Move Node"; Anchor: (Width: 210, Height: 46); }
+      TextButton #MoveNode {
+        Text: "Event: Move Node";
+        Anchor: (Width: 210, Height: 46);
+        Style: $Common.@DefaultTextButtonStyle;
+      }
       Group { Anchor: (Width: 16); }
-      Button #PanRight { Text: "Event: Pan Right"; Anchor: (Width: 190, Height: 46); }
+      TextButton #PanRight {
+        Text: "Event: Pan Right";
+        Anchor: (Width: 190, Height: 46);
+        Style: $Common.@DefaultTextButtonStyle;
+      }
     }
   }
 }
