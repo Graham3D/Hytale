@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.hytalerpg.combat.power.ItemPowerDescriptor;
 import com.inigmasgames.hytalerpg.execution.SkillExecutionPort;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 /** Audits authoritative equipped item IDs and Hytale-authored basic damage data. */
@@ -21,15 +22,15 @@ public final class HytaleEquipmentAdapter {
 
     private static SkillExecutionPort.Item item(ItemStack stack) {
         if (stack == null || stack.isEmpty() || !stack.isValid()) return null;
-        String kind = kind(stack.getItemId());
+        var item = stack.getItem();
+        String kind = kind(stack.getItemId(), item == null || item.getData() == null ? Map.of() : item.getData().getRawTags());
         Set<String> tags = switch (kind) {
-            case "SWORD", "DAGGER", "BOW", "CROSSBOW" -> Set.of("RPG_WEAPON_LIGHT");
+            case "SWORD", "DAGGER", "BOW", "CROSSBOW", "BOMB" -> Set.of("RPG_WEAPON_LIGHT");
             case "LONGSWORD", "MACE", "BATTLEAXE", "SHIELD" -> Set.of("RPG_WEAPON_HEAVY");
             case "STAFF", "WAND", "SPELLBOOK" -> Set.of("RPG_WEAPON_MAGIC");
             default -> Set.of();
         };
         Double power = null;
-        var item = stack.getItem();
         if (item != null && item.getWeapon() != null && item.getWeapon().getBasicDamageBreakdown() != null
                 && !item.getWeapon().getBasicDamageBreakdown().entries().isEmpty()) {
             power = item.getWeapon().getBasicDamageBreakdown().entries().stream()
@@ -55,5 +56,11 @@ public final class HytaleEquipmentAdapter {
         if (id.contains("MACE")) return "MACE";
         if (id.contains("SWORD")) return "SWORD";
         return "UNKNOWN";
+    }
+    /** The installed bomb items declare Family=Bomb; names such as Shortbow_Bomb do not override native family. */
+    public static String kind(String itemId, java.util.Map<String,String[]> rawTags) {
+        String[] family = rawTags == null ? null : rawTags.get("Family");
+        if (family != null && java.util.Arrays.asList(family).contains("Bomb")) return "BOMB";
+        return kind(itemId);
     }
 }

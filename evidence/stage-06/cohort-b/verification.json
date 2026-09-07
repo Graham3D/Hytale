@@ -1,0 +1,32 @@
+{
+  "capturedAtUtc": "2026-09-07T20:08:10.2633390Z",
+  "revision": "R025",
+  "version": "0.0.18",
+  "stage": "06",
+  "branch": "RPG",
+  "sourceHead": "12e49083492734ba9d2a372622cfd5da8332f0e7",
+  "worktreeDirty": true,
+  "stageStatus": "IMPLEMENTATION_IN_PROGRESS",
+  "completeStageGate": false,
+  "cohort": "b",
+  "cohortSkills": [
+    "powder_mine",
+    "cold_wave",
+    "venom_spray",
+    "blizzard",
+    "wall_of_fire",
+    "poison_cloud"
+  ],
+  "tests": 190,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "connectedVerification": "UNVERIFIED",
+  "nativeCastingFixed": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "jarSha256": "AD835309D55CA1958159992CBC5A57FB2D669CD7D897BD6BD071E2471D3EA935",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "rollbackSha256": "FA6C2AAB3E232665D78336EB64334C98048C38821388E2C869AD057E85C14D1F"
+}

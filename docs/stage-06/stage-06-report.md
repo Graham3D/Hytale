@@ -102,11 +102,96 @@ or client. Cohort-A RPG JAR SHA-256:
 No live mod was replaced. R024 rollback hash remains
 `FA6C2AAB3E232665D78336EB64334C98048C38821388E2C869AD057E85C14D1F`.
 
+## Cohort B — finite zones, cones, mine and periodic source packages
+
+The second bounded cohort adds Powder Mine, Cold Wave, Venom Spray, Blizzard,
+Wall of Fire and Poison Cloud. No Stage 07 work is included. Canonical counts
+remain 87 skills and 66 passives. Native items remain zero-cost/zero-cooldown
+trigger bridges; resources and damage remain RPG-owned.
+
+### Decisions and exact mechanics
+
+- Powder Mine separates its 2.5 m trigger cylinder from its 4 m blast cylinder,
+  arms after 0.5 s, expires after 20 s without exploding, and damages each eligible
+  blast target once. Cold Wave uses the full 70-degree cone, 12 m range and 2.5 m
+  height, with three Chill stacks inside 6 m and two outside. Venom Spray uses
+  its full 65-degree cone, 8 m range, 0.9 direct coefficient and seven-second Poison.
+- Wall of Fire uses full 10 m by 2 m dimensions, perpendicular to horizontal
+  placement aim. Its 0.45 coefficient is damage **per second**, not per update.
+  Poison Cloud likewise integrates 0.30 per second. Both last eight seconds;
+  0.25 s ticks multiply by elapsed duration, and status application has a separate
+  one-second per-target interval. A server gap over one second cancels the field
+  rather than inventing historical target positions. Shorter catch-up intervals
+  use currently observed targets, not reconstructed movement history.
+- Blizzard has sixteen radius-2 m sub-impacts in its radius-6 m field, no hidden
+  full-field damage, and a per-root/per-target 0.75 s damage interval. The bounded
+  deterministic pattern uses a root/skill seed, equal-area radial strata and
+  inset centers so the entire child footprint remains inside the advertised field.
+  **Timing interpretation:** instant commitment starts a 0.25 s warning lead-in;
+  authored impact offsets 0 through 7.5 s then run from that active epoch. Thus
+  the first impact is 0.25 s after commitment and total field ownership is 8.25 s.
+  This reconciles the required warning with an authored first offset of zero;
+  it is explicit implementation judgment, not connected timing evidence. Lag
+  cannot shorten an actually issued warning. A missing/changed warned surface
+  consumes that impact without damage or retargeting to an unwarned point.
+- Sub-impact placement uses native upward-floor collision and parent-to-impact
+  LOS. Cone origin does not require the caster to stand on a ground surface.
+  Rectangle/cone presentation uses bounded native line geometry matching those
+  shapes; discs retain the native disc template. Rendering is unverified and
+  placeholder icons/geometry are not final visual-quality acceptance.
+
+### Proven shared-runtime corrections
+
+The prior Burn map was keyed by owner/victim, allowing different source skills
+to overwrite each other. The shared periodic runtime now keys source packages
+by owner, skill, victim and Burn/Poison kind. Burn refreshes one source stack;
+Poison adds up to three source stacks and retains at most twelve victim stacks,
+ranked by resolved per-stack offensive snapshot strength with stable identity
+tie-breaking. A weaker refresh cannot reduce the retained stronger snapshot.
+Accrual is integrated before stack/snapshot changes, with one-second ticks and
+proportional final remainders. Newly added stacks do not damage earlier time.
+Competing packages settle before the Poison cap is enforced: an expired package
+cannot displace a live one, and eviction preserves already-earned fractional
+damage. Native-failure paths consume pending work before callbacks to prevent
+replay; a gap over two seconds drops unobserved periodic catch-up.
+
+This runtime calls the existing calculation/native damage path for every paid
+tick; it never writes Health or manufactures downstream native events. DoT
+damage uses the resolved offensive base before the direct-hit coefficient and
+does not crit or seed triggered copies. Fire Bolt retains its existing native
+Projectile damage channel and authored Burn coefficient/duration. New area Burn
+and Poison use verified native Fire/Poison channels. Native visual effects carry
+no damage. Projection is reconciled on the victim's world thread and owner
+teardown preserves packages owned by other casters.
+
+Two catalog corrections follow explicit master content rather than new balance:
+Venom Spray is INNATE base power 20, not an unaudited weapon-power requirement;
+periodic Wall of Fire/Poison Cloud do not advertise CAN_CRIT. Native Bomb items
+also required an equipment-boundary correction: the installed items expose
+`Family=Bomb` with an empty Weapon breakdown. The adapter now reads this actual
+family tag. The audited Weapon_Bomb/Weapon_Bomb_Fire throw/projectile/explosion
+inheritance resolves EntityDamage 20, recorded as their fallback power. RPG
+does **not** run the native explosion, consume another item, or damage terrain.
+Unaudited bomb variants remain missing-power rejections.
+
+### Cohort-B evidence
+
+The complete retained build passed **190 tests, zero failures/errors/skips**.
+The normal isolated three-mod server resolved nine area profiles, ten status
+assets and both project damage channels, booted and stopped with exit code 0.
+It retains shipped-asset/animation and offline-auth warnings in the raw log;
+the gate does not label the entire engine log warning-free. Cohort-B JAR SHA-256:
+`AD835309D55CA1958159992CBC5A57FB2D669CD7D897BD6BD071E2471D3EA935`.
+Aggregate totals, build hashes and boot results are recorded in
+`evidence/stage-06/cohort-b/verification.json` and its smoke summary.
+These are local engineering evidence only. R023 remains live; no connected
+RPG input, zone rendering, NPC control or periodic Health loss is proven by them.
+
 ## Remaining Stage 06 work — not a capability-blocked or completed claim
 
-Before the stage gate can pass, finish the other twelve skills in cohorts of at
-most six; scheduled/stratified impacts, periodic source packages, disjoint inner
-payloads, swept pulls, roof/terrain anchoring, warning timing and all templates.
+Before the stage gate can pass, finish the six remaining skills: Vortex,
+Earthquake, Meteor, Comet, Avalanche and Void Cataclysm. Complete disjoint inner
+payloads, swept pulls, overhead roof checks and their warning/presentation paths.
 Complete Expanded Radius, Skill Delay and Echo through shared runtime seams,
 including valid preexisting projectile consumers; preserve Potency 15%.
 

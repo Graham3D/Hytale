@@ -220,7 +220,7 @@ public final class Phase00Plugin extends JavaPlugin {
         // Assets are resolved before plugin start, including in --bare smoke mode (no BootEvent).
         com.inigmasgames.hytalerpg.input.NativeRuneControl.auditAssets();
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem.requireAssets();
-        LOGGER.atInfo().log("RPG_STAGE06_ASSETS revision=%s areaProfiles=%d requiredStatusAssets=8 nativeDamageChannels=2 result=PASS connectedProof=false",
+        LOGGER.atInfo().log("RPG_STAGE06_ASSETS revision=%s areaProfiles=%d requiredStatusAssets=10 nativeDamageChannels=2 result=PASS connectedProof=false",
                 BuildIdentity.REVISION, Stage04SkillProfiles.EXPECTED_STAGE06_PROFILES);
     }
 

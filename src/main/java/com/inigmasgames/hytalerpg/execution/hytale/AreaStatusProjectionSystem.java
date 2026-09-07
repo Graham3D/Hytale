@@ -17,6 +17,9 @@ public final class AreaStatusProjectionSystem extends EntityTickingSystem<Entity
     public AreaStatusProjectionSystem(StatusService statuses) { this.statuses = statuses; }
     public static void requireAssets() {
         if (!HytaleAreaStatuses.available()) throw new IllegalStateException("Stage 06 native status assets missing");
+        for (String id : java.util.List.of("RPG_Burn_Visual", "RPG_Poison_Visual"))
+            if (com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect.getAssetMap().getAsset(id) == null)
+                throw new IllegalStateException("Stage 06 periodic status visual missing: " + id);
         for (String id : java.util.List.of("RPG_Nature", "RPG_Void"))
             if (com.hypixel.hytale.server.core.modules.entity.damage.DamageCause.getAssetMap().getAsset(id) == null)
                 throw new IllegalStateException("Stage 06 native damage channel missing: " + id);

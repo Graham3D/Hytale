@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param()
+param([ValidateSet('a','b')][string]$Cohort = 'a')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
@@ -8,9 +8,11 @@ $serverJar = Join-Path $package 'Server\HytaleServer.jar'
 $assets = Join-Path $package 'Assets.zip'
 $saveMods = "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\mods"
 $savePermissions = "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\permissions.json"
-$runDirectory = Join-Path $projectRoot 'run\stage06-cohort-a-smoke'
+$runDirectory = Join-Path $projectRoot "run\stage06-cohort-$Cohort-smoke"
 $mods = Join-Path $runDirectory 'mods'
-$evidence = Join-Path $projectRoot 'evidence\stage-06\cohort-a'
+$evidence = Join-Path $projectRoot "evidence\stage-06\cohort-$Cohort"
+$expectedProfiles = if ($Cohort -eq 'a') { 3 } else { 9 }
+$expectedStatusAssets = if ($Cohort -eq 'a') { 8 } else { 10 }
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path
 if (-not $resolved.StartsWith($projectRoot, [StringComparison]::OrdinalIgnoreCase)) { throw "Unsafe smoke path: $resolved" }
@@ -49,7 +51,7 @@ $summary = [ordered]@{
     managerStarted = [bool]($plain -match 'Plugin manager started!')
     networkBooted = [bool]($plain -match 'Hytale Server Booted')
     cleanShutdown = [bool]($plain -match 'Shutting down\.\.\. 0\s')
-    areaAssetsResolved = [bool]($plain -match 'RPG_STAGE06_ASSETS revision=R025 areaProfiles=3 requiredStatusAssets=8 nativeDamageChannels=2 result=PASS connectedProof=false')
+    areaAssetsResolved = [bool]($plain -match "RPG_STAGE06_ASSETS revision=R025 areaProfiles=$expectedProfiles requiredStatusAssets=$expectedStatusAssets nativeDamageChannels=2 result=PASS connectedProof=false")
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8

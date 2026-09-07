@@ -11,7 +11,7 @@ public record AreaSkillProfile(AreaGeometry.Kind geometry, double radius, double
         String status, double statusSeconds, int chillStacks, int innerChillStacks,
         double statusInnerRadius, double statusInnerSeconds, double displacement, double pullCoreRadius,
         boolean firstTargetOnly, boolean stratified, double finalCoefficient, double finalPull,
-        String element, int candidateBudget) {
+        String element, int candidateBudget, boolean periodic, double statusIntervalSeconds) {
     public AreaSkillProfile {
         if (geometry == null || element == null || status == null || impactCount < 0 || impactCount > 48
                 || perTargetHitCap < 1 || (candidateBudget != 64 && candidateBudget != 256))
@@ -20,10 +20,14 @@ public record AreaSkillProfile(AreaGeometry.Kind geometry, double radius, double
                 lifetimeSeconds, armingSeconds, warningSeconds, intervalSeconds, firstImpactSeconds,
                 impactRadius, targetIntervalSeconds, coefficient, innerRadius, innerCoefficient,
                 edgeFalloff, statusSeconds, statusInnerRadius, statusInnerSeconds, displacement,
-                pullCoreRadius, finalCoefficient, finalPull})
+                pullCoreRadius, finalCoefficient, finalPull, statusIntervalSeconds})
             if (!Double.isFinite(value) || value < 0) throw new IllegalArgumentException("Invalid area numeric value");
         if (height <= 0 || edgeFalloff > 1 || (impactCount > 1 && intervalSeconds <= 0))
             throw new IllegalArgumentException("Invalid area timing/height/falloff");
+        if (periodic && (lifetimeSeconds <= 0 || intervalSeconds <= 0 || impactCount != 0))
+            throw new IllegalArgumentException("Periodic areas require finite duration and time integration, not discrete impacts");
+        if (stratified && (impactRadius <= 0 || impactRadius > radius || impactCount < 1 || warningSeconds <= 0))
+            throw new IllegalArgumentException("Invalid stratified impact/warning profile");
     }
     public AreaGeometry footprint(Vec3 origin, Vec3 direction, double radiusFactor) {
         return new AreaGeometry(geometry, origin, direction, radius * radiusFactor, angleDegrees, length, width, height);

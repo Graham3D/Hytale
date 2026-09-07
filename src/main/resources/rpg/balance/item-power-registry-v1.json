@@ -1,7 +1,17 @@
 {
   "schemaVersion": 1,
-  "registryId": "rpg.item-power.audit.r011",
+  "registryId": "rpg.item-power.audit.r025",
   "items": [
+    {
+      "itemId": "Weapon_Bomb",
+      "tags": ["RPG_WEAPON_LIGHT"],
+      "weaponPower": 20.0
+    },
+    {
+      "itemId": "Weapon_Bomb_Fire",
+      "tags": ["RPG_WEAPON_LIGHT"],
+      "weaponPower": 20.0
+    },
     {
       "itemId": "HytaleRPG_Development_Light",
       "tags": ["RPG_WEAPON_LIGHT"],

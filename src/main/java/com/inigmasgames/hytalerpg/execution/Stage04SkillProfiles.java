@@ -14,7 +14,7 @@ import java.util.Map;
 public final class Stage04SkillProfiles {
     public static final int EXPECTED_STAGE04_PILOTS = 6;
     public static final int EXPECTED_STAGE05_PILOTS = 6;
-    public static final int EXPECTED_STAGE06_PROFILES = 3;
+    public static final int EXPECTED_STAGE06_PROFILES = 9;
     private final Map<String, Stage04SkillProfile> profiles;
 
     public Stage04SkillProfiles(List<Stage04SkillProfile> profiles) {
@@ -30,7 +30,8 @@ public final class Stage04SkillProfiles {
             List<Stage04SkillProfile> profiles = new ArrayList<>();
             profiles.addAll(load("/rpg/runtime/stage-04-skills.json", EXPECTED_STAGE04_PILOTS));
             profiles.addAll(load("/rpg/runtime/stage-05-projectiles.json", EXPECTED_STAGE05_PILOTS));
-            profiles.addAll(load("/rpg/runtime/stage-06-area-cohort-a.json", EXPECTED_STAGE06_PROFILES));
+            profiles.addAll(load("/rpg/runtime/stage-06-area-cohort-a.json", 3));
+            profiles.addAll(load("/rpg/runtime/stage-06-area-cohort-b.json", 6));
             Stage04SkillProfiles loaded = new Stage04SkillProfiles(profiles);
             int expected = EXPECTED_STAGE04_PILOTS + EXPECTED_STAGE05_PILOTS + EXPECTED_STAGE06_PROFILES;
             if (loaded.profiles.size() != expected)

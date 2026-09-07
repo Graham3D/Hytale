@@ -77,11 +77,8 @@ class Stage06AreaRuntimeTest {
     }
 
     static Stage04SkillProfile profile(String id) {
-        try (var stream = Stage06AreaRuntimeTest.class.getResourceAsStream("/rpg/runtime/stage-06-area-cohort-a.json")) {
-            assertNotNull(stream);
-            var data = new Gson().fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), Data.class);
-            return data.skills.stream().filter(p -> p.skillId().equals(id)).findFirst().orElseThrow();
-        } catch (java.io.IOException error) { throw new AssertionError(error); }
+        return com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles.loadCanonical(
+                com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical()).require(id);
     }
     static SkillExecutionContext context(String id) {
         UUID owner = UUID.randomUUID(); var bundle = Stage01BTestSupport.bundle();
@@ -103,8 +100,12 @@ class Stage06AreaRuntimeTest {
         final List<Payload> payloads = new ArrayList<>(); final List<String> hitIds = new ArrayList<>();
         final List<SkillExecutionContext> contexts = new ArrayList<>();
         final List<AreaGeometry> presented = new ArrayList<>(); final List<String> events = new ArrayList<>();
+        boolean ground = true;
         public Query query(AreaGeometry shape, int budget) { return new Query(targets, overflow); }
         public boolean lineOfSight(Vec3 origin, Target target) { return los; }
+        public java.util.Optional<AreaGeometry> prepareImpact(Vec3 parent, AreaGeometry shape) {
+            return ground ? java.util.Optional.of(shape) : java.util.Optional.empty();
+        }
         public boolean apply(SkillExecutionContext context, Target target, Payload payload) {
             contexts.add(context); hitIds.add(target.id()); payloads.add(payload); return true;
         }

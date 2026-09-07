@@ -85,6 +85,13 @@ public final class StatusService {
         if (actor.isEmpty()) states.remove(target);
         return true;
     }
+    /** Read-model projection of the source-owned periodic runtime, not a second DoT timer or damage writer. */
+    public synchronized void projectPeriodic(UUID target, RpgStatusType type, int stacks, double seconds) {
+        if (type != RpgStatusType.BURN && type != RpgStatusType.POISON)
+            throw new IllegalArgumentException("Not a periodic status");
+        if (stacks <= 0 || seconds <= 0) { remove(target, type); return; }
+        applySimple(target, type, seconds, stacks, true, "source-owned periodic projection");
+    }
     public synchronized Snapshot inspect(UUID target) {
         expire(target);
         EnumMap<RpgStatusType, StatusView> result = new EnumMap<>(RpgStatusType.class);

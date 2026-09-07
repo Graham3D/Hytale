@@ -1,8 +1,8 @@
 [CmdletBinding()]
-param()
+param([ValidateSet('a','b')][string]$Cohort = 'a')
 $ErrorActionPreference = 'Stop'
 $stage06Root = (Resolve-Path "$PSScriptRoot\..").Path
-$stage06Evidence = Join-Path $stage06Root 'evidence\stage-06\cohort-a'
+$stage06Evidence = Join-Path $stage06Root "evidence\stage-06\cohort-$Cohort"
 $stage06Package = "$env:APPDATA\Hytale\install\pre-release\package\game\latest"
 $stage06Server = Join-Path $stage06Package 'Server\HytaleServer.jar'
 $stage06Assets = Join-Path $stage06Package 'Assets.zip'
@@ -27,6 +27,8 @@ try {
         'com.hypixel.hytale.server.npc.role.Role',
         'com.hypixel.hytale.server.core.entity.InteractionManager',
         'com.hypixel.hytale.server.core.modules.entity.damage.Damage',
+        'com.hypixel.hytale.assetstore.AssetExtraInfo$Data',
+        'com.hypixel.hytale.server.core.asset.type.item.config.Item',
         'com.hypixel.hytale.server.core.io.PacketHandler'
     )
     foreach ($stage06Class in $stage06Classes) {
@@ -38,10 +40,15 @@ try {
     $stage06Zip = [IO.Compression.ZipFile]::OpenRead($stage06Assets)
     try {
         foreach ($stage06AssetPath in @('Server/Entity/Effects/Status/Root.json', 'Server/Entity/Effects/Status/Slow.json',
-                'Server/Entity/Effects/Status/Stun.json', 'Server/Entity/Damage/Earth.json', 'Server/Entity/Damage/Elemental.json',
+                'Server/Entity/Effects/Status/Stun.json', 'Server/Entity/Effects/Status/Burn_Template.json',
+                'Server/Entity/Damage/Earth.json', 'Server/Entity/Damage/Elemental.json',
                 'Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Elite.json',
                 'Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Elite_Phase_2.json',
-                'Server/EncounterManager/Encounter_Skeleton_Elite.json', 'Server/EncounterManager/Example_Boss.json')) {
+                'Server/EncounterManager/Encounter_Skeleton_Elite.json', 'Server/EncounterManager/Example_Boss.json',
+                'Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json', 'Server/Item/Items/Weapon/Bomb/Weapon_Bomb_Fire.json',
+                'Server/Item/Interactions/Weapons/Bomb/Bomb_Throw.json', 'Server/Item/Interactions/Weapons/Bomb/Bomb_Explode.json',
+                'Server/ProjectileConfigs/Weapons/Bombs/Projectile_Config_Bomb_Base.json',
+                'Server/Item/Interactions/Explosions/Explode_Generic_Entities.json', 'Server/Item/Interactions/Explosions/Explode_Generic.json')) {
             $stage06Entry = $stage06Zip.GetEntry($stage06AssetPath)
             if ($null -eq $stage06Entry) { throw "Missing native asset: $stage06AssetPath" }
             $stage06Reader = [IO.StreamReader]::new($stage06Entry.Open())
@@ -57,6 +64,8 @@ try {
         $stage06Errors += [int]$stage06Xml.testsuite.errors; $stage06Skipped += [int]$stage06Xml.testsuite.skipped
     }
     if ($stage06Failed -or $stage06Errors -or $stage06Skipped) { throw 'Regression result is not green.' }
+    $stage06MinimumTests = if ($Cohort -eq 'a') { 171 } else { 190 }
+    if ($stage06Tests -lt $stage06MinimumTests) { throw "Incomplete retained regression suite: $stage06Tests < $stage06MinimumTests" }
     & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $stage06Jar
     $stage06Protected = @(& git diff --name-only 5c5e55e -- 'src/main/java/com/inigmasgames/hytalerpg/ui' 'src/main/resources/Common/UI' 'canvas-ui/src' 'src/main/resources/rpg/runtime/stage-04-skills.json' 'src/main/resources/rpg/runtime/stage-05-projectiles.json' 'src/main/java/com/inigmasgames/hytalerpg/execution/projectile')
     if ($stage06Protected.Count) { throw "Protected HUD/earlier delivery changes: $stage06Protected" }
@@ -65,7 +74,9 @@ try {
     $stage06Summary = [ordered]@{
         capturedAtUtc=[DateTime]::UtcNow.ToString('o'); revision='R025'; version='0.0.18'; stage='06'
         branch=(& git branch --show-current).Trim(); sourceHead=(& git rev-parse HEAD).Trim(); worktreeDirty=[bool](& git status --porcelain)
-        stageStatus='IMPLEMENTATION_IN_PROGRESS'; completeStageGate=$false; cohortSkills=@('ground_slam','frost_nova','root_snare')
+        stageStatus='IMPLEMENTATION_IN_PROGRESS'; completeStageGate=$false; cohort=$Cohort
+        cohortSkills=$(if ($Cohort -eq 'a') { @('ground_slam','frost_nova','root_snare') }
+            else { @('powder_mine','cold_wave','venom_spray','blizzard','wall_of_fire','poison_cloud') })
         tests=$stage06Tests; failures=$stage06Failed; errors=$stage06Errors; skipped=$stage06Skipped
         connectedVerification='UNVERIFIED'; nativeCastingFixed=$false; liveDeploymentPerformed=$false
         protectedPathsChanged=$stage06Protected

@@ -2972,8 +2972,8 @@
     ],
     "weaponRequirement": "None",
     "scalingClass": "Light",
-    "basePowerSource": "WEAPON",
-    "innateBasePower": null,
+    "basePowerSource": "INNATE",
+    "innateBasePower": 20,
     "resourceType": "STAMINA",
     "castCost": "Stamina 12",
     "upkeep": "",
@@ -3122,7 +3122,7 @@
     "travelSpeed": "N/A",
     "lifetime": "8 s",
     "powerCoefficient": "0.45x Magic Power per second",
-    "canCrit": true,
+    "canCrit": false,
     "statusApplications": [
       "Burn 5 s on entry; per-target reapplication cooldown 1 s."
     ],
@@ -3131,7 +3131,6 @@
     "linkCompatibilityTags": [
       "APPLIES_BURN",
       "CAN_ACQUIRE_ENEMY_TARGET",
-      "CAN_CRIT",
       "CAN_KILL",
       "DAMAGE",
       "DIRECT_HIT",
@@ -3187,7 +3186,7 @@
     "travelSpeed": "N/A",
     "lifetime": "8 s",
     "powerCoefficient": "0.30x Magic Power per second",
-    "canCrit": true,
+    "canCrit": false,
     "statusApplications": [
       "Poison 8 s; cloud refreshes poison while target remains inside."
     ],
@@ -3196,7 +3195,6 @@
     "linkCompatibilityTags": [
       "APPLIES_POISON",
       "CAN_ACQUIRE_ENEMY_TARGET",
-      "CAN_CRIT",
       "CAN_KILL",
       "DAMAGE",
       "DIRECT_HIT",

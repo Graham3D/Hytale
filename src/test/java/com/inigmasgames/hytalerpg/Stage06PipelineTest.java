@@ -24,7 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage06PipelineTest {
     @Test void pilotsReuseOneCommitOneCooldownAndSnapshotAuthority() {
-        for (String id : new String[]{"ground_slam", "frost_nova", "root_snare"}) {
+        for (String id : new String[]{"ground_slam", "frost_nova", "root_snare", "powder_mine", "cold_wave",
+                "venom_spray", "blizzard", "wall_of_fire", "poison_cloud"}) {
             Harness harness = harness(id);
             var profile = harness.profiles.require(id); var pool = ResourceType.valueOf(profile.resourceType());
             assertTrue(harness.execute().committed());
@@ -99,7 +100,8 @@ class Stage06PipelineTest {
         assertTrue(bundle.service().equipSkill(actor, SkillSlot.SKILL01, new SkillId(id)).success());
         var profiles = Stage04SkillProfiles.loadCanonical(RpgCatalog.loadCanonical());
         var kernel = new RpgCombatKernel(CombatBalanceProfile.loadCanonical(), new CriticalRoller(() -> 1));
-        String kind = id.equals("ground_slam") ? "MACE" : "STAFF";
+        String kind = switch (id) { case "ground_slam" -> "MACE"; case "powder_mine" -> "BOMB";
+            case "venom_spray" -> "NONE"; default -> "STAFF"; };
         var port = new Port(kind);
         var service = new SkillExecutionService(bundle.service(), profiles, kernel, SkillExecutorRegistry.runtime(),
                 new SkillInstanceLifecycle(), bundle.tracer());
@@ -118,7 +120,7 @@ class Stage06PipelineTest {
         Validation validation = Validation.pass();
         Port(String kind) {
             values.put(ResourceType.MANA, 100d); values.put(ResourceType.STAMINA, 100d);
-            equipment = new Equipment(new Item("fixture", kind,
+            equipment = new Equipment(kind.equals("NONE") ? null : new Item("fixture", kind,
                     new ItemPowerDescriptor("fixture", Set.of(kind), 20d, 20d)), null);
         }
         public boolean actorAliveAndUsable() { return true; }

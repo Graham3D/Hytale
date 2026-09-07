@@ -48,6 +48,7 @@ import com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageMetadata;
 import com.inigmasgames.hytalerpg.combat.resource.NativeResourcePort;
 import com.inigmasgames.hytalerpg.combat.status.ControlProfile;
 import com.inigmasgames.hytalerpg.combat.status.RpgStatusType;
+import com.inigmasgames.hytalerpg.combat.status.PeriodicStatusRuntime;
 import com.inigmasgames.hytalerpg.diagnostics.RpgTraceEventType;
 import com.inigmasgames.hytalerpg.execution.SkillExecutionContext;
 import com.inigmasgames.hytalerpg.execution.SkillExecutionPort;
@@ -104,7 +105,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final Map<String, ProjectileCarrier> projectiles = new HashMap<>();
     private final RpgProjectileService projectileService =
             new RpgProjectileService(new ProjectileLifecycleRegistry());
-    private final Map<BurnKey, BurnState> burns = new HashMap<>();
+    private final PeriodicStatusRuntime<SkillExecutionContext, PeriodicTarget> periodicStatuses = new PeriodicStatusRuntime<>();
     private final AreaRuntime areas = new AreaRuntime();
     private final com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry areaControls =
             com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry.loadCanonical();
@@ -147,7 +148,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         advanceRepeatingStrike(store, ref, playerRef, player, stats, buffer);
         advanceProjectiles(actor, deltaSeconds, store, buffer);
-        advanceBurns(actor, store);
+        periodicStatuses.tick(actor, System.nanoTime() / 1e9, periodicPort());
         areas.tick(actor, System.nanoTime() / 1_000_000_000.0, port.areaWorld());
         Motion motion = motions.get(actor);
         if (motion != null) advanceMotion(deltaSeconds, store, ref, player, motion, buffer);
@@ -277,11 +278,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if (!admitted.equals("PASS")) return Validation.reject(admitted);
                 Vec3 feet = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
                 areaDirection = aim(store, actor);
-                areaPlacement = profile.area().placementRange() > 0
+                areaPlacement = profile.family() == Stage04SkillProfile.Family.CONE ? feet : profile.area().placementRange() > 0
                         ? HytaleAreaQueries.ground(store, feet.add(new Vec3(0, 1.35, 0)), areaDirection,
                             profile.area().placementRange()).orElse(null)
                         : HytaleAreaQueries.ground(store, feet.add(new Vec3(0, .15, 0)), new Vec3(0, -1, 0), .65).orElse(null);
                 if (areaPlacement == null) return Validation.reject("NO_LEGAL_GROUND_SURFACE");
+                if (profile.family() == Stage04SkillProfile.Family.WALL)
+                    areaDirection = new Vec3(areaDirection.z(), 0, -areaDirection.x()).horizontalNormalized();
                 var query = areaWorld().query(profile.area().footprint(areaPlacement, areaDirection, 1), profile.area().candidateBudget());
                 if (query.overflow()) return Validation.reject("AREA_CANDIDATE_BUDGET");
                 if (!HytaleAreaStatuses.available()) return Validation.reject("AREA_STATUS_ASSETS_UNAVAILABLE");
@@ -351,6 +354,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 @Override public boolean lineOfSight(Vec3 origin, Target target) {
                     return HytaleAreaQueries.clear(store, origin.add(new Vec3(0, .1, 0)), target.bounds().centre());
                 }
+                @Override public java.util.Optional<AreaGeometry> prepareImpact(Vec3 parent, AreaGeometry footprint) {
+                    return HytaleAreaQueries.ground(store, footprint.origin().add(new Vec3(0, 3, 0)), new Vec3(0, -1, 0), 6)
+                            .filter(point -> HytaleAreaQueries.clear(store, parent.add(new Vec3(0, .1, 0)), point.add(new Vec3(0, .1, 0))))
+                            .map(point -> footprint.at(point, footprint.radius()));
+                }
                 @Override public boolean apply(SkillExecutionContext context, Target target, Payload payload) {
                     var reference = refs.get(target.id());
                     if (reference == null || !HytaleAreaQueries.hostile(store, reference, actor)) return false;
@@ -369,17 +377,21 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     DamageCause cause = DamageCause.getAssetMap().getAsset(causeId);
                     if (cause == null) throw new IllegalStateException("MISSING_NATIVE_DAMAGE_CAUSE_" + causeId);
                     DamageOutcome outcome = damage(context, candidate, payload.impactIndex(), payload.coefficient(),
-                            payload.periodic() ? 0 : context.snapshot().criticalChance(), cause);
+                            payload.periodic() ? 0 : context.snapshot().criticalChance(), cause, payload.periodic());
                     if (outcome.cancelled()) return false;
-                    HytaleAreaStatuses.apply(kernel, context, candidate, payload, control, store, actor,
-                            (event, details) -> emit(context, event, details));
-                    if (!payload.status().isBlank()) buffer.ensureAndGetComponent(reference, AreaStatusProjection.getComponentType());
+                    if (payload.status().equals("BURN") || payload.status().equals("POISON")) {
+                        applyPeriodicStatus(context, candidate, PeriodicStatusRuntime.Kind.valueOf(payload.status()),
+                                payload.statusSeconds(), payload.status().equals("BURN") ? .10 : .06);
+                    } else {
+                        HytaleAreaStatuses.apply(kernel, context, candidate, payload, control, store, actor,
+                                (event, details) -> emit(context, event, details));
+                        if (!payload.status().isBlank()) buffer.ensureAndGetComponent(reference, AreaStatusProjection.getComponentType());
+                    }
                     if (payload.displacement() > 0 && control.displacementMultiplier() > 0 && reference.isValid()
                             && npc.getRole() != null && npc.getRole().getKnockbackScale() > 0) {
                         var transform = store.getComponent(reference, TransformComponent.getComponentType());
                         Vec3 origin = vec(transform.getPosition());
-                        Vec3 away = origin.subtract(areaPlacement == null
-                                ? vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition()) : areaPlacement)
+                        Vec3 away = origin.subtract(payload.origin())
                                 .horizontalNormalized().multiply(payload.displacement() * control.displacementMultiplier());
                         double fraction = collisionFraction(store, reference, origin, away);
                         transform.setPosition(vector(origin.add(away.multiply(fraction))));
@@ -544,7 +556,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private DamageOutcome damage(SkillExecutionContext context,
                                      StrikeGeometryService.Candidate<Ref<EntityStore>> target, int hitIndex,
                                      double coefficient, double criticalChance, DamageCause cause) {
-            double effective = switch (context.profile().scaling()) {
+            return damage(context, target, hitIndex, coefficient, criticalChance, cause, false);
+        }
+        private double effectiveAttribute(SkillExecutionContext context) {
+            return switch (context.profile().scaling()) {
                 case "HEAVY" -> context.snapshot().derivedStats().effective(RpgAttribute.STR);
                 case "LIGHT" -> context.snapshot().derivedStats().effective(RpgAttribute.DEX);
                 case "MAGIC" -> context.snapshot().derivedStats().effective(RpgAttribute.INT);
@@ -552,14 +567,19 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                         .map(context.snapshot().derivedStats()::effective).orElse(0.0);
                 default -> 0.0;
             };
-            DamageCalculationService.Result result = kernel.damage().calculate(DamageCalculationService.Request.direct(
+        }
+        private DamageOutcome damage(SkillExecutionContext context,
+                                     StrikeGeometryService.Candidate<Ref<EntityStore>> target, int hitIndex,
+                                     double coefficient, double criticalChance, DamageCause cause, boolean periodic) {
+            double effective = effectiveAttribute(context);
+            DamageCalculationService.Result result = kernel.damage().calculate(new DamageCalculationService.Request(
                     context.snapshot().basePower(), effective, coefficient,
-                    context.snapshot().modifiers(), criticalChance,
+                    context.snapshot().modifiers(), !periodic, criticalChance,
                     context.snapshot().criticalMultiplier()));
             CombatTrace.Context ids = ids(context);
             trace.emit(playerRef.getUuid(), RpgTraceEventType.DAMAGE_CALC_BEGIN, ids,
                     Map.of("basePower", context.snapshot().basePower(), "effectiveAttribute", effective,
-                            "coefficient", coefficient, "hitIndex", hitIndex));
+                            "coefficient", coefficient, "hitIndex", hitIndex, "periodic", periodic));
             trace.emit(playerRef.getUuid(), RpgTraceEventType.BASE_POWER_RESOLVED, ids,
                     Map.of("source", context.snapshot().basePowerSource(), "weaponClass", context.snapshot().weaponClass(),
                             "basePower", context.snapshot().basePower()));
@@ -650,32 +670,42 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
 
         private boolean applyBurn(SkillExecutionContext context,
-                                   StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
-            Stage04SkillProfile.Projectile projectile = context.profile().projectile();
+                StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
+            var profile = context.profile().projectile();
+            return applyPeriodicStatus(context, target, PeriodicStatusRuntime.Kind.BURN,
+                    profile.statusSeconds(), profile.periodicCoefficient() / profile.periodicIntervalSeconds());
+        }
+
+        private boolean applyPeriodicStatus(SkillExecutionContext context,
+                StrikeGeometryService.Candidate<Ref<EntityStore>> target,
+                PeriodicStatusRuntime.Kind kind, double duration, double coefficientPerSecond) {
             UUID targetId = UUID.fromString(target.stableId());
-            emit(context, RpgTraceEventType.STATUS_REQUEST, Map.of("targetId", target.stableId(),
-                    "status", projectile.statusId(), "durationSeconds", projectile.statusSeconds()));
-            var result = kernel.statuses().apply(targetId, RpgStatusType.BURN,
-                    new ControlProfile(target.protectedTarget(), target.boss(), false), projectile.statusSeconds());
-            EffectControllerComponent controller = store.getComponent(target.handle(), EffectControllerComponent.getComponentType());
-            EntityEffect effect = EntityEffect.getAssetMap().getAsset(NATIVE_BURN_VISUAL_EFFECT);
-            boolean nativeApplied = controller != null && effect != null && controller.addEffect(target.handle(), effect,
-                    (float) projectile.statusSeconds(), OverlapBehavior.OVERWRITE, store, actor);
-            if (!nativeApplied) {
-                kernel.statuses().remove(targetId, RpgStatusType.BURN);
-                trace.emit(playerRef.getUuid(), RpgTraceEventType.STATUS_REJECTED, ids(context), Map.of(
-                        "targetId", target.stableId(), "status", "BURN",
-                        "durationSeconds", projectile.statusSeconds(), "detail", "NATIVE_BURN_EFFECT_REJECTED"));
+            var source = new PeriodicStatusRuntime.Source(playerRef.getUuid(), context.profile().skillId(), targetId, kind);
+            double now = System.nanoTime() / 1e9;
+            String admitted = periodicStatuses.admission(source);
+            if (!admitted.equals("PASS")) {
+                emit(context, RpgTraceEventType.STATUS_REJECTED, Map.of("status", kind, "targetId", targetId, "reason", admitted));
                 return false;
             }
-            burns.put(new BurnKey(playerRef.getUuid(), targetId), new BurnState(context, actor, target.handle(),
-                    targetId, projectile.periodicTicks(), System.nanoTime()
-                    + Math.round(projectile.periodicIntervalSeconds() * 1_000_000_000.0)));
-            RpgTraceEventType event = result.outcome() == com.inigmasgames.hytalerpg.combat.status.StatusService.Outcome.REFRESHED
-                    ? RpgTraceEventType.STATUS_REFRESHED : RpgTraceEventType.STATUS_APPLIED;
-            trace.emit(playerRef.getUuid(), event, ids(context), Map.of("targetId", target.stableId(),
-                    "status", "BURN", "durationSeconds", result.remainingSeconds(), "detail", result.detail()));
-            return true;
+            EffectControllerComponent controller = store.getComponent(target.handle(), EffectControllerComponent.getComponentType());
+            String effectId = kind == PeriodicStatusRuntime.Kind.BURN ? NATIVE_BURN_VISUAL_EFFECT : "RPG_Poison_Visual";
+            EntityEffect effect = EntityEffect.getAssetMap().getAsset(effectId);
+            double visualDuration = Math.max(duration, periodicStatuses.view(targetId, kind, now).remainingSeconds());
+            if (controller == null || effect == null || !controller.addEffect(target.handle(), effect,
+                    (float) visualDuration, OverlapBehavior.OVERWRITE, store, actor)) {
+                emit(context, RpgTraceEventType.STATUS_REJECTED, Map.of("status", kind, "targetId", targetId, "reason", "NATIVE_EFFECT_REJECTED"));
+                return false;
+            }
+            double strength = kernel.damage().calculate(DamageCalculationService.Request.periodic(
+                    context.snapshot().basePower(), effectiveAttribute(context), coefficientPerSecond,
+                    context.snapshot().modifiers(), 0, context.snapshot().criticalMultiplier())).preMitigationDamage();
+            String result = periodicStatuses.apply(source, context, new PeriodicTarget(actor, target.handle()),
+                    coefficientPerSecond, strength, duration, 1, kind == PeriodicStatusRuntime.Kind.BURN ? 1 : 3, now, periodicPort());
+            boolean accepted = result.equals("APPLIED") || result.equals("REFRESHED");
+            emit(context, accepted ? RpgTraceEventType.STATUS_APPLIED : RpgTraceEventType.STATUS_REJECTED,
+                    Map.of("status", kind, "targetId", targetId, "durationSeconds", duration, "result", result,
+                            "authority", "RPG_SOURCE_PACKAGE", "nativeBehaviorVerified", false));
+            return accepted;
         }
 
         private String applyProjectileStatus(SkillExecutionContext context,
@@ -886,44 +916,58 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
     }
 
-    private void advanceBurns(UUID actorId, Store<EntityStore> store) {
-        long now = System.nanoTime();
-        List<Map.Entry<BurnKey, BurnState>> owned = burns.entrySet().stream()
-                .filter(entry -> entry.getKey().actorId.equals(actorId)).toList();
-        for (Map.Entry<BurnKey, BurnState> entry : owned) {
-            BurnState burn = entry.getValue();
-            if (!burn.actor.isValid() || !burn.target.isValid()) {
-                burns.remove(entry.getKey(), burn);
-                kernel.statuses().remove(burn.targetId, RpgStatusType.BURN);
-                continue;
+    private PeriodicStatusRuntime.Port<SkillExecutionContext, PeriodicTarget> periodicPort() {
+        return new PeriodicStatusRuntime.Port<>() {
+            @Override public void terminated(PeriodicStatusRuntime.Source source, SkillExecutionContext context,
+                    PeriodicTarget target, String reason) {
+                emit(context, RpgTraceEventType.STATUS_REMOVED,
+                        Map.of("targetId", source.victim(), "status", source.kind(), "sourceSkill", source.skill(), "reason", reason));
             }
-            PlayerRef playerRef = store.getComponent(burn.actor, PlayerRef.getComponentType());
-            Player player = store.getComponent(burn.actor, Player.getComponentType());
-            EntityStatMap stats = store.getComponent(burn.actor, EntityStatMap.getComponentType());
-            if (playerRef == null || player == null || stats == null) continue;
-            Port port = new Port(store, burn.actor, playerRef, player, stats, burn.target, null);
-            Stage04SkillProfile.Projectile authored = burn.context.profile().projectile();
-            while (burn.remainingTicks > 0 && now >= burn.nextTickNanos) {
-                StrikeGeometryService.Candidate<Ref<EntityStore>> target = port.candidate(burn.target);
-                if (target == null || target.protectedTarget()) {
-                    burn.remainingTicks = 0;
-                    break;
-                }
-                burn.tickIndex++;
-                DamageOutcome outcome = port.damage(burn.context, target, burn.tickIndex,
-                        authored.periodicCoefficient(), 0.0, DamageCause.PROJECTILE);
-                emit(burn.context, RpgTraceEventType.BURN_TICK,
-                        Map.of("targetId", target.stableId(), "tickIndex", burn.tickIndex,
-                                "tickCount", authored.periodicTicks(),
-                                "coefficient", authored.periodicCoefficient(), "criticalChance", 0.0,
-                                "preMitigationDamage", outcome.preMitigationDamage(),
-                                "actualHealthLoss", outcome.actualHealthLoss()));
-                burn.remainingTicks--;
-                burn.nextTickNanos += Math.round(authored.periodicIntervalSeconds() * 1_000_000_000.0);
+            @Override public boolean tick(PeriodicStatusRuntime.Source source, SkillExecutionContext context,
+                    PeriodicTarget target, int tickIndex, double coefficient, double seconds) {
+                if (!target.actor.isValid() || !target.victim.isValid()
+                        || target.actor.getStore() != target.victim.getStore()) return false;
+                Store<EntityStore> store = target.actor.getStore();
+                if (!store.isInThread()) throw new IllegalStateException("PERIODIC_DAMAGE_WRONG_WORLD_THREAD");
+                PlayerRef owner = store.getComponent(target.actor, PlayerRef.getComponentType());
+                Player player = store.getComponent(target.actor, Player.getComponentType());
+                EntityStatMap stats = store.getComponent(target.actor, EntityStatMap.getComponentType());
+                if (owner == null || player == null || stats == null || !owner.getUuid().equals(source.owner())) return false;
+                Port port = new Port(store, target.actor, owner, player, stats, target.victim, null);
+                if (!port.actorAliveAndUsable() || !HytaleAreaQueries.hostile(store, target.victim, target.actor)) return false;
+                var candidate = port.candidate(target.victim);
+                if (candidate == null || candidate.protectedTarget()) return false;
+                // Preserve the Stage 05 Fire Bolt channel; newly authored area statuses use their explicit element.
+                DamageCause cause = context.profile().projectile() != null ? DamageCause.PROJECTILE
+                        : DamageCause.getAssetMap().getAsset(source.kind() == PeriodicStatusRuntime.Kind.BURN ? "Fire" : "Poison");
+                if (cause == null) throw new IllegalStateException("PERIODIC_DAMAGE_CAUSE_UNAVAILABLE");
+                DamageOutcome outcome = port.damage(context, candidate, tickIndex, coefficient, 0, cause, true);
+                emit(context, source.kind() == PeriodicStatusRuntime.Kind.BURN ? RpgTraceEventType.BURN_TICK : RpgTraceEventType.POISON_TICK,
+                        Map.of("targetId", source.victim(), "tickIndex", tickIndex, "coefficient", coefficient,
+                                "integratedSeconds", seconds, "canCrit", false, "canTrigger", false,
+                                "preMitigationDamage", outcome.preMitigationDamage(), "actualHealthLoss", outcome.actualHealthLoss()));
+                return !outcome.cancelled();
             }
-            if (burn.remainingTicks == 0 && burns.remove(entry.getKey(), burn))
-                kernel.statuses().remove(burn.targetId, RpgStatusType.BURN);
-        }
+            @Override public void changed(PeriodicStatusRuntime.Source source, PeriodicTarget target, PeriodicStatusRuntime.View ignored) {
+                double now = System.nanoTime() / 1e9;
+                var view = periodicStatuses.view(source.victim(), source.kind(), now);
+                kernel.statuses().projectPeriodic(source.victim(), RpgStatusType.valueOf(source.kind().name()), view.stacks(), view.remainingSeconds());
+                if (!target.victim.isValid()) return;
+                Store<EntityStore> targetStore = target.victim.getStore();
+                Runnable reconcile = () -> {
+                    if (!target.victim.isValid()) return;
+                    var current = periodicStatuses.view(source.victim(), source.kind(), System.nanoTime() / 1e9);
+                    var controller = targetStore.getComponent(target.victim, EffectControllerComponent.getComponentType());
+                    String effectId = source.kind() == PeriodicStatusRuntime.Kind.BURN ? NATIVE_BURN_VISUAL_EFFECT : "RPG_Poison_Visual";
+                    var effect = EntityEffect.getAssetMap().getAsset(effectId);
+                    if (controller == null || effect == null) return;
+                    if (current.remainingSeconds() <= 0) controller.removeEffect(target.victim, EntityEffect.getAssetMap().getIndex(effectId), targetStore);
+                    else controller.addEffect(target.victim, effect, (float) current.remainingSeconds(), OverlapBehavior.OVERWRITE, targetStore);
+                };
+                if (targetStore.isInThread()) reconcile.run();
+                else targetStore.getExternalData().getWorld().execute(reconcile);
+            }
+        };
     }
 
     private void removeOwnedProjectiles(UUID actorId, CommandBuffer<EntityStore> buffer) {
@@ -944,12 +988,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
 
     private void removeOwnedBurns(UUID actorId) {
-        List<Map.Entry<BurnKey, BurnState>> owned = burns.entrySet().stream()
-                .filter(entry -> entry.getKey().actorId.equals(actorId)).toList();
-        for (Map.Entry<BurnKey, BurnState> entry : owned) {
-            if (burns.remove(entry.getKey(), entry.getValue()))
-                kernel.statuses().remove(entry.getValue().targetId, RpgStatusType.BURN);
-        }
+        periodicStatuses.cancel(actorId, System.nanoTime() / 1e9, periodicPort());
     }
 
     private static Vec3 facing(Store<EntityStore> store, Ref<EntityStore> actor) {
@@ -1022,20 +1061,6 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private record RepeatingStrike(SkillExecutionContext context, StrikeRepeatSchedule schedule) { }
     private record ProjectileCarrier(SkillExecutionContext context, Ref<EntityStore> actor, UUID actorId,
                                      Ref<EntityStore> projectile, ProjectileInstance instance) { }
-    private record BurnKey(UUID actorId, UUID targetId) { }
-    private static final class BurnState {
-        final SkillExecutionContext context;
-        final Ref<EntityStore> actor;
-        final Ref<EntityStore> target;
-        final UUID targetId;
-        int remainingTicks;
-        int tickIndex;
-        long nextTickNanos;
-        BurnState(SkillExecutionContext context, Ref<EntityStore> actor, Ref<EntityStore> target,
-                  UUID targetId, int remainingTicks, long nextTickNanos) {
-            this.context = context; this.actor = actor; this.target = target; this.targetId = targetId;
-            this.remainingTicks = remainingTicks; this.nextTickNanos = nextTickNanos;
-        }
-    }
+    private record PeriodicTarget(Ref<EntityStore> actor, Ref<EntityStore> victim) { }
     private record DamageOutcome(double preMitigationDamage, double actualHealthLoss, boolean cancelled) { }
 }

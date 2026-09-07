@@ -1,0 +1,1071 @@
+Compiled from "PacketHandler.java"
+public abstract class com.hypixel.hytale.server.core.io.PacketHandler implements com.hypixel.hytale.server.core.receiver.IPacketReceiver,com.hypixel.hytale.protocol.io.ConnectionHandler {
+  public static final int MAX_PACKET_ID;
+
+  public static final java.util.Map<com.hypixel.hytale.protocol.NetworkChannel, io.netty.handler.codec.quic.QuicStreamPriority> DEFAULT_STREAM_PRIORITIES;
+
+  private static final com.hypixel.hytale.logger.HytaleLogger LOGIN_TIMING_LOGGER;
+
+  protected final com.hypixel.hytale.protocol.io.ChannelConnection[] channels;
+
+  protected final com.hypixel.hytale.server.core.io.ProtocolVersion protocolVersion;
+
+  protected com.hypixel.hytale.server.core.auth.PlayerAuthentication auth;
+
+  protected boolean queuePackets;
+
+  protected final java.util.concurrent.atomic.AtomicInteger queuedPackets;
+
+  protected final java.security.SecureRandom pingIdRandom;
+
+  protected final com.hypixel.hytale.server.core.io.PacketHandler$PingInfo[] pingInfo;
+
+  private float pingTimer;
+
+  protected boolean registered;
+
+  protected java.lang.Throwable clientReadyForChunksFutureStack;
+
+  protected java.util.concurrent.CompletableFuture<java.lang.Void> clientReadyForChunksFuture;
+
+  protected final com.hypixel.hytale.server.core.io.PacketHandler$DisconnectReason disconnectReason;
+
+  private final java.util.Map<com.hypixel.hytale.protocol.packets.stream.StreamType, com.hypixel.hytale.protocol.io.ChannelConnection> auxiliaryChannels;
+
+  private final java.util.concurrent.atomic.AtomicLong lastStreamOpenTimeNanos;
+
+  private static final long STREAM_OPEN_MIN_INTERVAL_NANOS;
+
+  public com.hypixel.hytale.server.core.io.PacketHandler(com.hypixel.hytale.protocol.io.ChannelConnection, com.hypixel.hytale.server.core.io.ProtocolVersion);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: getstatic     #7                  // Field com/hypixel/hytale/protocol/NetworkChannel.COUNT:I
+         8: anewarray     #13                 // class com/hypixel/hytale/protocol/io/ChannelConnection
+        11: putfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+        14: aload_0
+        15: new           #21                 // class java/util/concurrent/atomic/AtomicInteger
+        18: dup
+        19: invokespecial #23                 // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+        22: putfield      #24                 // Field queuedPackets:Ljava/util/concurrent/atomic/AtomicInteger;
+        25: aload_0
+        26: new           #28                 // class java/security/SecureRandom
+        29: dup
+        30: invokespecial #30                 // Method java/security/SecureRandom."<init>":()V
+        33: putfield      #31                 // Field pingIdRandom:Ljava/security/SecureRandom;
+        36: aload_0
+        37: new           #35                 // class com/hypixel/hytale/server/core/io/PacketHandler$DisconnectReason
+        40: dup
+        41: invokespecial #37                 // Method com/hypixel/hytale/server/core/io/PacketHandler$DisconnectReason."<init>":()V
+        44: putfield      #38                 // Field disconnectReason:Lcom/hypixel/hytale/server/core/io/PacketHandler$DisconnectReason;
+        47: aload_0
+        48: new           #42                 // class java/util/EnumMap
+        51: dup
+        52: ldc           #44                 // class com/hypixel/hytale/protocol/packets/stream/StreamType
+        54: invokespecial #46                 // Method java/util/EnumMap."<init>":(Ljava/lang/Class;)V
+        57: invokestatic  #49                 // Method java/util/Collections.synchronizedMap:(Ljava/util/Map;)Ljava/util/Map;
+        60: putfield      #55                 // Field auxiliaryChannels:Ljava/util/Map;
+        63: aload_0
+        64: new           #59                 // class java/util/concurrent/atomic/AtomicLong
+        67: dup
+        68: invokespecial #61                 // Method java/util/concurrent/atomic/AtomicLong."<init>":()V
+        71: putfield      #62                 // Field lastStreamOpenTimeNanos:Ljava/util/concurrent/atomic/AtomicLong;
+        74: aload_0
+        75: getfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+        78: iconst_0
+        79: aload_1
+        80: aastore
+        81: aload_0
+        82: aload_2
+        83: putfield      #66                 // Field protocolVersion:Lcom/hypixel/hytale/server/core/io/ProtocolVersion;
+        86: aload_0
+        87: getstatic     #70                 // Field com/hypixel/hytale/protocol/packets/connection/PongType.VALUES:[Lcom/hypixel/hytale/protocol/packets/connection/PongType;
+        90: arraylength
+        91: anewarray     #76                 // class com/hypixel/hytale/server/core/io/PacketHandler$PingInfo
+        94: putfield      #78                 // Field pingInfo:[Lcom/hypixel/hytale/server/core/io/PacketHandler$PingInfo;
+        97: getstatic     #70                 // Field com/hypixel/hytale/protocol/packets/connection/PongType.VALUES:[Lcom/hypixel/hytale/protocol/packets/connection/PongType;
+       100: astore_3
+       101: aload_3
+       102: arraylength
+       103: istore        4
+       105: iconst_0
+       106: istore        5
+       108: iload         5
+       110: iload         4
+       112: if_icmpge     146
+       115: aload_3
+       116: iload         5
+       118: aaload
+       119: astore        6
+       121: aload_0
+       122: getfield      #78                 // Field pingInfo:[Lcom/hypixel/hytale/server/core/io/PacketHandler$PingInfo;
+       125: aload         6
+       127: invokevirtual #82                 // Method com/hypixel/hytale/protocol/packets/connection/PongType.ordinal:()I
+       130: new           #76                 // class com/hypixel/hytale/server/core/io/PacketHandler$PingInfo
+       133: dup
+       134: aload         6
+       136: invokespecial #86                 // Method com/hypixel/hytale/server/core/io/PacketHandler$PingInfo."<init>":(Lcom/hypixel/hytale/protocol/packets/connection/PongType;)V
+       139: aastore
+       140: iinc          5, 1
+       143: goto          108
+       146: return
+
+  public com.hypixel.hytale.protocol.io.ChannelConnection getChannel();
+    Code:
+         0: aload_0
+         1: getfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: iconst_0
+         5: aaload
+         6: areturn
+
+  public com.hypixel.hytale.protocol.io.ChannelConnection getChannel(com.hypixel.hytale.protocol.packets.stream.StreamType);
+    Code:
+         0: aload_1
+         1: getstatic     #89                 // Field com/hypixel/hytale/protocol/packets/stream/StreamType.Game:Lcom/hypixel/hytale/protocol/packets/stream/StreamType;
+         4: if_acmpne     14
+         7: aload_0
+         8: getfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+        11: iconst_0
+        12: aaload
+        13: areturn
+        14: aload_0
+        15: getfield      #55                 // Field auxiliaryChannels:Ljava/util/Map;
+        18: aload_1
+        19: invokeinterface #93,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        24: checkcast     #13                 // class com/hypixel/hytale/protocol/io/ChannelConnection
+        27: areturn
+
+  public abstract java.lang.String getIdentifier();
+
+  public com.hypixel.hytale.server.core.io.ProtocolVersion getProtocolVersion();
+    Code:
+         0: aload_0
+         1: getfield      #66                 // Field protocolVersion:Lcom/hypixel/hytale/server/core/io/ProtocolVersion;
+         4: areturn
+
+  public final void registered(com.hypixel.hytale.protocol.io.ConnectionHandler);
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: putfield      #99                 // Field registered:Z
+         5: aload_0
+         6: aload_1
+         7: invokevirtual #103                // Method registered0:(Lcom/hypixel/hytale/protocol/io/ConnectionHandler;)V
+        10: return
+
+  protected void registered0(com.hypixel.hytale.protocol.io.ConnectionHandler);
+    Code:
+         0: return
+
+  public final void unregistered(com.hypixel.hytale.protocol.io.ConnectionHandler);
+    Code:
+         0: aload_0
+         1: iconst_0
+         2: putfield      #99                 // Field registered:Z
+         5: aload_0
+         6: invokevirtual #107                // Method clearTimeout:()V
+         9: aload_0
+        10: aload_1
+        11: invokevirtual #110                // Method unregistered0:(Lcom/hypixel/hytale/protocol/io/ConnectionHandler;)V
+        14: return
+
+  protected void unregistered0(com.hypixel.hytale.protocol.io.ConnectionHandler);
+    Code:
+         0: return
+
+  public void handle(com.hypixel.hytale.protocol.ToServerPacket);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #113                // Method accept:(Lcom/hypixel/hytale/protocol/ToServerPacket;)V
+         5: return
+
+  public abstract void accept(com.hypixel.hytale.protocol.ToServerPacket);
+
+  public void logCloseMessage();
+    Code:
+         0: invokestatic  #117                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+         3: getstatic     #123                // Field java/util/logging/Level.INFO:Ljava/util/logging/Level;
+         6: invokevirtual #129                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+         9: ldc           #133                // String %s was closed.
+        11: aload_0
+        12: invokevirtual #135                // Method getIdentifier:()Ljava/lang/String;
+        15: invokeinterface #139,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;)V
+        20: return
+
+  public void closed(com.hypixel.hytale.protocol.NetworkChannel);
+    Code:
+         0: aload_0
+         1: invokevirtual #107                // Method clearTimeout:()V
+         4: return
+
+  public void setQueuePackets(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #145                // Field queuePackets:Z
+         5: return
+
+  public void tryFlush();
+    Code:
+         0: aload_0
+         1: getfield      #24                 // Field queuedPackets:Ljava/util/concurrent/atomic/AtomicInteger;
+         4: iconst_0
+         5: invokevirtual #148                // Method java/util/concurrent/atomic/AtomicInteger.getAndSet:(I)I
+         8: ifle          49
+        11: aload_0
+        12: getfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+        15: astore_1
+        16: aload_1
+        17: arraylength
+        18: istore_2
+        19: iconst_0
+        20: istore_3
+        21: iload_3
+        22: iload_2
+        23: if_icmpge     49
+        26: aload_1
+        27: iload_3
+        28: aaload
+        29: astore        4
+        31: aload         4
+        33: ifnull        43
+        36: aload         4
+        38: invokeinterface #152,  1          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.flush:()V
+        43: iinc          3, 1
+        46: goto          21
+        49: return
+
+  public void write(com.hypixel.hytale.protocol.ToClientPacket...);
+    Code:
+         0: aload_1
+         1: arraylength
+         2: ifne          6
+         5: return
+         6: aload_1
+         7: arraylength
+         8: anewarray     #155                // class com/hypixel/hytale/protocol/ToClientPacket
+        11: astore_2
+        12: aload_0
+        13: aload_1
+        14: aload_2
+        15: invokevirtual #157                // Method handleOutboundAndCachePackets:([Lcom/hypixel/hytale/protocol/ToClientPacket;[Lcom/hypixel/hytale/protocol/ToClientPacket;)V
+        18: aload_1
+        19: iconst_0
+        20: aaload
+        21: invokeinterface #161,  1          // InterfaceMethod com/hypixel/hytale/protocol/ToClientPacket.getChannel:()Lcom/hypixel/hytale/protocol/NetworkChannel;
+        26: astore_3
+        27: iconst_1
+        28: istore        4
+        30: iload         4
+        32: aload_1
+        33: arraylength
+        34: if_icmpge     66
+        37: aload_3
+        38: aload_1
+        39: iload         4
+        41: aaload
+        42: invokeinterface #161,  1          // InterfaceMethod com/hypixel/hytale/protocol/ToClientPacket.getChannel:()Lcom/hypixel/hytale/protocol/NetworkChannel;
+        47: if_acmpeq     60
+        50: new           #165                // class java/lang/IllegalArgumentException
+        53: dup
+        54: ldc           #167                // String All packets must be sent on the same channel!
+        56: invokespecial #169                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        59: athrow
+        60: iinc          4, 1
+        63: goto          30
+        66: aload_0
+        67: getfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+        70: aload_3
+        71: invokevirtual #172                // Method com/hypixel/hytale/protocol/NetworkChannel.getValue:()I
+        74: aaload
+        75: astore        4
+        77: aload_0
+        78: getfield      #145                // Field queuePackets:Z
+        81: ifeq          103
+        84: aload         4
+        86: aload_2
+        87: invokeinterface #175,  2          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.write:([Lcom/hypixel/hytale/protocol/ToClientPacket;)V
+        92: aload_0
+        93: getfield      #24                 // Field queuedPackets:Ljava/util/concurrent/atomic/AtomicInteger;
+        96: invokevirtual #179                // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+        99: pop
+       100: goto          111
+       103: aload         4
+       105: aload_2
+       106: invokeinterface #182,  2          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.writeAndFlush:([Lcom/hypixel/hytale/protocol/ToClientPacket;)V
+       111: return
+
+  public void write(com.hypixel.hytale.protocol.ToClientPacket[], com.hypixel.hytale.protocol.ToClientPacket);
+    Code:
+         0: aload_1
+         1: arraylength
+         2: iconst_1
+         3: iadd
+         4: anewarray     #155                // class com/hypixel/hytale/protocol/ToClientPacket
+         7: astore_3
+         8: aload_0
+         9: aload_1
+        10: aload_3
+        11: invokevirtual #157                // Method handleOutboundAndCachePackets:([Lcom/hypixel/hytale/protocol/ToClientPacket;[Lcom/hypixel/hytale/protocol/ToClientPacket;)V
+        14: aload_3
+        15: aload_3
+        16: arraylength
+        17: iconst_1
+        18: isub
+        19: aload_0
+        20: aload_2
+        21: invokevirtual #185                // Method handleOutboundAndCachePacket:(Lcom/hypixel/hytale/protocol/ToClientPacket;)Lcom/hypixel/hytale/protocol/ToClientPacket;
+        24: aastore
+        25: aload_2
+        26: invokeinterface #161,  1          // InterfaceMethod com/hypixel/hytale/protocol/ToClientPacket.getChannel:()Lcom/hypixel/hytale/protocol/NetworkChannel;
+        31: astore        4
+        33: iconst_0
+        34: istore        5
+        36: iload         5
+        38: aload_1
+        39: arraylength
+        40: if_icmpge     73
+        43: aload         4
+        45: aload_1
+        46: iload         5
+        48: aaload
+        49: invokeinterface #161,  1          // InterfaceMethod com/hypixel/hytale/protocol/ToClientPacket.getChannel:()Lcom/hypixel/hytale/protocol/NetworkChannel;
+        54: if_acmpeq     67
+        57: new           #165                // class java/lang/IllegalArgumentException
+        60: dup
+        61: ldc           #167                // String All packets must be sent on the same channel!
+        63: invokespecial #169                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        66: athrow
+        67: iinc          5, 1
+        70: goto          36
+        73: aload_0
+        74: getfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+        77: aload         4
+        79: invokevirtual #172                // Method com/hypixel/hytale/protocol/NetworkChannel.getValue:()I
+        82: aaload
+        83: astore        5
+        85: aload_0
+        86: getfield      #145                // Field queuePackets:Z
+        89: ifeq          111
+        92: aload         5
+        94: aload_3
+        95: invokeinterface #175,  2          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.write:([Lcom/hypixel/hytale/protocol/ToClientPacket;)V
+       100: aload_0
+       101: getfield      #24                 // Field queuedPackets:Ljava/util/concurrent/atomic/AtomicInteger;
+       104: invokevirtual #179                // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+       107: pop
+       108: goto          119
+       111: aload         5
+       113: aload_3
+       114: invokeinterface #182,  2          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.writeAndFlush:([Lcom/hypixel/hytale/protocol/ToClientPacket;)V
+       119: return
+
+  public void write(com.hypixel.hytale.protocol.ToClientPacket);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iconst_1
+         3: invokevirtual #189                // Method writePacket:(Lcom/hypixel/hytale/protocol/ToClientPacket;Z)Z
+         6: pop
+         7: return
+
+  public void writeNoCache(com.hypixel.hytale.protocol.ToClientPacket);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iconst_0
+         3: invokevirtual #189                // Method writePacket:(Lcom/hypixel/hytale/protocol/ToClientPacket;Z)Z
+         6: pop
+         7: return
+
+  public boolean writePacket(com.hypixel.hytale.protocol.ToClientPacket, boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokestatic  #193                // Method com/hypixel/hytale/server/core/io/adapter/PacketAdapters.__handleOutbound:(Lcom/hypixel/hytale/server/core/io/PacketHandler;Lcom/hypixel/hytale/protocol/Packet;)Z
+         5: ifeq          10
+         8: iconst_0
+         9: ireturn
+        10: iload_2
+        11: ifeq          23
+        14: aload_0
+        15: aload_1
+        16: invokevirtual #185                // Method handleOutboundAndCachePacket:(Lcom/hypixel/hytale/protocol/ToClientPacket;)Lcom/hypixel/hytale/protocol/ToClientPacket;
+        19: astore_3
+        20: goto          25
+        23: aload_1
+        24: astore_3
+        25: aload_0
+        26: getfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+        29: aload_1
+        30: invokeinterface #161,  1          // InterfaceMethod com/hypixel/hytale/protocol/ToClientPacket.getChannel:()Lcom/hypixel/hytale/protocol/NetworkChannel;
+        35: invokevirtual #172                // Method com/hypixel/hytale/protocol/NetworkChannel.getValue:()I
+        38: aaload
+        39: astore        4
+        41: aload_0
+        42: getfield      #145                // Field queuePackets:Z
+        45: ifeq          67
+        48: aload         4
+        50: aload_3
+        51: invokeinterface #199,  2          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.write:(Lcom/hypixel/hytale/protocol/ToClientPacket;)V
+        56: aload_0
+        57: getfield      #24                 // Field queuedPackets:Ljava/util/concurrent/atomic/AtomicInteger;
+        60: invokevirtual #179                // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+        63: pop
+        64: goto          75
+        67: aload         4
+        69: aload_3
+        70: invokeinterface #202,  2          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.writeAndFlush:(Lcom/hypixel/hytale/protocol/ToClientPacket;)V
+        75: iconst_1
+        76: ireturn
+
+  private void handleOutboundAndCachePackets(com.hypixel.hytale.protocol.ToClientPacket[], com.hypixel.hytale.protocol.ToClientPacket[]);
+    Code:
+         0: iconst_0
+         1: istore_3
+         2: iload_3
+         3: aload_1
+         4: arraylength
+         5: if_icmpge     40
+         8: aload_1
+         9: iload_3
+        10: aaload
+        11: astore        4
+        13: aload_0
+        14: aload         4
+        16: invokestatic  #193                // Method com/hypixel/hytale/server/core/io/adapter/PacketAdapters.__handleOutbound:(Lcom/hypixel/hytale/server/core/io/PacketHandler;Lcom/hypixel/hytale/protocol/Packet;)Z
+        19: ifeq          25
+        22: goto          34
+        25: aload_2
+        26: iload_3
+        27: aload_0
+        28: aload         4
+        30: invokevirtual #185                // Method handleOutboundAndCachePacket:(Lcom/hypixel/hytale/protocol/ToClientPacket;)Lcom/hypixel/hytale/protocol/ToClientPacket;
+        33: aastore
+        34: iinc          3, 1
+        37: goto          2
+        40: return
+
+  private com.hypixel.hytale.protocol.ToClientPacket handleOutboundAndCachePacket(com.hypixel.hytale.protocol.ToClientPacket);
+    Code:
+         0: aload_1
+         1: instanceof    #204                // class com/hypixel/hytale/protocol/CachedPacket
+         4: ifeq          9
+         7: aload_1
+         8: areturn
+         9: aload_1
+        10: invokestatic  #206                // Method com/hypixel/hytale/protocol/CachedPacket.cache:(Lcom/hypixel/hytale/protocol/ToClientPacket;)Lcom/hypixel/hytale/protocol/CachedPacket;
+        13: areturn
+
+  public void disconnect(com.hypixel.hytale.server.core.Message);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #210                // Method com/hypixel/hytale/server/core/Message.getFormattedMessage:()Lcom/hypixel/hytale/protocol/FormattedMessage;
+         5: invokevirtual #216                // Method disconnect:(Lcom/hypixel/hytale/protocol/FormattedMessage;)V
+         8: return
+
+  public void disconnect(com.hypixel.hytale.protocol.FormattedMessage);
+    Code:
+         0: aload_0
+         1: getfield      #38                 // Field disconnectReason:Lcom/hypixel/hytale/server/core/io/PacketHandler$DisconnectReason;
+         4: aload_1
+         5: invokevirtual #220                // Method com/hypixel/hytale/server/core/io/PacketHandler$DisconnectReason.setServerDisconnectReason:(Lcom/hypixel/hytale/protocol/FormattedMessage;)V
+         8: aload_0
+         9: invokevirtual #223                // Method getSniHostname:()Ljava/lang/String;
+        12: astore_2
+        13: invokestatic  #117                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        16: getstatic     #123                // Field java/util/logging/Level.INFO:Ljava/util/logging/Level;
+        19: invokevirtual #129                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        22: ldc           #226                // String Disconnecting %s (SNI: %s) with the message: %s
+        24: aload_0
+        25: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+        28: invokeinterface #231,  1          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.formatRemoteAddress:()Ljava/lang/String;
+        33: aload_2
+        34: aload_1
+        35: invokestatic  #234                // Method com/hypixel/hytale/server/core/util/MessageUtil.formatMessageToPlainString:(Lcom/hypixel/hytale/protocol/FormattedMessage;)Ljava/lang/String;
+        38: invokeinterface #240,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+        43: aload_0
+        44: aload_1
+        45: invokevirtual #243                // Method disconnect0:(Lcom/hypixel/hytale/protocol/FormattedMessage;)V
+        48: return
+
+  protected void disconnect0(com.hypixel.hytale.protocol.FormattedMessage);
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: aload_1
+         5: invokeinterface #246,  2          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.disconnect:(Lcom/hypixel/hytale/protocol/FormattedMessage;)V
+        10: return
+
+  public com.hypixel.hytale.protocol.io.PacketStatsRecorder getPacketStatsRecorder();
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: invokeinterface #247,  1          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.getPacketStatsRecorder:()Lcom/hypixel/hytale/protocol/io/PacketStatsRecorder;
+         9: areturn
+
+  public com.hypixel.hytale.server.core.io.PacketHandler$PingInfo getPingInfo(com.hypixel.hytale.protocol.packets.connection.PongType);
+    Code:
+         0: aload_0
+         1: getfield      #78                 // Field pingInfo:[Lcom/hypixel/hytale/server/core/io/PacketHandler$PingInfo;
+         4: aload_1
+         5: invokevirtual #82                 // Method com/hypixel/hytale/protocol/packets/connection/PongType.ordinal:()I
+         8: aaload
+         9: areturn
+
+  public long getOperationTimeoutThreshold();
+    Code:
+         0: aload_0
+         1: getstatic     #251                // Field com/hypixel/hytale/protocol/packets/connection/PongType.Tick:Lcom/hypixel/hytale/protocol/packets/connection/PongType;
+         4: invokevirtual #255                // Method getPingInfo:(Lcom/hypixel/hytale/protocol/packets/connection/PongType;)Lcom/hypixel/hytale/server/core/io/PacketHandler$PingInfo;
+         7: invokevirtual #259                // Method com/hypixel/hytale/server/core/io/PacketHandler$PingInfo.getPingMetricSet:()Lcom/hypixel/hytale/metrics/metric/HistoricMetric;
+        10: iconst_0
+        11: invokevirtual #263                // Method com/hypixel/hytale/metrics/metric/HistoricMetric.getAverage:(I)D
+        14: dstore_1
+        15: getstatic     #269                // Field com/hypixel/hytale/server/core/io/PacketHandler$PingInfo.TIME_UNIT:Ljava/util/concurrent/TimeUnit;
+        18: dload_1
+        19: ldc2_w        #273                // double 2.0d
+        22: dmul
+        23: invokestatic  #275                // Method java/lang/Math.round:(D)J
+        26: invokevirtual #281                // Method java/util/concurrent/TimeUnit.toMillis:(J)J
+        29: ldc2_w        #287                // long 3000l
+        32: ladd
+        33: lreturn
+
+  public void tickPing(float);
+    Code:
+         0: aload_0
+         1: dup
+         2: getfield      #289                // Field pingTimer:F
+         5: fload_1
+         6: fsub
+         7: putfield      #289                // Field pingTimer:F
+        10: aload_0
+        11: getfield      #289                // Field pingTimer:F
+        14: fconst_0
+        15: fcmpg
+        16: ifgt          28
+        19: aload_0
+        20: fconst_1
+        21: putfield      #289                // Field pingTimer:F
+        24: aload_0
+        25: invokevirtual #293                // Method sendPing:()V
+        28: return
+
+  public void sendPing();
+    Code:
+         0: aload_0
+         1: getfield      #31                 // Field pingIdRandom:Ljava/security/SecureRandom;
+         4: invokevirtual #296                // Method java/security/SecureRandom.nextInt:()I
+         7: istore_1
+         8: invokestatic  #299                // Method java/time/Instant.now:()Ljava/time/Instant;
+        11: astore_2
+        12: invokestatic  #305                // Method java/lang/System.nanoTime:()J
+        15: lstore_3
+        16: aload_0
+        17: getfield      #78                 // Field pingInfo:[Lcom/hypixel/hytale/server/core/io/PacketHandler$PingInfo;
+        20: astore        5
+        22: aload         5
+        24: arraylength
+        25: istore        6
+        27: iconst_0
+        28: istore        7
+        30: iload         7
+        32: iload         6
+        34: if_icmpge     57
+        37: aload         5
+        39: iload         7
+        41: aaload
+        42: astore        8
+        44: aload         8
+        46: iload_1
+        47: lload_3
+        48: invokevirtual #311                // Method com/hypixel/hytale/server/core/io/PacketHandler$PingInfo.recordSent:(IJ)V
+        51: iinc          7, 1
+        54: goto          30
+        57: aload_0
+        58: new           #315                // class com/hypixel/hytale/protocol/packets/connection/Ping
+        61: dup
+        62: iload_1
+        63: aload_2
+        64: invokestatic  #317                // Method com/hypixel/hytale/server/core/modules/time/WorldTimeResource.instantToInstantData:(Ljava/time/Instant;)Lcom/hypixel/hytale/protocol/InstantData;
+        67: aload_0
+        68: getstatic     #323                // Field com/hypixel/hytale/protocol/packets/connection/PongType.Raw:Lcom/hypixel/hytale/protocol/packets/connection/PongType;
+        71: invokevirtual #255                // Method getPingInfo:(Lcom/hypixel/hytale/protocol/packets/connection/PongType;)Lcom/hypixel/hytale/server/core/io/PacketHandler$PingInfo;
+        74: invokevirtual #259                // Method com/hypixel/hytale/server/core/io/PacketHandler$PingInfo.getPingMetricSet:()Lcom/hypixel/hytale/metrics/metric/HistoricMetric;
+        77: invokevirtual #326                // Method com/hypixel/hytale/metrics/metric/HistoricMetric.getLastValue:()J
+        80: l2i
+        81: aload_0
+        82: getstatic     #329                // Field com/hypixel/hytale/protocol/packets/connection/PongType.Direct:Lcom/hypixel/hytale/protocol/packets/connection/PongType;
+        85: invokevirtual #255                // Method getPingInfo:(Lcom/hypixel/hytale/protocol/packets/connection/PongType;)Lcom/hypixel/hytale/server/core/io/PacketHandler$PingInfo;
+        88: invokevirtual #259                // Method com/hypixel/hytale/server/core/io/PacketHandler$PingInfo.getPingMetricSet:()Lcom/hypixel/hytale/metrics/metric/HistoricMetric;
+        91: invokevirtual #326                // Method com/hypixel/hytale/metrics/metric/HistoricMetric.getLastValue:()J
+        94: l2i
+        95: aload_0
+        96: getstatic     #251                // Field com/hypixel/hytale/protocol/packets/connection/PongType.Tick:Lcom/hypixel/hytale/protocol/packets/connection/PongType;
+        99: invokevirtual #255                // Method getPingInfo:(Lcom/hypixel/hytale/protocol/packets/connection/PongType;)Lcom/hypixel/hytale/server/core/io/PacketHandler$PingInfo;
+       102: invokevirtual #259                // Method com/hypixel/hytale/server/core/io/PacketHandler$PingInfo.getPingMetricSet:()Lcom/hypixel/hytale/metrics/metric/HistoricMetric;
+       105: invokevirtual #326                // Method com/hypixel/hytale/metrics/metric/HistoricMetric.getLastValue:()J
+       108: l2i
+       109: invokespecial #332                // Method com/hypixel/hytale/protocol/packets/connection/Ping."<init>":(ILcom/hypixel/hytale/protocol/InstantData;III)V
+       112: invokevirtual #335                // Method writeNoCache:(Lcom/hypixel/hytale/protocol/ToClientPacket;)V
+       115: return
+
+  public void handlePong(com.hypixel.hytale.protocol.packets.connection.Pong);
+    Code:
+         0: aload_0
+         1: getfield      #78                 // Field pingInfo:[Lcom/hypixel/hytale/server/core/io/PacketHandler$PingInfo;
+         4: aload_1
+         5: getfield      #338                // Field com/hypixel/hytale/protocol/packets/connection/Pong.type:Lcom/hypixel/hytale/protocol/packets/connection/PongType;
+         8: invokevirtual #82                 // Method com/hypixel/hytale/protocol/packets/connection/PongType.ordinal:()I
+        11: aaload
+        12: aload_1
+        13: invokevirtual #343                // Method com/hypixel/hytale/server/core/io/PacketHandler$PingInfo.handlePacket:(Lcom/hypixel/hytale/protocol/packets/connection/Pong;)V
+        16: return
+
+  protected void initStage(java.lang.String, java.time.Duration, java.util.function.BooleanSupplier);
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: aload_1
+         5: aload_0
+         6: invokevirtual #135                // Method getIdentifier:()Ljava/lang/String;
+         9: invokeinterface #347,  3          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.initTimeoutContext:(Ljava/lang/String;Ljava/lang/String;)V
+        14: aload_0
+        15: aload_1
+        16: aload_2
+        17: aload_3
+        18: invokevirtual #351                // Method setStageTimeout:(Ljava/lang/String;Ljava/time/Duration;Ljava/util/function/BooleanSupplier;)V
+        21: return
+
+  protected void enterStage(java.lang.String, java.time.Duration, java.util.function.BooleanSupplier);
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: aload_1
+         5: aload_0
+         6: invokevirtual #135                // Method getIdentifier:()Ljava/lang/String;
+         9: invokeinterface #355,  3          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.updateTimeoutContext:(Ljava/lang/String;Ljava/lang/String;)V
+        14: aload_0
+        15: aload_2
+        16: invokevirtual #358                // Method updatePacketTimeout:(Ljava/time/Duration;)V
+        19: aload_0
+        20: aload_1
+        21: aload_2
+        22: aload_3
+        23: invokevirtual #351                // Method setStageTimeout:(Ljava/lang/String;Ljava/time/Duration;Ljava/util/function/BooleanSupplier;)V
+        26: return
+
+  protected void enterStage(java.lang.String, java.time.Duration);
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: aload_1
+         5: aload_0
+         6: invokevirtual #135                // Method getIdentifier:()Ljava/lang/String;
+         9: invokeinterface #355,  3          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.updateTimeoutContext:(Ljava/lang/String;Ljava/lang/String;)V
+        14: aload_0
+        15: aload_2
+        16: invokevirtual #358                // Method updatePacketTimeout:(Ljava/time/Duration;)V
+        19: return
+
+  protected void continueStage(java.lang.String, java.time.Duration, java.util.function.BooleanSupplier);
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: aload_1
+         5: invokeinterface #362,  2          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.updateTimeoutContext:(Ljava/lang/String;)V
+        10: aload_0
+        11: aload_2
+        12: invokevirtual #358                // Method updatePacketTimeout:(Ljava/time/Duration;)V
+        15: aload_0
+        16: aload_1
+        17: aload_2
+        18: aload_3
+        19: invokevirtual #351                // Method setStageTimeout:(Ljava/lang/String;Ljava/time/Duration;Ljava/util/function/BooleanSupplier;)V
+        22: return
+
+  private void setStageTimeout(java.lang.String, java.time.Duration, java.util.function.BooleanSupplier);
+    Code:
+         0: aload_0
+         1: instanceof    #364                // class com/hypixel/hytale/server/core/io/handlers/login/AuthenticationPacketHandler
+         4: ifne          22
+         7: aload_0
+         8: instanceof    #366                // class com/hypixel/hytale/server/core/io/handlers/login/PasswordPacketHandler
+        11: ifeq          22
+        14: aload_0
+        15: getfield      #368                // Field auth:Lcom/hypixel/hytale/server/core/auth/PlayerAuthentication;
+        18: ifnonnull     22
+        21: return
+        22: aload_0
+        23: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+        26: aload_1
+        27: aload_2
+        28: aload_3
+        29: aload_0
+        30: invokedynamic #372,  0            // InvokeDynamic #0:run:(Lcom/hypixel/hytale/server/core/io/PacketHandler;)Ljava/lang/Runnable;
+        35: invokeinterface #376,  5          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.setStageTimeout:(Ljava/lang/String;Ljava/time/Duration;Ljava/util/function/BooleanSupplier;Ljava/lang/Runnable;)V
+        40: return
+
+  private void updatePacketTimeout(java.time.Duration);
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: aload_1
+         5: invokeinterface #379,  2          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.setPacketTimeout:(Ljava/time/Duration;)V
+        10: return
+
+  protected void clearTimeout();
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: invokeinterface #382,  1          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.clearStageTimeout:()V
+         9: aload_0
+        10: getfield      #385                // Field clientReadyForChunksFuture:Ljava/util/concurrent/CompletableFuture;
+        13: ifnull        35
+        16: aload_0
+        17: getfield      #385                // Field clientReadyForChunksFuture:Ljava/util/concurrent/CompletableFuture;
+        20: iconst_1
+        21: invokevirtual #389                // Method java/util/concurrent/CompletableFuture.cancel:(Z)Z
+        24: pop
+        25: aload_0
+        26: aconst_null
+        27: putfield      #385                // Field clientReadyForChunksFuture:Ljava/util/concurrent/CompletableFuture;
+        30: aload_0
+        31: aconst_null
+        32: putfield      #395                // Field clientReadyForChunksFutureStack:Ljava/lang/Throwable;
+        35: return
+
+  public com.hypixel.hytale.server.core.auth.PlayerAuthentication getAuth();
+    Code:
+         0: aload_0
+         1: getfield      #368                // Field auth:Lcom/hypixel/hytale/server/core/auth/PlayerAuthentication;
+         4: areturn
+
+  public boolean stillActive();
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: invokeinterface #399,  1          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.isActive:()Z
+         9: ireturn
+
+  public int getQueuedPacketsCount();
+    Code:
+         0: aload_0
+         1: getfield      #24                 // Field queuedPackets:Ljava/util/concurrent/atomic/AtomicInteger;
+         4: invokevirtual #403                // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+         7: ireturn
+
+  public boolean isLocalConnection();
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: invokeinterface #405,  1          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.remoteAddress:()Ljava/net/SocketAddress;
+         9: astore_1
+        10: aload_1
+        11: instanceof    #409                // class java/net/InetSocketAddress
+        14: ifeq          46
+        17: aload_1
+        18: checkcast     #409                // class java/net/InetSocketAddress
+        21: invokevirtual #411                // Method java/net/InetSocketAddress.getAddress:()Ljava/net/InetAddress;
+        24: astore_2
+        25: aload_2
+        26: iconst_2
+        27: anewarray     #415                // class com/hypixel/hytale/common/util/NetworkUtil$AddressType
+        30: dup
+        31: iconst_0
+        32: getstatic     #417                // Field com/hypixel/hytale/common/util/NetworkUtil$AddressType.ANY_LOCAL:Lcom/hypixel/hytale/common/util/NetworkUtil$AddressType;
+        35: aastore
+        36: dup
+        37: iconst_1
+        38: getstatic     #421                // Field com/hypixel/hytale/common/util/NetworkUtil$AddressType.LOOPBACK:Lcom/hypixel/hytale/common/util/NetworkUtil$AddressType;
+        41: aastore
+        42: invokestatic  #424                // Method com/hypixel/hytale/common/util/NetworkUtil.addressMatchesAny:(Ljava/net/InetAddress;[Lcom/hypixel/hytale/common/util/NetworkUtil$AddressType;)Z
+        45: ireturn
+        46: aload_1
+        47: instanceof    #430                // class io/netty/channel/unix/DomainSocketAddress
+        50: ifne          60
+        53: aload_1
+        54: instanceof    #432                // class io/netty/channel/local/LocalAddress
+        57: ifeq          64
+        60: iconst_1
+        61: goto          65
+        64: iconst_0
+        65: ireturn
+
+  public boolean isLANConnection();
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: invokeinterface #405,  1          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.remoteAddress:()Ljava/net/SocketAddress;
+         9: astore_1
+        10: aload_1
+        11: instanceof    #409                // class java/net/InetSocketAddress
+        14: ifeq          30
+        17: aload_1
+        18: checkcast     #409                // class java/net/InetSocketAddress
+        21: invokevirtual #411                // Method java/net/InetSocketAddress.getAddress:()Ljava/net/InetAddress;
+        24: astore_2
+        25: aload_2
+        26: invokestatic  #434                // Method com/hypixel/hytale/common/util/NetworkUtil.addressMatchesAny:(Ljava/net/InetAddress;)Z
+        29: ireturn
+        30: aload_1
+        31: instanceof    #430                // class io/netty/channel/unix/DomainSocketAddress
+        34: ifne          44
+        37: aload_1
+        38: instanceof    #432                // class io/netty/channel/local/LocalAddress
+        41: ifeq          48
+        44: iconst_1
+        45: goto          49
+        48: iconst_0
+        49: ireturn
+
+  public java.lang.String getSniHostname();
+    Code:
+         0: aload_0
+         1: invokevirtual #228                // Method getChannel:()Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: invokeinterface #437,  1          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.getSniHostname:()Ljava/lang/String;
+         9: areturn
+
+  public boolean checkStreamOpenRateLimit();
+    Code:
+         0: invokestatic  #305                // Method java/lang/System.nanoTime:()J
+         3: lstore_1
+         4: aload_0
+         5: getfield      #62                 // Field lastStreamOpenTimeNanos:Ljava/util/concurrent/atomic/AtomicLong;
+         8: lload_1
+         9: invokedynamic #438,  0            // InvokeDynamic #1:applyAsLong:(J)Ljava/util/function/LongUnaryOperator;
+        14: invokevirtual #442                // Method java/util/concurrent/atomic/AtomicLong.getAndUpdate:(Ljava/util/function/LongUnaryOperator;)J
+        17: lstore_3
+        18: lload_1
+        19: lload_3
+        20: lsub
+        21: getstatic     #446                // Field STREAM_OPEN_MIN_INTERVAL_NANOS:J
+        24: lcmp
+        25: ifge          32
+        28: iconst_1
+        29: goto          33
+        32: iconst_0
+        33: ireturn
+
+  public com.hypixel.hytale.server.core.io.PacketHandler$DisconnectReason getDisconnectReason();
+    Code:
+         0: aload_0
+         1: getfield      #38                 // Field disconnectReason:Lcom/hypixel/hytale/server/core/io/PacketHandler$DisconnectReason;
+         4: areturn
+
+  public void setClientReadyForChunksFuture(java.util.concurrent.CompletableFuture<java.lang.Void>);
+    Code:
+         0: aload_0
+         1: getfield      #385                // Field clientReadyForChunksFuture:Ljava/util/concurrent/CompletableFuture;
+         4: ifnull        22
+         7: new           #450                // class java/lang/IllegalStateException
+        10: dup
+        11: ldc_w         #452                // String Tried to hook client ready but something is already waiting for it!
+        14: aload_0
+        15: getfield      #395                // Field clientReadyForChunksFutureStack:Ljava/lang/Throwable;
+        18: invokespecial #454                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+        21: athrow
+        22: invokestatic  #117                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        25: getstatic     #457                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        28: invokevirtual #129                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        31: ldc_w         #460                // String %s Added future for ClientReady packet?
+        34: aload_0
+        35: invokevirtual #135                // Method getIdentifier:()Ljava/lang/String;
+        38: invokeinterface #139,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;)V
+        43: aload_0
+        44: getstatic     #462                // Field com/hypixel/hytale/common/util/DebugFlags.CAPTURE_THROWABLES:Z
+        47: ifeq          60
+        50: new           #467                // class java/lang/Throwable
+        53: dup
+        54: invokespecial #469                // Method java/lang/Throwable."<init>":()V
+        57: goto          61
+        60: aconst_null
+        61: putfield      #395                // Field clientReadyForChunksFutureStack:Ljava/lang/Throwable;
+        64: aload_0
+        65: aload_1
+        66: putfield      #385                // Field clientReadyForChunksFuture:Ljava/util/concurrent/CompletableFuture;
+        69: return
+
+  public java.util.concurrent.CompletableFuture<java.lang.Void> getClientReadyForChunksFuture();
+    Code:
+         0: aload_0
+         1: getfield      #385                // Field clientReadyForChunksFuture:Ljava/util/concurrent/CompletableFuture;
+         4: areturn
+
+  public com.hypixel.hytale.protocol.io.ChannelConnection getChannel(com.hypixel.hytale.protocol.NetworkChannel);
+    Code:
+         0: aload_0
+         1: getfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: aload_1
+         5: invokevirtual #172                // Method com/hypixel/hytale/protocol/NetworkChannel.getValue:()I
+         8: aaload
+         9: areturn
+
+  public void setChannel(com.hypixel.hytale.protocol.NetworkChannel, com.hypixel.hytale.protocol.io.ChannelConnection);
+    Code:
+         0: aload_0
+         1: getfield      #15                 // Field channels:[Lcom/hypixel/hytale/protocol/io/ChannelConnection;
+         4: aload_1
+         5: invokevirtual #172                // Method com/hypixel/hytale/protocol/NetworkChannel.getValue:()I
+         8: aload_2
+         9: aastore
+        10: return
+
+  public void setChannel(com.hypixel.hytale.protocol.packets.stream.StreamType, com.hypixel.hytale.protocol.io.ChannelConnection);
+    Code:
+         0: aload_1
+         1: getstatic     #89                 // Field com/hypixel/hytale/protocol/packets/stream/StreamType.Game:Lcom/hypixel/hytale/protocol/packets/stream/StreamType;
+         4: if_acmpne     18
+         7: new           #165                // class java/lang/IllegalArgumentException
+        10: dup
+        11: ldc_w         #470                // String Cannot set Game stream via auxiliary channel API
+        14: invokespecial #169                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        17: athrow
+        18: aload_2
+        19: ifnull        37
+        22: aload_0
+        23: getfield      #55                 // Field auxiliaryChannels:Ljava/util/Map;
+        26: aload_1
+        27: aload_2
+        28: invokeinterface #472,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        33: pop
+        34: goto          48
+        37: aload_0
+        38: getfield      #55                 // Field auxiliaryChannels:Ljava/util/Map;
+        41: aload_1
+        42: invokeinterface #476,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        47: pop
+        48: return
+
+  public boolean compareAndSetChannel(com.hypixel.hytale.protocol.packets.stream.StreamType, com.hypixel.hytale.protocol.io.ChannelConnection, com.hypixel.hytale.protocol.io.ChannelConnection);
+    Code:
+         0: aload_1
+         1: getstatic     #89                 // Field com/hypixel/hytale/protocol/packets/stream/StreamType.Game:Lcom/hypixel/hytale/protocol/packets/stream/StreamType;
+         4: if_acmpne     18
+         7: new           #165                // class java/lang/IllegalArgumentException
+        10: dup
+        11: ldc_w         #479                // String Cannot CAS Game stream via auxiliary channel API
+        14: invokespecial #169                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        17: athrow
+        18: aload_0
+        19: getfield      #55                 // Field auxiliaryChannels:Ljava/util/Map;
+        22: dup
+        23: astore        4
+        25: monitorenter
+        26: aload_0
+        27: getfield      #55                 // Field auxiliaryChannels:Ljava/util/Map;
+        30: aload_1
+        31: invokeinterface #93,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        36: checkcast     #13                 // class com/hypixel/hytale/protocol/io/ChannelConnection
+        39: astore        5
+        41: aload         5
+        43: aload_2
+        44: invokestatic  #481                // Method java/util/Objects.equals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+        47: ifeq          85
+        50: aload_3
+        51: ifnull        69
+        54: aload_0
+        55: getfield      #55                 // Field auxiliaryChannels:Ljava/util/Map;
+        58: aload_1
+        59: aload_3
+        60: invokeinterface #472,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        65: pop
+        66: goto          80
+        69: aload_0
+        70: getfield      #55                 // Field auxiliaryChannels:Ljava/util/Map;
+        73: aload_1
+        74: invokeinterface #476,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        79: pop
+        80: iconst_1
+        81: aload         4
+        83: monitorexit
+        84: ireturn
+        85: iconst_0
+        86: aload         4
+        88: monitorexit
+        89: ireturn
+        90: astore        6
+        92: aload         4
+        94: monitorexit
+        95: aload         6
+        97: athrow
+      Exception table:
+         from    to  target type
+            26    84    90   any
+            85    89    90   any
+            90    95    90   any
+
+  public int getAuxiliaryChannelCount();
+    Code:
+         0: aload_0
+         1: getfield      #55                 // Field auxiliaryChannels:Ljava/util/Map;
+         4: invokeinterface #487,  1          // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  public static void logConnectionTimings(com.hypixel.hytale.protocol.io.ChannelConnection, java.lang.String, java.util.logging.Level);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: invokeinterface #490,  3          // InterfaceMethod com/hypixel/hytale/protocol/io/ChannelConnection.logConnectionTimings:(Ljava/lang/String;Ljava/util/logging/Level;)V
+         8: return
+
+  private static long lambda$checkStreamOpenRateLimit$0(long, long);
+    Code:
+         0: lload_0
+         1: lload_2
+         2: lsub
+         3: getstatic     #446                // Field STREAM_OPEN_MIN_INTERVAL_NANOS:J
+         6: lcmp
+         7: iflt          14
+        10: lload_0
+        11: goto          15
+        14: lload_2
+        15: lreturn
+
+  private void lambda$setStageTimeout$0();
+    Code:
+         0: aload_0
+         1: ldc_w         #494                // String client.general.disconnect.stageTimeout
+         4: invokestatic  #496                // Method com/hypixel/hytale/server/core/Message.translation:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/Message;
+         7: invokevirtual #500                // Method disconnect:(Lcom/hypixel/hytale/server/core/Message;)V
+        10: return
+
+  static {};
+    Code:
+         0: getstatic     #503                // Field com/hypixel/hytale/protocol/NetworkChannel.Default:Lcom/hypixel/hytale/protocol/NetworkChannel;
+         3: new           #507                // class io/netty/handler/codec/quic/QuicStreamPriority
+         6: dup
+         7: iconst_0
+         8: iconst_1
+         9: invokespecial #509                // Method io/netty/handler/codec/quic/QuicStreamPriority."<init>":(IZ)V
+        12: getstatic     #512                // Field com/hypixel/hytale/protocol/NetworkChannel.Chunks:Lcom/hypixel/hytale/protocol/NetworkChannel;
+        15: new           #507                // class io/netty/handler/codec/quic/QuicStreamPriority
+        18: dup
+        19: iconst_0
+        20: iconst_1
+        21: invokespecial #509                // Method io/netty/handler/codec/quic/QuicStreamPriority."<init>":(IZ)V
+        24: getstatic     #515                // Field com/hypixel/hytale/protocol/NetworkChannel.WorldMap:Lcom/hypixel/hytale/protocol/NetworkChannel;
+        27: new           #507                // class io/netty/handler/codec/quic/QuicStreamPriority
+        30: dup
+        31: iconst_1
+        32: iconst_1
+        33: invokespecial #509                // Method io/netty/handler/codec/quic/QuicStreamPriority."<init>":(IZ)V
+        36: invokestatic  #518                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+        39: putstatic     #522                // Field DEFAULT_STREAM_PRIORITIES:Ljava/util/Map;
+        42: ldc_w         #525                // String LoginTiming
+        45: invokestatic  #527                // Method com/hypixel/hytale/logger/HytaleLogger.get:(Ljava/lang/String;)Lcom/hypixel/hytale/logger/HytaleLogger;
+        48: putstatic     #530                // Field LOGIN_TIMING_LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+        51: getstatic     #530                // Field LOGIN_TIMING_LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+        54: getstatic     #534                // Field java/util/logging/Level.ALL:Ljava/util/logging/Level;
+        57: invokevirtual #537                // Method com/hypixel/hytale/logger/HytaleLogger.setLevel:(Ljava/util/logging/Level;)V
+        60: getstatic     #541                // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+        63: lconst_1
+        64: invokevirtual #544                // Method java/util/concurrent/TimeUnit.toNanos:(J)J
+        67: putstatic     #446                // Field STREAM_OPEN_MIN_INTERVAL_NANOS:J
+        70: return
+}

@@ -21,8 +21,16 @@ public final class LinkTreeVfxService {
     /** Procedural gameplay-readability template; supplied authoritative dimensions are never inferred from art. */
     public void presentArea(World world, com.inigmasgames.hytalerpg.execution.area.AreaGeometry shape,
                             String phase, double seconds) {
-        if (shape.kind() != com.inigmasgames.hytalerpg.execution.area.AreaGeometry.Kind.DISC)
-            throw new IllegalArgumentException("AREA_TEMPLATE_NOT_REGISTERED");
+        if (shape.kind() != com.inigmasgames.hytalerpg.execution.area.AreaGeometry.Kind.DISC) {
+            for (var segment : com.inigmasgames.hytalerpg.execution.area.AreaOutline.segments(shape))
+                com.hypixel.hytale.server.core.modules.debug.DebugUtils.addLine(world,
+                        new org.joml.Vector3d(segment.from().x(), segment.from().y(), segment.from().z()),
+                        new org.joml.Vector3d(segment.to().x(), segment.to().y(), segment.to().z()),
+                        phase.equals("IMPACT") ? com.hypixel.hytale.server.core.modules.debug.DebugUtils.COLOR_CYAN
+                                : com.hypixel.hytale.server.core.modules.debug.DebugUtils.COLOR_YELLOW,
+                        .035, (float) seconds, com.hypixel.hytale.server.core.modules.debug.DebugUtils.FLAG_NONE);
+            return;
+        }
         var origin = shape.origin();
         com.hypixel.hytale.server.core.modules.debug.DebugUtils.addDisc(world,
                 new org.joml.Vector3d(origin.x(), origin.y() + .025, origin.z()), shape.radius(),

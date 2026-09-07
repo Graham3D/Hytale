@@ -12,11 +12,15 @@ public interface AreaWorldPort {
         public Query { targets = List.copyOf(targets); }
     }
     record Payload(int impactIndex, double coefficient, String status, double statusSeconds,
-                   int chillStacks, double displacement, boolean periodic, String element) { }
+                   int chillStacks, double displacement, boolean periodic, String element, Vec3 origin) { }
 
     /** Returns only living, hostile, unprotected candidates; overflow must not silently truncate hits. */
     Query query(AreaGeometry geometry, int candidateBudget);
     boolean lineOfSight(Vec3 origin, Target target);
+    /** Resolves a sub-impact onto legal terrain without crossing a wall from the parent footprint. */
+    default java.util.Optional<AreaGeometry> prepareImpact(Vec3 parentOrigin, AreaGeometry footprint) {
+        return java.util.Optional.of(footprint);
+    }
     /** Final native revalidation and the existing RPG calculation -> Hytale damage path. */
     boolean apply(SkillExecutionContext context, Target target, Payload payload);
     /** Uses this exact footprint, not a particle/model as collision authority. */
