@@ -193,3 +193,11 @@ Stage06Started = false
 ```
 
 Work stops for owner QA.
+
+## R017 deployment correction
+
+The first connected R016 rejoin exposed a client grammar error in
+`RpgSkillTreeLibraryRow.ui (7:89)`. R017 replaces every affected late `@Text =`
+assignment with `Text:`, strengthens the validator, and supersedes the deployed R016
+JAR. See `docs/corrections/R017-customui-load-fix.md`. Historical R016 implementation
+evidence above remains unchanged.
