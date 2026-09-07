@@ -210,8 +210,10 @@ class Stage03PresentationTest {
             @Override public void setVisible(Set<HudComponent> components) { current = Set.copyOf(components); }
         }
         Port port = new Port();
-        HudVisibilityLease lease = HudVisibilityLease.hideRpgResourceDuplicates(port);
+        HudVisibilityLease lease = HudVisibilityLease.hideNativeManaForCustomPlacement(port);
         assertFalse(port.current.contains(HudComponent.Mana));
+        assertTrue(port.current.contains(HudComponent.Health));
+        assertTrue(port.current.contains(HudComponent.Stamina));
         assertTrue(port.current.contains(HudComponent.Hotbar));
         lease.restore();
         lease.restore();

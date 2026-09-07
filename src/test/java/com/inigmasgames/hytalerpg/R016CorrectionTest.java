@@ -84,9 +84,13 @@ class R016CorrectionTest {
         assertTrue(passives.details().description().contains("15%"));
     }
 
-    @Test void r018SupersedesPipsAndKeepsExactlyThreeRpgAbilityCells() throws Exception {
+    @Test void r019KeepsContinuousXpManaOnlyResourceAndExactlyThreeRpgAbilityCells() throws Exception {
         String hud = Files.readString(Path.of("src/main/resources/Common/UI/Custom/RpgHud.ui"));
         for (int index = 1; index <= 10; index++) assertFalse(hud.contains("#XpPip" + index + "Fill"));
+        assertTrue(hud.contains("#ExperienceFill"));
+        assertTrue(hud.contains("#ManaHud"));
+        assertFalse(hud.contains("#HealthBar"));
+        assertFalse(hud.contains("#StaminaBar"));
         assertTrue(hud.contains("#Skill1Name")); assertTrue(hud.contains("#Skill2Name")); assertTrue(hud.contains("#Skill3Name"));
         assertFalse(hud.contains("#Skill4Name"));
         assertTrue(hud.contains("#RpgAbilityHud"));

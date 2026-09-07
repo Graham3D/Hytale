@@ -70,7 +70,7 @@ public final class RpgUiProjectionService {
                             ? stage04.supports(id.get().value()) ? "COMPILED_PLAN_UNSUPPORTED" : "EXECUTOR_NOT_IMPLEMENTED"
                             : ""));
         }
-        return new RpgHudViewModel(view.state().revision, resources.health(), resources.mana(), resources.stamina(),
+        return new RpgHudViewModel(view.state().revision, resources.mana(), resources.health(), resources.stamina(),
                 projectedXp, view.state().pendingLevelUpPoints, slots);
     }
 

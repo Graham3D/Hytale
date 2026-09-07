@@ -15,14 +15,12 @@ public final class HudVisibilityLease {
         this.port = port; this.snapshot = Set.copyOf(snapshot);
     }
 
-    public static HudVisibilityLease hideRpgResourceDuplicates(Port port) {
+    public static HudVisibilityLease hideNativeManaForCustomPlacement(Port port) {
         Set<HudComponent> before = port.visible();
         HudVisibilityLease lease = new HudVisibilityLease(port, before);
         EnumSet<HudComponent> after = before.isEmpty()
                 ? EnumSet.noneOf(HudComponent.class) : EnumSet.copyOf(before);
         after.remove(HudComponent.Mana);
-        after.remove(HudComponent.Health);
-        after.remove(HudComponent.Stamina);
         try { port.setVisible(Set.copyOf(after)); }
         catch (RuntimeException error) {
             port.setVisible(lease.snapshot);

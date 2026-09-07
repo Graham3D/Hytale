@@ -36,16 +36,17 @@ public final class RpgHudCoordinator {
         UUID id = playerRef.getUuid();
         teardown(id, "REINSTALL");
         HudManager manager = player.getHudManager();
-        HudVisibilityLease lease = HudVisibilityLease.hideRpgResourceDuplicates(new ManagerPort(manager, playerRef));
+        HudVisibilityLease lease = HudVisibilityLease.hideNativeManaForCustomPlacement(new ManagerPort(manager, playerRef));
         try {
             RpgHudViewModel model = projection.hud(id, resources.read(stats), xpFixtures.get(id));
             RpgHud hud = new RpgHud(playerRef, model);
             manager.addCustomHud(playerRef, hud);
             sessions.put(id, new Session(playerRef, manager, lease, hud, model, System.nanoTime()));
             trace.trace(id, "HUD_LAYOUT_READY", ref(), Map.of(
-                    "resourceOrder", "Health|Mana|Stamina", "resourceAnchor", "Horizontal:0 Bottom:118",
+                    "resourceOrder", "Health|Mana|Stamina", "nativeResourceBars", "Health|Stamina",
+                    "manaAnchor", "Centered Bottom:114", "manaArtSource", "release Inventory",
                     "xpLayerOrder", "ExperienceBackground|ExperienceBar|ExperienceFrame",
-                    "xpAnchor", "Horizontal:0 Bottom:176", "nativeAbilitiesVisible", true,
+                    "xpAnchor", "Centered Bottom:138", "nativeAbilitiesVisible", true,
                     "nativeSignature", "PRESERVED", "rpgAbilityAnchor", "Right:390 Bottom:40",
                     "inputLabelSource", "LOGICAL_ACTION_FALLBACK_PUBLIC_BINDING_LABEL_UNAVAILABLE"));
             traceResources(id, model, true);
@@ -129,7 +130,9 @@ public final class RpgHudCoordinator {
     private void traceResources(UUID player, RpgHudViewModel model, boolean initial) {
         trace.trace(player, "RESOURCE_HUD_REFRESH", ref(), Map.of(
                 "order", "Health|Mana|Stamina", "authority", "EntityStatMap",
+                "nativePresentation", "Health|Stamina", "customPresentation", "Mana",
                 "health", resource(model.health()), "mana", resource(model.mana()),
+                "manaFillWidth", RpgHud.manaFillWidth(model.mana()),
                 "stamina", resource(model.stamina()), "initial", initial));
     }
 
@@ -162,8 +165,7 @@ public final class RpgHudCoordinator {
     }
 
     private static Map<String, Object> resource(com.inigmasgames.hytalerpg.ui.model.NativeResourceView value) {
-        return Map.of("current", value.current(), "maximum", value.maximum(),
-                "fillWidth", RpgHud.resourceFillWidth(value));
+        return Map.of("current", value.current(), "maximum", value.maximum());
     }
 
     private static Map<String, Object> slot(SkillSlotView value) {

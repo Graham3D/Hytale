@@ -1,38 +1,19 @@
 Group {
-  // The native hotbar remains at the bottom. These portable graphical bars are
-  // centered above it in the owner-required Health | Mana | Stamina order.
-  Group #ResourceHud { Anchor: (Horizontal: 0, Bottom: 118, Width: 764, Height: 44); LayoutMode: Left;
-    Group #HealthBar { Anchor: (Width: 244, Height: 44);
-      Group { Anchor: (Left: 0, Top: 10, Width: 24, Height: 24); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/HealthIcon.png"); }
-      Group { Anchor: (Left: 30, Top: 15, Width: 210, Height: 12); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/HealthBackground.png");
-        Group #HealthFill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/HealthBarFill.png"); }
-        Label #HealthValue { Anchor: (Full: 0); Text: "0 / 0"; Style: (FontSize: 10, TextColor: #fff5f5, Alignment: Center, RenderBold: true); }
-      }
-    }
-    Group { Anchor: (Width: 16); }
-    Group #ManaBar { Anchor: (Width: 244, Height: 44);
-      Group { Anchor: (Left: 0, Top: 10, Width: 24, Height: 24); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/ManaIcon.png"); }
-      Group { Anchor: (Left: 30, Top: 15, Width: 210, Height: 12); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/ManaBackground.png");
-        Group #ManaFill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/ManaFill.png"); }
-        Label #ManaValue { Anchor: (Full: 0); Text: "0 / 0"; Style: (FontSize: 10, TextColor: #eef8ff, Alignment: Center, RenderBold: true); }
-      }
-    }
-    Group { Anchor: (Width: 16); }
-    Group #StaminaBar { Anchor: (Width: 244, Height: 44);
-      Group { Anchor: (Left: 0, Top: 10, Width: 24, Height: 24); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/StaminaIcon.png"); }
-      Group { Anchor: (Left: 30, Top: 15, Width: 210, Height: 12); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/StaminaBackground.png");
-        Group #StaminaFill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/StaminaBar.png"); }
-        Label #StaminaValue { Anchor: (Full: 0); Text: "0 / 0"; Style: (FontSize: 10, TextColor: #f4fff4, Alignment: Center, RenderBold: true); }
-      }
+  // Hytale continues to render native Health and Stamina. Only Mana is custom,
+  // centered between them using unmodified release Inventory art.
+  Group #ManaHud { Anchor: (Bottom: 114, Width: 172, Height: 24);
+    Group #ManaIcon { Anchor: (Left: 0, Top: 0, Width: 24, Height: 24); Background: (TexturePath: "Assets/RpgHud/CharacterPanelStatIconMana.png"); }
+    Group #ManaBackground { Anchor: (Left: 30, Top: 10, Width: 142, Height: 4); Background: (TexturePath: "Assets/RpgHud/ProgressBar.png");
+      Group #ManaFill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 4); Background: (TexturePath: "Assets/RpgHud/ProgressBarFill.png"); }
     }
   }
 
-  // Owner-supplied XP art: background, left-anchored 1x22 fill, then frame.
-  Group #ExperienceHud { Anchor: (Horizontal: 0, Bottom: 176, Width: 931, Height: 40);
-    Group #ExperienceBackground { Anchor: (Left: 3, Top: 0, Width: 925, Height: 28); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/ExperienceBackground.png"); }
-    Group #ExperienceFill { Anchor: (Left: 3, Top: 3, Width: 0, Height: 22); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/ExperienceBar.png"); }
-    Group #ExperienceFrame { Anchor: (Left: 0, Top: 0, Width: 931, Height: 28); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/ExperienceFrame.png"); }
-    Label #XpLabel { Anchor: (Left: 3, Top: 3, Width: 925, Height: 22); Text: "LV 1  0%"; Style: (FontSize: 11, TextColor: #1a2430, Alignment: Center, RenderBold: true); }
+  // Centering is implicit when Width is specified without Left/Right/Horizontal.
+  // Exact layer order: background, left-anchored fill, then owner frame.
+  Group #ExperienceHud { Anchor: (Bottom: 138, Width: 931, Height: 28);
+    Group #ExperienceBackground { Anchor: (Left: 3, Top: 0, Width: 925, Height: 28); Background: (TexturePath: "Assets/RpgHud/ExperienceBackground.png"); }
+    Group #ExperienceFill { Anchor: (Left: 3, Top: 3, Width: 0, Height: 22); Background: (TexturePath: "Assets/RpgHud/ExperienceBar.png"); }
+    Group #ExperienceFrame { Anchor: (Left: 0, Top: 0, Width: 931, Height: 28); Background: (TexturePath: "Assets/RpgHud/ExperienceFrame.png"); }
   }
 
   Label #LevelUpNotice { Anchor: (Horizontal: 0, Top: 70, Width: 410, Height: 34); Background: (Color: #3b2a12e8); Text: "LEVEL UP - ATTRIBUTE POINTS"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Visible: false; }
@@ -42,36 +23,36 @@ Group {
   Group #RpgAbilityHud { Anchor: (Right: 390, Bottom: 40, Width: 222, Height: 112); LayoutMode: Left;
     Group #RpgAbility2 { Anchor: (Width: 70, Height: 112);
       Label #Skill1Action { Anchor: (Top: 0, Width: 66, Height: 18); Text: "Ability2"; Style: (FontSize: 11, TextColor: #ffffe6, Alignment: Center, RenderBold: true); }
-      Group { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/Background_Ability_NotReady.png"); }
+      Group { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Background_Ability_NotReady.png"); }
       Group #Skill1Icon { Anchor: (Left: 6, Top: 26, Width: 54, Height: 54); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); Visible: false; }
-      Group #Skill1Unavailable { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/OverlayAbilityErrorState.png"); Visible: false; }
+      Group #Skill1Unavailable { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (TexturePath: "Assets/RpgHud/OverlayAbilityErrorState.png"); Visible: false; }
       Group #Skill1Cooldown { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (Color: #07101bd0); Visible: false; }
-      Group #Skill1NotReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/Frame_Ability_NotReady.png"); }
-      Group #Skill1ReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/Frame_Ability_Ready.png"); Visible: false; }
+      Group #Skill1NotReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_NotReady.png"); }
+      Group #Skill1ReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_Ready.png"); Visible: false; }
       Label #Skill1Name { Anchor: (Left: 2, Top: 48, Width: 62, Height: 18); Text: "Empty"; Style: (FontSize: 10, TextColor: #ffffff, Alignment: Center, RenderBold: true); }
       Label #Skill1State { Anchor: (Left: 0, Top: 88, Width: 66, Height: 20); Text: "EMPTY"; Style: (FontSize: 10, TextColor: #93a4b6, Alignment: Center); }
     }
     Group { Anchor: (Width: 4); }
     Group #RpgAbility3 { Anchor: (Width: 70, Height: 112);
       Label #Skill2Action { Anchor: (Top: 0, Width: 66, Height: 18); Text: "Ability3"; Style: (FontSize: 11, TextColor: #ffffe6, Alignment: Center, RenderBold: true); }
-      Group { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/Background_Ability_NotReady.png"); }
+      Group { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Background_Ability_NotReady.png"); }
       Group #Skill2Icon { Anchor: (Left: 6, Top: 26, Width: 54, Height: 54); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); Visible: false; }
-      Group #Skill2Unavailable { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/OverlayAbilityErrorState.png"); Visible: false; }
+      Group #Skill2Unavailable { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (TexturePath: "Assets/RpgHud/OverlayAbilityErrorState.png"); Visible: false; }
       Group #Skill2Cooldown { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (Color: #07101bd0); Visible: false; }
-      Group #Skill2NotReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/Frame_Ability_NotReady.png"); }
-      Group #Skill2ReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/Frame_Ability_Ready.png"); Visible: false; }
+      Group #Skill2NotReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_NotReady.png"); }
+      Group #Skill2ReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_Ready.png"); Visible: false; }
       Label #Skill2Name { Anchor: (Left: 2, Top: 48, Width: 62, Height: 18); Text: "Empty"; Style: (FontSize: 10, TextColor: #ffffff, Alignment: Center, RenderBold: true); }
       Label #Skill2State { Anchor: (Left: 0, Top: 88, Width: 66, Height: 20); Text: "EMPTY"; Style: (FontSize: 10, TextColor: #93a4b6, Alignment: Center); }
     }
     Group { Anchor: (Width: 4); }
     Group #RpgAbility4 { Anchor: (Width: 70, Height: 112);
       Label #Skill3Action { Anchor: (Top: 0, Width: 66, Height: 18); Text: "Ability4"; Style: (FontSize: 11, TextColor: #ffffe6, Alignment: Center, RenderBold: true); }
-      Group { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/Background_Ability_NotReady.png"); }
+      Group { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Background_Ability_NotReady.png"); }
       Group #Skill3Icon { Anchor: (Left: 6, Top: 26, Width: 54, Height: 54); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); Visible: false; }
-      Group #Skill3Unavailable { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/OverlayAbilityErrorState.png"); Visible: false; }
+      Group #Skill3Unavailable { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (TexturePath: "Assets/RpgHud/OverlayAbilityErrorState.png"); Visible: false; }
       Group #Skill3Cooldown { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (Color: #07101bd0); Visible: false; }
-      Group #Skill3NotReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/Frame_Ability_NotReady.png"); }
-      Group #Skill3ReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Common/UI/Custom/Assets/RpgHud/Frame_Ability_Ready.png"); Visible: false; }
+      Group #Skill3NotReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_NotReady.png"); }
+      Group #Skill3ReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_Ready.png"); Visible: false; }
       Label #Skill3Name { Anchor: (Left: 2, Top: 48, Width: 62, Height: 18); Text: "Empty"; Style: (FontSize: 10, TextColor: #ffffff, Alignment: Center, RenderBold: true); }
       Label #Skill3State { Anchor: (Left: 0, Top: 88, Width: 66, Height: 20); Text: "EMPTY"; Style: (FontSize: 10, TextColor: #93a4b6, Alignment: Center); }
     }
