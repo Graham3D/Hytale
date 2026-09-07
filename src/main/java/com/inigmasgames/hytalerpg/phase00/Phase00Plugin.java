@@ -32,6 +32,7 @@ import java.util.EnumMap;
 import java.util.UUID;
 import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
 import com.inigmasgames.hytalerpg.input.HytaleAbilitySkillInputAdapter;
+import com.inigmasgames.hytalerpg.input.NativeAbilityBridgeAudit;
 import com.inigmasgames.hytalerpg.input.NativeAbilityProjectionService;
 import com.inigmasgames.hytalerpg.input.NativeAbilityProjectionTickSystem;
 import com.inigmasgames.hytalerpg.input.CommandOnlyRpgUiOpenInputAdapter;
@@ -52,6 +53,8 @@ import com.inigmasgames.hytalerpg.execution.reaction.ReactionWindowService;
 import com.inigmasgames.hytalerpg.vfx.HtDevLibVfxAdapter;
 import com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService;
 import java.util.Map;
+import com.hypixel.hytale.assetstore.event.LoadedAssetsEvent;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
 
 import javax.annotation.Nonnull;
 
@@ -110,6 +113,8 @@ public final class Phase00Plugin extends JavaPlugin {
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
                 uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities));
+        getEventRegistry().register(LoadedAssetsEvent.class, RootInteraction.class,
+                NativeAbilityBridgeAudit::onRootInteractionsLoaded);
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Filter(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace));

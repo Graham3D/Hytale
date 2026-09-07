@@ -42,10 +42,11 @@ class R021NativeAbilityCorrectionTest {
         }
         String root = Files.readString(Path.of(
                 "src/main/resources/Server/Item/RootInteractions/RPG/Root_RPG_Ability_Bridge.json"));
-        assertTrue(root.contains("\"Type\": \"Simple\""));
+        assertTrue(root.contains("\"RequireNewClick\": true"));
         assertFalse(root.contains("Damage"));
         assertFalse(root.contains("ChangeStat"));
         assertFalse(root.contains("TriggerCooldown"));
+        assertFalse(root.contains("Launch"));
     }
 
     @Test void itemIdsAreDeterministicAndOwnershipIsPrefixBounded() {

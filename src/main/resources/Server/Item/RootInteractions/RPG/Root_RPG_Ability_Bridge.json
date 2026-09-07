@@ -1,8 +1,7 @@
 {
   "Interactions": [
     {
-      "Type": "Simple",
-      "RunTime": 0.01
+      "Type": "FirstClick"
     }
   ],
   "RequireNewClick": true
