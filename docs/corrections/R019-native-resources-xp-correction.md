@@ -94,6 +94,7 @@ in the supplied screenshot, not only the XP textures.
 | Revision/version | `R019` / `0.0.12` |
 | Player schema | `3` (unchanged) |
 | Implementation commit | `b2d73e994ef6cc468d1b279b2363abc3c4be6cf4` |
+| Evidence/deployment commit | `3c5f038e372a754f95fadd2d26556c08f7aabaee` |
 | Aggregate tests | PASS — 132 tests, 0 failures/errors/skips |
 | Source CustomUI validation | PASS — 17 documents |
 | Packaged RPG CustomUI validation | PASS — 10 documents |
@@ -125,4 +126,3 @@ Static and isolated-server evidence cannot prove final client rendering. Complet
 R019 = DEPLOYED_AWAITING_CONNECTED_HUD_QA
 Stage06Started = false
 ```
-
