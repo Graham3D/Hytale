@@ -246,3 +246,14 @@ Stage06SafeToBegin = false
 ```
 
 Work stops at this gate. Stage 06 has not begun.
+
+## R016 correction reference
+
+R016 preserves the six Stage 05 projectile executors and changes their activation
+boundary to the permanent three-slot model: Ability2/3/4 map to RPG
+`skill01/02/03`, while Ability1 remains the native weapon Signature Move. Historical
+R015 implementation/smoke evidence above is unchanged. The reviewed connected R015
+session never produced an activation or projectile trace, so it neither passes nor
+fails the connected projectile gate. See `docs/corrections/R016-correction-report.md`
+and use `docs/corrections/R016-client-verification.md` for current QA. Stage 06 remains
+unstarted.

@@ -258,3 +258,12 @@ Stage05SafeToBeginProvisionally = true
 There is no automated, server-startup, architectural, persistence, or RPG-scoped
 exception blocker. Under the owner's explicit authorization, Stage 05 may begin as a
 separate revision while Stage 04 remains non-PASS pending connected evidence.
+
+## R016 correction reference
+
+R016 changes only the slot/input/frontend boundary around the retained Stage 04
+executors: native Ability1 is ignored by RPG, while Ability2/3/4 map to
+`skill01/02/03`. The obsolete fourth RPG slot is removed through schema-v3 migration.
+Historical R013 executor evidence above is unchanged. Current connected verification
+must use `docs/corrections/R016-client-verification.md`; do not use the old four-slot
+or Ability1 instructions in the historical checklist. Stage 06 remains unstarted.

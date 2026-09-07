@@ -1,0 +1,29 @@
+﻿{
+    "verifiedAtUtc":  "2026-09-07T01:35:37.0716529Z",
+    "revision":  "R016",
+    "version":  "0.0.9",
+    "stage":  "pre-Stage06 correction",
+    "schema":  3,
+    "hytaleVersion":  "0.7.0-pre.1",
+    "branch":  "RPG",
+    "sourceCommit":  "613b0c2d6e6715fba522964b27fc01cd00edd63e",
+    "jarPath":  "G:\\My Drive\\Inigmas Games\\Hytale Taverns\\HytaleRPG\\build\\libs\\HytaleRPG-0.0.9.jar",
+    "jarSha256":  "17CDEE20BF04E6F2C4F66C7CB9F9CB884C98FDF09142CB969E08E895A9E0BFDE",
+    "requiredJarEntriesPresent":  true,
+    "missingJarEntries":  [
+
+                          ],
+    "canonicalSkills":  87,
+    "canonicalPassives":  66,
+    "skillSlots":  3,
+    "passiveSlots":  6,
+    "jointSlots":  2,
+    "jointInputCapacity":  3,
+    "tests":  125,
+    "failures":  0,
+    "errors":  0,
+    "skipped":  0,
+    "canvasUiSourceChanged":  false,
+    "customUiValidated":  true,
+    "hotkey":  "BLOCKED_PUBLIC_API"
+}

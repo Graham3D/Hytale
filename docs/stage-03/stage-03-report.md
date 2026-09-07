@@ -265,6 +265,11 @@ these observations and the relevant UI/server trace records are captured.
 
 ## Connected closure checklist
 
+> Superseded by R016: Ability1 remains Hytale's native weapon Signature Move,
+> Ability2/3/4 map to RPG `skill01/02/03`, and `skill04` no longer exists. Use
+> `docs/corrections/R016-client-verification.md` for current testing; the R012 list
+> below remains only as historical evidence context.
+
 1. Fully restart the RPG world, rejoin, and confirm the `R012` badge, native nine-slot
    hotbar, centered `Mana | Health | Stamina`, and four right-side skill cells appear
    without a CustomUI/server error.
@@ -321,3 +326,13 @@ Stage04SafeToBegin = true
 Stage 04 began later under the owner's explicit provisional authorization. This does
 not change the Stage 03 status or manufacture connected evidence for it; see
 `docs/stage-04/stage-04-report.md` for the separate R013 revision.
+
+## R016 correction reference
+
+R016 permanently reduces the runtime/player-facing loadout to three Skill slots,
+reserves native Ability1 for the weapon Signature Move, and maps Ability2/3/4 to RPG
+`skill01/02/03`. It also moves the three-cell RPG HUD away from the native hotbar,
+repairs ten-pip XP rendering and UI trace formatting, migrates player schema v2 to
+v3, and adds `/rpg skilltree`. Historical R012 evidence above is unchanged. See
+`docs/corrections/R016-correction-report.md` and use the R016 checklist for current
+connected verification. Stage 06 remains unstarted.

@@ -1,5 +1,10 @@
 # Stage 05 R015 — Connected Client Verification
 
+> Superseded input/slot notice: R016 reserves Ability1 for Hytale's native weapon
+> Signature Move and maps Ability2/3/4 to RPG `skill01/02/03`; `skill04` no longer
+> exists. Use `docs/corrections/R016-client-verification.md` for current testing. The
+> historical R015 steps below are retained as evidence context only.
+
 ## Setup
 
 1. Fully restart the `RPG` world and rejoin. Confirm the HUD badge is `R015`.
