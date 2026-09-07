@@ -76,6 +76,7 @@ the 696-pixel usable background width. No XP text or extra HUD element was added
 | Hytale target | `0.7.0-pre.1` (unchanged) |
 | Player schema | `3` (unchanged) |
 | Implementation commit | `359fef86ae89feea4730bcbe503b04281507f468` |
+| Evidence/deployment commit | `63cbb89711726a660c240b4ce98096484bd67b2b` |
 | Aggregate tests | PASS — 130 tests, 0 failures/errors/skips |
 | Source CustomUI validation | PASS — 17 documents |
 | Packaged RPG CustomUI validation | PASS — 10 documents |
