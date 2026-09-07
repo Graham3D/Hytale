@@ -54,7 +54,7 @@ before deployment.
 | Hytale target | `0.7.0-pre.1` |
 | Player schema | `3` (unchanged) |
 | Implementation commit | `f374e7c1efd8a48b3a7a5439b4f97da09e5e5a50` |
-| Evidence commit | `EVIDENCE_COMMIT_PENDING` |
+| Evidence/deployment commit | `2b0a6e8a49deb93a5349592a709bb897ea971559` |
 | Clean aggregate tests | PASS — 125, no failures/errors/skips |
 | Source CustomUI validation | PASS — 17 documents |
 | Packaged RPG CustomUI validation | PASS — 10 documents |
