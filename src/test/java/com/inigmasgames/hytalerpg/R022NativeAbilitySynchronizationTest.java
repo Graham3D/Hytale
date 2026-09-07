@@ -15,6 +15,7 @@ class R022NativeAbilitySynchronizationTest {
     @Test void bridgeIsBranchlessAndContainsNoGameplayMutation() throws Exception {
         String root = Files.readString(ROOT);
         assertTrue(root.contains("\"Type\": \"FirstClick\""));
+        assertTrue(root.contains("\"Type\": \"RPG_ActivateSkill\""));
         assertTrue(root.contains("\"RequireNewClick\": true"));
         assertFalse(root.contains("\"Click\""));
         assertFalse(root.contains("\"Held\""));

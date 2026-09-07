@@ -2,6 +2,9 @@
   "Interactions": [
     {
       "Type": "FirstClick"
+    },
+    {
+      "Type": "RPG_ActivateSkill"
     }
   ],
   "RequireNewClick": true

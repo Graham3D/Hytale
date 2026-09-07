@@ -50,13 +50,17 @@ tasks.withType(JavaCompile).configureEach {
 tasks.test {
     useJUnitPlatform()
     exclude '**/R023NativeRuneControlTest*'
+    exclude '**/R024NativeInteractionAssetTest*'
 }
 
 tasks.register('nativeControlTest', Test) {
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
     useJUnitPlatform()
-    filter { includeTestsMatching '*R023NativeRuneControlTest' }
+    filter {
+        includeTestsMatching '*R023NativeRuneControlTest'
+        includeTestsMatching '*R024NativeInteractionAssetTest'
+    }
     // Separate JVM: native codecs require Hytale's logger; retained UI tests exercise the JUL fallback.
     systemProperty 'java.util.logging.manager', 'com.hypixel.hytale.logger.backend.HytaleLogManager'
 }

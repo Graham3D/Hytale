@@ -1,5 +1,13 @@
 # R023 — Native Rune control and observation differential
 
+## Subsequent connected result — 2026-09-07
+
+The owner confirmed visible vanilla Fireball casting. Both captured trials had a
+wholly silent inbound watcher. The installed Quiche dispatch path bypasses the
+legacy inbound adapter hook; see [R024](R024-native-execution-boundary.md) for the
+connected evidence and exact bytecode audit. R023 did not fix RPG casting. The
+second trial disconnected with restoration pending; its recovery journal is retained.
+
 ## Scope and status
 
 R023 is a diagnostic experiment, not another proposed bridge fix. R022's branchless

@@ -24,6 +24,35 @@ public final class HytaleAbilitySkillInputAdapter {
     private final Consumer<Observation> observations;
     private Predicate<UUID> executionSuppressed = ignored -> false;
     private BiConsumer<UUID, Packet> rawObserver = (player, packet) -> { };
+    private boolean nativeExecutionOnly;
+    private final ConcurrentHashMap<UUID, java.util.Map<Object, Boolean>> executedChains = new ConcurrentHashMap<>();
+
+    /** Production uses the native server interaction callback; packet observation is diagnostic only. */
+    public void useNativeExecution() { nativeExecutionOnly = true; }
+
+    public void acceptNativeExecution(UUID player, InteractionType action, int chainId, Object chainIdentity,
+                                      String itemId, int nativeSlot) {
+        SkillSlot slot = slot(action);
+        if (slot == null || chainIdentity == null || itemId == null
+                || !itemId.startsWith(NativeAbilityProjectionService.OWNED_ITEM_PREFIX)
+                || nativeSlot != (action == InteractionType.Ability2 ? 0 : 3)) return;
+        // Native chains own their lifetime. Weak keys retain deduplication while the actual chain exists,
+        // without a time-window expiry permitting a long-lived chain to activate twice.
+        var ledger = executedChains.computeIfAbsent(player,
+                ignored -> java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>()));
+        synchronized (ledger) {
+            if (ledger.containsKey(chainIdentity) || ledger.size() >= 256) return;
+            ledger.put(chainIdentity, Boolean.TRUE);
+        }
+        String correlation = UUID.randomUUID().toString();
+        boolean suppressed = executionSuppressed.test(player);
+        boolean full = requests.stream().filter(request -> request.player().equals(player)).limit(64).count() >= 64;
+        String result = suppressed ? "NATIVE_CONTROL_RPG_SUPPRESSED"
+                : full ? "NATIVE_INPUT_QUEUE_FULL" : "NATIVE_EXECUTION_MAPPED";
+        observations.accept(new Observation(player, slot, action.name(), chainId, correlation, result));
+        if (!suppressed && !full) requests.add(new Request(player, slot, action.name(), chainId, correlation,
+                desiredMovement.getOrDefault(player, new Vec3(0, 0, 0))));
+    }
 
     /** Installed once during setup; the control observes the same inbound watcher before filtering. */
     public void configureControl(Predicate<UUID> suppressed, BiConsumer<UUID, Packet> observer) {
@@ -45,6 +74,7 @@ public final class HytaleAbilitySkillInputAdapter {
             return;
         }
         if (!(packet instanceof SyncInteractionChains chains) || chains.updates == null) return;
+        if (nativeExecutionOnly) return;
         for (SyncInteractionChain chain : chains.updates) observe(player, chain);
     }
 
@@ -106,6 +136,7 @@ public final class HytaleAbilitySkillInputAdapter {
         requests.removeIf(request -> request.player().equals(player));
         seen.keySet().removeIf(key -> key.player().equals(player));
         desiredMovement.remove(player);
+        executedChains.remove(player);
     }
 
     public static SkillSlot slot(InteractionType type) {

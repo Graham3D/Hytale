@@ -103,6 +103,11 @@ public final class Phase00Plugin extends JavaPlugin {
         nativeAbilities = new NativeAbilityProjectionService(loadouts, runtimeProfiles, skillTrace);
         loadouts.addMutationListener(nativeAbilities::onLoadoutMutation);
         abilityInputs = new HytaleAbilitySkillInputAdapter(nativeAbilities::observeInput);
+        abilityInputs.useNativeExecution();
+        getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
+                .register(com.inigmasgames.hytalerpg.input.NativeSkillActivationInteraction.TYPE,
+                        com.inigmasgames.hytalerpg.input.NativeSkillActivationInteraction.class,
+                        com.inigmasgames.hytalerpg.input.NativeSkillActivationInteraction.codec(abilityInputs));
         var runeControl = new com.inigmasgames.hytalerpg.input.NativeRuneControl(
                 getDataDirectory().resolve("diagnostics").resolve("native-rune-control"),
                 configuration.developmentEntitlements(), skillTrace);

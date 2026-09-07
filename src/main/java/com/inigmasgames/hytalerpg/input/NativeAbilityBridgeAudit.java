@@ -27,22 +27,25 @@ public final class NativeAbilityBridgeAudit {
 
     public static Result inspect(RootInteraction root) {
         int operationCount = root == null ? 0 : root.getOperationMax();
-        Object operation = operationCount == 1 ? root.getOperation(0) : null;
+        Object operation = operationCount >= 1 ? root.getOperation(0) : null;
         boolean firstClick = operation instanceof FirstClickInteraction;
         WaitForDataFrom waitFor = firstClick
                 ? ((FirstClickInteraction) operation).getWaitForDataFrom() : WaitForDataFrom.None;
         boolean operationRemote = firstClick && ((FirstClickInteraction) operation).needsRemoteSync();
         boolean rootRemote = root != null && root.needsRemoteSync();
-        // One branchless FirstClick operation cannot mutate damage, stats, inventory, resources, cooldowns, or projectiles.
-        boolean effectFree = firstClick && operationCount == 1;
-        return new Result(operationCount, operation == null ? "" : operation.getClass().getSimpleName(),
+        boolean callback = operationCount == 2 && root.getOperation(1) instanceof NativeSkillActivationInteraction activation
+                && activation.getWaitForDataFrom() == WaitForDataFrom.Server && activation.needsRemoteSync();
+        // Exact whitelist: FirstClick + server dispatch callback, no native damage/stat/cost/cooldown operation.
+        boolean effectFree = firstClick && callback;
+        return new Result(operationCount, operation == null ? "" : operation.getClass().getSimpleName()
+                + (callback ? "+NativeSkillActivationInteraction" : ""),
                 waitFor, operationRemote, rootRemote, effectFree);
     }
 
     public record Result(int operationCount, String operationType, WaitForDataFrom waitFor,
                          boolean operationRemote, boolean rootRemote, boolean effectFree) {
         public boolean pass() {
-            return operationCount == 1 && "FirstClickInteraction".equals(operationType)
+            return operationCount == 2 && "FirstClickInteraction+NativeSkillActivationInteraction".equals(operationType)
                     && waitFor == WaitForDataFrom.Client && operationRemote && rootRemote && effectFree;
         }
     }

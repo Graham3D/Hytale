@@ -1,0 +1,98 @@
+Compiled from "SimpleInstantInteraction.java"
+public abstract class com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction extends com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction> CODEC;
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction(java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction."<init>":(Ljava/lang/String;)V
+         5: return
+
+  protected com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction();
+    Code:
+         0: aload_0
+         1: invokespecial #7                  // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction."<init>":()V
+         4: return
+
+  protected final void tick0(boolean, float, com.hypixel.hytale.protocol.InteractionType, com.hypixel.hytale.server.core.entity.InteractionContext, com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler);
+    Code:
+         0: iload_1
+         1: ifne          5
+         4: return
+         5: aload_0
+         6: aload_3
+         7: aload         4
+         9: aload         5
+        11: invokevirtual #10                 // Method firstRun:(Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler;)V
+        14: aload_0
+        15: iload_1
+        16: fload_2
+        17: aload_3
+        18: aload         4
+        20: aload         5
+        22: invokespecial #16                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction.tick0:(ZFLcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler;)V
+        25: return
+
+  protected void simulateTick0(boolean, float, com.hypixel.hytale.protocol.InteractionType, com.hypixel.hytale.server.core.entity.InteractionContext, com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler);
+    Code:
+         0: iload_1
+         1: ifne          5
+         4: return
+         5: aload_0
+         6: aload_3
+         7: aload         4
+         9: aload         5
+        11: invokevirtual #20                 // Method simulateFirstRun:(Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler;)V
+        14: aload_0
+        15: invokevirtual #23                 // Method getWaitForDataFrom:()Lcom/hypixel/hytale/protocol/WaitForDataFrom;
+        18: getstatic     #27                 // Field com/hypixel/hytale/protocol/WaitForDataFrom.Server:Lcom/hypixel/hytale/protocol/WaitForDataFrom;
+        21: if_acmpne     57
+        24: aload         4
+        26: invokevirtual #33                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getServerState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+        29: ifnull        57
+        32: aload         4
+        34: invokevirtual #33                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getServerState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+        37: getfield      #39                 // Field com/hypixel/hytale/protocol/InteractionSyncData.state:Lcom/hypixel/hytale/protocol/InteractionState;
+        40: getstatic     #45                 // Field com/hypixel/hytale/protocol/InteractionState.Failed:Lcom/hypixel/hytale/protocol/InteractionState;
+        43: if_acmpne     57
+        46: aload         4
+        48: invokevirtual #50                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+        51: getstatic     #45                 // Field com/hypixel/hytale/protocol/InteractionState.Failed:Lcom/hypixel/hytale/protocol/InteractionState;
+        54: putfield      #39                 // Field com/hypixel/hytale/protocol/InteractionSyncData.state:Lcom/hypixel/hytale/protocol/InteractionState;
+        57: aload_0
+        58: iload_1
+        59: fload_2
+        60: aload_3
+        61: aload         4
+        63: aload         5
+        65: invokespecial #16                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction.tick0:(ZFLcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler;)V
+        68: return
+
+  protected abstract void firstRun(com.hypixel.hytale.protocol.InteractionType, com.hypixel.hytale.server.core.entity.InteractionContext, com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler);
+
+  protected void simulateFirstRun(com.hypixel.hytale.protocol.InteractionType, com.hypixel.hytale.server.core.entity.InteractionContext, com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: invokevirtual #10                 // Method firstRun:(Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler;)V
+         7: return
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: invokespecial #53                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction.toString:()Ljava/lang/String;
+         4: invokedynamic #57,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+         9: areturn
+
+  static {};
+    Code:
+         0: ldc           #11                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInstantInteraction
+         2: getstatic     #61                 // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+         5: invokestatic  #65                 // Method com/hypixel/hytale/codec/builder/BuilderCodec.abstractBuilder:(Ljava/lang/Class;Lcom/hypixel/hytale/codec/builder/BuilderCodec;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+         8: invokevirtual #71                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        11: putstatic     #77                 // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        14: return
+}
