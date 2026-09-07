@@ -178,8 +178,6 @@ public final class Phase00Plugin extends JavaPlugin {
         getCommandRegistry().registerCommand(new CharacterProbeCommand());
         getCommandRegistry().registerCommand(new LinkCanvasProbeCommand());
         getCommandRegistry().registerCommand(new MouseProbeCommand());
-        getCommandRegistry().registerCommand(new HudShowProbeCommand());
-        getCommandRegistry().registerCommand(new HudClearProbeCommand());
         getCommandRegistry().registerCommand(new StatsProbeCommand());
         getCommandRegistry().registerCommand(new CapabilitiesProbeCommand());
         getCommandRegistry().registerCommand(new AbilityInputsProbeCommand());

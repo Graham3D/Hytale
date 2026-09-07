@@ -30,6 +30,17 @@ class R020HudCorrectionTest {
         }
         assertFalse(Files.exists(Path.of(
                 "src/main/java/com/inigmasgames/hytalerpg/ui/hud/HudVisibilityLease.java")));
+        for (String resourceControl : new String[]{"#Health", "#Mana", "#Stamina"})
+            assertFalse(hud.contains(resourceControl), resourceControl);
+        assertFalse(Files.exists(Path.of("src/main/resources/Common/UI/Custom/Phase00Hud.ui")));
+        assertFalse(Files.exists(Path.of(
+                "src/main/java/com/inigmasgames/hytalerpg/phase00/Phase00Hud.java")));
+        String allProductionJava = String.join("\n", Files.walk(Path.of("src/main/java"))
+                .filter(path -> path.toString().endsWith(".java"))
+                .map(path -> assertDoesNotThrow(() -> Files.readString(path))).toList());
+        for (String mutation : new String[]{"setVisibleHudComponents", "getVisibleHudComponents",
+                "hideHudComponents", "resetVisibleHudComponents"})
+            assertFalse(allProductionJava.contains(mutation), mutation);
     }
 
     @Test void experienceUsesOwnerAssetsAtAuthoritativeDimensionsAndExactCenteredLayerGeometry()

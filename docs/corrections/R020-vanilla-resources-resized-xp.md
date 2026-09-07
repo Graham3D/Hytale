@@ -28,6 +28,8 @@ Hytale is once again the sole presenter of Health, Mana, and Stamina. R020 remov
 - custom Mana fill calculations and update commands;
 - the Mana-only native visibility lease and every associated
   `getVisibleHudComponents` / `setVisibleHudComponents` call;
+- the obsolete Phase 00 replacement-HUD commands and document, which could still
+  hide all three native bars when manually invoked;
 - RPG resource-presentation polling traces; and
 - all remaining RPG-packaged Health, Mana, and Stamina art.
 
@@ -80,7 +82,7 @@ the 696-pixel usable background width. No XP text or extra HUD element was added
 | Aggregate tests | PASS — 130 tests, 0 failures/errors/skips |
 | Source CustomUI validation | PASS — 17 documents |
 | Packaged RPG CustomUI validation | PASS — 10 documents |
-| RPG resource controls/assets absent | PASS |
+| RPG resource controls/assets absent from every packaged HUD | PASS |
 | RPG native-visibility mutation absent | PASS |
 | Owner XP files byte-identical | PASS |
 | XP runtime/source dimensions | PASS — 702×28, 696×28, 1×22 |

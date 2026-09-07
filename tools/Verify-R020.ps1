@@ -44,6 +44,8 @@ try {
     }
 
     $hudText = Get-Content -Raw 'src\main\resources\Common\UI\Custom\RpgHud.ui'
+    $allProductionJava = (Get-ChildItem 'src\main\java' -Recurse -File -Filter '*.java' |
+        Get-Content -Raw) -join [Environment]::NewLine
     $healthText = Get-Content -Raw (Join-Path $releaseInterface 'Hud\Health\Health.ui')
     $staminaText = Get-Content -Raw (Join-Path $releaseInterface 'Hud\Stamina\StaminaPanel.ui')
     $xpChecks = foreach ($name in @('ExperienceFrame.png','ExperienceBackground.png','ExperienceBar.png')) {
@@ -66,9 +68,10 @@ try {
         capturedAtUtc = [DateTime]::UtcNow.ToString('o')
         releaseHealthNativeHotbarRelative = [bool]($healthText -match 'InventoryClosedContainerMargin.*HotbarHeight.*\+ 6')
         releaseStaminaNativeHotbarRelative = [bool]($staminaText -match 'InventoryClosedContainerMargin.*HotbarHeight.*\+ 6')
-        allNativeResourceControlsAbsentFromCustomDocument = -not ($hudText -match '#Health|#Mana|#Stamina')
-        noRpgVisibilityMutation = -not [bool]((Get-ChildItem 'src\main\java\com\inigmasgames\hytalerpg\ui\hud' -File |
-            Get-Content -Raw) -match 'HudVisibilityLease|setVisibleHudComponents|getVisibleHudComponents')
+        allNativeResourceControlsAbsentFromPackagedHud = -not ($hudText -match '#Health|#Mana|#Stamina') -and
+            -not (Test-Path -LiteralPath 'src\main\resources\Common\UI\Custom\Phase00Hud.ui')
+        noRpgVisibilityMutation = -not [bool]($allProductionJava -match
+            'HudVisibilityLease|setVisibleHudComponents|getVisibleHudComponents|hideHudComponents|resetVisibleHudComponents')
         xpOwnerAssetsByteIdentical = -not [bool](@($xpChecks | Where-Object { $_.sourceSha256 -ne $_.packagedSha256 }).Count)
         xpAssetDimensionsAuthoritative = $dimensionsMatch
         texturePathsRelativeToDocument = -not ($hudText -match 'TexturePath: "Common/UI/Custom/')
@@ -115,7 +118,7 @@ try {
     [pscustomobject]$result | Format-List
     if ($missing.Count -ne 0 -or $unexpected.Count -ne 0 -or $failures -ne 0 -or $errors -ne 0 -or
         -not $audit.releaseHealthNativeHotbarRelative -or -not $audit.releaseStaminaNativeHotbarRelative -or
-        -not $audit.allNativeResourceControlsAbsentFromCustomDocument -or -not $audit.noRpgVisibilityMutation -or
+        -not $audit.allNativeResourceControlsAbsentFromPackagedHud -or -not $audit.noRpgVisibilityMutation -or
         -not $audit.xpOwnerAssetsByteIdentical -or -not $audit.xpAssetDimensionsAuthoritative -or
         -not $audit.texturePathsRelativeToDocument -or
         -not $audit.experienceImplicitlyCentered -or -not $audit.experienceBackgroundGeometry -or
