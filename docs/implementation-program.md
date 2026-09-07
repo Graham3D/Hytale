@@ -1,0 +1,80 @@
+# RPG implementation program — Stages 06–13
+
+## Authority and evidence rules
+
+Owner authorization: attachment `4be7b0e7-6165-4222-9c28-5ef5ca1faddf`, followed by
+the supplied master v1.2 Markdown and explicit connected-evidence requirements.
+Master v1.2 SHA-256: `750483855846FF6DB2564B4D6D626C2A12F1AC6EBBBBF12232B2C3ECCF667010`.
+Baseline RPG HEAD: `8aa4ae3af8925847f78361a5799108c724ed3c39`.
+
+The later authorization supersedes old per-stage owner-approval pauses. Cohort
+limits, testing, reports, rollback and separate stage commits remain mandatory.
+Only connected Hytale observations establish rendering, input, animation, packet
+behavior and native execution. Unit tests and isolated smoke have separate gates.
+Unverified connected input does not block independent backend implementation.
+
+## Reconciliation
+
+- MD-19/00.4 and R020/R021 supersede older custom resource-bar and fake ability HUD
+  instructions. Native Health/Mana/Stamina and Signature Move remain untouched.
+- Retain R016's explicit three logical slots and schema 3. Do not restore obsolete
+  four-slot topology or remove skill03 to work around Ability4 unavailability.
+- The live deployed build is R023. R024 is a separately committed correction:
+  `5c5e55e`, server-side interaction entry, awaiting connected verification. The
+  owner-confirmed vanilla Rune cast plus silent watcher and Quiche bytecode audit
+  prove the previous observer boundary was inappropriate for this transport.
+- R023's interrupted second control has a recovery journal. Preserve/recover it;
+  never silently delete temporary-item ownership evidence.
+- Stage 01B and Stage 02 retain their recorded connected PASS scope. Stage 03–05
+  reports describe limited cohorts and pending connected gates, not all-catalog
+  completion. There are only twelve current executable pilot profiles: six each
+  from Stages 04 and 05. Final coverage must account for their other 27 skills,
+  not label them implemented merely because all 87 catalog entries exist.
+- Potency remains 15%. There is no canonical Swift Recovery passive. Preserve
+  generic cooldown recovery independently.
+- The existing XP assets/geometry and all three-mod ownership corrections remain.
+- A normal loopback smoke must reach `Hytale Server Booted`; plugin readiness or
+  inherited `--bare` startup alone is not a valid server-start gate.
+
+## Existing ownership map
+
+| Contract | Existing implementation to extend |
+|---|---|
+| Loadout/persistence/migration | RpgLoadoutService, FileRpgPlayerStateRepository, RpgStateMigrator |
+| Catalog/graph/compiler | RpgCatalog, RpgLinkGraphService, CompatibilityService, LinkCompiler |
+| Resource/cooldown/snapshot/damage | RpgCombatKernel and HytaleDamageAdapter/lifecycle systems |
+| Activation/family orchestration | SkillExecutionService, SkillExecutionPort, SkillExecutorRegistry |
+| Native world ownership | HytaleSkillExecutionSystem and bounded owned-effect registries |
+| Projectile carrier authority | RpgProjectileService, ProjectileLifecycleRegistry, StandardPhysicsProvider |
+| Native input projection | NativeAbilityProjectionService; R024 native interaction callback |
+| XP UI | CharacterXpProjectionService and existing XP-only HUD |
+
+No second damage engine, current-resource store, fake native input or UI-only XP
+authority will be introduced. Exact stage contracts and installed API/asset
+definitions are read before each corresponding implementation.
+
+## Stage boundaries
+
+| Stage | Scope | Initial state |
+|---|---|---|
+| 06 | 15 spatial skills; Potency, Expanded Radius, Echo, Skill Delay | implementation next |
+| 07 | 12 projectile continuation/multiplicity passives | not started |
+| 08 | 8 line/beam/tether/orbit skills | not started |
+| 09 | 16 support/barrier/Aura skills and 7 passives | not started |
+| 10 | 9 summon/corpse/conversion skills and 3 passives | not started |
+| 11 | remaining 40 passives; component-scoped matrix/combinations | not started |
+| 12 | progression, attribution, exact-once rewards and acquisition | not started |
+| 13 | full 87/66 coverage, hardening, release-candidate assessment | not started |
+
+Advance only after each local engineering gate passes. Each stage has a report,
+machine-readable evidence, archived build/rollback and an independent commit.
+No stage receives connected PASS from the local gate. Development-only grants and
+internal fixtures must never be relabeled production acquisition evidence.
+
+## Live deployment
+
+Build/archive without mutating the live RPG save during this implementation
+program. Operator approval and a stopped world are required for deployment. The
+authorization to continue implementation does not authorize interrupting a live
+test or silently replacing the owner's active mod set. Exactly three established
+mods remain the deployment target when approved.
