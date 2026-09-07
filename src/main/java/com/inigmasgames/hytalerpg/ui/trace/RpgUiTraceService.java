@@ -58,7 +58,8 @@ public final class RpgUiTraceService implements AutoCloseable {
     private static String inferredPage(String event) {
         if (event.startsWith("SKILLTREE")) return "skilltree";
         if (event.startsWith("CHARACTER") || event.startsWith("ATTRIBUTE")) return "character";
-        if (event.startsWith("HUD") || event.startsWith("SKILLBAR") || event.startsWith("XP_")
+        if (event.startsWith("HUD") || event.startsWith("RESOURCE_HUD") || event.startsWith("ABILITY_")
+                || event.startsWith("SKILLBAR") || event.startsWith("XP_")
                 || event.startsWith("LEVEL_UP")) return "hud";
         return "command";
     }

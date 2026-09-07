@@ -9,18 +9,19 @@ import com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService;
 import com.inigmasgames.hytalerpg.ui.HytaleResourceViewAdapter;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.ui.model.RpgHudViewModel;
+import com.inigmasgames.hytalerpg.ui.model.SkillSlotView;
 import com.inigmasgames.hytalerpg.ui.model.XpView;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Owns production HUD lifecycle, diff refresh, and exact native visibility restoration. */
+/** Owns the presentation-only HUD lifecycle and traces meaningful state transitions. */
 public final class RpgHudCoordinator {
     private static final long POLL_NANOS = 250_000_000L;
-    private static final long RATE_TRACE_NANOS = 5_000_000_000L;
     private final RpgUiProjectionService projection;
     private final HytaleResourceViewAdapter resources = new HytaleResourceViewAdapter();
     private final RpgUiTraceService trace;
@@ -36,21 +37,21 @@ public final class RpgHudCoordinator {
         teardown(id, "REINSTALL");
         HudManager manager = player.getHudManager();
         HudVisibilityLease lease = HudVisibilityLease.hideRpgResourceDuplicates(new ManagerPort(manager, playerRef));
-        trace.trace(id, "HUD_VISIBILITY_SNAPSHOT", ref(), Map.of("visible", lease.snapshot().toString(),
-                "hidden", "Mana,Health,Stamina"));
         try {
             RpgHudViewModel model = projection.hud(id, resources.read(stats), xpFixtures.get(id));
             RpgHud hud = new RpgHud(playerRef, model);
             manager.addCustomHud(playerRef, hud);
             sessions.put(id, new Session(playerRef, manager, lease, hud, model, System.nanoTime()));
-            trace.trace(id, "HUD_OPENED", ref(), Map.of("revision", model.revision(), "skillSlots", 3,
-                    "abilityActions", "Ability2|Ability3|Ability4", "nativeAbility1", "SIGNATURE_UNTOUCHED",
-                    "resourceOrder", "Mana|Health|Stamina"));
-            trace.trace(id, "SKILLBAR_REFRESH", ref(), Map.of(
-                    "slots", model.skills().stream().map(slot -> slot.skillId() + ':' + slot.state()).toList(),
-                    "initial", true));
-            trace.trace(id, "XP_PROJECTED", ref(), Map.of("level", model.xp().level(),
-                    "progress", model.xp().progress(), "pips", model.xp().pipFill(), "initial", true));
+            trace.trace(id, "HUD_LAYOUT_READY", ref(), Map.of(
+                    "resourceOrder", "Health|Mana|Stamina", "resourceAnchor", "Horizontal:0 Bottom:118",
+                    "xpLayerOrder", "ExperienceBackground|ExperienceBar|ExperienceFrame",
+                    "xpAnchor", "Horizontal:0 Bottom:176", "nativeAbilitiesVisible", true,
+                    "nativeSignature", "PRESERVED", "rpgAbilityAnchor", "Right:390 Bottom:40",
+                    "inputLabelSource", "LOGICAL_ACTION_FALLBACK_PUBLIC_BINDING_LABEL_UNAVAILABLE"));
+            traceResources(id, model, true);
+            traceAbilities(id, model, true);
+            for (SkillSlotView slot : model.skills()) traceSlot(id, null, slot, true);
+            traceXp(id, model, true);
             if (model.showLevelUpNotice()) trace.trace(id, "LEVEL_UP_INDICATOR_SHOWN", ref(),
                     Map.of("pendingLevelUpPoints", model.pendingLevelUpPoints(), "initial", true));
         } catch (RuntimeException error) {
@@ -65,31 +66,30 @@ public final class RpgHudCoordinator {
         long now = System.nanoTime();
         if (now - session.lastPollNanos < POLL_NANOS) return;
         session.lastPollNanos = now;
-        session.polls++;
         try {
+            RpgHudViewModel previous = session.model;
             RpgHudViewModel next = projection.hud(playerRef.getUuid(), resources.read(stats), xpFixtures.get(playerRef.getUuid()));
-            if (!next.equals(session.model)) {
-                boolean skillsChanged = !next.skills().equals(session.model.skills());
-                boolean xpChanged = !next.xp().equals(session.model.xp());
-                boolean noticeChanged = next.showLevelUpNotice() != session.model.showLevelUpNotice();
-                session.hud.refresh(next);
-                session.model = next;
-                session.updates++;
-                if (skillsChanged) trace.trace(playerRef.getUuid(), "SKILLBAR_REFRESH", ref(),
-                        Map.of("slots", next.skills().stream().map(slot -> slot.skillId() + ':' + slot.state()).toList()));
-                if (xpChanged) trace.trace(playerRef.getUuid(), "XP_PROJECTED", ref(),
-                        Map.of("level", next.xp().level(), "progress", next.xp().progress(), "pips", next.xp().pipFill()));
-                if (noticeChanged) trace.trace(playerRef.getUuid(), next.showLevelUpNotice()
-                        ? "LEVEL_UP_INDICATOR_SHOWN" : "LEVEL_UP_INDICATOR_HIDDEN", ref(),
-                        Map.of("pendingLevelUpPoints", next.pendingLevelUpPoints()));
+            if (next.equals(previous)) return;
+            boolean resourcesChanged = !next.health().equals(previous.health()) || !next.mana().equals(previous.mana())
+                    || !next.stamina().equals(previous.stamina());
+            boolean skillsChanged = !next.skills().equals(previous.skills());
+            boolean xpChanged = !next.xp().equals(previous.xp());
+            boolean noticeChanged = next.showLevelUpNotice() != previous.showLevelUpNotice();
+            session.hud.refresh(next);
+            session.model = next;
+            if (resourcesChanged) traceResources(playerRef.getUuid(), next, false);
+            if (skillsChanged) {
+                traceAbilities(playerRef.getUuid(), next, false);
+                for (int index = 0; index < next.skills().size(); index++) {
+                    SkillSlotView before = previous.skills().get(index);
+                    SkillSlotView after = next.skills().get(index);
+                    if (!before.equals(after)) traceSlot(playerRef.getUuid(), before, after, false);
+                }
             }
-            if (now - session.rateWindowNanos >= RATE_TRACE_NANOS) {
-                double seconds = (now - session.rateWindowNanos) / 1_000_000_000.0;
-                trace.trace(playerRef.getUuid(), "HUD_REFRESHED", ref(), Map.of(
-                        "pollRateHz", session.polls / seconds, "updateRateHz", session.updates / seconds,
-                        "polls", session.polls, "updates", session.updates));
-                session.rateWindowNanos = now; session.polls = 0; session.updates = 0;
-            }
+            if (xpChanged) traceXp(playerRef.getUuid(), next, false);
+            if (noticeChanged) trace.trace(playerRef.getUuid(), next.showLevelUpNotice()
+                            ? "LEVEL_UP_INDICATOR_SHOWN" : "LEVEL_UP_INDICATOR_HIDDEN", ref(),
+                    Map.of("pendingLevelUpPoints", next.pendingLevelUpPoints()));
         } catch (RuntimeException error) {
             trace.trace(playerRef.getUuid(), "HUD_REFRESH_FAILED", ref(), Map.of(
                     "error", error.getClass().getSimpleName(), "message", String.valueOf(error.getMessage())));
@@ -126,6 +126,52 @@ public final class RpgHudCoordinator {
         }
     }
 
+    private void traceResources(UUID player, RpgHudViewModel model, boolean initial) {
+        trace.trace(player, "RESOURCE_HUD_REFRESH", ref(), Map.of(
+                "order", "Health|Mana|Stamina", "authority", "EntityStatMap",
+                "health", resource(model.health()), "mana", resource(model.mana()),
+                "stamina", resource(model.stamina()), "initial", initial));
+    }
+
+    private void traceAbilities(UUID player, RpgHudViewModel model, boolean initial) {
+        trace.trace(player, "ABILITY_HUD_REFRESH", ref(), Map.of(
+                "nativeSignature", "PRESERVED", "nativeAction", "Ability1",
+                "rpgSlots", model.skills().stream().map(RpgHudCoordinator::slot).toList(),
+                "initial", initial));
+    }
+
+    private void traceSlot(UUID player, SkillSlotView before, SkillSlotView after, boolean initial) {
+        LinkedHashMap<String, Object> details = new LinkedHashMap<>();
+        details.put("slot", after.slot().externalId());
+        details.put("action", after.action());
+        details.put("skillId", after.skillId());
+        details.put("state", after.state().name());
+        details.put("cooldownRemainingSeconds", after.cooldownRemainingSeconds());
+        details.put("reason", after.unavailableReason());
+        details.put("previousSkillId", before == null ? "" : before.skillId());
+        details.put("previousState", before == null ? "NONE" : before.state().name());
+        details.put("initial", initial);
+        trace.trace(player, "ABILITY_SLOT_CHANGED", ref(), details);
+    }
+
+    private void traceXp(UUID player, RpgHudViewModel model, boolean initial) {
+        trace.trace(player, "XP_HUD_REFRESH", ref(), Map.of(
+                "level", model.xp().level(), "progress", model.xp().progress(),
+                "fillWidth", RpgHud.xpFillWidth(model.xp().progress()),
+                "fullWidth", RpgHud.XP_FILL_WIDTH, "leftAnchored", true, "initial", initial));
+    }
+
+    private static Map<String, Object> resource(com.inigmasgames.hytalerpg.ui.model.NativeResourceView value) {
+        return Map.of("current", value.current(), "maximum", value.maximum(),
+                "fillWidth", RpgHud.resourceFillWidth(value));
+    }
+
+    private static Map<String, Object> slot(SkillSlotView value) {
+        return Map.of("slot", value.slot().externalId(), "action", value.action(),
+                "skillId", value.skillId(), "state", value.state().name(),
+                "cooldownRemainingSeconds", value.cooldownRemainingSeconds());
+    }
+
     private static String ref() { return UUID.randomUUID().toString().substring(0, 12); }
 
     private static final class ManagerPort implements HudVisibilityLease.Port {
@@ -138,11 +184,10 @@ public final class RpgHudCoordinator {
     private static final class Session {
         private final PlayerRef playerRef; private final HudManager manager; private final HudVisibilityLease lease;
         private final RpgHud hud; private RpgHudViewModel model; private long lastPollNanos;
-        private long rateWindowNanos; private long polls; private long updates;
         private Session(PlayerRef playerRef, HudManager manager, HudVisibilityLease lease, RpgHud hud,
                         RpgHudViewModel model, long now) {
             this.playerRef = playerRef; this.manager = manager; this.lease = lease; this.hud = hud;
-            this.model = model; this.lastPollNanos = now; this.rateWindowNanos = now;
+            this.model = model; this.lastPollNanos = now;
         }
     }
 }
