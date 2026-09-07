@@ -5,6 +5,10 @@ $stage7Root=(Resolve-Path "$PSScriptRoot\..").Path
 $stage7Evidence=Join-Path $stage7Root "evidence\stage-07\cohort-$Cohort"
 $stage7Package="$env:APPDATA\Hytale\install\pre-release\package\game\latest"
 $stage7Jar=Join-Path $stage7Root 'build\libs\HytaleRPG-0.0.19.jar'
+$stage7Archived=Join-Path $stage7Evidence 'artifacts\HytaleRPG-0.0.19.jar'
+if((Test-Path -LiteralPath $stage7Archived) -and (Get-FileHash -LiteralPath $stage7Archived).Hash -ne (Get-FileHash -LiteralPath $stage7Jar).Hash) {
+    throw 'Refusing to overwrite an earlier cohort artifact. Preserve the cohort and select the next one.'
+}
 New-Item -ItemType Directory -Force -Path $stage7Evidence,(Join-Path $stage7Evidence 'artifacts'),(Join-Path $stage7Evidence 'rollback') | Out-Null
 Push-Location $stage7Root
 try {
@@ -18,7 +22,8 @@ try {
             errors=[int]$stage7Suite.errors;skipped=[int]$stage7Suite.skipped;seconds=$stage7Suite.time;
             cases=@($stage7Suite.testcase | ForEach-Object {$_.name})}
     }
-    if($stage7Count -lt 236 -or $stage7Failures -or $stage7Errors -or $stage7Skipped){throw 'Incomplete or failing retained regression suite.'}
+    $stage7Minimum=if($Cohort -eq 'a'){236}else{255}
+    if($stage7Count -lt $stage7Minimum -or $stage7Failures -or $stage7Errors -or $stage7Skipped){throw 'Incomplete or failing retained regression suite.'}
     & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $stage7Jar
     $stage7ProtectedPaths=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI',
         'canvas-ui/src','src/main/resources/rpg/runtime/stage-04-skills.json','src/main/resources/rpg/runtime/stage-05-projectiles.json',

@@ -197,9 +197,11 @@ public final class SkillExecutionService {
                     attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
             Map<String, Double> status = prepared.profile.authoredStatuses();
             // CombatSnapshotFactory alone installs compiled Increased modifiers (including Potency).
+            var payloadLess=new java.util.ArrayList<>(prepared.plan.projectileModifiers().payloadLess());
+            if(releaseModifiers.expandedRadius())payloadLess.add(.10);
             ModifierBuckets modifiers = new ModifierBuckets(java.util.List.of(), java.util.List.of(),
                     releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
-                    releaseModifiers.expandedRadius()?java.util.List.of(.10):java.util.List.of());
+                    payloadLess);
             var snapshot = kernel.snapshots().capture(prepared.rootCastId, prepared.instanceId,
                     prepared.request.actorId(), attributes, power, prepared.plan,
                     prepared.profile.damageCoefficient(),
@@ -293,7 +295,8 @@ public final class SkillExecutionService {
 
     /** Called from the owner's actual world tick with a fresh native port, never a stale retained command buffer. */
     public void tickScheduled(UUID actor, SkillExecutionPort port) {
-        for(var release:releases.due(actor,now())) {
+        // At most three authored releases per reservation; a late tick can drain fixed Barrage offsets.
+        for(int pass=0;pass<3;pass++) for(var release:releases.due(actor,now())) {
             if(!releases.isCurrent(release)) continue;
             var context=release.context();
             try {
@@ -304,20 +307,20 @@ public final class SkillExecutionService {
                     cancelRelease(release,validation.code());continue;
                 }
                 if(!releases.isCurrent(release)) continue;
-                if(!context.echo() && !lifecycle.begin(actor,context.skillInstanceId(),SkillInstanceLifecycle.Phase.COMMITTED)) {
+                if(!context.derivedRelease() && !lifecycle.begin(actor,context.skillInstanceId(),SkillInstanceLifecycle.Phase.COMMITTED)) {
                     port.abandonRelease(context);
                     cancelRelease(release,"INCOMPATIBLE_ACTIVE_STATE");continue;
                 }
                 emit(context.request(),RpgTraceEventType.SKILL_RELEASED,context.rootCastId(),context.skillInstanceId(),
-                        Map.of("echo",context.echo(),"resourceCharged",false));
+                        Map.of("echo",context.echo(),"barrageBatch",context.barrageBatch(),"resourceCharged",false));
                 emit(context.request(),RpgTraceEventType.EXECUTOR_DISPATCH,context.rootCastId(),context.skillInstanceId(),
-                        Map.of("family",context.profile().family().name(),"echo",context.echo()));
+                        Map.of("family",context.profile().family().name(),"echo",context.echo(),"barrageBatch",context.barrageBatch()));
                 var outcome=executors.require(context.profile().family()).execute(context,port);
                 if(!outcome.committed()) {
                     port.abandonRelease(context);
                     cancelRelease(release,"EXECUTOR_DID_NOT_RELEASE");continue;
                 }
-                if(context.echo()) releases.finish(release.reservation());
+                if(context.derivedRelease()) releases.additionalReleased(release);
                 else {
                     retainExecutionLifecycle(context);
                     releases.primaryReleased(context,now());
@@ -330,13 +333,17 @@ public final class SkillExecutionService {
         }
     }
     private void traceEchoSchedule(SkillExecutionContext context) {
+        var modifiers=context.compiledPlan().executionModifiers();
+        for(int batch=1;batch<modifiers.barrageBatches();batch++)
+            emit(context.request(),RpgTraceEventType.SKILL_RELEASE_SCHEDULED,context.rootCastId(),context.skillInstanceId(),
+                    Map.of("delaySeconds",batch*modifiers.barrageInterval(),"barrageBatch",batch,"echo",false,"paid",true));
         if(context.compiledPlan().executionModifiers().echoDelaySeconds()>0)
             emit(context.request(),RpgTraceEventType.SKILL_RELEASE_SCHEDULED,context.rootCastId(),context.skillInstanceId()+"/echo",
                     Map.of("delaySeconds",context.compiledPlan().executionModifiers().echoDelaySeconds(),"echo",true,"paid",true));
     }
     private void cancelRelease(SkillReleaseScheduler.Release release,String reason) {
         releases.finish(release.reservation());var context=release.context();
-        if(!context.echo()) terminate(context,"RELEASE_CANCELLED");
+        if(!context.derivedRelease()) terminate(context,"RELEASE_CANCELLED");
         emit(context.request(),RpgTraceEventType.SKILL_RELEASE_CANCELLED,context.rootCastId(),context.skillInstanceId(),
                 Map.of("reason",reason,"refund",false));
     }

@@ -11,6 +11,11 @@ $savePermissions = "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\permissions.j
 $runDirectory = Join-Path $projectRoot "run\stage07-cohort-$Cohort-smoke"
 $mods = Join-Path $runDirectory 'mods'
 $evidence = Join-Path $projectRoot "evidence\stage-07\cohort-$Cohort"
+$stage7Archived = Join-Path $evidence 'artifacts\HytaleRPG-0.0.19.jar'
+if ((Test-Path -LiteralPath $stage7Archived) -and
+    (Get-FileHash -LiteralPath $stage7Archived).Hash -ne (Get-FileHash -LiteralPath (Join-Path $projectRoot 'build\libs\HytaleRPG-0.0.19.jar')).Hash) {
+    throw 'This cohort already archives a different build. Use the next cohort; do not overwrite evidence.'
+}
 $expectedProfiles = 15
 $expectedStatusAssets = 10
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null

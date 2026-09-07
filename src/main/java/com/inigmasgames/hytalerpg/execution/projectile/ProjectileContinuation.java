@@ -6,8 +6,9 @@ import java.util.*;
 /** Ordered continuation decisions after the hit payload. No cost, damage, asset lookup or native mutation. */
 public final class ProjectileContinuation {
     public record Candidate(String id,Vec3 point,boolean visible) { }
-    public enum Action { PIERCE, FORK, CHAIN, RETURN, TERMINATE, RETURN_CONTINUE }
-    public record Decision(Action action,Vec3 direction,List<ProjectileInstance> children,String reason) {
+    public enum Action { PIERCE, FORK, CHAIN, RETURN, RICOCHET, TERMINATE, RETURN_CONTINUE }
+    public record Decision(Action action,Vec3 direction,List<ProjectileInstance> children,String reason,Vec3 surfaceNormal) {
+        public Decision(Action action,Vec3 direction,List<ProjectileInstance> children,String reason) {this(action,direction,children,reason,Vec3.ZERO);}
         public Decision { children=List.copyOf(children); }
     }
     private final ProjectileLifecycleRegistry registry;
@@ -45,6 +46,14 @@ public final class ProjectileContinuation {
     public Decision forwardEnd(ProjectileInstance instance,Vec3 point,Vec3 caster,String reason) {
         if(!instance.returning() && instance.beginReturn(point,caster))return decision(Action.RETURN,instance,"RETURN_BEGIN_"+reason);
         return decision(Action.TERMINATE,instance,reason);
+    }
+    public Decision afterTerrain(ProjectileInstance instance,Vec3 point,Vec3 caster,Vec3 actualNormal) {
+        if(!instance.returning()&&instance.remainingDistance()>1e-6&&instance.remainingSeconds()>1e-6&&instance.remaining("RICOCHET")>0) {
+            if(!instance.bounceIntervalReady())return decision(Action.TERMINATE,instance,"RICOCHET_MIN_INTERVAL");
+            if(instance.bounce(actualNormal))return new Decision(Action.RICOCHET,instance.direction(),List.of(),"TERRAIN_BOUNCE_CREDIT",actualNormal.normalized());
+            return decision(Action.TERMINATE,instance,"INVALID_TERRAIN_NORMAL");
+        }
+        return forwardEnd(instance,point,caster,"TERRAIN_CONTINUATION_EXHAUSTED");
     }
     private static Decision decision(Action action,ProjectileInstance instance,String reason){return new Decision(action,instance.direction(),List.of(),reason);}
     public static Vec3 yaw(Vec3 direction,double degrees) {

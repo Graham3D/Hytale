@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-Stage status: **IMPLEMENTATION_IN_PROGRESS**. Cohort A has passed its local
+Stage status: **IMPLEMENTATION_IN_PROGRESS**. Cohorts A and B have passed their local
 engineering gate. Native casting, rendering, contacts, return motion and cleanup
 remain **UNVERIFIED** pending connected Hytale evidence. This is not Stage 07 PASS.
 No live deployment has occurred; the RPG save still uses R023. R024's execution-side
@@ -22,8 +22,8 @@ Assets SHA: `46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39`.
 | Cohort | Canonical passives | Local state |
 |---|---|---|
 | A | Piercing, Fork, Chain, Return | implemented; full regressions and isolated boot/stop passed |
-| B | Ricochet, Volley, Barrage, Homing | next; not implemented by cohort A |
-| C | Accelerant, Ballistics, Shrapnel, Splinterburst | not implemented by cohort A |
+| B | Ricochet, Volley, Barrage, Homing | implemented; full regressions and isolated boot/stop passed |
+| C | Accelerant, Ballistics, Shrapnel, Splinterburst | next; not implemented by cohorts A/B |
 
 Catalog membership remains exactly 87 skills and 66 passives. This stage adds no
 skill or passive definitions. Compiled plan schema advances from 3 to 4 because
@@ -179,6 +179,111 @@ Rollback SHA: `B45CD1502D29D7ADE8E46F17000081A5CCDCA6858A19FC867CB4339438235766`
 machine-readable gate. Stage 06 cohorts and R024/R023 recovery evidence remain.
 A stopped-world rollback restores the earlier artifact and recompiles saved
 loadouts; it does not erase equipped content or the live Rune-control journal.
+
+## Cohort B — multiplicity, terrain reflection and steering
+
+Baseline is cohort A commit `bbf3510`. This cohort implements exactly Ricochet,
+Volley, Barrage and Homing. It reuses the audited provider motion/normal APIs,
+native world queries and FIFO callback sequencing; it adds no guessed asset IDs,
+native gameplay interactions or another executor family. The same seven native
+projectile configurations remain byte-for-byte unchanged relative to Stage 06.
+
+**Volley** expands each current single-original projectile batch into the complete
+-12/0/+12-degree spread. The root's total launch count is computed before resource
+commit: three for Volley alone, six for Volley+Echo and nine for Volley+Barrage.
+The registry atomically reserves active and future launches; native allocation is
+all-or-nothing for each complete batch. A later scheduled launch can use its
+existing promise rather than being admitted as a new root. Partial native batch
+allocation is rolled back as a group. The old single-plan service method explicitly
+rejects Volley consumers which should request a complete batch, preventing an
+accidental one-shot allocation from leaving two unconsumed promises.
+
+**Barrage** extends the existing SkillReleaseScheduler. It does not create a second
+timer/execution service. Primary release anchors the epoch; the next two batches
+are due at +0.18 and +0.36 seconds. Skill Delay moves that epoch to the actual delayed
+primary release. The committed world/aim endpoint, offensive snapshot and original
+rootCastId/skillInstanceId/correlationId are retained. Each scheduled release checks
+the current caster origin, world, life, equipment identity, range and LOS through
+the existing release port. Projectile IDs include batch/shot indices. Later batches
+are derived generation one; they cannot recursively schedule Barrage or charge
+resources/cooldown/ammunition again. Existing Echo remains a distinct child execution
+and the compiler's repeat group continues to reject Echo+Barrage.
+
+On a late world tick, a bounded three-pass queue drain can release the two overdue
+batches once, using their absolute offsets rather than shifting the second timer
+by the first timer's lateness. This is server-tick scheduling, not a promise of
+frame-perfect client animation. Invalid later releases cancel remaining promises
+without refunding the already paid activation. Death/logout/world drain retain
+the same scheduler and registry teardown path. Pending-only roots remain bounded.
+
+Volley's 25% Less, Barrage's 40% Less and Homing's 10% Less are installed once in
+the committed payload snapshot. Direct damage and the projectile's source-owned
+DoT channel inherit that same snapshot; children do not apply these factors again.
+With Potency, the tested combination is `0.75 * 0.60 * 0.90 * 1.15 = 0.46575` for
+each projectile. Skill Delay's More and Echo's Less compose through the existing
+kernel buckets. No damage coefficient, resource cost, cooldown or native projectile
+collision radius is rewritten. Fixed status applications/CC and authored durations
+are not implicitly converted into fractional stack counts or mastery-like CC boosts.
+Healing/barrier payloads are not invented for the current projectile pilot cohort.
+
+**Ricochet** reads the actual native contact normal captured at collision time,
+before deferred handling. Reflection is `v - 2*dot(v,n)*n`, with compiled speed
+preserved. It consumes a dedicated two-bounce budget, offsets 0.03 m along the
+surface normal, validates the offset against native terrain and does not spend
+enemy Chain. At least 0.05 seconds separates accepted bounces. Too-rapid collision
+or invalid/non-facing normal fails closed, rather than phasing through a wall or
+starting Return while unspent bounce credits remain. After the two legal terrain
+bounces are exhausted, Return may start. A return leg terminates at its first solid
+obstacle and cannot rearm Ricochet. Fork inherits both the remaining bounce credits
+and the last-bounce time; it cannot bypass the minimum interval by changing carrier.
+
+**Homing** uses server-validated live NPC UUIDs. Reacquisition is bounded to 64
+candidates, eight metres, a 60-degree half-cone and clear native LOS at 0.10-second
+intervals; selection uses distance then stable ID. Friendly/protected/dead/removed
+targets are rejected. Current target position and LOS are refreshed for steering;
+an invalid or occluded target leaves the current trajectory unchanged until a legal
+reacquisition. The turn limit is 120 degrees/second. Vector interpolation handles
+vertical and opposite directions without NaN or excess turning. Native physics
+continues to own terrain contact and gravity. Return's live-caster tracking takes
+precedence over enemy Homing. `PROJECTILE_HOMING_QUERY` records actual acquisition
+attempts, including NONE, rather than pretending that a query delivered damage.
+This 10 Hz diagnostic channel remains part of the later Stage 13 trace-volume audit.
+
+Original launches, Volley batches and Fork children now use one native carrier
+construction helper, with shared configuration/physics checks, cleanup and spawn
+traces. The helper installs the plan's velocity through the inspected provider and
+Velocity component APIs; all current authored speeds are preserved. The plan's
+identity remains independent of native Ref lifetime. The damage adapter is still
+the single payload authority. No live visual or native motion claim follows from
+the fact that these methods compile.
+
+### Cohort B gate
+
+The full retained `clean build` passed **255 tests**, zero failures/errors/skips:
+236 retained plus nineteen new tests. New fixtures cover nine-shot root identities,
+one resource mutation/commit, unchanged cooldown authority, spread and payload
+factors, current-origin/saved-aim semantics, early-primary termination, admission
+before payment, later-release cancellation, death/logout/drain, delayed and late-tick
+Barrage, Echo exclusivity, Volley+Pierce+Fork budgets, oblique native-normal math,
+two Ricochets before Return, inherited minimum bounce interval, Homing cone/range/LOS,
+10 Hz acquisition, turn cap, finite opposite/vertical vectors, overflow rejection
+and typed positive/negative compatibility. These are engine-neutral world fixtures;
+they do not prove native ammunition mutation, contact callbacks or client motion.
+A spread-vector assertion initially used exact equality after normalization and
+was corrected to a 1e-24 squared-distance tolerance for floating-point roundoff.
+
+The packaged UI check again passed nine documents. The exact build completed a
+normal three-mod isolated server boot and clean shutdown (exit 0); all existing
+native bridge/control/area asset audit gates passed. Native HUD, XP, resources,
+cooldowns and earlier numeric profiles passed the protected-path guard. Raw log,
+test-case inventory and verification manifests are retained under `cohort-b/`.
+
+Artifact: `cohort-b/artifacts/HytaleRPG-0.0.19.jar`.
+SHA: `E901FB2AE9B34C2739CA83022A728D28C1065CCD4BDECBD63B157303E85809F9`.
+Stage 06 rollback remains `B45CD1502D29D7ADE8E46F17000081A5CCDCA6858A19FC867CB4339438235766`;
+cohort A's artifact also remains intact. Evidence scripts now refuse to overwrite
+an earlier cohort with a different JAR. There has been no live deployment.
+Stage 07 remains in progress until cohort C and the final local hardening gate.
 
 ## Required connected evidence
 

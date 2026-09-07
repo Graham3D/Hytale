@@ -67,21 +67,32 @@ public record CompiledSkillPlan(
     /** Typed release/geometry contract derived from the compiler's validated, deduplicated passive order. */
     public ExecutionModifiers executionModifiers() { return ExecutionModifiers.from(passiveOrder); }
     public ProjectileModifiers projectileModifiers() { return ProjectileModifiers.from(passiveOrder); }
-    public record ProjectileModifiers(int pierce,int fork,int chain,int returning) {
+    public record ProjectileModifiers(int pierce,int fork,int chain,int returning,int ricochet,boolean volley,boolean barrage,boolean homing) {
         public static ProjectileModifiers from(List<PassiveId> order) {
             Set<String> ids=order.stream().map(PassiveId::value).collect(java.util.stream.Collectors.toSet());
             return new ProjectileModifiers(ids.contains("piercing")?2:0,ids.contains("fork")?1:0,
-                    ids.contains("chain")?2:0,ids.contains("return")?1:0);
+                    ids.contains("chain")?2:0,ids.contains("return")?1:0,ids.contains("ricochet")?2:0,
+                    ids.contains("volley"),ids.contains("barrage"),ids.contains("homing"));
+        }
+        public int batchSize(){return volley?3:1;}
+        public int batchCount(){return barrage?3:1;}
+        public int rootLaunches(boolean echo){return batchSize()*(echo?2:batchCount());}
+        public List<Double> payloadLess(){
+            var less=new java.util.ArrayList<Double>();if(volley)less.add(.25);if(barrage)less.add(.40);if(homing)less.add(.10);return List.copyOf(less);
         }
     }
     public record ExecutionModifiers(double radiusFactor, double delaySeconds, double echoDelaySeconds,
-                                     double echoMagnitude, boolean expandedRadius) {
+                                     double echoMagnitude, boolean expandedRadius,int barrageBatches,double barrageInterval) {
+        public ExecutionModifiers(double radiusFactor,double delaySeconds,double echoDelaySeconds,double echoMagnitude,boolean expandedRadius) {
+            this(radiusFactor,delaySeconds,echoDelaySeconds,echoMagnitude,expandedRadius,1,0);
+        }
         public static ExecutionModifiers from(List<PassiveId> order) {
             boolean radius=order.stream().anyMatch(p->p.value().equals("expanded_radius"));
             boolean delay=order.stream().anyMatch(p->p.value().equals("skill_delay"));
             boolean echo=order.stream().anyMatch(p->p.value().equals("echo"));
-            return new ExecutionModifiers(radius?1.25:1,delay?2:0,echo?.45:0,echo?.7:1,radius);
+            boolean barrage=order.stream().anyMatch(p->p.value().equals("barrage"));
+            return new ExecutionModifiers(radius?1.25:1,delay?2:0,echo?.45:0,echo?.7:1,radius,barrage?3:1,barrage?.18:0);
         }
-        public boolean scheduled() { return delaySeconds>0 || echoDelaySeconds>0; }
+        public boolean scheduled() { return delaySeconds>0 || echoDelaySeconds>0 || barrageBatches>1; }
     }
 }

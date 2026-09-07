@@ -17,6 +17,8 @@ public final class ProjectileInstance {
     private double completedDistance,completedSeconds,returnDistance;
     private int motionRevision;
     private long nativeClockNanos;
+    private double lastBounceSeconds=Double.NEGATIVE_INFINITY;
+    private final ProjectileHoming homing=new ProjectileHoming();
     private Termination termination;
 
     public ProjectileInstance(ProjectileExecutionPlan plan) {
@@ -43,6 +45,14 @@ public final class ProjectileInstance {
     public synchronized Vec3 direction() { return direction; }
     public synchronized void redirect(Vec3 direction) { this.direction=direction.normalized();motionRevision++; }
     public synchronized int motionRevision() { return motionRevision; }
+    public ProjectileHoming homing(){return homing;}
+    public synchronized boolean bounce(Vec3 normal) {
+        if(returning||normal.lengthSquared()<1e-12||totalSeconds()-lastBounceSeconds<.05-1e-9||remaining("RICOCHET")<=0)return false;
+        normal=normal.normalized();double dot=direction.x()*normal.x()+direction.y()*normal.y()+direction.z()*normal.z();
+        if(dot>=-1e-9)return false;
+        spend("RICOCHET");lastBounceSeconds=totalSeconds();redirect(direction.subtract(normal.multiply(2*dot)));return true;
+    }
+    public synchronized boolean bounceIntervalReady(){return totalSeconds()-lastBounceSeconds>=.05-1e-9;}
     public synchronized double remainingDistance() { return flight.remainingDistance(); }
     public synchronized double remainingSeconds() { return flight.remainingSeconds(); }
     public synchronized double totalDistance() { return completedDistance+flight.travelled(); }
@@ -50,6 +60,7 @@ public final class ProjectileInstance {
     public synchronized void inheritVisited(ProjectileInstance parent) {
         hitTargets.addAll(parent.hitTargets());returnDistance=parent.returnDistance;
         completedDistance=parent.totalDistance();completedSeconds=parent.totalSeconds();
+        lastBounceSeconds=parent.lastBounceSeconds;
     }
     public synchronized boolean beginReturn(Vec3 position,Vec3 caster) {
         if(returning||!spend("RETURN")||position.distanceSquared(caster)<=.25)return false;

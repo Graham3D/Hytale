@@ -7,15 +7,24 @@ import com.inigmasgames.hytalerpg.domain.CompiledSkillPlan;
 public record SkillExecutionContext(SkillExecutionRequest request, String rootCastId, String skillInstanceId,
                                     Stage04SkillProfile profile, CompiledSkillPlan compiledPlan,
                                     CombatSnapshot snapshot, SkillExecutionPort.Equipment equipment,
-                                    CommittedTarget target, boolean echo) {
+                                    CommittedTarget target, boolean echo,int barrageBatch) {
+    public SkillExecutionContext(SkillExecutionRequest request,String rootCastId,String skillInstanceId,Stage04SkillProfile profile,
+            CompiledSkillPlan compiledPlan,CombatSnapshot snapshot,SkillExecutionPort.Equipment equipment,CommittedTarget target,boolean echo) {
+        this(request,rootCastId,skillInstanceId,profile,compiledPlan,snapshot,equipment,target,echo,0);
+    }
     public SkillExecutionContext(SkillExecutionRequest request, String rootCastId, String skillInstanceId,
             Stage04SkillProfile profile, CompiledSkillPlan compiledPlan, CombatSnapshot snapshot, SkillExecutionPort.Equipment equipment) {
         this(request,rootCastId,skillInstanceId,profile,compiledPlan,snapshot,equipment,null,false);
     }
     public SkillExecutionContext {
         if (request == null || rootCastId == null || skillInstanceId == null || profile == null
-                || compiledPlan == null || snapshot == null)
+                || compiledPlan == null || snapshot == null || barrageBatch<0 || barrageBatch>2 || echo&&barrageBatch>0)
             throw new IllegalArgumentException("Committed execution context is incomplete");
+    }
+    public boolean derivedRelease() {return echo||barrageBatch>0;}
+    public SkillExecutionContext barrageCopy(int batch) {
+        if(echo||batch<1||batch>=compiledPlan.executionModifiers().barrageBatches())throw new IllegalStateException("INVALID_BARRAGE_BATCH");
+        return new SkillExecutionContext(request,rootCastId,skillInstanceId,profile,compiledPlan,snapshot,equipment,target,false,batch);
     }
     public SkillExecutionContext echoCopy() {
         if(echo) throw new IllegalStateException("ECHO_CANNOT_REPEAT_ITSELF");

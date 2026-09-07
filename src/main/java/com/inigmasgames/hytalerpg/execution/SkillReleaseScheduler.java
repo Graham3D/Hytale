@@ -29,8 +29,19 @@ public final class SkillReleaseScheduler {
     public synchronized void primaryReleased(SkillExecutionContext context,double now) {
         requireClock(now);
         var entry=entries.get(context.skillInstanceId());if(entry==null)return;
+        if(entry.modifiers.barrageBatches()>1) {
+            entry.primaryPending=false;entry.primaryReleasedAt=now;entry.context=context.barrageCopy(1);
+            entry.due=now+entry.modifiers.barrageInterval();return;
+        }
         if(entry.modifiers.echoDelaySeconds()<=0) { entries.remove(context.skillInstanceId());return; }
         entry.primaryPending=false;entry.context=context.echoCopy();entry.due=now+entry.modifiers.echoDelaySeconds();
+    }
+    public synchronized void additionalReleased(Release release) {
+        if(!isCurrent(release))return;
+        var entry=entries.get(release.reservation());var context=release.context();
+        int next=context.barrageBatch()+1;
+        if(context.echo()||next>=entry.modifiers.barrageBatches()) {entries.remove(release.reservation());return;}
+        entry.context=context.barrageCopy(next);entry.due=entry.primaryReleasedAt+next*entry.modifiers.barrageInterval();
     }
     public synchronized List<Release> due(UUID owner,double now) {
         requireClock(now);
@@ -62,7 +73,7 @@ public final class SkillReleaseScheduler {
     }
     private static final class Entry {
         final UUID owner;final SkillSlot slot;final ExecutionModifiers modifiers;
-        boolean primaryPending;SkillExecutionContext context;double due=Double.POSITIVE_INFINITY;
+        boolean primaryPending;SkillExecutionContext context;double due=Double.POSITIVE_INFINITY,primaryReleasedAt;
         Entry(UUID owner,SkillSlot slot,ExecutionModifiers modifiers) {
             this.owner=owner;this.slot=slot;this.modifiers=modifiers;primaryPending=modifiers.delaySeconds()>0;
         }
