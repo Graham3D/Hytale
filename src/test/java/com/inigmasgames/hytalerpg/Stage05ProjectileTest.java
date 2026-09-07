@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage05ProjectileTest {
     @Test void sixProjectileProfilesPreserveCanonicalCohortAndExcludeSnipe() {
         Stage04SkillProfiles profiles = profiles();
-        assertEquals(12, profiles.all().values().stream().filter(profile -> profile.area() == null).count());
+        assertEquals(12, profiles.all().values().stream().filter(profile -> profile.area() == null && profile.connection() == null).count());
         assertFalse(profiles.supports("snipe"));
         assertProjectile(profiles.require("fire_bolt"), Set.of("STAFF", "WAND"), "MANA", 8, 1.4,
                 "MAGIC_WEAPON", "MAGIC", "Projectile_Config_RPG_Fire_Bolt", 24, 24, .30, .95);

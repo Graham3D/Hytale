@@ -1,0 +1,445 @@
+Compiled from "DamageCause.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DamageCause implements com.hypixel.hytale.assetstore.map.JsonAssetWithMap<java.lang.String, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause>> {
+  public static final com.hypixel.hytale.assetstore.codec.AssetBuilderCodec<java.lang.String, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause> CODEC;
+
+  private static com.hypixel.hytale.assetstore.AssetStore<java.lang.String, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause>> ASSET_STORE;
+
+  public static final com.hypixel.hytale.codec.validation.ValidatorCache<java.lang.String> VALIDATOR_CACHE;
+
+  public static final com.hypixel.hytale.codec.Codec<java.lang.String> CHILD_ASSET_CODEC;
+
+  public static com.hypixel.hytale.server.core.modules.entity.damage.DamageCause PHYSICAL;
+
+  public static com.hypixel.hytale.server.core.modules.entity.damage.DamageCause PROJECTILE;
+
+  public static com.hypixel.hytale.server.core.modules.entity.damage.DamageCause COMMAND;
+
+  public static com.hypixel.hytale.server.core.modules.entity.damage.DamageCause DROWNING;
+
+  public static com.hypixel.hytale.server.core.modules.entity.damage.DamageCause ENVIRONMENT;
+
+  public static com.hypixel.hytale.server.core.modules.entity.damage.DamageCause FALL;
+
+  public static com.hypixel.hytale.server.core.modules.entity.damage.DamageCause OUT_OF_WORLD;
+
+  public static com.hypixel.hytale.server.core.modules.entity.damage.DamageCause SUFFOCATION;
+
+  protected com.hypixel.hytale.assetstore.AssetExtraInfo$Data data;
+
+  protected java.lang.String id;
+
+  protected java.lang.String inherits;
+
+  protected boolean durabilityLoss;
+
+  protected boolean staminaLoss;
+
+  protected boolean bypassResistances;
+
+  protected java.lang.String damageTextColor;
+
+  private transient com.hypixel.hytale.protocol.Color resolvedDamageTextColor;
+
+  private transient boolean damageTextColorResolved;
+
+  protected java.lang.String animationId;
+
+  protected java.lang.String deathAnimationId;
+
+  public static com.hypixel.hytale.assetstore.AssetStore<java.lang.String, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause>> getAssetStore();
+    Code:
+         0: getstatic     #1                  // Field ASSET_STORE:Lcom/hypixel/hytale/assetstore/AssetStore;
+         3: ifnonnull     14
+         6: ldc           #2                  // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+         8: invokestatic  #7                  // Method com/hypixel/hytale/assetstore/AssetRegistry.getAssetStore:(Ljava/lang/Class;)Lcom/hypixel/hytale/assetstore/AssetStore;
+        11: putstatic     #1                  // Field ASSET_STORE:Lcom/hypixel/hytale/assetstore/AssetStore;
+        14: getstatic     #1                  // Field ASSET_STORE:Lcom/hypixel/hytale/assetstore/AssetStore;
+        17: areturn
+
+  public static com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause> getAssetMap();
+    Code:
+         0: invokestatic  #13                 // Method getAssetStore:()Lcom/hypixel/hytale/assetstore/AssetStore;
+         3: invokevirtual #16                 // Method com/hypixel/hytale/assetstore/AssetStore.getAssetMap:()Lcom/hypixel/hytale/assetstore/AssetMap;
+         6: checkcast     #22                 // class com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap
+         9: areturn
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageCause();
+    Code:
+         0: aload_0
+         1: invokespecial #24                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: ldc           #30                 // String Hurt
+         7: putfield      #32                 // Field animationId:Ljava/lang/String;
+        10: aload_0
+        11: ldc           #36                 // String Death
+        13: putfield      #38                 // Field deathAnimationId:Ljava/lang/String;
+        16: return
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageCause(java.lang.String);
+    Code:
+         0: aload_0
+         1: invokespecial #24                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: ldc           #30                 // String Hurt
+         7: putfield      #32                 // Field animationId:Ljava/lang/String;
+        10: aload_0
+        11: ldc           #36                 // String Death
+        13: putfield      #38                 // Field deathAnimationId:Ljava/lang/String;
+        16: aload_0
+        17: aload_1
+        18: putfield      #41                 // Field id:Ljava/lang/String;
+        21: return
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageCause(java.lang.String, java.lang.String, boolean, boolean, boolean);
+    Code:
+         0: aload_0
+         1: invokespecial #24                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: ldc           #30                 // String Hurt
+         7: putfield      #32                 // Field animationId:Ljava/lang/String;
+        10: aload_0
+        11: ldc           #36                 // String Death
+        13: putfield      #38                 // Field deathAnimationId:Ljava/lang/String;
+        16: aload_0
+        17: aload_1
+        18: putfield      #41                 // Field id:Ljava/lang/String;
+        21: aload_0
+        22: aload_2
+        23: putfield      #44                 // Field inherits:Ljava/lang/String;
+        26: aload_0
+        27: iload_3
+        28: putfield      #47                 // Field durabilityLoss:Z
+        31: aload_0
+        32: iload         4
+        34: putfield      #51                 // Field staminaLoss:Z
+        37: aload_0
+        38: iload         5
+        40: putfield      #54                 // Field bypassResistances:Z
+        43: return
+
+  public java.lang.String getId();
+    Code:
+         0: aload_0
+         1: getfield      #41                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  public boolean isDurabilityLoss();
+    Code:
+         0: aload_0
+         1: getfield      #47                 // Field durabilityLoss:Z
+         4: ireturn
+
+  public boolean isStaminaLoss();
+    Code:
+         0: aload_0
+         1: getfield      #51                 // Field staminaLoss:Z
+         4: ireturn
+
+  public boolean doesBypassResistances();
+    Code:
+         0: aload_0
+         1: getfield      #54                 // Field bypassResistances:Z
+         4: ireturn
+
+  public java.lang.String getInherits();
+    Code:
+         0: aload_0
+         1: getfield      #44                 // Field inherits:Ljava/lang/String;
+         4: areturn
+
+  public java.lang.String getAnimationId();
+    Code:
+         0: aload_0
+         1: getfield      #32                 // Field animationId:Ljava/lang/String;
+         4: areturn
+
+  public java.lang.String getDeathAnimationId();
+    Code:
+         0: aload_0
+         1: getfield      #38                 // Field deathAnimationId:Ljava/lang/String;
+         4: areturn
+
+  public com.hypixel.hytale.protocol.Color resolveDamageTextColor();
+    Code:
+         0: aload_0
+         1: getfield      #57                 // Field damageTextColorResolved:Z
+         4: ifeq          12
+         7: aload_0
+         8: getfield      #60                 // Field resolvedDamageTextColor:Lcom/hypixel/hytale/protocol/Color;
+        11: areturn
+        12: aload_0
+        13: astore_1
+        14: iconst_0
+        15: istore_2
+        16: aload_1
+        17: ifnull        78
+        20: iload_2
+        21: bipush        8
+        23: if_icmpge     78
+        26: aload_1
+        27: getfield      #64                 // Field damageTextColor:Ljava/lang/String;
+        30: ifnull        47
+        33: aload_0
+        34: aload_1
+        35: getfield      #64                 // Field damageTextColor:Ljava/lang/String;
+        38: invokestatic  #67                 // Method com/hypixel/hytale/server/core/asset/util/ColorParseUtil.parseColor:(Ljava/lang/String;)Lcom/hypixel/hytale/protocol/Color;
+        41: putfield      #60                 // Field resolvedDamageTextColor:Lcom/hypixel/hytale/protocol/Color;
+        44: goto          78
+        47: aload_1
+        48: getfield      #44                 // Field inherits:Ljava/lang/String;
+        51: ifnull        70
+        54: invokestatic  #73                 // Method getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        57: aload_1
+        58: getfield      #44                 // Field inherits:Ljava/lang/String;
+        61: invokevirtual #76                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+        64: checkcast     #2                  // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+        67: goto          71
+        70: aconst_null
+        71: astore_1
+        72: iinc          2, 1
+        75: goto          16
+        78: aload_0
+        79: iconst_1
+        80: putfield      #57                 // Field damageTextColorResolved:Z
+        83: aload_0
+        84: getfield      #60                 // Field resolvedDamageTextColor:Lcom/hypixel/hytale/protocol/Color;
+        87: areturn
+
+  public com.hypixel.hytale.protocol.DamageCause toPacket();
+    Code:
+         0: new           #80                 // class com/hypixel/hytale/protocol/DamageCause
+         3: dup
+         4: aload_0
+         5: getfield      #41                 // Field id:Ljava/lang/String;
+         8: aload_0
+         9: getfield      #64                 // Field damageTextColor:Ljava/lang/String;
+        12: invokespecial #82                 // Method com/hypixel/hytale/protocol/DamageCause."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+        15: areturn
+
+  public java.lang.Object getId();
+    Code:
+         0: aload_0
+         1: invokevirtual #85                 // Method getId:()Ljava/lang/String;
+         4: areturn
+
+  private static java.lang.String lambda$static$17(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: getfield      #38                 // Field deathAnimationId:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$16(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #38                 // Field deathAnimationId:Ljava/lang/String;
+         5: return
+
+  private static java.lang.String lambda$static$15(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: getfield      #32                 // Field animationId:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$14(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #32                 // Field animationId:Ljava/lang/String;
+         5: return
+
+  private static java.lang.String lambda$static$13(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: getfield      #64                 // Field damageTextColor:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$12(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #64                 // Field damageTextColor:Ljava/lang/String;
+         5: return
+
+  private static java.lang.Boolean lambda$static$11(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: getfield      #54                 // Field bypassResistances:Z
+         4: invokestatic  #89                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$10(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #95                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #54                 // Field bypassResistances:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$9(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: getfield      #51                 // Field staminaLoss:Z
+         4: invokestatic  #89                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$8(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #95                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #51                 // Field staminaLoss:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$7(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: getfield      #47                 // Field durabilityLoss:Z
+         4: invokestatic  #89                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$6(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #95                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #47                 // Field durabilityLoss:Z
+         8: return
+
+  private static java.lang.String lambda$static$5(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: getfield      #44                 // Field inherits:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$4(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #44                 // Field inherits:Ljava/lang/String;
+         5: return
+
+  private static com.hypixel.hytale.assetstore.AssetExtraInfo$Data lambda$static$3(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: getfield      #99                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         4: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, com.hypixel.hytale.assetstore.AssetExtraInfo$Data);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #99                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         5: return
+
+  private static java.lang.String lambda$static$1(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: getfield      #41                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #41                 // Field id:Ljava/lang/String;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #2                  // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+         2: invokedynamic #103,  0            // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+         7: getstatic     #107                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+        10: invokedynamic #113,  0            // InvokeDynamic #1:accept:()Ljava/util/function/BiConsumer;
+        15: invokedynamic #117,  0            // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+        20: invokedynamic #121,  0            // InvokeDynamic #3:accept:()Ljava/util/function/BiConsumer;
+        25: invokedynamic #122,  0            // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+        30: invokestatic  #123                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder;
+        33: new           #129                // class com/hypixel/hytale/codec/KeyedCodec
+        36: dup
+        37: ldc           #131                // String Inherits
+        39: getstatic     #107                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+        42: invokespecial #133                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        45: invokedynamic #136,  0            // InvokeDynamic #5:accept:()Ljava/util/function/BiConsumer;
+        50: invokedynamic #137,  0            // InvokeDynamic #6:apply:()Ljava/util/function/Function;
+        55: invokevirtual #138                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        58: invokevirtual #144                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        61: checkcast     #139                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+        64: new           #129                // class com/hypixel/hytale/codec/KeyedCodec
+        67: dup
+        68: ldc           #150                // String DurabilityLoss
+        70: getstatic     #152                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+        73: invokespecial #133                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        76: invokedynamic #156,  0            // InvokeDynamic #7:accept:()Ljava/util/function/BiConsumer;
+        81: invokedynamic #157,  0            // InvokeDynamic #8:apply:()Ljava/util/function/Function;
+        86: invokevirtual #138                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        89: invokevirtual #144                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        92: checkcast     #139                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+        95: new           #129                // class com/hypixel/hytale/codec/KeyedCodec
+        98: dup
+        99: ldc           #158                // String StaminaLoss
+       101: getstatic     #152                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       104: invokespecial #133                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       107: invokedynamic #160,  0            // InvokeDynamic #9:accept:()Ljava/util/function/BiConsumer;
+       112: invokedynamic #161,  0            // InvokeDynamic #10:apply:()Ljava/util/function/Function;
+       117: invokevirtual #138                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       120: invokevirtual #144                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       123: checkcast     #139                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       126: new           #129                // class com/hypixel/hytale/codec/KeyedCodec
+       129: dup
+       130: ldc           #162                // String BypassResistances
+       132: getstatic     #152                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       135: invokespecial #133                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       138: invokedynamic #164,  0            // InvokeDynamic #11:accept:()Ljava/util/function/BiConsumer;
+       143: invokedynamic #165,  0            // InvokeDynamic #12:apply:()Ljava/util/function/Function;
+       148: invokevirtual #138                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       151: invokevirtual #144                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       154: checkcast     #139                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       157: new           #129                // class com/hypixel/hytale/codec/KeyedCodec
+       160: dup
+       161: ldc           #166                // String DamageTextColor
+       163: getstatic     #107                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       166: invokespecial #133                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       169: invokedynamic #168,  0            // InvokeDynamic #13:accept:()Ljava/util/function/BiConsumer;
+       174: invokedynamic #169,  0            // InvokeDynamic #14:apply:()Ljava/util/function/Function;
+       179: invokevirtual #138                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       182: invokevirtual #144                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       185: checkcast     #139                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       188: new           #129                // class com/hypixel/hytale/codec/KeyedCodec
+       191: dup
+       192: ldc           #170                // String AnimationId
+       194: getstatic     #107                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       197: invokespecial #133                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       200: invokedynamic #172,  0            // InvokeDynamic #15:accept:()Ljava/util/function/BiConsumer;
+       205: invokedynamic #173,  0            // InvokeDynamic #16:apply:()Ljava/util/function/Function;
+       210: invokevirtual #138                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       213: invokevirtual #144                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       216: checkcast     #139                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       219: new           #129                // class com/hypixel/hytale/codec/KeyedCodec
+       222: dup
+       223: ldc           #174                // String DeathAnimationId
+       225: getstatic     #107                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       228: invokespecial #133                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       231: invokedynamic #176,  0            // InvokeDynamic #17:accept:()Ljava/util/function/BiConsumer;
+       236: invokedynamic #177,  0            // InvokeDynamic #18:apply:()Ljava/util/function/Function;
+       241: invokevirtual #138                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       244: invokevirtual #144                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       247: checkcast     #139                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       250: invokevirtual #178                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.build:()Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       253: putstatic     #182                // Field CODEC:Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       256: new           #186                // class com/hypixel/hytale/codec/validation/ValidatorCache
+       259: dup
+       260: new           #188                // class com/hypixel/hytale/assetstore/AssetKeyValidator
+       263: dup
+       264: invokedynamic #190,  0            // InvokeDynamic #19:get:()Ljava/util/function/Supplier;
+       269: invokespecial #191                // Method com/hypixel/hytale/assetstore/AssetKeyValidator."<init>":(Ljava/util/function/Supplier;)V
+       272: invokespecial #194                // Method com/hypixel/hytale/codec/validation/ValidatorCache."<init>":(Lcom/hypixel/hytale/codec/validation/Validator;)V
+       275: putstatic     #197                // Field VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+       278: new           #201                // class com/hypixel/hytale/assetstore/codec/ContainedAssetCodec
+       281: dup
+       282: ldc           #2                  // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+       284: getstatic     #182                // Field CODEC:Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       287: invokespecial #203                // Method com/hypixel/hytale/assetstore/codec/ContainedAssetCodec."<init>":(Ljava/lang/Class;Lcom/hypixel/hytale/assetstore/codec/AssetCodec;)V
+       290: putstatic     #206                // Field CHILD_ASSET_CODEC:Lcom/hypixel/hytale/codec/Codec;
+       293: return
+}

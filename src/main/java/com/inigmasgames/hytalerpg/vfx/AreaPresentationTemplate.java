@@ -14,6 +14,8 @@ public final class AreaPresentationTemplate {
             case "NATURE" -> new Color(.25f,.8f,.3f);
             case "VOID" -> new Color(.6f,.3f,.85f);
             case "PHYSICAL" -> new Color(.85f,.7f,.4f);
+            case "WIND" -> new Color(.7f,.9f,.9f);
+            case "LIGHTNING" -> new Color(.85f,.9f,1);
             default -> new Color(.4f,.5f,1);
         };
         return phase.startsWith("IMPACT") ? new Color((1+base.red)/2,(1+base.green)/2,(1+base.blue)/2) : base;

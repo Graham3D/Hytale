@@ -28,6 +28,9 @@ final class HytaleAreaQueries {
     record Result(List<Candidate> candidates, boolean overflow) { }
 
     static Result query(Store<EntityStore> store, Ref<EntityStore> owner, AreaGeometry geometry, int budget) {
+        return query(store,owner,geometry::intersects,budget);
+    }
+    static Result query(Store<EntityStore> store,Ref<EntityStore> owner,java.util.function.Predicate<AreaGeometry.Bounds> geometry,int budget) {
         Query<EntityStore> query = Query.and(NPCEntity.getComponentType(), TransformComponent.getComponentType(),
                 BoundingBox.getComponentType(), com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
         if (store.getEntityCountFor(query) > MAX_SCANNED_NPCS) return new Result(List.of(), true);
@@ -39,7 +42,7 @@ final class HytaleAreaQueries {
                 var box = chunk.getComponent(index, BoundingBox.getComponentType()).getBoundingBox();
                 var position = chunk.getComponent(index, TransformComponent.getComponentType()).getPosition();
                 var bounds = new AreaGeometry.Bounds(vec(box.min).add(vec(position)), vec(box.max).add(vec(position)));
-                if (!geometry.intersects(bounds) || !hostile(store, target, owner)) continue;
+                if (!geometry.test(bounds) || !hostile(store, target, owner)) continue;
                 if (selected.size() == budget) return true;
                 selected.add(new Candidate(target, bounds));
             }

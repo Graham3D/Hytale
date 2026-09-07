@@ -22,7 +22,16 @@ public record Stage04SkillProfile(
         Movement movement,
         Reaction reaction,
         Projectile projectile,
-        com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area) {
+        com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area,
+        com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile connection) {
+
+    public Stage04SkillProfile(String skillId,Family family,Set<String> secondaryFamilies,Set<String> allowedMainHandKinds,
+            Set<String> requiredOffHandKinds,String resourceType,double resourceCost,double cooldownSeconds,double windupSeconds,
+            String basePowerSource,double innateBasePower,String scaling,Strike strike,Movement movement,Reaction reaction,Projectile projectile,
+            com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area) {
+        this(skillId,family,secondaryFamilies,allowedMainHandKinds,requiredOffHandKinds,resourceType,resourceCost,cooldownSeconds,
+                windupSeconds,basePowerSource,innateBasePower,scaling,strike,movement,reaction,projectile,area,null);
+    }
 
     /** Retained source compatibility for the Stage 04/05 fixtures and consumers. */
     public Stage04SkillProfile(String skillId, Family family, Set<String> secondaryFamilies,
@@ -52,6 +61,7 @@ public record Stage04SkillProfile(
         if (strike != null) return strike.coefficient();
         if (projectile != null) return projectile.coefficient();
         if (area != null) return area.coefficient();
+        if (connection != null) return connection.coefficient();
         return 0.0;
     }
 
@@ -63,7 +73,7 @@ public record Stage04SkillProfile(
         return Map.of();
     }
 
-    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE, BURST, CONE, TRAP, GROUND_ZONE, WALL, OVERHEAD, BOMBARDMENT }
+    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE, BURST, CONE, TRAP, GROUND_ZONE, WALL, OVERHEAD, BOMBARDMENT, LINE,BEAM,ORB }
     public enum Geometry { ARC, LINE, ASSIST_CONE, RADIUS }
     public enum MovementKind { DASH, LEAP }
 

@@ -36,7 +36,10 @@ public final class SkillExecutorRegistry {
                 forwarding(Stage04SkillProfile.Family.GROUND_ZONE, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.WALL, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.OVERHEAD, SkillExecutionPort::executeArea),
-                forwarding(Stage04SkillProfile.Family.BOMBARDMENT, SkillExecutionPort::executeArea)));
+                forwarding(Stage04SkillProfile.Family.BOMBARDMENT, SkillExecutionPort::executeArea),
+                forwarding(Stage04SkillProfile.Family.LINE, SkillExecutionPort::executeConnection),
+                forwarding(Stage04SkillProfile.Family.BEAM, SkillExecutionPort::executeConnection),
+                forwarding(Stage04SkillProfile.Family.ORB, SkillExecutionPort::executeConnection)));
     }
     private static SkillFamilyExecutor forwarding(Stage04SkillProfile.Family family, Dispatch dispatch) {
         return new SkillFamilyExecutor() {

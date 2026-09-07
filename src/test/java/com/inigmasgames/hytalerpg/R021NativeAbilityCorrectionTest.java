@@ -27,8 +27,9 @@ class R021NativeAbilityCorrectionTest {
     }
 
     @Test void executableCohortHasTriggerOnlyNativeItemAssets() throws Exception {
-        List<String> skills = List.of("Quick_Slash", "Heavy_Swing", "Shield_Bash", "Quickstep", "Pounce",
-                "Riposte", "Fire_Bolt", "Frost_Bolt", "Arcane_Bolt", "Stone_Bolt", "Quick_Shot", "Axe_Toss");
+        List<String> skills = com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles.loadCanonical(
+                com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical()).all().keySet().stream()
+                .map(id -> NativeAbilityProjectionService.itemIdFor(id).substring("RPG_Ability_".length())).toList();
         try (var files = Files.list(ITEMS)) {
             assertEquals(com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles.loadCanonical(
                     com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical()).all().size(),

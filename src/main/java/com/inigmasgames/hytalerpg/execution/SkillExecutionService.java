@@ -106,6 +106,7 @@ public final class SkillExecutionService {
         Optional<SkillInstanceLifecycle.Active> cancelled = lifecycle.cancel(actor);
         if (cancelled.isEmpty()) return !queued.isEmpty();
         if (context == null && windup == null) return true; // No fabricated context during a claimed release.
+        if(context!=null) startEndedChannelCooldown(context);
         SkillExecutionRequest request = context != null ? context.request() : windup.request;
         String root = context != null ? context.rootCastId() : windup.rootCastId;
         String instance = context != null ? context.skillInstanceId() : windup.instanceId;
@@ -120,6 +121,7 @@ public final class SkillExecutionService {
 
     public void terminate(SkillExecutionContext context, String reason) {
         if (lifecycle.terminate(context.request().actorId(), context.skillInstanceId())) {
+            startEndedChannelCooldown(context);
             synchronized (activeContexts) { activeContexts.remove(context.request().actorId()); }
             emit(context.request(), RpgTraceEventType.SKILL_TERMINATED, context.rootCastId(),
                     context.skillInstanceId(), Map.of("reason", reason));
@@ -209,9 +211,11 @@ public final class SkillExecutionService {
             context = new SkillExecutionContext(prepared.request, prepared.rootCastId, prepared.instanceId,
                     prepared.profile, prepared.plan, snapshot, prepared.equipment,target,false);
             kernel.resources().commitCost(token, port.resources()); resourceCommitted = true;
-            kernel.cooldowns().startCooldown(prepared.request.actorId(), prepared.profile.skillId(),
-                    prepared.profile.cooldownSeconds(), 1.0, attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
-            cooldownStarted = true;
+            if(!channel(prepared.profile)) {
+                kernel.cooldowns().startCooldown(prepared.request.actorId(), prepared.profile.skillId(),
+                        prepared.profile.cooldownSeconds(), 1.0, attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
+                cooldownStarted = true;
+            }
         } catch (RuntimeException error) {
             if (cooldownStarted) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
             try {
@@ -249,8 +253,8 @@ public final class SkillExecutionService {
             releases.finish(prepared.instanceId);
             // Spatial dispatch can already have applied a hit before a later presentation/status adapter fails.
             // A paid area must not yield free native damage through the synchronous rollback path.
-            if (cooldownStarted && prepared.profile.area() == null) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
-            try { if (resourceCommitted && prepared.profile.area() == null) kernel.resources().refundCommittedCost(token, port.resources());
+            if (cooldownStarted && prepared.profile.area() == null && prepared.profile.connection()==null) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
+            try { if (resourceCommitted && prepared.profile.area() == null && prepared.profile.connection()==null) kernel.resources().refundCommittedCost(token, port.resources());
                   else if (resourceCommitted) kernel.resources().finish(token); }
             catch (RuntimeException ignored) { }
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());
@@ -262,7 +266,11 @@ public final class SkillExecutionService {
     }
 
     private void retainExecutionLifecycle(SkillExecutionContext context) {
-        if (context.profile().area() != null) {
+        if(channel(context.profile())) {
+            if(!lifecycle.transition(context.request().actorId(),context.skillInstanceId(),SkillInstanceLifecycle.Phase.COMMITTED,SkillInstanceLifecycle.Phase.CHANNEL))
+                throw new IllegalStateException("Channel lifecycle transition failed");
+            synchronized(activeContexts){activeContexts.put(context.request().actorId(),context);}
+        } else if (context.profile().area() != null || context.profile().connection()!=null) {
             // The area registry owns the finite effect after dispatch; it does not lock unrelated casts for its lifetime.
             lifecycle.terminate(context.request().actorId(), context.skillInstanceId());
         } else if (context.profile().family() == Stage04SkillProfile.Family.STRIKE
@@ -291,6 +299,14 @@ public final class SkillExecutionService {
     }
 
     private double now() { return nanoTime.getAsLong()/1e9; }
+    private static boolean channel(Stage04SkillProfile profile){return profile.connection()!=null&&profile.connection().channel();}
+    private void startEndedChannelCooldown(SkillExecutionContext context) {
+        if(!channel(context.profile())||context.derivedRelease())return;
+        var calculation=kernel.cooldowns().startCooldown(context.request().actorId(),context.profile().skillId(),context.profile().cooldownSeconds(),
+                1,context.snapshot().derivedStats().cooldownRecovery(),context.compiledPlan().kernelModifiers());
+        emit(context.request(),RpgTraceEventType.COOLDOWN_STARTED,context.rootCastId(),context.skillInstanceId(),
+                Map.of("skillId",context.profile().skillId(),"afterChannelEnd",true,"seconds",calculation.finalSeconds()));
+    }
     public int pendingReleaseCount() { return releases.size(); }
 
     /** Called from the owner's actual world tick with a fresh native port, never a stale retained command buffer. */

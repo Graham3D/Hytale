@@ -23,6 +23,6 @@ public final class SkillInstanceLifecycle {
     }
     public synchronized Optional<Active> cancel(UUID actor) { return Optional.ofNullable(active.remove(actor)); }
     public synchronized Optional<Active> active(UUID actor) { return Optional.ofNullable(active.get(actor)); }
-    public enum Phase { WINDUP, COMMITTED, STRIKE_REPEAT, MOVEMENT, REACTION, PROJECTILE }
+    public enum Phase { WINDUP, COMMITTED, STRIKE_REPEAT, MOVEMENT, REACTION, PROJECTILE, CHANNEL }
     public record Active(String instanceId, Phase phase) { }
 }

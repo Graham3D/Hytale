@@ -13,14 +13,15 @@ import java.util.UUID;
 /** World-thread finite-effect ownership and per-cast ledgers shared by spatial families. */
 public final class AreaRuntime {
     public static final int OWNER_CAP = 8, GLOBAL_CAP = 128;
+    private final com.inigmasgames.hytalerpg.execution.OwnedFieldBudget capacity;
+    public AreaRuntime(){this(new com.inigmasgames.hytalerpg.execution.OwnedFieldBudget());}
+    public AreaRuntime(com.inigmasgames.hytalerpg.execution.OwnedFieldBudget capacity){this.capacity=java.util.Objects.requireNonNull(capacity);}
     private final Map<String, Field> fields = new LinkedHashMap<>();
     private final Map<String,Map<String,Ledger>> rootLedgers=new HashMap<>();
     private final Map<String,Integer> rootSpawned=new HashMap<>();
 
     public synchronized String admission(UUID owner, String skill, boolean trap) {
-        if (fields.size() >= GLOBAL_CAP) return "GLOBAL_FIELD_BUDGET";
-        long count = fields.values().stream().filter(f -> f.context.request().actorId().equals(owner)).count();
-        if (count >= OWNER_CAP) return "OWNER_FIELD_BUDGET";
+        String capacityVerdict=capacity.admission(owner);if(!capacityVerdict.equals("PASS"))return capacityVerdict;
         if (trap && fields.values().stream().anyMatch(f -> f.context.request().actorId().equals(owner)
                 && f.context.profile().skillId().equals(skill))) return "TRAP_ALREADY_DEPLOYED";
         return "PASS";
@@ -39,6 +40,7 @@ public final class AreaRuntime {
         int spent=rootSpawned.getOrDefault(rootKey(context),0);
         if(spent+spawnCost>context.compiledPlan().safetyBudgets().maxSpawnedEffects()) throw new IllegalStateException("ROOT_SPAWN_EFFECT_BUDGET");
         Field field = new Field(context, profile.footprint(point, direction, radiusFactor), now, radiusFactor);
+        capacity.reserve(context.request().actorId(),context.skillInstanceId());
         rootSpawned.put(rootKey(context),spent+spawnCost);
         fields.put(context.skillInstanceId(), field);
         try {
@@ -65,7 +67,7 @@ public final class AreaRuntime {
         List<SkillExecutionContext> removed = new ArrayList<>();
         fields.values().removeIf(f -> {
             if (!f.context.request().actorId().equals(owner)) return false;
-            f.done=true;removed.add(f.context); return true;
+            f.done=true;removed.add(f.context);capacity.release(owner,f.context.skillInstanceId());return true;
         });
         removed.forEach(c->cleanupRoot(rootKey(c)));
         return List.copyOf(removed);
@@ -286,7 +288,7 @@ public final class AreaRuntime {
         catch (RuntimeException ignored) { }
     }
     private void removeField(Field field) {
-        fields.remove(field.context.skillInstanceId());cleanupRoot(rootKey(field.context));
+        fields.remove(field.context.skillInstanceId());capacity.release(field.context.request().actorId(),field.context.skillInstanceId());cleanupRoot(rootKey(field.context));
     }
     private void cleanupRoot(String root) {
         if(fields.values().stream().noneMatch(f->rootKey(f.context).equals(root))) {

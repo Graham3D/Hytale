@@ -1,0 +1,234 @@
+Compiled from "BoundingBox.java"
+public class com.hypixel.hytale.server.core.modules.entity.component.BoundingBox implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  private static final com.hypixel.hytale.logger.HytaleLogger LOGGER;
+
+  private final com.hypixel.hytale.math.shape.Box boundingBox;
+
+  private com.hypixel.hytale.math.shape.Box baseModelBox;
+
+  protected java.util.Map<java.lang.String, com.hypixel.hytale.server.core.asset.type.model.config.DetailBox[]> detailBoxes;
+
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.component.BoundingBox> getComponentType();
+    Code:
+         0: invokestatic  #1                  // Method com/hypixel/hytale/server/core/modules/entity/EntityModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/EntityModule;
+         3: invokevirtual #7                  // Method com/hypixel/hytale/server/core/modules/entity/EntityModule.getBoundingBoxComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: areturn
+
+  public com.hypixel.hytale.server.core.modules.entity.component.BoundingBox();
+    Code:
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #17                 // class com/hypixel/hytale/math/shape/Box
+         8: dup
+         9: invokespecial #19                 // Method com/hypixel/hytale/math/shape/Box."<init>":()V
+        12: putfield      #20                 // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+        15: return
+
+  public com.hypixel.hytale.server.core.modules.entity.component.BoundingBox(com.hypixel.hytale.math.shape.Box);
+    Code:
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #17                 // class com/hypixel/hytale/math/shape/Box
+         8: dup
+         9: invokespecial #19                 // Method com/hypixel/hytale/math/shape/Box."<init>":()V
+        12: putfield      #20                 // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+        15: aload_0
+        16: aload_1
+        17: invokevirtual #26                 // Method setBoundingBox:(Lcom/hypixel/hytale/math/shape/Box;)V
+        20: return
+
+  public com.hypixel.hytale.math.shape.Box getBoundingBox();
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+         4: areturn
+
+  public void setBoundingBox(com.hypixel.hytale.math.shape.Box);
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+         4: aload_1
+         5: invokevirtual #30                 // Method com/hypixel/hytale/math/shape/Box.assign:(Lcom/hypixel/hytale/math/shape/Box;)Lcom/hypixel/hytale/math/shape/Box;
+         8: pop
+         9: return
+
+  public void setBaseModelBox(com.hypixel.hytale.math.shape.Box);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: ifnull        12
+         5: aload_1
+         6: invokevirtual #34                 // Method com/hypixel/hytale/math/shape/Box.clone:()Lcom/hypixel/hytale/math/shape/Box;
+         9: goto          13
+        12: aconst_null
+        13: putfield      #38                 // Field baseModelBox:Lcom/hypixel/hytale/math/shape/Box;
+        16: return
+
+  public void applyRotation(float, float, float);
+    Code:
+         0: aload_0
+         1: getfield      #38                 // Field baseModelBox:Lcom/hypixel/hytale/math/shape/Box;
+         4: ifnonnull     8
+         7: return
+         8: fload_1
+         9: invokestatic  #41                 // Method java/lang/Float.isFinite:(F)Z
+        12: ifeq          29
+        15: fload_2
+        16: invokestatic  #41                 // Method java/lang/Float.isFinite:(F)Z
+        19: ifeq          29
+        22: fload_3
+        23: invokestatic  #41                 // Method java/lang/Float.isFinite:(F)Z
+        26: ifne          93
+        29: getstatic     #47                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+        32: getstatic     #51                 // Field java/util/logging/Level.SEVERE:Ljava/util/logging/Level;
+        35: invokevirtual #57                 // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        38: iconst_1
+        39: getstatic     #63                 // Field java/util/concurrent/TimeUnit.MINUTES:Ljava/util/concurrent/TimeUnit;
+        42: invokeinterface #69,  3           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.atMostEvery:(ILjava/util/concurrent/TimeUnit;)Lcom/google/common/flogger/LoggingApi;
+        47: checkcast     #70                 // class com/hypixel/hytale/logger/HytaleLogger$Api
+        50: getstatic     #75                 // Field com/google/common/flogger/StackSize.MEDIUM:Lcom/google/common/flogger/StackSize;
+        53: invokeinterface #81,  2           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.withStackTrace:(Lcom/google/common/flogger/StackSize;)Lcom/google/common/flogger/LoggingApi;
+        58: checkcast     #70                 // class com/hypixel/hytale/logger/HytaleLogger$Api
+        61: ldc           #85                 // String Non-finite entity rotation reached applyRotation (pitch=%s, yaw=%s, roll=%s); leaving bounding box unrotated
+        63: fload_1
+        64: invokestatic  #87                 // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+        67: fload_2
+        68: invokestatic  #87                 // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+        71: fload_3
+        72: invokestatic  #87                 // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+        75: invokeinterface #91,  5           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+        80: aload_0
+        81: getfield      #20                 // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+        84: aload_0
+        85: getfield      #38                 // Field baseModelBox:Lcom/hypixel/hytale/math/shape/Box;
+        88: invokevirtual #30                 // Method com/hypixel/hytale/math/shape/Box.assign:(Lcom/hypixel/hytale/math/shape/Box;)Lcom/hypixel/hytale/math/shape/Box;
+        91: pop
+        92: return
+        93: aload_0
+        94: getfield      #20                 // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+        97: aload_0
+        98: getfield      #38                 // Field baseModelBox:Lcom/hypixel/hytale/math/shape/Box;
+       101: fload_1
+       102: fload_2
+       103: fload_3
+       104: invokevirtual #95                 // Method com/hypixel/hytale/math/shape/Box.enclosingRotatedAABB:(FFF)Lcom/hypixel/hytale/math/shape/Box;
+       107: invokevirtual #30                 // Method com/hypixel/hytale/math/shape/Box.assign:(Lcom/hypixel/hytale/math/shape/Box;)Lcom/hypixel/hytale/math/shape/Box;
+       110: pop
+       111: return
+
+  public java.util.Map<java.lang.String, com.hypixel.hytale.server.core.asset.type.model.config.DetailBox[]> getDetailBoxes();
+    Code:
+         0: aload_0
+         1: getfield      #99                 // Field detailBoxes:Ljava/util/Map;
+         4: areturn
+
+  public void setDetailBoxes(java.util.Map<java.lang.String, com.hypixel.hytale.server.core.asset.type.model.config.DetailBox[]>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #99                 // Field detailBoxes:Ljava/util/Map;
+         5: return
+
+  public com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> clone();
+    Code:
+         0: new           #21                 // class com/hypixel/hytale/server/core/modules/entity/component/BoundingBox
+         3: dup
+         4: aload_0
+         5: getfield      #20                 // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+         8: invokespecial #103                // Method "<init>":(Lcom/hypixel/hytale/math/shape/Box;)V
+        11: astore_1
+        12: aload_1
+        13: aload_0
+        14: getfield      #38                 // Field baseModelBox:Lcom/hypixel/hytale/math/shape/Box;
+        17: ifnull        30
+        20: aload_0
+        21: getfield      #38                 // Field baseModelBox:Lcom/hypixel/hytale/math/shape/Box;
+        24: invokevirtual #34                 // Method com/hypixel/hytale/math/shape/Box.clone:()Lcom/hypixel/hytale/math/shape/Box;
+        27: goto          31
+        30: aconst_null
+        31: putfield      #38                 // Field baseModelBox:Lcom/hypixel/hytale/math/shape/Box;
+        34: aload_0
+        35: getfield      #99                 // Field detailBoxes:Ljava/util/Map;
+        38: ifnull        192
+        41: new           #105                // class java/util/HashMap
+        44: dup
+        45: aload_0
+        46: getfield      #99                 // Field detailBoxes:Ljava/util/Map;
+        49: invokeinterface #107,  1          // InterfaceMethod java/util/Map.size:()I
+        54: invokespecial #113                // Method java/util/HashMap."<init>":(I)V
+        57: astore_2
+        58: aload_0
+        59: getfield      #99                 // Field detailBoxes:Ljava/util/Map;
+        62: invokeinterface #116,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        67: invokeinterface #120,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        72: astore_3
+        73: aload_3
+        74: invokeinterface #126,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        79: ifeq          187
+        82: aload_3
+        83: invokeinterface #132,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        88: checkcast     #136                // class java/util/Map$Entry
+        91: astore        4
+        93: aload         4
+        95: invokeinterface #138,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+       100: checkcast     #141                // class "[Lcom/hypixel/hytale/server/core/asset/type/model/config/DetailBox;"
+       103: astore        5
+       105: aconst_null
+       106: astore        6
+       108: aload         5
+       110: ifnull        167
+       113: aload         5
+       115: arraylength
+       116: anewarray     #143                // class com/hypixel/hytale/server/core/asset/type/model/config/DetailBox
+       119: astore        6
+       121: iconst_0
+       122: istore        7
+       124: iload         7
+       126: aload         5
+       128: arraylength
+       129: if_icmpge     167
+       132: aload         6
+       134: iload         7
+       136: aload         5
+       138: iload         7
+       140: aaload
+       141: ifnull        159
+       144: new           #143                // class com/hypixel/hytale/server/core/asset/type/model/config/DetailBox
+       147: dup
+       148: aload         5
+       150: iload         7
+       152: aaload
+       153: invokespecial #145                // Method com/hypixel/hytale/server/core/asset/type/model/config/DetailBox."<init>":(Lcom/hypixel/hytale/server/core/asset/type/model/config/DetailBox;)V
+       156: goto          160
+       159: aconst_null
+       160: aastore
+       161: iinc          7, 1
+       164: goto          124
+       167: aload_2
+       168: aload         4
+       170: invokeinterface #148,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+       175: checkcast     #151                // class java/lang/String
+       178: aload         6
+       180: invokevirtual #153                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       183: pop
+       184: goto          73
+       187: aload_1
+       188: aload_2
+       189: putfield      #99                 // Field detailBoxes:Ljava/util/Map;
+       192: aload_1
+       193: areturn
+
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+    Code:
+         0: aload_0
+         1: invokevirtual #157                // Method clone:()Lcom/hypixel/hytale/component/Component;
+         4: areturn
+
+  static {};
+    Code:
+         0: invokestatic  #160                // Method com/hypixel/hytale/logger/HytaleLogger.forEnclosingClass:()Lcom/hypixel/hytale/logger/HytaleLogger;
+         3: putstatic     #47                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+         6: return
+}

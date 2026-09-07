@@ -21,6 +21,12 @@ public final class RpgResourceService {
     public ResourceCost evaluate(ResourceCost declared, CompiledSkillPlan.KernelModifiers modifiers) {
         return declared.modified(modifiers == null ? 1.0 : modifiers.resourceCostMultiplier());
     }
+    /** Continuous upkeep retains fractional units; the integer upfront-cost rule does not apply. */
+    public ResourceCost evaluateUpkeep(ResourceCost slice, CompiledSkillPlan.KernelModifiers modifiers) {
+        double multiplier = modifiers == null ? 1.0 : modifiers.resourceCostMultiplier();
+        if (!Double.isFinite(multiplier) || multiplier < 0) throw new IllegalArgumentException("Invalid upkeep multiplier");
+        return new ResourceCost(slice.type(), slice.amount() * multiplier);
+    }
     public synchronized boolean canAfford(UUID actor, ResourceCost cost, NativeResourcePort resources) {
         if (cost.type() == ResourceType.NONE) return true;
         double held = pending.values().stream().filter(p -> p.actor.equals(actor) && p.cost.type() == cost.type() && !p.committed)

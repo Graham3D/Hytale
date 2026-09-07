@@ -1,0 +1,15 @@
+{
+  "Server/Entity/Damage/Elemental.json": {
+    "$Comment": "This damage type exists to facilitate sub types"
+  },
+  "Server/Entity/Damage/Wind.json": {
+    "Parent": "Elemental",
+    "Inherits": "Elemental",
+    "DamageTextColor": "#A5D8F5"
+  },
+  "Server/Entity/Damage/Lightning.json": {
+    "Parent": "Elemental",
+    "Inherits": "Elemental",
+    "DamageTextColor": "#FFE14D"
+  }
+}
