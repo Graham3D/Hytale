@@ -12,6 +12,8 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import com.inigmasgames.hytalerpg.content.CatalogResolution;
@@ -59,6 +61,7 @@ import com.inigmasgames.hytalerpg.ui.hud.RpgHudCoordinator;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
 import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeMutationService;
 import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeProjectionService;
+import com.inigmasgames.hytalerpg.input.NativeAbilityProjectionService;
 
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -72,7 +75,8 @@ public final class RpgCommand extends AbstractCommandCollection {
                       RpgUiProjectionService uiProjection, AttributeAllocationService allocation,
                       RpgUiTraceService uiTrace, RpgHudCoordinator hud,
                       RpgSkillTreeProjectionService skillTreeProjection,
-                      RpgSkillTreeMutationService skillTreeMutations) {
+                      RpgSkillTreeMutationService skillTreeMutations,
+                      NativeAbilityProjectionService nativeAbilities) {
         super("rpg", "Configure and inspect the server-authoritative RPG Link Tree.");
         addSubCommand(new RpgCharacterCommand(uiProjection, allocation, uiTrace));
         addSubCommand(new RpgSkillTreeCommand(skillTreeProjection, skillTreeMutations, uiTrace));
@@ -83,7 +87,7 @@ public final class RpgCommand extends AbstractCommandCollection {
         addSubCommand(new LoadoutCommand(catalog, loadouts));
         addSubCommand(new CompileCommand(loadouts));
         addSubCommand(new StatsCommand(loadouts, kernel, combatTrace));
-        addSubCommand(new DevCommand(catalog, loadouts, kernel, combatTrace, allocation, uiTrace, hud));
+        addSubCommand(new DevCommand(catalog, loadouts, kernel, combatTrace, allocation, uiTrace, hud, nativeAbilities));
     }
 
     private abstract static class PlayerSubcommand extends AbstractPlayerCommand {
@@ -219,7 +223,8 @@ public final class RpgCommand extends AbstractCommandCollection {
 
     private static final class DevCommand extends AbstractCommandCollection {
         DevCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts, RpgCombatKernel kernel, CombatTrace trace,
-                   AttributeAllocationService allocation, RpgUiTraceService uiTrace, RpgHudCoordinator hud) {
+                   AttributeAllocationService allocation, RpgUiTraceService uiTrace, RpgHudCoordinator hud,
+                   NativeAbilityProjectionService nativeAbilities) {
             super("dev", "Development-only RPG fixtures.");
             addSubCommand(new RpgDevPointsCommand(allocation, uiTrace));
             addSubCommand(new RpgDevXpDisplayCommand(hud));
@@ -231,6 +236,23 @@ public final class RpgCommand extends AbstractCommandCollection {
             addSubCommand(new PotencyProofCommand(catalog, loadouts, kernel, trace));
             addSubCommand(new DamageCommand(loadouts, kernel, trace));
             addSubCommand(new StatusCommand(loadouts, kernel, trace));
+            addSubCommand(new AbilityStatusCommand(nativeAbilities));
+        }
+    }
+
+    private static final class AbilityStatusCommand extends AbstractPlayerCommand {
+        private final NativeAbilityProjectionService projection;
+        AbilityStatusCommand(NativeAbilityProjectionService projection) {
+            super("ability-status", "Inspect native Ability2/Ability3 projection and the Ability4 boundary.");
+            this.projection = projection;
+            setPermissionGroup(GameMode.Adventure);
+        }
+        @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
+                                         PlayerRef playerRef, World world) {
+            Player player = store.getComponent(ref, Player.getComponentType());
+            boolean abilitiesVisible = player != null
+                    && player.getHudManager().getVisibleHudComponents().contains(HudComponent.Abilities);
+            context.sendMessage(Message.raw(projection.status(playerRef.getUuid(), abilitiesVisible)));
         }
     }
 

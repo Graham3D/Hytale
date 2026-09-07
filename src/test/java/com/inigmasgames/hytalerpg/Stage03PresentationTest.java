@@ -189,11 +189,11 @@ class Stage03PresentationTest {
                 "EXECUTOR_NOT_IMPLEMENTED".equals(record.details().get("failureCode"))));
     }
 
-    @Test void installedAbilityActionsLeaveSignatureNativeAndMapExactlyToThreeLogicalSlots() {
+    @Test void installedAbilityActionsLeaveSignatureNativeAndMapOnlyTheTwoNativeRunePrimaries() {
         assertNull(HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability1));
         assertEquals(SkillSlot.SKILL01, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability2));
         assertEquals(SkillSlot.SKILL02, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability3));
-        assertEquals(SkillSlot.SKILL03, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability4));
+        assertNull(HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability4));
         assertNull(HytaleAbilitySkillInputAdapter.slot(InteractionType.Primary));
     }
 

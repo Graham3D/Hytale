@@ -14,11 +14,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
-/** Leaves native Ability1 untouched and maps Ability2..Ability4 to the three RPG slots. */
+/** Observes Hytale's native ability interaction chains; it does not own physical keys or HUD controls. */
 public final class HytaleAbilitySkillInputAdapter {
     private final ConcurrentLinkedQueue<Request> requests = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<Key, Long> seen = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, Vec3> desiredMovement = new ConcurrentHashMap<>();
+    private final Consumer<Observation> observations;
+
+    public HytaleAbilitySkillInputAdapter() { this(ignored -> { }); }
+    public HytaleAbilitySkillInputAdapter(Consumer<Observation> observations) { this.observations = observations; }
 
     public void observe(PlayerRef player, Packet packet) {
         if (packet instanceof ClientMovement movement && movement.wishMovement != null) {
@@ -32,13 +36,23 @@ public final class HytaleAbilitySkillInputAdapter {
     private void observe(UUID player, SyncInteractionChain chain) {
         if (chain == null) return;
         SkillSlot slot = slot(chain.interactionType);
-        if (slot != null) {
+        if (isAbilityAction(chain.interactionType)) {
             Key key = new Key(player, chain.chainId, chain.interactionType);
             long now = System.nanoTime();
             seen.entrySet().removeIf(entry -> now - entry.getValue() > 10_000_000_000L);
-            if (chain.initial && seen.putIfAbsent(key, now) == null)
-                requests.add(new Request(player, slot, chain.interactionType.name(),
-                    chain.chainId, UUID.randomUUID().toString(), desiredMovement.getOrDefault(player, new Vec3(0, 0, 0))));
+            if (chain.initial && seen.putIfAbsent(key, now) == null) {
+                String correlation = UUID.randomUUID().toString();
+                String result = switch (chain.interactionType) {
+                    case Ability1 -> "NATIVE_SIGNATURE_PRESERVED";
+                    case Ability2, Ability3 -> "MAPPED";
+                    case Ability4 -> NativeAbilityProjectionService.ABILITY4_UNAVAILABLE;
+                    default -> "IGNORED";
+                };
+                observations.accept(new Observation(player, slot, chain.interactionType.name(), chain.chainId,
+                        correlation, result));
+                if (slot != null) requests.add(new Request(player, slot, chain.interactionType.name(),
+                        chain.chainId, correlation, desiredMovement.getOrDefault(player, new Vec3(0, 0, 0))));
+            }
             if (!chain.initial && chain.state != null && switch (chain.state) {
                 case Finished, Skip, ItemChanged, Failed -> true;
                 default -> false;
@@ -81,9 +95,13 @@ public final class HytaleAbilitySkillInputAdapter {
         return switch (type) {
             case Ability2 -> SkillSlot.SKILL01;
             case Ability3 -> SkillSlot.SKILL02;
-            case Ability4 -> SkillSlot.SKILL03;
             default -> null;
         };
+    }
+
+    private static boolean isAbilityAction(InteractionType type) {
+        return type == InteractionType.Ability1 || type == InteractionType.Ability2
+                || type == InteractionType.Ability3 || type == InteractionType.Ability4;
     }
 
     public record Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId,
@@ -92,5 +110,7 @@ public final class HytaleAbilitySkillInputAdapter {
             this(player, slot, action, chainId, correlationId, new Vec3(0, 0, 0));
         }
     }
+    public record Observation(UUID player, SkillSlot slot, String action, int chainId,
+                              String correlationId, String result) { }
     private record Key(UUID player, int chainId, InteractionType action) { }
 }

@@ -7,10 +7,8 @@ import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.inigmasgames.hytalerpg.ui.model.RpgHudViewModel;
-import com.inigmasgames.hytalerpg.ui.model.SkillSlotView;
 
 import javax.annotation.Nonnull;
-import java.util.Locale;
 
 final class RpgHud extends CustomUIHud {
     static final String KEY = "inigmas:hytalerpg:hud";
@@ -33,14 +31,12 @@ final class RpgHud extends CustomUIHud {
         UICommandBuilder update = new UICommandBuilder();
         if (!previous.xp().equals(next.xp())) writeXp(update, next);
         if (previous.pendingLevelUpPoints() != next.pendingLevelUpPoints()) writeNotice(update, next);
-        if (!previous.skills().equals(next.skills())) writeSkills(update, next);
         if (update.getCommands().length > 0) update(false, update);
     }
 
     private static void writeAll(UICommandBuilder commands, RpgHudViewModel model) {
         writeXp(commands, model);
         writeNotice(commands, model);
-        writeSkills(commands, model);
     }
 
     private static void writeXp(UICommandBuilder commands, RpgHudViewModel model) {
@@ -51,31 +47,6 @@ final class RpgHud extends CustomUIHud {
         commands.set("#LevelUpNotice.Visible", model.showLevelUpNotice());
         commands.set("#LevelUpNotice.TextSpans", Message.raw("LEVEL UP - " + model.pendingLevelUpPoints()
                 + " ATTRIBUTE POINT" + (model.pendingLevelUpPoints() == 1 ? "" : "S")));
-    }
-
-    private static void writeSkills(UICommandBuilder commands, RpgHudViewModel model) {
-        for (int index = 0; index < model.skills().size(); index++) {
-            SkillSlotView slot = model.skills().get(index);
-            int number = index + 1;
-            boolean occupied = !slot.skillId().isBlank();
-            boolean cooldown = slot.state() == SkillSlotView.State.COOLDOWN;
-            boolean unavailable = slot.state() == SkillSlotView.State.UNAVAILABLE;
-            boolean ready = slot.state() == SkillSlotView.State.READY;
-            String state = switch (slot.state()) {
-                case EMPTY -> "EMPTY";
-                case READY -> "READY";
-                case COOLDOWN -> String.format(Locale.ROOT, "%.1fs", slot.cooldownRemainingSeconds());
-                case UNAVAILABLE -> "UNAVAILABLE";
-            };
-            commands.set("#Skill" + number + "Action.TextSpans", Message.raw(slot.action()));
-            commands.set("#Skill" + number + "Icon.Visible", occupied);
-            commands.set("#Skill" + number + "Cooldown.Visible", cooldown);
-            commands.set("#Skill" + number + "Unavailable.Visible", unavailable);
-            commands.set("#Skill" + number + "ReadyFrame.Visible", ready);
-            commands.set("#Skill" + number + "NotReadyFrame.Visible", !ready);
-            commands.set("#Skill" + number + "Name.TextSpans", Message.raw(occupied ? slot.name() : "Empty"));
-            commands.set("#Skill" + number + "State.TextSpans", Message.raw(state));
-        }
     }
 
     static int xpFillWidth(double progress) { return proportionalWidth(progress, XP_FILL_WIDTH); }

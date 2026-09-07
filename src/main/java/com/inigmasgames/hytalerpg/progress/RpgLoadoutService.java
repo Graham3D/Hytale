@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
 
@@ -41,6 +42,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     private final EntitlementPolicy entitlements;
     private final RpgSkillTracer tracer;
     private final Map<UUID, Holder> states = new ConcurrentHashMap<>();
+    private final List<Consumer<UUID>> mutationListeners = new CopyOnWriteArrayList<>();
 
     public RpgLoadoutService(RpgCatalog catalog, RpgPlayerStateRepository repository,
                              RpgLinkGraphService graphService, LinkCompiler compiler,
@@ -48,6 +50,9 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         this.catalog = catalog; this.repository = repository; this.graphService = graphService;
         this.compiler = compiler; this.entitlements = entitlements; this.tracer = tracer;
     }
+
+    /** Runtime projection hook. Listener failures cannot roll back or invalidate an already-saved RPG state. */
+    public void addMutationListener(Consumer<UUID> listener) { mutationListeners.add(listener); }
 
     @Override public MutationResult equipSkill(UUID player, SkillSlot slot, SkillId skill) {
         String correlation = reference();
@@ -329,6 +334,10 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
                     "RPG state was not changed because persistence failed: " + error.getMessage(), holder.state.revision);
         }
         holder.state = candidate;
+        for (Consumer<UUID> listener : mutationListeners) {
+            try { listener.accept(player); }
+            catch (RuntimeException ignored) { /* Runtime projections repair on their next bounded tick. */ }
+        }
         return new MutationResult(true, ValidationCode.ACCEPTED, "Compile: PASS.", correlation,
                 candidate.revision, compiled.plans());
     }

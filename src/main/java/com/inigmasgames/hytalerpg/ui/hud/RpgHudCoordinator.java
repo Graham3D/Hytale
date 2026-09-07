@@ -8,11 +8,9 @@ import com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService;
 import com.inigmasgames.hytalerpg.ui.HytaleResourceViewAdapter;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.ui.model.RpgHudViewModel;
-import com.inigmasgames.hytalerpg.ui.model.SkillSlotView;
 import com.inigmasgames.hytalerpg.ui.model.XpView;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -45,10 +43,7 @@ public final class RpgHudCoordinator {
                 "xpLayerOrder", "ExperienceBackground|ExperienceBar|ExperienceFrame",
                 "xpAnchor", "Centered Bottom:138 Width:702", "xpUsableWidth", RpgHud.XP_FILL_WIDTH,
                 "nativeAbilitiesVisible", true, "nativeSignature", "PRESERVED",
-                "rpgAbilityAnchor", "Right:390 Bottom:40",
-                "inputLabelSource", "LOGICAL_ACTION_FALLBACK_PUBLIC_BINDING_LABEL_UNAVAILABLE"));
-        traceAbilities(id, model, true);
-        for (SkillSlotView slot : model.skills()) traceSlot(id, null, slot, true);
+                "rpgAbilityControls", 0, "abilityPresentation", "NATIVE_HYTALE_ONLY"));
         traceXp(id, model, true);
         if (model.showLevelUpNotice()) trace.trace(id, "LEVEL_UP_INDICATOR_SHOWN", ref(),
                 Map.of("pendingLevelUpPoints", model.pendingLevelUpPoints(), "initial", true));
@@ -64,19 +59,10 @@ public final class RpgHudCoordinator {
             RpgHudViewModel previous = session.model;
             RpgHudViewModel next = projection.hud(playerRef.getUuid(), resources.read(stats), xpFixtures.get(playerRef.getUuid()));
             if (next.equals(previous)) return;
-            boolean skillsChanged = !next.skills().equals(previous.skills());
             boolean xpChanged = !next.xp().equals(previous.xp());
             boolean noticeChanged = next.showLevelUpNotice() != previous.showLevelUpNotice();
             session.hud.refresh(next);
             session.model = next;
-            if (skillsChanged) {
-                traceAbilities(playerRef.getUuid(), next, false);
-                for (int index = 0; index < next.skills().size(); index++) {
-                    SkillSlotView before = previous.skills().get(index);
-                    SkillSlotView after = next.skills().get(index);
-                    if (!before.equals(after)) traceSlot(playerRef.getUuid(), before, after, false);
-                }
-            }
             if (xpChanged) traceXp(playerRef.getUuid(), next, false);
             if (noticeChanged) trace.trace(playerRef.getUuid(), next.showLevelUpNotice()
                             ? "LEVEL_UP_INDICATOR_SHOWN" : "LEVEL_UP_INDICATOR_HIDDEN", ref(),
@@ -112,38 +98,11 @@ public final class RpgHudCoordinator {
         }
     }
 
-    private void traceAbilities(UUID player, RpgHudViewModel model, boolean initial) {
-        trace.trace(player, "ABILITY_HUD_REFRESH", ref(), Map.of(
-                "nativeSignature", "PRESERVED", "nativeAction", "Ability1",
-                "rpgSlots", model.skills().stream().map(RpgHudCoordinator::slot).toList(),
-                "initial", initial));
-    }
-
-    private void traceSlot(UUID player, SkillSlotView before, SkillSlotView after, boolean initial) {
-        LinkedHashMap<String, Object> details = new LinkedHashMap<>();
-        details.put("slot", after.slot().externalId());
-        details.put("action", after.action());
-        details.put("skillId", after.skillId());
-        details.put("state", after.state().name());
-        details.put("cooldownRemainingSeconds", after.cooldownRemainingSeconds());
-        details.put("reason", after.unavailableReason());
-        details.put("previousSkillId", before == null ? "" : before.skillId());
-        details.put("previousState", before == null ? "NONE" : before.state().name());
-        details.put("initial", initial);
-        trace.trace(player, "ABILITY_SLOT_CHANGED", ref(), details);
-    }
-
     private void traceXp(UUID player, RpgHudViewModel model, boolean initial) {
         trace.trace(player, "XP_HUD_REFRESH", ref(), Map.of(
                 "level", model.xp().level(), "progress", model.xp().progress(),
                 "fillWidth", RpgHud.xpFillWidth(model.xp().progress()),
                 "fullWidth", RpgHud.XP_FILL_WIDTH, "leftAnchored", true, "initial", initial));
-    }
-
-    private static Map<String, Object> slot(SkillSlotView value) {
-        return Map.of("slot", value.slot().externalId(), "action", value.action(),
-                "skillId", value.skillId(), "state", value.state().name(),
-                "cooldownRemainingSeconds", value.cooldownRemainingSeconds());
     }
 
     private static String ref() { return UUID.randomUUID().toString().substring(0, 12); }

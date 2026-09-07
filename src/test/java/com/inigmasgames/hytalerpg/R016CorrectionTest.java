@@ -84,7 +84,7 @@ class R016CorrectionTest {
         assertTrue(passives.details().description().contains("15%"));
     }
 
-    @Test void r020KeepsContinuousXpWithNoRpgResourceControlsAndExactlyThreeRpgAbilityCells() throws Exception {
+    @Test void r021KeepsContinuousXpWithNoRpgResourceOrAbilityControls() throws Exception {
         String hud = Files.readString(Path.of("src/main/resources/Common/UI/Custom/RpgHud.ui"));
         for (int index = 1; index <= 10; index++) assertFalse(hud.contains("#XpPip" + index + "Fill"));
         assertTrue(hud.contains("#ExperienceFill"));
@@ -92,12 +92,11 @@ class R016CorrectionTest {
         assertFalse(hud.contains("#Health"));
         assertFalse(hud.contains("#Mana"));
         assertFalse(hud.contains("#Stamina"));
-        assertTrue(hud.contains("#Skill1Name")); assertTrue(hud.contains("#Skill2Name")); assertTrue(hud.contains("#Skill3Name"));
-        assertFalse(hud.contains("#Skill4Name"));
-        assertTrue(hud.contains("#RpgAbilityHud"));
+        assertFalse(hud.contains("#Skill1Name")); assertFalse(hud.contains("#Skill2Name"));
+        assertFalse(hud.contains("#Skill3Name")); assertFalse(hud.contains("#RpgAbilityHud"));
     }
 
-    @Test void installedNativeHudExposesSeparateAbilitiesComponentButNoRpgProjectionApi() {
+    @Test void installedNativeHudExposesAbilitiesComponentAndAbilitySlotsProjectionApi() {
         assertEquals("Abilities", HudComponent.Abilities.name());
         assertDoesNotThrow(() -> Class.forName("com.hypixel.hytale.server.core.inventory.InventoryComponent$AbilitySlots",
                 false, getClass().getClassLoader()));

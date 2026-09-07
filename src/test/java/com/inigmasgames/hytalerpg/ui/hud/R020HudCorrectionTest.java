@@ -38,7 +38,7 @@ class R020HudCorrectionTest {
         String allProductionJava = String.join("\n", Files.walk(Path.of("src/main/java"))
                 .filter(path -> path.toString().endsWith(".java"))
                 .map(path -> assertDoesNotThrow(() -> Files.readString(path))).toList());
-        for (String mutation : new String[]{"setVisibleHudComponents", "getVisibleHudComponents",
+        for (String mutation : new String[]{"setVisibleHudComponents",
                 "hideHudComponents", "resetVisibleHudComponents"})
             assertFalse(allProductionJava.contains(mutation), mutation);
     }
@@ -76,9 +76,7 @@ class R020HudCorrectionTest {
     }
 
     @Test void requiredPortableAssetsExistAndEveryRpgResourceAssetIsRetired() {
-        for (String name : new String[]{"ExperienceFrame.png", "ExperienceBackground.png",
-                "ExperienceBar.png", "Background_Ability_NotReady.png", "Frame_Ability_NotReady.png",
-                "Frame_Ability_Ready.png", "OverlayAbilityErrorState.png"})
+        for (String name : new String[]{"ExperienceFrame.png", "ExperienceBackground.png", "ExperienceBar.png"})
             assertTrue(Files.isRegularFile(ASSETS.resolve(name)), name);
         for (String retired : new String[]{"HealthBackground.png", "HealthBarFill.png", "HealthIcon.png",
                 "ManaBackground.png", "ManaFill.png", "ManaIcon.png", "StaminaBackground.png",
@@ -87,19 +85,23 @@ class R020HudCorrectionTest {
             assertFalse(Files.exists(ASSETS.resolve(retired)), retired);
     }
 
-    @Test void abilityAreaStillContainsAllThreeRpgSlotsBesideNativeSignature() throws Exception {
+    @Test void customHudContainsNoRpgOwnedAbilityCellsOrArtwork() throws Exception {
         String hud = Files.readString(HUD);
-        assertTrue(hud.contains("#RpgAbility2"));
-        assertTrue(hud.contains("#RpgAbility3"));
-        assertTrue(hud.contains("#RpgAbility4"));
-        assertTrue(hud.contains("Right: 390, Bottom: 40"));
+        assertFalse(hud.contains("#RpgAbility2"));
+        assertFalse(hud.contains("#RpgAbility3"));
+        assertFalse(hud.contains("#RpgAbility4"));
+        for (String retired : new String[]{"Background_Ability_NotReady.png", "Frame_Ability_NotReady.png",
+                "Frame_Ability_Ready.png", "OverlayAbilityErrorState.png"})
+            assertFalse(Files.exists(ASSETS.resolve(retired)), retired);
         assertFalse(hud.contains("#RpgRevision"));
     }
 
     @Test void traceDescribesVanillaResourceOwnershipWithoutPollingResourcePresentation() throws Exception {
         String coordinator = Files.readString(COORDINATOR);
-        for (String event : new String[]{"ABILITY_HUD_REFRESH", "ABILITY_SLOT_CHANGED",
-                "XP_HUD_REFRESH", "HUD_LAYOUT_READY"}) assertTrue(coordinator.contains(event));
+        for (String event : new String[]{"XP_HUD_REFRESH", "HUD_LAYOUT_READY"})
+            assertTrue(coordinator.contains(event));
+        for (String retired : new String[]{"ABILITY_HUD_REFRESH", "ABILITY_SLOT_CHANGED", "traceAbilities", "traceSlot"})
+            assertFalse(coordinator.contains(retired));
         assertTrue(coordinator.contains("VANILLA_HYTALE"));
         assertTrue(coordinator.contains("nativeResourceVisibilityMutation\", false"));
         assertFalse(coordinator.contains("RESOURCE_HUD_REFRESH"));

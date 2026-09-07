@@ -9,44 +9,4 @@ Group {
   }
 
   Label #LevelUpNotice { Anchor: (Horizontal: 0, Top: 70, Width: 410, Height: 34); Background: (Color: #3b2a12e8); Text: "LEVEL UP - ATTRIBUTE POINTS"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Visible: false; }
-
-  // The native Abilities HUD remains visible at Right:50, Bottom:40 and owns the
-  // Signature Move. This three-slot extension sits immediately to its left.
-  Group #RpgAbilityHud { Anchor: (Right: 390, Bottom: 40, Width: 222, Height: 112); LayoutMode: Left;
-    Group #RpgAbility2 { Anchor: (Width: 70, Height: 112);
-      Label #Skill1Action { Anchor: (Top: 0, Width: 66, Height: 18); Text: "Ability2"; Style: (FontSize: 11, TextColor: #ffffe6, Alignment: Center, RenderBold: true); }
-      Group { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Background_Ability_NotReady.png"); }
-      Group #Skill1Icon { Anchor: (Left: 6, Top: 26, Width: 54, Height: 54); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); Visible: false; }
-      Group #Skill1Unavailable { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (TexturePath: "Assets/RpgHud/OverlayAbilityErrorState.png"); Visible: false; }
-      Group #Skill1Cooldown { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (Color: #07101bd0); Visible: false; }
-      Group #Skill1NotReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_NotReady.png"); }
-      Group #Skill1ReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_Ready.png"); Visible: false; }
-      Label #Skill1Name { Anchor: (Left: 2, Top: 48, Width: 62, Height: 18); Text: "Empty"; Style: (FontSize: 10, TextColor: #ffffff, Alignment: Center, RenderBold: true); }
-      Label #Skill1State { Anchor: (Left: 0, Top: 88, Width: 66, Height: 20); Text: "EMPTY"; Style: (FontSize: 10, TextColor: #93a4b6, Alignment: Center); }
-    }
-    Group { Anchor: (Width: 4); }
-    Group #RpgAbility3 { Anchor: (Width: 70, Height: 112);
-      Label #Skill2Action { Anchor: (Top: 0, Width: 66, Height: 18); Text: "Ability3"; Style: (FontSize: 11, TextColor: #ffffe6, Alignment: Center, RenderBold: true); }
-      Group { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Background_Ability_NotReady.png"); }
-      Group #Skill2Icon { Anchor: (Left: 6, Top: 26, Width: 54, Height: 54); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); Visible: false; }
-      Group #Skill2Unavailable { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (TexturePath: "Assets/RpgHud/OverlayAbilityErrorState.png"); Visible: false; }
-      Group #Skill2Cooldown { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (Color: #07101bd0); Visible: false; }
-      Group #Skill2NotReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_NotReady.png"); }
-      Group #Skill2ReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_Ready.png"); Visible: false; }
-      Label #Skill2Name { Anchor: (Left: 2, Top: 48, Width: 62, Height: 18); Text: "Empty"; Style: (FontSize: 10, TextColor: #ffffff, Alignment: Center, RenderBold: true); }
-      Label #Skill2State { Anchor: (Left: 0, Top: 88, Width: 66, Height: 20); Text: "EMPTY"; Style: (FontSize: 10, TextColor: #93a4b6, Alignment: Center); }
-    }
-    Group { Anchor: (Width: 4); }
-    Group #RpgAbility4 { Anchor: (Width: 70, Height: 112);
-      Label #Skill3Action { Anchor: (Top: 0, Width: 66, Height: 18); Text: "Ability4"; Style: (FontSize: 11, TextColor: #ffffe6, Alignment: Center, RenderBold: true); }
-      Group { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Background_Ability_NotReady.png"); }
-      Group #Skill3Icon { Anchor: (Left: 6, Top: 26, Width: 54, Height: 54); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); Visible: false; }
-      Group #Skill3Unavailable { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (TexturePath: "Assets/RpgHud/OverlayAbilityErrorState.png"); Visible: false; }
-      Group #Skill3Cooldown { Anchor: (Left: 4, Top: 24, Width: 58, Height: 58); Background: (Color: #07101bd0); Visible: false; }
-      Group #Skill3NotReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_NotReady.png"); }
-      Group #Skill3ReadyFrame { Anchor: (Left: 0, Top: 20, Width: 66, Height: 66); Background: (TexturePath: "Assets/RpgHud/Frame_Ability_Ready.png"); Visible: false; }
-      Label #Skill3Name { Anchor: (Left: 2, Top: 48, Width: 62, Height: 18); Text: "Empty"; Style: (FontSize: 10, TextColor: #ffffff, Alignment: Center, RenderBold: true); }
-      Label #Skill3State { Anchor: (Left: 0, Top: 88, Width: 66, Height: 20); Text: "EMPTY"; Style: (FontSize: 10, TextColor: #93a4b6, Alignment: Center); }
-    }
-  }
 }

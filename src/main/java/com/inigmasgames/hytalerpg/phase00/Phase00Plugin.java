@@ -32,6 +32,8 @@ import java.util.EnumMap;
 import java.util.UUID;
 import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
 import com.inigmasgames.hytalerpg.input.HytaleAbilitySkillInputAdapter;
+import com.inigmasgames.hytalerpg.input.NativeAbilityProjectionService;
+import com.inigmasgames.hytalerpg.input.NativeAbilityProjectionTickSystem;
 import com.inigmasgames.hytalerpg.input.CommandOnlyRpgUiOpenInputAdapter;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.ui.hud.RpgHudCoordinator;
@@ -64,6 +66,7 @@ public final class Phase00Plugin extends JavaPlugin {
     private RpgUiTraceService uiTrace;
     private RpgHudCoordinator rpgHud;
     private HytaleAbilitySkillInputAdapter abilityInputs;
+    private NativeAbilityProjectionService nativeAbilities;
     private HytaleSkillExecutionSystem skillExecutionSystem;
 
     public Phase00Plugin(@Nonnull JavaPluginInit init) {
@@ -93,8 +96,10 @@ public final class Phase00Plugin extends JavaPlugin {
                 configuration.developmentEntitlements());
         var skillTreeMutations = new RpgSkillTreeMutationService(loadouts, staticLayout);
         var allocation = new AttributeAllocationService(loadouts);
-        abilityInputs = new HytaleAbilitySkillInputAdapter();
         var runtimeProfiles = Stage04SkillProfiles.loadCanonical(catalog);
+        nativeAbilities = new NativeAbilityProjectionService(loadouts, runtimeProfiles, skillTrace);
+        loadouts.addMutationListener(nativeAbilities::onLoadoutMutation);
+        abilityInputs = new HytaleAbilitySkillInputAdapter(nativeAbilities::observeInput);
         var reactions = new ReactionWindowService(System::nanoTime);
         var executions = new SkillExecutionService(loadouts, runtimeProfiles, combatKernel,
                 SkillExecutorRegistry.runtime(), new SkillInstanceLifecycle(), skillTrace);
@@ -104,7 +109,7 @@ public final class Phase00Plugin extends JavaPlugin {
                 combatTrace, reactions, vfx, bosses);
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
-                uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations));
+                uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Filter(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace));
@@ -113,8 +118,9 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new HomeRestorationTickSystem(combatKernel.homeRestoration(),
                 combatKernel.hostileCombat(), combatKernel.resources()));
         getEntityStoreRegistry().registerSystem(new RpgHudTickSystem(rpgHud));
+        getEntityStoreRegistry().registerSystem(new NativeAbilityProjectionTickSystem(nativeAbilities));
         getEntityStoreRegistry().registerSystem(skillExecutionSystem);
-        LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability2->skill01,Ability3->skill02,Ability4->skill03 nativeAbility1=SIGNATURE_UNTOUCHED skillTreeHotkey=BLOCKED_PUBLIC_API uiOpen=%s entitlementMode=%s",
+        LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability2->skill01,Ability3->skill02 nativeAbility4=NATIVE_ABILITY4_UNAVAILABLE nativeAbility1=SIGNATURE_UNTOUCHED abilityHud=NATIVE_HYTALE_ONLY skillTreeHotkey=BLOCKED_PUBLIC_API uiOpen=%s entitlementMode=%s",
                 BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
                 runtimeProfiles.all().size(), Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS,
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,
@@ -123,7 +129,6 @@ public final class Phase00Plugin extends JavaPlugin {
                 configuration.developmentEntitlements() ? "DEVELOPMENT" : "PRODUCTION");
         MouseProbeService.initialize(getDataDirectory());
         inboundWatcher = PacketAdapters.registerInbound((PlayerPacketWatcher) (playerRef, packet) -> {
-            AbilityInputObserver.observe(playerRef, packet);
             abilityInputs.observe(playerRef, packet);
             MouseProbeService.observeRaw(playerRef, packet);
         });
@@ -138,6 +143,10 @@ public final class Phase00Plugin extends JavaPlugin {
                 abilityInputs.clear(playerRef.getUuid());
                 skillExecutionSystem.cancel(playerRef.getUuid(), "PLAYER_READY_RESET");
                 var view = loadouts.getLoadout(playerRef.getUuid());
+                var abilitySlots = ref.getStore().getComponent(ref,
+                        com.hypixel.hytale.server.core.inventory.InventoryComponent.AbilitySlots.getComponentType());
+                if (abilitySlots != null) nativeAbilities.install(playerRef.getUuid(), abilitySlots);
+                else LOGGER.atWarning().log("RPG native AbilitySlots unavailable player=%s", playerRef.getUuid());
                 EntityStatMap statMap = ref.getStore().getComponent(ref, EntityStatMap.getComponentType());
                 if (statMap != null) {
                     EnumMap<RpgAttribute, Integer> raw = new EnumMap<>(RpgAttribute.class);
@@ -161,6 +170,7 @@ public final class Phase00Plugin extends JavaPlugin {
             catch (RuntimeException error) {
                 LOGGER.atWarning().withCause(error).log("RPG HUD disconnect teardown failed player=%s", player);
             }
+            nativeAbilities.detach(player, "PLAYER_DISCONNECT");
             abilityInputs.clear(player);
             bosses.clear(player);
             skillExecutionSystem.cancel(player, "PLAYER_DISCONNECT");
@@ -170,6 +180,7 @@ public final class Phase00Plugin extends JavaPlugin {
             var playerRef = event.getHolder().getComponent(
                     com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
             if (playerRef != null) {
+                nativeAbilities.detach(playerRef.getUuid(), "WORLD_DRAIN");
                 abilityInputs.clear(playerRef.getUuid());
                 bosses.clear(playerRef.getUuid());
                 skillExecutionSystem.cancel(playerRef.getUuid(), "WORLD_DRAIN");
@@ -180,7 +191,6 @@ public final class Phase00Plugin extends JavaPlugin {
         getCommandRegistry().registerCommand(new MouseProbeCommand());
         getCommandRegistry().registerCommand(new StatsProbeCommand());
         getCommandRegistry().registerCommand(new CapabilitiesProbeCommand());
-        getCommandRegistry().registerCommand(new AbilityInputsProbeCommand());
         getCommandRegistry().registerCommand(new HtDevLibProbeCommand());
     }
 
@@ -195,6 +205,7 @@ public final class Phase00Plugin extends JavaPlugin {
             outboundWatcher = null;
         }
         MouseProbeService.clear();
+        if (nativeAbilities != null) { nativeAbilities.close(); nativeAbilities = null; }
         if (rpgHud != null) { rpgHud.close(); rpgHud = null; }
         skillExecutionSystem = null;
         abilityInputs = null;
