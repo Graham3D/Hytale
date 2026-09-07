@@ -107,6 +107,7 @@ logical action, Skill ID, state, cooldown, and reason. The previous periodic
 | RPG revision/version | `R018` / `0.0.11` |
 | Player schema | `3` (unchanged) |
 | Implementation commit | `434f2dcea265a176952eedadfcc1e75f49ef7aec` |
+| Evidence/deployment commit | `faf1bc377f18c27b42d0e7cba96af0818448d0d9` |
 | Clean RPG + CanvasUI build | PASS |
 | Aggregate tests | PASS — 132 tests, 0 failures/errors/skips |
 | Source CustomUI validation | PASS — 17 documents |
@@ -146,4 +147,3 @@ logs and `ui-trace.jsonl`.
 R018 = DEPLOYED_AWAITING_CONNECTED_HUD_QA
 Stage06Started = false
 ```
-
