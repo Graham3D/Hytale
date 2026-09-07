@@ -1,8 +1,8 @@
 {
-  "capturedAtUtc": "2026-09-07T15:08:44.2467955Z",
+  "capturedAtUtc": "2026-09-07T15:16:24.4333031Z",
   "releaseHealthNativeHotbarRelative": true,
   "releaseStaminaNativeHotbarRelative": true,
-  "allNativeResourceControlsAbsentFromCustomDocument": true,
+  "allNativeResourceControlsAbsentFromPackagedHud": true,
   "noRpgVisibilityMutation": true,
   "xpOwnerAssetsByteIdentical": true,
   "xpAssetDimensionsAuthoritative": true,

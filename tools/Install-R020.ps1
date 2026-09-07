@@ -12,9 +12,14 @@ if (-not $mods.EndsWith('Hytale\data\pre-release\Saves\RPG\mods', [StringCompari
 }
 New-Item -ItemType Directory -Force -Path $evidence, $rollback | Out-Null
 & (Join-Path $PSScriptRoot 'Test-CustomUIDocuments.ps1') -Path $source
+$target = Join-Path $mods 'HytaleRPG-0.0.13.jar'
 $prior = @(Get-ChildItem -LiteralPath $mods -Filter 'HytaleRPG-*.jar' -File)
-foreach ($jar in $prior) { Copy-Item -LiteralPath $jar.FullName -Destination (Join-Path $rollback $jar.Name) -Force }
-$target = Join-Path $mods 'HytaleRPG-0.0.13.jar'; Copy-Item -LiteralPath $source -Destination $target -Force
+foreach ($jar in $prior) {
+    if ($jar.FullName -ne $target) {
+        Copy-Item -LiteralPath $jar.FullName -Destination (Join-Path $rollback $jar.Name) -Force
+    }
+}
+Copy-Item -LiteralPath $source -Destination $target -Force
 foreach ($jar in $prior) { if ($jar.FullName -ne $target) { Remove-Item -LiteralPath $jar.FullName -Force } }
 $jars = @(Get-ChildItem -LiteralPath $mods -Filter '*.jar' -File | Sort-Object Name)
 $expected = @('CanvasUI-0.1.0.jar','HYTALEDEVLIB-0.5.0.jar','HytaleRPG-0.0.13.jar')

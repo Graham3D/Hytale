@@ -77,11 +77,13 @@ the 696-pixel usable background width. No XP text or extra HUD element was added
 | Revision/version | `R020` / `0.0.13` |
 | Hytale target | `0.7.0-pre.1` (unchanged) |
 | Player schema | `3` (unchanged) |
-| Implementation commit | `359fef86ae89feea4730bcbe503b04281507f468` |
-| Evidence/deployment commit | `63cbb89711726a660c240b4ce98096484bd67b2b` |
+| Primary implementation commit | `359fef86ae89feea4730bcbe503b04281507f468` |
+| Legacy probe retirement commit | `01dfd176b34d2a26c22d7a9fd3baf3b2efdfbe9d` |
+| Verified source/gate commit | `4a57696cb774e32fbcb7b2bd31a0fe98b2f85302` |
+| Initial evidence/deployment commit | `63cbb89711726a660c240b4ce98096484bd67b2b` |
 | Aggregate tests | PASS — 130 tests, 0 failures/errors/skips |
-| Source CustomUI validation | PASS — 17 documents |
-| Packaged RPG CustomUI validation | PASS — 10 documents |
+| Source CustomUI validation | PASS — 16 documents |
+| Packaged RPG CustomUI validation | PASS — 9 documents |
 | RPG resource controls/assets absent from every packaged HUD | PASS |
 | RPG native-visibility mutation absent | PASS |
 | Owner XP files byte-identical | PASS |
@@ -89,7 +91,7 @@ the 696-pixel usable background width. No XP text or extra HUD element was added
 | XP centering/layer/left-fill geometry | PASS |
 | CanvasUI source | unchanged |
 | Isolated three-mod server smoke | PASS — ready and clean shutdown |
-| RPG JAR SHA-256 | `232FA73053E5438AC0724953E0D753004F97A9F692B02ACD0713D9D2A96D5099` |
+| RPG JAR SHA-256 | `FBC49B7625161934FDA4139FE4EA55607ECFB1FC7A5298930D2A6987B0A9A01C` |
 
 The RPG save contains exactly:
 
@@ -97,7 +99,7 @@ The RPG save contains exactly:
 |---|---|
 | `CanvasUI-0.1.0.jar` | `218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6` |
 | `HYTALEDEVLIB-0.5.0.jar` | `DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230` |
-| `HytaleRPG-0.0.13.jar` | `232FA73053E5438AC0724953E0D753004F97A9F692B02ACD0713D9D2A96D5099` |
+| `HytaleRPG-0.0.13.jar` | `FBC49B7625161934FDA4139FE4EA55607ECFB1FC7A5298930D2A6987B0A9A01C` |
 
 Rollback is retained at
 `evidence/corrections/R020/rollback/HytaleRPG-0.0.12.jar`. Static tests and a bare
