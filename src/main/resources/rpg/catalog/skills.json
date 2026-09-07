@@ -3255,7 +3255,7 @@
     "travelSpeed": "N/A",
     "lifetime": "6 s",
     "powerCoefficient": "0.35x Magic Power per second",
-    "canCrit": true,
+    "canCrit": false,
     "statusApplications": [
       "Pull 1.5 m/s toward center; boss pull scales by control-resistance policy."
     ],
@@ -3263,7 +3263,6 @@
     "soundRecipeId": "rpg.sound.skill.vortex",
     "linkCompatibilityTags": [
       "CAN_ACQUIRE_ENEMY_TARGET",
-      "CAN_CRIT",
       "CAN_KILL",
       "DAMAGE",
       "DIRECT_HIT",

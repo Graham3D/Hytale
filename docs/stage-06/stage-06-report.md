@@ -187,12 +187,72 @@ Aggregate totals, build hashes and boot results are recorded in
 These are local engineering evidence only. R023 remains live; no connected
 RPG input, zone rendering, NPC control or periodic Health loss is proven by them.
 
+## Cohort C — pulls, pulses and overhead/bombardment payloads
+
+This cohort adds Vortex, Earthquake, Meteor, Comet, Avalanche and Void Cataclysm.
+All fifteen Phase 06 skill profiles now exist, but the four-link integration and
+full stage hardening gate below are still outstanding.
+
+- Vortex integrates 0.35 per second at quarter-second intervals for six seconds.
+  Pull requests integrate 1.5 m/s, stop at the 1.5 m core and are separate from
+  damage. Vortex's catalog CAN_CRIT flag is removed for the same master periodic
+  rule used by Wall of Fire and Poison Cloud.
+- The pull planner uses horizontal segments at most 0.25 m long, native swept
+  collision and ground-support checks. It never changes target height or snaps
+  an airborne NPC onto the field. The installed `Role.isOnGround()` delegates
+  to the current native motion controller's `onGround()`, verified in bytecode.
+  Native zero knockback scale and project control resistance suppress motion;
+  elite scale is 0.5, boss/protected scale is zero absent an authored opt-in.
+- Earthquake emits exactly four 0.55 pulses at 0, 1.125, 2.25 and 3.375 s, with
+  requested 0.4 s Stagger through the existing shared resistance system. Its
+  field expires at 4.5 s. There is no deformation or block destruction path.
+- Meteor and Comet retain 0.9 s interruptible cast wind-ups, followed by 1.2 s
+  and 1.3 s warnings. A native 12 m vertical collision check rejects blocked
+  descent before commitment and during the warning; the warned ground must
+  still resolve to the same surface at impact. A bounded procedural sphere
+  samples the final 0.6 s descent at up to 20 Hz, from 12 m to ground. It is
+  presentation-only, not a native projectile or damage authority. Their inner
+  and outer coefficients are disjoint per target; Meteor's separate 3 m Burn
+  tier does not add another direct hit. Comet requests five inner/three outer
+  Chill stacks through the existing threshold policy.
+- Avalanche's first hit remains at 0.5 s, then once each second through 5.5 s.
+  The implementation supplies a 0.25 s per-impact warning (duration is template
+  judgment; the master requires a local warning but does not supply its number).
+  Ice/stone alternate Cold+Chill and Earth+0.5 s Stagger. Maximum three hits per
+  target/root. Unlike Blizzard's zero-offset reconciliation, no epoch shift is
+  necessary because its first authored impact already allows warning time.
+- Void Cataclysm starts its eight-second field after the 1.25 s cast. Its eight
+  radius-2.5 m impacts occur at offsets 0..7 s with five per-target/root hits
+  maximum. A separate final radius-10 m hit at 8 s is permitted once even if a
+  target reached the sub-impact cap or missed every sub-impact. Its susceptible
+  3 m pull request runs immediately before damage. The 4 m core is presentation
+  only; it never creates an extra damage tier or packet.
+- The Tier IV/V profiles explicitly select the bounded 256-candidate apex query
+  profile; ordinary skills retain 64. Neither path silently truncates a query.
+  Every new native item remains a trigger-only Primary Rune with unchanged
+  native HUD ownership, zero native cost and zero native cooldown.
+
+New deterministic fixtures cover these exact schedules, disjoint tiers, roof
+rejection, missing warned terrain, capped sub-impacts, separate final ledgers,
+grounded/collision-constrained pulls, and 12 m descent sampling. The shared
+activation fixture now exercises all fifteen profiles, including resource-free
+wind-up followed by one commitment. Its initial duplicate-cast assertion exposed
+fixture precedence, not an engine failure: Void Cataclysm leaves only 35/100 Mana,
+so affordability correctly rejects before cooldown. The test now checks both
+rejections separately without changing production resource logic.
+
+The complete cohort-C build passed **199 tests, zero failures/errors/skips**.
+Its normal three-mod isolated boot resolved all fifteen area profiles, reached
+network-ready startup and stopped cleanly with exit code 0. JAR SHA-256:
+`0DD129ECBE65E865E0E35BD77154DC74DDE231576AB2A8F6FB8D77E8B1C692E1`.
+Aggregate regression/boot results and hashes are captured separately in
+`evidence/stage-06/cohort-c/`; prior cohort artifacts and R024 remain available.
+Connected rendering, timing, movement, native interaction and Health loss remain
+UNVERIFIED. There has been no live deployment during this implementation program.
+
 ## Remaining Stage 06 work — not a capability-blocked or completed claim
 
-Before the stage gate can pass, finish the six remaining skills: Vortex,
-Earthquake, Meteor, Comet, Avalanche and Void Cataclysm. Complete disjoint inner
-payloads, swept pulls, overhead roof checks and their warning/presentation paths.
-Complete Expanded Radius, Skill Delay and Echo through shared runtime seams,
+Before the stage gate can pass, complete Expanded Radius, Skill Delay and Echo through shared runtime seams,
 including valid preexisting projectile consumers; preserve Potency 15%.
 
 Also extend the audited control registry with later relevant roles; add

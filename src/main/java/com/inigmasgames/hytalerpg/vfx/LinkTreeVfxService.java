@@ -39,5 +39,12 @@ public final class LinkTreeVfxService {
                 (float) seconds, com.hypixel.hytale.server.core.modules.debug.DebugUtils.FLAG_NONE);
     }
     @FunctionalInterface public interface Adapter { boolean emit(World world, Player actor, String nativeEffectId); }
+    /** Bounded procedural overhead core; no native projectile or gameplay interaction is spawned. */
+    public void presentDescending(World world, com.inigmasgames.hytalerpg.execution.math.Vec3 position, String element, double seconds) {
+        com.hypixel.hytale.server.core.modules.debug.DebugUtils.addSphere(world,
+                new org.joml.Vector3d(position.x(),position.y(),position.z()),
+                element.equals("FIRE") ? new org.joml.Vector3f(1f,.3f,.08f) : new org.joml.Vector3f(.35f,.8f,1f),
+                .45,(float)seconds);
+    }
     public record Result(boolean presented, String reason) { }
 }

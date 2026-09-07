@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b')][string]$Cohort = 'a')
+param([ValidateSet('a','b','c')][string]$Cohort = 'a')
 $ErrorActionPreference = 'Stop'
 $stage06Root = (Resolve-Path "$PSScriptRoot\..").Path
 $stage06Evidence = Join-Path $stage06Root "evidence\stage-06\cohort-$Cohort"
@@ -64,7 +64,7 @@ try {
         $stage06Errors += [int]$stage06Xml.testsuite.errors; $stage06Skipped += [int]$stage06Xml.testsuite.skipped
     }
     if ($stage06Failed -or $stage06Errors -or $stage06Skipped) { throw 'Regression result is not green.' }
-    $stage06MinimumTests = if ($Cohort -eq 'a') { 171 } else { 190 }
+    $stage06MinimumTests = switch ($Cohort) { 'a' { 171 } 'b' { 190 } 'c' { 199 } }
     if ($stage06Tests -lt $stage06MinimumTests) { throw "Incomplete retained regression suite: $stage06Tests < $stage06MinimumTests" }
     & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $stage06Jar
     $stage06Protected = @(& git diff --name-only 5c5e55e -- 'src/main/java/com/inigmasgames/hytalerpg/ui' 'src/main/resources/Common/UI' 'canvas-ui/src' 'src/main/resources/rpg/runtime/stage-04-skills.json' 'src/main/resources/rpg/runtime/stage-05-projectiles.json' 'src/main/java/com/inigmasgames/hytalerpg/execution/projectile')
@@ -76,7 +76,8 @@ try {
         branch=(& git branch --show-current).Trim(); sourceHead=(& git rev-parse HEAD).Trim(); worktreeDirty=[bool](& git status --porcelain)
         stageStatus='IMPLEMENTATION_IN_PROGRESS'; completeStageGate=$false; cohort=$Cohort
         cohortSkills=$(if ($Cohort -eq 'a') { @('ground_slam','frost_nova','root_snare') }
-            else { @('powder_mine','cold_wave','venom_spray','blizzard','wall_of_fire','poison_cloud') })
+            elseif ($Cohort -eq 'b') { @('powder_mine','cold_wave','venom_spray','blizzard','wall_of_fire','poison_cloud') }
+            else { @('vortex','earthquake','meteor','comet','avalanche','void_cataclysm') })
         tests=$stage06Tests; failures=$stage06Failed; errors=$stage06Errors; skipped=$stage06Skipped
         connectedVerification='UNVERIFIED'; nativeCastingFixed=$false; liveDeploymentPerformed=$false
         protectedPathsChanged=$stage06Protected

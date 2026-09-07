@@ -13,7 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage06CohortBTest {
     @Test void everyAreaNativeItemIsTriggerOnlyAndPeriodicCatalogDoesNotAdvertiseCrit() throws Exception {
-        for(String id:List.of("ground_slam","frost_nova","root_snare","powder_mine","cold_wave","venom_spray","blizzard","wall_of_fire","poison_cloud")) {
+        for(String id:List.of("ground_slam","frost_nova","root_snare","powder_mine","cold_wave","venom_spray","blizzard","wall_of_fire","poison_cloud",
+                "vortex","earthquake","meteor","comet","avalanche","void_cataclysm")) {
             String item="RPG_Ability_"+java.util.Arrays.stream(id.split("_")).map(s->Character.toUpperCase(s.charAt(0))+s.substring(1))
                     .collect(java.util.stream.Collectors.joining("_"));
             try(var input=getClass().getResourceAsStream("/Server/Item/Items/RPG/Abilities/"+item+".json")) {
@@ -31,7 +32,7 @@ class Stage06CohortBTest {
             assertEquals(87,records.size());
             for(var record:records) {
                 var skill=record.getAsJsonObject();String id=skill.get("id").getAsString();
-                if(id.equals("wall_of_fire")||id.equals("poison_cloud")) assertFalse(skill.get("canCrit").getAsBoolean());
+                if(id.equals("wall_of_fire")||id.equals("poison_cloud")||id.equals("vortex")) assertFalse(skill.get("canCrit").getAsBoolean());
                 if(id.equals("venom_spray")) {
                     assertEquals("INNATE",skill.get("basePowerSource").getAsString());assertEquals(20,skill.get("innateBasePower").getAsDouble());
                 }

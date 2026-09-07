@@ -283,6 +283,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             profile.area().placementRange()).orElse(null)
                         : HytaleAreaQueries.ground(store, feet.add(new Vec3(0, .15, 0)), new Vec3(0, -1, 0), .65).orElse(null);
                 if (areaPlacement == null) return Validation.reject("NO_LEGAL_GROUND_SURFACE");
+                if (profile.area().overheadHeight() > 0 && !areaWorld().overheadClear(
+                        profile.area().footprint(areaPlacement, areaDirection, 1), profile.area().overheadHeight()))
+                    return Validation.reject("OVERHEAD_ROOF_BLOCKED");
                 if (profile.family() == Stage04SkillProfile.Family.WALL)
                     areaDirection = new Vec3(areaDirection.z(), 0, -areaDirection.x()).horizontalNormalized();
                 var query = areaWorld().query(profile.area().footprint(areaPlacement, areaDirection, 1), profile.area().candidateBudget());
@@ -359,6 +362,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             .filter(point -> HytaleAreaQueries.clear(store, parent.add(new Vec3(0, .1, 0)), point.add(new Vec3(0, .1, 0))))
                             .map(point -> footprint.at(point, footprint.radius()));
                 }
+                @Override public boolean overheadClear(AreaGeometry footprint, double height) {
+                    return HytaleAreaQueries.clear(store, footprint.origin().add(new Vec3(0, .1, 0)),
+                            footprint.origin().add(new Vec3(0, height, 0)));
+                }
+                @Override public void descendingVisual(SkillExecutionContext context, Vec3 position, double seconds) {
+                    vfx.presentDescending(store.getExternalData().getWorld(), position, context.profile().area().element(), seconds);
+                }
                 @Override public boolean apply(SkillExecutionContext context, Target target, Payload payload) {
                     var reference = refs.get(target.id());
                     if (reference == null || !HytaleAreaQueries.hostile(store, reference, actor)) return false;
@@ -376,9 +386,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     };
                     DamageCause cause = DamageCause.getAssetMap().getAsset(causeId);
                     if (cause == null) throw new IllegalStateException("MISSING_NATIVE_DAMAGE_CAUSE_" + causeId);
+                    if (payload.pullBeforeDamage() && payload.pull() > 0) applyAreaPull(context, reference, npc, control, payload);
                     DamageOutcome outcome = damage(context, candidate, payload.impactIndex(), payload.coefficient(),
                             payload.periodic() ? 0 : context.snapshot().criticalChance(), cause, payload.periodic());
                     if (outcome.cancelled()) return false;
+                    if (!payload.pullBeforeDamage() && payload.pull() > 0) applyAreaPull(context, reference, npc, control, payload);
                     if (payload.status().equals("BURN") || payload.status().equals("POISON")) {
                         applyPeriodicStatus(context, candidate, PeriodicStatusRuntime.Kind.valueOf(payload.status()),
                                 payload.statusSeconds(), payload.status().equals("BURN") ? .10 : .06);
@@ -407,6 +419,26 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     emit(context, RpgTraceEventType.valueOf(event), details);
                 }
             };
+        }
+        private void applyAreaPull(SkillExecutionContext context, Ref<EntityStore> reference, NPCEntity npc,
+                ControlProfile control, AreaWorldPort.Payload payload) {
+            if (!reference.isValid()) return;
+            var liveCandidate=candidate(reference);
+            if(liveCandidate == null || liveCandidate.protectedTarget()) return;
+            var transform=store.getComponent(reference, TransformComponent.getComponentType());
+            var bounds=store.getComponent(reference, BoundingBox.getComponentType());
+            if(transform == null || bounds == null) return;
+            Vec3 start=vec(transform.getPosition());
+            double scale=npc.getRole() != null && npc.getRole().getKnockbackScale() > 0 ? control.displacementMultiplier() : 0;
+            var plan=com.inigmasgames.hytalerpg.execution.area.AreaPullPlanner.plan(start,payload.origin(),payload.pull(),payload.pullCoreRadius(),
+                    scale,npc.getRole()!=null && npc.getRole().isOnGround(),
+                    (point, segment)->collisionFraction(store,reference,point,segment),
+                    point->HytaleAreaQueries.ground(store,point.add(new Vec3(0,bounds.getBoundingBox().min.y()+.15,0)),
+                            new Vec3(0,-1,0),.35).isPresent());
+            if(plan.distance() > 0) transform.setPosition(vector(plan.destination()));
+            emit(context,RpgTraceEventType.AREA_DISPLACEMENT,Map.of("targetId",liveCandidate.stableId(),
+                    "requested",payload.pull(),"applied",plan.distance(),"reason",plan.reason(),
+                    "beforeDamage",payload.pullBeforeDamage(),"nativeBehaviorVerified",false));
         }
         private int executeStrikeHit(SkillExecutionContext context, int hitIndex) {
             StrikeGeometryService.QueryResult<Ref<EntityStore>> selected = select(context, context.profile().strike());

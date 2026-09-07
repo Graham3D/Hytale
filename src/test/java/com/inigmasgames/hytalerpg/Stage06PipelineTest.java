@@ -25,16 +25,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage06PipelineTest {
     @Test void pilotsReuseOneCommitOneCooldownAndSnapshotAuthority() {
         for (String id : new String[]{"ground_slam", "frost_nova", "root_snare", "powder_mine", "cold_wave",
-                "venom_spray", "blizzard", "wall_of_fire", "poison_cloud"}) {
+                "venom_spray", "blizzard", "wall_of_fire", "poison_cloud", "vortex", "earthquake", "meteor", "comet", "avalanche", "void_cataclysm"}) {
             Harness harness = harness(id);
             var profile = harness.profiles.require(id); var pool = ResourceType.valueOf(profile.resourceType());
-            assertTrue(harness.execute().committed());
+            var result=harness.execute();
+            if(profile.windupSeconds() > 0) {
+                assertEquals(SkillExecutionResult.Status.PENDING,result.status());
+                assertEquals(100,harness.port.current(pool));assertEquals(0,harness.port.dispatches);
+                result=harness.service.completeWindup(harness.actor,harness.port);
+            }
+            assertTrue(result.committed(),id+" "+result);
             assertEquals(100 - profile.resourceCost(), harness.port.current(pool), 1e-12);
             assertEquals(1, harness.port.dispatches);
             assertTrue(harness.kernel.cooldowns().remaining(harness.actor, id) > 0);
             assertEquals(harness.port.context.rootCastId(), harness.port.context.snapshot().rootCastId());
             assertEquals(harness.port.context.skillInstanceId(), harness.port.context.snapshot().skillInstanceId());
-            assertEquals("COOLDOWN_ACTIVE", harness.execute().code()); assertEquals(1, harness.port.dispatches);
+            assertEquals(100-profile.resourceCost() < profile.resourceCost() ? "INSUFFICIENT_RESOURCE" : "COOLDOWN_ACTIVE",
+                    harness.execute().code());
+            assertEquals(100-profile.resourceCost(),harness.port.current(pool));assertEquals(1, harness.port.dispatches);
+            harness.port.setCurrent(pool,100); // Fixture refill isolates the existing cooldown check from affordability precedence.
+            assertEquals("COOLDOWN_ACTIVE",harness.execute().code());assertEquals(100,harness.port.current(pool));
         }
     }
     @Test void rejectedNativePlacementDoesNotCommitAnyResourceOrCooldown() {

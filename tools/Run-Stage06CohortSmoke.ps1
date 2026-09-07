@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b')][string]$Cohort = 'a')
+param([ValidateSet('a','b','c')][string]$Cohort = 'a')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
@@ -11,7 +11,7 @@ $savePermissions = "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\permissions.j
 $runDirectory = Join-Path $projectRoot "run\stage06-cohort-$Cohort-smoke"
 $mods = Join-Path $runDirectory 'mods'
 $evidence = Join-Path $projectRoot "evidence\stage-06\cohort-$Cohort"
-$expectedProfiles = if ($Cohort -eq 'a') { 3 } else { 9 }
+$expectedProfiles = switch ($Cohort) { 'a' { 3 } 'b' { 9 } 'c' { 15 } }
 $expectedStatusAssets = if ($Cohort -eq 'a') { 8 } else { 10 }
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path

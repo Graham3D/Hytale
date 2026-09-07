@@ -100,7 +100,10 @@ class Stage06AreaRuntimeTest {
         final List<Payload> payloads = new ArrayList<>(); final List<String> hitIds = new ArrayList<>();
         final List<SkillExecutionContext> contexts = new ArrayList<>();
         final List<AreaGeometry> presented = new ArrayList<>(); final List<String> events = new ArrayList<>();
-        boolean ground = true;
+        boolean ground = true, roof;
+        final List<Vec3> descending = new ArrayList<>();
+        public boolean overheadClear(AreaGeometry shape,double height) { return !roof; }
+        public void descendingVisual(SkillExecutionContext context,Vec3 position,double seconds) { descending.add(position); }
         public Query query(AreaGeometry shape, int budget) { return new Query(targets, overflow); }
         public boolean lineOfSight(Vec3 origin, Target target) { return los; }
         public java.util.Optional<AreaGeometry> prepareImpact(Vec3 parent, AreaGeometry shape) {
