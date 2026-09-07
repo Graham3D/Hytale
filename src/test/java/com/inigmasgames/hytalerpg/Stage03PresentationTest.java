@@ -108,7 +108,7 @@ class Stage03PresentationTest {
         assertEquals(revision, bundle.service().getPresentationView(player).state().revision);
     }
 
-    @Test void projectionHasFourLogicalSlotsAndReadsLiveResourcesInCanonicalOrder() {
+    @Test void projectionHasThreeLogicalSlotsAndReadsLiveResourcesInCanonicalOrder() {
         var bundle = Stage01BTestSupport.bundle();
         RpgCombatKernel kernel = RpgCombatKernel.createProduction();
         var projection = new RpgUiProjectionService(bundle.catalog(), bundle.service(),
@@ -117,11 +117,11 @@ class Stage03PresentationTest {
         var nativeResources = new HytaleResourceViewAdapter.Snapshot(
                 new NativeResourceView(31, 100), new NativeResourceView(72, 120), new NativeResourceView(44, 90));
         var empty = projection.hud(player, nativeResources, null);
-        assertEquals(4, empty.skills().size());
+        assertEquals(3, empty.skills().size());
         assertEquals(31, empty.mana().current());
         assertEquals(72, empty.health().current());
         assertEquals(44, empty.stamina().current());
-        assertEquals("Ability1", empty.skills().getFirst().action());
+        assertEquals("Ability2", empty.skills().getFirst().action());
         assertTrue(empty.skills().stream().allMatch(slot -> slot.state() == SkillSlotView.State.EMPTY));
         bundle.service().equipSkill(player, SkillSlot.SKILL02, new SkillId("fire_bolt"));
         var equipped = projection.hud(player, nativeResources, null).skills().get(1);
@@ -183,7 +183,7 @@ class Stage03PresentationTest {
         bundle.service().equipSkill(player, SkillSlot.SKILL01, new SkillId("quick_slash"));
         var activation = new RpgSkillActivationService(bundle.service(), bundle.tracer());
         var result = activation.request(new HytaleAbilitySkillInputAdapter.Request(
-                player, SkillSlot.SKILL01, "Ability1", 42, "corr"));
+                player, SkillSlot.SKILL01, "Ability2", 42, "corr"));
         assertFalse(result.accepted());
         assertEquals(RpgSkillActivationService.Reason.EXECUTOR_NOT_IMPLEMENTED, result.reason());
         assertEquals(0.0, kernel.cooldowns().remaining(player, "quick_slash"));
@@ -193,11 +193,11 @@ class Stage03PresentationTest {
                 "EXECUTOR_NOT_IMPLEMENTED".equals(record.details().get("failureCode"))));
     }
 
-    @Test void installedAbilityActionsMapExactlyToFourLogicalSlots() {
-        assertEquals(SkillSlot.SKILL01, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability1));
-        assertEquals(SkillSlot.SKILL02, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability2));
-        assertEquals(SkillSlot.SKILL03, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability3));
-        assertEquals(SkillSlot.SKILL04, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability4));
+    @Test void installedAbilityActionsLeaveSignatureNativeAndMapExactlyToThreeLogicalSlots() {
+        assertNull(HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability1));
+        assertEquals(SkillSlot.SKILL01, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability2));
+        assertEquals(SkillSlot.SKILL02, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability3));
+        assertEquals(SkillSlot.SKILL03, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability4));
         assertNull(HytaleAbilitySkillInputAdapter.slot(InteractionType.Primary));
     }
 

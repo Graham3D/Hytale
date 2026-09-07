@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
-/** Maps Hytale's configured Ability1..Ability4 actions to logical RPG slots without key assumptions. */
+/** Leaves native Ability1 untouched and maps Ability2..Ability4 to the three RPG slots. */
 public final class HytaleAbilitySkillInputAdapter {
     private final ConcurrentLinkedQueue<Request> requests = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<Key, Long> seen = new ConcurrentHashMap<>();
@@ -79,10 +79,9 @@ public final class HytaleAbilitySkillInputAdapter {
     public static SkillSlot slot(InteractionType type) {
         if (type == null) return null;
         return switch (type) {
-            case Ability1 -> SkillSlot.SKILL01;
-            case Ability2 -> SkillSlot.SKILL02;
-            case Ability3 -> SkillSlot.SKILL03;
-            case Ability4 -> SkillSlot.SKILL04;
+            case Ability2 -> SkillSlot.SKILL01;
+            case Ability3 -> SkillSlot.SKILL02;
+            case Ability4 -> SkillSlot.SKILL03;
             default -> null;
         };
     }

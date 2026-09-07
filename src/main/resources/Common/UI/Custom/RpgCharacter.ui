@@ -10,7 +10,7 @@ Group {
     Group { Anchor: (Height: 62); LayoutMode: Left;
       Label { Text: "CHARACTER"; Style: (FontSize: 30, TextColor: #f2d488); Anchor: (Width: 260); }
       Label #CharacterName { Text: "Player"; Style: (FontSize: 24, TextColor: #dce6ed, Alignment: Center); Anchor: (Width: 560); }
-      Label #Revision { Text: "R015"; Style: (FontSize: 15, TextColor: #78c6d0, Alignment: Center); Anchor: (Width: 300); }
+      Label #Revision { Text: "R016"; Style: (FontSize: 15, TextColor: #78c6d0, Alignment: Center); Anchor: (Width: 300); }
     }
     Group { Anchor: (Height: 72); LayoutMode: Left;
       Label #LevelValue { Text: "Level 1"; Style: (FontSize: 22, TextColor: #f2d488); Anchor: (Width: 180); }
@@ -37,6 +37,6 @@ Group {
       }
     }
     Label #Status { Text: ""; Style: (FontSize: 16, TextColor: #e4b861, Alignment: Center); Anchor: (Height: 50); }
-    Label { Text: "Authoritative +1 allocation - Escape closes - Link Tree frontend remains deferred"; Style: (FontSize: 15, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 42); }
+    Label { Text: "Authoritative +1 allocation - Escape closes - /rpg skilltree opens the Link Tree"; Style: (FontSize: 15, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 42); }
   }
 }

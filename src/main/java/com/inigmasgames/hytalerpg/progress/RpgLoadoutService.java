@@ -262,6 +262,52 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         }
     }
 
+    /** Atomic content+topology mutation used by the fixed Skill Tree adapter. */
+    public MutationResult mutateStaticTree(UUID player, long expectedRevision, LinkNodeId node,
+                                           String contentId, Consumer<RpgPlayerState> topology) {
+        String correlation = reference();
+        if (node.kind() == LinkNodeId.NodeKind.JOINT)
+            return MutationResult.failure(ValidationCode.INVALID_REQUEST, "Joint nodes do not hold content.",
+                    correlation, revision(player));
+        Holder holder = holder(player);
+        synchronized (holder) {
+            if (holder.state.revision != expectedRevision)
+                return MutationResult.failure(ValidationCode.STALE_REVISION,
+                        "Expected RPG revision " + expectedRevision + " but authoritative revision is "
+                                + holder.state.revision + '.', correlation, holder.state.revision);
+            String clean = contentId == null ? "" : contentId.trim();
+            if (!clean.isBlank() && node.kind() == LinkNodeId.NodeKind.SKILL) {
+                SkillId id = new SkillId(clean);
+                if (catalog.skill(id).isEmpty()) return MutationResult.failure(ValidationCode.UNKNOWN_SKILL,
+                        "Unknown Skill: " + clean, correlation, holder.state.revision);
+                var verdict = entitlements.skill(holder.state, id);
+                if (!verdict.allowed()) return MutationResult.failure(ValidationCode.SOURCE_UNAVAILABLE,
+                        verdict.reason(), correlation, holder.state.revision);
+            }
+            if (!clean.isBlank() && node.kind() == LinkNodeId.NodeKind.PASSIVE) {
+                PassiveId id = new PassiveId(clean);
+                if (catalog.passive(id).isEmpty()) return MutationResult.failure(ValidationCode.UNKNOWN_PASSIVE,
+                        "Unknown Passive: " + clean, correlation, holder.state.revision);
+                var verdict = entitlements.passive(holder.state, id);
+                if (!verdict.allowed()) return MutationResult.failure(ValidationCode.NO_OWNED_COPY,
+                        verdict.reason(), correlation, holder.state.revision);
+            }
+            MutationResult result = mutate(holder, player, correlation, candidate -> {
+                if (node.kind() == LinkNodeId.NodeKind.SKILL)
+                    candidate.skill(node.skillSlot(), clean.isBlank() ? null : new SkillId(clean));
+                else candidate.passive(node.passiveSlot(), clean.isBlank() ? null : new PassiveId(clean));
+                topology.accept(candidate);
+            });
+            trace(player, result.success() ? RpgTraceEventType.LINK_ACCEPTED : RpgTraceEventType.LINK_REJECTED,
+                    correlation, details("operation", "STATIC_TREE_ASSIGN", "nodeId", node.externalId(),
+                            "contentId", clean, "validationResult", result.success() ? "PASS" : "FAIL",
+                            "failureCode", result.success() ? "" : result.code().name(),
+                            "failureMessage", result.success() ? "" : result.message(),
+                            "RPG revision", result.revision()));
+            return result;
+        }
+    }
+
     private MutationResult mutate(Holder holder, UUID player, String correlation, Consumer<RpgPlayerState> mutation) {
         RpgPlayerState candidate = holder.state.copy();
         try { mutation.accept(candidate); }

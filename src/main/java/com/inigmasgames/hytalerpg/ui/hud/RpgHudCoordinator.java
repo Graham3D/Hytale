@@ -43,7 +43,8 @@ public final class RpgHudCoordinator {
             RpgHud hud = new RpgHud(playerRef, model);
             manager.addCustomHud(playerRef, hud);
             sessions.put(id, new Session(playerRef, manager, lease, hud, model, System.nanoTime()));
-            trace.trace(id, "HUD_OPENED", ref(), Map.of("revision", model.revision(), "skillSlots", 4,
+            trace.trace(id, "HUD_OPENED", ref(), Map.of("revision", model.revision(), "skillSlots", 3,
+                    "abilityActions", "Ability2|Ability3|Ability4", "nativeAbility1", "SIGNATURE_UNTOUCHED",
                     "resourceOrder", "Mana|Health|Stamina"));
             trace.trace(id, "SKILLBAR_REFRESH", ref(), Map.of(
                     "slots", model.skills().stream().map(slot -> slot.skillId() + ':' + slot.state()).toList(),

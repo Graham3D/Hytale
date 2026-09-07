@@ -37,6 +37,9 @@ import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.ui.hud.RpgHudCoordinator;
 import com.inigmasgames.hytalerpg.ui.hud.RpgHudTickSystem;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
+import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeMutationService;
+import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeProjectionService;
+import com.inigmasgames.hytalerpg.ui.skilltree.StaticSkillTreeLayout;
 import com.inigmasgames.hytalerpg.execution.SkillExecutionService;
 import com.inigmasgames.hytalerpg.execution.SkillExecutorRegistry;
 import com.inigmasgames.hytalerpg.execution.SkillInstanceLifecycle;
@@ -85,6 +88,10 @@ public final class Phase00Plugin extends JavaPlugin {
         CombatTrace combatTrace = new CombatTrace(skillTrace);
         uiTrace = new RpgUiTraceService(getDataDirectory().resolve("logs").resolve("rpg").resolve("ui-trace.jsonl"));
         var uiProjection = new RpgUiProjectionService(catalog, loadouts, combatKernel.derivedStats(), combatKernel.cooldowns());
+        var staticLayout = new StaticSkillTreeLayout();
+        var skillTreeProjection = new RpgSkillTreeProjectionService(catalog, loadouts, staticLayout,
+                configuration.developmentEntitlements());
+        var skillTreeMutations = new RpgSkillTreeMutationService(loadouts, staticLayout);
         var allocation = new AttributeAllocationService(loadouts);
         abilityInputs = new HytaleAbilitySkillInputAdapter();
         var runtimeProfiles = Stage04SkillProfiles.loadCanonical(catalog);
@@ -97,7 +104,7 @@ public final class Phase00Plugin extends JavaPlugin {
                 combatTrace, reactions, vfx, bosses);
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
-                uiProjection, allocation, uiTrace, rpgHud));
+                uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Filter(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace));
@@ -107,7 +114,7 @@ public final class Phase00Plugin extends JavaPlugin {
                 combatKernel.hostileCombat(), combatKernel.resources()));
         getEntityStoreRegistry().registerSystem(new RpgHudTickSystem(rpgHud));
         getEntityStoreRegistry().registerSystem(skillExecutionSystem);
-        LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability1..Ability4 uiOpen=%s entitlementMode=%s",
+        LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability2->skill01,Ability3->skill02,Ability4->skill03 nativeAbility1=SIGNATURE_UNTOUCHED skillTreeHotkey=BLOCKED_PUBLIC_API uiOpen=%s entitlementMode=%s",
                 BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
                 runtimeProfiles.all().size(), Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS,
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,

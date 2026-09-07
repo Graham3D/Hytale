@@ -3,7 +3,7 @@ package com.inigmasgames.hytalerpg.domain;
 import java.util.Locale;
 
 public enum SkillSlot {
-    SKILL01(0), SKILL02(1), SKILL03(2), SKILL04(3);
+    SKILL01(0), SKILL02(1), SKILL03(2);
     private final int index;
     SkillSlot(int index) { this.index = index; }
     public int index() { return index; }
@@ -14,8 +14,7 @@ public enum SkillSlot {
             case "SKILL1", "SKILL01" -> SKILL01;
             case "SKILL2", "SKILL02" -> SKILL02;
             case "SKILL3", "SKILL03" -> SKILL03;
-            case "SKILL4", "SKILL04" -> SKILL04;
-            default -> throw new IllegalArgumentException("Unknown Skill slot: " + value + " (expected skill01..skill04)");
+            default -> throw new IllegalArgumentException("Unknown Skill slot: " + value + " (expected skill01..skill03)");
         };
     }
 }

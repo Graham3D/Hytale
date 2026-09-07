@@ -74,9 +74,9 @@ public final class RpgLinkGraphService {
             incoming.merge(edge.targetNodeId(), 1, Integer::sum);
         }
         for (var entry : incoming.entrySet()) {
-            if (entry.getKey().kind() == LinkNodeId.NodeKind.JOINT && entry.getValue() > 2) {
+            if (entry.getKey().kind() == LinkNodeId.NodeKind.JOINT && entry.getValue() > 3) {
                 issues.add(new GraphValidationResult.Issue(ValidationCode.JOINT_INPUT_CAPACITY,
-                        entry.getKey().externalId() + " accepts at most two incoming routes", null, entry.getKey()));
+                        entry.getKey().externalId() + " accepts at most three incoming Passive routes", null, entry.getKey()));
             }
         }
         if (edges.stream().filter(edge -> edge.sourceNodeId().kind() == LinkNodeId.NodeKind.PASSIVE)

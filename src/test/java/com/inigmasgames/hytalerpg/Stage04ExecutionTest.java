@@ -267,7 +267,7 @@ class Stage04ExecutionTest {
     private record Harness(UUID actor, Stage01BTestSupport.Bundle bundle, RpgCombatKernel kernel,
                            SkillExecutionService service, FakePort port) {
         SkillExecutionResult execute() {
-            return service.request(new SkillExecutionRequest(actor, SkillSlot.SKILL01, "Ability1", 41,
+            return service.request(new SkillExecutionRequest(actor, SkillSlot.SKILL01, "Ability2", 41,
                     "stage04-correlation", Vec3.FORWARD), port);
         }
     }

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CatalogAndSlotTest {
     @Test void allPermanentSlotParsersAreExactAndBounded() {
-        for (int index = 1; index <= 4; index++) {
+        for (int index = 1; index <= 3; index++) {
             assertEquals(index - 1, SkillSlot.parse("skill0" + index).index());
             assertEquals(LinkNodeId.NodeKind.SKILL, LinkNodeId.parse("skill" + index).kind());
         }
@@ -23,6 +23,8 @@ class CatalogAndSlotTest {
         assertEquals(LinkNodeId.JOINT02, LinkNodeId.parse("joint02"));
         assertThrows(IllegalArgumentException.class, () -> PassiveSlot.parse("passive07"));
         assertThrows(IllegalArgumentException.class, () -> SkillSlot.parse("skill05"));
+        assertThrows(IllegalArgumentException.class, () -> SkillSlot.parse("skill04"));
+        assertThrows(IllegalArgumentException.class, () -> LinkNodeId.parse("skill04"));
     }
 
     @Test void canonicalCatalogLoadsAndResolvesFormattingWithoutGuessing() {

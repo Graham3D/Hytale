@@ -46,7 +46,10 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
             RpgPlayerState state = gson.fromJson(migration.state(), RpgPlayerState.class);
             state.normalizeShape();
             if (!playerUuid.toString().equals(state.playerUuid)) throw new IllegalStateException("RPG state player UUID mismatch: " + path);
-            if (migration.migrated()) warnings.add("Migrated RPG schema v" + migration.sourceVersion() + " -> v" + migration.targetVersion());
+            if (migration.migrated()) {
+                warnings.add("Migrated RPG schema v" + migration.sourceVersion() + " -> v" + migration.targetVersion());
+                save(state);
+            }
             return new LoadResult(state, true, migration.migrated(), migration.sourceVersion(), warnings);
         } catch (Exception error) {
             throw new IllegalStateException("Refusing to reset unreadable RPG player state " + path + ": " + error.getMessage(), error);

@@ -13,6 +13,7 @@ public final class RpgStateMigrator {
         while (version < RpgPlayerState.CURRENT_SCHEMA) {
             state = switch (version) {
                 case 1 -> migrateV1ToV2(state);
+                case 2 -> migrateV2ToV3(state);
                 default -> throw new IllegalStateException("No migration from RPG schema v" + version);
             };
             version = state.get("schemaVersion").getAsInt();
@@ -37,6 +38,38 @@ public final class RpgStateMigrator {
         if (!state.has("skillMastery")) state.add("skillMastery", new JsonObject());
         if (!state.has("degradedReasons")) state.add("degradedReasons", new JsonArray());
         state.addProperty("schemaVersion", 2);
+        return state;
+    }
+
+    /** Removes the obsolete fourth equipped slot without deleting player-owned progression. */
+    private static JsonObject migrateV2ToV3(JsonObject state) {
+        JsonArray skills = state.has("equippedSkills") && state.get("equippedSkills").isJsonArray()
+                ? state.getAsJsonArray("equippedSkills") : new JsonArray();
+        String legacySkill = skills.size() > 3 && !skills.get(3).isJsonNull() ? skills.get(3).getAsString() : "";
+        JsonArray retained = new JsonArray();
+        for (int index = 0; index < 3; index++) retained.add(index < skills.size() ? skills.get(index) : null);
+        state.add("equippedSkills", retained);
+
+        int removedEdges = 0;
+        JsonArray retainedEdges = new JsonArray();
+        if (state.has("graphEdges") && state.get("graphEdges").isJsonArray()) {
+            for (JsonElement element : state.getAsJsonArray("graphEdges")) {
+                JsonObject edge = element.getAsJsonObject();
+                String source = edge.has("sourceNodeId") ? edge.get("sourceNodeId").getAsString() : "";
+                String target = edge.has("targetNodeId") ? edge.get("targetNodeId").getAsString() : "";
+                if ("skill04".equalsIgnoreCase(source) || "skill04".equalsIgnoreCase(target)) removedEdges++;
+                else retainedEdges.add(element);
+            }
+        }
+        state.add("graphEdges", retainedEdges);
+        JsonArray reasons = state.has("degradedReasons") && state.get("degradedReasons").isJsonArray()
+                ? state.getAsJsonArray("degradedReasons") : new JsonArray();
+        String detail = "MIGRATION_V2_TO_V3:removed skill04";
+        if (!legacySkill.isBlank()) detail += " equipped=" + legacySkill + " (learned/mastery preserved)";
+        detail += " removedEdges=" + removedEdges;
+        reasons.add(detail);
+        state.add("degradedReasons", reasons);
+        state.addProperty("schemaVersion", 3);
         return state;
     }
 

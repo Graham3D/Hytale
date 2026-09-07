@@ -60,6 +60,30 @@ class PersistenceAndMigrationTest {
         assertFalse(repository.load(player).migrated());
     }
 
+    @Test void v2FourSkillMigrationPreservesOwnershipAndMasteryWhileRecordingSkill04Cleanup() throws Exception {
+        FileRpgPlayerStateRepository repository = new FileRpgPlayerStateRepository(temp.resolve("players-v3"));
+        UUID player = UUID.randomUUID();
+        Files.createDirectories(repository.path(player).getParent());
+        String v2 = """
+                {"schemaVersion":2,"playerUuid":"%s","equippedSkills":["quick_slash","fire_bolt",null,"frost_bolt"],
+                 "equippedPassives":[null,null,null,null,null,null],"joints":["joint01","joint02"],
+                 "graphEdges":[{"schemaVersion":1,"edgeId":"legacy","sourceNodeId":"passive06","targetNodeId":"skill04"}],
+                 "learnedSkills":["frost_bolt"],"ownedPassives":{},"skillMastery":{"frost_bolt":77},
+                 "attributes":{"STR":10,"DEX":10,"INT":10,"WIS":10,"LUCK":10},"revision":12}
+                """.formatted(player);
+        Files.writeString(repository.path(player), v2);
+        var loaded = repository.load(player);
+        assertTrue(loaded.migrated());
+        assertEquals(3, loaded.state().equippedSkills.length);
+        assertArrayEquals(new String[]{"quick_slash", "fire_bolt", null}, loaded.state().equippedSkills);
+        assertTrue(loaded.state().learnedSkills.contains("frost_bolt"));
+        assertEquals(77L, loaded.state().skillMastery.get("frost_bolt"));
+        assertTrue(loaded.state().graphEdges.isEmpty());
+        assertTrue(loaded.state().degradedReasons.stream().anyMatch(reason -> reason.contains("MIGRATION_V2_TO_V3")
+                && reason.contains("frost_bolt") && reason.contains("removedEdges=1")));
+        assertFalse(repository.load(player).migrated(), "migration is persisted immediately and runs once");
+    }
+
     @Test void restartReloadPreservesRequiredCommandSequence() {
         var repository = new Stage01BTestSupport.InMemoryRepository();
         UUID player = UUID.randomUUID();

@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /** Versioned server-owned RPG player state. Live Hytale resources are intentionally not duplicated here. */
 public final class RpgPlayerState {
-    public static final int CURRENT_SCHEMA = 2;
+    public static final int CURRENT_SCHEMA = 3;
 
     public int schemaVersion = CURRENT_SCHEMA;
     public String playerUuid;
@@ -30,7 +30,7 @@ public final class RpgPlayerState {
     public int unspentAttributePoints;
     public Set<String> learnedSkills = new LinkedHashSet<>();
     public Map<String, Integer> ownedPassives = new LinkedHashMap<>();
-    public String[] equippedSkills = new String[4];
+    public String[] equippedSkills = new String[3];
     public String[] equippedPassives = new String[6];
     public String[] joints = {"joint01", "joint02"};
     public List<PersistedLinkEdge> graphEdges = new ArrayList<>();
@@ -71,9 +71,9 @@ public final class RpgPlayerState {
     }
 
     public void normalizeShape() {
-        if (equippedSkills == null) equippedSkills = new String[4];
+        if (equippedSkills == null) equippedSkills = new String[3];
         if (equippedPassives == null) equippedPassives = new String[6];
-        if (equippedSkills.length != 4) equippedSkills = Arrays.copyOf(equippedSkills, 4);
+        if (equippedSkills.length != 3) equippedSkills = Arrays.copyOf(equippedSkills, 3);
         if (equippedPassives.length != 6) equippedPassives = Arrays.copyOf(equippedPassives, 6);
         if (joints == null || joints.length != 2) joints = new String[]{"joint01", "joint02"};
         if (attributes == null) attributes = defaultAttributes();

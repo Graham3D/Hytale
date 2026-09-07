@@ -1,0 +1,7 @@
+$Common = "Common.ui";
+
+Group {
+  Anchor: (Height: 38, Bottom: 3);
+  $Common.@CheckBox #Toggle { Anchor: (Left: 4, Top: 7, Width: 24, Height: 24); }
+  Label #Name { Anchor: (Left: 38, Right: 4, Top: 3, Height: 32); Text: "Weapon"; Style: (FontSize: 13, TextColor: #dce6ed, VerticalAlignment: Center); }
+}

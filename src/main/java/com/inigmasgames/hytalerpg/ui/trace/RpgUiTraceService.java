@@ -41,12 +41,26 @@ public final class RpgUiTraceService implements AutoCloseable {
     }
 
     public void trace(UUID player, String event, String correlationId, Map<String, ?> details) {
+        LinkedHashMap<String, Object> enriched = new LinkedHashMap<>();
+        enriched.put("page", inferredPage(event));
+        enriched.put("component", event.toLowerCase(java.util.Locale.ROOT));
+        enriched.putAll(details);
         Record record = new Record(Instant.now().toString(), BuildIdentity.REVISION, BuildIdentity.VERSION,
-                BuildIdentity.HYTALE_VERSION, player, event, correlationId, new LinkedHashMap<>(details));
-        LOGGER.log(Level.INFO, "RPG_UI_TRACE revision={0} event={1} player={2} correlation={3}",
-                new Object[]{BuildIdentity.REVISION, event, player, correlationId});
+                BuildIdentity.HYTALE_VERSION, player, event, correlationId, enriched);
+        if (!"HUD_REFRESHED".equals(event)) {
+            LOGGER.log(Level.INFO, "RPG_UI_TRACE revision=" + BuildIdentity.REVISION + " event=" + event
+                    + " player=" + player + " correlation=" + correlationId + " details=" + enriched);
+        }
         try { writer.execute(() -> write(record)); }
         catch (RejectedExecutionException error) { logFailureOnce(error); }
+    }
+
+    private static String inferredPage(String event) {
+        if (event.startsWith("SKILLTREE")) return "skilltree";
+        if (event.startsWith("CHARACTER") || event.startsWith("ATTRIBUTE")) return "character";
+        if (event.startsWith("HUD") || event.startsWith("SKILLBAR") || event.startsWith("XP_")
+                || event.startsWith("LEVEL_UP")) return "hud";
+        return "command";
     }
 
     private void write(Record record) {

@@ -46,7 +46,7 @@ public final class RpgUiProjectionService {
     public RpgHudViewModel hud(UUID player, HytaleResourceViewAdapter.Snapshot resources, XpView xpOverride) {
         RpgLoadoutView view = loadouts.getPresentationView(player);
         XpView projectedXp = xpOverride == null ? xp.project(view.state().currentXp) : xpOverride;
-        List<SkillSlotView> slots = new ArrayList<>(4);
+        List<SkillSlotView> slots = new ArrayList<>(3);
         for (SkillSlot slot : SkillSlot.values()) {
             var id = view.state().skill(slot);
             if (id.isEmpty()) {
@@ -83,5 +83,5 @@ public final class RpgUiProjectionService {
         return derivedStats.derive(raw);
     }
 
-    private static String abilityAction(SkillSlot slot) { return "Ability" + (slot.index() + 1); }
+    private static String abilityAction(SkillSlot slot) { return "Ability" + (slot.index() + 2); }
 }

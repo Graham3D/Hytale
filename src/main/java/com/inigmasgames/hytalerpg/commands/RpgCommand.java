@@ -57,6 +57,8 @@ import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.ui.hud.RpgHudCoordinator;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
+import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeMutationService;
+import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeProjectionService;
 
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -68,9 +70,12 @@ public final class RpgCommand extends AbstractCommandCollection {
     public RpgCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts,
                       RpgCombatKernel kernel, CombatTrace combatTrace,
                       RpgUiProjectionService uiProjection, AttributeAllocationService allocation,
-                      RpgUiTraceService uiTrace, RpgHudCoordinator hud) {
+                      RpgUiTraceService uiTrace, RpgHudCoordinator hud,
+                      RpgSkillTreeProjectionService skillTreeProjection,
+                      RpgSkillTreeMutationService skillTreeMutations) {
         super("rpg", "Configure and inspect the server-authoritative RPG Link Tree.");
         addSubCommand(new RpgCharacterCommand(uiProjection, allocation, uiTrace));
+        addSubCommand(new RpgSkillTreeCommand(skillTreeProjection, skillTreeMutations, uiTrace));
         addSubCommand(new EquipCommand(catalog, loadouts));
         addSubCommand(new UnequipCommand(loadouts));
         addSubCommand(new LinkCommand(loadouts));
@@ -97,7 +102,7 @@ public final class RpgCommand extends AbstractCommandCollection {
         EquipCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts) {
             super("equip", "Equip a Skill or Passive definition into a permanent slot.", loadouts);
             this.catalog = catalog;
-            slot = withRequiredArg("slot", "skill01..skill04 or passive01..passive06", ArgTypes.STRING);
+            slot = withRequiredArg("slot", "skill01..skill03 or passive01..passive06", ArgTypes.STRING);
             definition = withRequiredArg("definition", "canonical name or ID", ArgTypes.GREEDY_STRING);
         }
         @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
@@ -117,7 +122,7 @@ public final class RpgCommand extends AbstractCommandCollection {
                         context.sendMessage(Message.raw(resolved.message())); return;
                     }
                     send(context, loadouts.equipPassive(playerRef.getUuid(), PassiveSlot.parse(slotValue), resolved.value().id()));
-                } else throw new IllegalArgumentException("Equip slot must be skill01..skill04 or passive01..passive06.");
+                } else throw new IllegalArgumentException("Equip slot must be skill01..skill03 or passive01..passive06.");
             } catch (RuntimeException error) { error(context, error); }
         }
     }
@@ -126,7 +131,7 @@ public final class RpgCommand extends AbstractCommandCollection {
         private final RequiredArg<String> slot;
         UnequipCommand(RpgLoadoutOperations loadouts) {
             super("unequip", "Unequip a Skill or Passive and safely remove affected links.", loadouts);
-            slot = withRequiredArg("slot", "skill01..skill04 or passive01..passive06", ArgTypes.STRING);
+            slot = withRequiredArg("slot", "skill01..skill03 or passive01..passive06", ArgTypes.STRING);
         }
         @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
                                          PlayerRef playerRef, World world) {

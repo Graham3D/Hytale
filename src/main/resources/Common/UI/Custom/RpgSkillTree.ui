@@ -1,0 +1,92 @@
+$Common = "Common.ui";
+
+Group {
+  Anchor: (Full: 0);
+  Background: (Color: #050b13f4);
+  LayoutMode: Center;
+  Group {
+    Anchor: (Width: 1860, Height: 980);
+    Background: (Color: #081421f8);
+    Padding: (Full: 16);
+    LayoutMode: Left;
+
+    Group { Anchor: (Width: 410); Background: (Color: #0d1c2bed); Padding: (Full: 14); LayoutMode: Top;
+      Group { Anchor: (Height: 48); LayoutMode: Left;
+        $Common.@TextButton #SkillsTab { @Text = "Skills"; Anchor: (Width: 184, Height: 42); }
+        $Common.@TextButton #PassivesTab { @Text = "Passives"; Anchor: (Width: 184, Height: 42); }
+      }
+      Group { Anchor: (Height: 46); LayoutMode: Left;
+        Label #LibraryHeading { Anchor: (Width: 310); Text: "Available Skills"; Style: (FontSize: 20, TextColor: #f2d488, VerticalAlignment: Center); }
+        $Common.@TextButton #FilterButton { @Text = "Filter"; Anchor: (Width: 72, Height: 38); }
+      }
+      $Common.@TextField #SearchInput { Anchor: (Height: 40, Bottom: 8); PlaceholderText: "Search canonical content..."; }
+      Group #FilterPanel { Visible: false; Anchor: (Height: 230, Bottom: 8); Background: (Color: #132438f4); Padding: (Full: 8); LayoutMode: TopScrolling; ScrollbarStyle: $Common.@DefaultScrollbarStyle;
+        Group #FilterRows { LayoutMode: Top; }
+      }
+      Label #LibraryCount { Anchor: (Height: 28); Text: "0 entries"; Style: (FontSize: 13, TextColor: #93a4b6); }
+      Group { Anchor: (Height: 748); LayoutMode: TopScrolling; ScrollbarStyle: $Common.@DefaultScrollbarStyle;
+        Group #LibraryRows { LayoutMode: Top; }
+      }
+    }
+
+    Group { Anchor: (Width: 16); }
+    Group { Anchor: (Width: 980); Background: (Color: #07111ded); Padding: (Full: 12); LayoutMode: Top;
+      Label { Anchor: (Height: 42); Text: "SKILL TREE"; Style: (FontSize: 24, TextColor: #78c6d0, Alignment: Center); }
+      Label { Anchor: (Height: 28); Text: "Select a node, choose canonical content, then Apply"; Style: (FontSize: 13, TextColor: #93a4b6, Alignment: Center); }
+      Group #Tree { Anchor: (Height: 820);
+        // Fixed connectors: passive fan-in is visually upward toward its Skill path.
+        Group { Anchor: (Left: 146, Top: 136, Width: 3, Height: 142); Background: (Color: #e6b959); }
+        Group { Anchor: (Left: 83, Top: 326, Width: 66, Height: 3); Background: (Color: #e6b959); }
+        Group { Anchor: (Left: 149, Top: 326, Width: 66, Height: 3); Background: (Color: #e6b959); }
+        Group { Anchor: (Left: 146, Top: 329, Width: 3, Height: 126); Background: (Color: #e6b959); }
+        Group { Anchor: (Left: 469, Top: 136, Width: 3, Height: 142); Background: (Color: #54b9ed); }
+        Group { Anchor: (Left: 405, Top: 326, Width: 66, Height: 3); Background: (Color: #54b9ed); }
+        Group { Anchor: (Left: 469, Top: 329, Width: 3, Height: 126); Background: (Color: #54b9ed); }
+        Group { Anchor: (Left: 793, Top: 136, Width: 3, Height: 319); Background: (Color: #6bdc83); }
+
+        $Common.@TextButton #Skill01 { Anchor: (Left: 78, Top: 58, Width: 140, Height: 78); @Text = "Empty Skill"; }
+        $Common.@TextButton #Skill02 { Anchor: (Left: 401, Top: 58, Width: 140, Height: 78); @Text = "Empty Skill"; }
+        $Common.@TextButton #Skill03 { Anchor: (Left: 725, Top: 58, Width: 140, Height: 78); @Text = "Empty Skill"; }
+
+        Group { Anchor: (Left: 103, Top: 278, Width: 92, Height: 92); Background: (TexturePath: "Common/CheckBoxFrame.png", Border: 22); }
+        $Common.@TextButton #Joint01 { Anchor: (Left: 111, Top: 286, Width: 76, Height: 76); @Text = "JOINT A 3/3"; Disabled: true; }
+        Group { Anchor: (Left: 426, Top: 278, Width: 92, Height: 92); Background: (TexturePath: "Common/CheckBoxFrame.png", Border: 22); }
+        $Common.@TextButton #Joint02 { Anchor: (Left: 434, Top: 286, Width: 76, Height: 76); @Text = "JOINT B 2/3"; Disabled: true; }
+
+        Group { Anchor: (Left: 10, Top: 292, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+        $Common.@TextButton #Passive01 { Anchor: (Left: 0, Top: 374, Width: 104, Height: 62); @Text = "Passive 1"; }
+        Group { Anchor: (Left: 205, Top: 292, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+        $Common.@TextButton #Passive02 { Anchor: (Left: 195, Top: 374, Width: 104, Height: 62); @Text = "Passive 2"; }
+        Group { Anchor: (Left: 108, Top: 455, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+        $Common.@TextButton #Passive03 { Anchor: (Left: 97, Top: 537, Width: 104, Height: 62); @Text = "Passive 3"; }
+
+        Group { Anchor: (Left: 332, Top: 292, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+        $Common.@TextButton #Passive04 { Anchor: (Left: 321, Top: 374, Width: 104, Height: 62); @Text = "Passive 4"; }
+        Group { Anchor: (Left: 430, Top: 455, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+        $Common.@TextButton #Passive05 { Anchor: (Left: 419, Top: 537, Width: 104, Height: 62); @Text = "Passive 5"; }
+
+        Group { Anchor: (Left: 754, Top: 455, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+        $Common.@TextButton #Passive06 { Anchor: (Left: 743, Top: 537, Width: 104, Height: 62); @Text = "Passive 6"; }
+      }
+      Label #TreeStatus { Anchor: (Height: 42); Text: "Ready"; Background: (Color: #0d1c2bee); Style: (FontSize: 14, TextColor: #e4b861, Alignment: Center); }
+    }
+
+    Group { Anchor: (Width: 16); }
+    Group { Anchor: (Width: 410); Background: (Color: #0d1c2bed); Padding: (Full: 16); LayoutMode: Top;
+      Label { Anchor: (Height: 45); Text: "DETAILS"; Style: (FontSize: 22, TextColor: #f2d488); }
+      Group #DetailsIcon { Anchor: (Width: 128, Height: 128, Bottom: 12); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+      Label #DetailsName { Anchor: (Height: 40); Text: "Select content"; Style: (FontSize: 22, TextColor: #dce6ed); }
+      Label #DetailsCategory { Anchor: (Height: 30); Text: ""; Style: (FontSize: 15, TextColor: #78c6d0); }
+      Label #DetailsDescription { Anchor: (Height: 104); Text: "Choose a tree node or library entry."; Style: (FontSize: 14, TextColor: #b6c2cf, Wrap: true); }
+      Group { Anchor: (Height: 420); LayoutMode: TopScrolling; ScrollbarStyle: $Common.@DefaultScrollbarStyle;
+        Label #DetailsFacts { Anchor: (Height: 400); Text: ""; Style: (FontSize: 14, TextColor: #dce6ed, Wrap: true); }
+      }
+      Label #DetailsValidation { Anchor: (Height: 80); Text: ""; Style: (FontSize: 14, TextColor: #e4b861, Wrap: true); }
+      Group { Anchor: (Height: 52); LayoutMode: Left;
+        $Common.@TextButton #Apply { @Text = "Apply / Assign"; Anchor: (Width: 178, Height: 44); }
+        Group { Anchor: (Width: 14); }
+        $Common.@TextButton #Clear { @Text = "Clear / Unequip"; Anchor: (Width: 178, Height: 44); }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 $Common = "Common.ui";
 
 Group {
-  Group { Anchor: (Right: 18, Top: 18, Width: 94, Height: 30); Background: (Color: #090d14dd); Label #RpgRevision { Text: "R015"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); } }
+  Group { Anchor: (Right: 18, Top: 18, Width: 94, Height: 30); Background: (Color: #090d14dd); Label #RpgRevision { Text: "R016"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); } }
   Label #LevelUpNotice { Anchor: (Horizontal: 0, Top: 70, Width: 410, Height: 34); Background: (Color: #3b2a12e8); Text: "LEVEL UP - ATTRIBUTE POINTS"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Visible: false; }
   Group { Anchor: (Horizontal: 0, Bottom: 116, Width: 620, Height: 62); Background: (Color: #08101be8); Padding: (Full: 8); LayoutMode: Top;
     Group { Anchor: (Height: 28); LayoutMode: Left;
@@ -15,11 +15,24 @@ Group {
       Label #StaminaValue { Text: "0 / 0"; Style: (FontSize: 15, TextColor: #7ad58a, Alignment: Center); Anchor: (Width: 200); }
     }
   }
-  Label #XpValue { Anchor: (Horizontal: 0, Bottom: 90, Width: 620, Height: 24); Background: (Color: #08101be8); Text: "LV 1 [..........] 0%"; Style: (FontSize: 13, TextColor: #f2d488, Alignment: Center); }
-  Group { Anchor: (Horizontal: 585, Bottom: 24, Width: 536, Height: 64); Background: (Color: #08101be8); Padding: (Full: 6); LayoutMode: Left;
-    Group { Anchor: (Width: 127); LayoutMode: Top; Label #Skill1Name { Text: "[EMP] Empty"; Style: (FontSize: 13, TextColor: #dce6ed, Alignment: Center); Anchor: (Height: 28); } Label #Skill1State { Text: "Ability1 / EMPTY"; Style: (FontSize: 11, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 24); } }
-    Group { Anchor: (Width: 127); LayoutMode: Top; Label #Skill2Name { Text: "[EMP] Empty"; Style: (FontSize: 13, TextColor: #dce6ed, Alignment: Center); Anchor: (Height: 28); } Label #Skill2State { Text: "Ability2 / EMPTY"; Style: (FontSize: 11, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 24); } }
-    Group { Anchor: (Width: 127); LayoutMode: Top; Label #Skill3Name { Text: "[EMP] Empty"; Style: (FontSize: 13, TextColor: #dce6ed, Alignment: Center); Anchor: (Height: 28); } Label #Skill3State { Text: "Ability3 / EMPTY"; Style: (FontSize: 11, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 24); } }
-    Group { Anchor: (Width: 127); LayoutMode: Top; Label #Skill4Name { Text: "[EMP] Empty"; Style: (FontSize: 13, TextColor: #dce6ed, Alignment: Center); Anchor: (Height: 28); } Label #Skill4State { Text: "Ability4 / EMPTY"; Style: (FontSize: 11, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 24); } }
+  Group { Anchor: (Left: 24, Top: 24, Width: 376, Height: 58); Background: (Color: #08101bf2); Padding: (Full: 9); LayoutMode: Top;
+    Label #XpLabel { Anchor: (Height: 22); Text: "LV 1  0%"; Style: (FontSize: 13, TextColor: #f2d488); }
+    Group { Anchor: (Height: 16); LayoutMode: Left;
+      Group { Anchor: (Width: 30, Height: 14, Right: 5); Background: (Color: #26313fff); Group #XpPip1Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+      Group { Anchor: (Width: 30, Height: 14, Right: 5); Background: (Color: #26313fff); Group #XpPip2Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+      Group { Anchor: (Width: 30, Height: 14, Right: 5); Background: (Color: #26313fff); Group #XpPip3Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+      Group { Anchor: (Width: 30, Height: 14, Right: 5); Background: (Color: #26313fff); Group #XpPip4Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+      Group { Anchor: (Width: 30, Height: 14, Right: 5); Background: (Color: #26313fff); Group #XpPip5Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+      Group { Anchor: (Width: 30, Height: 14, Right: 5); Background: (Color: #26313fff); Group #XpPip6Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+      Group { Anchor: (Width: 30, Height: 14, Right: 5); Background: (Color: #26313fff); Group #XpPip7Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+      Group { Anchor: (Width: 30, Height: 14, Right: 5); Background: (Color: #26313fff); Group #XpPip8Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+      Group { Anchor: (Width: 30, Height: 14, Right: 5); Background: (Color: #26313fff); Group #XpPip9Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+      Group { Anchor: (Width: 30, Height: 14); Background: (Color: #26313fff); Group #XpPip10Fill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 12); Background: (Color: #e4b861); } }
+    }
+  }
+  Group { Anchor: (Right: 18, Top: 112, Width: 232, Height: 174); Background: (Color: #08101be8); Padding: (Full: 7); LayoutMode: Top;
+    Group { Anchor: (Height: 52); LayoutMode: Top; Label #Skill1Name { Text: "[EMP] Empty"; Style: (FontSize: 13, TextColor: #dce6ed, Alignment: Center); Anchor: (Height: 27); } Label #Skill1State { Text: "Ability2 / EMPTY"; Style: (FontSize: 11, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 22); } }
+    Group { Anchor: (Height: 52); LayoutMode: Top; Label #Skill2Name { Text: "[EMP] Empty"; Style: (FontSize: 13, TextColor: #dce6ed, Alignment: Center); Anchor: (Height: 27); } Label #Skill2State { Text: "Ability3 / EMPTY"; Style: (FontSize: 11, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 22); } }
+    Group { Anchor: (Height: 52); LayoutMode: Top; Label #Skill3Name { Text: "[EMP] Empty"; Style: (FontSize: 13, TextColor: #dce6ed, Alignment: Center); Anchor: (Height: 27); } Label #Skill3State { Text: "Ability4 / EMPTY"; Style: (FontSize: 11, TextColor: #93a4b6, Alignment: Center); Anchor: (Height: 22); } }
   }
 }

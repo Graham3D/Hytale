@@ -3,6 +3,8 @@ package com.inigmasgames.hytalerpg.ui.hud;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
+import com.hypixel.hytale.server.core.ui.Anchor;
+import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.inigmasgames.hytalerpg.phase00.BuildIdentity;
 import com.inigmasgames.hytalerpg.ui.model.RpgHudViewModel;
@@ -52,10 +54,15 @@ final class RpgHud extends CustomUIHud {
     }
 
     private static void writeXp(UICommandBuilder commands, RpgHudViewModel model) {
-        StringBuilder pips = new StringBuilder();
-        for (double fill : model.xp().pipFill()) pips.append(fill >= 0.999 ? '|' : fill <= 0.001 ? '.' : ':');
-        commands.set("#XpValue.TextSpans", Message.raw("LV " + model.xp().level() + "  [" + pips + "]  "
+        commands.set("#XpLabel.TextSpans", Message.raw("LV " + model.xp().level() + "  "
                 + Math.round(model.xp().progress() * 100.0) + "%"));
+        for (int index = 0; index < model.xp().pipFill().size(); index++) {
+            Anchor fill = new Anchor();
+            fill.setLeft(Value.of(0)); fill.setTop(Value.of(0));
+            fill.setWidth(Value.of((int) Math.round(28.0 * model.xp().pipFill().get(index))));
+            fill.setHeight(Value.of(12));
+            commands.setObject("#XpPip" + (index + 1) + "Fill.Anchor", fill);
+        }
     }
 
     private static void writeNotice(UICommandBuilder commands, RpgHudViewModel model) {

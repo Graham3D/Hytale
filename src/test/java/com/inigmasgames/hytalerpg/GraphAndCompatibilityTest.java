@@ -71,15 +71,28 @@ class GraphAndCompatibilityTest {
                 LinkEdge.create(LinkNodeId.JOINT02, LinkNodeId.JOINT01)));
         assertTrue(bundle.graph().validate(state).issues().stream().anyMatch(issue -> issue.code() == ValidationCode.CYCLIC_GRAPH));
 
-        state.passive(PassiveSlot.PASSIVE01, new PassiveId("fork"));
-        state.passive(PassiveSlot.PASSIVE02, new PassiveId("chain"));
-        state.passive(PassiveSlot.PASSIVE03, new PassiveId("return"));
+        state.passive(PassiveSlot.PASSIVE01, new PassiveId("potency"));
+        state.passive(PassiveSlot.PASSIVE02, new PassiveId("efficiency"));
+        state.passive(PassiveSlot.PASSIVE03, new PassiveId("long_reach"));
         state.linkEdges(List.of(
                 LinkEdge.create(LinkNodeId.JOINT01, LinkNodeId.SKILL01),
                 LinkEdge.create(LinkNodeId.PASSIVE01, LinkNodeId.JOINT01),
                 LinkEdge.create(LinkNodeId.PASSIVE02, LinkNodeId.JOINT01),
                 LinkEdge.create(LinkNodeId.PASSIVE03, LinkNodeId.JOINT01)));
+        assertTrue(bundle.graph().validate(state).valid(), "three Passive inputs are canonical Joint capacity");
+        state.passive(PassiveSlot.PASSIVE04, new PassiveId("fork"));
+        state.linkEdges(List.of(
+                LinkEdge.create(LinkNodeId.JOINT01, LinkNodeId.SKILL01),
+                LinkEdge.create(LinkNodeId.PASSIVE01, LinkNodeId.JOINT01),
+                LinkEdge.create(LinkNodeId.PASSIVE02, LinkNodeId.JOINT01),
+                LinkEdge.create(LinkNodeId.PASSIVE03, LinkNodeId.JOINT01),
+                LinkEdge.create(LinkNodeId.PASSIVE04, LinkNodeId.JOINT01)));
         assertTrue(bundle.graph().validate(state).issues().stream().anyMatch(issue -> issue.code() == ValidationCode.JOINT_INPUT_CAPACITY));
+
+        state.linkEdges(List.of(LinkEdge.create(LinkNodeId.JOINT01, LinkNodeId.SKILL01),
+                LinkEdge.create(LinkNodeId.JOINT01, LinkNodeId.SKILL02)));
+        assertTrue(bundle.graph().validate(state).issues().stream()
+                .anyMatch(issue -> issue.code() == ValidationCode.SOURCE_OUTPUT_CAPACITY));
     }
 
     @Test void sixPassiveGlobalBudgetCanSpecializeOneSkill() {
