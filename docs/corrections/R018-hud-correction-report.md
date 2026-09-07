@@ -147,3 +147,11 @@ logs and `ui-trace.jsonl`.
 R018 = DEPLOYED_AWAITING_CONNECTED_HUD_QA
 Stage06Started = false
 ```
+
+## R019 supersession
+
+Connected R018 testing exposed unresolved custom textures and incorrect horizontal
+anchoring. R019 removes the custom Health/Stamina implementation, restores those
+native HUD components, adds only an Inventory-art Mana bar, and replaces the XP
+layout with client-relative texture paths and native-style implicit centering. See
+`docs/corrections/R019-native-resources-xp-correction.md`.

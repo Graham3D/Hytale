@@ -1,0 +1,46 @@
+{
+  "capturedAtUtc": "2026-09-07T13:02:02.9054354Z",
+  "releaseHealthNativeHotbarRelative": true,
+  "releaseStaminaNativeHotbarRelative": true,
+  "nativeHealthAndStaminaAbsentFromCustomDocument": true,
+  "customManaOnly": true,
+  "manaInventoryAssetsByteIdentical": true,
+  "xpOwnerAssetsByteIdentical": true,
+  "texturePathsRelativeToDocument": true,
+  "experienceImplicitlyCentered": true,
+  "experienceLayerOrder": "ExperienceBackground|ExperienceFill|ExperienceFrame",
+  "manaAssets": [
+    {
+      "name": "CharacterPanelStatIconMana@2x.png",
+      "sourceSha256": "A43E68F5F29D4D6AA7CAC4CE1179EBCA9704AD899D99617533297DA4DBDB1718",
+      "packagedSha256": "A43E68F5F29D4D6AA7CAC4CE1179EBCA9704AD899D99617533297DA4DBDB1718"
+    },
+    {
+      "name": "ProgressBar@2x.png",
+      "sourceSha256": "2274A622744FAF9320E3190D1E54DFC8B64A9B6E428765A5B40EF209EFFB5547",
+      "packagedSha256": "2274A622744FAF9320E3190D1E54DFC8B64A9B6E428765A5B40EF209EFFB5547"
+    },
+    {
+      "name": "ProgressBarFill@2x.png",
+      "sourceSha256": "AFCB6063F66B493D17AC91B80FCF98AA5B5123FAB95F4E0809B6F5726E3AE4D8",
+      "packagedSha256": "AFCB6063F66B493D17AC91B80FCF98AA5B5123FAB95F4E0809B6F5726E3AE4D8"
+    }
+  ],
+  "experienceAssets": [
+    {
+      "name": "ExperienceFrame.png",
+      "sourceSha256": "F173DE47BAB0EAAA5D0F1DB79EB701D03D4EBC94266CF7D05F479FCB69B26CAE",
+      "packagedSha256": "F173DE47BAB0EAAA5D0F1DB79EB701D03D4EBC94266CF7D05F479FCB69B26CAE"
+    },
+    {
+      "name": "ExperienceBackground.png",
+      "sourceSha256": "79200B6BE97B648F4B642067A266C0C9C64DE81B02C315BC7136131203E7D6AF",
+      "packagedSha256": "79200B6BE97B648F4B642067A266C0C9C64DE81B02C315BC7136131203E7D6AF"
+    },
+    {
+      "name": "ExperienceBar.png",
+      "sourceSha256": "B8DCBDE4295DDC2810AB043B075202D1C337D9444A867B4DF5D927794F2C3D2B",
+      "packagedSha256": "B8DCBDE4295DDC2810AB043B075202D1C337D9444A867B4DF5D927794F2C3D2B"
+    }
+  ]
+}
