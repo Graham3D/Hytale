@@ -55,7 +55,9 @@ public record ProjectileExecutionPlan(
                 context.skillInstanceId() + "-projectile-0", owner, context.profile().skillId(),
                 context.compiledPlan().planHash(), context.snapshot(), 0,
                 Map.of("SPLIT", 0, "PIERCE", 0, "FORK", 0, "CHAIN", 0, "RICOCHET", 0, "RETURN", 0),
-                budgets.maxSpawnedEffects() - 1, budgets.maxTriggeredSecondaries(),
+                // Echo is the second authorized release of this root, not another first release.
+                // The retained registry validates the declared ordinal against existing root carriers.
+                budgets.maxSpawnedEffects() - (context.echo() ? 2 : 1), budgets.maxTriggeredSecondaries(),
                 spawnTimestampNanos, configId, origin, direction.normalized().multiply(speed),
                 projectile.radius(), projectile.maxDistance(), projectile.maxDistance() / speed);
     }

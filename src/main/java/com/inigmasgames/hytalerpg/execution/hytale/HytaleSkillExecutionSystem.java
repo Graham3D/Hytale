@@ -51,6 +51,7 @@ import com.inigmasgames.hytalerpg.combat.status.RpgStatusType;
 import com.inigmasgames.hytalerpg.combat.status.PeriodicStatusRuntime;
 import com.inigmasgames.hytalerpg.diagnostics.RpgTraceEventType;
 import com.inigmasgames.hytalerpg.execution.SkillExecutionContext;
+import com.inigmasgames.hytalerpg.execution.CommittedTarget;
 import com.inigmasgames.hytalerpg.execution.SkillExecutionPort;
 import com.inigmasgames.hytalerpg.execution.SkillExecutionRequest;
 import com.inigmasgames.hytalerpg.execution.SkillExecutionResult;
@@ -150,6 +151,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         advanceProjectiles(actor, deltaSeconds, store, buffer);
         periodicStatuses.tick(actor, System.nanoTime() / 1e9, periodicPort());
         areas.tick(actor, System.nanoTime() / 1_000_000_000.0, port.areaWorld());
+        executions.tickScheduled(actor,port);
         Motion motion = motions.get(actor);
         if (motion != null) advanceMotion(deltaSeconds, store, ref, player, motion, buffer);
         Long windupEnd = windupEnds.get(actor);
@@ -288,7 +290,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     return Validation.reject("OVERHEAD_ROOF_BLOCKED");
                 if (profile.family() == Stage04SkillProfile.Family.WALL)
                     areaDirection = new Vec3(areaDirection.z(), 0, -areaDirection.x()).horizontalNormalized();
-                var query = areaWorld().query(profile.area().footprint(areaPlacement, areaDirection, 1), profile.area().candidateBudget());
+                var query = areaWorld().query(profile.area().footprint(areaPlacement, areaDirection, plan.executionModifiers().radiusFactor()), profile.area().candidateBudget());
                 if (query.overflow()) return Validation.reject("AREA_CANDIDATE_BUDGET");
                 if (!HytaleAreaStatuses.available()) return Validation.reject("AREA_STATUS_ASSETS_UNAVAILABLE");
                 return Validation.pass();
@@ -318,6 +320,88 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             return select(profile.strike(), false).accepted().isEmpty()
                     ? Validation.reject("NO_VALID_TARGET") : Validation.pass();
         }
+        @Override public CommittedTarget captureTarget(Stage04SkillProfile profile,
+                com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,SkillExecutionRequest request) {
+            Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
+            Vec3 direction=facing(store,actor),point=feet;UUID targetId=null;
+            if(profile.area()!=null) { point=areaPlacement;direction=areaDirection; }
+            else if(profile.projectile()!=null) {
+                direction=aim(store,actor);Vec3 muzzle=feet.add(new Vec3(0,1.35,0)).add(direction.multiply(.65));
+                point=HytaleAreaQueries.rayEndpoint(store,muzzle,direction,profile.projectile().maxDistance());
+            } else if(profile.movement()!=null) {
+                if(profile.movement().kind()==Stage04SkillProfile.MovementKind.LEAP) {
+                    if(pounceTarget==null || !pounceTarget.isValid()) throw new IllegalStateException("COMMITTED_ENTITY_TARGET_MISSING");
+                    var id=store.getComponent(pounceTarget,UUIDComponent.getComponentType());
+                    if(id==null) throw new IllegalStateException("COMMITTED_TARGET_UUID_MISSING");
+                    targetId=id.getUuid();point=vec(store.getComponent(pounceTarget,TransformComponent.getComponentType()).getPosition());
+                    direction=point.subtract(feet).horizontalNormalized();
+                } else {
+                    if(request.desiredMovement().horizontalLengthSquared()>1e-6)direction=request.desiredMovement().horizontalNormalized();
+                    point=feet.add(direction.multiply(profile.movement().maxDistance()));
+                }
+            } else if(profile.strike()!=null) point=feet.add(direction.multiply(profile.strike().range()));
+            return new CommittedTarget(playerRef.getWorldUuid(),feet,point,direction,targetId);
+        }
+        @Override public Validation validateRelease(SkillExecutionContext context) {
+            var target=context.target();var profile=context.profile();
+            if(target==null) return Validation.reject("COMMITTED_TARGET_MISSING");
+            if(!target.worldId().equals(playerRef.getWorldUuid())) return Validation.reject("COMMITTED_WORLD_CHANGED");
+            var current=equipment();var committed=context.equipment();
+            if(!profile.allowedMainHandKinds().isEmpty() && !sameItem(current.mainHand(),committed.mainHand())
+                    || !profile.requiredOffHandKinds().isEmpty() && !sameItem(current.offHand(),committed.offHand()))
+                return Validation.reject("COMMITTED_EQUIPMENT_CHANGED");
+            if(motions.containsKey(playerRef.getUuid())||windupEnds.containsKey(playerRef.getUuid())||reactions.active(playerRef.getUuid()).isPresent())
+                return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
+            Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
+            if(profile.area()!=null) {
+                String admission=areas.admission(playerRef.getUuid(),profile.skillId(),profile.area().trap());
+                if(!admission.equals("PASS"))return Validation.reject(admission);
+                double reach=profile.area().placementRange()>0?profile.area().placementRange():Math.max(.5,profile.area().radius());
+                if(feet.subtract(target.point()).horizontalLength()>reach+1e-6) return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
+                if(!HytaleAreaQueries.clear(store,feet.add(new Vec3(0,1.35,0)),target.point().add(new Vec3(0,.1,0))))
+                    return Validation.reject("COMMITTED_TARGET_LOS_BLOCKED");
+                areaPlacement=target.point();areaDirection=target.direction();
+                var shape=profile.area().footprint(areaPlacement,areaDirection,context.compiledPlan().executionModifiers().radiusFactor());
+                if(profile.family()!=Stage04SkillProfile.Family.CONE) {
+                    var grounded=areaWorld().prepareImpact(areaPlacement,shape);
+                    if(grounded.isEmpty()||grounded.get().origin().distanceSquared(areaPlacement)>.0001)
+                        return Validation.reject("COMMITTED_GROUND_CHANGED");
+                }
+                if(profile.area().overheadHeight()>0 && !areaWorld().overheadClear(shape,profile.area().overheadHeight()))
+                    return Validation.reject("OVERHEAD_ROOF_BLOCKED");
+                return areaWorld().query(shape,profile.area().candidateBudget()).overflow()?Validation.reject("AREA_CANDIDATE_BUDGET"):Validation.pass();
+            }
+            if(profile.projectile()!=null) {
+                Vec3 muzzle=feet.add(new Vec3(0,1.35,0));Vec3 delta=target.point().subtract(muzzle);
+                if(delta.length()>profile.projectile().maxDistance()+.65+1e-6 || delta.length()<.66)
+                    return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
+                if(!HytaleAreaQueries.clear(store,muzzle,target.point()))return Validation.reject("COMMITTED_TARGET_LOS_BLOCKED");
+                long owned=projectiles.values().stream().filter(p->p.actorId.equals(playerRef.getUuid())).count();
+                return owned>=context.compiledPlan().safetyBudgets().maxLiveProjectiles()
+                        ?Validation.reject("PROJECTILE_LIVE_BUDGET_EXCEEDED"):Validation.pass();
+            }
+            if(profile.movement()!=null) {
+                if(feet.subtract(target.point()).horizontalLength()>profile.movement().maxDistance()+1e-6)
+                    return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
+                if(target.entityId()!=null) {
+                    var ref=store.getExternalData().getRefFromUUID(target.entityId());
+                    var selected=candidate(ref);
+                    if(selected==null||selected.protectedTarget()||!HytaleAreaQueries.hostile(store,ref,actor))
+                        return Validation.reject("COMMITTED_ENTITY_INVALID");
+                }
+                if(!HytaleAreaQueries.clear(store,feet.add(new Vec3(0,.1,0)),target.point().add(new Vec3(0,.1,0))))
+                    return Validation.reject("COMMITTED_TARGET_LOS_BLOCKED");
+                return Validation.pass();
+            }
+            if(profile.strike()!=null) {
+                if(feet.subtract(target.origin()).horizontalLength()>profile.strike().range())return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
+                return select(context,profile.strike()).accepted().isEmpty()?Validation.reject("COMMITTED_STRIKE_EMPTY"):Validation.pass();
+            }
+            return Validation.reject("COMMITTED_TARGET_FAMILY_UNAVAILABLE");
+        }
+        private boolean sameItem(Item current,Item prior) {
+            return current!=null && prior!=null && current.itemId().equals(prior.itemId()) && current.weaponKind().equals(prior.weaponKind());
+        }
         @Override public SkillExecutionResult executeStrike(SkillExecutionContext context) {
             int applied = executeStrikeHit(context, 0);
             var strike = context.profile().strike();
@@ -334,8 +418,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
 
         @Override public SkillExecutionResult executeArea(SkillExecutionContext context) {
+            if(context.target()!=null) {areaPlacement=context.target().point();areaDirection=context.target().direction();}
             if (areaPlacement == null || areaDirection == null) throw new IllegalStateException("AREA_PLACEMENT_NOT_VALIDATED");
-            areas.start(context, areaPlacement, areaDirection, System.nanoTime() / 1_000_000_000.0, 1, areaWorld());
+            areas.start(context, areaPlacement, areaDirection, System.nanoTime() / 1_000_000_000.0,
+                    context.compiledPlan().executionModifiers().radiusFactor(), areaWorld());
             return SkillExecutionResult.committed("AREA_DISPATCHED", 0, 0);
         }
 
@@ -411,7 +497,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     return true;
                 }
                 @Override public void present(SkillExecutionContext context, AreaGeometry shape, String phase, double seconds) {
-                    vfx.presentArea(store.getExternalData().getWorld(), shape, phase, seconds);
+                    vfx.presentArea(store.getExternalData().getWorld(), shape, phase, context.profile().area().element(),
+                            context.profile().area().trap(), seconds);
                     emit(context, RpgTraceEventType.AREA_PRESENTATION, Map.of("phase", phase, "radius", shape.radius(),
                             "height", shape.height(), "duration", seconds, "template", "NATIVE_GEOMETRY"));
                 }
@@ -460,7 +547,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             TransformComponent transform = store.getComponent(actor, TransformComponent.getComponentType());
             Vec3 origin = vec(transform.getPosition());
             Vec3 direction; double distance = context.profile().movement().maxDistance();
-            if (context.profile().movement().kind() == Stage04SkillProfile.MovementKind.LEAP) {
+            if(context.target()!=null) {
+                direction=context.target().point().subtract(origin);distance=Math.min(distance,direction.horizontalLength());
+            } else if (context.profile().movement().kind() == Stage04SkillProfile.MovementKind.LEAP) {
                 Ref<EntityStore> target = pounceTarget != null ? pounceTarget : nearestTarget(distance, 120.0);
                 if (target == null) throw new IllegalStateException("Pounce target vanished before dispatch");
                 TransformComponent targetTransform = store.getComponent(target, TransformComponent.getComponentType());
@@ -499,8 +588,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 String weaponKind = context.equipment().mainHand().weaponKind();
                 String configId = authored.configIdFor(weaponKind);
                 double speed = authored.speedFor(weaponKind);
-                Vec3 direction = aim(store, actor);
                 Vec3 actorPosition = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
+                Vec3 direction = context.target()==null?aim(store,actor)
+                        :context.target().point().subtract(actorPosition.add(new Vec3(0,1.35,0))).normalized();
                 Vec3 origin = new Vec3(actorPosition.x(), actorPosition.y() + 1.35, actorPosition.z())
                         .add(direction.multiply(0.65));
                 ProjectileExecutionPlan plan = projectileService.buildPlan(context, playerRef.getUuid(),
@@ -513,8 +603,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 emit(context, RpgTraceEventType.AMMO_CHECK,
                         Map.of("required", authored.requiresAmmo(), "itemId", authored.ammoItemId(),
                                 "quantity", authored.ammoQuantity(), "available", true));
-                ammo = ammunition.consume(actor, store, authored);
-                if (authored.requiresAmmo()) emit(context, RpgTraceEventType.AMMO_COMMITTED,
+                if(!context.echo()) ammo = ammunition.consume(actor, store, authored);
+                if (authored.requiresAmmo() && !context.echo()) emit(context, RpgTraceEventType.AMMO_COMMITTED,
                         Map.of("itemId", ammo.itemId(), "quantity", ammo.quantity(),
                                 "fullyCharged", authored.fullyCharged()));
                 ProjectileConfig config = ProjectileConfig.getAssetMap().getAsset(configId);
@@ -571,10 +661,24 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private StrikeGeometryService.QueryResult<Ref<EntityStore>> select(SkillExecutionContext context,
                                                                            Stage04SkillProfile.Strike strike) {
             Vec3 origin = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
+            Vec3 direction=facing(store,actor);Vec3 currentOrigin=origin;
+            if(context!=null && context.target()!=null && context.profile().family()==Stage04SkillProfile.Family.STRIKE) {
+                origin=context.target().origin();direction=context.target().direction();
+            }
+            if(context!=null && strike.geometry()==Stage04SkillProfile.Geometry.RADIUS) {
+                strike=new Stage04SkillProfile.Strike(strike.geometry(),strike.range()*context.compiledPlan().executionModifiers().radiusFactor(),
+                        strike.angleDegrees(),strike.lineHalfWidth(),strike.repeats(),strike.repeatIntervalSeconds(),strike.targetCap(),
+                        strike.coefficient(),strike.statusId(),strike.statusSeconds());
+            }
             List<StrikeGeometryService.Candidate<Ref<EntityStore>>> candidates = candidates(origin, strike.range());
+            if(context!=null && context.target()!=null) {
+                double reach=strike.range();
+                candidates=candidates.stream().filter(c->c.position().subtract(currentOrigin).horizontalLength()<=reach)
+                        .filter(c->HytaleAreaQueries.clear(store,currentOrigin.add(new Vec3(0,1.35,0)),c.position().add(new Vec3(0,.5,0)))).toList();
+            }
             if (forcedTarget != null && forcedTarget.isValid())
                 candidates = candidates.stream().filter(value -> value.handle().equals(forcedTarget)).toList();
-            var result = geometry.query(origin, facing(store, actor), strike, candidates);
+            var result = geometry.query(origin, direction, strike, candidates);
             if (context != null) {
                 emit(context, RpgTraceEventType.STRIKE_QUERY, Map.of("geometry", strike.geometry().name(),
                         "range", strike.range(), "angleDegrees", strike.angleDegrees(),

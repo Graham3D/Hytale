@@ -10,6 +10,8 @@ public interface SkillExecutionPort {
     Equipment equipment();
     NativeResourcePort resources();
     Validation familyPrerequisites(Stage04SkillProfile profile, CompiledSkillPlan plan);
+    default CommittedTarget captureTarget(Stage04SkillProfile profile, CompiledSkillPlan plan, SkillExecutionRequest request) { return null; }
+    default Validation validateRelease(SkillExecutionContext context) { return Validation.reject("COMMITTED_TARGET_ADAPTER_UNAVAILABLE"); }
     SkillExecutionResult executeStrike(SkillExecutionContext context);
     SkillExecutionResult executeMovement(SkillExecutionContext context);
     SkillExecutionResult executeReaction(SkillExecutionContext context);

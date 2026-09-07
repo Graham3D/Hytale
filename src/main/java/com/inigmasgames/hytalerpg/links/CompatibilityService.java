@@ -64,6 +64,12 @@ public final class CompatibilityService {
         // The source contract has gates whose prose is richer than its token clauses. These are stable,
         // shared rules rather than command-specific exceptions.
         String id = passive.id().value();
+        if (id.equals("echo")) {
+            Set<String> repeatExcluded = new LinkedHashSet<>(Set.of("CORPSE", "CORPSE_REQUIRED", "COLLISION_WALL", "TRAP"));
+            repeatExcluded.retainAll(actual);
+            if (!repeatExcluded.isEmpty()) return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
+                    "Echo excludes corpse consumers, collision-wall creators and deployed traps.", repeatExcluded, actual);
+        }
         if (id.equals("expanded_radius") && !actual.contains("HAS_RADIUS")) {
             return CompatibilityResult.rejected(ValidationCode.MISSING_CAPABILITY,
                     "Expanded Radius requires an effect radius; projectile collision radius does not qualify.",

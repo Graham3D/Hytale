@@ -144,7 +144,8 @@ public final class LinkCompiler {
         String canonical = slot + "|" + skill.id().value() + "|" + family + "|" + sorted(finalTags)
                 + "|" + order + "|" + targeting + "|" + geometry + "|" + multiplicity + "|" + continuation
                 + "|" + resource + "|" + power + "|" + triggers + "|" + spawnCost
-                + "|" + scalablePayloadIncreased + "|" + resourceCostMultiplier + "|" + cooldownRecoveryBonus;
+                + "|" + scalablePayloadIncreased + "|" + resourceCostMultiplier + "|" + cooldownRecoveryBonus
+                + "|" + CompiledSkillPlan.ExecutionModifiers.from(order) + "|planSchema=" + CompiledSkillPlan.CURRENT_SCHEMA;
         var kernelModifiers = new CompiledSkillPlan.KernelModifiers(scalablePayloadIncreased,
                 resourceCostMultiplier, cooldownRecoveryBonus);
         return new CompiledSkillPlan(CompiledSkillPlan.CURRENT_SCHEMA, slot, skill.id(), hash(canonical), family,

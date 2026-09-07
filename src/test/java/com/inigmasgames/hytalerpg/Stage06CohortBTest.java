@@ -112,7 +112,7 @@ class Stage06CohortBTest {
         assertTrue(lines.stream().allMatch(l->l.from().horizontalLength()<=12+1e-9));
         var wall=profile("wall_of_fire").area().footprint(Vec3.ZERO,Vec3.FORWARD,1);
         var wallLines=AreaOutline.segments(wall);assertEquals(12,wallLines.size());
-        assertEquals(3.025,wallLines.stream().mapToDouble(l->l.to().y()).max().orElseThrow(),1e-12);
+        assertEquals(3.10,wallLines.stream().mapToDouble(l->l.to().y()).max().orElseThrow(),1e-12);
         assertEquals(5,wallLines.stream().mapToDouble(l->Math.abs(l.to().z())).max().orElseThrow());
         assertEquals(1,wallLines.stream().mapToDouble(l->Math.abs(l.to().x())).max().orElseThrow());
     }

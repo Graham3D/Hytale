@@ -27,7 +27,7 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 2;
+    public static final int CURRENT_SCHEMA = 3;
     public CompiledSkillPlan {
         finalTags = Set.copyOf(finalTags);
         passiveOrder = List.copyOf(passiveOrder);
@@ -63,5 +63,17 @@ public record CompiledSkillPlan(
         public static SafetyBudgets baseline(int passiveSpawnCost) {
             return new SafetyBudgets(3, 48, 16, 8, 24, 8, 4, passiveSpawnCost);
         }
+    }
+    /** Typed release/geometry contract derived from the compiler's validated, deduplicated passive order. */
+    public ExecutionModifiers executionModifiers() { return ExecutionModifiers.from(passiveOrder); }
+    public record ExecutionModifiers(double radiusFactor, double delaySeconds, double echoDelaySeconds,
+                                     double echoMagnitude, boolean expandedRadius) {
+        public static ExecutionModifiers from(List<PassiveId> order) {
+            boolean radius=order.stream().anyMatch(p->p.value().equals("expanded_radius"));
+            boolean delay=order.stream().anyMatch(p->p.value().equals("skill_delay"));
+            boolean echo=order.stream().anyMatch(p->p.value().equals("echo"));
+            return new ExecutionModifiers(radius?1.25:1,delay?2:0,echo?.45:0,echo?.7:1,radius);
+        }
+        public boolean scheduled() { return delaySeconds>0 || echoDelaySeconds>0; }
     }
 }

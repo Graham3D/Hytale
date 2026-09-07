@@ -1,0 +1,35 @@
+{
+  "capturedAtUtc": "2026-09-07T20:56:43.9255233Z",
+  "revision": "R025",
+  "version": "0.0.18",
+  "stage": "06",
+  "branch": "RPG",
+  "sourceHead": "6a417a0ee836f828766a9df315cc52415db6e03f",
+  "worktreeDirty": true,
+  "stageStatus": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+  "completeStageGate": true,
+  "gateScope": "LOCAL_ENGINEERING_ONLY",
+  "cohort": "d",
+  "cohortSkills": null,
+  "cohortPassives": [
+    "potency",
+    "expanded_radius",
+    "echo",
+    "skill_delay"
+  ],
+  "reviewedSharedCorrections": [
+    "src/main/java/com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.java"
+  ],
+  "tests": 217,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "connectedVerification": "UNVERIFIED",
+  "nativeCastingFixed": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "jarSha256": "B45CD1502D29D7ADE8E46F17000081A5CCDCA6858A19FC867CB4339438235766",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "rollbackSha256": "FA6C2AAB3E232665D78336EB64334C98048C38821388E2C869AD057E85C14D1F"
+}

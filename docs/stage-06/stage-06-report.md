@@ -1,8 +1,8 @@
-# Stage 06 — spatial families (R025 work in progress)
+# Stage 06 — spatial families and first four Links (R025)
 
-`Stage06 = IMPLEMENTATION_IN_PROGRESS`. No complete local stage gate or connected
-PASS is asserted. R024 remains the prior archived rollback; R023 remains deployed.
-Stages 07–13 have not started. The program continues after the bounded cohorts.
+`Stage06 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION`. The local engineering
+gate is complete; connected PASS is not asserted. R024 remains the prior archived
+rollback; R023 remains deployed. The authorized program advances into Stage 07.
 
 ## Authority and first cohort
 
@@ -250,15 +250,107 @@ Aggregate regression/boot results and hashes are captured separately in
 Connected rendering, timing, movement, native interaction and Health loss remain
 UNVERIFIED. There has been no live deployment during this implementation program.
 
-## Remaining Stage 06 work — not a capability-blocked or completed claim
+## Cohort D — first four Links and stage-local hardening
 
-Before the stage gate can pass, complete Expanded Radius, Skill Delay and Echo through shared runtime seams,
-including valid preexisting projectile consumers; preserve Potency 15%.
+The four-passive cohort is Potency, Expanded Radius, Skill Delay and Echo. No
+resource/cooldown formula, HUD, XP artwork, native slot policy, player schema or
+Stage 04/05 numeric profile is changed. Compiled plan schema advances from 2 to 3
+because the plan hash now includes typed release/geometry operations. Player
+schema remains 3, and saved loadouts are recompiled rather than discarded.
 
-Also extend the audited control registry with later relevant roles; add
-budget/load/adversarial and native teardown tests; rerun full regressions and isolated
-smoke; archive the final stage build, report its exact gates and commit Stage 06
-independently. These are implementation tasks, not fabricated Hytale API blockers.
+Expanded Radius multiplies each declared radius by 1.25 once, including trap
+trigger/blast and bombardment child/core radii, but not height, angle, wall
+length/width or a projectile's collision radius. It contributes a single 10%
+Less scalable-payload bucket. Utility fields do not acquire damage from it.
+Potency remains a single 15% Increased bucket. The combined fixture exposed an
+existing shared integration error: SkillExecutionService added Potency before
+CombatSnapshotFactory added it again. Removing the service's duplicate addition
+restores the canonical 15%, not a new balance value. A plain Quick Slash regression
+now guards this boundary as well as the area/projectile combinations.
+
+The bounded SkillReleaseScheduler reserves capacity before payment (six roots
+per owner, 256 globally). Skill Delay commits cost/cooldown/snapshot/target once,
+then releases after two seconds with 35% More. One pending primary per logical
+slot remains enforced even if the loadout changes. Echo schedules one child
+0.45 seconds after the actual primary release, at 70% magnitude, without a new
+payment or cooldown; Delay+Echo gives 1.35*0.70=0.945 before other modifiers.
+The child shares rootCastId/correlationId, receives its own skillInstanceId and
+snapshot identity, inherits the committed offensive values and cannot Echo itself.
+
+CommittedTarget contains world/point/direction/optional original target UUID,
+not a retained native command buffer. Each scheduled release obtains a fresh
+world-thread port and revalidates life, world, required equipment identity,
+current range/LOS, ground/roof and capacity. No current aim replaces the saved
+point. The original leap target is looked up via the installed EntityStore UUID
+API, not by acquiring a new enemy. Delayed strikes retain their committed
+geometry; movement validates the old destination; projectiles launch from the
+current legal muzzle toward the old point. Invalid releases cancel without
+refund or replay. Native ammunition remains the existing projectile release
+adapter's responsibility; an Echo never consumes it a second time. Death,
+disconnect and world-drain hooks cancel the release queue through the same
+existing execution teardown. These hooks are code-audited, not connected proof.
+
+Two additional integration problems were demonstrated by deterministic tests:
+
+- The old projectile registration allowance counted only the primary effect,
+  rejecting the legitimate Echo carrier. The generation-zero plan now reserves
+  the second effect ordinal for an Echo; the primary-only path is unchanged.
+  This exact shared correction is archived as a diff. The evidence guard still
+  rejects unrelated changes under the earlier projectile/HUD paths. Stage 07
+  will extend this seam into complete root-lifetime continuation accounting.
+- Blizzard's interval and Avalanche/Void sub-impact caps belong to the root,
+  not each copy. AreaRuntime now shares those ledgers between overlapping
+  primary/Echo fields. Ordinary burst copies still apply independently, and a
+  final Void blast has its separate final-hit ledger. Field plus sub-impact
+  reservations enforce the 48-effect ceiling; owner/global limits remain 8/128.
+
+Echo's richer canonical exclusions are now enforced centrally: corpse consumers,
+deployed traps and collision-wall creators reject explicitly. Bone Cage receives
+the semantic COLLISION_WALL catalog tag; the non-solid Wall of Fire remains
+eligible. No new passive is introduced. Repeat-controller incompatibility still
+rejects Echo+Barrage. Root Snare is classified as a deployed trap for this rule,
+avoiding an apparently accepted Echo that only fails the one-deployed-trap rule.
+
+Procedural telegraphs consume the same scaled geometry as queries. The fallback
+palette follows elemental groups; preparing circular warnings use a second inset
+ring, traps use a diamond marker, and impacts brighten. Native DebugUtils
+FLAG_NO_SOLID is used for disc outlines so a filled ground disc is not requested.
+The presentation lift is corrected to the master's 0.10 m without lifting hit
+geometry. Rectangles retain their full 3 m height outline. All these current
+player-owned PvE fields are non-hostile to players; no unsupported PvP boundary
+semantics are implied. Client readability, z-fighting and packet rendering remain
+unverified. Shapes expire in bounded durations; no infinite emitter is created.
+
+## Final local engineering evidence
+
+`clean build` passed **217 tests, zero failures/errors/skips**, including retained
+Stage 01B/02/04/05, native-control structure and CanvasUI regressions. Catalog
+counts remain 87 skills and 66 passives. The packaged CustomUI check passed.
+All fifteen area profiles, ten status assets and two native damage channels
+resolved in a normal three-mod isolated server; it reached network-ready boot
+and clean shutdown, exit code 0. Shipped/offline warnings remain in the raw log.
+
+The load fixture executes 96 simultaneous apex roots (12 owners at eight fields
+each), 256 candidate bounds per query, with 1.25 radius scaling over 8.5 simulated
+seconds. It produced 147,456 accepted fixture hits, 864 queries, 7,872 presentation
+calls and 147,648 trace calls, then zero retained fields/roots. Measured runtime
+was **84.020 ms** in the full build. This is an engine-neutral fixture: it excludes
+native ECS collision, damage dispatch, serialization, disk logging, networking
+and rendering. It is not a frame-time or live-server throughput promise. The
+trace volume and procedural packet load require the Stage 13/native load audit.
+Other fixtures cover malformed starts, overflow without eviction, root budgets,
+claimed-release cancellation, failure cleanup and invalid-target no-replay.
+
+Final JAR: `evidence/stage-06/cohort-d/artifacts/HytaleRPG-0.0.18.jar`.
+SHA-256: `B45CD1502D29D7ADE8E46F17000081A5CCDCA6858A19FC867CB4339438235766`.
+Machine records: `cohort-d/verification.json`, `load-fixture.json` and
+`server-smoke-summary.json`; exact API bytecode and shared correction diff are
+retained alongside them. Cohorts A–C and R024 remain archived. No live deployment
+was performed. Rollback cancels pending releases/areas/status ownership on a
+stopped-world transition and restores the archived R024 JAR, retaining player
+progress; unsupported equipped skills are rejected explicitly, not erased.
+
+## Connected gate still outstanding
 
 Connected requirements include actual RPG ability input, legal/rejected ground
 placement, friendly/protected/boss control, Health loss, correct visible footprint,

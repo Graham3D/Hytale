@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c')][string]$Cohort = 'a')
+param([ValidateSet('a','b','c','d')][string]$Cohort = 'a')
 $ErrorActionPreference = 'Stop'
 $stage06Root = (Resolve-Path "$PSScriptRoot\..").Path
 $stage06Evidence = Join-Path $stage06Root "evidence\stage-06\cohort-$Cohort"
@@ -30,6 +30,7 @@ try {
         'com.hypixel.hytale.assetstore.AssetExtraInfo$Data',
         'com.hypixel.hytale.server.core.asset.type.item.config.Item',
         'com.hypixel.hytale.server.core.io.PacketHandler'
+        'com.hypixel.hytale.server.core.universe.world.storage.EntityStore'
     )
     foreach ($stage06Class in $stage06Classes) {
         $stage06Bytecode = & javap -classpath $stage06Server -c -p $stage06Class
@@ -64,20 +65,38 @@ try {
         $stage06Errors += [int]$stage06Xml.testsuite.errors; $stage06Skipped += [int]$stage06Xml.testsuite.skipped
     }
     if ($stage06Failed -or $stage06Errors -or $stage06Skipped) { throw 'Regression result is not green.' }
-    $stage06MinimumTests = switch ($Cohort) { 'a' { 171 } 'b' { 190 } 'c' { 199 } }
+    $stage06MinimumTests = switch ($Cohort) { 'a' { 171 } 'b' { 190 } 'c' { 199 } 'd' { 217 } }
     if ($stage06Tests -lt $stage06MinimumTests) { throw "Incomplete retained regression suite: $stage06Tests < $stage06MinimumTests" }
     & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $stage06Jar
     $stage06Protected = @(& git diff --name-only 5c5e55e -- 'src/main/java/com/inigmasgames/hytalerpg/ui' 'src/main/resources/Common/UI' 'canvas-ui/src' 'src/main/resources/rpg/runtime/stage-04-skills.json' 'src/main/resources/rpg/runtime/stage-05-projectiles.json' 'src/main/java/com/inigmasgames/hytalerpg/execution/projectile')
+    $stage06AllowedShared = @()
+    if ($Cohort -eq 'd') {
+        $stage06AllowedShared = @($stage06Protected | Where-Object { $_ -eq 'src/main/java/com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.java' })
+        $stage06Protected = @($stage06Protected | Where-Object { $_ -notin $stage06AllowedShared })
+        & git diff 5c5e55e -- 'src/main/java/com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.java' |
+            Set-Content -LiteralPath (Join-Path $stage06Evidence 'shared-projectile-echo-correction.diff') -Encoding utf8
+        [xml]$stage06LoadXml = Get-Content -Raw -LiteralPath 'build/test-results/test/TEST-com.inigmasgames.hytalerpg.Stage06HardeningTest.xml'
+        $stage06LoadMatch = [regex]::Match($stage06LoadXml.testsuite.'system-out'.InnerText, 'STAGE06_LOAD (\{[^\r\n]+\})')
+        if (-not $stage06LoadMatch.Success) { throw 'Missing 96-root load fixture evidence.' }
+        $stage06LoadMatch.Groups[1].Value | ConvertFrom-Json | ConvertTo-Json |
+            Set-Content -LiteralPath (Join-Path $stage06Evidence 'load-fixture.json') -Encoding utf8
+        $stage06Smoke = Get-Content -LiteralPath (Join-Path $stage06Evidence 'server-smoke-summary.json') -Raw | ConvertFrom-Json
+        if (-not $stage06Smoke.networkBooted -or -not $stage06Smoke.cleanShutdown -or $stage06Smoke.failure -or
+            $stage06Smoke.jarSha256 -ne (Get-FileHash -LiteralPath $stage06Jar).Hash) { throw 'Final Stage 06 smoke must match this JAR.' }
+    }
     if ($stage06Protected.Count) { throw "Protected HUD/earlier delivery changes: $stage06Protected" }
     Copy-Item -LiteralPath $stage06Jar -Destination (Join-Path $stage06Evidence 'artifacts\HytaleRPG-0.0.18.jar') -Force
     Copy-Item -LiteralPath 'evidence/corrections/R024/artifacts/HytaleRPG-0.0.17.jar' -Destination (Join-Path $stage06Evidence 'rollback\HytaleRPG-0.0.17.jar') -Force
     $stage06Summary = [ordered]@{
         capturedAtUtc=[DateTime]::UtcNow.ToString('o'); revision='R025'; version='0.0.18'; stage='06'
         branch=(& git branch --show-current).Trim(); sourceHead=(& git rev-parse HEAD).Trim(); worktreeDirty=[bool](& git status --porcelain)
-        stageStatus='IMPLEMENTATION_IN_PROGRESS'; completeStageGate=$false; cohort=$Cohort
+        stageStatus=$(if ($Cohort -eq 'd') { 'IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION' } else { 'IMPLEMENTATION_IN_PROGRESS' })
+        completeStageGate=($Cohort -eq 'd'); gateScope='LOCAL_ENGINEERING_ONLY'; cohort=$Cohort
         cohortSkills=$(if ($Cohort -eq 'a') { @('ground_slam','frost_nova','root_snare') }
             elseif ($Cohort -eq 'b') { @('powder_mine','cold_wave','venom_spray','blizzard','wall_of_fire','poison_cloud') }
-            else { @('vortex','earthquake','meteor','comet','avalanche','void_cataclysm') })
+            elseif ($Cohort -eq 'c') { @('vortex','earthquake','meteor','comet','avalanche','void_cataclysm') } else { @() })
+        cohortPassives=$(if ($Cohort -eq 'd') { @('potency','expanded_radius','echo','skill_delay') } else { @() })
+        reviewedSharedCorrections=$stage06AllowedShared
         tests=$stage06Tests; failures=$stage06Failed; errors=$stage06Errors; skipped=$stage06Skipped
         connectedVerification='UNVERIFIED'; nativeCastingFixed=$false; liveDeploymentPerformed=$false
         protectedPathsChanged=$stage06Protected

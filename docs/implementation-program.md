@@ -57,7 +57,7 @@ definitions are read before each corresponding implementation.
 
 | Stage | Scope | Initial state |
 |---|---|---|
-| 06 | 15 spatial skills; Potency, Expanded Radius, Echo, Skill Delay | implementation next |
+| 06 | 15 spatial skills; Potency, Expanded Radius, Echo, Skill Delay | R025 local gate complete; connected verification outstanding |
 | 07 | 12 projectile continuation/multiplicity passives | not started |
 | 08 | 8 line/beam/tether/orbit skills | not started |
 | 09 | 16 support/barrier/Aura skills and 7 passives | not started |

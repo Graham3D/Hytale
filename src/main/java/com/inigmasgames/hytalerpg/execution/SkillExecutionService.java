@@ -28,14 +28,22 @@ public final class SkillExecutionService {
     private final SkillExecutorRegistry executors;
     private final SkillInstanceLifecycle lifecycle;
     private final RpgSkillTracer tracer;
+    private final SkillReleaseScheduler releases = new SkillReleaseScheduler();
+    private final java.util.function.LongSupplier nanoTime;
     private final Map<UUID, Prepared> windups = new LinkedHashMap<>();
     private final Map<UUID, SkillExecutionContext> activeContexts = new LinkedHashMap<>();
 
     public SkillExecutionService(RpgLoadoutOperations loadouts, Stage04SkillProfiles profiles,
                                  RpgCombatKernel kernel, SkillExecutorRegistry executors,
                                  SkillInstanceLifecycle lifecycle, RpgSkillTracer tracer) {
+        this(loadouts,profiles,kernel,executors,lifecycle,tracer,System::nanoTime);
+    }
+    public SkillExecutionService(RpgLoadoutOperations loadouts, Stage04SkillProfiles profiles,
+                                 RpgCombatKernel kernel, SkillExecutorRegistry executors,
+                                 SkillInstanceLifecycle lifecycle, RpgSkillTracer tracer, java.util.function.LongSupplier nanoTime) {
         this.loadouts = loadouts; this.profiles = profiles; this.kernel = kernel;
         this.executors = executors; this.lifecycle = lifecycle; this.tracer = tracer;
+        this.nanoTime=nanoTime;
     }
 
     public SkillExecutionResult request(SkillExecutionRequest request, SkillExecutionPort port) {
@@ -88,12 +96,16 @@ public final class SkillExecutionService {
     }
 
     public boolean cancel(UUID actor, String reason) {
+        var queued=releases.cancel(actor);
+        for(var pending:queued) emit(pending.request(),RpgTraceEventType.SKILL_RELEASE_CANCELLED,
+                pending.rootCastId(),pending.skillInstanceId(),Map.of("reason",reason,"refund",false));
         Prepared windup;
         synchronized (windups) { windup = windups.remove(actor); }
         SkillExecutionContext context;
         synchronized (activeContexts) { context = activeContexts.remove(actor); }
         Optional<SkillInstanceLifecycle.Active> cancelled = lifecycle.cancel(actor);
-        if (cancelled.isEmpty()) return false;
+        if (cancelled.isEmpty()) return !queued.isEmpty();
+        if (context == null && windup == null) return true; // No fabricated context during a claimed release.
         SkillExecutionRequest request = context != null ? context.request() : windup.request;
         String root = context != null ? context.rootCastId() : windup.rootCastId;
         String instance = context != null ? context.skillInstanceId() : windup.instanceId;
@@ -119,6 +131,7 @@ public final class SkillExecutionService {
     }
     private Prepared validate(SkillExecutionRequest request, SkillExecutionPort port, String root, String retainedInstance) {
         if (!port.actorAliveAndUsable()) throw new Rejection("ACTOR_NOT_USABLE", retainedInstance);
+        if(releases.hasPendingPrimary(request.actorId(),request.slot())) throw new Rejection("PENDING_PRIMARY_FOR_SLOT",retainedInstance);
         var view = loadouts.getPresentationView(request.actorId());
         var skill = view.state().skill(request.slot()).orElseThrow(() -> new Rejection("EMPTY_SLOT", retainedInstance));
         CompiledSkillPlan plan = view.plans().get(request.slot());
@@ -154,7 +167,26 @@ public final class SkillExecutionService {
     }
 
     private SkillExecutionResult commitAndDispatch(Prepared prepared, SkillExecutionPort port) {
-        var token = kernel.resources().reserveCost(prepared.request.actorId(), prepared.cost, port.resources());
+        var releaseModifiers=prepared.plan.executionModifiers();
+        String admission=releases.reserve(prepared.instanceId,prepared.request.actorId(),prepared.request.slot(),releaseModifiers);
+        if(!admission.equals("PASS")) {
+            lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);
+            return reject(prepared.request,prepared.rootCastId,prepared.instanceId,admission);
+        }
+        CommittedTarget target;
+        try {
+            target=releaseModifiers.scheduled()?port.captureTarget(prepared.profile,prepared.plan,prepared.request):null;
+            if(releaseModifiers.scheduled() && target==null) throw new IllegalStateException("COMMITTED_TARGET_ADAPTER_UNAVAILABLE");
+        } catch(RuntimeException error) {
+            releases.finish(prepared.instanceId);lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);
+            return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"TARGET_CAPTURE_FAILED_"+error.getMessage());
+        }
+        com.inigmasgames.hytalerpg.combat.resource.RpgResourceService.CostToken token;
+        try { token=kernel.resources().reserveCost(prepared.request.actorId(),prepared.cost,port.resources()); }
+        catch(RuntimeException error) {
+            releases.finish(prepared.instanceId);lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);
+            return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"RESOURCE_RESERVATION_FAILED");
+        }
         boolean resourceCommitted = false;
         boolean cooldownStarted = false;
         SkillExecutionContext context;
@@ -164,16 +196,16 @@ public final class SkillExecutionService {
             var cooldown = kernel.cooldowns().calculate(prepared.profile.cooldownSeconds(), 1.0,
                     attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
             Map<String, Double> status = prepared.profile.authoredStatuses();
-            ModifierBuckets modifiers = new ModifierBuckets(
-                    prepared.plan.kernelModifiers().scalablePayloadIncreased() > 0.0
-                            ? java.util.List.of(prepared.plan.kernelModifiers().scalablePayloadIncreased())
-                            : java.util.List.of(), java.util.List.of(), java.util.List.of(), java.util.List.of());
+            // CombatSnapshotFactory alone installs compiled Increased modifiers (including Potency).
+            ModifierBuckets modifiers = new ModifierBuckets(java.util.List.of(), java.util.List.of(),
+                    releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
+                    releaseModifiers.expandedRadius()?java.util.List.of(.10):java.util.List.of());
             var snapshot = kernel.snapshots().capture(prepared.rootCastId, prepared.instanceId,
                     prepared.request.actorId(), attributes, power, prepared.plan,
                     prepared.profile.damageCoefficient(),
                     modifiers, prepared.cost, cooldown.finalSeconds(), status);
             context = new SkillExecutionContext(prepared.request, prepared.rootCastId, prepared.instanceId,
-                    prepared.profile, prepared.plan, snapshot, prepared.equipment);
+                    prepared.profile, prepared.plan, snapshot, prepared.equipment,target,false);
             kernel.resources().commitCost(token, port.resources()); resourceCommitted = true;
             kernel.cooldowns().startCooldown(prepared.request.actorId(), prepared.profile.skillId(),
                     prepared.profile.cooldownSeconds(), 1.0, attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
@@ -185,6 +217,7 @@ public final class SkillExecutionService {
                 else kernel.resources().refundIfUncommitted(token);
             } catch (RuntimeException ignored) { }
             lifecycle.terminate(prepared.request.actorId(), prepared.instanceId);
+            releases.finish(prepared.instanceId);
             return reject(prepared.request, prepared.rootCastId, prepared.instanceId,
                     "COMMIT_FAILED_" + error.getClass().getSimpleName());
         }
@@ -192,14 +225,26 @@ public final class SkillExecutionService {
                 Map.of("skillId", prepared.profile.skillId(), "resourceCost", prepared.cost.amount(),
                         "cooldownSeconds", context.snapshot().cooldownSeconds(),
                         "compiledPlanHash", prepared.plan.planHash()));
+        releases.arm(context,now());
+        if(releaseModifiers.delaySeconds()>0) {
+            kernel.resources().finish(token);lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);
+            emit(prepared.request,RpgTraceEventType.SKILL_RELEASE_SCHEDULED,prepared.rootCastId,prepared.instanceId,
+                    Map.of("delaySeconds",releaseModifiers.delaySeconds(),"echo",false,"paid",true));
+            return SkillExecutionResult.committed("RELEASE_PENDING",0,0);
+        }
         emit(prepared.request, RpgTraceEventType.EXECUTOR_DISPATCH, prepared.rootCastId, prepared.instanceId,
                 Map.of("family", prepared.profile.family().name()));
         SkillExecutionResult result;
         try {
             result = executors.require(prepared.profile.family()).execute(context, port);
             kernel.resources().finish(token);
+            if (result.committed()) {
+                releases.primaryReleased(context,now());
+                traceEchoSchedule(context);
+            } else releases.finish(prepared.instanceId);
         }
         catch (RuntimeException error) {
+            releases.finish(prepared.instanceId);
             // Spatial dispatch can already have applied a hit before a later presentation/status adapter fails.
             // A paid area must not yield free native damage through the synchronous rollback path.
             if (cooldownStarted && prepared.profile.area() == null) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
@@ -210,33 +255,86 @@ public final class SkillExecutionService {
             return new SkillExecutionResult(SkillExecutionResult.Status.TERMINATED,
                     "EXECUTOR_ERROR", true, 0, 0.0);
         }
-        if (prepared.profile.area() != null) {
+        retainExecutionLifecycle(context);
+        return result;
+    }
+
+    private void retainExecutionLifecycle(SkillExecutionContext context) {
+        if (context.profile().area() != null) {
             // The area registry owns the finite effect after dispatch; it does not lock unrelated casts for its lifetime.
-            lifecycle.terminate(prepared.request.actorId(), prepared.instanceId);
-        } else if (prepared.profile.family() == Stage04SkillProfile.Family.STRIKE
-                && prepared.profile.strike().repeats() > 1
-                && prepared.profile.strike().repeatIntervalSeconds() > 0.0) {
-            if (!lifecycle.transition(prepared.request.actorId(), prepared.instanceId,
+            lifecycle.terminate(context.request().actorId(), context.skillInstanceId());
+        } else if (context.profile().family() == Stage04SkillProfile.Family.STRIKE
+                && context.profile().strike().repeats() > 1
+                && context.profile().strike().repeatIntervalSeconds() > 0.0) {
+            if (!lifecycle.transition(context.request().actorId(), context.skillInstanceId(),
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.STRIKE_REPEAT))
                 throw new IllegalStateException("Strike-repeat lifecycle transition failed");
-            synchronized (activeContexts) { activeContexts.put(prepared.request.actorId(), context); }
-        } else if (prepared.profile.family() == Stage04SkillProfile.Family.MOVEMENT) {
-            if (!lifecycle.transition(prepared.request.actorId(), prepared.instanceId,
+            synchronized (activeContexts) { activeContexts.put(context.request().actorId(), context); }
+        } else if (context.profile().family() == Stage04SkillProfile.Family.MOVEMENT) {
+            if (!lifecycle.transition(context.request().actorId(), context.skillInstanceId(),
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.MOVEMENT))
                 throw new IllegalStateException("Movement lifecycle transition failed");
-            synchronized (activeContexts) { activeContexts.put(prepared.request.actorId(), context); }
-        } else if (prepared.profile.family() == Stage04SkillProfile.Family.REACTION) {
-            if (!lifecycle.transition(prepared.request.actorId(), prepared.instanceId,
+            synchronized (activeContexts) { activeContexts.put(context.request().actorId(), context); }
+        } else if (context.profile().family() == Stage04SkillProfile.Family.REACTION) {
+            if (!lifecycle.transition(context.request().actorId(), context.skillInstanceId(),
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.REACTION))
                 throw new IllegalStateException("Reaction lifecycle transition failed");
-            synchronized (activeContexts) { activeContexts.put(prepared.request.actorId(), context); }
-        } else if (prepared.profile.family() == Stage04SkillProfile.Family.PROJECTILE) {
-            if (!lifecycle.transition(prepared.request.actorId(), prepared.instanceId,
+            synchronized (activeContexts) { activeContexts.put(context.request().actorId(), context); }
+        } else if (context.profile().family() == Stage04SkillProfile.Family.PROJECTILE) {
+            if (!lifecycle.transition(context.request().actorId(), context.skillInstanceId(),
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.PROJECTILE))
                 throw new IllegalStateException("Projectile lifecycle transition failed");
-            synchronized (activeContexts) { activeContexts.put(prepared.request.actorId(), context); }
+            synchronized (activeContexts) { activeContexts.put(context.request().actorId(), context); }
         } else terminate(context, "STRIKE_COMPLETE");
-        return result;
+    }
+
+    private double now() { return nanoTime.getAsLong()/1e9; }
+    public int pendingReleaseCount() { return releases.size(); }
+
+    /** Called from the owner's actual world tick with a fresh native port, never a stale retained command buffer. */
+    public void tickScheduled(UUID actor, SkillExecutionPort port) {
+        for(var release:releases.due(actor,now())) {
+            if(!releases.isCurrent(release)) continue;
+            var context=release.context();
+            try {
+                SkillExecutionPort.Validation validation=port.actorAliveAndUsable()?port.validateRelease(context)
+                        :SkillExecutionPort.Validation.reject("ACTOR_NOT_USABLE");
+                if(!validation.accepted()) {
+                    cancelRelease(release,validation.code());continue;
+                }
+                if(!releases.isCurrent(release)) continue;
+                if(!context.echo() && !lifecycle.begin(actor,context.skillInstanceId(),SkillInstanceLifecycle.Phase.COMMITTED)) {
+                    cancelRelease(release,"INCOMPATIBLE_ACTIVE_STATE");continue;
+                }
+                emit(context.request(),RpgTraceEventType.SKILL_RELEASED,context.rootCastId(),context.skillInstanceId(),
+                        Map.of("echo",context.echo(),"resourceCharged",false));
+                emit(context.request(),RpgTraceEventType.EXECUTOR_DISPATCH,context.rootCastId(),context.skillInstanceId(),
+                        Map.of("family",context.profile().family().name(),"echo",context.echo()));
+                var outcome=executors.require(context.profile().family()).execute(context,port);
+                if(!outcome.committed()) {
+                    cancelRelease(release,"EXECUTOR_DID_NOT_RELEASE");continue;
+                }
+                if(context.echo()) releases.finish(release.reservation());
+                else {
+                    retainExecutionLifecycle(context);
+                    releases.primaryReleased(context,now());
+                    traceEchoSchedule(context);
+                }
+            } catch(RuntimeException error) {
+                cancelRelease(release,"RELEASE_FAILURE_"+error.getClass().getSimpleName()+":"+String.valueOf(error.getMessage()));
+            }
+        }
+    }
+    private void traceEchoSchedule(SkillExecutionContext context) {
+        if(context.compiledPlan().executionModifiers().echoDelaySeconds()>0)
+            emit(context.request(),RpgTraceEventType.SKILL_RELEASE_SCHEDULED,context.rootCastId(),context.skillInstanceId()+"/echo",
+                    Map.of("delaySeconds",context.compiledPlan().executionModifiers().echoDelaySeconds(),"echo",true,"paid",true));
+    }
+    private void cancelRelease(SkillReleaseScheduler.Release release,String reason) {
+        releases.finish(release.reservation());var context=release.context();
+        if(!context.echo()) terminate(context,"RELEASE_CANCELLED");
+        emit(context.request(),RpgTraceEventType.SKILL_RELEASE_CANCELLED,context.rootCastId(),context.skillInstanceId(),
+                Map.of("reason",reason,"refund",false));
     }
 
     private DerivedStats derive(UUID actor) {

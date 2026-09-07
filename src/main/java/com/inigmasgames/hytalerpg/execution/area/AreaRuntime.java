@@ -14,6 +14,8 @@ import java.util.UUID;
 public final class AreaRuntime {
     public static final int OWNER_CAP = 8, GLOBAL_CAP = 128;
     private final Map<String, Field> fields = new LinkedHashMap<>();
+    private final Map<String,Map<String,Ledger>> rootLedgers=new HashMap<>();
+    private final Map<String,Integer> rootSpawned=new HashMap<>();
 
     public synchronized String admission(UUID owner, String skill, boolean trap) {
         if (fields.size() >= GLOBAL_CAP) return "GLOBAL_FIELD_BUDGET";
@@ -33,13 +35,19 @@ public final class AreaRuntime {
         String admission = admission(context.request().actorId(), context.profile().skillId(), profile.trap());
         if (!admission.equals("PASS")) throw new IllegalStateException(admission);
         if (fields.containsKey(context.skillInstanceId())) throw new IllegalStateException("DUPLICATE_FIELD_INSTANCE");
+        int spawnCost=1+(profile.stratified()?profile.impactCount():0);
+        int spent=rootSpawned.getOrDefault(rootKey(context),0);
+        if(spent+spawnCost>context.compiledPlan().safetyBudgets().maxSpawnedEffects()) throw new IllegalStateException("ROOT_SPAWN_EFFECT_BUDGET");
         Field field = new Field(context, profile.footprint(point, direction, radiusFactor), now, radiusFactor);
+        rootSpawned.put(rootKey(context),spent+spawnCost);
         fields.put(context.skillInstanceId(), field);
-        port.trace(context, "AREA_STARTED", Map.of("origin", point.toString(), "radius", field.geometry.radius(),
-                "height", field.geometry.height(), "lifetimeSeconds", profile.lifetimeSeconds()));
-        try { tickField(field, now, port); }
+        try {
+            port.trace(context, "AREA_STARTED", Map.of("origin", point.toString(), "radius", field.geometry.radius(),
+                    "height", field.geometry.height(), "lifetimeSeconds", profile.lifetimeSeconds()));
+            tickField(field, now, port);
+        }
         catch (RuntimeException error) { finish(field, "NATIVE_ADAPTER_FAILURE_" + error.getClass().getSimpleName(), port); throw error; }
-        finally { if (field.done) fields.remove(context.skillInstanceId()); }
+        finally { if (field.done) removeField(field); }
     }
 
     public synchronized void tick(UUID owner, double now, AreaWorldPort port) {
@@ -48,7 +56,7 @@ public final class AreaRuntime {
             if (!field.context.request().actorId().equals(owner)) continue;
             try { tickField(field, now, port); }
             catch (RuntimeException error) { finish(field, "NATIVE_ADAPTER_FAILURE_" + error.getClass().getSimpleName(), port); }
-            if (field.done) fields.remove(field.context.skillInstanceId());
+            finally { if (field.done) removeField(field); }
         }
     }
 
@@ -57,8 +65,9 @@ public final class AreaRuntime {
         List<SkillExecutionContext> removed = new ArrayList<>();
         fields.values().removeIf(f -> {
             if (!f.context.request().actorId().equals(owner)) return false;
-            removed.add(f.context); return true;
+            f.done=true;removed.add(f.context); return true;
         });
+        removed.forEach(c->cleanupRoot(rootKey(c)));
         return List.copyOf(removed);
     }
     public synchronized int size() { return fields.size(); }
@@ -231,11 +240,14 @@ public final class AreaRuntime {
                     int impactIndex, double now, AreaWorldPort port, double seconds, boolean periodic, boolean finalBlast) {
         AreaSkillProfile profile = field.context.profile().area();
         int applied = 0;
+        Map<String,Ledger> ledger=profile.stratified()&&!finalBlast
+                ?rootLedgers.computeIfAbsent(rootKey(field.context),ignored->new HashMap<>()) :field.ledger;
+        String impactKey=field.context.skillInstanceId()+"/"+impactIndex;
         for (AreaWorldPort.Target target : targets) {
-            Ledger previous = field.ledger.get(target.id());
+            Ledger previous = ledger.get(target.id());
             if (!finalBlast && previous != null && (previous.hits >= profile.perTargetHitCap()
                     || now - previous.lastHit < profile.targetIntervalSeconds() - 1e-9
-                    || previous.lastImpact == impactIndex)) continue;
+                    || previous.lastImpact.equals(impactKey))) continue;
             double distance = footprint.horizontalDistance(target.bounds());
             boolean inner = profile.innerRadius() > 0 && distance <= profile.innerRadius() * field.radiusFactor;
             double coefficient = inner && profile.innerCoefficient() > 0 ? profile.innerCoefficient() : profile.coefficient();
@@ -258,7 +270,8 @@ public final class AreaRuntime {
                     finalBlast ? 0 : profile.pullCoreRadius() * field.radiusFactor, finalBlast);
             if (!port.apply(field.context, target, payload)) continue;
             if (statusReady && !status.isBlank()) field.statusLastHit.put(target.id(), now);
-            field.ledger.put(target.id(), new Ledger(previous == null ? 1 : previous.hits + 1, now, impactIndex));
+            var accepted=new Ledger(previous == null ? 1 : previous.hits + 1, now, impactKey);
+            ledger.put(target.id(),accepted);field.ledger.put(target.id(),accepted);
             applied++;
             port.trace(field.context, "AREA_HIT", Map.of("target", target.id(), "impactIndex", impactIndex,
                     "coefficient", coefficient, "distance", distance));
@@ -268,9 +281,21 @@ public final class AreaRuntime {
     }
     private void finish(Field field, String reason, AreaWorldPort port) {
         field.done = true;
-        port.trace(field.context, "AREA_TERMINATED", Map.of("reason", reason, "hitTargets", field.ledger.size()));
+        // A failed diagnostic sink must not prevent cleanup or the next owner's field tick.
+        try { port.trace(field.context, "AREA_TERMINATED", Map.of("reason", reason, "hitTargets", field.ledger.size())); }
+        catch (RuntimeException ignored) { }
     }
-    private record Ledger(int hits, double lastHit, int lastImpact) { }
+    private void removeField(Field field) {
+        fields.remove(field.context.skillInstanceId());cleanupRoot(rootKey(field.context));
+    }
+    private void cleanupRoot(String root) {
+        if(fields.values().stream().noneMatch(f->rootKey(f.context).equals(root))) {
+            rootLedgers.remove(root);rootSpawned.remove(root);
+        }
+    }
+    public synchronized int retainedRootCount() { return rootSpawned.size(); }
+    private static String rootKey(SkillExecutionContext context) { return context.request().actorId()+"/"+context.rootCastId(); }
+    private record Ledger(int hits, double lastHit, String lastImpact) { }
     private static final class Field {
         final SkillExecutionContext context; final AreaGeometry geometry; final double started, radiusFactor;
         final Map<String, Ledger> ledger = new HashMap<>();

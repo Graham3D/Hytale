@@ -1,0 +1,14 @@
+{
+  "roots": 96,
+  "owners": 12,
+  "targetsPerQuery": 256,
+  "simulationSeconds": 8.5,
+  "nativeClient": false,
+  "hits": 147456,
+  "queries": 864,
+  "presentationCalls": 7872,
+  "traceCalls": 147648,
+  "elapsedMillis": 84.02,
+  "retainedFields": 0,
+  "retainedRoots": 0
+}

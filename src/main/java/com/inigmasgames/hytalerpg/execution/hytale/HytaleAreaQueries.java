@@ -64,6 +64,12 @@ final class HytaleAreaQueries {
         BlockCollisionData hit = first(store, origin, destination.subtract(origin));
         return hit == null || hit.collisionStart >= 1 - 1e-6;
     }
+    /** Saves the original aiming ray's world endpoint; does not acquire an enemy or cross its first blocking surface. */
+    static Vec3 rayEndpoint(Store<EntityStore> store,Vec3 origin,Vec3 direction,double range) {
+        Vec3 delta=direction.normalized().multiply(range);var hit=first(store,origin,delta);
+        double fraction=hit==null?1:Math.clamp(hit.collisionStart-.03/Math.max(.03,range),0,1);
+        return origin.add(delta.multiply(fraction));
+    }
     private static BlockCollisionData first(Store<EntityStore> store, Vec3 origin, Vec3 displacement) {
         CollisionResult result = new CollisionResult(); result.setDefaultPlayerSettings();
         result.disableCharacterCollisions(); result.disableTriggerBlocks(); result.disableDamageBlocks();

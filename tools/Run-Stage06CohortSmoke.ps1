@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c')][string]$Cohort = 'a')
+param([ValidateSet('a','b','c','d')][string]$Cohort = 'a')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
@@ -11,7 +11,7 @@ $savePermissions = "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\permissions.j
 $runDirectory = Join-Path $projectRoot "run\stage06-cohort-$Cohort-smoke"
 $mods = Join-Path $runDirectory 'mods'
 $evidence = Join-Path $projectRoot "evidence\stage-06\cohort-$Cohort"
-$expectedProfiles = switch ($Cohort) { 'a' { 3 } 'b' { 9 } 'c' { 15 } }
+$expectedProfiles = switch ($Cohort) { 'a' { 3 } 'b' { 9 } 'c' { 15 } 'd' { 15 } }
 $expectedStatusAssets = if ($Cohort -eq 'a') { 8 } else { 10 }
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path
@@ -40,6 +40,7 @@ finally { Pop-Location }
 $plain.TrimEnd() | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke.txt') -Encoding utf8
 $summary = [ordered]@{
     capturedAtUtc = [DateTime]::UtcNow.ToString('o'); processExitCode = $exitCode
+    jarSha256 = (Get-FileHash -LiteralPath (Join-Path $resolved 'HytaleRPG-0.0.18.jar')).Hash
     exactlyThreeMods = @(Get-ChildItem -LiteralPath $resolved -Filter '*.jar' -File).Count -eq 3
     rpgDiscovered = [bool]($plain -match 'HytaleRPG-0\.0\.18\.jar')
     rpgSetup = [bool]($plain -match 'HYTALE_RPG_SETUP revision=R025 version=0\.0\.18 hytale=0\.7\.0-pre\.1 stage=06')

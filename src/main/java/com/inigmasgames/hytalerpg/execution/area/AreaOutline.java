@@ -4,12 +4,12 @@ import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Bounded procedural footprint outline. Arc sagitta is <= 0.15 m before the 0.025 m visual lift. */
+/** Bounded procedural footprint outline. Arc sagitta is <= 0.15 m before the 0.10 m presentation-only lift. */
 public final class AreaOutline {
     public record Segment(Vec3 from, Vec3 to) { }
     private AreaOutline() { }
     public static List<Segment> segments(AreaGeometry shape) {
-        Vec3 center = shape.origin().add(new Vec3(0, .025, 0));
+        Vec3 center = shape.origin().add(new Vec3(0, .10, 0));
         Vec3 forward = shape.direction(), right = new Vec3(forward.z(), 0, -forward.x());
         List<Vec3> points = new ArrayList<>();
         if (shape.kind() == AreaGeometry.Kind.RECTANGLE) {
