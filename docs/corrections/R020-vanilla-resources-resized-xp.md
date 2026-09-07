@@ -81,6 +81,7 @@ the 696-pixel usable background width. No XP text or extra HUD element was added
 | Legacy probe retirement commit | `01dfd176b34d2a26c22d7a9fd3baf3b2efdfbe9d` |
 | Verified source/gate commit | `4a57696cb774e32fbcb7b2bd31a0fe98b2f85302` |
 | Initial evidence/deployment commit | `63cbb89711726a660c240b4ce98096484bd67b2b` |
+| Final global-ownership evidence commit | `b2ab9821a1050b83e70c11c0778bc9f63cf06564` |
 | Aggregate tests | PASS — 130 tests, 0 failures/errors/skips |
 | Source CustomUI validation | PASS — 16 documents |
 | Packaged RPG CustomUI validation | PASS — 9 documents |
