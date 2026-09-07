@@ -1,0 +1,4 @@
+Compiled from "ImpactConsumer.java"
+public interface com.hypixel.hytale.server.core.modules.projectile.config.ImpactConsumer {
+  public abstract void onImpact(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, org.joml.Vector3d, org.joml.Vector3i, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.lang.String, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+}

@@ -27,7 +27,7 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 3;
+    public static final int CURRENT_SCHEMA = 4;
     public CompiledSkillPlan {
         finalTags = Set.copyOf(finalTags);
         passiveOrder = List.copyOf(passiveOrder);
@@ -66,6 +66,14 @@ public record CompiledSkillPlan(
     }
     /** Typed release/geometry contract derived from the compiler's validated, deduplicated passive order. */
     public ExecutionModifiers executionModifiers() { return ExecutionModifiers.from(passiveOrder); }
+    public ProjectileModifiers projectileModifiers() { return ProjectileModifiers.from(passiveOrder); }
+    public record ProjectileModifiers(int pierce,int fork,int chain,int returning) {
+        public static ProjectileModifiers from(List<PassiveId> order) {
+            Set<String> ids=order.stream().map(PassiveId::value).collect(java.util.stream.Collectors.toSet());
+            return new ProjectileModifiers(ids.contains("piercing")?2:0,ids.contains("fork")?1:0,
+                    ids.contains("chain")?2:0,ids.contains("return")?1:0);
+        }
+    }
     public record ExecutionModifiers(double radiusFactor, double delaySeconds, double echoDelaySeconds,
                                      double echoMagnitude, boolean expandedRadius) {
         public static ExecutionModifiers from(List<PassiveId> order) {

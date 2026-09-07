@@ -65,6 +65,10 @@ import com.inigmasgames.hytalerpg.execution.movement.MovementPlanner;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileFlight;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileExecutionPlan;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance;
+import com.inigmasgames.hytalerpg.execution.projectile.ProjectileContinuation;
+import com.inigmasgames.hytalerpg.execution.projectile.ProjectileSweep;
+import com.hypixel.hytale.server.core.modules.projectile.component.PierceProjectile;
+import com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry;
 import com.inigmasgames.hytalerpg.execution.projectile.RpgProjectileService;
 import com.inigmasgames.hytalerpg.execution.reaction.ReactionWindowService;
@@ -103,9 +107,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final Map<UUID, Motion> motions = new HashMap<>();
     private final Map<UUID, Counter> counters = new HashMap<>();
     private final Map<UUID, RepeatingStrike> repeatingStrikes = new HashMap<>();
-    private final Map<String, ProjectileCarrier> projectiles = new HashMap<>();
+    private final Map<String, ProjectileCarrier> projectiles = new java.util.concurrent.ConcurrentHashMap<>();
     private final RpgProjectileService projectileService =
             new RpgProjectileService(new ProjectileLifecycleRegistry());
+    private final ProjectileContinuation continuations=new ProjectileContinuation(projectileService.registry());
     private final PeriodicStatusRuntime<SkillExecutionContext, PeriodicTarget> periodicStatuses = new PeriodicStatusRuntime<>();
     private final AreaRuntime areas = new AreaRuntime();
     private final com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry areaControls =
@@ -306,6 +311,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 long owned = projectiles.values().stream().filter(value -> value.actorId.equals(playerRef.getUuid())).count();
                 if (owned >= plan.safetyBudgets().maxLiveProjectiles())
                     return Validation.reject("PROJECTILE_LIVE_BUDGET_EXCEEDED");
+                String admission=projectileService.registry().admission(playerRef.getUuid(),plan.executionModifiers().echoDelaySeconds()>0?2:1);
+                if(!admission.equals("PASS"))return Validation.reject(admission);
                 if (!ammunition.available(actor, store, profile.projectile()))
                     return Validation.reject("AMMUNITION_UNAVAILABLE");
                 return Validation.pass();
@@ -401,6 +408,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         private boolean sameItem(Item current,Item prior) {
             return current!=null && prior!=null && current.itemId().equals(prior.itemId()) && current.weaponKind().equals(prior.weaponKind());
+        }
+        @Override public void abandonRelease(SkillExecutionContext context) {
+            if(context.profile().projectile()!=null && context.echo())
+                projectileService.registry().abandonLaunch(context.request().actorId(),context.rootCastId());
         }
         @Override public SkillExecutionResult executeStrike(SkillExecutionContext context) {
             int applied = executeStrikeHit(context, 0);
@@ -617,8 +628,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 instance = projectileService.onProjectileSpawn(plan);
                 ProjectileCarrier carrier = new ProjectileCarrier(context, actor, playerRef.getUuid(), spawned, instance);
                 projectiles.put(plan.projectileInstanceId(), carrier);
+                configureContinuationCarrier(carrier,buffer);
                 physics.setImpactConsumer((projectileRef, position, blockPosition, hitEntity, interaction, commandBuffer) ->
-                        onProjectileImpact(carrier, projectileRef, position, blockPosition, hitEntity, commandBuffer));
+                        dispatchNativeProjectileImpact(carrier, projectileRef, position, blockPosition, hitEntity, commandBuffer));
                 emit(context, RpgTraceEventType.PROJECTILE_SPAWNED,
                         Map.ofEntries(Map.entry("projectileInstanceId", plan.projectileInstanceId()),
                                 Map.entry("skillId", plan.skillId()), Map.entry("generation", plan.generation()),
@@ -635,6 +647,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if (instance != null) {
                     projectiles.remove(instance.plan().projectileInstanceId());
                     projectileService.onForwardTermination(instance, "SPAWN_REJECTED", instance.plan().origin());
+                    projectileService.registry().abandonLaunch(context.request().actorId(),context.rootCastId());
                 }
                 if (spawned != null && spawned.isValid()) buffer.tryRemoveEntity(spawned, RemoveReason.REMOVE);
                 if (ammo.quantity() > 0) ammunition.refund(actor, store, ammo);
@@ -917,6 +930,28 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
     }
 
+    private void dispatchNativeProjectileImpact(ProjectileCarrier carrier,Ref<EntityStore> projectileRef,
+            Vector3d position,Vector3i blockPosition,Ref<EntityStore> hitEntity,CommandBuffer<EntityStore> buffer) {
+        // Keep the unmodified Stage 05 callback path. Modified carriers use native Pierce, whose
+        // endCourse queues Despawn AFTER its callback and omits the terrain coordinates from its arguments.
+        if(!hasContinuations(carrier.context)) {onProjectileImpact(carrier,projectileRef,position,blockPosition,hitEntity,buffer);return;}
+        var physics=buffer.getComponent(projectileRef,StandardPhysicsProvider.getComponentType());
+        boolean courseEnd=hitEntity==null&&blockPosition==null;
+        Vector3i nativeBlock=courseEnd&&physics!=null&&physics.isBounced()?physics.bounceBlockPosition():blockPosition;
+        Vector3i savedBlock=nativeBlock==null?null:new Vector3i(nativeBlock);
+        Vector3d savedPosition=position==null?null:new Vector3d(position);
+        int revision=carrier.instance.motionRevision();
+        // CommandBuffer.run appends FIFO; the second enqueue executes after endCourse's queued writes.
+        // No replacement entity and no native despawn cancellation on an unproven/non-terrain ending.
+        buffer.run(ignored->buffer.run(afterNative->{
+            if(projectiles.get(carrier.instance.plan().projectileInstanceId())!=carrier || !projectileRef.isValid()
+                    || carrier.instance.motionRevision()!=revision)return;
+            if(courseEnd&&savedBlock!=null)buffer.tryRemoveComponent(projectileRef,
+                    com.hypixel.hytale.server.core.modules.entity.DespawnComponent.getComponentType());
+            onProjectileImpact(carrier,projectileRef,savedPosition,savedBlock,hitEntity,buffer);
+        }));
+    }
+
     private void onProjectileImpact(ProjectileCarrier expected, Ref<EntityStore> projectileRef,
                                     Vector3d position, Vector3i blockPosition, Ref<EntityStore> hitEntity,
                                     CommandBuffer<EntityStore> buffer) {
@@ -945,12 +980,38 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             return;
         }
         Port port = new Port(store, carrier.actor, playerRef, player, stats, hitEntity, buffer);
+        if(position==null) {cancelProjectile(carrier,"NATIVE_IMPACT_POSITION_MISSING",null,buffer);return;}
+        // endCourse() invokes the callback with neither entity nor block, then schedules native despawn.
+        // It is cancellation, not a terrain contact that may be resurrected by Return.
+        if(hitEntity==null && blockPosition==null) {cancelProjectile(carrier,"NATIVE_COURSE_ENDED",vec(position),buffer);return;}
+        if(!port.actorAliveAndUsable()) {cancelProjectile(carrier,"ACTOR_NOT_ALIVE",vec(position),buffer);return;}
+        if(hasContinuations(carrier.context) && expireContinuationClock(carrier,buffer))return;
+        if(carrier.instance.returning()) {
+            Vec3 from=carrier.instance.flight().lastPosition(),end=ProjectileSweep.limit(from,vec(position),carrier.instance.remainingDistance());
+            var caught=ProjectileSweep.catchFraction(from,end,casterPoint(carrier,store));
+            if(caught.isPresent()) {
+                end=from.add(end.subtract(from).multiply(caught.getAsDouble()));
+                if(hitEntity!=null || !processSweptContacts(carrier,end,buffer))terminateProjectile(carrier,"RETURN_CAUGHT",end,buffer);
+                return;
+            }
+        }
+        if(hasContinuations(carrier.context) && hitEntity==null && processSweptContacts(carrier,vec(position),buffer)) return;
+        if(hasContinuations(carrier.context) && carrier.instance.flight().lastPosition().subtract(vec(position)).length()
+                >carrier.instance.remainingDistance()+1e-6) {
+            Vec3 from=carrier.instance.flight().lastPosition();Vec3 end=from.add(vec(position).subtract(from).normalized().multiply(carrier.instance.remainingDistance()));
+            if(processSweptContacts(carrier,end,buffer))return;
+            carrier.instance.observe(0,end);
+            applyContinuation(carrier,continuations.forwardEnd(carrier.instance,end,casterPoint(carrier,store),"MAX_RANGE"),end,buffer);return;
+        }
         if (hitEntity != null && hitEntity.isValid()) {
+            if(hasContinuations(carrier.context) && !HytaleAreaQueries.clear(store,carrier.instance.flight().lastPosition(),vec(position))) {
+                cancelProjectile(carrier,"OCCLUDED_NATIVE_CONTACT",vec(position),buffer);return;
+            }
             StrikeGeometryService.Candidate<Ref<EntityStore>> target = port.candidate(hitEntity);
-            if (target == null || target.protectedTarget()) {
+            if (target == null || target.protectedTarget() || !HytaleAreaQueries.hostile(store,hitEntity,carrier.actor)) {
                 emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TARGET_REJECTED,
                         Map.of("target", hitEntity.toString(), "reason",
-                                target == null ? "INVALID_OR_NON_DAMAGEABLE" : "PROTECTED_TARGET"));
+                                target == null ? "INVALID_OR_NON_DAMAGEABLE" : "PROTECTED_OR_NON_HOSTILE_TARGET"));
                 terminateProjectile(carrier, "TARGET_REJECTED", vec(position), buffer);
                 return;
             }
@@ -959,9 +1020,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                         Map.of("targetId", target.stableId(), "reason", "ALREADY_HIT"));
                 return;
             }
-            projectiles.remove(projectileId, carrier);
-            if (projectileRef != null && projectileRef.isValid()) buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
+            boolean continues=hasContinuations(carrier.context);
+            if(!continues) {
+                projectiles.remove(projectileId, carrier);
+                if (projectileRef != null && projectileRef.isValid()) buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
+            }
             try {
+                carrier.instance.observe(0,vec(position));
                 Stage04SkillProfile.Projectile authored = carrier.context.profile().projectile();
                 DamageOutcome outcome = port.damage(carrier.context, target, 0, authored.coefficient(),
                         carrier.context.snapshot().criticalChance(), DamageCause.PROJECTILE);
@@ -983,11 +1048,18 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 hit.put("impactX", position.x); hit.put("impactY", position.y); hit.put("impactZ", position.z);
                 hit.put("travelledDistance", carrier.instance.flight().travelled());
                 emitProjectile(carrier, RpgTraceEventType.PROJECTILE_ENTITY_HIT, hit);
+                if(continues) {
+                    var decision=continuations.afterEnemy(carrier.instance,vec(position),casterPoint(carrier,store),
+                            chainCandidates(carrier,vec(position),port),System.nanoTime());
+                    applyContinuation(carrier,decision,vec(position),buffer);return;
+                }
                 projectileService.onForwardTermination(carrier.instance, "ENTITY_HIT", vec(position));
                 emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
                         Map.of("reason", "ENTITY_HIT", "travelledDistance", carrier.instance.flight().travelled()));
                 executions.terminate(carrier.context, "PROJECTILE_ENTITY_HIT");
             } catch (RuntimeException error) {
+                projectiles.remove(projectileId,carrier);
+                if(projectileRef!=null && projectileRef.isValid())buffer.tryRemoveEntity(projectileRef,RemoveReason.REMOVE);
                 projectileService.onForwardTermination(carrier.instance, "PAYLOAD_FAILURE", vec(position));
                 emitProjectile(carrier, RpgTraceEventType.PROJECTILE_CANCELLED,
                         Map.of("reason", "PAYLOAD_FAILURE", "error", error.getClass().getSimpleName()));
@@ -1005,6 +1077,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         details.put("travelledDistance", carrier.instance.flight().travelled());
         emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERRAIN_HIT, details);
+        if(hasContinuations(carrier.context)) {
+            carrier.instance.observe(0,vec(position));
+            applyContinuation(carrier,continuations.forwardEnd(carrier.instance,vec(position),casterPoint(carrier,store),"TERRAIN_HIT"),vec(position),buffer);
+            return;
+        }
         projectiles.remove(projectileId, carrier);
         if (projectileRef != null && projectileRef.isValid()) buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
         projectileService.onTerrainContact(carrier.instance, vec(position));
@@ -1033,6 +1110,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             TransformComponent transform = store.getComponent(carrier.projectile, TransformComponent.getComponentType());
             if (transform == null) continue;
+            if(hasContinuations(carrier.context)) {advanceModifiedProjectile(carrier,vec(transform.getPosition()),buffer);continue;}
             ProjectileFlight.Observation observation = carrier.instance.observe(Math.max(0.0, deltaSeconds),
                     vec(transform.getPosition()));
             if (!observation.expired() || !projectiles.remove(projectileId, carrier)) continue;
@@ -1109,17 +1187,168 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private void removeOwnedProjectiles(UUID actorId, CommandBuffer<EntityStore> buffer) {
         List<ProjectileCarrier> owned = projectiles.values().stream()
                 .filter(value -> value.actorId.equals(actorId)).toList();
+        // Drop promises/registry ownership before any native teardown can throw or queue on another world.
+        projectileService.cancelOwner(actorId,"OWNER_CANCELLED");
         for (ProjectileCarrier carrier : owned) {
             if (!projectiles.remove(carrier.instance.plan().projectileInstanceId(), carrier)) continue;
             projectileService.onForwardTermination(carrier.instance, "OWNER_CANCELLED", carrier.instance.flight().lastPosition());
             if (carrier.projectile.isValid()) {
                 if (buffer != null) buffer.tryRemoveEntity(carrier.projectile, RemoveReason.REMOVE);
-                else carrier.projectile.getStore().removeEntity(carrier.projectile, RemoveReason.REMOVE);
+                else {
+                    var projectileStore=carrier.projectile.getStore();
+                    Runnable remove=()-> {if(carrier.projectile.isValid())projectileStore.removeEntity(carrier.projectile,RemoveReason.REMOVE);};
+                    if(projectileStore.isInThread())remove.run();
+                    else projectileStore.getExternalData().getWorld().execute(remove);
+                }
             }
             emitProjectile(carrier, RpgTraceEventType.PROJECTILE_CANCELLED,
                     Map.of("reason", "OWNER_CANCELLED", "travelledDistance", carrier.instance.flight().travelled()));
             emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
                     Map.of("reason", "OWNER_CANCELLED", "travelledDistance", carrier.instance.flight().travelled()));
+        }
+    }
+
+    private static boolean hasContinuations(SkillExecutionContext context) {
+        var modifiers=context.compiledPlan().projectileModifiers();
+        return modifiers.pierce()+modifiers.fork()+modifiers.chain()+modifiers.returning()>0;
+    }
+    private boolean expireContinuationClock(ProjectileCarrier carrier,CommandBuffer<EntityStore> buffer) {
+        var observation=carrier.instance.sampleNativeClock(System.nanoTime());
+        if(!observation.expired())return false;
+        String reason=carrier.instance.remainingDistance()<=1e-6?"MAX_RANGE":"MAX_LIFETIME";
+        applyContinuation(carrier,continuations.forwardEnd(carrier.instance,observation.position(),casterPoint(carrier,buffer.getStore()),reason),
+                observation.position(),buffer);
+        return true;
+    }
+    private void advanceModifiedProjectile(ProjectileCarrier carrier,Vec3 nativePosition,CommandBuffer<EntityStore> buffer) {
+        try {
+            if(expireContinuationClock(carrier,buffer))return;
+            Vec3 from=carrier.instance.flight().lastPosition();
+            Vec3 position=ProjectileSweep.limit(from,nativePosition,carrier.instance.remainingDistance());
+            Vec3 caster=casterPoint(carrier,buffer.getStore());
+            var caught=carrier.instance.returning()?ProjectileSweep.catchFraction(from,position,caster):java.util.OptionalDouble.empty();
+            if(caught.isPresent())position=from.add(position.subtract(from).multiply(caught.getAsDouble()));
+            if(processSweptContacts(carrier,position,buffer))return;
+            var observation=carrier.instance.observe(0,position);
+            if(caught.isPresent()) {terminateProjectile(carrier,"RETURN_CAUGHT",position,buffer);return;}
+            if(observation.expired()) {
+                applyContinuation(carrier,continuations.forwardEnd(carrier.instance,position,caster,"MAX_RANGE"),position,buffer);return;
+            }
+            if(carrier.instance.returning()) {
+                carrier.instance.redirect(caster.subtract(position));resumeCarrier(carrier,position,buffer,false);
+            }
+        } catch(RuntimeException error) {
+            cancelProjectile(carrier,"CONTINUATION_TICK_FAILURE_"+error.getClass().getSimpleName(),carrier.instance.flight().lastPosition(),buffer);
+        }
+    }
+    /** The native Pierce provider only reports contact[0]; visit the remaining swept bounds without skipping a body. */
+    private boolean processSweptContacts(ProjectileCarrier carrier,Vec3 destination,CommandBuffer<EntityStore> buffer) {
+        var instance=carrier.instance;Vec3 from=instance.flight().lastPosition(),delta=destination.subtract(from);
+        if(delta.lengthSquared()<1e-12)return false;
+        double distance=Math.min(delta.length(),instance.remainingDistance());Vec3 end=from.add(delta.normalized().multiply(distance));
+        var box=buffer.getComponent(carrier.projectile,BoundingBox.getComponentType());
+        if(box==null) {cancelProjectile(carrier,"SWEEP_BOUNDS_MISSING",from,buffer);return true;}
+        var local=new AreaGeometry.Bounds(vec(box.getBoundingBox().min),vec(box.getBoundingBox().max));
+        double extent=Math.max(local.min().length(),local.max().length());Vec3 middle=from.add(end).multiply(.5);
+        double span=distance/2+extent;
+        var shape=new AreaGeometry(AreaGeometry.Kind.DISC,middle.add(new Vec3(0,-span,0)),Vec3.FORWARD,span,360,0,0,span*2);
+        var found=HytaleAreaQueries.query(buffer.getStore(),carrier.actor,shape,64);
+        if(found.overflow()){cancelProjectile(carrier,"SWEEP_CANDIDATE_BUDGET",from,buffer);return true;}
+        record Contact(Ref<EntityStore> ref,String id,double fraction) { }
+        var contacts=new ArrayList<Contact>();
+        for(var target:found.candidates()) {
+            var uuid=buffer.getStore().getComponent(target.ref(),UUIDComponent.getComponentType());
+            if(uuid==null || instance.previouslyHit(uuid.getUuid().toString()))continue;
+            var fraction=ProjectileSweep.contact(from,end,local,target.bounds());
+            if(fraction.isPresent())contacts.add(new Contact(target.ref(),uuid.getUuid().toString(),fraction.getAsDouble()));
+        }
+        contacts.sort(java.util.Comparator.comparingDouble(Contact::fraction).thenComparing(Contact::id));
+        for(var contact:contacts) {
+            Vec3 point=from.add(end.subtract(from).multiply(contact.fraction()));
+            if(!HytaleAreaQueries.clear(buffer.getStore(),from,point))break;
+            int revision=instance.motionRevision();
+            onProjectileImpact(carrier,carrier.projectile,vector(point),null,contact.ref(),buffer);
+            if(projectiles.get(instance.plan().projectileInstanceId())!=carrier||instance.motionRevision()!=revision)return true;
+        }
+        return false;
+    }
+    private Vec3 casterPoint(ProjectileCarrier carrier,Store<EntityStore> store) {
+        return vec(store.getComponent(carrier.actor,TransformComponent.getComponentType()).getPosition()).add(new Vec3(0,1.35,0));
+    }
+    private List<ProjectileContinuation.Candidate> chainCandidates(ProjectileCarrier carrier,Vec3 point,Port port) {
+        if(carrier.instance.returning()||carrier.instance.remaining("CHAIN")==0)return List.of();
+        var shape=new AreaGeometry(AreaGeometry.Kind.DISC,point.add(new Vec3(0,-8,0)),Vec3.FORWARD,8,360,0,0,16);
+        var found=HytaleAreaQueries.query(port.store,carrier.actor,shape,64);
+        if(found.overflow()) {
+            emitProjectile(carrier,RpgTraceEventType.PROJECTILE_TARGET_REJECTED,Map.of("reason","CHAIN_CANDIDATE_BUDGET"));return List.of();
+        }
+        var choices=new ArrayList<ProjectileContinuation.Candidate>();
+        for(var value:found.candidates()) {
+            var target=port.candidate(value.ref());if(target==null||target.protectedTarget())continue;
+            Vec3 center=value.bounds().centre();
+            choices.add(new ProjectileContinuation.Candidate(target.stableId(),center,HytaleAreaQueries.clear(port.store,point,center)));
+        }
+        return List.copyOf(choices);
+    }
+    private void configureContinuationCarrier(ProjectileCarrier carrier,CommandBuffer<EntityStore> buffer) {
+        if(!hasContinuations(carrier.context))return;
+        var instance=carrier.instance;var plan=instance.plan();
+        // Native Pierce prevents a just-hit body from stopping the carrier. RPG owns the exact leg budgets.
+        double range=carrier.context.profile().projectile().maxDistance()*2+2;
+        var component=new PierceProjectile(vector(instance.flight().lastPosition()),range,(float)(range/plan.velocity().length()+1));
+        for(String target:instance.hitTargets()) {
+            Ref<EntityStore> ref=buffer.getStore().getExternalData().getRefFromUUID(UUID.fromString(target));
+            if(ref!=null && ref.isValid())component.markHit(ref);
+        }
+        buffer.putComponent(carrier.projectile,PierceProjectile.getComponentType(),component);
+    }
+    private void resumeCarrier(ProjectileCarrier carrier,Vec3 point,CommandBuffer<EntityStore> buffer,boolean resetHitPhase) {
+        var physics=buffer.getComponent(carrier.projectile,StandardPhysicsProvider.getComponentType());
+        if(physics==null)throw new IllegalStateException("CONTINUATION_PHYSICS_MISSING");
+        physics.getPosition().set(vector(point));physics.getVelocity().set(vector(carrier.instance.direction().multiply(carrier.instance.plan().velocity().length())));
+        physics.setState(StandardPhysicsProvider.STATE.ACTIVE);
+        var transform=buffer.getComponent(carrier.projectile,TransformComponent.getComponentType());
+        var velocity=buffer.getComponent(carrier.projectile,com.hypixel.hytale.server.core.modules.physics.component.Velocity.getComponentType());
+        if(transform==null||velocity==null)throw new IllegalStateException("CONTINUATION_TRANSFORM_MISSING");
+        transform.setPosition(physics.getPosition());velocity.set(physics.getVelocity());
+        if(resetHitPhase)buffer.putComponent(carrier.projectile,PierceProjectile.getComponentType(),
+                new PierceProjectile(vector(point),carrier.context.profile().projectile().maxDistance()+1,
+                        (float)(carrier.context.profile().projectile().maxDistance()/carrier.instance.plan().velocity().length()+.5)));
+    }
+    private void applyContinuation(ProjectileCarrier carrier,ProjectileContinuation.Decision decision,Vec3 point,
+            CommandBuffer<EntityStore> buffer) {
+        var action=decision.action();
+        if(action==ProjectileContinuation.Action.TERMINATE) {terminateProjectile(carrier,decision.reason(),point,buffer);return;}
+        if(action!=ProjectileContinuation.Action.RETURN_CONTINUE)
+            emitProjectile(carrier,RpgTraceEventType.valueOf(action.name()),Map.of("reason",decision.reason(),
+                    "remaining",carrier.instance.budgets(),"totalTravelled",carrier.instance.totalDistance(),"nativeMotionVerified",false));
+        if(action==ProjectileContinuation.Action.FORK) {
+            var spawned=new ArrayList<ProjectileCarrier>();
+            try {
+                for(var child:decision.children()) {
+                    var plan=child.plan();var config=ProjectileConfig.getAssetMap().getAsset(plan.configId());
+                    if(config==null)throw new IllegalStateException("CHILD_CONFIG_MISSING");
+                    var ref=ProjectileModule.get().spawnProjectile(carrier.actor,buffer,config,vector(point),vector(child.direction()));
+                    var next=new ProjectileCarrier(carrier.context,carrier.actor,carrier.actorId,ref,child);spawned.add(next);
+                    projectiles.put(plan.projectileInstanceId(),next);configureContinuationCarrier(next,buffer);
+                    var physics=buffer.getComponent(ref,StandardPhysicsProvider.getComponentType());
+                    if(physics==null)throw new IllegalStateException("CHILD_PHYSICS_MISSING");
+                    physics.setImpactConsumer((p,position,block,entity,interaction,commands)->dispatchNativeProjectileImpact(next,p,position,block,entity,commands));
+                    emitProjectile(next,RpgTraceEventType.PROJECTILE_SPAWNED,Map.of("parentProjectileId",carrier.instance.plan().projectileInstanceId(),
+                            "derived",true,"additionalCost",0,"remainingDistance",plan.maxDistance()));
+                }
+            } catch(RuntimeException error) {
+                for(var next:spawned) {
+                    projectiles.remove(next.instance.plan().projectileInstanceId(),next);
+                    if(next.projectile.isValid())buffer.tryRemoveEntity(next.projectile,RemoveReason.REMOVE);
+                }
+                for(var child:decision.children())projectileService.onForwardTermination(child,"CHILD_SPAWN_FAILED",point);
+                emitProjectile(carrier,RpgTraceEventType.PROJECTILE_SPAWN_REJECTED,Map.of("reason","FORK_BATCH_FAILED","error",error.getClass().getSimpleName()));
+            } finally {terminateProjectile(carrier,"FORK_PARENT_CONSUMED",point,buffer);}
+        } else if(action==ProjectileContinuation.Action.CHAIN || action==ProjectileContinuation.Action.RETURN) {
+            Vec3 offset=point.add(decision.direction().multiply(.03));
+            if(!HytaleAreaQueries.clear(buffer.getStore(),point,offset)) {terminateProjectile(carrier,"CONTINUATION_OFFSET_BLOCKED",point,buffer);return;}
+            resumeCarrier(carrier,offset,buffer,action==ProjectileContinuation.Action.RETURN);
         }
     }
 

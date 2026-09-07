@@ -8,28 +8,69 @@ import java.util.Set;
 /** Mutable lifecycle state for one native carrier; all authored inputs remain in its immutable plan. */
 public final class ProjectileInstance {
     private final ProjectileExecutionPlan plan;
-    private final ProjectileFlight flight;
+    private ProjectileFlight flight;
     private final Set<String> hitTargets = new LinkedHashSet<>();
+    private final Set<String> returnTargets = new LinkedHashSet<>();
+    private final java.util.Map<String,Integer> budgets;
+    private Vec3 direction;
+    private boolean returning;
+    private double completedDistance,completedSeconds,returnDistance;
+    private int motionRevision;
+    private long nativeClockNanos;
     private Termination termination;
 
     public ProjectileInstance(ProjectileExecutionPlan plan) {
         this.plan = plan;
-        this.flight = new ProjectileFlight(plan.origin(), plan.velocity().length(), plan.maxDistance());
+        this.flight = new ProjectileFlight(plan.origin(), plan.velocity().length(), plan.maxDistance(),plan.maxLifetimeSeconds());
+        this.budgets=new java.util.HashMap<>(plan.remainingContinuationBudgets());
+        this.direction=plan.velocity().normalized();this.returnDistance=plan.maxDistance();
+        this.nativeClockNanos=plan.spawnTimestampNanos();
     }
 
     public synchronized boolean acceptTarget(String targetId) {
         if (termination != null || targetId == null || targetId.isBlank()) return false;
-        return hitTargets.add(targetId);
+        var ledger=returning?returnTargets:hitTargets;
+        return ledger.size()<256 && ledger.add(targetId);
     }
 
-    public synchronized boolean previouslyHit(String targetId) { return hitTargets.contains(targetId); }
+    public synchronized boolean previouslyHit(String targetId) { return (returning?returnTargets:hitTargets).contains(targetId); }
+    public synchronized boolean spend(String kind) {
+        int count=budgets.getOrDefault(kind,0);if(count<=0)return false;budgets.put(kind,count-1);return true;
+    }
+    public synchronized int remaining(String kind) { return budgets.getOrDefault(kind,0); }
+    public synchronized java.util.Map<String,Integer> budgets() { return java.util.Map.copyOf(budgets); }
+    public synchronized boolean returning() { return returning; }
+    public synchronized Vec3 direction() { return direction; }
+    public synchronized void redirect(Vec3 direction) { this.direction=direction.normalized();motionRevision++; }
+    public synchronized int motionRevision() { return motionRevision; }
+    public synchronized double remainingDistance() { return flight.remainingDistance(); }
+    public synchronized double remainingSeconds() { return flight.remainingSeconds(); }
+    public synchronized double totalDistance() { return completedDistance+flight.travelled(); }
+    public synchronized double totalSeconds() { return completedSeconds+flight.elapsed(); }
+    public synchronized void inheritVisited(ProjectileInstance parent) {
+        hitTargets.addAll(parent.hitTargets());returnDistance=parent.returnDistance;
+        completedDistance=parent.totalDistance();completedSeconds=parent.totalSeconds();
+    }
+    public synchronized boolean beginReturn(Vec3 position,Vec3 caster) {
+        if(returning||!spend("RETURN")||position.distanceSquared(caster)<=.25)return false;
+        completedDistance+=flight.travelled();completedSeconds+=flight.elapsed();returning=true;
+        flight=new ProjectileFlight(position,plan.velocity().length(),returnDistance,returnDistance/plan.velocity().length()+.1);
+        direction=caster.subtract(position).normalized();motionRevision++;return true;
+    }
     public synchronized ProjectileFlight.Observation observe(double seconds, Vec3 position) {
         return flight.observe(seconds, position);
+    }
+    /** Native callbacks and player ticks share one clock; redirects cannot skip or double-charge elapsed time. */
+    public synchronized ProjectileFlight.Observation sampleNativeClock(long now) {
+        long elapsed=now-nativeClockNanos;
+        if(elapsed<0)return flight.observe(0,flight.lastPosition());
+        nativeClockNanos=now;
+        return flight.observe(elapsed/1e9,flight.lastPosition());
     }
     public synchronized boolean terminate(String reason, Vec3 position) {
         if (termination != null) return false;
         termination = new Termination(reason, position == null ? flight.lastPosition() : position,
-                flight.travelled(), flight.elapsed());
+                totalDistance(), totalSeconds());
         return true;
     }
 

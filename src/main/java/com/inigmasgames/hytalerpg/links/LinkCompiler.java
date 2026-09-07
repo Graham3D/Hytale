@@ -145,7 +145,8 @@ public final class LinkCompiler {
                 + "|" + order + "|" + targeting + "|" + geometry + "|" + multiplicity + "|" + continuation
                 + "|" + resource + "|" + power + "|" + triggers + "|" + spawnCost
                 + "|" + scalablePayloadIncreased + "|" + resourceCostMultiplier + "|" + cooldownRecoveryBonus
-                + "|" + CompiledSkillPlan.ExecutionModifiers.from(order) + "|planSchema=" + CompiledSkillPlan.CURRENT_SCHEMA;
+                + "|" + CompiledSkillPlan.ExecutionModifiers.from(order) + "|" + CompiledSkillPlan.ProjectileModifiers.from(order)
+                + "|planSchema=" + CompiledSkillPlan.CURRENT_SCHEMA;
         var kernelModifiers = new CompiledSkillPlan.KernelModifiers(scalablePayloadIncreased,
                 resourceCostMultiplier, cooldownRecoveryBonus);
         return new CompiledSkillPlan(CompiledSkillPlan.CURRENT_SCHEMA, slot, skill.id(), hash(canonical), family,

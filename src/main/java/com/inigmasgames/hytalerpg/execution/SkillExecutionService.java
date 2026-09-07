@@ -300,10 +300,12 @@ public final class SkillExecutionService {
                 SkillExecutionPort.Validation validation=port.actorAliveAndUsable()?port.validateRelease(context)
                         :SkillExecutionPort.Validation.reject("ACTOR_NOT_USABLE");
                 if(!validation.accepted()) {
+                    port.abandonRelease(context);
                     cancelRelease(release,validation.code());continue;
                 }
                 if(!releases.isCurrent(release)) continue;
                 if(!context.echo() && !lifecycle.begin(actor,context.skillInstanceId(),SkillInstanceLifecycle.Phase.COMMITTED)) {
+                    port.abandonRelease(context);
                     cancelRelease(release,"INCOMPATIBLE_ACTIVE_STATE");continue;
                 }
                 emit(context.request(),RpgTraceEventType.SKILL_RELEASED,context.rootCastId(),context.skillInstanceId(),
@@ -312,6 +314,7 @@ public final class SkillExecutionService {
                         Map.of("family",context.profile().family().name(),"echo",context.echo()));
                 var outcome=executors.require(context.profile().family()).execute(context,port);
                 if(!outcome.committed()) {
+                    port.abandonRelease(context);
                     cancelRelease(release,"EXECUTOR_DID_NOT_RELEASE");continue;
                 }
                 if(context.echo()) releases.finish(release.reservation());
@@ -321,6 +324,7 @@ public final class SkillExecutionService {
                     traceEchoSchedule(context);
                 }
             } catch(RuntimeException error) {
+                port.abandonRelease(context);
                 cancelRelease(release,"RELEASE_FAILURE_"+error.getClass().getSimpleName()+":"+String.valueOf(error.getMessage()));
             }
         }

@@ -1,0 +1,304 @@
+Compiled from "Velocity.java"
+public class com.hypixel.hytale.server.core.modules.physics.component.Velocity implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.physics.component.Velocity> CODEC;
+
+  protected final java.util.List<com.hypixel.hytale.server.core.modules.physics.component.Velocity$Instruction> instructions;
+
+  protected final org.joml.Vector3d velocity;
+
+  protected final org.joml.Vector3d clientVelocity;
+
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.physics.component.Velocity> getComponentType();
+    Code:
+         0: invokestatic  #1                  // Method com/hypixel/hytale/server/core/modules/entity/EntityModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/EntityModule;
+         3: invokevirtual #7                  // Method com/hypixel/hytale/server/core/modules/entity/EntityModule.getVelocityComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: areturn
+
+  public com.hypixel.hytale.server.core.modules.physics.component.Velocity();
+    Code:
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #17                 // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+         8: dup
+         9: invokespecial #19                 // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+        12: putfield      #20                 // Field instructions:Ljava/util/List;
+        15: aload_0
+        16: new           #26                 // class org/joml/Vector3d
+        19: dup
+        20: invokespecial #28                 // Method org/joml/Vector3d."<init>":()V
+        23: putfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+        26: aload_0
+        27: new           #26                 // class org/joml/Vector3d
+        30: dup
+        31: invokespecial #28                 // Method org/joml/Vector3d."<init>":()V
+        34: putfield      #33                 // Field clientVelocity:Lorg/joml/Vector3d;
+        37: return
+
+  public com.hypixel.hytale.server.core.modules.physics.component.Velocity(com.hypixel.hytale.server.core.modules.physics.component.Velocity);
+    Code:
+         0: aload_0
+         1: new           #26                 // class org/joml/Vector3d
+         4: dup
+         5: aload_1
+         6: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         9: invokespecial #36                 // Method org/joml/Vector3d."<init>":(Lorg/joml/Vector3dc;)V
+        12: invokespecial #39                 // Method "<init>":(Lorg/joml/Vector3d;)V
+        15: return
+
+  public com.hypixel.hytale.server.core.modules.physics.component.Velocity(org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #17                 // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+         8: dup
+         9: invokespecial #19                 // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+        12: putfield      #20                 // Field instructions:Ljava/util/List;
+        15: aload_0
+        16: new           #26                 // class org/joml/Vector3d
+        19: dup
+        20: invokespecial #28                 // Method org/joml/Vector3d."<init>":()V
+        23: putfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+        26: aload_0
+        27: new           #26                 // class org/joml/Vector3d
+        30: dup
+        31: invokespecial #28                 // Method org/joml/Vector3d."<init>":()V
+        34: putfield      #33                 // Field clientVelocity:Lorg/joml/Vector3d;
+        37: aload_0
+        38: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+        41: aload_1
+        42: invokevirtual #42                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        45: pop
+        46: return
+
+  public void setZero();
+    Code:
+         0: aload_0
+         1: dconst_0
+         2: dconst_0
+         3: dconst_0
+         4: invokevirtual #46                 // Method set:(DDD)V
+         7: return
+
+  public void addVelocity(org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: aload_1
+         5: invokevirtual #49                 // Method org/joml/Vector3d.add:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+         8: pop
+         9: return
+
+  public void addVelocity(double, double, double);
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: dload_1
+         5: dload_3
+         6: dload         5
+         8: invokevirtual #52                 // Method org/joml/Vector3d.add:(DDD)Lorg/joml/Vector3d;
+        11: pop
+        12: return
+
+  public void set(org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #55                 // Method org/joml/Vector3d.x:()D
+         5: aload_1
+         6: invokevirtual #59                 // Method org/joml/Vector3d.y:()D
+         9: aload_1
+        10: invokevirtual #62                 // Method org/joml/Vector3d.z:()D
+        13: invokevirtual #46                 // Method set:(DDD)V
+        16: return
+
+  public void set(double, double, double);
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: dload_1
+         5: dload_3
+         6: dload         5
+         8: invokevirtual #65                 // Method org/joml/Vector3d.set:(DDD)Lorg/joml/Vector3d;
+        11: pop
+        12: return
+
+  public void setClient(org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #55                 // Method org/joml/Vector3d.x:()D
+         5: aload_1
+         6: invokevirtual #59                 // Method org/joml/Vector3d.y:()D
+         9: aload_1
+        10: invokevirtual #62                 // Method org/joml/Vector3d.z:()D
+        13: invokevirtual #67                 // Method setClient:(DDD)V
+        16: return
+
+  public void setClient(double, double, double);
+    Code:
+         0: aload_0
+         1: getfield      #33                 // Field clientVelocity:Lorg/joml/Vector3d;
+         4: dload_1
+         5: dload_3
+         6: dload         5
+         8: invokevirtual #65                 // Method org/joml/Vector3d.set:(DDD)Lorg/joml/Vector3d;
+        11: pop
+        12: return
+
+  public void setX(double);
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: dload_1
+         5: putfield      #70                 // Field org/joml/Vector3d.x:D
+         8: return
+
+  public void setY(double);
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: dload_1
+         5: putfield      #73                 // Field org/joml/Vector3d.y:D
+         8: return
+
+  public void setZ(double);
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: dload_1
+         5: putfield      #75                 // Field org/joml/Vector3d.z:D
+         8: return
+
+  public double getX();
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: invokevirtual #55                 // Method org/joml/Vector3d.x:()D
+         7: dreturn
+
+  public double getY();
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: invokevirtual #59                 // Method org/joml/Vector3d.y:()D
+         7: dreturn
+
+  public double getZ();
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: invokevirtual #62                 // Method org/joml/Vector3d.z:()D
+         7: dreturn
+
+  public double getSpeed();
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: invokevirtual #77                 // Method org/joml/Vector3d.length:()D
+         7: dreturn
+
+  public void addInstruction(org.joml.Vector3d, com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig, com.hypixel.hytale.protocol.ChangeVelocityType);
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field instructions:Ljava/util/List;
+         4: new           #80                 // class com/hypixel/hytale/server/core/modules/physics/component/Velocity$Instruction
+         7: dup
+         8: aload_1
+         9: aload_2
+        10: aload_3
+        11: invokespecial #82                 // Method com/hypixel/hytale/server/core/modules/physics/component/Velocity$Instruction."<init>":(Lorg/joml/Vector3d;Lcom/hypixel/hytale/server/core/modules/splitvelocity/VelocityConfig;Lcom/hypixel/hytale/protocol/ChangeVelocityType;)V
+        14: invokeinterface #85,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        19: pop
+        20: return
+
+  public void addInstruction(org.joml.Vector3d, com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig, com.hypixel.hytale.protocol.ChangeVelocityType, float);
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field instructions:Ljava/util/List;
+         4: new           #80                 // class com/hypixel/hytale/server/core/modules/physics/component/Velocity$Instruction
+         7: dup
+         8: aload_1
+         9: aload_2
+        10: aload_3
+        11: fload         4
+        13: invokespecial #90                 // Method com/hypixel/hytale/server/core/modules/physics/component/Velocity$Instruction."<init>":(Lorg/joml/Vector3d;Lcom/hypixel/hytale/server/core/modules/splitvelocity/VelocityConfig;Lcom/hypixel/hytale/protocol/ChangeVelocityType;F)V
+        16: invokeinterface #85,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        21: pop
+        22: return
+
+  public java.util.List<com.hypixel.hytale.server.core.modules.physics.component.Velocity$Instruction> getInstructions();
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field instructions:Ljava/util/List;
+         4: areturn
+
+  public org.joml.Vector3d getVelocity();
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: areturn
+
+  public org.joml.Vector3d getClientVelocity();
+    Code:
+         0: aload_0
+         1: getfield      #33                 // Field clientVelocity:Lorg/joml/Vector3d;
+         4: areturn
+
+  public org.joml.Vector3d assignVelocityTo(org.joml.Vector3d);
+    Code:
+         0: aload_1
+         1: aload_0
+         2: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         5: invokevirtual #42                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+         8: areturn
+
+  public com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> clone();
+    Code:
+         0: new           #21                 // class com/hypixel/hytale/server/core/modules/physics/component/Velocity
+         3: dup
+         4: aload_0
+         5: invokespecial #93                 // Method "<init>":(Lcom/hypixel/hytale/server/core/modules/physics/component/Velocity;)V
+         8: areturn
+
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+    Code:
+         0: aload_0
+         1: invokevirtual #96                 // Method clone:()Lcom/hypixel/hytale/component/Component;
+         4: areturn
+
+  private static org.joml.Vector3d lambda$static$1(com.hypixel.hytale.server.core.modules.physics.component.Velocity);
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.physics.component.Velocity, org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field velocity:Lorg/joml/Vector3d;
+         4: aload_1
+         5: invokevirtual #42                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+         8: pop
+         9: return
+
+  static {};
+    Code:
+         0: ldc           #21                 // class com/hypixel/hytale/server/core/modules/physics/component/Velocity
+         2: invokedynamic #100,  0            // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+         7: invokestatic  #103                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        10: new           #109                // class com/hypixel/hytale/codec/KeyedCodec
+        13: dup
+        14: ldc           #111                // String Velocity
+        16: getstatic     #113                // Field com/hypixel/hytale/math/vector/Vector3dUtil.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        19: invokespecial #119                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        22: invokedynamic #122,  0            // InvokeDynamic #1:accept:()Ljava/util/function/BiConsumer;
+        27: invokedynamic #126,  0            // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+        32: invokevirtual #130                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        35: invokevirtual #136                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        38: checkcast     #131                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        41: invokevirtual #141                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        44: putstatic     #145                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        47: return
+}

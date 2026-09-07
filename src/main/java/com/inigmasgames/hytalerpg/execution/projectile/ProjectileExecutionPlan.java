@@ -35,9 +35,11 @@ public record ProjectileExecutionPlan(
                 || snapshot == null || generation < 0 || remainingContinuationBudgets == null
                 || remainingContinuationBudgets.values().stream().anyMatch(value -> value == null || value < 0)
                 || remainingSpawnedEffects < 0
-                || remainingTriggeredSecondaries < 0 || spawnTimestampNanos < 0
+                || remainingTriggeredSecondaries < 0
                 || configId == null || configId.isBlank() || origin == null || velocity == null
-                || velocity.lengthSquared() < 1.0e-12 || radius <= 0.0 || maxDistance <= 0.0
+                || velocity.lengthSquared() < 1.0e-12 || !Double.isFinite(velocity.lengthSquared())
+                || !Double.isFinite(radius) || !Double.isFinite(maxDistance) || !Double.isFinite(maxLifetimeSeconds)
+                || radius <= 0.0 || maxDistance <= 0.0
                 || maxLifetimeSeconds <= 0.0)
             throw new IllegalArgumentException("Incomplete projectile execution plan");
         remainingContinuationBudgets = Map.copyOf(remainingContinuationBudgets);
@@ -51,10 +53,13 @@ public record ProjectileExecutionPlan(
                 || budgets.maxTriggeredSecondaries() < 0)
             throw new IllegalStateException("Compiled projectile safety budget rejects generation zero");
         var projectile = context.profile().projectile();
+        var modifiers=context.compiledPlan().projectileModifiers();
         return new ProjectileExecutionPlan(context.rootCastId(), context.skillInstanceId(),
                 context.skillInstanceId() + "-projectile-0", owner, context.profile().skillId(),
-                context.compiledPlan().planHash(), context.snapshot(), 0,
-                Map.of("SPLIT", 0, "PIERCE", 0, "FORK", 0, "CHAIN", 0, "RICOCHET", 0, "RETURN", 0),
+                context.compiledPlan().planHash(), context.snapshot(), context.echo()?1:0,
+                Map.of("SPLIT", 0, "PIERCE", modifiers.pierce(), "FORK", modifiers.fork(), "CHAIN", modifiers.chain(),
+                        "RICOCHET", 0, "RETURN", modifiers.returning(),
+                        "ROOT_LAUNCHES",context.compiledPlan().executionModifiers().echoDelaySeconds()>0?2:1,"IS_LAUNCH",1),
                 // Echo is the second authorized release of this root, not another first release.
                 // The retained registry validates the declared ordinal against existing root carriers.
                 budgets.maxSpawnedEffects() - (context.echo() ? 2 : 1), budgets.maxTriggeredSecondaries(),

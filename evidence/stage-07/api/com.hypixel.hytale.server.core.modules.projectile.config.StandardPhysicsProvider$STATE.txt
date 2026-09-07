@@ -1,0 +1,75 @@
+Compiled from "StandardPhysicsProvider.java"
+public final class com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE extends java.lang.Enum<com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE> {
+  public static final com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE ACTIVE;
+
+  public static final com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE RESTING;
+
+  public static final com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE INACTIVE;
+
+  private static final com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE[] $VALUES;
+
+  public static com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE[] values();
+    Code:
+         0: getstatic     #13                 // Field $VALUES:[Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+         3: invokevirtual #17                 // Method "[Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;".clone:()Ljava/lang/Object;
+         6: checkcast     #18                 // class "[Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;"
+         9: areturn
+
+  public static com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE valueOf(java.lang.String);
+    Code:
+         0: ldc           #1                  // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE
+         2: aload_0
+         3: invokestatic  #22                 // Method java/lang/Enum.valueOf:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+         6: checkcast     #1                  // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE
+         9: areturn
+
+  private com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE();
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iload_2
+         3: invokespecial #28                 // Method java/lang/Enum."<init>":(Ljava/lang/String;I)V
+         6: return
+
+  private static com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE[] $values();
+    Code:
+         0: iconst_3
+         1: anewarray     #1                  // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE
+         4: dup
+         5: iconst_0
+         6: getstatic     #3                  // Field ACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+         9: aastore
+        10: dup
+        11: iconst_1
+        12: getstatic     #7                  // Field RESTING:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+        15: aastore
+        16: dup
+        17: iconst_2
+        18: getstatic     #10                 // Field INACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+        21: aastore
+        22: areturn
+
+  static {};
+    Code:
+         0: new           #1                  // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE
+         3: dup
+         4: ldc           #32                 // String ACTIVE
+         6: iconst_0
+         7: invokespecial #33                 // Method "<init>":(Ljava/lang/String;I)V
+        10: putstatic     #3                  // Field ACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+        13: new           #1                  // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE
+        16: dup
+        17: ldc           #34                 // String RESTING
+        19: iconst_1
+        20: invokespecial #33                 // Method "<init>":(Ljava/lang/String;I)V
+        23: putstatic     #7                  // Field RESTING:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+        26: new           #1                  // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE
+        29: dup
+        30: ldc           #35                 // String INACTIVE
+        32: iconst_2
+        33: invokespecial #33                 // Method "<init>":(Ljava/lang/String;I)V
+        36: putstatic     #10                 // Field INACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+        39: invokestatic  #36                 // Method $values:()[Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+        42: putstatic     #13                 // Field $VALUES:[Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+        45: return
+}
