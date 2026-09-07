@@ -13,6 +13,8 @@ public final class StatusService {
     private final LongSupplier nanoTime;
     private final Map<UUID, EnumMap<RpgStatusType, State>> states = new HashMap<>();
     private final Map<UUID, Long> frozenImmunityEnds = new HashMap<>();
+    private final Map<UUID, Map<String, SlowState>> slows = new HashMap<>();
+    private final Map<UUID, java.util.ArrayDeque<Long>> controls = new HashMap<>();
     public StatusService(CombatBalanceProfile profile, LongSupplier nanoTime) { this.profile = profile; this.nanoTime = nanoTime; }
 
     public synchronized Result apply(UUID target, RpgStatusType type, ControlProfile control) {
@@ -23,6 +25,7 @@ public final class StatusService {
     public synchronized Result apply(UUID target, RpgStatusType type, ControlProfile control,
                                      double authoredDurationSeconds) {
         expire(target);
+        if (control.protectedEntity()) return new Result(Outcome.REJECTED, type, 0, 0, "protected target rejects hostile status");
         if (type == RpgStatusType.CHILL) return applyChill(target, control);
         if (isHardControl(type) && control.blocksHardControl()) {
             if (type == RpgStatusType.FROZEN) return applySimple(target, RpgStatusType.FROZEN_SUBSTITUTE_SLOW,
@@ -40,14 +43,28 @@ public final class StatusService {
         };
         if (Double.isFinite(authoredDurationSeconds) && authoredDurationSeconds > 0.0)
             duration = authoredDurationSeconds;
+        if (isHardControl(type) && type != RpgStatusType.TAUNT) {
+            long now = nanoTime.getAsLong();
+            var history = controls.computeIfAbsent(target, ignored -> new java.util.ArrayDeque<>());
+            while (!history.isEmpty() && now - history.getFirst() >= 10_000_000_000L) history.removeFirst();
+            if (history.size() >= 3) return new Result(Outcome.REJECTED, type, 0, 0, "rolling hard-control resistance");
+            duration *= control.durationMultiplier() * Math.scalb(1d, -history.size());
+            history.addLast(now);
+        }
         return applySimple(target, type, duration, 1, true, "applied");
     }
     private Result applyChill(UUID target, ControlProfile control) {
         EnumMap<RpgStatusType, State> actor = states.computeIfAbsent(target, ignored -> new EnumMap<>(RpgStatusType.class));
         int stacks = actor.getOrDefault(RpgStatusType.CHILL, new State(0, 0L)).stacks + 1;
         if (stacks >= profile.chillMaximumStacks) {
-            actor.remove(RpgStatusType.CHILL);
             Result frozen = apply(target, RpgStatusType.FROZEN, control);
+            if (frozen.outcome == Outcome.REJECTED) {
+                applySimple(target, RpgStatusType.CHILL, profile.chillDurationSeconds, profile.chillMaximumStacks - 1, true,
+                        "Chill held below threshold during control immunity");
+                return new Result(Outcome.REJECTED, RpgStatusType.CHILL, profile.chillMaximumStacks - 1,
+                        profile.chillDurationSeconds, frozen.detail);
+            }
+            actor.remove(RpgStatusType.CHILL);
             return new Result(Outcome.THRESHOLD, frozen.type, frozen.stacks, frozen.remainingSeconds,
                     "consumed " + profile.chillMaximumStacks + " Chill; " + frozen.detail);
         }
@@ -76,13 +93,46 @@ public final class StatusService {
                 result.put(type, new StatusView(state.stacks, Math.max(0.0, (state.endsAtNanos - now) / 1_000_000_000.0))));
         return new Snapshot(result);
     }
+    /** Authored Slow overrides share one strongest-only channel with Chill and the Frozen substitute. */
+    public synchronized void applySlow(UUID target, String source, double magnitude, double seconds) {
+        if (target == null || source == null || source.isBlank() || !Double.isFinite(magnitude) || magnitude <= 0
+                || !Double.isFinite(seconds) || seconds <= 0) throw new IllegalArgumentException("Invalid Slow");
+        strongestSlow(target);
+        Map<String, SlowState> entries = slows.computeIfAbsent(target, ignored -> new HashMap<>());
+        if (entries.size() >= 32 && !entries.containsKey(source)) throw new IllegalStateException("SLOW_SOURCE_BUDGET");
+        entries.put(source, new SlowState(Math.min(.6, magnitude), nanoTime.getAsLong() + Math.round(seconds * 1e9)));
+    }
+    public synchronized SlowView strongestSlow(UUID target) {
+        var active = inspect(target).active();
+        double strength = 0, seconds = 0; long now = nanoTime.getAsLong();
+        var chill = active.get(RpgStatusType.CHILL);
+        if (chill != null) { strength = chill.stacks() * profile.chillMovementPenaltyPerStack; seconds = chill.remainingSeconds(); }
+        var substitute = active.get(RpgStatusType.FROZEN_SUBSTITUTE_SLOW);
+        if (substitute != null && profile.protectedFrozenSlow >= strength) {
+            strength = profile.protectedFrozenSlow; seconds = substitute.remainingSeconds();
+        }
+        Map<String, SlowState> sources = slows.get(target);
+        if (sources != null) {
+            sources.values().removeIf(value -> value.ends <= now);
+            for (SlowState value : sources.values()) {
+                double remaining = (value.ends - now) / 1e9;
+                if (value.magnitude > strength || value.magnitude == strength && remaining > seconds) {
+                    strength = value.magnitude; seconds = remaining;
+                }
+            }
+            if (sources.isEmpty()) slows.remove(target);
+        }
+        return new SlowView(Math.min(.6, strength), seconds);
+    }
+    private record SlowState(double magnitude, long ends) { }
+    public record SlowView(double magnitude, double remainingSeconds) { }
     private void expire(UUID target) {
         EnumMap<RpgStatusType, State> actor = states.get(target);
         if (actor == null) return;
         long now = nanoTime.getAsLong();
-        boolean frozenExpired = actor.containsKey(RpgStatusType.FROZEN) && actor.get(RpgStatusType.FROZEN).endsAtNanos <= now;
+        long frozenEnd = actor.containsKey(RpgStatusType.FROZEN) ? actor.get(RpgStatusType.FROZEN).endsAtNanos : Long.MAX_VALUE;
         actor.entrySet().removeIf(entry -> entry.getValue().endsAtNanos <= now);
-        if (frozenExpired) frozenImmunityEnds.put(target, now + Math.round(profile.frozenImmunitySeconds * 1_000_000_000.0));
+        if (frozenEnd <= now) frozenImmunityEnds.put(target, frozenEnd + Math.round(profile.frozenImmunitySeconds * 1_000_000_000.0));
         if (actor.isEmpty()) states.remove(target);
     }
     private static boolean isHardControl(RpgStatusType type) {
@@ -90,6 +140,10 @@ public final class StatusService {
                 || type == RpgStatusType.TAUNT || type == RpgStatusType.STAGGER;
     }
     private record State(int stacks, long endsAtNanos) { }
+    /** Native entity removal is the terminal authority for victim-owned status memory. */
+    public synchronized void forget(UUID target) {
+        states.remove(target); slows.remove(target); controls.remove(target); frozenImmunityEnds.remove(target);
+    }
     public enum Outcome { APPLIED, REFRESHED, THRESHOLD, REJECTED }
     public record Result(Outcome outcome, RpgStatusType type, int stacks, double remainingSeconds, String detail) { }
     public record StatusView(int stacks, double remainingSeconds) { }

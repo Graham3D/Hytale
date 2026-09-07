@@ -1,0 +1,28 @@
+{
+  "capturedAtUtc": "2026-09-07T19:24:55.7016052Z",
+  "revision": "R025",
+  "version": "0.0.18",
+  "stage": "06",
+  "branch": "RPG",
+  "sourceHead": "6cc2861baf52931570ab0847c5c58ccf80c81648",
+  "worktreeDirty": true,
+  "stageStatus": "IMPLEMENTATION_IN_PROGRESS",
+  "completeStageGate": false,
+  "cohortSkills": [
+    "ground_slam",
+    "frost_nova",
+    "root_snare"
+  ],
+  "tests": 171,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "connectedVerification": "UNVERIFIED",
+  "nativeCastingFixed": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "jarSha256": "D9396CE6B7B657F99D6BA067845045140DF7AB2DCD9AE5659A463504ECA6036E",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "rollbackSha256": "FA6C2AAB3E232665D78336EB64334C98048C38821388E2C869AD057E85C14D1F"
+}

@@ -21,7 +21,19 @@ public record Stage04SkillProfile(
         Strike strike,
         Movement movement,
         Reaction reaction,
-        Projectile projectile) {
+        Projectile projectile,
+        com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area) {
+
+    /** Retained source compatibility for the Stage 04/05 fixtures and consumers. */
+    public Stage04SkillProfile(String skillId, Family family, Set<String> secondaryFamilies,
+            Set<String> allowedMainHandKinds, Set<String> requiredOffHandKinds, String resourceType,
+            double resourceCost, double cooldownSeconds, double windupSeconds, String basePowerSource,
+            double innateBasePower, String scaling, Strike strike, Movement movement, Reaction reaction,
+            Projectile projectile) {
+        this(skillId, family, secondaryFamilies, allowedMainHandKinds, requiredOffHandKinds, resourceType,
+                resourceCost, cooldownSeconds, windupSeconds, basePowerSource, innateBasePower, scaling,
+                strike, movement, reaction, projectile, null);
+    }
 
     public Stage04SkillProfile {
         secondaryFamilies = Set.copyOf(secondaryFamilies == null ? Set.of() : secondaryFamilies);
@@ -39,6 +51,7 @@ public record Stage04SkillProfile(
     public double damageCoefficient() {
         if (strike != null) return strike.coefficient();
         if (projectile != null) return projectile.coefficient();
+        if (area != null) return area.coefficient();
         return 0.0;
     }
 
@@ -50,7 +63,7 @@ public record Stage04SkillProfile(
         return Map.of();
     }
 
-    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE }
+    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE, BURST, CONE, TRAP, GROUND_ZONE, WALL, OVERHEAD, BOMBARDMENT }
     public enum Geometry { ARC, LINE, ASSIST_CONE, RADIUS }
     public enum MovementKind { DASH, LEAP }
 

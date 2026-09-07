@@ -22,6 +22,13 @@ public final class HytaleDamageAdapter {
     public void apply(Ref<EntityStore> target, ComponentAccessor<EntityStore> accessor,
                       Ref<EntityStore> source, DamageCause cause,
                       HytaleDamageMetadata metadata, DamageCalculationService.Result calculation) {
+        applyObserved(target, accessor, source, cause, metadata, calculation);
+    }
+
+    /** Same native dispatch with an observation result; cancellation must also gate secondary statuses. */
+    public NativeResult applyObserved(Ref<EntityStore> target, ComponentAccessor<EntityStore> accessor,
+                      Ref<EntityStore> source, DamageCause cause,
+                      HytaleDamageMetadata metadata, DamageCalculationService.Result calculation) {
         EntityStatMap targetStats = accessor.getComponent(target, EntityStatMap.getComponentType());
         double before = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
                 ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();
@@ -31,7 +38,11 @@ public final class HytaleDamageAdapter {
                 cause, calculation.toHytaleDamageFloat());
         damage.putMetaObject(RPG_METADATA, GSON.toJson(complete));
         DamageSystems.executeDamage(target, accessor, damage);
+        double after = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
+                ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();
+        return new NativeResult(damage.isCancelled(), damage.getAmount(), before, after);
     }
+    public record NativeResult(boolean cancelled, double nativeAmount, double healthBefore, double healthAfter) { }
     static HytaleDamageMetadata metadata(Damage damage) {
         String json = damage.getIfPresentMetaObject(RPG_METADATA);
         return json == null || json.isBlank() ? null : GSON.fromJson(json, HytaleDamageMetadata.class);

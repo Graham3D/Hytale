@@ -1,0 +1,876 @@
+[
+  {
+    "document": {
+      "Duration": 10,
+      "ModelOverride": {
+        "Model": "VFX/Spells/Roots/Model.blockymodel",
+        "Texture": "VFX/Spells/Roots/Model.png",
+        "AnimationSets": {
+          "Spawn": {
+            "Animations": [
+              {
+                "Animation": "VFX/Spells/Roots/Spawn.blockyanim",
+                "Looping": false
+              }
+            ]
+          },
+          "Despawn": {
+            "Animations": [
+              {
+                "Animation": "VFX/Spells/Roots/Despawn.blockyanim",
+                "Looping": false
+              }
+            ]
+          }
+        }
+      },
+      "ApplicationEffects": {
+        "EntityTopTint": "#008000",
+        "EntityBottomTint": "#000000",
+        "ScreenEffect": "ScreenEffects/Poison.png",
+        "Particles": [
+          {
+            "SystemId": "Effect_Poison"
+          }
+        ],
+        "MovementEffects": {
+          "DisableAll": true
+        },
+        "KnockbackMultiplier": 0
+      }
+    },
+    "path": "Server/Entity/Effects/Status/Root.json"
+  },
+  {
+    "document": {
+      "Duration": 10,
+      "ApplicationEffects": {
+        "EntityBottomTint": "#80ecff",
+        "ModelVFXId": "Intangible_Dark",
+        "ScreenEffect": "ScreenEffects/Snow.png",
+        "EntityTopTint": "#da72ff",
+        "HorizontalSpeedMultiplier": 0.5
+      }
+    },
+    "path": "Server/Entity/Effects/Status/Slow.json"
+  },
+  {
+    "document": {
+      "Duration": 10,
+      "ApplicationEffects": {
+        "EntityBottomTint": "#ffa93f",
+        "ScreenEffect": "ScreenEffects/Snow.png",
+        "Particles": [
+          {
+            "SystemId": "Stunned",
+            "TargetEntityPart": "Entity",
+            "TargetNodeName": "Head"
+          }
+        ],
+        "EntityTopTint": "#da72ff",
+        "MovementEffects": {
+          "DisableAll": true
+        },
+        "AbilityEffects": {
+          "Disabled": [
+            "Primary",
+            "Secondary",
+            "Ability1",
+            "Ability3"
+          ]
+        }
+      }
+    },
+    "path": "Server/Entity/Effects/Status/Stun.json"
+  },
+  {
+    "document": {
+      "Parent": "Elemental",
+      "Inherits": "Elemental",
+      "DamageTextColor": "#B2C96B"
+    },
+    "path": "Server/Entity/Damage/Earth.json"
+  },
+  {
+    "document": {
+      "$Comment": "This damage type exists to facilitate sub types"
+    },
+    "path": "Server/Entity/Damage/Elemental.json"
+  },
+  {
+    "document": {
+      "Type": "Variant",
+      "Reference": "Template_Intelligent",
+      "Parameters": {
+        "WanderRadius": {
+          "Value": 3,
+          "Description": "General wander radius for idle wander and wander on the break."
+        },
+        "FollowPatrolPath": {
+          "Value": false,
+          "Description": "Whether this NPC will follow patrol paths at all."
+        },
+        "Patrol": {
+          "Value": false,
+          "Description": "Whether or not this NPC will patrol during its waking hours, either alone or as part of a group."
+        },
+        "FlockArray": {
+          "Value": [
+            "Skeleton_Burnt_Soldier",
+            "Skeleton_Burnt_Archer"
+          ],
+          "TypeHint": "String",
+          "Description": "Array containing NPCs for this flock type."
+        },
+        "ApplySeparation": {
+          "Value": false,
+          "Description": "When set to false, NPCs wont try to avoid each other or player, it can lead to them stacking together, but can help to avoid jerky-like movemenet in enclosed space."
+        },
+        "NameTranslationKey": {
+          "Value": "server.npcRoles.Skeleton_Elite.name",
+          "Description": "Translation key for NPC name display"
+        }
+      },
+      "Modify": {
+        "DeathParticles": "Effect_Death_Bones",
+        "DeathAnimationTime": 3,
+        "MaxHealth": 226,
+        "MaxSpeed": 3,
+        "AttackDistance": 4,
+        "DesiredAttackDistanceRange": [
+          3,
+          3
+        ],
+        "RunThreshold": 1,
+        "HearingRange": 8,
+        "ViewSector": 270,
+        "WakingPeriod": [
+          0,
+          24
+        ],
+        "DropList": "Drop_Skeleton_Elite",
+        "Appearance": "Skeleton_Elite",
+        "Weapons": [
+          "Weapon_Longsword_Ruined_Giant_NPC"
+        ],
+        "OffHand": [
+          "Weapon_Shield_Ruined_Giant"
+        ],
+        "LeashMinPlayerDistance": 4,
+        "DefaultOffHandSlot": 0,
+        "FlockArray": {
+          "Compute": "FlockArray"
+        },
+        "FollowPatrolPath": {
+          "Compute": "FollowPatrolPath"
+        },
+        "Patrol": {
+          "Compute": "Patrol"
+        },
+        "WanderRadius": {
+          "Compute": "WanderRadius"
+        },
+        "WakingIdleBehaviorComponent": "Component_Instruction_Stationary_Idle",
+        "UseCombatActionEvaluator": true,
+        "_CombatConfig": "CAE_Skeleton_Elite",
+        "ApplySeparation": {
+          "Compute": "ApplySeparation"
+        },
+        "IsMemory": true,
+        "MemoriesCategory": "Undead",
+        "MemoriesNameOverride": "Skeleton_Elite",
+        "BreathesInWater": true,
+        "NameTranslationKey": {
+          "Compute": "NameTranslationKey"
+        }
+      }
+    },
+    "path": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Elite.json"
+  },
+  {
+    "document": {
+      "Type": "Variant",
+      "Reference": "Template_Skeleton_Elite_Phase_2",
+      "Modify": {
+        "MaxHealth": 226,
+        "IsMemory": true,
+        "MemoriesCategory": "Undead",
+        "MemoriesNameOverride": "Skeleton_Elite",
+        "NameTranslationKey": {
+          "Compute": "NameTranslationKey"
+        },
+        "ViewRange": 24,
+        "ViewSector": 270,
+        "HearingRange": 12,
+        "MaxSpeed": 3,
+        "AlertedRange": 25,
+        "CombatMaintainDistance": [
+          3,
+          3
+        ],
+        "_CombatConfig": "CAE_Skeleton_Elite_Phase_2",
+        "Appearance": "Skeleton_Elite",
+        "Weapons": [
+          "Weapon_Longsword_Ruined_Giant_NPC",
+          "Weapon_Longsword_Ruined_Giant_Dual_NPC"
+        ],
+        "OffHand": [],
+        "DefaultOffHandSlot": -1
+      },
+      "Parameters": {
+        "NameTranslationKey": {
+          "Value": "server.npcRoles.Skeleton_Elite.name",
+          "Description": "Translation key for the Skeleton Elite name."
+        }
+      }
+    },
+    "path": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Elite_Phase_2.json"
+  },
+  {
+    "document": {
+      "Class": "EncounterManager",
+      "Type": "Generic",
+      "StartState": "Phase_1",
+      "Debug": "DisplayState,DisplayTarget",
+      "Instructions": [
+        {
+          "$Comment": "Capture the nearest Skeleton Elite so the encounter can preserve it through role changes.",
+          "Continue": true,
+          "Sensor": {
+            "Type": "Mob",
+            "Range": 30,
+            "LockOnTarget": true,
+            "LockedTargetSlot": "EncounterTarget",
+            "Rebind": true,
+            "Filters": [
+              {
+                "Type": "NPCGroup",
+                "IncludeGroups": [
+                  "Skeleton_Elite_Encounter_Target"
+                ]
+              }
+            ]
+          },
+          "Actions": [
+            {
+              "Type": "Nothing"
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Phase_1"
+          },
+          "Instructions": [
+            {
+              "$Comment": "Prevent phase 1 death at critical health, then enter phase 2 at full health.",
+              "Sensor": {
+                "Type": "Target",
+                "Range": 100,
+                "TargetSlot": "EncounterTarget",
+                "Filters": [
+                  {
+                    "Type": "Stat",
+                    "StatTarget": "Value",
+                    "RelativeTo": "Health",
+                    "Stat": "Health",
+                    "RelativeToTarget": "Max",
+                    "ValueRange": [
+                      0,
+                      0.1
+                    ]
+                  }
+                ]
+              },
+              "ActionsBlocking": true,
+              "Actions": [
+                {
+                  "Type": "SetTargetNPCInvulnerable",
+                  "Invulnerable": true
+                },
+                {
+                  "Type": "ChangeTargetRole",
+                  "Role": "Skeleton_Elite_Phase_2",
+                  "ChangeAppearance": true,
+                  "State": "Combat.Revive"
+                },
+                {
+                  "Type": "State",
+                  "State": "Phase_2"
+                }
+              ]
+            },
+            {
+              "$Comment": "Switch the tracked NPC to phase 2 after shield damage breaks its stamina.",
+              "Sensor": {
+                "Type": "Target",
+                "Range": 100,
+                "TargetSlot": "EncounterTarget",
+                "Filters": [
+                  {
+                    "Type": "EntityEffect",
+                    "EffectId": "Stamina_Broken"
+                  },
+                  {
+                    "$Comment": "Let the critical-health transition own the role swap when both conditions match.",
+                    "Type": "Not",
+                    "Filter": {
+                      "Type": "Stat",
+                      "StatTarget": "Value",
+                      "RelativeTo": "Health",
+                      "Stat": "Health",
+                      "RelativeToTarget": "Max",
+                      "ValueRange": [
+                        0,
+                        0.1
+                      ]
+                    }
+                  }
+                ]
+              },
+              "ActionsBlocking": true,
+              "Actions": [
+                {
+                  "$Comment": "Protect the NPC until phase 2 restores its health.",
+                  "Type": "SetTargetNPCInvulnerable",
+                  "Invulnerable": true
+                },
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    1.55,
+                    1.55
+                  ]
+                },
+                {
+                  "Type": "ChangeTargetRole",
+                  "Role": "Skeleton_Elite_Phase_2",
+                  "ChangeAppearance": true,
+                  "State": "Combat.Unsheath"
+                },
+                {
+                  "Type": "State",
+                  "State": "Phase_2"
+                }
+              ]
+            },
+            {
+              "$Comment": "Trigger one authored phase 1 spawn marker after a player approaches the encounter.",
+              "Sensor": {
+                "Type": "Not",
+                "Sensor": {
+                  "Type": "Target",
+                  "TargetSlot": "EncounterTarget",
+                  "Range": 100
+                }
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Player",
+                    "Range": 30,
+                    "Once": true
+                  },
+                  "Actions": [
+                    {
+                      "Type": "TriggerSpawners",
+                      "SpawnMarker": "Skeleton_Elite_Manual",
+                      "Range": 30,
+                      "Count": 1,
+                      "TargetSlot": "EncounterTarget",
+                      "Rebind": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Actions": [
+                {
+                  "Type": "Nothing"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Phase_2"
+          },
+          "Instructions": [
+            {
+              "Reference": "Encounter_Macro_Transition_TargetGone",
+              "Modify": {
+                "_ExportStates": [
+                  "Complete"
+                ],
+                "Slot": "EncounterTarget",
+                "Range": 100
+              }
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Complete"
+          },
+          "Actions": [
+            {
+              "Type": "Nothing"
+            }
+          ]
+        }
+      ]
+    },
+    "path": "Server/EncounterManager/Encounter_Skeleton_Elite.json"
+  },
+  {
+    "document": {
+      "Class": "EncounterManager",
+      "Type": "Generic",
+      "Debug": "DisplayState",
+      "StartState": "Intro",
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Player",
+            "Range": 30,
+            "Collector": {
+              "Type": "EncounterMembers"
+            }
+          },
+          "Instructions": [
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": "Intro"
+              },
+              "Instructions": [
+                {
+                  "Continue": true,
+                  "Sensor": {
+                    "Type": "Target",
+                    "Range": 100,
+                    "TargetSlot": "Boss"
+                  },
+                  "Actions": [
+                    {
+                      "Type": "SetEncounterBossBar",
+                      "Name": "server.npcRoles.Test_Boss_Basic_Intro.name"
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Type": "And",
+                    "Sensors": [
+                      {
+                        "Type": "Beacon",
+                        "Range": 100,
+                        "Message": "Boss_In_Position"
+                      },
+                      {
+                        "Type": "Target",
+                        "Range": 100,
+                        "TargetSlot": "Boss"
+                      }
+                    ]
+                  },
+                  "Actions": [
+                    {
+                      "Type": "SetTargetNPCInvulnerable",
+                      "Invulnerable": false
+                    },
+                    {
+                      "Type": "ChangeTargetRole",
+                      "Role": "Test_Boss_Basic"
+                    },
+                    {
+                      "Type": "SetEncounterBossBar",
+                      "Name": "server.npcRoles.Test_Boss_Basic.name"
+                    },
+                    {
+                      "Type": "StartEncounterMusic",
+                      "MusicContainer": "Track_Encounter_Cave_Test"
+                    },
+                    {
+                      "Type": "SetEncounterWeather",
+                      "Weather": "Blood_Moon"
+                    },
+                    {
+                      "Type": "State",
+                      "State": "Phase_1"
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Type": "Not",
+                    "Sensor": {
+                      "Type": "Target",
+                      "Range": 100,
+                      "TargetSlot": "Boss"
+                    }
+                  },
+                  "ActionsBlocking": true,
+                  "Actions": [
+                    {
+                      "Type": "PlaySound",
+                      "SoundEventId": "SFX_Test_Blip_A"
+                    },
+                    {
+                      "Type": "Timeout",
+                      "Delay": [
+                        1,
+                        1
+                      ]
+                    },
+                    {
+                      "Type": "TriggerSpawners",
+                      "Count": 1,
+                      "Range": 30,
+                      "SpawnMarker": "Test_Boss_Marker",
+                      "TargetSlot": "Boss",
+                      "Rebind": true
+                    },
+                    {
+                      "Type": "Timeout",
+                      "Delay": [
+                        2,
+                        2
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": "Phase_1"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Target",
+                    "Range": 100,
+                    "TargetSlot": "Boss",
+                    "Filters": [
+                      {
+                        "Type": "Stat",
+                        "StatTarget": "Value",
+                        "RelativeTo": "Health",
+                        "Stat": "Health",
+                        "RelativeToTarget": "Max",
+                        "ValueRange": [
+                          0.5,
+                          1
+                        ]
+                      }
+                    ]
+                  },
+                  "Actions": [
+                    {
+                      "Type": "Nothing"
+                    }
+                  ]
+                },
+                {
+                  "Continue": true,
+                  "Sensor": {
+                    "Type": "Target",
+                    "Range": 100,
+                    "TargetSlot": "Boss",
+                    "Filters": [
+                      {
+                        "Type": "Stat",
+                        "StatTarget": "Value",
+                        "RelativeTo": "Health",
+                        "Stat": "Health",
+                        "RelativeToTarget": "Max",
+                        "ValueRange": [
+                          0,
+                          0.49
+                        ]
+                      }
+                    ]
+                  },
+                  "Actions": [
+                    {
+                      "Type": "ChangeTargetRole",
+                      "Role": "Test_Boss_Basic_Wander"
+                    }
+                  ]
+                },
+                {
+                  "ActionsBlocking": true,
+                  "Actions": [
+                    {
+                      "Type": "PlaySound",
+                      "SoundEventId": "SFX_Test_Blip_A"
+                    },
+                    {
+                      "Type": "SetEncounterAudioState",
+                      "AudioState": "AudioState_Test_EncounterIntensity",
+                      "Value": "Climax",
+                      "FadeMs": 1500
+                    },
+                    {
+                      "Type": "State",
+                      "State": "Phase_2"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": "Phase_2"
+              },
+              "Instructions": [
+                {
+                  "Continue": true,
+                  "Sensor": {
+                    "Type": "Mob",
+                    "Once": true,
+                    "Range": 100,
+                    "MultiTarget": true,
+                    "Filters": [
+                      {
+                        "Type": "Attitude",
+                        "Attitudes": [
+                          "Friendly"
+                        ]
+                      }
+                    ]
+                  },
+                  "Actions": [
+                    {
+                      "Type": "ForEach",
+                      "Actions": [
+                        {
+                          "Type": "SpawnParticles",
+                          "PositionSource": "Sensor",
+                          "ParticleSystem": "Explosion_Medium"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Continue": true,
+                  "Sensor": {
+                    "Type": "Player",
+                    "Range": 100,
+                    "MultiTarget": true
+                  },
+                  "Actions": [
+                    {
+                      "Type": "Sequence",
+                      "Blocking": true,
+                      "Actions": [
+                        {
+                          "Type": "Timeout",
+                          "Delay": [
+                            5,
+                            5
+                          ]
+                        },
+                        {
+                          "Type": "ProjectToGround",
+                          "Actions": [
+                            {
+                              "Type": "ForEach",
+                              "Actions": [
+                                {
+                                  "Type": "SpawnParticles",
+                                  "PositionSource": "Sensor",
+                                  "ParticleSystem": "Explosion_Medium"
+                                }
+                              ]
+                            },
+                            {
+                              "Type": "AdjustPosition",
+                              "Offset": [
+                                0,
+                                10,
+                                0
+                              ],
+                              "Actions": [
+                                {
+                                  "Type": "ForEach",
+                                  "Actions": [
+                                    {
+                                      "Type": "SpawnInteraction",
+                                      "PositionSource": "Sensor",
+                                      "Interaction": "Test_Encounter_Projectile",
+                                      "OrientationSource": "Absolute",
+                                      "Pitch": -90,
+                                      "Delay": [
+                                        2,
+                                        2
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Continue": true,
+                  "Sensor": {
+                    "Type": "Points",
+                    "Tag": "arrow",
+                    "Range": 100
+                  },
+                  "Actions": [
+                    {
+                      "Type": "Sequence",
+                      "Blocking": true,
+                      "Actions": [
+                        {
+                          "Type": "Timeout",
+                          "Delay": [
+                            5,
+                            5
+                          ]
+                        },
+                        {
+                          "Type": "ForEach",
+                          "TargetCount": [
+                            4,
+                            4
+                          ],
+                          "Actions": [
+                            {
+                              "Type": "ProjectToGround",
+                              "Actions": [
+                                {
+                                  "Type": "SpawnParticles",
+                                  "PositionSource": "Sensor",
+                                  "ParticleSystem": "Explosion_Medium"
+                                }
+                              ]
+                            },
+                            {
+                              "Type": "SpawnInteraction",
+                              "PositionSource": "Sensor",
+                              "OrientationSource": "UseSensor",
+                              "Interaction": "Test_Encounter_Projectile",
+                              "Delay": [
+                                2,
+                                2
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Type": "Target",
+                    "Range": 100,
+                    "TargetSlot": "Boss"
+                  },
+                  "Actions": [
+                    {
+                      "Type": "Nothing"
+                    }
+                  ]
+                },
+                {
+                  "Actions": [
+                    {
+                      "Type": "PlaySound",
+                      "SoundEventId": "SFX_Test_Blip_A"
+                    },
+                    {
+                      "Type": "ClearEncounterBossBar"
+                    },
+                    {
+                      "Type": "ClearEncounterWeather"
+                    },
+                    {
+                      "Type": "ReleaseTarget",
+                      "TargetSlot": "Boss"
+                    },
+                    {
+                      "Type": "State",
+                      "State": "BossDead"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": "BossDead"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Not",
+                    "Sensor": {
+                      "Type": "Mob",
+                      "Range": 100,
+                      "Filters": [
+                        {
+                          "Type": "Attitude",
+                          "Attitudes": [
+                            "Friendly"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "Actions": [
+                    {
+                      "Type": "StopEncounterMusic"
+                    },
+                    {
+                      "Type": "State",
+                      "State": "Complete"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": "Complete"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Beacon",
+                    "Message": "Restart"
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Intro"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "path": "Server/EncounterManager/Example_Boss.json"
+  }
+]

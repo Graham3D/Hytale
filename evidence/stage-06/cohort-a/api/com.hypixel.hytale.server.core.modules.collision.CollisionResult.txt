@@ -1,0 +1,1774 @@
+Compiled from "CollisionResult.java"
+public class com.hypixel.hytale.server.core.modules.collision.CollisionResult implements com.hypixel.hytale.math.iterator.BoxBlockIterator$BoxIterationConsumer {
+  public static final java.util.Comparator<com.hypixel.hytale.server.core.modules.collision.BlockCollisionData> BLOCK_COLLISION_DATA_COMPARATOR;
+
+  private final com.hypixel.hytale.server.core.modules.collision.CollisionConfig collisionConfig;
+
+  private final com.hypixel.hytale.server.core.modules.collision.CollisionDataArray<com.hypixel.hytale.server.core.modules.collision.BlockCollisionData> blockCollisions;
+
+  private final com.hypixel.hytale.server.core.modules.collision.CollisionDataArray<com.hypixel.hytale.server.core.modules.collision.BlockCollisionData> blockSlides;
+
+  private final com.hypixel.hytale.server.core.modules.collision.CollisionDataArray<com.hypixel.hytale.server.core.modules.collision.BlockCollisionData> blockTriggers;
+
+  private final com.hypixel.hytale.server.core.modules.collision.CollisionDataArray<com.hypixel.hytale.server.core.modules.collision.BlockCollisionData> passThroughBlocks;
+
+  private final com.hypixel.hytale.server.core.modules.collision.CollisionDataArray<com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData> characterCollisions;
+
+  private final com.hypixel.hytale.server.core.modules.collision.MovingBoxBoxCollisionEvaluator movingBoxBoxCollision;
+
+  private final com.hypixel.hytale.server.core.modules.collision.BoxBlockIntersectionEvaluator boxBlockIntersection;
+
+  public java.util.List<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> collisionEntities;
+
+  private boolean continueAfterCollision;
+
+  private boolean haveNoCollision;
+
+  private com.hypixel.hytale.logger.HytaleLogger logger;
+
+  private int debugEntityId;
+
+  public double slideStart;
+
+  public double slideEnd;
+
+  public boolean isSliding;
+
+  public int validate;
+
+  private boolean checkForCharacterCollisions;
+
+  private boolean recordPassThrough;
+
+  private int walkableMaterialMask;
+
+  public java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig> isNonWalkable;
+
+  private com.hypixel.hytale.math.data.Int3OpenHashSet lastTriggers;
+
+  private com.hypixel.hytale.math.data.Int3OpenHashSet newTriggers;
+
+  public com.hypixel.hytale.server.core.modules.collision.CollisionResult();
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: iconst_0
+         3: invokespecial #1                  // Method "<init>":(ZZ)V
+         6: return
+
+  public com.hypixel.hytale.server.core.modules.collision.CollisionResult(boolean, boolean);
+    Code:
+         0: aload_0
+         1: invokespecial #7                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iconst_1
+         6: putfield      #12                 // Field continueAfterCollision:Z
+         9: aload_0
+        10: iconst_1
+        11: putfield      #16                 // Field haveNoCollision:Z
+        14: aload_0
+        15: iconst_m1
+        16: putfield      #19                 // Field debugEntityId:I
+        19: aload_0
+        20: new           #23                 // class com/hypixel/hytale/math/data/Int3OpenHashSet
+        23: dup
+        24: invokespecial #25                 // Method com/hypixel/hytale/math/data/Int3OpenHashSet."<init>":()V
+        27: putfield      #26                 // Field lastTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+        30: aload_0
+        31: new           #23                 // class com/hypixel/hytale/math/data/Int3OpenHashSet
+        34: dup
+        35: invokespecial #25                 // Method com/hypixel/hytale/math/data/Int3OpenHashSet."<init>":()V
+        38: putfield      #30                 // Field newTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+        41: new           #33                 // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+        44: dup
+        45: invokespecial #35                 // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+        48: astore_3
+        49: new           #33                 // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+        52: dup
+        53: invokespecial #35                 // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+        56: astore        4
+        58: aload_0
+        59: new           #36                 // class com/hypixel/hytale/server/core/modules/collision/CollisionDataArray
+        62: dup
+        63: invokedynamic #38,  0             // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+        68: invokedynamic #42,  0             // InvokeDynamic #1:accept:()Ljava/util/function/Consumer;
+        73: aload_3
+        74: invokespecial #46                 // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray."<init>":(Ljava/util/function/Supplier;Ljava/util/function/Consumer;Ljava/util/List;)V
+        77: putfield      #49                 // Field blockCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        80: aload_0
+        81: new           #36                 // class com/hypixel/hytale/server/core/modules/collision/CollisionDataArray
+        84: dup
+        85: invokedynamic #38,  0             // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+        90: invokedynamic #42,  0             // InvokeDynamic #1:accept:()Ljava/util/function/Consumer;
+        95: aload_3
+        96: invokespecial #46                 // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray."<init>":(Ljava/util/function/Supplier;Ljava/util/function/Consumer;Ljava/util/List;)V
+        99: putfield      #53                 // Field blockSlides:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+       102: aload_0
+       103: new           #36                 // class com/hypixel/hytale/server/core/modules/collision/CollisionDataArray
+       106: dup
+       107: invokedynamic #38,  0             // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+       112: invokedynamic #42,  0             // InvokeDynamic #1:accept:()Ljava/util/function/Consumer;
+       117: aload_3
+       118: invokespecial #46                 // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray."<init>":(Ljava/util/function/Supplier;Ljava/util/function/Consumer;Ljava/util/List;)V
+       121: putfield      #56                 // Field blockTriggers:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+       124: aload_0
+       125: new           #36                 // class com/hypixel/hytale/server/core/modules/collision/CollisionDataArray
+       128: dup
+       129: invokedynamic #38,  0             // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+       134: invokedynamic #42,  0             // InvokeDynamic #1:accept:()Ljava/util/function/Consumer;
+       139: aload_3
+       140: invokespecial #46                 // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray."<init>":(Ljava/util/function/Supplier;Ljava/util/function/Consumer;Ljava/util/List;)V
+       143: putfield      #59                 // Field passThroughBlocks:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+       146: aload_0
+       147: new           #36                 // class com/hypixel/hytale/server/core/modules/collision/CollisionDataArray
+       150: dup
+       151: invokedynamic #62,  0             // InvokeDynamic #2:get:()Ljava/util/function/Supplier;
+       156: aconst_null
+       157: aload         4
+       159: invokespecial #46                 // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray."<init>":(Ljava/util/function/Supplier;Ljava/util/function/Consumer;Ljava/util/List;)V
+       162: putfield      #63                 // Field characterCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+       165: aload_0
+       166: new           #66                 // class com/hypixel/hytale/server/core/modules/collision/CollisionConfig
+       169: dup
+       170: invokespecial #68                 // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig."<init>":()V
+       173: putfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       176: aload_0
+       177: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       180: invokevirtual #73                 // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setDefaultCollisionBehaviour:()V
+       183: aload_0
+       184: new           #76                 // class com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator
+       187: dup
+       188: invokespecial #78                 // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator."<init>":()V
+       191: putfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       194: aload_0
+       195: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       198: iload_1
+       199: invokevirtual #83                 // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.setCheckForOnGround:(Z)V
+       202: aload_0
+       203: new           #87                 // class com/hypixel/hytale/server/core/modules/collision/BoxBlockIntersectionEvaluator
+       206: dup
+       207: invokespecial #89                 // Method com/hypixel/hytale/server/core/modules/collision/BoxBlockIntersectionEvaluator."<init>":()V
+       210: putfield      #90                 // Field boxBlockIntersection:Lcom/hypixel/hytale/server/core/modules/collision/BoxBlockIntersectionEvaluator;
+       213: aload_0
+       214: iload_2
+       215: putfield      #94                 // Field checkForCharacterCollisions:Z
+       218: aload_0
+       219: invokevirtual #97                 // Method setDefaultWalkableBehaviour:()V
+       222: return
+
+  public com.hypixel.hytale.server.core.modules.collision.CollisionConfig getConfig();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: areturn
+
+  public java.util.List<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> getCollisionEntities();
+    Code:
+         0: aload_0
+         1: getfield      #100                // Field collisionEntities:Ljava/util/List;
+         4: areturn
+
+  public void setCollisionEntities(java.util.List<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #100                // Field collisionEntities:Ljava/util/List;
+         5: return
+
+  public com.hypixel.hytale.server.core.modules.collision.BoxBlockIntersectionEvaluator getBoxBlockIntersection();
+    Code:
+         0: aload_0
+         1: getfield      #90                 // Field boxBlockIntersection:Lcom/hypixel/hytale/server/core/modules/collision/BoxBlockIntersectionEvaluator;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.modules.collision.MovingBoxBoxCollisionEvaluator getMovingBoxBoxCollision();
+    Code:
+         0: aload_0
+         1: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData allocCharacterCollision();
+    Code:
+         0: aload_0
+         1: getfield      #63                 // Field characterCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #104                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.alloc:()Ljava/lang/Object;
+         7: checkcast     #108                // class com/hypixel/hytale/server/core/modules/collision/CharacterCollisionData
+        10: areturn
+
+  public void addCollision(com.hypixel.hytale.server.core.modules.collision.IBlockCollisionEvaluator, int);
+    Code:
+         0: aload_1
+         1: invokeinterface #110,  1          // InterfaceMethod com/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator.getCollisionStart:()D
+         6: dconst_1
+         7: dcmpl
+         8: ifle          12
+        11: return
+        12: aload_1
+        13: aload_0
+        14: invokevirtual #116                // Method newCollision:()Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;
+        17: aload_0
+        18: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        21: iload_2
+        22: invokeinterface #120,  4          // InterfaceMethod com/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator.setCollisionData:(Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;I)V
+        27: return
+
+  public com.hypixel.hytale.server.core.modules.collision.BlockCollisionData newCollision();
+    Code:
+         0: aload_0
+         1: getfield      #49                 // Field blockCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #104                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.alloc:()Ljava/lang/Object;
+         7: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        10: areturn
+
+  public void addSlide(com.hypixel.hytale.server.core.modules.collision.IBlockCollisionEvaluator, int);
+    Code:
+         0: aload_1
+         1: invokeinterface #110,  1          // InterfaceMethod com/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator.getCollisionStart:()D
+         6: dconst_1
+         7: dcmpl
+         8: ifle          12
+        11: return
+        12: aload_1
+        13: aload_0
+        14: invokevirtual #126                // Method newSlide:()Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;
+        17: aload_0
+        18: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        21: iload_2
+        22: invokeinterface #120,  4          // InterfaceMethod com/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator.setCollisionData:(Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;I)V
+        27: return
+
+  public com.hypixel.hytale.server.core.modules.collision.BlockCollisionData newSlide();
+    Code:
+         0: aload_0
+         1: getfield      #53                 // Field blockSlides:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #104                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.alloc:()Ljava/lang/Object;
+         7: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        10: areturn
+
+  public void addTrigger(com.hypixel.hytale.server.core.modules.collision.IBlockCollisionEvaluator, int);
+    Code:
+         0: aload_1
+         1: invokeinterface #110,  1          // InterfaceMethod com/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator.getCollisionStart:()D
+         6: dconst_1
+         7: dcmpl
+         8: ifle          12
+        11: return
+        12: aload_1
+        13: aload_0
+        14: invokevirtual #129                // Method newTrigger:()Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;
+        17: aload_0
+        18: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        21: iload_2
+        22: invokeinterface #120,  4          // InterfaceMethod com/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator.setCollisionData:(Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;I)V
+        27: return
+
+  public com.hypixel.hytale.server.core.modules.collision.BlockCollisionData newTrigger();
+    Code:
+         0: aload_0
+         1: getfield      #56                 // Field blockTriggers:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #104                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.alloc:()Ljava/lang/Object;
+         7: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        10: areturn
+
+  public void addPassThrough(com.hypixel.hytale.server.core.modules.collision.IBlockCollisionEvaluator, int);
+    Code:
+         0: aload_1
+         1: invokeinterface #110,  1          // InterfaceMethod com/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator.getCollisionStart:()D
+         6: dconst_1
+         7: dcmpl
+         8: ifle          12
+        11: return
+        12: aload_1
+        13: aload_0
+        14: invokevirtual #132                // Method newPassThrough:()Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;
+        17: aload_0
+        18: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        21: iload_2
+        22: invokeinterface #120,  4          // InterfaceMethod com/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator.setCollisionData:(Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;I)V
+        27: return
+
+  public com.hypixel.hytale.server.core.modules.collision.BlockCollisionData newPassThrough();
+    Code:
+         0: aload_0
+         1: getfield      #59                 // Field passThroughBlocks:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #104                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.alloc:()Ljava/lang/Object;
+         7: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        10: areturn
+
+  public void reset();
+    Code:
+         0: aload_0
+         1: getfield      #49                 // Field blockCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #135                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.reset:()V
+         7: aload_0
+         8: getfield      #53                 // Field blockSlides:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        11: invokevirtual #135                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.reset:()V
+        14: aload_0
+        15: getfield      #56                 // Field blockTriggers:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        18: invokevirtual #135                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.reset:()V
+        21: aload_0
+        22: getfield      #59                 // Field passThroughBlocks:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        25: invokevirtual #135                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.reset:()V
+        28: aload_0
+        29: getfield      #63                 // Field characterCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        32: invokevirtual #135                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.reset:()V
+        35: return
+
+  public void process();
+    Code:
+         0: aload_0
+         1: getfield      #49                 // Field blockCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: getstatic     #138                // Field com/hypixel/hytale/server/core/modules/collision/BasicCollisionData.COLLISION_START_COMPARATOR:Ljava/util/Comparator;
+         7: invokevirtual #144                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.sort:(Ljava/util/Comparator;)V
+        10: aload_0
+        11: getfield      #56                 // Field blockTriggers:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        14: getstatic     #138                // Field com/hypixel/hytale/server/core/modules/collision/BasicCollisionData.COLLISION_START_COMPARATOR:Ljava/util/Comparator;
+        17: invokevirtual #144                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.sort:(Ljava/util/Comparator;)V
+        20: aload_0
+        21: getfield      #59                 // Field passThroughBlocks:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        24: getstatic     #138                // Field com/hypixel/hytale/server/core/modules/collision/BasicCollisionData.COLLISION_START_COMPARATOR:Ljava/util/Comparator;
+        27: invokevirtual #144                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.sort:(Ljava/util/Comparator;)V
+        30: aload_0
+        31: getfield      #63                 // Field characterCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        34: getstatic     #138                // Field com/hypixel/hytale/server/core/modules/collision/BasicCollisionData.COLLISION_START_COMPARATOR:Ljava/util/Comparator;
+        37: invokevirtual #144                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.sort:(Ljava/util/Comparator;)V
+        40: aload_0
+        41: getfield      #53                 // Field blockSlides:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        44: invokevirtual #148                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.getCount:()I
+        47: ifle          186
+        50: aload_0
+        51: getfield      #53                 // Field blockSlides:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        54: getstatic     #152                // Field BLOCK_COLLISION_DATA_COMPARATOR:Ljava/util/Comparator;
+        57: invokevirtual #144                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.sort:(Ljava/util/Comparator;)V
+        60: aload_0
+        61: getfield      #53                 // Field blockSlides:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        64: iconst_0
+        65: invokevirtual #155                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.get:(I)Ljava/lang/Object;
+        68: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        71: astore_1
+        72: aload_0
+        73: aload_1
+        74: getfield      #158                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+        77: putfield      #162                // Field slideStart:D
+        80: aload_0
+        81: aload_1
+        82: getfield      #165                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionEnd:D
+        85: putfield      #168                // Field slideEnd:D
+        88: iconst_1
+        89: istore_2
+        90: iload_2
+        91: aload_0
+        92: getfield      #53                 // Field blockSlides:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        95: invokevirtual #148                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.getCount:()I
+        98: if_icmpge     151
+       101: aload_0
+       102: getfield      #53                 // Field blockSlides:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+       105: iload_2
+       106: invokevirtual #155                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.get:(I)Ljava/lang/Object;
+       109: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+       112: astore_1
+       113: aload_1
+       114: getfield      #158                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+       117: aload_0
+       118: getfield      #168                // Field slideEnd:D
+       121: dcmpg
+       122: ifgt          145
+       125: aload_1
+       126: getfield      #165                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionEnd:D
+       129: aload_0
+       130: getfield      #168                // Field slideEnd:D
+       133: dcmpl
+       134: ifle          145
+       137: aload_0
+       138: aload_1
+       139: getfield      #165                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionEnd:D
+       142: putfield      #168                // Field slideEnd:D
+       145: iinc          2, 1
+       148: goto          90
+       151: aload_0
+       152: aload_0
+       153: getfield      #162                // Field slideStart:D
+       156: dconst_0
+       157: dcmpg
+       158: ifgt          165
+       161: iconst_1
+       162: goto          166
+       165: iconst_0
+       166: putfield      #171                // Field isSliding:Z
+       169: aload_0
+       170: getfield      #168                // Field slideEnd:D
+       173: dconst_1
+       174: dcmpl
+       175: ifle          183
+       178: aload_0
+       179: dconst_1
+       180: putfield      #168                // Field slideEnd:D
+       183: goto          191
+       186: aload_0
+       187: iconst_0
+       188: putfield      #171                // Field isSliding:Z
+       191: return
+
+  public int getBlockCollisionCount();
+    Code:
+         0: aload_0
+         1: getfield      #49                 // Field blockCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #148                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.getCount:()I
+         7: ireturn
+
+  public com.hypixel.hytale.server.core.modules.collision.BlockCollisionData getBlockCollision(int);
+    Code:
+         0: aload_0
+         1: getfield      #49                 // Field blockCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: iload_1
+         5: invokevirtual #155                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.get:(I)Ljava/lang/Object;
+         8: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        11: areturn
+
+  public com.hypixel.hytale.server.core.modules.collision.BlockCollisionData getFirstBlockCollision();
+    Code:
+         0: aload_0
+         1: getfield      #49                 // Field blockCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #174                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.getFirst:()Ljava/lang/Object;
+         7: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        10: areturn
+
+  public com.hypixel.hytale.server.core.modules.collision.BlockCollisionData forgetFirstBlockCollision();
+    Code:
+         0: aload_0
+         1: getfield      #49                 // Field blockCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #177                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.forgetFirst:()Ljava/lang/Object;
+         7: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        10: areturn
+
+  public int getCharacterCollisionCount();
+    Code:
+         0: aload_0
+         1: getfield      #63                 // Field characterCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #148                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.getCount:()I
+         7: ireturn
+
+  public com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData getCharacterCollision(int);
+    Code:
+         0: aload_0
+         1: getfield      #63                 // Field characterCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: iload_1
+         5: invokevirtual #155                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.get:(I)Ljava/lang/Object;
+         8: checkcast     #108                // class com/hypixel/hytale/server/core/modules/collision/CharacterCollisionData
+        11: areturn
+
+  public com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData getFirstCharacterCollision();
+    Code:
+         0: aload_0
+         1: getfield      #63                 // Field characterCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #174                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.getFirst:()Ljava/lang/Object;
+         7: checkcast     #108                // class com/hypixel/hytale/server/core/modules/collision/CharacterCollisionData
+        10: areturn
+
+  public com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData forgetFirstCharacterCollision();
+    Code:
+         0: aload_0
+         1: getfield      #63                 // Field characterCollisions:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #177                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.forgetFirst:()Ljava/lang/Object;
+         7: checkcast     #108                // class com/hypixel/hytale/server/core/modules/collision/CharacterCollisionData
+        10: areturn
+
+  public int getPassThroughCount();
+    Code:
+         0: aload_0
+         1: getfield      #59                 // Field passThroughBlocks:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #148                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.getCount:()I
+         7: ireturn
+
+  public com.hypixel.hytale.server.core.modules.collision.BlockCollisionData getPassThrough(int);
+    Code:
+         0: aload_0
+         1: getfield      #59                 // Field passThroughBlocks:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: iload_1
+         5: invokevirtual #155                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.get:(I)Ljava/lang/Object;
+         8: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        11: areturn
+
+  public void pruneTriggerBlocks(double);
+    Code:
+         0: aload_0
+         1: getfield      #56                 // Field blockTriggers:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: invokevirtual #180                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.size:()I
+         7: iconst_1
+         8: isub
+         9: istore_3
+        10: iload_3
+        11: iflt          54
+        14: aload_0
+        15: getfield      #56                 // Field blockTriggers:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        18: iload_3
+        19: invokevirtual #155                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.get:(I)Ljava/lang/Object;
+        22: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        25: astore        4
+        27: aload         4
+        29: getfield      #158                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+        32: dload_1
+        33: dcmpg
+        34: ifgt          40
+        37: goto          54
+        40: aload_0
+        41: getfield      #56                 // Field blockTriggers:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        44: iload_3
+        45: invokevirtual #183                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.remove:(I)V
+        48: iinc          3, -1
+        51: goto          10
+        54: return
+
+  public com.hypixel.hytale.server.core.modules.collision.CollisionDataArray<com.hypixel.hytale.server.core.modules.collision.BlockCollisionData> getTriggerBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #56                 // Field blockTriggers:Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+         4: areturn
+
+  public int defaultTriggerBlocksProcessing(com.hypixel.hytale.server.core.entity.InteractionManager, com.hypixel.hytale.server.core.entity.Entity, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, boolean, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload         5
+         2: invokeinterface #187,  1          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getExternalData:()Ljava/lang/Object;
+         7: checkcast     #192                // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+        10: invokevirtual #194                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+        13: invokevirtual #198                // Method com/hypixel/hytale/server/core/universe/world/World.getChunkStore:()Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;
+        16: astore        6
+        18: aload_0
+        19: getfield      #26                 // Field lastTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+        22: astore        7
+        24: aload_0
+        25: aload_0
+        26: getfield      #30                 // Field newTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+        29: putfield      #26                 // Field lastTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+        32: aload_0
+        33: aload         7
+        35: putfield      #30                 // Field newTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+        38: aload_0
+        39: getfield      #30                 // Field newTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+        42: invokevirtual #204                // Method com/hypixel/hytale/math/data/Int3OpenHashSet.clear:()V
+        45: iconst_0
+        46: istore        8
+        48: aload_0
+        49: invokevirtual #207                // Method getTriggerBlocks:()Lcom/hypixel/hytale/server/core/modules/collision/CollisionDataArray;
+        52: astore        9
+        54: iconst_0
+        55: istore        10
+        57: aload         9
+        59: invokevirtual #180                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.size:()I
+        62: istore        11
+        64: iload         10
+        66: iload         11
+        68: if_icmpge     569
+        71: aload         9
+        73: iload         10
+        75: invokevirtual #155                // Method com/hypixel/hytale/server/core/modules/collision/CollisionDataArray.get:(I)Ljava/lang/Object;
+        78: checkcast     #124                // class com/hypixel/hytale/server/core/modules/collision/BlockCollisionData
+        81: astore        12
+        83: aload         12
+        85: getfield      #211                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+        88: ifnull        123
+        91: aload         12
+        93: getfield      #211                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+        96: invokevirtual #215                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getDamageToEntities:()I
+        99: aload         12
+       101: getfield      #220                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.fluid:Lcom/hypixel/hytale/server/core/asset/type/fluid/Fluid;
+       104: invokevirtual #224                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.getDamageToEntities:()I
+       107: invokestatic  #227                // Method java/lang/Math.max:(II)I
+       110: istore        13
+       112: iload         13
+       114: iload         8
+       116: if_icmple     123
+       119: iload         13
+       121: istore        8
+       123: iload         4
+       125: ifeq          563
+       128: aload_2
+       129: instanceof    #233                // class com/hypixel/hytale/server/core/entity/LivingEntity
+       132: ifeq          563
+       135: aload         6
+       137: aload         12
+       139: getfield      #235                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.x:I
+       142: aload         12
+       144: getfield      #238                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.y:I
+       147: aload         12
+       149: getfield      #241                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.z:I
+       152: invokevirtual #244                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getChunkSectionReferenceAtBlock:(III)Lcom/hypixel/hytale/component/Ref;
+       155: astore        13
+       157: aload         13
+       159: ifnull        563
+       162: aload         13
+       164: invokevirtual #250                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+       167: ifeq          563
+       170: aload         6
+       172: invokevirtual #256                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getStore:()Lcom/hypixel/hytale/component/Store;
+       175: aload         13
+       177: invokestatic  #260                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       180: invokevirtual #266                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       183: checkcast     #261                // class com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection
+       186: astore        14
+       188: aload         14
+       190: ifnonnull     196
+       193: goto          563
+       196: aload         6
+       198: invokevirtual #256                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getStore:()Lcom/hypixel/hytale/component/Store;
+       201: aload         13
+       203: invokestatic  #272                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       206: invokevirtual #266                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       209: checkcast     #273                // class com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection
+       212: astore        15
+       214: invokestatic  #275                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/BlockTypeAssetMap;
+       217: aload         14
+       219: aload         12
+       221: getfield      #235                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.x:I
+       224: aload         12
+       226: getfield      #238                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.y:I
+       229: aload         12
+       231: getfield      #241                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.z:I
+       234: invokevirtual #279                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection.get:(III)I
+       237: invokevirtual #282                // Method com/hypixel/hytale/assetstore/map/BlockTypeAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       240: checkcast     #216                // class com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType
+       243: astore        16
+       245: invokestatic  #288                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+       248: aload         15
+       250: ifnull        276
+       253: aload         15
+       255: aload         12
+       257: getfield      #235                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.x:I
+       260: aload         12
+       262: getfield      #238                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.y:I
+       265: aload         12
+       267: getfield      #241                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.z:I
+       270: invokevirtual #291                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection.getFluidId:(III)I
+       273: goto          277
+       276: iconst_0
+       277: invokevirtual #294                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       280: checkcast     #225                // class com/hypixel/hytale/server/core/asset/type/fluid/Fluid
+       283: astore        17
+       285: aload         16
+       287: invokevirtual #297                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getInteractions:()Ljava/util/Map;
+       290: getstatic     #301                // Field com/hypixel/hytale/protocol/InteractionType.CollisionEnter:Lcom/hypixel/hytale/protocol/InteractionType;
+       293: invokeinterface #307,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       298: checkcast     #312                // class java/lang/String
+       301: astore        18
+       303: aload         18
+       305: ifnonnull     326
+       308: aload         17
+       310: invokevirtual #314                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.getInteractions:()Ljava/util/Map;
+       313: getstatic     #301                // Field com/hypixel/hytale/protocol/InteractionType.CollisionEnter:Lcom/hypixel/hytale/protocol/InteractionType;
+       316: invokeinterface #307,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       321: checkcast     #312                // class java/lang/String
+       324: astore        18
+       326: aload         16
+       328: invokevirtual #297                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getInteractions:()Ljava/util/Map;
+       331: getstatic     #315                // Field com/hypixel/hytale/protocol/InteractionType.Collision:Lcom/hypixel/hytale/protocol/InteractionType;
+       334: invokeinterface #307,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       339: checkcast     #312                // class java/lang/String
+       342: astore        19
+       344: aload         19
+       346: ifnonnull     367
+       349: aload         17
+       351: invokevirtual #314                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.getInteractions:()Ljava/util/Map;
+       354: getstatic     #315                // Field com/hypixel/hytale/protocol/InteractionType.Collision:Lcom/hypixel/hytale/protocol/InteractionType;
+       357: invokeinterface #307,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       362: checkcast     #312                // class java/lang/String
+       365: astore        19
+       367: aload         18
+       369: ifnonnull     380
+       372: aload         19
+       374: ifnonnull     380
+       377: goto          563
+       380: aload         14
+       382: aload         12
+       384: getfield      #235                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.x:I
+       387: aload         12
+       389: getfield      #238                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.y:I
+       392: aload         12
+       394: getfield      #241                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.z:I
+       397: invokevirtual #318                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection.getFiller:(III)I
+       400: istore        20
+       402: aload         12
+       404: getfield      #235                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.x:I
+       407: istore        21
+       409: aload         12
+       411: getfield      #238                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.y:I
+       414: istore        22
+       416: aload         12
+       418: getfield      #241                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.z:I
+       421: istore        23
+       423: iload         20
+       425: ifeq          458
+       428: iload         21
+       430: iload         20
+       432: invokestatic  #321                // Method com/hypixel/hytale/server/core/util/FillerBlockUtil.unpackX:(I)I
+       435: isub
+       436: istore        21
+       438: iload         22
+       440: iload         20
+       442: invokestatic  #327                // Method com/hypixel/hytale/server/core/util/FillerBlockUtil.unpackY:(I)I
+       445: isub
+       446: istore        22
+       448: iload         23
+       450: iload         20
+       452: invokestatic  #330                // Method com/hypixel/hytale/server/core/util/FillerBlockUtil.unpackZ:(I)I
+       455: isub
+       456: istore        23
+       458: aload_0
+       459: getfield      #30                 // Field newTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+       462: iload         21
+       464: iload         22
+       466: iload         23
+       468: invokevirtual #333                // Method com/hypixel/hytale/math/data/Int3OpenHashSet.add:(III)Z
+       471: ifne          477
+       474: goto          563
+       477: aload_0
+       478: getfield      #26                 // Field lastTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+       481: iload         21
+       483: iload         22
+       485: iload         23
+       487: invokevirtual #337                // Method com/hypixel/hytale/math/data/Int3OpenHashSet.remove:(III)Z
+       490: ifne          528
+       493: aload         18
+       495: ifnull        528
+       498: new           #339                // class com/hypixel/hytale/protocol/BlockPosition
+       501: dup
+       502: iload         21
+       504: iload         22
+       506: iload         23
+       508: invokespecial #341                // Method com/hypixel/hytale/protocol/BlockPosition."<init>":(III)V
+       511: astore        24
+       513: aload_0
+       514: aload_1
+       515: getstatic     #301                // Field com/hypixel/hytale/protocol/InteractionType.CollisionEnter:Lcom/hypixel/hytale/protocol/InteractionType;
+       518: aload_3
+       519: aload         18
+       521: aload         24
+       523: aload         5
+       525: invokevirtual #344                // Method doCollisionInteraction:(Lcom/hypixel/hytale/server/core/entity/InteractionManager;Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/component/Ref;Ljava/lang/String;Lcom/hypixel/hytale/protocol/BlockPosition;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+       528: aload         19
+       530: ifnull        563
+       533: new           #339                // class com/hypixel/hytale/protocol/BlockPosition
+       536: dup
+       537: iload         21
+       539: iload         22
+       541: iload         23
+       543: invokespecial #341                // Method com/hypixel/hytale/protocol/BlockPosition."<init>":(III)V
+       546: astore        24
+       548: aload_0
+       549: aload_1
+       550: getstatic     #315                // Field com/hypixel/hytale/protocol/InteractionType.Collision:Lcom/hypixel/hytale/protocol/InteractionType;
+       553: aload_3
+       554: aload         19
+       556: aload         24
+       558: aload         5
+       560: invokevirtual #344                // Method doCollisionInteraction:(Lcom/hypixel/hytale/server/core/entity/InteractionManager;Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/component/Ref;Ljava/lang/String;Lcom/hypixel/hytale/protocol/BlockPosition;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+       563: iinc          10, 1
+       566: goto          64
+       569: iload         4
+       571: ifeq          610
+       574: aload_2
+       575: instanceof    #233                // class com/hypixel/hytale/server/core/entity/LivingEntity
+       578: ifeq          610
+       581: aload_0
+       582: getfield      #26                 // Field lastTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+       585: invokevirtual #348                // Method com/hypixel/hytale/math/data/Int3OpenHashSet.isEmpty:()Z
+       588: ifne          610
+       591: aload_0
+       592: getfield      #26                 // Field lastTriggers:Lcom/hypixel/hytale/math/data/Int3OpenHashSet;
+       595: aload_0
+       596: aload         6
+       598: aload_1
+       599: aload_3
+       600: aload         5
+       602: invokedynamic #351,  0            // InvokeDynamic #3:accept:(Lcom/hypixel/hytale/server/core/modules/collision/CollisionResult;Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;Lcom/hypixel/hytale/server/core/entity/InteractionManager;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/function/consumer/TriIntConsumer;
+       607: invokevirtual #354                // Method com/hypixel/hytale/math/data/Int3OpenHashSet.forEach:(Lcom/hypixel/hytale/function/consumer/TriIntConsumer;)V
+       610: iload         8
+       612: ireturn
+
+  private void doCollisionInteraction(com.hypixel.hytale.server.core.entity.InteractionManager, com.hypixel.hytale.protocol.InteractionType, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.lang.String, com.hypixel.hytale.protocol.BlockPosition, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload         4
+         2: invokestatic  #358                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getRootInteractionOrUnknown:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;
+         5: astore        7
+         7: aload_1
+         8: aload_3
+         9: aload_2
+        10: aload         6
+        12: invokestatic  #364                // Method com/hypixel/hytale/server/core/entity/InteractionContext.forInteraction:(Lcom/hypixel/hytale/server/core/entity/InteractionManager;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/server/core/entity/InteractionContext;
+        15: astore        8
+        17: aload         8
+        19: invokevirtual #370                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getMetaStore:()Lcom/hypixel/hytale/server/core/meta/DynamicMetaStore;
+        22: getstatic     #374                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.TARGET_BLOCK_RAW:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        25: aload         5
+        27: invokevirtual #380                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+        30: pop
+        31: aload         8
+        33: invokevirtual #370                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getMetaStore:()Lcom/hypixel/hytale/server/core/meta/DynamicMetaStore;
+        36: getstatic     #386                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.TARGET_BLOCK:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        39: aload         5
+        41: invokevirtual #380                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+        44: pop
+        45: aload_1
+        46: aload_2
+        47: aload         8
+        49: aload         7
+        51: iconst_m1
+        52: aload         5
+        54: iconst_0
+        55: invokevirtual #389                // Method com/hypixel/hytale/server/core/entity/InteractionManager.initChain:(Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;ILcom/hypixel/hytale/protocol/BlockPosition;Z)Lcom/hypixel/hytale/server/core/entity/InteractionChain;
+        58: astore        9
+        60: aload_1
+        61: aload         9
+        63: invokevirtual #395                // Method com/hypixel/hytale/server/core/entity/InteractionManager.queueExecuteChain:(Lcom/hypixel/hytale/server/core/entity/InteractionChain;)V
+        66: return
+
+  public boolean next();
+    Code:
+         0: aload_0
+         1: getfield      #12                 // Field continueAfterCollision:Z
+         4: ifne          14
+         7: aload_0
+         8: getfield      #16                 // Field haveNoCollision:Z
+        11: ifeq          18
+        14: iconst_1
+        15: goto          19
+        18: iconst_0
+        19: ireturn
+
+  public boolean accept(long, long, long);
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: lload_1
+         5: l2i
+         6: lload_3
+         7: l2i
+         8: lload         5
+        10: l2i
+        11: invokevirtual #399                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.canCollide:(III)Z
+        14: ifeq          265
+        17: lload_1
+        18: aload_0
+        19: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        22: invokevirtual #402                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBoxOffsetX:()I
+        25: i2l
+        26: ladd
+        27: lstore_1
+        28: lload_3
+        29: aload_0
+        30: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        33: invokevirtual #405                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBoxOffsetY:()I
+        36: i2l
+        37: ladd
+        38: lstore_3
+        39: lload         5
+        41: aload_0
+        42: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        45: invokevirtual #408                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBoxOffsetZ:()I
+        48: i2l
+        49: ladd
+        50: lstore        5
+        52: aload_0
+        53: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        56: invokevirtual #411                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getDetailCount:()I
+        59: istore        7
+        61: aload_0
+        62: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+        65: aload_0
+        66: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        69: invokevirtual #414                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBox:()Lcom/hypixel/hytale/math/shape/Box;
+        72: lload_1
+        73: l2d
+        74: lload_3
+        75: l2d
+        76: lload         5
+        78: l2d
+        79: invokevirtual #418                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isBoundingBoxColliding:(Lcom/hypixel/hytale/math/shape/Box;DDD)Z
+        82: istore        8
+        84: aload_0
+        85: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+        88: ifnull        172
+        91: aload_0
+        92: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        95: getfield      #426                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+        98: ifnull        114
+       101: aload_0
+       102: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       105: getfield      #426                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       108: invokevirtual #427                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getId:()Ljava/lang/String;
+       111: goto          117
+       114: ldc_w         #431                // String null
+       117: astore        9
+       119: aload_0
+       120: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       123: getstatic     #433                // Field java/util/logging/Level.INFO:Ljava/util/logging/Level;
+       126: invokevirtual #439                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       129: ldc_w         #445                // String ?? Block Test at %s/%s/%s numDet=%d haveColl=%s overlap=%s blockType=%s
+       132: lload_1
+       133: invokestatic  #447                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       136: lload_3
+       137: invokestatic  #447                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       140: lload         5
+       142: invokestatic  #447                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       145: iload         7
+       147: invokestatic  #453                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       150: iload         8
+       152: invokestatic  #458                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       155: aload_0
+       156: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       159: invokevirtual #463                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isOverlapping:()Z
+       162: invokestatic  #458                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       165: aload         9
+       167: invokeinterface #466,  9          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       172: iload         7
+       174: iconst_1
+       175: if_icmpgt     188
+       178: aload_0
+       179: iload         8
+       181: iconst_0
+       182: invokevirtual #472                // Method processCollisionResult:(ZI)V
+       185: goto          262
+       188: iload         8
+       190: ifne          213
+       193: aload_0
+       194: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       197: invokevirtual #463                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isOverlapping:()Z
+       200: ifne          213
+       203: aload_0
+       204: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       207: invokevirtual #476                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isTouching:()Z
+       210: ifeq          262
+       213: iconst_0
+       214: istore        9
+       216: iload         9
+       218: iload         7
+       220: if_icmpge     262
+       223: aload_0
+       224: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       227: aload_0
+       228: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       231: iload         9
+       233: invokevirtual #479                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBox:(I)Lcom/hypixel/hytale/math/shape/Box;
+       236: lload_1
+       237: l2d
+       238: lload_3
+       239: l2d
+       240: lload         5
+       242: l2d
+       243: invokevirtual #418                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isBoundingBoxColliding:(Lcom/hypixel/hytale/math/shape/Box;DDD)Z
+       246: istore        8
+       248: aload_0
+       249: iload         8
+       251: iload         9
+       253: invokevirtual #472                // Method processCollisionResult:(ZI)V
+       256: iinc          9, 1
+       259: goto          216
+       262: goto          524
+       265: aload_0
+       266: getfield      #482                // Field recordPassThrough:Z
+       269: ifeq          456
+       272: aload_0
+       273: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       276: getfield      #485                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockFilteredOut:Z
+       279: ifeq          456
+       282: lload_1
+       283: aload_0
+       284: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       287: invokevirtual #402                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBoxOffsetX:()I
+       290: i2l
+       291: ladd
+       292: lstore_1
+       293: lload_3
+       294: aload_0
+       295: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       298: invokevirtual #405                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBoxOffsetY:()I
+       301: i2l
+       302: ladd
+       303: lstore_3
+       304: lload         5
+       306: aload_0
+       307: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       310: invokevirtual #408                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBoxOffsetZ:()I
+       313: i2l
+       314: ladd
+       315: lstore        5
+       317: aload_0
+       318: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       321: invokevirtual #411                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getDetailCount:()I
+       324: istore        7
+       326: aload_0
+       327: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       330: aload_0
+       331: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       334: invokevirtual #414                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBox:()Lcom/hypixel/hytale/math/shape/Box;
+       337: lload_1
+       338: l2d
+       339: lload_3
+       340: l2d
+       341: lload         5
+       343: l2d
+       344: invokevirtual #418                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isBoundingBoxColliding:(Lcom/hypixel/hytale/math/shape/Box;DDD)Z
+       347: istore        8
+       349: iload         7
+       351: iconst_1
+       352: if_icmpgt     372
+       355: iload         8
+       357: ifeq          453
+       360: aload_0
+       361: aload_0
+       362: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       365: iconst_0
+       366: invokevirtual #488                // Method addPassThrough:(Lcom/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator;I)V
+       369: goto          453
+       372: iload         8
+       374: ifne          397
+       377: aload_0
+       378: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       381: invokevirtual #463                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isOverlapping:()Z
+       384: ifne          397
+       387: aload_0
+       388: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       391: invokevirtual #476                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isTouching:()Z
+       394: ifeq          453
+       397: iconst_0
+       398: istore        9
+       400: iload         9
+       402: iload         7
+       404: if_icmpge     453
+       407: aload_0
+       408: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       411: aload_0
+       412: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       415: iload         9
+       417: invokevirtual #479                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getBoundingBox:(I)Lcom/hypixel/hytale/math/shape/Box;
+       420: lload_1
+       421: l2d
+       422: lload_3
+       423: l2d
+       424: lload         5
+       426: l2d
+       427: invokevirtual #418                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isBoundingBoxColliding:(Lcom/hypixel/hytale/math/shape/Box;DDD)Z
+       430: istore        8
+       432: iload         8
+       434: ifeq          447
+       437: aload_0
+       438: aload_0
+       439: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       442: iload         9
+       444: invokevirtual #488                // Method addPassThrough:(Lcom/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator;I)V
+       447: iinc          9, 1
+       450: goto          400
+       453: goto          524
+       456: aload_0
+       457: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       460: ifnull        524
+       463: aload_0
+       464: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       467: getfield      #426                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       470: ifnull        486
+       473: aload_0
+       474: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       477: getfield      #426                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       480: invokevirtual #427                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getId:()Ljava/lang/String;
+       483: goto          489
+       486: ldc_w         #431                // String null
+       489: astore        7
+       491: aload_0
+       492: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       495: getstatic     #433                // Field java/util/logging/Level.INFO:Ljava/util/logging/Level;
+       498: invokevirtual #439                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       501: ldc_w         #492                // String -- Ignoring block at %s/%s/%s blockType=%s
+       504: lload_1
+       505: invokestatic  #447                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       508: lload_3
+       509: invokestatic  #447                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       512: lload         5
+       514: invokestatic  #447                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       517: aload         7
+       519: invokeinterface #494,  6          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       524: iconst_1
+       525: ireturn
+
+  private void processCollisionResult(boolean, int);
+    Code:
+         0: aload_0
+         1: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+         4: ifnull        73
+         7: aload_0
+         8: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+        11: getstatic     #433                // Field java/util/logging/Level.INFO:Ljava/util/logging/Level;
+        14: invokevirtual #439                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        17: ldc_w         #497                // String ?? Further testing block haveCol=%s hitBoxIndex=%s onGround=%s touching=%s canCollide=%s canTrigger=%s
+        20: iload_1
+        21: invokestatic  #458                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+        24: iload_2
+        25: invokestatic  #453                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        28: aload_0
+        29: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+        32: invokevirtual #499                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isOnGround:()Z
+        35: invokestatic  #458                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+        38: aload_0
+        39: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+        42: invokevirtual #476                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isTouching:()Z
+        45: invokestatic  #458                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+        48: aload_0
+        49: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        52: getfield      #502                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockCanCollide:Z
+        55: invokestatic  #458                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+        58: aload_0
+        59: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        62: getfield      #505                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockCanTrigger:Z
+        65: invokestatic  #458                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+        68: invokeinterface #508,  8          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+        73: aload_0
+        74: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        77: getfield      #502                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockCanCollide:Z
+        80: ifeq          349
+        83: iconst_1
+        84: istore_3
+        85: aload_0
+        86: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+        89: getfield      #511                // Field com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.onGround:Z
+        92: ifeq          272
+        95: aload_0
+        96: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        99: getfield      #426                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       102: ifnull        121
+       105: aload_0
+       106: getfield      #514                // Field isNonWalkable:Ljava/util/function/Predicate;
+       109: aload_0
+       110: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       113: invokeinterface #518,  2          // InterfaceMethod java/util/function/Predicate.test:(Ljava/lang/Object;)Z
+       118: ifeq          125
+       121: iconst_1
+       122: goto          126
+       125: iconst_0
+       126: istore_1
+       127: iload_1
+       128: ifne          215
+       131: aload_0
+       132: aload_0
+       133: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       136: iload_2
+       137: invokevirtual #524                // Method addSlide:(Lcom/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator;I)V
+       140: aload_0
+       141: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       144: getfield      #505                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockCanTrigger:Z
+       147: ifeq          159
+       150: aload_0
+       151: aload_0
+       152: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       155: iload_2
+       156: invokevirtual #527                // Method addTrigger:(Lcom/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator;I)V
+       159: aload_0
+       160: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       163: ifnull        214
+       166: aload_0
+       167: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       170: getstatic     #433                // Field java/util/logging/Level.INFO:Ljava/util/logging/Level;
+       173: invokevirtual #439                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       176: ldc_w         #530                // String ++ Sliding block start=%s end=%s normal=%s
+       179: aload_0
+       180: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       183: invokevirtual #532                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.getCollisionStart:()D
+       186: invokestatic  #533                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       189: aload_0
+       190: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       193: invokevirtual #538                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.getCollisionEnd:()D
+       196: invokestatic  #533                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       199: aload_0
+       200: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       203: invokevirtual #541                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.getCollisionNormal:()Lorg/joml/Vector3d;
+       206: invokestatic  #545                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+       209: invokeinterface #551,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       214: return
+       215: iconst_0
+       216: istore_3
+       217: aload_0
+       218: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       221: ifnull        272
+       224: aload_0
+       225: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       228: getstatic     #433                // Field java/util/logging/Level.INFO:Ljava/util/logging/Level;
+       231: invokevirtual #439                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       234: ldc_w         #554                // String ?? Sliding block is unwalkable start=%s end=%s normal=%s
+       237: aload_0
+       238: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       241: invokevirtual #532                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.getCollisionStart:()D
+       244: invokestatic  #533                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       247: aload_0
+       248: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       251: invokevirtual #538                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.getCollisionEnd:()D
+       254: invokestatic  #533                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       257: aload_0
+       258: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       261: invokevirtual #541                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.getCollisionNormal:()Lorg/joml/Vector3d;
+       264: invokestatic  #545                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+       267: invokeinterface #551,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       272: iload_1
+       273: ifeq          349
+       276: aload_0
+       277: aload_0
+       278: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       281: iload_2
+       282: invokevirtual #556                // Method addCollision:(Lcom/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator;I)V
+       285: iload_3
+       286: ifeq          294
+       289: aload_0
+       290: iconst_0
+       291: putfield      #16                 // Field haveNoCollision:Z
+       294: aload_0
+       295: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       298: ifnull        349
+       301: aload_0
+       302: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       305: getstatic     #433                // Field java/util/logging/Level.INFO:Ljava/util/logging/Level;
+       308: invokevirtual #439                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       311: ldc_w         #559                // String ++ Collision with block start=%s end=%s normal=%s
+       314: aload_0
+       315: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       318: getfield      #561                // Field com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.collisionStart:D
+       321: invokestatic  #533                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       324: aload_0
+       325: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       328: getfield      #562                // Field com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.collisionEnd:D
+       331: invokestatic  #533                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       334: aload_0
+       335: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       338: getfield      #563                // Field com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.collisionNormal:Lorg/joml/Vector3d;
+       341: invokestatic  #545                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+       344: invokeinterface #551,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       349: aload_0
+       350: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+       353: getfield      #505                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockCanTrigger:Z
+       356: ifeq          437
+       359: iload_1
+       360: ifne          373
+       363: aload_0
+       364: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       367: invokevirtual #476                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isTouching:()Z
+       370: ifeq          437
+       373: aload_0
+       374: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       377: ifnull        428
+       380: aload_0
+       381: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+       384: getstatic     #433                // Field java/util/logging/Level.INFO:Ljava/util/logging/Level;
+       387: invokevirtual #439                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       390: ldc_w         #567                // String ++ Trigger block start=%s end=%s normal=%s
+       393: aload_0
+       394: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       397: invokevirtual #532                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.getCollisionStart:()D
+       400: invokestatic  #533                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       403: aload_0
+       404: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       407: invokevirtual #538                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.getCollisionEnd:()D
+       410: invokestatic  #533                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       413: aload_0
+       414: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       417: invokevirtual #541                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.getCollisionNormal:()Lorg/joml/Vector3d;
+       420: invokestatic  #545                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+       423: invokeinterface #551,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       428: aload_0
+       429: aload_0
+       430: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+       433: iload_2
+       434: invokevirtual #527                // Method addTrigger:(Lcom/hypixel/hytale/server/core/modules/collision/IBlockCollisionEvaluator;I)V
+       437: return
+
+  public void iterateBlocks(com.hypixel.hytale.math.shape.Box, org.joml.Vector3d, org.joml.Vector3d, double, boolean, double);
+    Code:
+         0: aload_0
+         1: iload         6
+         3: ifne          10
+         6: iconst_1
+         7: goto          11
+        10: iconst_0
+        11: putfield      #12                 // Field continueAfterCollision:Z
+        14: aload_1
+        15: invokevirtual #569                // Method com/hypixel/hytale/math/shape/Box.getMin:()Lorg/joml/Vector3d;
+        18: astore        9
+        20: aload_1
+        21: invokevirtual #574                // Method com/hypixel/hytale/math/shape/Box.getMax:()Lorg/joml/Vector3d;
+        24: astore        10
+        26: aload         9
+        28: getfield      #577                // Field org/joml/Vector3d.x:D
+        31: dload         7
+        33: dsub
+        34: aload         9
+        36: getfield      #581                // Field org/joml/Vector3d.y:D
+        39: dload         7
+        41: dsub
+        42: aload         9
+        44: getfield      #583                // Field org/joml/Vector3d.z:D
+        47: dload         7
+        49: dsub
+        50: aload         10
+        52: getfield      #577                // Field org/joml/Vector3d.x:D
+        55: dload         7
+        57: dadd
+        58: aload         10
+        60: getfield      #581                // Field org/joml/Vector3d.y:D
+        63: dload         7
+        65: dadd
+        66: aload         10
+        68: getfield      #583                // Field org/joml/Vector3d.z:D
+        71: dload         7
+        73: dadd
+        74: aload_2
+        75: getfield      #577                // Field org/joml/Vector3d.x:D
+        78: aload_2
+        79: getfield      #581                // Field org/joml/Vector3d.y:D
+        82: aload_2
+        83: getfield      #583                // Field org/joml/Vector3d.z:D
+        86: aload_3
+        87: getfield      #577                // Field org/joml/Vector3d.x:D
+        90: aload_3
+        91: getfield      #581                // Field org/joml/Vector3d.y:D
+        94: aload_3
+        95: getfield      #583                // Field org/joml/Vector3d.z:D
+        98: dload         4
+       100: aload_0
+       101: invokestatic  #585                // Method com/hypixel/hytale/math/iterator/BoxBlockIterator.iterate:(DDDDDDDDDDDDDLcom/hypixel/hytale/math/iterator/BoxBlockIterator$BoxIterationConsumer;)Z
+       104: pop
+       105: return
+
+  public void acquireCollisionModule();
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: putfield      #16                 // Field haveNoCollision:Z
+         5: return
+
+  public void disableSlides();
+    Code:
+         0: aload_0
+         1: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+         4: iconst_0
+         5: invokevirtual #83                 // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.setCheckForOnGround:(Z)V
+         8: return
+
+  public void enableSlides();
+    Code:
+         0: aload_0
+         1: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+         4: iconst_1
+         5: invokevirtual #83                 // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.setCheckForOnGround:(Z)V
+         8: return
+
+  public void disableCharacterCollisions();
+    Code:
+         0: aload_0
+         1: iconst_0
+         2: putfield      #94                 // Field checkForCharacterCollisions:Z
+         5: return
+
+  public void enableCharacterCollsions();
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: putfield      #94                 // Field checkForCharacterCollisions:Z
+         5: return
+
+  public boolean isCheckingForCharacterCollisions();
+    Code:
+         0: aload_0
+         1: getfield      #94                 // Field checkForCharacterCollisions:Z
+         4: ireturn
+
+  public boolean isRecordingPassThrough();
+    Code:
+         0: aload_0
+         1: getfield      #482                // Field recordPassThrough:Z
+         4: ireturn
+
+  public void setRecordPassThrough(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #482                // Field recordPassThrough:Z
+         5: return
+
+  public void enableTriggerBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: iconst_1
+         5: invokevirtual #591                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setCheckTriggerBlocks:(Z)V
+         8: return
+
+  public void disableTriggerBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: iconst_0
+         5: invokevirtual #591                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setCheckTriggerBlocks:(Z)V
+         8: return
+
+  public boolean isCheckingTriggerBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: invokevirtual #594                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.isCheckTriggerBlocks:()Z
+         7: ireturn
+
+  public void enableDamageBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: iconst_1
+         5: invokevirtual #597                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setCheckDamageBlocks:(Z)V
+         8: return
+
+  public void disableDamageBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: iconst_0
+         5: invokevirtual #597                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setCheckDamageBlocks:(Z)V
+         8: return
+
+  public boolean isCheckingDamageBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: invokevirtual #600                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.isCheckDamageBlocks:()Z
+         7: ireturn
+
+  public boolean setDamageBlocking(boolean);
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: iload_1
+         5: invokevirtual #603                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setCollideWithDamageBlocks:(Z)Z
+         8: istore_2
+         9: aload_0
+        10: invokevirtual #607                // Method updateDamageWalkableFlag:()V
+        13: iload_2
+        14: ireturn
+
+  public boolean isDamageBlocking();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: invokevirtual #610                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.isCollidingWithDamageBlocks:()Z
+         7: ireturn
+
+  public java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig> getBlockCollisionFilter();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: getfield      #613                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.extraBlockCollisionFilter:Ljava/util/function/Predicate;
+         7: areturn
+
+  public java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig> setBlockCollisionFilter(java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig>);
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: getfield      #613                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.extraBlockCollisionFilter:Ljava/util/function/Predicate;
+         7: astore_2
+         8: aload_0
+         9: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+        12: aload_1
+        13: putfield      #613                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.extraBlockCollisionFilter:Ljava/util/function/Predicate;
+        16: aload_2
+        17: areturn
+
+  public void setCollisionByMaterial(int);
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: iload_1
+         5: invokevirtual #616                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setCollisionByMaterial:(I)V
+         8: return
+
+  public void setCollisionByMaterial(int, int);
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: iload_1
+         5: invokevirtual #616                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setCollisionByMaterial:(I)V
+         8: aload_0
+         9: iload_2
+        10: invokevirtual #619                // Method setWalkableByMaterial:(I)V
+        13: return
+
+  public int getCollisionByMaterial();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: invokevirtual #622                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.getCollisionByMaterial:()I
+         7: ireturn
+
+  public void setDefaultCollisionBehaviour();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: invokevirtual #73                 // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setDefaultCollisionBehaviour:()V
+         7: return
+
+  public void setDefaultBlockCollisionPredicate();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: invokevirtual #625                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.setDefaultBlockCollisionPredicate:()V
+         7: return
+
+  public void setDefaultNonWalkablePredicate();
+    Code:
+         0: aload_0
+         1: aload_0
+         2: invokedynamic #628,  0            // InvokeDynamic #4:test:(Lcom/hypixel/hytale/server/core/modules/collision/CollisionResult;)Ljava/util/function/Predicate;
+         7: putfield      #514                // Field isNonWalkable:Ljava/util/function/Predicate;
+        10: return
+
+  public void setNonWalkablePredicate(java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #514                // Field isNonWalkable:Ljava/util/function/Predicate;
+         5: return
+
+  public void setWalkableByMaterial(int);
+    Code:
+         0: aload_0
+         1: bipush        15
+         3: iload_1
+         4: iand
+         5: putfield      #631                // Field walkableMaterialMask:I
+         8: aload_0
+         9: invokevirtual #607                // Method updateDamageWalkableFlag:()V
+        12: return
+
+  protected void updateDamageWalkableFlag();
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field collisionConfig:Lcom/hypixel/hytale/server/core/modules/collision/CollisionConfig;
+         4: invokevirtual #610                // Method com/hypixel/hytale/server/core/modules/collision/CollisionConfig.isCollidingWithDamageBlocks:()Z
+         7: ifeq          24
+        10: aload_0
+        11: dup
+        12: getfield      #631                // Field walkableMaterialMask:I
+        15: bipush        16
+        17: ior
+        18: putfield      #631                // Field walkableMaterialMask:I
+        21: goto          35
+        24: aload_0
+        25: dup
+        26: getfield      #631                // Field walkableMaterialMask:I
+        29: bipush        -17
+        31: iand
+        32: putfield      #631                // Field walkableMaterialMask:I
+        35: return
+
+  public void setDefaultWalkableBehaviour();
+    Code:
+         0: aload_0
+         1: invokevirtual #634                // Method setDefaultNonWalkablePredicate:()V
+         4: aload_0
+         5: iconst_5
+         6: invokevirtual #619                // Method setWalkableByMaterial:(I)V
+         9: return
+
+  public void setDefaultPlayerSettings();
+    Code:
+         0: aload_0
+         1: invokevirtual #637                // Method enableSlides:()V
+         4: aload_0
+         5: invokevirtual #640                // Method disableCharacterCollisions:()V
+         8: aload_0
+         9: invokevirtual #634                // Method setDefaultNonWalkablePredicate:()V
+        12: aload_0
+        13: invokevirtual #643                // Method setDefaultBlockCollisionPredicate:()V
+        16: aload_0
+        17: iconst_4
+        18: invokevirtual #644                // Method setCollisionByMaterial:(I)V
+        21: aload_0
+        22: bipush        15
+        24: invokevirtual #619                // Method setWalkableByMaterial:(I)V
+        27: return
+
+  public boolean isComputeOverlaps();
+    Code:
+         0: aload_0
+         1: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+         4: invokevirtual #645                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.isComputeOverlaps:()Z
+         7: ireturn
+
+  public void setComputeOverlaps(boolean);
+    Code:
+         0: aload_0
+         1: getfield      #79                 // Field movingBoxBoxCollision:Lcom/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator;
+         4: iload_1
+         5: invokevirtual #648                // Method com/hypixel/hytale/server/core/modules/collision/MovingBoxBoxCollisionEvaluator.setComputeOverlaps:(Z)V
+         8: return
+
+  public com.hypixel.hytale.logger.HytaleLogger getLogger();
+    Code:
+         0: aload_0
+         1: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+         4: areturn
+
+  public boolean shouldLog();
+    Code:
+         0: aload_0
+         1: getfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+         4: ifnull        11
+         7: iconst_1
+         8: goto          12
+        11: iconst_0
+        12: ireturn
+
+  public void setLogger(com.hypixel.hytale.logger.HytaleLogger);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+         5: return
+
+  public void setLogger(com.hypixel.hytale.logger.HytaleLogger, int);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #422                // Field logger:Lcom/hypixel/hytale/logger/HytaleLogger;
+         5: aload_0
+         6: iload_2
+         7: putfield      #19                 // Field debugEntityId:I
+        10: return
+
+  public void setDebugEntityId(int);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #19                 // Field debugEntityId:I
+         5: return
+
+  public int getDebugEntityId();
+    Code:
+         0: aload_0
+         1: getfield      #19                 // Field debugEntityId:I
+         4: ireturn
+
+  private boolean lambda$setDefaultNonWalkablePredicate$0(com.hypixel.hytale.server.core.modules.collision.CollisionConfig);
+    Code:
+         0: aload_1
+         1: getfield      #651                // Field com/hypixel/hytale/server/core/modules/collision/CollisionConfig.blockMaterialMask:I
+         4: aload_0
+         5: getfield      #631                // Field walkableMaterialMask:I
+         8: iand
+         9: istore_2
+        10: iload_2
+        11: ifeq          21
+        14: iload_2
+        15: bipush        16
+        17: iand
+        18: ifeq          25
+        21: iconst_1
+        22: goto          26
+        25: iconst_0
+        26: ireturn
+
+  private void lambda$defaultTriggerBlocksProcessing$0(com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.core.entity.InteractionManager, com.hypixel.hytale.component.Ref, com.hypixel.hytale.component.ComponentAccessor, int, int, int);
+    Code:
+         0: aload_1
+         1: iload         5
+         3: iload         6
+         5: iload         7
+         7: invokevirtual #244                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getChunkSectionReferenceAtBlock:(III)Lcom/hypixel/hytale/component/Ref;
+        10: astore        8
+        12: aload         8
+        14: ifnull        25
+        17: aload         8
+        19: invokevirtual #250                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        22: ifne          26
+        25: return
+        26: aload_1
+        27: invokevirtual #256                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getStore:()Lcom/hypixel/hytale/component/Store;
+        30: aload         8
+        32: invokestatic  #260                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        35: invokevirtual #266                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        38: checkcast     #261                // class com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection
+        41: astore        9
+        43: aload         9
+        45: ifnonnull     49
+        48: return
+        49: aload_1
+        50: invokevirtual #256                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getStore:()Lcom/hypixel/hytale/component/Store;
+        53: aload         8
+        55: invokestatic  #272                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        58: invokevirtual #266                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        61: checkcast     #273                // class com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection
+        64: astore        10
+        66: invokestatic  #275                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/BlockTypeAssetMap;
+        69: aload         9
+        71: iload         5
+        73: iload         6
+        75: iload         7
+        77: invokevirtual #279                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection.get:(III)I
+        80: invokevirtual #282                // Method com/hypixel/hytale/assetstore/map/BlockTypeAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+        83: checkcast     #216                // class com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType
+        86: astore        11
+        88: invokestatic  #288                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        91: aload         10
+        93: ifnull        110
+        96: aload         10
+        98: iload         5
+       100: iload         6
+       102: iload         7
+       104: invokevirtual #291                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection.getFluidId:(III)I
+       107: goto          111
+       110: iconst_0
+       111: invokevirtual #294                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       114: checkcast     #225                // class com/hypixel/hytale/server/core/asset/type/fluid/Fluid
+       117: astore        12
+       119: aload         11
+       121: invokevirtual #297                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getInteractions:()Ljava/util/Map;
+       124: getstatic     #654                // Field com/hypixel/hytale/protocol/InteractionType.CollisionLeave:Lcom/hypixel/hytale/protocol/InteractionType;
+       127: invokeinterface #307,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       132: checkcast     #312                // class java/lang/String
+       135: astore        13
+       137: aload         13
+       139: ifnonnull     160
+       142: aload         12
+       144: invokevirtual #314                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.getInteractions:()Ljava/util/Map;
+       147: getstatic     #654                // Field com/hypixel/hytale/protocol/InteractionType.CollisionLeave:Lcom/hypixel/hytale/protocol/InteractionType;
+       150: invokeinterface #307,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       155: checkcast     #312                // class java/lang/String
+       158: astore        13
+       160: aload         13
+       162: ifnull        191
+       165: aload_0
+       166: aload_2
+       167: getstatic     #654                // Field com/hypixel/hytale/protocol/InteractionType.CollisionLeave:Lcom/hypixel/hytale/protocol/InteractionType;
+       170: aload_3
+       171: aload         13
+       173: new           #339                // class com/hypixel/hytale/protocol/BlockPosition
+       176: dup
+       177: iload         5
+       179: iload         6
+       181: iload         7
+       183: invokespecial #341                // Method com/hypixel/hytale/protocol/BlockPosition."<init>":(III)V
+       186: aload         4
+       188: invokevirtual #344                // Method doCollisionInteraction:(Lcom/hypixel/hytale/server/core/entity/InteractionManager;Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/component/Ref;Ljava/lang/String;Lcom/hypixel/hytale/protocol/BlockPosition;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+       191: return
+
+  private static double lambda$static$1(com.hypixel.hytale.server.core.modules.collision.BlockCollisionData);
+    Code:
+         0: aload_0
+         1: getfield      #165                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionEnd:D
+         4: dreturn
+
+  private static double lambda$static$0(com.hypixel.hytale.server.core.modules.collision.BlockCollisionData);
+    Code:
+         0: aload_0
+         1: getfield      #158                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+         4: dreturn
+
+  static {};
+    Code:
+         0: invokedynamic #657,  0            // InvokeDynamic #5:applyAsDouble:()Ljava/util/function/ToDoubleFunction;
+         5: invokestatic  #661                // InterfaceMethod java/util/Comparator.comparingDouble:(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;
+         8: invokedynamic #667,  0            // InvokeDynamic #6:applyAsDouble:()Ljava/util/function/ToDoubleFunction;
+        13: invokeinterface #668,  2          // InterfaceMethod java/util/Comparator.thenComparingDouble:(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;
+        18: putstatic     #152                // Field BLOCK_COLLISION_DATA_COMPARATOR:Ljava/util/Comparator;
+        21: return
+}

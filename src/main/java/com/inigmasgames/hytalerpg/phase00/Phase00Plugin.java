@@ -135,6 +135,12 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new RpgHudTickSystem(rpgHud));
         getEntityStoreRegistry().registerSystem(new NativeAbilityProjectionTickSystem(nativeAbilities));
         getEntityStoreRegistry().registerSystem(skillExecutionSystem);
+        com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.class,
+                com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection::new));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem(combatKernel.statuses()));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.AreaNpcControlSystem(combatKernel.statuses()));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.StatusRemovalSystem(combatKernel.statuses()));
         LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability2->skill01,Ability3->skill02 nativeAbility4=NATIVE_ABILITY4_UNAVAILABLE nativeAbility1=SIGNATURE_UNTOUCHED abilityHud=NATIVE_HYTALE_ONLY skillTreeHotkey=BLOCKED_PUBLIC_API uiOpen=%s entitlementMode=%s",
                 BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
                 runtimeProfiles.all().size(), Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS,
@@ -213,6 +219,9 @@ public final class Phase00Plugin extends JavaPlugin {
     protected void start() {
         // Assets are resolved before plugin start, including in --bare smoke mode (no BootEvent).
         com.inigmasgames.hytalerpg.input.NativeRuneControl.auditAssets();
+        com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem.requireAssets();
+        LOGGER.atInfo().log("RPG_STAGE06_ASSETS revision=%s areaProfiles=%d requiredStatusAssets=8 nativeDamageChannels=2 result=PASS connectedProof=false",
+                BuildIdentity.REVISION, Stage04SkillProfiles.EXPECTED_STAGE06_PROFILES);
     }
 
     @Override

@@ -200,14 +200,20 @@ public final class SkillExecutionService {
             kernel.resources().finish(token);
         }
         catch (RuntimeException error) {
-            if (cooldownStarted) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
-            try { if (resourceCommitted) kernel.resources().refundCommittedCost(token, port.resources()); }
+            // Spatial dispatch can already have applied a hit before a later presentation/status adapter fails.
+            // A paid area must not yield free native damage through the synchronous rollback path.
+            if (cooldownStarted && prepared.profile.area() == null) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
+            try { if (resourceCommitted && prepared.profile.area() == null) kernel.resources().refundCommittedCost(token, port.resources());
+                  else if (resourceCommitted) kernel.resources().finish(token); }
             catch (RuntimeException ignored) { }
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());
             return new SkillExecutionResult(SkillExecutionResult.Status.TERMINATED,
                     "EXECUTOR_ERROR", true, 0, 0.0);
         }
-        if (prepared.profile.family() == Stage04SkillProfile.Family.STRIKE
+        if (prepared.profile.area() != null) {
+            // The area registry owns the finite effect after dispatch; it does not lock unrelated casts for its lifetime.
+            lifecycle.terminate(prepared.request.actorId(), prepared.instanceId);
+        } else if (prepared.profile.family() == Stage04SkillProfile.Family.STRIKE
                 && prepared.profile.strike().repeats() > 1
                 && prepared.profile.strike().repeatIntervalSeconds() > 0.0) {
             if (!lifecycle.transition(prepared.request.actorId(), prepared.instanceId,

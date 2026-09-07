@@ -14,6 +14,9 @@ public interface SkillExecutionPort {
     SkillExecutionResult executeMovement(SkillExecutionContext context);
     SkillExecutionResult executeReaction(SkillExecutionContext context);
     SkillExecutionResult executeProjectile(SkillExecutionContext context);
+    default SkillExecutionResult executeArea(SkillExecutionContext context) {
+        throw new UnsupportedOperationException("AREA_NATIVE_PORT_UNAVAILABLE");
+    }
 
     record Equipment(Item mainHand, Item offHand) { }
     record Item(String itemId, String weaponKind, ItemPowerDescriptor power) { }

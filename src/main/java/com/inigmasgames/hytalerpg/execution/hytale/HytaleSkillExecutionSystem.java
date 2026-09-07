@@ -56,6 +56,9 @@ import com.inigmasgames.hytalerpg.execution.SkillExecutionResult;
 import com.inigmasgames.hytalerpg.execution.SkillExecutionService;
 import com.inigmasgames.hytalerpg.execution.Stage04SkillProfile;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
+import com.inigmasgames.hytalerpg.execution.area.AreaGeometry;
+import com.inigmasgames.hytalerpg.execution.area.AreaRuntime;
+import com.inigmasgames.hytalerpg.execution.area.AreaWorldPort;
 import com.inigmasgames.hytalerpg.execution.movement.MovementPlanner;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileFlight;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileExecutionPlan;
@@ -102,6 +105,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final RpgProjectileService projectileService =
             new RpgProjectileService(new ProjectileLifecycleRegistry());
     private final Map<BurnKey, BurnState> burns = new HashMap<>();
+    private final AreaRuntime areas = new AreaRuntime();
+    private final com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry areaControls =
+            com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry.loadCanonical();
 
     public HytaleSkillExecutionSystem(HytaleAbilitySkillInputAdapter inputs, SkillExecutionService executions,
                                       RpgCombatKernel kernel, CombatTrace trace,
@@ -142,6 +148,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         advanceRepeatingStrike(store, ref, playerRef, player, stats, buffer);
         advanceProjectiles(actor, deltaSeconds, store, buffer);
         advanceBurns(actor, store);
+        areas.tick(actor, System.nanoTime() / 1_000_000_000.0, port.areaWorld());
         Motion motion = motions.get(actor);
         if (motion != null) advanceMotion(deltaSeconds, store, ref, player, motion, buffer);
         Long windupEnd = windupEnds.get(actor);
@@ -188,6 +195,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         if (repeating != null) hits.clear(repeating.context.skillInstanceId());
         removeOwnedProjectiles(actor, buffer);
         removeOwnedBurns(actor);
+        for (SkillExecutionContext area : areas.cancel(actor))
+            emit(area, RpgTraceEventType.AREA_TERMINATED, Map.of("reason", reason));
         reactions.cancel(actor);
         executions.cancel(actor, reason);
     }
@@ -245,6 +254,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private final Ref<EntityStore> forcedTarget;
         private final CommandBuffer<EntityStore> buffer;
         private Ref<EntityStore> pounceTarget;
+        private Vec3 areaPlacement;
+        private Vec3 areaDirection;
         Port(Store<EntityStore> store, Ref<EntityStore> actor, PlayerRef playerRef, Player player,
              EntityStatMap stats, Ref<EntityStore> forcedTarget, CommandBuffer<EntityStore> buffer) {
             this.store = store; this.actor = actor; this.playerRef = playerRef; this.player = player;
@@ -261,6 +272,21 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                                                         com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
             if (motions.containsKey(playerRef.getUuid()) || windupEnds.containsKey(playerRef.getUuid())
                     || reactions.active(playerRef.getUuid()).isPresent()) return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
+            if (profile.area() != null) {
+                String admitted = areas.admission(playerRef.getUuid(), profile.skillId(), profile.area().trap());
+                if (!admitted.equals("PASS")) return Validation.reject(admitted);
+                Vec3 feet = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
+                areaDirection = aim(store, actor);
+                areaPlacement = profile.area().placementRange() > 0
+                        ? HytaleAreaQueries.ground(store, feet.add(new Vec3(0, 1.35, 0)), areaDirection,
+                            profile.area().placementRange()).orElse(null)
+                        : HytaleAreaQueries.ground(store, feet.add(new Vec3(0, .15, 0)), new Vec3(0, -1, 0), .65).orElse(null);
+                if (areaPlacement == null) return Validation.reject("NO_LEGAL_GROUND_SURFACE");
+                var query = areaWorld().query(profile.area().footprint(areaPlacement, areaDirection, 1), profile.area().candidateBudget());
+                if (query.overflow()) return Validation.reject("AREA_CANDIDATE_BUDGET");
+                if (!HytaleAreaStatuses.available()) return Validation.reject("AREA_STATUS_ASSETS_UNAVAILABLE");
+                return Validation.pass();
+            }
             if (profile.family() == Stage04SkillProfile.Family.PROJECTILE) {
                 if (profile.projectile() == null) return Validation.reject("PROJECTILE_PROFILE_MISSING");
                 boolean configMissing = java.util.stream.Stream.concat(
@@ -299,6 +325,76 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             vfx.present(store.getExternalData().getWorld(), player, context.compiledPlan().vfxRecipeId());
             return SkillExecutionResult.committed("STRIKE_COMPLETE", applied, 0.0);
+        }
+
+        @Override public SkillExecutionResult executeArea(SkillExecutionContext context) {
+            if (areaPlacement == null || areaDirection == null) throw new IllegalStateException("AREA_PLACEMENT_NOT_VALIDATED");
+            areas.start(context, areaPlacement, areaDirection, System.nanoTime() / 1_000_000_000.0, 1, areaWorld());
+            return SkillExecutionResult.committed("AREA_DISPATCHED", 0, 0);
+        }
+
+        private AreaWorldPort areaWorld() {
+            return new AreaWorldPort() {
+                private final Map<String, Ref<EntityStore>> refs = new HashMap<>();
+                @Override public Query query(AreaGeometry shape, int budget) {
+                    refs.clear();
+                    var found = HytaleAreaQueries.query(store, actor, shape, budget);
+                    List<Target> targets = new ArrayList<>();
+                    for (var value : found.candidates()) {
+                        var candidate = candidate(value.ref());
+                        if (candidate == null || candidate.protectedTarget()) continue;
+                        refs.put(candidate.stableId(), candidate.handle());
+                        targets.add(new Target(candidate.stableId(), value.bounds(), candidate.boss()));
+                    }
+                    return new Query(targets, found.overflow());
+                }
+                @Override public boolean lineOfSight(Vec3 origin, Target target) {
+                    return HytaleAreaQueries.clear(store, origin.add(new Vec3(0, .1, 0)), target.bounds().centre());
+                }
+                @Override public boolean apply(SkillExecutionContext context, Target target, Payload payload) {
+                    var reference = refs.get(target.id());
+                    if (reference == null || !HytaleAreaQueries.hostile(store, reference, actor)) return false;
+                    var candidate = candidate(reference);
+                    if (candidate == null || candidate.protectedTarget()) return false;
+                    NPCEntity npc = store.getComponent(reference, NPCEntity.getComponentType());
+                    ControlProfile control = areaControls.resolve(npc.getRoleName(), candidate.protectedTarget(), candidate.boss());
+                    if (control.protectedEntity()) return false;
+                    if (!payload.status().isBlank() && store.getComponent(reference, EffectControllerComponent.getComponentType()) == null)
+                        return false;
+                    String causeId = switch (payload.element()) {
+                        case "COLD" -> "Ice"; case "FIRE" -> "Fire"; case "EARTH" -> "Earth";
+                        case "POISON" -> "Poison"; case "PHYSICAL" -> "Physical"; case "NATURE" -> "RPG_Nature";
+                        case "VOID" -> "RPG_Void"; default -> throw new IllegalStateException("UNMAPPED_AREA_DAMAGE_CHANNEL");
+                    };
+                    DamageCause cause = DamageCause.getAssetMap().getAsset(causeId);
+                    if (cause == null) throw new IllegalStateException("MISSING_NATIVE_DAMAGE_CAUSE_" + causeId);
+                    DamageOutcome outcome = damage(context, candidate, payload.impactIndex(), payload.coefficient(),
+                            payload.periodic() ? 0 : context.snapshot().criticalChance(), cause);
+                    if (outcome.cancelled()) return false;
+                    HytaleAreaStatuses.apply(kernel, context, candidate, payload, control, store, actor,
+                            (event, details) -> emit(context, event, details));
+                    if (!payload.status().isBlank()) buffer.ensureAndGetComponent(reference, AreaStatusProjection.getComponentType());
+                    if (payload.displacement() > 0 && control.displacementMultiplier() > 0 && reference.isValid()
+                            && npc.getRole() != null && npc.getRole().getKnockbackScale() > 0) {
+                        var transform = store.getComponent(reference, TransformComponent.getComponentType());
+                        Vec3 origin = vec(transform.getPosition());
+                        Vec3 away = origin.subtract(areaPlacement == null
+                                ? vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition()) : areaPlacement)
+                                .horizontalNormalized().multiply(payload.displacement() * control.displacementMultiplier());
+                        double fraction = collisionFraction(store, reference, origin, away);
+                        transform.setPosition(vector(origin.add(away.multiply(fraction))));
+                    }
+                    return true;
+                }
+                @Override public void present(SkillExecutionContext context, AreaGeometry shape, String phase, double seconds) {
+                    vfx.presentArea(store.getExternalData().getWorld(), shape, phase, seconds);
+                    emit(context, RpgTraceEventType.AREA_PRESENTATION, Map.of("phase", phase, "radius", shape.radius(),
+                            "height", shape.height(), "duration", seconds, "template", "NATIVE_GEOMETRY"));
+                }
+                @Override public void trace(SkillExecutionContext context, String event, Map<String, ?> details) {
+                    emit(context, RpgTraceEventType.valueOf(event), details);
+                }
+            };
         }
         private int executeStrikeHit(SkillExecutionContext context, int hitIndex) {
             StrikeGeometryService.QueryResult<Ref<EntityStore>> selected = select(context, context.profile().strike());
@@ -476,12 +572,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             "multiplier", context.snapshot().criticalMultiplier()));
             EntityStatMap targetStats = store.getComponent(target.handle(), EntityStatMap.getComponentType());
             double before = health(targetStats);
-            new HytaleDamageAdapter().apply(target.handle(), store, actor, cause,
+            var nativeResult = new HytaleDamageAdapter().applyObserved(target.handle(), store, actor, cause,
                     new HytaleDamageMetadata(playerRef.getUuid(), context.rootCastId(), context.skillInstanceId(),
                             context.request().correlationId(), result.preMitigationDamage(), Double.NaN), result);
             double after = health(targetStats);
             return new DamageOutcome(result.preMitigationDamage(),
-                    Double.isFinite(before) && Double.isFinite(after) ? Math.max(0.0, before - after) : -1.0);
+                    Double.isFinite(before) && Double.isFinite(after) ? Math.max(0.0, before - after) : -1.0,
+                    nativeResult.cancelled());
         }
         private void applyStatus(SkillExecutionContext context,
                                  StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
@@ -940,5 +1037,5 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             this.remainingTicks = remainingTicks; this.nextTickNanos = nextTickNanos;
         }
     }
-    private record DamageOutcome(double preMitigationDamage, double actualHealthLoss) { }
+    private record DamageOutcome(double preMitigationDamage, double actualHealthLoss, boolean cancelled) { }
 }
