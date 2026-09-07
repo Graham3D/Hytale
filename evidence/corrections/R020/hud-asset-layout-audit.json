@@ -1,0 +1,43 @@
+{
+  "capturedAtUtc": "2026-09-07T15:08:44.2467955Z",
+  "releaseHealthNativeHotbarRelative": true,
+  "releaseStaminaNativeHotbarRelative": true,
+  "allNativeResourceControlsAbsentFromCustomDocument": true,
+  "noRpgVisibilityMutation": true,
+  "xpOwnerAssetsByteIdentical": true,
+  "xpAssetDimensionsAuthoritative": true,
+  "texturePathsRelativeToDocument": true,
+  "experienceImplicitlyCentered": true,
+  "experienceBackgroundGeometry": true,
+  "experienceFillGeometry": true,
+  "experienceLayerOrder": "ExperienceBackground|ExperienceFill|ExperienceFrame",
+  "experienceAssets": [
+    {
+      "name": "ExperienceFrame.png",
+      "sourceSha256": "E0F96FBF1032EE2CEA47831E09B1AD87C68CF41D19DA90378D5FCA5FA6842C40",
+      "packagedSha256": "E0F96FBF1032EE2CEA47831E09B1AD87C68CF41D19DA90378D5FCA5FA6842C40",
+      "sourceWidth": 702,
+      "sourceHeight": 28,
+      "packagedWidth": 702,
+      "packagedHeight": 28
+    },
+    {
+      "name": "ExperienceBackground.png",
+      "sourceSha256": "361282840D94680116E2B7A231AACA45E67A3AFAC0E14F7E724D82B025C8F456",
+      "packagedSha256": "361282840D94680116E2B7A231AACA45E67A3AFAC0E14F7E724D82B025C8F456",
+      "sourceWidth": 696,
+      "sourceHeight": 28,
+      "packagedWidth": 696,
+      "packagedHeight": 28
+    },
+    {
+      "name": "ExperienceBar.png",
+      "sourceSha256": "B8DCBDE4295DDC2810AB043B075202D1C337D9444A867B4DF5D927794F2C3D2B",
+      "packagedSha256": "B8DCBDE4295DDC2810AB043B075202D1C337D9444A867B4DF5D927794F2C3D2B",
+      "sourceWidth": 1,
+      "sourceHeight": 22,
+      "packagedWidth": 1,
+      "packagedHeight": 22
+    }
+  ]
+}

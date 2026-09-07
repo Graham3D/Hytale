@@ -3,6 +3,10 @@
 R019 supersedes R018's broken HUD presentation. This remains a HUD-only correction;
 Stage 06 has not begun.
 
+> Superseded by R020. R020 removes the custom Mana overlay and visibility lease,
+> returns Health/Mana/Stamina presentation entirely to Hytale, and adopts the new
+> 702/696-pixel XP artwork. See `R020-vanilla-resources-resized-xp.md`.
+
 ## Connected R018 failure
 
 The owner-connected R018 screenshot showed red missing-texture placeholders for the
