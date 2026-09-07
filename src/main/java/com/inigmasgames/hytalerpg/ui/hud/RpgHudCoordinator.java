@@ -1,6 +1,5 @@
 package com.inigmasgames.hytalerpg.ui.hud;
 
-import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.HudManager;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
@@ -36,29 +35,23 @@ public final class RpgHudCoordinator {
         UUID id = playerRef.getUuid();
         teardown(id, "REINSTALL");
         HudManager manager = player.getHudManager();
-        HudVisibilityLease lease = HudVisibilityLease.hideNativeManaForCustomPlacement(new ManagerPort(manager, playerRef));
-        try {
-            RpgHudViewModel model = projection.hud(id, resources.read(stats), xpFixtures.get(id));
-            RpgHud hud = new RpgHud(playerRef, model);
-            manager.addCustomHud(playerRef, hud);
-            sessions.put(id, new Session(playerRef, manager, lease, hud, model, System.nanoTime()));
-            trace.trace(id, "HUD_LAYOUT_READY", ref(), Map.of(
-                    "resourceOrder", "Health|Mana|Stamina", "nativeResourceBars", "Health|Stamina",
-                    "manaAnchor", "Centered Bottom:114", "manaArtSource", "release Inventory",
-                    "xpLayerOrder", "ExperienceBackground|ExperienceBar|ExperienceFrame",
-                    "xpAnchor", "Centered Bottom:138", "nativeAbilitiesVisible", true,
-                    "nativeSignature", "PRESERVED", "rpgAbilityAnchor", "Right:390 Bottom:40",
-                    "inputLabelSource", "LOGICAL_ACTION_FALLBACK_PUBLIC_BINDING_LABEL_UNAVAILABLE"));
-            traceResources(id, model, true);
-            traceAbilities(id, model, true);
-            for (SkillSlotView slot : model.skills()) traceSlot(id, null, slot, true);
-            traceXp(id, model, true);
-            if (model.showLevelUpNotice()) trace.trace(id, "LEVEL_UP_INDICATOR_SHOWN", ref(),
-                    Map.of("pendingLevelUpPoints", model.pendingLevelUpPoints(), "initial", true));
-        } catch (RuntimeException error) {
-            lease.restore();
-            throw error;
-        }
+        RpgHudViewModel model = projection.hud(id, resources.read(stats), xpFixtures.get(id));
+        RpgHud hud = new RpgHud(playerRef, model);
+        manager.addCustomHud(playerRef, hud);
+        sessions.put(id, new Session(playerRef, manager, hud, model, System.nanoTime()));
+        trace.trace(id, "HUD_LAYOUT_READY", ref(), Map.of(
+                "resourcePresentation", "VANILLA_HYTALE", "rpgResourceControls", 0,
+                "nativeResourceVisibilityMutation", false,
+                "xpLayerOrder", "ExperienceBackground|ExperienceBar|ExperienceFrame",
+                "xpAnchor", "Centered Bottom:138 Width:702", "xpUsableWidth", RpgHud.XP_FILL_WIDTH,
+                "nativeAbilitiesVisible", true, "nativeSignature", "PRESERVED",
+                "rpgAbilityAnchor", "Right:390 Bottom:40",
+                "inputLabelSource", "LOGICAL_ACTION_FALLBACK_PUBLIC_BINDING_LABEL_UNAVAILABLE"));
+        traceAbilities(id, model, true);
+        for (SkillSlotView slot : model.skills()) traceSlot(id, null, slot, true);
+        traceXp(id, model, true);
+        if (model.showLevelUpNotice()) trace.trace(id, "LEVEL_UP_INDICATOR_SHOWN", ref(),
+                Map.of("pendingLevelUpPoints", model.pendingLevelUpPoints(), "initial", true));
     }
 
     public void tick(PlayerRef playerRef, EntityStatMap stats) {
@@ -71,14 +64,11 @@ public final class RpgHudCoordinator {
             RpgHudViewModel previous = session.model;
             RpgHudViewModel next = projection.hud(playerRef.getUuid(), resources.read(stats), xpFixtures.get(playerRef.getUuid()));
             if (next.equals(previous)) return;
-            boolean resourcesChanged = !next.health().equals(previous.health()) || !next.mana().equals(previous.mana())
-                    || !next.stamina().equals(previous.stamina());
             boolean skillsChanged = !next.skills().equals(previous.skills());
             boolean xpChanged = !next.xp().equals(previous.xp());
             boolean noticeChanged = next.showLevelUpNotice() != previous.showLevelUpNotice();
             session.hud.refresh(next);
             session.model = next;
-            if (resourcesChanged) traceResources(playerRef.getUuid(), next, false);
             if (skillsChanged) {
                 traceAbilities(playerRef.getUuid(), next, false);
                 for (int index = 0; index < next.skills().size(); index++) {
@@ -112,12 +102,7 @@ public final class RpgHudCoordinator {
             if (session.manager.getCustomHud(RpgHud.KEY) != null)
                 session.manager.removeCustomHud(session.playerRef, RpgHud.KEY);
         } catch (RuntimeException error) { failure = error; }
-        try {
-            session.lease.restore();
-            trace.trace(player, "HUD_VISIBILITY_RESTORED", ref(), Map.of("visible", session.lease.snapshot().toString()));
-        } finally {
-            trace.trace(player, "HUD_TEARDOWN", ref(), Map.of("reason", reason));
-        }
+        trace.trace(player, "HUD_TEARDOWN", ref(), Map.of("reason", reason));
         if (failure != null) throw failure;
     }
 
@@ -125,15 +110,6 @@ public final class RpgHudCoordinator {
         for (UUID player : Set.copyOf(sessions.keySet())) {
             try { teardown(player, "PLUGIN_SHUTDOWN"); } catch (RuntimeException ignored) { }
         }
-    }
-
-    private void traceResources(UUID player, RpgHudViewModel model, boolean initial) {
-        trace.trace(player, "RESOURCE_HUD_REFRESH", ref(), Map.of(
-                "order", "Health|Mana|Stamina", "authority", "EntityStatMap",
-                "nativePresentation", "Health|Stamina", "customPresentation", "Mana",
-                "health", resource(model.health()), "mana", resource(model.mana()),
-                "manaFillWidth", RpgHud.manaFillWidth(model.mana()),
-                "stamina", resource(model.stamina()), "initial", initial));
     }
 
     private void traceAbilities(UUID player, RpgHudViewModel model, boolean initial) {
@@ -164,10 +140,6 @@ public final class RpgHudCoordinator {
                 "fullWidth", RpgHud.XP_FILL_WIDTH, "leftAnchored", true, "initial", initial));
     }
 
-    private static Map<String, Object> resource(com.inigmasgames.hytalerpg.ui.model.NativeResourceView value) {
-        return Map.of("current", value.current(), "maximum", value.maximum());
-    }
-
     private static Map<String, Object> slot(SkillSlotView value) {
         return Map.of("slot", value.slot().externalId(), "action", value.action(),
                 "skillId", value.skillId(), "state", value.state().name(),
@@ -176,19 +148,12 @@ public final class RpgHudCoordinator {
 
     private static String ref() { return UUID.randomUUID().toString().substring(0, 12); }
 
-    private static final class ManagerPort implements HudVisibilityLease.Port {
-        private final HudManager manager; private final PlayerRef player;
-        private ManagerPort(HudManager manager, PlayerRef player) { this.manager = manager; this.player = player; }
-        @Override public Set<HudComponent> visible() { return Set.copyOf(manager.getVisibleHudComponents()); }
-        @Override public void setVisible(Set<HudComponent> components) { manager.setVisibleHudComponents(player, components); }
-    }
-
     private static final class Session {
-        private final PlayerRef playerRef; private final HudManager manager; private final HudVisibilityLease lease;
+        private final PlayerRef playerRef; private final HudManager manager;
         private final RpgHud hud; private RpgHudViewModel model; private long lastPollNanos;
-        private Session(PlayerRef playerRef, HudManager manager, HudVisibilityLease lease, RpgHud hud,
+        private Session(PlayerRef playerRef, HudManager manager, RpgHud hud,
                         RpgHudViewModel model, long now) {
-            this.playerRef = playerRef; this.manager = manager; this.lease = lease; this.hud = hud;
+            this.playerRef = playerRef; this.manager = manager; this.hud = hud;
             this.model = model; this.lastPollNanos = now;
         }
     }

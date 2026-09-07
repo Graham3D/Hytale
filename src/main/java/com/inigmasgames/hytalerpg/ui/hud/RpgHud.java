@@ -6,7 +6,6 @@ import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.inigmasgames.hytalerpg.ui.model.NativeResourceView;
 import com.inigmasgames.hytalerpg.ui.model.RpgHudViewModel;
 import com.inigmasgames.hytalerpg.ui.model.SkillSlotView;
 
@@ -15,8 +14,7 @@ import java.util.Locale;
 
 final class RpgHud extends CustomUIHud {
     static final String KEY = "inigmas:hytalerpg:hud";
-    static final int MANA_FILL_WIDTH = 142;
-    static final int XP_FILL_WIDTH = 925;
+    static final int XP_FILL_WIDTH = 696;
     private RpgHudViewModel model;
 
     RpgHud(PlayerRef playerRef, RpgHudViewModel model) {
@@ -33,7 +31,6 @@ final class RpgHud extends CustomUIHud {
         RpgHudViewModel previous = model;
         model = next;
         UICommandBuilder update = new UICommandBuilder();
-        if (!previous.mana().equals(next.mana())) writeMana(update, next.mana());
         if (!previous.xp().equals(next.xp())) writeXp(update, next);
         if (previous.pendingLevelUpPoints() != next.pendingLevelUpPoints()) writeNotice(update, next);
         if (!previous.skills().equals(next.skills())) writeSkills(update, next);
@@ -41,14 +38,9 @@ final class RpgHud extends CustomUIHud {
     }
 
     private static void writeAll(UICommandBuilder commands, RpgHudViewModel model) {
-        writeMana(commands, model.mana());
         writeXp(commands, model);
         writeNotice(commands, model);
         writeSkills(commands, model);
-    }
-
-    private static void writeMana(UICommandBuilder commands, NativeResourceView mana) {
-        commands.setObject("#ManaFill.Anchor", leftFill(manaFillWidth(mana), 0, 0, 4));
     }
 
     private static void writeXp(UICommandBuilder commands, RpgHudViewModel model) {
@@ -84,11 +76,6 @@ final class RpgHud extends CustomUIHud {
             commands.set("#Skill" + number + "Name.TextSpans", Message.raw(occupied ? slot.name() : "Empty"));
             commands.set("#Skill" + number + "State.TextSpans", Message.raw(state));
         }
-    }
-
-    static int manaFillWidth(NativeResourceView mana) {
-        if (mana.maximum() <= 0.0) return 0;
-        return proportionalWidth(mana.current() / mana.maximum(), MANA_FILL_WIDTH);
     }
 
     static int xpFillWidth(double progress) { return proportionalWidth(progress, XP_FILL_WIDTH); }

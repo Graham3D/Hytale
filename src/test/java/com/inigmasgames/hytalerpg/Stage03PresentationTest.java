@@ -1,6 +1,5 @@
 package com.inigmasgames.hytalerpg;
 
-import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.inigmasgames.hytalerpg.combat.RpgCombatKernel;
 import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
@@ -14,7 +13,6 @@ import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
 import com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService;
 import com.inigmasgames.hytalerpg.ui.HytaleResourceViewAdapter;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
-import com.inigmasgames.hytalerpg.ui.hud.HudVisibilityLease;
 import com.inigmasgames.hytalerpg.ui.model.NativeResourceView;
 import com.inigmasgames.hytalerpg.ui.model.SkillSlotView;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
@@ -25,8 +23,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.EnumSet;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -199,25 +195,6 @@ class Stage03PresentationTest {
         assertEquals(SkillSlot.SKILL02, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability3));
         assertEquals(SkillSlot.SKILL03, HytaleAbilitySkillInputAdapter.slot(InteractionType.Ability4));
         assertNull(HytaleAbilitySkillInputAdapter.slot(InteractionType.Primary));
-    }
-
-    @Test void nativeHudVisibilityIsRestoredExactlyAndLeaseIsIdempotent() {
-        Set<HudComponent> initial = EnumSet.of(HudComponent.Hotbar, HudComponent.Compass,
-                HudComponent.Mana, HudComponent.Health, HudComponent.Stamina, HudComponent.Chat);
-        class Port implements HudVisibilityLease.Port {
-            Set<HudComponent> current = Set.copyOf(initial);
-            @Override public Set<HudComponent> visible() { return current; }
-            @Override public void setVisible(Set<HudComponent> components) { current = Set.copyOf(components); }
-        }
-        Port port = new Port();
-        HudVisibilityLease lease = HudVisibilityLease.hideNativeManaForCustomPlacement(port);
-        assertFalse(port.current.contains(HudComponent.Mana));
-        assertTrue(port.current.contains(HudComponent.Health));
-        assertTrue(port.current.contains(HudComponent.Stamina));
-        assertTrue(port.current.contains(HudComponent.Hotbar));
-        lease.restore();
-        lease.restore();
-        assertEquals(initial, port.current);
     }
 
     @Test void uiOpenAdapterHonestlyReportsCommandOnlyOnInstalledBuild() {

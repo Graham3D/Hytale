@@ -1,19 +1,11 @@
 Group {
-  // Hytale continues to render native Health and Stamina. Only Mana is custom,
-  // centered between them using unmodified release Inventory art.
-  Group #ManaHud { Anchor: (Bottom: 114, Width: 172, Height: 24);
-    Group #ManaIcon { Anchor: (Left: 0, Top: 0, Width: 24, Height: 24); Background: (TexturePath: "Assets/RpgHud/CharacterPanelStatIconMana.png"); }
-    Group #ManaBackground { Anchor: (Left: 30, Top: 10, Width: 142, Height: 4); Background: (TexturePath: "Assets/RpgHud/ProgressBar.png");
-      Group #ManaFill { Anchor: (Left: 0, Top: 0, Width: 0, Height: 4); Background: (TexturePath: "Assets/RpgHud/ProgressBarFill.png"); }
-    }
-  }
-
   // Centering is implicit when Width is specified without Left/Right/Horizontal.
-  // Exact layer order: background, left-anchored fill, then owner frame.
-  Group #ExperienceHud { Anchor: (Bottom: 138, Width: 931, Height: 28);
-    Group #ExperienceBackground { Anchor: (Left: 3, Top: 0, Width: 925, Height: 28); Background: (TexturePath: "Assets/RpgHud/ExperienceBackground.png"); }
+  // Native Hytale exclusively owns Health, Mana, and Stamina presentation.
+  // Exact XP layer order: background, left-anchored fill, then owner frame.
+  Group #ExperienceHud { Anchor: (Bottom: 138, Width: 702, Height: 28);
+    Group #ExperienceBackground { Anchor: (Left: 3, Top: 0, Width: 696, Height: 28); Background: (TexturePath: "Assets/RpgHud/ExperienceBackground.png"); }
     Group #ExperienceFill { Anchor: (Left: 3, Top: 3, Width: 0, Height: 22); Background: (TexturePath: "Assets/RpgHud/ExperienceBar.png"); }
-    Group #ExperienceFrame { Anchor: (Left: 0, Top: 0, Width: 931, Height: 28); Background: (TexturePath: "Assets/RpgHud/ExperienceFrame.png"); }
+    Group #ExperienceFrame { Anchor: (Left: 0, Top: 0, Width: 702, Height: 28); Background: (TexturePath: "Assets/RpgHud/ExperienceFrame.png"); }
   }
 
   Label #LevelUpNotice { Anchor: (Horizontal: 0, Top: 70, Width: 410, Height: 34); Background: (Color: #3b2a12e8); Text: "LEVEL UP - ATTRIBUTE POINTS"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Visible: false; }
