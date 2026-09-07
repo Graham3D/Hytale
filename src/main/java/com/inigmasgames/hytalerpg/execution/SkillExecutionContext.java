@@ -22,6 +22,11 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
             throw new IllegalArgumentException("Committed execution context is incomplete");
     }
     public boolean derivedRelease() {return echo||barrageBatch>0;}
+    public SkillExecutionContext withSnapshot(CombatSnapshot inherited) {
+        if(!rootCastId.equals(inherited.rootCastId())||!skillInstanceId.equals(inherited.skillInstanceId())
+                ||!request.actorId().equals(inherited.actorId()))throw new IllegalArgumentException("Foreign derived snapshot");
+        return new SkillExecutionContext(request,rootCastId,skillInstanceId,profile,compiledPlan,inherited,equipment,target,echo,barrageBatch);
+    }
     public SkillExecutionContext barrageCopy(int batch) {
         if(echo||batch<1||batch>=compiledPlan.executionModifiers().barrageBatches())throw new IllegalStateException("INVALID_BARRAGE_BATCH");
         return new SkillExecutionContext(request,rootCastId,skillInstanceId,profile,compiledPlan,snapshot,equipment,target,false,batch);

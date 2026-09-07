@@ -6,7 +6,7 @@ import java.util.*;
 /** Ordered continuation decisions after the hit payload. No cost, damage, asset lookup or native mutation. */
 public final class ProjectileContinuation {
     public record Candidate(String id,Vec3 point,boolean visible) { }
-    public enum Action { PIERCE, FORK, CHAIN, RETURN, RICOCHET, TERMINATE, RETURN_CONTINUE }
+    public enum Action { PIERCE, FORK, CHAIN, RETURN, RICOCHET, SPLINTERBURST, TERMINATE, RETURN_CONTINUE }
     public record Decision(Action action,Vec3 direction,List<ProjectileInstance> children,String reason,Vec3 surfaceNormal) {
         public Decision(Action action,Vec3 direction,List<ProjectileInstance> children,String reason) {this(action,direction,children,reason,Vec3.ZERO);}
         public Decision { children=List.copyOf(children); }
@@ -22,6 +22,7 @@ public final class ProjectileContinuation {
             var children=new ArrayList<ProjectileInstance>();
             for(int index=0;index<2;index++) {
                 var parent=instance.plan();var budgets=new HashMap<>(instance.budgets());budgets.put("IS_LAUNCH",0);budgets.put("FORK",0);
+                budgets.put("SHRAPNEL",parent.remainingContinuationBudgets().getOrDefault("SHRAPNEL",0));
                 Vec3 direction=yaw(instance.direction(),index==0?-20:20);double speed=parent.velocity().length();
                 var plan=new ProjectileExecutionPlan(parent.rootCastId(),parent.skillInstanceId(),parent.projectileInstanceId()+"/fork-"+index,
                         parent.ownerId(),parent.skillId(),parent.compiledPlanHash(),parent.snapshot(),parent.generation()+1,budgets,

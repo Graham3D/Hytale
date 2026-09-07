@@ -14,7 +14,7 @@ public final class ProjectileInstance {
     private final java.util.Map<String,Integer> budgets;
     private Vec3 direction;
     private boolean returning;
-    private double completedDistance,completedSeconds,returnDistance;
+    private double completedDistance,completedSeconds,returnDistance,originalLifetime;
     private int motionRevision;
     private long nativeClockNanos;
     private double lastBounceSeconds=Double.NEGATIVE_INFINITY;
@@ -26,6 +26,7 @@ public final class ProjectileInstance {
         this.flight = new ProjectileFlight(plan.origin(), plan.velocity().length(), plan.maxDistance(),plan.maxLifetimeSeconds());
         this.budgets=new java.util.HashMap<>(plan.remainingContinuationBudgets());
         this.direction=plan.velocity().normalized();this.returnDistance=plan.maxDistance();
+        this.originalLifetime=plan.maxLifetimeSeconds();
         this.nativeClockNanos=plan.spawnTimestampNanos();
     }
 
@@ -54,11 +55,14 @@ public final class ProjectileInstance {
     }
     public synchronized boolean bounceIntervalReady(){return totalSeconds()-lastBounceSeconds>=.05-1e-9;}
     public synchronized double remainingDistance() { return flight.remainingDistance(); }
+    public synchronized double originalMaxDistance() { return returnDistance; }
+    public synchronized double originalMaxLifetimeSeconds() { return originalLifetime; }
     public synchronized double remainingSeconds() { return flight.remainingSeconds(); }
     public synchronized double totalDistance() { return completedDistance+flight.travelled(); }
     public synchronized double totalSeconds() { return completedSeconds+flight.elapsed(); }
     public synchronized void inheritVisited(ProjectileInstance parent) {
         hitTargets.addAll(parent.hitTargets());returnDistance=parent.returnDistance;
+        originalLifetime=parent.originalLifetime;
         completedDistance=parent.totalDistance();completedSeconds=parent.totalSeconds();
         lastBounceSeconds=parent.lastBounceSeconds;
     }

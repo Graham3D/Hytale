@@ -101,14 +101,22 @@ public record Stage04SkillProfile(
                              String ammoItemId, int ammoQuantity, boolean fullyCharged,
                              double knockbackDistance,
                              Map<String, String> configIdsByWeaponKind,
-                             Map<String, Double> speedsByWeaponKind) {
+                             Map<String, Double> speedsByWeaponKind,double independentLifetimeSeconds) {
+        public Projectile(String configId,double speed,double maxDistance,double radius,double gravity,int targetCap,double coefficient,
+                String statusId,double statusSeconds,double periodicCoefficient,int periodicTicks,double periodicIntervalSeconds,
+                String ammoItemId,int ammoQuantity,boolean fullyCharged,double knockbackDistance,Map<String,String> configIdsByWeaponKind,
+                Map<String,Double> speedsByWeaponKind) {
+            this(configId,speed,maxDistance,radius,gravity,targetCap,coefficient,statusId,statusSeconds,periodicCoefficient,periodicTicks,
+                    periodicIntervalSeconds,ammoItemId,ammoQuantity,fullyCharged,knockbackDistance,configIdsByWeaponKind,speedsByWeaponKind,0);
+        }
         public Projectile {
             configId = configId == null ? "" : configId;
             statusId = statusId == null ? "" : statusId;
             ammoItemId = ammoItemId == null ? "" : ammoItemId;
             configIdsByWeaponKind = Map.copyOf(configIdsByWeaponKind == null ? Map.of() : configIdsByWeaponKind);
             speedsByWeaponKind = Map.copyOf(speedsByWeaponKind == null ? Map.of() : speedsByWeaponKind);
-            if (configId.isBlank() || speed <= 0.0 || maxDistance <= 0.0 || radius <= 0.0
+            if (configId.isBlank() || !Double.isFinite(speed)||!Double.isFinite(maxDistance)||!Double.isFinite(radius)
+                    || !Double.isFinite(independentLifetimeSeconds)||independentLifetimeSeconds<0 || speed <= 0.0 || maxDistance <= 0.0 || radius <= 0.0
                     || !Double.isFinite(gravity) || targetCap < 1 || coefficient < 0.0
                     || statusSeconds < 0.0 || periodicCoefficient < 0.0 || periodicTicks < 0
                     || periodicIntervalSeconds < 0.0 || ammoQuantity < 0 || knockbackDistance < 0.0
@@ -119,14 +127,15 @@ public record Stage04SkillProfile(
             if ((periodicTicks == 0) != (periodicCoefficient == 0.0 || periodicIntervalSeconds == 0.0))
                 throw new IllegalArgumentException("Projectile periodic payload must be fully declared or absent");
         }
-        public double maximumLifetimeSeconds() { return maxDistance / speed; }
+        public double maximumLifetimeSeconds() { return capLifetime(maxDistance/speed); }
         public String configIdFor(String weaponKind) {
             return configIdsByWeaponKind.getOrDefault(weaponKind, configId);
         }
         public double speedFor(String weaponKind) {
             return speedsByWeaponKind.getOrDefault(weaponKind, speed);
         }
-        public double maximumLifetimeSeconds(String weaponKind) { return maxDistance / speedFor(weaponKind); }
+        public double maximumLifetimeSeconds(String weaponKind) { return capLifetime(maxDistance/speedFor(weaponKind)); }
+        public double capLifetime(double computed){return independentLifetimeSeconds>0?Math.min(computed,independentLifetimeSeconds):computed;}
         public boolean requiresAmmo() { return ammoQuantity > 0; }
         public boolean hasPeriodicStatus() { return periodicTicks > 0; }
     }

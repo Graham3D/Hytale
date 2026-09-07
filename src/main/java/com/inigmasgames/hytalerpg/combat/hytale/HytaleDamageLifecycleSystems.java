@@ -33,8 +33,11 @@ public final class HytaleDamageLifecycleSystems {
         @Override public Query<EntityStore> getQuery() { return Query.any(); }
         void emit(Damage damage, RpgTraceEventType type, Map<String, ?> details) {
             HytaleDamageMetadata metadata = HytaleDamageAdapter.metadata(damage);
-            if (metadata != null) trace.emit(metadata.actorId(), type,
-                    new CombatTrace.Context(metadata.rootCastId(), metadata.skillInstanceId(), metadata.correlationId()), details);
+            if (metadata != null) {
+                var values=new java.util.HashMap<String,Object>(details);values.put("effectInstanceId",metadata.effectInstanceId());values.put("canProc",metadata.canProc());
+                trace.emit(metadata.actorId(), type,
+                    new CombatTrace.Context(metadata.rootCastId(), metadata.skillInstanceId(), metadata.correlationId()), values);
+            }
         }
     }
     public static final class Gather extends TraceSystem {
@@ -95,7 +98,7 @@ public final class HytaleDamageLifecycleSystems {
                             "healthBefore", metadata.targetHealthBefore(), "healthAfter", after,
                             "actualHealthLoss", Double.isFinite(after) && Double.isFinite(metadata.targetHealthBefore())
                                     ? Math.max(0.0, metadata.targetHealthBefore() - after) : -1.0,
-                            "cancelled", damage.isCancelled()));
+                            "cancelled", damage.isCancelled(),"effectInstanceId",metadata.effectInstanceId(),"canProc",metadata.canProc()));
         }
     }
 

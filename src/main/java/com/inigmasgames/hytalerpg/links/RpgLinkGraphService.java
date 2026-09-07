@@ -116,7 +116,7 @@ public final class RpgLinkGraphService {
                 else if (skill == null) issues.add(new GraphValidationResult.Issue(ValidationCode.UNKNOWN_SKILL,
                         "Unknown equipped Skill " + skillId.get().value(), passiveNode, route.getLast()));
                 else {
-                    CompatibilityResult result = compatibility.assess(skill, passive);
+                    CompatibilityResult result = compatibility.assess(skill, passive,selectedFor(state,skillSlot,outgoing));
                     if (!result.accepted()) issues.add(new GraphValidationResult.Issue(result.code(), result.message(), passiveNode, route.getLast()));
                 }
             }
@@ -153,7 +153,19 @@ public final class RpgLinkGraphService {
                 passiveSlot.externalId() + " has no equipped Passive", Set.of(), Set.of());
         if (skill.isEmpty()) return CompatibilityResult.rejected(ValidationCode.EMPTY_TARGET_NODE,
                 skillSlot.externalId() + " has no equipped Skill", Set.of(), Set.of());
-        return compatibility.assess(skill.get(), passive.get());
+        Map<LinkNodeId,LinkNodeId> outgoing=new EnumMap<>(LinkNodeId.class);
+        state.linkEdges().forEach(e->outgoing.put(e.sourceNodeId(),e.targetNodeId()));
+        return compatibility.assess(skill.get(),passive.get(),selectedFor(state,skillSlot,outgoing));
+    }
+    private List<PassiveDefinition> selectedFor(RpgPlayerState state,SkillSlot skill,Map<LinkNodeId,LinkNodeId> outgoing) {
+        var selected=new ArrayList<PassiveDefinition>();
+        for(LinkNodeId node:LinkNodeId.values()) {
+            if(node.kind()!=LinkNodeId.NodeKind.PASSIVE)continue;
+            var nodes=route(node,outgoing);
+            if(!nodes.isEmpty()&&nodes.getLast().kind()==LinkNodeId.NodeKind.SKILL&&nodes.getLast().skillSlot()==skill)
+                state.passive(node.passiveSlot()).flatMap(catalog::passive).ifPresent(selected::add);
+        }
+        return List.copyOf(selected);
     }
 
     private static boolean legal(LinkNodeId source, LinkNodeId target) {

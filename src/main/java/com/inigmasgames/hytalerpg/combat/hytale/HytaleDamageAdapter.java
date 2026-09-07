@@ -33,7 +33,8 @@ public final class HytaleDamageAdapter {
         double before = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
                 ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();
         HytaleDamageMetadata complete = new HytaleDamageMetadata(metadata.actorId(), metadata.rootCastId(),
-                metadata.skillInstanceId(), metadata.correlationId(), calculation.preMitigationDamage(), before);
+                metadata.skillInstanceId(), metadata.correlationId(), calculation.preMitigationDamage(), before,
+                metadata.effectInstanceId(),metadata.canProc());
         Damage damage = new Damage(source == null ? Damage.NULL_SOURCE : new Damage.EntitySource(source),
                 cause, calculation.toHytaleDamageFloat());
         damage.putMetaObject(RPG_METADATA, GSON.toJson(complete));

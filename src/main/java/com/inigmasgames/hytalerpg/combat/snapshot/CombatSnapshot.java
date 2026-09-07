@@ -29,4 +29,12 @@ public record CombatSnapshot(String rootCastId, String skillInstanceId, UUID act
         if (modifiers == null) modifiers = ModifierBuckets.NONE;
         if (resourceCost == null) resourceCost = ResourceCost.NONE;
     }
+    /** Derived payloads inherit the commit snapshot; this changes magnitude, never payment or live equipment. */
+    public CombatSnapshot withMagnitudeFactor(double factor) {
+        if(!Double.isFinite(factor)||factor<=0||factor>1)throw new IllegalArgumentException("Invalid derived magnitude factor");
+        var less=new java.util.ArrayList<>(modifiers.less());less.add(1-factor);
+        return new CombatSnapshot(rootCastId,skillInstanceId,actorId,rawAttributes,effectiveAttributes,derivedStats,itemId,weaponClass,
+                basePowerSource,basePower,compiledPlanHash,skillCoefficient,criticalChance,criticalMultiplier,
+                new ModifierBuckets(modifiers.increased(),modifiers.reduced(),modifiers.more(),less),resourceCost,cooldownSeconds,statusModifiers);
+    }
 }

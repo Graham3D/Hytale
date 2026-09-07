@@ -8,6 +8,15 @@ import java.util.Set;
 
 /** One compatibility authority shared by commands, graph validation, compiler, and future UI adapters. */
 public final class CompatibilityService {
+    /** Component-introduction seam: do not grant radius to the original projectile carrier. */
+    public CompatibilityResult assess(SkillDefinition skill,PassiveDefinition passive,java.util.List<PassiveDefinition> selected) {
+        var base=assess(skill,passive);
+        if(base.accepted()||!passive.id().value().equals("expanded_radius"))return base;
+        boolean shrapnel=selected.stream().anyMatch(p->p.id().value().equals("shrapnel")&&assess(skill,p).accepted());
+        if(!shrapnel)return base;
+        return new CompatibilityResult(true,ValidationCode.ACCEPTED,"Compatible with Shrapnel secondary radius only",Set.of("HAS_RADIUS"),
+                Set.of("COMPONENT_SHRAPNEL","AREA","BURST","DAMAGE","HAS_RADIUS"));
+    }
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
@@ -64,6 +73,9 @@ public final class CompatibilityService {
         // The source contract has gates whose prose is richer than its token clauses. These are stable,
         // shared rules rather than command-specific exceptions.
         String id = passive.id().value();
+        if(id.equals("ballistics")&&actual.contains("BALLISTIC_GRAVITY"))
+            return CompatibilityResult.rejected(ValidationCode.UNSUPPORTED_BUILD,"Ballistics requires an implemented retargeted gravity solution",
+                    Set.of("RETARGETED_BALLISTIC_SOLUTION"),actual);
         if (id.equals("echo")) {
             Set<String> repeatExcluded = new LinkedHashSet<>(Set.of("CORPSE", "CORPSE_REQUIRED", "COLLISION_WALL", "TRAP"));
             repeatExcluded.retainAll(actual);

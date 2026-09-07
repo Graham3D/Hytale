@@ -198,7 +198,7 @@ public final class SkillExecutionService {
             Map<String, Double> status = prepared.profile.authoredStatuses();
             // CombatSnapshotFactory alone installs compiled Increased modifiers (including Potency).
             var payloadLess=new java.util.ArrayList<>(prepared.plan.projectileModifiers().payloadLess());
-            if(releaseModifiers.expandedRadius())payloadLess.add(.10);
+            if(releaseModifiers.expandedRadius()&&!prepared.plan.radiusOnlyOnShrapnel())payloadLess.add(.10);
             ModifierBuckets modifiers = new ModifierBuckets(java.util.List.of(), java.util.List.of(),
                     releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
                     payloadLess);

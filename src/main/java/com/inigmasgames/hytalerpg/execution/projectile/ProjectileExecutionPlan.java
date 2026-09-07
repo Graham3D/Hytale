@@ -54,17 +54,20 @@ public record ProjectileExecutionPlan(
             throw new IllegalStateException("Compiled projectile safety budget rejects generation zero");
         var projectile = context.profile().projectile();
         var modifiers=context.compiledPlan().projectileModifiers();
+        if(modifiers.ballistics()&&projectile.gravity()!=0)throw new IllegalStateException("BALLISTICS_GRAVITY_UNSUPPORTED");
+        speed*=modifiers.speedFactor();double distance=projectile.maxDistance()*modifiers.distanceFactor();
         return new ProjectileExecutionPlan(context.rootCastId(), context.skillInstanceId(),
                 context.skillInstanceId() + (context.barrageBatch()>0?"-batch-"+context.barrageBatch():"")+"-projectile-0", owner, context.profile().skillId(),
                 context.compiledPlan().planHash(), context.snapshot(), context.derivedRelease()?1:0,
-                Map.of("SPLIT", 0, "PIERCE", modifiers.pierce(), "FORK", modifiers.fork(), "CHAIN", modifiers.chain(),
+                Map.of("SHRAPNEL",modifiers.shrapnel()?1:0,"SPLINTERBURST",modifiers.splinterburst()?1:0,
+                        "PIERCE", modifiers.pierce(), "FORK", modifiers.fork(), "CHAIN", modifiers.chain(),
                         "RICOCHET", modifiers.ricochet(), "RETURN", modifiers.returning(),
                         "ROOT_LAUNCHES",modifiers.rootLaunches(context.compiledPlan().executionModifiers().echoDelaySeconds()>0),"IS_LAUNCH",1),
                 // Echo is the second authorized release of this root, not another first release.
                 // The retained registry validates the declared ordinal against existing root carriers.
                 budgets.maxSpawnedEffects() - (context.echo() ? 2 : 1), budgets.maxTriggeredSecondaries(),
                 spawnTimestampNanos, configId, origin, direction.normalized().multiply(speed),
-                projectile.radius(), projectile.maxDistance(), projectile.maxDistance() / speed);
+                projectile.radius(),distance,projectile.capLifetime(distance/speed));
     }
     /** One original batch expands into the complete symmetric Volley before native allocation. */
     public static java.util.List<ProjectileExecutionPlan> launchBatch(SkillExecutionContext context,UUID owner,Vec3 origin,
@@ -75,7 +78,7 @@ public record ProjectileExecutionPlan(
         for(int index=0;index<3;index++)batch.add(new ProjectileExecutionPlan(center.rootCastId(),center.skillInstanceId(),
                 context.skillInstanceId()+"-batch-"+context.barrageBatch()+"-projectile-"+index,owner,center.skillId(),center.compiledPlanHash(),
                 center.snapshot(),center.generation(),center.remainingContinuationBudgets(),center.remainingSpawnedEffects(),center.remainingTriggeredSecondaries(),
-                now,configId,origin,ProjectileContinuation.yaw(direction,(index-1)*12).multiply(speed),center.radius(),center.maxDistance(),center.maxLifetimeSeconds()));
+                now,configId,origin,ProjectileContinuation.yaw(direction,(index-1)*12).multiply(center.velocity().length()),center.radius(),center.maxDistance(),center.maxLifetimeSeconds()));
         return java.util.List.copyOf(batch);
     }
 }

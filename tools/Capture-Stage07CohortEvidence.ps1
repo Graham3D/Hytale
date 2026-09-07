@@ -22,7 +22,7 @@ try {
             errors=[int]$stage7Suite.errors;skipped=[int]$stage7Suite.skipped;seconds=$stage7Suite.time;
             cases=@($stage7Suite.testcase | ForEach-Object {$_.name})}
     }
-    $stage7Minimum=if($Cohort -eq 'a'){236}else{255}
+    $stage7Minimum=switch($Cohort){'a'{236}'b'{255}'c'{274}}
     if($stage7Count -lt $stage7Minimum -or $stage7Failures -or $stage7Errors -or $stage7Skipped){throw 'Incomplete or failing retained regression suite.'}
     & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $stage7Jar
     $stage7ProtectedPaths=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI',
@@ -48,6 +48,14 @@ try {
     Copy-Item -LiteralPath $stage7Jar -Destination (Join-Path $stage7Evidence 'artifacts\HytaleRPG-0.0.19.jar') -Force
     Copy-Item -LiteralPath 'evidence/stage-06/cohort-d/artifacts/HytaleRPG-0.0.18.jar' -Destination (Join-Path $stage7Evidence 'rollback\HytaleRPG-0.0.18.jar') -Force
     $stage7Results | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $stage7Evidence 'test-results.json') -Encoding utf8
+    if($Cohort -eq 'c') {
+        [xml]$stage7Load=Get-Content -Raw -LiteralPath 'build/test-results/test/TEST-com.inigmasgames.hytalerpg.Stage07LoadTest.xml'
+        $stage7LoadMatch=[regex]::Match($stage7Load.testsuite.'system-out'.InnerText,'STAGE07_LOAD (\{[^\r\n]+\})')
+        if(-not $stage7LoadMatch.Success){throw 'Missing Stage 07 local load result.'}
+        $stage7Performance=$stage7LoadMatch.Groups[1].Value | ConvertFrom-Json
+        if($stage7Performance.carriers -ne 512 -or $stage7Performance.remainingCarriers -ne 0 -or $stage7Performance.remainingRoots -ne 0){throw 'Incomplete Stage 07 load cleanup.'}
+        $stage7Performance | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stage7Evidence 'local-performance.json') -Encoding utf8
+    }
     $stage7Summary=[ordered]@{
         capturedAtUtc=[DateTime]::UtcNow.ToString('o');revision='R026';version='0.0.19';stage='07';cohort=$Cohort
         branch=(& git branch --show-current).Trim();sourceHead=(& git rev-parse HEAD).Trim();worktreeDirty=[bool](& git status --porcelain)

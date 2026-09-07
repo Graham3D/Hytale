@@ -16,6 +16,8 @@ foreach($stage7Class in @('com.hypixel.hytale.server.core.modules.projectile.con
         'com.hypixel.hytale.server.core.modules.projectile.component.PierceProjectile',
         'com.hypixel.hytale.component.CommandBuffer',
         'com.hypixel.hytale.server.core.modules.entity.DespawnComponent',
+        'com.hypixel.hytale.server.core.modules.physics.util.PhysicsMath',
+        'com.hypixel.hytale.server.core.modules.physics.util.ForceProviderStandardState',
         'com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider$STATE')) {
     $stage7Code=& javap -classpath $stage7Jar -c -p $stage7Class
     if($LASTEXITCODE -ne 0){throw "Missing native class $stage7Class"}

@@ -2250,6 +2250,7 @@
     "tier": "II",
     "phase": 5,
     "tags": [
+      "BALLISTIC_GRAVITY",
       "EXPLOSION",
       "PHYSICAL",
       "PROJECTILE"
@@ -2324,6 +2325,7 @@
     "tier": "II",
     "phase": 5,
     "tags": [
+      "BALLISTIC_GRAVITY",
       "EXPLOSION",
       "PHYSICAL",
       "PROJECTILE"

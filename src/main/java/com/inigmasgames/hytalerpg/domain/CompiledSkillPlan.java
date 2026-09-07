@@ -67,13 +67,17 @@ public record CompiledSkillPlan(
     /** Typed release/geometry contract derived from the compiler's validated, deduplicated passive order. */
     public ExecutionModifiers executionModifiers() { return ExecutionModifiers.from(passiveOrder); }
     public ProjectileModifiers projectileModifiers() { return ProjectileModifiers.from(passiveOrder); }
-    public record ProjectileModifiers(int pierce,int fork,int chain,int returning,int ricochet,boolean volley,boolean barrage,boolean homing) {
+    public record ProjectileModifiers(int pierce,int fork,int chain,int returning,int ricochet,boolean volley,boolean barrage,boolean homing,
+            boolean accelerant,boolean ballistics,boolean shrapnel,boolean splinterburst) {
         public static ProjectileModifiers from(List<PassiveId> order) {
             Set<String> ids=order.stream().map(PassiveId::value).collect(java.util.stream.Collectors.toSet());
             return new ProjectileModifiers(ids.contains("piercing")?2:0,ids.contains("fork")?1:0,
                     ids.contains("chain")?2:0,ids.contains("return")?1:0,ids.contains("ricochet")?2:0,
-                    ids.contains("volley"),ids.contains("barrage"),ids.contains("homing"));
+                    ids.contains("volley"),ids.contains("barrage"),ids.contains("homing"),ids.contains("accelerant"),ids.contains("ballistics"),
+                    ids.contains("shrapnel"),ids.contains("splinterburst"));
         }
+        public double speedFactor(){return (accelerant?1.4:1)*(ballistics?.65:1);}
+        public double distanceFactor(){return accelerant?1.2:1;}
         public int batchSize(){return volley?3:1;}
         public int batchCount(){return barrage?3:1;}
         public int rootLaunches(boolean echo){return batchSize()*(echo?2:batchCount());}
@@ -81,6 +85,7 @@ public record CompiledSkillPlan(
             var less=new java.util.ArrayList<Double>();if(volley)less.add(.25);if(barrage)less.add(.40);if(homing)less.add(.10);return List.copyOf(less);
         }
     }
+    public boolean radiusOnlyOnShrapnel(){return executionModifiers().expandedRadius()&&projectileModifiers().shrapnel()&&!finalTags.contains("HAS_RADIUS");}
     public record ExecutionModifiers(double radiusFactor, double delaySeconds, double echoDelaySeconds,
                                      double echoMagnitude, boolean expandedRadius,int barrageBatches,double barrageInterval) {
         public ExecutionModifiers(double radiusFactor,double delaySeconds,double echoDelaySeconds,double echoMagnitude,boolean expandedRadius) {

@@ -2,8 +2,8 @@
 
 ## Status and authority
 
-Stage status: **IMPLEMENTATION_IN_PROGRESS**. Cohorts A and B have passed their local
-engineering gate. Native casting, rendering, contacts, return motion and cleanup
+Stage status: **IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION**. All three cohorts
+have passed their local engineering gate. Native casting, rendering, contacts, return motion and cleanup
 remain **UNVERIFIED** pending connected Hytale evidence. This is not Stage 07 PASS.
 No live deployment has occurred; the RPG save still uses R023. R024's execution-side
 input correction remains implemented but awaiting connected verification.
@@ -23,7 +23,7 @@ Assets SHA: `46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39`.
 |---|---|---|
 | A | Piercing, Fork, Chain, Return | implemented; full regressions and isolated boot/stop passed |
 | B | Ricochet, Volley, Barrage, Homing | implemented; full regressions and isolated boot/stop passed |
-| C | Accelerant, Ballistics, Shrapnel, Splinterburst | next; not implemented by cohorts A/B |
+| C | Accelerant, Ballistics, Shrapnel, Splinterburst | implemented; full regressions, bounded load and isolated boot/stop passed |
 
 Catalog membership remains exactly 87 skills and 66 passives. This stage adds no
 skill or passive definitions. Compiled plan schema advances from 3 to 4 because
@@ -285,6 +285,134 @@ cohort A's artifact also remains intact. Evidence scripts now refuse to overwrit
 an earlier cohort with a different JAR. There has been no live deployment.
 Stage 07 remains in progress until cohort C and the final local hardening gate.
 
+## Cohort C and final local gate
+
+### Installed implementation and scope decisions
+
+The exact LP-019–022 records and Phase 07 contract were reread before this cohort.
+The API archive now also includes PhysicsMath and ForceProviderStandardState.
+`StandardPhysicsProvider.recomputeDragFactors` calls the installed
+`computeDragCoefficient(terminalSpeed, area, mass, gravity)`, whose implementation
+is `mass * gravity / (area * terminalSpeed²)`. The seven retained pilot carrier
+configs have zero gravity, so these drag coefficients are zero; terminal-speed
+settings are not a direct clamp on the compiled velocity. This supports using the
+existing provider/Velocity setters without rewriting physics assets. It does not
+prove connected projectile speed or collision behavior.
+
+**Accelerant** multiplies speed by 1.40 and original flight distance by 1.20.
+**Ballistics** multiplies speed by 0.65 and contributes +0.30 to the existing
+Increased magnitude bucket. Potency + Ballistics is therefore 1.45 before separate
+More/Less factors, not 1.15 times 1.30. Both recompute lifetime from distance/speed;
+an explicit independent profile time cap wins when shorter. Volley uses the
+compiled speed for all three directions. Saved projectile aiming endpoints,
+release-range validation and loose native Pierce bounds use compiled distance.
+The precise accumulated-distance/time authority remains in ProjectileInstance.
+
+The master explicitly authors gravity 9.81 for Explosive Flask and Bomb Toss and
+excludes Ballistics on gravity trajectories without retargeted ballistic support.
+Those two existing records now expose the semantic `BALLISTIC_GRAVITY` tag; the
+shared compatibility authority rejects Ballistics with `UNSUPPORTED_BUILD` and
+`RETARGETED_BALLISTIC_SOLUTION`. A second guard checks the actual profile gravity
+before building a projectile plan. No new catalog records, numerical skill changes
+or guessed trajectory solver were added. Those non-pilot skills still belong to
+the final coverage work, not a fabricated Stage 05 completion claim.
+
+**Shrapnel** claims its one per-carrier trigger only after positive observed native
+Health loss. Zero, cancelled or unknown loss cannot spend that trigger. It creates
+a radius-2.5, height-3 secondary cylinder centred vertically on the impact, with
+0.50 magnitude. It has its own bounded 64-victim ledger, so the original victim may
+also receive one radial hit if still alive, in bounds and visible. Actual NPC
+bounds, hostility, protection and native LOS remain authoritative. Candidate
+overflow rejects the entire query. Damage still uses HytaleDamageAdapter; eligible
+critical rolls cannot create further explosions. The secondary inherits scalable
+direct/DoT magnitude once; fixed status applications, durations and knockback are
+not multiplied into fractional stack counts. Source-owned periodic/status rules
+remain the existing rules. Neither radial damage nor its statuses call the direct
+projectile impact callback recursively.
+
+The new secondary is an introduced Area/Burst component, not a larger carrier.
+Expanded Radius can now bind when Shrapnel is linked to the same skill. The shared
+graph, compiler and UI-advice gate agree on that rule without adding HAS_RADIUS to
+the original projectile's final tags. Its 1.25 radius factor and 10% Less apply to
+the radial component only when that is the sole radius-bearing component. Tests
+prove unchanged primary collision radius/magnitude, rejection on another root,
+and transaction rollback when removing the required Shrapnel link while Expanded
+Radius is still attached. Removing the dependent radius link first succeeds.
+This narrow capability-introduction seam precedes the full Stage 11 component
+compiler; it is not a claim that Stage 11 has been implemented.
+
+Shrapnel passes `effectInstanceId` and `CanProc=false` through the real damage
+metadata, including Gather/Filter/Apply/Inspect trace annotations. Existing
+six-argument damage metadata construction remains source-compatible. Periodic
+damage through the execution port is also explicitly non-proccing. Root cast,
+skill instance and correlation IDs are preserved; the secondary effect ID adds
+disambiguation rather than replacing them. This is implemented metadata plumbing,
+not connected evidence of any lifecycle phase.
+
+**Splinterburst** admits three children atomically at -25/0/+25 degrees, each at
+0.35 inherited magnitude and half the original compiled distance. Its new carrier
+gets its own finite lifetime and hit ledger. Remaining legal continuation credits
+are inherited, never replenished; Splinterburst itself is removed. Fork preserves
+the ancestor's original distance/lifetime limit, so terminal children are not
+accidentally limited to a tiny remainder from the last Fork segment. New carriers
+get their own once-per-projectile Shrapnel allowance, while the root's global
+budgets still constrain all such bursts. A child of generation 3 cannot create a
+fourth generation or a triggered secondary beyond that bound.
+
+Only explicit range, lifetime, enemy, terrain and return-catch terminal causes
+can enter the burst path. Forward termination starts Return first when available;
+the burst waits for the return leg's terminal end. Owner cancellation, unload,
+unknown native course ending, payload failure, invalid contacts and budget
+rejection use cleanup directly. They cannot manufacture secondary shots.
+The single carrier construction helper now inherits each child's actual snapshot,
+so the 0.35 factor reaches native direct damage and DoT calculation without a
+second resource/ammunition/cooldown operation.
+
+Root ownership now counts instant secondaries against both the 48-effect and
+16-triggered-secondary limits; Splinterburst counts its three triggered children.
+An atomic batch rejection spends no partial allocation and cannot evict another
+owner. A consumed/rejected per-carrier terminal trigger cannot retry later after
+capacity becomes free. Root spent counts survive child cleanup until the root's
+last active/pending owner is released. There are no persistent burst collections.
+
+### Final local evidence and rollback
+
+The complete retained clean build passed **274 tests**, zero failures/errors/skips:
+255 retained plus nineteen new cohort C/load tests. A final complete build after
+adding removal/rollback assertions also passed. Coverage includes all twelve
+passives' positive/negative gates, speed/lifetime/cap math, gravity exclusion,
+shared Increased/More/Less factors, component-local geometry, actual-loss trigger
+conditions, separate ledgers, Return deferral, remaining-credit inheritance,
+generation 3, spawn/trigger/capacity limits, cancellation/unload, snapshot/metadata
+identity, and the combined Delay → Echo → Fork → Chain → Return paid-once fixture.
+An initial compile check caught an incorrect assumption that the existing
+projectile profile exposed `element()`; presentation now uses its compiled semantic
+element tags instead. No nonexistent method or invented native VFX ID remains.
+
+The load fixture held **512 carriers across 22 owners**, created 512 finite burst
+ledgers and checked **32,768 secondary victim entries**, then asserted **zero
+carriers and zero roots**. The last recorded operation took **31.1929 ms**, excluding
+fixture/catalog construction. This is engine-neutral registry/geometry work, not a
+native ECS/physics, disk trace, network or rendering benchmark. Stage 13 retains
+those native/trace-volume obligations; the test does not imply a frame-time budget.
+
+The exact packaged JAR passed the nine-document CustomUI audit, all retained asset
+tests, the seven empty native projectile-interaction checks, and a normal isolated
+three-mod boot followed by clean shutdown with process exit 0. Native bridge,
+shipped Rune control and Stage 06 asset audits all resolved. Protected HUD/XP,
+resource/cooldown, CanvasUI and earlier numeric projectile/strike assets are
+unchanged. The live save still has exactly the original three R023-era mod hashes;
+no deployment occurred.
+
+Final R026 artifact: `evidence/stage-07/cohort-c/artifacts/HytaleRPG-0.0.19.jar`.
+SHA-256: `7684E120C2A1C314D3054077761BF90232CB73E0961C5B2AC6CA463425F87ACF`.
+Rollback R025: `B45CD1502D29D7ADE8E46F17000081A5CCDCA6858A19FC867CB4339438235766`.
+Cohort A/B artifacts remain intact; player schema remains 3 and plan schema 4.
+Machine-readable test inventory, local performance, boot log, smoke summary and
+verification manifest are retained under `evidence/stage-07/cohort-c/`.
+The local Stage 07 gate is complete. Stage 08 may proceed under the owner program;
+this does not close connected Stage 07 verification or the native casting gate.
+
 ## Required connected evidence
 
 First prove R024's actual execution-side input chain using the already documented
@@ -293,5 +421,9 @@ exact-once Health loss, multiple close-body contacts, finite Chain/Fork/Return,
 terrain return, live-caster catch, occlusion/friendly rejection, root IDs, one
 resource/cooldown charge and owner/world cleanup. Rendering, native callback
 delivery, synchronization, damage and animation cannot be closed by this report's
-unit tests or no-client smoke. Independent Stage 07 cohorts continue under the
+unit tests or no-client smoke. Independent later-stage backend work continues under the
 owner's program authorization while those connected gates remain outstanding.
+Also verify Shrapnel's separate radial hit, exact Health loss and non-proccing
+metadata; all three Splinterburst children, inherited reduced payloads and cleanup;
+Accelerant/Ballistics flight distance/time; no fourth generation, no cap overflow
+or cancellation burst, and no duplicated native/RPG damage or payment.

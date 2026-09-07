@@ -67,7 +67,7 @@ public final class LinkCompiler {
     private CompilationResult validateBindings(SkillDefinition skill, List<PassiveBinding> bindings) {
         Map<String, PassiveDefinition> groups = new LinkedHashMap<>();
         for (PassiveBinding binding : bindings) {
-            CompatibilityResult result = compatibility.assess(skill, binding.definition());
+            CompatibilityResult result = compatibility.assess(skill, binding.definition(),bindings.stream().map(PassiveBinding::definition).toList());
             if (!result.accepted()) return CompilationResult.failure(result.code(), result.message());
             String group = binding.definition().stackingGroup();
             if (group != null && !group.isBlank()) {
@@ -131,12 +131,14 @@ public final class LinkCompiler {
             spawnCost += passive.spawnBudgetCost();
             switch (passive.id().value()) {
                 case "potency" -> scalablePayloadIncreased += balance.potencyIncreased;
+                case "ballistics" -> scalablePayloadIncreased += .30;
                 case "efficiency" -> resourceCostMultiplier *= 0.85;
                 default -> { }
             }
             if (passive.id().value().equals("expanded_radius")) {
-                geometry.add("RADIUS_MULTIPLIER=1.25");
-                power.add("MAGNITUDE_MULTIPLIER=0.90");
+                boolean secondaryOnly=!finalTags.contains("HAS_RADIUS")&&bindings.stream().anyMatch(b->b.definition().id().value().equals("shrapnel"));
+                geometry.add((secondaryOnly?"SHRAPNEL_":"")+"RADIUS_MULTIPLIER=1.25");
+                power.add((secondaryOnly?"SHRAPNEL_":"")+"MAGNITUDE_MULTIPLIER=0.90");
             }
         }
         continuation.sort(Comparator.comparingInt(LinkCompiler::continuationRank).thenComparing(String::compareTo));

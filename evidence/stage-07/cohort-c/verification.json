@@ -1,0 +1,33 @@
+{
+  "capturedAtUtc": "2026-09-07T22:32:25.7431987Z",
+  "revision": "R026",
+  "version": "0.0.19",
+  "stage": "07",
+  "cohort": "c",
+  "branch": "RPG",
+  "sourceHead": "9e33d546e24edfe584d85971867b73ee2d9b222e",
+  "worktreeDirty": true,
+  "stageStatus": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+  "completeStageGate": true,
+  "gateScope": "LOCAL_ENGINEERING_ONLY",
+  "cohortPassives": [
+    "accelerant",
+    "ballistics",
+    "shrapnel",
+    "splinterburst"
+  ],
+  "tests": 274,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "connectedVerification": "UNVERIFIED",
+  "nativeCastingFixed": false,
+  "nativeProjectileBehaviorVerified": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "projectileConfigsWithNoNativeGameplay": 7,
+  "jarSha256": "7684E120C2A1C314D3054077761BF90232CB73E0961C5B2AC6CA463425F87ACF",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "rollbackSha256": "B45CD1502D29D7ADE8E46F17000081A5CCDCA6858A19FC867CB4339438235766"
+}
