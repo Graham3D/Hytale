@@ -86,3 +86,7 @@ next exact file/line boundary will be actionable.
 R017 = DEPLOYED_AWAITING_CONNECTED_REJOIN
 Stage06Started = false
 ```
+
+R018 supersedes the deployed R017 JAR with the HUD-only correction documented in
+`docs/corrections/R018-hud-correction-report.md`. The R017 parser fix and validator
+remain in force.
