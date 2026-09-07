@@ -237,6 +237,7 @@ public final class RpgCommand extends AbstractCommandCollection {
             addSubCommand(new DamageCommand(loadouts, kernel, trace));
             addSubCommand(new StatusCommand(loadouts, kernel, trace));
             addSubCommand(new AbilityStatusCommand(nativeAbilities));
+            addSubCommand(new RuneControlCommand(nativeAbilities));
         }
     }
 
@@ -253,6 +254,22 @@ public final class RpgCommand extends AbstractCommandCollection {
             boolean abilitiesVisible = player != null
                     && player.getHudManager().getVisibleHudComponents().contains(HudComponent.Abilities);
             context.sendMessage(Message.raw(projection.status(playerRef.getUuid(), abilitiesVisible)));
+        }
+    }
+
+    private static final class RuneControlCommand extends AbstractPlayerCommand {
+        private final NativeAbilityProjectionService projection;
+        private final RequiredArg<String> action;
+        RuneControlCommand(NativeAbilityProjectionService projection) {
+            super("rune-control", "Development-only, 120-second shipped Fireball control; preserves RPG loadout.");
+            this.projection = projection;
+            action = withRequiredArg("action", "start, status, or stop", ArgTypes.STRING);
+            // Keep the default explicit command permission: this diagnostic grants a temporary vanilla Rune.
+        }
+        @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
+                                         PlayerRef playerRef, World world) {
+            try { context.sendMessage(Message.raw(projection.runeControl(playerRef.getUuid(), context.get(action)))); }
+            catch (RuntimeException error) { context.sendMessage(Message.raw("Rune control: " + error.getMessage())); }
         }
     }
 

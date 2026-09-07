@@ -103,6 +103,11 @@ public final class Phase00Plugin extends JavaPlugin {
         nativeAbilities = new NativeAbilityProjectionService(loadouts, runtimeProfiles, skillTrace);
         loadouts.addMutationListener(nativeAbilities::onLoadoutMutation);
         abilityInputs = new HytaleAbilitySkillInputAdapter(nativeAbilities::observeInput);
+        var runeControl = new com.inigmasgames.hytalerpg.input.NativeRuneControl(
+                getDataDirectory().resolve("diagnostics").resolve("native-rune-control"),
+                configuration.developmentEntitlements(), skillTrace);
+        nativeAbilities.configureControl(runeControl);
+        abilityInputs.configureControl(runeControl::inputSuppressed, runeControl::observe);
         var reactions = new ReactionWindowService(System::nanoTime);
         var executions = new SkillExecutionService(loadouts, runtimeProfiles, combatKernel,
                 SkillExecutorRegistry.runtime(), new SkillInstanceLifecycle(), skillTrace);
@@ -197,6 +202,12 @@ public final class Phase00Plugin extends JavaPlugin {
         getCommandRegistry().registerCommand(new StatsProbeCommand());
         getCommandRegistry().registerCommand(new CapabilitiesProbeCommand());
         getCommandRegistry().registerCommand(new HtDevLibProbeCommand());
+    }
+
+    @Override
+    protected void start() {
+        // Assets are resolved before plugin start, including in --bare smoke mode (no BootEvent).
+        com.inigmasgames.hytalerpg.input.NativeRuneControl.auditAssets();
     }
 
     @Override

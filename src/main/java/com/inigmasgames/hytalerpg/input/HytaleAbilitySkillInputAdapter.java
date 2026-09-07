@@ -13,6 +13,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.BiConsumer;
 
 /** Observes Hytale's native ability interaction chains; it does not own physical keys or HUD controls. */
 public final class HytaleAbilitySkillInputAdapter {
@@ -20,17 +22,30 @@ public final class HytaleAbilitySkillInputAdapter {
     private final ConcurrentHashMap<Key, Long> seen = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, Vec3> desiredMovement = new ConcurrentHashMap<>();
     private final Consumer<Observation> observations;
+    private Predicate<UUID> executionSuppressed = ignored -> false;
+    private BiConsumer<UUID, Packet> rawObserver = (player, packet) -> { };
+
+    /** Installed once during setup; the control observes the same inbound watcher before filtering. */
+    public void configureControl(Predicate<UUID> suppressed, BiConsumer<UUID, Packet> observer) {
+        executionSuppressed = suppressed;
+        rawObserver = observer;
+    }
 
     public HytaleAbilitySkillInputAdapter() { this(ignored -> { }); }
     public HytaleAbilitySkillInputAdapter(Consumer<Observation> observations) { this.observations = observations; }
 
     public void observe(PlayerRef player, Packet packet) {
+        observe(player.getUuid(), packet);
+    }
+
+    public void observe(UUID player, Packet packet) {
+        rawObserver.accept(player, packet);
         if (packet instanceof ClientMovement movement && movement.wishMovement != null) {
-            desiredMovement.put(player.getUuid(), new Vec3(movement.wishMovement.x, 0.0, movement.wishMovement.z));
+            desiredMovement.put(player, new Vec3(movement.wishMovement.x, 0.0, movement.wishMovement.z));
             return;
         }
         if (!(packet instanceof SyncInteractionChains chains) || chains.updates == null) return;
-        for (SyncInteractionChain chain : chains.updates) observe(player.getUuid(), chain);
+        for (SyncInteractionChain chain : chains.updates) observe(player, chain);
     }
 
     private void observe(UUID player, SyncInteractionChain chain) {
@@ -48,9 +63,10 @@ public final class HytaleAbilitySkillInputAdapter {
                     case Ability4 -> NativeAbilityProjectionService.ABILITY4_UNAVAILABLE;
                     default -> "IGNORED";
                 };
+                if (slot != null && executionSuppressed.test(player)) result = "NATIVE_CONTROL_RPG_SUPPRESSED";
                 observations.accept(new Observation(player, slot, chain.interactionType.name(), chain.chainId,
                         correlation, result));
-                if (slot != null) requests.add(new Request(player, slot, chain.interactionType.name(),
+                if (slot != null && !executionSuppressed.test(player)) requests.add(new Request(player, slot, chain.interactionType.name(),
                         chain.chainId, correlation, desiredMovement.getOrDefault(player, new Vec3(0, 0, 0))));
             }
             if (!chain.initial && chain.state != null && switch (chain.state) {
@@ -66,7 +82,7 @@ public final class HytaleAbilitySkillInputAdapter {
         while (count < limit) {
             Request request = requests.poll();
             if (request == null) break;
-            consumer.accept(request);
+            if (!executionSuppressed.test(request.player())) consumer.accept(request);
             count++;
         }
         return count;
@@ -78,7 +94,9 @@ public final class HytaleAbilitySkillInputAdapter {
         while (accepted < limit && scanned++ < initial) {
             Request request = requests.poll();
             if (request == null) break;
-            if (request.player().equals(player)) { consumer.accept(request); accepted++; }
+            if (request.player().equals(player)) {
+                if (!executionSuppressed.test(player)) { consumer.accept(request); accepted++; }
+            }
             else requests.add(request);
         }
         return accepted;

@@ -8,16 +8,18 @@ presentation, and the Ability4 policy were not changed.
 ## Status
 
 ```ini
-R022 = DEPLOYED_AWAITING_CONNECTED_NATIVE_ABILITY_QA
+R022 = FAILED_CONNECTED_NATIVE_ABILITY_QA
 Stage03 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION
 Stage04 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION
 Stage05 = IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION
 Stage06Started = false
 ```
 
-The source, packaged-asset, and isolated-server gates pass. A bare server cannot
-generate real client Ability2/Ability3 input, so this report does not claim the
-connected activation gate has passed.
+The source, packaged-asset, and isolated-server gates passed. The subsequent
+2026-09-07 connected session FAILED: four successful projection transitions, zero
+accepted initial ability observations and zero RPG activation/executor events.
+The FirstClick synchronization hypothesis was insufficient. It is not an established
+root cause or fix. See `R023-native-rune-control.md` and its retained R022 evidence.
 
 ## R021 connected failure evidence
 
@@ -43,7 +45,7 @@ Retained external evidence at diagnosis time:
 | R021 `skill-trace.jsonl` through `2026-09-07T16:27:43Z` | `BC7BE482678702F915652F4D0D68299930E46898C5193BA3F6A2519BDA6ED012` |
 | R021 `2026-09-07_12-23-43_server.log` | `826547CB067F4ED967C2B5BC9031F6EA6D2AB2D4005819BA6FF424B72D039FE4` |
 
-## Root cause
+## Historical R022 hypothesis — not confirmed as the connected root cause
 
 R021 used this bridge root:
 
@@ -57,10 +59,11 @@ Inspection of the exact installed `0.7.0-pre.1` server implementation establishe
 - a branchless `SimpleInteraction.needsRemoteSync()` returns false; and
 - the root consequently had no remote-synchronized operation.
 
-Hytale could render and respond to the ItemAbility locally, but this effect-free
-local operation gave the client no reason to emit the `SyncInteractionChains`
-traffic consumed by `HytaleAbilitySkillInputAdapter`. The adapter and all later RPG
-mechanics were never reached.
+The hypothesis was that this local operation did not induce the traffic consumed
+by `HytaleAbilitySkillInputAdapter`. R022 changed the remote-sync properties but
+did not recover casting. These static properties alone therefore do not establish
+the connected failure's cause. The old observer also only logged accepted initial
+ability chains: absence of that event must not be described as a raw packet count.
 
 ## Correction
 
@@ -105,10 +108,12 @@ is observed.
 
 R022 adds a one-shot listener to Hytale's actual `LoadedAssetsEvent` for
 `RootInteraction`. It inspects the decoded and compiled packaged asset, not a
-second hand-authored model. Plugin setup fails closed if the bridge is absent,
-contains more than one operation, is not `FirstClickInteraction`, does not wait for
+second hand-authored model. When the bridge appears in the loaded-assets event,
+the listener rejects it if it contains more than one operation, is not `FirstClickInteraction`, does not wait for
 the client, does not require remote synchronization at both operation and root
-levels, or is not effect-free by its single branchless operation topology.
+levels, or is not effect-free by its single branchless operation topology. Correction:
+the listener returns when this event does not contain the root; it is not a standalone
+absence gate. The smoke script separately requires the successful audit log.
 
 The isolated three-mod server emitted:
 
@@ -159,7 +164,7 @@ incorporated because R022 is synchronization-only.
 | ItemAbility native cost/cooldown authority | zero/none — unchanged |
 | Protected mechanics/HUD files changed | no |
 | Isolated three-mod server smoke | PASS — ready, plugin enabled, clean shutdown |
-| Connected client activation | REQUIRED |
+| Connected client activation | FAILED — session 2026-09-07 17:13–17:16 UTC |
 | RPG JAR SHA-256 | `27012D3095D450895D690EB00DD820BB79A971F52A0944156B6C4D8F5BF9B7D9` |
 
 Deployment contains exactly:

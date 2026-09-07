@@ -37,6 +37,20 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
     private final Stage04SkillProfiles executable;
     private final RpgSkillTracer tracer;
     private final Map<UUID, Session> sessions = new ConcurrentHashMap<>();
+    private NativeRuneControl runeControl;
+
+    public void configureControl(NativeRuneControl control) { runeControl = control; }
+
+    public String runeControl(UUID player, String action) {
+        Session session = sessions.get(player);
+        if (runeControl == null || session == null) return "No active native ability session.";
+        return switch (action) {
+            case "start" -> runeControl.start(player, session.slots.getInventory());
+            case "stop" -> runeControl.stop(player, session.slots.getInventory(), "COMMAND_STOP");
+            case "status" -> runeControl.status(player);
+            default -> "Use /rpg dev rune-control start|status|stop";
+        };
+    }
 
     public NativeAbilityProjectionService(RpgLoadoutOperations loadouts, Stage04SkillProfiles executable,
                                           RpgSkillTracer tracer) {
@@ -46,6 +60,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
     }
 
     public void install(UUID player, InventoryComponent.AbilitySlots slots) {
+        if (runeControl != null) runeControl.onJoin(player);
         sessions.put(player, new Session(slots));
         reconcile(player, slots, "PLAYER_READY");
     }
@@ -105,6 +120,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
     }
 
     public void detach(UUID player, String reason) {
+        if (runeControl != null) runeControl.onDetach(player);
         Session session = sessions.remove(player);
         if (session == null) return;
         clearOwned(player, session.slots, reason);
@@ -115,6 +131,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
     }
 
     private void reconcile(UUID player, InventoryComponent.AbilitySlots slots, String reason) {
+        if (runeControl != null && runeControl.pauseProjection(player, slots.getInventory())) return;
         Session session = sessions.computeIfAbsent(player, ignored -> new Session(slots));
         ItemContainer container = slots.getInventory();
         if (container.getCapacity() < InventoryComponent.DEFAULT_ABILITIES_CAPACITY) {

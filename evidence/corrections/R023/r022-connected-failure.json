@@ -1,0 +1,26 @@
+{
+  "capturedAtUtc": "2026-09-07T17:41:32.9014815Z",
+  "revision": "R022",
+  "serverLog": "2026-09-07_13-12-52_server.log",
+  "serverLogSha256": "E5D108559A77AF567B18CF8203914A7359279DEEC950CDB6F4457C399522B147",
+  "traceSha256": "2B7BB84B2C88BD456987A9C4040D2DAECEEB21F7B3C1BC2C9C79C8FEDDDBAE93",
+  "firstR022Timestamp": "2026-09-07T17:13:03.458183400Z",
+  "lastR022Timestamp": "2026-09-07T17:15:57.452948100Z",
+  "eventCounts": {
+    "NATIVE_ABILITY_SLOT_PROJECTED": 4,
+    "NATIVE_ABILITY_SLOT_CONFLICT": 2,
+    "NATIVE_ABILITY_INPUT_OBSERVED": 0,
+    "SKILL_ACTIVATION_REQUEST": 0,
+    "SKILL_VALIDATION_PASS": 0,
+    "SKILL_COMMITTED": 0,
+    "EXECUTOR_DISPATCH": 0,
+    "STRIKE_QUERY": 0,
+    "PROJECTILE_SPAWN_REQUEST": 0,
+    "PROJECTILE_SPAWNED": 0
+  },
+  "setupAndBridgeEvidence": [
+    "[2026/09/07 17:12:56   INFO]          [Phase00Plugin] RPG_STAGE05_READY revision=R022 skills=87 passives=66 pilots=12 projectiles=6 schema=3 balance=rpg.combat-kernel.r011 skillTrace=mods\\InigmasGames_HytaleRPGPhase00Audit\\logs\\rpg\\skill-trace.jsonl uiTrace=mods\\InigmasGames_HytaleRPGPhase00Audit\\logs\\rpg\\ui-trace.jsonl abilityInput=Ability2->skill01,Ability3->skill02 nativeAbility4=NATIVE_ABILITY4_UNAVAILABLE nativeAbility1=SIGNATURE_UNTOUCHED abilityHud=NATIVE_HYTALE_ONLY skillTreeHotkey=BLOCKED_PUBLIC_API uiOpen=COMMAND_ONLY entitlementMode=DEVELOPMENT",
+    "[2026/09/07 17:12:58   INFO]      [NativeAbilityBridgeAudit] RPG_NATIVE_BRIDGE_AUDIT revision=R022 root=Root_RPG_Ability_Bridge exists=true operations=1 operation=FirstClickInteraction waitFor=Client operationRemote=true rootRemote=true effectFree=true result=PASS"
+  ],
+  "conclusion": "Connected RPG casting FAILED. Zero accepted initial ability observations, not a raw packet capture. Bridge versus watcher remains unresolved."
+}
