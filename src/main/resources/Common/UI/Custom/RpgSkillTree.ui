@@ -12,12 +12,12 @@ Group {
 
     Group { Anchor: (Width: 410); Background: (Color: #0d1c2bed); Padding: (Full: 14); LayoutMode: Top;
       Group { Anchor: (Height: 48); LayoutMode: Left;
-        $Common.@TextButton #SkillsTab { @Text = "Skills"; Anchor: (Width: 184, Height: 42); }
-        $Common.@TextButton #PassivesTab { @Text = "Passives"; Anchor: (Width: 184, Height: 42); }
+        $Common.@TextButton #SkillsTab { Text: "Skills"; Anchor: (Width: 184, Height: 42); }
+        $Common.@TextButton #PassivesTab { Text: "Passives"; Anchor: (Width: 184, Height: 42); }
       }
       Group { Anchor: (Height: 46); LayoutMode: Left;
         Label #LibraryHeading { Anchor: (Width: 310); Text: "Available Skills"; Style: (FontSize: 20, TextColor: #f2d488, VerticalAlignment: Center); }
-        $Common.@TextButton #FilterButton { @Text = "Filter"; Anchor: (Width: 72, Height: 38); }
+        $Common.@TextButton #FilterButton { Text: "Filter"; Anchor: (Width: 72, Height: 38); }
       }
       $Common.@TextField #SearchInput { Anchor: (Height: 40, Bottom: 8); PlaceholderText: "Search canonical content..."; }
       Group #FilterPanel { Visible: false; Anchor: (Height: 230, Bottom: 8); Background: (Color: #132438f4); Padding: (Full: 8); LayoutMode: TopScrolling; ScrollbarStyle: $Common.@DefaultScrollbarStyle;
@@ -44,29 +44,29 @@ Group {
         Group { Anchor: (Left: 469, Top: 329, Width: 3, Height: 126); Background: (Color: #54b9ed); }
         Group { Anchor: (Left: 793, Top: 136, Width: 3, Height: 319); Background: (Color: #6bdc83); }
 
-        $Common.@TextButton #Skill01 { Anchor: (Left: 78, Top: 58, Width: 140, Height: 78); @Text = "Empty Skill"; }
-        $Common.@TextButton #Skill02 { Anchor: (Left: 401, Top: 58, Width: 140, Height: 78); @Text = "Empty Skill"; }
-        $Common.@TextButton #Skill03 { Anchor: (Left: 725, Top: 58, Width: 140, Height: 78); @Text = "Empty Skill"; }
+        $Common.@TextButton #Skill01 { Anchor: (Left: 78, Top: 58, Width: 140, Height: 78); Text: "Empty Skill"; }
+        $Common.@TextButton #Skill02 { Anchor: (Left: 401, Top: 58, Width: 140, Height: 78); Text: "Empty Skill"; }
+        $Common.@TextButton #Skill03 { Anchor: (Left: 725, Top: 58, Width: 140, Height: 78); Text: "Empty Skill"; }
 
         Group { Anchor: (Left: 103, Top: 278, Width: 92, Height: 92); Background: (TexturePath: "Common/CheckBoxFrame.png", Border: 22); }
-        $Common.@TextButton #Joint01 { Anchor: (Left: 111, Top: 286, Width: 76, Height: 76); @Text = "JOINT A 3/3"; Disabled: true; }
+        $Common.@TextButton #Joint01 { Anchor: (Left: 111, Top: 286, Width: 76, Height: 76); Text: "JOINT A 3/3"; Disabled: true; }
         Group { Anchor: (Left: 426, Top: 278, Width: 92, Height: 92); Background: (TexturePath: "Common/CheckBoxFrame.png", Border: 22); }
-        $Common.@TextButton #Joint02 { Anchor: (Left: 434, Top: 286, Width: 76, Height: 76); @Text = "JOINT B 2/3"; Disabled: true; }
+        $Common.@TextButton #Joint02 { Anchor: (Left: 434, Top: 286, Width: 76, Height: 76); Text: "JOINT B 2/3"; Disabled: true; }
 
         Group { Anchor: (Left: 10, Top: 292, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
-        $Common.@TextButton #Passive01 { Anchor: (Left: 0, Top: 374, Width: 104, Height: 62); @Text = "Passive 1"; }
+        $Common.@TextButton #Passive01 { Anchor: (Left: 0, Top: 374, Width: 104, Height: 62); Text: "Passive 1"; }
         Group { Anchor: (Left: 205, Top: 292, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
-        $Common.@TextButton #Passive02 { Anchor: (Left: 195, Top: 374, Width: 104, Height: 62); @Text = "Passive 2"; }
+        $Common.@TextButton #Passive02 { Anchor: (Left: 195, Top: 374, Width: 104, Height: 62); Text: "Passive 2"; }
         Group { Anchor: (Left: 108, Top: 455, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
-        $Common.@TextButton #Passive03 { Anchor: (Left: 97, Top: 537, Width: 104, Height: 62); @Text = "Passive 3"; }
+        $Common.@TextButton #Passive03 { Anchor: (Left: 97, Top: 537, Width: 104, Height: 62); Text: "Passive 3"; }
 
         Group { Anchor: (Left: 332, Top: 292, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
-        $Common.@TextButton #Passive04 { Anchor: (Left: 321, Top: 374, Width: 104, Height: 62); @Text = "Passive 4"; }
+        $Common.@TextButton #Passive04 { Anchor: (Left: 321, Top: 374, Width: 104, Height: 62); Text: "Passive 4"; }
         Group { Anchor: (Left: 430, Top: 455, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
-        $Common.@TextButton #Passive05 { Anchor: (Left: 419, Top: 537, Width: 104, Height: 62); @Text = "Passive 5"; }
+        $Common.@TextButton #Passive05 { Anchor: (Left: 419, Top: 537, Width: 104, Height: 62); Text: "Passive 5"; }
 
         Group { Anchor: (Left: 754, Top: 455, Width: 82, Height: 82); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
-        $Common.@TextButton #Passive06 { Anchor: (Left: 743, Top: 537, Width: 104, Height: 62); @Text = "Passive 6"; }
+        $Common.@TextButton #Passive06 { Anchor: (Left: 743, Top: 537, Width: 104, Height: 62); Text: "Passive 6"; }
       }
       Label #TreeStatus { Anchor: (Height: 42); Text: "Ready"; Background: (Color: #0d1c2bee); Style: (FontSize: 14, TextColor: #e4b861, Alignment: Center); }
     }
@@ -83,9 +83,9 @@ Group {
       }
       Label #DetailsValidation { Anchor: (Height: 80); Text: ""; Style: (FontSize: 14, TextColor: #e4b861, Wrap: true); }
       Group { Anchor: (Height: 52); LayoutMode: Left;
-        $Common.@TextButton #Apply { @Text = "Apply / Assign"; Anchor: (Width: 178, Height: 44); }
+        $Common.@TextButton #Apply { Text: "Apply / Assign"; Anchor: (Width: 178, Height: 44); }
         Group { Anchor: (Width: 14); }
-        $Common.@TextButton #Clear { @Text = "Clear / Unequip"; Anchor: (Width: 178, Height: 44); }
+        $Common.@TextButton #Clear { Text: "Clear / Unequip"; Anchor: (Width: 178, Height: 44); }
       }
     }
   }

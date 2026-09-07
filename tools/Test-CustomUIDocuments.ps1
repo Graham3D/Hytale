@@ -107,9 +107,17 @@ foreach ($document in $documents) {
             $errors.Add("$($document.Name) ($matchLine): Button does not accept Text; use TextButton for a labeled control.")
         }
     }
+
+    # Imported-control macro arguments must precede concrete properties. The R016
+    # client failure used `Anchor: (...); @Text = ...` on one line: delimiter checks
+    # cannot see that grammar error, but the client parser rejects it at `=`.
+    foreach ($match in [regex]::Matches($text, '(?m)\b\w+\s*:[^;\r\n]*;[^\r\n]*@\w+\s*=')) {
+        $matchLine = 1 + ([regex]::Matches($text.Substring(0, $match.Index), "`n")).Count
+        $errors.Add("$($document.Name) ($matchLine): imported-control macro arguments must precede concrete properties; use Text: or move the macro argument before the property.")
+    }
 }
 
 if ($documents.Count -eq 0) { throw 'No CustomUI .ui documents were found in the validation targets.' }
 if ($errors.Count -gt 0) { throw "CustomUI validation failed:`n$($errors -join "`n")" }
 
-"Validated $($documents.Count) CustomUI document(s): no invalid escapes, unterminated strings, or unbalanced delimiters."
+"Validated $($documents.Count) CustomUI document(s): no invalid escapes, unterminated strings, unbalanced delimiters, labeled Button misuse, or late imported-control macro arguments."

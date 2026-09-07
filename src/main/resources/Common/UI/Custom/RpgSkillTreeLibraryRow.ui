@@ -4,5 +4,5 @@ Group {
   Anchor: (Height: 82, Bottom: 6);
   Background: (Color: #122338ee);
   Group #Icon { Anchor: (Left: 7, Top: 7, Width: 68, Height: 68); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
-  $Common.@TextButton #Select { Anchor: (Left: 82, Right: 7, Top: 7, Height: 68); @Text = "Content - Category"; }
+  $Common.@TextButton #Select { Anchor: (Left: 82, Right: 7, Top: 7, Height: 68); Text: "Content - Category"; }
 }
