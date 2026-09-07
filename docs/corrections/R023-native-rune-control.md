@@ -9,7 +9,7 @@ resource ownership or Ability4 policy has been changed.
 
 ```ini
 R022 = FAILED_CONNECTED_NATIVE_ABILITY_QA
-R023 = IMPLEMENTED_AWAITING_CONNECTED_CONTROL
+R023 = DEPLOYED_AWAITING_CONNECTED_CONTROL
 CastingFixed = false
 Stage06Started = false
 ```
@@ -141,8 +141,20 @@ unchanged. An initial attempt to use that logger globally exposed this test-harn
 conflict; it was isolated rather than weakening the retained assertion.
 
 The first smoke attempt showed that bare mode did not deliver BootEvent. The
-read-only audit was moved to plugin start, after asset loading. This changes the
-audit lifecycle only, not native interaction execution.
+read-only audit was moved to plugin start, after asset loading. Further inspection
+found the actual harness limitation: the installed ServerManager skips its normal
+transport/listener setup under `--bare` but later rejects an empty listener list.
+Both R022 and the initial R023 smoke log contained `Listeners is empty after
+starting ServerManager!!`, `Failed to create HytaleServer`, and a null-transport
+shutdown exception. The inherited script incorrectly accepted plugin readiness
+and an exit-zero shutdown marker as a complete clean-start/stop gate.
+
+R023's smoke script now starts a normal isolated server on **127.0.0.1:0**
+(loopback-only, OS-assigned port), requires `Hytale Server Booted`, and rejects those
+startup/shutdown errors. It still uses its own `run/r023-smoke` directory, not the
+owner's RPG world. The initial false-positive artifact is retained in implementation
+commit `bad70b1`; the final smoke evidence supersedes it. No production transport
+configuration or gameplay was changed to repair the test harness.
 
 Machine-readable verification, shipped asset comparison, server smoke and deployment
 records live in `evidence/corrections/R023/`. Verification explicitly checks no
@@ -189,6 +201,23 @@ activation/commit/executor events as the no-double-execution safety gate.
 
 No branch is chosen and no further synchronization patch is attempted without the
 connected result. Stage 04/05 mechanics and Stage 06 stay out of scope.
+
+## Deployment record
+
+Deployed at `2026-09-07T17:47:53.8928791Z` from implementation commit
+`bad70b1926fe530753b1627521652a7759aa2b42`. No Hytale server process was running.
+Only the RPG JAR was replaced; the active folder still contains exactly three mods:
+
+| Installed file | SHA-256 |
+|---|---|
+| CanvasUI-0.1.0.jar | 218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6 |
+| HYTALEDEVLIB-0.5.0.jar | DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230 |
+| HytaleRPG-0.0.16.jar | D3CEEA9CEEA5995F515451317452AB9A9CBB62F3E6CF56953B5F707A1BF7FA42 |
+
+R022 was copied to rollback storage and hash-verified before removal from the
+active mod folder. Its hash remains
+`27012D3095D450895D690EB00DD820BB79A971F52A0944156B6C4D8F5BF9B7D9`.
+The real RPG world restart/rejoin and connected control remain owner QA requirements.
 
 ## Rollback
 

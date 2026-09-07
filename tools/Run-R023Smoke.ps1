@@ -22,7 +22,7 @@ Copy-Item -LiteralPath $savePermissions -Destination (Join-Path $runDirectory 'p
 
 Push-Location $runDirectory
 try {
-    $start = [Diagnostics.ProcessStartInfo]::new('java', "-jar `"$serverJar`" --bare --auth-mode offline --allow-op --disable-sentry --assets=`"$assets`"")
+    $start = [Diagnostics.ProcessStartInfo]::new('java', "-jar `"$serverJar`" --bind 127.0.0.1:0 --auth-mode offline --allow-op --disable-sentry --assets=`"$assets`"")
     $start.WorkingDirectory = $runDirectory; $start.UseShellExecute = $false; $start.CreateNoWindow = $true
     $start.RedirectStandardInput = $true; $start.RedirectStandardOutput = $true; $start.RedirectStandardError = $true
     $process = [Diagnostics.Process]::new(); $process.StartInfo = $start
@@ -35,7 +35,7 @@ try {
     $exitCode = $process.ExitCode
 }
 finally { Pop-Location }
-$plain | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke.txt') -Encoding utf8
+$plain.TrimEnd() | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke.txt') -Encoding utf8
 $summary = [ordered]@{
     capturedAtUtc = [DateTime]::UtcNow.ToString('o'); processExitCode = $exitCode
     exactlyThreeMods = @(Get-ChildItem -LiteralPath $resolved -Filter '*.jar' -File).Count -eq 3
@@ -47,11 +47,12 @@ $summary = [ordered]@{
     nativeAbilityAssetsRejected = [bool]($plain -match '(?i)(RPG_Ability_|Root_RPG_Ability_Bridge).{0,240}(error|failed|invalid|unknown)')
     pluginEnabled = [bool]($plain -match 'Enabled plugin InigmasGames:HytaleRPGPhase00Audit')
     managerStarted = [bool]($plain -match 'Plugin manager started!')
+    networkBooted = [bool]($plain -match 'Hytale Server Booted')
     cleanShutdown = [bool]($plain -match 'Shutting down\.\.\. 0\s')
-    failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error)')
+    failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8
 [pscustomobject]$summary | Format-List
 if (-not ($summary.exactlyThreeMods -and $summary.rpgDiscovered -and $summary.rpgSetup -and $summary.ready -and
-    $summary.packagedRootResolved -and $summary.shippedRuneResolved -and $summary.pluginEnabled -and $summary.managerStarted -and $summary.cleanShutdown) -or
+    $summary.packagedRootResolved -and $summary.shippedRuneResolved -and $summary.pluginEnabled -and $summary.managerStarted -and $summary.networkBooted -and $summary.cleanShutdown) -or
     $summary.nativeAbilityAssetsRejected -or $summary.failure) { throw 'R023 smoke gate failed.' }

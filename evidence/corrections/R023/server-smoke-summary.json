@@ -1,5 +1,5 @@
 {
-  "capturedAtUtc": "2026-09-07T17:46:24.3485155Z",
+  "capturedAtUtc": "2026-09-07T17:50:12.7823158Z",
   "processExitCode": 0,
   "exactlyThreeMods": true,
   "rpgDiscovered": true,
@@ -10,6 +10,7 @@
   "nativeAbilityAssetsRejected": false,
   "pluginEnabled": true,
   "managerStarted": true,
+  "networkBooted": true,
   "cleanShutdown": true,
   "failure": false
 }

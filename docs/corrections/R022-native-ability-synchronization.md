@@ -163,7 +163,7 @@ incorporated because R022 is synchronization-only.
 | Gameplay-mutating bridge operation | absent |
 | ItemAbility native cost/cooldown authority | zero/none — unchanged |
 | Protected mechanics/HUD files changed | no |
-| Isolated three-mod server smoke | PASS — ready, plugin enabled, clean shutdown |
+| Isolated three-mod server smoke | Asset/plugin phase passed; full server startup/shutdown NOT clean (R023 audit found the inherited bare-mode listener failure) |
 | Connected client activation | FAILED — session 2026-09-07 17:13–17:16 UTC |
 | RPG JAR SHA-256 | `27012D3095D450895D690EB00DD820BB79A971F52A0944156B6C4D8F5BF9B7D9` |
 
