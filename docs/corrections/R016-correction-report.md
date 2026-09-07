@@ -2,8 +2,8 @@
 
 R016 is a bounded correction/frontend pass over Stages 03–05. It does not begin
 Stage 06. The implementation is committed as
-`613b0c2d6e6715fba522964b27fc01cd00edd63e`. The primary evidence commit is
-`EVIDENCE_COMMIT_PENDING` until the evidence bundle is committed.
+`613b0c2d6e6715fba522964b27fc01cd00edd63e`. The primary evidence/deployment commit
+is `252ad6acab4d37e166e6bcf2124ff382b7427395`.
 
 ## Connected R015 evidence reviewed
 
@@ -142,6 +142,7 @@ this pass.
 | RPG revision/version | `R016` / `0.0.9` |
 | Player schema | `3` |
 | Implementation commit | `613b0c2d6e6715fba522964b27fc01cd00edd63e` |
+| Evidence/deployment commit | `252ad6acab4d37e166e6bcf2124ff382b7427395` |
 | RPG JAR SHA-256 | `17CDEE20BF04E6F2C4F66C7CB9F9CB884C98FDF09142CB969E08E895A9E0BFDE` |
 | Clean RPG + CanvasUI build | PASS |
 | CustomUI validation | PASS — 17 documents |
