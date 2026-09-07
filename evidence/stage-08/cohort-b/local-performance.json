@@ -1,0 +1,32 @@
+[
+  {
+    "result": {
+      "fields": 128,
+      "owners": 128,
+      "victimsPerSlice": 64,
+      "damageCalls": 163840,
+      "upkeepCalls": 2560,
+      "remainingFields": 0,
+      "remainingCapacity": 0,
+      "milliseconds": 85.5176,
+      "nativeOrConnectedProof": false
+    },
+    "family": "BEAM",
+    "scope": "Engine-neutral runtime only; excludes native ECS, physics, trace I/O, network, client rendering and fixture construction."
+  },
+  {
+    "result": {
+      "fields": 128,
+      "owners": 16,
+      "blades": 512,
+      "victimsPerSlice": 64,
+      "damageCalls": 114688,
+      "remainingFields": 0,
+      "remainingCapacity": 0,
+      "milliseconds": 587.7001,
+      "nativeOrConnectedProof": false
+    },
+    "family": "ORBIT",
+    "scope": "Engine-neutral runtime only; excludes native ECS, physics, trace I/O, network, client rendering and fixture construction."
+  }
+]

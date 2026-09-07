@@ -302,6 +302,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 var connection=profile.connection();String admitted=connections.admission(playerRef.getUuid(),connection.channel());
                 if(!admitted.equals("PASS"))return Validation.reject(admitted);
                 if(connectionCause(connection.element())==null)return Validation.reject("CONNECTION_DAMAGE_CAUSE_MISSING");
+                if(connection.requiresTarget()) {
+                    var selection=com.inigmasgames.hytalerpg.execution.connection.ConnectionTargeting.select(connection,connectionWorld());
+                    if(!selection.verdict().equals("PASS"))return Validation.reject(selection.verdict());
+                }
                 if(connection.channel()) {
                     var cost=kernel.resources().evaluateUpkeep(new com.inigmasgames.hytalerpg.combat.resource.ResourceCost(
                             ResourceType.MANA,connection.upkeepPerSecond()*connection.intervalSeconds()),plan.kernelModifiers());
@@ -374,6 +378,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if(profile.connection().kind()==com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile.Kind.WAVE)direction=direction.horizontalNormalized();
                 Vec3 origin=feet.add(new Vec3(0,profile.connection().originHeight(),0));
                 point=HytaleAreaQueries.rayEndpoint(store,origin,direction,profile.connection().range());
+                if(profile.connection().requiresTarget()){
+                    var selected=com.inigmasgames.hytalerpg.execution.connection.ConnectionTargeting.select(profile.connection(),connectionWorld());
+                    if(!selected.verdict().equals("PASS"))throw new IllegalStateException(selected.verdict());
+                    point=selected.target().bounds().centre();targetId=UUID.fromString(selected.target().id());
+                }
             }
             else if(profile.projectile()!=null) {
                 direction=aim(store,actor);Vec3 muzzle=feet.add(new Vec3(0,1.35,0)).add(direction.multiply(.65));
@@ -405,9 +414,17 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
             if(profile.connection()!=null) {
                 var origin=feet.add(new Vec3(0,profile.connection().originHeight(),0));
-                if(target.point().subtract(origin).length()>profile.connection().range()+1e-6)return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
-                if(!HytaleAreaQueries.clear(store,origin,target.point()))return Validation.reject("COMMITTED_TARGET_LOS_BLOCKED");
-                return familyPrerequisites(profile,context.compiledPlan());
+                if(target.entityId()!=null){
+                    var resolved=connectionWorld().resolveTarget(target.entityId().toString()).orElse(null);
+                    if(resolved==null)return Validation.reject("COMMITTED_ENTITY_TARGET_INVALID");
+                    if(ConnectionShape.pointDistanceSquared(origin,resolved.bounds())>profile.connection().range()*profile.connection().range()+1e-9)return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
+                    if(!HytaleAreaQueries.clear(store,origin,resolved.bounds().centre()))return Validation.reject("COMMITTED_TARGET_LOS_BLOCKED");
+                }else{
+                    if(target.point().subtract(origin).length()>profile.connection().range()+1e-6)return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
+                    if(!HytaleAreaQueries.clear(store,origin,target.point()))return Validation.reject("COMMITTED_TARGET_LOS_BLOCKED");
+                }
+                String admission=connections.admission(playerRef.getUuid(),profile.connection().channel());
+                return admission.equals("PASS")?Validation.pass():Validation.reject(admission);
             }
             if(profile.area()!=null) {
                 String admission=areas.admission(playerRef.getUuid(),profile.skillId(),profile.area().trap());
@@ -485,12 +502,23 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     double range=to.subtract(from).length();return range<=1e-9?from:HytaleAreaQueries.rayEndpoint(store,from,to.subtract(from),range);
                 }
                 public Query query(ConnectionShape shape,int cap) {
-                    refs.clear();var found=HytaleAreaQueries.query(store,actor,shape::intersects,cap);var targets=new ArrayList<Target>();
+                    return query(List.of(shape),cap);
+                }
+                public Query query(List<ConnectionShape> shapes,int cap) {
+                    refs.clear();var found=HytaleAreaQueries.query(store,actor,bounds->shapes.stream().anyMatch(shape->shape.intersects(bounds)),cap);var targets=new ArrayList<Target>();
                     for(var value:found.candidates()) {
                         var target=candidate(value.ref());if(target==null||target.protectedTarget())continue;
                         refs.put(target.stableId(),value.ref());targets.add(new Target(target.stableId(),value.bounds()));
                     }
                     return new Query(targets,found.overflow());
+                }
+                public java.util.Optional<Target> resolveTarget(String id) {
+                    if(id==null)return java.util.Optional.empty();var ref=store.getExternalData().getRefFromUUID(UUID.fromString(id));
+                    if(ref==null||!ref.isValid()||!HytaleAreaQueries.hostile(store,ref,actor))return java.util.Optional.empty();
+                    var candidate=Port.this.candidate(ref);var box=store.getComponent(ref,BoundingBox.getComponentType());
+                    if(candidate==null||candidate.protectedTarget()||box==null)return java.util.Optional.empty();
+                    var position=vec(store.getComponent(ref,TransformComponent.getComponentType()).getPosition());var bounds=box.getBoundingBox();refs.put(id,ref);
+                    return java.util.Optional.of(new Target(id,new AreaGeometry.Bounds(vec(bounds.min).add(position),vec(bounds.max).add(position))));
                 }
                 public boolean lineOfSight(Vec3 origin,Target target){return HytaleAreaQueries.clear(store,origin,target.bounds().centre());}
                 public boolean payUpkeep(SkillExecutionContext context,int tick,double seconds) {
@@ -507,12 +535,33 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     } finally {kernel.resources().finish(token);}
                 }
                 public double damage(SkillExecutionContext context,Target target,int tick,double coefficient,boolean periodic) {
-                    var ref=refs.get(target.id());if(ref==null||!ref.isValid()||!HytaleAreaQueries.hostile(store,ref,actor))return 0;
+                    var ref=store.getExternalData().getRefFromUUID(UUID.fromString(target.id()));if(ref==null||!ref.isValid()||!HytaleAreaQueries.hostile(store,ref,actor))return 0;
                     var value=candidate(ref);if(value==null||value.protectedTarget())return 0;
                     DamageCause cause=connectionCause(context.profile().connection().element());
                     if(cause==null)throw new IllegalStateException("CONNECTION_DAMAGE_CAUSE_MISSING");
-                    return Port.this.damage(context,value,tick,coefficient,periodic?0:context.snapshot().criticalChance(),cause,periodic,
-                            context.skillInstanceId()+"/connection/"+tick,!periodic).actualHealthLoss();
+                    var outcome=Port.this.damage(context,value,tick,coefficient,periodic?0:context.snapshot().criticalChance(),cause,periodic,
+                            context.skillInstanceId()+"/connection/"+tick,!periodic);
+                    var authored=context.profile().connection().details();
+                    if(!outcome.cancelled()&&!authored.status().isBlank()&&ref.isValid()) {
+                        var npc=store.getComponent(ref,NPCEntity.getComponentType());
+                        var control=areaControls.resolve(npc.getRoleName(),value.protectedTarget(),value.boss());
+                        var status=kernel.statuses().apply(UUID.fromString(target.id()),RpgStatusType.valueOf(authored.status()),control,authored.statusSeconds());
+                        emit(context,status.outcome()==com.inigmasgames.hytalerpg.combat.status.StatusService.Outcome.REJECTED?RpgTraceEventType.STATUS_REJECTED:RpgTraceEventType.STATUS_APPLIED,
+                                Map.of("status",status.type(),"targetId",target.id(),"seconds",status.remainingSeconds(),"reason",status.detail()));
+                    }
+                    return outcome.actualHealthLoss();
+                }
+                public void healFromDamage(SkillExecutionContext context,int tick,double actualHealthLost) {
+                    if(!actorAliveAndUsable())return;var stats=store.getComponent(actor,EntityStatMap.getComponentType());
+                    var value=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());if(value==null)throw new IllegalStateException("NATIVE_HEALTH_MISSING");
+                    var healing=new com.inigmasgames.hytalerpg.combat.healing.HealingCalculationService().fromActualDamage(actualHealthLost,
+                            context.profile().connection().details().healFraction(),context.snapshot().derivedStats().healingMultiplier(),
+                            context.compiledPlan().kernelModifiers().scalablePayloadIncreased());
+                    double before=value.get(),requested=Math.min(value.getMax(),before+healing.requestedHealing());
+                    stats.setStatValue(DefaultEntityStatTypes.getHealth(),(float)requested);double after=value.get();
+                    emit(context,RpgTraceEventType.HEAL_APPLIED,Map.of("tick",tick,"sourceActualHealthLoss",actualHealthLost,
+                            "baseHealing",healing.baseHealing(),"wisdomMultiplier",healing.wisdomMultiplier(),"healingIncreased",healing.healingIncreased(),
+                            "requestedHealing",healing.requestedHealing(),"healthBefore",before,"healthAfter",after,"actualHealing",Math.max(0,after-before)));
                 }
                 public void present(SkillExecutionContext context,ConnectionShape shape,String phase,double seconds) {
                     try{vfx.presentConnection(store.getExternalData().getWorld(),shape,context.profile().connection().element(),phase,seconds);}
@@ -1302,7 +1351,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 || modifiers.homing() || modifiers.shrapnel() || modifiers.splinterburst() || modifiers.accelerant() || modifiers.ballistics();
     }
     private static DamageCause connectionCause(String element) {
-        String id=switch(element){case "WIND"->"Wind";case "LIGHTNING"->"Lightning";case "VOID"->"RPG_Void";default->null;};
+        String id=switch(element){case "WIND"->"Wind";case "LIGHTNING"->"Lightning";case "VOID"->"RPG_Void";case "NATURE"->"RPG_Nature";case "NECROTIC"->"RPG_Necrotic";default->null;};
         return id==null?null:DamageCause.getAssetMap().getAsset(id);
     }
     private boolean expireContinuationClock(ProjectileCarrier carrier,CommandBuffer<EntityStore> buffer) {

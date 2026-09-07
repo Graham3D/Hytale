@@ -177,8 +177,9 @@ public final class SkillExecutionService {
         }
         CommittedTarget target;
         try {
-            target=releaseModifiers.scheduled()?port.captureTarget(prepared.profile,prepared.plan,prepared.request):null;
-            if(releaseModifiers.scheduled() && target==null) throw new IllegalStateException("COMMITTED_TARGET_ADAPTER_UNAVAILABLE");
+            boolean capture=releaseModifiers.scheduled()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget();
+            target=capture?port.captureTarget(prepared.profile,prepared.plan,prepared.request):null;
+            if(capture && target==null) throw new IllegalStateException("COMMITTED_TARGET_ADAPTER_UNAVAILABLE");
         } catch(RuntimeException error) {
             releases.finish(prepared.instanceId);lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);
             return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"TARGET_CAPTURE_FAILED_"+error.getMessage());

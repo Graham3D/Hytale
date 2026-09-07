@@ -20,7 +20,7 @@ class Stage08ConnectionTest {
     @Test void pilotProfilesRetainCatalogAndExactAuthoredGeometry() {
         var catalog=Stage01BTestSupport.bundle().catalog();var p=Stage04SkillProfiles.loadCanonical(catalog);
         assertEquals(87,catalog.skills().size());assertEquals(66,catalog.passives().size());
-        assertEquals(3,p.all().values().stream().filter(x->x.connection()!=null).count());
+        assertEquals(Stage04SkillProfiles.EXPECTED_STAGE08_PROFILES,p.all().values().stream().filter(x->x.connection()!=null).count());
         var wave=p.require("wind_cutter");assertEquals(Stage04SkillProfile.Family.LINE,wave.family());
         assertEquals(16,wave.connection().range());assertEquals(1.2,wave.connection().width());assertEquals(2.5,wave.connection().height());
         assertEquals(.3,wave.connection().depth());assertEquals(20,wave.connection().speed());assertEquals(.8,wave.connection().lifetimeSeconds());assertEquals(.95,wave.damageCoefficient());
@@ -168,7 +168,8 @@ class Stage08ConnectionTest {
         final SkillInstanceLifecycle lifecycle=new SkillInstanceLifecycle();final SkillExecutionService service;final Stage04SkillProfile profile;
         final List<Target> targets=new ArrayList<>();final List<Hit> hits=new ArrayList<>();final List<String> order=new ArrayList<>(),ends=new ArrayList<>();
         final List<ConnectionShape> shapes=new ArrayList<>();final List<SkillExecutionContext> contexts=new ArrayList<>();
-        Vec3 aim=Vec3.FORWARD;double mana=200,wallZ=Double.POSITIVE_INFINITY;int resourceWrites;boolean overflow,rejectWrites;String validation="PASS";
+        Vec3 aim=Vec3.FORWARD,feet=Vec3.ZERO;double mana=200,wallZ=Double.POSITIVE_INFINITY,health=50,healTotal;int resourceWrites;boolean overflow,rejectWrites;String validation="PASS";
+        final Map<String,Double> victimHealth=new HashMap<>();final List<Double> healRequests=new ArrayList<>();
         Harness(String skill,String...passives) {
             assertTrue(bundle.service().equipSkill(owner,SkillSlot.SKILL01,new SkillId(skill)).success());for(String passive:passives)assertTrue(link(passive),passive);
             var profiles=Stage04SkillProfiles.loadCanonical(bundle.catalog());profile=profiles.require(skill);
@@ -180,28 +181,38 @@ class Stage08ConnectionTest {
         void advance(double seconds){clock.set(Math.round(seconds*1e9));runtime.tick(owner,seconds,this);service.tickScheduled(owner,this);}
         long cooldownEndTraces(){return tracer.records.stream().filter(r->r.eventType().name().equals("COOLDOWN_STARTED")).count();}
         public boolean actorAliveAndUsable(){return true;}
-        public Equipment equipment(){return new Equipment(new Item("staff","STAFF",new ItemPowerDescriptor("staff",Set.of("STAFF"),20d,20d)),null);}
+        public Equipment equipment(){String kind=profile.allowedMainHandKinds().stream().sorted().findFirst().orElseThrow();return new Equipment(new Item("fixture",kind,new ItemPowerDescriptor("fixture",Set.of(kind),20d,20d)),null);}
         public NativeResourcePort resources(){return this;}
-        public Validation familyPrerequisites(Stage04SkillProfile p,CompiledSkillPlan plan){String verdict=runtime.admission(owner,p.connection().channel());return verdict.equals("PASS")?Validation.pass():Validation.reject(verdict);}
-        public CommittedTarget captureTarget(Stage04SkillProfile p,CompiledSkillPlan plan,SkillExecutionRequest r){var origin=new Vec3(0,p.connection().originHeight(),0);return new CommittedTarget(world,origin,origin.add(aim.multiply(p.connection().range())),aim,null);}
+        public Validation familyPrerequisites(Stage04SkillProfile p,CompiledSkillPlan plan){String verdict=runtime.admission(owner,p.connection().channel());
+            if(verdict.equals("PASS")&&p.connection().requiresTarget())verdict=ConnectionTargeting.select(p.connection(),this).verdict();
+            return verdict.equals("PASS")?Validation.pass():Validation.reject(verdict);}
+        public CommittedTarget captureTarget(Stage04SkillProfile p,CompiledSkillPlan plan,SkillExecutionRequest r){var origin=feet.add(new Vec3(0,p.connection().originHeight(),0));
+            var selected=p.connection().requiresTarget()?ConnectionTargeting.select(p.connection(),this).target():null;
+            return new CommittedTarget(world,origin,selected==null?origin.add(aim.multiply(p.connection().range())):selected.bounds().centre(),aim,selected==null?null:UUID.fromString(selected.id()));}
         public Validation validateRelease(SkillExecutionContext c){return Validation.pass();}
         public SkillExecutionResult executeConnection(SkillExecutionContext c){contexts.add(c);runtime.start(c,clock.get()/1e9,this);return SkillExecutionResult.committed("CONNECTION_STARTED",0,0);}
         public SkillExecutionResult executeProjectile(SkillExecutionContext c){throw new AssertionError();}
         public SkillExecutionResult executeStrike(SkillExecutionContext c){throw new AssertionError();}public SkillExecutionResult executeMovement(SkillExecutionContext c){throw new AssertionError();}public SkillExecutionResult executeReaction(SkillExecutionContext c){throw new AssertionError();}
         public double current(ResourceType type){return mana;}public double maximum(ResourceType type){return 200;}
         public void setCurrent(ResourceType type,double value){if(!rejectWrites)mana=value;resourceWrites++;}
-        public Frame frame(){return new Frame(world,Vec3.ZERO,aim);}
+        public Frame frame(){return new Frame(world,feet,aim);}
         public String validate(SkillExecutionContext c,UUID world){return validation;}
         public Vec3 unobstructedEndpoint(Vec3 from,Vec3 to){if(to.z()>wallZ&&to.z()>from.z())return from.add(to.subtract(from).multiply(Math.max(0,(wallZ-from.z())/(to.z()-from.z()))));return to;}
-        public Query query(ConnectionShape shape,int cap){return new Query(targets,overflow);}
+        public Query query(ConnectionShape shape,int cap){return new Query(targets.stream().filter(t->shape.intersects(t.bounds())).toList(),overflow);}
+        public Optional<Target> resolveTarget(String id){return targets.stream().filter(t->t.id().equals(id)).findFirst();}
         public boolean lineOfSight(Vec3 from,Target t){return t.bounds().centre().z()<=wallZ;}
         public boolean payUpkeep(SkillExecutionContext c,int tick,double seconds){
             var cost=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,c.profile().connection().upkeepPerSecond()*seconds),c.compiledPlan().kernelModifiers());
             if(!kernel.resources().canAfford(owner,cost,this))return false;double before=mana;var token=kernel.resources().reserveCost(owner,cost,this);
             try{kernel.resources().commitCost(token,this);order.add("pay"+tick);return Math.abs(before-mana-cost.amount())<1e-9;}finally{kernel.resources().finish(token);}
         }
-        public double damage(SkillExecutionContext c,Target target,int tick,double coefficient,boolean periodic){hits.add(new Hit(target.id(),tick,coefficient,periodic));order.add("hit"+tick);return coefficient*20;}
-        public void present(SkillExecutionContext c,ConnectionShape shape,String phase,double seconds){assertTrue(seconds>0&&seconds<=.2);shapes.add(shape);}
+        public double damage(SkillExecutionContext c,Target target,int tick,double coefficient,boolean periodic){hits.add(new Hit(target.id(),tick,coefficient,periodic));order.add("hit"+tick);
+            double before=victimHealth.getOrDefault(target.id(),10000d),lost=Math.min(before,coefficient*20);victimHealth.put(target.id(),before-lost);return lost;}
+        public void healFromDamage(SkillExecutionContext c,int tick,double lost){
+            var healing=new com.inigmasgames.hytalerpg.combat.healing.HealingCalculationService().fromActualDamage(lost,c.profile().connection().details().healFraction(),c.snapshot().derivedStats().healingMultiplier(),c.compiledPlan().kernelModifiers().scalablePayloadIncreased());
+            healRequests.add(healing.requestedHealing());double before=health;health=Math.min(100,health+healing.requestedHealing());healTotal+=health-before;
+        }
+        public void present(SkillExecutionContext c,ConnectionShape shape,String phase,double seconds){assertTrue(seconds>0&&seconds<=.25);shapes.add(shape);}
         public void ended(SkillExecutionContext c,String reason){ends.add(reason);service.terminate(c,reason);}
         public void trace(SkillExecutionContext c,String event,Map<String,?> details){ }
     }

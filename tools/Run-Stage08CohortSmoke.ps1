@@ -17,6 +17,7 @@ if ((Test-Path -LiteralPath $stage8Archived) -and
     throw 'This cohort already archives a different build. Use the next cohort; do not overwrite evidence.'
 }
 $expectedConnections = if($Cohort -eq 'a'){3}else{8}
+$expectedConnectionCauses = if($Cohort -eq 'a'){3}else{5}
 $expectedProfiles = 15
 $expectedStatusAssets = 10
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
@@ -59,7 +60,7 @@ $summary = [ordered]@{
     networkBooted = [bool]($plain -match 'Hytale Server Booted')
     cleanShutdown = [bool]($plain -match 'Shutting down\.\.\. 0\s')
     areaAssetsResolved = [bool]($plain -match "RPG_STAGE06_ASSETS revision=R027 areaProfiles=$expectedProfiles requiredStatusAssets=$expectedStatusAssets nativeDamageChannels=2 result=PASS connectedProof=false")
-    connectionAssetsResolved = [bool]($plain -match "RPG_STAGE08_ASSETS revision=R027 connectionProfiles=$expectedConnections nativeDamageChannels=3 result=PASS connectedProof=false")
+    connectionAssetsResolved = [bool]($plain -match "RPG_STAGE08_ASSETS revision=R027 connectionProfiles=$expectedConnections nativeDamageChannels=$expectedConnectionCauses result=PASS connectedProof=false")
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8

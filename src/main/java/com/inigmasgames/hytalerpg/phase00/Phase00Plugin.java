@@ -222,10 +222,10 @@ public final class Phase00Plugin extends JavaPlugin {
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem.requireAssets();
         LOGGER.atInfo().log("RPG_STAGE06_ASSETS revision=%s areaProfiles=%d requiredStatusAssets=10 nativeDamageChannels=2 result=PASS connectedProof=false",
                 BuildIdentity.REVISION, Stage04SkillProfiles.EXPECTED_STAGE06_PROFILES);
-        for(String cause:java.util.List.of("Wind","Lightning","RPG_Void"))
+        for(String cause:java.util.List.of("Wind","Lightning","RPG_Void","RPG_Nature","RPG_Necrotic"))
             if(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause.getAssetMap().getAsset(cause)==null)
                 throw new IllegalStateException("Missing Stage 08 native damage channel: "+cause);
-        LOGGER.atInfo().log("RPG_STAGE08_ASSETS revision=%s connectionProfiles=%d nativeDamageChannels=3 result=PASS connectedProof=false",
+        LOGGER.atInfo().log("RPG_STAGE08_ASSETS revision=%s connectionProfiles=%d nativeDamageChannels=5 result=PASS connectedProof=false",
                 BuildIdentity.REVISION,Stage04SkillProfiles.EXPECTED_STAGE08_PROFILES);
     }
 

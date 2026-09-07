@@ -19,7 +19,8 @@ try {
         $stage8Results += @{name=$stage8Suite.name;tests=[int]$stage8Suite.tests;failures=[int]$stage8Suite.failures;
             errors=[int]$stage8Suite.errors;skipped=[int]$stage8Suite.skipped;seconds=$stage8Suite.time;cases=@($stage8Suite.testcase | ForEach-Object {$_.name})}
     }
-    if($stage8Count -lt 298 -or $stage8Failures -or $stage8Errors -or $stage8Skipped){throw 'Incomplete or failing retained regression suite.'}
+    $stage8Minimum=if($Cohort -eq 'a'){298}else{320}
+    if($stage8Count -lt $stage8Minimum -or $stage8Failures -or $stage8Errors -or $stage8Skipped){throw 'Incomplete or failing retained regression suite.'}
     & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $stage8Jar
     $stage8ProtectedPaths=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI','canvas-ui/src',
         'src/main/resources/rpg/runtime/stage-04-skills.json','src/main/resources/rpg/runtime/stage-05-projectiles.json',
@@ -48,6 +49,18 @@ try {
     Copy-Item -LiteralPath $stage8Jar -Destination $stage8Archived -Force
     Copy-Item -LiteralPath 'evidence/stage-07/cohort-c/artifacts/HytaleRPG-0.0.19.jar' -Destination (Join-Path $stage8Evidence 'rollback\HytaleRPG-0.0.19.jar') -Force
     $stage8Results | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $stage8Evidence 'test-results.json') -Encoding utf8
+    if($Cohort -eq 'b') {
+        [xml]$stage8Load=Get-Content -Raw -LiteralPath 'build/test-results/test/TEST-com.inigmasgames.hytalerpg.Stage08LoadTest.xml'
+        $stage8Performance=@()
+        foreach($stage8Kind in @('BEAM','ORBIT')) {
+            $stage8Match=[regex]::Match($stage8Load.testsuite.'system-out'.InnerText,"STAGE08_$($stage8Kind)_LOAD (\{[^\r\n]+\})")
+            if(-not $stage8Match.Success){throw "Missing Stage 08 $stage8Kind load result"}
+            $stage8Result=$stage8Match.Groups[1].Value | ConvertFrom-Json
+            if($stage8Result.fields -ne 128 -or $stage8Result.remainingFields -ne 0 -or $stage8Result.remainingCapacity -ne 0){throw 'Incomplete Stage 08 load cleanup.'}
+            $stage8Performance+=@{family=$stage8Kind;result=$stage8Result;scope='Engine-neutral runtime only; excludes native ECS, physics, trace I/O, network, client rendering and fixture construction.'}
+        }
+        $stage8Performance | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $stage8Evidence 'local-performance.json') -Encoding utf8
+    }
     $stage8Summary=[ordered]@{
         capturedAtUtc=[DateTime]::UtcNow.ToString('o');revision='R027';version='0.0.20';stage='08';cohort=$Cohort
         branch=(& git branch --show-current).Trim();sourceHead=(& git rev-parse HEAD).Trim();worktreeDirty=[bool](& git status --porcelain)

@@ -13,6 +13,7 @@ public final class AreaPresentationTemplate {
             case "POISON" -> new Color(.7f,.9f,.15f);
             case "NATURE" -> new Color(.25f,.8f,.3f);
             case "VOID" -> new Color(.6f,.3f,.85f);
+            case "NECROTIC" -> new Color(.75f,.15f,.4f);
             case "PHYSICAL" -> new Color(.85f,.7f,.4f);
             case "WIND" -> new Color(.7f,.9f,.9f);
             case "LIGHTNING" -> new Color(.85f,.9f,1);

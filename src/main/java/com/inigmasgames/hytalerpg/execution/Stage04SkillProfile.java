@@ -66,6 +66,7 @@ public record Stage04SkillProfile(
     }
 
     public Map<String, Double> authoredStatuses() {
+        if(connection!=null&&!connection.details().status().isBlank())return Map.of(connection.details().status(),connection.details().statusSeconds());
         if (strike != null && !strike.statusId().isBlank())
             return Map.of(strike.statusId(), strike.statusSeconds());
         if (projectile != null && !projectile.statusId().isBlank())
@@ -73,7 +74,7 @@ public record Stage04SkillProfile(
         return Map.of();
     }
 
-    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE, BURST, CONE, TRAP, GROUND_ZONE, WALL, OVERHEAD, BOMBARDMENT, LINE,BEAM,ORB }
+    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE, BURST, CONE, TRAP, GROUND_ZONE, WALL, OVERHEAD, BOMBARDMENT, LINE,BEAM,ORB,DIRECT_TARGET }
     public enum Geometry { ARC, LINE, ASSIST_CONE, RADIUS }
     public enum MovementKind { DASH, LEAP }
 

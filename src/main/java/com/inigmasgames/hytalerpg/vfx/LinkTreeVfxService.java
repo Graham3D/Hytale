@@ -56,7 +56,12 @@ public final class LinkTreeVfxService {
     @FunctionalInterface public interface Adapter { boolean emit(World world, Player actor, String nativeEffectId); }
     /** Endpoint-fit outline of the actual volume, with bounded lifetimes and no gameplay interaction. */
     public void presentConnection(World world,com.inigmasgames.hytalerpg.execution.connection.ConnectionShape shape,String element,String phase,double seconds) {
-        var palette=AreaPresentationTemplate.color(element,phase);var color=new org.joml.Vector3f(palette.red(),palette.green(),palette.blue());
+         var palette=AreaPresentationTemplate.color(element,phase);var color=new org.joml.Vector3f(palette.red(),palette.green(),palette.blue());
+         if(shape.kind()==com.inigmasgames.hytalerpg.execution.connection.ConnectionShape.Kind.CAPSULE) {
+             var end=shape.end();com.hypixel.hytale.server.core.modules.debug.DebugUtils.addSphere(world,
+                     new org.joml.Vector3d(end.x(),end.y(),end.z()),color,shape.radius(),(float)seconds);
+             connectionLine(world,shape.start(),end,color,seconds);return;
+         }
         if(shape.kind()==com.inigmasgames.hytalerpg.execution.connection.ConnectionShape.Kind.CYLINDER) {
             var origin=shape.start();
             com.hypixel.hytale.server.core.modules.debug.DebugUtils.addSphere(world,new org.joml.Vector3d(origin.x(),origin.y(),origin.z()),color,.2,(float)seconds);

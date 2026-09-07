@@ -1,0 +1,22 @@
+[
+  "Server/Entity/Damage/Bludgeoning.json",
+  "Server/Entity/Damage/Command.json",
+  "Server/Entity/Damage/Crush.json",
+  "Server/Entity/Damage/Drowning.json",
+  "Server/Entity/Damage/Earth.json",
+  "Server/Entity/Damage/Elemental.json",
+  "Server/Entity/Damage/Environment.json",
+  "Server/Entity/Damage/Environmental.json",
+  "Server/Entity/Damage/Fall.json",
+  "Server/Entity/Damage/Fire.json",
+  "Server/Entity/Damage/Ice.json",
+  "Server/Entity/Damage/Lightning.json",
+  "Server/Entity/Damage/OutOfWorld.json",
+  "Server/Entity/Damage/Physical.json",
+  "Server/Entity/Damage/Poison.json",
+  "Server/Entity/Damage/Projectile.json",
+  "Server/Entity/Damage/Slashing.json",
+  "Server/Entity/Damage/Suffocation.json",
+  "Server/Entity/Damage/Water.json",
+  "Server/Entity/Damage/Wind.json"
+]

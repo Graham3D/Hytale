@@ -13,6 +13,8 @@ foreach($stage8Class in @('com.hypixel.hytale.server.core.modules.collision.Coll
         'com.hypixel.hytale.server.core.modules.entity.component.HeadRotation',
         'com.hypixel.hytale.server.npc.role.support.WorldSupport',
         'com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap',
+        'com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue',
+        'com.hypixel.hytale.server.core.universe.world.storage.EntityStore',
         'com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent',
         'com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes',
         'com.hypixel.hytale.server.core.modules.entity.damage.DamageCause',
@@ -23,6 +25,8 @@ foreach($stage8Class in @('com.hypixel.hytale.server.core.modules.collision.Coll
 }
 $stage8Zip=[IO.Compression.ZipFile]::OpenRead((Join-Path $stage8Package 'Assets.zip'))
 try {
+    @($stage8Zip.Entries | Where-Object {$_.FullName -like 'Server/Entity/Damage/*.json'} | ForEach-Object {$_.FullName}) |
+        ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stage8Audit 'shipped-damage-inventory.json') -Encoding utf8
     $stage8Assets=@{}
     foreach($stage8Name in @('Server/Entity/Damage/Wind.json','Server/Entity/Damage/Lightning.json','Server/Entity/Damage/Elemental.json')) {
         $stage8Entry=$stage8Zip.GetEntry($stage8Name)

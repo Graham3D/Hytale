@@ -24,6 +24,11 @@ public final class ConnectionRuntime {
         Vec3 direction=context.target()==null?frame.aim():context.target().point().subtract(origin).normalized();
         if(profile.kind()==ConnectionProfile.Kind.WAVE)direction=direction.horizontalNormalized();
         var field=new Field(context,frame.world(),origin,direction,now);
+        if(profile.requiresTarget()) {
+            if(context.target()==null||context.target().entityId()==null)throw new IllegalStateException("COMMITTED_ENTITY_TARGET_MISSING");
+            field.targetId=context.target().entityId().toString();
+            if(boundTarget(field,origin,port)==null)throw new IllegalStateException("COMMITTED_ENTITY_TARGET_INVALID");
+        }
         capacity.reserve(field.owner(),context.skillInstanceId());fields.put(context.skillInstanceId(),field);
         try {port.trace(context,"CONNECTION_STARTED",Map.of("kind",profile.kind(),"origin",origin.toString(),"lifetimeSeconds",profile.lifetimeSeconds()));tickField(field,now,port);}
         catch(RuntimeException error){finish(field,"NATIVE_ADAPTER_FAILURE_"+error.getClass().getSimpleName(),port);throw error;}
@@ -49,9 +54,17 @@ public final class ConnectionRuntime {
         if(now-field.lastTick>1+1e-9){finish(field,"SIMULATION_GAP_EXCEEDS_ONE_SECOND",port);return;}
         field.lastTick=now;var profile=field.profile();double elapsed=Math.min(now-field.started,profile.lifetimeSeconds());
         if(profile.kind()==ConnectionProfile.Kind.WAVE){wave(field,elapsed,now,port);return;}
+        if(profile.kind()==ConnectionProfile.Kind.LINE||profile.kind()==ConnectionProfile.Kind.TETHER){instant(field,port);return;}
+        if(profile.kind()==ConnectionProfile.Kind.CHAIN){chain(field,elapsed,port);return;}
+        if(profile.kind()==ConnectionProfile.Kind.ORBIT){orbit(field,elapsed,port);return;}
         while(!field.done&&(field.tick+1)*profile.intervalSeconds()<=elapsed+1e-9) {
             int tick=field.tick+1;double at=tick*profile.intervalSeconds();ConnectionShape shape;
-            if(profile.channel()) {
+            ConnectionWorldPort.Target tether=null;
+            if(profile.kind()==ConnectionProfile.Kind.DRAIN) {
+                var origin=port.frame().feet().add(new Vec3(0,profile.originHeight(),0));tether=boundTarget(field,origin,port);
+                if(tether==null){finish(field,"TETHER_TARGET_INVALID",port);return;}
+                shape=ConnectionShape.line(origin,tether.bounds().centre(),profile.width(),profile.width());
+            } else if(profile.channel()) {
                 // Current native aim is explicitly sampled for each authored channel slice.
                 var frame=port.frame();Vec3 origin=frame.feet().add(new Vec3(0,profile.originHeight(),0));
                 Vec3 end=port.unobstructedEndpoint(origin,origin.add(frame.aim().normalized().multiply(profile.range())));
@@ -59,7 +72,7 @@ public final class ConnectionRuntime {
             } else {
                 moveOrb(field,at,port);shape=ConnectionShape.cylinder(field.position,profile.radius()*field.context.compiledPlan().executionModifiers().radiusFactor(),profile.height());
             }
-            var targets=targets(field,shape,port);if(targets==null)return;
+            var targets=tether==null?targets(field,shape,port):List.of(tether);if(targets==null)return;
             if(profile.channel()&&!port.payUpkeep(field.context,tick,profile.intervalSeconds())){finish(field,"INSUFFICIENT_UPKEEP",port);return;}
             field.tick=tick;
             hit(field,targets,tick,profile.coefficient()*(profile.channel()?profile.intervalSeconds():1),profile.channel(),port);
@@ -72,10 +85,71 @@ public final class ConnectionRuntime {
             field.nextVisual=now+.05;ConnectionShape shape;
             if(profile.channel()) {
                 var frame=port.frame();var start=frame.feet().add(new Vec3(0,profile.originHeight(),0));
-                shape=ConnectionShape.line(start,port.unobstructedEndpoint(start,start.add(frame.aim().normalized().multiply(profile.range()))),profile.width(),profile.height());
+                if(profile.kind()==ConnectionProfile.Kind.DRAIN){var target=boundTarget(field,start,port);if(target==null){finish(field,"TETHER_TARGET_INVALID",port);return;}
+                    shape=ConnectionShape.line(start,target.bounds().centre(),profile.width(),profile.width());}
+                else shape=ConnectionShape.line(start,port.unobstructedEndpoint(start,start.add(frame.aim().normalized().multiply(profile.range()))),profile.width(),profile.height());
             } else {moveOrb(field,elapsed,port);shape=ConnectionShape.cylinder(field.position,profile.radius()*field.context.compiledPlan().executionModifiers().radiusFactor(),profile.height());}
             port.present(field.context,shape,"ACTIVE",.08);
         }
+    }
+    private ConnectionWorldPort.Target boundTarget(Field field,Vec3 origin,ConnectionWorldPort port){
+        var target=port.resolveTarget(field.targetId).orElse(null);
+        return target!=null&&ConnectionShape.pointDistanceSquared(origin,target.bounds())<=field.profile().range()*field.profile().range()+1e-9
+                &&port.lineOfSight(origin,target)?target:null;
+    }
+    private void instant(Field field,ConnectionWorldPort port){
+        var p=field.profile();ConnectionShape shape;List<ConnectionWorldPort.Target> targets;
+        if(p.kind()==ConnectionProfile.Kind.TETHER){var target=boundTarget(field,field.origin,port);if(target==null){finish(field,"TETHER_TARGET_INVALID",port);return;}
+            shape=ConnectionShape.line(field.origin,target.bounds().centre(),p.width(),p.height());targets=List.of(target);}
+        else {shape=ConnectionShape.line(field.origin,port.unobstructedEndpoint(field.origin,field.origin.add(field.direction.multiply(p.range()))),p.width(),p.height());targets=targets(field,shape,port);}
+        if(targets==null)return;hit(field,targets,0,p.coefficient(),false,port);
+        if(!field.done){port.present(field.context,shape,"IMPACT",p.kind()==ConnectionProfile.Kind.TETHER?.25:.15);finish(field,"LINE_COMPLETE",port);}
+    }
+    private void chain(Field field,double elapsed,ConnectionWorldPort port){
+        var p=field.profile();var coefficients=p.details().jumpCoefficients();
+        if(field.lastHit.isEmpty()){
+            var target=boundTarget(field,field.origin,port);if(target==null){finish(field,"CHAIN_TARGET_INVALID",port);return;}
+            chainHit(field,target,field.origin,0,coefficients.getFirst(),port);
+        }
+        while(!field.done&&(field.tick+1)*p.intervalSeconds()<=elapsed+1e-9&&field.tick+1<coefficients.size()){
+            // Death/despawn after a hit keeps its last actual impact point; a live prior target is refreshed.
+            var from=port.resolveTarget(field.targetId).map(t->t.bounds().centre()).orElse(field.position);
+            double radius=p.details().jumpRadius()*field.context.compiledPlan().executionModifiers().radiusFactor();
+            var found=targets(field,ConnectionShape.cylinder(from,radius,radius*2),port);if(found==null)return;
+            var target=found.stream().filter(t->!field.lastHit.containsKey(t.id())&&ConnectionShape.pointDistanceSquared(from,t.bounds())<=radius*radius+1e-9)
+                    .sorted(Comparator.comparingDouble((ConnectionWorldPort.Target t)->ConnectionShape.pointDistanceSquared(from,t.bounds())).thenComparing(ConnectionWorldPort.Target::id)).findFirst();
+            if(target.isEmpty()){finish(field,"CHAIN_NO_VALID_JUMP",port);return;}
+            int tick=field.tick+1;chainHit(field,target.get(),from,tick,coefficients.get(tick),port);
+        }
+        if(!field.done&&field.tick+1>=coefficients.size())finish(field,"CHAIN_COMPLETE",port);
+    }
+    private void chainHit(Field field,ConnectionWorldPort.Target target,Vec3 origin,int tick,double coefficient,ConnectionWorldPort port){
+        field.tick=tick;field.targetId=target.id();field.position=target.bounds().centre();hit(field,List.of(target),tick,coefficient,false,port);
+        if(!field.done)port.present(field.context,ConnectionShape.line(origin,field.position,field.profile().width(),field.profile().width()),"IMPACT",.15);
+    }
+    private void orbit(Field field,double elapsed,ConnectionWorldPort port){
+        var p=field.profile();double interval=p.intervalSeconds(),radius=p.range()*field.context.compiledPlan().executionModifiers().radiusFactor();
+        while(!field.done&&(field.tick+1)*interval<=elapsed+1e-9&&(field.tick+1)*interval<p.lifetimeSeconds()-1e-9){
+            int tick=field.tick+1;double at=tick*interval;var center=port.frame().feet().add(new Vec3(0,p.originHeight(),0));
+            var oldCenter=field.tick<0?center:field.position;var shapes=new ArrayList<ConnectionShape>();
+            for(int blade=0;blade<p.details().bladeCount();blade++){
+                double angle=Math.toRadians(p.details().degreesPerSecond()*at+360d*blade/p.details().bladeCount());
+                double prior=Math.toRadians(p.details().degreesPerSecond()*Math.max(0,at-interval)+360d*blade/p.details().bladeCount());
+                var start=oldCenter.add(new Vec3(Math.cos(prior)*radius,0,Math.sin(prior)*radius));
+                var end=center.add(new Vec3(Math.cos(angle)*radius,0,Math.sin(angle)*radius));
+                shapes.add(ConnectionShape.capsule(start,end,p.radius()));
+            }
+            var query=port.query(shapes,64);
+            if(query.overflow()||query.targets().size()>64){finish(field,"CANDIDATE_BUDGET_REJECTED",port);return;}
+            var unique=new TreeMap<String,ConnectionWorldPort.Target>();
+            for(var target:query.targets())if(shapes.stream().anyMatch(s->s.intersects(target.bounds()))&&port.lineOfSight(center,target))unique.putIfAbsent(target.id(),target);
+            long additions=unique.keySet().stream().filter(id->!field.lastHit.containsKey(id)).count();
+            if(field.lastHit.size()+additions>256){finish(field,"TARGET_LEDGER_BUDGET",port);return;}
+            var eligible=unique.values().stream().filter(t->(tick-field.lastHit.getOrDefault(t.id(),-1000000))*interval>=p.details().contactCooldown()-1e-9).toList();
+            field.tick=tick;field.position=center;hit(field,eligible,tick,p.coefficient(),false,port);
+            if(field.done)return;for(var shape:shapes)port.present(field.context,shape,"BLADE_CONTACT_PROXY",.08);
+        }
+        if(!field.done&&elapsed>=p.lifetimeSeconds()-1e-9)finish(field,"ORBIT_EXPIRED",port);
     }
     private void wave(Field field,double elapsed,double now,ConnectionWorldPort port) {
         var profile=field.profile();
@@ -115,6 +189,7 @@ public final class ConnectionRuntime {
             if(field.done)break;if(field.lastHit.getOrDefault(target.id(),-1)==tick)continue;
             field.lastHit.put(target.id(),tick);attempts++;
             double lost=port.damage(field.context,target,tick,coefficient,periodic);if(Double.isFinite(lost)&&lost>0)healthLost+=lost;
+            if(!field.done&&field.profile().kind()==ConnectionProfile.Kind.DRAIN&&Double.isFinite(lost)&&lost>0)port.healFromDamage(field.context,tick,lost);
         }
         port.trace(field.context,"CONNECTION_TICK",Map.of("tick",tick,"coefficient",coefficient,"targetAttempts",attempts,"actualHealthLoss",healthLost,"periodic",periodic));
     }
@@ -125,9 +200,10 @@ public final class ConnectionRuntime {
     }
     private static final class Field {
         final SkillExecutionContext context;final UUID world;final Vec3 origin,direction;final double started;
-        final Map<String,Integer> lastHit=new HashMap<>();Vec3 position;double lastTick,nextVisual,travelled;int tick;boolean stopped,done;
+        final Map<String,Integer> lastHit=new HashMap<>();Vec3 position;double lastTick,nextVisual,travelled;int tick;boolean stopped,done;String targetId;
         Field(SkillExecutionContext context,UUID world,Vec3 origin,Vec3 direction,double now){
             this.context=context;this.world=world;this.origin=origin;this.direction=direction;this.position=origin;this.started=now;this.lastTick=now;this.nextVisual=now;
+            if(context.profile().connection().kind()==ConnectionProfile.Kind.ORBIT)tick=-1;
         }
         UUID owner(){return context.request().actorId();}ConnectionProfile profile(){return context.profile().connection();}
     }
