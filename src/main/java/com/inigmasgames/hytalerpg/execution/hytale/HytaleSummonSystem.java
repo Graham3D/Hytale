@@ -33,13 +33,94 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         void apply(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> owner,
                    Ref<EntityStore> target,SummonRegistry.Lease lease,int attack);
     }
+    @FunctionalInterface public interface Benefit {
+        void apply(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> owner,SkillExecutionContext context);
+    }
+    @FunctionalInterface public interface Burst {
+        int apply(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> owner,SkillExecutionContext context,
+                  Vec3 point,double radius,double coefficient,String effect,boolean frozenSnapshot);
+    }
     private final SummonRegistry registry=new SummonRegistry();
     private final CorpseLedger corpses;
     private final CombatTrace trace;
     private final Attack attack;
-    public HytaleSummonSystem(CombatTrace trace,Attack attack,CorpseLedger corpses){this.trace=trace;this.attack=attack;this.corpses=corpses;}
+    private final Benefit benefit;
+    private final Burst burst;
+    public HytaleSummonSystem(CombatTrace trace,Attack attack,CorpseLedger corpses,Benefit benefit,Burst burst){
+        this.trace=trace;this.attack=attack;this.corpses=corpses;this.benefit=benefit;this.burst=burst;
+    }
     public SummonRegistry registry(){return registry;}
     public CorpseLedger corpses(){return corpses;}
+    public void commitConsumable(Store<EntityStore> store,Ref<EntityStore> owner,SkillExecutionContext context){
+        boolean consumes=context.profile().summon()!=null&&context.profile().summon().corpseRequired()||context.profile().summonAction()!=null&&
+                context.profile().summonAction().kind()==com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile.Kind.CORPSE_BURST;
+        if(!consumes)return;
+        var source=corpses.available(context.target().entityId(),context.target().worldId()).orElseThrow(()->new IllegalStateException("CORPSE_UNAVAILABLE"));
+        if(!HytaleCorpseSystem.valid(store,owner,source))throw new IllegalStateException("CORPSE_NO_LONGER_VALID");
+        var claim=corpses.reserve(source.entity(),source.world(),context.request().actorId(),context.rootCastId());
+        emitContext(context,RpgTraceEventType.CORPSE_CLAIMED,Map.of("corpse",claim.entity(),"claim",claim.nonce()));
+        try{if(!corpses.commit(claim,context.skillInstanceId()))throw new IllegalStateException("CORPSE_COMMIT_REJECTED");}
+        catch(RuntimeException failure){corpses.release(claim);throw failure;}
+        emitContext(context,RpgTraceEventType.CORPSE_CONSUMED,Map.of("corpse",claim.entity(),"claim",claim.nonce(),"rewardCreated",false,"atPaidCommit",true));
+    }
+    public Optional<CorpseLedger.Claim> committedCorpse(SkillExecutionContext context){
+        return corpses.committed(context.request().actorId(),context.target().worldId(),context.rootCastId(),context.skillInstanceId())
+                .filter(c->c.entity().equals(context.target().entityId()));
+    }
+    public SkillExecutionPort.Validation preflightAction(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,Vec3 aim){
+        var p=profile.summonAction();boolean found=p.kind()==com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile.Kind.CORPSE_BURST?
+                selectCorpse(store,owner,aim,p.range()).isPresent():selectOwned(store,owner,aim,p.range()).isPresent();
+        return found?SkillExecutionPort.Validation.pass():SkillExecutionPort.Validation.reject("NO_VALID_CONSUMABLE_"+p.kind());
+    }
+    public CommittedTarget captureAction(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,Vec3 aim){
+        var p=profile.summonAction();
+        if(p.kind()==com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile.Kind.CORPSE_BURST){
+            var source=selectCorpse(store,owner,aim,p.range()).orElseThrow();return new CommittedTarget(source.world(),position(store,owner),source.anchor(),aim,source.entity());
+        }
+        var lease=selectOwned(store,owner,aim,p.range()).orElseThrow();var target=store.getExternalData().getRefFromUUID(lease.entity());
+        return new CommittedTarget(lease.world(),position(store,owner),position(store,target),aim,lease.entity());
+    }
+    private Optional<SummonRegistry.Lease> selectOwned(Store<EntityStore> store,Ref<EntityStore> owner,Vec3 aim,double range){
+        var player=store.getComponent(owner,PlayerRef.getComponentType());var origin=position(store,owner).add(new Vec3(0,1.35,0));var direction=aim.normalized();
+        return registry.owned(player.getUuid(),player.getWorldUuid()).stream().filter(l->l.context().compiledPlan().finalTags().contains("TEMPORARY_COMBAT_SUMMON")&&now()<l.expires())
+                .filter(l->{var ref=store.getExternalData().getRefFromUUID(l.entity());if(!alive(store,ref))return false;
+                    var point=position(store,ref).add(new Vec3(0,.4,0));var delta=point.subtract(origin);double dot=delta.x()*direction.x()+delta.y()*direction.y()+delta.z()*direction.z();
+                    return delta.length()<=range&&dot>=0&&delta.subtract(direction.multiply(dot)).length()<=1.25&&HytaleAreaQueries.clear(store,origin,point);})
+                .min(Comparator.comparing(SummonRegistry.Lease::entity));
+    }
+    public SkillExecutionPort.Validation validateAction(Store<EntityStore> store,Ref<EntityStore> owner,SkillExecutionContext context){
+        if(context.derivedRelease()||context.target()==null)return SkillExecutionPort.Validation.reject("CONSUMER_REPLAY_FORBIDDEN");
+        var target=context.target();var player=store.getComponent(owner,PlayerRef.getComponentType());
+        if(!target.worldId().equals(player.getWorldUuid()))return SkillExecutionPort.Validation.reject("CONSUMER_WORLD_CHANGED");
+        Vec3 point=target.point();
+        if(context.profile().summonAction().kind()==com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile.Kind.CORPSE_BURST){
+            if(committedCorpse(context).isEmpty())return SkillExecutionPort.Validation.reject("COMMITTED_CORPSE_PERMIT_UNAVAILABLE");
+        }else{
+            var lease=registry.owned(player.getUuid(),target.worldId(),target.entityId()).orElse(null);var ref=store.getExternalData().getRefFromUUID(target.entityId());
+            if(lease==null||now()>=lease.expires()||!alive(store,ref)||!lease.context().compiledPlan().finalTags().contains("TEMPORARY_COMBAT_SUMMON"))
+                return SkillExecutionPort.Validation.reject("OWNED_COMBAT_SUMMON_UNAVAILABLE");
+            point=position(store,ref);
+        }
+        return point.subtract(position(store,owner)).length()<=context.profile().summonAction().range()&&HytaleAreaQueries.clear(store,position(store,owner).add(new Vec3(0,1.35,0)),point.add(new Vec3(0,.1,0)))?
+                SkillExecutionPort.Validation.pass():SkillExecutionPort.Validation.reject("CONSUMER_RANGE_OR_LOS");
+    }
+    public SkillExecutionResult executeAction(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> owner,SkillExecutionContext context){
+        if(buffer==null)throw new IllegalStateException("SUMMON_WORLD_COMMAND_BUFFER_REQUIRED");
+        var verdict=validateAction(store,owner,context);if(!verdict.accepted())throw new IllegalStateException(verdict.code());
+        var p=context.profile().summonAction();
+        if(p.kind()==com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile.Kind.CONSUME_MINION){
+            var lease=registry.consume(context.request().actorId(),context.target().worldId(),context.target().entityId(),now(),
+                    ()->benefit.apply(store,buffer,owner,context)).orElseThrow(()->new IllegalStateException("SUMMON_ALREADY_CONSUMED"));
+            var target=store.getExternalData().getRefFromUUID(lease.entity());if(target!=null&&target.isValid())buffer.tryRemoveEntity(target,RemoveReason.REMOVE);
+            emitContext(context,RpgTraceEventType.SUMMON_CONSUMED,Map.of("entity",lease.entity(),"summonRoot",lease.context().rootCastId(),"deathPact",false,"corpseCreated",false));
+            return SkillExecutionResult.committed("SUMMON_CONSUMED",1,0);
+        }
+        var claim=corpses.takeCommitted(context.request().actorId(),context.target().worldId(),context.rootCastId(),context.skillInstanceId())
+                .orElseThrow(()->new IllegalStateException("COMMITTED_CORPSE_PERMIT_UNAVAILABLE"));
+        int hits=burst.apply(store,buffer,owner,context,claim.source().anchor(),p.radius()*context.compiledPlan().executionModifiers().radiusFactor(),p.coefficient(),"corpse/"+claim.nonce(),false);
+        emitContext(context,RpgTraceEventType.CORPSE_BURST,Map.of("corpse",claim.entity(),"targets",hits,"anchor",claim.source().anchor(),"canProc",false));
+        return SkillExecutionResult.committed("CORPSE_BURST",hits,0);
+    }
     public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,Vec3 aim){
         var spec=profile.summon();
         if(!NPCPlugin.get().hasRoleName(spec.roleId()))return SkillExecutionPort.Validation.reject("SUMMON_ROLE_UNAVAILABLE");
@@ -76,19 +157,13 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         if(buffer==null)throw new IllegalStateException("SUMMON_WORLD_COMMAND_BUFFER_REQUIRED");
         CorpseLedger.Claim claim=null;
         if(context.profile().summon().corpseRequired()){
-            var source=corpses.available(context.target().entityId(),context.target().worldId()).orElseThrow(()->new IllegalStateException("CORPSE_UNAVAILABLE"));
-            if(!HytaleCorpseSystem.valid(store,owner,source))throw new IllegalStateException("CORPSE_NO_LONGER_VALID");
-            claim=corpses.reserve(source.entity(),source.world(),context.request().actorId(),context.rootCastId());
+            if(committedCorpse(context).isEmpty())throw new IllegalStateException("COMMITTED_CORPSE_PERMIT_UNAVAILABLE");
+            claim=corpses.takeCommitted(context.request().actorId(),context.target().worldId(),context.rootCastId(),context.skillInstanceId()).orElseThrow();
         }
         List<SummonRegistry.Lease> leases;
         try{leases=registry.reserve(context,now(),claim==null?null:claim.source());}
         catch(RuntimeException failure){if(claim!=null)corpses.release(claim);throw failure;}
         try{
-            if(claim!=null){
-                emit(leases.getFirst(),RpgTraceEventType.CORPSE_CLAIMED,Map.of("corpse",claim.entity(),"claim",claim.nonce()));
-                if(!corpses.consume(claim))throw new IllegalStateException("CORPSE_COMMIT_REJECTED");
-                emit(leases.getFirst(),RpgTraceEventType.CORPSE_CONSUMED,Map.of("corpse",claim.entity(),"claim",claim.nonce(),"rewardCreated",false));
-            }
             emit(leases.getFirst(),RpgTraceEventType.SUMMON_SPAWN_REQUEST,Map.of("count",leases.size(),"role",context.profile().summon().roleId()));
             // NPCPlugin uses Store.addEntity: execute outside entity iteration, on this SAME native world thread.
             buffer.run(actual->spawnBatch(actual,owner,context,leases));
@@ -155,7 +230,11 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         else if(!alive(store,ref))ended="SUMMON_DIED";
         else if(now>=lease.expires())ended="EXPIRED";
         else if(position(store,owner).subtract(position(store,ref)).length()>lease.context().profile().summon().leash())ended="LEASH_EXCEEDED";
-        if(ended!=null){registry.remove(lease.token());emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason",ended));buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);return;}
+        if(ended!=null){
+            var reason=switch(ended){case "EXPIRED"->SummonRegistry.EndReason.NATURAL_EXPIRY;case "OWNER_GONE"->SummonRegistry.EndReason.OWNER_GONE;
+                case "LEASH_EXCEEDED"->SummonRegistry.EndReason.LEASH;default->enemyDeath(store,ref,owner)?SummonRegistry.EndReason.ENEMY_KILL:SummonRegistry.EndReason.OTHER_DEATH;};
+            endNative(store,buffer,ref,lease,reason);return;
+        }
         if(now<marker.nextQuery)return;marker.nextQuery=now+.1;
         try{
             var origin=position(store,owner);var here=position(store,ref);
@@ -185,11 +264,32 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         var stats=store.getComponent(ref,EntityStatMap.getComponentType());var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
         return hp!=null&&hp.get()>0;
     }
+    private void endNative(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> ref,SummonRegistry.Lease lease,SummonRegistry.EndReason reason){
+        Vec3 anchor=position(store,ref);var end=registry.end(lease.token(),reason);
+        buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);
+        if(end.isEmpty())return;
+        if(end.get().deathPact())buffer.run(actual->{
+            var owner=actual.getExternalData().getRefFromUUID(lease.owner());
+            try{int hits=burst.apply(actual,null,owner,lease.context(),anchor,3,.6,"death-pact/"+lease.token(),true);
+                emit(lease,RpgTraceEventType.DEATH_PACT_BURST,Map.of("entity",lease.entity(),"reason",reason,"targets",hits,"anchor",anchor,"canProc",false));}
+            catch(RuntimeException failure){emit(lease,RpgTraceEventType.SUMMON_ACTION_REJECTED,Map.of("action","DEATH_PACT","boundary",String.valueOf(failure.getMessage())));}
+        });
+        emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason",reason));
+    }
+    private static boolean enemyDeath(Store<EntityStore> store,Ref<EntityStore> ref,Ref<EntityStore> owner){
+        if(owner==null||!owner.isValid())return false;var death=store.getComponent(ref,DeathComponent.getComponentType());
+        var damage=death==null?null:death.getDeathInfo();
+        return damage!=null&&damage.getSource() instanceof Damage.EntitySource source&&source.getRef()!=null&&source.getRef().isValid()
+                &&HytaleAreaQueries.hostile(store,source.getRef(),owner);
+    }
     private static Vec3 position(Store<EntityStore> store,Ref<EntityStore> ref){var v=store.getComponent(ref,TransformComponent.getComponentType()).getPosition();return new Vec3(v.x(),v.y(),v.z());}
     private static Vector3d vector(Vec3 v){return new Vector3d(v.x(),v.y(),v.z());}
     private static double now(){return System.nanoTime()/1e9;}
     void emit(SummonRegistry.Lease lease,RpgTraceEventType event,Map<String,?> details){
-        var context=lease.context();trace.emit(lease.owner(),event,new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),details);
+        emitContext(lease.context(),event,details);
+    }
+    private void emitContext(SkillExecutionContext context,RpgTraceEventType event,Map<String,?> details){
+        trace.emit(context.request().actorId(),event,new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),details);
     }
     public static final class Removal extends com.hypixel.hytale.component.system.RefSystem<EntityStore>{
         private final HytaleSummonSystem summons;
@@ -199,6 +299,19 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
             var marker=store.getComponent(ref,SummonProjection.getComponentType());
             summons.registry.remove(marker.token).ifPresent(lease->summons.emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason","NATIVE_REMOVE_"+reason)));
+        }
+    }
+    /** Native death event claims termination before native corpse removal can win the next tick. */
+    public static final class Death extends DeathSystems.OnDeathSystem {
+        private final HytaleSummonSystem summons;
+        public Death(HytaleSummonSystem summons){this.summons=summons;}
+        @Override public Query<EntityStore> getQuery(){return Query.and(SummonProjection.getComponentType(),TransformComponent.getComponentType());}
+        @Override public void onComponentAdded(Ref<EntityStore> ref,DeathComponent death,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+            var marker=store.getComponent(ref,SummonProjection.getComponentType());var lease=summons.registry.find(marker.token).orElse(null);
+            if(lease==null)return;var owner=store.getExternalData().getRefFromUUID(lease.owner());
+            var damage=death.getDeathInfo();boolean enemy=alive(store,owner)&&damage!=null&&damage.getSource() instanceof Damage.EntitySource source
+                    &&source.getRef()!=null&&source.getRef().isValid()&&HytaleAreaQueries.hostile(store,source.getRef(),owner);
+            summons.endNative(store,buffer,ref,lease,enemy?SummonRegistry.EndReason.ENEMY_KILL:SummonRegistry.EndReason.OTHER_DEATH);
         }
     }
     /** Defense in depth: owned actors have no native attack roots, and cannot damage or farm each other. */

@@ -311,3 +311,125 @@ Rollback is cohort B .22 SHA-256
 Earlier archives remain unchanged. No live deployment, HUD/resource formula,
 Stage04/05 executor or XP artwork change. Connected casting, native batch spawn,
 animation/damage, encounter ownership and cleanup remain **UNVERIFIED**.
+
+## Cohort D — consuming actions and Death Pact
+
+### Consume Minion
+
+Adds a typed consuming-action profile, separate from the native spawn profile.
+Consume Minion requires a Spellbook, costs 15 Mana, starts a 12-second cooldown,
+and selects one live, unexpired, owned combat summon within 12 metres and LOS.
+The registry publishes the benefit and removes the lease under the same lock.
+If benefit publication fails, the lease remains available; the already-paid
+activation is not refunded. After success the exact native actor is removed
+through the world command buffer, without native death, corpse or loot creation.
+Another owner, world or duplicate request cannot publish a second benefit.
+
+The existing bounded finite-support store carries a self-only eight-second
+effect: +20% Increased RPG skill damage and a shield equal to 10% captured caster
+maximum Health. This resolves the inherited 18-versus-8-second contradiction in
+favor of the normative closure. The shield enters the existing post-filter,
+pre-native-Apply absorption path, not a second Health store. Its depletion leaves
+the damage bonus alive until eight seconds; it does not accidentally erase both
+benefits. The bonus is not added to native basic-attack damage. Reapplication
+replaces the named effect rather than stacking duplicate shields. Owner/world
+cleanup uses the retained finite-support teardown.
+
+The catalog also wrongly labelled Consume Minion as a created temporary combat
+summon. Those two creation capabilities are removed; Swarm, Empowerment and Death
+Pact cannot target the sacrifice action. This does not change its SUMMON/CONSUME
+family identity or any canonical passive count.
+
+### Corpse Burst and paid-commit correction
+
+Corpse Burst requires a Spellbook, costs 18 Mana, starts a six-second cooldown,
+selects an eligible classified native corpse within 20 metres, and applies a
+4-metre, 1.60 Magic-Power Necrotic burst through the existing calculation and
+HytaleDamageAdapter. Target acquisition remains bounded by 4096 scanned NPCs,
+256 candidates and 64 accepted targets. It uses authoritative bounds, hostility,
+LOS and protected-target checks; no damage is submitted if the accepted budget
+overflows. Each accepted target is visited once. Expanded Radius modifies the
+burst radius to five metres and retains its existing .90 magnitude factor.
+Generic Echo/Retaliation/Critical Trigger/Kill Trigger cannot automate corpse or
+owned-summon consumption in the shared compatibility authority.
+
+The delayed-cast review found that the B pilot consumed at release, which does
+not meet the normative paid-commit requirement for a corpse consumer. Both Revive
+and Corpse Burst now run a family-specific commit hook after the actual resource
+and cooldown commit, but before any delayed release is armed. The hook reserves
+and durably consumes the native corpse, then retains a bounded, one-use release
+permit keyed by owner/instance and checked against root/world/corpse identity.
+The permit stores the original death anchor and source stats. A later native body
+removal does not retarget or invalidate that already-consumed source. This
+supersedes B's earlier release-time requirement that the native body still exist.
+
+The permit is taken before native damage or spawn dispatch. Cancellation drops
+the pending permit, never the durable consumption receipt. A process restart
+does not re-arm the delayed effect and still rejects the consumed body. If commit
+fails after payment, the cast terminates with a recorded earliest boundary and
+retains the charge/cooldown; it cannot schedule damage or imply a refund restored
+an uncertain corpse. Unconsumed claims are released when commit cannot reserve
+capacity. Native callbacks explicitly abandon permits on release rejection;
+owner cleanup clears all pending permits. The runtime permit limit is 1024.
+No native corpse lifetime or world-save behavior is changed.
+
+### Death Pact and offensive snapshot ownership
+
+Death Pact is a typed summon-component operator. A native DeathComponent observer
+claims termination before native corpse removal can race the ordinary summon
+tick. The tick separately handles natural expiry. Both use the same atomic
+terminal operation; only an active actor ending from natural expiry or confirmed
+hostile EntitySource death may produce a burst. Environmental/unknown death,
+owner loss, world removal, leash cleanup, pending spawn, voluntary sacrifice and
+duplicate termination do not. Forced cleanup never becomes a damage event.
+
+The allowed burst is queued on the same native world command buffer, retains the
+observed death/expiry position, rechecks owner/world availability, and goes through
+the same bounded native-damage burst adapter. It uses a three-metre radius and .60
+caster-snapshotted offensive power in the parent summon's primary element, not
+.60 times the minion's already-reduced attack coefficient. Its unique effect ID
+is derived from the summon lease. It creates no actor/corpse and is marked
+canProc=false, so it cannot create another generic repeat/proc controller. The
+ordinary captured critical chance remains available to this direct damage
+calculation; no additional critical-trigger execution is authorized by the burst.
+
+The review also found that A–C summon attacks added *current* outgoing buffs at
+each attack. Created summons now capture outgoing buff/debuff buckets at commit;
+their attacks and Death Pact use that frozen offensive snapshot, with only
+victim-side modifiers evaluated at the actual hit. This prevents a later caster
+buff change from rewriting the captured summon offense and avoids applying
+Potency twice. The delayed-release admission check now includes Swarm's modified
+count, matching initial admission and final registry allocation.
+
+Burst presentation uses the retained short-lived procedural geometry template;
+it is not a claim that an artist-approved bone burst, sacrifice stream, shield
+flash or native animation has been rendered. No gameplay is scheduled from VFX.
+
+### Validation, failures and boundaries
+
+Full retained gate: 610 tests, including 34 new D tests. New tests cover paid
+consumption, shield absorption without premature bonus expiry, exact eight-second
+duration, exclusion from native basic damage, wrong owner/world, expired actors,
+publication failure, corpse cross-skill/restart deduplication, captured burst
+coefficient, repeat exclusions, all terminal reasons, independent Swarm terminal
+claims, frozen offensive modifiers, cleanup, radius composition, commit-before-
+delay ordering, native-body removal after commit, abandoned permits, failed
+commit, and no replay after repository recreation. The focused D tests passed;
+the full suite retains all prior Stage01B/CanvasUI/Stage02–09 regressions.
+Three historical profile-count tests exclude the new typed action component
+while preserving their original 12/35-skill inventories and behavior assertions.
+
+Compiled-plan schema is now 8; player schema remains 5. The packaged build has
+57 neutral native ability triggers, six Stage10 skill profiles and three safe
+native summon roles. It must pass the unchanged normal three-mod network boot
+and clean shutdown. Exact proof inventory and JAR hash:
+`evidence/stage-10/cohort-d/verification.json`. Rollback is C .22, SHA-256
+`2D3D5EDF3020FC61E5A892A3ACA5D9251D601DB4E13B1F64C3F38ECB62782D6F`.
+Retain corpse receipts when rolling back. No live deployment or HUD change.
+
+Connected gates remain **UNVERIFIED**: actual native death callback order, enemy
+kill versus cleanup, authoritative burst Health loss/crit, visible shield/bonus
+behavior, native minion disappearance without loot, delayed corpse timing and
+rejoin/restart observations. The domain's once-only terminal tests do not prove
+the native event arrived. Unclassified corpse roles still reject; the source
+coverage limit remains explicit. Simulacrum, Dominate and Bone Cage remain next.

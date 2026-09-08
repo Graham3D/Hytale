@@ -100,7 +100,7 @@ class Stage10SummonTest {
         h.now=2;h.execution.tickScheduled(h.actor,h);assertEquals(0,h.summons.size());assertEquals(80,h.mana);
         assertFalse(h.kernel.cooldowns().canActivate(h.actor,"wolf_summon"));
     }
-    private static SkillExecutionContext copy(SkillExecutionContext original,UUID owner,String root){
+    static SkillExecutionContext copy(SkillExecutionContext original,UUID owner,String root){
         var request=new SkillExecutionRequest(owner,SkillSlot.SKILL01,"fixture",1,"test",Vec3.FORWARD);
         var old=original.snapshot();
         var snapshot=new com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot(root,root,owner,old.rawAttributes(),old.effectiveAttributes(),

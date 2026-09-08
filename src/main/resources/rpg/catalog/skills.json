@@ -5191,9 +5191,7 @@
       "NECROTIC",
       "PROXY",
       "SACRIFICE",
-      "SUMMON",
-      "TEMPORARY_COMBAT_SUMMON",
-      "TEMPORARY_SUMMON"
+      "SUMMON"
     ],
     "sourceAcquisition": {
       "signatureEnemyId": "UNASSIGNED - distinct signature enemy required",

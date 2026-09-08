@@ -24,7 +24,7 @@ class Stage10SummonAssetTest {
         }
     }
     @Test void abilityTriggerOwnsNoNativeGameplayCharge() throws Exception {
-        for(var name:java.util.List.of("Wolf_Summon","Revive_Fallen","Summon_Void_Crawlers","Brood_Call")){
+        for(var name:java.util.List.of("Wolf_Summon","Revive_Fallen","Summon_Void_Crawlers","Brood_Call","Consume_Minion","Corpse_Burst")){
         var ability=read("/Server/Item/Items/RPG/Abilities/RPG_Ability_"+name+".json").getAsJsonObject("Ability");
         assertEquals(0,ability.get("Cost").getAsInt());assertEquals("None",ability.get("CostType").getAsString());
         assertEquals(0,ability.get("Cooldown").getAsInt());assertEquals("Root_RPG_Ability_Bridge",ability.get("Cast").getAsString());

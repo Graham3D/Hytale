@@ -24,6 +24,8 @@ public final class CorpseLedger {
         Entry(Source source){this.source=source;}
     }
     private final Map<UUID,Entry> entries=new LinkedHashMap<>();
+    private record PermitKey(UUID owner,String instance){}
+    private final Map<PermitKey,Claim> committed=new HashMap<>();
     private final CorpseConsumptionStore consumption;
     public CorpseLedger(CorpseConsumptionStore consumption){this.consumption=Objects.requireNonNull(consumption);}
     public synchronized boolean observe(Source source){
@@ -55,8 +57,24 @@ public final class CorpseLedger {
         if(value==null||value.claim!=claim||value.consumed)return false;
         value.claim=null;return true;
     }
+    /** Paid commit captures the anchor even if native body removal precedes a delayed release. */
+    public synchronized boolean commit(Claim claim,String instance){
+        if(instance==null||instance.isBlank())throw new IllegalArgumentException("Missing instance");
+        var key=new PermitKey(claim.owner(),instance);
+        if(committed.containsKey(key)||committed.size()>=LIMIT)return false;
+        if(!consume(claim))return false;
+        committed.put(key,claim);return true;
+    }
+    public synchronized Optional<Claim> committed(UUID owner,UUID world,String root,String instance){
+        var value=committed.get(new PermitKey(owner,instance));return value!=null&&value.source().world().equals(world)&&value.root().equals(root)?Optional.of(value):Optional.empty();
+    }
+    public synchronized Optional<Claim> takeCommitted(UUID owner,UUID world,String root,String instance){
+        var found=committed(owner,world,root,instance);if(found.isPresent())committed.remove(new PermitKey(owner,instance));return found;
+    }
+    public synchronized void abandon(UUID owner,String instance){committed.remove(new PermitKey(owner,instance));}
+    public synchronized int pendingReleases(){return committed.size();}
     public synchronized void remove(UUID entity){entries.remove(entity);}
-    public synchronized void cancelUncommitted(UUID owner){entries.values().stream().filter(v->!v.consumed&&v.claim!=null&&v.claim.owner().equals(owner)).forEach(v->v.claim=null);}
+    public synchronized void cancelUncommitted(UUID owner){entries.values().stream().filter(v->!v.consumed&&v.claim!=null&&v.claim.owner().equals(owner)).forEach(v->v.claim=null);committed.keySet().removeIf(k->k.owner.equals(owner));}
     public synchronized int size(){return entries.size();}
     public record ReviveStats(double maximumHealth,double hitPower,double attackInterval){}
     public static ReviveStats revive(Source source,double casterMaxHealth,double resolvedMagicPower){

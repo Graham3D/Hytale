@@ -73,6 +73,10 @@ public final class CompatibilityService {
         // The source contract has gates whose prose is richer than its token clauses. These are stable,
         // shared rules rather than command-specific exceptions.
         String id = passive.id().value();
+        if(Set.of("echo","retaliation","critical_trigger","kill_trigger").contains(id)&&
+                (actual.contains("CORPSE_REQUIRED")||actual.contains("CORPSE")||actual.contains("CONSUME")))
+            return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
+                    "Generic repeats/triggers cannot select or consume a corpse or owned summon.",Set.of("CONSUMER"),actual);
         if(id.equals("swarm")&&(!actual.contains("TEMPORARY_COMBAT_SUMMON")||actual.contains("CORPSE_REQUIRED")||actual.contains("REVIVE")||actual.contains("DECOY")||actual.contains("CONVERSION")))
             return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
                     "Swarm requires a static temporary combat summon and cannot duplicate a corpse, decoy or conversion.",Set.of("TEMPORARY_COMBAT_SUMMON"),actual);

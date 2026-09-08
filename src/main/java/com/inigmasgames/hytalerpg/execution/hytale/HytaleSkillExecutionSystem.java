@@ -133,11 +133,23 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             var candidate=port.candidate(target);var context=lease.context();
             if(candidate==null||candidate.protectedTarget()||!HytaleAreaQueries.hostile(store,target,owner))return;
             var result=port.damage(context,candidate,attack,lease.coefficient(),context.snapshot().criticalChance(),
-                    connectionCause(context.profile().summon().element()),false,lease.token()+"/attack/"+attack,false);
+                    connectionCause(context.profile().summon().element()),false,lease.token()+"/attack/"+attack,false,true);
             summons.emit(lease,RpgTraceEventType.SUMMON_ATTACK,Map.of("entity",lease.entity(),"target",candidate.stableId(),
                     "attack",attack,"actualHealthLoss",result.actualHealthLoss(),"cancelled",result.cancelled()));
         },new com.inigmasgames.hytalerpg.execution.summon.CorpseLedger(
-                new com.inigmasgames.hytalerpg.execution.summon.FileCorpseConsumptionStore(consumptionDirectory)));return summons;
+                new com.inigmasgames.hytalerpg.execution.summon.FileCorpseConsumptionStore(consumptionDirectory)),
+                (store,buffer,owner,context)->{
+                    support.runtime().finite().consumeMinion(context,System.nanoTime()/1e9);
+                    trace.emit(context.request().actorId(),RpgTraceEventType.FINITE_SUPPORT_APPLIED,ids(context),
+                            Map.of("kind","CONSUME_MINION","seconds",context.profile().summonAction().duration(),"damageIncreased",context.profile().summonAction().damageIncreased(),
+                                    "shieldCreated",context.snapshot().derivedStats().maxHealth()*context.profile().summonAction().shieldFraction()));
+                },(store,buffer,owner,context,point,radius,coefficient,effect,frozen)->{
+                    if(!HytaleSummonSystem.alive(store,owner))throw new IllegalStateException("BURST_OWNER_UNAVAILABLE");
+                    var player=store.getComponent(owner,PlayerRef.getComponentType());
+                    if(!context.target().worldId().equals(player.getWorldUuid()))throw new IllegalStateException("BURST_WORLD_CHANGED");
+                    var port=new Port(store,owner,player,store.getComponent(owner,Player.getComponentType()),store.getComponent(owner,EntityStatMap.getComponentType()),null,buffer);
+                    return port.summonBurst(context,point,radius,coefficient,effect,frozen);
+                });return summons;
     }
     public HytaleSupportSystem configureSupport(com.inigmasgames.hytalerpg.progress.RpgLoadoutService loadouts){
         if(support!=null)throw new IllegalStateException("Support already configured");
@@ -348,6 +360,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     || reactions.active(playerRef.getUuid()).isPresent()) return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
             if(profile.support()!=null)return support==null?Validation.reject("SUPPORT_NATIVE_ADAPTER_UNAVAILABLE"):
                     support.preflight(store,actor,profile,plan);
+            if(profile.summonAction()!=null)return summons==null?Validation.reject("SUMMON_NATIVE_ADAPTER_UNAVAILABLE"):
+                    summons.preflightAction(store,actor,profile,aim(store,actor));
             if(profile.summon()!=null)return summons==null?Validation.reject("SUMMON_NATIVE_ADAPTER_UNAVAILABLE"):
                     summons.preflight(store,actor,profile,plan,aim(store,actor));
             if(profile.connection()!=null) {
@@ -423,6 +437,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public CommittedTarget captureTarget(Stage04SkillProfile profile,
                 com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,SkillExecutionRequest request) {
             if(profile.support()!=null)return support.capture(store,actor,profile);
+            if(profile.summonAction()!=null)return summons.captureAction(store,actor,profile,aim(store,actor));
             if(profile.summon()!=null)return summons.capture(store,actor,profile,aim(store,actor));
             Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
             Vec3 direction=facing(store,actor),point=feet;UUID targetId=null;
@@ -467,15 +482,15 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(motions.containsKey(playerRef.getUuid())||windupEnds.containsKey(playerRef.getUuid())||reactions.active(playerRef.getUuid()).isPresent())
                 return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
             Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
+            if(profile.summonAction()!=null)return summons.validateAction(store,actor,context);
             if(profile.summon()!=null){
                 if(context.derivedRelease())return Validation.reject("SUMMON_REPEAT_FORBIDDEN");
                 if(feet.subtract(target.point()).length()>profile.summon().range())return Validation.reject("SUMMON_COMMITTED_TARGET_OUT_OF_RANGE");
                 if(!HytaleAreaQueries.clear(store,feet.add(new Vec3(0,1.35,0)),target.point()))return Validation.reject("SUMMON_COMMITTED_LOS_BLOCKED");
                 if(profile.summon().corpseRequired()){
-                    var corpse=summons.corpses().available(target.entityId(),target.worldId()).orElse(null);
-                    if(corpse==null||!HytaleCorpseSystem.valid(store,actor,corpse))return Validation.reject("CORPSE_EXPIRED_BEFORE_RELEASE");
+                    if(summons.committedCorpse(context).isEmpty())return Validation.reject("COMMITTED_CORPSE_PERMIT_UNAVAILABLE");
                 }
-                String capacity=summons.registry().admission(playerRef.getUuid(),profile.summon().count());
+                String capacity=summons.registry().admission(playerRef.getUuid(),context.compiledPlan().summonModifiers().count(profile.summon().count()));
                 return capacity.equals("PASS")?Validation.pass():Validation.reject(capacity);
             }
             if(profile.connection()!=null) {
@@ -546,7 +561,31 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             return SkillExecutionResult.committed("CONNECTION_STARTED",0,0);
         }
         @Override public SkillExecutionResult executeSupport(SkillExecutionContext context){return support.execute(store,actor,context,buffer);}
-        @Override public SkillExecutionResult executeSummon(SkillExecutionContext context){return summons.execute(store,buffer,actor,context);}
+        @Override public com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets captureSummonModifiers(com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets authored){
+            return support==null?authored:support.runtime().finite().outgoingModifiers(playerRef.getWorldUuid(),playerRef.getUuid(),authored,System.nanoTime()/1e9);
+        }
+        @Override public void commitConsumable(SkillExecutionContext context){if(summons!=null)summons.commitConsumable(store,actor,context);}
+        @Override public SkillExecutionResult executeSummon(SkillExecutionContext context){return context.profile().summonAction()!=null?
+                summons.executeAction(store,buffer,actor,context):summons.execute(store,buffer,actor,context);}
+        private int summonBurst(SkillExecutionContext context,Vec3 point,double radius,double coefficient,String effect,boolean frozen){
+            var shape=new AreaGeometry(AreaGeometry.Kind.DISC,point.add(new Vec3(0,-1,0)),Vec3.FORWARD,radius,0,0,0,3);
+            var query=HytaleAreaQueries.query(store,actor,shape,256);
+            if(query.overflow())throw new IllegalStateException("SUMMON_BURST_QUERY_CAP");
+            var accepted=query.candidates().stream().filter(c->HytaleSummonSystem.alive(store,c.ref()))
+                    .filter(c->store.getComponent(c.ref(),SummonProjection.getComponentType())==null)
+                    .filter(c->HytaleAreaQueries.clear(store,point.add(new Vec3(0,.2,0)),c.bounds().centre()))
+                    .map(c->candidate(c.ref())).filter(java.util.Objects::nonNull).filter(c->!c.protectedTarget())
+                    .sorted(java.util.Comparator.comparing(c->c.stableId())).toList();
+            if(accepted.size()>64)throw new IllegalStateException("SUMMON_BURST_ACCEPTED_CAP");
+            String element=context.profile().summon()!=null?context.profile().summon().element():"NECROTIC";
+            int hit=0;for(var target:accepted){
+                if(!target.handle().isValid()||!HytaleSummonSystem.alive(store,target.handle())||!HytaleAreaQueries.hostile(store,target.handle(),actor))continue;
+                damage(context,target,++hit,coefficient,context.snapshot().criticalChance(),connectionCause(element),false,effect,false,frozen);
+            }
+            try{vfx.presentConnection(store.getExternalData().getWorld(),com.inigmasgames.hytalerpg.execution.connection.ConnectionShape.cylinder(point,radius,3),element,"SUMMON_BURST",.4);}
+            catch(RuntimeException failure){emit(context,RpgTraceEventType.SUMMON_ACTION_REJECTED,Map.of("action","PRESENTATION","boundary",String.valueOf(failure.getMessage())));}
+            return hit;
+        }
         private ConnectionWorldPort connectionWorld() {
             return new ConnectionWorldPort() {
                 private final Map<String,Ref<EntityStore>> refs=new HashMap<>();
@@ -641,6 +680,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             };
         }
         @Override public void abandonRelease(SkillExecutionContext context) {
+            if(summons!=null)summons.corpses().abandon(context.request().actorId(),context.skillInstanceId());
             if(context.profile().projectile()!=null && context.derivedRelease())
                 projectileService.registry().abandonLaunch(context.request().actorId(),context.rootCastId());
         }

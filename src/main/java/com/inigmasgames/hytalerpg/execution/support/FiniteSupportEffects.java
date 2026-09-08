@@ -53,7 +53,17 @@ public final class FiniteSupportEffects {
         next.put(key,effect);requireBudget(next,key.owner,List.of(target));
         effects.clear();effects.putAll(next);return Optional.of(effect);
     }
-    public static boolean isShield(Effect e){return e.kind==SupportProfile.Kind.SHIELD||e.kind==SupportProfile.Kind.OVERFLOW||e.kind==SupportProfile.Kind.SHARED_SHIELD;}
+    public static boolean isShield(Effect e){return e.kind==SupportProfile.Kind.SHIELD||e.kind==SupportProfile.Kind.OVERFLOW||e.kind==SupportProfile.Kind.SHARED_SHIELD||e.kind==SupportProfile.Kind.CONSUME_MINION;}
+    /** One self-only, source-owned effect carries both the skill-damage bonus and shield. */
+    public synchronized void consumeMinion(SkillExecutionContext context,double now){
+        var p=context.profile().summonAction();
+        if(p==null||p.kind()!=com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile.Kind.CONSUME_MINION||!Double.isFinite(now))
+            throw new IllegalArgumentException("INVALID_CONSUME_BENEFIT");
+        expire(now);UUID actor=context.request().actorId();var key=new Key(context.target().worldId(),actor,context.profile().skillId(),actor);
+        var effect=new Effect(key,SupportProfile.Kind.CONSUME_MINION,p.damageIncreased(),0,now,now+p.duration(),context.rootCastId(),context.skillInstanceId(),
+                context.request().correlationId(),context,context.snapshot().derivedStats().maxHealth()*p.shieldFraction());
+        var next=new LinkedHashMap<>(effects);next.put(key,effect);requireBudget(next,actor,List.of(actor));effects.clear();effects.putAll(next);
+    }
     /** One derived ally shield, with the created parent's already-modified capacity; no redirect or recursive share. */
     public synchronized Optional<Effect> shareCreatedShield(SkillExecutionContext context,UUID ally,double now){
         if(!context.compiledPlan().supportModifiers().sharedAegis()||ally==null||ally.equals(context.request().actorId())||
@@ -124,14 +134,16 @@ public final class FiniteSupportEffects {
     }
     /** Capture outgoing buff/debuff contributions with source-owned DoT snapshots, never at every later DoT tick. */
     public synchronized ModifierBuckets outgoingModifiers(UUID world,UUID source,ModifierBuckets base,double now){
-        expire(now);double rally=0,howl=0,weak=0;
+        expire(now);double rally=0,howl=0,weak=0,consume=0;
         for(var e:effects.values()){
             if(!e.key.world.equals(world))continue;
             if(e.key.target.equals(source)&&e.kind==SupportProfile.Kind.RALLY)rally=Math.max(rally,e.magnitude);
             if(e.key.target.equals(source)&&e.kind==SupportProfile.Kind.HOWL)howl=Math.max(howl,e.magnitude);
             if(e.key.target.equals(source)&&e.kind==SupportProfile.Kind.WEAKEN)weak=Math.max(weak,1-e.magnitude);
+            if(e.key.target.equals(source)&&e.kind==SupportProfile.Kind.CONSUME_MINION)consume=Math.max(consume,e.magnitude);
         }
         var increased=new ArrayList<>(base.increased());if(rally>0)increased.add(rally);if(howl>0)increased.add(howl);
+        if(consume>0)increased.add(consume);
         var less=new ArrayList<>(base.less());if(weak>0)less.add(weak);
         return new ModifierBuckets(increased,base.reduced(),base.more(),less);
     }
@@ -182,7 +194,7 @@ public final class FiniteSupportEffects {
             var current=effects.get(shield.key);if(current==null)continue;
             double used=Math.min(remaining,current.shieldRemaining);remaining-=used;absorbed+=used;
             if(used>0)allocations.add(new Absorption(current,used,current.shieldRemaining-used));
-            if(current.shieldRemaining-used<=1e-9)effects.remove(shield.key);
+            if(current.shieldRemaining-used<=1e-9&&current.kind!=SupportProfile.Kind.CONSUME_MINION)effects.remove(shield.key);
             else effects.put(shield.key,current.remaining(current.shieldRemaining-used));
             if(remaining<=1e-9)break;
         }

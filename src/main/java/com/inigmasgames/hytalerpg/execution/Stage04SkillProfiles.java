@@ -17,7 +17,7 @@ public final class Stage04SkillProfiles {
     public static final int EXPECTED_STAGE06_PROFILES = 15;
     public static final int EXPECTED_STAGE08_PROFILES = 8;
     public static final int EXPECTED_STAGE09_PROFILES = 16;
-    public static final int EXPECTED_STAGE10_PROFILES = 4;
+    public static final int EXPECTED_STAGE10_PROFILES = 6;
     private final Map<String, Stage04SkillProfile> profiles;
 
     public Stage04SkillProfiles(List<Stage04SkillProfile> profiles) {
@@ -45,6 +45,7 @@ public final class Stage04SkillProfiles {
             profiles.addAll(load("/rpg/runtime/stage-10-summons-cohort-a.json", 1));
             profiles.addAll(load("/rpg/runtime/stage-10-summons-cohort-b.json", 1));
             profiles.addAll(load("/rpg/runtime/stage-10-summons-cohort-c.json", 2));
+            profiles.addAll(load("/rpg/runtime/stage-10-summons-cohort-d.json", 2));
             Stage04SkillProfiles loaded = new Stage04SkillProfiles(profiles);
             int expected = EXPECTED_STAGE04_PILOTS + EXPECTED_STAGE05_PILOTS + EXPECTED_STAGE06_PROFILES + EXPECTED_STAGE08_PROFILES + EXPECTED_STAGE09_PROFILES + EXPECTED_STAGE10_PROFILES;
             if (loaded.profiles.size() != expected)

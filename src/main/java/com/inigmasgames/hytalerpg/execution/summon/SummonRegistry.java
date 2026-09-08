@@ -72,6 +72,23 @@ public final class SummonRegistry {
         lease.entity=entity;return true;
     }
     public synchronized Optional<Lease> find(UUID token){return Optional.ofNullable(leases.get(token));}
+    public synchronized Optional<Lease> owned(UUID owner,UUID world,UUID entity){return leases.values().stream()
+            .filter(l->l.owner().equals(owner)&&l.world().equals(world)&&entity!=null&&entity.equals(l.entity())).findFirst();}
+    public synchronized List<Lease> owned(UUID owner,UUID world){return leases.values().stream().filter(l->l.owner().equals(owner)&&l.world().equals(world)&&l.entity()!=null).toList();}
+    public enum EndReason { NATURAL_EXPIRY, ENEMY_KILL, OTHER_DEATH, OWNER_GONE, LEASH, VOLUNTARY, NATIVE_REMOVAL }
+    public record End(Lease lease,EndReason reason,boolean deathPact){}
+    public synchronized Optional<End> end(UUID token,EndReason reason){
+        Objects.requireNonNull(reason);var lease=leases.remove(token);
+        return lease==null?Optional.empty():Optional.of(new End(lease,reason,lease.entity!=null&&lease.context.compiledPlan().summonModifiers().deathPact()
+                &&(reason==EndReason.NATURAL_EXPIRY||reason==EndReason.ENEMY_KILL)));
+    }
+    /** Benefit publication either succeeds before removal, or leaves the owned lease untouched.
+     * Caller must not do native entity removal or a second resource charge inside this callback. */
+    public synchronized Optional<Lease> consume(UUID owner,UUID world,UUID entity,double now,Runnable publishBenefit){
+        clock(now);var lease=owned(owner,world,entity).orElse(null);
+        if(lease==null||now>=lease.expires||!lease.context.compiledPlan().finalTags().contains("TEMPORARY_COMBAT_SUMMON"))return Optional.empty();
+        publishBenefit.run();leases.remove(lease.token);return Optional.of(lease);
+    }
     /** Claims before damage dispatch. Reentrant calls and a stalled tick never catch up multiple attacks. */
     public synchronized int claimAttack(UUID token,double now) {
         clock(now);var lease=leases.get(token);
