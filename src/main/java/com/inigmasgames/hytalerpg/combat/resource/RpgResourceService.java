@@ -21,8 +21,24 @@ public final class RpgResourceService {
     public ResourceCost evaluate(ResourceCost declared, CompiledSkillPlan.KernelModifiers modifiers) {
         return declared.modified(modifiers == null ? 1.0 : modifiers.resourceCostMultiplier());
     }
+    /** Pinned native Health storage is float. Reject a nonlethal double payment that cannot subtract natively. */
+    public static float nativeHealthTarget(float current,double requested){
+        if(!Float.isFinite(current)||!Double.isFinite(requested)||requested<1||requested<current&&(float)requested>=current)
+            throw new IllegalStateException("Health payment is lethal or below native float precision");
+        return (float)requested;
+    }
+    /** One final integer boundary, after ordinary factors, additive Attunement stacks and named Health conversion. */
+    public ResourceCost evaluateActivation(ResourceCost declared,CompiledSkillPlan plan,int attunementStacks) {
+        if(attunementStacks<0||attunementStacks>5||attunementStacks>0&&!plan.resources().attunement())throw new IllegalArgumentException("Invalid Attunement stack count");
+        double factor=plan.kernelModifiers().resourceCostMultiplier()*(1-.03*attunementStacks);
+        if(!plan.resources().lifeblood())return declared.modified(factor);
+        if(declared.type()!=ResourceType.MANA&&declared.type()!=ResourceType.STAMINA||declared.amount()<=0)
+            throw new IllegalArgumentException("Lifeblood requires a positive upfront Mana/Stamina cost");
+        return new ResourceCost(ResourceType.HEALTH,Math.max(1,Math.ceil(1.5*declared.amount()*factor)));
+    }
     /** Continuous upkeep retains fractional units; the integer upfront-cost rule does not apply. */
     public ResourceCost evaluateUpkeep(ResourceCost slice, CompiledSkillPlan.KernelModifiers modifiers) {
+        if(slice.type()==ResourceType.HEALTH)throw new IllegalArgumentException("Health upkeep is forbidden");
         double multiplier = modifiers == null ? 1.0 : modifiers.resourceCostMultiplier();
         if (!Double.isFinite(multiplier) || multiplier < 0) throw new IllegalArgumentException("Invalid upkeep multiplier");
         return new ResourceCost(slice.type(), slice.amount() * multiplier);
@@ -31,7 +47,9 @@ public final class RpgResourceService {
         if (cost.type() == ResourceType.NONE) return true;
         double held = pending.values().stream().filter(p -> p.actor.equals(actor) && p.cost.type() == cost.type() && !p.committed)
                 .mapToDouble(p -> p.cost.amount()).sum();
-        return resources.current(cost.type()) + 1.0e-9 >= cost.amount() + held;
+        double current=resources.current(cost.type());
+        if(!Double.isFinite(current))return false;
+        return cost.type()==ResourceType.HEALTH?current-cost.amount()-held>=1:current + 1.0e-9 >= cost.amount() + held;
     }
     public synchronized CostToken reserveCost(UUID actor, ResourceCost cost, NativeResourcePort resources) {
         if (!canAfford(actor, cost, resources)) throw new IllegalStateException("Insufficient " + cost.type());
@@ -44,7 +62,8 @@ public final class RpgResourceService {
         if (hold.committed) return false;
         if (hold.cost.type() != ResourceType.NONE) {
             double current = resources.current(hold.cost.type());
-            if (current + 1.0e-9 < hold.cost.amount()) throw new IllegalStateException("Native resource changed before commit");
+            if (!Double.isFinite(current)||(hold.cost.type()==ResourceType.HEALTH?current-hold.cost.amount()<1:current + 1.0e-9 < hold.cost.amount()))
+                throw new IllegalStateException("Native resource changed before commit");
             resources.setCurrent(hold.cost.type(), current - hold.cost.amount());
         }
         pending.put(token.tokenId(), new PendingCost(hold.actor, hold.cost, true));
@@ -68,7 +87,7 @@ public final class RpgResourceService {
     public synchronized void finish(CostToken token) { pending.remove(token.tokenId()); }
 
     public double regenerate(UUID actor, ResourceType type, double seconds, NativeResourcePort resources) {
-        if (type == ResourceType.NONE || seconds <= 0.0) return 0.0;
+        if (type != ResourceType.MANA && type != ResourceType.STAMINA || seconds <= 0.0) return 0.0;
         double cap = type == ResourceType.MANA
                 ? reservations.spendableMaximum(actor, resources.maximum(type)) : resources.maximum(type);
         return addCapped(type, resources.maximum(type) * profile.passiveRegenerationPerSecond * seconds, cap, resources);

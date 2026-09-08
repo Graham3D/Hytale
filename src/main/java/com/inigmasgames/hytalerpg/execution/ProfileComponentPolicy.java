@@ -10,6 +10,12 @@ import java.util.Set;
 public final class ProfileComponentPolicy {
     private ProfileComponentPolicy(){}
     private static final class Canonical {static final Stage04SkillProfiles PROFILES=Stage04SkillProfiles.loadCanonical(RpgCatalog.loadCanonical());}
+    public static Optional<Boolean> finiteUpfront(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(finiteUpfront(p));}
+    public static boolean finiteUpfront(Stage04SkillProfile p){
+        return Set.of("MANA","STAMINA").contains(p.resourceType())&&p.resourceCost()>0
+                &&!(p.connection()!=null&&p.connection().channel())
+                &&!(p.support()!=null&&(p.support().aura()||p.support().upkeepPerSecond()>0));
+    }
     public static Optional<Boolean> chillPayload(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(chillPayload(p));}
     public static boolean chillPayload(Stage04SkillProfile p){
         return p.projectile()!=null&&p.projectile().statusId().equals("CHILL")

@@ -80,6 +80,9 @@ public final class LinkCompiler {
             }
         }
         boolean orbit = bindings.stream().anyMatch(binding -> binding.definition().id().value().equals("orbit"));
+        var selected=bindings.stream().map(b->b.definition().id().value()).collect(java.util.stream.Collectors.toSet());
+        if(selected.contains("lifeblood")&&(selected.contains("leeching")||selected.contains("retaliation")))
+            return CompilationResult.failure(ValidationCode.CONFLICTING_MODIFIER,"Lifeblood excludes Leeching and nonmanual Retaliation Health spending.");
         if (orbit && bindings.stream().anyMatch(binding -> Set.of("piercing", "fork", "chain", "ricochet", "return")
                 .contains(binding.definition().id().value()))) {
             return CompilationResult.failure(ValidationCode.CONFLICTING_MODIFIER,
@@ -139,6 +142,7 @@ public final class LinkCompiler {
                 case "lingering" -> resourceCostMultiplier*=1.15;
                 case "reversal" -> scalablePayloadIncreased+=.25;
                 case "focused_channel" -> scalablePayloadIncreased+=.30;
+                case "lifeblood" -> scalablePayloadIncreased+=.10;
                 default -> { }
             }
             if (passive.id().value().equals("expanded_radius")) {
@@ -163,6 +167,7 @@ public final class LinkCompiler {
                 + "|" + com.inigmasgames.hytalerpg.domain.PulseModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.DotModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.ControlModifiers.from(order)
+                + "|" + com.inigmasgames.hytalerpg.domain.ResourceModifiers.from(order)
                 + "|planSchema=" + CompiledSkillPlan.CURRENT_SCHEMA;
         var kernelModifiers = new CompiledSkillPlan.KernelModifiers(scalablePayloadIncreased,
                 resourceCostMultiplier, cooldownRecoveryBonus);

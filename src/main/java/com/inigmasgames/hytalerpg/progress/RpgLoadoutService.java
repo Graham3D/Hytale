@@ -43,6 +43,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     private final RpgSkillTracer tracer;
     private final Map<UUID, Holder> states = new ConcurrentHashMap<>();
     private final List<Consumer<UUID>> mutationListeners = new CopyOnWriteArrayList<>();
+    private final List<Consumer<UUID>> loadoutMutationListeners = new CopyOnWriteArrayList<>();
 
     public RpgLoadoutService(RpgCatalog catalog, RpgPlayerStateRepository repository,
                              RpgLinkGraphService graphService, LinkCompiler compiler,
@@ -53,6 +54,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     /** Runtime projection hook. Listener failures cannot roll back or invalidate an already-saved RPG state. */
     public void addMutationListener(Consumer<UUID> listener) { mutationListeners.add(listener); }
+    @Override public void addLoadoutMutationListener(Consumer<UUID> listener) { loadoutMutationListeners.add(listener); }
 
     @Override public MutationResult equipSkill(UUID player, SkillSlot slot, SkillId skill) {
         String correlation = reference();
@@ -361,7 +363,12 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
             return fail(player, correlation, RpgTraceEventType.COMPILE_FAILURE, ValidationCode.PERSISTENCE_FAILURE,
                     "RPG state was not changed because persistence failed: " + error.getMessage(), holder.state.revision);
         }
+        boolean loadoutChanged=!java.util.Arrays.equals(holder.state.equippedSkills,candidate.equippedSkills)
+                ||!java.util.Arrays.equals(holder.state.equippedPassives,candidate.equippedPassives)
+                ||!java.util.Arrays.equals(holder.state.joints,candidate.joints)
+                ||!holder.state.linkEdges().equals(candidate.linkEdges());
         holder.state = candidate;
+        if(loadoutChanged)for(var listener:loadoutMutationListeners){try{listener.accept(player);}catch(RuntimeException ignored){}}
         for (Consumer<UUID> listener : mutationListeners) {
             try { listener.accept(player); }
             catch (RuntimeException ignored) { /* Runtime projections repair on their next bounded tick. */ }

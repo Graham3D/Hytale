@@ -273,6 +273,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
 
     private void cancel(UUID actor, String reason, CommandBuffer<EntityStore> buffer) {
+        executions.forgetPassiveState(actor);
         kernel.statuses().forgetSource(actor);
         if(summons!=null)summons.cancel(actor,reason);
         if(conversions!=null)conversions.cancel(actor);

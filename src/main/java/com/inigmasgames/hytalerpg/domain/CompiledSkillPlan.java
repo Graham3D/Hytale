@@ -27,7 +27,8 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 19;
+    public static final int CURRENT_SCHEMA = 20;
+    public ResourceModifiers resources(){return ResourceModifiers.from(passiveOrder);}
     public ControlModifiers controls(){return ControlModifiers.from(passiveOrder);}
     public DotModifiers dots(){return DotModifiers.from(passiveOrder);}
     public PulseModifiers pulses(){return PulseModifiers.from(passiveOrder);}

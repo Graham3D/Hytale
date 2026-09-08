@@ -18,6 +18,8 @@ public final class EntityStatResourcePort implements NativeResourcePort {
     @Override public void setCurrent(ResourceType type, double value) {
         int index = index(type);
         EntityStatValue stat = require(stats.get(index), type);
+        if(!Double.isFinite(value))throw new IllegalArgumentException("Non-finite native resource value");
+        if(type==ResourceType.HEALTH)com.inigmasgames.hytalerpg.combat.resource.RpgResourceService.nativeHealthTarget(stat.get(),value);
         stats.setStatValue(index, (float) Math.max(stat.getMin(), Math.min(stat.getMax(), value)));
     }
     private EntityStatValue value(ResourceType type) { return require(stats.get(index(type)), type); }
@@ -29,6 +31,7 @@ public final class EntityStatResourcePort implements NativeResourcePort {
         return switch (type) {
             case MANA -> DefaultEntityStatTypes.getMana();
             case STAMINA -> DefaultEntityStatTypes.getStamina();
+            case HEALTH -> DefaultEntityStatTypes.getHealth();
             case NONE -> throw new IllegalArgumentException("NONE has no Hytale EntityStat");
         };
     }

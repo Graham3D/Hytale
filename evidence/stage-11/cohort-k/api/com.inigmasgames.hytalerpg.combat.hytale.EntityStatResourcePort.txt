@@ -1,0 +1,153 @@
+Compiled from "EntityStatResourcePort.java"
+public final class com.inigmasgames.hytalerpg.combat.hytale.EntityStatResourcePort implements com.inigmasgames.hytalerpg.combat.resource.NativeResourcePort {
+  private final com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap stats;
+
+  public com.inigmasgames.hytalerpg.combat.hytale.EntityStatResourcePort(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field stats:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;
+         9: return
+
+  public double current(com.inigmasgames.hytalerpg.combat.resource.ResourceType);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #13                 // Method value:(Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: invokevirtual #17                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+         8: f2d
+         9: dreturn
+
+  public double maximum(com.inigmasgames.hytalerpg.combat.resource.ResourceType);
+    Code:
+         0: aload_1
+         1: getstatic     #23                 // Field com/inigmasgames/hytalerpg/combat/resource/ResourceType.MANA:Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;
+         4: if_acmpne     18
+         7: aload_0
+         8: aload_1
+         9: invokevirtual #13                 // Method value:(Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        12: invokestatic  #29                 // Method com/inigmasgames/hytalerpg/combat/hytale/NativeManaReservationProjection.totalMaximum:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;)D
+        15: goto          27
+        18: aload_0
+        19: aload_1
+        20: invokevirtual #13                 // Method value:(Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        23: invokevirtual #35                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+        26: f2d
+        27: dreturn
+
+  public void setReservedMana(double);
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field stats:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;
+         4: dload_1
+         5: invokestatic  #38                 // Method com/inigmasgames/hytalerpg/combat/hytale/NativeManaReservationProjection.project:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;D)V
+         8: return
+
+  public void setCurrent(com.inigmasgames.hytalerpg.combat.resource.ResourceType, double);
+    Code:
+         0: aload_1
+         1: invokestatic  #42                 // Method index:(Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;)I
+         4: istore        4
+         6: aload_0
+         7: getfield      #7                  // Field stats:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;
+        10: iload         4
+        12: invokevirtual #46                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        15: aload_1
+        16: invokestatic  #51                 // Method require:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        19: astore        5
+        21: dload_2
+        22: invokestatic  #55                 // Method java/lang/Double.isFinite:(D)Z
+        25: ifne          38
+        28: new           #61                 // class java/lang/IllegalArgumentException
+        31: dup
+        32: ldc           #63                 // String Non-finite native resource value
+        34: invokespecial #65                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        37: athrow
+        38: aload_1
+        39: getstatic     #68                 // Field com/inigmasgames/hytalerpg/combat/resource/ResourceType.HEALTH:Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;
+        42: if_acmpne     55
+        45: aload         5
+        47: invokevirtual #17                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        50: dload_2
+        51: invokestatic  #71                 // Method com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.nativeHealthTarget:(FD)F
+        54: pop
+        55: aload_0
+        56: getfield      #7                  // Field stats:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;
+        59: iload         4
+        61: aload         5
+        63: invokevirtual #77                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+        66: f2d
+        67: aload         5
+        69: invokevirtual #35                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+        72: f2d
+        73: dload_2
+        74: invokestatic  #80                 // Method java/lang/Math.min:(DD)D
+        77: invokestatic  #86                 // Method java/lang/Math.max:(DD)D
+        80: d2f
+        81: invokevirtual #89                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.setStatValue:(IF)F
+        84: pop
+        85: return
+
+  private com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue value(com.inigmasgames.hytalerpg.combat.resource.ResourceType);
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field stats:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;
+         4: aload_1
+         5: invokestatic  #42                 // Method index:(Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;)I
+         8: invokevirtual #46                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        11: aload_1
+        12: invokestatic  #51                 // Method require:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        15: areturn
+
+  private static com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue require(com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue, com.inigmasgames.hytalerpg.combat.resource.ResourceType);
+    Code:
+         0: aload_0
+         1: ifnonnull     21
+         4: new           #93                 // class java/lang/IllegalStateException
+         7: dup
+         8: aload_1
+         9: invokestatic  #95                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        12: invokedynamic #101,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        17: invokespecial #105                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        20: athrow
+        21: aload_0
+        22: areturn
+
+  private static int index(com.inigmasgames.hytalerpg.combat.resource.ResourceType);
+    Code:
+         0: getstatic     #106                // Field com/inigmasgames/hytalerpg/combat/hytale/EntityStatResourcePort$1.$SwitchMap$com$inigmasgames$hytalerpg$combat$resource$ResourceType:[I
+         3: aload_0
+         4: invokevirtual #112                // Method com/inigmasgames/hytalerpg/combat/resource/ResourceType.ordinal:()I
+         7: iaload
+         8: tableswitch   { // 1 to 4
+
+                       1: 50
+
+                       2: 56
+
+                       3: 62
+
+                       4: 68
+                 default: 40
+            }
+        40: new           #116                // class java/lang/MatchException
+        43: dup
+        44: aconst_null
+        45: aconst_null
+        46: invokespecial #118                // Method java/lang/MatchException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+        49: athrow
+        50: invokestatic  #121                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getMana:()I
+        53: goto          78
+        56: invokestatic  #126                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getStamina:()I
+        59: goto          78
+        62: invokestatic  #129                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getHealth:()I
+        65: goto          78
+        68: new           #61                 // class java/lang/IllegalArgumentException
+        71: dup
+        72: ldc           #132                // String NONE has no Hytale EntityStat
+        74: invokespecial #65                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        77: athrow
+        78: ireturn
+}

@@ -320,6 +320,7 @@ public final class RpgCommand extends AbstractCommandCollection {
                                          PlayerRef playerRef, World world) {
             try {
                 ResourceType resourceType = ResourceType.valueOf(context.get(type).toUpperCase(java.util.Locale.ROOT));
+                if(resourceType!=ResourceType.MANA&&resourceType!=ResourceType.STAMINA)throw new IllegalArgumentException("This diagnostic accepts Mana or Stamina only.");
                 double numeric = Double.parseDouble(context.get(amount));
                 EntityStatResourcePort port = resources(store, ref, playerRef.getUuid());
                 String correlation = shortId();

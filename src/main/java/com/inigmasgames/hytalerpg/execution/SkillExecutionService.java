@@ -30,6 +30,7 @@ public final class SkillExecutionService {
     private final RpgSkillTracer tracer;
     private final SkillReleaseScheduler releases = new SkillReleaseScheduler();
     private final CompiledProfileResolver compiledProfiles = new CompiledProfileResolver();
+    private final AttunementLedger attunement = new AttunementLedger();
     private final java.util.function.LongSupplier nanoTime;
     private final Map<UUID, Prepared> windups = new LinkedHashMap<>();
     private final Map<UUID, SkillExecutionContext> activeContexts = new LinkedHashMap<>();
@@ -45,13 +46,14 @@ public final class SkillExecutionService {
         this.loadouts = loadouts; this.profiles = profiles; this.kernel = kernel;
         this.executors = executors; this.lifecycle = lifecycle; this.tracer = tracer;
         this.nanoTime=nanoTime;
+        loadouts.addLoadoutMutationListener(attunement::forget);
     }
 
     public SkillExecutionResult request(SkillExecutionRequest request, SkillExecutionPort port) {
         String root = "input-" + request.chainId() + '-' + request.correlationId().substring(0, Math.min(8, request.correlationId().length()));
         String pendingInstance = "activation-" + UUID.randomUUID();
         emit(request, RpgTraceEventType.SKILL_ACTIVATION_REQUEST, root, pendingInstance,
-                Map.of("action", request.action(), "skillSlot", request.slot().externalId()));
+                Map.of("action", request.action(), "skillSlot", request.slot().externalId(),"origin",request.origin()));
         Prepared prepared;
         try {
             var equipped=loadouts.getPresentationView(request.actorId()).state().skill(request.slot());
@@ -130,6 +132,10 @@ public final class SkillExecutionService {
         return true;
     }
 
+    /** Terminal owner cleanup; an ordinary interrupted windup retains earlier successful commits. */
+    public void forgetPassiveState(UUID actor){attunement.forget(actor);}
+    public int attunementStacks(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return attunement.stacks(new AttunementLedger.Key(actor,slot),now());}
+
     public void terminate(SkillExecutionContext context, String reason) {
         if (lifecycle.terminate(context.request().actorId(), context.skillInstanceId())) {
             startEndedChannelCooldown(context);
@@ -151,6 +157,10 @@ public final class SkillExecutionService {
         if (plan == null || plan.degraded()) throw new Rejection("COMPILED_PLAN_INVALID", retainedInstance);
         if (!profiles.supports(skill.value())) throw new Rejection("FAMILY_NOT_IMPLEMENTED", retainedInstance);
         Stage04SkillProfile profile = compiledProfiles.resolve(profiles.require(skill.value()),plan);
+        if((plan.resources().lifeblood()||plan.resources().attunement())&&!ProfileComponentPolicy.finiteUpfront(profile))
+            throw new Rejection("FINITE_UPFRONT_COMPONENT_REQUIRED",retainedInstance);
+        if(plan.resources().lifeblood()&&(profile.reaction()!=null||request.origin()!=SkillExecutionRequest.Origin.MANUAL))
+            throw new Rejection("LIFEBLOOD_MANUAL_UPFRONT_ONLY",retainedInstance);
         String instance = retainedInstance == null ? skill.value() + '-' + UUID.randomUUID() : retainedInstance;
         if(profile.cage()!=null)throw new Rejection(com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY,instance);
         if (!profile.family().name().equals(plan.finalFamily())
@@ -168,7 +178,8 @@ public final class SkillExecutionService {
             throw new Rejection(family.code(), instance);
         }
         ResourceCost declared = new ResourceCost(ResourceType.valueOf(profile.resourceType()), profile.resourceCost());
-        ResourceCost cost = kernel.resources().evaluate(declared, plan.kernelModifiers());
+        int stacks=attunementFor(request,plan);
+        ResourceCost cost = kernel.resources().evaluateActivation(declared, plan,stacks);
         if(profile.support()!=null&&profile.support().upkeepPerSecond()>0){
             var first=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,profile.support().upkeepPerSecond()*.25*plan.supportModifiers().commitmentFactor()),plan.kernelModifiers());
             if(!kernel.resources().canAfford(request.actorId(),new ResourceCost(ResourceType.MANA,cost.amount()+first.amount()),port.resources()))
@@ -182,10 +193,23 @@ public final class SkillExecutionService {
             emitProjectileRejection(request, root, instance, profile, "COOLDOWN_ACTIVE");
             throw new Rejection("COOLDOWN_ACTIVE", instance);
         }
-        return new Prepared(request, root, instance, profile, plan, cost, equipment);
+        return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks);
+    }
+
+    private int attunementFor(SkillExecutionRequest request,CompiledSkillPlan plan){
+        if(!plan.resources().attunement()||request.origin()!=SkillExecutionRequest.Origin.MANUAL)return 0;
+        var key=new AttunementLedger.Key(request.actorId(),request.slot());
+        if(!attunement.hasCapacity(key,now()))throw new Rejection("ATTUNEMENT_LEDGER_CAPACITY",null);
+        return attunement.stacks(key,now());
     }
 
     private SkillExecutionResult commitAndDispatch(Prepared prepared, SkillExecutionPort port) {
+        // Re-evaluate expiry at the actual commit, not when an interruptible windup began.
+        try{
+            int stacks=attunementFor(prepared.request,prepared.plan);
+            var cost=kernel.resources().evaluateActivation(new ResourceCost(ResourceType.valueOf(prepared.profile.resourceType()),prepared.profile.resourceCost()),prepared.plan,stacks);
+            prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,prepared.profile,prepared.plan,cost,prepared.equipment,stacks);
+        }catch(RuntimeException failed){lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_RESOURCE_MODIFIER_REJECTED");}
         var releaseModifiers=prepared.plan.executionModifiers();
         String admission=releases.reserve(prepared.instanceId,prepared.request.actorId(),prepared.request.slot(),releaseModifiers);
         if(!admission.equals("PASS")) {
@@ -211,6 +235,7 @@ public final class SkillExecutionService {
         boolean resourceCommitted = false;
         boolean cooldownStarted = false;
         com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend cooldownSpend=null;
+        AttunementLedger.Commit attunementCommit=null;
         SkillExecutionContext context;
         try {
             DerivedStats attributes = derive(prepared.request.actorId());
@@ -222,7 +247,7 @@ public final class SkillExecutionService {
             var payloadLess=new java.util.ArrayList<>(prepared.plan.projectileModifiers().payloadLess());
             if(releaseModifiers.expandedRadius()&&!prepared.plan.radiusOnlyOnShrapnel())payloadLess.add(.10);
             if(prepared.plan.zones().mobileDomain())payloadLess.add(.20);
-            ModifierBuckets modifiers = new ModifierBuckets(java.util.List.of(), java.util.List.of(),
+            ModifierBuckets modifiers = new ModifierBuckets(prepared.attunementStacks>0?java.util.List.of(.03*prepared.attunementStacks):java.util.List.of(), java.util.List.of(),
                     releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
                     payloadLess);
             if(prepared.profile.summon()!=null)modifiers=port.captureSummonModifiers(modifiers);
@@ -238,7 +263,10 @@ public final class SkillExecutionService {
                         prepared.profile.cooldownSeconds(), prepared.plan.foundationModifiers().rechargeFactor(), attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
                 cooldownStarted = true;
             }
+            if(prepared.plan.resources().attunement()&&prepared.request.origin()==SkillExecutionRequest.Origin.MANUAL)
+                attunementCommit=attunement.committed(new AttunementLedger.Key(prepared.request.actorId(),prepared.request.slot()),prepared.rootCastId,now());
         } catch (RuntimeException error) {
+            attunement.rollback(attunementCommit);
             if (cooldownStarted) kernel.cooldowns().refundCharge(cooldownSpend);
             try {
                 if (resourceCommitted) kernel.resources().refundCommittedCost(token, port.resources());
@@ -250,7 +278,7 @@ public final class SkillExecutionService {
                     "COMMIT_FAILED_" + error.getClass().getSimpleName());
         }
         emit(prepared.request, RpgTraceEventType.SKILL_COMMITTED, prepared.rootCastId, prepared.instanceId,
-                Map.of("skillId", prepared.profile.skillId(), "resourceCost", prepared.cost.amount(),
+                Map.of("skillId", prepared.profile.skillId(), "resourceCost", prepared.cost.amount(),"resourceType",prepared.cost.type(),"attunementStacksUsed",prepared.attunementStacks,
                         "cooldownSeconds", context.snapshot().cooldownSeconds(),
                         "compiledPlanHash", prepared.plan.planHash(),"chargeCapacity",prepared.plan.foundationModifiers().chargeCapacity(),
                         "chargesRemaining",kernel.cooldowns().availableCharges(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity())));
@@ -281,8 +309,9 @@ public final class SkillExecutionService {
             releases.finish(prepared.instanceId);
             // Spatial dispatch can already have applied a hit before a later presentation/status adapter fails.
             // A paid area must not yield free native damage through the synchronous rollback path.
-            if (cooldownStarted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.cooldowns().refundCharge(cooldownSpend);
-            try { if (resourceCommitted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.resources().refundCommittedCost(token, port.resources());
+            // Once a Lifeblood executor was entered, a late adapter error cannot prove that no hit happened.
+            if (cooldownStarted && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.cooldowns().refundCharge(cooldownSpend);
+            try { if (resourceCommitted && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) {kernel.resources().refundCommittedCost(token, port.resources());attunement.rollback(attunementCommit);}
                   else if (resourceCommitted) kernel.resources().finish(token); }
             catch (RuntimeException ignored) { }
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());
@@ -447,7 +476,7 @@ public final class SkillExecutionService {
     }
     private record Prepared(SkillExecutionRequest request, String rootCastId, String instanceId,
                             Stage04SkillProfile profile, CompiledSkillPlan plan, ResourceCost cost,
-                            SkillExecutionPort.Equipment equipment) { }
+                            SkillExecutionPort.Equipment equipment,int attunementStacks) { }
     private static final class Rejection extends RuntimeException {
         private final String code; private final String skillInstanceId;
         private Rejection(String code, String skillInstanceId) { super(code); this.code = code; this.skillInstanceId = skillInstanceId; }

@@ -740,3 +740,84 @@ Player schema6 remains unchanged; rollback to I uses the same schema. No live
 deployment, art, native ability or HUD changes. Local gate PASS, connected gates
 UNVERIFIED. Twenty of40 Stage11 primitives have local evidence;20 remain before
 matrix/hardening closure. All output remains in the GitHub checkout, not Drive.
+
+## Cohort K — Lifeblood and Attunement
+
+Baseline J `42a853b`. Master LP061/LP062, resource rounding, nonlethal Health
+exception, snapshot and rollback contracts read before implementation. Installed
+EntityStatMap/EntityStatValue/DefaultEntityStatTypes APIs audited; their packaged
+call sites and bytecode are retained in `evidence/stage-11/cohort-k/api`.
+R030/0.0.23, plan schema20, player schema6 unchanged. Two passives.
+
+Lifeblood converts only a legal finite upfront Mana/Stamina cost into Health.
+Cost factors retain fractional precision until the final integer boundary:
+ceil(baseCost × ordinary cost factors × (1−0.03×Attunement stacks) ×1.50).
+Thus Quick Slash5 becomes8Health; with Efficiency,5×0.85×1.50=6.375 becomes7.
+There is no intermediate Mana/Stamina rounding followed by a second Health round.
+The named exception adds0.10 Increased damage/heal/barrier magnitude through the
+existing kernel snapshot; it does not change the authored resource declaration,
+upkeep, regeneration, reservations, attributes or cooldown formula.
+
+The resource transaction now supports an explicit HEALTH type, but regeneration
+still accepts only Mana/Stamina, and Health upkeep is rejected. The development
+resource command explicitly retains its Mana/Stamina-only scope. Affordability
+accounts for concurrent pending costs and requires the final Health to remain at
+least1, both before reservation and immediately before payment. Equality with the
+cost, non-finite Health and fractional remnants below1 fail without dispatch.
+Native writes use DefaultEntityStatTypes.getHealth/EntityStatMap.setStatValue,
+not DamageSystems: a self-cost cannot become damage, recovery or reflection credit.
+The float narrowing guard rejects an attempted subtraction that would round back
+to unchanged native Health. No new Health pool or HUD presentation exists.
+
+A cooldown persistence failure before dispatch refunds the Health transaction.
+After entering a Lifeblood executor, a later adapter exception retains cost and
+cooldown: it cannot establish that no effect or native hit already happened, and
+refunding could grant free Health-funded damage. This conservative branch is
+specific to the new Health exception; it does not rewrite the retained ordinary
+Stage04/05 cancellation mechanics. Lifeblood+Leeching and nonmanual Retaliation
+Health spending are explicitly incompatible. The runtime independently rejects
+nonmanual Lifeblood activation. Failed graph links retain the existing graph and
+the owner's passive copy.
+
+Attunement is an ephemeral per-actor/skill-slot ledger, capped at4096 entries.
+The first manual commit uses zero stacks then installs one. Later commits use the
+existing count, add0.03 Increased magnitude per stack and one additive0.03 cost
+reduction per stack (not repeated0.97 multiplication), then increment up to five.
+Stacks expire exactly4s after that skill's last successful commit. Cooldown,
+resource and cancelled windup failures do not extend the deadline. Misses do
+count because this passive's contract is successful commit, not successful hit.
+Windup completion re-evaluates stack expiry and price before payment. Derived
+Echo/Barrage/other snapshot copies inherit their parent's benefit without another
+payment or stack. A typed MANUAL/TRIGGERED request origin prevents string-based
+guessing about trigger eligibility.
+
+A saved loadout mutation now has a separate notification from generic progression
+mutations. Changes to equipped slots, joints or graph clear the owner's stacks;
+attribute/XP saves and using another equipped skill do not. Failed persistence
+does not publish the change. Ordinary damage-interrupted windup cancellation
+retains previously earned stacks, while terminal native owner cleanup removes
+them. Transaction rollback cannot erase a later commit or resurrect state already
+cleared by a loadout change. The ledger is not persisted or credited offline.
+
+### Cohort K local gate
+
+31 new tests cover positive/two-negative fixtures, factor order, Health edge cases,
+native float narrowing arithmetic, pending payment conservation, cooldown-save
+rollback, post-dispatch uncertainty, graph rollback, explicit trigger origin,
+Attunement expiry/cap/identity, windup timing, exact loadout notifications and Echo
+snapshot inheritance. Initial compile errors were fixture API naming mistakes;
+the first running suite also used a Sword where Heavy Swing requires Longsword,
+and incorrectly tried Echo on Quick Slash. Fixtures were corrected to the real
+contracts, with Fire Bolt as the eligible Echo pilot; production gates were not
+relaxed. Fixture cooldown clearing enables rapid repeated commits and is not
+evidence of normal connected cooldown timing.
+
+`clean build`: **941 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot/clean exit0; packaged CustomUI9 validation PASS.
+Artifact: `evidence/stage-11/cohort-k/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `6A7D067D901DFD4A149CD9A6AE718AF1CDF8C5B067B9B7A4F4E81D2FCE2F9C8B`.
+Rollback: J, SHA-256
+`93252D1109F75C49B3C7C83AFD7A4AD8499258D6F4A55B7E2381BB46DB1460AC`.
+No live deployment, save migration, artwork, native ability projection or HUD
+changes. Connected Health payment/casting/animation gates remain UNVERIFIED.
+Twenty-two of40 Stage11 primitives have local evidence;18 remain before closure.
