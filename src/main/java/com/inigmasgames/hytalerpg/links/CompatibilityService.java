@@ -21,6 +21,17 @@ public final class CompatibilityService {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
 
+        if(passive.id().value().equals("reversal")&&com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.reactionWindow(skill.id().value()).filter(value->!value).isPresent())
+            return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Reversal requires an authored reaction window.",Set.of("REACTION_WINDOW_COMPONENT"),actual);
+        if(passive.id().value().equals("momentum")){
+            boolean travels=(actual.contains("MOVEMENT")||actual.contains("DAMAGING_CHARGE"))&&actual.contains("DAMAGE");
+            if(!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.damagingMovement(skill.id().value()).orElse(travels))
+                return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Momentum requires validated travel followed by a damage component.",Set.of("DAMAGING_MOVEMENT_COMPONENT"),actual);
+            // The source says Movement OR DamagingCharge; imported clauses incorrectly require both.
+            // This local assessment never writes capability tags into the original skill or plan.
+            actual.add("MOVEMENT");actual.add("DAMAGING_CHARGE");
+        }
+
         // Imported summary tags are not proof of a distinct spend/range component.
         // These canonical radius-only fields must never gain reach semantics globally.
         if(passive.id().value().equals("long_reach")&&Set.of("whirlwind","ground_slam","frost_nova",

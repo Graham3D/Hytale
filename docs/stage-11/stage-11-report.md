@@ -241,3 +241,69 @@ Rollback code SHA-256:
 Machine evidence and full test-case inventory: `evidence/stage-11/cohort-c`.
 Local gate PASS; connected UNVERIFIED. Seven of40 Stage11 primitives now have
 local evidence;33 remain before full matrix and hardening closure.
+
+## Cohort D — Reversal and Momentum
+
+Baseline C `0a7ffc0`. Master LP028/LP031 read in full. R030/0.0.23,
+player schema6 unchanged, compiled-plan schema13. No new skills in this cohort.
+
+Reversal resolves the authored reaction window×1.30 before the existing native
+`ReactionWindowService.arm` call. Riposte0.8s becomes1.04s, with the same qualifying
+native blocked-damage signals and one-shot event identity. Retaliation receives
++0.25 Increased through the existing kernel bucket (+Potency gives+0.40, not two
+multipliers). No ordinary strike or active shield gains a reaction window, and
+cost/cooldown/strike geometry/timing remain unchanged.
+
+Momentum records a bounded, per-motion accepted path. Installed0.7.0-pre.1 bytecode
+confirms Player.moveTo delegates to Entity.moveTo, which writes the Transform
+position; the native adapter now rereads that authoritative position afterward.
+Only positions lying on the collision-approved segment count, with continuity
+from the previous observation. This is server implementation evidence, not proof
+that a connected client accepted or displayed the movement. Raw bytecode and
+identity are archived in `evidence/stage-11/cohort-d/api`.
+
+The bonus is0.05 Increased per accepted meter, capped at10m/+0.50. It counts actual
+3D segments, including leap height, rather than requested distance or endpoint
+displacement. A partial two-meter result of a ten-meter request earns+0.10. Zero
+travel, zero-time teleport, overshoot, off-segment movement, or discontinuity cannot
+grant a bonus. An external discontinuity invalidates that cast's Momentum evidence
+without changing the existing movement executor's mechanics. This conservative
+behavior needs connected QA around native corrections and ordinary input during
+movement. The existing `MOVEMENT_END.distance` endpoint field is retained; separate
+validatedTravelMeters/travelEvidenceValid/momentumIncreased fields expose the new
+evidence, so it cannot be confused with planned distance.
+
+At the existing landing-strike boundary, the accepted bonus is added to a derived
+copy of the original immutable combat snapshot. Payment, cooldown, equipment,
+rootCastId/skillInstanceId/correlationId remain unchanged; no second authority or
+damage path was introduced. Cancellation never dispatches a landing strike.
+Motion teardown already removes the ledger on completion/death/logout/unload.
+
+The imported Momentum clauses incorrectly required Movement AND DamagingCharge,
+although the master explicitly says OR and names Charge as positive. Compatibility
+now assesses an actual damaging movement component (or the canonical catalog
+declaration for not-yet-implemented profiles). It does not add global tags. Pounce
+and Charge qualify; Quick Shot and non-damaging Quickstep reject specifically.
+Charge still has no runtime profile at this point: compatibility is not skill
+implementation evidence and its remaining Stage04 work remains tracked.
+
+22 new tests cover the above, real shared commit/reaction fixtures, expiry,
+identity, additive magnitude, no repeated payment, path caps and invalid movement.
+Initial test compilation corrected a Java compound-var declaration and the
+finalTags accessor; no production failure was hidden by altering expectations.
+
+### Cohort D local gate
+
+`clean build`: **763 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot and clean exit0 PASS. Packaged CustomUI9 documents PASS.
+Native resources/HUD/XP and neutral native ability assets are unchanged.
+No live deployment or save migration occurred.
+
+Artifact: `evidence/stage-11/cohort-d/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `3DB526C4211FEE01DC1F2F69843C312086689300FDA4FC9A47DB82C7B86D4FDA`.
+Rollback: C, SHA-256
+`A7ED226057EEC5292524D84E4CE5162016BBD1E9E86EC8AF93451D2B89E3C30E`.
+Both use player schema6; ordinary stopped-world checkpoint precautions apply.
+Earlier schema5 rollback still requires the pre-migration checkpoint noted above.
+Local gate PASS; connected UNVERIFIED. Nine of40 Stage11 primitives now have local
+implementation evidence;31 remain before matrix/hardening closure.

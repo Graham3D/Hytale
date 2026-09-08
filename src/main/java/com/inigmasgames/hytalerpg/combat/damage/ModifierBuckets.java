@@ -17,6 +17,10 @@ public record ModifierBuckets(List<Double> increased, List<Double> reduced, List
         for (double value : less) result *= 1.0 - value;
         return result;
     }
+    public ModifierBuckets withIncreased(double value){
+        var values=new java.util.ArrayList<>(increased);values.add(value);
+        return new ModifierBuckets(values,reduced,more,less);
+    }
     private static List<Double> validated(List<Double> values, String name) {
         List<Double> copy = List.copyOf(values == null ? List.of() : values);
         if (copy.stream().anyMatch(value -> value == null || !Double.isFinite(value) || value < 0.0))

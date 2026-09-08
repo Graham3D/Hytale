@@ -20,7 +20,7 @@ public final class CompiledProfileResolver {
         if(!authored.skillId().equals(plan.skillId().value())||plan.degraded()||plan.schemaVersion()!=CompiledSkillPlan.CURRENT_SCHEMA)
             throw new IllegalArgumentException("Profile requires a current matching compiled plan");
         var modifiers=plan.foundationModifiers();
-        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering())return authored;
+        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal())return authored;
         var key=new Key(authored,modifiers);
         var prior=cache.get(key);if(prior!=null)return prior;
         JsonObject resolved=JSON.toJsonTree(authored).getAsJsonObject();
@@ -48,6 +48,10 @@ public final class CompiledProfileResolver {
         }
         if(modifiers.concentration())concentrate(authored,resolved);
         if(modifiers.lingering())linger(authored,resolved);
+        if(modifiers.reversal()){
+            if(authored.reaction()==null)throw new IllegalArgumentException("NO_REACTION_WINDOW_COMPONENT");
+            scale(resolved,"reaction",1.3,"windowSeconds");
+        }
         var effective=JSON.fromJson(resolved,Stage04SkillProfile.class);
         if(cache.size()>=CAPACITY)cache.remove(cache.keySet().iterator().next());
         cache.put(key,effective);return effective;

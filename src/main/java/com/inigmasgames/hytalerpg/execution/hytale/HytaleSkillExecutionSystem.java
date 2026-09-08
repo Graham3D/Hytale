@@ -308,21 +308,24 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         Vec3 applied = current.add(segment.multiply(fraction));
         double fall = player.getCurrentFallDistance();
         player.moveTo(ref, applied.x(), applied.y(), applied.z(), store);
+        Vec3 observed=vec(store.getComponent(ref,TransformComponent.getComponentType()).getPosition());
+        motion.travel.observe(current,applied,observed,deltaSeconds);
         player.setCurrentFallDistance(Math.max(fall, player.getCurrentFallDistance()));
         if (fraction < 1.0 - 1.0e-6) {
             emit(motion.context, RpgTraceEventType.MOVEMENT_CLAMPED,
                     Map.of("requestedSegment", segment.horizontalLength(), "appliedFraction", fraction,
                             "reason", "NATIVE_BLOCK_COLLISION"));
-            finishMotion(motion, applied, true, buffer); return;
+            finishMotion(motion, observed, true, buffer); return;
         }
-        if (progress >= 1.0) finishMotion(motion, applied, motion.plan.clamped(), buffer);
+        if (progress >= 1.0) finishMotion(motion, observed, motion.plan.clamped(), buffer);
     }
 
     private void finishMotion(Motion motion, Vec3 finalPosition, boolean clamped, CommandBuffer<EntityStore> buffer) {
         UUID actor = motion.context.request().actorId(); motions.remove(actor);
         emit(motion.context, RpgTraceEventType.MOVEMENT_END,
                 Map.of("distance", finalPosition.subtract(motion.plan.origin()).horizontalLength(), "clamped", clamped,
-                        "durationSeconds", motion.elapsed));
+                        "durationSeconds", motion.elapsed,"validatedTravelMeters",motion.travel.meters(),
+                        "travelEvidenceValid",motion.travel.valid(),"momentumIncreased",motion.travel.increased(motion.context)));
         if (motion.context.profile().hasFamily(Stage04SkillProfile.Family.STRIKE)) {
             Ref<EntityStore> ref = motion.actor;
             if (ref.isValid()) {
@@ -331,7 +334,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 Player player = store.getComponent(ref, Player.getComponentType());
                 EntityStatMap stats = store.getComponent(ref, EntityStatMap.getComponentType());
                 if (playerRef != null && player != null && stats != null)
-                    new Port(store, ref, playerRef, player, stats, null, buffer).executeStrike(motion.context);
+                    new Port(store, ref, playerRef, player, stats, null, buffer).executeStrike(motion.travel.impact(motion.context));
             }
         }
         hits.clear(motion.context.skillInstanceId());
@@ -1805,8 +1808,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
     private static final class Motion {
         final SkillExecutionContext context; final Ref<EntityStore> actor; final MovementPlanner.Plan plan; double elapsed;
+        final com.inigmasgames.hytalerpg.execution.movement.ValidatedTravel travel;
         Motion(SkillExecutionContext context, Ref<EntityStore> actor, MovementPlanner.Plan plan) {
             this.context = context; this.actor = actor; this.plan = plan;
+            travel=new com.inigmasgames.hytalerpg.execution.movement.ValidatedTravel(plan.origin());
         }
     }
     private record Counter(SkillExecutionContext context, Ref<EntityStore> attacker, String eventId) { }

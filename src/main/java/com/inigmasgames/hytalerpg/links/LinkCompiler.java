@@ -136,6 +136,7 @@ public final class LinkCompiler {
                 case "overcharge" -> {scalablePayloadIncreased+=.25;resourceCostMultiplier*=1.20;}
                 case "concentration" -> scalablePayloadIncreased+=.30;
                 case "lingering" -> resourceCostMultiplier*=1.15;
+                case "reversal" -> scalablePayloadIncreased+=.25;
                 default -> { }
             }
             if (passive.id().value().equals("expanded_radius")) {

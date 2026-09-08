@@ -16,6 +16,12 @@ public final class ProfileComponentPolicy {
     public static Optional<Boolean> affectedArea(String skill){
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(affectedArea(p));
     }
+    public static Optional<Boolean> reactionWindow(String skill){
+        var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(p.reaction()!=null);
+    }
+    public static Optional<Boolean> damagingMovement(String skill){
+        var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(p.movement()!=null&&p.strike()!=null);
+    }
     public static boolean affectedArea(Stage04SkillProfile p){
         return p.area()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().radius()>0
                 ||p.support()!=null&&p.support().radius()>0||p.movement()!=null&&p.movement().landingRadius()>0
