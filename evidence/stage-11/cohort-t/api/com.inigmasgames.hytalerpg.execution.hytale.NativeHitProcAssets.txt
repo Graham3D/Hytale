@@ -1,0 +1,50 @@
+Compiled from "NativeHitProcAssets.java"
+public final class com.inigmasgames.hytalerpg.execution.hytale.NativeHitProcAssets {
+  private com.inigmasgames.hytalerpg.execution.hytale.NativeHitProcAssets();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public static void requireAssets();
+    Code:
+         0: invokestatic  #7                  // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: ldc           #13                 // String RPG_Bleed_Visual
+         5: invokevirtual #15                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+         8: checkcast     #8                  // class com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect
+        11: astore_0
+        12: aload_0
+        13: ifnull        30
+        16: aload_0
+        17: invokevirtual #21                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getApplicationEffects:()Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/ApplicationEffects;
+        20: ifnull        30
+        23: aload_0
+        24: invokevirtual #25                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getDamageCalculator:()Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/server/combat/DamageCalculator;
+        27: ifnull        40
+        30: new           #29                 // class java/lang/IllegalStateException
+        33: dup
+        34: ldc           #31                 // String BLEED_VISUAL_ASSET_MISSING_OR_NATIVE_DAMAGE
+        36: invokespecial #33                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        39: athrow
+        40: aload_0
+        41: invokevirtual #21                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getApplicationEffects:()Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/ApplicationEffects;
+        44: invokevirtual #36                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/ApplicationEffects.toPacket:()Lcom/hypixel/hytale/protocol/ApplicationEffects;
+        47: astore_1
+        48: aload_1
+        49: getfield      #42                 // Field com/hypixel/hytale/protocol/ApplicationEffects.movementEffects:Lcom/hypixel/hytale/protocol/MovementEffects;
+        52: ifnonnull     71
+        55: aload_1
+        56: getfield      #48                 // Field com/hypixel/hytale/protocol/ApplicationEffects.abilityEffects:Lcom/hypixel/hytale/protocol/AbilityEffects;
+        59: ifnonnull     71
+        62: aload_1
+        63: getfield      #52                 // Field com/hypixel/hytale/protocol/ApplicationEffects.horizontalSpeedMultiplier:F
+        66: fconst_1
+        67: fcmpl
+        68: ifeq          81
+        71: new           #29                 // class java/lang/IllegalStateException
+        74: dup
+        75: ldc           #56                 // String BLEED_VISUAL_MUTATES_NATIVE_GAMEPLAY
+        77: invokespecial #33                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        80: athrow
+        81: return
+}

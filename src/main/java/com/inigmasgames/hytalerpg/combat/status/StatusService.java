@@ -70,6 +70,7 @@ public final class StatusService {
             case FROZEN, FROZEN_SUBSTITUTE_SLOW -> profile.frozenDurationSeconds;
             case BURN -> profile.burnDurationSeconds;
             case POISON -> profile.poisonDurationSeconds;
+            case BLEED -> 4;
             case ROOT, FEAR, TAUNT, STAGGER -> profile.frozenDurationSeconds;
             case CHILL -> profile.chillDurationSeconds;
         };
@@ -119,7 +120,7 @@ public final class StatusService {
     }
     /** Read-model projection of the source-owned periodic runtime, not a second DoT timer or damage writer. */
     public synchronized void projectPeriodic(UUID target, RpgStatusType type, int stacks, double seconds) {
-        if (type != RpgStatusType.BURN && type != RpgStatusType.POISON)
+        if (type != RpgStatusType.BURN && type != RpgStatusType.POISON && type != RpgStatusType.BLEED)
             throw new IllegalArgumentException("Not a periodic status");
         if (stacks <= 0 || seconds <= 0) { remove(target, type); return; }
         applySimple(target, type, seconds, stacks, true, "source-owned periodic projection");

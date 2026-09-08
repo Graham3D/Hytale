@@ -10,7 +10,7 @@ import java.util.UUID;
 /** Source-owned Burn/Poison timing and stack accounting. The port still owns all damage calculation/native filtering.
  * Accrual is integrated before source changes; ticks remain one second with a proportional final remainder. */
 public final class PeriodicStatusRuntime<C, T> {
-    public enum Kind { BURN, POISON }
+    public enum Kind { BURN, POISON, BLEED }
     public record Source(UUID owner, String skill, UUID victim, Kind kind) {
         public Source {
             if (owner == null || victim == null || skill == null || skill.isBlank() || kind == null)
@@ -46,7 +46,7 @@ public final class PeriodicStatusRuntime<C, T> {
         if (context == null || target == null || !finitePositive(coefficientPerSecond) || !finitePositive(strength)
                 || !finitePositive(duration) || duration > 120 || !Double.isFinite(now) || addedStacks < 1
                 || sourceCap < 1 || sourceCap > 12) throw new IllegalArgumentException("Invalid periodic application");
-        if (source.kind == Kind.BURN) { addedStacks = 1; sourceCap = 1; }
+        if (source.kind != Kind.POISON) { addedStacks = 1; sourceCap = 1; }
         // A source's world tick need not precede another caster's application. Settle
         // all competing packages before ranking; expired poison cannot evict a live
         // package and stack changes cannot push accrual across an undelivered tick.

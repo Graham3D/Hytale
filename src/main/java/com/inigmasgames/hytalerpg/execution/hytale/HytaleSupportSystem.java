@@ -150,6 +150,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 ?SkillExecutionPort.Validation.pass():SkillExecutionPort.Validation.reject("COMMITTED_HEAL_TARGET_INVALID");
     }
     public SupportWorldPort port(Store<EntityStore> store,Ref<EntityStore> actor){return new Port(store,actor);}
+    public SupportWorldPort port(Store<EntityStore> store,Ref<EntityStore> actor,CommandBuffer<EntityStore> buffer){return new Port(store,actor,buffer);}
     private final class Port implements SupportWorldPort {
         final Store<EntityStore> store;final Ref<EntityStore> actor;final PlayerRef player;final CommandBuffer<EntityStore> buffer;
         Port(Store<EntityStore> store,Ref<EntityStore> actor){this(store,actor,null);}

@@ -11,6 +11,8 @@ public final class CompatibilityService {
     /** Component-introduction seam: do not grant radius to the original projectile carrier. */
     public CompatibilityResult assess(SkillDefinition skill,PassiveDefinition passive,java.util.List<PassiveDefinition> selected) {
         boolean orbit=selected.stream().anyMatch(p->p.id().value().equals("orbit"))&&com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.orbit(skill.id().value());
+        if(orbit&&(passive.id().value().equals("terror")||passive.id().value().equals("hemorrhage")&&skill.tags().contains("PHYSICAL")))
+            return CompatibilityResult.accepted(Set.of("CONVERTED_ORBIT_DIRECT_HIT","DAMAGE"));
         if(orbit&&Set.of("piercing","fork","chain","return","ricochet","homing","accelerant","ballistics","shrapnel","splinterburst","long_reach","rapid_pulse").contains(passive.id().value()))return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
                 "Orbit removes projectile flight/continuation and pulse cadence; this modifier has no retained eligible component.",Set.of("REMOVED_BY_ORBIT"),skill.linkCompatibilityTags());
         if(orbit&&Set.of("expanded_radius","concentration","lingering","aftermath","vacuum","repulsion").contains(passive.id().value()))return new CompatibilityResult(true,ValidationCode.ACCEPTED,
@@ -34,6 +36,16 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(passive.id().value().equals("hemorrhage")&&!actual.contains("PHYSICAL"))return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
+                "Hemorrhage requires direct Physical damage; elemental damage alone does not qualify.",Set.of("PHYSICAL_DAMAGE_COMPONENT"),actual);
+        if(passive.id().value().equals("shatter")&&(!actual.contains("COLD")||!actual.contains("DAMAGE")||!actual.contains("CAN_KILL")))return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
+                "Shatter requires a killing Cold damage component, not a Slow, heal or non-Cold hit.",Set.of("COLD_KILL_COMPONENT"),actual);
+        if(Set.of("hemorrhage","terror").contains(passive.id().value())){
+            var direct=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.directDamage(skill.id().value());
+            if(direct.filter(v->!v).isPresent())return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
+                    passive.name()+" requires a direct damaging component, not DoT, pulse-only damage, support or a summoned actor.",Set.of("DIRECT_DAMAGE_COMPONENT"),actual);
+            if(direct.orElse(false)){actual.add("DIRECT_HIT");actual.add("DAMAGE");}
+        }
         if(passive.id().value().equals("orbit")){
             if(!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.orbit(skill.id().value()))return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
                     "Orbit requires an implemented projectile or finite Orb payload",Set.of("ORBIT_CONVERSION_COMPONENT"),actual);

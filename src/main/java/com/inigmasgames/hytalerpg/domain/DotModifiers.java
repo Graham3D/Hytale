@@ -15,6 +15,7 @@ public record DotModifiers(boolean combustion,boolean virulence,boolean concentr
     public Application application(Kind kind,double coefficientPerSecond){
         if(kind==null||!Double.isFinite(coefficientPerSecond)||coefficientPerSecond<=0)throw new IllegalArgumentException("Invalid DoT payload");
         return switch(kind){
+            case BLEED->new Application(coefficientPerSecond,1,1);
             case BURN->new Application(coefficientPerSecond*(combustion?1.5:1),1,1);
             case POISON->new Application(coefficientPerSecond*(concentratedVenom?1.75:1),virulence?2:1,concentratedVenom?1:3);
         };

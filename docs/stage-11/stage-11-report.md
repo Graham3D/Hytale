@@ -1414,3 +1414,74 @@ Rollback R: `0C7DA5E5D7DC652A442A2DCB249150E64ACD9115E77440D0AF51C176AC92C6EC`.
 All87 skills/66 passives retained; native HUD/input/XP and live three mods unchanged.
 No owner art or Google Drive writes. Seven Stage11 passives plus matrix/legacy-state
 closure remain; progression/hardening stages have not started.
+
+## R030 cohort T — Hemorrhage, Terror, Shatter
+
+LP045/048/049, master damage/proc coefficient rule and existing native damage,
+status, periodic and Fear adapters were reviewed before implementation. Plan schema29;
+player schema6 unchanged. These passives now consume completed native damage receipts
+from the existing HytaleDamageAdapter path, not an activation request or guessed hit.
+Receipts carry actual before/after/minimum Health, cancellation, hostile/protected
+classification, resolved pre-mitigation magnitude and the component's damage channel.
+Frozen is sampled before lethal damage. Player candidates never enter this adapter.
+
+HitProcRuntime owns decisions only. A root admits at most256 unique proc contacts;
+duplicate receipts cannot reroll. Successful proc attempts also claim the shared
+48-effect/16-triggered-secondary budget. Child identity preserves rootCastId,
+correlationId, actor, resource/Leech budgets and snapshot ownership, while receiving
+a distinct skillInstanceId. Derived effects cannot recurse. Native secondary failure
+is traced without refunding the already-applied parent hit, cost or cooldown.
+
+Hemorrhage rolls25% times proc coefficient on a surviving target after a direct
+Physical hit loses Health. It stores exactly12% of that hit's pre-mitigation amount
+as resolved DPS for4 seconds. PeriodicStatusRuntime gained BLEED in its existing
+bounded source-owned timer; one stack, strongest package retained on weaker refresh.
+Each tick calls applyResolved with Physical damage and periodic/no-proc metadata:
+no offensive stat, modifier, conditional or crit recalculation. Native filtering
+still runs. The new RPG_Bleed_Visual uses the existing EntityEffect tint schema,
+not a guessed particle ID; startup audits its resolved asset for no native damage,
+movement or ability mutation. StatusService's Bleed projection is a read model,
+not a second damage timer. Source ownership and teardown follow existing DoTs.
+
+Terror rolls15% times proc coefficient, then attempts1.5s Fear through the existing
+HytaleSupportSystem finite-effect/AI adapter. It retains target hostility, protection,
+native ground-navigation requirements, elite duration reduction, rolling hard-control
+resistance and the existing.25s direct-damage-break grace. Bosses/players are excluded.
+The8s victim ICD is shared across the caster's skills and bounded at256 targets per
+caster/4096 globally. An uncertain native failure retains that attempted ICD rather
+than immediately rerolling. Owner teardown clears it. ECS marker writes use the
+existing command buffer when available. No new Fear movement engine was introduced.
+
+Shatter requires an actual killing Cold component and pre-hit Frozen, not the boss
+Slow substitute. One killed victim admits one3m Cold explosion at50% of the killing
+hit's resolved pre-mitigation amount. The existing bounded cylinder/AABB query,
+hostility/protection and LOS checks select targets; overflow fails closed at256
+candidates/64 accepted targets. applyResolved preserves native mitigation without
+rerolling offense/crit. Shatter's child has no proc authority and cannot Shatter.
+Primary Cold pulse kills may qualify independently of direct-hit chance procs.
+Secondary Leech, when present, still uses the shared root actual-Health-loss budget.
+
+Simultaneous Volley projectiles and Orbit orbs use1/count proc coefficient; sequential
+contacts do not discount damage. Converted Orbit introduces a direct-contact component
+for compatibility, not a global permission for pulse-only or support effects.
+Focused tests exposed missing Physical/Cold restrictions in the imported gate parser;
+explicit typed component checks now reject those invalid links. Two initial fixture
+compile errors used incorrect windup helper names; corrected to the retained harness
+API. No production gate or trace was weakened to satisfy a fixture.
+
+38 new tests cover positive/negative compatibility, exact magnitudes/chances,
+cancelled/shield-only/friendly/protected/player/periodic exclusions, deduplication,
+root caps, child ownership, native failure retention, Terror ICD/resistance/teardown,
+Frozen-kill distinctions, simultaneous-count weighting and existing Bleed/Fear timers.
+Full `clean build`: **1192 PASS**, zero failures/errors/skips. Normal isolated three-mod
+network boot/clean exit0 and resolved Bleed asset audit PASS. Packaged CustomUI9 and
+all retained regressions pass. `evidence/stage-11/cohort-t/api` is structural evidence
+only. Connected proc delivery, native Health changes, NPC retreat and tint/area
+presentation remain UNVERIFIED; no claim that the owner can cast on this build yet.
+
+Artifact `evidence/stage-11/cohort-t/artifacts/HytaleRPG-0.0.23.jar`:
+`3CBB13F9A8FC79A5D2991AFD4757F18BA2688AD594B67B6440324BE6688C1154`.
+Rollback S: `771E6A1596D543F3642C6BD64D06593B79F169520B4C2859052CB59F47FD6CB6`.
+Native HUD/XP/input and the live three-mod set are unchanged. No owner art or Google
+Drive writes.36/40 Stage11 primitives have local cohort evidence; Proliferation,
+Retaliation, Critical Trigger, Kill Trigger and matrix/legacy-state closure remain.

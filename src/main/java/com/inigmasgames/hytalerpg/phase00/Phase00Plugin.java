@@ -259,6 +259,8 @@ public final class Phase00Plugin extends JavaPlugin {
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem.requireAssets();
         com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.requireAssets();
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeActionLock.requireAsset();
+        com.inigmasgames.hytalerpg.execution.hytale.NativeHitProcAssets.requireAssets();
+        LOGGER.atInfo().log("RPG_STAGE11_HIT_PROC_ASSETS bleedVisual=RPG_Bleed_Visual nativeDamage=false movementUnchanged=true result=PASS connectedProof=false");
         LOGGER.atInfo().log("RPG_STAGE11_STRIKE_ACTION_LOCK asset=RPG_Strike_Action_Lock disabledInteractions=6 movementUnchanged=true result=PASS connectedProof=false");
         LOGGER.atInfo().log("RPG_STAGE06_ASSETS revision=%s areaProfiles=%d requiredStatusAssets=10 nativeDamageChannels=2 result=PASS connectedProof=false",
                 BuildIdentity.REVISION, Stage04SkillProfiles.EXPECTED_STAGE06_PROFILES);

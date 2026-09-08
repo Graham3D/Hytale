@@ -39,10 +39,16 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
                 ||leechBudget==null||!leechBudget.owns(request.actorId(),rootCastId)||effects==null||!effects.owns(request.actorId(),rootCastId))
             throw new IllegalArgumentException("Committed execution context is incomplete");
         if(multistrikeIndex<0||multistrikeIndex>2||multistrikeIndex>0&&(echo||barrageBatch>0))throw new IllegalArgumentException("Invalid Multistrike child identity");
-        if(secondaryKind==null||!java.util.Set.of("","cleaving_edge","phantom_reach","shockwave","cascade","aftermath").contains(secondaryKind)
+        if(secondaryKind==null||!java.util.Set.of("","cleaving_edge","phantom_reach","shockwave","cascade","aftermath","hemorrhage","terror","shatter").contains(secondaryKind)
                 ||!secondaryKind.isEmpty()&&(echo||barrageBatch>0||multistrikeIndex>0))throw new IllegalArgumentException("Invalid secondary identity");
     }
     public boolean derivedRelease() {return echo||barrageBatch>0||multistrikeIndex>0||!secondaryKind.isEmpty();}
+    public SkillExecutionContext hitProcCopy(String kind,int ordinal){
+        if(derivedRelease()||ordinal<1||ordinal>16||!java.util.Set.of("hemorrhage","terror","shatter").contains(kind))throw new IllegalStateException("HIT_PROC_CANNOT_RECURSE");
+        String child=skillInstanceId+"/"+kind+"-"+ordinal;var old=snapshot;
+        var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,kind);
+    }
     public SkillExecutionContext aftermathCopy(){
         if(derivedRelease()||!compiledPlan.zones().aftermath())throw new IllegalStateException("AFTERMATH_CANNOT_RECURSE");
         var next=com.inigmasgames.hytalerpg.execution.area.AftermathProfiles.resolve(profile);

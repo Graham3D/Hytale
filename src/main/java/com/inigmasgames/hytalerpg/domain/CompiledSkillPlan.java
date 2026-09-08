@@ -27,7 +27,7 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 28;
+    public static final int CURRENT_SCHEMA = 29;
     public boolean orbit(){return passiveOrder.stream().anyMatch(p->p.value().equals("orbit"));}
     public PositionModifiers positions(){return PositionModifiers.from(passiveOrder);}
     public boolean positionOnlyOnSecondary(){return geometryModifiers.contains("POSITION_SCOPE=SECONDARY_ONLY");}
@@ -81,6 +81,7 @@ public record CompiledSkillPlan(
     public SupportModifiers supportModifiers(){return SupportModifiers.from(passiveOrder);}
     public SummonModifiers summonModifiers(){return SummonModifiers.from(passiveOrder);}
     public FoundationModifiers foundationModifiers(){return FoundationModifiers.from(passiveOrder);}
+    public HitProcModifiers hitProcs(){return HitProcModifiers.from(passiveOrder);}
     public record ProjectileModifiers(int pierce,int fork,int chain,int returning,int ricochet,boolean volley,boolean barrage,boolean homing,
             boolean accelerant,boolean ballistics,boolean shrapnel,boolean splinterburst) {
         public static ProjectileModifiers from(List<PassiveId> order) {

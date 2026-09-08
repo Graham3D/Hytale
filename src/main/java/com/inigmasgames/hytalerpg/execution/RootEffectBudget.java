@@ -10,6 +10,13 @@ public final class RootEffectBudget {
     private final com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement=new com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger();
     private final Map<String,Double> statusTimes=new HashMap<>();
     private final Map<String,Double> orbitContacts=new HashMap<>();
+    private final Set<String> procContacts=new HashSet<>();
+    public synchronized String claimProcContact(String id){
+        if(id==null||id.isBlank()||id.length()>512)return "INVALID_PROC_CONTACT";
+        if(procContacts.contains(id))return "DUPLICATE_PROC_CONTACT";
+        if(procContacts.size()>=256)return "ROOT_PROC_CONTACT_BUDGET";
+        procContacts.add(id);return "PASS";
+    }
     public synchronized String claimOrbitContact(String target,double now){
         if(target==null||target.isBlank()||target.length()>256||!Double.isFinite(now))return "INVALID_ORBIT_CONTACT";
         if(now-orbitContacts.getOrDefault(target,Double.NEGATIVE_INFINITY)<.75-1e-9)return "ROOT_ORBIT_CONTACT_ICD";

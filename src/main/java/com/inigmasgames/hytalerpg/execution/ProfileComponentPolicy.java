@@ -13,6 +13,9 @@ public final class ProfileComponentPolicy {
     public static Optional<Boolean> discreteStrike(String skill,boolean excludeAuthoredSequence){
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(discreteStrike(p,excludeAuthoredSequence));
     }
+    public static Optional<Boolean> directDamage(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(directDamage(p));}
+    public static boolean directDamage(Stage04SkillProfile p){return p.damageCoefficient()>0&&p.summon()==null&&p.summonAction()==null&&p.cage()==null
+            &&!(p.area()!=null&&p.area().periodic())&&!(p.connection()!=null&&(p.connection().channel()||p.connection().kind()==ConnectionProfile.Kind.ORB));}
     public static Optional<Boolean> frontalStrike(String skill){
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(discreteStrike(p,false)&&p.strike().geometry()!=Stage04SkillProfile.Geometry.RADIUS);
     }
