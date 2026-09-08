@@ -63,6 +63,8 @@ public final class SupportDamageSystems {
     }
     public static void reflectAbsorbed(HytaleSupportSystem support,FiniteSupportEffects.Absorption absorption,Damage damage,
                                        Ref<EntityStore> recipient,Store<EntityStore> store,double now){
+        // Every existing absorption path reaches here; consumption credit is independent of optional reflection.
+        support.absorptionResolved(store,recipient,damage,absorption);
         if(absorption==null||absorption.amount()<=0||!absorption.effect().context().compiledPlan().supportModifiers().reflectiveWard()||
                 secondaryCannotReflect(HytaleDamageAdapter.metadata(damage))||!(damage.getSource() instanceof Damage.EntitySource attacker))return;
         var source=attacker.getRef();var effect=absorption.effect();

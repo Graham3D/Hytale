@@ -53,9 +53,15 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         });
     }
     public SupportRuntime runtime(){return runtime;}
+    private HytaleEncounterRewards encounterRewards;
+    public void configureEncounterRewards(HytaleEncounterRewards rewards){encounterRewards=java.util.Objects.requireNonNull(rewards);}
+    public void absorptionResolved(Store<EntityStore> store,Ref<EntityStore> recipient,Damage damage,FiniteSupportEffects.Absorption absorption){
+        if(encounterRewards!=null)encounterRewards.absorptionResolved(store,recipient,damage,absorption);
+    }
     /** Shared post-write hook for direct heals and drain healing; no second Health writer or mastery grant. */
     public void healingResolved(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> target,
                                 SkillExecutionContext context,double requested,double before,double after,double maximum){
+        if(encounterRewards!=null)encounterRewards.healingResolved(store,target,context,before,after);
         if(!context.compiledPlan().supportModifiers().overflow())return;
         var id=store.getComponent(target,UUIDComponent.getComponentType());if(id==null)return;
         try{

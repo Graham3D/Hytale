@@ -29,10 +29,38 @@ public final class HytaleEncounterRewards {
     private final RpgSkillTracer trace;
     private boolean failureLogged;
     private long nextDeliveryNanos;
+    private volatile PartyMembershipProvider parties=PartyMembershipProvider.UNAVAILABLE;
     public HytaleEncounterRewards(FileEncounterStore store,RpgLoadoutService loadouts,RpgSkillTracer trace){
         this.runtime=new PersistentEncounterRuntime(store,loadouts::awardEarned);this.loadouts=loadouts;this.trace=trace;
     }
     public void invalidateConverted(UUID world,UUID enemy){runtime.disqualify(world,enemy);}
+    public void configurePartyProvider(PartyMembershipProvider provider){parties=Objects.requireNonNull(provider);}
+    public String partyAvailability(){return parties.availability();}
+    /** Called only after the existing native Health write; does not add healing or award mastery. */
+    public void healingResolved(Store<EntityStore> store,Ref<EntityStore> beneficiary,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,double before,double after){
+        safely("NATIVE_HEAL_CONTRIBUTION",()->{
+            if(!Double.isFinite(before)||!Double.isFinite(after)||after<=before)return;
+            var healer=store.getExternalData().getRefFromUUID(context.request().actorId());
+            if(healer==null||!healer.isValid()||store.getComponent(healer,PlayerRef.getComponentType())==null||!HytaleSupportSystem.eligibleAlly(store,healer,beneficiary))return;
+            var recipient=id(store,beneficiary);if(recipient==null)return;
+            int count=runtime.heal(world(store),context.request().actorId(),recipient,after-before,true,System.currentTimeMillis());
+            if(count>0)emit(context.request().actorId(),RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,context.request().correlationId(),
+                    Map.of("kind","HEAL","beneficiary",recipient,"healthBefore",before,"healthAfter",after,"actualHealing",after-before,"eligibleEncounters",count,"rootCastId",context.rootCastId(),"skillInstanceId",context.skillInstanceId(),"masteryAwarded",false));
+        });
+    }
+    /** Actual post-filter consumed shield amount, regardless of whether its optional reflection is configured. */
+    public void absorptionResolved(Store<EntityStore> store,Ref<EntityStore> recipient,Damage damage,com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects.Absorption absorption){
+        if(absorption==null||absorption.amount()<=0)return;
+        safely("NATIVE_ABSORB_CONTRIBUTION",()->{
+            var metadata=HytaleDamageAdapter.metadata(damage);if(damage.isCancelled()||metadata!=null&&metadata.noCredit()||!(damage.getSource() instanceof Damage.EntitySource source))return;
+            var enemyRef=source.getRef();if(enemyRef==null||!enemyRef.isValid()||!HytaleAreaQueries.hostile(store,enemyRef,recipient))return;
+            var enemy=id(store,enemyRef);var actor=absorption.effect().key().owner();var owner=store.getExternalData().getRefFromUUID(actor);
+            if(enemy==null||owner==null||!owner.isValid()||store.getComponent(owner,PlayerRef.getComponentType())==null)return;
+            var c=absorption.effect().context();
+            if(runtime.absorb(world(store),enemy,actor,absorption.amount(),true,System.currentTimeMillis()))
+                emit(actor,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,c.request().correlationId(),Map.of("kind","ABSORB","enemy",enemy,"beneficiary",id(store,recipient),"actuallyAbsorbed",absorption.amount(),"rootCastId",c.rootCastId(),"skillInstanceId",c.skillInstanceId(),"masteryAwarded",false));
+        });
+    }
     private static UUID world(Store<EntityStore> store){return store.getExternalData().getWorld().getWorldConfig().getUuid();}
     private static UUID id(Store<EntityStore> store,Ref<EntityStore> ref){var component=ref==null||!ref.isValid()?null:store.getComponent(ref,UUIDComponent.getComponentType());return component==null?null:component.getUuid();}
     private static Vec3 position(Store<EntityStore> store,Ref<EntityStore> ref){var p=store.getComponent(ref,TransformComponent.getComponentType()).getPosition();return new Vec3(p.x(),p.y(),p.z());}
@@ -109,8 +137,9 @@ public final class HytaleEncounterRewards {
             if(actor==null||!actor.isValid()||store.getComponent(actor,PlayerRef.getComponentType())==null||store.getComponent(actor,TransformComponent.getComponentType())==null)continue;
             participants.add(new EncounterContributions.Participant(player,world,position(store,actor),loadouts.characterLevel(player),true,null));
         }
-        var plan=runtime.death(world,enemy,position(store,ref),System.currentTimeMillis(),participants);
-        plan.ifPresent(p->emit(null,RpgTraceEventType.ENCOUNTER_DEATH_FROZEN,enemy.toString(),Map.of("world",world,"enemy",enemy,"eventId",p.spawn().eventId(),"recipients",p.shares().size(),"nativeDeath",true,"partyProvider","SOLO_ONLY_NATIVE_PARTY_API_UNAVAILABLE")));
+        var provider=parties;
+        var plan=runtime.death(world,enemy,position(store,ref),System.currentTimeMillis(),PartyMembershipProvider.apply(world,participants,provider));
+        plan.ifPresent(p->emit(null,RpgTraceEventType.ENCOUNTER_DEATH_FROZEN,enemy.toString(),Map.of("world",world,"enemy",enemy,"eventId",p.spawn().eventId(),"recipients",p.shares().size(),"nativeDeath",true,"partyProvider",provider.availability())));
     }
     private synchronized void deliver(){
         long now=System.nanoTime();if(now<nextDeliveryNanos)return;nextDeliveryNanos=now+1_000_000_000L;

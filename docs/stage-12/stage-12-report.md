@@ -446,3 +446,46 @@ its `api/` subdirectory. Player8/plan35 unchanged. Restore players, earned-rewar
 and encounters as a coordinated checkpoint when rolling back earned progress.
 Live R023 and its control-recovery journal remain untouched; no Google Drive or
 art writes. Local gate PASS; connected gate UNVERIFIED. Continue Stage12.
+
+## Cohort F — actual support credit and trusted party-provider boundary
+
+Continued from pushed 208fb0d, retaining the unfinished local changes. Healing
+observes the existing post-native-write callback and records positive actual
+Health restored to an eligible contributor, not requested healing or overheal.
+Actual finite shield and Managuard consumption feed the existing central
+absorption callback before the optional Reflective Ward branch. Unused shields
+and non-hostile/recursive damage do not become absorption contributions. These
+observers do not alter damage, healing, costs, regeneration or native HUD/input.
+
+The persistent runtime saves the affected recent encounters (bounded to 64 per
+beneficiary). Unknown, expired, excluded or completed encounters cannot gain late
+credit. Uncertain persistence still freezes awards until recovery. Neither hook
+awards mastery yet: hostile-healing provenance and meaningful-root validation
+must be established before positive healing alone can qualify for mastery.
+
+No installed native party membership adapter has been established. A server-only
+PartyMembershipProvider accepts a bounded immutable candidate set and returns a
+validated snapshot. Default status is NATIVE_PARTY_PROVIDER_UNAVAILABLE_SOLO_ONLY.
+Foreign members, invalid IDs, null results and provider failures reject rather
+than silently reprice a party as solo. The frozen death plan retains its original
+membership/pricing across replay. This seam is not proof of connected parties.
+
+24 new tests cover actual/non-overheal support, expiration/world/exclusion/death
+boundaries, persistence, party snapshot integrity, one-pot sharing and replay.
+Full clean retained build: **1576 tests, zero failures/errors/skips**, 62 seconds.
+Normal isolated three-mod boot and clean stop passed; support callbacks register.
+Packaged UI/asset validation, unchanged native authority checks, artifact hashing
+and prior-build archive checks passed. These prove local structure only; native
+support execution, party integration and all client behavior remain UNVERIFIED.
+
+Artifact SHA-256: 2964B5D9FA94A903D7BC7B77F9543B2FA5B9932FF8EA6023B560B1F4289289A5.
+Rollback E: A353FEE1E0F480569B2BBC540392596948823ED2290181DE1F56DC81E2DEA11E.
+Evidence/archive: `evidence/stage-12/cohort-f/`. Player8/plan35 unchanged. Restore
+players, earned-rewards and encounters together; never clear reward tombstones.
+Synchronous support persistence cost remains a required Stage13 measurement.
+No live deployment, owner-art mutation or Google Drive writes occurred.
+
+Following the owner's latest efficiency instruction, remaining related work uses
+targeted tests during implementation, with complete retained regression, normal
+three-mod smoke, archive and rollback checks at Stage12 closure and Stage13 final
+candidate. No assertions, behavior or connected gate is relaxed by that batching.

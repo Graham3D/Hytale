@@ -36,6 +36,11 @@ public final class PersistentEncounterRuntime {
     }
     public synchronized boolean absorb(UUID world,UUID enemy,UUID actor,double amount,boolean hostile,long now){return contribute(world,enemy,()->ledger.absorb(world,enemy,actor,amount,hostile,now));}
     public synchronized boolean control(UUID world,UUID enemy,UUID actor,boolean changed,boolean taunt,boolean hostile,long now){return contribute(world,enemy,()->ledger.control(world,enemy,actor,changed,taunt,hostile,now));}
+    public synchronized int heal(UUID world,UUID healer,UUID beneficiary,double actualEligibleHealing,boolean allyAllowed,long now){return guarded(()->{
+        var encounters=ledger.healingEncounters(world,beneficiary,now);
+        int count=ledger.heal(world,healer,beneficiary,actualEligibleHealing,allyAllowed,now);
+        if(count>0)for(var enemy:encounters)store.save(ledger.snapshot(world,enemy));return count;
+    });}
     private boolean contribute(UUID world,UUID enemy,BooleanSupplier operation){return guarded(()->{
         if(!loaded.contains(new Key(world,enemy))||!operation.getAsBoolean())return false;
         store.save(ledger.snapshot(world,enemy));return true;

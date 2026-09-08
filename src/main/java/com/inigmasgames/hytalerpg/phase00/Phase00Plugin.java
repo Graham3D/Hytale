@@ -72,6 +72,13 @@ public final class Phase00Plugin extends JavaPlugin {
     private NativeAbilityProjectionService nativeAbilities;
     private HytaleSkillExecutionSystem skillExecutionSystem;
     private com.inigmasgames.hytalerpg.progress.FileEncounterStore encounterStore;
+    private com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards encounterRewards;
+
+    /** Trusted server-plugin integration only; no command or packet can supply party membership. */
+    public void configurePartyMembership(com.inigmasgames.hytalerpg.progress.PartyMembershipProvider provider){
+        if(encounterRewards==null)throw new IllegalStateException("RPG_ENCOUNTER_SERVICE_NOT_READY");
+        encounterRewards.configurePartyProvider(provider);
+    }
 
     public Phase00Plugin(@Nonnull JavaPluginInit init) {
         super(init);
@@ -144,7 +151,8 @@ public final class Phase00Plugin extends JavaPlugin {
                 com.inigmasgames.hytalerpg.execution.hytale.ConversionProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.ConversionProjection::new));
         var conversionSystem=skillExecutionSystem.configureConversions();
-        var encounterRewards=new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards(encounterStore,loadouts,skillTrace);
+        encounterRewards=new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards(encounterStore,loadouts,skillTrace);
+        supportSystem.configureEncounterRewards(encounterRewards);
         conversionSystem.configureRewardExclusion(encounterRewards::invalidateConverted);
         getEntityStoreRegistry().registerSystem(conversionSystem);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleConversionSystem.Removal(conversionSystem));
@@ -191,6 +199,7 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Death(encounterRewards));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Delivery(encounterRewards));
         LOGGER.atInfo().log("RPG_STAGE12_NATIVE_REWARDS spawn=LEGACY_WORLD_SPAWN contribution=POST_APPLY_HEALTH_LOSS death=NATIVE_DEATH_COMPONENT deliveryBudget=8_per_second party=SOLO_ONLY connectedProof=false");
+        LOGGER.atInfo().log("RPG_STAGE12_SUPPORT_CREDIT healing=POST_NATIVE_WRITE absorption=ACTUAL_CONSUMPTION partyProvider=%s mastery=false connectedProof=false",encounterRewards.partyAvailability());
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection::new));

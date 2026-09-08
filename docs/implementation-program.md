@@ -64,13 +64,19 @@ definitions are read before each corresponding implementation.
 | 09 | 16 support/barrier/Aura skills and 7 passives | R028 local gate complete: 516 retained tests, schema 5, all seven passive primitives; Flame Weapon root contact and Pedanticism native-enemy cooldown progress gated; connected verification outstanding |
 | 10 | 9 summon/corpse/conversion skills and 3 passives | R029 cohorts A–G local scope complete: eight native skill implementations plus Bone Cage intentionally disabled by master collision safety gate; 662 retained tests, plan schema 9; corpse/decoy/conversion role coverage restricted; connected verification outstanding |
 | 11 | remaining 40 passives; component-scoped matrix/combinations | R030 cohorts A–Z local scope complete: all forty primitives, 1377 tests, plan schema35, player schema7; 5742 cells,2145 pairs,1000 valid six-Link property fixtures and saved inactive-node recovery; connected verification outstanding |
-| 12 | progression, attribution, exact-once rewards and acquisition | R031 cohorts A–E: exact math, schema8 durable awards, audited three-role/four-biome pilots, persistent encounter/farm context and native spawn/Health-loss/death adapters; 1552 retained tests; native support/party integration and acquisition/mastery in progress; connected verification outstanding |
+| 12 | progression, attribution, exact-once rewards and acquisition | R031 cohorts A–F: exact math, schema8 durable awards, audited three-role/four-biome pilots, persistent encounter/farm context, native spawn/Health-loss/death and actual healing/absorption callbacks; trusted party-provider seam defaults explicitly unavailable/solo; 1576 retained tests; effective control/acquisition/mastery in progress; connected verification outstanding |
 | 13 | full 87/66 coverage, hardening, release-candidate assessment | not started |
 
 Advance only after each local engineering gate passes. Each stage has a report,
 machine-readable evidence, archived build/rollback and an independent commit.
 No stage receives connected PASS from the local gate. Development-only grants and
 internal fixtures must never be relabeled production acquisition evidence.
+
+Owner continuation on 2026-09-08 authorizes the fewest safe remaining cohorts,
+targeted tests while implementing, and complete retained regressions, isolated
+three-mod smoke, packaging/archive and rollback validation at each stage closure
+and again for the final Stage13 candidate. This supersedes redundant full-suite
+runs after every intermediate change, not any correctness or master-spec gate.
 
 ## Live deployment
 

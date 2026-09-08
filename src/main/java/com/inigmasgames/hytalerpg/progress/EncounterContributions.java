@@ -104,6 +104,13 @@ public final class EncounterContributions {
             if(active(world,e.spawn.enemy(),now)!=null&&credit(e,healer,Kind.HEAL,actualEligibleHealing,now))credited++;
         }return credited;
     }
+    public synchronized List<UUID> healingEncounters(UUID world,UUID beneficiary,long now){
+        List<UUID> result=new ArrayList<>();
+        for(var key:actorEncounters.getOrDefault(new ActorKey(world,beneficiary),Set.of())){
+            var e=encounters.get(key);if(e==null||e.disqualified||e.death!=null)continue;
+            var credit=e.contributors.get(beneficiary);if(credit!=null&&recent(credit.observedAtMillis(),now))result.add(key.enemy());
+        }return List.copyOf(result);
+    }
     public synchronized boolean masteryEligible(UUID world,UUID enemy,UUID player,int playerLevel,long now){
         if(playerLevel<1||playerLevel>99)return false;var e=active(world,enemy,now);
         if(e==null||e.spawn.level()-playerLevel<=-11||e.firstCombat<0||now-e.progressAt>FARM_WINDOW_MS)return false;
