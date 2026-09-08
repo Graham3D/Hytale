@@ -21,6 +21,11 @@ public final class CompatibilityService {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
 
+        if(passive.id().value().equals("mobile_domain")&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.mobileZone(skill.id().value()))
+            return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
+                    "Mobile Domain requires a finite ground zone without fixed warnings, collision, corpse or trap ownership.",
+                    Set.of("MOBILE_FINITE_ZONE_COMPONENT"),actual);
+
         if(passive.id().value().equals("impact_force")){
             var impact=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.impact(skill.id().value());
             if(impact.filter(v->!v).isPresent())return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Impact Force requires authored knockback or Stagger, not any crowd control or pull.",Set.of("IMPACT_COMPONENT"),actual);

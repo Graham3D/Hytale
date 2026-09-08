@@ -159,6 +159,7 @@ public final class LinkCompiler {
                 + "|" + com.inigmasgames.hytalerpg.domain.FoundationModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.HitConditionModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.GeometryModifiers.from(order)
+                + "|" + com.inigmasgames.hytalerpg.domain.ZoneModifiers.from(order)
                 + "|planSchema=" + CompiledSkillPlan.CURRENT_SCHEMA;
         var kernelModifiers = new CompiledSkillPlan.KernelModifiers(scalablePayloadIncreased,
                 resourceCostMultiplier, cooldownRecoveryBonus);

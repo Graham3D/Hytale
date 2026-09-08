@@ -27,25 +27,29 @@ public final class AreaRuntime {
         return "PASS";
     }
 
-    /** Placement is already validated; immutable position/direction survive later owner aim changes. */
+    /** Static placement stays committed; a Mobile Domain attaches to its live owner only at release. */
     public synchronized void start(SkillExecutionContext context, Vec3 point, Vec3 direction, double now,
                       double radiusFactor, AreaWorldPort port) {
         AreaSkillProfile profile = context.profile().area();
         if (profile == null || !Double.isFinite(now) || !Double.isFinite(radiusFactor) || radiusFactor <= 0)
             throw new IllegalArgumentException("Invalid area start");
+        boolean mobile=context.compiledPlan().zones().mobileDomain();
+        if(mobile&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.mobileZone(context.profile()))
+            throw new IllegalStateException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
+        Vec3 origin=mobile?mobileOrigin(context,port).orElseThrow(()->new IllegalStateException("MOBILE_OWNER_ANCHOR_UNAVAILABLE")):point;
         String admission = admission(context.request().actorId(), context.profile().skillId(), profile.trap());
         if (!admission.equals("PASS")) throw new IllegalStateException(admission);
         if (fields.containsKey(context.skillInstanceId())) throw new IllegalStateException("DUPLICATE_FIELD_INSTANCE");
         int spawnCost=1+(profile.stratified()?profile.impactCount():0);
         int spent=rootSpawned.getOrDefault(rootKey(context),0);
         if(spent+spawnCost>context.compiledPlan().safetyBudgets().maxSpawnedEffects()) throw new IllegalStateException("ROOT_SPAWN_EFFECT_BUDGET");
-        Field field = new Field(context, profile.footprint(point, direction, radiusFactor), now, radiusFactor);
+        Field field = new Field(context, profile.footprint(origin, direction, radiusFactor), now, radiusFactor);
         capacity.reserve(context.request().actorId(),context.skillInstanceId());
         rootSpawned.put(rootKey(context),spent+spawnCost);
         fields.put(context.skillInstanceId(), field);
         try {
-            port.trace(context, "AREA_STARTED", Map.of("origin", point.toString(), "radius", field.geometry.radius(),
-                    "height", field.geometry.height(), "lifetimeSeconds", profile.lifetimeSeconds()));
+            port.trace(context, "AREA_STARTED", Map.of("origin", origin.toString(), "radius", field.geometry.radius(),
+                    "height", field.geometry.height(), "lifetimeSeconds", profile.lifetimeSeconds(),"mobileDomain",mobile));
             tickField(field, now, port);
         }
         catch (RuntimeException error) { finish(field, "NATIVE_ADAPTER_FAILURE_" + error.getClass().getSimpleName(), port); throw error; }
@@ -76,6 +80,12 @@ public final class AreaRuntime {
 
     private void tickField(Field field, double now, AreaWorldPort port) {
         if (field.done || now < field.lastTick) return;
+        if(field.context.compiledPlan().zones().mobileDomain()){
+            var origin=mobileOrigin(field.context,port);
+            if(origin.isEmpty()){finish(field,"MOBILE_OWNER_ANCHOR_UNAVAILABLE",port);return;}
+            // One current footprint, never a swept damage trail or a restarted duration/ledger.
+            field.geometry=field.geometry.at(origin.get(),field.geometry.radius());
+        }
         double gap = now - field.lastTick;
         field.lastTick = now;
         AreaSkillProfile profile = field.context.profile().area();
@@ -296,10 +306,15 @@ public final class AreaRuntime {
         }
     }
     public synchronized int retainedRootCount() { return rootSpawned.size(); }
+    private static java.util.Optional<Vec3> mobileOrigin(SkillExecutionContext context,AreaWorldPort port){
+        if(context.target()==null)return java.util.Optional.empty();
+        return port.ownerAnchor(context).filter(a->a.actorId().equals(context.request().actorId())
+                &&a.worldId().equals(context.target().worldId())).map(AreaWorldPort.OwnerAnchor::position);
+    }
     private static String rootKey(SkillExecutionContext context) { return context.request().actorId()+"/"+context.rootCastId(); }
     private record Ledger(int hits, double lastHit, String lastImpact) { }
     private static final class Field {
-        final SkillExecutionContext context; final AreaGeometry geometry; final double started, radiusFactor;
+        final SkillExecutionContext context; AreaGeometry geometry; final double started, radiusFactor;
         final Map<String, Ledger> ledger = new HashMap<>();
         final Map<String, Double> statusLastHit = new HashMap<>();
         final List<Vec3> offsets; final double[] warnedAt;

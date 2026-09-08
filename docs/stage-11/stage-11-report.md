@@ -442,3 +442,66 @@ Rollback: E, SHA-256
 No live deployment, save migration, native ability or HUD changes. Local gate
 PASS; connected geometry, displacement, control and casting UNVERIFIED.
 Fourteen of40 Stage11 primitives now have local evidence;26 remain.
+
+## Cohort G — Mobile Domain
+
+Baseline F `ac0492e`. Master LP033 read in full; existing area lifecycle, native
+Transform/Health/world access and ground/query adapters inspected before changes.
+R030/0.0.23, compiled-plan schema16, player schema6 unchanged. No new native API
+assumption: the existing authoritative Transform is read, never written, for this
+passive. The retained Stage11 movement audit documents that installed component.
+
+Poison Cloud, Vortex and Earthquake now support finite caster-attached zones.
+Blizzard remains ineligible because each stratified impact owns a specific warned
+terrain footprint; following a moving caster would contradict that placement and
+warning contract. The component policy also excludes traps, Auras, walls, corpse
+consumers and any unimplemented/unknown mobile component. No generic relocation
+capability is inferred merely from a broad family tag.
+
+The typed zone modifier is part of the plan hash. Scalable magnitude receives one
+0.20 Less factor in the existing commit snapshot (0.80 final factor), inherited by
+direct/periodic damage and the existing Poison status snapshot. It composes with
+Potency, Expanded Radius, Skill Delay and Echo without modifying costs, cooldowns,
+radius, lifetime, pulse spacing, status duration, Vortex pull rules or target caps.
+The runtime remains AreaRuntime, not AuraRuntime: no new reservation, upkeep,
+passive resource drain, self-buff or native HUD mutation.
+
+At release, the zone uses the current caster position, not the previously aimed
+terrain point. Each world-thread field tick updates the same footprint origin,
+including its vertical position. It does not sweep damage along the movement
+path, create a trail, reset the lifetime, rebuild per-target ledgers or allocate
+new fields. Query/LOS/control/collision checks and one-second unobserved-simulation
+gap rejection remain. Presentation consumes that same current footprint; this is
+implementation structure, not proof of visible connected behavior.
+
+OwnerAnchor explicitly carries actor and world identity. Missing, dead/removed,
+foreign-owner or changed-world anchors terminate and release the field/root budget.
+The native port reads live Health/DeathComponent and Transform before supplying
+that anchor. Existing logout/world teardown remains idempotent. No native entity
+reference is stored in the field. Invalid mobile starts reserve no field capacity.
+
+The first focused test run exposed a real integration requirement: immediate area
+casts previously skipped CommittedTarget capture. Mobile casts now capture their
+world identity before payment even without Skill Delay/Echo; other immediate area
+casts keep their prior path. Failure to capture rejects before resource mutation.
+The static-area fixture was corrected to retain its normal nullable-target path.
+The first full suite also caught the retained schema15 assertion, now updated to16.
+
+### Cohort G local gate
+
+26 new tests cover positive/negative component fixtures, finite non-Aura ownership,
+one payment/cooldown, snapshot composition, current release position, no damage
+trail, vertical movement, static-area invariance, lifetime/ledger preservation,
+missing/foreign anchors, adapter exceptions, capacity cleanup, LOS/overflow, lag,
+Vortex, Earthquake, Lingering, Skill Delay and Echo identity. These fixtures do not
+exercise connected Hytale movement, damage, input or rendering.
+
+`clean build`: **835 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot, clean shutdown/exit0 and packaged CustomUI9 validation PASS.
+Artifact: `evidence/stage-11/cohort-g/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `8902BD6C3D3B129AD28B6BBF1806E715CC03531C8AFDEC40DADE6F6EC45DBA6A`.
+Rollback: F, SHA-256
+`352B10F04699FD7B360BF43435451D4A9F51BD2890D18DC94E8DF2657202DAC6`.
+No live deployment, save migration, art changes, native ability or HUD changes.
+Local gate PASS; connected gate UNVERIFIED. Fifteen of40 Stage11 primitives now
+have local evidence;25 remain before Stage11 matrix/hardening closure.

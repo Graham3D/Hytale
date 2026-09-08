@@ -7,6 +7,14 @@ import java.util.Map;
 
 /** Native world authority. Geometry and timers never write Health or emulate a damage engine. */
 public interface AreaWorldPort {
+    record OwnerAnchor(java.util.UUID actorId, java.util.UUID worldId, Vec3 position) {
+        public OwnerAnchor {
+            java.util.Objects.requireNonNull(actorId); java.util.Objects.requireNonNull(worldId);
+            java.util.Objects.requireNonNull(position);
+        }
+    }
+    /** Current live caster Transform in the committed world; absent means stop, not use stale coordinates. */
+    default java.util.Optional<OwnerAnchor> ownerAnchor(SkillExecutionContext context) { return java.util.Optional.empty(); }
     record Target(String id, AreaGeometry.Bounds bounds, boolean boss) { }
     record Query(List<Target> targets, boolean overflow) {
         public Query { targets = List.copyOf(targets); }

@@ -194,7 +194,7 @@ public final class SkillExecutionService {
         }
         CommittedTarget target;
         try {
-            boolean capture=releaseModifiers.scheduled()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
+            boolean capture=releaseModifiers.scheduled()||prepared.plan.zones().mobileDomain()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
                     ||prepared.profile.support()!=null||prepared.profile.summon()!=null||prepared.profile.summonAction()!=null||prepared.profile.conversion()!=null;
             target=capture?port.captureTarget(prepared.profile,prepared.plan,prepared.request):null;
             if(capture && target==null) throw new IllegalStateException("COMMITTED_TARGET_ADAPTER_UNAVAILABLE");
@@ -221,6 +221,7 @@ public final class SkillExecutionService {
             // CombatSnapshotFactory alone installs compiled Increased modifiers (including Potency).
             var payloadLess=new java.util.ArrayList<>(prepared.plan.projectileModifiers().payloadLess());
             if(releaseModifiers.expandedRadius()&&!prepared.plan.radiusOnlyOnShrapnel())payloadLess.add(.10);
+            if(prepared.plan.zones().mobileDomain())payloadLess.add(.20);
             ModifierBuckets modifiers = new ModifierBuckets(java.util.List.of(), java.util.List.of(),
                     releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
                     payloadLess);

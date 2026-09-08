@@ -398,7 +398,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if (!admitted.equals("PASS")) return Validation.reject(admitted);
                 Vec3 feet = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
                 areaDirection = aim(store, actor);
-                areaPlacement = profile.family() == Stage04SkillProfile.Family.CONE ? feet : profile.area().placementRange() > 0
+                areaPlacement = profile.family() == Stage04SkillProfile.Family.CONE ? feet : profile.area().placementRange() > 0&&!plan.zones().mobileDomain()
                         ? HytaleAreaQueries.ground(store, feet.add(new Vec3(0, 1.35, 0)), areaDirection,
                             profile.area().placementRange()).orElse(null)
                         : HytaleAreaQueries.ground(store, feet.add(new Vec3(0, .15, 0)), new Vec3(0, -1, 0), .65).orElse(null);
@@ -524,6 +524,15 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(profile.area()!=null) {
                 String admission=areas.admission(playerRef.getUuid(),profile.skillId(),profile.area().trap());
                 if(!admission.equals("PASS"))return Validation.reject(admission);
+                if(context.compiledPlan().zones().mobileDomain()){
+                    if(!actorAliveAndUsable())return Validation.reject("MOBILE_OWNER_ANCHOR_UNAVAILABLE");
+                    // After Skill Delay, placement belongs to the current caster, not the old aim point.
+                    areaPlacement=HytaleAreaQueries.ground(store,feet.add(new Vec3(0,.15,0)),new Vec3(0,-1,0),.65).orElse(null);
+                    if(areaPlacement==null)return Validation.reject("NO_LEGAL_GROUND_SURFACE");
+                    areaDirection=target.direction();
+                    var attached=profile.area().footprint(feet,areaDirection,context.compiledPlan().executionModifiers().radiusFactor());
+                    return areaWorld().query(attached,profile.area().candidateBudget()).overflow()?Validation.reject("AREA_CANDIDATE_BUDGET"):Validation.pass();
+                }
                 double reach=profile.area().placementRange()>0?profile.area().placementRange():Math.max(.5,profile.area().radius());
                 if(feet.subtract(target.point()).horizontalLength()>reach+1e-6) return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
                 if(!HytaleAreaQueries.clear(store,feet.add(new Vec3(0,1.35,0)),target.point().add(new Vec3(0,.1,0))))
@@ -725,6 +734,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private AreaWorldPort areaWorld() {
             return new AreaWorldPort() {
                 private final Map<String, Ref<EntityStore>> refs = new HashMap<>();
+                @Override public java.util.Optional<OwnerAnchor> ownerAnchor(SkillExecutionContext context){
+                    if(!actorAliveAndUsable()||!context.request().actorId().equals(playerRef.getUuid()))return java.util.Optional.empty();
+                    var transform=store.getComponent(actor,TransformComponent.getComponentType());
+                    return transform==null?java.util.Optional.empty():java.util.Optional.of(
+                            new OwnerAnchor(playerRef.getUuid(),playerRef.getWorldUuid(),vec(transform.getPosition())));
+                }
                 @Override public Query query(AreaGeometry shape, int budget) {
                     refs.clear();
                     var found = HytaleAreaQueries.query(store, actor, shape, budget);

@@ -10,6 +10,18 @@ import java.util.Set;
 public final class ProfileComponentPolicy {
     private ProfileComponentPolicy(){}
     private static final class Canonical {static final Stage04SkillProfiles PROFILES=Stage04SkillProfiles.loadCanonical(RpgCatalog.loadCanonical());}
+    public static boolean mobileZone(String skill){
+        var p=Canonical.PROFILES.all().get(skill);return p!=null&&mobileZone(p);
+    }
+    public static boolean mobileZone(Stage04SkillProfile p){
+        var a=p.area();
+        // Warned/stratified impacts own a particular terrain placement; moving it after
+        // warning would invalidate the telegraph. No collision wall, corpse or trap seam.
+        return p.family()==Stage04SkillProfile.Family.GROUND_ZONE&&a!=null
+                &&a.geometry()==com.inigmasgames.hytalerpg.execution.area.AreaGeometry.Kind.DISC
+                &&a.lifetimeSeconds()>0&&(a.periodic()||a.impactCount()>1)
+                &&!a.stratified()&&!a.trap()&&a.warningSeconds()==0&&a.overheadHeight()==0&&a.armingSeconds()==0;
+    }
     public static Optional<Boolean> finiteDuration(String skill){
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(finiteDuration(p));
     }

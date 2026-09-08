@@ -19,6 +19,8 @@ public final class CompiledProfileResolver {
     public synchronized Stage04SkillProfile resolve(Stage04SkillProfile authored,CompiledSkillPlan plan){
         if(!authored.skillId().equals(plan.skillId().value())||plan.degraded()||plan.schemaVersion()!=CompiledSkillPlan.CURRENT_SCHEMA)
             throw new IllegalArgumentException("Profile requires a current matching compiled plan");
+        if(plan.zones().mobileDomain()&&!ProfileComponentPolicy.mobileZone(authored))
+            throw new IllegalArgumentException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
         var modifiers=plan.foundationModifiers();var geometry=plan.geometry();
         if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active())return authored;
         var key=new Key(authored,modifiers,geometry);
