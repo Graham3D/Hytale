@@ -62,7 +62,7 @@ definitions are read before each corresponding implementation.
 | 07 | 12 projectile continuation/multiplicity passives | R026 local gate complete; connected verification outstanding |
 | 08 | 8 line/beam/tether/orbit skills | R027 local gate complete; connected verification outstanding |
 | 09 | 16 support/barrier/Aura skills and 7 passives | R028 local gate complete: 516 retained tests, schema 5, all seven passive primitives; Flame Weapon root contact and Pedanticism native-enemy cooldown progress gated; connected verification outstanding |
-| 10 | 9 summon/corpse/conversion skills and 3 passives | not started |
+| 10 | 9 summon/corpse/conversion skills and 3 passives | R029 cohort A Wolf Summon local gate: 535 retained tests and normal three-mod boot/stop; Revive Fallen next; connected verification outstanding |
 | 11 | remaining 40 passives; component-scoped matrix/combinations | not started |
 | 12 | progression, attribution, exact-once rewards and acquisition | not started |
 | 13 | full 87/66 coverage, hardening, release-candidate assessment | not started |

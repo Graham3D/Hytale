@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "skills": [{
+    "skillId": "wolf_summon", "family": "SUMMON",
+    "allowedMainHandKinds": ["SPELLBOOK"], "requiredOffHandKinds": [], "secondaryFamilies": [],
+    "resourceType": "MANA", "resourceCost": 20, "cooldownSeconds": 25, "windupSeconds": 0,
+    "basePowerSource": "MAGIC_WEAPON", "innateBasePower": 0, "scaling": "MAGIC",
+    "summon": {"roleId": "RPG_Summon_Wolf", "element": "NATURE", "range": 6,
+      "count": 1, "healthFactor": 0.6, "coefficient": 0.55, "lifetime": 20,
+      "attackInterval": 1, "leash": 24}
+  }]
+}

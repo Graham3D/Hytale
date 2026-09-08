@@ -193,7 +193,7 @@ public final class SkillExecutionService {
         CommittedTarget target;
         try {
             boolean capture=releaseModifiers.scheduled()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
-                    ||prepared.profile.support()!=null;
+                    ||prepared.profile.support()!=null||prepared.profile.summon()!=null;
             target=capture?port.captureTarget(prepared.profile,prepared.plan,prepared.request):null;
             if(capture && target==null) throw new IllegalStateException("COMMITTED_TARGET_ADAPTER_UNAVAILABLE");
         } catch(RuntimeException error) {
@@ -312,7 +312,7 @@ public final class SkillExecutionService {
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.PROJECTILE))
                 throw new IllegalStateException("Projectile lifecycle transition failed");
             synchronized (activeContexts) { activeContexts.put(context.request().actorId(), context); }
-        } else terminate(context, "STRIKE_COMPLETE");
+        } else terminate(context, context.profile().summon()!=null?"SUMMON_DISPATCH_COMPLETE":"STRIKE_COMPLETE");
     }
 
     private double now() { return nanoTime.getAsLong()/1e9; }

@@ -1,0 +1,45 @@
+Compiled from "DeathSystems.java"
+public abstract class com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems$OnDeathSystem extends com.hypixel.hytale.component.system.RefChangeSystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent> {
+  public com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems$OnDeathSystem();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/RefChangeSystem."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent> componentType();
+    Code:
+         0: invokestatic  #7                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         3: areturn
+
+  public void onComponentSet(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: return
+
+  public void onComponentRemoved(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: return
+
+  public void onComponentRemoved(com.hypixel.hytale.component.Ref, com.hypixel.hytale.component.Component, com.hypixel.hytale.component.Store, com.hypixel.hytale.component.CommandBuffer);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: checkcast     #8                  // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+         6: aload_3
+         7: aload         4
+         9: invokevirtual #13                 // Method onComponentRemoved:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/entity/damage/DeathComponent;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;)V
+        12: return
+
+  public void onComponentSet(com.hypixel.hytale.component.Ref, com.hypixel.hytale.component.Component, com.hypixel.hytale.component.Component, com.hypixel.hytale.component.Store, com.hypixel.hytale.component.CommandBuffer);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: checkcast     #8                  // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+         6: aload_3
+         7: checkcast     #8                  // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+        10: aload         4
+        12: aload         5
+        14: invokevirtual #19                 // Method onComponentSet:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/entity/damage/DeathComponent;Lcom/hypixel/hytale/server/core/modules/entity/damage/DeathComponent;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;)V
+        17: return
+}

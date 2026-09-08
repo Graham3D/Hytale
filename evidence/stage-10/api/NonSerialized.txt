@@ -1,0 +1,34 @@
+Compiled from "NonSerialized.java"
+public class com.hypixel.hytale.component.NonSerialized<ECS_TYPE> implements com.hypixel.hytale.component.Component<ECS_TYPE> {
+  private static final com.hypixel.hytale.component.NonSerialized<?> INSTANCE;
+
+  public com.hypixel.hytale.component.NonSerialized();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public static <ECS_TYPE> com.hypixel.hytale.component.NonSerialized<ECS_TYPE> get();
+    Code:
+         0: getstatic     #7                  // Field INSTANCE:Lcom/hypixel/hytale/component/NonSerialized;
+         3: areturn
+
+  public com.hypixel.hytale.component.Component<ECS_TYPE> clone();
+    Code:
+         0: invokestatic  #13                 // Method get:()Lcom/hypixel/hytale/component/NonSerialized;
+         3: areturn
+
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+    Code:
+         0: aload_0
+         1: invokevirtual #17                 // Method clone:()Lcom/hypixel/hytale/component/Component;
+         4: areturn
+
+  static {};
+    Code:
+         0: new           #8                  // class com/hypixel/hytale/component/NonSerialized
+         3: dup
+         4: invokespecial #21                 // Method "<init>":()V
+         7: putstatic     #7                  // Field INSTANCE:Lcom/hypixel/hytale/component/NonSerialized;
+        10: return
+}

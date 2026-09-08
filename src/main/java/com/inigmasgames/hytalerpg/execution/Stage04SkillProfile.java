@@ -24,7 +24,18 @@ public record Stage04SkillProfile(
         Projectile projectile,
         com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area,
         com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile connection,
-        com.inigmasgames.hytalerpg.execution.support.SupportProfile support) {
+        com.inigmasgames.hytalerpg.execution.support.SupportProfile support,
+        com.inigmasgames.hytalerpg.execution.summon.SummonProfile summon) {
+
+    public Stage04SkillProfile(String skillId,Family family,Set<String> secondaryFamilies,Set<String> allowedMainHandKinds,
+            Set<String> requiredOffHandKinds,String resourceType,double resourceCost,double cooldownSeconds,double windupSeconds,
+            String basePowerSource,double innateBasePower,String scaling,Strike strike,Movement movement,Reaction reaction,Projectile projectile,
+            com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area,
+            com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile connection,
+            com.inigmasgames.hytalerpg.execution.support.SupportProfile support) {
+        this(skillId,family,secondaryFamilies,allowedMainHandKinds,requiredOffHandKinds,resourceType,resourceCost,cooldownSeconds,
+                windupSeconds,basePowerSource,innateBasePower,scaling,strike,movement,reaction,projectile,area,connection,support,null);
+    }
 
     public Stage04SkillProfile(String skillId,Family family,Set<String> secondaryFamilies,Set<String> allowedMainHandKinds,
             Set<String> requiredOffHandKinds,String resourceType,double resourceCost,double cooldownSeconds,double windupSeconds,
@@ -72,6 +83,7 @@ public record Stage04SkillProfile(
         if (projectile != null) return projectile.coefficient();
         if (area != null) return area.coefficient();
         if (connection != null) return connection.coefficient();
+        if (summon != null) return summon.coefficient();
         return 0.0;
     }
 
@@ -84,7 +96,7 @@ public record Stage04SkillProfile(
         return Map.of();
     }
 
-    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE, BURST, CONE, TRAP, GROUND_ZONE, WALL, OVERHEAD, BOMBARDMENT, LINE,BEAM,ORB,DIRECT_TARGET,AURA,BARRIER,BUFF }
+    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE, BURST, CONE, TRAP, GROUND_ZONE, WALL, OVERHEAD, BOMBARDMENT, LINE,BEAM,ORB,DIRECT_TARGET,AURA,BARRIER,BUFF,SUMMON,CORPSE }
     public enum Geometry { ARC, LINE, ASSIST_CONE, RADIUS }
     public enum MovementKind { DASH, LEAP }
 

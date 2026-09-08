@@ -1,3 +1,6 @@
+npcRoles.RPG_Summon_Wolf.name = RPG Summoned Wolf
+items.RPG_Ability_Wolf_Summon.name = Wolf Summon
+items.RPG_Ability_Wolf_Summon.description = Temporary allied wolf; RPG owns its cost, cooldown and damage.
 items.RPG_Ability_Quick_Slash.name = Quick Slash
 items.RPG_Ability_Quick_Slash.description = RPG skill projected into Hytale's native ability slot.
 items.RPG_Ability_Heavy_Swing.name = Heavy Swing

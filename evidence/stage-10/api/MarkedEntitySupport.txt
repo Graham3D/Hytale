@@ -1,0 +1,644 @@
+Compiled from "MarkedEntitySupport.java"
+public class com.hypixel.hytale.server.npc.role.support.MarkedEntitySupport implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.npc.role.support.MarkedEntitySupport> CODEC;
+
+  public static final java.lang.String DEFAULT_TARGET_SLOT;
+
+  protected static final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.npc.entities.NPCEntity> NPC_COMPONENT_TYPE;
+
+  private static final it.unimi.dsi.fastutil.objects.Object2IntMap<java.lang.String> EMPTY_TARGET_SLOT_MAP;
+
+  protected it.unimi.dsi.fastutil.objects.Object2IntMap<java.lang.String> targetSlotMappings;
+
+  protected it.unimi.dsi.fastutil.ints.Int2ObjectMap<java.lang.String> slotToNameMap;
+
+  protected com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>[] entityTargets;
+
+  protected org.joml.Vector3d[] storedPositions;
+
+  protected java.util.Map<java.lang.String, java.util.UUID> rebindUuids;
+
+  protected int defaultTargetSlot;
+
+  protected int targetSlotToIgnoreForAvoidance;
+
+  static final boolean $assertionsDisabled;
+
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.npc.role.support.MarkedEntitySupport> getComponentType();
+    Code:
+         0: invokestatic  #1                  // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+         3: invokevirtual #7                  // Method com/hypixel/hytale/server/npc/NPCPlugin.getMarkedEntitySupportComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: areturn
+
+  public static com.hypixel.hytale.server.npc.role.support.MarkedEntitySupport get(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_1
+         1: aload_0
+         2: invokestatic  #11                 // Method getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokeinterface #16,  3           // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        10: checkcast     #12                 // class com/hypixel/hytale/server/npc/role/support/MarkedEntitySupport
+        13: astore_2
+        14: getstatic     #22                 // Field $assertionsDisabled:Z
+        17: ifne          41
+        20: aload_2
+        21: ifnonnull     41
+        24: new           #26                 // class java/lang/AssertionError
+        27: dup
+        28: aload_0
+        29: invokestatic  #28                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        32: invokedynamic #34,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        37: invokespecial #38                 // Method java/lang/AssertionError."<init>":(Ljava/lang/Object;)V
+        40: athrow
+        41: aload_2
+        42: areturn
+
+  public com.hypixel.hytale.server.npc.role.support.MarkedEntitySupport();
+    Code:
+         0: aload_0
+         1: invokespecial #42                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #47                 // class java/util/HashMap
+         8: dup
+         9: invokespecial #49                 // Method java/util/HashMap."<init>":()V
+        12: putfield      #50                 // Field rebindUuids:Ljava/util/Map;
+        15: aload_0
+        16: ldc           #56                 // int -2147483648
+        18: putfield      #57                 // Field targetSlotToIgnoreForAvoidance:I
+        21: aload_0
+        22: invokevirtual #61                 // Method initEmpty:()V
+        25: return
+
+  private void initEmpty();
+    Code:
+         0: aload_0
+         1: getstatic     #64                 // Field EMPTY_TARGET_SLOT_MAP:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+         4: putfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+         7: aload_0
+         8: aconst_null
+         9: putfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        12: aload_0
+        13: getstatic     #75                 // Field com/hypixel/hytale/component/Ref.EMPTY_ARRAY:[Lcom/hypixel/hytale/component/Ref;
+        16: putfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+        19: aload_0
+        20: ldc           #56                 // int -2147483648
+        22: putfield      #84                 // Field defaultTargetSlot:I
+        25: aload_0
+        26: ldc           #56                 // int -2147483648
+        28: putfield      #57                 // Field targetSlotToIgnoreForAvoidance:I
+        31: return
+
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>[] getEntityTargets();
+    Code:
+         0: aload_0
+         1: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+         4: areturn
+
+  public void postRoleBuilder(com.hypixel.hytale.server.npc.asset.builder.BuilderSupport);
+    Code:
+         0: aload_1
+         1: invokevirtual #87                 // Method com/hypixel/hytale/server/npc/asset/builder/BuilderSupport.getTargetSlotMappings:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+         4: astore_2
+         5: aload_2
+         6: ifnull        56
+         9: aload_0
+        10: aload_2
+        11: putfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        14: aload_0
+        15: aload_1
+        16: invokevirtual #93                 // Method com/hypixel/hytale/server/npc/asset/builder/BuilderSupport.getTargetSlotToNameMap:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        19: putfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        22: aload_0
+        23: aload_0
+        24: getfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        27: invokeinterface #97,  1           // InterfaceMethod it/unimi/dsi/fastutil/objects/Object2IntMap.size:()I
+        32: anewarray     #76                 // class com/hypixel/hytale/component/Ref
+        35: putfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+        38: aload_0
+        39: aload_0
+        40: getfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        43: ldc           #103                // String LockedTarget
+        45: invokeinterface #105,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/Object2IntMap.getInt:(Ljava/lang/Object;)I
+        50: putfield      #84                 // Field defaultTargetSlot:I
+        53: goto          81
+        56: aload_0
+        57: getstatic     #64                 // Field EMPTY_TARGET_SLOT_MAP:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        60: putfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        63: aload_0
+        64: aconst_null
+        65: putfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        68: aload_0
+        69: getstatic     #75                 // Field com/hypixel/hytale/component/Ref.EMPTY_ARRAY:[Lcom/hypixel/hytale/component/Ref;
+        72: putfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+        75: aload_0
+        76: ldc           #56                 // int -2147483648
+        78: putfield      #84                 // Field defaultTargetSlot:I
+        81: aload_0
+        82: aload_1
+        83: invokevirtual #109                // Method com/hypixel/hytale/server/npc/asset/builder/BuilderSupport.allocatePositionSlots:()[Lorg/joml/Vector3d;
+        86: putfield      #113                // Field storedPositions:[Lorg/joml/Vector3d;
+        89: aload_0
+        90: aload_0
+        91: getfield      #84                 // Field defaultTargetSlot:I
+        94: putfield      #57                 // Field targetSlotToIgnoreForAvoidance:I
+        97: return
+
+  public void clearMarkedEntity(int);
+    Code:
+         0: aload_0
+         1: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+         4: iload_1
+         5: aconst_null
+         6: aastore
+         7: aload_0
+         8: iload_1
+         9: invokevirtual #117                // Method removeRebind:(I)V
+        12: return
+
+  public void setMarkedEntity(java.lang.String, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: getfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+         4: aload_1
+         5: invokeinterface #105,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/Object2IntMap.getInt:(Ljava/lang/Object;)I
+        10: istore_3
+        11: iload_3
+        12: iflt          21
+        15: aload_0
+        16: iload_3
+        17: aload_2
+        18: invokevirtual #121                // Method setMarkedEntity:(ILcom/hypixel/hytale/component/Ref;)V
+        21: return
+
+  public void setMarkedEntity(int, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_2
+         1: ifnull        11
+         4: aload_2
+         5: invokevirtual #125                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+         8: ifne          17
+        11: aload_0
+        12: iload_1
+        13: invokevirtual #129                // Method clearMarkedEntity:(I)V
+        16: return
+        17: aload_0
+        18: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+        21: iload_1
+        22: aload_2
+        23: aastore
+        24: aload_0
+        25: iload_1
+        26: invokevirtual #117                // Method removeRebind:(I)V
+        29: return
+
+  public void setMarkedEntity(java.lang.String, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, boolean, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: getfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+         4: aload_1
+         5: invokeinterface #105,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/Object2IntMap.getInt:(Ljava/lang/Object;)I
+        10: istore        5
+        12: iload         5
+        14: iflt          27
+        17: aload_0
+        18: iload         5
+        20: aload_2
+        21: iload_3
+        22: aload         4
+        24: invokevirtual #132                // Method setMarkedEntity:(ILcom/hypixel/hytale/component/Ref;ZLcom/hypixel/hytale/component/ComponentAccessor;)V
+        27: return
+
+  public void setMarkedEntity(int, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, boolean, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_2
+         1: ifnull        11
+         4: aload_2
+         5: invokevirtual #125                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+         8: ifne          17
+        11: aload_0
+        12: iload_1
+        13: invokevirtual #129                // Method clearMarkedEntity:(I)V
+        16: return
+        17: aload_0
+        18: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+        21: iload_1
+        22: aload_2
+        23: aastore
+        24: iload_3
+        25: ifeq          39
+        28: aload_0
+        29: iload_1
+        30: aload_2
+        31: aload         4
+        33: invokevirtual #135                // Method captureRebind:(ILcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+        36: goto          44
+        39: aload_0
+        40: iload_1
+        41: invokevirtual #117                // Method removeRebind:(I)V
+        44: return
+
+  private void captureRebind(int, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: getfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         4: ifnonnull     8
+         7: return
+         8: aload_0
+         9: getfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        12: iload_1
+        13: invokeinterface #139,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+        18: checkcast     #29                 // class java/lang/String
+        21: astore        4
+        23: aload         4
+        25: ifnonnull     29
+        28: return
+        29: aload_3
+        30: aload_2
+        31: invokestatic  #144                // Method com/hypixel/hytale/server/core/entity/UUIDComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        34: invokeinterface #16,  3           // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        39: checkcast     #145                // class com/hypixel/hytale/server/core/entity/UUIDComponent
+        42: astore        5
+        44: aload         5
+        46: ifnonnull     50
+        49: return
+        50: aload_0
+        51: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+        54: aload         4
+        56: aload         5
+        58: invokevirtual #147                // Method com/hypixel/hytale/server/core/entity/UUIDComponent.getUuid:()Ljava/util/UUID;
+        61: invokeinterface #151,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        66: pop
+        67: return
+
+  private void removeRebind(int);
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+         4: invokeinterface #157,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+         9: ifne          19
+        12: aload_0
+        13: getfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        16: ifnonnull     20
+        19: return
+        20: aload_0
+        21: getfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        24: iload_1
+        25: invokeinterface #139,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+        30: checkcast     #29                 // class java/lang/String
+        33: astore_2
+        34: aload_2
+        35: ifnull        49
+        38: aload_0
+        39: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+        42: aload_2
+        43: invokeinterface #160,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        48: pop
+        49: return
+
+  public boolean isRebindSlot(int);
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+         4: invokeinterface #157,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+         9: ifne          19
+        12: aload_0
+        13: getfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        16: ifnonnull     21
+        19: iconst_0
+        20: ireturn
+        21: aload_0
+        22: getfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        25: iload_1
+        26: invokeinterface #139,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+        31: checkcast     #29                 // class java/lang/String
+        34: astore_2
+        35: aload_2
+        36: ifnull        56
+        39: aload_0
+        40: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+        43: aload_2
+        44: invokeinterface #164,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+        49: ifeq          56
+        52: iconst_1
+        53: goto          57
+        56: iconst_0
+        57: ireturn
+
+  public void resolveRebinds(com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+         4: invokeinterface #157,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+         9: ifne          19
+        12: aload_0
+        13: getfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        16: ifnonnull     20
+        19: return
+        20: aload_0
+        21: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+        24: invokeinterface #168,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        29: invokeinterface #172,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        34: astore_2
+        35: aload_2
+        36: invokeinterface #178,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        41: ifeq          175
+        44: aload_2
+        45: invokeinterface #183,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        50: checkcast     #187                // class java/util/Map$Entry
+        53: astore_3
+        54: aload_0
+        55: getfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        58: aload_3
+        59: invokeinterface #189,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+        64: invokeinterface #105,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/Object2IntMap.getInt:(Ljava/lang/Object;)I
+        69: istore        4
+        71: iload         4
+        73: ifge          85
+        76: aload_2
+        77: invokeinterface #192,  1          // InterfaceMethod java/util/Iterator.remove:()V
+        82: goto          35
+        85: aload_0
+        86: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+        89: iload         4
+        91: aaload
+        92: astore        5
+        94: aload         5
+        96: ifnull        110
+        99: aload         5
+       101: invokevirtual #125                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+       104: ifeq          110
+       107: goto          35
+       110: aload_1
+       111: invokeinterface #194,  1          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getExternalData:()Ljava/lang/Object;
+       116: checkcast     #197                // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+       119: aload_3
+       120: invokeinterface #199,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+       125: checkcast     #202                // class java/util/UUID
+       128: invokevirtual #204                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getRefFromUUID:(Ljava/util/UUID;)Lcom/hypixel/hytale/component/Ref;
+       131: astore        6
+       133: aload         6
+       135: ifnull        158
+       138: aload         6
+       140: invokevirtual #125                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+       143: ifeq          158
+       146: aload_0
+       147: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+       150: iload         4
+       152: aload         6
+       154: aastore
+       155: goto          172
+       158: aload_0
+       159: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+       162: iload         4
+       164: aconst_null
+       165: aastore
+       166: aload_2
+       167: invokeinterface #192,  1          // InterfaceMethod java/util/Iterator.remove:()V
+       172: goto          35
+       175: return
+
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getMarkedEntityRef(java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+         4: aload_1
+         5: invokeinterface #105,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/Object2IntMap.getInt:(Ljava/lang/Object;)I
+        10: istore_2
+        11: iload_2
+        12: iflt          21
+        15: aload_0
+        16: iload_2
+        17: invokevirtual #208                // Method getMarkedEntityRef:(I)Lcom/hypixel/hytale/component/Ref;
+        20: areturn
+        21: aconst_null
+        22: areturn
+
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getMarkedEntityRef(int);
+    Code:
+         0: aload_0
+         1: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+         4: iload_1
+         5: aaload
+         6: astore_2
+         7: aload_2
+         8: ifnull        22
+        11: aload_2
+        12: invokevirtual #125                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        15: ifeq          22
+        18: aload_2
+        19: goto          23
+        22: aconst_null
+        23: areturn
+
+  public int getMarkedEntitySlotCount();
+    Code:
+         0: aload_0
+         1: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+         4: arraylength
+         5: ireturn
+
+  public org.joml.Vector3d getStoredPosition(int);
+    Code:
+         0: aload_0
+         1: getfield      #113                // Field storedPositions:[Lorg/joml/Vector3d;
+         4: iload_1
+         5: aaload
+         6: areturn
+
+  public boolean hasMarkedEntity(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, int);
+    Code:
+         0: aload_1
+         1: aload_0
+         2: iload_2
+         3: invokevirtual #208                // Method getMarkedEntityRef:(I)Lcom/hypixel/hytale/component/Ref;
+         6: invokevirtual #212                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+         9: ireturn
+
+  public boolean hasMarkedEntityInSlot(java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #68                 // Field targetSlotMappings:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+         4: aload_1
+         5: invokeinterface #105,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/Object2IntMap.getInt:(Ljava/lang/Object;)I
+        10: istore_2
+        11: iload_2
+        12: ifge          17
+        15: iconst_0
+        16: ireturn
+        17: aload_0
+        18: iload_2
+        19: invokevirtual #215                // Method hasMarkedEntityInSlot:(I)Z
+        22: ireturn
+
+  public boolean hasMarkedEntityInSlot(int);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: invokevirtual #208                // Method getMarkedEntityRef:(I)Lcom/hypixel/hytale/component/Ref;
+         5: ifnull        12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: ireturn
+
+  public void flockSetTarget(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.lang.String, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_1
+         1: aload         4
+         3: invokestatic  #219                // Method com/hypixel/hytale/server/flock/FlockPlugin.getFlockReference:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/component/Ref;
+         6: astore        5
+         8: aload         5
+        10: ifnull        37
+        13: aload         4
+        15: aload         5
+        17: invokestatic  #225                // Method com/hypixel/hytale/server/core/entity/group/EntityGroup.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        20: invokevirtual #228                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        23: checkcast     #226                // class com/hypixel/hytale/server/core/entity/group/EntityGroup
+        26: invokedynamic #231,  0            // InvokeDynamic #1:accept:()Lcom/hypixel/hytale/function/consumer/QuadConsumer;
+        31: aload_1
+        32: aload_3
+        33: aload_2
+        34: invokevirtual #235                // Method com/hypixel/hytale/server/core/entity/group/EntityGroup.forEachMember:(Lcom/hypixel/hytale/function/consumer/QuadConsumer;Lcom/hypixel/hytale/component/Ref;Ljava/lang/Object;Ljava/lang/Object;)V
+        37: return
+
+  public void setTargetSlotToIgnoreForAvoidance(int);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: iflt          9
+         5: iload_1
+         6: goto          13
+         9: aload_0
+        10: getfield      #84                 // Field defaultTargetSlot:I
+        13: putfield      #57                 // Field targetSlotToIgnoreForAvoidance:I
+        16: return
+
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getTargetReferenceToIgnoreForAvoidance();
+    Code:
+         0: aload_0
+         1: getfield      #57                 // Field targetSlotToIgnoreForAvoidance:I
+         4: ifge          9
+         7: aconst_null
+         8: areturn
+         9: aload_0
+        10: aload_0
+        11: getfield      #57                 // Field targetSlotToIgnoreForAvoidance:I
+        14: invokevirtual #208                // Method getMarkedEntityRef:(I)Lcom/hypixel/hytale/component/Ref;
+        17: areturn
+
+  public java.lang.String getSlotName(int);
+    Code:
+         0: aload_0
+         1: getfield      #71                 // Field slotToNameMap:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         4: iload_1
+         5: invokeinterface #139,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+        10: checkcast     #29                 // class java/lang/String
+        13: areturn
+
+  public void unloaded();
+    Code:
+         0: aload_0
+         1: getfield      #81                 // Field entityTargets:[Lcom/hypixel/hytale/component/Ref;
+         4: aconst_null
+         5: invokestatic  #239                // Method java/util/Arrays.fill:([Ljava/lang/Object;Ljava/lang/Object;)V
+         8: return
+
+  public com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> clone();
+    Code:
+         0: new           #12                 // class com/hypixel/hytale/server/npc/role/support/MarkedEntitySupport
+         3: dup
+         4: invokespecial #245                // Method "<init>":()V
+         7: astore_1
+         8: aload_1
+         9: new           #47                 // class java/util/HashMap
+        12: dup
+        13: aload_0
+        14: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+        17: invokespecial #246                // Method java/util/HashMap."<init>":(Ljava/util/Map;)V
+        20: putfield      #50                 // Field rebindUuids:Ljava/util/Map;
+        23: aload_1
+        24: areturn
+
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+    Code:
+         0: aload_0
+         1: invokevirtual #249                // Method clone:()Lcom/hypixel/hytale/component/Component;
+         4: areturn
+
+  private static void lambda$flockSetTarget$0(com.hypixel.hytale.component.Ref, com.hypixel.hytale.component.Ref, com.hypixel.hytale.component.Ref, java.lang.String);
+    Code:
+         0: aload_0
+         1: invokevirtual #253                // Method com/hypixel/hytale/component/Ref.getStore:()Lcom/hypixel/hytale/component/Store;
+         4: aload_0
+         5: getstatic     #257                // Field NPC_COMPONENT_TYPE:Lcom/hypixel/hytale/component/ComponentType;
+         8: invokevirtual #228                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        11: checkcast     #261                // class com/hypixel/hytale/server/npc/entities/NPCEntity
+        14: astore        4
+        16: aload         4
+        18: ifnonnull     22
+        21: return
+        22: aload         4
+        24: aload_3
+        25: aload_2
+        26: invokevirtual #263                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.onFlockSetTarget:(Ljava/lang/String;Lcom/hypixel/hytale/component/Ref;)V
+        29: return
+
+  private static java.util.Map lambda$static$1(com.hypixel.hytale.server.npc.role.support.MarkedEntitySupport);
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+         4: invokeinterface #157,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+         9: ifeq          16
+        12: aconst_null
+        13: goto          20
+        16: aload_0
+        17: getfield      #50                 // Field rebindUuids:Ljava/util/Map;
+        20: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.npc.role.support.MarkedEntitySupport, java.util.Map);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #50                 // Field rebindUuids:Ljava/util/Map;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #12                 // class com/hypixel/hytale/server/npc/role/support/MarkedEntitySupport
+         2: invokevirtual #267                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #22                 // Field $assertionsDisabled:Z
+        16: ldc           #12                 // class com/hypixel/hytale/server/npc/role/support/MarkedEntitySupport
+        18: invokedynamic #272,  0            // InvokeDynamic #2:get:()Ljava/util/function/Supplier;
+        23: invokestatic  #275                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        26: new           #281                // class com/hypixel/hytale/codec/KeyedCodec
+        29: dup
+        30: ldc_w         #283                // String RebindTargets
+        33: new           #285                // class com/hypixel/hytale/codec/codecs/map/MapCodec
+        36: dup
+        37: getstatic     #287                // Field com/hypixel/hytale/codec/Codec.UUID_BINARY:Lcom/hypixel/hytale/codec/codecs/UUIDBinaryCodec;
+        40: invokedynamic #293,  0            // InvokeDynamic #3:get:()Ljava/util/function/Supplier;
+        45: iconst_0
+        46: invokespecial #294                // Method com/hypixel/hytale/codec/codecs/map/MapCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/Supplier;Z)V
+        49: invokespecial #297                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        52: invokedynamic #300,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        57: invokedynamic #303,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        62: invokevirtual #307                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        65: invokevirtual #313                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        68: checkcast     #308                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        71: invokevirtual #319                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        74: putstatic     #323                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        77: invokestatic  #327                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        80: putstatic     #257                // Field NPC_COMPONENT_TYPE:Lcom/hypixel/hytale/component/ComponentType;
+        83: new           #328                // class it/unimi/dsi/fastutil/objects/Object2IntOpenHashMap
+        86: dup
+        87: iconst_0
+        88: invokespecial #330                // Method it/unimi/dsi/fastutil/objects/Object2IntOpenHashMap."<init>":(I)V
+        91: putstatic     #64                 // Field EMPTY_TARGET_SLOT_MAP:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        94: getstatic     #64                 // Field EMPTY_TARGET_SLOT_MAP:Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        97: ldc           #56                 // int -2147483648
+        99: invokeinterface #332,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/Object2IntMap.defaultReturnValue:(I)V
+       104: return
+}

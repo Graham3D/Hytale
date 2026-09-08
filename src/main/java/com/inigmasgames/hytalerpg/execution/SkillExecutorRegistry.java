@@ -45,6 +45,8 @@ public final class SkillExecutorRegistry {
                 forwarding(Stage04SkillProfile.Family.AURA, SkillExecutionPort::executeSupport),
                 forwarding(Stage04SkillProfile.Family.BARRIER, SkillExecutionPort::executeSupport),
                 forwarding(Stage04SkillProfile.Family.BUFF, SkillExecutionPort::executeSupport),
+                forwarding(Stage04SkillProfile.Family.SUMMON, SkillExecutionPort::executeSummon),
+                forwarding(Stage04SkillProfile.Family.CORPSE, SkillExecutionPort::executeSummon),
                 forwarding(Stage04SkillProfile.Family.BEAM, SkillExecutionPort::executeConnection),
                 forwarding(Stage04SkillProfile.Family.ORB, SkillExecutionPort::executeConnection)));
     }

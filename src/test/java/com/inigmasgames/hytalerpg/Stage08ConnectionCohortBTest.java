@@ -13,7 +13,7 @@ import static com.inigmasgames.hytalerpg.Stage08ConnectionTest.*;
 
 class Stage08ConnectionCohortBTest {
     @Test void exactFiveProfilesCompleteStage08WithoutExpandingCatalog() {
-        var p=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(35,p.all().values().stream().filter(profile->profile.support()==null).count());
+        var p=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(35,p.all().values().stream().filter(profile->profile.support()==null&&profile.summon()==null).count());
         var root=p.require("root_lash");assertEquals(ConnectionProfile.Kind.TETHER,root.connection().kind());assertEquals(12,root.connection().range());
         assertEquals(.7,root.connection().width());assertEquals(.7,root.damageCoefficient());assertEquals(Map.of("ROOT",1.5),root.authoredStatuses());assertEquals(9,root.resourceCost());
         var line=p.require("lightning_bolt");assertEquals(.15,line.windupSeconds());assertEquals(1.45,line.damageCoefficient());assertEquals(24,line.connection().range());

@@ -121,6 +121,13 @@ public final class Phase00Plugin extends JavaPlugin {
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
                 combatTrace, reactions, vfx, bosses);
         var supportSystem=skillExecutionSystem.configureSupport(loadouts);
+        var summonSystem=skillExecutionSystem.configureSummons();
+        com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.class,
+                com.inigmasgames.hytalerpg.execution.hytale.SummonProjection::new));
+        getEntityStoreRegistry().registerSystem(summonSystem);
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSummonSystem.Removal(summonSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSummonSystem.DamageGuard(summonSystem));
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         var rpgCommand=new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
                 uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities);
@@ -247,8 +254,11 @@ public final class Phase00Plugin extends JavaPlugin {
                 throw new IllegalStateException("Missing Stage 08 native damage channel: "+cause);
         LOGGER.atInfo().log("RPG_STAGE08_ASSETS revision=%s connectionProfiles=%d nativeDamageChannels=5 result=PASS connectedProof=false",
                 BuildIdentity.REVISION,Stage04SkillProfiles.EXPECTED_STAGE08_PROFILES);
-        LOGGER.atInfo().log("RPG_STAGE09_READY revision=%s supportProfiles=%d playerSchema=4 regenAdapter=NATIVE_ENTRY_DECORATOR reservationProjection=STATIC_MAX allyPolicy=SELF_OR_NATIVE_FRIENDLY connectedProof=false",
+        LOGGER.atInfo().log("RPG_STAGE09_READY revision=%s supportProfiles=%d playerSchema=5 regenAdapter=NATIVE_ENTRY_DECORATOR reservationProjection=STATIC_MAX allyPolicy=SELF_OR_NATIVE_FRIENDLY connectedProof=false",
                 BuildIdentity.REVISION,Stage04SkillProfiles.EXPECTED_STAGE09_PROFILES);
+        com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Wolf");
+        LOGGER.atInfo().log("RPG_STAGE10_ASSETS revision=%s summonProfiles=%d role=RPG_Summon_Wolf result=PASS connectedProof=false",
+                BuildIdentity.REVISION,Stage04SkillProfiles.EXPECTED_STAGE10_PROFILES);
     }
 
     @Override
