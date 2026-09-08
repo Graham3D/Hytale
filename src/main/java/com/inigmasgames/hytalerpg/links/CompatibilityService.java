@@ -27,8 +27,17 @@ public final class CompatibilityService {
                 "orbiting_shadow_blades","battle_cry","pack_howl","thorns_aura","emanatism",
                 "chilling_aura","pedanticism","reaping_storm").contains(skill.id().value()))
             return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Long Reach cannot scale a radius-only component.",Set.of("DECLARED_REACH_NOT_RADIUS"),actual);
-        if(passive.id().value().equals("efficiency")&&actual.contains("MANA_RESERVATION")&&!actual.contains("HAS_UPKEEP"))
-            return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Efficiency cannot reduce a pure Mana reservation.",Set.of("FINITE_SPEND_OR_UPKEEP"),actual);
+        if(Set.of("efficiency","overcharge").contains(passive.id().value())&&actual.contains("MANA_RESERVATION")&&!actual.contains("HAS_UPKEEP"))
+            return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,passive.name()+" cannot modify a pure Mana reservation.",Set.of("FINITE_SPEND_OR_UPKEEP"),actual);
+        if(passive.id().value().equals("lingering")&&com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.finiteDuration(skill.id().value()).filter(value->!value).isPresent())
+            return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Lingering requires a finite effect component, not flight, channel maximum, attack sequence, warning or crowd-control duration.",Set.of("FINITE_EFFECT_DURATION_COMPONENT"),actual);
+        if(passive.id().value().equals("concentration")){
+            var area=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.affectedArea(skill.id().value());
+            if(area.filter(value->!value).isPresent())return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
+                    "Concentration requires an affected area, not a projectile collision or target-lock width.",Set.of("AFFECTED_AREA_COMPONENT"),actual);
+            // Local assessment only: this set is not written into the skill or compiled global tags.
+            if(area.orElse(false))actual.add("HAS_AREA_GEOMETRY");
+        }
 
         if (!passive.requiredFamilies().isEmpty() && passive.requiredFamilies().stream().noneMatch(actual::contains)) {
             return CompatibilityResult.rejected(ValidationCode.WRONG_FAMILY,

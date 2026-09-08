@@ -94,3 +94,80 @@ Stage10 final build; no new player-state migration is introduced in this cohort.
 Next authorized work: remaining Stage11 primitives in bounded cohorts, then the
 complete eligibility/pair matrix and graph-fuzz closure. Do not present these
 three primitives as completion of all40 Stage11 passives.
+
+## Cohort B — Overcharge, Concentration, Lingering
+
+Baseline: cohort A `ae687e7`. Exact LP006/007/009 master records reread in full.
+Player schema remains5; compiled-plan schema11 invalidates the changed typed
+profile transforms. No additional skills, HUD controls or native interactions.
+
+### Decisions and implementation
+
+- Overcharge adds0.25 to the existing Increased bucket and multiplies spend/upkeep
+  by1.20 before affordability. With Potency, Increased is0.40, not1.15×1.25.
+  Existing fractional upkeep and integer-upfront ceiling remain authoritative.
+  Pure reservation payloads reject it, even with incorrect imported finite-cost
+  tags. Quickstep rejects it because it has no scalable effect payload.
+- Concentration adds0.30 Increased and transforms exactly the relevant footprint
+  dimensions: radial radii×0.70; cone/arc angle×0.70; line/wall width×0.70.
+  Radial inner/impact/status thresholds remain proportional to the radial
+  footprint. It does not change placement range, height, wall length, projectile
+  collision size or Orbit blade collision size. Expanded Radius remains a later
+  1.25 radius factor: a5m Ground Slam becomes4.375m, not a double reduction.
+- Concentration fixtures exposed imported-tag errors: Frost Bolt had an area tag
+  for its collision shape; Wall of Fire/Void Beam lacked one despite their real
+  affected footprints. `ProfileComponentPolicy` derives only this assessment from
+  current immutable runtime records. The local eligibility result does not add
+  global tags to the catalog/compiler, demonstrated by a dedicated test.
+- Lingering extends finite actor, trap, zone, shield, non-control buff/debuff,
+  pulse-Orb, and DoT effect duration by1.40. It multiplies the existing spend or
+  attributable upkeep by1.15. An instantaneous hit with a finite Burn may extend
+  that Burn; it cannot extend the projectile's flight. Imported duration tags
+  alone do not qualify flight-only effects, reaction windows, crowd-control-only
+  effects (including Dominate), attack sequences, or channel maximum durations.
+- Periodic and repeated area schedules retain their cadence. Counts/caps that
+  were derived from lifetime expand to cover the new duration, bounded at48
+  impacts and256 ticks. Authored smaller per-cast hit caps remain unchanged
+  (e.g. Avalanche3). Warning, arming, descent and crowd-control timing do not
+  change. This avoids an apparently longer zone whose damage silently stops at
+  its old lifetime-derived hit cap.
+- Burn uses the existing `PeriodicStatusRuntime` duration/DPS integration. The
+ 4s Fire Bolt Burn becomes5.6s: five full1s slices plus0.6s, not six full ticks.
+  Native visual duration uses the same resolved status field. No parallel status
+  clock or damage engine was added. Related projection remains connected-unverified.
+- Wolf Summon becomes28s for23 Mana. Combining Minion Empowerment yields21s;
+  its existing power/Health multipliers are unchanged. Finite Reaping Storm may
+  extend, but indefinite reservation Auras do not acquire a synthetic lifetime.
+
+### Evidence scope and limitations
+
+32 new tests include positive/two-negative primitive fixtures, additive bucket
+composition, resource payment, geometry rejection, no-global-tag leakage, real
+summon lease expiry, a real `SkillExecutionService`→`AreaRuntime` extended-zone
+fixture, ownership cleanup, and the existing DoT runtime's fractional tail.
+One test initially referenced the harness's SupportRuntime instead of its local
+AreaRuntime; that fixture naming collision was corrected before build validation.
+
+Profile policy currently refines the60 implemented runtime profiles. Unknown
+future runtime records still use catalog gates and cannot execute without a
+profile. The remaining27 Stage04/05 records must be audited when implemented;
+their catalog presence is not completion. Component-introduced Shrapnel-only
+Concentration is not granted globally to the original projectile carrier.
+
+Connected proofs still required: changed range/footprint/telegraph, actual native
+duration/status application, actual cost/upkeep and the R024 native input path.
+These unit-runtime fixtures are not evidence of native/client execution.
+
+### Cohort B local gate
+
+`clean build`: **719 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot and clean exit0 PASS; all retained native assets and roles
+resolved. Packaged RPG CustomUI audit9 documents PASS. No live deployment.
+
+Artifact: `evidence/stage-11/cohort-b/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `F7000238722525048C3A018A858F6F590DEFBE38612054356A40FBDA883AD082`.
+Rollback: cohort A, SHA-256
+`7558FABC74B0D9068E603330844FC2455836E5723D2ED71BD73BCC4A5288C1D0`.
+Machine evidence and all test-case names are in `evidence/stage-11/cohort-b`.
+Local gate PASS; connected UNVERIFIED. Six of40 Stage11 passive primitives now
+have local implementation evidence;34 remain before matrix/hardening closure.

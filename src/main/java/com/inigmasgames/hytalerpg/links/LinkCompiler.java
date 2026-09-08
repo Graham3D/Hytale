@@ -133,6 +133,9 @@ public final class LinkCompiler {
                 case "potency" -> scalablePayloadIncreased += balance.potencyIncreased;
                 case "ballistics" -> scalablePayloadIncreased += .30;
                 case "efficiency" -> resourceCostMultiplier *= 0.85;
+                case "overcharge" -> {scalablePayloadIncreased+=.25;resourceCostMultiplier*=1.20;}
+                case "concentration" -> scalablePayloadIncreased+=.30;
+                case "lingering" -> resourceCostMultiplier*=1.15;
                 default -> { }
             }
             if (passive.id().value().equals("expanded_radius")) {

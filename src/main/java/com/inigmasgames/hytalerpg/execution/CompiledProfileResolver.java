@@ -20,7 +20,7 @@ public final class CompiledProfileResolver {
         if(!authored.skillId().equals(plan.skillId().value())||plan.degraded()||plan.schemaVersion()!=CompiledSkillPlan.CURRENT_SCHEMA)
             throw new IllegalArgumentException("Profile requires a current matching compiled plan");
         var modifiers=plan.foundationModifiers();
-        if(!modifiers.longReach()&&!modifiers.rapidInvocation())return authored;
+        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering())return authored;
         var key=new Key(authored,modifiers);
         var prior=cache.get(key);if(prior!=null)return prior;
         JsonObject resolved=JSON.toJsonTree(authored).getAsJsonObject();
@@ -46,6 +46,8 @@ public final class CompiledProfileResolver {
             scale(resolved,"conversion",reach,"range");
             scale(resolved,"cage",reach,"range");
         }
+        if(modifiers.concentration())concentrate(authored,resolved);
+        if(modifiers.lingering())linger(authored,resolved);
         var effective=JSON.fromJson(resolved,Stage04SkillProfile.class);
         if(cache.size()>=CAPACITY)cache.remove(cache.keySet().iterator().next());
         cache.put(key,effective);return effective;
@@ -56,5 +58,55 @@ public final class CompiledProfileResolver {
         for(String field:fields)if(value.has(field))value.addProperty(field,value.get(field).getAsDouble()*factor);
     }
     public synchronized int cachedProfiles(){return cache.size();}
+    private static void concentrate(Stage04SkillProfile p,JsonObject root){
+        if(p.strike()!=null)switch(p.strike().geometry()){
+            case ARC,ASSIST_CONE->scale(root,"strike",.7,"angleDegrees");
+            case LINE->scale(root,"strike",.7,"lineHalfWidth");
+            case RADIUS->scale(root,"strike",.7,"range");
+        }
+        scale(root,"movement",.7,"landingRadius");
+        if(p.area()!=null)switch(p.area().geometry()){
+            case DISC->scale(root,"area",.7,"radius","innerRadius","impactRadius","statusInnerRadius","pullCoreRadius","visualCoreRadius");
+            case SECTOR->scale(root,"area",.7,"angleDegrees");
+            case RECTANGLE->scale(root,"area",.7,"width");
+        }
+        if(p.connection()!=null)switch(p.connection().kind()){
+            case ORBIT->scale(root,"connection",.7,"range"); // Contact collision radius is unchanged.
+            case ORB->scale(root,"connection",.7,"radius");
+            default->scale(root,"connection",.7,"width");
+        }
+        scale(root,"support",.7,"radius");scale(root,"summonAction",.7,"radius");scale(root,"cage",.7,"radius");
+    }
+    private static void linger(Stage04SkillProfile p,JsonObject root){
+        if(!ProfileComponentPolicy.finiteDuration(p))throw new IllegalArgumentException("NO_FINITE_EFFECT_DURATION_COMPONENT");
+        scale(root,"summon",1.4,"lifetime");scale(root,"summonAction",1.4,"duration");scale(root,"cage",1.4,"duration");
+        if(p.support()!=null&&p.support().kind()!=com.inigmasgames.hytalerpg.execution.support.SupportProfile.Kind.FEAR
+                &&p.support().kind()!=com.inigmasgames.hytalerpg.execution.support.SupportProfile.Kind.TAUNT)scale(root,"support",1.4,"durationSeconds");
+        if(p.connection()!=null&&java.util.Set.of(com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile.Kind.ORB,
+                com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile.Kind.ORBIT).contains(p.connection().kind()))scale(root,"connection",1.4,"lifetimeSeconds");
+        if(p.strike()!=null&&ProfileComponentPolicy.periodicStatus(p.strike().statusId()))scale(root,"strike",1.4,"statusSeconds");
+        if(p.projectile()!=null&&p.projectile().hasPeriodicStatus()){
+            scale(root,"projectile",1.4,"statusSeconds");
+            // Runtime integrates duration and DPS, including the fractional final slice.
+            root.getAsJsonObject("projectile").addProperty("periodicTicks",(int)Math.ceil(p.projectile().statusSeconds()*1.4/p.projectile().periodicIntervalSeconds()));
+        }
+        if(p.area()!=null){
+            var a=p.area();var value=root.getAsJsonObject("area");
+            if(ProfileComponentPolicy.periodicStatus(a.status()))scale(root,"area",1.4,"statusSeconds","statusInnerSeconds");
+            if(a.lifetimeSeconds()>0){
+                scale(root,"area",1.4,"lifetimeSeconds");
+                // Preserve cadence. Schedule-derived caps expand, explicitly smaller per-cast caps do not.
+                int before=a.periodic()?(int)Math.ceil(a.lifetimeSeconds()/a.intervalSeconds()):a.impactCount();
+                int after=a.periodic()?(int)Math.ceil(a.lifetimeSeconds()*1.4/a.intervalSeconds()):a.impactCount();
+                if(a.impactCount()>1){
+                    after=(int)Math.ceil((a.lifetimeSeconds()*1.4-a.firstImpactSeconds())/a.intervalSeconds()-1e-9);
+                    if(after>48)throw new IllegalArgumentException("LINGERING_IMPACT_BUDGET");
+                    value.addProperty("impactCount",after);
+                }
+                if(after>256)throw new IllegalArgumentException("LINGERING_TICK_BUDGET");
+                if(!a.trap()&&a.perTargetHitCap()==before)value.addProperty("perTargetHitCap",after);
+            }
+        }
+    }
     private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers){}
 }

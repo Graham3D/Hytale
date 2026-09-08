@@ -2,7 +2,10 @@
 param([ValidateSet('a','b','c','d','e','f','g','h','i','j','k','l','m','n')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $passiveRoot=(Resolve-Path "$PSScriptRoot\..").Path
-$passiveConfig=@{a=@{tests=687;passives=@('efficiency','long_reach','rapid_invocation');planSchema=10;rollback='evidence\stage-10\cohort-g\artifacts\HytaleRPG-0.0.22.jar'}}[$Cohort]
+$passiveConfig=@{
+    a=@{tests=687;passives=@('efficiency','long_reach','rapid_invocation');planSchema=10;rollback='evidence\stage-10\cohort-g\artifacts\HytaleRPG-0.0.22.jar'}
+    b=@{tests=719;passives=@('overcharge','concentration','lingering');planSchema=11;rollback='evidence\stage-11\cohort-a\artifacts\HytaleRPG-0.0.23.jar'}
+}[$Cohort]
 if(-not $passiveConfig){throw 'Cohort must declare tested scope before evidence capture'}
 $passiveEvidence=Join-Path $passiveRoot "evidence\stage-11\cohort-$Cohort"
 $passiveJar=Join-Path $passiveRoot 'build\libs\HytaleRPG-0.0.23.jar'

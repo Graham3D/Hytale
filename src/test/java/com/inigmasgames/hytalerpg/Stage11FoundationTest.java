@@ -46,7 +46,7 @@ class Stage11FoundationTest {
     @Test void rapidInvocationRejectsReactionWindow(){assertFalse(accepts("riposte","rapid_invocation"));}
     @Test void rapidInvocationCannotAccelerateSkillDelay(){var p=plan("heavy_swing","rapid_invocation","skill_delay");assertEquals(2,p.executionModifiers().delaySeconds());assertEquals(.36,resolver.resolve(profiles.require("heavy_swing"),p).windupSeconds(),1e-9);}
     @Test void rapidInvocationKeepsMinimumAndDoesNotMakeZeroNonzero(){var m=FoundationModifiers.from(List.of(new PassiveId("rapid_invocation")));assertEquals(.05,m.windup(.01));assertEquals(0,m.windup(0));}
-    @Test void compiledPlanIsSlotScopedAndHasNoRangeLeak(){var plain=plan("fire_bolt");var modified=plan("fire_bolt","long_reach");assertNotEquals(plain.planHash(),modified.planHash());assertSame(profiles.require("fire_bolt"),resolver.resolve(profiles.require("fire_bolt"),plain));assertEquals(10,modified.schemaVersion());}
+    @Test void compiledPlanIsSlotScopedAndHasNoRangeLeak(){var plain=plan("fire_bolt");var modified=plan("fire_bolt","long_reach");assertNotEquals(plain.planHash(),modified.planHash());assertSame(profiles.require("fire_bolt"),resolver.resolve(profiles.require("fire_bolt"),plain));assertEquals(CompiledSkillPlan.CURRENT_SCHEMA,modified.schemaVersion());}
     @Test void mismatchedPlanCannotRewriteAnotherSkill(){assertThrows(IllegalArgumentException.class,()->resolver.resolve(profiles.require("heavy_swing"),plan("fire_bolt","long_reach")));}
     @Test void realExecutionReceivesEffectiveWindupAndReachBeforeCommit(){
         var h=new Stage09SupportRuntimeTest.Harness("heavy_swing"){
