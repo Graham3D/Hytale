@@ -11,7 +11,14 @@ public final class CompatibilityService {
     /** Component-introduction seam: do not grant radius to the original projectile carrier. */
     public CompatibilityResult assess(SkillDefinition skill,PassiveDefinition passive,java.util.List<PassiveDefinition> selected) {
         var base=assess(skill,passive);
-        if(base.accepted()||!passive.id().value().equals("expanded_radius"))return base;
+        if(base.accepted())return base;
+        boolean shockwave=selected.stream().anyMatch(p->p.id().value().equals("shockwave")&&assess(skill,p).accepted());
+        boolean cleave=selected.stream().anyMatch(p->p.id().value().equals("cleaving_edge")&&assess(skill,p).accepted());
+        if(passive.id().value().equals("concentration")&&(shockwave||cleave))return new CompatibilityResult(true,ValidationCode.ACCEPTED,
+                "Concentration applies only to the introduced secondary area component, not the original single-target strike",Set.of("HAS_AREA_GEOMETRY"),Set.of("COMPONENT_STRIKE_SECONDARY","AREA","DAMAGE","HAS_AREA_GEOMETRY"));
+        if(!passive.id().value().equals("expanded_radius"))return base;
+        if(shockwave)return new CompatibilityResult(true,ValidationCode.ACCEPTED,"Expanded Radius applies only to the Shockwave Burst, not the original strike",
+                Set.of("HAS_RADIUS"),Set.of("COMPONENT_SHOCKWAVE","BURST","AREA","DAMAGE","HAS_RADIUS"));
         boolean shrapnel=selected.stream().anyMatch(p->p.id().value().equals("shrapnel")&&assess(skill,p).accepted());
         if(!shrapnel)return base;
         return new CompatibilityResult(true,ValidationCode.ACCEPTED,"Compatible with Shrapnel secondary radius only",Set.of("HAS_RADIUS"),
@@ -23,7 +30,7 @@ public final class CompatibilityService {
         if(Set.of("cleaving_edge","phantom_reach").contains(passive.id().value())&&
                 (skill.id().value().equals("ground_slam")||com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.frontalStrike(skill.id().value()).filter(v->!v).isPresent()))
             return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,passive.name()+" requires a frontal damaging Strike, not a radial, movement or reaction-only component.",Set.of("FRONTAL_STRIKE_COMPONENT"),actual);
-        if(Set.of("multistrike","ruthless").contains(passive.id().value())&&
+        if(Set.of("multistrike","ruthless","shockwave").contains(passive.id().value())&&
                 com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.discreteStrike(skill.id().value(),passive.id().value().equals("multistrike")).filter(v->!v).isPresent())
             return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,passive.name()+" requires an independent discrete damaging Strike; Multistrike excludes an already authored sequence.",Set.of("DISCRETE_STRIKE_COMPONENT"),actual);
         if(passive.id().value().equals("multistrike")&&Set.of("dagger_flurry","whirlwind").contains(skill.id().value()))

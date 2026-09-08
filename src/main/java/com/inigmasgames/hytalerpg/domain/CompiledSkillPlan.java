@@ -27,7 +27,7 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 23;
+    public static final int CURRENT_SCHEMA = 24;
     public StrikeModifiers strikes(){return StrikeModifiers.from(passiveOrder);}
     public ResourceModifiers resources(){return ResourceModifiers.from(passiveOrder);}
     public ControlModifiers controls(){return ControlModifiers.from(passiveOrder);}
@@ -97,6 +97,9 @@ public record CompiledSkillPlan(
         }
     }
     public boolean radiusOnlyOnShrapnel(){return executionModifiers().expandedRadius()&&projectileModifiers().shrapnel()&&!finalTags.contains("HAS_RADIUS");}
+    public boolean radiusOnlyOnShockwave(){return geometryModifiers.contains("SHOCKWAVE_RADIUS_MULTIPLIER=1.25");}
+    public boolean radiusOnlyOnSecondary(){return radiusOnlyOnShrapnel()||radiusOnlyOnShockwave();}
+    public boolean concentrationOnlyOnSecondary(){return powerModifiers.contains("CONCENTRATION_SCOPE=SECONDARY_ONLY");}
     public record ExecutionModifiers(double radiusFactor, double delaySeconds, double echoDelaySeconds,
                                      double echoMagnitude, boolean expandedRadius,int barrageBatches,double barrageInterval) {
         public ExecutionModifiers(double radiusFactor,double delaySeconds,double echoDelaySeconds,double echoMagnitude,boolean expandedRadius) {

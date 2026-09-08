@@ -138,7 +138,10 @@ public final class LinkCompiler {
                 case "ballistics" -> scalablePayloadIncreased += .30;
                 case "efficiency" -> resourceCostMultiplier *= 0.85;
                 case "overcharge" -> {scalablePayloadIncreased+=.25;resourceCostMultiplier*=1.20;}
-                case "concentration" -> scalablePayloadIncreased+=.30;
+                case "concentration" -> {
+                    if(compatibility.assess(skill,passive).accepted())scalablePayloadIncreased+=.30;
+                    else power.add("CONCENTRATION_SCOPE=SECONDARY_ONLY");
+                }
                 case "lingering" -> resourceCostMultiplier*=1.15;
                 case "reversal" -> scalablePayloadIncreased+=.25;
                 case "focused_channel" -> scalablePayloadIncreased+=.30;
@@ -146,9 +149,13 @@ public final class LinkCompiler {
                 default -> { }
             }
             if (passive.id().value().equals("expanded_radius")) {
-                boolean secondaryOnly=!finalTags.contains("HAS_RADIUS")&&bindings.stream().anyMatch(b->b.definition().id().value().equals("shrapnel"));
-                geometry.add((secondaryOnly?"SHRAPNEL_":"")+"RADIUS_MULTIPLIER=1.25");
-                power.add((secondaryOnly?"SHRAPNEL_":"")+"MAGNITUDE_MULTIPLIER=0.90");
+                String prefix="";
+                if(!compatibility.assess(skill,passive).accepted()){
+                    if(bindings.stream().anyMatch(b->b.definition().id().value().equals("shockwave")))prefix="SHOCKWAVE_";
+                    else if(bindings.stream().anyMatch(b->b.definition().id().value().equals("shrapnel")))prefix="SHRAPNEL_";
+                }
+                geometry.add(prefix+"RADIUS_MULTIPLIER=1.25");
+                power.add(prefix+"MAGNITUDE_MULTIPLIER=0.90");
             }
         }
         continuation.sort(Comparator.comparingInt(LinkCompiler::continuationRank).thenComparing(String::compareTo));

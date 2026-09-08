@@ -48,7 +48,7 @@ public final class CompiledProfileResolver {
             scale(resolved,"conversion",reach,"range");
             scale(resolved,"cage",reach,"range");
         }
-        if(modifiers.concentration())concentrate(authored,resolved);
+        if(modifiers.concentration()&&!plan.concentrationOnlyOnSecondary())concentrate(authored,resolved);
         if(modifiers.lingering())linger(authored,resolved);
         if(modifiers.reversal()){
             if(authored.reaction()==null)throw new IllegalArgumentException("NO_REACTION_WINDOW_COMPONENT");

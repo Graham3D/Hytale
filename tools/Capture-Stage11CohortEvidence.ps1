@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c','d','e','f','g','h','i','j','k','l','m','n')][string]$Cohort='a')
+param([ValidateSet('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $passiveRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $passiveConfig=@{
@@ -17,6 +17,7 @@ $passiveConfig=@{
     l=@{tests=967;passives=@('leeching');planSchema=21;rollback='evidence\stage-11\cohort-k\artifacts\HytaleRPG-0.0.23.jar'}
     m=@{tests=997;passives=@('multistrike','ruthless');planSchema=22;rollback='evidence\stage-11\cohort-l\artifacts\HytaleRPG-0.0.23.jar'}
     n=@{tests=1027;passives=@('cleaving_edge','phantom_reach');planSchema=23;rollback='evidence\stage-11\cohort-m\artifacts\HytaleRPG-0.0.23.jar'}
+    o=@{tests=1052;passives=@('shockwave');planSchema=24;rollback='evidence\stage-11\cohort-n\artifacts\HytaleRPG-0.0.23.jar'}
 }[$Cohort]
 if(-not $passiveConfig){throw 'Cohort must declare tested scope before evidence capture'}
 $passiveEvidence=Join-Path $passiveRoot "evidence\stage-11\cohort-$Cohort"

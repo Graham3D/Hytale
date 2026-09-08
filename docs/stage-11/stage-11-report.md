@@ -1064,3 +1064,95 @@ Rollback M: `DC931839E6A36129BFCD270F699B884FC7AE4EFE20D9F3049FFAD23044631977`.
 No live deployment, save migration, native HUD/input/ability projection or owner
 art changes. Twenty-seven of40 Stage11 primitives now have local evidence;
 13 remain before matrix/legacy-state closure. Connected gates remain UNVERIFIED.
+
+## Cohort O — Shockwave and introduced-component scoping
+
+Baseline N `97cda1e`. Master LP026, geometry defaults and component modifier contract
+reviewed; installed BoundingBox, native attitude, collision/LOS and damage adapter
+boundaries audited. R030/0.0.23, compiled-plan schema24, unchanged player schema6.
+One passive, extending the immediate strike-secondary primitive from cohort N.
+
+Shockwave triggers at the first successful uncancelled actual-Health-losing root
+Strike contact, once per root. A missed first authored hit can qualify on a later
+authored hit. Multistrike/other derived children cannot qualify. It creates one
+3m PHYSICAL radial Burst at40% of the contact's resolved pre-mitigation amount.
+No additional critical roll, attribute calculation, resource cost, cooldown,
+status application or proc controller is executed. Native filtering/mitigation
+and authoritative Health loss still go through HytaleDamageAdapter. The primary
+victim may receive the authored burst as well; unlike Cleaving Edge/Phantom Reach,
+the Shockwave contract does not exclude it. A victim is hit at most once within
+that burst. One burst consumes one root effect and one triggered-secondary
+admission, not one admission per radial target; at most64 valid targets resolve
+under the retained256-candidate/4096-NPC spatial guards. The cylinder height is3m.
+No terrain operation, projectile carrier or retained field is created.
+
+Shockwave's Burst/Area/Damage/HasRadius capabilities belong to its introduced
+component. The original compiled family remains Strike and does not gain global
+Burst/HasRadius tags. Expanded Radius can therefore be linked after Shockwave
+without changing the parent strike's reach or damage: only the burst radius*1.25
+and its magnitude*.90 apply when the parent had no radius. Removing Shockwave
+while that dependent modifier remains linked rejects/rolls back rather than
+leaving a silently inactive graph.
+
+Concentration is handled similarly. When the original skill already has an area
+component, its ordinary Increased bucket/footprint behavior remains and the burst
+inherits that resolved amount once. When only Shockwave or Cleaving Edge introduces
+an eligible area, compiler output marks CONCENTRATION_SCOPE=SECONDARY_ONLY: parent
+snapshot damage and parent geometry remain unchanged. The cleave child adds .30
+to its own Increased bucket and narrows its angle. The Shockwave child adds the
+equivalent .30 Increased contribution to its already-resolved source amount,
+then applies the40% factor; its radius*.70. Phantom Reach's non-area direct copy
+does not gain that secondary-area bonus.
+
+To preserve additive arithmetic without rerolling/recalculating offense, the
+existing damage result now exposes the value of +1 Increased for that contact:
+raw skill damage × its already-selected critical multiplier × its More/Less
+factors. Native strike outcomes carry that value beside the resolved pre-mitigation
+amount. Conditional victim Increased already resolved during native Gather remains
+in the source amount. Example: a100-unit raw hit with Potency gives115; an exclusively
+secondary Concentration yields(115+30)*.40=58, **not**115*1.30*.40. Missing/nonfinite
+additive data or overflowing secondary damage rejects rather than guessing.
+The kernel's base resource, cooldown, attribute and damage formulas are unchanged.
+
+### Collision-bounds correction to cohort N
+
+Review against the normative geometry contract found that N inherited the retained
+strike selector's point-centre convention. This was structurally testable but did
+not meet the master requirement to use target collision bounds. The new secondary
+port supplies translated native BoundingBox bounds. Cleaving Edge now tests its
+actual sector against those bounds with the2.5m humanoid height; Phantom Reach
+uses impact-to-bounds distance and stable nearest ties. Shockwave intersects the
+3m-high cylinder with bounds. Large valid entities are not missed merely because
+their centre is outside the radius. The existing primary Stage04 selector is not
+silently changed in this cohort; its independent geometry hardening remains an
+explicit later release-candidate audit item. N's archive is retained unchanged.
+
+Procedural fallback outlines receive the same resolved geometry and .25s cosmetic
+lifetime. AREA_PRESENTATION records dimensions and connectedProof=false. They are
+not gameplay colliders or proof of a rendered client result. New secondary writes
+retain the same once-only admission and paid-root error containment as N. Actual
+native damage, attack animation, LOS scenarios and presentation remain connected
+QA requirements.
+
+### Cohort O local gate
+
+25 new tests cover positive/negative gates, component-local capabilities,
+parent noninterference, dependent-link rollback,40% resolved arithmetic,
+Potency/Concentration additive composition with crit/More/Less, conditional
+source amounts, shared cost/cooldown/Leech ownership, first-success semantics,
+derived-proc exclusion, primary-in-burst semantics, stable collision-bound target
+selection, cylinder height,64-target/256-query limits, shared admission limits,
+uncertain-write dedup and missing-value rejection. The first test compile used a
+node ID where unlink requires an EdgeId; the fixture was corrected to resolve the
+existing persisted edge. No production compatibility or safety gate was weakened.
+
+`clean build`: **1052 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot/clean exit0, retained native asset/root audits and packaged
+CustomUI9 validation PASS. API/call-site evidence under
+`evidence/stage-11/cohort-o/api` is structural, not connected execution proof.
+Artifact: `evidence/stage-11/cohort-o/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `0B5F56C8B256ED5D49B99C64E7F159EB3D5C4DF0894506F82E41143933671642`.
+Rollback N: `BB39ABDAC3C80139F85134D12D7B3CD6E09678DB7B06D3B4D6B22F0A4221CA44`.
+No live deployment, save migration, HUD/input/ability projection or owner art
+changes. Twenty-eight of40 Stage11 primitives have local evidence;12 remain,
+followed by matrix/legacy-state closure. Connected gates remain UNVERIFIED.

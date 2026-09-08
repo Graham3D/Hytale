@@ -1,0 +1,7 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "jarSha256": "0B5F56C8B256ED5D49B99C64E7F159EB3D5C4DF0894506F82E41143933671642",
+  "scope": "Shockwave: one root burst, collision-bounds cylinder/hostile/LOS query -> resolved original premitigation *.40 with component-scoped radius/Concentration -> same DamageSystems path without another offensive roll.",
+  "evidence": "Installed bytecode and packaged call-site structure only; no connected input, damage, LOS or presentation proof",
+  "connected": "UNVERIFIED"
+}

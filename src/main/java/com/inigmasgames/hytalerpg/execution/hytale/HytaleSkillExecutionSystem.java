@@ -861,7 +861,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if (!hits.accept(context.skillInstanceId(), hitIndex, target.stableId())) continue;
                 DamageOutcome outcome = damage(context, target, hitIndex,
                         context.profile().strike().coefficient(), context.snapshot().criticalChance(), DamageCause.PHYSICAL,false,context.skillInstanceId(),!context.derivedRelease());
-                primaryHits.add(new StrikeSecondaryRuntime.Hit<>(target,outcome.preMitigationDamage(),outcome.actualHealthLoss(),outcome.cancelled()));
+                primaryHits.add(new StrikeSecondaryRuntime.Hit<>(target,outcome.preMitigationDamage(),outcome.actualHealthLoss(),outcome.cancelled(),outcome.increasedUnit()));
                 emit(context, RpgTraceEventType.STRIKE_HIT,
                         Map.of("targetId", target.stableId(), "hitIndex", hitIndex,
                                 "preMitigationDamage", outcome.preMitigationDamage(),
@@ -879,11 +879,26 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 public boolean lineOfSight(Vec3 center,StrikeGeometryService.Candidate<Ref<EntityStore>> target){
                     return HytaleAreaQueries.clear(store,center.add(new Vec3(0,.5,0)),target.position().add(new Vec3(0,.5,0)));
                 }
+                public AreaGeometry.Bounds bounds(StrikeGeometryService.Candidate<Ref<EntityStore>> target){
+                    var box=store.getComponent(target.handle(),BoundingBox.getComponentType()).getBoundingBox();
+                    var point=vec(store.getComponent(target.handle(),TransformComponent.getComponentType()).getPosition());
+                    return new AreaGeometry.Bounds(vec(box.min).add(point),vec(box.max).add(point));
+                }
+                public List<StrikeGeometryService.Candidate<Ref<EntityStore>>> burstCandidates(AreaGeometry shape){
+                    var queried=HytaleAreaQueries.query(store,actor,shape,256);
+                    if(queried.overflow()){rejected("shockwave","BOUNDED_SPATIAL_QUERY_OVERFLOW");return List.of();}
+                    return queried.candidates().stream().map(c->candidate(c.ref())).filter(java.util.Objects::nonNull).toList();
+                }
                 public void presentCleave(Vec3 center,Vec3 facing,double range,double angle){
-                    vfx.presentArea(store.getExternalData().getWorld(),new AreaGeometry(AreaGeometry.Kind.SECTOR,center,facing,range,angle,0,0,5),"IMPACT_CLEAVE","PHYSICAL",false,.25);
+                    emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","IMPACT_CLEAVE","range",range,"angle",angle,"height",2.5,"seconds",.25,"connectedProof",false));
+                    vfx.presentArea(store.getExternalData().getWorld(),new AreaGeometry(AreaGeometry.Kind.SECTOR,center,facing,range,angle,0,0,2.5),"IMPACT_CLEAVE","PHYSICAL",false,.25);
                 }
                 public void presentPhantom(Vec3 impact,Vec3 destination){
                     vfx.presentConnection(store.getExternalData().getWorld(),ConnectionShape.capsule(impact.add(new Vec3(0,.5,0)),destination.add(new Vec3(0,.5,0)),.12),"PHYSICAL","IMPACT_PHANTOM",.25);
+                }
+                public void presentShockwave(AreaGeometry shape){
+                    emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","IMPACT_SHOCKWAVE","radius",shape.radius(),"height",shape.height(),"seconds",.25,"connectedProof",false));
+                    vfx.presentArea(store.getExternalData().getWorld(),shape,"IMPACT_SHOCKWAVE","PHYSICAL",false,.25);
                 }
                 public void rejected(String effect,String reason){emit(context,RpgTraceEventType.STRIKE_SECONDARY_REJECTED,Map.of("effectInstanceId",effect,"reason",reason));}
                 public void damage(SkillExecutionContext child,StrikeGeometryService.Candidate<Ref<EntityStore>> target,Double resolved){
@@ -1086,7 +1101,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(leechEligible)recoverObservedLeech(context,target,nativeResult,effectId);
             return new DamageOutcome(nativeResult.preMitigationAmount(),
                     Double.isFinite(before) && Double.isFinite(after) ? Math.max(0.0, before - after) : -1.0,
-                    nativeResult.cancelled());
+                    nativeResult.cancelled(),result.increasedUnit(buckets,context.snapshot().criticalMultiplier()));
         }
         private void recoverObservedLeech(SkillExecutionContext context,StrikeGeometryService.Candidate<Ref<EntityStore>> target,HytaleDamageAdapter.NativeResult nativeResult,String effectId){
             var recovered=kernel.resources().recoverLeech(context.leechBudget(),
@@ -1928,5 +1943,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private record ProjectileCarrier(SkillExecutionContext context, Ref<EntityStore> actor, UUID actorId,
                                      Ref<EntityStore> projectile, ProjectileInstance instance) { }
     private record PeriodicTarget(Ref<EntityStore> actor, Ref<EntityStore> victim) { }
-    private record DamageOutcome(double preMitigationDamage, double actualHealthLoss, boolean cancelled) { }
+    private record DamageOutcome(double preMitigationDamage, double actualHealthLoss, boolean cancelled,double increasedUnit) {
+        private DamageOutcome(double preMitigationDamage,double actualHealthLoss,boolean cancelled){this(preMitigationDamage,actualHealthLoss,cancelled,Double.NaN);}
+    }
 }

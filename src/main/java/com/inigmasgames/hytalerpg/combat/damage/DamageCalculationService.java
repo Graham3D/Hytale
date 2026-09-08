@@ -41,6 +41,10 @@ public final class DamageCalculationService {
     public record Result(double basePower, double attributeMultiplier, double scaledBasePower,
                          double skillRawDamage, double modifierFactor, double preCritDamage,
                          boolean critical, double preMitigationDamage) {
+        /** Value of +1 Increased before native mitigation, retaining this contact's existing crit and More/Less. */
+        public double increasedUnit(ModifierBuckets buckets,double criticalMultiplier){
+            return skillRawDamage*(critical?criticalMultiplier:1)*new ModifierBuckets(java.util.List.of(),java.util.List.of(),buckets.more(),buckets.less()).factor();
+        }
         /** The sole numeric narrowing boundary: double kernel output to Hytale's float Damage value. */
         public float toHytaleDamageFloat() { return (float) preMitigationDamage; }
     }
