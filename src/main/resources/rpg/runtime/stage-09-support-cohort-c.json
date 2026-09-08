@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "pack_howl",
+      "family": "BURST",
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "secondaryFamilies": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 8,
+      "cooldownSeconds": 16,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "HOWL",
+        "range": 0,
+        "radius": 7,
+        "coefficient": 0.08,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 10,
+        "movementIncreased": 0.12
+      }
+    },
+    {
+      "skillId": "reflective_hide",
+      "family": "REACTION",
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "secondaryFamilies": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 10,
+      "cooldownSeconds": 3,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "REFLECT",
+        "range": 0,
+        "radius": 0,
+        "coefficient": 0.2,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 3,
+        "movementIncreased": 0
+      }
+    },
+    {
+      "skillId": "flame_weapon",
+      "family": "BUFF",
+      "allowedMainHandKinds": [
+        "SWORD",
+        "LONGSWORD",
+        "MACE",
+        "BATTLEAXE",
+        "SPEAR",
+        "DAGGER"
+      ],
+      "requiredOffHandKinds": [],
+      "secondaryFamilies": [],
+      "resourceType": "MANA",
+      "resourceCost": 15,
+      "cooldownSeconds": 12,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "innateBasePower": 0,
+      "scaling": "MAGIC",
+      "support": {
+        "kind": "IMBUE",
+        "range": 0,
+        "radius": 0,
+        "coefficient": 0.3,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 12,
+        "movementIncreased": 0
+      }
+    },
+    {
+      "skillId": "spirit_shield",
+      "family": "BARRIER",
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "secondaryFamilies": [],
+      "resourceType": "MANA",
+      "resourceCost": 18,
+      "cooldownSeconds": 14,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "SHIELD",
+        "range": 18,
+        "radius": 0,
+        "coefficient": 1.5,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 8,
+        "movementIncreased": 0
+      }
+    }
+  ]
+}

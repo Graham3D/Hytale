@@ -15,6 +15,8 @@ public interface SupportWorldPort {
     double heal(SkillExecutionContext context,UUID target,double requested);
     default void finiteEffect(SkillExecutionContext context,FiniteSupportEffects effects,double now){throw new IllegalStateException("FINITE_SUPPORT_UNAVAILABLE");}
     default double masteryMultiplier(SkillExecutionContext context){return 1;}
+    /** Must mean authenticated native root/contact attribution, not a Primary-type packet or visual trail. */
+    default boolean rootWeaponContactAvailable(){return false;}
     void present(SkillExecutionContext context,double radius,double duration);
     void trace(SkillExecutionContext context,String event,Map<String,?> details);
 }

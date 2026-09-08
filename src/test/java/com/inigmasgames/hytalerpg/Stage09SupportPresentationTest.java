@@ -19,7 +19,8 @@ class Stage09SupportPresentationTest {
         assertEquals(Set.of("RPG_Support_Mark_0","RPG_Support_Mark_1","RPG_Support_Mark_2","RPG_Support_Mark_3"),palette);
     }
     @Test void tintFallbacksHaveNoGameplayOrWorldTrackingFields()throws Exception{
-        for(String id:List.of("RPG_Support_Mark_0","RPG_Support_Mark_1","RPG_Support_Mark_2","RPG_Support_Mark_3","RPG_Support_Hex_Tint")){
+        for(String id:List.of("RPG_Support_Mark_0","RPG_Support_Mark_1","RPG_Support_Mark_2","RPG_Support_Mark_3","RPG_Support_Hex_Tint",
+                "RPG_Support_Howl_Tint","RPG_Support_Reflect_Tint","RPG_Support_Shield_Tint")){
             var stream=getClass().getResourceAsStream("/Server/Entity/Effects/RPG/"+id+".json");assertNotNull(stream);
             try(var reader=new InputStreamReader(stream,StandardCharsets.UTF_8)){
                 var asset=JsonParser.parseReader(reader).getAsJsonObject();

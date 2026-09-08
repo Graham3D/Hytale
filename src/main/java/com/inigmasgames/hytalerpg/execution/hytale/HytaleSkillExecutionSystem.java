@@ -865,11 +865,19 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private DamageOutcome damage(SkillExecutionContext context,
                 StrikeGeometryService.Candidate<Ref<EntityStore>> target,int hitIndex,double coefficient,double criticalChance,
                 DamageCause cause,boolean periodic,String effectId,boolean canProc) {
+            return damage(context,target,hitIndex,coefficient,criticalChance,cause,periodic,effectId,canProc,false);
+        }
+        private DamageOutcome damage(SkillExecutionContext context,
+                StrikeGeometryService.Candidate<Ref<EntityStore>> target,int hitIndex,double coefficient,double criticalChance,
+                DamageCause cause,boolean periodic,String effectId,boolean canProc,boolean frozenOutgoingSnapshot) {
             double effective = effectiveAttribute(context);
+            var buckets=context.snapshot().modifiers();
+            if(support!=null)buckets=frozenOutgoingSnapshot?support.runtime().finite().victimModifiers(
+                    playerRef.getWorldUuid(),playerRef.getUuid(),UUID.fromString(target.stableId()),buckets,System.nanoTime()/1e9):
+                    support.runtime().finite().damageModifiers(playerRef.getWorldUuid(),playerRef.getUuid(),UUID.fromString(target.stableId()),buckets,System.nanoTime()/1e9);
             DamageCalculationService.Result result = kernel.damage().calculate(new DamageCalculationService.Request(
                     context.snapshot().basePower(), effective, coefficient,
-                    support==null?context.snapshot().modifiers():support.runtime().finite().damageModifiers(
-                            playerRef.getWorldUuid(),playerRef.getUuid(),UUID.fromString(target.stableId()),context.snapshot().modifiers(),System.nanoTime()/1e9), !periodic, criticalChance,
+                    buckets, !periodic, criticalChance,
                     context.snapshot().criticalMultiplier()));
             CombatTrace.Context ids = ids(context);
             trace.emit(playerRef.getUuid(), RpgTraceEventType.DAMAGE_CALC_BEGIN, ids,
@@ -992,10 +1000,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 emit(context, RpgTraceEventType.STATUS_REJECTED, Map.of("status", kind, "targetId", targetId, "reason", "NATIVE_EFFECT_REJECTED"));
                 return false;
             }
+            var outgoing=support==null?context.snapshot().modifiers():support.runtime().finite().outgoingModifiers(
+                    playerRef.getWorldUuid(),playerRef.getUuid(),context.snapshot().modifiers(),now);
             double strength = kernel.damage().calculate(DamageCalculationService.Request.periodic(
                     context.snapshot().basePower(), effectiveAttribute(context), coefficientPerSecond,
-                    context.snapshot().modifiers(), 0, context.snapshot().criticalMultiplier())).preMitigationDamage();
-            String result = periodicStatuses.apply(source, context, new PeriodicTarget(actor, target.handle()),
+                    outgoing,
+                    0, context.snapshot().criticalMultiplier())).preMitigationDamage();
+            var captured=context.withSnapshot(context.snapshot().withModifiers(outgoing));
+            String result = periodicStatuses.apply(source, captured, new PeriodicTarget(actor, target.handle()),
                     coefficientPerSecond, strength, duration, 1, kind == PeriodicStatusRuntime.Kind.BURN ? 1 : 3, now, periodicPort());
             boolean accepted = result.equals("APPLIED") || result.equals("REFRESHED");
             emit(context, accepted ? RpgTraceEventType.STATUS_APPLIED : RpgTraceEventType.STATUS_REJECTED,
@@ -1304,7 +1316,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 DamageCause cause = context.profile().projectile() != null ? DamageCause.PROJECTILE
                         : DamageCause.getAssetMap().getAsset(source.kind() == PeriodicStatusRuntime.Kind.BURN ? "Fire" : "Poison");
                 if (cause == null) throw new IllegalStateException("PERIODIC_DAMAGE_CAUSE_UNAVAILABLE");
-                DamageOutcome outcome = port.damage(context, candidate, tickIndex, coefficient, 0, cause, true);
+                DamageOutcome outcome = port.damage(context, candidate, tickIndex, coefficient, 0, cause, true,
+                        context.skillInstanceId()+"/dot/"+source.kind()+"/"+tickIndex,false,true);
                 emit(context, source.kind() == PeriodicStatusRuntime.Kind.BURN ? RpgTraceEventType.BURN_TICK : RpgTraceEventType.POISON_TICK,
                         Map.of("targetId", source.victim(), "tickIndex", tickIndex, "coefficient", coefficient,
                                 "integratedSeconds", seconds, "canCrit", false, "canTrigger", false,

@@ -4431,15 +4431,15 @@
     "upkeep": "",
     "castTime": "Instant",
     "cooldown": "16 s",
-    "targetMode": "7 m radius  /  moving aura burst",
+    "targetMode": "7 m radius / self and confirmed allies sampled once",
     "maxRange": "7 m radius",
-    "geometry": "moving aura burst",
+    "geometry": "finite recipient burst; not an Aura emitter",
     "travelSpeed": "N/A",
     "lifetime": "10 s",
     "powerCoefficient": "No direct damage",
     "canCrit": false,
     "statusApplications": [
-      "Initial baseline: \\+12% movement speed and \\+8% attack/skill damage."
+      "+0.12 movement speed and +0.08 Increased attack/skill damage for 10 s."
     ],
     "vfxRecipeId": "rpg.vfx.skill.pack_howl",
     "soundRecipeId": "rpg.sound.skill.pack_howl",
@@ -4478,14 +4478,13 @@
     "tier": "I",
     "phase": 9,
     "tags": [
-      "BARRIER",
       "PHYSICAL",
       "REACTION",
       "REFLECT"
     ],
     "weaponRequirement": "None",
-    "scalingClass": "Heavy",
-    "basePowerSource": "WEAPON",
+    "scalingClass": "Utility",
+    "basePowerSource": "NONE",
     "innateBasePower": null,
     "resourceType": "STAMINA",
     "castCost": "Stamina 10",
@@ -4497,19 +4496,16 @@
     "geometry": "3 m contextual  /  Defined by family tag",
     "travelSpeed": "N/A",
     "lifetime": "3 s",
-    "powerCoefficient": "0.90x scaling power",
-    "canCrit": true,
-    "statusApplications": null,
+    "powerCoefficient": "No direct attack; reflect 20% of eligible post-mitigation Health loss as Physical for 3 s.",
+    "canCrit": false,
+    "statusApplications": [
+      "No absorption, no extra reduction, no reflection recursion."
+    ],
     "vfxRecipeId": "rpg.vfx.skill.reflective_hide",
     "soundRecipeId": "rpg.sound.skill.reflective_hide",
     "linkCompatibilityTags": [
-      "ABSORBS_DAMAGE",
-      "BARRIER",
       "CAN_ACQUIRE_ENEMY_TARGET",
-      "CAN_CRIT",
-      "CAN_KILL",
       "DAMAGE",
-      "DIRECT_HIT",
       "FINITE_RESOURCE_COST",
       "HAS_COOLDOWN",
       "HAS_FINITE_DURATION",
@@ -4517,8 +4513,6 @@
       "REACTION",
       "REFLECT",
       "SCALABLE_PAYLOAD",
-      "SELF_TARGETED_BARRIER",
-      "SHIELD",
       "STAMINA_RESOURCE"
     ],
     "sourceAcquisition": {
@@ -4796,8 +4790,8 @@
       "HOLY"
     ],
     "weaponRequirement": "Staffs / Spellbooks",
-    "scalingClass": "Magic",
-    "basePowerSource": "INNATE",
+    "scalingClass": "Wisdom",
+    "basePowerSource": "NONE",
     "innateBasePower": null,
     "resourceType": "MANA",
     "castCost": "Mana 18",
@@ -4810,21 +4804,16 @@
     "travelSpeed": "N/A",
     "lifetime": "8 s",
     "powerCoefficient": "Shield = 1.50x Healing Power",
-    "canCrit": true,
+    "canCrit": false,
     "statusApplications": [
-      "When cast on ally, 20% of post-mitigation damage is redirected to caster while shield remains."
+      "Capacity 1.50*HealingPower(WIS), duration 8 s; one 20% post-mitigation redirect to caster on ally hits while shield exists."
     ],
     "vfxRecipeId": "rpg.vfx.skill.spirit_shield",
     "soundRecipeId": "rpg.sound.skill.spirit_shield",
     "linkCompatibilityTags": [
       "ABSORBS_DAMAGE",
       "BARRIER",
-      "CAN_ACQUIRE_ENEMY_TARGET",
-      "CAN_CRIT",
-      "CAN_KILL",
-      "DAMAGE",
       "DAMAGE_REDIRECT",
-      "DIRECT_HIT",
       "DISCRETE_ACTIVATION",
       "FINITE_RESOURCE_COST",
       "HAS_COOLDOWN",

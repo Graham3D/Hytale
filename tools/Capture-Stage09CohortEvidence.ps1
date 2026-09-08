@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b')][string]$Cohort='a')
+param([ValidateSet('a','b','c')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $stage9Root=(Resolve-Path "$PSScriptRoot\..").Path
 $stage9Evidence=Join-Path $stage9Root "evidence\stage-09\cohort-$Cohort"
@@ -19,7 +19,7 @@ try {
         $stage9Results += @{name=$stage9Suite.name;tests=[int]$stage9Suite.tests;failures=[int]$stage9Suite.failures;
             errors=[int]$stage9Suite.errors;skipped=[int]$stage9Suite.skipped;seconds=$stage9Suite.time;cases=@($stage9Suite.testcase | ForEach-Object {$_.name})}
     }
-    $stage9Minimum=if($Cohort -eq 'a'){374}else{402}
+    $stage9Minimum=switch($Cohort){'a'{374};'b'{402};'c'{428}}
     if($stage9Count -lt $stage9Minimum -or $stage9Failures -or $stage9Errors -or $stage9Skipped){throw 'Incomplete or failing retained regression suite.'}
     & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $stage9Jar
     $stage9ProtectedPaths=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI','canvas-ui/src',
@@ -36,7 +36,7 @@ try {
     $stage9Zip=[IO.Compression.ZipFile]::OpenRead($stage9Jar)
     try {
         $stage9AbilityAssets=@($stage9Zip.Entries | Where-Object {$_.FullName -like 'Server/Item/Items/RPG/Abilities/*.json'})
-        $stage9Triggers=if($Cohort -eq 'a'){38}else{43}
+        $stage9Triggers=switch($Cohort){'a'{38};'b'{43};'c'{47}}
         if($stage9AbilityAssets.Count -ne $stage9Triggers){throw 'Unexpected trigger inventory.'}
         foreach($stage9Entry in $stage9AbilityAssets) {
             $stage9Reader=[IO.StreamReader]::new($stage9Entry.Open())
@@ -52,7 +52,8 @@ try {
         capturedAtUtc=[DateTime]::UtcNow.ToString('o');revision='R028';version='0.0.21';stage='09';cohort=$Cohort;playerSchema=4
         branch=(& git branch --show-current).Trim();sourceHead=(& git rev-parse HEAD).Trim();worktreeDirty=[bool](& git status --porcelain)
         stageStatus='IMPLEMENTATION_IN_PROGRESS';completeStageGate=$false;gateScope='LOCAL_ENGINEERING_ONLY'
-        cohortSkills=$(if($Cohort -eq 'a'){@('minor_heal','managuard','emanatism')}else{@('taunt','weakening_hex','hunter_s_mark','intimidate','battle_cry')})
+        cohortSkills=$(switch($Cohort){'a'{@('minor_heal','managuard','emanatism')};'b'{@('taunt','weakening_hex','hunter_s_mark','intimidate','battle_cry')};'c'{@('pack_howl','reflective_hide','flame_weapon','spirit_shield')}})
+        capabilityGates=$(if($Cohort -eq 'c'){@{flame_weapon='NATIVE_ROOT_WEAPON_CONTACT_ID_UNAVAILABLE; no native hit callback is wired; rejects before cost/cooldown'}}else{@{}})
         tests=$stage9Count;failures=$stage9Failures;errors=$stage9Errors;skipped=$stage9Skipped
         connectedVerification='UNVERIFIED';nativeCastingFixed=$false;nativeSupportBehaviorVerified=$false;liveDeploymentPerformed=$false
         protectedPathsChanged=$stage9Protected;zeroNativeCostTriggerAssets=$stage9AbilityAssets.Count

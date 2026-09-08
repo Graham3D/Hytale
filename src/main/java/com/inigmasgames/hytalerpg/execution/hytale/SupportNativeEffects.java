@@ -34,8 +34,11 @@ public final class SupportNativeEffects {
     private SupportNativeEffects(){}
     public static void requireAssets(){
         if(EntityEffect.getAssetMap().getAsset("RPG_Rally_Movement")==null)throw new IllegalStateException("RALLY_EFFECT_MISSING");
-        for(String asset:List.of("RPG_Support_Hex_Tint","RPG_Support_Mark_0","RPG_Support_Mark_1","RPG_Support_Mark_2","RPG_Support_Mark_3"))
+        for(String asset:List.of("RPG_Support_Hex_Tint","RPG_Support_Mark_0","RPG_Support_Mark_1","RPG_Support_Mark_2","RPG_Support_Mark_3",
+                "RPG_Howl_Movement","RPG_Rally_Howl_Movement","RPG_Support_Shield_Tint","RPG_Support_Reflect_Tint","RPG_Support_Howl_Tint"))
             if(EntityEffect.getAssetMap().getAsset(asset)==null)throw new IllegalStateException("SUPPORT_PRESENTATION_ASSET_MISSING:"+asset);
+        var redirect=DamageCause.getAssetMap().getAsset("RPG_Redirected");
+        if(redirect==null||!redirect.doesBypassResistances())throw new IllegalStateException("REDIRECT_RESISTANCE_BYPASS_CAUSE_REQUIRED");
     }
     static void requireRallyRecipient(Store<EntityStore> store,Ref<EntityStore> ref){
         if(store.getComponent(ref,EffectControllerComponent.getComponentType())==null)throw new IllegalStateException("NATIVE_MOVEMENT_EFFECT_CONTROLLER_MISSING");
@@ -74,6 +77,17 @@ public final class SupportNativeEffects {
     }
     private static Query<EntityStore> recipientQuery(){return Query.and(SupportEffectProjection.getComponentType(),UUIDComponent.getComponentType(),TransformComponent.getComponentType());}
     public static String markTint(UUID owner){return "RPG_Support_Mark_"+Math.floorMod(owner.hashCode(),4);}
+    public static String movementAsset(double increased){
+        if(increased<=0)return "";
+        if(Math.abs(increased-.1)<1e-6)return "RPG_Rally_Movement";
+        if(Math.abs(increased-.12)<1e-6)return "RPG_Howl_Movement";
+        if(Math.abs(increased-.22)<1e-6)return "RPG_Rally_Howl_Movement";
+        throw new IllegalStateException("NATIVE_SUPPORT_MOVEMENT_MAGNITUDE_UNAVAILABLE");
+    }
+    private static void clearMovement(EffectControllerComponent controller,Ref<EntityStore> ref,Store<EntityStore> store,String keep){
+        for(String id:List.of("RPG_Rally_Movement","RPG_Howl_Movement","RPG_Rally_Howl_Movement"))
+            if(!id.equals(keep))controller.removeEffect(ref,EntityEffect.getAssetMap().getIndex(id),store);
+    }
     private static void presentRecipient(HytaleSupportSystem support,Store<EntityStore> store,Ref<EntityStore> ref,
                                          UUID id,SupportEffectProjection marker,double now){
         var controller=store.getComponent(ref,EffectControllerComponent.getComponentType());if(controller==null)return;
@@ -81,7 +95,13 @@ public final class SupportNativeEffects {
         var mark=list.stream().filter(e->e.kind()==SupportProfile.Kind.MARK).sorted(Comparator.comparing(e->e.key().owner().toString()))
                 .filter(e->{var owner=store.getExternalData().getRefFromUUID(e.key().owner());
                     return HytaleSupportSystem.alive(store,owner)&&HytaleSupportSystem.inRange(store,owner,ref,64);}).findFirst();
-        String desired=mark.map(e->markTint(e.key().owner())).orElseGet(()->list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.WEAKEN)?"RPG_Support_Hex_Tint":"");
+        String desired=mark.map(e->markTint(e.key().owner())).orElseGet(()->{
+            if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.WEAKEN))return "RPG_Support_Hex_Tint";
+            if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.SHIELD&&e.shieldRemaining()>0))return "RPG_Support_Shield_Tint";
+            if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.REFLECT))return "RPG_Support_Reflect_Tint";
+            if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.HOWL))return "RPG_Support_Howl_Tint";
+            return "";
+        });
         try{
             if(!marker.presentationAsset.isEmpty()&&!marker.presentationAsset.equals(desired))
                 controller.removeEffect(ref,EntityEffect.getAssetMap().getIndex(marker.presentationAsset),store);
@@ -129,7 +149,7 @@ public final class SupportNativeEffects {
             for(var effect:effects.forTarget(world,id,now)){
                 var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
                 boolean invalid=!HytaleSupportSystem.alive(store,owner);
-                if(!invalid)invalid=effect.kind()==SupportProfile.Kind.RALLY?!HytaleSupportSystem.eligibleAlly(store,owner,ref):
+                if(!invalid)invalid=!effect.context().profile().support().hostileTarget()?!HytaleSupportSystem.eligibleAlly(store,owner,ref):
                         control(store,ref,support.bosses()).protectedEntity()||!HytaleAreaQueries.hostile(store,ref,owner);
                 if(invalid)effects.remove(effect.key());
             }
@@ -149,12 +169,14 @@ public final class SupportNativeEffects {
                 var controller=store.getComponent(ref,EffectControllerComponent.getComponentType());
                 try{
                     if(effects.movementIncreased(world,id,now)>0){
-                        if(controller==null||!controller.addEffect(ref,EntityEffect.getAssetMap().getAsset("RPG_Rally_Movement"),.25f,OverlapBehavior.OVERWRITE,store))
+                        String asset=movementAsset(effects.movementIncreased(world,id,now));
+                        if(controller!=null)clearMovement(controller,ref,store,asset);
+                        if(controller==null||!controller.addEffect(ref,EntityEffect.getAssetMap().getAsset(asset),.25f,OverlapBehavior.OVERWRITE,store))
                             throw new IllegalStateException("NATIVE_MOVEMENT_EFFECT_REJECTED");
                     }
-                    else if(controller!=null)controller.removeEffect(ref,EntityEffect.getAssetMap().getIndex("RPG_Rally_Movement"),store);
+                    else if(controller!=null)clearMovement(controller,ref,store,"");
                 }catch(RuntimeException failure){
-                    for(var e:effects.forTarget(world,id,now))if(e.kind()==SupportProfile.Kind.RALLY){
+                    for(var e:effects.forTarget(world,id,now))if(e.movement()>0){
                         effects.remove(e.key());support.traceFinite(e,RpgTraceEventType.NATIVE_SUPPORT_REJECTED,
                                 Map.of("boundary","NATIVE_MOVEMENT_EFFECT_REJECTED","exception",failure.getClass().getSimpleName()));
                     }
@@ -164,7 +186,7 @@ public final class SupportNativeEffects {
                 releaseTaunt(store,ref,marker);
                 var controller=store.getComponent(ref,EffectControllerComponent.getComponentType());
                 try{if(controller!=null){
-                    controller.removeEffect(ref,EntityEffect.getAssetMap().getIndex("RPG_Rally_Movement"),store);
+                    clearMovement(controller,ref,store,"");
                     if(!marker.presentationAsset.isEmpty())controller.removeEffect(ref,EntityEffect.getAssetMap().getIndex(marker.presentationAsset),store);
                 }}catch(RuntimeException ignored){/* Bounded native leases expire even if removal fails during teardown. */}
                 buffer.removeComponent(ref,SupportEffectProjection.getComponentType());
@@ -256,6 +278,7 @@ public final class SupportNativeEffects {
         @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
             var marker=store.getComponent(ref,SupportEffectProjection.getComponentType());if(marker!=null)releaseTaunt(store,ref,marker);
             var id=store.getComponent(ref,UUIDComponent.getComponentType());support.runtime().finite().forget(id.getUuid());
+            support.runtime().imbues().forget(id.getUuid());
         }
     }
 }

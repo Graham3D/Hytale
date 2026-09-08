@@ -329,3 +329,105 @@ machine verification, build and rollback. SHA-256:
 `5918C90D6F5B081388C74B4EA4DDDEB57F816560F2610D46D3405A87B9690EA3`.
 This closes only cohort B's local engineering gate; eight skills and seven
 passives remain before Stage 09 local completion.
+
+## Cohort C — finite barrier, reflection and weapon-imbue boundary
+
+This cohort covers Pack Howl, Reflective Hide, Spirit Shield and Flame Weapon.
+Cohort B is independently committed as `ff261e5` and its exact artifact remains
+archived. Master 04.1/04.2 and all four normative records were reread before
+implementation. This is not Stage 09 closure or a connected casting claim.
+
+### Implementation and pinned native evidence
+
+- Pack Howl samples self/confirmed allies once in seven metres. The ten-second
+  bonuses are +0.08 Increased damage and +0.12 movement; it is not a moving Aura.
+  Howl and Battle Cry add in the existing bucket, while identical named copies
+  use the strongest value. Native movement assets cover 1.10, 1.12 and 1.22,
+  without invented continuous native effect parameters.
+- Spirit Shield uses 1.5 times HealingPower, Wisdom, mastery and applicable
+  magnitude modifiers once. It lasts eight seconds and never adds repeated
+  caster/skill copies. Native post-filter damage is split once: a non-self shield
+  may redirect 20% to its caster, then the target's portion consumes bounded
+  shield capacity. Self-shielding never redirects. Cancelled transfer does not
+  grant free damage reduction. Different caster shields have deterministic order.
+- Reflective Hide creates no initial hit, shield or extra mitigation. For three
+  seconds, it reflects 20% of eligible actual Health lost, after native mitigation
+  and barriers, as Physical damage. The legacy attack/absorb catalog placeholder
+  was corrected; Spirit Shield's old damage flags and Pack Howl's moving-Aura
+  description were likewise reconciled with their normative closures. Counts
+  remain 87 skills and 66 passives.
+- Both secondary paths use HytaleDamageAdapter and DamageSystems.executeDamage,
+  not direct Health subtraction. RPG metadata retains rootCastId, skillInstanceId,
+  correlationId and a distinct effect ID. REFLECTED/REDIRECTED disallow recursive
+  reflection/redirect, proc, leech and credit. Future reward/trigger consumers
+  must honor those tags; this cohort does not claim to implement Stage 12 credit.
+- The installed damage filters were inspected in `api-barrier/`. Redirect uses a
+  project-owned Physical-parent cause with BypassResistances=true, and a native
+  non-Entity NULL_SOURCE. This avoids another armor, wielding-block or attacker
+  effect-scaling pass while native invulnerability and player-spawn protection
+  still run. Reflection also uses NULL_SOURCE, but normal Physical resistance
+  filtering remains. RPG metadata provides attribution; this does not establish
+  native attacker aggro attribution. Explicit hostility/allegiance/protection
+  checks precede submission. The two failed class-name candidates in the audit
+  are recorded failures, not dependencies or successful API evidence.
+- Native ApplyDamage rounds its float amount to an integer. Backend 20/80 split
+  tests establish the pre-Apply allocation, not exact fractional Health loss in
+  Hytale; small reflections may round to zero. No direct Health bypass was added
+  to evade native rounding. Connected before/after Health evidence is required.
+- A native secondary exception removes its source lease and never retries. If
+  Health loss was observed before the exception, the original hit is not charged
+  that transferred portion again. A failed dispatch without observed Health loss
+  grants no transfer reduction. Unavailable Health is explicitly UNAVAILABLE,
+  never a fabricated Apply/Inspect result. Native completion remains unproven
+  for exceptions; third-party handler failures require log diagnosis.
+
+### Flame Weapon: explicit pre-payment capability gate
+
+The backend contact contract accepts authenticated rootAttackId/contactId plus
+positive hostile root-weapon Health damage. It enforces one 0.30 Fire payload per
+contact, source-owned four-second Burn with a one-second per-target application
+ICD, a twelve-second imbue, item-swap termination and bounded deduplication.
+Derived hits and self hits reject. These are deterministic fixture results only.
+
+The pinned DamageEntityInteraction supplies INTERACTION_TYPE but does not export
+an unambiguous root/contact ID on each Damage. DAMAGE_SEQUENCE appears only on the
+first Damage in a multi-channel hit and exposes a sequence count, not a root
+identity. InteractionChain IDs exist, but enumerating concurrent chains does not
+prove which chain produced this Damage. Its queued-damage context key is private.
+Accordingly no production root-contact callback is wired: Flame Weapon rejects
+`NATIVE_ROOT_WEAPON_CONTACT_ID_UNAVAILABLE` before resource/cooldown payment. This
+is a specific current native adapter boundary, not a claim that every possible
+Hytale integration is impossible. A proven native interaction attribution seam
+is required before enabling it; packet guessing and visual trails are not proof.
+
+### Shared correction, tests and remaining QA
+
+Cohort B's live outgoing buff lookup would have resampled Rally/Hex on every
+source-owned Burn/Poison tick. Master 04.2 requires an offensive snapshot. The
+existing periodic package now captures outgoing buckets once, while victim-side
+Mark remains evaluated at hit time. No Stage 04/05 family mechanics or costs were
+redesigned. Tests cover outgoing-buff expiry and buffs gained after DoT creation.
+
+During development an incorrect result accessor failed compilation, and three
+Flame Weapon fixture tests accidentally targeted the caster. Correcting the
+fixture, not relaxing hostile/root validation, resolved those failures. The
+additional tests cover replacement/expiry, one redirect across multiple shields,
+cancellation, self-shield, Potency/Wisdom, flags, contact/root caps, Burn ICD,
+equipment cleanup, native-dispatch exceptions and presentation-only tint fields.
+
+Presentation uses short entity-bound tint fallbacks and existing Aura templates;
+it is not final art or proof of visibility, hit timing or occlusion. All native
+barrier order, invulnerability, rounding, actual HP loss, movement overlap, and
+RPG input remain IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION. Flame Weapon stays
+capability-gated. No live world, native resource HUD, Signature Move, Ability4,
+XP artwork, resource formula or cooldown formula is changed. Four Aura skills
+and seven passives still remain for Stage 09 after this cohort's local gate.
+
+Cohort C's local gate passed: **428 retained tests**, zero failures/errors/skips;
+47 zero-native-cost packaged trigger assets; normal isolated three-mod network
+boot and clean exit 0. Machine evidence, complete smoke/test results, `.21`
+artifact and `.20` rollback are in `evidence/stage-09/cohort-c/`. Exact JAR SHA-256:
+`68FEA006666F288E01D2E38E6772DA3CF11F165EA549E087BAE2868A727940F7`.
+Protected HUD/XP/Stage04-05-profile/projectile/cost-formula paths remain unchanged.
+This gate includes the explicit Flame Weapon pre-payment rejection, not a claim
+that its missing native hit attribution was implemented or connected-tested.

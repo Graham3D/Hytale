@@ -79,9 +79,9 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             NativeManaReservationProjection.maximumMultiplier(store.getComponent(actor,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getMana()));
             String result=runtime.preflight(id,profile.skillId(),profile.support(),port(store,actor));
             if(!result.equals("PASS"))return SkillExecutionPort.Validation.reject(result);
-            if(profile.support().kind()==SupportProfile.Kind.HEAL)selectHealTarget(store,actor,profile.support().range());
+            if(profile.support().allyTarget())selectHealTarget(store,actor,profile.support().range());
             if(profile.support().hostileTarget())SupportNativeEffects.requireTarget(store,actor,selectHostileTarget(store,actor,profile.support().range()),profile.support(),bosses);
-            if(profile.support().kind()==SupportProfile.Kind.RALLY){
+            if(profile.support().recipientBurst()){
                 SupportNativeEffects.requireAssets();
                 for(var ref:allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor()))SupportNativeEffects.requireRallyRecipient(store,ref);
             }
@@ -90,7 +90,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     }
     public CommittedTarget capture(Store<EntityStore> store,Ref<EntityStore> actor,Stage04SkillProfile profile){
         var owner=store.getComponent(actor,PlayerRef.getComponentType());
-        var chosen=profile.support().kind()==SupportProfile.Kind.HEAL?selectHealTarget(store,actor,profile.support().range()):
+        var chosen=profile.support().allyTarget()?selectHealTarget(store,actor,profile.support().range()):
                 profile.support().hostileTarget()?selectHostileTarget(store,actor,profile.support().range()):actor;
         var id=store.getComponent(chosen,UUIDComponent.getComponentType());
         UUID target=chosen.equals(actor)?owner.getUuid():id.getUuid();
@@ -103,7 +103,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         String valid=port(store,actor).valid(context);
         if(!valid.equals("PASS"))return SkillExecutionPort.Validation.reject(valid);
         if(context.profile().support().aura())return SkillExecutionPort.Validation.reject("AURA_CANNOT_SCHEDULE_REPEAT");
-        if(context.profile().support().kind()==SupportProfile.Kind.RALLY)return SkillExecutionPort.Validation.pass();
+        if(context.profile().support().recipientBurst())return SkillExecutionPort.Validation.pass();
         var owner=store.getComponent(actor,PlayerRef.getComponentType());
         var target=context.target().entityId();
         var ref=owner.getUuid().equals(target)?actor:target==null?null:store.getExternalData().getRefFromUUID(target);
@@ -155,11 +155,13 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         public void finiteEffect(SkillExecutionContext context,FiniteSupportEffects effects,double now){
             if(!valid(context).equals("PASS"))throw new IllegalStateException("SUPPORT_OWNER_INVALID");
             var p=context.profile().support();
-            var refs=p.kind()==SupportProfile.Kind.RALLY?allyRefs(store,actor,p.radius()*context.compiledPlan().executionModifiers().radiusFactor()):
-                    List.of(store.getExternalData().getRefFromUUID(context.target().entityId()));
+            var refs=p.recipientBurst()?allyRefs(store,actor,p.radius()*context.compiledPlan().executionModifiers().radiusFactor()):
+                    List.of(context.target().entityId().equals(player.getUuid())?actor:store.getExternalData().getRefFromUUID(context.target().entityId()));
             double seconds=p.durationSeconds();
             if(p.hostileTarget())SupportNativeEffects.requireTarget(store,actor,refs.getFirst(),p,bosses);
-            if(p.kind()==SupportProfile.Kind.RALLY)for(var ref:refs)SupportNativeEffects.requireRallyRecipient(store,ref);
+            if(p.recipientBurst())for(var ref:refs)SupportNativeEffects.requireRallyRecipient(store,ref);
+            if(p.allyTarget()&&(!eligibleAlly(store,actor,refs.getFirst())||!inRange(store,actor,refs.getFirst(),p.range())))
+                throw new IllegalStateException("SHIELD_ALLY_TARGET_INVALID");
             var ids=refs.stream().map(ref->ref.equals(actor)?player.getUuid():store.getComponent(ref,UUIDComponent.getComponentType()).getUuid()).toList();
             effects.requireAdmission(context,ids,seconds,now);
             if(p.kind()==SupportProfile.Kind.FEAR){
@@ -169,7 +171,10 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 seconds=result.remainingSeconds();
             }
             try{
-                effects.apply(context,ids,seconds,now);
+                if(p.kind()==SupportProfile.Kind.SHIELD){
+                    double capacity=SupportMagnitude.shield(context,masteryMultiplier(context));
+                    effects.applyShield(context,ids,seconds,capacity,now);
+                }else effects.apply(context,ids,seconds,now);
                 for(var ref:refs){
                     if(buffer!=null)buffer.ensureComponent(ref,SupportEffectProjection.getComponentType());
                     else store.ensureComponent(ref,SupportEffectProjection.getComponentType());
@@ -268,6 +273,8 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
             if(damage.isCancelled()||damage.getAmount()<=0)return;
+            var metadata=HytaleDamageAdapter.metadata(damage);
+            if(metadata!=null&&metadata.origin()==HytaleDamageMetadata.Origin.REDIRECTED)return;
             var ref=chunk.getReferenceTo(index);var actor=chunk.getComponent(index,PlayerRef.getComponentType()).getUuid();double now=System.nanoTime()/1e9;
             if(damage.getSource() instanceof Damage.EntitySource source&&HytaleAreaQueries.hostile(store,source.getRef(),ref)){
                 support.runtime.hostileDamage(actor,now);support.kernel.hostileCombat().markHostile(actor);

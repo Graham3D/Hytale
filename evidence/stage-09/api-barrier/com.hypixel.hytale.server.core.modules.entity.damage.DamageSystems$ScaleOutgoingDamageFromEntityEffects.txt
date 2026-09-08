@@ -1,0 +1,213 @@
+Compiled from "DamageSystems.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ScaleOutgoingDamageFromEntityEffects extends com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem {
+  private static final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> QUERY;
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ScaleOutgoingDamageFromEntityEffects();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageEventSystem."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getGroup();
+    Code:
+         0: invokestatic  #7                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+         3: invokevirtual #13                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getFilterDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+         6: areturn
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: getstatic     #17                 // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+         3: areturn
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: aload         5
+         2: invokevirtual #23                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getSource:()Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage$Source;
+         5: astore        7
+         7: aload         7
+         9: instanceof    #29                 // class com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource
+        12: ifeq          25
+        15: aload         7
+        17: checkcast     #29                 // class com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource
+        20: astore        6
+        22: goto          26
+        25: return
+        26: aload         6
+        28: invokevirtual #31                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource.getRef:()Lcom/hypixel/hytale/component/Ref;
+        31: astore        7
+        33: aload         7
+        35: ifnull        46
+        38: aload         7
+        40: invokevirtual #35                 // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        43: ifne          47
+        46: return
+        47: aload_3
+        48: aload         7
+        50: invokestatic  #41                 // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        53: invokevirtual #47                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        56: checkcast     #42                 // class com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent
+        59: astore        8
+        61: aload         8
+        63: ifnonnull     67
+        66: return
+        67: invokestatic  #53                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        70: aload         5
+        72: invokevirtual #59                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getDamageCauseIndex:()I
+        75: invokevirtual #63                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+        78: checkcast     #54                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+        81: astore        9
+        83: aload         9
+        85: ifnonnull     89
+        88: return
+        89: fconst_0
+        90: fstore        10
+        92: fconst_0
+        93: fstore        11
+        95: aload         8
+        97: invokevirtual #69                 // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getActiveEffects:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       100: invokeinterface #73,  1           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.keySet:()Lit/unimi/dsi/fastutil/ints/IntSet;
+       105: invokeinterface #79,  1           // InterfaceMethod it/unimi/dsi/fastutil/ints/IntSet.iterator:()Lit/unimi/dsi/fastutil/ints/IntIterator;
+       110: astore        12
+       112: aload         12
+       114: invokeinterface #85,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+       119: ifeq          311
+       122: aload         12
+       124: invokeinterface #90,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       129: checkcast     #94                 // class java/lang/Integer
+       132: invokevirtual #96                 // Method java/lang/Integer.intValue:()I
+       135: istore        13
+       137: invokestatic  #99                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+       140: iload         13
+       142: invokevirtual #63                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       145: checkcast     #100                // class com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect
+       148: astore        14
+       150: aload         14
+       152: ifnull        163
+       155: aload         14
+       157: invokevirtual #102                // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getOutgoingDamageValues:()Ljava/util/Map;
+       160: goto          164
+       163: aconst_null
+       164: astore        15
+       166: aload         15
+       168: ifnonnull     174
+       171: goto          112
+       174: aload         15
+       176: invokeinterface #106,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+       181: invokeinterface #112,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+       186: astore        16
+       188: aload         16
+       190: invokeinterface #85,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+       195: ifeq          308
+       198: aload         16
+       200: invokeinterface #90,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       205: checkcast     #117                // class java/util/Map$Entry
+       208: astore        17
+       210: aload         9
+       212: aload         17
+       214: invokeinterface #119,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+       219: checkcast     #54                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+       222: invokestatic  #122                // Method causeMatches:(Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;)Z
+       225: ifne          231
+       228: goto          188
+       231: aload         17
+       233: invokeinterface #126,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+       238: checkcast     #129                // class "[Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier;"
+       241: astore        18
+       243: aload         18
+       245: arraylength
+       246: istore        19
+       248: iconst_0
+       249: istore        20
+       251: iload         20
+       253: iload         19
+       255: if_icmpge     305
+       258: aload         18
+       260: iload         20
+       262: aaload
+       263: astore        21
+       265: aload         21
+       267: invokevirtual #131                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getCalculationType:()Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType;
+       270: getstatic     #137                // Field com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType.FLAT:Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType;
+       273: if_acmpne     289
+       276: fload         11
+       278: aload         21
+       280: invokevirtual #143                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getAmount:()F
+       283: fadd
+       284: fstore        11
+       286: goto          299
+       289: fload         10
+       291: aload         21
+       293: invokevirtual #143                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getAmount:()F
+       296: fadd
+       297: fstore        10
+       299: iinc          20, 1
+       302: goto          251
+       305: goto          188
+       308: goto          112
+       311: fload         10
+       313: fconst_0
+       314: fcmpl
+       315: ifne          326
+       318: fload         11
+       320: fconst_0
+       321: fcmpl
+       322: ifne          326
+       325: return
+       326: aload         5
+       328: fconst_0
+       329: aload         5
+       331: invokevirtual #147                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getAmount:()F
+       334: fload         11
+       336: fadd
+       337: fconst_1
+       338: fload         10
+       340: fadd
+       341: fmul
+       342: invokestatic  #148                // Method java/lang/Math.max:(FF)F
+       345: invokevirtual #154                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.setAmount:(F)V
+       348: return
+
+  private static boolean causeMatches(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: aload_0
+         1: astore_2
+         2: aload_2
+         3: ifnull        41
+         6: aload_2
+         7: aload_1
+         8: if_acmpne     13
+        11: iconst_1
+        12: ireturn
+        13: aload_2
+        14: invokevirtual #158                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getInherits:()Ljava/lang/String;
+        17: ifnull        36
+        20: invokestatic  #53                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        23: aload_2
+        24: invokevirtual #158                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getInherits:()Ljava/lang/String;
+        27: invokevirtual #162                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+        30: checkcast     #54                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+        33: goto          37
+        36: aconst_null
+        37: astore_2
+        38: goto          2
+        41: iconst_0
+        42: ireturn
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk, com.hypixel.hytale.component.Store, com.hypixel.hytale.component.CommandBuffer, com.hypixel.hytale.component.system.EcsEvent);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: checkcast     #24                 // class com/hypixel/hytale/server/core/modules/entity/damage/Damage
+        11: invokevirtual #165                // Method handle:(ILcom/hypixel/hytale/component/ArchetypeChunk;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)V
+        14: return
+
+  static {};
+    Code:
+         0: getstatic     #169                // Field com/hypixel/hytale/server/core/modules/entity/AllLegacyLivingEntityTypesQuery.INSTANCE:Lcom/hypixel/hytale/server/core/modules/entity/AllLegacyLivingEntityTypesQuery;
+         3: putstatic     #17                 // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+         6: return
+}

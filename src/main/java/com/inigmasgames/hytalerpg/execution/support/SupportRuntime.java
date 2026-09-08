@@ -19,7 +19,9 @@ public final class SupportRuntime {
     private final Map<UUID,LinkedHashMap<String,Aura>> active=new HashMap<>();
     private final Map<UUID,Session> sessions=new HashMap<>();
     private final FiniteSupportEffects finite=new FiniteSupportEffects();
+    private final WeaponImbueContacts imbues=new WeaponImbueContacts(finite);
     public FiniteSupportEffects finite(){return finite;}
+    public WeaponImbueContacts imbues(){return imbues;}
     public SupportRuntime(ReservationService reservations,OwnedFieldBudget fields,SupportProgressStore progress){
         this.reservations=reservations;this.fields=fields;this.progress=progress;
     }
@@ -51,6 +53,7 @@ public final class SupportRuntime {
         port.trace(aura.context,"AURA_ALLOCATION_CHANGED",Map.of("percent",percent,"deficit",session.state.managuard().deficit(),"currentMana",port.resources().current(ResourceType.MANA)));
     }
     public synchronized String preflight(UUID actor,String skill,SupportProfile profile,SupportWorldPort port){
+        if(profile.kind()==SupportProfile.Kind.IMBUE&&!port.rootWeaponContactAvailable())return "NATIVE_ROOT_WEAPON_CONTACT_ID_UNAVAILABLE";
         var state=session(actor).state;
         if(!profile.aura())return "PASS";
         if(state.toggleLocks().getOrDefault(skill,0.0)>1e-9)return "AURA_TOGGLE_LOCK";
@@ -180,6 +183,7 @@ public final class SupportRuntime {
     }
     public synchronized void cancel(UUID actor,String reason,SupportWorldPort port){
         finite.forget(actor);
+        imbues.forget(actor);
         RuntimeException failed=null;
         for(String skill:List.copyOf(active.getOrDefault(actor,new LinkedHashMap<>()).keySet())){
             try{end(actor,skill,reason,port);}catch(RuntimeException failure){if(failed==null)failed=failure;else failed.addSuppressed(failure);}

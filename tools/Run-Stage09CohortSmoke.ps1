@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b')][string]$Cohort = 'a')
+param([ValidateSet('a','b','c')][string]$Cohort = 'a')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
@@ -20,7 +20,7 @@ $expectedConnections = 8
 $expectedConnectionCauses = 5
 $expectedProfiles = 15
 $expectedStatusAssets = 10
-$expectedSupport = if($Cohort -eq 'a'){3}else{8}
+$expectedSupport = switch($Cohort){'a'{3};'b'{8};'c'{12}}
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path
 if (-not $resolved.StartsWith($projectRoot, [StringComparison]::OrdinalIgnoreCase)) { throw "Unsafe smoke path: $resolved" }

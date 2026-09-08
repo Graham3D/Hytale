@@ -14,7 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage09FiniteSupportTest {
     @Test void cohortHasExactlyFiveFiniteZeroDamageProfiles(){
-        var h=new Harness("taunt");var profiles=h.profiles.all().values().stream().filter(p->p.support()!=null&&p.support().finiteEffect()).toList();
+        var h=new Harness("taunt");var cohort=Set.of("taunt","weakening_hex","hunter_s_mark","intimidate","battle_cry");
+        var profiles=h.profiles.all().values().stream().filter(p->cohort.contains(p.skillId())).toList();
         assertEquals(5,profiles.size());assertTrue(profiles.stream().allMatch(p->p.damageCoefficient()==0));
         assertEquals(87,h.bundle.catalog().skills().size());assertEquals(66,h.bundle.catalog().passives().size());
     }

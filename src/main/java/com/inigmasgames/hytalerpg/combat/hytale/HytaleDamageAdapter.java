@@ -29,14 +29,20 @@ public final class HytaleDamageAdapter {
     public NativeResult applyObserved(Ref<EntityStore> target, ComponentAccessor<EntityStore> accessor,
                       Ref<EntityStore> source, DamageCause cause,
                       HytaleDamageMetadata metadata, DamageCalculationService.Result calculation) {
+        return applyResolved(target,accessor,source,cause,metadata,calculation.preMitigationDamage());
+    }
+    /** Already-resolved secondary amount (e.g. a post-mitigation split), not another offensive scaling pass. */
+    public NativeResult applyResolved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,
+                      Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,double amount){
+        if(!Double.isFinite(amount)||amount<0||amount>Float.MAX_VALUE)throw new IllegalArgumentException("Invalid native damage amount");
         EntityStatMap targetStats = accessor.getComponent(target, EntityStatMap.getComponentType());
         double before = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
                 ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();
         HytaleDamageMetadata complete = new HytaleDamageMetadata(metadata.actorId(), metadata.rootCastId(),
-                metadata.skillInstanceId(), metadata.correlationId(), calculation.preMitigationDamage(), before,
+                metadata.skillInstanceId(), metadata.correlationId(), amount, before,
                 metadata.effectInstanceId(),metadata.canProc(),metadata.origin());
         Damage damage = new Damage(source == null ? Damage.NULL_SOURCE : new Damage.EntitySource(source),
-                cause, calculation.toHytaleDamageFloat());
+                cause, (float)amount);
         damage.putMetaObject(RPG_METADATA, GSON.toJson(complete));
         DamageSystems.executeDamage(target, accessor, damage);
         double after = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null

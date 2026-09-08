@@ -1,0 +1,76 @@
+Compiled from "DamageSystems.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$FilterPlayerWorldConfig extends com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem {
+  private static final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> QUERY;
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$FilterPlayerWorldConfig();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageEventSystem."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getGroup();
+    Code:
+         0: invokestatic  #7                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+         3: invokevirtual #13                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getFilterDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+         6: areturn
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: getstatic     #17                 // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+         3: areturn
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: aload_3
+         1: invokevirtual #23                 // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+         4: checkcast     #29                 // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+         7: invokevirtual #31                 // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+        10: astore        6
+        12: aload         6
+        14: invokevirtual #35                 // Method com/hypixel/hytale/server/core/universe/world/World.getGameplayConfig:()Lcom/hypixel/hytale/server/core/asset/type/gameplay/GameplayConfig;
+        17: astore        7
+        19: aload         7
+        21: invokevirtual #41                 // Method com/hypixel/hytale/server/core/asset/type/gameplay/GameplayConfig.getCombatConfig:()Lcom/hypixel/hytale/server/core/asset/type/gameplay/CombatConfig;
+        24: invokevirtual #47                 // Method com/hypixel/hytale/server/core/asset/type/gameplay/CombatConfig.isPlayerIncomingDamageDisabled:()Z
+        27: ifeq          53
+        30: aload         5
+        32: iconst_1
+        33: invokevirtual #53                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.setCancelled:(Z)V
+        36: aload_2
+        37: iload_1
+        38: invokevirtual #59                 // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+        41: astore        8
+        43: aload         4
+        45: aload         8
+        47: invokestatic  #65                 // Method com/hypixel/hytale/server/core/entity/knockback/KnockbackComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        50: invokevirtual #71                 // Method com/hypixel/hytale/component/CommandBuffer.tryRemoveComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)V
+        53: return
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk, com.hypixel.hytale.component.Store, com.hypixel.hytale.component.CommandBuffer, com.hypixel.hytale.component.system.EcsEvent);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: checkcast     #54                 // class com/hypixel/hytale/server/core/modules/entity/damage/Damage
+        11: invokevirtual #77                 // Method handle:(ILcom/hypixel/hytale/component/ArchetypeChunk;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)V
+        14: return
+
+  static {};
+    Code:
+         0: iconst_2
+         1: anewarray     #81                 // class com/hypixel/hytale/component/query/Query
+         4: dup
+         5: iconst_0
+         6: getstatic     #83                 // Field com/hypixel/hytale/server/core/modules/entity/AllLegacyLivingEntityTypesQuery.INSTANCE:Lcom/hypixel/hytale/server/core/modules/entity/AllLegacyLivingEntityTypesQuery;
+         9: aastore
+        10: dup
+        11: iconst_1
+        12: invokestatic  #89                 // Method com/hypixel/hytale/server/core/entity/entities/Player.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        15: aastore
+        16: invokestatic  #92                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        19: putstatic     #17                 // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+        22: return
+}
