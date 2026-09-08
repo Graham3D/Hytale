@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /** Versioned server-owned RPG player state. Live Hytale resources are intentionally not duplicated here. */
 public final class RpgPlayerState {
-    public static final int CURRENT_SCHEMA = 3;
+    public static final int CURRENT_SCHEMA = 4;
 
     public int schemaVersion = CURRENT_SCHEMA;
     public String playerUuid;
@@ -36,6 +36,7 @@ public final class RpgPlayerState {
     public List<PersistedLinkEdge> graphEdges = new ArrayList<>();
     public Map<String, Long> skillMastery = new LinkedHashMap<>();
     public long revision;
+    public SupportProgress support = SupportProgress.INITIAL;
     public List<String> degradedReasons = new ArrayList<>();
 
     public static RpgPlayerState create(UUID playerUuid) {
@@ -83,6 +84,7 @@ public final class RpgPlayerState {
         if (graphEdges == null) graphEdges = new ArrayList<>();
         if (skillMastery == null) skillMastery = new LinkedHashMap<>();
         if (degradedReasons == null) degradedReasons = new ArrayList<>();
+        if (support == null) throw new IllegalStateException("Missing durable support ledger; refusing a free-shield reset");
     }
 
     public RpgPlayerState copy() {
@@ -102,6 +104,7 @@ public final class RpgPlayerState {
         copy.graphEdges = graphEdges.stream().map(PersistedLinkEdge::copy).collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         copy.skillMastery = new LinkedHashMap<>(skillMastery);
         copy.revision = revision;
+        copy.support = support;
         copy.degradedReasons = new ArrayList<>(degradedReasons);
         return copy;
     }

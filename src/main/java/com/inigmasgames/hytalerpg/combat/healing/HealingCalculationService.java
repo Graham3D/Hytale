@@ -2,6 +2,14 @@ package com.inigmasgames.hytalerpg.combat.healing;
 
 /** Damage conversion starts from observed Health loss, never calculated/absorbed/overkill damage. */
 public final class HealingCalculationService {
+    /** WIS and mastery apply once to the authored HealingPower baseline, never Magic/INT. */
+    public double direct(double healingPower,double coefficient,double wisdomMultiplier,double masteryMultiplier,double increased){
+        for(double value:new double[]{healingPower,coefficient,wisdomMultiplier,masteryMultiplier,increased})
+            if(!Double.isFinite(value)||value<0)throw new IllegalArgumentException("Invalid direct healing input");
+        double result=healingPower*coefficient*wisdomMultiplier*masteryMultiplier*(1+increased);
+        if(!Double.isFinite(result))throw new IllegalArgumentException("Direct healing overflow");
+        return result;
+    }
     public record Conversion(double actualHealthLost,double fraction,double baseHealing,double wisdomMultiplier,
                              double healingIncreased,double requestedHealing){ }
     public Conversion fromActualDamage(double lost,double fraction,double wisdomMultiplier,double healingIncreased){

@@ -1,0 +1,169 @@
+Compiled from "Modifier.java"
+public abstract class com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier implements com.hypixel.hytale.server.core.io.NetworkSerializable<com.hypixel.hytale.protocol.Modifier> {
+  public static final com.hypixel.hytale.codec.lookup.CodecMapCodec<com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier> CODEC;
+
+  protected static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier> BASE_CODEC;
+
+  protected com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier$ModifierTarget target;
+
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: getstatic     #7                  // Field com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget.MAX:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+         8: putfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+        11: return
+
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier(com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier$ModifierTarget);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: getstatic     #7                  // Field com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget.MAX:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+         8: putfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+        11: aload_0
+        12: aload_1
+        13: putfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+        16: return
+
+  public abstract float apply(float);
+
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier$ModifierTarget getTarget();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+         4: areturn
+
+  public com.hypixel.hytale.protocol.Modifier toPacket();
+    Code:
+         0: aload_0
+         1: instanceof    #18                 // class com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier
+         4: ifne          17
+         7: new           #20                 // class java/lang/UnsupportedOperationException
+        10: dup
+        11: ldc           #22                 // String Only static modifiers supported on the client currently.
+        13: invokespecial #24                 // Method java/lang/UnsupportedOperationException."<init>":(Ljava/lang/String;)V
+        16: athrow
+        17: new           #27                 // class com/hypixel/hytale/protocol/Modifier
+        20: dup
+        21: invokespecial #29                 // Method com/hypixel/hytale/protocol/Modifier."<init>":()V
+        24: astore_1
+        25: aload_1
+        26: aload_0
+        27: getfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+        30: invokevirtual #30                 // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget.ordinal:()I
+        33: lookupswitch  { // 2
+
+                       0: 76
+
+                       1: 70
+                 default: 60
+            }
+        60: new           #34                 // class java/lang/MatchException
+        63: dup
+        64: aconst_null
+        65: aconst_null
+        66: invokespecial #36                 // Method java/lang/MatchException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+        69: athrow
+        70: getstatic     #39                 // Field com/hypixel/hytale/protocol/ModifierTarget.Max:Lcom/hypixel/hytale/protocol/ModifierTarget;
+        73: goto          79
+        76: getstatic     #45                 // Field com/hypixel/hytale/protocol/ModifierTarget.Min:Lcom/hypixel/hytale/protocol/ModifierTarget;
+        79: putfield      #48                 // Field com/hypixel/hytale/protocol/Modifier.target:Lcom/hypixel/hytale/protocol/ModifierTarget;
+        82: aload_1
+        83: areturn
+
+  public boolean equals(java.lang.Object);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: if_acmpne     7
+         5: iconst_1
+         6: ireturn
+         7: aload_1
+         8: ifnull        22
+        11: aload_0
+        12: invokevirtual #50                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        15: aload_1
+        16: invokevirtual #50                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        19: if_acmpeq     24
+        22: iconst_0
+        23: ireturn
+        24: aload_1
+        25: checkcast     #14                 // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+        28: astore_2
+        29: aload_0
+        30: getfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+        33: aload_2
+        34: getfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+        37: if_acmpne     44
+        40: iconst_1
+        41: goto          45
+        44: iconst_0
+        45: ireturn
+
+  public int hashCode();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+         4: ifnull        17
+         7: aload_0
+         8: getfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+        11: invokevirtual #54                 // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget.hashCode:()I
+        14: goto          18
+        17: iconst_0
+        18: ireturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+         4: invokestatic  #57                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+         7: invokedynamic #63,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        12: areturn
+
+  public java.lang.Object toPacket();
+    Code:
+         0: aload_0
+         1: invokevirtual #67                 // Method toPacket:()Lcom/hypixel/hytale/protocol/Modifier;
+         4: areturn
+
+  private static com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier$ModifierTarget lambda$static$1(com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier);
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier$ModifierTarget);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #13                 // Field target:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+         5: return
+
+  static {};
+    Code:
+         0: new           #71                 // class com/hypixel/hytale/codec/lookup/CodecMapCodec
+         3: dup
+         4: invokespecial #73                 // Method com/hypixel/hytale/codec/lookup/CodecMapCodec."<init>":()V
+         7: putstatic     #74                 // Field CODEC:Lcom/hypixel/hytale/codec/lookup/CodecMapCodec;
+        10: ldc           #14                 // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+        12: invokestatic  #78                 // Method com/hypixel/hytale/codec/builder/BuilderCodec.abstractBuilder:(Ljava/lang/Class;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        15: new           #84                 // class com/hypixel/hytale/codec/KeyedCodec
+        18: dup
+        19: ldc           #86                 // String Target
+        21: new           #88                 // class com/hypixel/hytale/codec/codecs/EnumCodec
+        24: dup
+        25: ldc           #8                  // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget
+        27: getstatic     #90                 // Field com/hypixel/hytale/codec/codecs/EnumCodec$EnumStyle.LEGACY:Lcom/hypixel/hytale/codec/codecs/EnumCodec$EnumStyle;
+        30: invokespecial #96                 // Method com/hypixel/hytale/codec/codecs/EnumCodec."<init>":(Ljava/lang/Class;Lcom/hypixel/hytale/codec/codecs/EnumCodec$EnumStyle;)V
+        33: invokespecial #99                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        36: invokedynamic #102,  0            // InvokeDynamic #1:accept:()Ljava/util/function/BiConsumer;
+        41: invokedynamic #106,  0            // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+        46: invokevirtual #110                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        49: invokevirtual #116                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        52: checkcast     #111                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        55: invokevirtual #122                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        58: putstatic     #126                // Field BASE_CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        61: return
+}

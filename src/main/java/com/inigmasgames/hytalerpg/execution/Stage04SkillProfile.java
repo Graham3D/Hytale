@@ -23,7 +23,17 @@ public record Stage04SkillProfile(
         Reaction reaction,
         Projectile projectile,
         com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area,
-        com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile connection) {
+        com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile connection,
+        com.inigmasgames.hytalerpg.execution.support.SupportProfile support) {
+
+    public Stage04SkillProfile(String skillId,Family family,Set<String> secondaryFamilies,Set<String> allowedMainHandKinds,
+            Set<String> requiredOffHandKinds,String resourceType,double resourceCost,double cooldownSeconds,double windupSeconds,
+            String basePowerSource,double innateBasePower,String scaling,Strike strike,Movement movement,Reaction reaction,Projectile projectile,
+            com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area,
+            com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile connection) {
+        this(skillId,family,secondaryFamilies,allowedMainHandKinds,requiredOffHandKinds,resourceType,resourceCost,cooldownSeconds,
+                windupSeconds,basePowerSource,innateBasePower,scaling,strike,movement,reaction,projectile,area,connection,null);
+    }
 
     public Stage04SkillProfile(String skillId,Family family,Set<String> secondaryFamilies,Set<String> allowedMainHandKinds,
             Set<String> requiredOffHandKinds,String resourceType,double resourceCost,double cooldownSeconds,double windupSeconds,
@@ -74,7 +84,7 @@ public record Stage04SkillProfile(
         return Map.of();
     }
 
-    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE, BURST, CONE, TRAP, GROUND_ZONE, WALL, OVERHEAD, BOMBARDMENT, LINE,BEAM,ORB,DIRECT_TARGET }
+    public enum Family { STRIKE, MOVEMENT, REACTION, PROJECTILE, BURST, CONE, TRAP, GROUND_ZONE, WALL, OVERHEAD, BOMBARDMENT, LINE,BEAM,ORB,DIRECT_TARGET,AURA,BARRIER,BUFF }
     public enum Geometry { ARC, LINE, ASSIST_CONE, RADIUS }
     public enum MovementKind { DASH, LEAP }
 

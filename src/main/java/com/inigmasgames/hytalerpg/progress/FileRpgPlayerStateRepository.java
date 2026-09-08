@@ -43,6 +43,14 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
                 warnings.add("Legacy unwrapped state migrated to checksum envelope");
             }
             RpgStateMigrator.MigrationResult migration = migrator.migrate(rawState);
+            if (!migration.state().has("support") || migration.state().get("support").isJsonNull())
+                throw new IllegalStateException("Missing schema-4 durable support ledger");
+            var supportJson=migration.state().getAsJsonObject("support");
+            for(String required:List.of("revision","lastAuraEpoch","managuard","toggleLocks"))
+                if(!supportJson.has(required)||supportJson.get(required).isJsonNull())throw new IllegalStateException("Incomplete support field "+required);
+            var guardJson=supportJson.getAsJsonObject("managuard");
+            for(String required:List.of("deficit","lastValidatedCapacity","allocationPercent"))
+                if(!guardJson.has(required)||guardJson.get(required).isJsonNull())throw new IllegalStateException("Incomplete Managuard ledger field "+required);
             RpgPlayerState state = gson.fromJson(migration.state(), RpgPlayerState.class);
             state.normalizeShape();
             if (!playerUuid.toString().equals(state.playerUuid)) throw new IllegalStateException("RPG state player UUID mismatch: " + path);

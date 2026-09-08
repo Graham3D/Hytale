@@ -38,7 +38,11 @@ public final class SkillExecutorRegistry {
                 forwarding(Stage04SkillProfile.Family.OVERHEAD, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.BOMBARDMENT, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.LINE, SkillExecutionPort::executeConnection),
-                forwarding(Stage04SkillProfile.Family.DIRECT_TARGET, SkillExecutionPort::executeConnection),
+                forwarding(Stage04SkillProfile.Family.DIRECT_TARGET, (port,context)->context.profile().support()!=null
+                        ?port.executeSupport(context):port.executeConnection(context)),
+                forwarding(Stage04SkillProfile.Family.AURA, SkillExecutionPort::executeSupport),
+                forwarding(Stage04SkillProfile.Family.BARRIER, SkillExecutionPort::executeSupport),
+                forwarding(Stage04SkillProfile.Family.BUFF, SkillExecutionPort::executeSupport),
                 forwarding(Stage04SkillProfile.Family.BEAM, SkillExecutionPort::executeConnection),
                 forwarding(Stage04SkillProfile.Family.ORB, SkillExecutionPort::executeConnection)));
     }

@@ -14,6 +14,7 @@ public final class RpgStateMigrator {
             state = switch (version) {
                 case 1 -> migrateV1ToV2(state);
                 case 2 -> migrateV2ToV3(state);
+                case 3 -> migrateV3ToV4(state);
                 default -> throw new IllegalStateException("No migration from RPG schema v" + version);
             };
             version = state.get("schemaVersion").getAsInt();
@@ -78,6 +79,13 @@ public final class RpgStateMigrator {
             JsonElement value = state.remove(from);
             state.add(to, value);
         }
+    }
+
+    private static JsonObject migrateV3ToV4(JsonObject state) {
+        // Stage 08 and earlier had no support effects; only that schema boundary may initialize an empty ledger.
+        state.add("support",new com.google.gson.Gson().toJsonTree(SupportProgress.INITIAL));
+        state.addProperty("schemaVersion",4);
+        return state;
     }
 
     public record MigrationResult(JsonObject state, int sourceVersion, int targetVersion, boolean migrated) {}

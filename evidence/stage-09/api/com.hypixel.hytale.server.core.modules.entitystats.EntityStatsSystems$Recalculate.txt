@@ -1,0 +1,83 @@
+Compiled from "EntityStatsSystems.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.EntityStatsSystems$Recalculate extends com.hypixel.hytale.component.system.tick.EntityTickingSystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap> entityStatMapComponentType;
+
+  private final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> query;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatsSystems$Recalculate(com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap>);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field entityStatMapComponentType:Lcom/hypixel/hytale/component/ComponentType;
+         9: aload_0
+        10: iconst_2
+        11: anewarray     #13                 // class com/hypixel/hytale/component/query/Query
+        14: dup
+        15: iconst_0
+        16: getstatic     #15                 // Field com/hypixel/hytale/server/core/modules/entity/AllLegacyLivingEntityTypesQuery.INSTANCE:Lcom/hypixel/hytale/server/core/modules/entity/AllLegacyLivingEntityTypesQuery;
+        19: aastore
+        20: dup
+        21: iconst_1
+        22: aload_1
+        23: aastore
+        24: invokestatic  #21                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        27: putfield      #25                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+        30: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: aload_0
+         1: getfield      #25                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+         4: areturn
+
+  public boolean isParallel(int, int);
+    Code:
+         0: iload_1
+         1: iload_2
+         2: invokestatic  #29                 // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem.maybeUseParallel:(II)Z
+         5: ireturn
+
+  public void tick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: iload_2
+         2: aload_0
+         3: getfield      #7                  // Field entityStatMapComponentType:Lcom/hypixel/hytale/component/ComponentType;
+         6: invokevirtual #33                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         9: checkcast     #39                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+        12: astore        6
+        14: getstatic     #41                 // Field $assertionsDisabled:Z
+        17: ifne          33
+        20: aload         6
+        22: ifnonnull     33
+        25: new           #45                 // class java/lang/AssertionError
+        28: dup
+        29: invokespecial #47                 // Method java/lang/AssertionError."<init>":()V
+        32: athrow
+        33: aload_3
+        34: iload_2
+        35: invokevirtual #48                 // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+        38: astore        7
+        40: aload         6
+        42: invokevirtual #52                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getStatModifiersManager:()Lcom/hypixel/hytale/server/core/entity/StatModifiersManager;
+        45: aload         7
+        47: aload         6
+        49: aload         5
+        51: invokevirtual #56                 // Method com/hypixel/hytale/server/core/entity/StatModifiersManager.recalculateEntityStatModifiers:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+        54: return
+
+  static {};
+    Code:
+         0: ldc           #62                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatsSystems
+         2: invokevirtual #64                 // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #41                 // Field $assertionsDisabled:Z
+        16: return
+}

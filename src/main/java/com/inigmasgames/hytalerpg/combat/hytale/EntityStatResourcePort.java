@@ -11,7 +11,10 @@ public final class EntityStatResourcePort implements NativeResourcePort {
     private final EntityStatMap stats;
     public EntityStatResourcePort(EntityStatMap stats) { this.stats = stats; }
     @Override public double current(ResourceType type) { return value(type).get(); }
-    @Override public double maximum(ResourceType type) { return value(type).getMax(); }
+    @Override public double maximum(ResourceType type) {
+        return type==ResourceType.MANA?NativeManaReservationProjection.totalMaximum(value(type)):value(type).getMax();
+    }
+    @Override public void setReservedMana(double amount){NativeManaReservationProjection.project(stats,amount);}
     @Override public void setCurrent(ResourceType type, double value) {
         int index = index(type);
         EntityStatValue stat = require(stats.get(index), type);

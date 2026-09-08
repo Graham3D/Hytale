@@ -1,0 +1,599 @@
+Compiled from "EntityStatValue.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue {
+  public static final com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue[] EMPTY_ARRAY;
+
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue> CODEC;
+
+  private java.lang.String id;
+
+  private int index;
+
+  private float value;
+
+  private float min;
+
+  private float max;
+
+  private boolean ignoreInvulnerability;
+
+  private com.hypixel.hytale.server.core.modules.entitystats.RegeneratingValue[] regeneratingValues;
+
+  private java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier> modifiers;
+
+  protected com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: ldc           #9                  // int -2147483648
+         7: putfield      #10                 // Field index:I
+        10: return
+
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue(int, com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: ldc           #9                  // int -2147483648
+         7: putfield      #10                 // Field index:I
+        10: aload_0
+        11: aload_2
+        12: invokevirtual #16                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getId:()Ljava/lang/String;
+        15: putfield      #22                 // Field id:Ljava/lang/String;
+        18: aload_0
+        19: iload_1
+        20: putfield      #10                 // Field index:I
+        23: aload_0
+        24: aload_2
+        25: invokevirtual #26                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getInitialValue:()F
+        28: putfield      #30                 // Field value:F
+        31: aload_0
+        32: iload_1
+        33: aload_2
+        34: invokevirtual #34                 // Method synchronizeAsset:(ILcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)Z
+        37: pop
+        38: return
+
+  public java.lang.String getId();
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  public int getIndex();
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field index:I
+         4: ireturn
+
+  public float get();
+    Code:
+         0: aload_0
+         1: getfield      #30                 // Field value:F
+         4: freturn
+
+  public float asPercentage();
+    Code:
+         0: aload_0
+         1: getfield      #38                 // Field min:F
+         4: aload_0
+         5: getfield      #41                 // Field max:F
+         8: fcmpl
+         9: ifne          14
+        12: fconst_0
+        13: freturn
+        14: aload_0
+        15: getfield      #30                 // Field value:F
+        18: aload_0
+        19: getfield      #38                 // Field min:F
+        22: fsub
+        23: aload_0
+        24: getfield      #41                 // Field max:F
+        27: aload_0
+        28: getfield      #38                 // Field min:F
+        31: fsub
+        32: fdiv
+        33: freturn
+
+  public float getMin();
+    Code:
+         0: aload_0
+         1: getfield      #38                 // Field min:F
+         4: freturn
+
+  public float getMax();
+    Code:
+         0: aload_0
+         1: getfield      #41                 // Field max:F
+         4: freturn
+
+  protected float set(float);
+    Code:
+         0: aload_0
+         1: fload_1
+         2: aload_0
+         3: getfield      #38                 // Field min:F
+         6: aload_0
+         7: getfield      #41                 // Field max:F
+        10: invokestatic  #44                 // Method com/hypixel/hytale/math/util/MathUtil.clamp:(FFF)F
+        13: dup_x1
+        14: putfield      #30                 // Field value:F
+        17: freturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.RegeneratingValue[] getRegeneratingValues();
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field regeneratingValues:[Lcom/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier getModifier(java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #54                 // Field modifiers:Ljava/util/Map;
+         4: ifnonnull     9
+         7: aconst_null
+         8: areturn
+         9: aload_0
+        10: getfield      #54                 // Field modifiers:Ljava/util/Map;
+        13: aload_1
+        14: invokeinterface #58,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        19: checkcast     #64                 // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+        22: areturn
+
+  public boolean getIgnoreInvulnerability();
+    Code:
+         0: aload_0
+         1: getfield      #66                 // Field ignoreInvulnerability:Z
+         4: ireturn
+
+  public java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier> getModifiers();
+    Code:
+         0: aload_0
+         1: getfield      #54                 // Field modifiers:Ljava/util/Map;
+         4: areturn
+
+  protected com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier putModifier(java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier);
+    Code:
+         0: aload_0
+         1: getfield      #54                 // Field modifiers:Ljava/util/Map;
+         4: ifnonnull     18
+         7: aload_0
+         8: new           #70                 // class it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap
+        11: dup
+        12: invokespecial #72                 // Method it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap."<init>":()V
+        15: putfield      #54                 // Field modifiers:Ljava/util/Map;
+        18: aload_0
+        19: getfield      #54                 // Field modifiers:Ljava/util/Map;
+        22: aload_1
+        23: aload_2
+        24: invokeinterface #73,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        29: checkcast     #64                 // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+        32: astore_3
+        33: aload_0
+        34: invokestatic  #77                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        37: aload_0
+        38: getfield      #10                 // Field index:I
+        41: invokevirtual #81                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+        44: checkcast     #17                 // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType
+        47: invokevirtual #87                 // Method computeModifiers:(Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)V
+        50: aload_3
+        51: areturn
+
+  protected com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier removeModifier(java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #54                 // Field modifiers:Ljava/util/Map;
+         4: ifnonnull     9
+         7: aconst_null
+         8: areturn
+         9: aload_0
+        10: getfield      #54                 // Field modifiers:Ljava/util/Map;
+        13: aload_1
+        14: invokeinterface #91,  2           // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        19: checkcast     #64                 // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+        22: astore_2
+        23: aload_2
+        24: ifnull        44
+        27: aload_0
+        28: invokestatic  #77                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        31: aload_0
+        32: getfield      #10                 // Field index:I
+        35: invokevirtual #81                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+        38: checkcast     #17                 // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType
+        41: invokevirtual #87                 // Method computeModifiers:(Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)V
+        44: aload_2
+        45: areturn
+
+  public boolean synchronizeAsset(int, com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType);
+    Code:
+         0: aload_0
+         1: aload_2
+         2: invokevirtual #16                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getId:()Ljava/lang/String;
+         5: putfield      #22                 // Field id:Ljava/lang/String;
+         8: aload_0
+         9: iload_1
+        10: putfield      #10                 // Field index:I
+        13: aload_0
+        14: aload_2
+        15: invokevirtual #94                 // Method initializeRegenerating:(Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)V
+        18: aload_0
+        19: getfield      #38                 // Field min:F
+        22: aload_2
+        23: invokevirtual #97                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getMin:()F
+        26: fcmpl
+        27: ifne          42
+        30: aload_0
+        31: getfield      #41                 // Field max:F
+        34: aload_2
+        35: invokevirtual #100                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getMax:()F
+        38: fcmpl
+        39: ifeq          46
+        42: iconst_1
+        43: goto          47
+        46: iconst_0
+        47: istore_3
+        48: aload_0
+        49: aload_2
+        50: invokevirtual #103                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getIgnoreInvulnerability:()Z
+        53: putfield      #66                 // Field ignoreInvulnerability:Z
+        56: aload_0
+        57: getfield      #30                 // Field value:F
+        60: fstore        4
+        62: aload_0
+        63: aload_2
+        64: invokevirtual #87                 // Method computeModifiers:(Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)V
+        67: iload_3
+        68: ifne          81
+        71: aload_0
+        72: getfield      #30                 // Field value:F
+        75: fload         4
+        77: fcmpl
+        78: ifeq          85
+        81: iconst_1
+        82: goto          86
+        85: iconst_0
+        86: ireturn
+
+  private void initializeRegenerating(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType);
+    Code:
+         0: aload_1
+         1: invokevirtual #107                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getRegenerating:()[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+         4: astore_2
+         5: aload_2
+         6: ifnonnull     10
+         9: return
+        10: aload_0
+        11: aload_2
+        12: arraylength
+        13: anewarray     #111                // class com/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue
+        16: putfield      #50                 // Field regeneratingValues:[Lcom/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue;
+        19: iconst_0
+        20: istore_3
+        21: iload_3
+        22: aload_2
+        23: arraylength
+        24: if_icmpge     49
+        27: aload_0
+        28: getfield      #50                 // Field regeneratingValues:[Lcom/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue;
+        31: iload_3
+        32: new           #111                // class com/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue
+        35: dup
+        36: aload_2
+        37: iload_3
+        38: aaload
+        39: invokespecial #113                // Method com/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue."<init>":(Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;)V
+        42: aastore
+        43: iinc          3, 1
+        46: goto          21
+        49: return
+
+  protected void computeModifiers(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #97                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getMin:()F
+         5: putfield      #38                 // Field min:F
+         8: aload_0
+         9: aload_1
+        10: invokevirtual #100                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getMax:()F
+        13: putfield      #41                 // Field max:F
+        16: aload_0
+        17: getfield      #54                 // Field modifiers:Ljava/util/Map;
+        20: ifnull        370
+        23: getstatic     #116                // Field com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget.VALUES:[Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+        26: astore_2
+        27: aload_2
+        28: arraylength
+        29: istore_3
+        30: iconst_0
+        31: istore        4
+        33: iload         4
+        35: iload_3
+        36: if_icmpge     321
+        39: aload_2
+        40: iload         4
+        42: aaload
+        43: astore        5
+        45: iconst_0
+        46: istore        6
+        48: fconst_0
+        49: fstore        7
+        51: iconst_0
+        52: istore        8
+        54: fconst_0
+        55: fstore        9
+        57: aload_0
+        58: getfield      #54                 // Field modifiers:Ljava/util/Map;
+        61: invokeinterface #122,  1          // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        66: invokeinterface #126,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+        71: astore        10
+        73: aload         10
+        75: invokeinterface #132,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        80: ifeq          192
+        83: aload         10
+        85: invokeinterface #137,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        90: checkcast     #64                 // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+        93: astore        11
+        95: aload         11
+        97: instanceof    #141                // class com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier
+       100: ifeq          73
+       103: aload         11
+       105: checkcast     #141                // class com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier
+       108: astore        12
+       110: aload         12
+       112: invokevirtual #143                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier.getTarget:()Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+       115: aload         5
+       117: if_acmpeq     123
+       120: goto          73
+       123: getstatic     #147                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue$1.$SwitchMap$com$hypixel$hytale$server$core$modules$entitystats$modifier$StaticModifier$CalculationType:[I
+       126: aload         12
+       128: invokevirtual #153                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier.getCalculationType:()Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType;
+       131: invokevirtual #157                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType.ordinal:()I
+       134: iaload
+       135: lookupswitch  { // 2
+
+                       1: 160
+
+                       2: 176
+                 default: 189
+            }
+       160: iconst_1
+       161: istore        6
+       163: fload         7
+       165: aload         12
+       167: invokevirtual #163                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier.getAmount:()F
+       170: fadd
+       171: fstore        7
+       173: goto          189
+       176: iconst_1
+       177: istore        8
+       179: fload         9
+       181: aload         12
+       183: invokevirtual #163                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier.getAmount:()F
+       186: fadd
+       187: fstore        9
+       189: goto          73
+       192: getstatic     #166                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue$1.$SwitchMap$com$hypixel$hytale$server$core$modules$entitystats$modifier$Modifier$ModifierTarget:[I
+       195: aload         5
+       197: invokevirtual #169                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget.ordinal:()I
+       200: iaload
+       201: lookupswitch  { // 2
+
+                       1: 228
+
+                       2: 273
+                 default: 315
+            }
+       228: iload         6
+       230: ifeq          249
+       233: aload_0
+       234: getstatic     #170                // Field com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType.ADDITIVE:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType;
+       237: aload_0
+       238: getfield      #38                 // Field min:F
+       241: fload         7
+       243: invokevirtual #174                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType.compute:(FF)F
+       246: putfield      #38                 // Field min:F
+       249: iload         8
+       251: ifeq          315
+       254: aload_0
+       255: getstatic     #178                // Field com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType.MULTIPLICATIVE:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType;
+       258: aload_0
+       259: getfield      #38                 // Field min:F
+       262: fload         9
+       264: invokevirtual #174                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType.compute:(FF)F
+       267: putfield      #38                 // Field min:F
+       270: goto          315
+       273: iload         6
+       275: ifeq          294
+       278: aload_0
+       279: getstatic     #170                // Field com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType.ADDITIVE:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType;
+       282: aload_0
+       283: getfield      #41                 // Field max:F
+       286: fload         7
+       288: invokevirtual #174                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType.compute:(FF)F
+       291: putfield      #41                 // Field max:F
+       294: iload         8
+       296: ifeq          315
+       299: aload_0
+       300: getstatic     #178                // Field com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType.MULTIPLICATIVE:Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType;
+       303: aload_0
+       304: getfield      #41                 // Field max:F
+       307: fload         9
+       309: invokevirtual #174                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType.compute:(FF)F
+       312: putfield      #41                 // Field max:F
+       315: iinc          4, 1
+       318: goto          33
+       321: aload_0
+       322: getfield      #54                 // Field modifiers:Ljava/util/Map;
+       325: invokeinterface #122,  1          // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+       330: invokeinterface #126,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+       335: astore_2
+       336: aload_2
+       337: invokeinterface #132,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       342: ifeq          370
+       345: aload_2
+       346: invokeinterface #137,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       351: checkcast     #64                 // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+       354: astore_3
+       355: aload_3
+       356: instanceof    #141                // class com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier
+       359: ifne          367
+       362: aload_0
+       363: aload_3
+       364: invokevirtual #181                // Method applyModifier:(Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;)V
+       367: goto          336
+       370: aload_0
+       371: aload_0
+       372: getfield      #30                 // Field value:F
+       375: aload_0
+       376: getfield      #38                 // Field min:F
+       379: aload_0
+       380: getfield      #41                 // Field max:F
+       383: invokestatic  #44                 // Method com/hypixel/hytale/math/util/MathUtil.clamp:(FFF)F
+       386: putfield      #30                 // Field value:F
+       389: return
+
+  private void applyModifier(com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier);
+    Code:
+         0: getstatic     #166                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue$1.$SwitchMap$com$hypixel$hytale$server$core$modules$entitystats$modifier$Modifier$ModifierTarget:[I
+         3: aload_1
+         4: invokevirtual #185                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier.getTarget:()Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget;
+         7: invokevirtual #169                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier$ModifierTarget.ordinal:()I
+        10: iaload
+        11: lookupswitch  { // 2
+
+                       1: 36
+
+                       2: 51
+                 default: 63
+            }
+        36: aload_0
+        37: aload_1
+        38: aload_0
+        39: getfield      #38                 // Field min:F
+        42: invokevirtual #186                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier.apply:(F)F
+        45: putfield      #38                 // Field min:F
+        48: goto          63
+        51: aload_0
+        52: aload_1
+        53: aload_0
+        54: getfield      #41                 // Field max:F
+        57: invokevirtual #186                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier.apply:(F)F
+        60: putfield      #41                 // Field max:F
+        63: return
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field id:Ljava/lang/String;
+         4: aload_0
+         5: getfield      #10                 // Field index:I
+         8: aload_0
+         9: getfield      #30                 // Field value:F
+        12: aload_0
+        13: getfield      #38                 // Field min:F
+        16: aload_0
+        17: getfield      #41                 // Field max:F
+        20: aload_0
+        21: getfield      #50                 // Field regeneratingValues:[Lcom/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue;
+        24: invokestatic  #190                // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+        27: aload_0
+        28: getfield      #54                 // Field modifiers:Ljava/util/Map;
+        31: invokestatic  #196                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        34: invokedynamic #202,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;IFFFLjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        39: areturn
+
+  private static java.util.Map lambda$static$5(com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue);
+    Code:
+         0: aload_0
+         1: getfield      #54                 // Field modifiers:Ljava/util/Map;
+         4: ifnull        19
+         7: aload_0
+         8: getfield      #54                 // Field modifiers:Ljava/util/Map;
+        11: invokeinterface #206,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+        16: ifeq          23
+        19: aconst_null
+        20: goto          27
+        23: aload_0
+        24: getfield      #54                 // Field modifiers:Ljava/util/Map;
+        27: areturn
+
+  private static void lambda$static$4(com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue, java.util.Map);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #54                 // Field modifiers:Ljava/util/Map;
+         5: return
+
+  private static java.lang.Float lambda$static$3(com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue);
+    Code:
+         0: aload_0
+         1: getfield      #30                 // Field value:F
+         4: invokestatic  #209                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #214                // Method java/lang/Float.floatValue:()F
+         5: putfield      #30                 // Field value:F
+         8: return
+
+  private static java.lang.String lambda$static$1(com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue);
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #22                 // Field id:Ljava/lang/String;
+         5: return
+
+  static {};
+    Code:
+         0: iconst_0
+         1: anewarray     #11                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue
+         4: putstatic     #217                // Field EMPTY_ARRAY:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         7: ldc           #11                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue
+         9: invokedynamic #221,  0            // InvokeDynamic #1:get:()Ljava/util/function/Supplier;
+        14: invokestatic  #224                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        17: new           #230                // class com/hypixel/hytale/codec/KeyedCodec
+        20: dup
+        21: ldc           #232                // String Id
+        23: getstatic     #234                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+        26: invokespecial #240                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        29: invokedynamic #243,  0            // InvokeDynamic #2:accept:()Ljava/util/function/BiConsumer;
+        34: invokedynamic #247,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+        39: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.addField:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        42: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        45: new           #230                // class com/hypixel/hytale/codec/KeyedCodec
+        48: dup
+        49: ldc_w         #256                // String Value
+        52: getstatic     #258                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+        55: invokespecial #240                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        58: invokedynamic #262,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        63: invokedynamic #263,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        68: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.addField:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        71: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        74: new           #230                // class com/hypixel/hytale/codec/KeyedCodec
+        77: dup
+        78: ldc_w         #264                // String Modifiers
+        81: new           #266                // class com/hypixel/hytale/codec/codecs/map/MapCodec
+        84: dup
+        85: getstatic     #268                // Field com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier.CODEC:Lcom/hypixel/hytale/codec/lookup/CodecMapCodec;
+        88: invokedynamic #272,  0            // InvokeDynamic #6:get:()Ljava/util/function/Supplier;
+        93: iconst_0
+        94: invokespecial #273                // Method com/hypixel/hytale/codec/codecs/map/MapCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/Supplier;Z)V
+        97: invokespecial #240                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       100: invokedynamic #276,  0            // InvokeDynamic #7:accept:()Ljava/util/function/BiConsumer;
+       105: invokedynamic #277,  0            // InvokeDynamic #8:apply:()Ljava/util/function/Function;
+       110: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.addField:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       113: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       116: invokevirtual #278                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       119: putstatic     #282                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       122: return
+}

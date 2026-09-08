@@ -23,6 +23,9 @@ public interface SkillExecutionPort {
     default SkillExecutionResult executeConnection(SkillExecutionContext context) {
         throw new UnsupportedOperationException("CONNECTION_NATIVE_PORT_UNAVAILABLE");
     }
+    default SkillExecutionResult executeSupport(SkillExecutionContext context) {
+        throw new UnsupportedOperationException("SUPPORT_NATIVE_PORT_UNAVAILABLE");
+    }
 
     record Equipment(Item mainHand, Item offHand) { }
     record Item(String itemId, String weaponKind, ItemPowerDescriptor power) { }

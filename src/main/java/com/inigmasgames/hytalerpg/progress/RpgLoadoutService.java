@@ -268,6 +268,26 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     }
 
     /** Atomic content+topology mutation used by the fixed Skill Tree adapter. */
+    public SupportProgress mutateSupport(UUID player,long expectedRevision,
+                                          java.util.function.UnaryOperator<SupportProgress> mutation) {
+        Holder holder=holder(player);
+        synchronized(holder){
+            if(holder.state.support.revision()!=expectedRevision)throw new IllegalStateException("Stale support revision");
+            SupportProgress next=mutation.apply(holder.state.support);
+            if(next.revision()!=expectedRevision)throw new IllegalArgumentException("Support revision is service-owned");
+            if(next.equals(holder.state.support))return next;
+            RpgPlayerState candidate=holder.state.copy();candidate.support=next.nextRevision();
+            repository.save(candidate); // Failure leaves the authoritative in-memory ledger unchanged.
+            holder.state=candidate;
+            trace(player,RpgTraceEventType.SAVE,reference(),details("scope","SUPPORT_LEDGER",
+                    "supportRevision",candidate.support.revision(),"RPG revision",candidate.revision,
+                    "schemaVersion",candidate.schemaVersion,"validationResult","PASS"));
+            // No loadout recompile/projection notification for a barrier hit or one observed timer slice.
+            return candidate.support;
+        }
+    }
+
+    /** Atomic content+topology mutation used by the fixed Skill Tree adapter. */
     public MutationResult mutateStaticTree(UUID player, long expectedRevision, LinkNodeId node,
                                            String contentId, Consumer<RpgPlayerState> topology) {
         String correlation = reference();

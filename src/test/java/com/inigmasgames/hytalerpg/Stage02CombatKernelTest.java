@@ -229,7 +229,7 @@ class Stage02CombatKernelTest {
     }
 
     @Test void bedAndHomeRestorationHonorReservationAndTiming() {
-        UUID actor = UUID.randomUUID(); FakeResources port = new FakeResources(0, 100, 0, 100);
+        UUID actor = UUID.randomUUID(); FakeResources port = new FakeResources(25, 100, 0, 100);
         ReservationService reservations = new ReservationService();
         reservations.addPercentage(actor, "aura", .25, port);
         var resources = new RpgResourceService(profile, reservations);

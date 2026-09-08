@@ -122,6 +122,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final OwnedFieldBudget fieldCapacity=new OwnedFieldBudget();
     private final AreaRuntime areas = new AreaRuntime(fieldCapacity);
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
+    private HytaleSupportSystem support;
+    public HytaleSupportSystem configureSupport(com.inigmasgames.hytalerpg.progress.RpgLoadoutService loadouts){
+        if(support!=null)throw new IllegalStateException("Support already configured");
+        support=new HytaleSupportSystem(loadouts,kernel,fieldCapacity,trace,vfx);return support;
+    }
     private final com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry areaControls =
             com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry.loadCanonical();
 
@@ -298,6 +303,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                                                         com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
             if (motions.containsKey(playerRef.getUuid()) || windupEnds.containsKey(playerRef.getUuid())
                     || reactions.active(playerRef.getUuid()).isPresent()) return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
+            if(profile.support()!=null)return support==null?Validation.reject("SUPPORT_NATIVE_ADAPTER_UNAVAILABLE"):
+                    support.preflight(store,actor,profile,plan);
             if(profile.connection()!=null) {
                 var connection=profile.connection();String admitted=connections.admission(playerRef.getUuid(),connection.channel());
                 if(!admitted.equals("PASS"))return Validation.reject(admitted);
@@ -370,6 +377,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         @Override public CommittedTarget captureTarget(Stage04SkillProfile profile,
                 com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,SkillExecutionRequest request) {
+            if(profile.support()!=null)return support.capture(store,actor,profile);
             Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
             Vec3 direction=facing(store,actor),point=feet;UUID targetId=null;
             if(profile.area()!=null) { point=areaPlacement;direction=areaDirection; }
@@ -402,6 +410,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             return new CommittedTarget(playerRef.getWorldUuid(),feet,point,direction,targetId);
         }
         @Override public Validation validateRelease(SkillExecutionContext context) {
+            if(context.profile().support()!=null)return support.validateRelease(store,actor,context);
             var target=context.target();var profile=context.profile();
             if(target==null) return Validation.reject("COMMITTED_TARGET_MISSING");
             if(!target.worldId().equals(playerRef.getWorldUuid())) return Validation.reject("COMMITTED_WORLD_CHANGED");
@@ -479,6 +488,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             connections.start(context,System.nanoTime()/1e9,connectionWorld());
             return SkillExecutionResult.committed("CONNECTION_STARTED",0,0);
         }
+        @Override public SkillExecutionResult executeSupport(SkillExecutionContext context){return support.execute(store,actor,context);}
         private ConnectionWorldPort connectionWorld() {
             return new ConnectionWorldPort() {
                 private final Map<String,Ref<EntityStore>> refs=new HashMap<>();

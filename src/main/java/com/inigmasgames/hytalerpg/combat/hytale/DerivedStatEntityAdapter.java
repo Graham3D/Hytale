@@ -16,7 +16,18 @@ public final class DerivedStatEntityAdapter {
     public void apply(EntityStatMap stats, DerivedStats derived) {
         applyOne(stats, DefaultEntityStatTypes.getHealth(), HEALTH_KEY, derived.maxHealth());
         applyOne(stats, DefaultEntityStatTypes.getStamina(), STAMINA_KEY, derived.maxStamina());
-        applyOne(stats, DefaultEntityStatTypes.getMana(), MANA_KEY, derived.maxMana());
+        int manaIndex=DefaultEntityStatTypes.getMana();
+        var mana=stats.get(manaIndex);
+        boolean reserved=mana!=null&&mana.getModifier(NativeManaReservationProjection.KEY)!=null;
+        double priorCurrent=mana==null?0:mana.get();
+        double priorReserved=reserved?NativeManaReservationProjection.reserved(mana):0;
+        if(reserved)NativeManaReservationProjection.project(stats,0);
+        applyOne(stats, manaIndex, MANA_KEY, derived.maxMana());
+        if(reserved){
+            // Updating INT cannot turn a capacity reservation into a refill or feed spendable max back into total.
+            stats.setStatValue(manaIndex,(float)Math.min(priorCurrent,stats.get(manaIndex).getMax()));
+            NativeManaReservationProjection.project(stats,Math.min(priorReserved,stats.get(manaIndex).getMax()));
+        }
     }
     private static void applyOne(EntityStatMap stats, int index, String key, double desiredMaximum) {
         EntityStatValue before = stats.get(index);

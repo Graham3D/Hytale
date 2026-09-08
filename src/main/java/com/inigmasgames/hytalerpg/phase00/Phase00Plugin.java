@@ -120,9 +120,12 @@ public final class Phase00Plugin extends JavaPlugin {
         var bosses = new HytaleBossBarTracker();
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
                 combatTrace, reactions, vfx, bosses);
+        var supportSystem=skillExecutionSystem.configureSupport(loadouts);
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
-        getCommandRegistry().registerCommand(new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
-                uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities));
+        var rpgCommand=new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
+                uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities);
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
+        getCommandRegistry().registerCommand(rpgCommand);
         getEventRegistry().register(LoadedAssetsEvent.class, RootInteraction.class,
                 NativeAbilityBridgeAudit::onRootInteractionsLoaded);
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace));
@@ -135,6 +138,9 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new RpgHudTickSystem(rpgHud));
         getEntityStoreRegistry().registerSystem(new NativeAbilityProjectionTickSystem(nativeAbilities));
         getEntityStoreRegistry().registerSystem(skillExecutionSystem);
+        getEntityStoreRegistry().registerSystem(supportSystem);
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Absorb(supportSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Removal(supportSystem));
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection::new));
@@ -170,6 +176,7 @@ public final class Phase00Plugin extends JavaPlugin {
                 else LOGGER.atWarning().log("RPG native AbilitySlots unavailable player=%s", playerRef.getUuid());
                 EntityStatMap statMap = ref.getStore().getComponent(ref, EntityStatMap.getComponentType());
                 if (statMap != null) {
+                    supportSystem.ready(ref.getStore(),ref);
                     EnumMap<RpgAttribute, Integer> raw = new EnumMap<>(RpgAttribute.class);
                     for (RpgAttribute attribute : RpgAttribute.values())
                         raw.put(attribute, view.state().attributes.getOrDefault(attribute.name(), 10));
@@ -227,6 +234,8 @@ public final class Phase00Plugin extends JavaPlugin {
                 throw new IllegalStateException("Missing Stage 08 native damage channel: "+cause);
         LOGGER.atInfo().log("RPG_STAGE08_ASSETS revision=%s connectionProfiles=%d nativeDamageChannels=5 result=PASS connectedProof=false",
                 BuildIdentity.REVISION,Stage04SkillProfiles.EXPECTED_STAGE08_PROFILES);
+        LOGGER.atInfo().log("RPG_STAGE09_READY revision=%s supportProfiles=%d playerSchema=4 regenAdapter=NATIVE_ENTRY_DECORATOR reservationProjection=STATIC_MAX allyPolicy=SELF_OR_NATIVE_FRIENDLY connectedProof=false",
+                BuildIdentity.REVISION,Stage04SkillProfiles.EXPECTED_STAGE09_PROFILES);
     }
 
     @Override

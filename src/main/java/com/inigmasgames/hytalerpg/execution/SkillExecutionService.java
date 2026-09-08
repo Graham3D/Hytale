@@ -177,7 +177,8 @@ public final class SkillExecutionService {
         }
         CommittedTarget target;
         try {
-            boolean capture=releaseModifiers.scheduled()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget();
+            boolean capture=releaseModifiers.scheduled()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
+                    ||prepared.profile.support()!=null;
             target=capture?port.captureTarget(prepared.profile,prepared.plan,prepared.request):null;
             if(capture && target==null) throw new IllegalStateException("COMMITTED_TARGET_ADAPTER_UNAVAILABLE");
         } catch(RuntimeException error) {
@@ -254,8 +255,8 @@ public final class SkillExecutionService {
             releases.finish(prepared.instanceId);
             // Spatial dispatch can already have applied a hit before a later presentation/status adapter fails.
             // A paid area must not yield free native damage through the synchronous rollback path.
-            if (cooldownStarted && prepared.profile.area() == null && prepared.profile.connection()==null) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
-            try { if (resourceCommitted && prepared.profile.area() == null && prepared.profile.connection()==null) kernel.resources().refundCommittedCost(token, port.resources());
+            if (cooldownStarted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
+            try { if (resourceCommitted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null) kernel.resources().refundCommittedCost(token, port.resources());
                   else if (resourceCommitted) kernel.resources().finish(token); }
             catch (RuntimeException ignored) { }
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());
@@ -271,7 +272,7 @@ public final class SkillExecutionService {
             if(!lifecycle.transition(context.request().actorId(),context.skillInstanceId(),SkillInstanceLifecycle.Phase.COMMITTED,SkillInstanceLifecycle.Phase.CHANNEL))
                 throw new IllegalStateException("Channel lifecycle transition failed");
             synchronized(activeContexts){activeContexts.put(context.request().actorId(),context);}
-        } else if (context.profile().area() != null || context.profile().connection()!=null) {
+        } else if (context.profile().area() != null || context.profile().connection()!=null || context.profile().support()!=null) {
             // The area registry owns the finite effect after dispatch; it does not lock unrelated casts for its lifetime.
             lifecycle.terminate(context.request().actorId(), context.skillInstanceId());
         } else if (context.profile().family() == Stage04SkillProfile.Family.STRIKE

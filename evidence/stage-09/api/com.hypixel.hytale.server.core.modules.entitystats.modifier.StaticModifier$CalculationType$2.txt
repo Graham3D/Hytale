@@ -1,0 +1,17 @@
+Compiled from "StaticModifier.java"
+final class com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier$CalculationType$2 extends com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier$CalculationType {
+  private com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier$CalculationType$2(java.lang.String, int);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iload_2
+         3: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier$CalculationType."<init>":(Ljava/lang/String;I)V
+         6: return
+
+  public float compute(float, float);
+    Code:
+         0: fload_1
+         1: fload_2
+         2: fmul
+         3: freturn
+}

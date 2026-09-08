@@ -1,0 +1,303 @@
+Compiled from "EntityStatType.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating> CODEC;
+
+  private float interval;
+
+  private float amount;
+
+  private boolean clampAtZero;
+
+  private com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType regenType;
+
+  private com.hypixel.hytale.server.core.modules.entity.condition.Condition[] conditions;
+
+  private com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier[] modifiers;
+
+  public com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating(long, float, com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType, com.hypixel.hytale.server.core.modules.entity.condition.Condition[], com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier[]);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: lload_1
+         6: l2f
+         7: putfield      #7                  // Field interval:F
+        10: aload_0
+        11: fload_3
+        12: putfield      #13                 // Field amount:F
+        15: aload_0
+        16: aload         4
+        18: putfield      #16                 // Field regenType:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+        21: aload_0
+        22: aload         5
+        24: putfield      #20                 // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+        27: aload_0
+        28: aload         6
+        30: putfield      #24                 // Field modifiers:[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier;
+        33: return
+
+  public float getInterval();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field interval:F
+         4: freturn
+
+  public float getAmount();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field amount:F
+         4: freturn
+
+  public float clampAmount(float, float, com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue);
+    Code:
+         0: aload_0
+         1: getfield      #28                 // Field clampAtZero:Z
+         4: ifeq          13
+         7: fload_1
+         8: fconst_0
+         9: fcmpl
+        10: ifle          15
+        13: fload_1
+        14: freturn
+        15: aload_3
+        16: invokevirtual #32                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+        19: fconst_0
+        20: fcmpl
+        21: iflt          26
+        24: fload_1
+        25: freturn
+        26: aload_3
+        27: invokevirtual #38                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        30: fload_2
+        31: fadd
+        32: fload_1
+        33: fadd
+        34: fstore        4
+        36: fload         4
+        38: fconst_0
+        39: fcmpl
+        40: iflt          45
+        43: fload_1
+        44: freturn
+        45: fconst_0
+        46: fload_1
+        47: fload         4
+        49: fsub
+        50: invokestatic  #41                 // Method java/lang/Math.min:(FF)F
+        53: freturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType getRegenType();
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field regenType:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.modules.entity.condition.Condition[] getConditions();
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier[] getModifiers();
+    Code:
+         0: aload_0
+         1: getfield      #24                 // Field modifiers:[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier;
+         4: areturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field interval:F
+         4: aload_0
+         5: getfield      #13                 // Field amount:F
+         8: aload_0
+         9: getfield      #16                 // Field regenType:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+        12: invokestatic  #47                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        15: aload_0
+        16: getfield      #20                 // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+        19: invokestatic  #53                 // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+        22: aload_0
+        23: getfield      #24                 // Field modifiers:[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier;
+        26: invokestatic  #53                 // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+        29: invokedynamic #59,  0             // InvokeDynamic #0:makeConcatWithConstants:(FFLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        34: areturn
+
+  private static com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier[] lambda$static$11(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating);
+    Code:
+         0: aload_0
+         1: getfield      #24                 // Field modifiers:[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier;
+         4: areturn
+
+  private static void lambda$static$10(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating, com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #24                 // Field modifiers:[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier;
+         5: return
+
+  private static com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier[] lambda$CODEC$1(int);
+    Code:
+         0: iload_0
+         1: anewarray     #63                 // class com/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier
+         4: areturn
+
+  private static com.hypixel.hytale.server.core.modules.entity.condition.Condition[] lambda$static$9(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating);
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+         4: areturn
+
+  private static void lambda$static$8(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating, com.hypixel.hytale.server.core.modules.entity.condition.Condition[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #20                 // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+         5: return
+
+  private static com.hypixel.hytale.server.core.modules.entity.condition.Condition[] lambda$CODEC$0(int);
+    Code:
+         0: iload_0
+         1: anewarray     #65                 // class com/hypixel/hytale/server/core/modules/entity/condition/Condition
+         4: areturn
+
+  private static com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType lambda$static$7(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating);
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field regenType:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+         4: areturn
+
+  private static void lambda$static$6(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating, com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #16                 // Field regenType:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+         5: return
+
+  private static java.lang.Boolean lambda$static$5(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating);
+    Code:
+         0: aload_0
+         1: getfield      #28                 // Field clampAtZero:Z
+         4: invokestatic  #67                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$4(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #72                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #28                 // Field clampAtZero:Z
+         8: return
+
+  private static java.lang.Float lambda$static$3(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating);
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field amount:F
+         4: invokestatic  #76                 // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #81                 // Method java/lang/Float.floatValue:()F
+         5: putfield      #13                 // Field amount:F
+         8: return
+
+  private static java.lang.Float lambda$static$1(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating);
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field interval:F
+         4: invokestatic  #76                 // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #81                 // Method java/lang/Float.floatValue:()F
+         5: putfield      #7                  // Field interval:F
+         8: return
+
+  static {};
+    Code:
+         0: ldc           #8                  // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating
+         2: invokedynamic #84,  0             // InvokeDynamic #1:get:()Ljava/util/function/Supplier;
+         7: invokestatic  #87                 // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        10: new           #93                 // class com/hypixel/hytale/codec/KeyedCodec
+        13: dup
+        14: ldc           #95                 // String Interval
+        16: getstatic     #97                 // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+        19: invokespecial #103                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        22: invokedynamic #106,  0            // InvokeDynamic #2:accept:()Ljava/util/function/BiConsumer;
+        27: invokedynamic #110,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+        32: invokevirtual #114                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.addField:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        35: checkcast     #115                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        38: new           #93                 // class com/hypixel/hytale/codec/KeyedCodec
+        41: dup
+        42: ldc           #120                // String Amount
+        44: getstatic     #97                 // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+        47: invokespecial #103                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        50: invokedynamic #122,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        55: invokedynamic #123,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        60: invokevirtual #114                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.addField:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        63: checkcast     #115                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        66: new           #93                 // class com/hypixel/hytale/codec/KeyedCodec
+        69: dup
+        70: ldc           #124                // String ClampAtZero
+        72: getstatic     #126                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+        75: invokespecial #103                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        78: invokedynamic #130,  0            // InvokeDynamic #6:accept:()Ljava/util/function/BiConsumer;
+        83: invokedynamic #131,  0            // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+        88: invokevirtual #132                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        91: ldc           #136                // String Prevents this regenerating value from taking the stat value below zero.
+        93: invokevirtual #138                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        96: invokevirtual #144                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        99: checkcast     #115                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       102: new           #93                 // class com/hypixel/hytale/codec/KeyedCodec
+       105: dup
+       106: ldc           #148                // String RegenType
+       108: new           #150                // class com/hypixel/hytale/codec/codecs/EnumCodec
+       111: dup
+       112: ldc           #152                // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType
+       114: invokespecial #154                // Method com/hypixel/hytale/codec/codecs/EnumCodec."<init>":(Ljava/lang/Class;)V
+       117: invokespecial #103                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       120: invokedynamic #157,  0            // InvokeDynamic #8:accept:()Ljava/util/function/BiConsumer;
+       125: invokedynamic #158,  0            // InvokeDynamic #9:apply:()Ljava/util/function/Function;
+       130: invokevirtual #114                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.addField:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       133: checkcast     #115                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       136: new           #93                 // class com/hypixel/hytale/codec/KeyedCodec
+       139: dup
+       140: ldc           #159                // String Conditions
+       142: new           #161                // class com/hypixel/hytale/codec/codecs/array/ArrayCodec
+       145: dup
+       146: getstatic     #163                // Field com/hypixel/hytale/server/core/modules/entity/condition/Condition.CODEC:Lcom/hypixel/hytale/codec/lookup/CodecMapCodec;
+       149: invokedynamic #167,  0            // InvokeDynamic #10:apply:()Ljava/util/function/IntFunction;
+       154: invokespecial #170                // Method com/hypixel/hytale/codec/codecs/array/ArrayCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/IntFunction;)V
+       157: invokespecial #103                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       160: invokedynamic #173,  0            // InvokeDynamic #11:accept:()Ljava/util/function/BiConsumer;
+       165: invokedynamic #174,  0            // InvokeDynamic #12:apply:()Ljava/util/function/Function;
+       170: invokevirtual #114                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.addField:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       173: checkcast     #115                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       176: new           #93                 // class com/hypixel/hytale/codec/KeyedCodec
+       179: dup
+       180: ldc           #175                // String Modifiers
+       182: new           #161                // class com/hypixel/hytale/codec/codecs/array/ArrayCodec
+       185: dup
+       186: getstatic     #177                // Field com/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       189: invokedynamic #180,  0            // InvokeDynamic #13:apply:()Ljava/util/function/IntFunction;
+       194: invokespecial #170                // Method com/hypixel/hytale/codec/codecs/array/ArrayCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/IntFunction;)V
+       197: invokespecial #103                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       200: invokedynamic #181,  0            // InvokeDynamic #14:accept:()Ljava/util/function/BiConsumer;
+       205: invokedynamic #182,  0            // InvokeDynamic #15:apply:()Ljava/util/function/Function;
+       210: invokevirtual #114                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.addField:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       213: checkcast     #115                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       216: invokevirtual #183                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       219: putstatic     #187                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       222: return
+}
