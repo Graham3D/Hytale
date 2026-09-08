@@ -1,0 +1,201 @@
+Compiled from "AreaStatusProjectionSystem.java"
+public final class com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem extends com.hypixel.hytale.component.system.tick.EntityTickingSystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  private static final com.hypixel.hytale.logger.HytaleLogger LOGGER;
+
+  private final com.inigmasgames.hytalerpg.combat.status.StatusService statuses;
+
+  public com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem(com.inigmasgames.hytalerpg.combat.status.StatusService);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field statuses:Lcom/inigmasgames/hytalerpg/combat/status/StatusService;
+         9: return
+
+  public static void requireAssets();
+    Code:
+         0: invokestatic  #13                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaStatuses.available:()Z
+         3: ifne          16
+         6: new           #19                 // class java/lang/IllegalStateException
+         9: dup
+        10: ldc           #21                 // String Stage 06 native status assets missing
+        12: invokespecial #23                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        15: athrow
+        16: ldc           #26                 // String RPG_Burn_Visual
+        18: ldc           #28                 // String RPG_Poison_Visual
+        20: invokestatic  #30                 // InterfaceMethod java/util/List.of:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;
+        23: invokeinterface #36,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+        28: astore_0
+        29: aload_0
+        30: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+        35: ifeq          75
+        38: aload_0
+        39: invokeinterface #45,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        44: checkcast     #49                 // class java/lang/String
+        47: astore_1
+        48: invokestatic  #51                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        51: aload_1
+        52: invokevirtual #57                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+        55: ifnonnull     72
+        58: new           #19                 // class java/lang/IllegalStateException
+        61: dup
+        62: aload_1
+        63: invokedynamic #63,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        68: invokespecial #23                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        71: athrow
+        72: goto          29
+        75: ldc           #67                 // String RPG_Nature
+        77: ldc           #69                 // String RPG_Void
+        79: invokestatic  #30                 // InterfaceMethod java/util/List.of:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;
+        82: invokeinterface #36,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+        87: astore_0
+        88: aload_0
+        89: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+        94: ifeq          134
+        97: aload_0
+        98: invokeinterface #45,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       103: checkcast     #49                 // class java/lang/String
+       106: astore_1
+       107: invokestatic  #71                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+       110: aload_1
+       111: invokevirtual #57                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+       114: ifnonnull     131
+       117: new           #19                 // class java/lang/IllegalStateException
+       120: dup
+       121: aload_1
+       122: invokedynamic #74,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+       127: invokespecial #23                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       130: athrow
+       131: goto          88
+       134: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: iconst_3
+         1: anewarray     #75                 // class com/hypixel/hytale/component/query/Query
+         4: dup
+         5: iconst_0
+         6: invokestatic  #77                 // Method com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         9: aastore
+        10: dup
+        11: iconst_1
+        12: invokestatic  #83                 // Method com/hypixel/hytale/server/core/entity/UUIDComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        15: aastore
+        16: dup
+        17: iconst_2
+        18: invokestatic  #86                 // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        21: aastore
+        22: invokestatic  #89                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        25: areturn
+
+  public void tick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: iload_2
+         2: invokestatic  #77                 // Method com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokevirtual #93                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #78                 // class com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection
+        11: astore        6
+        13: aload         6
+        15: dconst_0
+        16: aload         6
+        18: getfield      #99                 // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.retryAfter:D
+        21: fload_1
+        22: f2d
+        23: dsub
+        24: invokestatic  #103                // Method java/lang/Math.max:(DD)D
+        27: putfield      #99                 // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.retryAfter:D
+        30: aload         6
+        32: dup
+        33: getfield      #109                // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.elapsed:D
+        36: fload_1
+        37: f2d
+        38: dadd
+        39: putfield      #109                // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.elapsed:D
+        42: aload         6
+        44: getfield      #109                // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.elapsed:D
+        47: ldc2_w        #112                // double 0.2d
+        50: dcmpg
+        51: iflt          64
+        54: aload         6
+        56: getfield      #99                 // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.retryAfter:D
+        59: dconst_0
+        60: dcmpl
+        61: ifle          65
+        64: return
+        65: aload         6
+        67: dup
+        68: getfield      #109                // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.elapsed:D
+        71: ldc2_w        #112                // double 0.2d
+        74: drem
+        75: putfield      #109                // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.elapsed:D
+        78: aload_3
+        79: iload_2
+        80: invokevirtual #114                // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+        83: astore        7
+        85: aload_3
+        86: iload_2
+        87: invokestatic  #83                 // Method com/hypixel/hytale/server/core/entity/UUIDComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        90: invokevirtual #93                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        93: checkcast     #84                 // class com/hypixel/hytale/server/core/entity/UUIDComponent
+        96: invokevirtual #118                // Method com/hypixel/hytale/server/core/entity/UUIDComponent.getUuid:()Ljava/util/UUID;
+        99: astore        8
+       101: aload_0
+       102: getfield      #7                  // Field statuses:Lcom/inigmasgames/hytalerpg/combat/status/StatusService;
+       105: aload         8
+       107: aload         7
+       109: aload         4
+       111: aconst_null
+       112: invokestatic  #122                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaStatuses.synchronize:(Lcom/inigmasgames/hytalerpg/combat/status/StatusService;Ljava/util/UUID;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;)V
+       115: goto          171
+       118: astore        9
+       120: aload         6
+       122: ldc2_w        #128                // double 2.0d
+       125: putfield      #99                 // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.retryAfter:D
+       128: aload         6
+       130: getfield      #130                // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.failureLogged:Z
+       133: ifne          170
+       136: aload         6
+       138: iconst_1
+       139: putfield      #130                // Field com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.failureLogged:Z
+       142: getstatic     #134                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       145: invokevirtual #138                // Method com/hypixel/hytale/logger/HytaleLogger.atWarning:()Lcom/google/common/flogger/LoggingApi;
+       148: checkcast     #144                // class com/hypixel/hytale/logger/HytaleLogger$Api
+       151: aload         9
+       153: invokeinterface #146,  2          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.withCause:(Ljava/lang/Throwable;)Lcom/google/common/flogger/LoggingApi;
+       158: checkcast     #144                // class com/hypixel/hytale/logger/HytaleLogger$Api
+       161: ldc           #150                // String RPG_NATIVE_STATUS_PROJECTION_FAILED target=%s retrySeconds=2 connectedProof=false
+       163: aload         8
+       165: invokeinterface #152,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;)V
+       170: return
+       171: aload_0
+       172: getfield      #7                  // Field statuses:Lcom/inigmasgames/hytalerpg/combat/status/StatusService;
+       175: aload         8
+       177: invokevirtual #156                // Method com/inigmasgames/hytalerpg/combat/status/StatusService.inspect:(Ljava/util/UUID;)Lcom/inigmasgames/hytalerpg/combat/status/StatusService$Snapshot;
+       180: invokevirtual #162                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$Snapshot.active:()Ljava/util/Map;
+       183: invokeinterface #168,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+       188: ifeq          218
+       191: aload_0
+       192: getfield      #7                  // Field statuses:Lcom/inigmasgames/hytalerpg/combat/status/StatusService;
+       195: aload         8
+       197: invokevirtual #173                // Method com/inigmasgames/hytalerpg/combat/status/StatusService.strongestSlow:(Ljava/util/UUID;)Lcom/inigmasgames/hytalerpg/combat/status/StatusService$SlowView;
+       200: invokevirtual #177                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$SlowView.magnitude:()D
+       203: dconst_0
+       204: dcmpl
+       205: ifne          218
+       208: aload         5
+       210: aload         7
+       212: invokestatic  #77                 // Method com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjection.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       215: invokevirtual #183                // Method com/hypixel/hytale/component/CommandBuffer.removeComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)V
+       218: return
+      Exception table:
+         from    to  target type
+           101   115   118   Class java/lang/RuntimeException
+
+  static {};
+    Code:
+         0: invokestatic  #189                // Method com/hypixel/hytale/logger/HytaleLogger.forEnclosingClass:()Lcom/hypixel/hytale/logger/HytaleLogger;
+         3: putstatic     #134                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+         6: return
+}

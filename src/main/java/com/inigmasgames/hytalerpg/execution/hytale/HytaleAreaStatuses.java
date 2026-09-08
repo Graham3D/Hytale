@@ -35,10 +35,7 @@ final class HytaleAreaStatuses {
         UUID id = UUID.fromString(target.stableId());
         StatusService.Result result;
         if (payload.status().equals("CHILL")) {
-            for (int i = 0; i < payload.chillStacks(); i++) {
-                result = kernel.statuses().apply(id, RpgStatusType.CHILL, control);
-                record(result, target.stableId(), trace);
-            }
+            applyChill(kernel,context,id,control,payload.chillStacks(),trace);
         } else if (payload.status().equals("ROOT") && control.boss()) {
             kernel.statuses().applySlow(id, context.rootCastId(), .35, payload.statusSeconds());
             trace.accept(RpgTraceEventType.STATUS_APPLIED, Map.of("targetId", target.stableId(), "status", "SLOW",
@@ -48,6 +45,14 @@ final class HytaleAreaStatuses {
             record(result, target.stableId(), trace);
         }
         synchronize(kernel.statuses(), id, target.handle(), store, owner);
+    }
+    static StatusService.ChillApplication applyChill(RpgCombatKernel kernel,SkillExecutionContext context,UUID target,
+            ControlProfile control,int stacks,BiConsumer<RpgTraceEventType,Map<String,?>> trace){
+        var result=kernel.statuses().applyChill(context.request().actorId(),context.rootCastId(),target,control,stacks,context.compiledPlan().controls().deepFreeze());
+        trace.accept(RpgTraceEventType.STATUS_REQUEST,Map.of("targetId",target,"status","CHILL","authoredStacks",stacks,
+                "deepFreeze",context.compiledPlan().controls().deepFreeze(),"bonusGate",result.bonusGate(),"authority","RPG_SOURCE_CHILL"));
+        for(var application:result.results())record(application,target.toString(),trace);
+        return result;
     }
     static void synchronize(StatusService statuses, UUID id, Ref<EntityStore> target, Store<EntityStore> store,
                             Ref<EntityStore> owner) {

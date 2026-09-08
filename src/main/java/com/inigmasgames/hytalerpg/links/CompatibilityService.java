@@ -21,6 +21,9 @@ public final class CompatibilityService {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
 
+        if(passive.id().value().equals("deep_freeze")&&com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.chillPayload(skill.id().value()).filter(v->!v).isPresent())
+            return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Deep Freeze requires an authored Chill application.",Set.of("CHILL_APPLICATION_COMPONENT"),actual);
+
         if(Set.of("combustion","virulence","concentrated_venom").contains(passive.id().value())){
             String status=passive.id().value().equals("combustion")?"BURN":"POISON";
             var payload=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.dotPayload(skill.id().value(),status);

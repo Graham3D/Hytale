@@ -171,10 +171,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(chill){
                 if(buffer==null||store.getComponent(ref,EffectControllerComponent.getComponentType())==null)throw new IllegalStateException("AURA_NATIVE_STATUS_ADAPTER_UNAVAILABLE");
                 buffer.ensureComponent(ref,AreaStatusProjection.getComponentType());
-                var result=kernel.statuses().apply(id,RpgStatusType.CHILL,SupportNativeEffects.control(store,ref,bosses));
+                HytaleAreaStatuses.applyChill(kernel,context,id,SupportNativeEffects.control(store,ref,bosses),1,
+                        (event,details)->emit(context,event,details));
                 HytaleAreaStatuses.synchronize(kernel.statuses(),id,ref,store,actor);
-                emit(context,result.outcome()==com.inigmasgames.hytalerpg.combat.status.StatusService.Outcome.REJECTED?RpgTraceEventType.STATUS_REJECTED:RpgTraceEventType.STATUS_APPLIED,
-                        Map.of("targetId",id,"status",result.type(),"stacks",result.stacks(),"tick",tick,"authority","AURA_CHILL_CLOCK"));
             }else{
                 var cause=context.profile().support().element().equals("COLD")?DamageCause.getAssetMap().getAsset("Ice"):
                         connectionCause(context.profile().support().element());if(cause==null)throw new IllegalStateException("AURA_NATIVE_CAUSE_MISSING");
@@ -274,6 +273,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
 
     private void cancel(UUID actor, String reason, CommandBuffer<EntityStore> buffer) {
+        kernel.statuses().forgetSource(actor);
         if(summons!=null)summons.cancel(actor,reason);
         if(conversions!=null)conversions.cancel(actor);
         windupEnds.remove(actor); motions.remove(actor); counters.remove(actor);
@@ -1158,6 +1158,16 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             emit(context, RpgTraceEventType.STATUS_REQUEST, Map.of("targetId", target.stableId(),
                     "status", type.name(), "durationSeconds", projectile.statusSeconds()));
             var control = new ControlProfile(target.protectedTarget(), target.boss(), false);
+            if(type==RpgStatusType.CHILL){
+                if(buffer==null||store.getComponent(target.handle(),EffectControllerComponent.getComponentType())==null){
+                    emit(context,RpgTraceEventType.STATUS_REJECTED,Map.of("targetId",targetId,"status","CHILL","reason","PROJECTILE_NATIVE_STATUS_ADAPTER_UNAVAILABLE"));
+                    return "PROJECTILE_NATIVE_STATUS_ADAPTER_UNAVAILABLE";
+                }
+                var batch=HytaleAreaStatuses.applyChill(kernel,context,targetId,SupportNativeEffects.control(store,target.handle(),bosses),1,(event,details)->emit(context,event,details));
+                buffer.ensureComponent(target.handle(),AreaStatusProjection.getComponentType());
+                HytaleAreaStatuses.synchronize(kernel.statuses(),targetId,target.handle(),store,actor);
+                var result=batch.results().getLast();return result.outcome().name()+':'+result.type().name()+":stacks="+result.stacks();
+            }
             var result = projectile.statusSeconds() > 0.0
                     ? kernel.statuses().apply(targetId, type, control, projectile.statusSeconds())
                     : kernel.statuses().apply(targetId, type, control);

@@ -15,7 +15,38 @@ public final class StatusService {
     private final Map<UUID, Long> frozenImmunityEnds = new HashMap<>();
     private final Map<UUID, Map<String, SlowState>> slows = new HashMap<>();
     private final Map<UUID, java.util.ArrayDeque<Long>> controls = new HashMap<>();
+    private record ChillBonusKey(UUID owner,String root,UUID target){}
+    private final Map<ChillBonusKey,Long> chillBonusEnds=new HashMap<>();
     public StatusService(CombatBalanceProfile profile, LongSupplier nanoTime) { this.profile = profile; this.nanoTime = nanoTime; }
+
+    public record ChillApplication(java.util.List<Result> results,String bonusGate){
+        public ChillApplication {results=java.util.List.copyOf(results);}
+    }
+    /** One payload opportunity, shared by projectile/area/Aura adapters. Children retain the same root. */
+    public synchronized ChillApplication applyChill(UUID owner,String root,UUID target,ControlProfile control,int authoredStacks,boolean deepFreeze){
+        if(owner==null||target==null||root==null||root.isBlank()||root.length()>256||control==null||authoredStacks<1||authoredStacks>5)
+            throw new IllegalArgumentException("Invalid source-owned Chill application");
+        var results=new java.util.ArrayList<Result>();
+        // A payload is atomic at the threshold: never leave another Chill behind a newly created Frozen.
+        if(inspect(target).active().containsKey(RpgStatusType.FROZEN))return new ChillApplication(java.util.List.of(
+                new Result(Outcome.REJECTED,RpgStatusType.CHILL,0,0,"Frozen already active")),"FROZEN_ACTIVE");
+        for(int i=0;i<authoredStacks;i++){
+            var result=apply(target,RpgStatusType.CHILL,control);results.add(result);
+            if(result.outcome()==Outcome.THRESHOLD)return new ChillApplication(results,"BASE_THRESHOLD");
+            if(result.outcome()==Outcome.REJECTED)return new ChillApplication(results,"BASE_REJECTED");
+        }
+        if(!deepFreeze)return new ChillApplication(results,"NOT_LINKED");
+        long now=nanoTime.getAsLong();chillBonusEnds.values().removeIf(end->end<=now);
+        var key=new ChillBonusKey(owner,root,target);
+        if(chillBonusEnds.containsKey(key))return new ChillApplication(results,"ROOT_TARGET_ONE_SECOND_ICD");
+        if(chillBonusEnds.size()>=4096||chillBonusEnds.keySet().stream().filter(k->k.owner.equals(owner)).count()>=256)
+            return new ChillApplication(results,"CHILL_BONUS_BUDGET");
+        chillBonusEnds.put(key,now+1_000_000_000L);
+        var extra=apply(target,RpgStatusType.CHILL,control);results.add(extra);
+        return new ChillApplication(results,extra.outcome()==Outcome.REJECTED?"BONUS_REJECTED":"BONUS_APPLIED");
+    }
+    public synchronized void forgetSource(UUID owner){chillBonusEnds.keySet().removeIf(k->k.owner.equals(owner));}
+    public synchronized int retainedChillBonusCount(){long now=nanoTime.getAsLong();chillBonusEnds.values().removeIf(end->end<=now);return chillBonusEnds.size();}
 
     public synchronized Result apply(UUID target, RpgStatusType type, ControlProfile control) {
         return apply(target, type, control, Double.NaN);
@@ -151,6 +182,7 @@ public final class StatusService {
     /** Native entity removal is the terminal authority for victim-owned status memory. */
     public synchronized void forget(UUID target) {
         states.remove(target); slows.remove(target); controls.remove(target); frozenImmunityEnds.remove(target);
+        chillBonusEnds.keySet().removeIf(k->k.owner.equals(target)||k.target.equals(target));
     }
     public enum Outcome { APPLIED, REFRESHED, THRESHOLD, REJECTED }
     public record Result(Outcome outcome, RpgStatusType type, int stacks, double remainingSeconds, String detail) { }

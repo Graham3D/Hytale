@@ -669,3 +669,74 @@ Rollback: H, SHA-256
 No live deployment, save migration, art, native ability or HUD changes. Local gate
 PASS; connected gates UNVERIFIED. Nineteen of40 Stage11 primitives now have local
 evidence;21 remain before matrix/hardening closure.
+
+## Cohort J — Deep Freeze and shared Chill application
+
+Baseline I `b25cb73`. Master LP044, the five-stack Chill threshold and Frozen
+immunity rules read in full. R030/0.0.23, plan schema19, player schema6 unchanged.
+One passive. Deep Freeze adds one Chill stack after a successful authored Chill
+application, with a shared caster/root/victim one-second bonus cooldown. Derived
+projectiles, area pulses and Aura pulses cannot each claim a separate bonus for
+the same root and victim during that second. It reduces direct hit coefficients
+by10%; periodic Aura damage and the authored Chill count remain unchanged. The
+typed control modifier participates in compiled identity and profile-cache keys.
+
+Known executable profiles must contain actual Chill payloads: Cold damage alone
+does not qualify. Frost projectile, Cold Chill areas, Chill Aura and alternating
+ice/stone Avalanche are covered. Unknown Stage04/05 profiles retain their catalog
+compatibility fixtures without being claimed as executable implementations.
+
+StatusService now exposes one source-owned batch application used by all three
+native delivery adapters. Baseline stacks use the existing status authority,
+then the optional bonus uses that same authority. The batch ends when Frozen is
+created or baseline application is rejected. This also fixes a safety defect in
+the prior area loop: another authored stack could otherwise be left behind
+immediately after crossing the Frozen threshold. Already-Frozen victims reject
+new Chill instead of refreshing Frozen. The five-stack threshold, normal2s Frozen,
+following3s immunity, elite duration scaling and boss Slow substitution are not
+rebalanced. Boss Slow is not reported as Frozen. Rapid Pulse's fractional stack
+ledger still determines whether an actual application opportunity exists before
+Deep Freeze is considered.
+
+The bonus ledger is bounded to4096 global/256 per caster entries, expires after1s
+and is removed on owner teardown or victim removal. Saturation rejects only the
+extra stack, not the already-accepted base application. The source key retains
+root identity; it is not reset by a projectile child or a different hit index.
+STATUS_REQUEST includes authoredStacks, deepFreeze and bonusGate; result events
+come only from the real kernel result, never invented native execution evidence.
+
+### Native projection boundary correction
+
+Code inspection found that projectile Chill called the RPG status service without
+the AreaStatusProjection marker/synchronization used by area and Aura Chill. The
+projectile adapter now requires the installed effect controller, uses the shared
+application, attaches the existing marker and invokes the same native projection.
+It also uses the existing audited target-control profile instead of discarding
+elite classification. Missing native projection capability rejects with
+PROJECTILE_NATIVE_STATUS_ADAPTER_UNAVAILABLE. Other projectile statuses are not
+rewritten by this cohort.
+
+The existing5Hz projection and RPG_Frozen/Chill effect assets remain authoritative
+for native effect writes. Frozen supplies the actual remaining duration to the
+installed effect controller rather than relying on the asset's default duration.
+The packaged call sites and installed EffectControllerComponent bytecode are
+captured under `evidence/stage-11/cohort-j/api`; this proves API/call-site structure
+only. It does not prove native movement suppression, client animation or casting
+interruption. Those connected gates remain UNVERIFIED.
+
+### Cohort J local gate
+
+23 new tests cover component compatibility, coefficient isolation, immutable
+profiles/cache identity, shared root cooldowns, exact cooldown boundary, victim
+and caster isolation, atomic Frozen threshold, immunity, boss/elite policies,
+Rapid Pulse composition, memory bounds, expiry, teardown and malformed inputs.
+`clean build`: **910 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot/clean exit0 and packaged CustomUI9 validation PASS.
+Artifact: `evidence/stage-11/cohort-j/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `93252D1109F75C49B3C7C83AFD7A4AD8499258D6F4A55B7E2381BB46DB1460AC`.
+Rollback: I, SHA-256
+`417D1F13F829A61F6A2B158C127C1DEE744A9EF8BB2468387EE1127E77C6C60B`.
+Player schema6 remains unchanged; rollback to I uses the same schema. No live
+deployment, art, native ability or HUD changes. Local gate PASS, connected gates
+UNVERIFIED. Twenty of40 Stage11 primitives have local evidence;20 remain before
+matrix/hardening closure. All output remains in the GitHub checkout, not Drive.

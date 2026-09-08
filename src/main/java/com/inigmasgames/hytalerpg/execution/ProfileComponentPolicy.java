@@ -10,6 +10,12 @@ import java.util.Set;
 public final class ProfileComponentPolicy {
     private ProfileComponentPolicy(){}
     private static final class Canonical {static final Stage04SkillProfiles PROFILES=Stage04SkillProfiles.loadCanonical(RpgCatalog.loadCanonical());}
+    public static Optional<Boolean> chillPayload(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(chillPayload(p));}
+    public static boolean chillPayload(Stage04SkillProfile p){
+        return p.projectile()!=null&&p.projectile().statusId().equals("CHILL")
+                ||p.area()!=null&&(p.area().status().equals("CHILL")&&p.area().chillStacks()>0||p.area().alternatingIceStone())
+                ||p.support()!=null&&p.support().chillInterval()>0;
+    }
     public static Optional<Boolean> dotPayload(String skill,String status){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(dotPayload(p,status));}
     public static boolean dotPayload(Stage04SkillProfile p,String status){
         return p.area()!=null&&p.area().status().equals(status)&&p.area().statusSeconds()>0

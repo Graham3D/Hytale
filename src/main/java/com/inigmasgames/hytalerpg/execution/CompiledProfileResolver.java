@@ -21,9 +21,9 @@ public final class CompiledProfileResolver {
             throw new IllegalArgumentException("Profile requires a current matching compiled plan");
         if(plan.zones().mobileDomain()&&!ProfileComponentPolicy.mobileZone(authored))
             throw new IllegalArgumentException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
-        var modifiers=plan.foundationModifiers();var geometry=plan.geometry();var pulses=plan.pulses();var dots=plan.dots();
-        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse()&&!dots.active())return authored;
-        var key=new Key(authored,modifiers,geometry,pulses,dots);
+        var modifiers=plan.foundationModifiers();var geometry=plan.geometry();var pulses=plan.pulses();var dots=plan.dots();var controls=plan.controls();
+        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse()&&!dots.active()&&!controls.deepFreeze())return authored;
+        var key=new Key(authored,modifiers,geometry,pulses,dots,controls);
         var prior=cache.get(key);if(prior!=null)return prior;
         JsonObject resolved=JSON.toJsonTree(authored).getAsJsonObject();
         resolved.addProperty("windupSeconds",modifiers.windup(authored.windupSeconds()));
@@ -63,6 +63,11 @@ public final class CompiledProfileResolver {
         }
         if(pulses.rapidPulse())rapidPulse(authored,resolved);
         if(dots.active())dots(authored,resolved,dots);
+        if(controls.deepFreeze()){
+            if(!ProfileComponentPolicy.chillPayload(authored))throw new IllegalArgumentException("CHILL_APPLICATION_COMPONENT_REQUIRED");
+            scale(resolved,"projectile",.9,"coefficient");
+            if(authored.area()!=null&&!authored.area().periodic())scale(resolved,"area",.9,"coefficient","innerCoefficient","finalCoefficient");
+        }
         var effective=JSON.fromJson(resolved,Stage04SkillProfile.class);
         if(cache.size()>=CAPACITY)cache.remove(cache.keySet().iterator().next());
         cache.put(key,effective);return effective;
@@ -181,5 +186,5 @@ public final class CompiledProfileResolver {
             }
         }
     }
-    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots){}
+    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots,com.inigmasgames.hytalerpg.domain.ControlModifiers controls){}
 }
