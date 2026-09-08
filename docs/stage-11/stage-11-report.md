@@ -1532,3 +1532,76 @@ Rollback T: `3CBB13F9A8FC79A5D2991AFD4757F18BA2688AD594B67B6440324BE6688C1154`.
 Native HUD/XP/input, live three mods, owner art and Google Drive remain untouched.
 37/40 Stage11 primitives have local cohort evidence; the three trigger controllers
 and component-matrix/legacy-state closure remain. No connected PASS is asserted.
+
+## R030 cohort V — Critical Trigger and Kill Trigger
+
+LP065/066, the master exclusive-controller/release contracts and existing native
+receipt, geometry, projectile registry and release queue were reviewed. Plan schema31;
+player schema6 unchanged. The imported EXCLUSIVE_REPEAT_CONTROLLER group already
+rejects combinations with Echo/Barrage/Multistrike/Retaliation or the other trigger.
+Typed runtime component checks additionally exclude support, movement, reaction,
+channel, summon and consumer replays. Critical Trigger requires direct damage.
+
+ConditionalRepeatRuntime consumes completed native Health-before/after receipts,
+not requests or a speculative crit roll. It requires a root manual source, actual
+hostile unprotected HP loss and the appropriate critical/lethal condition. Critical
+Trigger requires direct/proc-enabled critical damage, queues once after.20s at50%
+effect, and has a1.5s actor/skill ICD. Kill Trigger queues once at50% with a1s ICD;
+an original source-owned periodic kill can qualify, but a derived kill cannot.
+ICDs are bounded4096 globally/16 per owner and expire independently of loadout changes.
+One root gets one opportunity: missing targets, budget/queue rejection or uncertain
+native failure do not repeatedly retry the same opportunity. No failed child refunds
+the already-paid primary or starts a second resource/cooldown transaction.
+
+Children use SkillReleaseScheduler, its6-owner/256-global capacity, normal world tick
+and existing family executors. They retain the paid root/correlation, frozen snapshot,
+Leech and effect budgets, with a distinct instance and50% magnitude. Volley claims
+all three derived launches. Skill Delay does not apply again. Fresh release validation
+checks actor/world/equipment/target and the currently equipped plan hash. Successful
+loadout mutation cancels queued conditional children with a trace; stale projectiles
+cannot rearm a removed passive. Ordinary unrelated repeat reservations are retained.
+
+Critical Trigger retains the original target or ground/aim point without retargeting.
+Target death, changed ground, lost LOS/reach or equipment cancels release. Kill Trigger
+is the explicit retargeting exception: bounded native NPC/AABB query, nearest valid
+enemy within12m of the corpse AND legal caster reach, deterministic UUID ties, hostility,
+protection and LOS. Ground-targeted skills resolve legal ground at the new target;
+caster bursts/cones stay caster-centered. No eligible enemy means no spawn. Conditional
+melee uses current actor origin with committed aim, not damage from the old position.
+Connected targeting and geometry are still UNVERIFIED.
+
+Focused tests exposed a real missing seam: immediate casts previously omitted target
+capture unless another modifier needed a committed solution. Trigger-linked casts
+now capture it before payment. A separate review found the projectile registry discarded
+root accounting when the last carrier ended, before a delayed repeat. The existing
+registry now retains its bounded lifetime accounting through the root context, not a
+new combat scheduler. Conditional batches rejoin that same48-effect/16-secondary
+accounting even after carrier cleanup; duplicate IDs, foreign roots and capacity
+overflow fail atomically. It does not reserve live carrier slots for an untriggered
+passive. Current capacity is checked when the actual conditional batch releases.
+
+Native root-carrier classification excludes Fork/Splinterburst generations and Return
+contacts from these root-only triggers. Shrapnel cannot trigger them. Status packages
+from these secondary carriers retain derived provenance after the carrier disappears,
+so a later Burn/Poison kill cannot masquerade as an original root kill. Existing damage,
+cost, periodic strength and continuation formulas are unchanged. Trace canTrigger on
+periodic damage now explicitly reflects the eligible root Kill Trigger path.
+
+53 new tests cover exact timing/magnitude/payment, root/correlation identity, all
+exclusions, original-target retention, nearest/legal-reach selection, LOS/protection,
+ICDs, invalid targets, owner/loadout cancellation, source provenance, repeat groups,
+Skill Delay, Volley, registry lifetime/duplicate/48-effect/16-secondary bounds and
+native-dispatch failure retention. Initial compile missed two imports; fixed. The first
+full suite caught the expected schema assertion still at30; updated to31. Final clean
+build: **1279 PASS**, zero failures/errors/skips. Normal isolated three-mod network boot,
+clean exit0, asset gates and nine packaged CustomUI documents PASS. Bytecode/call-site
+audit under `evidence/stage-11/cohort-v/api` proves structure only, not native connected
+input, Health loss, repeat delivery, timing, animation or rendering.
+
+Artifact `evidence/stage-11/cohort-v/artifacts/HytaleRPG-0.0.23.jar`:
+`03B66B087149C940579D7A29A95AB2DC344F394B9CE9B97A9047058050EAB0AB`.
+Rollback U: `B160EC472928883C07AA8264E58929214C5BF946675F9FEF0E84A419C604741F`.
+39/40 Stage11 primitives have local cohort evidence. Retaliation and matrix/legacy
+closure remain. Native HUD/XP/input, all87/66 records, the live three-mod set and owner
+art remain unchanged. No Google Drive writes or live deployment. Connected gates remain
+IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION, not PASS.

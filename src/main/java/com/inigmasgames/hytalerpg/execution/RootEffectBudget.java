@@ -11,6 +11,8 @@ public final class RootEffectBudget {
     private final Map<String,Double> statusTimes=new HashMap<>();
     private final Map<String,Double> orbitContacts=new HashMap<>();
     private final Set<String> procContacts=new HashSet<>();
+    private final com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry.Lifetime projectileLifetime=new com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry.Lifetime();
+    public com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry.Lifetime projectileLifetime(){return projectileLifetime;}
     public synchronized String claimProcContact(String id){
         if(id==null||id.isBlank()||id.length()>512)return "INVALID_PROC_CONTACT";
         if(procContacts.contains(id))return "DUPLICATE_PROC_CONTACT";

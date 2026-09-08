@@ -13,6 +13,18 @@ public final class SkillReleaseScheduler {
     public static final int OWNER_CAP=6,GLOBAL_CAP=256;
     private final Map<String,Entry> entries=new LinkedHashMap<>();
     public record Release(String reservation,SkillExecutionContext context) { }
+    public synchronized String conditional(SkillExecutionContext child,double due){
+        requireClock(due);if(!child.conditionalRepeat())return "NOT_CONDITIONAL_RELEASE";
+        if(entries.containsKey(child.skillInstanceId()))return "DUPLICATE_RELEASE_RESERVATION";
+        if(entries.size()>=GLOBAL_CAP)return "GLOBAL_RELEASE_BUDGET";
+        if(entries.values().stream().filter(e->e.owner.equals(child.request().actorId())).count()>=OWNER_CAP)return "OWNER_RELEASE_BUDGET";
+        var entry=new Entry(child.request().actorId(),child.request().slot(),new ExecutionModifiers(1,0,0,1,false));
+        entry.context=child;entry.due=due;entries.put(child.skillInstanceId(),entry);return "PASS";
+    }
+    public synchronized List<SkillExecutionContext> cancelConditional(UUID actor){
+        var cancelled=new ArrayList<SkillExecutionContext>();
+        entries.values().removeIf(e->{if(!e.owner.equals(actor)||e.context==null||!e.context.conditionalRepeat())return false;cancelled.add(e.context);return true;});return List.copyOf(cancelled);
+    }
     public synchronized String reserve(String instance,UUID owner,SkillSlot slot,ExecutionModifiers modifiers) {
         if(!modifiers.scheduled()) return "PASS";
         if(entries.containsKey(instance)) return "DUPLICATE_RELEASE_RESERVATION";
@@ -40,7 +52,7 @@ public final class SkillReleaseScheduler {
         if(!isCurrent(release))return;
         var entry=entries.get(release.reservation());var context=release.context();
         int next=context.barrageBatch()+1;
-        if(context.echo()||next>=entry.modifiers.barrageBatches()) {entries.remove(release.reservation());return;}
+        if(context.conditionalRepeat()||context.echo()||next>=entry.modifiers.barrageBatches()) {entries.remove(release.reservation());return;}
         entry.context=context.barrageCopy(next);entry.due=entry.primaryReleasedAt+next*entry.modifiers.barrageInterval();
     }
     public synchronized List<Release> due(UUID owner,double now) {

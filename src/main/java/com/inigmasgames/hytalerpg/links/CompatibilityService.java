@@ -36,6 +36,9 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(Set.of("critical_trigger","kill_trigger").contains(passive.id().value())&&
+                com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.conditionalRepeat(skill.id().value(),passive.id().value().equals("critical_trigger")).filter(v->!v).isPresent())
+            return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,"Conditional repeats require a discrete damaging primary; no movement, reaction, channel, support, summon or consumer replay.",Set.of("REPEATABLE_PRIMARY_COMPONENT"),actual);
         if(passive.id().value().equals("proliferation")){
             var burn=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.dotPayload(skill.id().value(),"BURN");
             var poison=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.dotPayload(skill.id().value(),"POISON");

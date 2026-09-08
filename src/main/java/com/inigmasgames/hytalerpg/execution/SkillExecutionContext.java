@@ -39,10 +39,27 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
                 ||leechBudget==null||!leechBudget.owns(request.actorId(),rootCastId)||effects==null||!effects.owns(request.actorId(),rootCastId))
             throw new IllegalArgumentException("Committed execution context is incomplete");
         if(multistrikeIndex<0||multistrikeIndex>2||multistrikeIndex>0&&(echo||barrageBatch>0))throw new IllegalArgumentException("Invalid Multistrike child identity");
-        if(secondaryKind==null||!java.util.Set.of("","cleaving_edge","phantom_reach","shockwave","cascade","aftermath","hemorrhage","terror","shatter","proliferation").contains(secondaryKind)
+        if(secondaryKind==null||!java.util.Set.of("","cleaving_edge","phantom_reach","shockwave","cascade","aftermath","hemorrhage","terror","shatter","proliferation","critical_trigger","kill_trigger","projectile_status").contains(secondaryKind)
                 ||!secondaryKind.isEmpty()&&(echo||barrageBatch>0||multistrikeIndex>0))throw new IllegalArgumentException("Invalid secondary identity");
     }
     public boolean derivedRelease() {return echo||barrageBatch>0||multistrikeIndex>0||!secondaryKind.isEmpty();}
+    public boolean conditionalRepeat(){return secondaryKind.equals("critical_trigger")||secondaryKind.equals("kill_trigger");}
+    /** A continuation/secondary's later status kill is still derived even after the carrier has disappeared. */
+    public SkillExecutionContext projectileStatusChild(String effect){
+        if(derivedRelease())return this;
+        if(effect==null||effect.isBlank()||effect.length()>512)throw new IllegalArgumentException("INVALID_PROJECTILE_STATUS_SOURCE");
+        String child=skillInstanceId+"/status-child/"+java.util.UUID.nameUUIDFromBytes(effect.getBytes(java.nio.charset.StandardCharsets.UTF_8));var old=snapshot;
+        var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,"projectile_status");
+    }
+    public SkillExecutionContext conditionalCopy(CommittedTarget solution){
+        String kind=compiledPlan.conditionalRepeat();
+        if(derivedRelease()||kind.isEmpty()||solution==null||target==null||!target.worldId().equals(solution.worldId()))throw new IllegalStateException("CONDITIONAL_REPEAT_INVALID");
+        if(kind.equals("critical_trigger")&&!target.equals(solution))throw new IllegalStateException("CRITICAL_TRIGGER_CANNOT_RETARGET");
+        String child=skillInstanceId+"/"+kind;var old=snapshot.withMagnitudeFactor(.50);
+        var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,solution,false,0,leechBudget,0,effects,kind);
+    }
     public SkillExecutionContext proliferationCopy(String token){
         if(derivedRelease()||!compiledPlan.proliferation()||token==null||token.length()>256)throw new IllegalStateException("PROLIFERATION_CANNOT_RECURSE");
         String child=skillInstanceId+"/proliferation/"+java.util.UUID.nameUUIDFromBytes(token.getBytes(java.nio.charset.StandardCharsets.UTF_8));var old=snapshot;

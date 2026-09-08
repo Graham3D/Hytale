@@ -29,6 +29,7 @@ public final class SkillExecutionService {
     private final SkillInstanceLifecycle lifecycle;
     private final RpgSkillTracer tracer;
     private final SkillReleaseScheduler releases = new SkillReleaseScheduler();
+    private final ConditionalRepeatRuntime conditionalRepeats=new ConditionalRepeatRuntime();
     private final CompiledProfileResolver compiledProfiles = new CompiledProfileResolver();
     private final AttunementLedger attunement = new AttunementLedger();
     private final com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger ruthless=new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger();
@@ -49,6 +50,7 @@ public final class SkillExecutionService {
         this.nanoTime=nanoTime;
         loadouts.addLoadoutMutationListener(attunement::forget);
         loadouts.addLoadoutMutationListener(ruthless::forget);
+        loadouts.addLoadoutMutationListener(actor->{for(var c:releases.cancelConditional(actor))emit(c.request(),RpgTraceEventType.SKILL_RELEASE_CANCELLED,c.rootCastId(),c.skillInstanceId(),Map.of("reason","COMMITTED_LOADOUT_CHANGED","refund",false));});
     }
 
     public SkillExecutionResult request(SkillExecutionRequest request, SkillExecutionPort port) {
@@ -135,7 +137,20 @@ public final class SkillExecutionService {
     }
 
     /** Terminal owner cleanup; an ordinary interrupted windup retains earlier successful commits. */
-    public void forgetPassiveState(UUID actor){attunement.forget(actor);ruthless.forget(actor);}
+    public void forgetPassiveState(UUID actor){attunement.forget(actor);ruthless.forget(actor);conditionalRepeats.forget(actor);}
+    private boolean currentConditionalPlan(SkillExecutionContext c){
+        var plan=loadouts.getPresentationView(c.request().actorId()).plans().get(c.request().slot());
+        return plan!=null&&!plan.degraded()&&plan.planHash().equals(c.compiledPlan().planHash());
+    }
+    public String observedConditionalRepeat(SkillExecutionContext source,ConditionalRepeatRuntime.Hit hit,SkillExecutionPort port){
+        String verdict;
+        try{verdict=currentConditionalPlan(source)?conditionalRepeats.observed(source,hit,now(),new ConditionalRepeatRuntime.Port(){
+            public CommittedTarget killTarget(SkillExecutionContext c,ConditionalRepeatRuntime.Hit h){return port.conditionalKillTarget(c,h);}
+            public String enqueue(SkillExecutionContext child,double due){return releases.conditional(child,due);}
+        }):"COMMITTED_LOADOUT_CHANGED";}catch(RuntimeException failed){verdict="CONDITIONAL_REPEAT_OBSERVER_FAILED_"+failed.getClass().getSimpleName();}
+        emit(source.request(),RpgTraceEventType.CONDITIONAL_REPEAT_RESOLVED,source.rootCastId(),source.skillInstanceId(),Map.of("kind",source.compiledPlan().conditionalRepeat(),"verdict",verdict,"victim",hit.victim(),"healthBefore",hit.before(),"healthAfter",hit.after(),"resourceCharged",false));
+        return verdict;
+    }
     public boolean nextRuthless(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return ruthless.nextEmpowered(new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Key(actor,slot));}
     public int attunementStacks(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return attunement.stacks(new AttunementLedger.Key(actor,slot),now());}
 
@@ -230,7 +245,7 @@ public final class SkillExecutionService {
         }
         CommittedTarget target;
         try {
-            boolean capture=releaseModifiers.scheduled()||prepared.plan.strikes().multistrike()||prepared.plan.zones().mobileDomain()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
+            boolean capture=releaseModifiers.scheduled()||!prepared.plan.conditionalRepeat().isEmpty()||prepared.plan.strikes().multistrike()||prepared.plan.zones().mobileDomain()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
                     ||prepared.profile.support()!=null||prepared.profile.summon()!=null||prepared.profile.summonAction()!=null||prepared.profile.conversion()!=null;
             target=capture?port.captureTarget(prepared.profile,prepared.plan,prepared.request):null;
             if(capture && target==null) throw new IllegalStateException("COMMITTED_TARGET_ADAPTER_UNAVAILABLE");
@@ -396,6 +411,7 @@ public final class SkillExecutionService {
             if(!releases.isCurrent(release)) continue;
             var context=release.context();
             try {
+                if(context.conditionalRepeat()&&!currentConditionalPlan(context)){port.abandonRelease(context);cancelRelease(release,"COMMITTED_LOADOUT_CHANGED");continue;}
                 SkillExecutionPort.Validation validation=port.actorAliveAndUsable()?port.validateRelease(context)
                         :SkillExecutionPort.Validation.reject("ACTOR_NOT_USABLE");
                 if(!validation.accepted()) {

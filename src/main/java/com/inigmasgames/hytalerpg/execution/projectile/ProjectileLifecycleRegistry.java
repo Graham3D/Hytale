@@ -9,10 +9,13 @@ public final class ProjectileLifecycleRegistry {
     private final Map<RootKey,Root> roots=new LinkedHashMap<>();
     private record RootKey(UUID owner,String id) { }
     private static RootKey key(ProjectileExecutionPlan p) { return new RootKey(p.ownerId(),p.rootCastId()); }
+    /** Retains bounded original registry accounting while an owning skill/status context can still trigger a release. */
+    public static final class Lifetime {private RootKey key;private Root state;}
     private static final class Root {
-        int pending,spent,triggered;final Set<String> seen=new HashSet<>();
-        Root(int launches){pending=launches;spent=launches;}
-        Root(Root prior){pending=prior.pending;spent=prior.spent;triggered=prior.triggered;seen.addAll(prior.seen);}
+        int pending,spent,triggered;final Set<String> seen=new HashSet<>();final Lifetime lifetime;
+        Root(int launches){this(launches,null);}
+        Root(int launches,Lifetime lifetime){pending=launches;spent=launches;this.lifetime=lifetime;}
+        Root(Root prior){pending=prior.pending;spent=prior.spent;triggered=prior.triggered;seen.addAll(prior.seen);lifetime=prior.lifetime;}
     }
     public synchronized String admission(UUID owner,int launches) {
         if(launches<1||launches>48)return "INVALID_PROJECTILE_BATCH";
@@ -25,18 +28,32 @@ public final class ProjectileLifecycleRegistry {
     public synchronized void registerAll(List<ProjectileInstance> batch) {
         registerAll(batch,0);
     }
+    public synchronized void registerAll(List<ProjectileInstance> batch,Lifetime lifetime){registerAll(batch,0,lifetime,false);}
+    public synchronized void registerConditionalAll(List<ProjectileInstance> batch,Lifetime lifetime){registerAll(batch,batch.size(),lifetime,true);}
     public synchronized void registerTriggeredAll(List<ProjectileInstance> batch) { registerAll(batch,batch.size()); }
     private void registerAll(List<ProjectileInstance> batch,int triggered) {
+        registerAll(batch,triggered,null,false);
+    }
+    private void registerAll(List<ProjectileInstance> batch,int triggered,Lifetime lifetime,boolean conditional) {
         if(batch.isEmpty())return;
         var first=batch.getFirst().plan();RootKey key=key(first);Root prior=roots.get(key);
+        if(lifetime!=null&&lifetime.key!=null&&!lifetime.key.equals(key))throw new IllegalStateException("FOREIGN_PROJECTILE_LIFETIME");
+        if(prior!=null&&lifetime!=null&&prior.lifetime!=lifetime)throw new IllegalStateException("PROJECTILE_LIFETIME_CHANGED");
+        boolean restored=false;
+        if(conditional){
+            if(lifetime==null||lifetime.state==null)throw new IllegalStateException("CONDITIONAL_PROJECTILE_ROOT_MISSING");
+            if(prior==null){prior=lifetime.state;restored=true;}
+        }else if(prior==null&&lifetime!=null&&lifetime.state!=null)throw new IllegalStateException("PROJECTILE_ROOT_ALREADY_STARTED");
         if(prior==null && first.remainingContinuationBudgets().getOrDefault("IS_LAUNCH",1)==0)
             throw new IllegalStateException("UNKNOWN_PROJECTILE_ROOT");
         int launches=first.remainingContinuationBudgets().getOrDefault("ROOT_LAUNCHES",1);
         if(launches<1||launches>48)throw new IllegalStateException("INVALID_ROOT_LAUNCH_COUNT");
-        Root next=prior==null?new Root(launches):new Root(prior);
+        Root next=prior==null?new Root(launches,lifetime):new Root(prior);
+        if(conditional){next.pending+=batch.size();next.spent+=batch.size();}
         if(next.triggered+triggered>16)throw new IllegalStateException("ROOT_TRIGGERED_SECONDARY_BUDGET");
         next.triggered+=triggered;
-        int extra=prior==null?launches:0;
+        int extra=conditional?batch.size():prior==null?launches:0;
+        if(restored&&next.pending!=batch.size())throw new IllegalStateException("ORPHANED_PROJECTILE_PROMISE");
         for(var instance:batch) {
             var plan=instance.plan();
             if(!key(plan).equals(key)||plan.generation()>3||plan.remainingSpawnedEffects()>=48||plan.remainingTriggeredSecondaries()>16)
@@ -50,7 +67,7 @@ public final class ProjectileLifecycleRegistry {
         }
         if(next.spent>48)throw new IllegalStateException("ROOT_SPAWN_EFFECT_BUDGET");
         if(extra>0) {String admission=admission(first.ownerId(),extra);if(!admission.equals("PASS"))throw new IllegalStateException(admission);}
-        roots.put(key,next);for(var instance:batch)active.put(instance.plan().projectileInstanceId(),instance);
+        roots.put(key,next);if(next.lifetime!=null){next.lifetime.key=key;next.lifetime.state=next;}for(var instance:batch)active.put(instance.plan().projectileInstanceId(),instance);
     }
     /** Instant secondary effects spend root budgets, but hold no native carrier capacity. */
     public synchronized String reserveSecondary(ProjectileInstance parent,String id) {

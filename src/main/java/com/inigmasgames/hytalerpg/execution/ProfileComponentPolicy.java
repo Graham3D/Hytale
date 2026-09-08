@@ -10,6 +10,11 @@ import java.util.Set;
 public final class ProfileComponentPolicy {
     private ProfileComponentPolicy(){}
     private static final class Canonical {static final Stage04SkillProfiles PROFILES=Stage04SkillProfiles.loadCanonical(RpgCatalog.loadCanonical());}
+    public static Optional<Boolean> conditionalRepeat(String skill,boolean critical){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(conditionalRepeat(p,critical));}
+    public static boolean conditionalRepeat(Stage04SkillProfile p,boolean critical){
+        return p.damageCoefficient()>0&&p.movement()==null&&p.reaction()==null&&p.summon()==null&&p.summonAction()==null&&p.conversion()==null&&p.cage()==null&&p.support()==null
+                &&!(p.connection()!=null&&p.connection().channel())&&(!critical||directDamage(p));
+    }
     public static Optional<Boolean> discreteStrike(String skill,boolean excludeAuthoredSequence){
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(discreteStrike(p,excludeAuthoredSequence));
     }
