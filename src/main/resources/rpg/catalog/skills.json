@@ -5253,7 +5253,6 @@
       "MANA_RESOURCE",
       "PROXY",
       "SUMMON",
-      "TEMPORARY_COMBAT_SUMMON",
       "TEMPORARY_SUMMON"
     ],
     "sourceAcquisition": {
@@ -5625,8 +5624,8 @@
     ],
     "weaponRequirement": "None",
     "scalingClass": "Magic",
-    "basePowerSource": "MAGIC_WEAPON",
-    "innateBasePower": null,
+    "basePowerSource": "INNATE",
+    "innateBasePower": 20,
     "resourceType": "MANA",
     "castCost": "Mana 26",
     "upkeep": "",

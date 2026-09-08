@@ -349,7 +349,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(profile.support()!=null)return support==null?Validation.reject("SUPPORT_NATIVE_ADAPTER_UNAVAILABLE"):
                     support.preflight(store,actor,profile,plan);
             if(profile.summon()!=null)return summons==null?Validation.reject("SUMMON_NATIVE_ADAPTER_UNAVAILABLE"):
-                    summons.preflight(store,actor,profile,aim(store,actor));
+                    summons.preflight(store,actor,profile,plan,aim(store,actor));
             if(profile.connection()!=null) {
                 var connection=profile.connection();String admitted=connections.admission(playerRef.getUuid(),connection.channel());
                 if(!admitted.equals("PASS"))return Validation.reject(admitted);

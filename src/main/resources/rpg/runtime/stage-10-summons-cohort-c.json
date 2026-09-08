@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {"skillId":"summon_void_crawlers","family":"SUMMON","allowedMainHandKinds":["SPELLBOOK"],"requiredOffHandKinds":[],"secondaryFamilies":[],
+      "resourceType":"MANA","resourceCost":28,"cooldownSeconds":28,"windupSeconds":0,
+      "basePowerSource":"MAGIC_WEAPON","innateBasePower":0,"scaling":"MAGIC",
+      "summon":{"roleId":"RPG_Summon_Crawler","element":"VOID","range":6,"count":3,"healthFactor":0.35,"coefficient":0.40,"lifetime":18,"attackInterval":1,"leash":24}},
+    {"skillId":"brood_call","family":"SUMMON","allowedMainHandKinds":[],"requiredOffHandKinds":[],"secondaryFamilies":[],
+      "resourceType":"MANA","resourceCost":26,"cooldownSeconds":28,"windupSeconds":0,
+      "basePowerSource":"INNATE","innateBasePower":20,"scaling":"MAGIC",
+      "summon":{"roleId":"RPG_Summon_Broodling","element":"POISON","range":8,"count":4,"healthFactor":0.25,"coefficient":0.35,"lifetime":16,"attackInterval":1,"leash":24}}
+  ]
+}

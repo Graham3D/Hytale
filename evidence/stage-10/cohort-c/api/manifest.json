@@ -1,0 +1,61 @@
+{
+  "scope": "INSTALLED_MODELS_AND_RESOURCE_REFERENCES",
+  "models": [
+    {
+      "model": "NPC/Void/Crawler_Void/Models/Model.blockymodel",
+      "connectedAnimationProof": false,
+      "asset": "Server/Models/Void/Crawler_Void.json",
+      "texture": "NPC/Void/Crawler_Void/Models/Texture.png",
+      "animations": [
+        "Idle",
+        "Walk",
+        "WalkBackward",
+        "Run",
+        "Crouch",
+        "CrouchWalk",
+        "CrouchWalkBackward",
+        "Jump",
+        "JumpWalk",
+        "JumpRun",
+        "Fall",
+        "Alerted",
+        "Hurt",
+        "Death",
+        "Laydown",
+        "Sleep",
+        "Wake",
+        "Spawn",
+        "Despawn"
+      ]
+    },
+    {
+      "model": "NPC/Beast/Scarak_Louse/Models/Model.blockymodel",
+      "connectedAnimationProof": false,
+      "asset": "Server/Models/Beast/Scarak_Louse.json",
+      "texture": "NPC/Beast/Scarak_Louse/Models/Model_Scarak.png",
+      "animations": [
+        "Idle",
+        "Walk",
+        "WalkBackward",
+        "Run",
+        "Crouch",
+        "CrouchWalk",
+        "CrouchWalkBackward",
+        "Jump",
+        "JumpWalk",
+        "JumpRun",
+        "Fall",
+        "Alerted",
+        "Hurt",
+        "Death",
+        "Laydown",
+        "Sleep",
+        "Wake",
+        "Spawn",
+        "Despawn"
+      ]
+    }
+  ],
+  "connectedProof": false,
+  "sourceCombatOrLootCopied": false
+}

@@ -73,6 +73,9 @@ public final class CompatibilityService {
         // The source contract has gates whose prose is richer than its token clauses. These are stable,
         // shared rules rather than command-specific exceptions.
         String id = passive.id().value();
+        if(id.equals("swarm")&&(!actual.contains("TEMPORARY_COMBAT_SUMMON")||actual.contains("CORPSE_REQUIRED")||actual.contains("REVIVE")||actual.contains("DECOY")||actual.contains("CONVERSION")))
+            return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
+                    "Swarm requires a static temporary combat summon and cannot duplicate a corpse, decoy or conversion.",Set.of("TEMPORARY_COMBAT_SUMMON"),actual);
         if(id.equals("shared_aegis")&&!actual.contains("CAN_SHARE"))return CompatibilityResult.rejected(ValidationCode.MISSING_CAPABILITY,
                 "Shared Aegis requires a shareable self-target absorb payload, not native block or collision.",Set.of("CAN_SHARE"),actual);
         if(id.equals("selflessness")&&!actual.contains("HAS_RADIUS"))return CompatibilityResult.rejected(ValidationCode.MISSING_CAPABILITY,

@@ -40,10 +40,10 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     public HytaleSummonSystem(CombatTrace trace,Attack attack,CorpseLedger corpses){this.trace=trace;this.attack=attack;this.corpses=corpses;}
     public SummonRegistry registry(){return registry;}
     public CorpseLedger corpses(){return corpses;}
-    public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,Vec3 aim){
+    public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,Vec3 aim){
         var spec=profile.summon();
         if(!NPCPlugin.get().hasRoleName(spec.roleId()))return SkillExecutionPort.Validation.reject("SUMMON_ROLE_UNAVAILABLE");
-        String admission=registry.admission(store.getComponent(owner,PlayerRef.getComponentType()).getUuid(),spec.count());
+        String admission=registry.admission(store.getComponent(owner,PlayerRef.getComponentType()).getUuid(),plan.summonModifiers().count(spec.count()));
         if(!admission.equals("PASS"))return SkillExecutionPort.Validation.reject(admission);
         if(spec.corpseRequired())return selectCorpse(store,owner,aim,spec.range()).isPresent()?SkillExecutionPort.Validation.pass():
                 SkillExecutionPort.Validation.reject("NO_ELIGIBLE_CLASSIFIED_NATIVE_CORPSE");
@@ -103,10 +103,18 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
             var point=context.target().point();var origin=position(store,owner);var spec=context.profile().summon();
             if(origin.subtract(point).length()>spec.range()||!HytaleAreaQueries.clear(store,origin.add(new Vec3(0,1.35,0)),point))
                 throw new IllegalStateException("SUMMON_COMMITTED_PLACEMENT_INVALID");
+            var points=new ArrayList<Vec3>();
+            for(var offset:com.inigmasgames.hytalerpg.execution.summon.SummonFormation.points(point,leases.size())){
+                var grounded=leases.size()==1?offset:HytaleAreaQueries.ground(store,offset.add(new Vec3(0,1,0)),new Vec3(0,-1,0),2)
+                        .orElseThrow(()->new IllegalStateException("SUMMON_BATCH_NO_GROUND"));
+                if(origin.subtract(grounded).length()>spec.range()||!HytaleAreaQueries.clear(store,origin.add(new Vec3(0,1.35,0)),grounded))
+                    throw new IllegalStateException("SUMMON_BATCH_RANGE_OR_LOS");
+                points.add(grounded);
+            }
             for(int index=0;index<leases.size();index++){
                 var lease=leases.get(index);
                 if(registry.find(lease.token()).isEmpty()||now()>=lease.expires())throw new IllegalStateException("SUMMON_RESERVATION_CANCELLED");
-                var at=point.add(new Vec3(index*1.2,0,0));
+                var at=points.get(index);
                 var result=NPCPlugin.get().spawnNPCWithSpaceValidation(store,lease.roleId(),null,vector(at),
                         store.getComponent(owner,TransformComponent.getComponentType()).getRotation(),(npc,ref,actual)->{
                             created.add(ref); // Track first; any subsequent failure has an exact rollback target.
@@ -126,7 +134,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                 if(result!=SpawnTestResult.TEST_OK)throw new IllegalStateException("NATIVE_"+result);
             }
             for(var lease:leases)emit(lease,RpgTraceEventType.SUMMON_SPAWNED,Map.of("entity",lease.entity(),"rewardEligible",false,
-                    "lifetime",context.profile().summon().lifetime(),"nativeDamageInteractions",0,"serialized",false));
+                    "lifetime",Math.max(1,context.profile().summon().lifetime()*context.compiledPlan().summonModifiers().lifetimeFactor()),"nativeDamageInteractions",0,"serialized",false));
         }catch(RuntimeException failure){
             for(var ref:created)if(ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);
             for(var lease:leases)registry.remove(lease.token());

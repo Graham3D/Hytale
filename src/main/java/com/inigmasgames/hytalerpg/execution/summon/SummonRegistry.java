@@ -18,13 +18,14 @@ public final class SummonRegistry {
         private final String roleId;
         private int attacks;
         private Lease(SkillExecutionContext context,double now,CorpseLedger.Source source) {
-            this.context=context;expires=now+context.profile().summon().lifetime();
+            this.context=context;var modifiers=context.compiledPlan().summonModifiers();
+            expires=now+Math.max(1,context.profile().summon().lifetime()*modifiers.lifetimeFactor());
             var spec=context.profile().summon();
-            if(source==null){maximumHealth=context.snapshot().derivedStats().maxHealth()*spec.healthFactor();coefficient=spec.coefficient();interval=spec.attackInterval();roleId=spec.roleId();}
+            if(source==null){maximumHealth=context.snapshot().derivedStats().maxHealth()*spec.healthFactor()*modifiers.healthAndPowerFactor();coefficient=spec.coefficient()*modifiers.healthAndPowerFactor();interval=spec.attackInterval();roleId=spec.roleId();}
             else {
                 double magic=context.snapshot().basePower()*context.snapshot().derivedStats().magicDamageMultiplier();
                 var stats=CorpseLedger.revive(source,context.snapshot().derivedStats().maxHealth(),magic);
-                maximumHealth=stats.maximumHealth();coefficient=magic==0?0:stats.hitPower()/magic;interval=stats.attackInterval();roleId=source.projectionRole();
+                maximumHealth=stats.maximumHealth()*modifiers.healthAndPowerFactor();coefficient=magic==0?0:stats.hitPower()/magic*modifiers.healthAndPowerFactor();interval=stats.attackInterval();roleId=source.projectionRole();
             }
             nextAttack=now+interval;
         }
@@ -55,7 +56,7 @@ public final class SummonRegistry {
                 ||!context.request().actorId().equals(context.snapshot().actorId()))throw new IllegalArgumentException("SUMMON_SNAPSHOT_IDENTITY_MISMATCH");
         if(leases.values().stream().anyMatch(v->v.owner().equals(context.request().actorId())&&v.context.rootCastId().equals(context.rootCastId())))
             throw new IllegalStateException("SUMMON_ROOT_ALREADY_ACTIVE");
-        int count=context.profile().summon().count();String admission=admission(context.request().actorId(),count);
+        int count=context.compiledPlan().summonModifiers().count(context.profile().summon().count());String admission=admission(context.request().actorId(),count);
         if(context.profile().summon().corpseRequired()!=(corpse!=null)||corpse!=null&&(!corpse.eligible()||count!=1
                 ||!corpse.entity().equals(context.target().entityId())||!corpse.world().equals(context.target().worldId())))
             throw new IllegalArgumentException("CORPSE_SOURCE_IDENTITY_MISMATCH");

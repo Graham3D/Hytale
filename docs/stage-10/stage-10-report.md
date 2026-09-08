@@ -242,3 +242,72 @@ and attack cadence, no duplicate native rewards, duplicate/restart rejection,
 and cleanup on death/logout/unload. The wolf model is an audited archetype
 placeholder, not verified undead art/animation. Neither the in-memory fixture nor
 server boot proves any of these connected behaviors. Stage 10 remains in progress.
+
+## Cohort C — native batches, Swarm and Minion Empowerment
+
+Adds Summon Void Crawlers (3 actors, 28 Mana, 28-second cooldown, 6-metre placement,
+18-second lifetime, 35% caster maximum Health and .40 Magic coefficient per actor)
+and Brood Call (4 actors, 26 Mana, 28-second cooldown, 8-metre placement,
+16-second lifetime, 25% caster maximum Health and .35 INNATE base-20 INT-scaled
+power). Brood has no weapon requirement: its previous MAGIC_WEAPON catalog token
+was inconsistent with the normative closure and now resolves INNATE/20 in both
+catalog and runtime. Both retain one attack/second and the 24-metre owner leash.
+
+The installed `Crawler_Void` and `Scarak_Louse` models, textures and animation
+sets are audited in `evidence/stage-10/cohort-c/api`. New Generic roles reference
+those shipped presentations and reuse the effect-free Walk/Seek role structure.
+No broodmother combat, native attack roots, drops or encounter scripts are copied.
+Labels identify them as RPG summons. Native animation sets existing on disk are
+not evidence that the connected client played the intended animation. Portal,
+fade and readable ownership/art acceptance still need connected presentation QA.
+
+The formation changed from an expanding one-sided line to a deterministic ring
+centered on the committed point. Pair spacing is at least 1.05 metres, and the
+ring stays within 1.4 metres of its centre for counts 2–8. Each offset is grounded
+with the existing native block collision query and checked against caster range
+and LOS before any actor is spawned. Native role/space validation still runs per
+actor; a later failure removes the exact earlier actors in that batch. These are
+local placement contracts, not proof of safe connected navigation on all terrain.
+
+Swarm adds one actor and multiplies every actor's Health/power by .75. Empowerment
+multiplies Health/power by 1.30 and lifetime by .75, bounded below by the one-second
+runtime minimum (none of these authored profiles reaches that floor). Combined
+Health/power factor is .975, not an additive shortcut. Revive's base clamps run
+before Empowerment. The caster's own Health/power/cost/cooldown is not modified.
+Admission uses the modified whole-batch count; neither passive bypasses 8/owner
+or 256/global limits. Their typed component operators enter the deterministic
+plan hash; compiled-plan schema advances to 7, player schema stays 5.
+
+The catalog incorrectly granted TEMPORARY_COMBAT_SUMMON to the explicitly
+noncombat Simulacrum. A new compatibility test exposed this; that token is now
+removed. Swarm additionally rejects DECOY, CONVERSION and corpse consumers in the
+shared compatibility authority. This does not remove Simulacrum's legitimate
+TEMPORARY_SUMMON capability. Conversion remains ineligible for Empowerment.
+There are still exactly 87 skills and 66 passives.
+
+The full retained gate is 576 tests, including 21 new tests for this cohort.
+Existing role/ability asset tests now cover all three safe roles and all four
+Stage10 neutral native triggers. New coverage includes both skills' exact
+counts/costs/stats/lifetimes, no-weapon INNATE resolution, modified counts, passive
+composition/order, Revive clamps before Empowerment, non-stacking duplicate
+operator IDs, compatibility rollback, compact/spaced formation, actor-local
+attack claims, paid delayed release and pending whole-batch cap rejection.
+
+Initial failures distinguished an actual decoy-tag bug from two fixture issues:
+the shared test harness advances execution time but its kernel uses real cooldown
+time, and it reused an identical input root for separate simulated presses.
+Capacity/rollback fixtures now explicitly clear only their test cooldown and use
+fresh input identities; they do not claim to prove production cooldown expiry.
+The duplicate-root production guard remains intact and retains its dedicated test.
+Paid-but-terminated results are not accepted as successful actor creation in the
+two-batch test: it requires COMMITTED status and exactly eight registry entries.
+No tests were skipped or replaced with weaker expected outcomes.
+
+The packaged build contains 55 native zero-cost triggers and must pass the normal
+three-mod network boot/clean stop, including all three spawnable RPG role assets.
+Exact JAR/test/smoke hashes: `evidence/stage-10/cohort-c/verification.json`.
+Rollback is cohort B .22 SHA-256
+`6D8CD1110E3572CFFF43E960CD2D115BC21A2D5A2A0F2D0E24B3E3BE5B186DA8`.
+Earlier archives remain unchanged. No live deployment, HUD/resource formula,
+Stage04/05 executor or XP artwork change. Connected casting, native batch spawn,
+animation/damage, encounter ownership and cleanup remain **UNVERIFIED**.

@@ -21,7 +21,7 @@ $expectedConnectionCauses = 5
 $expectedProfiles = 15
 $expectedStatusAssets = 10
 $expectedSupport = 16
-$expectedSummons = switch($Cohort){'a'{1};'b'{2};default{throw 'Cohort is not configured'}}
+$expectedSummons = switch($Cohort){'a'{1};'b'{2};'c'{4};default{throw 'Cohort is not configured'}}
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path
 if (-not $resolved.StartsWith($projectRoot, [StringComparison]::OrdinalIgnoreCase)) { throw "Unsafe smoke path: $resolved" }
@@ -65,10 +65,11 @@ $summary = [ordered]@{
     connectionAssetsResolved = [bool]($plain -match "RPG_STAGE08_ASSETS revision=R029 connectionProfiles=$expectedConnections nativeDamageChannels=$expectedConnectionCauses result=PASS connectedProof=false")
     supportConfigured = [bool]($plain -match "RPG_STAGE09_READY revision=R029 supportProfiles=$expectedSupport playerSchema=5 regenAdapter=NATIVE_ENTRY_DECORATOR reservationProjection=STATIC_MAX allyPolicy=SELF_OR_NATIVE_FRIENDLY connectedProof=false")
     summonAssetsResolved = [bool]($plain -match "RPG_STAGE10_ASSETS revision=R029 summonProfiles=$expectedSummons role=RPG_Summon_Wolf result=PASS connectedProof=false")
+    batchRolesResolved = $Cohort -ne 'c' -or [bool]($plain -match 'RPG_STAGE10_BATCH_ROLES count=3 result=PASS connectedProof=false')
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8
 [pscustomobject]$summary | Format-List
 if (-not ($summary.exactlyThreeMods -and $summary.rpgDiscovered -and $summary.rpgSetup -and $summary.ready -and
-    $summary.summonAssetsResolved -and $summary.supportConfigured -and $summary.connectionAssetsResolved -and $summary.areaAssetsResolved -and $summary.packagedRootResolved -and $summary.shippedRuneResolved -and $summary.pluginEnabled -and $summary.managerStarted -and $summary.networkBooted -and $summary.cleanShutdown) -or
+    $summary.batchRolesResolved -and $summary.summonAssetsResolved -and $summary.supportConfigured -and $summary.connectionAssetsResolved -and $summary.areaAssetsResolved -and $summary.packagedRootResolved -and $summary.shippedRuneResolved -and $summary.pluginEnabled -and $summary.managerStarted -and $summary.networkBooted -and $summary.cleanShutdown) -or
     $summary.nativeAbilityAssetsRejected -or $summary.failure) { throw 'R029 smoke gate failed.' }

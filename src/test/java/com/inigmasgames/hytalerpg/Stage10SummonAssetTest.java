@@ -9,8 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage10SummonAssetTest {
     @Test void nativeRoleContainsOnlyMotionNotCombatRewardOrFlockMutation() throws Exception {
-        var role=read("/Server/NPC/Roles/RPG/RPG_Summon_Wolf.json");
-        assertEquals("Generic",role.get("Type").getAsString());assertEquals("Wolf_Black",role.get("Appearance").getAsString());
+        for(var entry:java.util.Map.of("Wolf","Wolf_Black","Crawler","Crawler_Void","Broodling","Scarak_Louse").entrySet()){
+        var role=read("/Server/NPC/Roles/RPG/RPG_Summon_"+entry.getKey()+".json");
+        assertEquals("Generic",role.get("Type").getAsString());assertEquals(entry.getValue(),role.get("Appearance").getAsString());
         assertEquals("Friendly",role.get("DefaultPlayerAttitude").getAsString());assertFalse(role.get("IsMemory").getAsBoolean());
         assertFalse(role.get("PickupDropOnDeath").getAsBoolean());
         assertEquals(Set.of("Type","Appearance","MaxHealth","IsMemory","DefaultPlayerAttitude","DefaultNPCAttitude",
@@ -20,11 +21,14 @@ class Stage10SummonAssetTest {
         assertEquals(Set.of("Sensor","BodyMotion"),instruction.keySet());
         assertEquals("Target",instruction.getAsJsonObject("Sensor").get("Type").getAsString());
         assertEquals("Seek",instruction.getAsJsonObject("BodyMotion").get("Type").getAsString());
+        }
     }
     @Test void abilityTriggerOwnsNoNativeGameplayCharge() throws Exception {
-        var ability=read("/Server/Item/Items/RPG/Abilities/RPG_Ability_Wolf_Summon.json").getAsJsonObject("Ability");
+        for(var name:java.util.List.of("Wolf_Summon","Revive_Fallen","Summon_Void_Crawlers","Brood_Call")){
+        var ability=read("/Server/Item/Items/RPG/Abilities/RPG_Ability_"+name+".json").getAsJsonObject("Ability");
         assertEquals(0,ability.get("Cost").getAsInt());assertEquals("None",ability.get("CostType").getAsString());
         assertEquals(0,ability.get("Cooldown").getAsInt());assertEquals("Root_RPG_Ability_Bridge",ability.get("Cast").getAsString());
+        }
     }
     private static JsonObject read(String path)throws Exception{
         try(var stream=Stage10SummonAssetTest.class.getResourceAsStream(path)){
