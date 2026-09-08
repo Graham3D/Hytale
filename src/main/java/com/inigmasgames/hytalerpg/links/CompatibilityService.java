@@ -21,6 +21,15 @@ public final class CompatibilityService {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
 
+        // Imported summary tags are not proof of a distinct spend/range component.
+        // These canonical radius-only fields must never gain reach semantics globally.
+        if(passive.id().value().equals("long_reach")&&Set.of("whirlwind","ground_slam","frost_nova",
+                "orbiting_shadow_blades","battle_cry","pack_howl","thorns_aura","emanatism",
+                "chilling_aura","pedanticism","reaping_storm").contains(skill.id().value()))
+            return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Long Reach cannot scale a radius-only component.",Set.of("DECLARED_REACH_NOT_RADIUS"),actual);
+        if(passive.id().value().equals("efficiency")&&actual.contains("MANA_RESERVATION")&&!actual.contains("HAS_UPKEEP"))
+            return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Efficiency cannot reduce a pure Mana reservation.",Set.of("FINITE_SPEND_OR_UPKEEP"),actual);
+
         if (!passive.requiredFamilies().isEmpty() && passive.requiredFamilies().stream().noneMatch(actual::contains)) {
             return CompatibilityResult.rejected(ValidationCode.WRONG_FAMILY,
                     passive.name() + " requires " + join(passive.requiredFamilies()) + "; " + skill.name()
@@ -55,7 +64,8 @@ public final class CompatibilityService {
 
         String gate = passive.compatibilityExpression().toLowerCase(java.util.Locale.ROOT);
         if ((gate.contains("finite mana/stamina cost") || gate.contains("finite upfront mana or stamina cost"))
-                && !actual.contains("FINITE_RESOURCE_COST")) {
+                && !actual.contains("FINITE_RESOURCE_COST")
+                && !(gate.contains("or continuous mana upkeep")&&actual.contains("HAS_UPKEEP"))) {
             return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
                     passive.name() + " requires a finite Mana or Stamina spend.", Set.of("FINITE_RESOURCE_COST"), actual);
         }

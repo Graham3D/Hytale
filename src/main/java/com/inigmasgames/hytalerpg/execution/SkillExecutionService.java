@@ -29,6 +29,7 @@ public final class SkillExecutionService {
     private final SkillInstanceLifecycle lifecycle;
     private final RpgSkillTracer tracer;
     private final SkillReleaseScheduler releases = new SkillReleaseScheduler();
+    private final CompiledProfileResolver compiledProfiles = new CompiledProfileResolver();
     private final java.util.function.LongSupplier nanoTime;
     private final Map<UUID, Prepared> windups = new LinkedHashMap<>();
     private final Map<UUID, SkillExecutionContext> activeContexts = new LinkedHashMap<>();
@@ -149,7 +150,7 @@ public final class SkillExecutionService {
         CompiledSkillPlan plan = view.plans().get(request.slot());
         if (plan == null || plan.degraded()) throw new Rejection("COMPILED_PLAN_INVALID", retainedInstance);
         if (!profiles.supports(skill.value())) throw new Rejection("FAMILY_NOT_IMPLEMENTED", retainedInstance);
-        Stage04SkillProfile profile = profiles.require(skill.value());
+        Stage04SkillProfile profile = compiledProfiles.resolve(profiles.require(skill.value()),plan);
         String instance = retainedInstance == null ? skill.value() + '-' + UUID.randomUUID() : retainedInstance;
         if(profile.cage()!=null)throw new Rejection(com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY,instance);
         if (!profile.family().name().equals(plan.finalFamily())
