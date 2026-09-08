@@ -27,6 +27,9 @@ public final class HytaleEncounterRewards {
     private final PersistentEncounterRuntime runtime;
     private final RpgLoadoutService loadouts;
     private final RpgSkillTracer trace;
+    private final HostileInjuryLedger injuries=new HostileInjuryLedger();
+    public void invalidateHealthCredit(UUID world,UUID recipient){injuries.invalidate(world,recipient);}
+    public void forgetPlayer(UUID actor){injuries.forget(actor);}
     private boolean failureLogged;
     private long nextDeliveryNanos;
     private volatile PartyMembershipProvider parties=PartyMembershipProvider.UNAVAILABLE;
@@ -36,6 +39,28 @@ public final class HytaleEncounterRewards {
     public void invalidateConverted(UUID world,UUID enemy){runtime.disqualify(world,enemy);}
     public void configurePartyProvider(PartyMembershipProvider provider){parties=Objects.requireNonNull(provider);}
     public String partyAvailability(){return parties.availability();}
+    private void mastery(Store<EntityStore> store,UUID enemy,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,boolean meaningful,String evidence){
+        var actor=context.request().actorId();long now=System.currentTimeMillis();var p=context.profile();
+        boolean sustained=context.effects().mastery().sustained();
+        context.effects().mastery().award(context.request().origin()==com.inigmasgames.hytalerpg.execution.SkillExecutionRequest.Origin.MANUAL,
+                meaningful,runtime.masteryEligible(world(store),enemy,actor,loadouts.characterLevel(actor),now),sustained,System.nanoTime(),ordinal->{
+            // Primary and every derived child share rootCastId + ordinal; never use victim/child/tick as the dedup identity.
+            loadouts.awardEarned(actor,new EarnedReward("mastery/"+context.effects().mastery().primaryInstance()+"/"+ordinal,0,0,Map.of(p.skillId(),1L),
+                    "MEANINGFUL_MANUAL_ROOT",context.rootCastId(),context.effects().mastery().primaryInstance(),context.request().correlationId()));
+        });
+    }
+    public void controlResolved(Store<EntityStore> store,Ref<EntityStore> target,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,boolean taunt,String evidence){
+        safely("NATIVE_EFFECTIVE_CONTROL",()->{
+            var actor=store.getExternalData().getRefFromUUID(context.request().actorId());var enemy=id(store,target);
+            if(actor==null||!actor.isValid()||enemy==null||store.getComponent(actor,PlayerRef.getComponentType())==null
+                    ||!HytaleAreaQueries.hostile(store,target,actor)||excluded(store,target))return;
+            if(runtime.control(world(store),enemy,context.request().actorId(),true,taunt,true,System.currentTimeMillis())){
+                emit(context.request().actorId(),RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,context.request().correlationId(),
+                    Map.of("kind",taunt?"TAUNT":"CONTROL","enemy",enemy,"evidence",evidence,"rootCastId",context.rootCastId(),"skillInstanceId",context.skillInstanceId(),"connectedProof",false));
+                mastery(store,enemy,context,true,evidence);
+            }
+        });
+    }
     /** Called only after the existing native Health write; does not add healing or award mastery. */
     public void healingResolved(Store<EntityStore> store,Ref<EntityStore> beneficiary,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,double before,double after){
         safely("NATIVE_HEAL_CONTRIBUTION",()->{
@@ -43,9 +68,12 @@ public final class HytaleEncounterRewards {
             var healer=store.getExternalData().getRefFromUUID(context.request().actorId());
             if(healer==null||!healer.isValid()||store.getComponent(healer,PlayerRef.getComponentType())==null||!HytaleSupportSystem.eligibleAlly(store,healer,beneficiary))return;
             var recipient=id(store,beneficiary);if(recipient==null)return;
-            int count=runtime.heal(world(store),context.request().actorId(),recipient,after-before,true,System.currentTimeMillis());
+            long now=System.currentTimeMillis();var restored=injuries.healed(world(store),recipient,before,after,now);
+            double eligibleHealing=restored.entrySet().stream().filter(e->runtime.contains(world(store),e.getKey())).mapToDouble(Map.Entry::getValue).sum();
+            int count=runtime.heal(world(store),context.request().actorId(),recipient,eligibleHealing,true,now);
             if(count>0)emit(context.request().actorId(),RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,context.request().correlationId(),
-                    Map.of("kind","HEAL","beneficiary",recipient,"healthBefore",before,"healthAfter",after,"actualHealing",after-before,"eligibleEncounters",count,"rootCastId",context.rootCastId(),"skillInstanceId",context.skillInstanceId(),"masteryAwarded",false));
+                    Map.of("kind","HEAL","beneficiary",recipient,"healthBefore",before,"healthAfter",after,"actualHealing",after-before,"hostileInjuryRestored",eligibleHealing,"eligibleEncounters",count,"rootCastId",context.rootCastId(),"skillInstanceId",context.skillInstanceId()));
+            if(count>0)for(var enemy:restored.keySet())mastery(store,enemy,context,true,"ACTUAL_HOSTILE_INJURY_RESTORED");
         });
     }
     /** Actual post-filter consumed shield amount, regardless of whether its optional reflection is configured. */
@@ -57,8 +85,10 @@ public final class HytaleEncounterRewards {
             var enemy=id(store,enemyRef);var actor=absorption.effect().key().owner();var owner=store.getExternalData().getRefFromUUID(actor);
             if(enemy==null||owner==null||!owner.isValid()||store.getComponent(owner,PlayerRef.getComponentType())==null)return;
             var c=absorption.effect().context();
-            if(runtime.absorb(world(store),enemy,actor,absorption.amount(),true,System.currentTimeMillis()))
-                emit(actor,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,c.request().correlationId(),Map.of("kind","ABSORB","enemy",enemy,"beneficiary",id(store,recipient),"actuallyAbsorbed",absorption.amount(),"rootCastId",c.rootCastId(),"skillInstanceId",c.skillInstanceId(),"masteryAwarded",false));
+            if(runtime.absorb(world(store),enemy,actor,absorption.amount(),true,System.currentTimeMillis())){
+                emit(actor,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,c.request().correlationId(),Map.of("kind","ABSORB","enemy",enemy,"beneficiary",id(store,recipient),"actuallyAbsorbed",absorption.amount(),"rootCastId",c.rootCastId(),"skillInstanceId",c.skillInstanceId()));
+                mastery(store,enemy,c,true,"ACTUAL_HOSTILE_ABSORPTION");
+            }
         });
     }
     private static UUID world(Store<EntityStore> store){return store.getExternalData().getWorld().getWorldConfig().getUuid();}
@@ -123,7 +153,21 @@ public final class HytaleEncounterRewards {
             details.put("healthBefore",before);details.put("healthAfter",hp.get());details.put("actualHealthLost",before-hp.get());details.put("nativeAmount",damage.getAmount());
             details.put("rootCastId",metadata==null?"":metadata.rootCastId());details.put("skillInstanceId",metadata==null?"":metadata.skillInstanceId());
             emit(player,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,metadata==null?enemy.toString():metadata.correlationId(),details);
+            var context=HytaleDamageAdapter.executionContext(damage);
+            // Store.invoke consumes queued death work before it returns. Observe mastery inside Inspect,
+            // after actual loss and persisted contribution but before death freezes/detaches this encounter.
+            if(context!=null&&context.request().actorId().equals(player))mastery(store,enemy,context,true,"POST_APPLY_INSPECT_HEALTH_LOSS");
         }
+    }
+    private void playerDamaged(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,Damage damage){
+        var ref=chunk.getReferenceTo(index);var hp=chunk.getComponent(index,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());
+        if(hp==null||damage.isCancelled())return;
+        UUID enemy=null;var meta=HytaleDamageAdapter.metadata(damage);
+        if((meta==null||!meta.noCredit())&&damage.getSource() instanceof Damage.EntitySource source){
+            var attacker=source.getRef();var candidate=id(store,attacker);
+            if(candidate!=null&&runtime.contains(world(store),candidate)&&!excluded(store,attacker)&&HytaleAreaQueries.hostile(store,attacker,ref))enemy=candidate;
+        }
+        injuries.damage(world(store),id(store,ref),enemy,SupportDamageSystems.observedHealthBefore(damage),hp.get(),System.currentTimeMillis());
     }
     private void died(Ref<EntityStore> ref,DeathComponent death,Store<EntityStore> store){
         if(death.getDeathInfo()==null)return;
@@ -173,6 +217,24 @@ public final class HytaleEncounterRewards {
         private final HytaleEncounterRewards rewards;public Death(HytaleEncounterRewards rewards){this.rewards=rewards;}
         @Override public Query<EntityStore> getQuery(){return Query.and(NPCEntity.getComponentType(),UUIDComponent.getComponentType(),EntityStatMap.getComponentType(),TransformComponent.getComponentType());}
         @Override public void onComponentAdded(Ref<EntityStore> ref,DeathComponent death,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){rewards.safely("NATIVE_DEATH_FREEZE",()->rewards.died(ref,death,store));}
+    }
+    public static final class PlayerInjuries extends DamageEventSystem{
+        private static final com.hypixel.hytale.server.core.meta.MetaKey<Boolean> OBSERVED=Damage.META_REGISTRY.registerMetaObject(ignored->false,false,"InigmasGames:HostileInjuryObserved",Codec.BOOLEAN);
+        private final HytaleEncounterRewards rewards;public PlayerInjuries(HytaleEncounterRewards rewards){this.rewards=rewards;}
+        @Override public Query<EntityStore> getQuery(){return Query.and(PlayerRef.getComponentType(),UUIDComponent.getComponentType(),EntityStatMap.getComponentType());}
+        @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getInspectDamageGroup();}
+        @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.AFTER,DamageSystems.ApplyDamage.class),new SystemDependency<>(Order.BEFORE,SupportDamageSystems.Reflect.class));}
+        @Override public void handle(int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){if(Boolean.TRUE.equals(damage.getIfPresentMetaObject(OBSERVED)))return;damage.putMetaObject(OBSERVED,true);rewards.safely("NATIVE_HOSTILE_INJURY",()->rewards.playerDamaged(i,chunk,store,damage));}
+    }
+    /** Read-only reconciliation of native regeneration; never consumes or rewrites native stat updates. */
+    public static final class HealthObservation extends com.hypixel.hytale.component.system.tick.EntityTickingSystem<EntityStore>{
+        private final HytaleEncounterRewards rewards;public HealthObservation(HytaleEncounterRewards rewards){this.rewards=rewards;}
+        @Override public Query<EntityStore> getQuery(){return Query.and(PlayerRef.getComponentType(),UUIDComponent.getComponentType(),EntityStatMap.getComponentType());}
+        @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.BEFORE,com.hypixel.hytale.server.core.modules.entitystats.EntityStatsSystems.ClearChanges.class),new SystemDependency<>(Order.AFTER,com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule.PlayerRegenerateStatsSystem.class));}
+        @Override public void tick(float delta,int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+            var hp=chunk.getComponent(i,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());
+            if(hp!=null)rewards.injuries.observedHealth(world(store),chunk.getComponent(i,UUIDComponent.getComponentType()).getUuid(),hp.get(),System.currentTimeMillis());
+        }
     }
     public static final class Delivery extends TickingSystem<EntityStore>{
         private final HytaleEncounterRewards rewards;public Delivery(HytaleEncounterRewards rewards){this.rewards=rewards;}

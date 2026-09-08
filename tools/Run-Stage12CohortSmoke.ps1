@@ -25,6 +25,7 @@ $expectedPlayerSchema = if($Cohort -eq 'a'){7}else{8}
 $expectedSummons = 9
 $expectedNativeBiomes = if($Cohort -in @('a','b')){0}else{4}
 $expectedAwardHook = if($Cohort -in @('a','b','c','d')){'false'}else{'true'}
+$expectedMastery = if($Cohort -in @('a','b','c','d','e','f')){'false'}else{'true'}
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path
 if (-not $resolved.StartsWith($projectRoot, [StringComparison]::OrdinalIgnoreCase)) { throw "Unsafe smoke path: $resolved" }
@@ -77,11 +78,13 @@ $summary = [ordered]@{
     encounterRegistryResolved = [bool]($plain -match "RPG_STAGE12_ENCOUNTER_REGISTRY roles=3 biomes=4 rankAuthority=RPG_PROFILE awardHook=$expectedAwardHook connectedProof=false")
     encounterStoreConfigured = [bool]($plain -match "RPG_STAGE12_ENCOUNTER_STORE schema=1 frozenDeathPlans=true permanentExclusions=true pending=0 awardHook=$expectedAwardHook connectedProof=false")
     nativeRewardHooksRegistered = [bool]($plain -match 'RPG_STAGE12_NATIVE_REWARDS spawn=LEGACY_WORLD_SPAWN contribution=POST_APPLY_HEALTH_LOSS death=NATIVE_DEATH_COMPONENT deliveryBudget=8_per_second party=SOLO_ONLY connectedProof=false')
-    supportCreditHooksRegistered = [bool]($plain -match 'RPG_STAGE12_SUPPORT_CREDIT healing=POST_NATIVE_WRITE absorption=ACTUAL_CONSUMPTION partyProvider=NATIVE_PARTY_PROVIDER_UNAVAILABLE_SOLO_ONLY mastery=false connectedProof=false')
+    supportCreditHooksRegistered = [bool]($plain -match "RPG_STAGE12_SUPPORT_CREDIT healing=POST_NATIVE_WRITE absorption=ACTUAL_CONSUMPTION partyProvider=NATIVE_PARTY_PROVIDER_UNAVAILABLE_SOLO_ONLY mastery=$expectedMastery connectedProof=false")
+    masteryHooksRegistered = [bool]($plain -match 'RPG_STAGE12_MASTERY damage=INSPECT_BEFORE_DEATH control=NATIVE_STATE_CHANGE healing=HOSTILE_INJURY_ONLY rootDedup=DURABLE sustainedIntervalSeconds=5 movementAvoidance=UNAVAILABLE connectedProof=false')
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8
 [pscustomobject]$summary | Format-List
+if($expectedMastery -eq 'true' -and -not ($summary.masteryHooksRegistered -and $summary.supportCreditHooksRegistered -and $summary.nativeRewardHooksRegistered -and $summary.encounterStoreConfigured -and $summary.encounterRegistryResolved)){throw 'Stage12 mastery/support native registration gate failed'}
 if (($Cohort -eq 'c' -and -not $summary.encounterRegistryResolved) -or ($Cohort -ne 'a' -and -not $summary.rewardStoreConfigured) -or -not ($summary.progressionProfilesResolved -and $summary.hitProcAssetsResolved -and $summary.strikeLockResolved -and $summary.exactlyThreeMods -and $summary.rpgDiscovered -and $summary.rpgSetup -and $summary.ready -and
     $summary.decoyRoleResolved -and $summary.batchRolesResolved -and $summary.summonAssetsResolved -and $summary.supportConfigured -and $summary.connectionAssetsResolved -and $summary.areaAssetsResolved -and $summary.packagedRootResolved -and $summary.shippedRuneResolved -and $summary.pluginEnabled -and $summary.managerStarted -and $summary.networkBooted -and $summary.cleanShutdown) -or
     $summary.nativeAbilityAssetsRejected -or $summary.failure) { throw 'R031 smoke gate failed.' }

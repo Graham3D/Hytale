@@ -161,6 +161,11 @@ public final class SupportNativeEffects {
                 var source=store.getExternalData().getRefFromUUID(taunt.get().key().owner());
                 var marked=store.getComponent(ref,MarkedEntitySupport.getComponentType());int slot=defaultSlot(marked);
                 if(slot>=0&&!marked.isRebindSlot(slot)){
+                    if(!marker.tauntCandidate.equals(taunt.get().skillInstanceId())){
+                        var prior=marked.getMarkedEntityRef(slot);
+                        marker.tauntCandidate=taunt.get().skillInstanceId();marker.tauntCredited=false;
+                        marker.tauntChanged=prior==null||!prior.equals(source);
+                    }
                     marked.setMarkedEntity(slot,source,false,store);marker.tauntOwner=taunt.get().key().owner();
                 }else effects.remove(taunt.get().key());
             }else releaseTaunt(store,ref,marker);
@@ -215,6 +220,10 @@ public final class SupportNativeEffects {
                 var selectedId=selected!=null&&selected.isValid()?store.getComponent(selected,UUIDComponent.getComponentType()):null;
                 boolean matches=selectedId!=null&&selectedId.getUuid().equals(e.key().owner());
                 var marker=chunk.getComponent(index,SupportEffectProjection.getComponentType());var observation=e.skillInstanceId()+":"+matches;
+                if(matches&&marker.tauntChanged&&!marker.tauntCredited&&marker.tauntCandidate.equals(e.skillInstanceId())){
+                    marker.tauntCredited=true;
+                    support.controlResolved(store,ref,e.context(),true,"NATIVE_TARGET_CHANGED_AND_RETAINED_AFTER_ROLE_EVALUATION");
+                }
                 if(!observation.equals(marker.lastTauntObservation)){
                     marker.lastTauntObservation=observation;
                     support.traceFinite(e,RpgTraceEventType.NATIVE_SUPPORT_TARGET_OBSERVED,Map.of("afterRoleEvaluation",true,"matchesCaster",matches,
@@ -234,6 +243,14 @@ public final class SupportNativeEffects {
             if(hard.containsKey(RpgStatusType.FROZEN)||hard.containsKey(RpgStatusType.ROOT)||motion==null||!motion.canSteer(ref,store))return;
             var from=store.getComponent(ref,TransformComponent.getComponentType()).getPosition();
             var source=store.getComponent(owner,TransformComponent.getComponentType()).getPosition();
+            var marker=chunk.getComponent(index,SupportEffectProjection.getComponentType());
+            var observedPosition=new com.inigmasgames.hytalerpg.execution.math.Vec3(from.x(),from.y(),from.z());
+            if(marker.fearCandidate.equals(effect.get().skillInstanceId())&&!marker.fearCredited.equals(effect.get().skillInstanceId())
+                    &&com.inigmasgames.hytalerpg.progress.ControlEvidence.retreatObserved(marker.fearPosition,observedPosition,
+                        marker.fearSource,now-marker.fearRequestedAt,marker.fearRequested)){
+                marker.fearCredited=effect.get().skillInstanceId();
+                support.controlResolved(store,ref,effect.get().context(),false,"NATIVE_POSITION_RETREATED_AFTER_SAFE_STEERING_REQUEST");
+            }
             // Bound the requested step and stop at unsafe edges. Native steering performs the actual move.
             double step=Math.max(.05,Math.min(1,motion.getMaximumSpeed()*Math.max(.01,Math.min(.1,delta))));
             var candidate=safeRetreat(from,source,motion.getComponentSelector(),step,displacement->{
@@ -241,6 +258,9 @@ public final class SupportNativeEffects {
                 return Double.isFinite(allowed)&&allowed>=step-1e-5&&!probe.edgeBlocked;
             });
             body.assign(candidate);
+            marker.fearCandidate=effect.get().skillInstanceId();marker.fearPosition=observedPosition;
+            marker.fearSource=new com.inigmasgames.hytalerpg.execution.math.Vec3(source.x(),source.y(),source.z());
+            marker.fearRequestedAt=now;marker.fearRequested=candidate.getTranslation().lengthSquared()>1e-8;
         }
     }
     public static final class NativeOutgoing extends DamageEventSystem {

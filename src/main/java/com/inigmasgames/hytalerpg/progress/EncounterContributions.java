@@ -84,7 +84,9 @@ public final class EncounterContributions {
         if(!hostile||!finitePositive(maximum)||!Double.isFinite(before)||!Double.isFinite(after)||before<=after||after<0||before>maximum)return false;
         var e=active(world,enemy,now);if(e==null)return false;
         if(!credit(e,player,Kind.DAMAGE,before-after,now))return false;
-        double fraction=after/maximum;if(fraction<e.lowestHealthFraction-1e-9){e.lowestHealthFraction=fraction;e.progressAt=now;}
+        // Once 60 seconds of unchanged interaction expires, the master requires a NEW enemy,
+        // not one extra point of damage to rehabilitate the same captive encounter.
+        double fraction=after/maximum;if(now-e.progressAt<=FARM_WINDOW_MS&&fraction<e.lowestHealthFraction-1e-9){e.lowestHealthFraction=fraction;e.progressAt=now;}
         return true;
     }
     /** Caller supplies actual consumed hostile absorption, not shield capacity or a cast request. */

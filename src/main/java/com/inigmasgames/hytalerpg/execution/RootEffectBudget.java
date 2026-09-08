@@ -7,6 +7,8 @@ public final class RootEffectBudget {
     private final UUID actor;private final String root;
     private final Set<String> effects=new HashSet<>(Set.of("PRIMARY")),controllers=new HashSet<>();
     private int triggered;
+    private final com.inigmasgames.hytalerpg.progress.MasteryRootBudget mastery=new com.inigmasgames.hytalerpg.progress.MasteryRootBudget();
+    public com.inigmasgames.hytalerpg.progress.MasteryRootBudget mastery(){return mastery;}
     private final com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement=new com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger();
     private final Map<String,Double> statusTimes=new HashMap<>();
     private final Map<String,Double> orbitContacts=new HashMap<>();

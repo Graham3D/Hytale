@@ -23,6 +23,17 @@ import java.util.function.BiConsumer;
 final class HytaleAreaStatuses {
     private static final List<String> SLOWS = List.of("RPG_Chill_1", "RPG_Chill_2", "RPG_Chill_3", "RPG_Chill_4",
             "RPG_Frozen_Slow", "RPG_Root_Slow");
+    static com.inigmasgames.hytalerpg.progress.ControlEvidence observed(Store<EntityStore> store,Ref<EntityStore> target) {
+        var controller=target==null||!target.isValid()?null:store.getComponent(target,EffectControllerComponent.getComponentType());
+        if(controller==null)return new com.inigmasgames.hytalerpg.progress.ControlEvidence(false,0);
+        boolean hard=java.util.stream.Stream.of("RPG_Root","RPG_Frozen","Stun").anyMatch(id->present(controller,id));
+        double slow=0;double[] strengths={.05,.10,.15,.20,.30,.35};
+        for(int i=0;i<SLOWS.size();i++)if(present(controller,SLOWS.get(i)))slow=Math.max(slow,strengths[i]);
+        return new com.inigmasgames.hytalerpg.progress.ControlEvidence(hard,slow);
+    }
+    private static boolean present(EffectControllerComponent controller,String id){
+        var effect=EntityEffect.getAssetMap().getAsset(id);return effect!=null&&controller.hasEffect(effect);
+    }
     static boolean available() {
         return java.util.stream.Stream.concat(SLOWS.stream(), java.util.stream.Stream.of("RPG_Frozen", "RPG_Root"))
                 .allMatch(id -> EntityEffect.getAssetMap().getAsset(id) != null);

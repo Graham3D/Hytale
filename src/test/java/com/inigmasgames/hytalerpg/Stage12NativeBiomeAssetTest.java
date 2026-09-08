@@ -11,6 +11,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Actual installed loader/asset checks. NOT connected spawn-location or reward execution proof. */
 class Stage12NativeBiomeAssetTest {
+    @Test void installedDamageSupportsTransientRootContextWithIdentityValidation(){
+        var fixture=new Stage10SummonTest.Harness();assertTrue(fixture.cast().committed());var context=fixture.context;
+        var damage=new com.hypixel.hytale.server.core.modules.entity.damage.Damage(com.hypixel.hytale.server.core.modules.entity.damage.Damage.NULL_SOURCE,0,1f);
+        var metadata=new com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageMetadata(context.request().actorId(),context.rootCastId(),context.skillInstanceId(),context.request().correlationId(),1,100);
+        com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter.attachExecutionContext(damage,metadata,context);
+        assertSame(context,com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter.executionContext(damage));
+        var foreign=new com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageMetadata(UUID.randomUUID(),context.rootCastId(),context.skillInstanceId(),context.request().correlationId(),1,100);
+        assertThrows(IllegalArgumentException.class,()->com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter.attachExecutionContext(damage,foreign,context));
+        assertNull(com.hypixel.hytale.server.core.modules.entity.damage.Damage.META_REGISTRY.getMetaKeyForCodecKey("InigmasGames:RpgMeaningfulRoot"));
+        var next=new com.hypixel.hytale.server.core.modules.entity.damage.Damage(com.hypixel.hytale.server.core.modules.entity.damage.Damage.NULL_SOURCE,0,1f);
+        assertNull(com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter.executionContext(next));
+    }
     private Path assets(){return Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install","pre-release","package","game","latest","Assets.zip");}
     @Test void installedFileContextLoaderResolvesAllFourQualifiedPilotBiomes()throws Exception{
         try(var zip=FileSystems.newFileSystem(assets());var io=FileIO.openFileIOSystem(new FileIOSystem(){

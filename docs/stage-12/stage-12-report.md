@@ -489,3 +489,71 @@ Following the owner's latest efficiency instruction, remaining related work uses
 targeted tests during implementation, with complete retained regression, normal
 three-mod smoke, archive and rollback checks at Stage12 closure and Stage13 final
 candidate. No assertions, behavior or connected gate is relaxed by that batching.
+
+## Cohort G — meaningful-use mastery and observed control
+
+Continued from 8fe4ff8. This is an intermediate implementation checkpoint, not
+Stage12 closure. **530 targeted tests** (506 root and 24 installed-API tests)
+passed with zero failures/errors/skips. Full retained regression and rollback
+validation remain required at stage closure. Normal isolated three-mod boot and
+clean stop passed on the exact archive; connected gate is UNVERIFIED.
+
+Mastery reads persisted skill XP when capturing a paid root snapshot: +2%
+scalable magnitude per level above one, capped at +38%. Cost, cooldown, geometry
+and native HUD/input are unchanged. A shared root budget credits one meaningful
+manual use; sustained channel/Aura/summon roots earn at most one credit per
+actual five-second interval, without catch-up. Children share primary instance
+and durable identity. Concurrency, replay and uncertain-write tests preserve
+exactly-once credit. Movement mastery remains unavailable without an
+authoritative hostile-attack avoidance witness; ordinary travel earns nothing.
+
+Installed Store.invoke consumes queued command/death work before returning.
+Mastery cannot safely run only after executeDamage returns: lethal-hit encounter
+context may already be detached. A nonpersistent Damage metadata key carries
+validated execution context to Inspect, after actual Health loss and before
+death payout. Actor/root/instance/correlation must match. Context is not saved
+or sent over the network. Tests instantiate installed Damage/MetaRegistry; that
+does not prove connected native execution.
+
+Control compares native EffectController before/after application. New
+immobilization or stronger effective slow qualifies; refresh, slow under
+immobilization and Root on Frozen do not. Root Tether previously recorded only
+kernel status; its callback now synchronizes the native effect through the
+common status adapter. Taunt requires an observed changed native target. Fear
+requires observed displacement away from the source after steering, with bounded
+elapsed time/displacement; requesting steering alone is not evidence.
+
+Healing requires actual restoration intersecting recent hostile injury on an
+eligible contributor. A bounded ephemeral interval ledger excludes overheal,
+friendly/self damage, unrelated losses and already-restored intervals. RPG Health
+costs invalidate provenance before writing Health. Native regeneration readback
+consumes restored intervals; logout/restart discards ephemeral wounds. Installed
+stat-update lists coalesce changes and are not an immutable Health history.
+Arbitrary third-party direct Health writes are not proven observable; such
+integrations must invalidate provenance. Bounds: 4096 recipients/64 intervals
+each. No second Health authority or regeneration policy is introduced. Actual
+shield/Managuard consumption, healing, damage and effective control share the
+persisted encounter eligibility and mastery budget.
+
+Two earlier farm tests expected new low Health to reopen an encounter after its
+unchanged-progress window expired. That contradicted the master's requirement
+for a **new enemy**. Assertions now require rejection after expiry, including
+persistence/reload; a distinct enemy remains eligible. The store also rejects
+reopening an exhausted persisted watermark. No tests were removed; the gate was
+strengthened, not bypassed.
+
+First isolated boot failed: a dependency named abstract Regenerate, while Hytale
+registers PlayerRegenerateStatsSystem. `failed-registration-01.txt` and summary
+retain that failure/hash. The dependency now names the actual registered system;
+rerun boot/registration and shutdown passed. Initial Java fixture compilation
+and the outdated farm assertion also failed during development and were corrected.
+
+Artifact SHA-256: 3DBB0CFC764CC68C1D29ABA20915C48286D6E8B640738466C6263FA333AAEF78.
+Rollback F: 2964B5D9FA94A903D7BC7B77F9543B2FA5B9932FF8EA6023B560B1F4289289A5.
+Evidence: `evidence/stage-12/cohort-g/`; scope explicitly
+TARGETED_INTERMEDIATE_NOT_STAGE_CLOSURE. Packaged UI validation, protected-path
+comparison, 87/66 counts and 60 zero-native-cost triggers passed. Player8/plan35
+unchanged; restore players, earned-rewards and encounters together. No live
+deployment, owner-art edit or Google Drive write. Native control, healing,
+mastery, input/rendering and latency require connected verification. Acquisition,
+Insight spending and respec are next.

@@ -38,6 +38,8 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
                 || compiledPlan == null || snapshot == null || barrageBatch<0 || barrageBatch>2 || echo&&barrageBatch>0
                 ||leechBudget==null||!leechBudget.owns(request.actorId(),rootCastId)||effects==null||!effects.owns(request.actorId(),rootCastId))
             throw new IllegalArgumentException("Committed execution context is incomplete");
+        effects.mastery().bindPrimary(skillInstanceId,profile.summon()!=null||profile.connection()!=null&&profile.connection().channel()
+                ||profile.support()!=null&&profile.support().aura());
         if(multistrikeIndex<0||multistrikeIndex>2||multistrikeIndex>0&&(echo||barrageBatch>0))throw new IllegalArgumentException("Invalid Multistrike child identity");
         if(secondaryKind==null||!java.util.Set.of("","cleaving_edge","phantom_reach","shockwave","cascade","aftermath","hemorrhage","terror","shatter","proliferation","critical_trigger","kill_trigger","projectile_status").contains(secondaryKind)
                 ||!secondaryKind.isEmpty()&&(echo||barrageBatch>0||multistrikeIndex>0))throw new IllegalArgumentException("Invalid secondary identity");

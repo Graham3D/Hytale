@@ -55,6 +55,15 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     public SupportRuntime runtime(){return runtime;}
     private HytaleEncounterRewards encounterRewards;
     public void configureEncounterRewards(HytaleEncounterRewards rewards){encounterRewards=java.util.Objects.requireNonNull(rewards);}
+    void invalidateHealthCredit(UUID world,UUID actor){if(encounterRewards!=null)encounterRewards.invalidateHealthCredit(world,actor);}
+    void forgetProgressionPlayer(UUID actor){if(encounterRewards!=null)encounterRewards.forgetPlayer(actor);}
+    void observeControl(Store<EntityStore> store,Ref<EntityStore> target,SkillExecutionContext context,Runnable operation){
+        var before=HytaleAreaStatuses.observed(store,target);operation.run();
+        if(HytaleAreaStatuses.observed(store,target).improvedFrom(before))controlResolved(store,target,context,false,"NATIVE_EFFECT_STATE_CHANGED");
+    }
+    void controlResolved(Store<EntityStore> store,Ref<EntityStore> target,SkillExecutionContext context,boolean taunt,String evidence){
+        if(encounterRewards!=null)encounterRewards.controlResolved(store,target,context,taunt,evidence);
+    }
     public void absorptionResolved(Store<EntityStore> store,Ref<EntityStore> recipient,Damage damage,FiniteSupportEffects.Absorption absorption){
         if(encounterRewards!=null)encounterRewards.absorptionResolved(store,recipient,damage,absorption);
     }

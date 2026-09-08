@@ -10,6 +10,12 @@ public final class SupportEffectProjection implements Component<EntityStore> {
     private static ComponentType<EntityStore,SupportEffectProjection> type;
     UUID tauntOwner;
     String lastTauntObservation="";
+    String tauntCandidate="";
+    boolean tauntChanged,tauntCredited;
+    String fearCandidate="",fearCredited="";
+    com.inigmasgames.hytalerpg.execution.math.Vec3 fearPosition,fearSource;
+    double fearRequestedAt;
+    boolean fearRequested;
     double elapsed;
     String presentationAsset="";
     boolean presentationFailureLogged;

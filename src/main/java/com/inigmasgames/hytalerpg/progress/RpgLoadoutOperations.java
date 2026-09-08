@@ -16,6 +16,7 @@ import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
 /** Stable backend seam for command UI and future CanvasUI/Noesis adapters. */
 public interface RpgLoadoutOperations {
     default void addLoadoutMutationListener(java.util.function.Consumer<UUID> listener) { }
+    default long masteryXp(UUID player,String skill){return getPresentationView(player).state().skillMastery.getOrDefault(skill,0L);}
     MutationResult equipSkill(UUID player, SkillSlot slot, SkillId skill);
     MutationResult unequipSkill(UUID player, SkillSlot slot);
     MutationResult equipPassive(UUID player, PassiveSlot slot, PassiveId passive);

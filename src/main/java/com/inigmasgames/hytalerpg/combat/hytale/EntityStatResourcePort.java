@@ -9,7 +9,9 @@ import com.inigmasgames.hytalerpg.combat.resource.ResourceType;
 /** Direct adapter over Hytale's live EntityStatMap. */
 public final class EntityStatResourcePort implements NativeResourcePort {
     private final EntityStatMap stats;
-    public EntityStatResourcePort(EntityStatMap stats) { this.stats = stats; }
+    private final Runnable healthWriteObserver;
+    public EntityStatResourcePort(EntityStatMap stats) { this(stats,()->{}); }
+    public EntityStatResourcePort(EntityStatMap stats,Runnable healthWriteObserver) {this.stats=stats;this.healthWriteObserver=java.util.Objects.requireNonNull(healthWriteObserver);}
     @Override public double current(ResourceType type) { return value(type).get(); }
     @Override public double maximum(ResourceType type) {
         return type==ResourceType.MANA?NativeManaReservationProjection.totalMaximum(value(type)):value(type).getMax();
@@ -27,6 +29,7 @@ public final class EntityStatResourcePort implements NativeResourcePort {
         EntityStatValue stat = require(stats.get(index), type);
         if(!Double.isFinite(value))throw new IllegalArgumentException("Non-finite native resource value");
         if(type==ResourceType.HEALTH)com.inigmasgames.hytalerpg.combat.resource.RpgResourceService.nativeHealthTarget(stat.get(),value);
+        if(type==ResourceType.HEALTH)healthWriteObserver.run();
         stats.setStatValue(index, (float) Math.max(stat.getMin(), Math.min(stat.getMax(), value)));
     }
     private EntityStatValue value(ResourceType type) { return require(stats.get(index(type)), type); }

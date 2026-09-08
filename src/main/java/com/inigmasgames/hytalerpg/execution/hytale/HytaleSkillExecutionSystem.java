@@ -173,6 +173,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         support=new HytaleSupportSystem(loadouts,kernel,fieldCapacity,trace,vfx,bosses,this::auraPayload);return support;
     }
     /** Aura pulses use the same calculation/native damage boundary as the other families. */
+    private void observeControl(Store<EntityStore> store,Ref<EntityStore> target,SkillExecutionContext context,Runnable operation){
+        if(support==null)operation.run();else support.observeControl(store,target,context,operation);
+    }
     private void auraPayload(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> actor,SkillExecutionContext context,List<UUID> targets,int tick,boolean chill){
         var port=new Port(store,actor,store.getComponent(actor,PlayerRef.getComponentType()),store.getComponent(actor,Player.getComponentType()),
                 store.getComponent(actor,EntityStatMap.getComponentType()),null,null);
@@ -183,9 +186,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(chill){
                 if(buffer==null||store.getComponent(ref,EffectControllerComponent.getComponentType())==null)throw new IllegalStateException("AURA_NATIVE_STATUS_ADAPTER_UNAVAILABLE");
                 buffer.ensureComponent(ref,AreaStatusProjection.getComponentType());
-                HytaleAreaStatuses.applyChill(kernel,context,id,SupportNativeEffects.control(store,ref,bosses),1,
+                observeControl(store,ref,context,()->{HytaleAreaStatuses.applyChill(kernel,context,id,SupportNativeEffects.control(store,ref,bosses),1,
                         (event,details)->emit(context,event,details),chillSources);
-                HytaleAreaStatuses.synchronize(kernel.statuses(),id,ref,store,actor);
+                HytaleAreaStatuses.synchronize(kernel.statuses(),id,ref,store,actor);});
                 port.applyPassiveAreaPosition(context,ref,vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition()));
             }else{
                 var cause=context.profile().support().element().equals("COLD")?DamageCause.getAssetMap().getAsset("Ice"):
@@ -294,6 +297,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
 
     private void cancel(UUID actor, String reason, CommandBuffer<EntityStore> buffer) {
+        if(support!=null)support.forgetProgressionPlayer(actor);
         executions.forgetPassiveState(actor);
         kernel.statuses().forgetSource(actor);
         if(summons!=null)summons.cancel(actor,reason);
@@ -382,7 +386,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     && store.getComponent(actor, DeathComponent.getComponentType()) == null;
         }
         @Override public Equipment equipment() { return equipment.read(actor, store); }
-        @Override public NativeResourcePort resources() { return new EntityStatResourcePort(stats); }
+        @Override public NativeResourcePort resources() { return new EntityStatResourcePort(stats,()->{if(support!=null)support.invalidateHealthCredit(playerRef.getWorldUuid(),playerRef.getUuid());}); }
         @Override public SkillExecutionResult stopActiveSupport(Stage04SkillProfile profile){return support==null?null:
                 support.runtime().stopActive(playerRef.getUuid(),profile.skillId(),support.port(store,actor));}
         @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
@@ -757,11 +761,17 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                         applyProjectileKnockback(context,value);
                     }
                     if(!outcome.cancelled()&&!authored.status().isBlank()&&ref.isValid()) {
+                        observeControl(store,ref,context,()->{
                         var npc=store.getComponent(ref,NPCEntity.getComponentType());
                         var control=areaControls.resolve(npc.getRoleName(),value.protectedTarget(),value.boss());
                         var status=kernel.statuses().apply(UUID.fromString(target.id()),RpgStatusType.valueOf(authored.status()),control,authored.statusSeconds());
                         emit(context,status.outcome()==com.inigmasgames.hytalerpg.combat.status.StatusService.Outcome.REJECTED?RpgTraceEventType.STATUS_REJECTED:RpgTraceEventType.STATUS_APPLIED,
                                 Map.of("status",status.type(),"targetId",target.id(),"seconds",status.remainingSeconds(),"reason",status.detail()));
+                        if(buffer==null||store.getComponent(ref,EffectControllerComponent.getComponentType())==null)
+                            throw new IllegalStateException("CONNECTION_NATIVE_CONTROL_UNAVAILABLE");
+                        buffer.ensureComponent(ref,AreaStatusProjection.getComponentType());
+                        HytaleAreaStatuses.synchronize(kernel.statuses(),UUID.fromString(target.id()),ref,store,actor);
+                        });
                     }
                     if(!outcome.cancelled()&&effectCenter!=null&&ProfileComponentPolicy.enemyPosition(context.profile()))applyPassiveAreaPosition(context,ref,effectCenter);
                     return outcome.actualHealthLoss();
@@ -882,8 +892,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                         applyPeriodicStatus(context, candidate, PeriodicStatusRuntime.Kind.valueOf(payload.status()),
                                 payload.statusSeconds(), payload.status().equals("BURN") ? .10 : .06);
                     } else {
-                        HytaleAreaStatuses.apply(kernel, context, candidate, payload, control, store, actor,
-                                (event, details) -> emit(context, event, details),chillSources);
+                        observeControl(store,reference,context,()->HytaleAreaStatuses.apply(kernel, context, candidate, payload, control, store, actor,
+                                (event, details) -> emit(context, event, details),chillSources));
                         if (!payload.status().isBlank()) buffer.ensureAndGetComponent(reference, AreaStatusProjection.getComponentType());
                     }
                     if (payload.displacement() > 0 && control.displacementMultiplier() > 0 && reference.isValid()
@@ -1028,7 +1038,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private DamageOutcome resolvedStrikeSecondary(SkillExecutionContext child,StrikeGeometryService.Candidate<Ref<EntityStore>> target,double amount){
             boolean eligible=child.compiledPlan().resources().leeching()&&!target.protectedTarget()&&HytaleAreaQueries.hostile(store,target.handle(),actor);
             var nativeResult=new HytaleDamageAdapter().applyResolved(target.handle(),store,actor,DamageCause.PHYSICAL,
-                    new HytaleDamageMetadata(playerRef.getUuid(),child.rootCastId(),child.skillInstanceId(),child.request().correlationId(),amount,Double.NaN,child.skillInstanceId(),false,HytaleDamageMetadata.Origin.DIRECT),amount);
+                    new HytaleDamageMetadata(playerRef.getUuid(),child.rootCastId(),child.skillInstanceId(),child.request().correlationId(),amount,Double.NaN,child.skillInstanceId(),false,HytaleDamageMetadata.Origin.DIRECT),amount,null,child);
             if(eligible)recoverObservedLeech(child,target,nativeResult,child.skillInstanceId());
             double lost=Double.isFinite(nativeResult.healthBefore())&&Double.isFinite(nativeResult.healthAfter())?Math.max(0,nativeResult.healthBefore()-nativeResult.healthAfter()):-1;
             return new DamageOutcome(nativeResult.preMitigationAmount(),lost,nativeResult.cancelled());
@@ -1218,7 +1228,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     new HytaleDamageMetadata(playerRef.getUuid(), context.rootCastId(), context.skillInstanceId(),
                             context.request().correlationId(), result.preMitigationDamage(), Double.NaN,effectId,canProc,
                             context.derivedRelease()||context.request().origin()==SkillExecutionRequest.Origin.TRIGGERED?HytaleDamageMetadata.Origin.TRIGGERED:periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT), result,
-                    com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage.calculated(context.compiledPlan().hitConditions(),buckets,result,context.snapshot().criticalMultiplier()));
+                    com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage.calculated(context.compiledPlan().hitConditions(),buckets,result,context.snapshot().criticalMultiplier()),context);
             double after = health(targetStats);
             if(leechEligible)recoverObservedLeech(context,target,nativeResult,effectId);
             if(!context.compiledPlan().conditionalRepeat().isEmpty()){
@@ -1255,7 +1265,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         private DamageOutcome resolvedProcDamage(SkillExecutionContext child,StrikeGeometryService.Candidate<Ref<EntityStore>> target,double amount,DamageCause cause,boolean periodic,String effect){
             var result=new HytaleDamageAdapter().applyResolved(target.handle(),store,actor,cause,new HytaleDamageMetadata(playerRef.getUuid(),child.rootCastId(),child.skillInstanceId(),child.request().correlationId(),amount,Double.NaN,effect,false,
-                    child.derivedRelease()||child.request().origin()==SkillExecutionRequest.Origin.TRIGGERED?HytaleDamageMetadata.Origin.TRIGGERED:periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT),amount);
+                    child.derivedRelease()||child.request().origin()==SkillExecutionRequest.Origin.TRIGGERED?HytaleDamageMetadata.Origin.TRIGGERED:periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT),amount,null,child);
             if(child.compiledPlan().resources().leeching()&&HytaleAreaQueries.hostile(store,target.handle(),actor))recoverObservedLeech(child,target,result,effect);
             return new DamageOutcome(result.preMitigationAmount(),Math.max(0,result.healthBefore()-result.healthAfter()),result.cancelled());
         }
@@ -1291,6 +1301,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             };
         }
         private void applyStatus(SkillExecutionContext context,
+                                 StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
+            observeControl(store,target.handle(),context,()->applyStatusObserved(context,target));
+        }
+        private void applyStatusObserved(SkillExecutionContext context,
                                  StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
             UUID targetId = UUID.fromString(target.stableId());
             emit(context, RpgTraceEventType.STATUS_REQUEST, Map.of("targetId", target.stableId(),
@@ -1419,9 +1433,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     emit(context,RpgTraceEventType.STATUS_REJECTED,Map.of("targetId",targetId,"status","CHILL","reason","PROJECTILE_NATIVE_STATUS_ADAPTER_UNAVAILABLE"));
                     return "PROJECTILE_NATIVE_STATUS_ADAPTER_UNAVAILABLE";
                 }
+                var nativeBefore=HytaleAreaStatuses.observed(store,target.handle());
                 var batch=HytaleAreaStatuses.applyChill(kernel,context,targetId,SupportNativeEffects.control(store,target.handle(),bosses),1,(event,details)->emit(context,event,details),chillSources);
                 buffer.ensureComponent(target.handle(),AreaStatusProjection.getComponentType());
                 HytaleAreaStatuses.synchronize(kernel.statuses(),targetId,target.handle(),store,actor);
+                if(support!=null&&HytaleAreaStatuses.observed(store,target.handle()).improvedFrom(nativeBefore))
+                    support.controlResolved(store,target.handle(),context,false,"NATIVE_EFFECT_STATE_CHANGED");
                 var result=batch.results().getLast();return result.outcome().name()+':'+result.type().name()+":stacks="+result.stacks();
             }
             var result = projectile.statusSeconds() > 0.0
@@ -1804,10 +1821,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 String result;
                 if(payload.kind()==ProliferationRuntime.Kind.CHILL){
                     if(store.getComponent(ref,EffectControllerComponent.getComponentType())==null)return "PROLIFERATION_NATIVE_CHILL_CONTROLLER_MISSING";
+                    var nativeBefore=HytaleAreaStatuses.observed(store,ref);
                     var before=kernel.statuses().inspect(target.id()).active().get(RpgStatusType.CHILL);
                     var applied=kernel.statuses().applyChill(c.request().actorId(),c.rootCastId(),target.id(),SupportNativeEffects.control(store,ref,bosses),payload.stacks(),false,payload.remaining());
                     chillSources.observed(c,target.id(),before,kernel.statuses().inspect(target.id()).active().get(RpgStatusType.CHILL),System.nanoTime()/1e9);
                     buffer.ensureComponent(ref,AreaStatusProjection.getComponentType());HytaleAreaStatuses.synchronize(kernel.statuses(),target.id(),ref,store,port.actor);
+                    if(support!=null&&HytaleAreaStatuses.observed(store,ref).improvedFrom(nativeBefore))
+                        support.controlResolved(store,ref,c,false,"NATIVE_EFFECT_STATE_CHANGED");
                     result=applied.results().getLast().outcome()+":"+applied.results().getLast().type();
                 }else{
                     var source=new PeriodicStatusRuntime.Source(c.request().actorId(),c.profile().skillId(),target.id(),PeriodicStatusRuntime.Kind.valueOf(payload.kind().name()));

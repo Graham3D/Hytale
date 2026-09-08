@@ -50,7 +50,9 @@ public final class FileEncounterStore {
         var spawn=value.spawn();var old=loadLocked(spawn.world(),spawn.enemy()).orElseThrow(()->new IllegalStateException("UNREGISTERED_ENCOUNTER"));
         if(!old.spawn().equals(spawn))throw new IllegalStateException("SPAWN_CONTEXT_CHANGED");
         if(deathLocked(spawn.world(),spawn.enemy()).isPresent())throw new IllegalStateException("ENCOUNTER_ALREADY_DIED");
-        if(old.disqualified()&&!value.disqualified())throw new IllegalStateException("ENCOUNTER_DISQUALIFICATION_ROLLBACK");
+          if(old.disqualified()&&!value.disqualified())throw new IllegalStateException("ENCOUNTER_DISQUALIFICATION_ROLLBACK");
+          if(old.firstCombat()>=0&&old.lastObserved()-old.progressAt()>EncounterContributions.FARM_WINDOW_MS&&value.progressAt()!=old.progressAt())
+              throw new IllegalStateException("EXHAUSTED_FARM_ENCOUNTER_CANNOT_REOPEN");
         if(value.lastObserved()<old.lastObserved()||value.lowestHealthFraction()>old.lowestHealthFraction()
                 ||old.firstCombat()>=0&&(value.firstCombat()!=old.firstCombat()||value.progressAt()<old.progressAt()))throw new IllegalStateException("ENCOUNTER_WATERMARK_ROLLBACK");
         write(keyPath("contexts",spawn.world(),spawn.enemy()),value,true);fault.accept(Boundary.AFTER_CONTEXT);return null;

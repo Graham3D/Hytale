@@ -231,6 +231,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     /** Progression eligibility needs no graph compilation or native HUD projection. */
     public int characterLevel(UUID player) {Holder holder=holder(player);synchronized(holder){return holder.state.level;}}
+    @Override public long masteryXp(UUID player,String skill){Holder holder=holder(player);synchronized(holder){return holder.state.skillMastery.getOrDefault(skill,0L);}}
 
     @Override public RpgLoadoutView getLoadout(UUID player) {
         Holder holder = holder(player);

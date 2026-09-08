@@ -311,6 +311,11 @@ public final class SkillExecutionService {
             ModifierBuckets modifiers = new ModifierBuckets(prepared.attunementStacks>0?java.util.List.of(.03*prepared.attunementStacks):java.util.List.of(), java.util.List.of(),
                     releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
                     payloadLess);
+            double mastery=com.inigmasgames.hytalerpg.progress.ProgressionMath.masteryMagnitude(loadouts.masteryXp(prepared.request.actorId(),prepared.profile.skillId()));
+            if(mastery!=1){
+                var more=new java.util.ArrayList<>(modifiers.more());more.add(mastery);
+                modifiers=new ModifierBuckets(modifiers.increased(),modifiers.reduced(),more,modifiers.less());
+            }
             if(prepared.ruthlessEmpowered)modifiers=modifiers.withIncreased(.60);
             if(prepared.profile.summon()!=null)modifiers=port.captureSummonModifiers(modifiers);
             var snapshot = kernel.snapshots().capture(prepared.rootCastId, prepared.instanceId,

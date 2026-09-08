@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c','d','e','f')][string]$Cohort='a')
+param([ValidateSet('a','b','c','d','e','f','g')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $passiveRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $passiveConfig=@{
@@ -9,6 +9,7 @@ $passiveConfig=@{
     d=@{tests=1529;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-c\artifacts\HytaleRPG-0.0.24.jar'}
     e=@{tests=1552;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-d\artifacts\HytaleRPG-0.0.24.jar'}
     f=@{tests=1576;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-e\artifacts\HytaleRPG-0.0.24.jar'}
+    g=@{tests=530;targeted=$true;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-f\artifacts\HytaleRPG-0.0.24.jar'}
 }[$Cohort]
 if(-not $passiveConfig){throw 'Cohort must declare tested scope before evidence capture'}
 $passiveEvidence=Join-Path $passiveRoot "evidence\stage-12\cohort-$Cohort"
@@ -17,7 +18,9 @@ $passiveArchive=Join-Path $passiveEvidence 'artifacts\HytaleRPG-0.0.24.jar'
 $passiveHash=(Get-FileHash -LiteralPath $passiveJar).Hash
 if((Test-Path -LiteralPath $passiveArchive) -and (Get-FileHash -LiteralPath $passiveArchive).Hash -ne $passiveHash){throw 'Never overwrite an archived cohort build'}
 $passiveTests=@();$passiveCount=0
-foreach($passiveFile in Get-ChildItem -Path "$passiveRoot\build\test-results\test","$passiveRoot\build\test-results\nativeControlTest","$passiveRoot\canvas-ui\build\test-results\test" -Filter 'TEST-*.xml'){
+$passiveTestPaths=@("$passiveRoot\build\test-results\test","$passiveRoot\build\test-results\nativeControlTest")
+if(-not $passiveConfig.targeted){$passiveTestPaths+="$passiveRoot\canvas-ui\build\test-results\test"}
+foreach($passiveFile in Get-ChildItem -Path $passiveTestPaths -Filter 'TEST-*.xml'){
     [xml]$passiveXml=Get-Content -Raw -LiteralPath $passiveFile.FullName;$passiveSuite=$passiveXml.testsuite
     if([int]$passiveSuite.failures -or [int]$passiveSuite.errors -or [int]$passiveSuite.skipped){throw 'All retained tests must pass without skips'}
     $passiveCount += [int]$passiveSuite.tests
@@ -31,9 +34,10 @@ if($passiveSmoke.jarSha256 -ne $passiveHash -or $passiveSmoke.processExitCode -n
 & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $passiveJar
 if($Cohort -ne 'a' -and -not $passiveSmoke.rewardStoreConfigured){throw 'Durable reward store must be configured at startup'}
 if($Cohort -notin @('a','b') -and -not $passiveSmoke.encounterRegistryResolved){throw 'Audited native pilot roles must resolve at startup'}
-if($Cohort -in @('d','e','f') -and -not $passiveSmoke.encounterStoreConfigured){throw 'Persistent encounter store must be configured at startup'}
-if($Cohort -in @('e','f') -and -not $passiveSmoke.nativeRewardHooksRegistered){throw 'Native reward hooks must be registered at startup'}
-if($Cohort -eq 'f' -and -not $passiveSmoke.supportCreditHooksRegistered){throw 'Support credit callbacks must be configured at startup'}
+if($Cohort -in @('d','e','f','g') -and -not $passiveSmoke.encounterStoreConfigured){throw 'Persistent encounter store must be configured at startup'}
+if($Cohort -in @('e','f','g') -and -not $passiveSmoke.nativeRewardHooksRegistered){throw 'Native reward hooks must be registered at startup'}
+if($Cohort -in @('f','g') -and -not $passiveSmoke.supportCreditHooksRegistered){throw 'Support credit callbacks must be configured at startup'}
+if($Cohort -eq 'g' -and -not $passiveSmoke.masteryHooksRegistered){throw 'Meaningful mastery callbacks must be configured at startup'}
 $passiveProtected=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI','canvas-ui/src',
     'src/main/resources/rpg/runtime/stage-04-skills.json','src/main/resources/rpg/runtime/stage-05-projectiles.json',
     'src/main/resources/Server/ProjectileConfigs','src/main/resources/rpg/balance',
@@ -66,6 +70,7 @@ $passiveLive=@(Get-ChildItem -LiteralPath "$env:APPDATA\Hytale\data\pre-release\
     sourceHead=(& git -C $passiveRoot rev-parse HEAD).Trim();branch=(& git -C $passiveRoot branch --show-current).Trim()
     status='IMPLEMENTATION_IN_PROGRESS';cohortStatus='IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION';localGate='PASS';connectedGate='UNVERIFIED'
     cohortSkills=@();cohortPassives=$passiveConfig.passives;tests=$passiveCount;failures=0;errors=0;skipped=0
+    regressionScope=$(if($passiveConfig.targeted){'TARGETED_INTERMEDIATE_NOT_STAGE_CLOSURE'}else{'FULL_RETAINED'})
     jarSha256=$passiveHash;rollbackSha256=(Get-FileHash -LiteralPath $passiveRollback).Hash
     serverSha256=(Get-FileHash -LiteralPath (Join-Path $passivePackage 'Server\HytaleServer.jar')).Hash
     assetsSha256=(Get-FileHash -LiteralPath (Join-Path $passivePackage 'Assets.zip')).Hash
