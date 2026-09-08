@@ -11,7 +11,8 @@ import java.util.function.LongSupplier;
 public final class RpgCooldownService {
     private final CombatBalanceProfile profile;
     private final LongSupplier nanoTime;
-    private final Map<Key, Long> endsAtNanos = new HashMap<>();
+    private final Map<Key, Work> work = new HashMap<>();
+    private final Map<UUID, AuraRate> auraRates = new HashMap<>();
     public RpgCooldownService(CombatBalanceProfile profile, LongSupplier nanoTime) {
         this.profile = profile; this.nanoTime = nanoTime;
     }
@@ -20,13 +21,32 @@ public final class RpgCooldownService {
                                                   double durationFactor, double wisdomRecovery,
                                                   CompiledSkillPlan.KernelModifiers modifiers) {
         if (!canActivate(actor, skillId)) throw new IllegalStateException("Skill is already on cooldown");
-        Calculation calculation = calculate(baseSeconds, durationFactor, wisdomRecovery, modifiers);
-        endsAtNanos.put(new Key(actor, skillId), nanoTime.getAsLong() + Math.round(calculation.finalSeconds * 1_000_000_000.0));
+        Calculation calculation = calculate(actor,baseSeconds,durationFactor,wisdomRecovery,modifiers);
+        long now=nanoTime.getAsLong();double baseRecovery=wisdomRecovery+(modifiers==null?0:modifiers.cooldownRecoveryBonus());
+        double rate=rate(actor,baseRecovery,now);
+        work.put(new Key(actor,skillId),new Work(calculation.finalSeconds*rate,baseRecovery,now));
         return calculation;
+    }
+    public synchronized Calculation calculate(UUID actor,double baseSeconds,double durationFactor,double wisdomRecovery,
+                                               CompiledSkillPlan.KernelModifiers modifiers){
+        var aura=auraRates.get(actor);long now=nanoTime.getAsLong();
+        double bonus=aura!=null&&aura.expires>now?aura.recovery:0;
+        double penalty=aura!=null&&aura.expires>now?aura.durationMultiplier:1;
+        return calculate(baseSeconds,durationFactor*penalty,wisdomRecovery+bonus,modifiers);
+    }
+    /** Preserve completed cooldown work at every membership transition; stale Aura leases expire automatically. */
+    public synchronized void setAuraRate(UUID actor,double recovery,double durationMultiplier,double leaseSeconds){
+        if(!Double.isFinite(recovery)||recovery<0||!Double.isFinite(durationMultiplier)||durationMultiplier<1
+                ||!Double.isFinite(leaseSeconds)||leaseSeconds<=0||leaseSeconds>1)throw new IllegalArgumentException("Invalid cooldown Aura rate");
+        long now=nanoTime.getAsLong();
+        work.forEach((key,value)->{if(key.actor.equals(actor))advance(actor,value,now);});
+        if(recovery==0&&durationMultiplier==1)auraRates.remove(actor);
+        else auraRates.put(actor,new AuraRate(recovery,durationMultiplier,now+Math.round(leaseSeconds*1e9)));
     }
     public Calculation calculate(double baseSeconds, double durationFactor, double wisdomRecovery,
                                  CompiledSkillPlan.KernelModifiers modifiers) {
-        if (baseSeconds < 0.0 || durationFactor < 0.0) throw new IllegalArgumentException("Cooldown values cannot be negative");
+        if (!Double.isFinite(baseSeconds)||!Double.isFinite(durationFactor)||!Double.isFinite(wisdomRecovery)||baseSeconds < 0.0 || durationFactor < 0.0)
+            throw new IllegalArgumentException("Cooldown values must be finite and non-negative");
         double passiveRecovery = modifiers == null ? 0.0 : modifiers.cooldownRecoveryBonus();
         double totalRecovery = clamp(wisdomRecovery + passiveRecovery, 0.0, profile.cooldownRecoveryCap);
         double seconds = Math.max(profile.minimumCooldownSeconds, baseSeconds * durationFactor / (1.0 + totalRecovery));
@@ -34,16 +54,28 @@ public final class RpgCooldownService {
     }
     public synchronized double remaining(UUID actor, String skillId) {
         Key key = new Key(actor, skillId);
-        Long end = endsAtNanos.get(key);
-        if (end == null) return 0.0;
-        long remaining = end - nanoTime.getAsLong();
-        if (remaining <= 0) { endsAtNanos.remove(key); return 0.0; }
-        return remaining / 1_000_000_000.0;
+        var value=work.get(key);if(value==null)return 0;
+        long now=nanoTime.getAsLong();advance(actor,value,now);
+        if(value.remaining<=1e-9){work.remove(key);return 0;}
+        return value.remaining/rate(actor,value.baseRecovery,now);
     }
-    public synchronized boolean clear(UUID actor, String skillId) { return endsAtNanos.remove(new Key(actor, skillId)) != null; }
-    public synchronized void clear(UUID actor) { endsAtNanos.keySet().removeIf(key -> key.actor.equals(actor)); }
+    private void advance(UUID actor,Work value,long now){
+        if(now<value.last)throw new IllegalStateException("Cooldown clock moved backwards");
+        var aura=auraRates.get(actor);long boundary=aura==null?value.last:Math.max(value.last,Math.min(now,aura.expires));
+        if(boundary>value.last)value.remaining-=(boundary-value.last)/1e9*rate(actor,value.baseRecovery,value.last);
+        if(now>boundary)value.remaining-=(now-boundary)/1e9*(1+clamp(value.baseRecovery,0,profile.cooldownRecoveryCap));
+        value.last=now;
+    }
+    private double rate(UUID actor,double baseRecovery,long now){
+        var aura=auraRates.get(actor);boolean active=aura!=null&&now<aura.expires;
+        return (1+clamp(baseRecovery+(active?aura.recovery:0),0,profile.cooldownRecoveryCap))/(active?aura.durationMultiplier:1);
+    }
+    public synchronized boolean clear(UUID actor, String skillId) { return work.remove(new Key(actor, skillId)) != null; }
+    public synchronized void clear(UUID actor) { work.keySet().removeIf(key -> key.actor.equals(actor));auraRates.remove(actor); }
     private static double clamp(double value, double min, double max) { return Math.max(min, Math.min(max, value)); }
     private record Key(UUID actor, String skill) { }
+    private record AuraRate(double recovery,double durationMultiplier,long expires){}
+    private static final class Work {double remaining;final double baseRecovery;long last;Work(double remaining,double baseRecovery,long last){this.remaining=remaining;this.baseRecovery=baseRecovery;this.last=last;}}
     public record Calculation(double baseSeconds, double durationFactor, double wisdomRecovery,
                               double passiveRecovery, double appliedRecovery, double finalSeconds) { }
 }

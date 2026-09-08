@@ -2,7 +2,7 @@
 
 ## Current state
 
-**COHORT_B_LOCAL_GATE_COMPLETE / STAGE_IMPLEMENTATION_IN_PROGRESS**.
+**COHORT_D_LOCAL_GATE_COMPLETE / STAGE_IMPLEMENTATION_IN_PROGRESS**.
 Version is `.21` / R028, not deployed. Stage 08 local completion is committed/pushed as `31d4a74`, with 320
 passing retained tests and its final `.20` artifact preserved in
 `evidence/stage-08/cohort-b/`. Connected RPG casting remains UNVERIFIED after the
@@ -431,3 +431,99 @@ artifact and `.20` rollback are in `evidence/stage-09/cohort-c/`. Exact JAR SHA-
 Protected HUD/XP/Stage04-05-profile/projectile/cost-formula paths remain unchanged.
 This gate includes the explicit Flame Weapon pre-payment rejection, not a claim
 that its missing native hit attribution was implemented or connected-tested.
+
+## Cohort D — remaining Aura skills
+
+Cohort C was committed/pushed as `afbf88d`. The exact Thorns Aura, Chilling Aura,
+Pedanticism and Reaping Storm records and Phase 09 closure were read before this
+cohort. The pinned cooldown audit is in `evidence/stage-09/api-aura/`; spatial,
+status, native stat, damage and effect assets reuse the earlier audited adapters.
+
+### Mechanics and shared corrections
+
+- Thorns Aura pays 18 Mana upfront and fractional 2 Mana/second upkeep. It grants
+  self/current confirmed allies within six metres a 20% Physical reflection of
+  eligible actual Health loss. Identical Thorns emitters select the strongest;
+  Reflective Hide remains a separate named effect. Neither reflection recurses,
+  crits, leeches or grants reward credit. Each paid Aura has a fresh one-second
+  secondary budget of eight; unused credits do not carry forward.
+- Chilling Aura pays 20 Mana plus 3/second. Damage pulses are 0.20 at one-second
+  intervals; a separate 1.5-second clock applies one Chill stack, first at 1.5 s.
+  The existing status authority and native projection produce Chill/Frozen;
+  no additional independent Slow is added. Requirement None uses the normative
+  innate 20 baseline with Intelligence scaling, not an undocumented required wand.
+- Reaping Storm pays 40 Mana plus 4/second for at most eight seconds. Its eight
+  0.70 Necrotic pulses occur at 1..8 seconds. The last paid pulse executes before
+  final termination; no ninth pulse or post-expiry upkeep is scheduled. It retains
+  its 35-second cooldown rather than a new toggle-lock cooldown.
+- Upkeep uses the existing resource service and observed native debit. Each
+  quarter-second slice is paid before its standing benefit is valid; initial
+  affordability includes the first slice before the upfront charge. At a slice
+  boundary, an already-paid pulse precedes the next slice purchase. Cancellation
+  never refunds the already-paid slice or upfront cost. A gap above one second
+  terminates drain Auras without fabricating catch-up hits. Indefinite valid
+  reservation Auras retain their existing no-artificial-lifetime contract.
+- Moving membership is sampled at 0.10 s using actual AABB/cylinder geometry
+  (three-metre height), LOS, positive allegiance, protection and whole-query
+  bounds (256 hostile candidates, 64 accepted recipients, bounded native scan).
+  Direct healing retains its separate 18 m targeting geometry. Thorns revalidates
+  owner/range/allegiance and the paid slice again at reflection time. Membership
+  and paid-effect leases cannot continue indefinitely after missing owner ticks.
+- Native damage and Chill callbacks use the shared damage/status implementation,
+  not a second combat executor. Component changes use the current CommandBuffer.
+  Damage is periodic/noncritical and all native lifecycle metadata is preserved.
+- Stopping an active Aura is not another cast. An explicit stop seam before
+  the new-activation transaction permits toggle-off at zero Mana, respects the
+  saved toggle lock, and never recharges the upfront cost or resets cooldown.
+  Existing Stage 04/05 executor mechanics and formulas remain unchanged.
+
+### Pedanticism: real RPG rate integration, explicit native boundary
+
+Pedanticism pays the existing reservation transaction for 20% total maximum Mana.
+Self/current confirmed allies gain +0.15 Skill Cooldown Recovery. The existing
+RpgCooldownService now stores remaining cooldown work rather than only an end
+timestamp. Membership changes first consume elapsed work at the prior rate, then
+change rate without resetting progress. The 75% total haste cap and original
+base/recovery formula remain authoritative. Removed recipients are updated;
+short rate leases expire even if owner teardown does not run. No native Signature
+Move or ability HUD cooldown is overwritten.
+
+The enemy **native** cooldown branch is explicitly blocked by
+`NATIVE_COOLDOWN_REMAINING_WORK_NOT_EXPOSED`. Pinned Cooldown.getCooldown() returns
+cooldownMax, not remainingCooldown; remainingCooldown and chargeTimer are private,
+with no public getters. setCooldownMax clamps rather than preserves elapsed work,
+resetCooldown restarts it, and increaseTime clamps to maximum. Mutating these
+blindly would not prove the requested 1.15 duration/rate contract on active native
+cooldowns and charges. This cohort does not use private-field reflection, guessed
+attack timers or animation-speed changes. The generic explicit RPG cooldown
+duration multiplier is tested independently; that test is not native enemy proof.
+One bounded AURA_CAPABILITY_BLOCKED trace per emitter makes the partial boundary
+visible, and the native item description states the limitation.
+
+### Validation scope and factual limitations
+
+The focused Stage 09 tests pass, including 23 new Aura/cooldown tests. The first
+test compile used the wrong balance-loader method name; it was corrected to the
+existing loadCanonical method. Native cooldown object tests establish only its
+public accessor semantics, not NPC cooldown behavior or connected casts.
+
+Catalog flags were reconciled with zero-damage utility/reflection and noncritical
+periodic semantics: Pedanticism is not direct damage, Thorns does not crit or
+generate kill credit, and the two damage Auras do not advertise direct critical
+hits. Canonical record counts and acquisition assignments remain unchanged.
+
+The native artwork remains approved template/fallback presentation, with no new
+HUD controls. Connected activation, moving membership, Chill/Frozen projection,
+reflection ordering/rounding, actual Mana debit/HP loss and presentation remain
+unverified. Flame Weapon's earlier root-contact boundary remains gated. The seven
+support passives are still pending; this cohort does not close Stage 09.
+
+The full retained build passed **451 tests**, zero failures/errors/skips. The
+exact `.21` artifact reached normal isolated three-mod network boot and clean
+exit 0; all 51 native trigger items have zero native gameplay cost/cooldown.
+`evidence/stage-09/cohort-d/` archives test cases, smoke, machine verification,
+build and `.20` rollback. JAR SHA-256:
+`CA2A401C527E58F115E973ACFD1555FD940286410E69B5099B17F3BCB8AB4D3D`.
+The evidence gate explicitly permits only RpgCooldownService's Pedanticism
+work-rate integration among cooldown files; balance coefficients remain protected.
+No live deployment or player migration was performed.

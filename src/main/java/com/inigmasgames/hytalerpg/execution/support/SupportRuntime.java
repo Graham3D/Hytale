@@ -27,6 +27,14 @@ public final class SupportRuntime {
     }
     public synchronized boolean active(UUID actor,String skill){return active.getOrDefault(actor,new LinkedHashMap<>()).containsKey(skill);}
     public synchronized SupportProgress state(UUID actor){return session(actor).state;}
+    /** Turning an owned Aura off is not a new cast and does not require another upfront payment/cooldown. */
+    public synchronized SkillExecutionResult stopActive(UUID actor,String skill,SupportWorldPort port){
+        if(!active(actor,skill))return null;
+        var session=session(actor);var aura=active.get(actor).get(skill);
+        if(session.state.toggleLocks().getOrDefault(skill,0d)>1e-9)return SkillExecutionResult.rejected("AURA_TOGGLE_LOCK");
+        session.state=progress.save(actor,session.state.toggle(skill,aura.context.profile().support().toggleLockSeconds(),false));session.durable=session.state;
+        end(actor,skill,"TOGGLED_OFF",port);return SkillExecutionResult.committed("AURA_OFF",0,0);
+    }
     public synchronized void allocateManaguard(UUID actor,int percent,SupportWorldPort port){
         var session=session(actor);flush(actor,session);
         var allocated=session.state.managuard().allocate(percent);
@@ -94,14 +102,15 @@ public final class SupportRuntime {
             end(actor,skill,"TOGGLED_OFF",port);
             return SkillExecutionResult.committed("AURA_OFF",0,0);
         }
-        Set<UUID> members=profile.kind()==SupportProfile.Kind.MANA_REGEN?members(context,radius(context),port):Set.of();
+        Set<UUID> members=profile.allyAura()?members(context,radius(context),port):Set.of();
+        Set<UUID> enemies=profile.hostileAura()?enemies(context,radius(context),port):Set.of();
         double fraction=profile.kind()==SupportProfile.Kind.MANAGUARD?session.state.managuard().allocationPercent()/100.0:profile.reservationFraction();
         String allocation="aura:"+skill;
         double current=port.resources().current(ResourceType.MANA);
         var previous=reservations.reservations(actor);
         fields.reserve(actor,context.skillInstanceId());
         try{
-            reservations.addPercentage(actor,allocation,fraction,port.resources());
+            if(fraction>0)reservations.addPercentage(actor,allocation,fraction,port.resources());
             SupportProgress next=session.state.toggle(skill,profile.toggleLockSeconds(),true);
             if(profile.kind()==SupportProfile.Kind.MANAGUARD)
                 next=next.guard(next.managuard().validateCapacity(port.resources().maximum(ResourceType.MANA)*fraction,
@@ -112,8 +121,17 @@ public final class SupportRuntime {
             catch(RuntimeException rollback){failure.addSuppressed(rollback);}
             fields.release(actor,context.skillInstanceId());throw failure;
         }
-        var aura=new Aura(context,allocation,fraction,now,members);
+        var aura=new Aura(context,allocation,fraction,now,members,enemies);
         active.computeIfAbsent(actor,ignored->new LinkedHashMap<>()).put(skill,aura);
+        if(aura.timeline!=null){
+            String payment;
+            try{payment=advance(aura,now,port);}catch(RuntimeException failure){
+                end(actor,skill,"INITIAL_UPKEEP_NATIVE_EXCEPTION",port);throw failure;
+            }
+            if(!payment.equals("ACTIVE")){end(actor,skill,payment,port);return SkillExecutionResult.committed(payment,0,0);}
+        }
+        try{port.auraMembership(context,List.copyOf(members),List.copyOf(enemies));}
+        catch(RuntimeException failure){end(actor,skill,"INITIAL_MEMBERSHIP_NATIVE_EXCEPTION",port);throw failure;}
         port.trace(context,"AURA_ACTIVATED",Map.of("epoch",session.state.lastAuraEpoch(),"reservationFraction",fraction,
                 "currentMana",port.resources().current(ResourceType.MANA),"members",members.size()));
         port.present(context,radius(context),.2);
@@ -142,14 +160,22 @@ public final class SupportRuntime {
                 session.state=session.state.guard(session.state.managuard().validateCapacity(
                         port.resources().maximum(ResourceType.MANA)*aura.fraction,
                         aura.context.snapshot().modifiers().factor()));
-            if(profile.kind()==SupportProfile.Kind.MANA_REGEN){
+            if(profile.allyAura()||profile.hostileAura()){
                 Set<UUID> next;
-                try{next=members(aura.context,radius(aura.context),port);}
+                try{next=profile.allyAura()?members(aura.context,radius(aura.context),port):Set.of();
+                    aura.enemies=profile.hostileAura()?enemies(aura.context,radius(aura.context),port):Set.of();}
                 catch(RuntimeException failure){end(actor,aura.context.profile().skillId(),"MEMBERSHIP_FAILED_"+failure.getMessage(),port);continue;}
                 if(!aura.members.equals(next))port.trace(aura.context,"AURA_MEMBERSHIP_CHANGED",Map.of("before",aura.members.size(),"after",next.size()));
                 aura.members=next;
             }
-            aura.validUntil=now+.25;
+            if(aura.timeline!=null){
+                String result;
+                try{result=advance(aura,now,port);}catch(RuntimeException error){result="AURA_NATIVE_FAILURE_"+error.getClass().getSimpleName();}
+                if(!result.equals("ACTIVE")){end(actor,aura.context.profile().skillId(),result,port);continue;}
+            }
+            aura.validUntil=aura.timeline==null?now+.25:Math.min(now+.25,aura.timeline.paidUntil());
+            try{port.auraMembership(aura.context,List.copyOf(aura.members),List.copyOf(aura.enemies));}
+            catch(RuntimeException failure){end(actor,aura.context.profile().skillId(),"MEMBERSHIP_NATIVE_EXCEPTION",port);continue;}
             if(now-aura.lastVisual>=.5){port.present(aura.context,radius(aura.context),.2);aura.lastVisual=now;}
         }
         if(now-session.lastSave>=1){flush(actor,session);session.lastSave=now;}
@@ -181,6 +207,35 @@ public final class SupportRuntime {
                 strongest=Math.max(strongest,aura.context.profile().support().coefficient());
         return strongest;
     }
+    public synchronized double cooldownRecoveryIncreased(UUID recipient,double now){
+        double strongest=0;
+        for(var bySkill:active.values())for(var aura:bySkill.values())
+            if(aura.context.profile().support().kind()==SupportProfile.Kind.COOLDOWN_AURA&&now<=aura.validUntil&&aura.members.contains(recipient))
+                strongest=Math.max(strongest,aura.context.profile().support().coefficient());
+        return strongest;
+    }
+    public synchronized Optional<FiniteSupportEffects.Effect> thorns(UUID world,UUID target,double now){
+        Aura strongest=null;
+        for(var bySkill:active.values())for(var aura:bySkill.values())
+            if(aura.context.target().worldId().equals(world)&&aura.context.profile().support().kind()==SupportProfile.Kind.THORNS
+                    &&now<=aura.validUntil&&aura.members.contains(target)&&(strongest==null||magnitude(aura)>magnitude(strongest)))strongest=aura;
+        if(strongest==null)return Optional.empty();var c=strongest.context;
+        return Optional.of(new FiniteSupportEffects.Effect(new FiniteSupportEffects.Key(world,c.request().actorId(),c.profile().skillId(),target),
+                SupportProfile.Kind.REFLECT,magnitude(strongest),0,0,strongest.validUntil,c.rootCastId(),c.skillInstanceId(),c.request().correlationId(),c,0));
+    }
+    public synchronized boolean claimAuraSecondary(SkillExecutionContext context,double now){
+        var aura=active.getOrDefault(context.request().actorId(),new LinkedHashMap<>()).get(context.profile().skillId());
+        if(aura==null||!aura.context.skillInstanceId().equals(context.skillInstanceId())||now>aura.validUntil)return false;
+        long epoch=(long)Math.floor(now);if(epoch!=aura.epoch){aura.epoch=epoch;aura.secondary=0;}
+        return aura.secondary++<8;
+    }
+    private static double magnitude(Aura aura){return aura.context.profile().support().coefficient()*aura.context.snapshot().modifiers().factor();}
+    private String advance(Aura aura,double now,SupportWorldPort port){
+        return aura.timeline.advance(now,new AuraTimeline.Port(){
+            public boolean pay(double seconds,int quantum){return port.upkeep(aura.context,seconds,quantum);}
+            public void pulse(int ordinal,boolean chill){port.auraPulse(aura.context,List.copyOf(aura.enemies),ordinal,chill);}
+        });
+    }
     public synchronized void cancel(UUID actor,String reason,SupportWorldPort port){
         finite.forget(actor);
         imbues.forget(actor);
@@ -194,6 +249,7 @@ public final class SupportRuntime {
         try{cancel(actor,reason,port);}
         finally{try{var session=sessions.get(actor);if(session!=null)flush(actor,session);}finally{sessions.remove(actor);}}
     }
+    public synchronized void terminateAura(UUID actor,String skill,String reason,SupportWorldPort port){end(actor,skill,reason,port);}
     private void end(UUID actor,String skill,String reason,SupportWorldPort port){
         var bySkill=active.get(actor);if(bySkill==null)return;var aura=bySkill.get(skill);if(aura==null)return;
         try{reservations.remove(actor,aura.allocation,port.resources());}
@@ -202,6 +258,7 @@ public final class SupportRuntime {
             reservations.remove(actor,aura.allocation);
             bySkill.remove(skill);if(bySkill.isEmpty())active.remove(actor);
             fields.release(actor,aura.context.skillInstanceId());
+            port.auraEnded(aura.context);
         }
         port.trace(aura.context,"AURA_TERMINATED",Map.of("reason",reason,"refundMana",false));
     }
@@ -209,6 +266,9 @@ public final class SupportRuntime {
         List<UUID> targets=port.allies(context,radius);
         if(targets.size()>64)throw new IllegalStateException("AURA_TARGET_BUDGET");
         return Set.copyOf(targets);
+    }
+    private Set<UUID> enemies(SkillExecutionContext context,double radius,SupportWorldPort port){
+        var targets=port.enemies(context,radius);if(targets.size()>64)throw new IllegalStateException("AURA_TARGET_BUDGET");return Set.copyOf(targets);
     }
     private static double radius(SkillExecutionContext context){return context.profile().support().radius()*context.compiledPlan().executionModifiers().radiusFactor();}
     private Session session(UUID actor){return sessions.computeIfAbsent(actor,id->new Session(progress.read(id)));}
@@ -223,9 +283,10 @@ public final class SupportRuntime {
     }
     private static final class Aura {
         final SkillExecutionContext context;final String allocation;double fraction;
-        Set<UUID> members;double validUntil,lastVisual;
-        Aura(SkillExecutionContext context,String allocation,double fraction,double now,Set<UUID> members){
-            this.context=context;this.allocation=allocation;this.fraction=fraction;this.members=members;validUntil=now+.25;lastVisual=now;
+        Set<UUID> members,enemies;double validUntil,lastVisual;final AuraTimeline timeline;long epoch=-1;int secondary;
+        Aura(SkillExecutionContext context,String allocation,double fraction,double now,Set<UUID> members,Set<UUID> enemies){
+            this.context=context;this.allocation=allocation;this.fraction=fraction;this.members=members;this.enemies=enemies;validUntil=now+.25;lastVisual=now;
+            timeline=context.profile().support().upkeepPerSecond()>0?new AuraTimeline(context.profile().support(),now):null;
         }
     }
 }

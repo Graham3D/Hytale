@@ -52,7 +52,17 @@ public final class SkillExecutionService {
         emit(request, RpgTraceEventType.SKILL_ACTIVATION_REQUEST, root, pendingInstance,
                 Map.of("action", request.action(), "skillSlot", request.slot().externalId()));
         Prepared prepared;
-        try { prepared = validate(request, port, root, pendingInstance); }
+        try {
+            var equipped=loadouts.getPresentationView(request.actorId()).state().skill(request.slot());
+            if(equipped.isPresent()&&profiles.supports(equipped.get().value())){
+                var profile=profiles.require(equipped.get().value());
+                if(profile.support()!=null&&profile.support().aura()){
+                    var stopped=port.stopActiveSupport(profile);
+                    if(stopped!=null)return stopped.committed()?stopped:reject(request,root,pendingInstance,stopped.code());
+                }
+            }
+            prepared = validate(request, port, root, pendingInstance);
+        }
         catch (Rejection rejection) {
             return reject(request, root, rejection.skillInstanceId, rejection.code);
         } catch (RuntimeException error) {
@@ -157,6 +167,11 @@ public final class SkillExecutionService {
         }
         ResourceCost declared = new ResourceCost(ResourceType.valueOf(profile.resourceType()), profile.resourceCost());
         ResourceCost cost = kernel.resources().evaluate(declared, plan.kernelModifiers());
+        if(profile.support()!=null&&profile.support().upkeepPerSecond()>0){
+            var first=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,profile.support().upkeepPerSecond()*.25),plan.kernelModifiers());
+            if(!kernel.resources().canAfford(request.actorId(),new ResourceCost(ResourceType.MANA,cost.amount()+first.amount()),port.resources()))
+                throw new Rejection("AURA_INITIAL_UPKEEP_UNAFFORDABLE",retainedInstance);
+        }
         if (!kernel.resources().canAfford(request.actorId(), cost, port.resources())) {
             emitProjectileRejection(request, root, instance, profile, "INSUFFICIENT_RESOURCE");
             throw new Rejection("INSUFFICIENT_RESOURCE", instance);
@@ -197,7 +212,7 @@ public final class SkillExecutionService {
         try {
             DerivedStats attributes = derive(prepared.request.actorId());
             BasePowerResolver.Resolution power = resolvePower(prepared.profile, prepared.equipment);
-            var cooldown = kernel.cooldowns().calculate(prepared.profile.cooldownSeconds(), 1.0,
+            var cooldown = kernel.cooldowns().calculate(prepared.request.actorId(),prepared.profile.cooldownSeconds(), 1.0,
                     attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
             Map<String, Double> status = prepared.profile.authoredStatuses();
             // CombatSnapshotFactory alone installs compiled Increased modifiers (including Potency).

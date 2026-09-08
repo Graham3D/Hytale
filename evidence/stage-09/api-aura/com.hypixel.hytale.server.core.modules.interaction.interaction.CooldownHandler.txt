@@ -1,0 +1,119 @@
+Compiled from "CooldownHandler.java"
+public final class com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler implements com.hypixel.hytale.common.thread.ticking.Tickable {
+  private final java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler$Cooldown> cooldowns;
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class java/util/concurrent/ConcurrentHashMap
+         8: dup
+         9: invokespecial #9                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+        12: putfield      #10                 // Field cooldowns:Ljava/util/Map;
+        15: return
+
+  public boolean isOnCooldown(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, java.lang.String, float, float[], boolean);
+    Code:
+         0: fload_3
+         1: fconst_0
+         2: fcmpg
+         3: ifgt          8
+         6: iconst_0
+         7: ireturn
+         8: aload_0
+         9: aload_2
+        10: fload_3
+        11: aload         4
+        13: aload_1
+        14: invokevirtual #16                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.resetCooldownOnStart:()Z
+        17: iload         5
+        19: invokevirtual #22                 // Method getCooldown:(Ljava/lang/String;F[FZZ)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown;
+        22: astore        6
+        24: aload         6
+        26: ifnull        42
+        29: aload         6
+        31: iconst_1
+        32: invokevirtual #26                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown.hasCooldown:(Z)Z
+        35: ifeq          42
+        38: iconst_1
+        39: goto          43
+        42: iconst_0
+        43: ireturn
+
+  public void resetCooldown(java.lang.String, float, float[], boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: fload_2
+         3: aload_3
+         4: iconst_1
+         5: iload         4
+         7: invokevirtual #22                 // Method getCooldown:(Ljava/lang/String;F[FZZ)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown;
+        10: astore        5
+        12: aload         5
+        14: ifnull        27
+        17: aload         5
+        19: invokevirtual #32                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown.resetCooldown:()V
+        22: aload         5
+        24: invokevirtual #35                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown.resetCharges:()V
+        27: return
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler$Cooldown getCooldown(java.lang.String, float, float[], boolean, boolean);
+    Code:
+         0: iload         4
+         2: ifeq          30
+         5: aload_0
+         6: getfield      #10                 // Field cooldowns:Ljava/util/Map;
+         9: aload_1
+        10: fload_2
+        11: aload_3
+        12: iload         5
+        14: invokedynamic #38,  0             // InvokeDynamic #0:apply:(F[FZ)Ljava/util/function/Function;
+        19: invokeinterface #42,  3           // InterfaceMethod java/util/Map.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+        24: checkcast     #27                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown
+        27: goto          43
+        30: aload_0
+        31: getfield      #10                 // Field cooldowns:Ljava/util/Map;
+        34: aload_1
+        35: invokeinterface #48,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        40: checkcast     #27                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown
+        43: areturn
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler$Cooldown getCooldown(java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field cooldowns:Ljava/util/Map;
+         4: aload_1
+         5: invokeinterface #48,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        10: checkcast     #27                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown
+        13: areturn
+
+  public void tick(float);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field cooldowns:Ljava/util/Map;
+         4: invokeinterface #52,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+         9: fload_1
+        10: invokedynamic #56,  0             // InvokeDynamic #1:test:(F)Ljava/util/function/Predicate;
+        15: invokeinterface #60,  2           // InterfaceMethod java/util/Collection.removeIf:(Ljava/util/function/Predicate;)Z
+        20: pop
+        21: return
+
+  private static boolean lambda$tick$0(float, com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler$Cooldown);
+    Code:
+         0: aload_1
+         1: fload_0
+         2: invokevirtual #66                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown.tick:(F)Z
+         5: ireturn
+
+  private static com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler$Cooldown lambda$getCooldown$0(float, float[], boolean, java.lang.String);
+    Code:
+         0: new           #27                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown
+         3: dup
+         4: fload_0
+         5: aload_1
+         6: iload_2
+         7: invokespecial #70                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler$Cooldown."<init>":(F[FZ)V
+        10: areturn
+}

@@ -12,6 +12,11 @@ public interface SupportWorldPort {
     String valid(SkillExecutionContext context);
     /** Owner plus positively established allies, alive/loaded/in range/LOS; >64 rejects the entire query. */
     List<UUID> allies(SkillExecutionContext context,double radius);
+    default List<UUID> enemies(SkillExecutionContext context,double radius){throw new IllegalStateException("AURA_HOSTILE_QUERY_UNAVAILABLE");}
+    default boolean upkeep(SkillExecutionContext context,double seconds,int quantum){throw new IllegalStateException("AURA_UPKEEP_UNAVAILABLE");}
+    default void auraPulse(SkillExecutionContext context,List<UUID> targets,int tick,boolean chill){throw new IllegalStateException("AURA_PAYLOAD_UNAVAILABLE");}
+    default void auraMembership(SkillExecutionContext context,List<UUID> allies,List<UUID> enemies){}
+    default void auraEnded(SkillExecutionContext context){}
     double heal(SkillExecutionContext context,UUID target,double requested);
     default void finiteEffect(SkillExecutionContext context,FiniteSupportEffects effects,double now){throw new IllegalStateException("FINITE_SUPPORT_UNAVAILABLE");}
     default double masteryMultiplier(SkillExecutionContext context){return 1;}

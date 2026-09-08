@@ -39,6 +39,7 @@ public final class SupportNativeEffects {
             if(EntityEffect.getAssetMap().getAsset(asset)==null)throw new IllegalStateException("SUPPORT_PRESENTATION_ASSET_MISSING:"+asset);
         var redirect=DamageCause.getAssetMap().getAsset("RPG_Redirected");
         if(redirect==null||!redirect.doesBypassResistances())throw new IllegalStateException("REDIRECT_RESISTANCE_BYPASS_CAUSE_REQUIRED");
+        for(String cause:List.of("Ice","RPG_Necrotic"))if(DamageCause.getAssetMap().getAsset(cause)==null)throw new IllegalStateException("AURA_DAMAGE_CAUSE_MISSING:"+cause);
     }
     static void requireRallyRecipient(Store<EntityStore> store,Ref<EntityStore> ref){
         if(store.getComponent(ref,EffectControllerComponent.getComponentType())==null)throw new IllegalStateException("NATIVE_MOVEMENT_EFFECT_CONTROLLER_MISSING");

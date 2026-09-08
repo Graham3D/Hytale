@@ -39,6 +39,12 @@ public final class SupportDamageSystems {
         if(attempt.failure()!=null){
             // Disable this lease after an uncertain dispatch; never retry a possibly applied native hit.
             support.runtime().finite().remove(effect.key());
+            if(effect.context().profile().support().aura()){
+                var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
+                if(owner!=null&&owner.isValid())try{
+                    support.runtime().terminateAura(effect.key().owner(),effect.key().skill(),"NATIVE_SECONDARY_DAMAGE_DISPATCH_EXCEPTION",support.port(store,owner));
+                }catch(RuntimeException cleanup){attempt.failure().addSuppressed(cleanup);}
+            }
             var fields=new LinkedHashMap<String,Object>();
             fields.put("reason","NATIVE_SECONDARY_DAMAGE_DISPATCH_EXCEPTION");fields.put("origin",origin);
             fields.put("error",attempt.failure().getClass().getName());fields.put("nativeCompletionProven",false);
@@ -112,13 +118,25 @@ public final class SupportDamageSystems {
             Double before=damage.getIfPresentMetaObject(BEFORE);double after=health(chunk,index);
             if(before==null||!Double.isFinite(before)||!Double.isFinite(after)||before<=after)return;
             var id=chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid();
-            var effect=support.runtime().finite().reflection(SupportNativeEffects.world(store),id,System.nanoTime()/1e9);
-            if(effect.isEmpty())return;var e=effect.get();double amount=(before-after)*e.magnitude();
-            var attempt=submit(support,e,source,store,DamageCause.PHYSICAL,amount,HytaleDamageMetadata.Origin.REFLECTED);
-            var outcome=attempt.completed();if(outcome==null)return;
-            support.traceFinite(e,RpgTraceEventType.DAMAGE_REFLECTED,Map.of("eligibleHealthLoss",before-after,"requestedReflection",amount,
-                    "healthBefore",outcome.healthBefore(),"healthAfter",outcome.healthAfter(),"cancelled",outcome.cancelled(),
-                    "noProc",true,"noLeech",true,"noCredit",true));
+            double now=System.nanoTime()/1e9;var world=SupportNativeEffects.world(store);
+            var effects=new ArrayList<FiniteSupportEffects.Effect>();
+            support.runtime().finite().reflection(world,id,now).ifPresent(effects::add);
+            support.runtime().thorns(world,id,now).ifPresent(effects::add);
+            for(var e:effects){
+                if(!HytaleSupportSystem.alive(store,source))break;
+                if(e.context().profile().support().aura()){
+                    var owner=store.getExternalData().getRefFromUUID(e.key().owner());
+                    if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,recipient)
+                            ||!HytaleSupportSystem.auraInRange(store,owner,recipient,e.context().profile().support().radius()*e.context().compiledPlan().executionModifiers().radiusFactor())
+                            ||!support.runtime().claimAuraSecondary(e.context(),now))continue;
+                }
+                double amount=(before-after)*e.magnitude();
+                var attempt=submit(support,e,source,store,DamageCause.PHYSICAL,amount,HytaleDamageMetadata.Origin.REFLECTED);
+                var outcome=attempt.completed();if(outcome==null)continue;
+                support.traceFinite(e,RpgTraceEventType.DAMAGE_REFLECTED,Map.of("eligibleHealthLoss",before-after,"requestedReflection",amount,
+                        "healthBefore",outcome.healthBefore(),"healthAfter",outcome.healthAfter(),"cancelled",outcome.cancelled(),
+                        "noProc",true,"noLeech",true,"noCredit",true));
+            }
         }
     }
 }

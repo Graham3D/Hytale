@@ -125,7 +125,31 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private HytaleSupportSystem support;
     public HytaleSupportSystem configureSupport(com.inigmasgames.hytalerpg.progress.RpgLoadoutService loadouts){
         if(support!=null)throw new IllegalStateException("Support already configured");
-        support=new HytaleSupportSystem(loadouts,kernel,fieldCapacity,trace,vfx,bosses);return support;
+        support=new HytaleSupportSystem(loadouts,kernel,fieldCapacity,trace,vfx,bosses,this::auraPayload);return support;
+    }
+    /** Aura pulses use the same calculation/native damage boundary as the other families. */
+    private void auraPayload(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> actor,SkillExecutionContext context,List<UUID> targets,int tick,boolean chill){
+        var port=new Port(store,actor,store.getComponent(actor,PlayerRef.getComponentType()),store.getComponent(actor,Player.getComponentType()),
+                store.getComponent(actor,EntityStatMap.getComponentType()),null,null);
+        for(var id:targets){
+            var ref=store.getExternalData().getRefFromUUID(id);var target=port.candidate(ref);
+            if(target==null||target.protectedTarget()||!HytaleAreaQueries.hostile(store,ref,actor)
+                    ||!HytaleSupportSystem.auraInRange(store,actor,ref,context.profile().support().radius()*context.compiledPlan().executionModifiers().radiusFactor()))continue;
+            if(chill){
+                if(buffer==null||store.getComponent(ref,EffectControllerComponent.getComponentType())==null)throw new IllegalStateException("AURA_NATIVE_STATUS_ADAPTER_UNAVAILABLE");
+                buffer.ensureComponent(ref,AreaStatusProjection.getComponentType());
+                var result=kernel.statuses().apply(id,RpgStatusType.CHILL,SupportNativeEffects.control(store,ref,bosses));
+                HytaleAreaStatuses.synchronize(kernel.statuses(),id,ref,store,actor);
+                emit(context,result.outcome()==com.inigmasgames.hytalerpg.combat.status.StatusService.Outcome.REJECTED?RpgTraceEventType.STATUS_REJECTED:RpgTraceEventType.STATUS_APPLIED,
+                        Map.of("targetId",id,"status",result.type(),"stacks",result.stacks(),"tick",tick,"authority","AURA_CHILL_CLOCK"));
+            }else{
+                var cause=context.profile().support().element().equals("COLD")?DamageCause.getAssetMap().getAsset("Ice"):
+                        connectionCause(context.profile().support().element());if(cause==null)throw new IllegalStateException("AURA_NATIVE_CAUSE_MISSING");
+                var outcome=port.damage(context,target,tick,context.profile().support().coefficient(),0,cause,true,
+                        context.skillInstanceId()+"/aura/"+tick,false);
+                emit(context,RpgTraceEventType.AURA_PULSE,Map.of("targetId",id,"tick",tick,"actualHealthLoss",outcome.actualHealthLoss(),"cancelled",outcome.cancelled()));
+            }
+        }
     }
     private final com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry areaControls =
             com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry.loadCanonical();
@@ -299,6 +323,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         @Override public Equipment equipment() { return equipment.read(actor, store); }
         @Override public NativeResourcePort resources() { return new EntityStatResourcePort(stats); }
+        @Override public SkillExecutionResult stopActiveSupport(Stage04SkillProfile profile){return support==null?null:
+                support.runtime().stopActive(playerRef.getUuid(),profile.skillId(),support.port(store,actor));}
         @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
                                                         com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
             if (motions.containsKey(playerRef.getUuid()) || windupEnds.containsKey(playerRef.getUuid())

@@ -36,7 +36,10 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     private final LinkTreeVfxService vfx;
     private final SupportRuntime runtime;
     private final HytaleBossBarTracker bosses;
-    public HytaleSupportSystem(RpgLoadoutService loadouts,RpgCombatKernel kernel,OwnedFieldBudget fields,CombatTrace trace,LinkTreeVfxService vfx,HytaleBossBarTracker bosses){
+    @FunctionalInterface public interface AuraPayload {void apply(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> actor,SkillExecutionContext context,List<UUID> targets,int tick,boolean chill);}
+    private final AuraPayload auraPayload;
+    public HytaleSupportSystem(RpgLoadoutService loadouts,RpgCombatKernel kernel,OwnedFieldBudget fields,CombatTrace trace,LinkTreeVfxService vfx,HytaleBossBarTracker bosses,AuraPayload auraPayload){
+        this.auraPayload=auraPayload;
         this.bosses=bosses;
         this.loadouts=loadouts;this.kernel=kernel;this.trace=trace;this.vfx=vfx;
         runtime=new SupportRuntime(kernel.reservations(),fields,new SupportProgressStore(){
@@ -61,7 +64,8 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         var ref=chunk.getReferenceTo(index);var player=chunk.getComponent(index,PlayerRef.getComponentType());
         var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
         NativeManaRegenerationAdapter.install(stats,()->runtime.manaRegenerationIncreased(player.getUuid(),System.nanoTime()/1e9));
-        runtime.tick(player.getUuid(),System.nanoTime()/1e9,alive(store,ref),port(store,ref));
+        runtime.tick(player.getUuid(),System.nanoTime()/1e9,alive(store,ref),new Port(store,ref,buffer));
+        kernel.cooldowns().setAuraRate(player.getUuid(),runtime.cooldownRecoveryIncreased(player.getUuid(),System.nanoTime()/1e9),1,.25);
     }
     public void ready(Store<EntityStore> store,Ref<EntityStore> actor){
         var player=store.getComponent(actor,PlayerRef.getComponentType());
@@ -83,8 +87,10 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             if(profile.support().hostileTarget())SupportNativeEffects.requireTarget(store,actor,selectHostileTarget(store,actor,profile.support().range()),profile.support(),bosses);
             if(profile.support().recipientBurst()){
                 SupportNativeEffects.requireAssets();
-                for(var ref:allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor()))SupportNativeEffects.requireRallyRecipient(store,ref);
+                for(var ref:allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor(),true))SupportNativeEffects.requireRallyRecipient(store,ref);
             }
+            if(profile.support().allyAura())allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor(),true);
+            if(profile.support().hostileAura())hostileRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor());
             return SkillExecutionPort.Validation.pass();
         }catch(RuntimeException error){return SkillExecutionPort.Validation.reject("SUPPORT_PREFLIGHT_"+error.getMessage());}
     }
@@ -132,7 +138,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             return "PASS";
         }
         public List<UUID> allies(SkillExecutionContext context,double radius){
-            var list=allyRefs(store,actor,radius);var result=new ArrayList<UUID>();
+            var list=allyRefs(store,actor,radius,true);var result=new ArrayList<UUID>();
             for(var ref:list){
                 var id=ref.equals(actor)?player.getUuid():store.getComponent(ref,UUIDComponent.getComponentType()).getUuid();
                 var stats=store.getComponent(ref,EntityStatMap.getComponentType());
@@ -140,6 +146,37 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 result.add(id);
             }
             return result;
+        }
+        public List<UUID> enemies(SkillExecutionContext context,double radius){return hostileRefs(store,actor,radius).stream()
+                .map(ref->store.getComponent(ref,UUIDComponent.getComponentType()).getUuid()).toList();}
+        public boolean upkeep(SkillExecutionContext context,double seconds,int quantum){
+            var cost=kernel.resources().evaluateUpkeep(new com.inigmasgames.hytalerpg.combat.resource.ResourceCost(
+                    com.inigmasgames.hytalerpg.combat.resource.ResourceType.MANA,context.profile().support().upkeepPerSecond()*seconds),context.compiledPlan().kernelModifiers());
+            var resources=resources();double before=resources.current(com.inigmasgames.hytalerpg.combat.resource.ResourceType.MANA);
+            if(!kernel.resources().canAfford(player.getUuid(),cost,resources))return false;
+            var token=kernel.resources().reserveCost(player.getUuid(),cost,resources);
+            try{
+                kernel.resources().commitCost(token,resources);double after=resources.current(com.inigmasgames.hytalerpg.combat.resource.ResourceType.MANA);
+                boolean observed=Math.abs(before-after-cost.amount())<=1e-4;
+                trace(context,"AURA_UPKEEP",Map.of("quantum",quantum,"seconds",seconds,"before",before,"after",after,"cost",cost.amount(),"nativeWriteObserved",observed));
+                return observed;
+            }finally{kernel.resources().finish(token);}
+        }
+        public void auraPulse(SkillExecutionContext context,List<UUID> targets,int tick,boolean chill){auraPayload.apply(store,buffer,actor,context,targets,tick,chill);}
+        public void auraMembership(SkillExecutionContext context,List<UUID> allies,List<UUID> enemies){
+            if(context.profile().support().kind()!=SupportProfile.Kind.COOLDOWN_AURA)return;
+            var affected=new HashSet<>(allies);var previous=cooldownRecipients.put(context.skillInstanceId(),Set.copyOf(allies));
+            if(previous!=null)affected.addAll(previous);
+            for(var id:affected)kernel.cooldowns().setAuraRate(id,runtime.cooldownRecoveryIncreased(id,System.nanoTime()/1e9),1,.25);
+            // Native Cooldown.getCooldown() returns maximum, not remaining work. No exported remaining/charge progress getter exists.
+            // Setting maximum or restarting native cooldowns would violate the elapsed-work contract.
+            if(warnedCooldownRoots.add(context.skillInstanceId()))trace(context,"AURA_CAPABILITY_BLOCKED",Map.of(
+                    "component","enemy.explicitNativeCooldown","reason","NATIVE_COOLDOWN_REMAINING_WORK_NOT_EXPOSED",
+                    "allyRpgRecoveryImplemented",true,"enemyCount",enemies.size(),"animationModified",false));
+        }
+        public void auraEnded(SkillExecutionContext context){
+            warnedCooldownRoots.remove(context.skillInstanceId());var previous=cooldownRecipients.remove(context.skillInstanceId());
+            if(previous!=null)for(var id:previous)kernel.cooldowns().setAuraRate(id,runtime.cooldownRecoveryIncreased(id,System.nanoTime()/1e9),1,.25);
         }
         public double heal(SkillExecutionContext context,UUID target,double requested){
             if(!valid(context).equals("PASS"))throw new IllegalStateException("HEAL_OWNER_INVALID");
@@ -155,7 +192,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         public void finiteEffect(SkillExecutionContext context,FiniteSupportEffects effects,double now){
             if(!valid(context).equals("PASS"))throw new IllegalStateException("SUPPORT_OWNER_INVALID");
             var p=context.profile().support();
-            var refs=p.recipientBurst()?allyRefs(store,actor,p.radius()*context.compiledPlan().executionModifiers().radiusFactor()):
+            var refs=p.recipientBurst()?allyRefs(store,actor,p.radius()*context.compiledPlan().executionModifiers().radiusFactor(),true):
                     List.of(context.target().entityId().equals(player.getUuid())?actor:store.getExternalData().getRefFromUUID(context.target().entityId()));
             double seconds=p.durationSeconds();
             if(p.hostileTarget())SupportNativeEffects.requireTarget(store,actor,refs.getFirst(),p,bosses);
@@ -202,19 +239,36 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         }
     }
     private static List<Ref<EntityStore>> allyRefs(Store<EntityStore> store,Ref<EntityStore> actor,double range){
+        return allyRefs(store,actor,range,false);
+    }
+    private static List<Ref<EntityStore>> allyRefs(Store<EntityStore> store,Ref<EntityStore> actor,double range,boolean cylinder){
         var query=Query.and(UUIDComponent.getComponentType(),EntityStatMap.getComponentType(),TransformComponent.getComponentType(),BoundingBox.getComponentType());
         if(store.getEntityCountFor(query)>4096)throw new IllegalStateException("SUPPORT_SCAN_BUDGET");
         var selected=new ArrayList<Ref<EntityStore>>();selected.add(actor);
         boolean overflow=store.forEachChunk(query,(chunk,buffer)->{
             for(int index=0;index<chunk.size();index++){
                 var ref=chunk.getReferenceTo(index);
-                if(ref.equals(actor)||!eligibleAlly(store,actor,ref)||!inRange(store,actor,ref,range))continue;
+                if(ref.equals(actor)||!eligibleAlly(store,actor,ref)||!(cylinder?auraInRange(store,actor,ref,range):inRange(store,actor,ref,range)))continue;
                 if(selected.size()>=64)return true;selected.add(ref);
             }
             return false;
         });
         if(overflow)throw new IllegalStateException("SUPPORT_TARGET_BUDGET");
         return List.copyOf(selected);
+    }
+    private final Set<String> warnedCooldownRoots=java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<>());
+    private final Map<String,Set<UUID>> cooldownRecipients=new java.util.concurrent.ConcurrentHashMap<>();
+    private List<Ref<EntityStore>> hostileRefs(Store<EntityStore> store,Ref<EntityStore> actor,double radius){
+        var shape=ConnectionShape.cylinder(position(store,actor).add(new Vec3(0,1.5,0)),radius,3);
+        var found=HytaleAreaQueries.query(store,actor,shape::intersects,256);
+        if(found.overflow())throw new IllegalStateException("AURA_CANDIDATE_BUDGET");
+        var list=found.candidates().stream().filter(c->alive(store,c.ref())&&!SupportNativeEffects.control(store,c.ref(),bosses).protectedEntity()
+                &&HytaleAreaQueries.clear(store,position(store,actor).add(new Vec3(0,1.35,0)),c.bounds().centre())).map(HytaleAreaQueries.Candidate::ref).toList();
+        if(list.size()>64)throw new IllegalStateException("AURA_TARGET_BUDGET");return list;
+    }
+    static boolean auraInRange(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target,double radius){
+        return actor.equals(target)||ConnectionShape.cylinder(position(store,actor).add(new Vec3(0,1.5,0)),radius,3).intersects(bounds(store,target))
+                &&HytaleAreaQueries.clear(store,position(store,actor).add(new Vec3(0,1.35,0)),bounds(store,target).centre());
     }
     static boolean eligibleAlly(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target){
         if(target==null||!target.isValid()||!alive(store,target))return false;

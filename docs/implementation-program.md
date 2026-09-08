@@ -61,7 +61,7 @@ definitions are read before each corresponding implementation.
 | 06 | 15 spatial skills; Potency, Expanded Radius, Echo, Skill Delay | R025 local gate complete; connected verification outstanding |
 | 07 | 12 projectile continuation/multiplicity passives | R026 local gate complete; connected verification outstanding |
 | 08 | 8 line/beam/tether/orbit skills | R027 local gate complete; connected verification outstanding |
-| 09 | 16 support/barrier/Aura skills and 7 passives | R028 cohorts A–C local gates: 12 profiles, 428 retained tests; Flame Weapon native contact attribution gated; remaining cohorts in progress |
+| 09 | 16 support/barrier/Aura skills and 7 passives | R028 cohorts A–D local gates: 16 profiles, 451 retained tests; Flame Weapon root contact and Pedanticism native-enemy cooldown progress gated; seven passives in progress |
 | 10 | 9 summon/corpse/conversion skills and 3 passives | not started |
 | 11 | remaining 40 passives; component-scoped matrix/combinations | not started |
 | 12 | progression, attribution, exact-once rewards and acquisition | not started |

@@ -35,7 +35,7 @@ class Stage09BarrierSupportTest {
     }
     @Test void fourProfilesHaveAuthoredCostsAndDuration(){
         var h=new Harness("pack_howl");
-        assertEquals(12,h.profiles.all().values().stream().filter(p->p.support()!=null).count());
+        assertEquals(Stage04SkillProfiles.EXPECTED_STAGE09_PROFILES,h.profiles.all().values().stream().filter(p->p.support()!=null).count());
         for(String id:List.of("pack_howl","reflective_hide","flame_weapon","spirit_shield"))assertEquals(0,h.profiles.require(id).damageCoefficient());
         assertEquals(8,h.profile.resourceCost());assertEquals(16,h.profile.cooldownSeconds());assertEquals(10,h.profile.support().durationSeconds());
     }

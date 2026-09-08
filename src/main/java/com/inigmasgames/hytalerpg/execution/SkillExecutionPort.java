@@ -13,6 +13,8 @@ public interface SkillExecutionPort {
     default CommittedTarget captureTarget(Stage04SkillProfile profile, CompiledSkillPlan plan, SkillExecutionRequest request) { return null; }
     default Validation validateRelease(SkillExecutionContext context) { return Validation.reject("COMMITTED_TARGET_ADAPTER_UNAVAILABLE"); }
     default void abandonRelease(SkillExecutionContext context) { }
+    /** Null means no owned active Aura. Stopping one is not a second activation transaction. */
+    default SkillExecutionResult stopActiveSupport(Stage04SkillProfile profile){return null;}
     SkillExecutionResult executeStrike(SkillExecutionContext context);
     SkillExecutionResult executeMovement(SkillExecutionContext context);
     SkillExecutionResult executeReaction(SkillExecutionContext context);
