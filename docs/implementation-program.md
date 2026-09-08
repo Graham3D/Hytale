@@ -63,7 +63,7 @@ definitions are read before each corresponding implementation.
 | 08 | 8 line/beam/tether/orbit skills | R027 local gate complete; connected verification outstanding |
 | 09 | 16 support/barrier/Aura skills and 7 passives | R028 local gate complete: 516 retained tests, schema 5, all seven passive primitives; Flame Weapon root contact and Pedanticism native-enemy cooldown progress gated; connected verification outstanding |
 | 10 | 9 summon/corpse/conversion skills and 3 passives | R029 cohorts A–G local scope complete: eight native skill implementations plus Bone Cage intentionally disabled by master collision safety gate; 662 retained tests, plan schema 9; corpse/decoy/conversion role coverage restricted; connected verification outstanding |
-| 11 | remaining 40 passives; component-scoped matrix/combinations | R030 cohorts A–Y local primitive/component/recovery gates complete: all forty primitives, 1372 tests, plan schema34, player schema7 inactive saved nodes; complete matrix closure remains; connected verification outstanding |
+| 11 | remaining 40 passives; component-scoped matrix/combinations | R030 cohorts A–Z local scope complete: all forty primitives, 1377 tests, plan schema35, player schema7; 5742 cells,2145 pairs,1000 valid six-Link property fixtures and saved inactive-node recovery; connected verification outstanding |
 | 12 | progression, attribution, exact-once rewards and acquisition | not started |
 | 13 | full 87/66 coverage, hardening, release-candidate assessment | not started |
 

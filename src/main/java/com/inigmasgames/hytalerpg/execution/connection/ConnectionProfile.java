@@ -4,6 +4,9 @@ package com.inigmasgames.hytalerpg.execution.connection;
 public record ConnectionProfile(Kind kind,double range,double width,double height,double depth,double speed,
         double lifetimeSeconds,double intervalSeconds,double coefficient,double upkeepPerSecond,double radius,
         double originHeight,String element,Details details) {
+    // Swept contact samples are not damage pulses. Keep both work classes explicitly finite.
+    public static final int MAX_ORBIT_SAMPLES=512;
+    public static final int MAX_DAMAGE_PULSES=256;
     public enum Kind { WAVE,BEAM,ORB,LINE,TETHER,CHAIN,ORBIT,DRAIN }
     public record Details(double jumpRadius,java.util.List<Double> jumpCoefficients,int bladeCount,double degreesPerSecond,
                           double contactCooldown,double healFraction,String status,double statusSeconds) {
@@ -24,7 +27,7 @@ public record ConnectionProfile(Kind kind,double range,double width,double heigh
         boolean ticking=kind==Kind.BEAM||kind==Kind.ORB||kind==Kind.CHAIN||kind==Kind.ORBIT||kind==Kind.DRAIN;
         if(range<=0||height<=0||lifetimeSeconds<=0||lifetimeSeconds>120||coefficient<=0
                 ||kind!=Kind.ORB&&kind!=Kind.ORBIT&&width<=0||(kind==Kind.ORB||kind==Kind.ORBIT)&&radius<=0
-                ||ticking&&(intervalSeconds<.05||lifetimeSeconds/intervalSeconds>256)
+                ||ticking&&(intervalSeconds<.05||lifetimeSeconds/intervalSeconds>(kind==Kind.ORBIT?MAX_ORBIT_SAMPLES:MAX_DAMAGE_PULSES))
                 ||kind==Kind.WAVE&&(depth<=0||speed<=0)||kind==Kind.ORB&&speed<=0
                 ||(kind==Kind.BEAM||kind==Kind.DRAIN)&&upkeepPerSecond<=0
                 ||kind==Kind.CHAIN&&(details.jumpRadius<=0||details.jumpCoefficients.isEmpty())

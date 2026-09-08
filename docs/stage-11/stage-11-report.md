@@ -1786,3 +1786,67 @@ Rollback X: `A28C6D8269E3425C638B2ACD1F29E8BB461D3939DC97BF6BA584A3EE267BDD71`.
 Archived under evidence/stage-11/cohort-y. Connected gates remain UNVERIFIED.
 No live deployment, Google Drive write, owner-art mutation or HUD/input change.
 The complete eligibility/pair matrix and six-Link property regression close next.
+
+## R030 cohort Z — matrix and local Stage11 closure
+
+The complete production compiler/profile path was exercised for87*66=5742 single
+skill/passive cells and2145 unordered passive pairs across all87 skills (186615
+pair/skill assessments). Rejections retain their specific compiler code; a catalog
+match without a runtime profile is explicitly not implementation evidence.
+
+| Single-cell classification | Count |
+| --- | ---: |
+| Compiled and numeric profile resolved; connected unverified | 1041 |
+| Catalog eligible but legacy Stage04/05 runtime not yet implemented | 643 |
+| Typed rejection | 4058 |
+
+| Pair classification | Count |
+| --- | ---: |
+| Valid on at least one listed implemented profile | 1212 |
+| Only catalog-eligible on pending legacy profiles | 57 |
+| No valid implemented or catalog-only skill | 876 |
+
+Every one of the66 passive primitives has at least one implemented-profile positive
+fixture. Machine matrices list exact skill IDs and rejection counts, not just these
+aggregates. They do not certify native availability, input, presentation or executor
+delivery. In particular Bone Cage and other adapter-specific gates retain their
+recorded restrictions even where a numerical profile compiles.
+
+Deterministic property seed110033 generated1000 valid six-Link graphs over57
+implemented profiles. Each was checked through direct routes, two three-input
+Joints and reversed passive-slot ordering. Semantic modifier order, tags, kernel
+values and geometry/power operations match; finite48-effect/16-secondary/generation3
+limits remain unchanged. Routes remain part of diagnostic plan identity; they do
+not apply a passive again. Rejected candidate extensions were not silently equipped.
+
+The first exhaustive run caught one genuine boundary, repeated across19 pairs:
+Lingering on unconverted Orbiting Shadow Blades produces14s at.05s sampling, but
+ConnectionProfile incorrectly capped those280 swept contact samples at256 as if
+they were damage pulses. Orbit spatial sampling now has an explicit512-sample
+finite cap; all actual damage-pulse profiles retain256. Runtime sample cadence,
+four authored blades, per-target.75s hit cooldown, candidate64/victim-memory256,
+owner/global field admission and one-second simulation-gap cancellation are unchanged.
+The regression runs all14s through the existing connection scheduler and observes
+19 eligible victim hits, one payment and final cleanup—not280 damage events.
+25.65s at.05s remains rejected by the finite sampling cap. No native API was added.
+
+Numeric constructor failures wrapped by Gson are now normalized back to typed
+IllegalArgumentException at the profile boundary, allowing prepayment validation
+and saved-node recovery to report the actual component gate. Unexpected nonvalidation
+exceptions still propagate rather than masquerading as content incompatibility.
+Plan schema35; player schema7 retained.
+
+Final clean build:1377 PASS in46s, zero failures/errors/skips. Matrix/property test
+class:3.444s on this machine; this is not a server combat-performance measurement.
+Normal isolated three-mod network boot, all retained native asset checks,9 packaged
+CustomUI documents and clean exit0 PASS. All evidence and the precise input hashes
+are under `evidence/stage-11/cohort-z`; the matrix directory is directly shareable.
+
+Artifact: `57A8688729BB33ABE1C76711B3777C98AF35351F98FEDA74365E6912811D9378`.
+Rollback Y: `C92890159DD27E9F0AA74E969B3AFB9D3DCC94A834F89B4BB39A98BFEC6756F7`.
+Stage11 local engineering scope is complete. Stage11 connected status remains
+IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION, not PASS. The27 missing Stage04/05
+runtime profiles remain explicitly tracked for Stage13; this local Stage11 closure
+does not declare all87 mechanics complete. Continue to Stage12 under the owner's
+continuous-program authorization. No live deployment, owner-art mutation, Google
+Drive write or native HUD/XP/input change occurred.

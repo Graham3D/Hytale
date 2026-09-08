@@ -79,7 +79,12 @@ public final class CompiledProfileResolver {
             var strike=resolved.getAsJsonObject("strike");strike.addProperty("repeats",3);strike.addProperty("repeatIntervalSeconds",.25);
         }
         if(plan.orbit()&&authored.projectile()!=null)resolved.getAsJsonObject("connection").add("coefficient",resolved.getAsJsonObject("projectile").get("coefficient"));
-        var effective=JSON.fromJson(resolved,Stage04SkillProfile.class);
+        final Stage04SkillProfile effective;
+        try{effective=JSON.fromJson(resolved,Stage04SkillProfile.class);}catch(RuntimeException failure){
+            Throwable cause=failure;while(cause.getCause()!=null)cause=cause.getCause();
+            if(cause instanceof IllegalArgumentException)throw new IllegalArgumentException("INVALID_COMPILED_COMPONENT:"+cause.getMessage(),failure);
+            throw failure;
+        }
         if(cache.size()>=CAPACITY)cache.remove(cache.keySet().iterator().next());
         cache.put(key,effective);return effective;
     }
