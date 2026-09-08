@@ -21,6 +21,12 @@ public final class CompatibilityService {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
 
+        if(passive.id().value().equals("rapid_pulse")){
+            if(!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.periodicPulse(skill.id().value()))
+                return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Rapid Pulse requires an authored pulse, not contact sampling, flight or a one-off attack sequence.",Set.of("PERIODIC_PULSE_COMPONENT"),actual);
+            actual.add("PERIODIC_PULSE"); // Assessment only, no new capability on unrelated components.
+        }
+
         if(passive.id().value().equals("mobile_domain")&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.mobileZone(skill.id().value()))
             return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
                     "Mobile Domain requires a finite ground zone without fixed warnings, collision, corpse or trap ownership.",

@@ -168,6 +168,7 @@ class Stage08ConnectionTest {
         final SkillInstanceLifecycle lifecycle=new SkillInstanceLifecycle();final SkillExecutionService service;final Stage04SkillProfile profile;
         final List<Target> targets=new ArrayList<>();final List<Hit> hits=new ArrayList<>();final List<String> order=new ArrayList<>(),ends=new ArrayList<>();
         final List<ConnectionShape> shapes=new ArrayList<>();final List<SkillExecutionContext> contexts=new ArrayList<>();
+        final List<SkillExecutionContext> hitContexts=new ArrayList<>();
         Vec3 aim=Vec3.FORWARD,feet=Vec3.ZERO;double mana=200,wallZ=Double.POSITIVE_INFINITY,health=50,healTotal;int resourceWrites;boolean overflow,rejectWrites;String validation="PASS";
         final Map<String,Double> victimHealth=new HashMap<>();final List<Double> healRequests=new ArrayList<>();
         Harness(String skill,String...passives) {
@@ -206,7 +207,7 @@ class Stage08ConnectionTest {
             if(!kernel.resources().canAfford(owner,cost,this))return false;double before=mana;var token=kernel.resources().reserveCost(owner,cost,this);
             try{kernel.resources().commitCost(token,this);order.add("pay"+tick);return Math.abs(before-mana-cost.amount())<1e-9;}finally{kernel.resources().finish(token);}
         }
-        public double damage(SkillExecutionContext c,Target target,int tick,double coefficient,boolean periodic){hits.add(new Hit(target.id(),tick,coefficient,periodic));order.add("hit"+tick);
+        public double damage(SkillExecutionContext c,Target target,int tick,double coefficient,boolean periodic){hitContexts.add(c);hits.add(new Hit(target.id(),tick,coefficient,periodic));order.add("hit"+tick);
             double before=victimHealth.getOrDefault(target.id(),10000d),lost=Math.min(before,coefficient*20);victimHealth.put(target.id(),before-lost);return lost;}
         public void healFromDamage(SkillExecutionContext c,int tick,double lost){
             var healing=new com.inigmasgames.hytalerpg.combat.healing.HealingCalculationService().fromActualDamage(lost,c.profile().connection().details().healFraction(),c.snapshot().derivedStats().healingMultiplier(),c.compiledPlan().kernelModifiers().scalablePayloadIncreased());

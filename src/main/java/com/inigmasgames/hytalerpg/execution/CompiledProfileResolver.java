@@ -21,9 +21,9 @@ public final class CompiledProfileResolver {
             throw new IllegalArgumentException("Profile requires a current matching compiled plan");
         if(plan.zones().mobileDomain()&&!ProfileComponentPolicy.mobileZone(authored))
             throw new IllegalArgumentException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
-        var modifiers=plan.foundationModifiers();var geometry=plan.geometry();
-        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active())return authored;
-        var key=new Key(authored,modifiers,geometry);
+        var modifiers=plan.foundationModifiers();var geometry=plan.geometry();var pulses=plan.pulses();
+        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse())return authored;
+        var key=new Key(authored,modifiers,geometry,pulses);
         var prior=cache.get(key);if(prior!=null)return prior;
         JsonObject resolved=JSON.toJsonTree(authored).getAsJsonObject();
         resolved.addProperty("windupSeconds",modifiers.windup(authored.windupSeconds()));
@@ -61,6 +61,7 @@ public final class CompiledProfileResolver {
             connection.addProperty("width",geometry.width(connection.get("width").getAsDouble()));
             if(geometry.widening())scale(resolved,"connection",.85,"coefficient");
         }
+        if(pulses.rapidPulse())rapidPulse(authored,resolved);
         var effective=JSON.fromJson(resolved,Stage04SkillProfile.class);
         if(cache.size()>=CAPACITY)cache.remove(cache.keySet().iterator().next());
         cache.put(key,effective);return effective;
@@ -71,6 +72,30 @@ public final class CompiledProfileResolver {
         for(String field:fields)if(value.has(field))value.addProperty(field,value.get(field).getAsDouble()*factor);
     }
     public synchronized int cachedProfiles(){return cache.size();}
+    private static void rapidPulse(Stage04SkillProfile authored,JsonObject root){
+        if(!ProfileComponentPolicy.periodicPulse(authored))throw new IllegalArgumentException("PERIODIC_PULSE_COMPONENT_REQUIRED");
+        // Start from already resolved duration/geometry. Do not compensate .80 Less away.
+        if(authored.area()!=null){
+            var a=JSON.fromJson(root.get("area"),com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile.class);
+            var value=root.getAsJsonObject("area");double interval=a.intervalSeconds()*.7;
+            int before=a.periodic()?(int)Math.ceil(a.lifetimeSeconds()/a.intervalSeconds()):a.impactCount();
+            int after=a.periodic()?(int)Math.floor(a.lifetimeSeconds()/interval+1e-9)
+                    :(int)Math.ceil((a.lifetimeSeconds()-a.firstImpactSeconds())/interval-1e-9);
+            if(interval<.05||after<1||after>(a.periodic()?256:48))throw new IllegalArgumentException("RAPID_PULSE_EVENT_BUDGET");
+            value.addProperty("intervalSeconds",interval);
+            if(!a.periodic())value.addProperty("impactCount",after);
+            if(a.perTargetHitCap()==before)value.addProperty("perTargetHitCap",after);
+            // Integrated areas store DPS: new slice * (old/new interval) * .80 snapshot = .80 old pulse.
+            if(a.periodic())scale(root,"area",1/.7,"coefficient","innerCoefficient");
+            scale(root,"area",a.periodic()?.8/.7:.8,"displacement","pullSpeed");
+            if(a.status().equals("STAGGER"))scale(root,"area",.8,"statusSeconds","statusInnerSeconds");
+        }
+        if(authored.connection()!=null){
+            scale(root,"connection",.7,"intervalSeconds");
+            if(authored.connection().channel())scale(root,"connection",1/.7,"coefficient");
+        }
+        scale(root,"support",.7,"damageInterval","chillInterval");
+    }
     private static void impact(Stage04SkillProfile p,JsonObject root){
         if(!ProfileComponentPolicy.impact(p))throw new IllegalArgumentException("NO_IMPACT_COMPONENT");
         if(p.strike()!=null){scale(root,"strike",.90,"coefficient");if(p.strike().statusId().equals("STAGGER"))scale(root,"strike",1.75,"statusSeconds");}
@@ -140,5 +165,5 @@ public final class CompiledProfileResolver {
             }
         }
     }
-    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry){}
+    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses){}
 }

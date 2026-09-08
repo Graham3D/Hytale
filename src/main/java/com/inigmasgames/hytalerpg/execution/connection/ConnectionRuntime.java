@@ -80,7 +80,13 @@ public final class ConnectionRuntime {
             port.present(field.context,shape,"IMPACT",profile.channel()?.1:.15);
         }
         if(field.done)return;
-        if(elapsed>=profile.lifetimeSeconds()-1e-9){finish(field,"CONNECTION_EXPIRED",port);return;}
+        if(elapsed>=profile.lifetimeSeconds()-1e-9){
+            // Rapid Pulse suppresses the final partial damage pulse, not the elapsed channel upkeep.
+            double tail=profile.lifetimeSeconds()-field.tick*profile.intervalSeconds();
+            if(profile.channel()&&field.context.compiledPlan().pulses().rapidPulse()&&tail>1e-9
+                    &&!port.payUpkeep(field.context,field.tick+1,tail)){finish(field,"INSUFFICIENT_UPKEEP",port);return;}
+            finish(field,"CONNECTION_EXPIRED",port);return;
+        }
         if(now>=field.nextVisual) {
             field.nextVisual=now+.05;ConnectionShape shape;
             if(profile.channel()) {
@@ -188,8 +194,8 @@ public final class ConnectionRuntime {
         for(var target:targets) {
             if(field.done)break;if(field.lastHit.getOrDefault(target.id(),-1)==tick)continue;
             field.lastHit.put(target.id(),tick);attempts++;
-            double lost=port.damage(field.context,target,tick,coefficient,periodic);if(Double.isFinite(lost)&&lost>0)healthLost+=lost;
-            if(!field.done&&field.profile().kind()==ConnectionProfile.Kind.DRAIN&&Double.isFinite(lost)&&lost>0)port.healFromDamage(field.context,tick,lost);
+            double lost=port.damage(field.pulseContext,target,tick,coefficient,periodic);if(Double.isFinite(lost)&&lost>0)healthLost+=lost;
+            if(!field.done&&field.profile().kind()==ConnectionProfile.Kind.DRAIN&&Double.isFinite(lost)&&lost>0)port.healFromDamage(field.pulseContext,tick,lost);
         }
         port.trace(field.context,"CONNECTION_TICK",Map.of("tick",tick,"coefficient",coefficient,"targetAttempts",attempts,"actualHealthLoss",healthLost,"periodic",periodic));
     }
@@ -199,10 +205,12 @@ public final class ConnectionRuntime {
         finally {port.ended(field.context,reason);}
     }
     private static final class Field {
-        final SkillExecutionContext context;final UUID world;final Vec3 origin,direction;final double started;
+        final SkillExecutionContext context,pulseContext;final UUID world;final Vec3 origin,direction;final double started;
         final Map<String,Integer> lastHit=new HashMap<>();Vec3 position;double lastTick,nextVisual,travelled;int tick;boolean stopped,done;String targetId;
         Field(SkillExecutionContext context,UUID world,Vec3 origin,Vec3 direction,double now){
             this.context=context;this.world=world;this.origin=origin;this.direction=direction;this.position=origin;this.started=now;this.lastTick=now;this.nextVisual=now;
+            if(context.compiledPlan().pulses().rapidPulse()&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.periodicPulse(context.profile()))throw new IllegalStateException("PERIODIC_PULSE_COMPONENT_REQUIRED");
+            pulseContext=context.compiledPlan().pulses().payload(context);
             if(context.profile().connection().kind()==ConnectionProfile.Kind.ORBIT)tick=-1;
         }
         UUID owner(){return context.request().actorId();}ConnectionProfile profile(){return context.profile().connection();}

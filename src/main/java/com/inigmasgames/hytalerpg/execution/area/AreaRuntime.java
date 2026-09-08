@@ -34,6 +34,8 @@ public final class AreaRuntime {
         if (profile == null || !Double.isFinite(now) || !Double.isFinite(radiusFactor) || radiusFactor <= 0)
             throw new IllegalArgumentException("Invalid area start");
         boolean mobile=context.compiledPlan().zones().mobileDomain();
+        if(context.compiledPlan().pulses().rapidPulse()&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.periodicPulse(context.profile()))
+            throw new IllegalStateException("PERIODIC_PULSE_COMPONENT_REQUIRED");
         if(mobile&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.mobileZone(context.profile()))
             throw new IllegalStateException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
         Vec3 origin=mobile?mobileOrigin(context,port).orElseThrow(()->new IllegalStateException("MOBILE_OWNER_ANCHOR_UNAVAILABLE")):point;
@@ -148,6 +150,7 @@ public final class AreaRuntime {
         double end = Math.min(elapsed, profile.lifetimeSeconds());
         int index = field.nextImpact;
         while (field.integrated < end - 1e-9) {
+            if(field.context.compiledPlan().pulses().rapidPulse()&&field.integrated+profile.intervalSeconds()>profile.lifetimeSeconds()+1e-9)break;
             double next = Math.min(field.integrated + profile.intervalSeconds(), profile.lifetimeSeconds());
             if (elapsed < next - 1e-9) break;
             List<AreaWorldPort.Target> targets = targets(field, field.geometry, port);
@@ -276,11 +279,15 @@ public final class AreaRuntime {
             }
             boolean statusReady = now - field.statusLastHit.getOrDefault(target.id(), Double.NEGATIVE_INFINITY)
                     >= profile.statusIntervalSeconds() - 1e-9;
+            if(statusReady&&status.equals("CHILL")&&field.context.compiledPlan().pulses().rapidPulse()){
+                chill=field.chill.grant(target.id(),impactIndex,chill);
+                if(chill==0)status="";
+            }
             AreaWorldPort.Payload payload = new AreaWorldPort.Payload(impactIndex, coefficient * seconds,
                     statusReady ? status : "", duration, chill, profile.displacement() * seconds, periodic, element, footprint.origin(),
                     finalBlast ? profile.finalPull() : profile.pullSpeed() * seconds,
                     finalBlast ? 0 : profile.pullCoreRadius() * field.radiusFactor, finalBlast);
-            if (!port.apply(field.context, target, payload)) continue;
+            if (!port.apply(finalBlast?field.context:field.pulseContext, target, payload)) continue;
             if (statusReady && !status.isBlank()) field.statusLastHit.put(target.id(), now);
             var accepted=new Ledger(previous == null ? 1 : previous.hits + 1, now, impactKey);
             ledger.put(target.id(),accepted);field.ledger.put(target.id(),accepted);
@@ -314,7 +321,8 @@ public final class AreaRuntime {
     private static String rootKey(SkillExecutionContext context) { return context.request().actorId()+"/"+context.rootCastId(); }
     private record Ledger(int hits, double lastHit, String lastImpact) { }
     private static final class Field {
-        final SkillExecutionContext context; AreaGeometry geometry; final double started, radiusFactor;
+        final SkillExecutionContext context,pulseContext; AreaGeometry geometry; final double started, radiusFactor;
+        final com.inigmasgames.hytalerpg.execution.ChillPulseLedger chill=new com.inigmasgames.hytalerpg.execution.ChillPulseLedger();
         final Map<String, Ledger> ledger = new HashMap<>();
         final Map<String, Double> statusLastHit = new HashMap<>();
         final List<Vec3> offsets; final double[] warnedAt;
@@ -322,6 +330,7 @@ public final class AreaRuntime {
         double nextScan, lastTick, integrated, nextDescent; int nextImpact; boolean done, finalHit;
         Field(SkillExecutionContext context, AreaGeometry geometry, double started, double radiusFactor) {
             this.context = context; this.geometry = geometry; this.started = started; this.radiusFactor = radiusFactor;
+            pulseContext=context.compiledPlan().pulses().payload(context);
             nextScan = started; lastTick = started;
             var profile = context.profile().area();
             offsets = profile.stratified() ? StratifiedAreaPattern.offsets(context.rootCastId() + "/" + context.profile().skillId(),

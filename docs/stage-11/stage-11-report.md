@@ -505,3 +505,85 @@ Rollback: F, SHA-256
 No live deployment, save migration, art changes, native ability or HUD changes.
 Local gate PASS; connected gate UNVERIFIED. Fifteen of40 Stage11 primitives now
 have local evidence;25 remain before Stage11 matrix/hardening closure.
+
+## Cohort H — Rapid Pulse
+
+Baseline G `338333a`. Master LP034, existing AreaRuntime/ConnectionRuntime,
+AuraTimeline/SupportRuntime and native Aura damage/Chill adapters read before
+changes. R030/0.0.23, compiled-plan schema17, player schema6 unchanged. This uses
+the existing native damage/status boundaries; it does not introduce an engine API.
+
+The component gate accepts actual periodic areas (including Wall of Fire), finite
+Ground Zone pulse schedules, Beam/Drain/Orb pulses and Aura damage/Chill clocks.
+It rejects flight, orbital contact sampling, target-to-target chain sequencing,
+single attacks/traps, summon attack cadence and non-periodic Auras. Avalanche and
+Void Cataclysm's authored bombardment sequences are not granted PeriodicPulse;
+Blizzard explicitly has that capability and its primary family is Ground Zone.
+Imported tags alone neither prove nor deny a distinct runtime component.
+
+The existing immutable profile resolver applies interval×0.70 after other duration
+operators. Pulse context applies one×0.80 snapshot factor. Integrated area/channel
+profiles store DPS, so their coefficient is divided by0.70 before multiplying by
+the shorter interval; otherwise the implementation would accidentally reduce each
+pulse to56% rather than80% of its original size. The80% factor is never compensated
+away. Root snapshots, constant Aura benefits, resource rates and non-pulse effects
+remain unchanged. The typed pulse record is included in plan identity/cache keys.
+
+Schedule-derived hit caps grow with the new count; explicit smaller victim caps,
+Blizzard's0.75s victim interval, fixed terrain warnings, radii and movement speed
+remain. Area schedules retain minimum interval0.05s and existing48-impact/256-tick
+limits. There is no final partial damage pulse. Discrete schedules with an authored
+initial impact retain that initial impact; Rapid Pulse does not delay it.
+
+- Poison Cloud: interval0.25→0.175s,45 full pulses in8s, each80% of the previous
+  quarter-second payload. Integrated coefficient sum after the80% factor is2.7
+  rather than baseline2.4; the exact finite-endpoint gain is12.5%, not the asymptotic
+ 14.2857% rate increase. One24Mana cost, no upkeep/reservation and unchanged cooldown.
+- Earthquake: interval1.125→0.7875s,6 impacts including the initial impact; each
+  direct pulse80%, authored Stagger0.4→0.32s before native resistance. Vortex's
+  per-pulse pull also receives80% of its old slice, without changing its core radius.
+- Blizzard:23 planned impacts across the same active lifetime;0.25s warnings and
+ 0.75s victim gate stay unchanged. Lingering+Rapid Pulse yields32 planned impacts,
+  still inside the retained root effect budget.
+- Reaping Storm:11 reduced pulses in8s, with the same32 quarter-second upkeep
+  payments,8 paid seconds and total Mana expenditure. Chilling Aura's damage clock
+  becomes0.70s and Chill clock1.05s; its constant slow/radius and Mana/sec do not change.
+- Void Beam:28 full damage pulses in5s. Twenty-eight0.175s resource slices plus the
+  final0.10s upkeep-only slice still pay20Mana at4Mana/sec. The tail never generates
+  damage or healing. An unaffordable tail stops normally without a free final pulse.
+  Exactly one end cooldown remains. Drain healing still derives from actual damage;
+  Orb speed, travel distance and lifetime do not change.
+
+Integer Chill requires explicit rounding policy. A bounded per-effect/per-victim
+ledger stores fifths: each authored stack contributes4/5, granting only whole
+stacks and retaining the fractional remainder. Five accepted one-stack pulse
+opportunities yield four application attempts, not five rounded-up stacks. New
+victims cannot inherit another victim's remainder; duplicate/older pulse ordinals
+grant nothing. Native immunity, resistance and Chill→Frozen authority still decide
+the actual result. Rejected native applications are not refunded into the ledger.
+At most256 victims are retained; the whole ledger dies with its finite field/Aura.
+This is implementation accounting, not connected status proof.
+
+The first focused suite failure was a fixture timing assumption: SupportRuntime
+already evaluates on a100ms owner cadence, so a5.25s deadline immediately after a
+5.20s owner tick is observed on the next eligible tick. The test now advances to
+5.30s; production scheduling was not changed to satisfy that assertion.
+
+### Cohort H local gate
+
+26 new tests cover compatibility, formulas, independent clocks, cap/warning
+preservation, fractional Chill accounting/bounds, actual shared area/Aura/channel
+fixtures, payment ordering, no partial-tail damage, identity inheritance, cleanup,
+Mobile Domain/Lingering combinations, native-adapter-shaped rejection and retained
+Drain healing dependency. Connection fixtures now record payload contexts; their
+simulated Health arithmetic is not relabeled native damage evidence.
+
+`clean build`: **861 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot/clean exit0 and packaged CustomUI9 validation PASS.
+Artifact: `evidence/stage-11/cohort-h/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `2BAFBF70462776033959FF8F6AFF6B6CA43176EA93F0156C7FD8A9338C9C197A`.
+Rollback: G, SHA-256
+`8902BD6C3D3B129AD28B6BBF1806E715CC03531C8AFDEC40DADE6F6EC45DBA6A`.
+No live deployment, save migration, art, native ability or HUD changes. Local gate
+PASS; all connected pulse/status/input/rendering gates UNVERIFIED. Sixteen of40
+Stage11 primitives have local evidence;24 remain before matrix/hardening closure.

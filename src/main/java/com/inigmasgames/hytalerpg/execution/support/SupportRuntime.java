@@ -299,7 +299,12 @@ public final class SupportRuntime {
     private String advance(Aura aura,double now,SupportWorldPort port){
         return aura.timeline.advance(now,new AuraTimeline.Port(){
             public boolean pay(double seconds,int quantum){return port.upkeep(aura.context,seconds,quantum);}
-            public void pulse(int ordinal,boolean chill){port.auraPulse(aura.context,List.copyOf(aura.enemies),ordinal,chill);}
+            public void pulse(int ordinal,boolean chill){
+                var targets=List.copyOf(aura.enemies);
+                if(chill&&aura.context.compiledPlan().pulses().rapidPulse())targets=targets.stream()
+                        .filter(id->aura.chill.grant(id.toString(),ordinal,1)>0).toList();
+                port.auraPulse(aura.pulseContext,targets,ordinal,chill);
+            }
         });
     }
     public synchronized void cancel(UUID actor,String reason,SupportWorldPort port){
@@ -349,10 +354,12 @@ public final class SupportRuntime {
         Session(SupportProgress state){this.state=state;durable=state;}
     }
     private static final class Aura {
-        final SkillExecutionContext context;final String allocation;double fraction;
+        final SkillExecutionContext context,pulseContext;final String allocation;double fraction;
+        final com.inigmasgames.hytalerpg.execution.ChillPulseLedger chill=new com.inigmasgames.hytalerpg.execution.ChillPulseLedger();
         Set<UUID> members,enemies;UUID sharedTarget;double validUntil,lastVisual;final AuraTimeline timeline;long epoch=-1;int secondary;boolean limitReported;
         Aura(SkillExecutionContext context,String allocation,double fraction,double now,Set<UUID> members,Set<UUID> enemies){
             this.context=context;this.allocation=allocation;this.fraction=fraction;this.members=members;this.enemies=enemies;validUntil=now+.25;lastVisual=now;
+            pulseContext=context.compiledPlan().pulses().payload(context);
             timeline=context.profile().support().upkeepPerSecond()>0?new AuraTimeline(context.profile().support(),now):null;
         }
     }
