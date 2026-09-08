@@ -18,6 +18,7 @@ public final class RpgStateMigrator {
                 case 4 -> migrateV4ToV5(state);
                 case 5 -> migrateV5ToV6(state);
                 case 6 -> migrateV6ToV7(state);
+                case 7 -> migrateV7ToV8(state);
                 default -> throw new IllegalStateException("No migration from RPG schema v" + version);
             };
             version = state.get("schemaVersion").getAsInt();
@@ -113,5 +114,10 @@ public final class RpgStateMigrator {
     private static JsonObject migrateV6ToV7(JsonObject state){
         state.add("inactivePassives",new JsonObject());
         state.addProperty("schemaVersion",7);return state;
+    }
+    private static JsonObject migrateV7ToV8(JsonObject state){
+        // No production earned-reward ledger existed. Do not infer old XP, mastery or point grants.
+        state.add("rewards",new com.google.gson.Gson().toJsonTree(RewardLedger.INITIAL));
+        state.addProperty("schemaVersion",8);return state;
     }
 }

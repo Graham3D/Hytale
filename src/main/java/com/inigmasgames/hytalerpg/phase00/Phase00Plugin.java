@@ -95,6 +95,9 @@ public final class Phase00Plugin extends JavaPlugin {
         var compiler = new LinkCompiler(catalog, graphService, compatibility, combatKernel.balance());
         loadouts = new RpgLoadoutService(catalog, repository, graphService, compiler,
                 new OwnershipEntitlementPolicy(configuration.developmentEntitlements()), skillTrace);
+        loadouts.configureEarnedRewards(new com.inigmasgames.hytalerpg.progress.FileEarnedRewardStore(getDataDirectory().resolve("earned-rewards")));
+        LOGGER.atInfo().log("RPG_STAGE12_REWARD_STORE playerSchema=%d writeAhead=true immutableReceipts=true awardHook=false connectedProof=false",
+                com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA);
         CombatTrace combatTrace = new CombatTrace(skillTrace);
         uiTrace = new RpgUiTraceService(getDataDirectory().resolve("logs").resolve("rpg").resolve("ui-trace.jsonl"));
         var uiProjection = new RpgUiProjectionService(catalog, loadouts, combatKernel.derivedStats(), combatKernel.cooldowns());

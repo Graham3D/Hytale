@@ -47,6 +47,11 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
                 throw new IllegalStateException("Missing schema-4 durable support ledger");
             if(!migration.state().has("inactivePassives")||!migration.state().get("inactivePassives").isJsonObject())
                 throw new IllegalStateException("Missing schema-7 inactive passive state");
+            if(!migration.state().has("rewards")||!migration.state().get("rewards").isJsonObject())
+                throw new IllegalStateException("Missing schema-8 earned-reward checkpoint");
+            var rewardJson=migration.state().getAsJsonObject("rewards");
+            for(String required:List.of("sequence","lastReceiptHash","insight"))
+                if(!rewardJson.has(required)||rewardJson.get(required).isJsonNull())throw new IllegalStateException("Incomplete reward checkpoint "+required);
             var supportJson=migration.state().getAsJsonObject("support");
             if(!migration.state().has("cooldowns")||!migration.state().get("cooldowns").isJsonObject())throw new IllegalStateException("Missing schema-5 cooldown work ledger");
             for(var entry:migration.state().getAsJsonObject("cooldowns").entrySet()){
@@ -96,13 +101,13 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
             envelope.addProperty("envelopeSchema", ENVELOPE_SCHEMA);
             envelope.addProperty("checksum", checksum(gson.toJson(stateJson)));
             envelope.add("state", stateJson);
-            Files.writeString(temp, gson.toJson(envelope), StandardCharsets.UTF_8);
-            if (Files.isRegularFile(path)) Files.copy(path, backup, StandardCopyOption.REPLACE_EXISTING);
-            try {
-                Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-            } catch (java.nio.file.AtomicMoveNotSupportedException unsupported) {
-                Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING);
+            byte[] bytes=gson.toJson(envelope).getBytes(StandardCharsets.UTF_8);
+            try(var channel=java.nio.channels.FileChannel.open(temp,java.nio.file.StandardOpenOption.CREATE,
+                    java.nio.file.StandardOpenOption.TRUNCATE_EXISTING,java.nio.file.StandardOpenOption.WRITE)){
+                var buffer=java.nio.ByteBuffer.wrap(bytes);while(buffer.hasRemaining())channel.write(buffer);channel.force(true);
             }
+            if (Files.isRegularFile(path)) Files.copy(path, backup, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
         } catch (Exception error) {
             try { Files.deleteIfExists(temp); } catch (Exception ignored) {}
             throw new IllegalStateException("Unable to save RPG player state " + path, error);

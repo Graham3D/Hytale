@@ -45,6 +45,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     private final Map<UUID, Holder> states = new ConcurrentHashMap<>();
     private final List<Consumer<UUID>> mutationListeners = new CopyOnWriteArrayList<>();
     private final List<Consumer<UUID>> loadoutMutationListeners = new CopyOnWriteArrayList<>();
+    private EarnedRewardStore earnedRewards;
 
     public RpgLoadoutService(RpgCatalog catalog, RpgPlayerStateRepository repository,
                              RpgLinkGraphService graphService, LinkCompiler compiler,
@@ -57,6 +58,55 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     /** Runtime projection hook. Listener failures cannot roll back or invalidate an already-saved RPG state. */
     public void addMutationListener(Consumer<UUID> listener) { mutationListeners.add(listener); }
     @Override public void addLoadoutMutationListener(Consumer<UUID> listener) { loadoutMutationListeners.add(listener); }
+
+    /** Configure once at startup, before any player can be loaded; no in-memory reward fallback. */
+    public synchronized void configureEarnedRewards(EarnedRewardStore store){
+        if(earnedRewards!=null||!states.isEmpty())throw new IllegalStateException("REWARD_STORE_MUST_BE_CONFIGURED_BEFORE_LOAD");
+        earnedRewards=java.util.Objects.requireNonNull(store);
+    }
+
+    /** Native eligibility belongs to the encounter service; this is the sole durable earned-award boundary. */
+    public EarnedRewardStore.Result awardEarned(UUID player,EarnedReward reward){
+        if(earnedRewards==null)throw new IllegalStateException("EARNED_REWARDS_NOT_CONFIGURED");
+        for(String id:reward.mastery().keySet())if(catalog.skill(new SkillId(id)).isEmpty())throw new IllegalArgumentException("UNKNOWN_MASTERY_SKILL");
+        Holder holder=holder(player);
+        synchronized(holder){
+            try{
+                var result=earnedRewards.award(player,reward,rewardAuthority(player,holder));
+                if(result.outcome()==EarnedRewardStore.Outcome.DUPLICATE)
+                    trace(player,RpgTraceEventType.PROGRESSION_REWARD_DUPLICATE,reward.correlationId(),
+                            rewardDetails(reward,result.sequence(),result.receiptHash()));
+                if(result.recoveredPending())trace(player,RpgTraceEventType.PROGRESSION_REWARD_RECOVERED,reward.correlationId(),
+                        details("sequence",holder.state.rewards.sequence(),"recoveredPending",true));
+                return result;
+            }catch(RuntimeException error){
+                holder.rewardRecoveryRequired=true;
+                trace(player,RpgTraceEventType.PROGRESSION_REWARD_REJECTED,reward.correlationId(),
+                        details("eventId",reward.eventId(),"boundary",error.getMessage()));throw error;
+            }
+        }
+    }
+    private EarnedRewardStore.Authority rewardAuthority(UUID player,Holder holder){
+        return new EarnedRewardStore.Authority(){
+            @Override public RewardCheckpoint current(){return RewardCheckpoint.of(holder.state);}
+            @Override public void commit(RewardIntent intent){
+                if(!intent.player().equals(player)||!current().equals(intent.before()))throw new IllegalStateException("STALE_REWARD_INTENT");
+                for(String id:intent.reward().mastery().keySet())if(catalog.skill(new SkillId(id)).isEmpty())throw new IllegalStateException("RECOVERY_UNKNOWN_MASTERY_SKILL");
+                var candidate=holder.state.copy();intent.after().applyTo(candidate);candidate.revision=Math.addExact(candidate.revision,1);
+                try{repository.save(candidate);}catch(RuntimeException error){holder.persistenceUncertain=true;throw error;}
+                holder.state=candidate;
+                trace(player,RpgTraceEventType.PROGRESSION_REWARD_COMMITTED,intent.reward().correlationId(),
+                        rewardDetails(intent.reward(),candidate.rewards.sequence(),intent.hash()));
+                // No graph recompile or loadout listener: earning XP must not clear Attunement, triggers or effects.
+                // The existing bounded HUD/projection tick reads the same state authority.
+            }
+        };
+    }
+    private static Map<String,Object> rewardDetails(EarnedReward reward,long sequence,String hash){
+        return details("eventId",reward.eventId(),"reason",reward.reason(),"characterXp",reward.characterXp(),"insight",reward.insight(),
+                "mastery",reward.mastery(),"rootCastId",reward.rootCastId(),"skillInstanceId",reward.skillInstanceId(),
+                "correlationId",reward.correlationId(),"sequence",sequence,"receiptHash",hash,"playerPersisted",true);
+    }
 
     @Override public MutationResult equipSkill(UUID player, SkillSlot slot, SkillId skill) {
         String correlation = reference();
@@ -355,6 +405,8 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
                     error.getMessage(), holder.state.revision);
         }
         candidate.revision = holder.state.revision + 1;
+        if(!java.util.Objects.equals(candidate.rewards,holder.state.rewards))return fail(player,correlation,RpgTraceEventType.COMPILE_FAILURE,
+                ValidationCode.INVALID_REQUEST,"Reward checkpoint is owned by the earned-reward authority",holder.state.revision);
         candidate.inactivePassives.keySet().retainAll(holder.state.inactivePassives.keySet());
         candidate.inactivePassives.replaceAll((slot,reason)->holder.state.inactivePassives.get(slot));
         inactiveRecovery.revalidateChanged(holder.state,candidate);
@@ -409,7 +461,14 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     }
 
     private Holder holder(UUID player) {
-        return states.computeIfAbsent(player, ignored -> load(player));
+        Holder holder=states.computeIfAbsent(player, ignored -> load(player));
+        synchronized(holder){
+            if(holder.persistenceUncertain)throw new IllegalStateException("PLAYER_PERSISTENCE_UNCERTAIN: restart and recover durable intent before further mutations");
+            if(holder.rewardRecoveryRequired){
+                earnedRewards.recover(player,rewardAuthority(player,holder));holder.rewardRecoveryRequired=false;
+            }
+        }
+        return holder;
     }
 
     private Holder load(UUID player) {
@@ -446,7 +505,11 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
                 .filter(warning -> warning.startsWith("UNKNOWN_")).toList());
         trace(player, RpgTraceEventType.LOAD, reference(), details("RPG revision", state.revision,
                 "schemaVersion", state.schemaVersion, "warnings", loadWarnings, "validationResult", "PASS"));
-        return new Holder(state);
+        Holder holder=new Holder(state);
+        if(earnedRewards!=null&&earnedRewards.recover(player,rewardAuthority(player,holder)))
+            trace(player,RpgTraceEventType.PROGRESSION_REWARD_RECOVERED,reference(),details("operation","LOAD_RECOVERY",
+                    "sequence",holder.state.rewards.sequence(),"receiptHash",holder.state.rewards.lastReceiptHash()));
+        return holder;
     }
 
     private void removeRoutesToSkill(RpgPlayerState state, SkillSlot slot) {
@@ -538,5 +601,5 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     private static String reference() { return UUID.randomUUID().toString().substring(0, 12); }
 
-    private static final class Holder { private RpgPlayerState state; private Holder(RpgPlayerState state) { this.state = state; } }
+    private static final class Holder { private RpgPlayerState state; private volatile boolean persistenceUncertain; private boolean rewardRecoveryRequired; private Holder(RpgPlayerState state) { this.state = state; } }
 }
