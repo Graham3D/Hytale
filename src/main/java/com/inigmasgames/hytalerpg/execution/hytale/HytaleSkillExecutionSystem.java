@@ -81,6 +81,7 @@ import com.inigmasgames.hytalerpg.execution.reaction.ReactionWindowService;
 import com.inigmasgames.hytalerpg.execution.strike.SkillHitLedger;
 import com.inigmasgames.hytalerpg.execution.strike.StrikeGeometryService;
 import com.inigmasgames.hytalerpg.execution.strike.StrikeRepeatSchedule;
+import com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime;
 import com.inigmasgames.hytalerpg.input.HytaleAbilitySkillInputAdapter;
 import com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService;
 import java.nio.charset.StandardCharsets;
@@ -851,11 +852,16 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         private int executeStrikeHit(SkillExecutionContext context, int hitIndex) {
             StrikeGeometryService.QueryResult<Ref<EntityStore>> selected = select(context, context.profile().strike());
+            Vec3 origin=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
+            Vec3 direction=context.target()==null?facing(store,actor):context.target().direction();
+            if(context.target()!=null&&!context.compiledPlan().strikes().multistrike())origin=context.target().origin();
+            var primaryHits=new ArrayList<StrikeSecondaryRuntime.Hit<Ref<EntityStore>>>();
             int applied = 0;
             for (var target : selected.accepted()) {
                 if (!hits.accept(context.skillInstanceId(), hitIndex, target.stableId())) continue;
                 DamageOutcome outcome = damage(context, target, hitIndex,
                         context.profile().strike().coefficient(), context.snapshot().criticalChance(), DamageCause.PHYSICAL,false,context.skillInstanceId(),!context.derivedRelease());
+                primaryHits.add(new StrikeSecondaryRuntime.Hit<>(target,outcome.preMitigationDamage(),outcome.actualHealthLoss(),outcome.cancelled()));
                 emit(context, RpgTraceEventType.STRIKE_HIT,
                         Map.of("targetId", target.stableId(), "hitIndex", hitIndex,
                                 "preMitigationDamage", outcome.preMitigationDamage(),
@@ -863,7 +869,42 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if (!outcome.cancelled()&&outcome.actualHealthLoss()>0&&!context.profile().strike().statusId().isBlank()) applyStatus(context, target);
                 applied++;
             }
+            try{new StrikeSecondaryRuntime().afterPrimary(context,hitIndex,origin,direction,primaryHits,new StrikeSecondaryRuntime.Port<Ref<EntityStore>>(){
+                public List<StrikeGeometryService.Candidate<Ref<EntityStore>>> candidates(Vec3 center,double radius){
+                    var shape=new AreaGeometry(AreaGeometry.Kind.DISC,center.add(new Vec3(0,-2.5,0)),Vec3.FORWARD,radius,360,0,0,5);
+                    var queried=HytaleAreaQueries.query(store,actor,shape,256);
+                    if(queried.overflow()){emit(context,RpgTraceEventType.STRIKE_SECONDARY_REJECTED,Map.of("reason","BOUNDED_SPATIAL_QUERY_OVERFLOW"));return List.of();}
+                    return queried.candidates().stream().map(c->candidate(c.ref())).filter(java.util.Objects::nonNull).toList();
+                }
+                public boolean lineOfSight(Vec3 center,StrikeGeometryService.Candidate<Ref<EntityStore>> target){
+                    return HytaleAreaQueries.clear(store,center.add(new Vec3(0,.5,0)),target.position().add(new Vec3(0,.5,0)));
+                }
+                public void presentCleave(Vec3 center,Vec3 facing,double range,double angle){
+                    vfx.presentArea(store.getExternalData().getWorld(),new AreaGeometry(AreaGeometry.Kind.SECTOR,center,facing,range,angle,0,0,5),"IMPACT_CLEAVE","PHYSICAL",false,.25);
+                }
+                public void presentPhantom(Vec3 impact,Vec3 destination){
+                    vfx.presentConnection(store.getExternalData().getWorld(),ConnectionShape.capsule(impact.add(new Vec3(0,.5,0)),destination.add(new Vec3(0,.5,0)),.12),"PHYSICAL","IMPACT_PHANTOM",.25);
+                }
+                public void rejected(String effect,String reason){emit(context,RpgTraceEventType.STRIKE_SECONDARY_REJECTED,Map.of("effectInstanceId",effect,"reason",reason));}
+                public void damage(SkillExecutionContext child,StrikeGeometryService.Candidate<Ref<EntityStore>> target,Double resolved){
+                    // No second family dispatch, root commit, status/proc controller or native projectile.
+                    emit(child,RpgTraceEventType.STRIKE_SECONDARY_DISPATCH,Map.of("kind",child.secondaryKind(),"parentExecutionId",context.skillInstanceId(),"targetId",target.stableId(),"resourceCharged",false,"canProc",false));
+                    DamageOutcome result=resolved==null?Port.this.damage(child,target,0,child.profile().strike().coefficient(),child.snapshot().criticalChance(),DamageCause.PHYSICAL,false,child.skillInstanceId(),false):resolvedStrikeSecondary(child,target,resolved);
+                    emit(child,RpgTraceEventType.STRIKE_SECONDARY_RESOLVED,Map.of("kind",child.secondaryKind(),"targetId",target.stableId(),"preMitigationDamage",result.preMitigationDamage(),"actualHealthLoss",result.actualHealthLoss(),"cancelled",result.cancelled(),"offenseRecalculated",resolved==null));
+                }
+            });}catch(RuntimeException failure){
+                // Primary/earlier child may already have hit. Never unwind into a free paid root or retry a claimed effect.
+                emit(context,RpgTraceEventType.STRIKE_SECONDARY_REJECTED,Map.of("reason","SECONDARY_NATIVE_ADAPTER_FAILED","error",failure.getClass().getSimpleName(),"paidRootRetained",true));
+            }
             return applied;
+        }
+        private DamageOutcome resolvedStrikeSecondary(SkillExecutionContext child,StrikeGeometryService.Candidate<Ref<EntityStore>> target,double amount){
+            boolean eligible=child.compiledPlan().resources().leeching()&&!target.protectedTarget()&&HytaleAreaQueries.hostile(store,target.handle(),actor);
+            var nativeResult=new HytaleDamageAdapter().applyResolved(target.handle(),store,actor,DamageCause.PHYSICAL,
+                    new HytaleDamageMetadata(playerRef.getUuid(),child.rootCastId(),child.skillInstanceId(),child.request().correlationId(),amount,Double.NaN,child.skillInstanceId(),false,HytaleDamageMetadata.Origin.DIRECT),amount);
+            if(eligible)recoverObservedLeech(child,target,nativeResult,child.skillInstanceId());
+            double lost=Double.isFinite(nativeResult.healthBefore())&&Double.isFinite(nativeResult.healthAfter())?Math.max(0,nativeResult.healthBefore()-nativeResult.healthAfter()):-1;
+            return new DamageOutcome(nativeResult.preMitigationAmount(),lost,nativeResult.cancelled());
         }
         @Override public SkillExecutionResult executeMovement(SkillExecutionContext context) {
             TransformComponent transform = store.getComponent(actor, TransformComponent.getComponentType());
@@ -1042,16 +1083,17 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT), result,
                     com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage.calculated(context.compiledPlan().hitConditions(),buckets,result,context.snapshot().criticalMultiplier()));
             double after = health(targetStats);
-            if(leechEligible){
-                var recovered=kernel.resources().recoverLeech(context.leechBudget(),
-                        new com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget.HitReceipt(nativeResult.healthBefore(),nativeResult.healthAfter(),nativeResult.cancelled(),true,false),resources());
-                emit(context,RpgTraceEventType.RESOURCE_RECOVERY,Map.of("source","LEECHING","resource",context.leechBudget().resource(),
-                        "gate",recovered.gate(),"actualHealthLoss",recovered.healthLost(),"requested",recovered.requested(),"actualRestored",recovered.restored(),
-                        "totalRootRestored",recovered.totalRestored(),"rootCap",recovered.rootCap(),"effectInstanceId",effectId,"targetId",target.stableId()));
-            }
+            if(leechEligible)recoverObservedLeech(context,target,nativeResult,effectId);
             return new DamageOutcome(nativeResult.preMitigationAmount(),
                     Double.isFinite(before) && Double.isFinite(after) ? Math.max(0.0, before - after) : -1.0,
                     nativeResult.cancelled());
+        }
+        private void recoverObservedLeech(SkillExecutionContext context,StrikeGeometryService.Candidate<Ref<EntityStore>> target,HytaleDamageAdapter.NativeResult nativeResult,String effectId){
+            var recovered=kernel.resources().recoverLeech(context.leechBudget(),
+                    new com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget.HitReceipt(nativeResult.healthBefore(),nativeResult.healthAfter(),nativeResult.cancelled(),true,false),resources());
+            emit(context,RpgTraceEventType.RESOURCE_RECOVERY,Map.of("source","LEECHING","resource",context.leechBudget().resource(),
+                    "gate",recovered.gate(),"actualHealthLoss",recovered.healthLost(),"requested",recovered.requested(),"actualRestored",recovered.restored(),
+                    "totalRootRestored",recovered.totalRestored(),"rootCap",recovered.rootCap(),"effectInstanceId",effectId,"targetId",target.stableId()));
         }
         private void applyStatus(SkillExecutionContext context,
                                  StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
@@ -1252,6 +1294,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             for (var due = repeating.schedule.claimDue(now); due.isPresent(); due = repeating.schedule.claimDue(now)){
                 if(multi){
                     var child=repeating.context.multistrikeCopy(due.getAsInt());
+                    String admission=child.effects().claim(child.skillInstanceId(),1,false);
+                    if(!admission.equals("PASS"))throw new IllegalStateException(admission);
                     emit(child,RpgTraceEventType.EXECUTOR_DISPATCH,Map.of("family","STRIKE","multistrikeIndex",due.getAsInt(),"resourceCharged",false,"canProc",false));
                     try{port.executeStrikeHit(child,0);}finally{hits.clear(child.skillInstanceId());}
                 }else port.executeStrikeHit(repeating.context,due.getAsInt());

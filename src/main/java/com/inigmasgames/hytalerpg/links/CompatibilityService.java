@@ -20,6 +20,9 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(Set.of("cleaving_edge","phantom_reach").contains(passive.id().value())&&
+                (skill.id().value().equals("ground_slam")||com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.frontalStrike(skill.id().value()).filter(v->!v).isPresent()))
+            return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,passive.name()+" requires a frontal damaging Strike, not a radial, movement or reaction-only component.",Set.of("FRONTAL_STRIKE_COMPONENT"),actual);
         if(Set.of("multistrike","ruthless").contains(passive.id().value())&&
                 com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.discreteStrike(skill.id().value(),passive.id().value().equals("multistrike")).filter(v->!v).isPresent())
             return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,passive.name()+" requires an independent discrete damaging Strike; Multistrike excludes an already authored sequence.",Set.of("DISCRETE_STRIKE_COMPONENT"),actual);

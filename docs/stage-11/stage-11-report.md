@@ -976,3 +976,91 @@ No live deployment or save migration. All outputs remain in the GitHub repositor
 owner art/lost-and-found files remain untouched. Connected gates are UNVERIFIED.
 Twenty-five of40 Stage11 primitives have local evidence;15 remain, followed by
 full compatibility-matrix and legacy-state hardening before Stage11 closure.
+
+## Cohort N — Cleaving Edge and Phantom Reach
+
+Baseline M `8ff6d73`. Master LP023/027, finite-root safety, installed native
+WorldSupport attitude query, DamageSystems dispatch and existing spatial/LOS
+adapters reviewed first. R030/0.0.23, compiled-plan schema23, player schema6.
+Two passives, piloting an immediate nonrecursive strike-secondary primitive.
+
+Both passives require a frontal damaging Strike rather than a radial, Movement
+or Reaction-only component. Shield Bash is accepted; Ground Slam, projectile
+skills and reaction-only strikes reject with a typed reason. Existing frontal
+arcs remain eligible. Their original target list and full damage are not replaced
+by an invented single-target attack. All original selected targets—not merely
+the first—are excluded from each additional-target query. This preserves the
+retained Quick Slash/Heavy Swing arc behavior while preventing a passive from
+duplicating damage to an original target.
+
+Cleaving Edge runs one80-degree/3m frontal query at the initial primary execution,
+up to four additional targets at .60 snapshot magnitude. A committed primary miss
+does not erase the cleave's independently valid arc. Geometry uses the same
+authored-facing/committed-direction rule as the strike. Long Reach modifies its
+explicit reach, and Concentration narrows its angle; baseline values remain80/3.
+Targets are sorted by distance then stable identity, deduplicated, and reject
+protected, dead, nonhostile or blocked candidates. Native queries reuse the
+existing4096-NPC scan guard and256-candidate fail-closed bound. No native entity
+reference is kept in the root ledger. Cleave performs ordinary direct damage
+calculation from the inherited offensive snapshot at60% magnitude, with no
+secondary proc or new status/controller invocation.
+
+Phantom Reach requires a successful uncancelled, actual-Health-losing initial
+primary contact. It selects one nearest additional hostile within3m of that
+impact, including vertical distance, with LOS from impact and stable tie order.
+Its direct packet is exactly .60 of that contact's resolved pre-mitigation amount;
+it does not use Health loss as its coefficient, reroll crit, recalculate attributes,
+or apply the offensive modifiers a second time. The same HytaleDamageAdapter /
+DamageSystems path still owns native mitigation, filtering and actual Health.
+No projectile is spawned and the compiled family remains Strike.
+
+Each child has a distinct SkillInstance identity, retains rootCastId/correlationId,
+and shares the committed Leeching cap. Both bypass activation/payment/cooldown and
+mark canProc=false. Multistrike children cannot start them; neither can their own
+secondary children. The two independently equipped passives may each affect the
+same additional victim, under **different** admitted effect IDs; that is two
+authored passive effects, not a replay of either packet. Each controller and each
+effect can be admitted only once. No original primary target receives either
+extra packet.
+
+A root-owned finite effect ledger enforces48 total gameplay effects including the
+primary,16 triggered secondaries and generation3, with a bounded16 controller-key
+set. Multistrike repeats spend non-triggered effect entries; these strike
+secondaries share its counters. Snapshot/Echo/Barrage copies preserve the same
+object. Projectile carrier admission remains in its existing exclusive-family
+registry; this cohort does not claim the later full cross-family matrix is done.
+The new ledger stores bounded keys and counters only and follows context lifetime.
+An uncertain secondary native write keeps its admission spent and cannot replay
+the controller. The native wrapper contains that error rather than unwinding into
+the legacy synchronous root-refund branch after the primary may already have hit.
+
+The existing procedural presentation gateway receives the cleave's actual range/
+angle and a short .25s Phantom impact-to-target connection. Presentation errors
+cannot erase paid gameplay. These are reuse of the approved fallback templates,
+not new HUD elements, art, colliders or damage authorities. Connected rendering,
+animation suitability and client readability remain UNVERIFIED. Trace adds
+STRIKE_SECONDARY_DISPATCH/RESOLVED/REJECTED with parent/effect identity, target,
+actual Health loss, cancellation, noProc and whether offense was recalculated.
+Already-resolved Phantom damage does not fabricate new calculation/crit traces.
+
+### Cohort N local gate
+
+30 new tests: positive/negative compatibility, immutable original profiles,
+primary exclusion for single/multitarget strikes, exact cone and impact-centred
+geometry, range/angle modifier composition, stable nearest ties, LOS/protection,
+candidate overflow, per-controller dedup, exact resolved Phantom arithmetic,
+cancelled/zero-loss exclusions, original misses, shared effect/Leech caps, distinct
+child identities, recursion rejection, resource/cooldown conservation, uncertain
+writes,48/16/3 bounds, and presentation failure isolation. The focused suites and
+full retained suite passed; no connected evidence is inferred from these fixtures.
+
+`clean build`: **1027 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot/clean exit0, native action-lock asset audit retained,
+packaged CustomUI9 validation PASS. Bytecode/call-site evidence retained under
+`evidence/stage-11/cohort-n/api`.
+Artifact: `evidence/stage-11/cohort-n/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `BB39ABDAC3C80139F85134D12D7B3CD6E09678DB7B06D3B4D6B22F0A4221CA44`.
+Rollback M: `DC931839E6A36129BFCD270F699B884FC7AE4EFE20D9F3049FFAD23044631977`.
+No live deployment, save migration, native HUD/input/ability projection or owner
+art changes. Twenty-seven of40 Stage11 primitives now have local evidence;
+13 remain before matrix/legacy-state closure. Connected gates remain UNVERIFIED.

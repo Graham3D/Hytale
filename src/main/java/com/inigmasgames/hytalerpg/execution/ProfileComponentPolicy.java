@@ -13,6 +13,9 @@ public final class ProfileComponentPolicy {
     public static Optional<Boolean> discreteStrike(String skill,boolean excludeAuthoredSequence){
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(discreteStrike(p,excludeAuthoredSequence));
     }
+    public static Optional<Boolean> frontalStrike(String skill){
+        var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(discreteStrike(p,false)&&p.strike().geometry()!=Stage04SkillProfile.Geometry.RADIUS);
+    }
     public static boolean discreteStrike(Stage04SkillProfile p,boolean excludeAuthoredSequence){
         return p.family()==Stage04SkillProfile.Family.STRIKE&&p.strike()!=null&&p.strike().coefficient()>0
                 &&(!excludeAuthoredSequence||p.strike().repeats()==1);
