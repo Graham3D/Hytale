@@ -10,6 +10,11 @@ import java.util.Set;
 public final class CompatibilityService {
     /** Component-introduction seam: do not grant radius to the original projectile carrier. */
     public CompatibilityResult assess(SkillDefinition skill,PassiveDefinition passive,java.util.List<PassiveDefinition> selected) {
+        boolean orbit=selected.stream().anyMatch(p->p.id().value().equals("orbit"))&&com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.orbit(skill.id().value());
+        if(orbit&&Set.of("piercing","fork","chain","return","ricochet","homing","accelerant","ballistics","shrapnel","splinterburst","long_reach","rapid_pulse").contains(passive.id().value()))return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
+                "Orbit removes projectile flight/continuation and pulse cadence; this modifier has no retained eligible component.",Set.of("REMOVED_BY_ORBIT"),skill.linkCompatibilityTags());
+        if(orbit&&Set.of("expanded_radius","concentration","lingering","aftermath","vacuum","repulsion").contains(passive.id().value()))return new CompatibilityResult(true,ValidationCode.ACCEPTED,
+                "Compatible with the converted finite Orbit component",Set.of("CONVERTED_ORBIT_COMPONENT"),Set.of("ORBIT","HAS_RADIUS","HAS_AREA_GEOMETRY","PERSISTENT_FINITE_EFFECT"));
         var base=assess(skill,passive);
         if(base.accepted())return base;
         boolean shockwave=selected.stream().anyMatch(p->p.id().value().equals("shockwave")&&assess(skill,p).accepted());
@@ -29,6 +34,11 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(passive.id().value().equals("orbit")){
+            if(!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.orbit(skill.id().value()))return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
+                    "Orbit requires an implemented projectile or finite Orb payload",Set.of("ORBIT_CONVERSION_COMPONENT"),actual);
+            actual.add("ORBIT_CONVERTIBLE");actual.add("ORB");
+        }
         if(passive.id().value().equals("aftermath")){
             if(!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.aftermath(skill.id().value()))return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
                     "Aftermath requires a finite persistent area/Orb/Orbit, not a channel, Aura, collision wall, travelling carrier or recipient buff.",Set.of("EXPIRING_PERSISTENT_AREA_COMPONENT"),actual);

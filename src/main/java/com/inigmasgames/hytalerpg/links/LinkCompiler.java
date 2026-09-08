@@ -82,6 +82,7 @@ public final class LinkCompiler {
         }
         boolean orbit = bindings.stream().anyMatch(binding -> binding.definition().id().value().equals("orbit"));
         var selected=bindings.stream().map(b->b.definition().id().value()).collect(java.util.stream.Collectors.toSet());
+        if(orbit&&(selected.contains("volley")?3:com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.baseOrbitCount(skill.id().value()))*(selected.contains("barrage")?3:selected.contains("echo")?2:1)>3)return CompilationResult.failure(ValidationCode.CONFLICTING_MODIFIER,"Orbit caps one root at three orbs; this multiplicity/release combination exceeds that cap.");
         if(selected.contains("lifeblood")&&(selected.contains("leeching")||selected.contains("retaliation")))
             return CompilationResult.failure(ValidationCode.CONFLICTING_MODIFIER,"Lifeblood excludes Leeching and nonmanual Retaliation Health spending.");
         if (orbit && bindings.stream().anyMatch(binding -> Set.of("piercing", "fork", "chain", "ricochet", "return")
@@ -121,6 +122,7 @@ public final class LinkCompiler {
                 finalTags.add(family);
                 if (passive.id().value().equals("orbit")) {
                     finalTags.removeAll(Set.of("PROJECTILE", "CAN_PIERCE", "CAN_FORK", "CAN_CHAIN", "CAN_RICOCHET", "CAN_RETURN"));
+                    finalTags.addAll(Set.of("ORB","HAS_RADIUS","HAS_AREA_GEOMETRY","PERSISTENT_FINITE_EFFECT","CAN_AFFECT_ENEMY_POSITION"));
                 }
             }
             String operation = passive.name() + ": " + String.join("; ", passive.modifierOps());
@@ -140,7 +142,7 @@ public final class LinkCompiler {
                 case "efficiency" -> resourceCostMultiplier *= 0.85;
                 case "overcharge" -> {scalablePayloadIncreased+=.25;resourceCostMultiplier*=1.20;}
                 case "concentration" -> {
-                    if(compatibility.assess(skill,passive).accepted())scalablePayloadIncreased+=.30;
+                    if(compatibility.assess(skill,passive).accepted()||bindings.stream().anyMatch(b->b.definition().id().value().equals("orbit")))scalablePayloadIncreased+=.30;
                     else power.add("CONCENTRATION_SCOPE=SECONDARY_ONLY");
                 }
                 case "lingering" -> resourceCostMultiplier*=1.15;
@@ -158,7 +160,7 @@ public final class LinkCompiler {
                 geometry.add(prefix+"RADIUS_MULTIPLIER=1.25");
                 power.add(prefix+"MAGNITUDE_MULTIPLIER=0.90");
             }
-            if(Set.of("vacuum","repulsion").contains(passive.id().value())&&!compatibility.assess(skill,passive).accepted())geometry.add("POSITION_SCOPE=SECONDARY_ONLY");
+            if(Set.of("vacuum","repulsion").contains(passive.id().value())&&!compatibility.assess(skill,passive).accepted()&&bindings.stream().noneMatch(b->b.definition().id().value().equals("orbit")))geometry.add("POSITION_SCOPE=SECONDARY_ONLY");
         }
         continuation.sort(Comparator.comparingInt(LinkCompiler::continuationRank).thenComparing(String::compareTo));
         List<PassiveId> order = bindings.stream().map(binding -> binding.definition().id()).toList();

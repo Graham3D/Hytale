@@ -15,6 +15,14 @@ public final class ConnectionRuntime {
         if(channel&&fields.values().stream().anyMatch(f->f.owner().equals(owner)&&f.profile().channel()))return "CHANNEL_ALREADY_ACTIVE";
         return capacity.admission(owner);
     }
+    public synchronized String admission(UUID owner,com.inigmasgames.hytalerpg.execution.Stage04SkillProfile profile,com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan){
+        String verdict=admission(owner,profile.connection().channel());if(!verdict.equals("PASS"))return verdict;
+        if(plan.orbit()){
+            int active=fields.values().stream().filter(f->f.owner().equals(owner)&&f.context.compiledPlan().orbit()).mapToInt(f->f.profile().details().bladeCount()).sum();
+            if(active+profile.connection().details().bladeCount()>OrbitConversionProfiles.CONFIG.maxOrbs())return "CONVERTED_ORBIT_LIVE_CAP";
+        }
+        return "PASS";
+    }
     public synchronized void start(SkillExecutionContext context,double now,ConnectionWorldPort port) {
         startAt(context,now,port,null,null);
     }
@@ -22,13 +30,23 @@ public final class ConnectionRuntime {
         if(context.profile().connection()==null||!Double.isFinite(now))throw new IllegalArgumentException("Invalid connection start");
         var profile=context.profile().connection();var frame=port.frame();String verdict=port.validate(context,frame.world());
         if(!verdict.equals("PASS"))throw new IllegalStateException(verdict);
-        verdict=admission(context.request().actorId(),profile.channel());if(!verdict.equals("PASS"))throw new IllegalStateException(verdict);
+        verdict=admission(context.request().actorId(),context.profile(),context.compiledPlan());if(!verdict.equals("PASS"))throw new IllegalStateException(verdict);
         var origin=inheritedOrigin==null?frame.feet().add(new Vec3(0,profile.originHeight(),0)):inheritedOrigin;
         Vec3 direction=inheritedDirection!=null?inheritedDirection:context.target()==null?frame.aim():context.target().point().subtract(origin).normalized();
         if(profile.kind()==ConnectionProfile.Kind.WAVE)direction=direction.horizontalNormalized();
         var field=new Field(context,frame.world(),origin,direction,now);
+        if(context.compiledPlan().orbit()&&!context.secondaryKind().equals("aftermath")){
+            int count=profile.details().bladeCount();
+            for(int i=0;i<count;i++)if(context.derivedRelease()||i>0){
+                String claim=context.effects().claim(context.skillInstanceId()+"/orbit-"+i,1,false);
+                if(!claim.equals("PASS"))throw new IllegalStateException(claim);
+            }
+        }
         if(context.secondaryKind().equals("aftermath")){
             String claim=context.effects().claim(context.skillInstanceId(),1,true);if(!claim.equals("PASS"))throw new IllegalStateException(claim);
+            if(context.compiledPlan().orbit())for(int i=1;i<profile.details().bladeCount();i++){
+                claim=context.effects().claim(context.skillInstanceId()+"/orbit-"+i,2,false);if(!claim.equals("PASS"))throw new IllegalStateException(claim);
+            }
             // Leave an expiring Orb's pulse at its final point; this is not another flight/reach grant.
             field.stopped=profile.kind()==ConnectionProfile.Kind.ORB;
         }
@@ -160,6 +178,7 @@ public final class ConnectionRuntime {
             long additions=unique.keySet().stream().filter(id->!field.lastHit.containsKey(id)).count();
             if(field.lastHit.size()+additions>256){finish(field,"TARGET_LEDGER_BUDGET",port);return;}
             var eligible=unique.values().stream().filter(t->(tick-field.lastHit.getOrDefault(t.id(),-1000000))*interval>=p.details().contactCooldown()-1e-9).toList();
+            if(field.context.compiledPlan().orbit())eligible=eligible.stream().filter(t->field.context.effects().claimOrbitContact(t.id(),field.started+at).equals("PASS")).toList();
             field.tick=tick;field.position=center;hit(field,eligible,tick,p.coefficient(),false,center,port);
             if(field.done)return;for(var shape:shapes)port.present(field.context,shape,"BLADE_CONTACT_PROXY",.08);
         }

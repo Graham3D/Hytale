@@ -22,9 +22,10 @@ public final class CompiledProfileResolver {
         if(plan.zones().mobileDomain()&&!ProfileComponentPolicy.mobileZone(authored))
             throw new IllegalArgumentException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
         var modifiers=plan.foundationModifiers();var geometry=plan.geometry();var pulses=plan.pulses();var dots=plan.dots();var controls=plan.controls();var strikes=plan.strikes();
-        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse()&&!dots.active()&&!controls.deepFreeze()&&!strikes.multistrike())return authored;
-        var key=new Key(authored,modifiers,geometry,pulses,dots,controls,strikes);
+        if(!plan.orbit()&&!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse()&&!dots.active()&&!controls.deepFreeze()&&!strikes.multistrike())return authored;
+        var key=new Key(authored,modifiers,geometry,pulses,dots,controls,strikes,plan.orbit()?com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles.count(authored,plan):0);
         var prior=cache.get(key);if(prior!=null)return prior;
+        if(plan.orbit())authored=com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles.convert(authored,plan);
         JsonObject resolved=JSON.toJsonTree(authored).getAsJsonObject();
         resolved.addProperty("windupSeconds",modifiers.windup(authored.windupSeconds()));
         double reach=modifiers.rangeFactor();
@@ -72,6 +73,7 @@ public final class CompiledProfileResolver {
             if(!ProfileComponentPolicy.discreteStrike(authored,true))throw new IllegalArgumentException("MULTISTRIKE_SINGLE_STRIKE_REQUIRED");
             var strike=resolved.getAsJsonObject("strike");strike.addProperty("repeats",3);strike.addProperty("repeatIntervalSeconds",.25);
         }
+        if(plan.orbit()&&authored.projectile()!=null)resolved.getAsJsonObject("connection").add("coefficient",resolved.getAsJsonObject("projectile").get("coefficient"));
         var effective=JSON.fromJson(resolved,Stage04SkillProfile.class);
         if(cache.size()>=CAPACITY)cache.remove(cache.keySet().iterator().next());
         cache.put(key,effective);return effective;
@@ -196,5 +198,5 @@ public final class CompiledProfileResolver {
             }
         }
     }
-    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots,com.inigmasgames.hytalerpg.domain.ControlModifiers controls,com.inigmasgames.hytalerpg.domain.StrikeModifiers strikes){}
+    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots,com.inigmasgames.hytalerpg.domain.ControlModifiers controls,com.inigmasgames.hytalerpg.domain.StrikeModifiers strikes,int orbitCount){}
 }

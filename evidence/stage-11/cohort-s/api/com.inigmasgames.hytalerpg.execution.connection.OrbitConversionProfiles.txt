@@ -1,0 +1,274 @@
+Compiled from "OrbitConversionProfiles.java"
+public final class com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles {
+  private static final com.google.gson.Gson JSON;
+
+  public static final com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles$Config CONFIG;
+
+  private com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  private static com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles$Config load();
+    Code:
+         0: ldc           #7                  // class com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles
+         2: ldc           #9                  // String /rpg/runtime/orbit-conversion.json
+         4: invokevirtual #11                 // Method java/lang/Class.getResourceAsStream:(Ljava/lang/String;)Ljava/io/InputStream;
+         7: astore_0
+         8: aload_0
+         9: ifnonnull     22
+        12: new           #17                 // class java/lang/IllegalStateException
+        15: dup
+        16: ldc           #19                 // String ORBIT_CONFIG_MISSING
+        18: invokespecial #21                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        21: athrow
+        22: getstatic     #24                 // Field JSON:Lcom/google/gson/Gson;
+        25: new           #28                 // class java/io/InputStreamReader
+        28: dup
+        29: aload_0
+        30: getstatic     #30                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+        33: invokespecial #36                 // Method java/io/InputStreamReader."<init>":(Ljava/io/InputStream;Ljava/nio/charset/Charset;)V
+        36: ldc           #39                 // class com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config
+        38: invokevirtual #41                 // Method com/google/gson/Gson.fromJson:(Ljava/io/Reader;Ljava/lang/Class;)Ljava/lang/Object;
+        41: checkcast     #39                 // class com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config
+        44: astore_1
+        45: aload_0
+        46: ifnull        53
+        49: aload_0
+        50: invokevirtual #47                 // Method java/io/InputStream.close:()V
+        53: aload_1
+        54: areturn
+        55: astore_1
+        56: aload_0
+        57: ifnull        73
+        60: aload_0
+        61: invokevirtual #47                 // Method java/io/InputStream.close:()V
+        64: goto          73
+        67: astore_2
+        68: aload_1
+        69: aload_2
+        70: invokevirtual #54                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+        73: aload_1
+        74: athrow
+        75: astore_0
+        76: new           #17                 // class java/lang/IllegalStateException
+        79: dup
+        80: aload_0
+        81: invokespecial #60                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/Throwable;)V
+        84: athrow
+      Exception table:
+         from    to  target type
+             8    45    55   Class java/lang/Throwable
+            60    64    67   Class java/lang/Throwable
+             0    53    75   Class java/io/IOException
+            55    75    75   Class java/io/IOException
+
+  public static boolean eligible(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile);
+    Code:
+         0: aload_0
+         1: invokevirtual #62                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.family:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Family;
+         4: getstatic     #68                 // Field com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Family.PROJECTILE:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Family;
+         7: if_acmpne     17
+        10: aload_0
+        11: invokevirtual #74                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+        14: ifnonnull     48
+        17: aload_0
+        18: invokevirtual #78                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        21: ifnull        52
+        24: getstatic     #82                 // Field com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind.ORB:Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+        27: getstatic     #88                 // Field com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind.ORBIT:Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+        30: invokestatic  #91                 // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+        33: aload_0
+        34: invokevirtual #78                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        37: invokevirtual #97                 // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.kind:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+        40: invokeinterface #103,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+        45: ifeq          52
+        48: iconst_1
+        49: goto          53
+        52: iconst_0
+        53: ireturn
+
+  public static int count(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan);
+    Code:
+         0: aload_1
+         1: invokevirtual #107                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.projectileModifiers:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ProjectileModifiers;
+         4: invokevirtual #113                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ProjectileModifiers.volley:()Z
+         7: ifeq          14
+        10: iconst_3
+        11: goto          57
+        14: aload_0
+        15: invokevirtual #78                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        18: ifnull        56
+        21: aload_0
+        22: invokevirtual #78                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        25: invokevirtual #97                 // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.kind:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+        28: getstatic     #88                 // Field com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind.ORBIT:Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+        31: if_acmpne     56
+        34: getstatic     #119                // Field CONFIG:Lcom/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config;
+        37: invokevirtual #123                // Method com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config.maxOrbs:()I
+        40: aload_0
+        41: invokevirtual #78                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        44: invokevirtual #127                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.details:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details;
+        47: invokevirtual #131                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details.bladeCount:()I
+        50: invokestatic  #136                // Method java/lang/Math.min:(II)I
+        53: goto          57
+        56: iconst_1
+        57: ireturn
+
+  public static com.inigmasgames.hytalerpg.execution.Stage04SkillProfile convert(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan);
+    Code:
+         0: aload_0
+         1: invokestatic  #142                // Method eligible:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+         4: ifne          17
+         7: new           #146                // class java/lang/IllegalArgumentException
+        10: dup
+        11: ldc           #148                // String NO_ORBIT_CONVERSION_COMPONENT
+        13: invokespecial #150                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        16: athrow
+        17: getstatic     #24                 // Field JSON:Lcom/google/gson/Gson;
+        20: aload_0
+        21: invokevirtual #151                // Method com/google/gson/Gson.toJsonTree:(Ljava/lang/Object;)Lcom/google/gson/JsonElement;
+        24: invokevirtual #155                // Method com/google/gson/JsonElement.getAsJsonObject:()Lcom/google/gson/JsonObject;
+        27: astore_2
+        28: getstatic     #119                // Field CONFIG:Lcom/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config;
+        31: astore_3
+        32: aload_0
+        33: invokevirtual #74                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+        36: ifnull        49
+        39: aload_0
+        40: invokevirtual #74                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+        43: invokevirtual #161                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.radius:()D
+        46: goto          56
+        49: aload_0
+        50: invokevirtual #78                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        53: invokevirtual #167                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.radius:()D
+        56: dstore        4
+        58: aload_0
+        59: invokevirtual #78                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        62: ifnull        75
+        65: aload_0
+        66: invokevirtual #78                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        69: invokevirtual #168                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.element:()Ljava/lang/String;
+        72: goto          210
+        75: aload_1
+        76: invokevirtual #172                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.finalTags:()Ljava/util/Set;
+        79: ldc           #176                // String COLD
+        81: invokeinterface #103,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+        86: ifeq          94
+        89: ldc           #176                // String COLD
+        91: goto          210
+        94: aload_1
+        95: invokevirtual #172                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.finalTags:()Ljava/util/Set;
+        98: ldc           #178                // String FIRE
+       100: invokeinterface #103,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+       105: ifeq          113
+       108: ldc           #178                // String FIRE
+       110: goto          210
+       113: aload_1
+       114: invokevirtual #172                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.finalTags:()Ljava/util/Set;
+       117: ldc           #180                // String EARTH
+       119: invokeinterface #103,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+       124: ifeq          132
+       127: ldc           #180                // String EARTH
+       129: goto          210
+       132: aload_1
+       133: invokevirtual #172                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.finalTags:()Ljava/util/Set;
+       136: ldc           #182                // String POISON
+       138: invokeinterface #103,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+       143: ifeq          151
+       146: ldc           #182                // String POISON
+       148: goto          210
+       151: aload_1
+       152: invokevirtual #172                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.finalTags:()Ljava/util/Set;
+       155: ldc           #184                // String NATURE
+       157: invokeinterface #103,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+       162: ifeq          170
+       165: ldc           #184                // String NATURE
+       167: goto          210
+       170: aload_1
+       171: invokevirtual #172                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.finalTags:()Ljava/util/Set;
+       174: ldc           #186                // String VOID
+       176: invokeinterface #103,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+       181: ifeq          189
+       184: ldc           #186                // String VOID
+       186: goto          210
+       189: aload_1
+       190: invokevirtual #172                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.finalTags:()Ljava/util/Set;
+       193: ldc           #188                // String ARCANE
+       195: invokeinterface #103,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+       200: ifeq          208
+       203: ldc           #188                // String ARCANE
+       205: goto          210
+       208: ldc           #190                // String PHYSICAL
+       210: astore        6
+       212: new           #132                // class com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details
+       215: dup
+       216: dconst_0
+       217: invokestatic  #192                // InterfaceMethod java/util/List.of:()Ljava/util/List;
+       220: aload_0
+       221: aload_1
+       222: invokestatic  #197                // Method count:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;)I
+       225: aload_3
+       226: invokevirtual #201                // Method com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config.degreesPerSecond:()D
+       229: aload_3
+       230: invokevirtual #204                // Method com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config.targetIntervalSeconds:()D
+       233: dconst_0
+       234: ldc           #207                // String
+       236: dconst_0
+       237: invokespecial #209                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details."<init>":(DLjava/util/List;IDDDLjava/lang/String;D)V
+       240: astore        7
+       242: new           #98                 // class com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile
+       245: dup
+       246: getstatic     #88                 // Field com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind.ORBIT:Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+       249: aload_3
+       250: invokevirtual #212                // Method com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config.radius:()D
+       253: dconst_0
+       254: ldc2_w        #213                // double 0.1d
+       257: dload         4
+       259: ldc2_w        #215                // double 2.0d
+       262: dmul
+       263: invokestatic  #217                // Method java/lang/Math.max:(DD)D
+       266: dconst_0
+       267: dconst_0
+       268: aload_3
+       269: invokevirtual #221                // Method com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config.durationSeconds:()D
+       272: aload_3
+       273: invokevirtual #224                // Method com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config.sampleSeconds:()D
+       276: aload_0
+       277: invokevirtual #227                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.damageCoefficient:()D
+       280: dconst_0
+       281: dload         4
+       283: aload_3
+       284: invokevirtual #230                // Method com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config.originHeight:()D
+       287: aload         6
+       289: aload         7
+       291: invokespecial #233                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile."<init>":(Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;DDDDDDDDDDDLjava/lang/String;Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details;)V
+       294: astore        8
+       296: aload_2
+       297: ldc           #236                // String family
+       299: ldc           #237                // String ORBIT
+       301: invokevirtual #238                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/String;)V
+       304: aload_2
+       305: ldc           #244                // String connection
+       307: getstatic     #24                 // Field JSON:Lcom/google/gson/Gson;
+       310: aload         8
+       312: invokevirtual #151                // Method com/google/gson/Gson.toJsonTree:(Ljava/lang/Object;)Lcom/google/gson/JsonElement;
+       315: invokevirtual #245                // Method com/google/gson/JsonObject.add:(Ljava/lang/String;Lcom/google/gson/JsonElement;)V
+       318: getstatic     #24                 // Field JSON:Lcom/google/gson/Gson;
+       321: aload_2
+       322: ldc           #63                 // class com/inigmasgames/hytalerpg/execution/Stage04SkillProfile
+       324: invokevirtual #249                // Method com/google/gson/Gson.fromJson:(Lcom/google/gson/JsonElement;Ljava/lang/Class;)Ljava/lang/Object;
+       327: checkcast     #63                 // class com/inigmasgames/hytalerpg/execution/Stage04SkillProfile
+       330: areturn
+
+  static {};
+    Code:
+         0: new           #42                 // class com/google/gson/Gson
+         3: dup
+         4: invokespecial #252                // Method com/google/gson/Gson."<init>":()V
+         7: putstatic     #24                 // Field JSON:Lcom/google/gson/Gson;
+        10: invokestatic  #253                // Method load:()Lcom/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config;
+        13: putstatic     #119                // Field CONFIG:Lcom/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles$Config;
+        16: return
+}

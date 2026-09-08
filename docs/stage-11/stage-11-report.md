@@ -1362,3 +1362,55 @@ Player schema6 and native resource/HUD/input ownership unchanged. No art or live
 mods changed; no Google Drive writes. Thirty-two of40 Stage11 primitives have local
 cohort evidence; eight and compatibility/legacy-state closure remain. Connected
 damage, expiry timing, collision, NPC state and presentation remain UNVERIFIED.
+
+## R030 cohort S — Orbit conversion (LP039)
+
+Local gate complete; connected gate UNVERIFIED. Compiled plan schema28 invalidates
+older cached plans; player schema6 is unchanged. Orbit now transforms implemented
+projectile/Orb payloads into the existing finite ConnectionRuntime ORBIT family.
+The immutable conversion retains equipment, ammunition, damage and status metadata.
+It does not spawn a native projectile carrier or duplicate native damage/resources.
+Approved parameters are data in `rpg/runtime/orbit-conversion.json`:4 seconds,
+70% magnitude,2.5m orbit radius,1.3m origin height,120 degrees/sec, at most3 orbs,
+shared.75s victim contact interval. Contact geometry uses the original payload's
+radius and existing swept capsule/AABB/LOS queries, not artwork or a broad disc.
+
+One original payload makes one orb; Volley makes three at its existing magnitude
+factor. Converted multi-orb input clamps to three (unconverted Shadow Blades stays
+at its authored four). Echo/Barrage multiplicity is rejected at compile time if
+the resulting count exceeds three. Separate converted instances share the original
+root contact ledger, effect budget, Leech/displacement/status ownership and one
+resource/cooldown commitment. Live converted-orb capacity also checks other casts;
+a later pending child can be rejected if another cast uses capacity meanwhile.
+Capacity is never expanded to rescue a paid repeat. Barrage now assigns distinct
+converted instance IDs without changing existing projectile instance behavior.
+
+Carrier continuations and unused flight-only modifiers reject after conversion,
+independent of link order. Radius, Concentration, finite duration, Aftermath and
+position modifiers assess the introduced spatial component; they do not quietly
+stay attached to a removed flight component. Projectile direct-hit penalties are
+retained in the converted connection coefficient. Burn/Poison/Chill and authored
+knockback still use their existing native adapter after observed Health loss.
+Ammunition is checked and consumed once through HytaleAmmoAdapter. No uncertain
+late native exception refunds ammo after a field may already have hit.
+
+Integration inspection found delayed converted releases were checking a stale
+aim endpoint. Converted Orbit now revalidates the current caster origin while
+retaining world/equipment/action-state checks. It owns space around the caster,
+not the old aim point. This is a code-boundary correction, not connected proof.
+
+27 new deterministic tests cover immutable conversion, exact configuration,
+dispatch, contact cadence, geometry, duration, status metadata, removed capability
+rejections, multiplicity, shared root identity/budgets, live caps, cancellation,
+simulation gaps, movement, Aftermath and unchanged payment. Full `clean build`:
+**1154 PASS**, no failures/errors/skips. Normal isolated three-mod network boot,
+asset resolution, clean exit0 and nine packaged CustomUI documents pass. Structural
+native call-site evidence is in `evidence/stage-11/cohort-s/api`; neither it nor the
+fixtures establish connected collision, input, damage or rendering.
+
+Artifact `evidence/stage-11/cohort-s/artifacts/HytaleRPG-0.0.23.jar`:
+`771E6A1596D543F3642C6BD64D06593B79F169520B4C2859052CB59F47FD6CB6`.
+Rollback R: `0C7DA5E5D7DC652A442A2DCB249150E64ACD9115E77440D0AF51C176AC92C6EC`.
+All87 skills/66 passives retained; native HUD/input/XP and live three mods unchanged.
+No owner art or Google Drive writes. Seven Stage11 passives plus matrix/legacy-state
+closure remain; progression/hardening stages have not started.

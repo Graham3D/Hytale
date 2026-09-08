@@ -50,7 +50,8 @@ public final class SkillExecutorRegistry {
                 forwarding(Stage04SkillProfile.Family.SUMMON, SkillExecutionPort::executeSummon),
                 forwarding(Stage04SkillProfile.Family.CORPSE, SkillExecutionPort::executeSummon),
                 forwarding(Stage04SkillProfile.Family.BEAM, SkillExecutionPort::executeConnection),
-                forwarding(Stage04SkillProfile.Family.ORB, SkillExecutionPort::executeConnection)));
+                forwarding(Stage04SkillProfile.Family.ORB, SkillExecutionPort::executeConnection),
+                forwarding(Stage04SkillProfile.Family.ORBIT, SkillExecutionPort::executeConnection)));
     }
     private static SkillFamilyExecutor forwarding(Stage04SkillProfile.Family family, Dispatch dispatch) {
         return new SkillFamilyExecutor() {

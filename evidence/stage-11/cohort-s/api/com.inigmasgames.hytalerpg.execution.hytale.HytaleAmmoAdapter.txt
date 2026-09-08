@@ -1,0 +1,123 @@
+Compiled from "HytaleAmmoAdapter.java"
+public final class com.inigmasgames.hytalerpg.execution.hytale.HytaleAmmoAdapter {
+  public com.inigmasgames.hytalerpg.execution.hytale.HytaleAmmoAdapter();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public boolean available(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.inigmasgames.hytalerpg.execution.Stage04SkillProfile$Projectile);
+    Code:
+         0: aload_3
+         1: invokevirtual #7                  // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.requiresAmmo:()Z
+         4: ifne          9
+         7: iconst_1
+         8: ireturn
+         9: aload_1
+        10: aload_2
+        11: invokestatic  #13                 // Method inventory:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/server/core/inventory/container/ItemContainer;
+        14: astore        4
+        16: aload         4
+        18: ifnull        50
+        21: aload         4
+        23: new           #19                 // class com/hypixel/hytale/server/core/inventory/ItemStack
+        26: dup
+        27: aload_3
+        28: invokevirtual #21                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.ammoItemId:()Ljava/lang/String;
+        31: aload_3
+        32: invokevirtual #25                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.ammoQuantity:()I
+        35: invokespecial #29                 // Method com/hypixel/hytale/server/core/inventory/ItemStack."<init>":(Ljava/lang/String;I)V
+        38: iconst_1
+        39: iconst_1
+        40: invokevirtual #32                 // Method com/hypixel/hytale/server/core/inventory/container/ItemContainer.canRemoveItemStack:(Lcom/hypixel/hytale/server/core/inventory/ItemStack;ZZ)Z
+        43: ifeq          50
+        46: iconst_1
+        47: goto          51
+        50: iconst_0
+        51: ireturn
+
+  public com.inigmasgames.hytalerpg.execution.hytale.HytaleAmmoAdapter$Token consume(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.inigmasgames.hytalerpg.execution.Stage04SkillProfile$Projectile);
+    Code:
+         0: aload_3
+         1: invokevirtual #7                  // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.requiresAmmo:()Z
+         4: ifne          11
+         7: getstatic     #38                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleAmmoAdapter$Token.NONE:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleAmmoAdapter$Token;
+        10: areturn
+        11: aload_1
+        12: aload_2
+        13: invokestatic  #13                 // Method inventory:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/server/core/inventory/container/ItemContainer;
+        16: astore        4
+        18: new           #19                 // class com/hypixel/hytale/server/core/inventory/ItemStack
+        21: dup
+        22: aload_3
+        23: invokevirtual #21                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.ammoItemId:()Ljava/lang/String;
+        26: aload_3
+        27: invokevirtual #25                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.ammoQuantity:()I
+        30: invokespecial #29                 // Method com/hypixel/hytale/server/core/inventory/ItemStack."<init>":(Ljava/lang/String;I)V
+        33: astore        5
+        35: aload         4
+        37: ifnull        55
+        40: aload         4
+        42: aload         5
+        44: iconst_1
+        45: iconst_1
+        46: invokevirtual #44                 // Method com/hypixel/hytale/server/core/inventory/container/ItemContainer.removeItemStack:(Lcom/hypixel/hytale/server/core/inventory/ItemStack;ZZ)Lcom/hypixel/hytale/server/core/inventory/transaction/ItemStackTransaction;
+        49: invokevirtual #48                 // Method com/hypixel/hytale/server/core/inventory/transaction/ItemStackTransaction.succeeded:()Z
+        52: ifne          65
+        55: new           #53                 // class java/lang/IllegalStateException
+        58: dup
+        59: ldc           #55                 // String Required projectile ammunition changed before commit
+        61: invokespecial #57                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        64: athrow
+        65: new           #39                 // class com/inigmasgames/hytalerpg/execution/hytale/HytaleAmmoAdapter$Token
+        68: dup
+        69: aload_3
+        70: invokevirtual #21                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.ammoItemId:()Ljava/lang/String;
+        73: aload_3
+        74: invokevirtual #25                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.ammoQuantity:()I
+        77: invokespecial #60                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAmmoAdapter$Token."<init>":(Ljava/lang/String;I)V
+        80: areturn
+
+  public void refund(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.inigmasgames.hytalerpg.execution.hytale.HytaleAmmoAdapter$Token);
+    Code:
+         0: aload_3
+         1: ifnull        11
+         4: aload_3
+         5: invokevirtual #61                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAmmoAdapter$Token.quantity:()I
+         8: ifne          12
+        11: return
+        12: aload_1
+        13: aload_2
+        14: invokestatic  #13                 // Method inventory:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/server/core/inventory/container/ItemContainer;
+        17: astore        4
+        19: aload         4
+        21: ifnull        53
+        24: aload         4
+        26: new           #19                 // class com/hypixel/hytale/server/core/inventory/ItemStack
+        29: dup
+        30: aload_3
+        31: invokevirtual #64                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAmmoAdapter$Token.itemId:()Ljava/lang/String;
+        34: aload_3
+        35: invokevirtual #61                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAmmoAdapter$Token.quantity:()I
+        38: invokespecial #29                 // Method com/hypixel/hytale/server/core/inventory/ItemStack."<init>":(Ljava/lang/String;I)V
+        41: iconst_1
+        42: iconst_1
+        43: iconst_1
+        44: invokevirtual #67                 // Method com/hypixel/hytale/server/core/inventory/container/ItemContainer.addItemStack:(Lcom/hypixel/hytale/server/core/inventory/ItemStack;ZZZ)Lcom/hypixel/hytale/server/core/inventory/transaction/ItemStackTransaction;
+        47: invokevirtual #48                 // Method com/hypixel/hytale/server/core/inventory/transaction/ItemStackTransaction.succeeded:()Z
+        50: ifne          63
+        53: new           #53                 // class java/lang/IllegalStateException
+        56: dup
+        57: ldc           #71                 // String Could not refund projectile ammunition
+        59: invokespecial #57                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        62: athrow
+        63: return
+
+  private static com.hypixel.hytale.server.core.inventory.container.ItemContainer inventory(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_1
+         1: aload_0
+         2: getstatic     #73                 // Field com/hypixel/hytale/server/core/inventory/InventoryComponent.HOTBAR_STORAGE_BACKPACK:[Lcom/hypixel/hytale/component/ComponentType;
+         5: invokestatic  #79                 // Method com/hypixel/hytale/server/core/inventory/InventoryComponent.getCombined:(Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;[Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/server/core/inventory/container/CombinedItemContainer;
+         8: areturn
+}

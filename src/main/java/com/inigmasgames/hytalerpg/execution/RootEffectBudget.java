@@ -9,6 +9,13 @@ public final class RootEffectBudget {
     private int triggered;
     private final com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement=new com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger();
     private final Map<String,Double> statusTimes=new HashMap<>();
+    private final Map<String,Double> orbitContacts=new HashMap<>();
+    public synchronized String claimOrbitContact(String target,double now){
+        if(target==null||target.isBlank()||target.length()>256||!Double.isFinite(now))return "INVALID_ORBIT_CONTACT";
+        if(now-orbitContacts.getOrDefault(target,Double.NEGATIVE_INFINITY)<.75-1e-9)return "ROOT_ORBIT_CONTACT_ICD";
+        if(!orbitContacts.containsKey(target)&&orbitContacts.size()>=256)return "ROOT_ORBIT_TARGET_BUDGET";
+        orbitContacts.put(target,now);return "PASS";
+    }
     public synchronized boolean statusReady(String target,double now,double interval){return Double.isFinite(now)&&Double.isFinite(interval)&&interval>=0
             &&(statusTimes.containsKey(target)||statusTimes.size()<256)&&now-statusTimes.getOrDefault(target,Double.NEGATIVE_INFINITY)>=interval-1e-9;}
     public synchronized void statusApplied(String target,double now){if(statusTimes.containsKey(target)||statusTimes.size()<256)statusTimes.put(target,now);}

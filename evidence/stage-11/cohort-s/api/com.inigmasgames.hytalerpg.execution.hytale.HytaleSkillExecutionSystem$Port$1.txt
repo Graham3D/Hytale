@@ -1,0 +1,954 @@
+Compiled from "HytaleSkillExecutionSystem.java"
+class com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem$Port$1 implements com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort {
+  private final java.util.Map<java.lang.String, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> refs;
+
+  final com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem$Port this$1;
+
+  com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem$Port$1(com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem$Port);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: dup
+         3: invokestatic  #3                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+         6: pop
+         7: putfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        10: aload_0
+        11: invokespecial #15                 // Method java/lang/Object."<init>":()V
+        14: aload_0
+        15: new           #21                 // class java/util/HashMap
+        18: dup
+        19: invokespecial #23                 // Method java/util/HashMap."<init>":()V
+        22: putfield      #24                 // Field refs:Ljava/util/Map;
+        25: return
+
+  public com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort$Frame frame();
+    Code:
+         0: new           #28                 // class com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Frame
+         3: dup
+         4: aload_0
+         5: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+         8: getfield      #30                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.playerRef:Lcom/hypixel/hytale/server/core/universe/PlayerRef;
+        11: invokevirtual #36                 // Method com/hypixel/hytale/server/core/universe/PlayerRef.getWorldUuid:()Ljava/util/UUID;
+        14: aload_0
+        15: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        18: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        21: aload_0
+        22: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        25: getfield      #46                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actor:Lcom/hypixel/hytale/component/Ref;
+        28: invokestatic  #50                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        31: invokevirtual #56                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        34: checkcast     #51                 // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+        37: invokevirtual #62                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+        40: invokestatic  #66                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.vec:(Lorg/joml/Vector3dc;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        43: aload_0
+        44: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        47: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        50: aload_0
+        51: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        54: getfield      #46                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actor:Lcom/hypixel/hytale/component/Ref;
+        57: invokestatic  #70                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.aim:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        60: invokespecial #74                 // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Frame."<init>":(Ljava/util/UUID;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)V
+        63: areturn
+
+  public java.lang.String validate(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, java.util.UUID);
+    Code:
+         0: aload_0
+         1: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+         4: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actorAliveAndUsable:()Z
+         7: ifne          13
+        10: ldc           #81                 // String ACTOR_NOT_USABLE
+        12: areturn
+        13: aload_2
+        14: aload_0
+        15: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        18: getfield      #30                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.playerRef:Lcom/hypixel/hytale/server/core/universe/PlayerRef;
+        21: invokevirtual #36                 // Method com/hypixel/hytale/server/core/universe/PlayerRef.getWorldUuid:()Ljava/util/UUID;
+        24: invokevirtual #83                 // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        27: ifne          33
+        30: ldc           #89                 // String WORLD_CHANGED
+        32: areturn
+        33: aload_0
+        34: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        37: invokevirtual #91                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.equipment:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+        40: astore_3
+        41: aload_1
+        42: invokevirtual #95                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.equipment:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+        45: astore        4
+        47: aload         4
+        49: ifnull        75
+        52: aload_3
+        53: ifnull        75
+        56: aload_0
+        57: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        60: aload_3
+        61: invokevirtual #98                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment.mainHand:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Item;
+        64: aload         4
+        66: invokevirtual #98                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment.mainHand:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Item;
+        69: invokevirtual #104                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.sameItem:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Item;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Item;)Z
+        72: ifne          78
+        75: ldc           #108                // String COMMITTED_EQUIPMENT_CHANGED
+        77: areturn
+        78: aload_1
+        79: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        82: invokevirtual #114                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        85: invokevirtual #120                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.channel:()Z
+        88: ifeq          225
+        91: aload_0
+        92: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        95: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+        98: getfield      #129                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.kernel:Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;
+       101: invokevirtual #133                // Method com/inigmasgames/hytalerpg/combat/RpgCombatKernel.statuses:()Lcom/inigmasgames/hytalerpg/combat/status/StatusService;
+       104: aload_0
+       105: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       108: getfield      #30                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.playerRef:Lcom/hypixel/hytale/server/core/universe/PlayerRef;
+       111: invokevirtual #139                // Method com/hypixel/hytale/server/core/universe/PlayerRef.getUuid:()Ljava/util/UUID;
+       114: invokevirtual #142                // Method com/inigmasgames/hytalerpg/combat/status/StatusService.inspect:(Ljava/util/UUID;)Lcom/inigmasgames/hytalerpg/combat/status/StatusService$Snapshot;
+       117: invokevirtual #148                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$Snapshot.active:()Ljava/util/Map;
+       120: astore        5
+       122: aload         5
+       124: getstatic     #154                // Field com/inigmasgames/hytalerpg/combat/status/RpgStatusType.FROZEN:Lcom/inigmasgames/hytalerpg/combat/status/RpgStatusType;
+       127: invokeinterface #160,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       132: ifne          161
+       135: aload         5
+       137: getstatic     #165                // Field com/inigmasgames/hytalerpg/combat/status/RpgStatusType.STAGGER:Lcom/inigmasgames/hytalerpg/combat/status/RpgStatusType;
+       140: invokeinterface #160,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       145: ifne          161
+       148: aload         5
+       150: getstatic     #168                // Field com/inigmasgames/hytalerpg/combat/status/RpgStatusType.FEAR:Lcom/inigmasgames/hytalerpg/combat/status/RpgStatusType;
+       153: invokeinterface #160,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       158: ifeq          164
+       161: ldc           #171                // String CHANNEL_CONTROL_INTERRUPT
+       163: areturn
+       164: aload_0
+       165: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       168: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+       171: aload_0
+       172: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       175: getfield      #46                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actor:Lcom/hypixel/hytale/component/Ref;
+       178: invokestatic  #173                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       181: invokevirtual #56                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       184: checkcast     #174                // class com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent
+       187: astore        6
+       189: invokestatic  #176                // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+       192: ldc           #182                // String Stun
+       194: invokevirtual #184                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+       197: checkcast     #177                // class com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect
+       200: astore        7
+       202: aload         6
+       204: ifnull        225
+       207: aload         7
+       209: ifnull        225
+       212: aload         6
+       214: aload         7
+       216: invokevirtual #190                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.hasEffect:(Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect;)Z
+       219: ifeq          225
+       222: ldc           #194                // String CHANNEL_NATIVE_STUN_INTERRUPT
+       224: areturn
+       225: ldc           #196                // String PASS
+       227: areturn
+
+  public com.inigmasgames.hytalerpg.execution.math.Vec3 unobstructedEndpoint(com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.math.Vec3);
+    Code:
+         0: aload_2
+         1: aload_1
+         2: invokevirtual #198                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.subtract:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+         5: invokevirtual #204                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.length:()D
+         8: dstore_3
+         9: dload_3
+        10: ldc2_w        #208                // double 1.0E-9d
+        13: dcmpg
+        14: ifgt          21
+        17: aload_1
+        18: goto          38
+        21: aload_0
+        22: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        25: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        28: aload_1
+        29: aload_2
+        30: aload_1
+        31: invokevirtual #198                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.subtract:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        34: dload_3
+        35: invokestatic  #210                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries.rayEndpoint:(Lcom/hypixel/hytale/component/Store;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        38: areturn
+
+  public com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort$Query query(com.inigmasgames.hytalerpg.execution.connection.ConnectionShape, int);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokestatic  #216                // InterfaceMethod java/util/List.of:(Ljava/lang/Object;)Ljava/util/List;
+         5: iload_2
+         6: invokevirtual #222                // Method query:(Ljava/util/List;I)Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Query;
+         9: areturn
+
+  public com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort$Query query(java.util.List<com.inigmasgames.hytalerpg.execution.connection.ConnectionShape>, int);
+    Code:
+         0: aload_0
+         1: getfield      #24                 // Field refs:Ljava/util/Map;
+         4: invokeinterface #226,  1          // InterfaceMethod java/util/Map.clear:()V
+         9: aload_0
+        10: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        13: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        16: aload_0
+        17: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        20: getfield      #46                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actor:Lcom/hypixel/hytale/component/Ref;
+        23: aload_1
+        24: invokedynamic #229,  0            // InvokeDynamic #0:test:(Ljava/util/List;)Ljava/util/function/Predicate;
+        29: iload_2
+        30: invokestatic  #233                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries.query:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;Ljava/util/function/Predicate;I)Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Result;
+        33: astore_3
+        34: new           #236                // class java/util/ArrayList
+        37: dup
+        38: invokespecial #238                // Method java/util/ArrayList."<init>":()V
+        41: astore        4
+        43: aload_3
+        44: invokevirtual #239                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Result.candidates:()Ljava/util/List;
+        47: invokeinterface #245,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+        52: astore        5
+        54: aload         5
+        56: invokeinterface #249,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        61: ifeq          152
+        64: aload         5
+        66: invokeinterface #254,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        71: checkcast     #258                // class com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Candidate
+        74: astore        6
+        76: aload_0
+        77: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        80: aload         6
+        82: invokevirtual #260                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Candidate.ref:()Lcom/hypixel/hytale/component/Ref;
+        85: invokevirtual #264                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.candidate:(Lcom/hypixel/hytale/component/Ref;)Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;
+        88: astore        7
+        90: aload         7
+        92: ifnull        54
+        95: aload         7
+        97: invokevirtual #268                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.protectedTarget:()Z
+       100: ifeq          106
+       103: goto          54
+       106: aload_0
+       107: getfield      #24                 // Field refs:Ljava/util/Map;
+       110: aload         7
+       112: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.stableId:()Ljava/lang/String;
+       115: aload         6
+       117: invokevirtual #260                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Candidate.ref:()Lcom/hypixel/hytale/component/Ref;
+       120: invokeinterface #277,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       125: pop
+       126: aload         4
+       128: new           #281                // class com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Target
+       131: dup
+       132: aload         7
+       134: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.stableId:()Ljava/lang/String;
+       137: aload         6
+       139: invokevirtual #283                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Candidate.bounds:()Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+       142: invokespecial #287                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Target."<init>":(Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)V
+       145: invokevirtual #290                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+       148: pop
+       149: goto          54
+       152: new           #293                // class com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Query
+       155: dup
+       156: aload         4
+       158: aload_3
+       159: invokevirtual #295                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Result.overflow:()Z
+       162: invokespecial #298                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Query."<init>":(Ljava/util/List;Z)V
+       165: areturn
+
+  public java.util.Optional<com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort$Target> resolveTarget(java.lang.String);
+    Code:
+         0: aload_1
+         1: ifnonnull     8
+         4: invokestatic  #301                // Method java/util/Optional.empty:()Ljava/util/Optional;
+         7: areturn
+         8: aload_0
+         9: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        12: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        15: invokevirtual #307                // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+        18: checkcast     #310                // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+        21: aload_1
+        22: invokestatic  #312                // Method java/util/UUID.fromString:(Ljava/lang/String;)Ljava/util/UUID;
+        25: invokevirtual #316                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getRefFromUUID:(Ljava/util/UUID;)Lcom/hypixel/hytale/component/Ref;
+        28: astore_2
+        29: aload_2
+        30: ifnull        61
+        33: aload_2
+        34: invokevirtual #320                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        37: ifeq          61
+        40: aload_0
+        41: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        44: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        47: aload_2
+        48: aload_0
+        49: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        52: getfield      #46                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actor:Lcom/hypixel/hytale/component/Ref;
+        55: invokestatic  #325                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries.hostile:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;)Z
+        58: ifne          65
+        61: invokestatic  #301                // Method java/util/Optional.empty:()Ljava/util/Optional;
+        64: areturn
+        65: aload_0
+        66: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        69: aload_2
+        70: invokevirtual #264                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.candidate:(Lcom/hypixel/hytale/component/Ref;)Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;
+        73: astore_3
+        74: aload_0
+        75: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        78: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        81: aload_2
+        82: invokestatic  #329                // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        85: invokevirtual #56                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        88: checkcast     #330                // class com/hypixel/hytale/server/core/modules/entity/component/BoundingBox
+        91: astore        4
+        93: aload_3
+        94: ifnull        109
+        97: aload_3
+        98: invokevirtual #268                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.protectedTarget:()Z
+       101: ifne          109
+       104: aload         4
+       106: ifnonnull     113
+       109: invokestatic  #301                // Method java/util/Optional.empty:()Ljava/util/Optional;
+       112: areturn
+       113: aload_0
+       114: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       117: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+       120: aload_2
+       121: invokestatic  #50                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       124: invokevirtual #56                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       127: checkcast     #51                 // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+       130: invokevirtual #62                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+       133: invokestatic  #66                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.vec:(Lorg/joml/Vector3dc;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       136: astore        5
+       138: aload         4
+       140: invokevirtual #332                // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getBoundingBox:()Lcom/hypixel/hytale/math/shape/Box;
+       143: astore        6
+       145: aload_0
+       146: getfield      #24                 // Field refs:Ljava/util/Map;
+       149: aload_1
+       150: aload_2
+       151: invokeinterface #277,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       156: pop
+       157: new           #281                // class com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Target
+       160: dup
+       161: aload_1
+       162: new           #336                // class com/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds
+       165: dup
+       166: aload         6
+       168: getfield      #338                // Field com/hypixel/hytale/math/shape/Box.min:Lorg/joml/Vector3d;
+       171: invokestatic  #66                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.vec:(Lorg/joml/Vector3dc;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       174: aload         5
+       176: invokevirtual #344                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       179: aload         6
+       181: getfield      #346                // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+       184: invokestatic  #66                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.vec:(Lorg/joml/Vector3dc;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       187: aload         5
+       189: invokevirtual #344                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       192: invokespecial #349                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds."<init>":(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)V
+       195: invokespecial #287                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Target."<init>":(Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)V
+       198: invokestatic  #352                // Method java/util/Optional.of:(Ljava/lang/Object;)Ljava/util/Optional;
+       201: areturn
+
+  public boolean lineOfSight(com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort$Target);
+    Code:
+         0: aload_0
+         1: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+         4: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+         7: aload_1
+         8: aload_2
+         9: invokevirtual #355                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Target.bounds:()Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+        12: invokevirtual #356                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds.centre:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        15: invokestatic  #360                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries.clear:(Lcom/hypixel/hytale/component/Store;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Z
+        18: ireturn
+
+  public boolean payUpkeep(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, int, double);
+    Code:
+         0: aload_0
+         1: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+         4: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+         7: getfield      #129                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.kernel:Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;
+        10: invokevirtual #363                // Method com/inigmasgames/hytalerpg/combat/RpgCombatKernel.resources:()Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService;
+        13: new           #367                // class com/inigmasgames/hytalerpg/combat/resource/ResourceCost
+        16: dup
+        17: getstatic     #369                // Field com/inigmasgames/hytalerpg/combat/resource/ResourceType.MANA:Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;
+        20: aload_1
+        21: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        24: invokevirtual #114                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        27: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.upkeepPerSecond:()D
+        30: dload_3
+        31: dmul
+        32: invokespecial #378                // Method com/inigmasgames/hytalerpg/combat/resource/ResourceCost."<init>":(Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;D)V
+        35: aload_1
+        36: invokevirtual #381                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        39: invokevirtual #385                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.kernelModifiers:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$KernelModifiers;
+        42: invokevirtual #391                // Method com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.evaluateUpkeep:(Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$KernelModifiers;)Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;
+        45: astore        5
+        47: aload_0
+        48: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        51: invokevirtual #397                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.resources:()Lcom/inigmasgames/hytalerpg/combat/resource/NativeResourcePort;
+        54: astore        6
+        56: aload         6
+        58: getstatic     #369                // Field com/inigmasgames/hytalerpg/combat/resource/ResourceType.MANA:Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;
+        61: invokeinterface #400,  2          // InterfaceMethod com/inigmasgames/hytalerpg/combat/resource/NativeResourcePort.current:(Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;)D
+        66: dstore        7
+        68: aload_0
+        69: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        72: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+        75: getfield      #129                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.kernel:Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;
+        78: invokevirtual #363                // Method com/inigmasgames/hytalerpg/combat/RpgCombatKernel.resources:()Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService;
+        81: aload_0
+        82: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        85: getfield      #30                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.playerRef:Lcom/hypixel/hytale/server/core/universe/PlayerRef;
+        88: invokevirtual #139                // Method com/hypixel/hytale/server/core/universe/PlayerRef.getUuid:()Ljava/util/UUID;
+        91: aload         5
+        93: aload         6
+        95: invokevirtual #406                // Method com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.canAfford:(Ljava/util/UUID;Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;Lcom/inigmasgames/hytalerpg/combat/resource/NativeResourcePort;)Z
+        98: ifne          103
+       101: iconst_0
+       102: ireturn
+       103: aload_0
+       104: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       107: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       110: getfield      #129                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.kernel:Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;
+       113: invokevirtual #363                // Method com/inigmasgames/hytalerpg/combat/RpgCombatKernel.resources:()Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService;
+       116: aload_0
+       117: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       120: getfield      #30                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.playerRef:Lcom/hypixel/hytale/server/core/universe/PlayerRef;
+       123: invokevirtual #139                // Method com/hypixel/hytale/server/core/universe/PlayerRef.getUuid:()Ljava/util/UUID;
+       126: aload         5
+       128: aload         6
+       130: invokevirtual #410                // Method com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.reserveCost:(Ljava/util/UUID;Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;Lcom/inigmasgames/hytalerpg/combat/resource/NativeResourcePort;)Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService$CostToken;
+       133: astore        9
+       135: aload_0
+       136: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       139: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       142: getfield      #129                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.kernel:Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;
+       145: invokevirtual #363                // Method com/inigmasgames/hytalerpg/combat/RpgCombatKernel.resources:()Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService;
+       148: aload         9
+       150: aload         6
+       152: invokevirtual #414                // Method com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.commitCost:(Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService$CostToken;Lcom/inigmasgames/hytalerpg/combat/resource/NativeResourcePort;)Z
+       155: pop
+       156: aload         6
+       158: getstatic     #369                // Field com/inigmasgames/hytalerpg/combat/resource/ResourceType.MANA:Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;
+       161: invokeinterface #400,  2          // InterfaceMethod com/inigmasgames/hytalerpg/combat/resource/NativeResourcePort.current:(Lcom/inigmasgames/hytalerpg/combat/resource/ResourceType;)D
+       166: dstore        10
+       168: dload         7
+       170: dload         10
+       172: dsub
+       173: aload         5
+       175: invokevirtual #418                // Method com/inigmasgames/hytalerpg/combat/resource/ResourceCost.amount:()D
+       178: dsub
+       179: invokestatic  #421                // Method java/lang/Math.abs:(D)D
+       182: ldc2_w        #427                // double 1.0E-4d
+       185: dcmpg
+       186: ifgt          193
+       189: iconst_1
+       190: goto          194
+       193: iconst_0
+       194: istore        12
+       196: aload_0
+       197: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       200: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       203: aload_1
+       204: getstatic     #429                // Field com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.CHANNEL_UPKEEP:Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;
+       207: ldc_w         #435                // String tick
+       210: iload_2
+       211: invokestatic  #437                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       214: ldc_w         #443                // String cost
+       217: aload         5
+       219: invokevirtual #418                // Method com/inigmasgames/hytalerpg/combat/resource/ResourceCost.amount:()D
+       222: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       225: ldc_w         #450                // String before
+       228: dload         7
+       230: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       233: ldc_w         #452                // String after
+       236: dload         10
+       238: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       241: ldc_w         #454                // String nativeWriteObserved
+       244: iload         12
+       246: invokestatic  #456                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       249: invokestatic  #461                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       252: invokevirtual #464                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.emit:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;Ljava/util/Map;)V
+       255: iload         12
+       257: istore        13
+       259: aload_0
+       260: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       263: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       266: getfield      #129                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.kernel:Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;
+       269: invokevirtual #363                // Method com/inigmasgames/hytalerpg/combat/RpgCombatKernel.resources:()Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService;
+       272: aload         9
+       274: invokevirtual #468                // Method com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.finish:(Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService$CostToken;)V
+       277: iload         13
+       279: ireturn
+       280: astore        14
+       282: aload_0
+       283: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       286: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       289: getfield      #129                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.kernel:Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;
+       292: invokevirtual #363                // Method com/inigmasgames/hytalerpg/combat/RpgCombatKernel.resources:()Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService;
+       295: aload         9
+       297: invokevirtual #468                // Method com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.finish:(Lcom/inigmasgames/hytalerpg/combat/resource/RpgResourceService$CostToken;)V
+       300: aload         14
+       302: athrow
+      Exception table:
+         from    to  target type
+           135   259   280   any
+           280   282   280   any
+
+  public double damage(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort$Target, int, double, boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: iload_3
+         4: dload         4
+         6: iload         6
+         8: aconst_null
+         9: invokevirtual #472                // Method damage:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Target;IDZLcom/inigmasgames/hytalerpg/execution/math/Vec3;)D
+        12: dreturn
+
+  public double damage(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort$Target, int, double, boolean, com.inigmasgames.hytalerpg.execution.math.Vec3);
+    Code:
+         0: aload_0
+         1: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+         4: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+         7: invokevirtual #307                // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+        10: checkcast     #310                // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+        13: aload_2
+        14: invokevirtual #476                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Target.id:()Ljava/lang/String;
+        17: invokestatic  #312                // Method java/util/UUID.fromString:(Ljava/lang/String;)Ljava/util/UUID;
+        20: invokevirtual #316                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getRefFromUUID:(Ljava/util/UUID;)Lcom/hypixel/hytale/component/Ref;
+        23: astore        8
+        25: aload         8
+        27: ifnull        60
+        30: aload         8
+        32: invokevirtual #320                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        35: ifeq          60
+        38: aload_0
+        39: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        42: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        45: aload         8
+        47: aload_0
+        48: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        51: getfield      #46                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actor:Lcom/hypixel/hytale/component/Ref;
+        54: invokestatic  #325                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries.hostile:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;)Z
+        57: ifne          62
+        60: dconst_0
+        61: dreturn
+        62: aload_0
+        63: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        66: aload         8
+        68: invokevirtual #264                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.candidate:(Lcom/hypixel/hytale/component/Ref;)Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;
+        71: astore        9
+        73: aload         9
+        75: ifnull        86
+        78: aload         9
+        80: invokevirtual #268                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.protectedTarget:()Z
+        83: ifeq          88
+        86: dconst_0
+        87: dreturn
+        88: aload_1
+        89: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        92: invokevirtual #479                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+        95: ifnull        104
+        98: getstatic     #483                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.PROJECTILE:Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;
+       101: goto          117
+       104: aload_1
+       105: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       108: invokevirtual #114                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       111: invokevirtual #489                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.element:()Ljava/lang/String;
+       114: invokestatic  #492                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.connectionCause:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;
+       117: astore        10
+       119: aload         10
+       121: ifnonnull     135
+       124: new           #496                // class java/lang/IllegalStateException
+       127: dup
+       128: ldc_w         #498                // String CONNECTION_DAMAGE_CAUSE_MISSING
+       131: invokespecial #500                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       134: athrow
+       135: aload_0
+       136: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       139: aload_1
+       140: aload         9
+       142: iload_3
+       143: dload         4
+       145: iload         6
+       147: ifeq          154
+       150: dconst_0
+       151: goto          161
+       154: aload_1
+       155: invokevirtual #503                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.snapshot:()Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+       158: invokevirtual #507                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.criticalChance:()D
+       161: aload         10
+       163: iload         6
+       165: aload_1
+       166: invokevirtual #512                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       169: iload_3
+       170: invokedynamic #515,  0            // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+       175: iload         6
+       177: ifne          191
+       180: aload_1
+       181: invokevirtual #519                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.derivedRelease:()Z
+       184: ifne          191
+       187: iconst_1
+       188: goto          192
+       191: iconst_0
+       192: invokevirtual #522                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.damage:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;IDDLcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;ZLjava/lang/String;Z)Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$DamageOutcome;
+       195: astore        11
+       197: aload_1
+       198: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       201: invokevirtual #114                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       204: invokevirtual #525                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.details:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details;
+       207: astore        12
+       209: aload_1
+       210: invokevirtual #381                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       213: invokevirtual #529                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.orbit:()Z
+       216: ifeq          311
+       219: aload_1
+       220: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       223: invokevirtual #479                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       226: ifnull        311
+       229: aload         11
+       231: invokevirtual #532                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$DamageOutcome.cancelled:()Z
+       234: ifne          311
+       237: aload         11
+       239: invokevirtual #537                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$DamageOutcome.actualHealthLoss:()D
+       242: dconst_0
+       243: dcmpl
+       244: ifle          311
+       247: aload_1
+       248: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       251: invokevirtual #479                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       254: astore        13
+       256: aload         13
+       258: invokevirtual #540                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.statusId:()Ljava/lang/String;
+       261: invokevirtual #545                // Method java/lang/String.isBlank:()Z
+       264: ifne          300
+       267: aload         13
+       269: invokevirtual #550                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.hasPeriodicStatus:()Z
+       272: ifeq          289
+       275: aload_0
+       276: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       279: aload_1
+       280: aload         9
+       282: invokevirtual #553                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.applyProjectilePeriodicStatus:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;)Z
+       285: pop
+       286: goto          300
+       289: aload_0
+       290: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       293: aload_1
+       294: aload         9
+       296: invokevirtual #557                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.applyProjectileStatus:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;)Ljava/lang/String;
+       299: pop
+       300: aload_0
+       301: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       304: aload_1
+       305: aload         9
+       307: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.applyProjectileKnockback:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;)D
+       310: pop2
+       311: aload         11
+       313: invokevirtual #532                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$DamageOutcome.cancelled:()Z
+       316: ifne          496
+       319: aload         12
+       321: invokevirtual #565                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details.status:()Ljava/lang/String;
+       324: invokevirtual #545                // Method java/lang/String.isBlank:()Z
+       327: ifne          496
+       330: aload         8
+       332: invokevirtual #320                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+       335: ifeq          496
+       338: aload_0
+       339: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       342: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+       345: aload         8
+       347: invokestatic  #570                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       350: invokevirtual #56                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       353: checkcast     #571                // class com/hypixel/hytale/server/npc/entities/NPCEntity
+       356: astore        13
+       358: aload_0
+       359: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       362: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       365: getfield      #573                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.areaControls:Lcom/inigmasgames/hytalerpg/combat/status/ControlProfileRegistry;
+       368: aload         13
+       370: invokevirtual #577                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getRoleName:()Ljava/lang/String;
+       373: aload         9
+       375: invokevirtual #268                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.protectedTarget:()Z
+       378: aload         9
+       380: invokevirtual #580                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.boss:()Z
+       383: invokevirtual #583                // Method com/inigmasgames/hytalerpg/combat/status/ControlProfileRegistry.resolve:(Ljava/lang/String;ZZ)Lcom/inigmasgames/hytalerpg/combat/status/ControlProfile;
+       386: astore        14
+       388: aload_0
+       389: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       392: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       395: getfield      #129                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.kernel:Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;
+       398: invokevirtual #133                // Method com/inigmasgames/hytalerpg/combat/RpgCombatKernel.statuses:()Lcom/inigmasgames/hytalerpg/combat/status/StatusService;
+       401: aload_2
+       402: invokevirtual #476                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Target.id:()Ljava/lang/String;
+       405: invokestatic  #312                // Method java/util/UUID.fromString:(Ljava/lang/String;)Ljava/util/UUID;
+       408: aload         12
+       410: invokevirtual #565                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details.status:()Ljava/lang/String;
+       413: invokestatic  #589                // Method com/inigmasgames/hytalerpg/combat/status/RpgStatusType.valueOf:(Ljava/lang/String;)Lcom/inigmasgames/hytalerpg/combat/status/RpgStatusType;
+       416: aload         14
+       418: aload         12
+       420: invokevirtual #592                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details.statusSeconds:()D
+       423: invokevirtual #595                // Method com/inigmasgames/hytalerpg/combat/status/StatusService.apply:(Ljava/util/UUID;Lcom/inigmasgames/hytalerpg/combat/status/RpgStatusType;Lcom/inigmasgames/hytalerpg/combat/status/ControlProfile;D)Lcom/inigmasgames/hytalerpg/combat/status/StatusService$Result;
+       426: astore        15
+       428: aload_0
+       429: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       432: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       435: aload_1
+       436: aload         15
+       438: invokevirtual #599                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$Result.outcome:()Lcom/inigmasgames/hytalerpg/combat/status/StatusService$Outcome;
+       441: getstatic     #605                // Field com/inigmasgames/hytalerpg/combat/status/StatusService$Outcome.REJECTED:Lcom/inigmasgames/hytalerpg/combat/status/StatusService$Outcome;
+       444: if_acmpne     453
+       447: getstatic     #611                // Field com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.STATUS_REJECTED:Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;
+       450: goto          456
+       453: getstatic     #614                // Field com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.STATUS_APPLIED:Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;
+       456: ldc_w         #617                // String status
+       459: aload         15
+       461: invokevirtual #618                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$Result.type:()Lcom/inigmasgames/hytalerpg/combat/status/RpgStatusType;
+       464: ldc_w         #622                // String targetId
+       467: aload_2
+       468: invokevirtual #476                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$Target.id:()Ljava/lang/String;
+       471: ldc_w         #624                // String seconds
+       474: aload         15
+       476: invokevirtual #626                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$Result.remainingSeconds:()D
+       479: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       482: ldc_w         #629                // String reason
+       485: aload         15
+       487: invokevirtual #631                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$Result.detail:()Ljava/lang/String;
+       490: invokestatic  #634                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       493: invokevirtual #464                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.emit:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;Ljava/util/Map;)V
+       496: aload         11
+       498: invokevirtual #532                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$DamageOutcome.cancelled:()Z
+       501: ifne          531
+       504: aload         7
+       506: ifnull        531
+       509: aload_1
+       510: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       513: invokestatic  #637                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.enemyPosition:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+       516: ifeq          531
+       519: aload_0
+       520: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       523: aload_1
+       524: aload         8
+       526: aload         7
+       528: invokevirtual #643                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.applyPassiveAreaPosition:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/hypixel/hytale/component/Ref;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)V
+       531: aload         11
+       533: invokevirtual #537                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$DamageOutcome.actualHealthLoss:()D
+       536: dreturn
+
+  public void healFromDamage(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, int, double);
+    Code:
+         0: aload_0
+         1: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+         4: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actorAliveAndUsable:()Z
+         7: ifne          11
+        10: return
+        11: aload_0
+        12: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        15: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        18: aload_0
+        19: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        22: getfield      #46                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actor:Lcom/hypixel/hytale/component/Ref;
+        25: invokestatic  #647                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        28: invokevirtual #56                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        31: checkcast     #648                // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+        34: astore        5
+        36: aload         5
+        38: ifnonnull     45
+        41: aconst_null
+        42: goto          53
+        45: aload         5
+        47: invokestatic  #650                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getHealth:()I
+        50: invokevirtual #656                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        53: astore        6
+        55: aload         6
+        57: ifnonnull     71
+        60: new           #496                // class java/lang/IllegalStateException
+        63: dup
+        64: ldc_w         #660                // String NATIVE_HEALTH_MISSING
+        67: invokespecial #500                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        70: athrow
+        71: new           #662                // class com/inigmasgames/hytalerpg/combat/healing/HealingCalculationService
+        74: dup
+        75: invokespecial #664                // Method com/inigmasgames/hytalerpg/combat/healing/HealingCalculationService."<init>":()V
+        78: dload_3
+        79: aload_1
+        80: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        83: invokevirtual #114                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        86: invokevirtual #525                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.details:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details;
+        89: invokevirtual #665                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details.healFraction:()D
+        92: aload_1
+        93: invokevirtual #503                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.snapshot:()Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+        96: invokevirtual #668                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.derivedStats:()Lcom/inigmasgames/hytalerpg/combat/attribute/DerivedStats;
+        99: invokevirtual #672                // Method com/inigmasgames/hytalerpg/combat/attribute/DerivedStats.healingMultiplier:()D
+       102: aload_1
+       103: invokevirtual #381                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       106: invokevirtual #385                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.kernelModifiers:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$KernelModifiers;
+       109: invokevirtual #677                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$KernelModifiers.scalablePayloadIncreased:()D
+       112: aload_1
+       113: invokevirtual #381                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       116: invokevirtual #682                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.supportModifiers:()Lcom/inigmasgames/hytalerpg/domain/SupportModifiers;
+       119: aload         6
+       121: invokevirtual #686                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       124: f2d
+       125: aload         6
+       127: invokevirtual #691                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+       130: f2d
+       131: invokevirtual #694                // Method com/inigmasgames/hytalerpg/domain/SupportModifiers.healingIncreased:(DD)D
+       134: dadd
+       135: invokevirtual #700                // Method com/inigmasgames/hytalerpg/combat/healing/HealingCalculationService.fromActualDamage:(DDDD)Lcom/inigmasgames/hytalerpg/combat/healing/HealingCalculationService$Conversion;
+       138: astore        7
+       140: aload         6
+       142: invokevirtual #686                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       145: f2d
+       146: dstore        8
+       148: aload         6
+       150: invokevirtual #691                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+       153: f2d
+       154: dload         8
+       156: aload         7
+       158: invokevirtual #704                // Method com/inigmasgames/hytalerpg/combat/healing/HealingCalculationService$Conversion.requestedHealing:()D
+       161: dadd
+       162: invokestatic  #709                // Method java/lang/Math.min:(DD)D
+       165: dstore        10
+       167: aload         5
+       169: invokestatic  #650                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getHealth:()I
+       172: dload         10
+       174: d2f
+       175: invokevirtual #711                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.setStatValue:(IF)F
+       178: pop
+       179: aload         6
+       181: invokevirtual #686                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       184: f2d
+       185: dstore        12
+       187: aload_0
+       188: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       191: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       194: getfield      #715                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.support:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;
+       197: ifnull        250
+       200: aload_0
+       201: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       204: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       207: getfield      #715                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.support:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;
+       210: aload_0
+       211: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       214: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+       217: aload_0
+       218: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       221: getfield      #719                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.buffer:Lcom/hypixel/hytale/component/CommandBuffer;
+       224: aload_0
+       225: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       228: getfield      #46                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.actor:Lcom/hypixel/hytale/component/Ref;
+       231: aload_1
+       232: aload         7
+       234: invokevirtual #704                // Method com/inigmasgames/hytalerpg/combat/healing/HealingCalculationService$Conversion.requestedHealing:()D
+       237: dload         8
+       239: dload         12
+       241: aload         6
+       243: invokevirtual #691                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+       246: f2d
+       247: invokevirtual #723                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.healingResolved:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/component/Ref;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;DDDD)V
+       250: aload_0
+       251: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+       254: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       257: aload_1
+       258: getstatic     #729                // Field com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.HEAL_APPLIED:Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;
+       261: ldc_w         #435                // String tick
+       264: iload_2
+       265: invokestatic  #437                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       268: ldc_w         #732                // String sourceActualHealthLoss
+       271: dload_3
+       272: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       275: ldc_w         #734                // String baseHealing
+       278: aload         7
+       280: invokevirtual #736                // Method com/inigmasgames/hytalerpg/combat/healing/HealingCalculationService$Conversion.baseHealing:()D
+       283: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       286: ldc_w         #738                // String wisdomMultiplier
+       289: aload         7
+       291: invokevirtual #740                // Method com/inigmasgames/hytalerpg/combat/healing/HealingCalculationService$Conversion.wisdomMultiplier:()D
+       294: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       297: ldc_w         #742                // String healingIncreased
+       300: aload         7
+       302: invokevirtual #743                // Method com/inigmasgames/hytalerpg/combat/healing/HealingCalculationService$Conversion.healingIncreased:()D
+       305: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       308: ldc_w         #745                // String requestedHealing
+       311: aload         7
+       313: invokevirtual #704                // Method com/inigmasgames/hytalerpg/combat/healing/HealingCalculationService$Conversion.requestedHealing:()D
+       316: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       319: ldc_w         #746                // String healthBefore
+       322: dload         8
+       324: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       327: ldc_w         #748                // String healthAfter
+       330: dload         12
+       332: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       335: ldc_w         #750                // String actualHealing
+       338: dconst_0
+       339: dload         12
+       341: dload         8
+       343: dsub
+       344: invokestatic  #752                // Method java/lang/Math.max:(DD)D
+       347: invokestatic  #445                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       350: invokestatic  #754                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       353: invokevirtual #464                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.emit:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;Ljava/util/Map;)V
+       356: return
+
+  public void present(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, com.inigmasgames.hytalerpg.execution.connection.ConnectionShape, java.lang.String, double);
+    Code:
+         0: aload_0
+         1: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+         4: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+         7: getfield      #757                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.vfx:Lcom/inigmasgames/hytalerpg/vfx/LinkTreeVfxService;
+        10: aload_0
+        11: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+        14: getfield      #42                 // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.store:Lcom/hypixel/hytale/component/Store;
+        17: invokevirtual #307                // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+        20: checkcast     #310                // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+        23: invokevirtual #761                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+        26: aload_2
+        27: aload_1
+        28: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        31: invokevirtual #114                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+        34: invokevirtual #489                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.element:()Ljava/lang/String;
+        37: aload_3
+        38: dload         4
+        40: invokevirtual #765                // Method com/inigmasgames/hytalerpg/vfx/LinkTreeVfxService.presentConnection:(Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionShape;Ljava/lang/String;Ljava/lang/String;D)V
+        43: goto          48
+        46: astore        6
+        48: return
+      Exception table:
+         from    to  target type
+             0    43    46   Class java/lang/RuntimeException
+
+  public void ended(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+         4: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+         7: getfield      #773                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.executions:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionService;
+        10: aload_1
+        11: aload_2
+        12: invokevirtual #777                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionService.terminate:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;)V
+        15: return
+
+  public void trace(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, java.lang.String, java.util.Map<java.lang.String, ?>);
+    Code:
+         0: aload_0
+         1: getfield      #9                  // Field this$1:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port;
+         4: getfield      #125                // Field com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.this$0:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+         7: aload_1
+         8: aload_2
+         9: invokestatic  #783                // Method com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.valueOf:(Ljava/lang/String;)Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;
+        12: aload_3
+        13: invokevirtual #464                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.emit:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;Ljava/util/Map;)V
+        16: return
+
+  private static boolean lambda$query$0(java.util.List, com.inigmasgames.hytalerpg.execution.area.AreaGeometry$Bounds);
+    Code:
+         0: aload_0
+         1: invokeinterface #786,  1          // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+         6: aload_1
+         7: invokedynamic #790,  0            // InvokeDynamic #2:test:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)Ljava/util/function/Predicate;
+        12: invokeinterface #793,  2          // InterfaceMethod java/util/stream/Stream.anyMatch:(Ljava/util/function/Predicate;)Z
+        17: ireturn
+
+  private static boolean lambda$query$1(com.inigmasgames.hytalerpg.execution.area.AreaGeometry$Bounds, com.inigmasgames.hytalerpg.execution.connection.ConnectionShape);
+    Code:
+         0: aload_1
+         1: aload_0
+         2: invokevirtual #799                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionShape.intersects:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)Z
+         5: ireturn
+}

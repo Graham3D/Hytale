@@ -63,6 +63,8 @@ public final class ProfileComponentPolicy {
     }
     public static Optional<Boolean> enemyPosition(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(enemyPosition(p));}
     public static boolean cascade(String skill){var p=Canonical.PROFILES.all().get(skill);return p!=null&&cascade(p);}
+    public static boolean orbit(String skill){var p=Canonical.PROFILES.all().get(skill);return p!=null&&com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles.eligible(p);}
+    public static int baseOrbitCount(String skill){var p=Canonical.PROFILES.require(skill);return p.connection()!=null&&p.connection().kind()==ConnectionProfile.Kind.ORBIT?Math.min(3,p.connection().details().bladeCount()):1;}
     public static boolean cascade(Stage04SkillProfile p){return p.area()!=null&&p.area().geometry()==com.inigmasgames.hytalerpg.execution.area.AreaGeometry.Kind.DISC&&p.area().placementRange()>0&&!p.area().trap();}
     public static boolean aftermath(String skill){var p=Canonical.PROFILES.all().get(skill);return p!=null&&aftermath(p);}
     public static boolean aftermath(Stage04SkillProfile p){return p.area()!=null&&p.area().lifetimeSeconds()>0&&(p.area().periodic()||p.area().impactCount()>1||p.area().trap())

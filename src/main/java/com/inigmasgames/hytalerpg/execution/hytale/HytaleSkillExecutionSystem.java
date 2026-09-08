@@ -386,9 +386,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(profile.summon()!=null)return summons==null?Validation.reject("SUMMON_NATIVE_ADAPTER_UNAVAILABLE"):
                     summons.preflight(store,actor,profile,plan,aim(store,actor));
             if(profile.connection()!=null) {
-                var connection=profile.connection();String admitted=connections.admission(playerRef.getUuid(),connection.channel());
+                var connection=profile.connection();String admitted=connections.admission(playerRef.getUuid(),profile,plan);
                 if(!admitted.equals("PASS"))return Validation.reject(admitted);
-                if(connectionCause(connection.element())==null)return Validation.reject("CONNECTION_DAMAGE_CAUSE_MISSING");
+                if(profile.projectile()==null&&connectionCause(connection.element())==null)return Validation.reject("CONNECTION_DAMAGE_CAUSE_MISSING");
+                if(plan.orbit()&&profile.projectile()!=null&&!ammunition.available(actor,store,profile.projectile()))return Validation.reject("AMMUNITION_UNAVAILABLE");
                 if(connection.requiresTarget()) {
                     var selection=com.inigmasgames.hytalerpg.execution.connection.ConnectionTargeting.select(connection,connectionWorld());
                     if(!selection.verdict().equals("PASS"))return Validation.reject(selection.verdict());
@@ -518,7 +519,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             if(profile.connection()!=null) {
                 var origin=feet.add(new Vec3(0,profile.connection().originHeight(),0));
-                if(target.entityId()!=null){
+                if(context.compiledPlan().orbit()){
+                    // The converted payload belongs to the current caster, not a stale aim endpoint.
+                    if(!HytaleAreaQueries.clear(store,feet.add(new Vec3(0,.1,0)),origin))return Validation.reject("CONNECTION_ORIGIN_BLOCKED");
+                }else if(target.entityId()!=null){
                     var resolved=connectionWorld().resolveTarget(target.entityId().toString()).orElse(null);
                     if(resolved==null)return Validation.reject("COMMITTED_ENTITY_TARGET_INVALID");
                     if(ConnectionShape.pointDistanceSquared(origin,resolved.bounds())>profile.connection().range()*profile.connection().range()+1e-9)return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
@@ -527,7 +531,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     if(target.point().subtract(origin).length()>profile.connection().range()+1e-6)return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
                     if(!HytaleAreaQueries.clear(store,origin,target.point()))return Validation.reject("COMMITTED_TARGET_LOS_BLOCKED");
                 }
-                String admission=connections.admission(playerRef.getUuid(),profile.connection().channel());
+                String admission=connections.admission(playerRef.getUuid(),profile,context.compiledPlan());
                 return admission.equals("PASS")?Validation.pass():Validation.reject(admission);
             }
             if(profile.area()!=null) {
@@ -589,6 +593,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             return current!=null && prior!=null && current.itemId().equals(prior.itemId()) && current.weaponKind().equals(prior.weaponKind());
         }
         @Override public SkillExecutionResult executeConnection(SkillExecutionContext context) {
+            if(context.compiledPlan().orbit()&&context.profile().projectile()!=null&&!context.derivedRelease()){
+                String gate=connections.admission(playerRef.getUuid(),context.profile(),context.compiledPlan());if(!gate.equals("PASS"))throw new IllegalStateException(gate);
+                var payload=context.profile().projectile();var ammo=ammunition.consume(actor,store,payload);
+                emit(context,RpgTraceEventType.AMMO_CHECK,Map.of("required",payload.requiresAmmo(),"itemId",payload.ammoItemId(),"quantity",payload.ammoQuantity(),"available",true,"convertedOrbit",true));
+                if(ammo.quantity()>0)emit(context,RpgTraceEventType.AMMO_COMMITTED,Map.of("itemId",ammo.itemId(),"quantity",ammo.quantity(),"convertedOrbit",true));
+                // Once the connection starts it can hit immediately; no ambiguous late failure refunds ammunition.
+            }
             connections.start(context,System.nanoTime()/1e9,connectionWorld());
             return SkillExecutionResult.committed("CONNECTION_STARTED",0,0);
         }
@@ -681,11 +692,18 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 public double damage(SkillExecutionContext context,Target target,int tick,double coefficient,boolean periodic,Vec3 effectCenter) {
                     var ref=store.getExternalData().getRefFromUUID(UUID.fromString(target.id()));if(ref==null||!ref.isValid()||!HytaleAreaQueries.hostile(store,ref,actor))return 0;
                     var value=candidate(ref);if(value==null||value.protectedTarget())return 0;
-                    DamageCause cause=connectionCause(context.profile().connection().element());
+                    DamageCause cause=context.profile().projectile()!=null?DamageCause.PROJECTILE:connectionCause(context.profile().connection().element());
                     if(cause==null)throw new IllegalStateException("CONNECTION_DAMAGE_CAUSE_MISSING");
                     var outcome=Port.this.damage(context,value,tick,coefficient,periodic?0:context.snapshot().criticalChance(),cause,periodic,
                             context.skillInstanceId()+"/connection/"+tick,!periodic&&!context.derivedRelease());
                     var authored=context.profile().connection().details();
+                    if(context.compiledPlan().orbit()&&context.profile().projectile()!=null&&!outcome.cancelled()&&outcome.actualHealthLoss()>0){
+                        var payload=context.profile().projectile();
+                        if(!payload.statusId().isBlank()){
+                            if(payload.hasPeriodicStatus())applyProjectilePeriodicStatus(context,value);else applyProjectileStatus(context,value);
+                        }
+                        applyProjectileKnockback(context,value);
+                    }
                     if(!outcome.cancelled()&&!authored.status().isBlank()&&ref.isValid()) {
                         var npc=store.getComponent(ref,NPCEntity.getComponentType());
                         var control=areaControls.resolve(npc.getRoleName(),value.protectedTarget(),value.boss());
@@ -719,7 +737,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         @Override public void abandonRelease(SkillExecutionContext context) {
             if(summons!=null)summons.corpses().abandon(context.request().actorId(),context.skillInstanceId());
-            if(context.profile().projectile()!=null && context.derivedRelease())
+            if(context.profile().projectile()!=null && !context.compiledPlan().orbit() && context.derivedRelease())
                 projectileService.registry().abandonLaunch(context.request().actorId(),context.rootCastId());
         }
         @Override public SkillExecutionResult executeStrike(SkillExecutionContext context) {

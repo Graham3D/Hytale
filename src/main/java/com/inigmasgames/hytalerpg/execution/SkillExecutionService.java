@@ -261,6 +261,7 @@ public final class SkillExecutionService {
             if(releaseModifiers.expandedRadius()&&!prepared.plan.radiusOnlyOnSecondary())payloadLess.add(.10);
             if(prepared.plan.zones().mobileDomain())payloadLess.add(.20);
             if(prepared.plan.positions().active()&&!prepared.plan.positionOnlyOnSecondary())payloadLess.add(.10);
+            if(prepared.plan.orbit())payloadLess.add(1-com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles.CONFIG.magnitudeFactor());
             ModifierBuckets modifiers = new ModifierBuckets(prepared.attunementStacks>0?java.util.List.of(.03*prepared.attunementStacks):java.util.List.of(), java.util.List.of(),
                     releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
                     payloadLess);

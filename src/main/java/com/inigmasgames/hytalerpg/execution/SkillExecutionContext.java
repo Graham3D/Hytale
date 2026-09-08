@@ -65,6 +65,11 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
     }
     public SkillExecutionContext barrageCopy(int batch) {
         if(echo||multistrikeIndex>0||!secondaryKind.isEmpty()||batch<1||batch>=compiledPlan.executionModifiers().barrageBatches())throw new IllegalStateException("INVALID_BARRAGE_BATCH");
+        if(compiledPlan.orbit()){
+            String child=skillInstanceId+"/barrage-"+batch;var old=snapshot;
+            var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
+            return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,batch,leechBudget,0,effects,"");
+        }
         return new SkillExecutionContext(request,rootCastId,skillInstanceId,profile,compiledPlan,snapshot,equipment,target,false,batch,leechBudget,0,effects,"");
     }
     public SkillExecutionContext echoCopy() {
