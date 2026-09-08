@@ -1,0 +1,838 @@
+Compiled from "WorldSpawnJobSystems.java"
+public class com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems {
+  private static final com.hypixel.hytale.logger.HytaleLogger LOGGER;
+
+  private static final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore> QUERY;
+
+  private static final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore> TICKING_QUERY;
+
+  private static final int JOB_BUDGET;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  private static com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems$Result run(com.hypixel.hytale.server.core.universe.world.World, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore>, com.hypixel.hytale.server.spawning.world.component.SpawnJobData, com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk, com.hypixel.hytale.server.spawning.world.ChunkEnvironmentSpawnData, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData, com.hypixel.hytale.server.spawning.suppression.component.SpawnSuppressionController);
+    Code:
+         0: aload_2
+         1: invokevirtual #7                  // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRoleIndex:()I
+         4: istore        7
+         6: iload         7
+         8: invokestatic  #13                 // Method getSpawnable:(I)Lcom/hypixel/hytale/server/spawning/ISpawnableWithModel;
+        11: astore        8
+        13: goto          32
+        16: astore        9
+        18: getstatic     #21                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.PERMANENT_FAILURE:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+        21: aload_2
+        22: aload_3
+        23: aload         5
+        25: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+        28: pop
+        29: aload         9
+        31: athrow
+        32: aload         8
+        34: ifnonnull     87
+        37: getstatic     #31                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+        40: getstatic     #35                 // Field java/util/logging/Level.FINEST:Ljava/util/logging/Level;
+        43: invokevirtual #41                 // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        46: astore        9
+        48: aload         9
+        50: invokeinterface #47,  1           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+        55: ifeq          76
+        58: aload         9
+        60: ldc           #53                 // String Spawn job %s: Terminated, spawnable %s gone
+        62: aload_2
+        63: invokevirtual #55                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getJobId:()I
+        66: iload         7
+        68: invokestatic  #58                 // Method getSpawnableName:(I)Ljava/lang/String;
+        71: invokeinterface #62,  4           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;ILjava/lang/Object;)V
+        76: getstatic     #66                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.FAILED:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+        79: aload_2
+        80: aload_3
+        81: aload         5
+        83: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+        86: areturn
+        87: aload_2
+        88: invokevirtual #69                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpawningContext:()Lcom/hypixel/hytale/server/spawning/SpawningContext;
+        91: astore        9
+        93: aload         9
+        95: aload         8
+        97: invokevirtual #73                 // Method com/hypixel/hytale/server/spawning/SpawningContext.setSpawnable:(Lcom/hypixel/hytale/server/spawning/ISpawnableWithModel;)Z
+       100: ifne          153
+       103: getstatic     #31                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       106: getstatic     #35                 // Field java/util/logging/Level.FINEST:Ljava/util/logging/Level;
+       109: invokevirtual #41                 // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       112: astore        10
+       114: aload         10
+       116: invokeinterface #47,  1           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       121: ifeq          142
+       124: aload         10
+       126: ldc           #79                 // String Spawn job %s: Terminated, Unable to set spawnable %s
+       128: aload_2
+       129: invokevirtual #55                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getJobId:()I
+       132: iload         7
+       134: invokestatic  #58                 // Method getSpawnableName:(I)Ljava/lang/String;
+       137: invokeinterface #62,  4           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;ILjava/lang/Object;)V
+       142: getstatic     #66                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.FAILED:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       145: aload_2
+       146: aload_3
+       147: aload         5
+       149: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       152: areturn
+       153: aload_2
+       154: invokevirtual #81                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpawnConfig:()Lcom/hypixel/hytale/server/spawning/wrappers/SpawnWrapper;
+       157: astore        10
+       159: aload         10
+       161: invokevirtual #85                 // Method com/hypixel/hytale/server/spawning/wrappers/SpawnWrapper.getRoles:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       164: iload         7
+       166: invokeinterface #91,  2           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+       171: checkcast     #97                 // class com/hypixel/hytale/server/spawning/assets/spawns/config/RoleSpawnParameters
+       174: astore        11
+       176: aload         11
+       178: aload         8
+       180: aload         9
+       182: invokevirtual #99                 // Method com/hypixel/hytale/server/spawning/assets/spawns/config/RoleSpawnParameters.getOrComputeMovementModeWeights:(Lcom/hypixel/hytale/server/spawning/ISpawnable;Lcom/hypixel/hytale/server/spawning/SpawningContext;)[D
+       185: astore        12
+       187: aload         12
+       189: ifnonnull     203
+       192: getstatic     #21                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.PERMANENT_FAILURE:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       195: aload_2
+       196: aload_3
+       197: aload         5
+       199: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       202: areturn
+       203: aload         9
+       205: invokestatic  #103                // Method com/hypixel/hytale/server/npc/movement/MovementMode.values:()[Lcom/hypixel/hytale/server/npc/movement/MovementMode;
+       208: aload         12
+       210: invokestatic  #109                // Method com/hypixel/hytale/math/random/RandomExtra.pickWeightedIndex:([D)I
+       213: aaload
+       214: aload         11
+       216: invokevirtual #115                // Method com/hypixel/hytale/server/spawning/assets/spawns/config/RoleSpawnParameters.getEnableSafeSpawning:()Z
+       219: invokevirtual #118                // Method com/hypixel/hytale/server/spawning/SpawningContext.setMovementMode:(Lcom/hypixel/hytale/server/npc/movement/MovementMode;Z)Z
+       222: ifne          236
+       225: getstatic     #21                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.PERMANENT_FAILURE:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       228: aload_2
+       229: aload_3
+       230: aload         5
+       232: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       235: areturn
+       236: aload         9
+       238: aload_0
+       239: aload_1
+       240: aload_2
+       241: invokevirtual #122                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getEnvironmentIndex:()I
+       244: invokevirtual #125                // Method com/hypixel/hytale/server/spawning/SpawningContext.setChunk:(Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/component/Ref;I)V
+       247: aload_2
+       248: invokevirtual #129                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSuppressionSpanHelper:()Lcom/hypixel/hytale/server/spawning/suppression/SuppressionSpanHelper;
+       251: astore        13
+       253: aload         6
+       255: invokevirtual #133                // Method com/hypixel/hytale/server/spawning/suppression/component/SpawnSuppressionController.getChunkSuppressionMap:()Lcom/hypixel/fastutil/longs/Long2ObjectConcurrentHashMap;
+       258: astore        14
+       260: aload         13
+       262: iload         7
+       264: aload         14
+       266: aload_3
+       267: invokevirtual #139                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getIndex:()J
+       270: invokevirtual #145                // Method com/hypixel/fastutil/longs/Long2ObjectConcurrentHashMap.get:(J)Ljava/lang/Object;
+       273: checkcast     #150                // class com/hypixel/hytale/server/spawning/suppression/component/ChunkSuppressionEntry
+       276: invokevirtual #152                // Method com/hypixel/hytale/server/spawning/suppression/SuppressionSpanHelper.optimiseSuppressedSpans:(ILcom/hypixel/hytale/server/spawning/suppression/component/ChunkSuppressionEntry;)V
+       279: aload         10
+       281: iload         7
+       283: invokevirtual #158                // Method com/hypixel/hytale/server/spawning/wrappers/SpawnWrapper.getSpawnBlockSet:(I)Lit/unimi/dsi/fastutil/ints/IntSet;
+       286: astore        15
+       288: aload         10
+       290: iload         7
+       292: invokevirtual #162                // Method com/hypixel/hytale/server/spawning/wrappers/SpawnWrapper.getSpawnFluidTag:(I)I
+       295: istore        16
+       297: aload         4
+       299: invokevirtual #166                // Method com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData.getRandomChunkColumnIterator:()Lcom/hypixel/hytale/server/spawning/util/RandomChunkColumnIterator;
+       302: astore        17
+       304: aload_2
+       305: iconst_0
+       306: invokevirtual #172                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.setBudgetUsed:(I)V
+       309: aload_2
+       310: invokevirtual #176                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getBudgetUsed:()I
+       313: bipush        64
+       315: if_icmpge     386
+       318: aload         17
+       320: invokevirtual #179                // Method com/hypixel/hytale/server/spawning/util/RandomChunkColumnIterator.nextPositionAvoidBorders:()I
+       323: pop
+       324: aload_2
+       325: iconst_3
+       326: invokevirtual #184                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.adjustBudgetUsed:(I)V
+       329: aload         9
+       331: aload         17
+       333: invokevirtual #187                // Method com/hypixel/hytale/server/spawning/util/RandomChunkColumnIterator.getCurrentX:()I
+       336: aload         17
+       338: invokevirtual #190                // Method com/hypixel/hytale/server/spawning/util/RandomChunkColumnIterator.getCurrentZ:()I
+       341: aload         13
+       343: invokevirtual #193                // Method com/hypixel/hytale/server/spawning/SpawningContext.setColumn:(IILcom/hypixel/hytale/server/spawning/suppression/SuppressionSpanHelper;)V
+       346: aload         8
+       348: aload         15
+       350: iload         16
+       352: aload_2
+       353: aload_3
+       354: aload         4
+       356: aload         5
+       358: invokestatic  #197                // Method trySpawn:(Lcom/hypixel/hytale/server/spawning/ISpawnableWithModel;Lit/unimi/dsi/fastutil/ints/IntSet;ILcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       361: astore        18
+       363: aload         18
+       365: getstatic     #201                // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.TRY_AGAIN:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       368: if_acmpeq     383
+       371: aload         18
+       373: astore        19
+       375: aload         9
+       377: invokevirtual #204                // Method com/hypixel/hytale/server/spawning/SpawningContext.release:()V
+       380: aload         19
+       382: areturn
+       383: goto          309
+       386: aload         9
+       388: invokevirtual #204                // Method com/hypixel/hytale/server/spawning/SpawningContext.release:()V
+       391: goto          404
+       394: astore        20
+       396: aload         9
+       398: invokevirtual #204                // Method com/hypixel/hytale/server/spawning/SpawningContext.release:()V
+       401: aload         20
+       403: athrow
+       404: getstatic     #201                // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.TRY_AGAIN:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       407: areturn
+      Exception table:
+         from    to  target type
+             6    13    16   Class java/lang/IllegalArgumentException
+           279   375   394   any
+           383   386   394   any
+           394   396   394   any
+
+  private static com.hypixel.hytale.server.spawning.ISpawnableWithModel getSpawnable(int);
+    Code:
+         0: invokestatic  #207                // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+         3: iload_0
+         4: invokevirtual #212                // Method com/hypixel/hytale/server/npc/NPCPlugin.tryGetCachedValidRole:(I)Lcom/hypixel/hytale/server/npc/asset/builder/Builder;
+         7: astore_1
+         8: aload_1
+         9: ifnonnull     14
+        12: aconst_null
+        13: areturn
+        14: aload_1
+        15: invokeinterface #216,  1          // InterfaceMethod com/hypixel/hytale/server/npc/asset/builder/Builder.isSpawnable:()Z
+        20: ifne          43
+        23: new           #19                 // class java/lang/IllegalArgumentException
+        26: dup
+        27: invokestatic  #207                // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+        30: iload_0
+        31: invokevirtual #221                // Method com/hypixel/hytale/server/npc/NPCPlugin.getName:(I)Ljava/lang/String;
+        34: invokedynamic #224,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        39: invokespecial #228                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        42: athrow
+        43: aload_1
+        44: instanceof    #231                // class com/hypixel/hytale/server/spawning/ISpawnableWithModel
+        47: ifne          70
+        50: new           #19                 // class java/lang/IllegalArgumentException
+        53: dup
+        54: invokestatic  #207                // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+        57: iload_0
+        58: invokevirtual #221                // Method com/hypixel/hytale/server/npc/NPCPlugin.getName:(I)Ljava/lang/String;
+        61: invokedynamic #233,  0            // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        66: invokespecial #228                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        69: athrow
+        70: aload_1
+        71: checkcast     #231                // class com/hypixel/hytale/server/spawning/ISpawnableWithModel
+        74: areturn
+
+  private static com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems$Result trySpawn(com.hypixel.hytale.server.spawning.ISpawnableWithModel, it.unimi.dsi.fastutil.ints.IntSet, int, com.hypixel.hytale.server.spawning.world.component.SpawnJobData, com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk, com.hypixel.hytale.server.spawning.world.ChunkEnvironmentSpawnData, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData);
+    Code:
+         0: aload_3
+         1: invokevirtual #234                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.incrementTotalColumnsTested:()V
+         4: aload_3
+         5: invokevirtual #69                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpawningContext:()Lcom/hypixel/hytale/server/spawning/SpawningContext;
+         8: astore        7
+        10: iconst_0
+        11: istore        8
+        13: iconst_0
+        14: istore        9
+        16: aload         7
+        18: invokevirtual #237                // Method com/hypixel/hytale/server/spawning/SpawningContext.selectRandomSpawnSpan:()Z
+        21: ifeq          316
+        24: aload_3
+        25: iconst_1
+        26: invokevirtual #184                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.adjustBudgetUsed:(I)V
+        29: aload_3
+        30: invokevirtual #240                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.incrementSpansTried:()V
+        33: iinc          9, 1
+        36: aload_3
+        37: invokevirtual #81                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpawnConfig:()Lcom/hypixel/hytale/server/spawning/wrappers/SpawnWrapper;
+        40: aload         7
+        42: invokevirtual #243                // Method com/hypixel/hytale/server/spawning/wrappers/SpawnWrapper.withinLightRange:(Lcom/hypixel/hytale/server/spawning/SpawningContext;)Z
+        45: ifne          61
+        48: aload_3
+        49: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        52: getstatic     #251                // Field com/hypixel/hytale/server/spawning/SpawnRejection.OUTSIDE_LIGHT_RANGE:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+        55: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+        58: goto          308
+        61: aload         7
+        63: aload_1
+        64: iload_2
+        65: invokevirtual #261                // Method com/hypixel/hytale/server/spawning/SpawningContext.canSpawnOnBlock:(Lit/unimi/dsi/fastutil/ints/IntSet;I)Z
+        68: ifne          87
+        71: iinc          8, 1
+        74: aload_3
+        75: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        78: getstatic     #265                // Field com/hypixel/hytale/server/spawning/SpawnRejection.INVALID_SPAWN_BLOCK:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+        81: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+        84: goto          308
+        87: aload         7
+        89: invokevirtual #268                // Method com/hypixel/hytale/server/spawning/SpawningContext.canSpawn:()Lcom/hypixel/hytale/server/spawning/SpawnTestResult;
+        92: astore        10
+        94: getstatic     #272                // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$1.$SwitchMap$com$hypixel$hytale$server$spawning$SpawnTestResult:[I
+        97: aload         10
+        99: invokevirtual #278                // Method com/hypixel/hytale/server/spawning/SpawnTestResult.ordinal:()I
+       102: iaload
+       103: tableswitch   { // 1 to 7
+
+                       1: 144
+
+                       2: 184
+
+                       3: 200
+
+                       4: 216
+
+                       5: 232
+
+                       6: 254
+
+                       7: 276
+                 default: 298
+            }
+       144: aload         7
+       146: invokevirtual #283                // Method com/hypixel/hytale/server/spawning/SpawningContext.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+       149: astore        11
+       151: getstatic     #287                // Field $assertionsDisabled:Z
+       154: ifne          173
+       157: aload         11
+       159: ifnonnull     173
+       162: new           #291                // class java/lang/AssertionError
+       165: dup
+       166: ldc_w         #293                // String Context lost its bound world between setChunk and trySpawn
+       169: invokespecial #295                // Method java/lang/AssertionError."<init>":(Ljava/lang/Object;)V
+       172: athrow
+       173: aload_3
+       174: aload         11
+       176: aload         4
+       178: aload         6
+       180: invokestatic  #298                // Method spawn:(Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       183: areturn
+       184: aload_3
+       185: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+       188: getstatic     #302                // Field com/hypixel/hytale/server/spawning/SpawnRejection.INVALID_POSITION:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+       191: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+       194: iinc          8, 1
+       197: goto          308
+       200: aload_3
+       201: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+       204: getstatic     #305                // Field com/hypixel/hytale/server/spawning/SpawnRejection.NO_POSITION:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+       207: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+       210: iinc          8, 1
+       213: goto          308
+       216: aload_3
+       217: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+       220: getstatic     #308                // Field com/hypixel/hytale/server/spawning/SpawnRejection.NOT_BREATHABLE:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+       223: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+       226: iinc          8, 1
+       229: goto          308
+       232: aload_3
+       233: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+       236: getstatic     #311                // Field com/hypixel/hytale/server/spawning/SpawnRejection.NO_MOTION_CONTROLLERS:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+       239: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+       242: getstatic     #21                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.PERMANENT_FAILURE:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       245: aload_3
+       246: aload         4
+       248: aload         6
+       250: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       253: areturn
+       254: aload_3
+       255: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+       258: getstatic     #314                // Field com/hypixel/hytale/server/spawning/SpawnRejection.NO_MOTION_CONTROLLER_MATCH:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+       261: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+       264: getstatic     #21                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.PERMANENT_FAILURE:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       267: aload_3
+       268: aload         4
+       270: aload         6
+       272: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       275: areturn
+       276: aload_3
+       277: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+       280: getstatic     #317                // Field com/hypixel/hytale/server/spawning/SpawnRejection.BREATHING_INCOMPATIBLE:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+       283: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+       286: getstatic     #21                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.PERMANENT_FAILURE:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       289: aload_3
+       290: aload         4
+       292: aload         6
+       294: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       297: areturn
+       298: aload_3
+       299: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+       302: getstatic     #320                // Field com/hypixel/hytale/server/spawning/SpawnRejection.OTHER:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+       305: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+       308: aload         7
+       310: invokevirtual #323                // Method com/hypixel/hytale/server/spawning/SpawningContext.deleteCurrentSpawnSpan:()V
+       313: goto          16
+       316: iload         8
+       318: ifle          332
+       321: iload         9
+       323: iload         8
+       325: if_icmpne     332
+       328: aload_3
+       329: invokevirtual #326                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.incrementTotalColumnsBlocked:()V
+       332: goto          418
+       335: astore        8
+       337: getstatic     #31                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       340: getstatic     #331                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+       343: invokevirtual #41                 // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       346: ldc_w         #334                // String %s with spawnable=%s spwnCfg=%s X/Y/Z=%s/%s/%s
+       349: aload         8
+       351: invokevirtual #336                // Method java/lang/IllegalStateException.getMessage:()Ljava/lang/String;
+       354: aload_3
+       355: invokevirtual #7                  // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRoleIndex:()I
+       358: invokestatic  #58                 // Method getSpawnableName:(I)Ljava/lang/String;
+       361: aload_3
+       362: invokevirtual #81                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpawnConfig:()Lcom/hypixel/hytale/server/spawning/wrappers/SpawnWrapper;
+       365: invokevirtual #340                // Method com/hypixel/hytale/server/spawning/wrappers/SpawnWrapper.getSpawn:()Lcom/hypixel/hytale/server/spawning/assets/spawns/config/NPCSpawn;
+       368: invokevirtual #344                // Method com/hypixel/hytale/server/spawning/assets/spawns/config/NPCSpawn.getId:()Ljava/lang/String;
+       371: aload         7
+       373: getfield      #349                // Field com/hypixel/hytale/server/spawning/SpawningContext.xSpawn:D
+       376: invokestatic  #353                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       379: aload         7
+       381: getfield      #359                // Field com/hypixel/hytale/server/spawning/SpawningContext.ySpawn:D
+       384: invokestatic  #353                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       387: aload         7
+       389: getfield      #362                // Field com/hypixel/hytale/server/spawning/SpawningContext.zSpawn:D
+       392: invokestatic  #353                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       395: invokeinterface #365,  8          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       400: aload_0
+       401: invokeinterface #368,  1          // InterfaceMethod com/hypixel/hytale/server/spawning/ISpawnableWithModel.markNeedsReload:()V
+       406: getstatic     #66                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.FAILED:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       409: aload_3
+       410: aload         4
+       412: aload         6
+       414: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       417: areturn
+       418: aload         5
+       420: invokevirtual #166                // Method com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData.getRandomChunkColumnIterator:()Lcom/hypixel/hytale/server/spawning/util/RandomChunkColumnIterator;
+       423: invokevirtual #371                // Method com/hypixel/hytale/server/spawning/util/RandomChunkColumnIterator.isAtSavedIteratorPosition:()Z
+       426: ifeq          582
+       429: aload_3
+       430: invokevirtual #374                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getTotalColumnsBlocked:()I
+       433: aload_3
+       434: invokevirtual #377                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getTotalColumnsTested:()I
+       437: if_icmpne     570
+       440: aload         5
+       442: aload_3
+       443: invokevirtual #7                  // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRoleIndex:()I
+       446: invokevirtual #380                // Method com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData.markRoleAsUnspawnable:(I)V
+       449: getstatic     #31                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       452: getstatic     #35                 // Field java/util/logging/Level.FINEST:Ljava/util/logging/Level;
+       455: invokevirtual #41                 // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       458: astore        8
+       460: aload         8
+       462: invokeinterface #47,  1           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       467: ifeq          524
+       470: aload         8
+       472: ldc_w         #383                // String Spawn job %s: No column to create %s (env %s) at chunk %s/%s, columns probed %s
+       475: aload_3
+       476: invokevirtual #55                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getJobId:()I
+       479: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       482: aload_3
+       483: invokevirtual #7                  // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRoleIndex:()I
+       486: invokestatic  #58                 // Method getSpawnableName:(I)Ljava/lang/String;
+       489: aload_3
+       490: invokevirtual #390                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getEnvironment:()Lcom/hypixel/hytale/server/core/asset/type/environment/config/Environment;
+       493: invokevirtual #394                // Method com/hypixel/hytale/server/core/asset/type/environment/config/Environment.getId:()Ljava/lang/String;
+       496: aload         4
+       498: invokevirtual #397                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getX:()I
+       501: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       504: aload         4
+       506: invokevirtual #400                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getZ:()I
+       509: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       512: aload_3
+       513: invokevirtual #377                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getTotalColumnsTested:()I
+       516: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       519: invokeinterface #365,  8          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       524: aload         5
+       526: invokevirtual #403                // Method com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData.allRolesUnspawnable:()Z
+       529: ifeq          570
+       532: aload         6
+       534: aload_3
+       535: invokevirtual #122                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getEnvironmentIndex:()I
+       538: aload         4
+       540: invokevirtual #139                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getIndex:()J
+       543: invokevirtual #406                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.queueUnspawnableChunk:(IJ)V
+       546: aload         8
+       548: invokeinterface #47,  1           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       553: ifeq          570
+       556: aload         8
+       558: ldc_w         #412                // String Spawn job %s: All roles unspawnable. Queued for processing.
+       561: aload_3
+       562: invokevirtual #55                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getJobId:()I
+       565: invokeinterface #414,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+       570: getstatic     #66                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.FAILED:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       573: aload_3
+       574: aload         4
+       576: aload         6
+       578: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       581: areturn
+       582: getstatic     #201                // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.TRY_AGAIN:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       585: areturn
+      Exception table:
+         from    to  target type
+            10   183   335   Class java/lang/IllegalStateException
+           184   253   335   Class java/lang/IllegalStateException
+           254   275   335   Class java/lang/IllegalStateException
+           276   297   335   Class java/lang/IllegalStateException
+           298   332   335   Class java/lang/IllegalStateException
+
+  private static com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems$Result spawn(com.hypixel.hytale.server.spawning.world.component.SpawnJobData, com.hypixel.hytale.server.core.universe.world.World, com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData);
+    Code:
+         0: invokestatic  #207                // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+         3: astore        4
+         5: aload_0
+         6: invokevirtual #69                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpawningContext:()Lcom/hypixel/hytale/server/spawning/SpawningContext;
+         9: astore        5
+        11: aload         5
+        13: invokevirtual #417                // Method com/hypixel/hytale/server/spawning/SpawningContext.newPosition:()Lorg/joml/Vector3d;
+        16: astore        6
+        18: aload         5
+        20: invokevirtual #421                // Method com/hypixel/hytale/server/spawning/SpawningContext.newRotation:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+        23: astore        7
+        25: aload_0
+        26: invokevirtual #7                  // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRoleIndex:()I
+        29: istore        8
+        31: aload_1
+        32: invokevirtual #425                // Method com/hypixel/hytale/server/core/universe/world/World.getEntityStore:()Lcom/hypixel/hytale/server/core/universe/world/storage/EntityStore;
+        35: invokevirtual #431                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getStore:()Lcom/hypixel/hytale/component/Store;
+        38: astore        10
+        40: aload         4
+        42: aload         10
+        44: iload         8
+        46: aload         6
+        48: aload         7
+        50: aload         5
+        52: invokevirtual #437                // Method com/hypixel/hytale/server/spawning/SpawningContext.getModel:()Lcom/hypixel/hytale/server/core/asset/type/model/config/Model;
+        55: iload         8
+        57: aload_0
+        58: invokedynamic #441,  0            // InvokeDynamic #2:accept:(ILcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;)Lcom/hypixel/hytale/function/consumer/TriConsumer;
+        63: aconst_null
+        64: invokevirtual #445                // Method com/hypixel/hytale/server/npc/NPCPlugin.spawnEntity:(Lcom/hypixel/hytale/component/Store;ILorg/joml/Vector3dc;Lcom/hypixel/hytale/math/vector/Rotation3fc;Lcom/hypixel/hytale/server/core/asset/type/model/config/Model;Lcom/hypixel/hytale/function/consumer/TriConsumer;Lcom/hypixel/hytale/function/consumer/TriConsumer;)Lit/unimi/dsi/fastutil/Pair;
+        67: astore        11
+        69: aload         11
+        71: ifnonnull     125
+        74: getstatic     #31                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+        77: getstatic     #449                // Field java/util/logging/Level.SEVERE:Ljava/util/logging/Level;
+        80: invokevirtual #41                 // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        83: ldc_w         #452                // String Spawn job %s: Failed to create %s: The spawned entity returned null
+        86: aload_0
+        87: invokevirtual #55                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getJobId:()I
+        90: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        93: aload         4
+        95: iload         8
+        97: invokevirtual #221                // Method com/hypixel/hytale/server/npc/NPCPlugin.getName:(I)Ljava/lang/String;
+       100: invokeinterface #454,  4          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+       105: aload_0
+       106: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+       109: getstatic     #320                // Field com/hypixel/hytale/server/spawning/SpawnRejection.OTHER:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+       112: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+       115: getstatic     #66                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.FAILED:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       118: aload_0
+       119: aload_2
+       120: aload_3
+       121: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       124: areturn
+       125: aload         11
+       127: invokeinterface #457,  1          // InterfaceMethod it/unimi/dsi/fastutil/Pair.right:()Ljava/lang/Object;
+       132: checkcast     #463                // class com/hypixel/hytale/server/npc/entities/NPCEntity
+       135: astore        9
+       137: aload         11
+       139: invokeinterface #465,  1          // InterfaceMethod it/unimi/dsi/fastutil/Pair.left:()Ljava/lang/Object;
+       144: checkcast     #468                // class com/hypixel/hytale/component/Ref
+       147: astore        12
+       149: aload         12
+       151: aload         9
+       153: iload         8
+       155: aload         6
+       157: aload         7
+       159: aload_0
+       160: invokevirtual #470                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getFlockSize:()I
+       163: aload_0
+       164: invokevirtual #473                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getFlockAsset:()Lcom/hypixel/hytale/server/flock/config/FlockAsset;
+       167: iload         8
+       169: aload_0
+       170: invokedynamic #477,  0            // InvokeDynamic #3:accept:(ILcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;)Lcom/hypixel/hytale/function/consumer/TriConsumer;
+       175: aconst_null
+       176: aload         10
+       178: invokestatic  #478                // Method com/hypixel/hytale/server/flock/FlockPlugin.trySpawnFlock:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/npc/entities/NPCEntity;ILorg/joml/Vector3dc;Lcom/hypixel/hytale/math/vector/Rotation3fc;ILcom/hypixel/hytale/server/flock/config/FlockAsset;Lcom/hypixel/hytale/function/consumer/TriConsumer;Lcom/hypixel/hytale/function/consumer/TriConsumer;Lcom/hypixel/hytale/component/Store;)Lcom/hypixel/hytale/component/Ref;
+       181: pop
+       182: goto          253
+       185: astore        10
+       187: getstatic     #31                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       190: getstatic     #449                // Field java/util/logging/Level.SEVERE:Ljava/util/logging/Level;
+       193: invokevirtual #41                 // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       196: aload         10
+       198: invokeinterface #486,  2          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.withCause:(Ljava/lang/Throwable;)Lcom/google/common/flogger/LoggingApi;
+       203: checkcast     #48                 // class com/hypixel/hytale/logger/HytaleLogger$Api
+       206: ldc_w         #490                // String Spawn job %s: Failed to create %s: %s
+       209: aload_0
+       210: invokevirtual #55                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getJobId:()I
+       213: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       216: aload         4
+       218: iload         8
+       220: invokevirtual #221                // Method com/hypixel/hytale/server/npc/NPCPlugin.getName:(I)Ljava/lang/String;
+       223: aload         10
+       225: invokevirtual #492                // Method java/lang/RuntimeException.getMessage:()Ljava/lang/String;
+       228: invokeinterface #493,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       233: aload_0
+       234: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+       237: getstatic     #320                // Field com/hypixel/hytale/server/spawning/SpawnRejection.OTHER:Lcom/hypixel/hytale/server/spawning/SpawnRejection;
+       240: invokestatic  #257                // Method rejectSpawn:(Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lcom/hypixel/hytale/server/spawning/SpawnRejection;)V
+       243: getstatic     #66                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.FAILED:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       246: aload_0
+       247: aload_2
+       248: aload_3
+       249: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       252: areturn
+       253: getstatic     #31                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       256: getstatic     #35                 // Field java/util/logging/Level.FINEST:Ljava/util/logging/Level;
+       259: invokevirtual #41                 // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       262: astore        10
+       264: aload         10
+       266: invokeinterface #47,  1           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       271: ifeq          334
+       274: aload         10
+       276: ldc_w         #496                // String Spawn job %s: Created %s with flock size %s (env %s) at chunk %s/%s, columns probed %s
+       279: aload_0
+       280: invokevirtual #55                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getJobId:()I
+       283: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       286: invokestatic  #207                // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+       289: iload         8
+       291: invokevirtual #221                // Method com/hypixel/hytale/server/npc/NPCPlugin.getName:(I)Ljava/lang/String;
+       294: aload_0
+       295: invokevirtual #470                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getFlockSize:()I
+       298: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       301: aload_0
+       302: invokevirtual #390                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getEnvironment:()Lcom/hypixel/hytale/server/core/asset/type/environment/config/Environment;
+       305: invokevirtual #394                // Method com/hypixel/hytale/server/core/asset/type/environment/config/Environment.getId:()Ljava/lang/String;
+       308: aload_2
+       309: invokevirtual #397                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getX:()I
+       312: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       315: aload_2
+       316: invokevirtual #400                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getZ:()I
+       319: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       322: aload_0
+       323: invokevirtual #377                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getTotalColumnsTested:()I
+       326: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       329: invokeinterface #498,  9          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       334: aload_0
+       335: invokevirtual #501                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.incrementSpansSuccess:()V
+       338: getstatic     #504                // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.SUCCESS:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       341: aload_0
+       342: aload_2
+       343: aload_3
+       344: invokestatic  #27                 // Method endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       347: areturn
+      Exception table:
+         from    to  target type
+            31   124   185   Class java/lang/RuntimeException
+           125   182   185   Class java/lang/RuntimeException
+
+  private static void preAddToWorld(com.hypixel.hytale.server.npc.entities.NPCEntity, com.hypixel.hytale.component.Holder<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, int, com.hypixel.hytale.server.spawning.world.component.SpawnJobData);
+    Code:
+         0: aload_0
+         1: iload_2
+         2: invokevirtual #507                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.setSpawnRoleIndex:(I)V
+         5: aload_3
+         6: invokevirtual #510                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.isSpawnFrozen:()Z
+         9: ifeq          19
+        12: aload_1
+        13: invokestatic  #513                // Method com/hypixel/hytale/server/core/entity/Frozen.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        16: invokevirtual #519                // Method com/hypixel/hytale/component/Holder.ensureComponent:(Lcom/hypixel/hytale/component/ComponentType;)V
+        19: aload_0
+        20: aload_3
+        21: invokevirtual #122                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getEnvironmentIndex:()I
+        24: invokevirtual #525                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.setEnvironment:(I)V
+        27: aload_0
+        28: aload_3
+        29: invokevirtual #528                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpawnConfigIndex:()I
+        32: invokevirtual #531                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.setSpawnConfiguration:(I)V
+        35: aload_0
+        36: aload_3
+        37: invokevirtual #69                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpawningContext:()Lcom/hypixel/hytale/server/spawning/SpawningContext;
+        40: getfield      #534                // Field com/hypixel/hytale/server/spawning/SpawningContext.activeMotionControllerType:Ljava/lang/String;
+        43: invokevirtual #538                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.setActiveMotionControllerName:(Ljava/lang/String;)V
+        46: return
+
+  private static void rejectSpawn(it.unimi.dsi.fastutil.objects.Object2IntMap<com.hypixel.hytale.server.spawning.SpawnRejection>, com.hypixel.hytale.server.spawning.SpawnRejection);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iconst_1
+         3: invokedynamic #541,  0            // InvokeDynamic #4:apply:()Lit/unimi/dsi/fastutil/ints/IntBinaryOperator;
+         8: invokeinterface #545,  4          // InterfaceMethod it/unimi/dsi/fastutil/objects/Object2IntMap.mergeInt:(Ljava/lang/Object;ILit/unimi/dsi/fastutil/ints/IntBinaryOperator;)I
+        13: pop
+        14: return
+
+  protected static com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems$Result endProbing(com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems$Result, com.hypixel.hytale.server.spawning.world.component.SpawnJobData, com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData);
+    Code:
+         0: getstatic     #31                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+         3: getstatic     #35                 // Field java/util/logging/Level.FINEST:Ljava/util/logging/Level;
+         6: invokevirtual #41                 // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+         9: astore        4
+        11: aload         4
+        13: invokeinterface #47,  1           // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+        18: ifeq          81
+        21: aload         4
+        23: ldc_w         #551                // String Term Spawnjob id=%s env=%s role=%s chunk=[%s/%s] tested=%s result=%s budgetUsed=%s
+        26: aload_1
+        27: invokevirtual #55                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getJobId:()I
+        30: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        33: aload_1
+        34: invokevirtual #390                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getEnvironment:()Lcom/hypixel/hytale/server/core/asset/type/environment/config/Environment;
+        37: invokevirtual #394                // Method com/hypixel/hytale/server/core/asset/type/environment/config/Environment.getId:()Ljava/lang/String;
+        40: aload_1
+        41: invokevirtual #7                  // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRoleIndex:()I
+        44: invokestatic  #58                 // Method getSpawnableName:(I)Ljava/lang/String;
+        47: aload_2
+        48: invokevirtual #397                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getX:()I
+        51: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        54: aload_2
+        55: invokevirtual #400                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getZ:()I
+        58: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        61: aload_1
+        62: invokevirtual #377                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getTotalColumnsTested:()I
+        65: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        68: aload_0
+        69: aload_1
+        70: invokevirtual #553                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getTotalBudgetUsed:()I
+        73: invokestatic  #385                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        76: invokeinterface #556,  10         // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+        81: aload_3
+        82: aload_1
+        83: invokevirtual #122                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getEnvironmentIndex:()I
+        86: aload_1
+        87: invokevirtual #7                  // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRoleIndex:()I
+        90: aload_1
+        91: invokevirtual #470                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getFlockSize:()I
+        94: invokevirtual #559                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.untrackNPC:(III)Z
+        97: pop
+        98: aload_3
+        99: aload_1
+       100: aload_0
+       101: invokestatic  #563                // Method updateSpawnStats:(Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;)V
+       104: aload_3
+       105: iconst_m1
+       106: aload_1
+       107: invokevirtual #470                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getFlockSize:()I
+       110: ineg
+       111: invokevirtual #567                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.adjustActiveSpawnJobs:(II)V
+       114: aload_0
+       115: areturn
+
+  private static void updateSpawnStats(com.hypixel.hytale.server.spawning.world.component.WorldSpawnData, com.hypixel.hytale.server.spawning.world.component.SpawnJobData, com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems$Result);
+    Code:
+         0: aload_2
+         1: getstatic     #504                // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.SUCCESS:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+         4: if_acmpne     11
+         7: iconst_1
+         8: goto          12
+        11: iconst_0
+        12: istore_3
+        13: aload_0
+        14: aload_1
+        15: invokevirtual #122                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getEnvironmentIndex:()I
+        18: invokevirtual #571                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.getWorldEnvironmentSpawnData:(I)Lcom/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData;
+        21: astore        4
+        23: aload         4
+        25: aload_1
+        26: invokevirtual #7                  // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRoleIndex:()I
+        29: aload_1
+        30: invokevirtual #575                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpansTried:()I
+        33: aload_1
+        34: invokevirtual #578                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getSpansSuccess:()I
+        37: aload_1
+        38: invokevirtual #553                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getTotalBudgetUsed:()I
+        41: aload_1
+        42: invokevirtual #247                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getRejectionMap:()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+        45: iload_3
+        46: invokevirtual #581                // Method com/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData.updateSpawnStats:(IIIILit/unimi/dsi/fastutil/objects/Object2IntMap;Z)V
+        49: aload_0
+        50: aload_1
+        51: invokevirtual #553                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getTotalBudgetUsed:()I
+        54: invokevirtual #586                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.addCompletedSpawnJob:(I)V
+        57: return
+
+  private static java.lang.String getSpawnableName(int);
+    Code:
+         0: invokestatic  #207                // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+         3: iload_0
+         4: invokevirtual #221                // Method com/hypixel/hytale/server/npc/NPCPlugin.getName:(I)Ljava/lang/String;
+         7: areturn
+
+  private static void lambda$spawn$1(int, com.hypixel.hytale.server.spawning.world.component.SpawnJobData, com.hypixel.hytale.server.npc.entities.NPCEntity, com.hypixel.hytale.component.Holder, com.hypixel.hytale.component.Store);
+    Code:
+         0: aload_2
+         1: aload_3
+         2: iload_0
+         3: aload_1
+         4: invokestatic  #589                // Method preAddToWorld:(Lcom/hypixel/hytale/server/npc/entities/NPCEntity;Lcom/hypixel/hytale/component/Holder;ILcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;)V
+         7: return
+
+  private static void lambda$spawn$0(int, com.hypixel.hytale.server.spawning.world.component.SpawnJobData, com.hypixel.hytale.server.npc.entities.NPCEntity, com.hypixel.hytale.component.Holder, com.hypixel.hytale.component.Store);
+    Code:
+         0: aload_2
+         1: aload_3
+         2: iload_0
+         3: aload_1
+         4: invokestatic  #589                // Method preAddToWorld:(Lcom/hypixel/hytale/server/npc/entities/NPCEntity;Lcom/hypixel/hytale/component/Holder;ILcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;)V
+         7: return
+
+  static {};
+    Code:
+         0: ldc           #14                 // class com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems
+         2: invokevirtual #593                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #287                // Field $assertionsDisabled:Z
+        16: invokestatic  #598                // Method com/hypixel/hytale/logger/HytaleLogger.forEnclosingClass:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        19: putstatic     #31                 // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+        22: iconst_2
+        23: anewarray     #602                // class com/hypixel/hytale/component/ComponentType
+        26: dup
+        27: iconst_0
+        28: invokestatic  #604                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        31: aastore
+        32: dup
+        33: iconst_1
+        34: invokestatic  #605                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        37: aastore
+        38: invokestatic  #606                // Method com/hypixel/hytale/component/Archetype.of:([Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Archetype;
+        41: putstatic     #612                // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+        44: iconst_2
+        45: anewarray     #616                // class com/hypixel/hytale/component/query/Query
+        48: dup
+        49: iconst_0
+        50: getstatic     #618                // Field com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+        53: invokevirtual #624                // Method com/hypixel/hytale/component/ComponentRegistry.getNonTickingComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        56: invokestatic  #629                // InterfaceMethod com/hypixel/hytale/component/query/Query.not:(Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/NotQuery;
+        59: aastore
+        60: dup
+        61: iconst_1
+        62: getstatic     #612                // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+        65: aastore
+        66: invokestatic  #633                // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        69: putstatic     #637                // Field TICKING_QUERY:Lcom/hypixel/hytale/component/query/Query;
+        72: return
+}

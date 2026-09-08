@@ -347,3 +347,102 @@ Evidence/archive/rollback: `evidence/stage-12/cohort-d/`.
 No live deployment, owner-world mutation, native HUD/input/balance edit, art
 change or Google Drive write. Local gate PASS; connected gate UNVERIFIED.
 Continue with the audited native spawn, actual-damage and death adapters.
+
+## Cohort E — native spawn/Health-loss/death hookup
+
+### Earliest native boundaries audited
+
+The installed WorldSpawnJobSystems passes a pre-add callback to NPCPlugin. That
+callback sets spawn role, environment and spawn configuration before
+Store.addEntity(SPAWN). Ordinary manual NPCPlugin spawns leave environment/spawn
+configuration at Integer.MIN_VALUE. The adapter requires a fresh SPAWN with both
+provenance fields initialized before classifying a new context. LOAD only restores
+an existing RPG context; an old NPC without that context earns nothing. This is
+deliberately narrower than all possible native spawning mechanisms: beacon,
+marker, newer-generator and unaudited mechanisms are not inferred equivalent.
+
+Native ApplyDamage subtracts Health, then queues DeathComponent creation through
+CommandBuffer.run. The RPG observer runs in Inspect after Apply, before RPG
+reflection, and reads the existing SupportDamageSystems pre-Apply Health capture
+and current authoritative Health. It requires positive actual loss, a loaded
+player source/credited owner, native hostile attitude and an eligible natural
+target. Cancelled, self, friendly, reflected and redirected damage grant no
+contribution. RPG metadata retains rootCastId/skillInstanceId/correlationId;
+ordinary native attacks do not receive fabricated RPG cast IDs. Native projectile
+sources inherit EntitySource with the owner reference, as verified in bytecode.
+
+The actual HytaleWorldGenProvider codec identifies Default. A first draft used
+the generator data-directory basename, but bytecode showed that the provider can
+load Default from a different root path. That assumption was removed before
+archiving: use public codec Name/Path fields, not reflection or toString parsing.
+Custom Path overrides and non-legacy generators require a separate asset audit.
+The actual legacy biome lookup uses the installed zone/biome result at spawn.
+
+### Authority and lifecycle
+
+PersistentEncounterRuntime serializes spawn, contribution, death and delivery
+callbacks. Each accepted contribution persists its timestamp and farm watermark.
+Any uncertain storage operation freezes progression awards until restart; it
+does not cancel native damage, refund casts, rewrite Health or stop native death.
+Ref removal/unload clears only the in-memory indices, retaining persistent context.
+Current-role changes or ownership/conversion disqualify previously tracked actors.
+
+Conversion now persists its exclusion before installing the native relationship
+overlay. If that write fails, the overlay is not installed; an already-paid cast
+is not silently refunded. Its existing lease cleanup remains in place. An
+interrupted or later-restored conversion cannot become an ordinary XP source.
+RPG summoned/revived actors remain excluded as targets, while their RPG-attributed
+damage credits the loaded owner once. Native converted attacks resolve to the
+lease owner while the overlay exists. No second summon/owner payout is added.
+
+The native DeathComponent hook requires real death information and Health at its
+minimum, then queries only the previously credited player IDs (maximum256) for
+current world presence/position/level. A new read-only characterLevel accessor
+avoids recompiling a loadout for this check. It freezes the cohort-D plan before
+queueing delivery. A global (not per-player/per-world multiplied) one-second
+delivery schedule permits eight award attempts per tick window. The existing
+earned-reward service writes XP, levels, 5+5 points and Insight and emits its
+commit traces. No death callback directly increments XP or replays the last hit.
+
+### Deliberate limitations
+
+This cohort's native participants are **solo**. No native party membership API
+was found by the installed class/API audit; do not mistake the injected party
+tests in cohortC for a live party adapter. The next cohort must expose a trusted
+provider contract and retain an explicit unavailable status without a provider.
+Healing/absorption/effective-control native contribution hooks and mastery are
+still next work. Frozen plans aggregate enemy contributions, so their death event
+uses the stable enemy correlation rather than pretending one root owned all XP.
+
+Startup now truthfully advertises awardHook=true but connectedProof=false. New
+trace events distinguish context restore, actual post-Apply contribution, frozen
+native death and rejected reward processing. One bounded incident is logged on
+adapter/storage failure. There is no new command, HUD, balance formula, native
+cost, cooldown or damage writer in this cohort. Synchronous persistence latency
+and the eight-awards/second delivery policy remain explicit Stage13 load-test
+risks, not performance claims.
+
+### Verification and rollback
+
+18 runtime tests cover persisted native-input-shaped events, reload/unload,
+unknown spawns, immutable role/biome context, cancelled/non-loss eligibility,
+conversion, actual exclusion/farm persistence, death replay, uncertain storage
+and player-write failure. Five additional native-control tests exercise the
+actual installed worldgen codec and spawn-provenance policy. A test initially
+referenced a recording field through the tracer interface and did not compile;
+the fixture now retains its concrete RecordingTracer and passes.
+
+Full clean retained build: **1552 tests, zero failures/errors/skips**, 62 seconds.
+Normal isolated three-mod network boot/clean stop and all retained asset gates
+pass, including construction/registration of the native tracking, Inspect,
+DeathComponent and delivery systems. That smoke has **no connected player** and
+does not prove natural spawn observation, real damage credit, native death reward
+execution, input delivery, XP rendering or notification behavior.
+
+Artifact SHA-256: A353FEE1E0F480569B2BBC540392596948823ED2290181DE1F56DC81E2DEA11E.
+Rollback cohort D: 45EA5583A7CCF25651B2BEB3BE9D41434110CB0888D3AB97E2AC89FE7720D320.
+Evidence/archive/rollback: `evidence/stage-12/cohort-e/`; exact bytecode audit in
+its `api/` subdirectory. Player8/plan35 unchanged. Restore players, earned-rewards
+and encounters as a coordinated checkpoint when rolling back earned progress.
+Live R023 and its control-recovery journal remain untouched; no Google Drive or
+art writes. Local gate PASS; connected gate UNVERIFIED. Continue Stage12.

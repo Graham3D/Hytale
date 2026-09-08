@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c','d')][string]$Cohort='a')
+param([ValidateSet('a','b','c','d','e')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $passiveRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $passiveConfig=@{
@@ -7,6 +7,7 @@ $passiveConfig=@{
     b=@{tests=1447;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-a\artifacts\HytaleRPG-0.0.24.jar'}
     c=@{tests=1486;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-b\artifacts\HytaleRPG-0.0.24.jar'}
     d=@{tests=1529;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-c\artifacts\HytaleRPG-0.0.24.jar'}
+    e=@{tests=1552;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-d\artifacts\HytaleRPG-0.0.24.jar'}
 }[$Cohort]
 if(-not $passiveConfig){throw 'Cohort must declare tested scope before evidence capture'}
 $passiveEvidence=Join-Path $passiveRoot "evidence\stage-12\cohort-$Cohort"
@@ -29,7 +30,8 @@ if($passiveSmoke.jarSha256 -ne $passiveHash -or $passiveSmoke.processExitCode -n
 & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $passiveJar
 if($Cohort -ne 'a' -and -not $passiveSmoke.rewardStoreConfigured){throw 'Durable reward store must be configured at startup'}
 if($Cohort -notin @('a','b') -and -not $passiveSmoke.encounterRegistryResolved){throw 'Audited native pilot roles must resolve at startup'}
-if($Cohort -eq 'd' -and -not $passiveSmoke.encounterStoreConfigured){throw 'Persistent encounter store must be configured at startup'}
+if($Cohort -in @('d','e') -and -not $passiveSmoke.encounterStoreConfigured){throw 'Persistent encounter store must be configured at startup'}
+if($Cohort -eq 'e' -and -not $passiveSmoke.nativeRewardHooksRegistered){throw 'Native reward hooks must be registered at startup'}
 $passiveProtected=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI','canvas-ui/src',
     'src/main/resources/rpg/runtime/stage-04-skills.json','src/main/resources/rpg/runtime/stage-05-projectiles.json',
     'src/main/resources/Server/ProjectileConfigs','src/main/resources/rpg/balance',

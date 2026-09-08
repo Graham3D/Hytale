@@ -1,0 +1,250 @@
+Compiled from "ChunkStore.java"
+public class com.hypixel.hytale.server.core.universe.world.storage.ChunkStore extends com.hypixel.hytale.server.core.universe.world.storage.ChunkGrid {
+  public static final com.hypixel.hytale.logger.HytaleLogger LOGGER;
+
+  public static final com.hypixel.hytale.metrics.MetricsRegistry<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore> METRICS_REGISTRY;
+
+  public static final com.hypixel.hytale.component.ComponentRegistry<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore> REGISTRY;
+
+  public static final com.hypixel.hytale.codec.store.CodecKey<com.hypixel.hytale.component.Holder<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore>> HOLDER_CODEC_KEY;
+
+  public static final com.hypixel.hytale.component.SystemType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.core.universe.world.storage.ChunkStore$LoadPacketDataQuerySystem> LOAD_PACKETS_DATA_QUERY_SYSTEM_TYPE;
+
+  public static final com.hypixel.hytale.component.SystemType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.core.universe.world.storage.ChunkStore$LoadFuturePacketDataQuerySystem> LOAD_FUTURE_PACKETS_DATA_QUERY_SYSTEM_TYPE;
+
+  public static final com.hypixel.hytale.component.SystemType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.core.universe.world.storage.ChunkStore$UnloadPacketDataQuerySystem> UNLOAD_PACKETS_DATA_QUERY_SYSTEM_TYPE;
+
+  public static final com.hypixel.hytale.component.ResourceType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.core.universe.world.storage.component.ChunkUnloadingSystem$Data> UNLOAD_RESOURCE;
+
+  public static final com.hypixel.hytale.component.ResourceType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.core.universe.world.storage.component.SectionUnloadingSystem$Data> SECTION_UNLOAD_RESOURCE;
+
+  public static final com.hypixel.hytale.component.ResourceType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.core.universe.world.storage.component.ChunkSavingSystems$Data> SAVE_RESOURCE;
+
+  public static final com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore> INIT_GROUP;
+
+  protected java.lang.Object storageData;
+
+  protected java.lang.Runnable pendingStorageMigration;
+
+  protected com.hypixel.hytale.server.core.universe.world.storage.IChunkSaver saver;
+
+  public com.hypixel.hytale.server.core.universe.world.storage.ChunkStore(com.hypixel.hytale.server.core.universe.world.World);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokespecial #1                  // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkGrid."<init>":(Lcom/hypixel/hytale/server/core/universe/world/World;)V
+         5: return
+
+  public void start(com.hypixel.hytale.component.IResourceStorage);
+    Code:
+         0: aload_0
+         1: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+         4: aload_0
+         5: aload_1
+         6: aload_0
+         7: invokedynamic #13,  0             // InvokeDynamic #0:accept:(Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;)Ljava/util/function/Consumer;
+        12: invokevirtual #17                 // Method com/hypixel/hytale/component/ComponentRegistry.addStore:(Ljava/lang/Object;Lcom/hypixel/hytale/component/IResourceStorage;Ljava/util/function/Consumer;)Lcom/hypixel/hytale/component/Store;
+        15: putfield      #23                 // Field store:Lcom/hypixel/hytale/component/Store;
+        18: aload_0
+        19: getfield      #27                 // Field pendingStorageMigration:Ljava/lang/Runnable;
+        22: ifnull        41
+        25: aload_0
+        26: getfield      #27                 // Field pendingStorageMigration:Ljava/lang/Runnable;
+        29: astore_2
+        30: aload_0
+        31: aconst_null
+        32: putfield      #27                 // Field pendingStorageMigration:Ljava/lang/Runnable;
+        35: aload_2
+        36: invokeinterface #31,  1           // InterfaceMethod java/lang/Runnable.run:()V
+        41: return
+
+  public java.lang.Object getStorageData();
+    Code:
+         0: aload_0
+         1: getfield      #37                 // Field storageData:Ljava/lang/Object;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.universe.world.storage.IChunkSaver getSaver();
+    Code:
+         0: aload_0
+         1: getfield      #41                 // Field saver:Lcom/hypixel/hytale/server/core/universe/world/storage/IChunkSaver;
+         4: areturn
+
+  public void pauseBackgroundSaving(com.hypixel.hytale.server.core.universe.world.storage.component.ChunkSavingSystems$Data);
+    Code:
+         0: aload_0
+         1: getfield      #41                 // Field saver:Lcom/hypixel/hytale/server/core/universe/world/storage/IChunkSaver;
+         4: ifnull        17
+         7: aload_0
+         8: getfield      #41                 // Field saver:Lcom/hypixel/hytale/server/core/universe/world/storage/IChunkSaver;
+        11: aload_1
+        12: invokeinterface #45,  2           // InterfaceMethod com/hypixel/hytale/server/core/universe/world/storage/IChunkSaver.pauseBackgroundSaving:(Lcom/hypixel/hytale/server/core/universe/world/storage/component/ChunkSavingSystems$Data;)V
+        17: return
+
+  public java.util.concurrent.CompletableFuture<java.lang.Void> resumeBackgroundSaving();
+    Code:
+         0: aload_0
+         1: getfield      #41                 // Field saver:Lcom/hypixel/hytale/server/core/universe/world/storage/IChunkSaver;
+         4: ifnull        17
+         7: aload_0
+         8: getfield      #41                 // Field saver:Lcom/hypixel/hytale/server/core/universe/world/storage/IChunkSaver;
+        11: invokeinterface #51,  1           // InterfaceMethod com/hypixel/hytale/server/core/universe/world/storage/IChunkSaver.resumeBackgroundSaving:()Ljava/util/concurrent/CompletableFuture;
+        16: areturn
+        17: aconst_null
+        18: invokestatic  #55                 // Method java/util/concurrent/CompletableFuture.completedFuture:(Ljava/lang/Object;)Ljava/util/concurrent/CompletableFuture;
+        21: areturn
+
+  public void shutdown();
+    Code:
+         0: aload_0
+         1: getfield      #23                 // Field store:Lcom/hypixel/hytale/component/Store;
+         4: invokevirtual #61                 // Method com/hypixel/hytale/component/Store.shutdown:()V
+         7: aload_0
+         8: getfield      #66                 // Field chunks:Lcom/hypixel/fastutil/longs/Long2ObjectConcurrentHashMap;
+        11: invokevirtual #70                 // Method com/hypixel/fastutil/longs/Long2ObjectConcurrentHashMap.clear:()V
+        14: return
+
+  private void lambda$start$0(com.hypixel.hytale.component.Store);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #23                 // Field store:Lcom/hypixel/hytale/component/Store;
+         5: return
+
+  private static java.lang.Long lambda$static$2(com.hypixel.hytale.server.core.universe.world.storage.ChunkStore);
+    Code:
+         0: aload_0
+         1: getfield      #75                 // Field totalLoadedChunksCount:Ljava/util/concurrent/atomic/AtomicInteger;
+         4: invokevirtual #79                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+         7: i2l
+         8: invokestatic  #85                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+        11: areturn
+
+  private static java.lang.Long lambda$static$1(com.hypixel.hytale.server.core.universe.world.storage.ChunkStore);
+    Code:
+         0: aload_0
+         1: getfield      #91                 // Field totalGeneratedChunksCount:Ljava/util/concurrent/atomic/AtomicInteger;
+         4: invokevirtual #79                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+         7: i2l
+         8: invokestatic  #85                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+        11: areturn
+
+  private static com.hypixel.hytale.server.core.universe.world.storage.component.ChunkSavingSystems$Data lambda$static$0(com.hypixel.hytale.server.core.universe.world.storage.ChunkStore);
+    Code:
+         0: aload_0
+         1: invokevirtual #94                 // Method getStore:()Lcom/hypixel/hytale/component/Store;
+         4: getstatic     #98                 // Field SAVE_RESOURCE:Lcom/hypixel/hytale/component/ResourceType;
+         7: invokevirtual #102                // Method com/hypixel/hytale/component/Store.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+        10: checkcast     #106                // class com/hypixel/hytale/server/core/universe/world/storage/component/ChunkSavingSystems$Data
+        13: areturn
+
+  static {};
+    Code:
+         0: invokestatic  #108                // Method com/hypixel/hytale/logger/HytaleLogger.forEnclosingClass:()Lcom/hypixel/hytale/logger/HytaleLogger;
+         3: putstatic     #114                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+         6: new           #118                // class com/hypixel/hytale/metrics/MetricsRegistry
+         9: dup
+        10: invokespecial #120                // Method com/hypixel/hytale/metrics/MetricsRegistry."<init>":()V
+        13: ldc           #122                // String Store
+        15: invokedynamic #124,  0            // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+        20: getstatic     #128                // Field com/hypixel/hytale/component/Store.METRICS_REGISTRY:Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        23: invokevirtual #132                // Method com/hypixel/hytale/metrics/MetricsRegistry.register:(Ljava/lang/String;Ljava/util/function/Function;Lcom/hypixel/hytale/codec/Codec;)Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        26: ldc           #136                // String ChunkLoader
+        28: invokedynamic #138,  0            // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+        33: invokestatic  #139                // InterfaceMethod com/hypixel/hytale/metrics/MetricProvider.maybe:(Ljava/util/function/Function;)Ljava/util/function/Function;
+        36: invokevirtual #145                // Method com/hypixel/hytale/metrics/MetricsRegistry.register:(Ljava/lang/String;Ljava/util/function/Function;)Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        39: ldc           #148                // String ChunkSaver
+        41: invokedynamic #150,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+        46: invokestatic  #139                // InterfaceMethod com/hypixel/hytale/metrics/MetricProvider.maybe:(Ljava/util/function/Function;)Ljava/util/function/Function;
+        49: invokevirtual #145                // Method com/hypixel/hytale/metrics/MetricsRegistry.register:(Ljava/lang/String;Ljava/util/function/Function;)Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        52: ldc           #151                // String WorldGen
+        54: invokedynamic #153,  0            // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+        59: invokestatic  #139                // InterfaceMethod com/hypixel/hytale/metrics/MetricProvider.maybe:(Ljava/util/function/Function;)Ljava/util/function/Function;
+        62: invokevirtual #145                // Method com/hypixel/hytale/metrics/MetricsRegistry.register:(Ljava/lang/String;Ljava/util/function/Function;)Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        65: ldc           #154                // String SaveQueue
+        67: invokedynamic #156,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        72: getstatic     #157                // Field com/hypixel/hytale/server/core/universe/world/storage/component/ChunkSavingSystems$Data.METRICS_REGISTRY:Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        75: invokevirtual #132                // Method com/hypixel/hytale/metrics/MetricsRegistry.register:(Ljava/lang/String;Ljava/util/function/Function;Lcom/hypixel/hytale/codec/Codec;)Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        78: ldc           #158                // String TotalGeneratedChunkCount
+        80: invokedynamic #160,  0            // InvokeDynamic #6:apply:()Ljava/util/function/Function;
+        85: getstatic     #161                // Field com/hypixel/hytale/codec/Codec.LONG:Lcom/hypixel/hytale/codec/codecs/simple/LongCodec;
+        88: invokevirtual #132                // Method com/hypixel/hytale/metrics/MetricsRegistry.register:(Ljava/lang/String;Ljava/util/function/Function;Lcom/hypixel/hytale/codec/Codec;)Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        91: ldc           #167                // String TotalLoadedChunkCount
+        93: invokedynamic #169,  0            // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+        98: getstatic     #161                // Field com/hypixel/hytale/codec/Codec.LONG:Lcom/hypixel/hytale/codec/codecs/simple/LongCodec;
+       101: invokevirtual #132                // Method com/hypixel/hytale/metrics/MetricsRegistry.register:(Ljava/lang/String;Ljava/util/function/Function;Lcom/hypixel/hytale/codec/Codec;)Lcom/hypixel/hytale/metrics/MetricsRegistry;
+       104: putstatic     #170                // Field METRICS_REGISTRY:Lcom/hypixel/hytale/metrics/MetricsRegistry;
+       107: new           #18                 // class com/hypixel/hytale/component/ComponentRegistry
+       110: dup
+       111: invokespecial #171                // Method com/hypixel/hytale/component/ComponentRegistry."<init>":()V
+       114: putstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       117: new           #172                // class com/hypixel/hytale/codec/store/CodecKey
+       120: dup
+       121: ldc           #174                // String ChunkHolder
+       123: invokespecial #176                // Method com/hypixel/hytale/codec/store/CodecKey."<init>":(Ljava/lang/String;)V
+       126: putstatic     #179                // Field HOLDER_CODEC_KEY:Lcom/hypixel/hytale/codec/store/CodecKey;
+       129: getstatic     #183                // Field com/hypixel/hytale/codec/store/CodecStore.STATIC:Lcom/hypixel/hytale/codec/store/CodecStore;
+       132: getstatic     #179                // Field HOLDER_CODEC_KEY:Lcom/hypixel/hytale/codec/store/CodecKey;
+       135: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       138: dup
+       139: invokestatic  #189                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+       142: pop
+       143: invokedynamic #195,  0            // InvokeDynamic #8:get:(Lcom/hypixel/hytale/component/ComponentRegistry;)Ljava/util/function/Supplier;
+       148: invokevirtual #198                // Method com/hypixel/hytale/codec/store/CodecStore.putCodecSupplier:(Lcom/hypixel/hytale/codec/store/CodecKey;Ljava/util/function/Supplier;)V
+       151: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       154: ldc           #202                // class com/hypixel/hytale/server/core/universe/world/storage/ChunkStore$LoadPacketDataQuerySystem
+       156: invokevirtual #204                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystemType:(Ljava/lang/Class;)Lcom/hypixel/hytale/component/SystemType;
+       159: putstatic     #208                // Field LOAD_PACKETS_DATA_QUERY_SYSTEM_TYPE:Lcom/hypixel/hytale/component/SystemType;
+       162: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       165: ldc           #212                // class com/hypixel/hytale/server/core/universe/world/storage/ChunkStore$LoadFuturePacketDataQuerySystem
+       167: invokevirtual #204                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystemType:(Ljava/lang/Class;)Lcom/hypixel/hytale/component/SystemType;
+       170: putstatic     #214                // Field LOAD_FUTURE_PACKETS_DATA_QUERY_SYSTEM_TYPE:Lcom/hypixel/hytale/component/SystemType;
+       173: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       176: ldc           #217                // class com/hypixel/hytale/server/core/universe/world/storage/ChunkStore$UnloadPacketDataQuerySystem
+       178: invokevirtual #204                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystemType:(Ljava/lang/Class;)Lcom/hypixel/hytale/component/SystemType;
+       181: putstatic     #219                // Field UNLOAD_PACKETS_DATA_QUERY_SYSTEM_TYPE:Lcom/hypixel/hytale/component/SystemType;
+       184: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       187: ldc           #222                // class com/hypixel/hytale/server/core/universe/world/storage/component/ChunkUnloadingSystem$Data
+       189: invokedynamic #224,  0            // InvokeDynamic #9:get:()Ljava/util/function/Supplier;
+       194: invokevirtual #227                // Method com/hypixel/hytale/component/ComponentRegistry.registerResource:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/component/ResourceType;
+       197: putstatic     #231                // Field UNLOAD_RESOURCE:Lcom/hypixel/hytale/component/ResourceType;
+       200: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       203: ldc           #234                // class com/hypixel/hytale/server/core/universe/world/storage/component/SectionUnloadingSystem$Data
+       205: invokedynamic #236,  0            // InvokeDynamic #10:get:()Ljava/util/function/Supplier;
+       210: invokevirtual #227                // Method com/hypixel/hytale/component/ComponentRegistry.registerResource:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/component/ResourceType;
+       213: putstatic     #237                // Field SECTION_UNLOAD_RESOURCE:Lcom/hypixel/hytale/component/ResourceType;
+       216: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       219: ldc           #106                // class com/hypixel/hytale/server/core/universe/world/storage/component/ChunkSavingSystems$Data
+       221: invokedynamic #240,  0            // InvokeDynamic #11:get:()Ljava/util/function/Supplier;
+       226: invokevirtual #227                // Method com/hypixel/hytale/component/ComponentRegistry.registerResource:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/component/ResourceType;
+       229: putstatic     #98                 // Field SAVE_RESOURCE:Lcom/hypixel/hytale/component/ResourceType;
+       232: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       235: invokevirtual #241                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystemGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+       238: putstatic     #245                // Field INIT_GROUP:Lcom/hypixel/hytale/component/SystemGroup;
+       241: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       244: new           #249                // class com/hypixel/hytale/server/core/universe/world/storage/ChunkStore$ChunkLoaderSaverSetupSystem
+       247: dup
+       248: invokespecial #251                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore$ChunkLoaderSaverSetupSystem."<init>":()V
+       251: invokevirtual #252                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       254: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       257: new           #256                // class com/hypixel/hytale/server/core/universe/world/storage/component/ChunkUnloadingSystem
+       260: dup
+       261: invokespecial #258                // Method com/hypixel/hytale/server/core/universe/world/storage/component/ChunkUnloadingSystem."<init>":()V
+       264: invokevirtual #252                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       267: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       270: new           #259                // class com/hypixel/hytale/server/core/universe/world/storage/component/SectionUnloadingSystem
+       273: dup
+       274: invokespecial #261                // Method com/hypixel/hytale/server/core/universe/world/storage/component/SectionUnloadingSystem."<init>":()V
+       277: invokevirtual #252                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       280: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       283: new           #262                // class com/hypixel/hytale/server/core/universe/world/storage/component/ChunkSavingSystems$WorldRemoved
+       286: dup
+       287: invokespecial #264                // Method com/hypixel/hytale/server/core/universe/world/storage/component/ChunkSavingSystems$WorldRemoved."<init>":()V
+       290: invokevirtual #252                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       293: getstatic     #7                  // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+       296: new           #265                // class com/hypixel/hytale/server/core/universe/world/storage/component/ChunkSavingSystems$Ticking
+       299: dup
+       300: invokespecial #267                // Method com/hypixel/hytale/server/core/universe/world/storage/component/ChunkSavingSystems$Ticking."<init>":()V
+       303: invokevirtual #252                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       306: return
+}

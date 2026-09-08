@@ -84,7 +84,7 @@ public final class Phase00Plugin extends JavaPlugin {
                 BuildIdentity.STAGE);
         RpgCatalog catalog = RpgCatalog.loadCanonical();
         var progressionProfiles=com.inigmasgames.hytalerpg.progress.ProgressionProfiles.load();
-        LOGGER.atInfo().log("RPG_STAGE12_PROFILES revision=%s bands=%d difficulties=%d nativeBiomeBindings=%d awardHook=false connectedProof=false",
+        LOGGER.atInfo().log("RPG_STAGE12_PROFILES revision=%s bands=%d difficulties=%d nativeBiomeBindings=%d awardHook=true connectedProof=false",
                 BuildIdentity.REVISION,progressionProfiles.biomeBands().size(),progressionProfiles.difficulties().size(),
                 progressionProfiles.biomeBands().stream().mapToInt(b->b.verifiedNativeBiomeIds().size()).sum());
         SkillTraceConfiguration configuration = SkillTraceConfiguration.load();
@@ -97,10 +97,10 @@ public final class Phase00Plugin extends JavaPlugin {
         loadouts = new RpgLoadoutService(catalog, repository, graphService, compiler,
                 new OwnershipEntitlementPolicy(configuration.developmentEntitlements()), skillTrace);
         loadouts.configureEarnedRewards(new com.inigmasgames.hytalerpg.progress.FileEarnedRewardStore(getDataDirectory().resolve("earned-rewards")));
-        LOGGER.atInfo().log("RPG_STAGE12_REWARD_STORE playerSchema=%d writeAhead=true immutableReceipts=true awardHook=false connectedProof=false",
+        LOGGER.atInfo().log("RPG_STAGE12_REWARD_STORE playerSchema=%d writeAhead=true immutableReceipts=true awardHook=true connectedProof=false",
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA);
         encounterStore=new com.inigmasgames.hytalerpg.progress.FileEncounterStore(getDataDirectory().resolve("encounters"));
-        LOGGER.atInfo().log("RPG_STAGE12_ENCOUNTER_STORE schema=1 frozenDeathPlans=true permanentExclusions=true pending=%d awardHook=false connectedProof=false",
+        LOGGER.atInfo().log("RPG_STAGE12_ENCOUNTER_STORE schema=1 frozenDeathPlans=true permanentExclusions=true pending=%d awardHook=true connectedProof=false",
                 encounterStore.pendingCount());
         CombatTrace combatTrace = new CombatTrace(skillTrace);
         uiTrace = new RpgUiTraceService(getDataDirectory().resolve("logs").resolve("rpg").resolve("ui-trace.jsonl"));
@@ -144,6 +144,8 @@ public final class Phase00Plugin extends JavaPlugin {
                 com.inigmasgames.hytalerpg.execution.hytale.ConversionProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.ConversionProjection::new));
         var conversionSystem=skillExecutionSystem.configureConversions();
+        var encounterRewards=new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards(encounterStore,loadouts,skillTrace);
+        conversionSystem.configureRewardExclusion(encounterRewards::invalidateConverted);
         getEntityStoreRegistry().registerSystem(conversionSystem);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleConversionSystem.Removal(conversionSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleConversionSystem.Death(conversionSystem));
@@ -184,6 +186,11 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.BeforeApply());
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Reflect(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleRetaliationSystem(skillExecutionSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Tracking(encounterRewards));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Inspect(encounterRewards));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Death(encounterRewards));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Delivery(encounterRewards));
+        LOGGER.atInfo().log("RPG_STAGE12_NATIVE_REWARDS spawn=LEGACY_WORLD_SPAWN contribution=POST_APPLY_HEALTH_LOSS death=NATIVE_DEATH_COMPONENT deliveryBudget=8_per_second party=SOLO_ONLY connectedProof=false");
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection::new));
@@ -288,7 +295,7 @@ public final class Phase00Plugin extends JavaPlugin {
         com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Wolf");
         var encounterRegistry=com.inigmasgames.hytalerpg.progress.EnemyRewardRegistry.load();
         for(var role:encounterRegistry.roles())com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole(role.roleId());
-        LOGGER.atInfo().log("RPG_STAGE12_ENCOUNTER_REGISTRY roles=%d biomes=%d rankAuthority=RPG_PROFILE awardHook=false connectedProof=false",
+        LOGGER.atInfo().log("RPG_STAGE12_ENCOUNTER_REGISTRY roles=%d biomes=%d rankAuthority=RPG_PROFILE awardHook=true connectedProof=false",
                 encounterRegistry.roles().size(),encounterRegistry.biomes().size());
         com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Crawler");
         com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Broodling");

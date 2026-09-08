@@ -1,0 +1,20 @@
+Compiled from "Damage.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.Damage$ProjectileSource extends com.hypixel.hytale.server.core.modules.entity.damage.Damage$EntitySource {
+  protected final com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> projectile;
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.Damage$ProjectileSource(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource."<init>":(Lcom/hypixel/hytale/component/Ref;)V
+         5: aload_0
+         6: aload_2
+         7: putfield      #7                  // Field projectile:Lcom/hypixel/hytale/component/Ref;
+        10: return
+
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getProjectile();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field projectile:Lcom/hypixel/hytale/component/Ref;
+         4: areturn
+}

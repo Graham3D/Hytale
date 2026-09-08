@@ -229,6 +229,9 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         synchronized (holder) { return compileTraced(player, holder.state, reference()); }
     }
 
+    /** Progression eligibility needs no graph compilation or native HUD projection. */
+    public int characterLevel(UUID player) {Holder holder=holder(player);synchronized(holder){return holder.state.level;}}
+
     @Override public RpgLoadoutView getLoadout(UUID player) {
         Holder holder = holder(player);
         synchronized (holder) {

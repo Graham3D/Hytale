@@ -35,4 +35,23 @@ class Stage12NativeBiomeAssetTest {
         }
     }
     private static String hash(byte[] bytes)throws Exception{return HexFormat.of().withUpperCase().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));}
+    @Test void actualDefaultWorldgenCodecIdentifiesDefaultWithoutFolderGuess(){
+        var provider=new com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider();
+        assertEquals("Default",com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.generatorIdentity(provider));
+    }
+    @Test void actualNamedWorldgenCodecDoesNotPretendToBeDefault(){
+        var provider=com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider.CODEC.decode(org.bson.BsonDocument.parse("{\"Name\":\"Custom\"}"),new com.hypixel.hytale.codec.ExtraInfo());
+        assertEquals("Custom",com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.generatorIdentity(provider));
+    }
+    @Test void customNativeWorldgenPathRequiresOwnAssetAudit(){
+        var provider=com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider.CODEC.decode(org.bson.BsonDocument.parse("{\"Name\":\"Default\",\"Path\":\"custom-world\"}"),new com.hypixel.hytale.codec.ExtraInfo());
+        assertEquals("CUSTOM_WORLDGEN_PATH_UNAUDITED",com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.generatorIdentity(provider));
+    }
+    @Test void nonLegacyGeneratorCannotInheritBiomeIdentity(){assertEquals("UNSUPPORTED_WORLD_GENERATOR",com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.generatorIdentity(new com.hypixel.hytale.server.core.universe.world.worldgen.provider.VoidWorldGenProvider()));}
+    @Test void nativeWorldSpawnRequiresFreshSpawnAndBothInitializedProvenanceFields(){
+        assertTrue(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.nativeWorldSpawnEvidence(com.hypixel.hytale.component.AddReason.SPAWN,0,0));
+        assertFalse(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.nativeWorldSpawnEvidence(com.hypixel.hytale.component.AddReason.LOAD,0,0));
+        assertFalse(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.nativeWorldSpawnEvidence(com.hypixel.hytale.component.AddReason.SPAWN,Integer.MIN_VALUE,0));
+        assertFalse(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.nativeWorldSpawnEvidence(com.hypixel.hytale.component.AddReason.SPAWN,0,Integer.MIN_VALUE));
+    }
 }

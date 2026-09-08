@@ -31,6 +31,8 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
     private final CombatTrace trace;
     private final HytaleBossBarTracker bosses;
     private final com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService vfx;
+    private java.util.function.BiConsumer<UUID,UUID> rewardExclusion=(world,enemy)->{};
+    public void configureRewardExclusion(java.util.function.BiConsumer<UUID,UUID> exclusion){rewardExclusion=Objects.requireNonNull(exclusion);}
     public HytaleConversionSystem(CombatTrace trace,HytaleBossBarTracker bosses,com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService vfx){this.trace=trace;this.bosses=bosses;this.vfx=vfx;}
     public void cancel(UUID owner){for(var lease:registry.owned(owner))registry.end(lease.token());}
     private static UUID world(ComponentAccessor<EntityStore> store){return store.getExternalData().getWorld().getWorldConfig().getUuid();}
@@ -92,7 +94,7 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
         var verdict=validate(store,owner,context);if(!verdict.accepted())throw new IllegalStateException(verdict.code());
         var target=store.getExternalData().getRefFromUUID(context.target().entityId());var marked=store.getComponent(target,MarkedEntitySupport.getComponentType());
         var lease=registry.begin(context,eligibility(store,target,owner),id(store,marked.getMarkedEntityRef(MarkedEntitySupport.DEFAULT_TARGET_SLOT)),System.nanoTime()/1e9);
-        try{install(store,owner);buffer.addComponent(target,ConversionProjection.getComponentType(),new ConversionProjection(lease));
+        try{rewardExclusion.accept(world(store),id(store,target));install(store,owner);buffer.addComponent(target,ConversionProjection.getComponentType(),new ConversionProjection(lease));
             // The non-persistent default target can be restored; persistent marked targets reject at admission.
             marked.setMarkedEntity(MarkedEntitySupport.DEFAULT_TARGET_SLOT,null);
         }catch(RuntimeException failure){registry.end(lease.token());throw failure;}
