@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /** Versioned server-owned RPG player state. Live Hytale resources are intentionally not duplicated here. */
 public final class RpgPlayerState {
-    public static final int CURRENT_SCHEMA = 4;
+    public static final int CURRENT_SCHEMA = 5;
 
     public int schemaVersion = CURRENT_SCHEMA;
     public String playerUuid;
@@ -37,6 +37,7 @@ public final class RpgPlayerState {
     public Map<String, Long> skillMastery = new LinkedHashMap<>();
     public long revision;
     public SupportProgress support = SupportProgress.INITIAL;
+    public Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> cooldowns=new LinkedHashMap<>();
     public List<String> degradedReasons = new ArrayList<>();
 
     public static RpgPlayerState create(UUID playerUuid) {
@@ -85,6 +86,7 @@ public final class RpgPlayerState {
         if (skillMastery == null) skillMastery = new LinkedHashMap<>();
         if (degradedReasons == null) degradedReasons = new ArrayList<>();
         if (support == null) throw new IllegalStateException("Missing durable support ledger; refusing a free-shield reset");
+        com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown.validate(cooldowns);
     }
 
     public RpgPlayerState copy() {
@@ -105,6 +107,7 @@ public final class RpgPlayerState {
         copy.skillMastery = new LinkedHashMap<>(skillMastery);
         copy.revision = revision;
         copy.support = support;
+        copy.cooldowns=new LinkedHashMap<>(cooldowns);
         copy.degradedReasons = new ArrayList<>(degradedReasons);
         return copy;
     }

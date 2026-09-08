@@ -267,7 +267,15 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         }
     }
 
-    /** Atomic content+topology mutation used by the fixed Skill Tree adapter. */
+    /** Saved cooldown work has no loadout revision/projection side effect and cannot overwrite the support deficit. */
+    public void saveCooldowns(UUID player,java.util.Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> values){
+        var checked=com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown.validate(values);Holder holder=holder(player);
+        synchronized(holder){
+            if(holder.state.cooldowns.equals(checked))return;
+            var candidate=holder.state.copy();candidate.cooldowns=new java.util.LinkedHashMap<>(checked);repository.save(candidate);holder.state=candidate;
+        }
+    }
+    /** Atomic support-ledger mutation, independent of the fixed Skill Tree topology. */
     public SupportProgress mutateSupport(UUID player,long expectedRevision,
                                           java.util.function.UnaryOperator<SupportProgress> mutation) {
         Holder holder=holder(player);

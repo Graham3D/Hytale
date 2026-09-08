@@ -7,12 +7,42 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.LongSupplier;
 
-/** Runtime-only cooldown state. Recovery is a work-rate divisor, never a silent duration subtraction. */
+/** RPG cooldown authority. Recovery is a work-rate divisor; optional durable work never serializes Aura leases. */
 public final class RpgCooldownService {
     private final CombatBalanceProfile profile;
     private final LongSupplier nanoTime;
     private final Map<Key, Work> work = new HashMap<>();
     private final Map<UUID, AuraRate> auraRates = new HashMap<>();
+    public interface Persistence {Map<String,SavedCooldown> load(UUID actor);void save(UUID actor,Map<String,SavedCooldown> values);}
+    private Persistence persistence;
+    private final java.util.Set<UUID> restored=new java.util.HashSet<>();
+    private final Map<UUID,Long> checkpoints=new HashMap<>();
+    public synchronized void bindPersistence(Persistence persistence){
+        if(this.persistence!=null||!work.isEmpty())throw new IllegalStateException("Cooldown persistence must bind before gameplay");
+        this.persistence=java.util.Objects.requireNonNull(persistence);
+    }
+    public synchronized void restore(UUID actor){
+        if(persistence==null||restored.contains(actor))return;
+        var saved=SavedCooldown.validate(persistence.load(actor));long now=nanoTime.getAsLong();
+        saved.forEach((skill,value)->{if(value.remainingWork()>0)work.put(new Key(actor,skill),new Work(value.remainingWork(),value.baseRecovery(),now));});
+        restored.add(actor);checkpoints.put(actor,now);
+    }
+    public synchronized Map<String,SavedCooldown> snapshot(UUID actor){
+        restore(actor);long now=nanoTime.getAsLong();var saved=new HashMap<String,SavedCooldown>();
+        work.forEach((key,value)->{if(key.actor.equals(actor)){advance(actor,value,now);if(value.remaining>1e-9)saved.put(key.skill,new SavedCooldown(value.remaining,value.baseRecovery));}});
+        return SavedCooldown.validate(saved);
+    }
+    public synchronized boolean checkpoint(UUID actor){
+        if(persistence==null)return false;restore(actor);long now=nanoTime.getAsLong();
+        if(now-checkpoints.getOrDefault(actor,now)<1_000_000_000L)return false;
+        checkpoints.put(actor,now); // Failed disk writes must not retry at frame rate.
+        persistence.save(actor,snapshot(actor));return true;
+    }
+    /** Disconnect is not an explicit reset. Save observed work, then evict; do not credit unobserved offline time. */
+    public synchronized void detach(UUID actor){
+        if(persistence!=null)persistence.save(actor,snapshot(actor));
+        work.keySet().removeIf(k->k.actor.equals(actor));auraRates.remove(actor);restored.remove(actor);checkpoints.remove(actor);
+    }
     public RpgCooldownService(CombatBalanceProfile profile, LongSupplier nanoTime) {
         this.profile = profile; this.nanoTime = nanoTime;
     }
@@ -24,6 +54,8 @@ public final class RpgCooldownService {
         Calculation calculation = calculate(actor,baseSeconds,durationFactor,wisdomRecovery,modifiers);
         long now=nanoTime.getAsLong();double baseRecovery=wisdomRecovery+(modifiers==null?0:modifiers.cooldownRecoveryBonus());
         double rate=rate(actor,baseRecovery,now);
+        var next=snapshot(actor);var saved=new HashMap<>(next);saved.put(skillId,new SavedCooldown(calculation.finalSeconds*rate,baseRecovery));
+        if(persistence!=null)persistence.save(actor,SavedCooldown.validate(saved)); // Persist before the paid executor may run.
         work.put(new Key(actor,skillId),new Work(calculation.finalSeconds*rate,baseRecovery,now));
         return calculation;
     }
@@ -53,6 +85,7 @@ public final class RpgCooldownService {
         return new Calculation(baseSeconds, durationFactor, wisdomRecovery, passiveRecovery, totalRecovery, seconds);
     }
     public synchronized double remaining(UUID actor, String skillId) {
+        restore(actor);
         Key key = new Key(actor, skillId);
         var value=work.get(key);if(value==null)return 0;
         long now=nanoTime.getAsLong();advance(actor,value,now);
@@ -70,8 +103,13 @@ public final class RpgCooldownService {
         var aura=auraRates.get(actor);boolean active=aura!=null&&now<aura.expires;
         return (1+clamp(baseRecovery+(active?aura.recovery:0),0,profile.cooldownRecoveryCap))/(active?aura.durationMultiplier:1);
     }
-    public synchronized boolean clear(UUID actor, String skillId) { return work.remove(new Key(actor, skillId)) != null; }
-    public synchronized void clear(UUID actor) { work.keySet().removeIf(key -> key.actor.equals(actor));auraRates.remove(actor); }
+    public synchronized boolean clear(UUID actor, String skillId) {
+        var saved=new HashMap<>(snapshot(actor));saved.remove(skillId);if(persistence!=null)persistence.save(actor,saved);
+        return work.remove(new Key(actor,skillId))!=null;
+    }
+    public synchronized void clear(UUID actor) {
+        restore(actor);if(persistence!=null)persistence.save(actor,Map.of());work.keySet().removeIf(key -> key.actor.equals(actor));auraRates.remove(actor);
+    }
     private static double clamp(double value, double min, double max) { return Math.max(min, Math.min(max, value)); }
     private record Key(UUID actor, String skill) { }
     private record AuraRate(double recovery,double durationMultiplier,long expires){}

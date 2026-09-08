@@ -2,7 +2,11 @@
 
 ## Current state
 
-**COHORT_E_LOCAL_GATE_COMPLETE / STAGE_IMPLEMENTATION_IN_PROGRESS**.
+**LOCAL_ENGINEERING_GATE_COMPLETE / IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION**.
+All six bounded cohorts are archived. Specific native capability gates remain
+below; this is not a connected PASS. Final local build: 516 retained tests,
+player schema 5, compiled-plan schema 6. Continue to Stage 10 under the owner's
+continuous-program authorization without waiting for connected testing.
 Version is `.21` / R028, not deployed. Stage 08 local completion is committed/pushed as `31d4a74`, with 320
 passing retained tests and its final `.20` artifact preserved in
 `evidence/stage-08/cohort-b/`. Connected RPG casting remains UNVERIFIED after the
@@ -597,3 +601,144 @@ Aura membership, rendering and R024 input remain UNVERIFIED. Flame Weapon and
 the Pedanticism native-enemy branch retain their exact prior capability gates.
 No live mod files, control journal or player save were modified. Triage, Shared
 Aegis and Reflective Ward remain for cohort F before the Stage 09 local closure.
+
+## Cohort F — final support passives and local Stage 09 closure
+
+Exact LP-055–057 and Phase 09 were read before this cohort. The same audited
+native targeting, damage filter, Health and effect-controller paths are reused.
+The pinned Damage.getCause() bytecode resolves the current damageCauseIndex in
+the real asset map; Ward uses that resolved cause, not a guessed element name.
+This is the final three-passive cohort, with focused integration/rollback/load
+hardening. No Stage 04/05 executor or projectile mechanic was redesigned.
+
+### Triage and barrier composition
+
+Triage reads the recipient's current/maximum HP at healing resolution. Strictly
+below 35%, it adds .35 to the Increased healing bucket. It does not multiply
+Potency by another 1.35, increase a barrier, or change Life Drain's 60% conversion
+fraction. Echo checks again at its own resolution, and Overflow observes the
+resulting final healing. Native Minor Heal and Life Drain use the shared rules;
+the still-missing Execution Strike path remains part of the full-catalog audit.
+
+Shared Aegis on a self-cast Spirit Shield chooses one nearest positively eligible
+non-self ally within 8 m/LOS, using distance and stable UUID tie-break. It grants
+half the already-modified created capacity for the parent's remaining duration.
+The derived child neither redirects damage nor triggers another Shared Aegis.
+No ally means no child. An ally-targeted Spirit Shield does not secretly create
+a second barrier. The root budget makes repeated/derived share calls idempotent.
+
+Managuard cannot implement that share as a freshly spawned full shield on every
+membership tick. Its persistent `sharedDeficit` now owns one ally pool. With
+owner capacity C, owner deficit D and shared deficit S, available ally shielding
+is `min(max(0,C-D)/2, max(0,C/2-S))`. Owner absorption raises S to at least half
+the new D; ally absorption increases S without spending the owner's separate
+self shield. This preserves the authored extra half-capacity protection while
+making it follow the owner's capacity/deficit. It is not a second Mana pool.
+The selected recipient may change, but S does not. Downsizing/re-expanding,
+unlinking, toggling and reconnect do not erase either deficit. Shared recharge
+uses the same observed six-second hostile delay and half-capacity recharge rate;
+hostile damage to its recipient restarts that delay. No offline recharge is
+invented. Deficits are saved before native damage can be reduced.
+
+Managuard recipients have a short validity lease and are revalidated for owner,
+allegiance, 8 m range and LOS at absorption. At most one ally per emitter and 32
+shared sources per target are admitted. Selection overflow rejects the candidate
+emitter/membership change rather than throwing during later recipient rendering.
+Standing shared presentation reuses the existing short shield tint lease.
+
+Reflective Ward reduces created absorb capacity by .80 once, including Managuard
+after actual reservation and Conservation. It reflects .20 of actual consumed
+capacity, not incoming damage, attempted absorption or Health loss. Reflection
+uses the original native damage channel, the real HytaleDamageAdapter and native
+damage execution. Root/skill/correlation provenance is inherited, with secondary
+origin and CanProc=false; it does not crit or re-enter reflection on reflected or
+redirected damage. Existing NPC hostility/protection/no-PvP policy is retained.
+Native integer damage rounding remains the cohort-C limitation: a fractional
+requested reflection is not claimed to equal observed native HP loss.
+
+Finite support roots share a 16-secondary budget (including the Shared Aegis
+child); paid Aura roots use eight per one-second epoch without accumulation.
+First limit rejection is traced once per budget window. Saturating counters
+cannot wrap to grant more effects, and finite root state expires with the bounded
+source lease. Native dispatch exceptions retain the prior no-retry/quarantine
+policy. No new recursive damage subsystem was introduced.
+
+Catalog corrections remove false absorb/self-shield flags from Shield Bash,
+Guard and Bone Cage: wielding a shield, native Stamina blocking or a collision
+wall is not a shareable RPG absorb capacity. Only real shareable barriers declare
+CanShare. Managuard's stale crit/damage tags and pre-closure recharge description
+were reconciled with its normative closure. Counts remain 87 skills/66 passives.
+
+### Durable cooldown work and migration
+
+The closure audit found that PlayerDisconnect still called cooldown.clear(actor),
+and no RPG cooldown work was saved. That would permit paid cooldown bypass by
+rejoining and did not meet Phase 09 rollback requirements. The shared cooldown
+service now optionally binds to the authoritative player repository. New work is
+persisted before an executor can run; a failed save does not publish an unrecorded
+cooldown. Active work checkpoints at most once per second, and disconnect saves
+then evicts rather than clearing. Explicit development/reset/rollback clearing
+still saves the intended removal. Restoring does not serialize native cooldowns,
+short-lived Aura rates, monotonic timestamps or guessed offline progress.
+
+Cooldown mutations preserve the loadout and support-ledger revisions, preventing
+a timer save from clobbering a barrier deficit. Failed checkpoints cannot retry
+at frame rate and warn once until a successful save. A crash can conservatively
+retain an older cooldown remainder; it cannot shorten it through a missing save.
+File I/O and this conservative no-offline-progress policy need connected restart
+QA and production-load measurement; backend timing below does not cover them.
+
+Player schema 4 -> 5 adds sharedDeficit initialized to half the existing owner
+deficit, plus an empty cooldown map because historical runtime-only cooldowns
+cannot be reconstructed. Existing loadout, progression and support locks survive.
+Malformed/missing new fields are rejected, not reset to free shield/cooldown.
+Compiled-plan schema is 6. Downgrading requires the matching prior player-state
+backup: `.20` requires schema 3; cohort E cannot read schema 5. The live schema-3
+world was never migrated by this program.
+
+### Final local evidence and connected requirements
+
+Forty new tests cover the final passives, deficit/restart/migration, cooldown save
+and failure transactions, bounded traces, repeated share rejection, teardown and
+load. One initial toggle fixture mixed a synthetic Aura clock with the kernel's
+real-time cooldown clock; it now uses the existing runtime-level toggle fixture
+for that accounting test. Separate cooldown tests use an injected monotonic clock.
+The retained full build passes **516 tests**, zero failures/errors/skips. Packaged
+UI validation and normal isolated three-mod network boot/clean exit 0 pass, with
+all 51 trigger items retaining zero native gameplay cost and cooldown.
+
+Measured deterministic load results (exclude native ECS, targeting, damage,
+network/rendering and disk writes):
+
+- 4,096 finite Overflow effects / 16 owners: 754.4167 ms for creation, overflow
+  rejection and expiry workload; 16 further admissions rejected, final effects
+  and secondary roots zero. This is not a server frame-time claim.
+- One externally supplied, still-paying Thorns emitter over 300 simulated seconds:
+  3,000 owner ticks, 30,000 attempted secondaries, exactly 2,400 admitted and
+  300.25 seconds prepaid (the next quarter-second slice is bought at t=300).
+  Workload 16.7214 ms; explicit teardown leaves zero Auras/fields.
+- Reaping pulse/payment totals are invariant under .025/.05/.10/.125/.20-second
+  fixture update cadences; no extra final unpaid pulse or upfront refund.
+
+Final archive `evidence/stage-09/cohort-f/` contains the exact JAR, full test-case
+manifest, smoke, load measurements and `.20` rollback. JAR SHA-256:
+`50ED7ACA31BFD78125B1762D9A80FDC463C747A84C3C09DBEFC04BE933B8FE3A`.
+Source baseline is cohort-E commit `a2941e6`; the independent cohort-F commit
+closes the local Stage 09 boundary. Current installed server/assets hashes match
+the pinned identities. All three live mod hashes were rechecked unchanged.
+
+The Stage 09 skills are locally implemented with two explicit scoped exceptions:
+Flame Weapon rejects before payment at the authenticated native root-weapon-contact
+boundary; Pedanticism's native-enemy remaining-cooldown branch is unavailable while
+its ally RPG work-rate branch is implemented. All seven support-passive primitives
+are covered locally. Player-party allegiance remains an affirmative-provider
+integration for Stage 12, not guessed from neutrality or disabled PvP.
+
+Connected QA must still establish R024 input/casting, actual healing and native
+Health loss/rounding, ally/radius/LOS membership, no-regeneration duplication,
+native cooldown/resource debit once, Taunt/retreat behavior, Chill/Frozen timing,
+barrier redirect/reflect ordering and original channels, no retaliation loops,
+Shared Aegis recipient swaps, paid Aura teardown, restart/deficit/cooldown recovery
+and template presentation. These are not inferred from tests or smoke. Native HUD,
+XP and Ability4 ownership are unchanged. Stage 09 is **not connected PASS**;
+independent Stage 10 work may proceed under the continuous-program authorization.

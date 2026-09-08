@@ -213,7 +213,8 @@ public final class Phase00Plugin extends JavaPlugin {
             abilityInputs.clear(player);
             bosses.clear(player);
             skillExecutionSystem.cancel(player, "PLAYER_DISCONNECT");
-            combatKernel.cooldowns().clear(player);
+            try{combatKernel.cooldowns().detach(player);}
+            catch(RuntimeException failure){LOGGER.atWarning().withCause(failure).log("RPG_COOLDOWN_DISCONNECT_SAVE_FAILED player=%s",player);}
         });
         getEventRegistry().registerGlobal(DrainPlayerFromWorldEvent.class, event -> {
             var playerRef = event.getHolder().getComponent(

@@ -36,12 +36,17 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     private final LinkTreeVfxService vfx;
     private final SupportRuntime runtime;
     private final HytaleBossBarTracker bosses;
+    private final Set<UUID> cooldownSaveWarnings=java.util.concurrent.ConcurrentHashMap.newKeySet();
     @FunctionalInterface public interface AuraPayload {void apply(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> actor,SkillExecutionContext context,List<UUID> targets,int tick,boolean chill);}
     private final AuraPayload auraPayload;
     public HytaleSupportSystem(RpgLoadoutService loadouts,RpgCombatKernel kernel,OwnedFieldBudget fields,CombatTrace trace,LinkTreeVfxService vfx,HytaleBossBarTracker bosses,AuraPayload auraPayload){
         this.auraPayload=auraPayload;
         this.bosses=bosses;
         this.loadouts=loadouts;this.kernel=kernel;this.trace=trace;this.vfx=vfx;
+        kernel.cooldowns().bindPersistence(new com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Persistence(){
+            public Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> load(UUID actor){return loadouts.getPresentationView(actor).state().cooldowns;}
+            public void save(UUID actor,Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> values){loadouts.saveCooldowns(actor,values);}
+        });
         runtime=new SupportRuntime(kernel.reservations(),fields,new SupportProgressStore(){
             public SupportProgress read(UUID actor){return loadouts.getPresentationView(actor).state().support;}
             public SupportProgress save(UUID actor,SupportProgress next){return loadouts.mutateSupport(actor,next.revision(),ignored->next);}
@@ -85,16 +90,20 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         NativeManaRegenerationAdapter.install(stats,()->runtime.manaRegenerationIncreased(player.getUuid(),System.nanoTime()/1e9));
         runtime.tick(player.getUuid(),System.nanoTime()/1e9,alive(store,ref),new Port(store,ref,buffer));
         kernel.cooldowns().setAuraRate(player.getUuid(),runtime.cooldownRecoveryIncreased(player.getUuid(),System.nanoTime()/1e9),1,.25);
+        try{if(kernel.cooldowns().checkpoint(player.getUuid()))cooldownSaveWarnings.remove(player.getUuid());}
+        catch(RuntimeException failure){if(cooldownSaveWarnings.add(player.getUuid()))
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure).log("RPG_COOLDOWN_CHECKPOINT_FAILED player=%s",player.getUuid());}
     }
     public void ready(Store<EntityStore> store,Ref<EntityStore> actor){
         var player=store.getComponent(actor,PlayerRef.getComponentType());
+        kernel.cooldowns().restore(player.getUuid());
         runtime.detach(player.getUuid(),"PLAYER_READY_RESET",port(store,actor));
         // A persisted native max modifier is capacity, not proof that a paid Aura may resume after reconnect.
         kernel.reservations().removeAll(player.getUuid(),new EntityStatResourcePort(store.getComponent(actor,EntityStatMap.getComponentType())));
     }
     public void detach(Store<EntityStore> store,Ref<EntityStore> actor,String reason){
         var player=store.getComponent(actor,PlayerRef.getComponentType());
-        if(player!=null)runtime.detach(player.getUuid(),reason,port(store,actor));
+        if(player!=null){cooldownSaveWarnings.remove(player.getUuid());runtime.detach(player.getUuid(),reason,port(store,actor));}
     }
     public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> actor,Stage04SkillProfile profile,CompiledSkillPlan plan){
         var id=store.getComponent(actor,PlayerRef.getComponentType()).getUuid();
@@ -110,6 +119,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             }
             if(profile.support().allyAura())allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor()*plan.supportModifiers().radiusFactor(),true);
             if(profile.support().hostileAura())hostileRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor()*plan.supportModifiers().radiusFactor());
+            if(plan.supportModifiers().sharedAegis())allyRefs(store,actor,8);
             return SkillExecutionPort.Validation.pass();
         }catch(RuntimeException error){return SkillExecutionPort.Validation.reject("SUPPORT_PREFLIGHT_"+error.getMessage());}
     }
@@ -209,6 +219,22 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             trace(context,"HEAL_APPLIED",Map.of("target",target.toString(),"requested",requested,"healthBefore",before,"healthAfter",after,"actualHealing",Math.max(0,after-before)));
             return Math.max(0,after-before);
         }
+        public Health health(UUID target){
+            var ref=target.equals(player.getUuid())?actor:store.getExternalData().getRefFromUUID(target);
+            if(!alive(store,ref))throw new IllegalStateException("HEAL_TARGET_INVALID");
+            var hp=store.getComponent(ref,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());return new Health(hp.get(),hp.getMax());
+        }
+        public UUID nearestAlly(SkillExecutionContext context){
+            var origin=position(store,actor).add(new Vec3(0,1.35,0));
+            return allyRefs(store,actor,8).stream().filter(ref->!ref.equals(actor))
+                    .min(Comparator.<Ref<EntityStore>>comparingDouble(ref->ConnectionShape.pointDistanceSquared(origin,bounds(store,ref)))
+                            .thenComparing(ref->store.getComponent(ref,UUIDComponent.getComponentType()).getUuid().toString()))
+                    .map(ref->store.getComponent(ref,UUIDComponent.getComponentType()).getUuid()).orElse(null);
+        }
+        public void sharedRecipient(SkillExecutionContext context,UUID target){
+            if(target==null)return;var ref=store.getExternalData().getRefFromUUID(target);
+            if(buffer!=null)buffer.ensureComponent(ref,SupportEffectProjection.getComponentType());else store.ensureComponent(ref,SupportEffectProjection.getComponentType());
+        }
         public void finiteEffect(SkillExecutionContext context,FiniteSupportEffects effects,double now){
             if(!valid(context).equals("PASS"))throw new IllegalStateException("SUPPORT_OWNER_INVALID");
             var p=context.profile().support();
@@ -231,6 +257,14 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 if(p.kind()==SupportProfile.Kind.SHIELD){
                     double capacity=SupportMagnitude.shield(context,masteryMultiplier(context));
                     effects.applyShield(context,ids,seconds,capacity,now);
+                    if(context.compiledPlan().supportModifiers().sharedAegis()&&context.request().actorId().equals(context.target().entityId())){
+                        var child=effects.shareCreatedShield(context,nearestAlly(context),now);
+                        if(child.isPresent()){
+                            var childRef=store.getExternalData().getRefFromUUID(child.get().key().target());
+                            if(buffer!=null)buffer.ensureComponent(childRef,SupportEffectProjection.getComponentType());else store.ensureComponent(childRef,SupportEffectProjection.getComponentType());
+                            traceFinite(child.get(),RpgTraceEventType.BARRIER_CREATED,Map.of("derived",true,"capacity",child.get().shieldRemaining(),"canShareAgain",false));
+                        }
+                    }
                 }else effects.apply(context,ids,seconds,now);
                 for(var ref:refs){
                     if(buffer!=null)buffer.ensureComponent(ref,SupportEffectProjection.getComponentType());
@@ -353,7 +387,8 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             if(damage.getSource() instanceof Damage.EntitySource source&&HytaleAreaQueries.hostile(store,source.getRef(),ref)){
                 support.runtime.hostileDamage(actor,now);support.kernel.hostileCombat().markHostile(actor);
             }
-            try{damage.setAmount((float)support.runtime.absorb(actor,damage.getAmount(),now,support.port(store,ref)));}
+            try{var hit=support.runtime.absorbDetailed(actor,damage.getAmount(),now,support.port(store,ref));
+                damage.setAmount((float)hit.remainder());SupportDamageSystems.reflectAbsorbed(support,hit.absorption(),damage,ref,store,now);}
             catch(RuntimeException failure){
                 // Failed persistence leaves the original native amount unchanged; never grant unrecorded shielding.
                 com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure).log("RPG_BARRIER_REJECTED player=%s",actor);

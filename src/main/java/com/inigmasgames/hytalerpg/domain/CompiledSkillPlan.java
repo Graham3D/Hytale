@@ -27,7 +27,7 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 5;
+    public static final int CURRENT_SCHEMA = 6;
     public CompiledSkillPlan {
         finalTags = Set.copyOf(finalTags);
         passiveOrder = List.copyOf(passiveOrder);

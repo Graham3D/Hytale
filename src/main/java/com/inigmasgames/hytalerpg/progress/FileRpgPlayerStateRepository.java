@@ -46,10 +46,16 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
             if (!migration.state().has("support") || migration.state().get("support").isJsonNull())
                 throw new IllegalStateException("Missing schema-4 durable support ledger");
             var supportJson=migration.state().getAsJsonObject("support");
+            if(!migration.state().has("cooldowns")||!migration.state().get("cooldowns").isJsonObject())throw new IllegalStateException("Missing schema-5 cooldown work ledger");
+            for(var entry:migration.state().getAsJsonObject("cooldowns").entrySet()){
+                if(!entry.getValue().isJsonObject())throw new IllegalStateException("Invalid saved cooldown "+entry.getKey());
+                for(String field:List.of("remainingWork","baseRecovery"))if(!entry.getValue().getAsJsonObject().has(field)||entry.getValue().getAsJsonObject().get(field).isJsonNull())
+                    throw new IllegalStateException("Incomplete saved cooldown "+entry.getKey()+"/"+field);
+            }
             for(String required:List.of("revision","lastAuraEpoch","managuard","toggleLocks"))
                 if(!supportJson.has(required)||supportJson.get(required).isJsonNull())throw new IllegalStateException("Incomplete support field "+required);
             var guardJson=supportJson.getAsJsonObject("managuard");
-            for(String required:List.of("deficit","lastValidatedCapacity","allocationPercent"))
+            for(String required:List.of("deficit","lastValidatedCapacity","allocationPercent","sharedDeficit"))
                 if(!guardJson.has(required)||guardJson.get(required).isJsonNull())throw new IllegalStateException("Incomplete Managuard ledger field "+required);
             RpgPlayerState state = gson.fromJson(migration.state(), RpgPlayerState.class);
             state.normalizeShape();

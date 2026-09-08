@@ -18,7 +18,7 @@ Unverified connected input does not block independent backend implementation.
 - MD-19/00.4 and R020/R021 supersede older custom resource-bar and fake ability HUD
   instructions. Native Health/Mana/Stamina and Signature Move remain untouched.
 - Retain R016's explicit three logical slots. Stage 09 adds schema 4 support
-  ledger migration, with the schema-3 backup required for rollback. Do not restore obsolete
+  then schema 5 shared-deficit/cooldown-work migration, with the schema-3 backup required for rollback. Do not restore obsolete
   four-slot topology or remove skill03 to work around Ability4 unavailability.
 - The live deployed build is R023. R024 is a separately committed correction:
   `5c5e55e`, server-side interaction entry, awaiting connected verification. The
@@ -61,7 +61,7 @@ definitions are read before each corresponding implementation.
 | 06 | 15 spatial skills; Potency, Expanded Radius, Echo, Skill Delay | R025 local gate complete; connected verification outstanding |
 | 07 | 12 projectile continuation/multiplicity passives | R026 local gate complete; connected verification outstanding |
 | 08 | 8 line/beam/tether/orbit skills | R027 local gate complete; connected verification outstanding |
-| 09 | 16 support/barrier/Aura skills and 7 passives | R028 cohorts A–E local gates: 16 profiles, four passives, 476 retained tests; Flame Weapon root contact and Pedanticism native-enemy cooldown progress gated; final three passives in progress |
+| 09 | 16 support/barrier/Aura skills and 7 passives | R028 local gate complete: 516 retained tests, schema 5, all seven passive primitives; Flame Weapon root contact and Pedanticism native-enemy cooldown progress gated; connected verification outstanding |
 | 10 | 9 summon/corpse/conversion skills and 3 passives | not started |
 | 11 | remaining 40 passives; component-scoped matrix/combinations | not started |
 | 12 | progression, attribution, exact-once rewards and acquisition | not started |

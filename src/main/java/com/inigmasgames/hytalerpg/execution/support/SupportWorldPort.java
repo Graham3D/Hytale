@@ -17,7 +17,12 @@ public interface SupportWorldPort {
     default void auraPulse(SkillExecutionContext context,List<UUID> targets,int tick,boolean chill){throw new IllegalStateException("AURA_PAYLOAD_UNAVAILABLE");}
     default void auraMembership(SkillExecutionContext context,List<UUID> allies,List<UUID> enemies){}
     default void auraEnded(SkillExecutionContext context){}
+    default void sharedRecipient(SkillExecutionContext context,UUID target){}
     double heal(SkillExecutionContext context,UUID target,double requested);
+    record Health(double current,double maximum){}
+    default Health health(UUID target){throw new IllegalStateException("HEAL_TARGET_HEALTH_UNAVAILABLE");}
+    /** Nearest confirmed non-self ally within 8m/LOS, deterministic UUID tie-break, whole bounded query. */
+    default UUID nearestAlly(SkillExecutionContext context){throw new IllegalStateException("SHARED_AEGIS_QUERY_UNAVAILABLE");}
     default void finiteEffect(SkillExecutionContext context,FiniteSupportEffects effects,double now){throw new IllegalStateException("FINITE_SUPPORT_UNAVAILABLE");}
     default double masteryMultiplier(SkillExecutionContext context){return 1;}
     /** Must mean authenticated native root/contact attribution, not a Primary-type packet or visual trail. */

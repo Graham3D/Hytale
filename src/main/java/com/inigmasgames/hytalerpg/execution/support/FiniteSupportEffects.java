@@ -13,6 +13,21 @@ public final class FiniteSupportEffects {
         Effect remaining(double value){return new Effect(key,kind,magnitude,movement,starts,ends,rootCastId,skillInstanceId,correlationId,context,value);}
     }
     private final Map<Key,Effect> effects=new LinkedHashMap<>();
+    private record Root(UUID world,UUID owner,String id){}
+    private static final class RootState {int used;double ends;boolean reported,shared;}
+    private final Map<Root,RootState> secondaryRoots=new HashMap<>();
+    private boolean fullReported;
+    public synchronized int claimSecondary(Effect effect,double now){
+        expire(now);var key=new Root(effect.key.world,effect.key.owner,effect.rootCastId);
+        var state=secondaryRoots.get(key);
+        if(state==null){
+            if(secondaryRoots.size()>=MAX_EFFECTS){if(fullReported)return 0;fullReported=true;return -1;}
+            fullReported=false;state=new RootState();secondaryRoots.put(key,state);
+        }
+        state.ends=Math.max(state.ends,effect.ends);
+        if(state.used<16){state.used++;return 1;}
+        if(state.reported)return 0;state.reported=true;return -1;
+    }
     /** Observe the completed native heal, never equate a rejected write with overheal.
      * Overflow is one capped recipient pool, including casts from different owners/skills. */
     public synchronized Optional<Effect> healingResolved(SkillExecutionContext context,UUID target,double requested,
@@ -38,7 +53,24 @@ public final class FiniteSupportEffects {
         next.put(key,effect);requireBudget(next,key.owner,List.of(target));
         effects.clear();effects.putAll(next);return Optional.of(effect);
     }
-    public static boolean isShield(Effect e){return e.kind==SupportProfile.Kind.SHIELD||e.kind==SupportProfile.Kind.OVERFLOW;}
+    public static boolean isShield(Effect e){return e.kind==SupportProfile.Kind.SHIELD||e.kind==SupportProfile.Kind.OVERFLOW||e.kind==SupportProfile.Kind.SHARED_SHIELD;}
+    /** One derived ally shield, with the created parent's already-modified capacity; no redirect or recursive share. */
+    public synchronized Optional<Effect> shareCreatedShield(SkillExecutionContext context,UUID ally,double now){
+        if(!context.compiledPlan().supportModifiers().sharedAegis()||ally==null||ally.equals(context.request().actorId())||
+                !context.request().actorId().equals(context.target().entityId()))return Optional.empty();
+        expire(now);var parent=effects.get(new Key(context.target().worldId(),context.request().actorId(),context.profile().skillId(),context.request().actorId()));
+        if(parent==null||parent.kind!=SupportProfile.Kind.SHIELD||!parent.skillInstanceId.equals(context.skillInstanceId()))return Optional.empty();
+        var key=new Key(parent.key.world,parent.key.owner,parent.key.skill,ally);
+        var child=new Effect(key,SupportProfile.Kind.SHARED_SHIELD,parent.magnitude*.5,0,now,parent.ends,parent.rootCastId,
+                parent.skillInstanceId,parent.correlationId,context,parent.magnitude*.5);
+        var root=new Root(key.world,key.owner,parent.rootCastId);
+        if(secondaryRoots.containsKey(root)&&secondaryRoots.get(root).shared)return Optional.empty();
+        var next=new LinkedHashMap<>(effects);
+        next.values().removeIf(e->e.key.world.equals(key.world)&&e.key.owner.equals(key.owner)&&e.key.skill.equals(key.skill)&&e.kind==SupportProfile.Kind.SHARED_SHIELD);
+        next.put(key,child);requireBudget(next,key.owner,List.of(ally));
+        if(claimSecondary(child,now)!=1)return Optional.empty();secondaryRoots.get(root).shared=true;
+        effects.clear();effects.putAll(next);return Optional.of(child);
+    }
     public synchronized void apply(SkillExecutionContext context,List<UUID> targets,double seconds,double now){
         var next=prepare(context,targets,seconds,now);effects.clear();effects.putAll(next);
     }
@@ -161,8 +193,9 @@ public final class FiniteSupportEffects {
                 .max(Comparator.comparingDouble(Effect::magnitude).thenComparing(e->e.key.owner.toString()));
     }
     public synchronized void remove(Key key){effects.remove(key);}
-    public synchronized void forget(UUID actor){effects.values().removeIf(e->e.key.owner.equals(actor)||e.key.target.equals(actor));}
-    public synchronized void clearWorld(UUID world){effects.values().removeIf(e->e.key.world.equals(world));}
-    public synchronized void expire(double now){effects.values().removeIf(e->e.ends<=now);}
+    public synchronized void forget(UUID actor){effects.values().removeIf(e->e.key.owner.equals(actor)||e.key.target.equals(actor));secondaryRoots.keySet().removeIf(k->k.owner.equals(actor));}
+    public synchronized void clearWorld(UUID world){effects.values().removeIf(e->e.key.world.equals(world));secondaryRoots.keySet().removeIf(k->k.world.equals(world));}
+    public synchronized void expire(double now){effects.values().removeIf(e->e.ends<=now);secondaryRoots.values().removeIf(s->s.ends<=now);}
+    public synchronized int secondaryRootCount(){return secondaryRoots.size();}
     public synchronized int size(){return effects.size();}
 }

@@ -168,7 +168,8 @@ class Stage09BarrierSupportTest {
         @Override public CommittedTarget captureTarget(Stage04SkillProfile p,CompiledSkillPlan plan,SkillExecutionRequest request){return new CommittedTarget(world,Vec3.ZERO,Vec3.ZERO,Vec3.FORWARD,target);}
         @Override public void finiteEffect(SkillExecutionContext c,FiniteSupportEffects effects,double now){
             var targets=c.profile().support().recipientBurst()?List.copyOf(members):List.of(target);
-            if(c.profile().support().kind()==SupportProfile.Kind.SHIELD)effects.applyShield(c,targets,c.profile().support().durationSeconds(),SupportMagnitude.shield(c,masteryMultiplier(c)),now);
+            if(c.profile().support().kind()==SupportProfile.Kind.SHIELD){effects.applyShield(c,targets,c.profile().support().durationSeconds(),SupportMagnitude.shield(c,masteryMultiplier(c)),now);
+                if(c.compiledPlan().supportModifiers().sharedAegis())effects.shareCreatedShield(c,nearestAlly(c),now);}
             else effects.apply(c,targets,c.profile().support().durationSeconds(),now);
         }
     }

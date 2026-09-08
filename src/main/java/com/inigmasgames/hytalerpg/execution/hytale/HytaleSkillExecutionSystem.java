@@ -592,7 +592,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     var value=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());if(value==null)throw new IllegalStateException("NATIVE_HEALTH_MISSING");
                     var healing=new com.inigmasgames.hytalerpg.combat.healing.HealingCalculationService().fromActualDamage(actualHealthLost,
                             context.profile().connection().details().healFraction(),context.snapshot().derivedStats().healingMultiplier(),
-                            context.compiledPlan().kernelModifiers().scalablePayloadIncreased());
+                            context.compiledPlan().kernelModifiers().scalablePayloadIncreased()+context.compiledPlan().supportModifiers().healingIncreased(value.get(),value.getMax()));
                     double before=value.get(),requested=Math.min(value.getMax(),before+healing.requestedHealing());
                     stats.setStatValue(DefaultEntityStatTypes.getHealth(),(float)requested);double after=value.get();
                     if(support!=null)support.healingResolved(store,buffer,actor,context,healing.requestedHealing(),before,after,value.getMax());

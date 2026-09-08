@@ -73,6 +73,8 @@ public final class CompatibilityService {
         // The source contract has gates whose prose is richer than its token clauses. These are stable,
         // shared rules rather than command-specific exceptions.
         String id = passive.id().value();
+        if(id.equals("shared_aegis")&&!actual.contains("CAN_SHARE"))return CompatibilityResult.rejected(ValidationCode.MISSING_CAPABILITY,
+                "Shared Aegis requires a shareable self-target absorb payload, not native block or collision.",Set.of("CAN_SHARE"),actual);
         if(id.equals("selflessness")&&!actual.contains("HAS_RADIUS"))return CompatibilityResult.rejected(ValidationCode.MISSING_CAPABILITY,
                 "Selflessness requires a beneficial ally-radius Aura, not a self-only shield.",Set.of("HAS_RADIUS"),actual);
         if(id.equals("ballistics")&&actual.contains("BALLISTIC_GRAVITY"))

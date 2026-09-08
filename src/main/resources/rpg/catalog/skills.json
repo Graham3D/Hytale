@@ -213,8 +213,6 @@
     "vfxRecipeId": "rpg.vfx.skill.shield_bash",
     "soundRecipeId": "rpg.sound.skill.shield_bash",
     "linkCompatibilityTags": [
-      "ABSORBS_DAMAGE",
-      "BARRIER",
       "CAN_ACQUIRE_ENEMY_TARGET",
       "CAN_CRIT",
       "CAN_KILL",
@@ -228,8 +226,6 @@
       "HAS_RANGE",
       "PHYSICAL",
       "SCALABLE_PAYLOAD",
-      "SELF_TARGETED_BARRIER",
-      "SHIELD",
       "STAMINA_RESOURCE",
       "STRIKE"
     ],
@@ -282,13 +278,10 @@
     "vfxRecipeId": "rpg.vfx.skill.guard",
     "soundRecipeId": "rpg.sound.skill.guard",
     "linkCompatibilityTags": [
-      "ABSORBS_DAMAGE",
       "BARRIER",
       "FINITE_RESOURCE_COST",
       "PHYSICAL",
       "REACTION",
-      "SCALABLE_PAYLOAD",
-      "SELF_TARGETED_BARRIER",
       "SHIELD",
       "STAMINA_RESOURCE",
       "STANCE"
@@ -4806,6 +4799,7 @@
     "linkCompatibilityTags": [
       "ABSORBS_DAMAGE",
       "BARRIER",
+      "CAN_SHARE",
       "DAMAGE_REDIRECT",
       "DISCRETE_ACTIVATION",
       "FINITE_RESOURCE_COST",
@@ -4861,9 +4855,9 @@
     "travelSpeed": "N/A",
     "lifetime": "Toggle while reservation remains active",
     "powerCoefficient": "Shield capacity = Mana points reserved at activation (for example, reserving 50 Mana creates a 50-point shield).",
-    "canCrit": true,
+    "canCrit": false,
     "statusApplications": [
-      "Reserved Mana is unavailable to spend while active. Shield recharge/refresh behavior remains a separate tuning decision and must not be guessed by the executor."
+      "Reserve integer 1..50% total Mana, default 50%; base shield equals actual reservation. Recharge 10% capacity/sec after 6 s without hostile damage. Preserve deficits across toggles and reconnect."
     ],
     "vfxRecipeId": "rpg.vfx.skill.managuard",
     "soundRecipeId": "rpg.sound.skill.managuard",
@@ -4871,11 +4865,7 @@
       "ABSORBS_DAMAGE",
       "AURA",
       "BARRIER",
-      "CAN_ACQUIRE_ENEMY_TARGET",
-      "CAN_CRIT",
-      "CAN_KILL",
-      "DAMAGE",
-      "DIRECT_HIT",
+      "CAN_SHARE",
       "FINITE_RESOURCE_COST",
       "MAGIC",
       "MANA_RESERVATION",
@@ -5450,7 +5440,6 @@
     "vfxRecipeId": "rpg.vfx.skill.bone_cage",
     "soundRecipeId": "rpg.sound.skill.bone_cage",
     "linkCompatibilityTags": [
-      "ABSORBS_DAMAGE",
       "BARRIER",
       "CAN_ACQUIRE_ENEMY_TARGET",
       "CAN_CRIT",
@@ -5469,8 +5458,6 @@
       "NECROTIC",
       "ROOT",
       "SCALABLE_PAYLOAD",
-      "SELF_TARGETED_BARRIER",
-      "SHIELD",
       "SPELL_CAST",
       "WALL"
     ],

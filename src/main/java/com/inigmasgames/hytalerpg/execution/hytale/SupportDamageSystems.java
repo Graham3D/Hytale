@@ -39,7 +39,7 @@ public final class SupportDamageSystems {
         if(attempt.failure()!=null){
             // Disable this lease after an uncertain dispatch; never retry a possibly applied native hit.
             support.runtime().finite().remove(effect.key());
-            if(effect.context().profile().support().aura()){
+            if(effect.context().profile().support()!=null&&effect.context().profile().support().aura()){
                 var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
                 if(owner!=null&&owner.isValid())try{
                     support.runtime().terminateAura(effect.key().owner(),effect.key().skill(),"NATIVE_SECONDARY_DAMAGE_DISPATCH_EXCEPTION",support.port(store,owner));
@@ -54,6 +54,26 @@ public final class SupportDamageSystems {
             support.traceFinite(effect,RpgTraceEventType.NATIVE_SUPPORT_REJECTED,fields);
         }
         return attempt;
+    }
+    public static void reflectAbsorbed(HytaleSupportSystem support,FiniteSupportEffects.Absorption absorption,Damage damage,
+                                       Ref<EntityStore> recipient,Store<EntityStore> store,double now){
+        if(absorption==null||absorption.amount()<=0||!absorption.effect().context().compiledPlan().supportModifiers().reflectiveWard()||
+                secondaryCannotReflect(HytaleDamageAdapter.metadata(damage))||!(damage.getSource() instanceof Damage.EntitySource attacker))return;
+        var source=attacker.getRef();var effect=absorption.effect();
+        if(source.equals(recipient)||!HytaleSupportSystem.alive(store,source)||!HytaleAreaQueries.hostile(store,source,recipient)||
+                SupportNativeEffects.control(store,source,support.bosses()).protectedEntity())return;
+        if(!claimSecondary(support,effect,now))return;
+        var cause=damage.getCause();if(cause==null){support.traceFinite(effect,RpgTraceEventType.NATIVE_SUPPORT_REJECTED,Map.of("boundary","REFLECTION_ORIGINAL_DAMAGE_CAUSE_UNAVAILABLE"));return;}
+        double amount=com.inigmasgames.hytalerpg.execution.support.SupportMagnitude.wardReflection(effect.context(),absorption.amount());
+        var attempt=submit(support,effect,source,store,cause,amount,HytaleDamageMetadata.Origin.REFLECTED);
+        var result=attempt.completed();if(result==null)return;
+        support.traceFinite(effect,RpgTraceEventType.DAMAGE_REFLECTED,Map.of("actuallyAbsorbed",absorption.amount(),"requestedReflection",amount,
+                "originalChannel",cause.getId(),"healthBefore",result.healthBefore(),"healthAfter",result.healthAfter(),"cancelled",result.cancelled(),"noProc",true,"noCrit",true));
+    }
+    private static boolean claimSecondary(HytaleSupportSystem support,FiniteSupportEffects.Effect effect,double now){
+        int result=support.runtime().claimSupportSecondary(effect,now);
+        if(result==-1)support.traceFinite(effect,RpgTraceEventType.NATIVE_SUPPORT_REJECTED,Map.of("boundary","SUPPORT_SECONDARY_BUDGET","oncePerBudgetWindow",true));
+        return result==1;
     }
     public static final class Shield extends DamageEventSystem {
         private final HytaleSupportSystem support;
@@ -91,6 +111,17 @@ public final class SupportDamageSystems {
             for(var absorption:hit.allocations())support.traceFinite(absorption.effect(),RpgTraceEventType.BARRIER_ABSORBED,
                     Map.of("absorbed",absorption.amount(),"shieldRemaining",absorption.remaining(),"nativeAmountAfterShield",hit.remainder(),
                             "redirected",hit.redirected(),"authority",absorption.effect().kind().name()+"_POST_FILTER"));
+            for(var absorption:hit.allocations())reflectAbsorbed(support,absorption,damage,ref,store,now);
+            for(var offered:support.runtime().sharedGuards(world,id,now)){
+                var owner=store.getExternalData().getRefFromUUID(offered.key().owner());
+                if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,ref)||!HytaleSupportSystem.inRange(store,owner,ref,8))continue;
+                if(damage.getSource() instanceof Damage.EntitySource source&&HytaleAreaQueries.hostile(store,source.getRef(),ref))support.runtime().hostileDamage(offered.key().owner(),now);
+                try{
+                    var shared=support.runtime().absorbShared(offered,damage.getAmount(),now,support.port(store,owner));
+                    damage.setAmount((float)shared.remainder());reflectAbsorbed(support,shared.absorption(),damage,ref,store,now);
+                }catch(RuntimeException failure){support.traceFinite(offered,RpgTraceEventType.NATIVE_SUPPORT_REJECTED,
+                        Map.of("boundary","SHARED_AEGIS_DURABLE_ABSORB_FAILED","exception",failure.getClass().getName()));}
+            }
         }
     }
     /** Captures actual pre-Apply HP after all absorption, including native non-RPG incoming damage. */
@@ -128,8 +159,9 @@ public final class SupportDamageSystems {
                     var owner=store.getExternalData().getRefFromUUID(e.key().owner());
                     if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,recipient)
                             ||!HytaleSupportSystem.auraInRange(store,owner,recipient,com.inigmasgames.hytalerpg.execution.support.SupportRuntime.radius(e.context()))
-                            ||!support.runtime().claimAuraSecondary(e.context(),now))continue;
+                            )continue;
                 }
+                if(!claimSecondary(support,e,now))continue;
                 double amount=(before-after)*e.magnitude();
                 var attempt=submit(support,e,source,store,DamageCause.PHYSICAL,amount,HytaleDamageMetadata.Origin.REFLECTED);
                 var outcome=attempt.completed();if(outcome==null)continue;

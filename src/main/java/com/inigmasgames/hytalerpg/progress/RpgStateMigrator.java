@@ -15,6 +15,7 @@ public final class RpgStateMigrator {
                 case 1 -> migrateV1ToV2(state);
                 case 2 -> migrateV2ToV3(state);
                 case 3 -> migrateV3ToV4(state);
+                case 4 -> migrateV4ToV5(state);
                 default -> throw new IllegalStateException("No migration from RPG schema v" + version);
             };
             version = state.get("schemaVersion").getAsInt();
@@ -89,4 +90,13 @@ public final class RpgStateMigrator {
     }
 
     public record MigrationResult(JsonObject state, int sourceVersion, int targetVersion, boolean migrated) {}
+    private static JsonObject migrateV4ToV5(JsonObject state){
+        // Old builds had no shared shielding. Initialize from the existing deficit, never a fresh full ally shield.
+        var guard=state.getAsJsonObject("support").getAsJsonObject("managuard");
+        double deficit=guard.get("deficit").getAsDouble();
+        if(!Double.isFinite(deficit)||deficit<0)throw new IllegalStateException("Invalid legacy Managuard deficit");
+        guard.addProperty("sharedDeficit",deficit*.5);
+        state.add("cooldowns",new JsonObject()); // Schema 4 never persisted this runtime state; historical values cannot be reconstructed.
+        state.addProperty("schemaVersion",5);return state;
+    }
 }

@@ -98,7 +98,8 @@ public final class SupportNativeEffects {
                     return HytaleSupportSystem.alive(store,owner)&&HytaleSupportSystem.inRange(store,owner,ref,64);}).findFirst();
         String desired=mark.map(e->markTint(e.key().owner())).orElseGet(()->{
             if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.WEAKEN))return "RPG_Support_Hex_Tint";
-            if(list.stream().anyMatch(e->FiniteSupportEffects.isShield(e)&&e.shieldRemaining()>0))return "RPG_Support_Shield_Tint";
+            if(list.stream().anyMatch(e->FiniteSupportEffects.isShield(e)&&e.shieldRemaining()>0)||
+                    support.runtime().sharedGuards(world(store),id,now).stream().anyMatch(e->e.shieldRemaining()>0))return "RPG_Support_Shield_Tint";
             if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.REFLECT))return "RPG_Support_Reflect_Tint";
             if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.HOWL))return "RPG_Support_Howl_Tint";
             return "";
@@ -184,7 +185,7 @@ public final class SupportNativeEffects {
                     }
                 }
             }
-            if(effects.forTarget(world,id,now).isEmpty()){
+            if(effects.forTarget(world,id,now).isEmpty()&&support.runtime().sharedGuards(world,id,now).isEmpty()){
                 releaseTaunt(store,ref,marker);
                 var controller=store.getComponent(ref,EffectControllerComponent.getComponentType());
                 try{if(controller!=null){

@@ -160,6 +160,8 @@ class Stage09SupportRuntimeTest {
         public void setCurrent(ResourceType type,double value){mana=Math.max(0,Math.min(100-reserved,value));}
         public void setReservedMana(double value){reserved=value;mana=Math.min(mana,100-reserved);}
         public String valid(SkillExecutionContext c){return valid;}
+        public Health health(UUID target){return new Health(health,100);}
+        public UUID nearestAlly(SkillExecutionContext context){return members.stream().filter(id->!id.equals(actor)).findFirst().orElse(null);}
         public List<UUID> allies(SkillExecutionContext c,double radius){lastRadius=radius;return List.copyOf(members);}
         public double heal(SkillExecutionContext c,UUID target,double amount){assertTrue(members.contains(target));double before=health;health=Math.min(100,health+amount);
             runtime.finite().healingResolved(c,target,amount,before,health,100,now);return health-before;}
