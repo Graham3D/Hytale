@@ -21,9 +21,9 @@ public final class CompiledProfileResolver {
             throw new IllegalArgumentException("Profile requires a current matching compiled plan");
         if(plan.zones().mobileDomain()&&!ProfileComponentPolicy.mobileZone(authored))
             throw new IllegalArgumentException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
-        var modifiers=plan.foundationModifiers();var geometry=plan.geometry();var pulses=plan.pulses();
-        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse())return authored;
-        var key=new Key(authored,modifiers,geometry,pulses);
+        var modifiers=plan.foundationModifiers();var geometry=plan.geometry();var pulses=plan.pulses();var dots=plan.dots();
+        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse()&&!dots.active())return authored;
+        var key=new Key(authored,modifiers,geometry,pulses,dots);
         var prior=cache.get(key);if(prior!=null)return prior;
         JsonObject resolved=JSON.toJsonTree(authored).getAsJsonObject();
         resolved.addProperty("windupSeconds",modifiers.windup(authored.windupSeconds()));
@@ -62,6 +62,7 @@ public final class CompiledProfileResolver {
             if(geometry.widening())scale(resolved,"connection",.85,"coefficient");
         }
         if(pulses.rapidPulse())rapidPulse(authored,resolved);
+        if(dots.active())dots(authored,resolved,dots);
         var effective=JSON.fromJson(resolved,Stage04SkillProfile.class);
         if(cache.size()>=CAPACITY)cache.remove(cache.keySet().iterator().next());
         cache.put(key,effective);return effective;
@@ -72,6 +73,21 @@ public final class CompiledProfileResolver {
         for(String field:fields)if(value.has(field))value.addProperty(field,value.get(field).getAsDouble()*factor);
     }
     public synchronized int cachedProfiles(){return cache.size();}
+    private static void dots(Stage04SkillProfile p,JsonObject root,com.inigmasgames.hytalerpg.domain.DotModifiers dots){
+        if(dots.combustion()){
+            if(!ProfileComponentPolicy.dotPayload(p,"BURN"))throw new IllegalArgumentException("BURN_APPLICATION_COMPONENT_REQUIRED");
+            // Hit-only penalty never enters the offensive base captured for Burn.
+            if(p.projectile()!=null)scale(root,"projectile",.85,"coefficient");
+            if(p.area()!=null&&!p.area().periodic())scale(root,"area",.85,"coefficient","innerCoefficient","finalCoefficient");
+        }
+        if((dots.virulence()||dots.concentratedVenom())&&!ProfileComponentPolicy.dotPayload(p,"POISON"))throw new IllegalArgumentException("POISON_APPLICATION_COMPONENT_REQUIRED");
+        String status=dots.combustion()?"BURN":"POISON";double duration=dots.combustion()?1.25:dots.virulence()?1.3:1;
+        if(p.area()!=null&&p.area().status().equals(status))scale(root,"area",duration,"statusSeconds","statusInnerSeconds");
+        if(p.projectile()!=null&&p.projectile().statusId().equals(status)){
+            scale(root,"projectile",duration,"statusSeconds");var value=root.getAsJsonObject("projectile");
+            value.addProperty("periodicTicks",(int)Math.ceil(value.get("statusSeconds").getAsDouble()/value.get("periodicIntervalSeconds").getAsDouble()));
+        }
+    }
     private static void rapidPulse(Stage04SkillProfile authored,JsonObject root){
         if(!ProfileComponentPolicy.periodicPulse(authored))throw new IllegalArgumentException("PERIODIC_PULSE_COMPONENT_REQUIRED");
         // Start from already resolved duration/geometry. Do not compensate .80 Less away.
@@ -165,5 +181,5 @@ public final class CompiledProfileResolver {
             }
         }
     }
-    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses){}
+    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots){}
 }

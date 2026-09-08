@@ -1103,16 +1103,18 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     vec(targetTransform.getPosition()), true, protectedTarget, boss);
         }
 
-        private boolean applyBurn(SkillExecutionContext context,
+        private boolean applyProjectilePeriodicStatus(SkillExecutionContext context,
                 StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
             var profile = context.profile().projectile();
-            return applyPeriodicStatus(context, target, PeriodicStatusRuntime.Kind.BURN,
+            return applyPeriodicStatus(context, target, PeriodicStatusRuntime.Kind.valueOf(profile.statusId()),
                     profile.statusSeconds(), profile.periodicCoefficient() / profile.periodicIntervalSeconds());
         }
 
         private boolean applyPeriodicStatus(SkillExecutionContext context,
                 StrikeGeometryService.Candidate<Ref<EntityStore>> target,
                 PeriodicStatusRuntime.Kind kind, double duration, double coefficientPerSecond) {
+            var application=context.compiledPlan().dots().application(kind,coefficientPerSecond);
+            coefficientPerSecond=application.coefficientPerSecond();
             UUID targetId = UUID.fromString(target.stableId());
             var source = new PeriodicStatusRuntime.Source(playerRef.getUuid(), context.profile().skillId(), targetId, kind);
             double now = System.nanoTime() / 1e9;
@@ -1138,11 +1140,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     0, context.snapshot().criticalMultiplier())).preMitigationDamage();
             var captured=context.withSnapshot(context.snapshot().withModifiers(outgoing));
             String result = periodicStatuses.apply(source, captured, new PeriodicTarget(actor, target.handle()),
-                    coefficientPerSecond, strength, duration, 1, kind == PeriodicStatusRuntime.Kind.BURN ? 1 : 3, now, periodicPort());
+                    coefficientPerSecond, strength, duration, application.addedStacks(), application.sourceCap(), now, periodicPort());
             boolean accepted = result.equals("APPLIED") || result.equals("REFRESHED");
-            emit(context, accepted ? RpgTraceEventType.STATUS_APPLIED : RpgTraceEventType.STATUS_REJECTED,
-                    Map.of("status", kind, "targetId", targetId, "durationSeconds", duration, "result", result,
-                            "authority", "RPG_SOURCE_PACKAGE", "nativeBehaviorVerified", false));
+            var details=new java.util.LinkedHashMap<String,Object>(Map.of("status", kind, "targetId", targetId, "durationSeconds", duration, "result", result,
+                            "authority", "RPG_SOURCE_PACKAGE", "nativeBehaviorVerified", false,
+                            "coefficientPerSecond",coefficientPerSecond,"requestedAddedStacks",application.addedStacks(),"requestedSourceCap",application.sourceCap()));
+            periodicStatuses.sourceView(source,now).ifPresent(v->{details.put("retainedSourceCap",v.sourceCap());details.put("retainedSourceStacks",v.stacks());details.put("retainedCoefficientPerSecond",v.coefficientPerSecond());});
+            emit(context, accepted ? RpgTraceEventType.STATUS_APPLIED : RpgTraceEventType.STATUS_REJECTED,details);
             return accepted;
         }
 
@@ -1323,7 +1327,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 String statusResult = "NONE";
                 if (outcome.actualHealthLoss() > 0.0 && !authored.statusId().isBlank())
                     statusResult = authored.hasPeriodicStatus()
-                            ? (port.applyBurn(carrier.context, target) ? "BURN_APPLIED" : "BURN_REJECTED")
+                            ? (port.applyProjectilePeriodicStatus(carrier.context, target) ? authored.statusId()+"_APPLIED" : authored.statusId()+"_REJECTED")
                             : port.applyProjectileStatus(carrier.context, target);
                 double appliedKnockback = outcome.actualHealthLoss() > 0.0
                         ? port.applyProjectileKnockback(carrier.context, target) : 0.0;
@@ -1443,7 +1447,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 var candidate = port.candidate(target.victim);
                 if (candidate == null || candidate.protectedTarget()) return false;
                 // Preserve the Stage 05 Fire Bolt channel; newly authored area statuses use their explicit element.
-                DamageCause cause = context.profile().projectile() != null ? DamageCause.PROJECTILE
+                DamageCause cause = context.profile().projectile() != null && source.kind()==PeriodicStatusRuntime.Kind.BURN ? DamageCause.PROJECTILE
                         : DamageCause.getAssetMap().getAsset(source.kind() == PeriodicStatusRuntime.Kind.BURN ? "Fire" : "Poison");
                 if (cause == null) throw new IllegalStateException("PERIODIC_DAMAGE_CAUSE_UNAVAILABLE");
                 DamageOutcome outcome = port.damage(context, candidate, tickIndex, coefficient, 0, cause, true,
@@ -1751,7 +1755,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     DamageCause.PROJECTILE,false,burst.id(),false);
             String status="NONE";
             if(outcome.actualHealthLoss()>0 && !authored.statusId().isBlank())status=authored.hasPeriodicStatus()
-                    ?(port.applyBurn(context,target)?"BURN_APPLIED":"BURN_REJECTED"):port.applyProjectileStatus(context,target);
+                    ?(port.applyProjectilePeriodicStatus(context,target)?authored.statusId()+"_APPLIED":authored.statusId()+"_REJECTED"):port.applyProjectileStatus(context,target);
             double knockback=outcome.actualHealthLoss()>0?port.applyProjectileKnockback(context,target):0;
             emitProjectile(carrier,RpgTraceEventType.AREA_HIT,Map.of("component","SHRAPNEL","effectInstanceId",burst.id(),
                     "targetId",target.stableId(),"actualHealthLoss",outcome.actualHealthLoss(),"canProc",false,

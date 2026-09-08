@@ -21,6 +21,14 @@ public final class CompatibilityService {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
 
+        if(Set.of("combustion","virulence","concentrated_venom").contains(passive.id().value())){
+            String status=passive.id().value().equals("combustion")?"BURN":"POISON";
+            var payload=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.dotPayload(skill.id().value(),status);
+            if(payload.filter(v->!v).isPresent())return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
+                    passive.name()+" requires an implemented "+status+" application, not elemental damage alone.",Set.of(status+"_APPLICATION_COMPONENT"),actual);
+            if(payload.orElse(false)){actual.add("APPLIES_"+status);if(status.equals("POISON"))actual.add("STACKABLE_POISON");}
+        }
+
         if(passive.id().value().equals("rapid_pulse")){
             if(!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.periodicPulse(skill.id().value()))
                 return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Rapid Pulse requires an authored pulse, not contact sampling, flight or a one-off attack sequence.",Set.of("PERIODIC_PULSE_COMPONENT"),actual);

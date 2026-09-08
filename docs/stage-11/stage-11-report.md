@@ -587,3 +587,85 @@ Rollback: G, SHA-256
 No live deployment, save migration, art, native ability or HUD changes. Local gate
 PASS; all connected pulse/status/input/rendering gates UNVERIFIED. Sixteen of40
 Stage11 primitives have local evidence;24 remain before matrix/hardening closure.
+
+## Cohort I — Combustion, Virulence and Concentrated Venom
+
+Baseline H `fd11808`. Master LP043/LP046/LP047 and normative04.2 source-owned
+status math read in full, along with existing periodic application, snapshot,
+native effect projection and tick adapters. R030/0.0.23, plan schema18, player
+schema6 unchanged. Three passives, within the four-passive limit.
+
+Combustion changes direct hit coefficients×0.85, Burn duration×1.25 and Burn
+DPS×1.50. The hit penalty is not put in the generic offensive snapshot: doing so
+would incorrectly reduce the separately specified Burn offensive base. Fire Bolt
+Burn therefore becomes0.15 offensive-base/sec for5s, without inheriting the direct
+hit coefficient or critical multiplier. Wall of Fire's continuous field damage
+is not a direct hit and stays unchanged; its applied Burn becomes6.25s at0.15/sec.
+That Burn still includes its proportional0.25s final tick. Lingering composes
+duration once (Fire Bolt7s), and the projectile's tick metadata follows duration.
+
+Virulence changes only applied Poison duration×1.30 and requests two stacks per
+legal application instead of one, retaining the source cap3. Poison Cloud's field
+still lives8s; its Poison package lasts10.4s. Concentrated Venom uses the canonical
+base source cap3: max(1,floor(3×0.60))=1, with0.06×1.75=0.105 offensive-base/sec
+per stack. Virulence+Concentrated Venom requests two but still retains at most one.
+Direct damage, critical behavior, current resource values, costs, cooldowns and
+zone pulse intervals are unchanged by those two Poison passives.
+
+The typed DoT record belongs to compiled identity/cache keys. Duration resolves
+once with the immutable profile; DPS/added-stacks/source-cap resolve once at the
+shared native periodic application boundary. The existing PeriodicStatusRuntime
+remains the sole Burn/Poison clock/stack owner. No new damage engine or independent
+status store was introduced. Its one-second ticks, proportional final remainder,
+live victim protection/filtering and noCrit/noTrigger flags remain unchanged.
+Projectile periodic application now selects its authored supported status kind
+instead of hardcoding Burn. Existing Fire Bolt's native Projectile damage channel
+is retained; a future Poison projectile uses the existing Poison channel.
+
+### Retained snapshot and source-cap correction
+
+The prior runtime retained a stronger damage snapshot on weaker refresh but used
+the incoming application's source cap. With Concentrated Venom implemented, that
+could turn a retained1.75× package into three empowered stacks simply by unlinking
+the passive and refreshing it with a weaker plain cast. Source cap now travels
+with the retained offensive package. A genuinely stronger replacement carries its
+own cap; previously accrued damage remains attached to its original snapshot and
+stack count. Equal/weaker refreshes do not mutate the retained package's cap.
+
+This preserves the normative caster+skill+victim source key instead of using a
+per-cast or per-plan key that could bypass the source cap by creating parallel
+packages. Other skills, other casters and the victim-wide12-stack strongest-package
+replacement rule retain their independent limits. Expired packages cannot lend
+their strength/cap to a later cast. Existing logout/native rejection cleanup drops
+the package; no state migration is needed for these unsaved finite effects.
+
+STATUS_APPLIED/REJECTED now records requestedAddedStacks/requestedSourceCap and
+coefficientPerSecond, plus retainedSourceStacks/retainedSourceCap/
+retainedCoefficientPerSecond when a package exists. Those names deliberately
+distinguish a weak refresh request from the authoritative stronger retained result.
+Cast identifiers and subsequent native damage/Inspect traces remain unchanged.
+
+Known executable profiles are refined using actual Burn/Poison components;
+elemental damage alone is not an application. Canonical Venom Spray's positive
+Virulence compatibility fixture is preserved, but it is still one of the missing
+Stage04/05 profiles: this cohort does **not** claim to implement that skill by
+passing a catalog test. Remaining skill coverage is still required before closure.
+
+### Cohort I local gate
+
+26 new tests cover positive/two-negative fixtures, independent hit/DoT scaling,
+duration composition, source/victim caps, Virulence cap clamping, accrued snapshot
+transitions, weaker refresh/unlink safety, unrelated source isolation, expiry,
+native-port rejection, no replay, and a shared Fire Bolt commit retaining its one
+payment while the kernel calculates non-critical Burn independently of the hit.
+These are backend and adapter-shaped fixtures, not connected Burn/Poison proof.
+
+`clean build`: **887 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot/clean exit0 and packaged CustomUI9 validation PASS.
+Artifact: `evidence/stage-11/cohort-i/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `417D1F13F829A61F6A2B158C127C1DEE744A9EF8BB2468387EE1127E77C6C60B`.
+Rollback: H, SHA-256
+`2BAFBF70462776033959FF8F6AFF6B6CA43176EA93F0156C7FD8A9338C9C197A`.
+No live deployment, save migration, art, native ability or HUD changes. Local gate
+PASS; connected gates UNVERIFIED. Nineteen of40 Stage11 primitives now have local
+evidence;21 remain before matrix/hardening closure.

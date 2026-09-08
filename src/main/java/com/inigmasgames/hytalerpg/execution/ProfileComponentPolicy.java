@@ -10,6 +10,11 @@ import java.util.Set;
 public final class ProfileComponentPolicy {
     private ProfileComponentPolicy(){}
     private static final class Canonical {static final Stage04SkillProfiles PROFILES=Stage04SkillProfiles.loadCanonical(RpgCatalog.loadCanonical());}
+    public static Optional<Boolean> dotPayload(String skill,String status){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(dotPayload(p,status));}
+    public static boolean dotPayload(Stage04SkillProfile p,String status){
+        return p.area()!=null&&p.area().status().equals(status)&&p.area().statusSeconds()>0
+                ||p.projectile()!=null&&p.projectile().hasPeriodicStatus()&&p.projectile().statusId().equals(status);
+    }
     public static boolean periodicPulse(String skill){var p=Canonical.PROFILES.all().get(skill);return p!=null&&periodicPulse(p);}
     public static boolean periodicPulse(Stage04SkillProfile p){
         return p.area()!=null&&!p.area().trap()&&(p.area().periodic()||p.family()==Stage04SkillProfile.Family.GROUND_ZONE&&p.area().impactCount()>1)

@@ -19,6 +19,12 @@ public final class PeriodicStatusRuntime<C, T> {
         String stableKey() { return owner + "/" + skill; }
     }
     public record View(int stacks, double remainingSeconds) { }
+    public record PackageView(int stacks,int sourceCap,double coefficientPerSecond,double remainingSeconds){}
+    public synchronized java.util.Optional<PackageView> sourceView(Source source,double now){
+        var value=packages.get(source);
+        return value==null||value.endsAt<=now?java.util.Optional.empty():java.util.Optional.of(
+                new PackageView(value.stacks,value.sourceCap,value.coefficient,value.endsAt-now));
+    }
     public interface Port<C, T> {
         /** Returning false terminates this source (dead/friendly/protected/native rejection). */
         boolean tick(Source source, C context, T target, int tickIndex, double coefficient, double seconds);
@@ -54,15 +60,17 @@ public final class PeriodicStatusRuntime<C, T> {
         var previous = packages.get(source);
         Package<C,T> value;
         if (previous == null) {
-            value = new Package<>(context, target, coefficientPerSecond, strength, Math.min(addedStacks, sourceCap), now, now + duration);
+            value = new Package<>(context, target, coefficientPerSecond, strength, Math.min(addedStacks, sourceCap), sourceCap, now, now + duration);
             packages.put(source, value);
         } else {
             value = previous;
             accrue(value, now);
             if (strength > value.strength) {
-                value.context = context; value.coefficient = coefficientPerSecond; value.strength = strength;
+                value.context = context; value.coefficient = coefficientPerSecond; value.strength = strength; value.sourceCap=sourceCap;
             }
-            value.stacks = Math.min(sourceCap, value.stacks + addedStacks);
+            // Cap belongs to the retained offensive snapshot. A weaker unlinked refresh must
+            // not expand a concentrated 1.75x package to three empowered stacks.
+            value.stacks = Math.min(value.sourceCap, value.stacks + addedStacks);
             value.endsAt = now + duration;
         }
         if (source.kind == Kind.POISON) enforcePoisonCap(source.victim, now, port);
@@ -156,11 +164,11 @@ public final class PeriodicStatusRuntime<C, T> {
     private static boolean finitePositive(double value) { return Double.isFinite(value) && value > 0; }
     private record Part<C>(C context, double coefficient, double seconds) { }
     private static final class Package<C,T> {
-        C context; final T target; double coefficient, strength; int stacks;
+        C context; final T target; double coefficient, strength; int stacks,sourceCap;
         double accountedAt, nextTick, endsAt; int tickIndex; final List<Part<C>> accrued = new ArrayList<>();
-        Package(C context, T target, double coefficient, double strength, int stacks, double now, double end) {
+        Package(C context, T target, double coefficient, double strength, int stacks, int sourceCap, double now, double end) {
             this.context=context; this.target=target; this.coefficient=coefficient; this.strength=strength;
-            this.stacks=stacks; accountedAt=now; nextTick=now+1; endsAt=end;
+            this.stacks=stacks; this.sourceCap=sourceCap; accountedAt=now; nextTick=now+1; endsAt=end;
         }
     }
 }
