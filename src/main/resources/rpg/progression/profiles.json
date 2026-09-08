@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "profileId": "rpg.progression.r031",
+  "biomeBands": [
+    {"id":"emerald_wilds","minimumLevel":1,"maximumLevel":20,"verifiedNativeBiomeIds":[]},
+    {"id":"howling_sands","minimumLevel":21,"maximumLevel":40,"verifiedNativeBiomeIds":[]},
+    {"id":"whisperfrost","minimumLevel":41,"maximumLevel":60,"verifiedNativeBiomeIds":[]},
+    {"id":"devastated_lands","minimumLevel":61,"maximumLevel":80,"verifiedNativeBiomeIds":[]},
+    {"id":"authored_endgame","minimumLevel":81,"maximumLevel":99,"verifiedNativeBiomeIds":[]}
+  ],
+  "difficulties": [
+    {"id":"NORMAL","enabled":true,"healthMultiplier":1.0,"damageMultiplier":1.0,"authoredEncounterRegistry":"","disabledReason":""},
+    {"id":"NIGHTMARE","enabled":false,"healthMultiplier":1.8,"damageMultiplier":1.35,"authoredEncounterRegistry":"","disabledReason":"UNAUTHORED_SPAWN_ENCOUNTER_SOURCE_DATA"},
+    {"id":"HELL","enabled":false,"healthMultiplier":3.0,"damageMultiplier":1.8,"authoredEncounterRegistry":"","disabledReason":"UNAUTHORED_SPAWN_ENCOUNTER_SOURCE_DATA"}
+  ]
+}

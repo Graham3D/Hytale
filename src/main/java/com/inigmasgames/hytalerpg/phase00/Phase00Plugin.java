@@ -82,6 +82,10 @@ public final class Phase00Plugin extends JavaPlugin {
                 BuildIdentity.REVISION, BuildIdentity.VERSION, BuildIdentity.HYTALE_VERSION,
                 BuildIdentity.STAGE);
         RpgCatalog catalog = RpgCatalog.loadCanonical();
+        var progressionProfiles=com.inigmasgames.hytalerpg.progress.ProgressionProfiles.load();
+        LOGGER.atInfo().log("RPG_STAGE12_PROFILES revision=%s bands=%d difficulties=%d nativeBiomeBindings=%d awardHook=false connectedProof=false",
+                BuildIdentity.REVISION,progressionProfiles.biomeBands().size(),progressionProfiles.difficulties().size(),
+                progressionProfiles.biomeBands().stream().mapToInt(b->b.verifiedNativeBiomeIds().size()).sum());
         SkillTraceConfiguration configuration = SkillTraceConfiguration.load();
         skillTrace = new RpgSkillTraceService(getDataDirectory().resolve("logs").resolve("rpg").resolve("skill-trace.jsonl"), configuration);
         var repository = new FileRpgPlayerStateRepository(getDataDirectory().resolve("players"));
