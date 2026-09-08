@@ -15,6 +15,13 @@ public final class EntityStatResourcePort implements NativeResourcePort {
         return type==ResourceType.MANA?NativeManaReservationProjection.totalMaximum(value(type)):value(type).getMax();
     }
     @Override public void setReservedMana(double amount){NativeManaReservationProjection.project(stats,amount);}
+    @Override public double restoreResourceAtMost(ResourceType type,double amount,double cap){
+        if(type!=ResourceType.MANA&&type!=ResourceType.STAMINA)throw new IllegalArgumentException("Only Mana/Stamina credit allowed");
+        var stat=value(type);double before=stat.get();
+        float next=com.inigmasgames.hytalerpg.combat.resource.RpgResourceService.nativeCreditTarget(stat.get(),amount,Math.min(cap,stat.getMax()));
+        if(next>before)stats.setStatValue(index(type),next);
+        return stat.get()-before;
+    }
     @Override public void setCurrent(ResourceType type, double value) {
         int index = index(type);
         EntityStatValue stat = require(stats.get(index), type);

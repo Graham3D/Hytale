@@ -20,6 +20,8 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(passive.id().value().equals("leeching")&&!Set.of("MANA","STAMINA").contains(skill.resourceType()))
+            return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Leeching requires a declared Mana or Stamina resource.",Set.of("DECLARED_SPEND_RESOURCE"),actual);
 
         if(Set.of("lifeblood","attunement").contains(passive.id().value())&&
                 com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.finiteUpfront(skill.id().value()).filter(v->!v).isPresent())

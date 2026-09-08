@@ -257,6 +257,10 @@ public final class SkillExecutionService {
                     modifiers, prepared.cost, cooldown.finalSeconds(), status);
             context = new SkillExecutionContext(prepared.request, prepared.rootCastId, prepared.instanceId,
                     prepared.profile, prepared.plan, snapshot, prepared.equipment,target,false);
+            if(prepared.plan.resources().leeching()){
+                var resource=ResourceType.valueOf(prepared.profile.resourceType());
+                context.leechBudget().initialize(resource,kernel.resources().spendableMaximum(prepared.request.actorId(),resource,port.resources()));
+            }
             kernel.resources().commitCost(token, port.resources()); resourceCommitted = true;
             if(!channel(prepared.profile)) {
                 cooldownSpend=kernel.cooldowns().spendCharge(prepared.request.actorId(), prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity(),

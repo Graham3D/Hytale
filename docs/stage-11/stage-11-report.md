@@ -821,3 +821,75 @@ Rollback: J, SHA-256
 No live deployment, save migration, artwork, native ability projection or HUD
 changes. Connected Health payment/casting/animation gates remain UNVERIFIED.
 Twenty-two of40 Stage11 primitives have local evidence;18 remain before closure.
+
+## Cohort L — Leeching from observed native Health loss
+
+Baseline K `5607912`. Master LP063 and resource/periodic/secondary safety contracts
+read before implementation. Installed ApplyDamage, the existing real
+HytaleDamageAdapter return boundary, resource float representation and separate
+reflection path audited. R030/0.0.23, plan schema21, player schema6 unchanged.
+One passive; no new native damage engine.
+
+The normal skill damage port invokes Leeching only after HytaleDamageAdapter's
+DamageSystems.executeDamage dispatch returns. Input is that call's observed
+Health-before/Health-after and cancellation result, not the RPG calculation or
+native damage amount. Hostility and target protection are checked before damage,
+so a victim dying during the hit does not erase its previously validated hostile
+identity. Loss is capped to nonnegative starting Health to exclude overkill.
+Zero loss, shield-only absorption, cancellation, missing/non-finite Health,
+friendly damage and reflected/redirected receipts provide no recovery.
+
+Return is3% of eligible Health loss to the skill's authored Mana or Stamina type.
+Each successful commit initializes one budget with8% of that resource's current
+spendable maximum. Mana reservations are excluded. Descendant contexts share the
+same object through Echo, Barrage and every snapshot replacement, including
+projectile continuations and retained periodic snapshots. It is not copied or
+reset per target, hit, tick, child instance or refreshed DoT. A later maximum
+increase cannot expand the committed root cap; a decrease constrains future
+returns. Different genuine commits have independent budgets.
+
+The root ledger contains only identity, a resource enum and bounded scalar state;
+it retains no native entity/resource adapter and no ever-growing hit-ID set. Its
+lifetime follows the existing context/effect ownership. A one-use observation
+receipt prevents duplicate consumption of the same dispatch result without
+storing an unbounded history for an indefinite Aura. It is an internal server
+receipt, not an endpoint accepting client-supplied damage claims. Full resource
+does not bank damage for later; a new eligible hit is required after depletion.
+Only actual credited resource consumes the cap when native completion is known.
+
+The native Mana/Stamina credit adapter rounds the destination float downward,
+never above the permitted increase or spendable cap. Tiny unrepresentable credits
+return zero, rather than rounding upward into a cap bypass. It reads back native
+current value. A failed or uncertain write consumes its attempted allowance and
+disables further recovery for that root; it is never retried or refunded into
+the budget. A native resource read failure is contained after the already-applied
+damage, so a recovery adapter failure cannot throw through and replay the hit.
+
+The existing reflection/redirect adapter does not enter this Leeching call site.
+Periodic damage is allowed despite noProc, because proc recursion and Leeching
+eligibility are distinct contracts. Lifeblood remains incompatible in either
+link order. Health costs never create a damage receipt. RESOURCE_RECOVERY records
+source=LEECHING, resource, gate, actualHealthLoss, requested, actualRestored,
+totalRootRestored, rootCap, effectInstanceId and targetId, with the original cast
+trace identities. Failed writes are not falsely reported as successful recovery.
+
+### Cohort L local gate
+
+26 new tests cover component/resource gates, actual-vs-overkill Health loss,
+cancellation/friendly/reflection exclusions, exact shared caps, reservation-aware
+maxima, capacity changes, full/partial pools, receipt deduplication, uncertain
+writes, native float bounds, real shared commit initialization, derived-context
+identity and Lifeblood conflicts. These are deterministic backend and adapter-
+shaped fixtures, not connected damage or recovery evidence.
+
+`clean build`: **967 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot/clean exit0; packaged CustomUI9 validation PASS.
+Packaged native call sites and installed ApplyDamage bytecode are retained under
+`evidence/stage-11/cohort-l/api` as structural evidence only.
+Artifact: `evidence/stage-11/cohort-l/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `B520F218707079CA855ECF6CDD7341CF333441C237DAD68179B979837A41F129`.
+Rollback: K, SHA-256
+`6A7D067D901DFD4A149CD9A6AE718AF1CDF8C5B067B9B7A4F4E81D2FCE2F9C8B`.
+No live deployment, save migration, native input/ability projection, HUD or art
+changes. Connected gates remain UNVERIFIED. Twenty-three of40 Stage11 primitives
+have local evidence;17 remain before matrix/hardening closure.

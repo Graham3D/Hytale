@@ -1025,12 +1025,21 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             "multiplier", context.snapshot().criticalMultiplier()));
             EntityStatMap targetStats = store.getComponent(target.handle(), EntityStatMap.getComponentType());
             double before = health(targetStats);
+            boolean leechEligible=context.compiledPlan().resources().leeching()&&!target.protectedTarget()
+                    &&HytaleAreaQueries.hostile(store,target.handle(),actor);
             var nativeResult = new HytaleDamageAdapter().applyObserved(target.handle(), store, actor, cause,
                     new HytaleDamageMetadata(playerRef.getUuid(), context.rootCastId(), context.skillInstanceId(),
                             context.request().correlationId(), result.preMitigationDamage(), Double.NaN,effectId,canProc,
                             periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT), result,
                     com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage.calculated(context.compiledPlan().hitConditions(),buckets,result,context.snapshot().criticalMultiplier()));
             double after = health(targetStats);
+            if(leechEligible){
+                var recovered=kernel.resources().recoverLeech(context.leechBudget(),
+                        new com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget.HitReceipt(nativeResult.healthBefore(),nativeResult.healthAfter(),nativeResult.cancelled(),true,false),resources());
+                emit(context,RpgTraceEventType.RESOURCE_RECOVERY,Map.of("source","LEECHING","resource",context.leechBudget().resource(),
+                        "gate",recovered.gate(),"actualHealthLoss",recovered.healthLost(),"requested",recovered.requested(),"actualRestored",recovered.restored(),
+                        "totalRootRestored",recovered.totalRestored(),"rootCap",recovered.rootCap(),"effectInstanceId",effectId,"targetId",target.stableId()));
+            }
             return new DamageOutcome(nativeResult.preMitigationAmount(),
                     Double.isFinite(before) && Double.isFinite(after) ? Math.max(0.0, before - after) : -1.0,
                     nativeResult.cancelled());

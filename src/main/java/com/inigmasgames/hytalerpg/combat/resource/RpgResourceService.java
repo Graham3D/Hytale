@@ -27,6 +27,23 @@ public final class RpgResourceService {
             throw new IllegalStateException("Health payment is lethal or below native float precision");
         return (float)requested;
     }
+    public static float nativeCreditTarget(float current,double amount,double cap){
+        if(!Float.isFinite(current)||current<0||!Double.isFinite(amount)||amount<0||!Double.isFinite(cap)||cap<0)
+            throw new IllegalArgumentException("Invalid bounded native credit");
+        double target=Math.min(cap,(double)current+amount);float narrowed=(float)target;
+        if(narrowed>target)narrowed=Math.nextDown(narrowed);
+        return Math.max(current,narrowed); // A recovery never removes current resource after a cap change.
+    }
+    public double spendableMaximum(UUID actor,ResourceType type,NativeResourcePort resources){
+        if(type!=ResourceType.MANA&&type!=ResourceType.STAMINA)throw new IllegalArgumentException("No leechable resource");
+        return type==ResourceType.MANA?reservations.spendableMaximum(actor,resources.maximum(type)):resources.maximum(type);
+    }
+    public RootLeechBudget.Recovery recoverLeech(RootLeechBudget budget,RootLeechBudget.HitReceipt receipt,NativeResourcePort resources){
+        try{
+            double maximum=budget.resource()==ResourceType.NONE?0:spendableMaximum(budget.actor(),budget.resource(),resources);
+            return budget.recover(receipt,maximum,resources);
+        }catch(RuntimeException unavailable){return budget.unavailable(receipt);}
+    }
     /** One final integer boundary, after ordinary factors, additive Attunement stacks and named Health conversion. */
     public ResourceCost evaluateActivation(ResourceCost declared,CompiledSkillPlan plan,int attunementStacks) {
         if(attunementStacks<0||attunementStacks>5||attunementStacks>0&&!plan.resources().attunement())throw new IllegalArgumentException("Invalid Attunement stack count");
