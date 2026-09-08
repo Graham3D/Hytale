@@ -151,6 +151,7 @@ public final class SkillExecutionService {
         if (!profiles.supports(skill.value())) throw new Rejection("FAMILY_NOT_IMPLEMENTED", retainedInstance);
         Stage04SkillProfile profile = profiles.require(skill.value());
         String instance = retainedInstance == null ? skill.value() + '-' + UUID.randomUUID() : retainedInstance;
+        if(profile.cage()!=null)throw new Rejection(com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY,instance);
         if (!profile.family().name().equals(plan.finalFamily())
                 && !plan.finalTags().contains(profile.family().name()))
             throw new Rejection("COMPILED_FAMILY_UNSUPPORTED", instance);

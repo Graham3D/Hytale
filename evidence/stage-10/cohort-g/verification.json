@@ -1,0 +1,42 @@
+{
+  "capturedAtUtc": "2026-09-08T14:15:38.7202844Z",
+  "stage": 10,
+  "cohort": "g",
+  "revision": "R029",
+  "version": "0.0.22",
+  "playerSchema": 5,
+  "compiledPlanSchema": 9,
+  "sourceHead": "3e5d0849f8eb7034bfea367bb24f99e7793db321",
+  "branch": "RPG",
+  "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION_WITH_MASTER_SAFETY_GATE",
+  "cohortStatus": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+  "localGate": "PASS",
+  "connectedGate": "UNVERIFIED",
+  "cohortSkills": [
+    "bone_cage"
+  ],
+  "cohortPassives": [],
+  "tests": 662,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "jarSha256": "DB7DACA4D309C7590A3FBD7D7E35F0F74D94CEEB5BCA91D5AB8A88B1973D9A41",
+  "rollbackSha256": "3FB303092035B15A6E9FD0E6E682092C99BE83D05E71CCAD6986408191C21975",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "zeroNativeCostTriggers": 60,
+  "normalThreeModSmoke": true,
+  "nativeSpawnOrMotionProven": false,
+  "nativeCastingFixed": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "remainingStage10Skills": 0,
+  "stage10Complete": false,
+  "stage10LocalScopeComplete": true,
+  "canonicalSkillCount": 87,
+  "canonicalPassiveCount": 66,
+  "explicitlyDisabled": {
+    "bone_cage": "BONE_CAGE_NATIVE_ENEMY_ONLY_COLLISION_UNVERIFIED; intentionally disabled by master safety contract"
+  },
+  "rollbackStateRequirement": "No migration from Stage09 schema5. Earlier live R023 schema3 still needs its own backup before any eventual deployment."
+}

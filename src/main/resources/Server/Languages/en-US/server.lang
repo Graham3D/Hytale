@@ -120,3 +120,5 @@ items.RPG_Ability_Simulacrum.description = Noncombat human-shaped decoy template
 npcRoles.RPG_Summon_Decoy.name = Simulacrum (decoy template)
 items.RPG_Ability_Dominate.name = Dominate
 items.RPG_Ability_Dominate.description = Temporary native relationship lease; only explicitly Dominatable, unprotected targets with non-persistent threat are eligible.
+items.RPG_Ability_Bone_Cage.name = Bone Cage (collision gate)
+items.RPG_Ability_Bone_Cage.description = Disabled: safe native enemy-only collision has not been proven. Activation spends no resource or cooldown.

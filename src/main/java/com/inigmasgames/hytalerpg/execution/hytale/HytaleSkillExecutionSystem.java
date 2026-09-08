@@ -362,6 +362,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 support.runtime().stopActive(playerRef.getUuid(),profile.skillId(),support.port(store,actor));}
         @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
                                                         com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
+            if(profile.cage()!=null)return Validation.reject(com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY);
             if (motions.containsKey(playerRef.getUuid()) || windupEnds.containsKey(playerRef.getUuid())
                     || reactions.active(playerRef.getUuid()).isPresent()) return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
             if(profile.support()!=null)return support==null?Validation.reject("SUPPORT_NATIVE_ADAPTER_UNAVAILABLE"):

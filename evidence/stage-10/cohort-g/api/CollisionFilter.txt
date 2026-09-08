@@ -1,0 +1,4 @@
+Compiled from "CollisionFilter.java"
+public interface com.hypixel.hytale.server.core.modules.collision.CollisionFilter<D, T> {
+  public abstract boolean test(T, int, D, com.hypixel.hytale.server.core.modules.collision.CollisionConfig);
+}

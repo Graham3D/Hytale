@@ -14,5 +14,5 @@ public final class ConversionProjection implements Component<EntityStore>{
     public ConversionProjection(ConversionRegistry.Lease lease){this.lease=lease;}
     public static ComponentType<EntityStore,ConversionProjection> getComponentType(){return type;}
     public static void bind(ComponentType<EntityStore,ConversionProjection> value){type=value;}
-    @Override public ConversionProjection clone(){return new ConversionProjection(lease);}
+    @Override public ConversionProjection clone(){var copy=new ConversionProjection(lease);copy.nextQuery=nextQuery;copy.restored=restored;return copy;}
 }

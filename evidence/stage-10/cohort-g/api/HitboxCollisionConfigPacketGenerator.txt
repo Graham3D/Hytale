@@ -1,0 +1,150 @@
+Compiled from "HitboxCollisionConfigPacketGenerator.java"
+public class com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfigPacketGenerator extends com.hypixel.hytale.server.core.asset.packet.AssetPacketGenerator<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig>> {
+  public com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfigPacketGenerator();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/asset/packet/AssetPacketGenerator."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.protocol.ToClientPacket generateInitPacket(com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig>, java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig>);
+    Code:
+         0: new           #7                  // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+         3: dup
+         4: invokespecial #9                  // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":()V
+         7: astore_3
+         8: aload_2
+         9: invokeinterface #10,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        14: invokeinterface #16,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        19: astore        4
+        21: aload         4
+        23: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+        28: ifeq          80
+        31: aload         4
+        33: invokeinterface #28,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        38: checkcast     #32                 // class java/util/Map$Entry
+        41: astore        5
+        43: aload_3
+        44: aload_1
+        45: aload         5
+        47: invokeinterface #34,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+        52: checkcast     #37                 // class java/lang/String
+        55: invokevirtual #39                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+        58: aload         5
+        60: invokeinterface #45,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+        65: checkcast     #48                 // class com/hypixel/hytale/server/core/modules/entity/hitboxcollision/HitboxCollisionConfig
+        68: invokevirtual #50                 // Method com/hypixel/hytale/server/core/modules/entity/hitboxcollision/HitboxCollisionConfig.toPacket:()Lcom/hypixel/hytale/protocol/HitboxCollisionConfig;
+        71: invokeinterface #54,  3           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+        76: pop
+        77: goto          21
+        80: new           #60                 // class com/hypixel/hytale/protocol/packets/assets/UpdateHitboxCollisionConfig
+        83: dup
+        84: getstatic     #62                 // Field com/hypixel/hytale/protocol/UpdateType.Init:Lcom/hypixel/hytale/protocol/UpdateType;
+        87: aload_1
+        88: invokevirtual #68                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getNextIndex:()I
+        91: aload_3
+        92: invokespecial #72                 // Method com/hypixel/hytale/protocol/packets/assets/UpdateHitboxCollisionConfig."<init>":(Lcom/hypixel/hytale/protocol/UpdateType;ILjava/util/Map;)V
+        95: areturn
+
+  public com.hypixel.hytale.protocol.ToClientPacket generateUpdatePacket(com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig>, java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig>, com.hypixel.hytale.assetstore.AssetUpdateQuery);
+    Code:
+         0: new           #7                  // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+         3: dup
+         4: invokespecial #9                  // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":()V
+         7: astore        4
+         9: aload_2
+        10: invokeinterface #10,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        15: invokeinterface #16,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        20: astore        5
+        22: aload         5
+        24: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+        29: ifeq          82
+        32: aload         5
+        34: invokeinterface #28,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        39: checkcast     #32                 // class java/util/Map$Entry
+        42: astore        6
+        44: aload         4
+        46: aload_1
+        47: aload         6
+        49: invokeinterface #34,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+        54: checkcast     #37                 // class java/lang/String
+        57: invokevirtual #39                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+        60: aload         6
+        62: invokeinterface #45,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+        67: checkcast     #48                 // class com/hypixel/hytale/server/core/modules/entity/hitboxcollision/HitboxCollisionConfig
+        70: invokevirtual #50                 // Method com/hypixel/hytale/server/core/modules/entity/hitboxcollision/HitboxCollisionConfig.toPacket:()Lcom/hypixel/hytale/protocol/HitboxCollisionConfig;
+        73: invokeinterface #54,  3           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+        78: pop
+        79: goto          22
+        82: new           #60                 // class com/hypixel/hytale/protocol/packets/assets/UpdateHitboxCollisionConfig
+        85: dup
+        86: getstatic     #75                 // Field com/hypixel/hytale/protocol/UpdateType.AddOrUpdate:Lcom/hypixel/hytale/protocol/UpdateType;
+        89: aload_1
+        90: invokevirtual #68                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getNextIndex:()I
+        93: aload         4
+        95: invokespecial #72                 // Method com/hypixel/hytale/protocol/packets/assets/UpdateHitboxCollisionConfig."<init>":(Lcom/hypixel/hytale/protocol/UpdateType;ILjava/util/Map;)V
+        98: areturn
+
+  public com.hypixel.hytale.protocol.ToClientPacket generateRemovePacket(com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig>, java.util.Set<java.lang.String>, com.hypixel.hytale.assetstore.AssetUpdateQuery);
+    Code:
+         0: new           #7                  // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+         3: dup
+         4: invokespecial #9                  // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":()V
+         7: astore        4
+         9: aload_2
+        10: invokeinterface #16,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        15: astore        5
+        17: aload         5
+        19: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+        24: ifeq          63
+        27: aload         5
+        29: invokeinterface #28,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        34: checkcast     #37                 // class java/lang/String
+        37: astore        6
+        39: aload         4
+        41: aload_1
+        42: aload         6
+        44: invokevirtual #39                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+        47: new           #78                 // class com/hypixel/hytale/protocol/HitboxCollisionConfig
+        50: dup
+        51: invokespecial #80                 // Method com/hypixel/hytale/protocol/HitboxCollisionConfig."<init>":()V
+        54: invokeinterface #54,  3           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+        59: pop
+        60: goto          17
+        63: new           #60                 // class com/hypixel/hytale/protocol/packets/assets/UpdateHitboxCollisionConfig
+        66: dup
+        67: getstatic     #81                 // Field com/hypixel/hytale/protocol/UpdateType.Remove:Lcom/hypixel/hytale/protocol/UpdateType;
+        70: aload_1
+        71: invokevirtual #68                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getNextIndex:()I
+        74: aload         4
+        76: invokespecial #72                 // Method com/hypixel/hytale/protocol/packets/assets/UpdateHitboxCollisionConfig."<init>":(Lcom/hypixel/hytale/protocol/UpdateType;ILjava/util/Map;)V
+        79: areturn
+
+  public com.hypixel.hytale.protocol.ToClientPacket generateRemovePacket(com.hypixel.hytale.assetstore.AssetMap, java.util.Set, com.hypixel.hytale.assetstore.AssetUpdateQuery);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: checkcast     #40                 // class com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap
+         5: aload_2
+         6: aload_3
+         7: invokevirtual #84                 // Method generateRemovePacket:(Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;Ljava/util/Set;Lcom/hypixel/hytale/assetstore/AssetUpdateQuery;)Lcom/hypixel/hytale/protocol/ToClientPacket;
+        10: areturn
+
+  public com.hypixel.hytale.protocol.ToClientPacket generateUpdatePacket(com.hypixel.hytale.assetstore.AssetMap, java.util.Map, com.hypixel.hytale.assetstore.AssetUpdateQuery);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: checkcast     #40                 // class com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap
+         5: aload_2
+         6: aload_3
+         7: invokevirtual #90                 // Method generateUpdatePacket:(Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;Ljava/util/Map;Lcom/hypixel/hytale/assetstore/AssetUpdateQuery;)Lcom/hypixel/hytale/protocol/ToClientPacket;
+        10: areturn
+
+  public com.hypixel.hytale.protocol.ToClientPacket generateInitPacket(com.hypixel.hytale.assetstore.AssetMap, java.util.Map);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: checkcast     #40                 // class com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap
+         5: aload_2
+         6: invokevirtual #94                 // Method generateInitPacket:(Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;Ljava/util/Map;)Lcom/hypixel/hytale/protocol/ToClientPacket;
+         9: areturn
+}

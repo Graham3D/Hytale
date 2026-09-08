@@ -36,7 +36,8 @@ public final class SkillExecutorRegistry {
                 forwarding(Stage04SkillProfile.Family.CONE, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.TRAP, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.GROUND_ZONE, SkillExecutionPort::executeArea),
-                forwarding(Stage04SkillProfile.Family.WALL, SkillExecutionPort::executeArea),
+                forwarding(Stage04SkillProfile.Family.WALL, (port,context)->context.profile().cage()!=null
+                        ?SkillExecutionResult.rejected(com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY):port.executeArea(context)),
                 forwarding(Stage04SkillProfile.Family.OVERHEAD, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.BOMBARDMENT, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.LINE, SkillExecutionPort::executeConnection),
