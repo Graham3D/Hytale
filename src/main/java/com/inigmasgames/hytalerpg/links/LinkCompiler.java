@@ -156,11 +156,15 @@ public final class LinkCompiler {
                 if(!compatibility.assess(skill,passive).accepted()){
                     if(bindings.stream().anyMatch(b->b.definition().id().value().equals("shockwave")))prefix="SHOCKWAVE_";
                     else if(bindings.stream().anyMatch(b->b.definition().id().value().equals("shrapnel")))prefix="SHRAPNEL_";
+                    else if(bindings.stream().anyMatch(b->b.definition().id().value().equals("shatter")))prefix="SHATTER_";
                 }
                 geometry.add(prefix+"RADIUS_MULTIPLIER=1.25");
                 power.add(prefix+"MAGNITUDE_MULTIPLIER=0.90");
             }
             if(Set.of("vacuum","repulsion").contains(passive.id().value())&&!compatibility.assess(skill,passive).accepted()&&bindings.stream().noneMatch(b->b.definition().id().value().equals("orbit")))geometry.add("POSITION_SCOPE=SECONDARY_ONLY");
+            if(passive.id().value().equals("impact_force")&&!compatibility.assess(skill,passive).accepted()
+                    &&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.enemyPosition(skill.id().value()).orElse(false)
+                    &&bindings.stream().noneMatch(b->b.definition().id().value().equals("orbit")))geometry.add("IMPACT_SCOPE=SECONDARY_ONLY");
         }
         continuation.sort(Comparator.comparingInt(LinkCompiler::continuationRank).thenComparing(String::compareTo));
         List<PassiveId> order = bindings.stream().map(binding -> binding.definition().id()).toList();

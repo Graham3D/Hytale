@@ -1229,7 +1229,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(context.compiledPlan().hitProcs().active()){
                 String element=procElement(context,cause);
                 var receipt=new HitProcRuntime.Hit(UUID.fromString(target.stableId()),effectId+"/"+hitIndex,element,!periodic,canProc,procHostile,target.protectedTarget(),target.boss(),false,
-                        frozenBefore,nativeResult.cancelled(),before,after,minimum,nativeResult.preMitigationAmount(),HitProcRuntime.coefficient(context));
+                        frozenBefore,nativeResult.cancelled(),before,after,minimum,nativeResult.preMitigationAmount(),HitProcRuntime.coefficient(context),result.increasedUnit(buckets,context.snapshot().criticalMultiplier()));
                 try{hitProcs.observed(context,receipt,System.nanoTime()/1e9,hitProcPort(target));}
                 catch(RuntimeException failure){emit(context,RpgTraceEventType.HIT_PROC_RESOLVED,Map.of("verdict","PROC_OBSERVER_FAILED","boundary",String.valueOf(failure.getMessage()),"paidRootRetained",true));}
             }
@@ -1282,6 +1282,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     if(accepted.size()>64)return "SHATTER_TARGET_BUDGET";
                     int count=0;for(var target:accepted){if(candidate(target.handle())==null||!HytaleAreaQueries.hostile(store,target.handle(),actor))continue;
                         var result=resolvedProcDamage(child,target,amount,cause,false,child.skillInstanceId()+"/"+count++);
+                        if(!result.cancelled())applyPassiveAreaPosition(child,target.handle(),center);
                         emit(child,RpgTraceEventType.HIT_PROC_RESOLVED,Map.of("kind","shatter","targetId",target.stableId(),"preMitigationDamage",result.preMitigationDamage(),"actualHealthLoss",result.actualHealthLoss(),"cancelled",result.cancelled(),"canProc",false));}
                     try{vfx.presentConnection(store.getExternalData().getWorld(),ConnectionShape.cylinder(center,radius,3),"COLD","SHATTER",.3);}catch(RuntimeException ignored){}
                     return "SHATTER_RESOLVED_TARGETS="+count;
@@ -2074,7 +2075,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         var burst=claim.burst().get();var found=HytaleAreaQueries.query(port.store,carrier.actor,burst.geometry(),64);
         if(found.overflow()) {emitProjectile(carrier,RpgTraceEventType.AREA_QUERY_REJECTED,
                 Map.of("component","SHRAPNEL","effectInstanceId",burst.id(),"reason","CANDIDATE_BUDGET"));return;}
-        var context=carrier.context.withSnapshot(carrier.context.snapshot().withMagnitudeFactor(burst.coefficientFactor()*(carrier.context.compiledPlan().positionOnlyOnSecondary()?.90:1)));
+        var plan=carrier.context.compiledPlan();
+        var snapshot=carrier.context.snapshot();
+        if(plan.concentrationOnlyOnSecondary())snapshot=snapshot.withModifiers(snapshot.modifiers().withIncreased(.30));
+        var context=carrier.context.withSnapshot(snapshot.withMagnitudeFactor(burst.coefficientFactor()*(plan.positionOnlyOnSecondary()?.90:1)*(plan.impactOnlyOnSecondary()?.90:1)));
         emitProjectile(carrier,RpgTraceEventType.SHRAPNEL,Map.of("effectInstanceId",burst.id(),"radius",burst.geometry().radius(),
                 "height",burst.geometry().height(),"coefficientFactor",burst.coefficientFactor(),"canProc",burst.canProc(),"generation",carrier.instance.plan().generation()+1));
         // Reuse the finite geometry template at impact height; presentation never decides a hit.

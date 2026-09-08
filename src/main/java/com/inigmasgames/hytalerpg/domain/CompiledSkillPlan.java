@@ -27,7 +27,8 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 32;
+    public static final int CURRENT_SCHEMA = 33;
+    public boolean impactOnlyOnSecondary(){return geometryModifiers.contains("IMPACT_SCOPE=SECONDARY_ONLY");}
     public boolean retaliation(){return passiveOrder.stream().anyMatch(p->p.value().equals("retaliation"));}
     public String conditionalRepeat(){return passiveOrder.stream().map(PassiveId::value).filter(p->p.equals("critical_trigger")||p.equals("kill_trigger")).findFirst().orElse("");}
     public boolean orbit(){return passiveOrder.stream().anyMatch(p->p.value().equals("orbit"));}
@@ -105,7 +106,7 @@ public record CompiledSkillPlan(
     }
     public boolean radiusOnlyOnShrapnel(){return executionModifiers().expandedRadius()&&projectileModifiers().shrapnel()&&!finalTags.contains("HAS_RADIUS");}
     public boolean radiusOnlyOnShockwave(){return geometryModifiers.contains("SHOCKWAVE_RADIUS_MULTIPLIER=1.25");}
-    public boolean radiusOnlyOnSecondary(){return radiusOnlyOnShrapnel()||radiusOnlyOnShockwave();}
+    public boolean radiusOnlyOnSecondary(){return radiusOnlyOnShrapnel()||radiusOnlyOnShockwave()||geometryModifiers.contains("SHATTER_RADIUS_MULTIPLIER=1.25");}
     public boolean concentrationOnlyOnSecondary(){return powerModifiers.contains("CONCENTRATION_SCOPE=SECONDARY_ONLY");}
     public record ExecutionModifiers(double radiusFactor, double delaySeconds, double echoDelaySeconds,
                                      double echoMagnitude, boolean expandedRadius,int barrageBatches,double barrageInterval) {

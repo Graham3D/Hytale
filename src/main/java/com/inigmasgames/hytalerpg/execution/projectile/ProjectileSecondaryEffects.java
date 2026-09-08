@@ -23,7 +23,7 @@ public final class ProjectileSecondaryEffects {
         if(!Double.isFinite(healthLost)||healthLost<=0||!parent.spend("SHRAPNEL"))return new BurstResult("NO_DAMAGING_TRIGGER",Optional.empty());
         String id=parent.plan().projectileInstanceId()+"/shrapnel",admission=registry.reserveSecondary(parent,id);
         if(!admission.equals("PASS"))return new BurstResult(admission,Optional.empty());
-        double radius=2.5*compiled.executionModifiers().radiusFactor();
+        double radius=2.5*compiled.executionModifiers().radiusFactor()*(compiled.foundationModifiers().concentration()?.7:1);
         double coefficient=.5*(compiled.radiusOnlyOnShrapnel()?.9:1);
         return new BurstResult("PASS",Optional.of(new Burst(id,new AreaGeometry(AreaGeometry.Kind.DISC,
                 point.add(new Vec3(0,-1.5,0)),Vec3.FORWARD,radius,360,0,0,3),coefficient)));

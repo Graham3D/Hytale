@@ -23,7 +23,8 @@ public final class CompiledProfileResolver {
             throw new IllegalArgumentException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
         var modifiers=plan.foundationModifiers();var geometry=plan.geometry();var pulses=plan.pulses();var dots=plan.dots();var controls=plan.controls();var strikes=plan.strikes();
         if(!plan.orbit()&&!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse()&&!dots.active()&&!controls.deepFreeze()&&!strikes.multistrike())return authored;
-        var key=new Key(authored,modifiers,geometry,pulses,dots,controls,strikes,plan.orbit()?com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles.count(authored,plan):0);
+        var key=new Key(authored,modifiers,geometry,pulses,dots,controls,strikes,plan.orbit()?com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles.count(authored,plan):0,
+                plan.concentrationOnlyOnSecondary(),plan.impactOnlyOnSecondary(),plan.positions().repulsion(),plan.hitProcs().hemorrhage());
         var prior=cache.get(key);if(prior!=null)return prior;
         if(plan.orbit())authored=com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles.convert(authored,plan);
         JsonObject resolved=JSON.toJsonTree(authored).getAsJsonObject();
@@ -50,12 +51,16 @@ public final class CompiledProfileResolver {
             scale(resolved,"cage",reach,"range");
         }
         if(modifiers.concentration()&&!plan.concentrationOnlyOnSecondary())concentrate(authored,resolved);
-        if(modifiers.lingering())linger(authored,resolved);
+        if(modifiers.lingering()){
+            if(ProfileComponentPolicy.finiteDuration(authored))linger(authored,resolved);
+            else if(!plan.hitProcs().hemorrhage())throw new IllegalArgumentException("NO_FINITE_EFFECT_DURATION_COMPONENT");
+            // Introduced Bleed is timed by HitProcRuntime, not by a fabricated primary duration.
+        }
         if(modifiers.reversal()){
             if(authored.reaction()==null)throw new IllegalArgumentException("NO_REACTION_WINDOW_COMPONENT");
             scale(resolved,"reaction",1.3,"windowSeconds");
         }
-        if(geometry.impactForce())impact(authored,resolved);
+        if(geometry.impactForce()&&!plan.impactOnlyOnSecondary())impact(authored,resolved,plan.positions().repulsion());
         if(geometry.widening()||geometry.focusedChannel()){
             if(!ProfileComponentPolicy.resolvingWidth(authored))throw new IllegalArgumentException("NO_RESOLVING_WIDTH_COMPONENT");
             var connection=resolved.getAsJsonObject("connection");
@@ -129,8 +134,8 @@ public final class CompiledProfileResolver {
         }
         scale(root,"support",.7,"damageInterval","chillInterval");
     }
-    private static void impact(Stage04SkillProfile p,JsonObject root){
-        if(!ProfileComponentPolicy.impact(p))throw new IllegalArgumentException("NO_IMPACT_COMPONENT");
+    private static void impact(Stage04SkillProfile p,JsonObject root,boolean introducedPush){
+        if(!ProfileComponentPolicy.impact(p)&&!introducedPush)throw new IllegalArgumentException("NO_IMPACT_COMPONENT");
         if(p.strike()!=null){scale(root,"strike",.90,"coefficient");if(p.strike().statusId().equals("STAGGER"))scale(root,"strike",1.75,"statusSeconds");}
         if(p.projectile()!=null){
             scale(root,"projectile",.90,"coefficient");scale(root,"projectile",1.75,"knockbackDistance");
@@ -198,5 +203,5 @@ public final class CompiledProfileResolver {
             }
         }
     }
-    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots,com.inigmasgames.hytalerpg.domain.ControlModifiers controls,com.inigmasgames.hytalerpg.domain.StrikeModifiers strikes,int orbitCount){}
+    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots,com.inigmasgames.hytalerpg.domain.ControlModifiers controls,com.inigmasgames.hytalerpg.domain.StrikeModifiers strikes,int orbitCount,boolean secondaryConcentration,boolean secondaryImpact,boolean repulsion,boolean hemorrhage){}
 }

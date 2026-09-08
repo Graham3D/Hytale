@@ -38,6 +38,7 @@ public final class StrikeSecondaryRuntime {
             for(var target:candidates.stream().filter(c->shape.intersects(port.bounds(c))).limit(4).toList()){
                 var child=root.secondaryCopy("cleaving_edge",++ordinal,.60);
                 if(root.compiledPlan().positionOnlyOnSecondary())child=child.withSnapshot(child.snapshot().withMagnitudeFactor(.90));
+                if(root.compiledPlan().impactOnlyOnSecondary())child=child.withSnapshot(child.snapshot().withMagnitudeFactor(.90));
                 if(root.compiledPlan().concentrationOnlyOnSecondary())child=child.withSnapshot(child.snapshot().withModifiers(child.snapshot().modifiers().withIncreased(.30)));
                 String admission=root.effects().claim(child.skillInstanceId(),1,true);
                 if(admission.equals("PASS")){port.damage(child,target,null,origin);count++;}else port.rejected(child.skillInstanceId(),admission);
@@ -84,7 +85,7 @@ public final class StrikeSecondaryRuntime {
             if(!Double.isFinite(hit.increasedUnit)||hit.increasedUnit<0)throw new IllegalArgumentException("RESOLVED_ADDITIVE_UNIT_UNAVAILABLE");
             base+=.30*hit.increasedUnit;
         }
-        double result=base*.40*(plan.radiusOnlyOnShockwave()?.90:1)*(plan.positionOnlyOnSecondary()?.90:1);
+        double result=base*.40*(plan.radiusOnlyOnShockwave()?.90:1)*(plan.positionOnlyOnSecondary()?.90:1)*(plan.impactOnlyOnSecondary()?.90:1);
         if(!Double.isFinite(result)||result<0||result>Float.MAX_VALUE)throw new IllegalArgumentException("SHOCKWAVE_DAMAGE_OVERFLOW");
         return result;
     }

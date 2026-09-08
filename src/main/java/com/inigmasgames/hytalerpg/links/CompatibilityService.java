@@ -22,11 +22,17 @@ public final class CompatibilityService {
         boolean shockwave=selected.stream().anyMatch(p->p.id().value().equals("shockwave")&&assess(skill,p).accepted());
         boolean cleave=selected.stream().anyMatch(p->p.id().value().equals("cleaving_edge")&&assess(skill,p).accepted());
         boolean shrapnel=selected.stream().anyMatch(p->p.id().value().equals("shrapnel")&&assess(skill,p).accepted());
-        if(Set.of("vacuum","repulsion").contains(passive.id().value())&&(shockwave||cleave||shrapnel))return new CompatibilityResult(true,ValidationCode.ACCEPTED,
+        boolean shatter=selected.stream().anyMatch(p->p.id().value().equals("shatter")&&assess(skill,p).accepted());
+        boolean bleed=selected.stream().anyMatch(p->p.id().value().equals("hemorrhage")&&assess(skill,p,java.util.List.of()).accepted());
+        if(passive.id().value().equals("lingering")&&bleed)return CompatibilityResult.accepted(Set.of("COMPONENT_HEMORRHAGE_FINITE_DURATION"));
+        if(passive.id().value().equals("impact_force")&&selected.stream().anyMatch(p->p.id().value().equals("repulsion")&&assess(skill,p,selected).accepted()))
+            return CompatibilityResult.accepted(Set.of("COMPONENT_REPULSION_KNOCKBACK"));
+        if(Set.of("vacuum","repulsion").contains(passive.id().value())&&(shockwave||cleave||shrapnel||shatter))return new CompatibilityResult(true,ValidationCode.ACCEPTED,
                 "Position control applies only to introduced hostile area components, not the original carrier",Set.of("HAS_AREA_GEOMETRY","CAN_AFFECT_ENEMY_POSITION"),Set.of("COMPONENT_SECONDARY_AREA"));
-        if(passive.id().value().equals("concentration")&&(shockwave||cleave))return new CompatibilityResult(true,ValidationCode.ACCEPTED,
-                "Concentration applies only to the introduced secondary area component, not the original single-target strike",Set.of("HAS_AREA_GEOMETRY"),Set.of("COMPONENT_STRIKE_SECONDARY","AREA","DAMAGE","HAS_AREA_GEOMETRY"));
+        if(passive.id().value().equals("concentration")&&(shockwave||cleave||shrapnel||shatter))return new CompatibilityResult(true,ValidationCode.ACCEPTED,
+                "Concentration applies only to introduced secondary areas, not the original carrier",Set.of("HAS_AREA_GEOMETRY"),Set.of("COMPONENT_SECONDARY_AREA","AREA","DAMAGE","HAS_AREA_GEOMETRY"));
         if(!passive.id().value().equals("expanded_radius"))return base;
+        if(shatter)return CompatibilityResult.accepted(Set.of("COMPONENT_SHATTER_RADIUS"));
         if(shockwave)return new CompatibilityResult(true,ValidationCode.ACCEPTED,"Expanded Radius applies only to the Shockwave Burst, not the original strike",
                 Set.of("HAS_RADIUS"),Set.of("COMPONENT_SHOCKWAVE","BURST","AREA","DAMAGE","HAS_RADIUS"));
         if(!shrapnel)return base;

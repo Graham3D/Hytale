@@ -1683,3 +1683,51 @@ All40 Stage11 primitives now have local cohort evidence. Component-introduction,
 complete matrix and legacy inactive-node closure still remain: this is not a Stage11
 connected PASS or final closure. All87/66 catalog records, native HUD/XP/input, owner
 art and the live three-mod set are retained; no Google Drive writes.
+
+## R030 cohort X — introduced-component compatibility correction
+
+Master LP007/008/009/032 and Shatter/Hemorrhage/Repulsion were reread. All four
+modifier primitives existed, but their compatibility checks did not account for
+components introduced by other valid passives. This was a compiler/runtime gap,
+not evidence of native input or damage failure. Plan schema33 invalidates older
+compiled plans; player schema6 and authored profiles remain unchanged.
+
+Repulsion now supplies a local knockback component for Impact Force. Vacuum does
+not: a pull is not knockback. The existing position port requests4.375m for this
+push before the same collision/control caps. Impact's direct-damage penalty is
+applied once to the affected primary or secondary component, not an unrelated
+carrier. Hemorrhage supplies a finite Bleed duration for Lingering:5.6s instead
+of4s, with the existing1.15 cost factor. No primary strike duration, projectile
+flight, CC duration or Burn/Poison capability is invented.
+
+Shatter supplies a secondary radius/area for Expanded Radius, Concentration and
+position control. Radius3m scales1.25 and/or.70; its50% resolved killing-hit
+magnitude receives only modifier factors not already present on that hit.
+Concentration uses the retained pre-Increased unit to add.30 Increased rather
+than multiplying an already Increased hit by1.30. Missing/invalid resolved units
+fail closed. The primary Frost Bolt collision radius, range and damage remain
+unchanged when only its Shatter component qualifies. Native Shatter recipients
+reuse the existing bounded displacement port and shared per-root target ICD.
+Shrapnel's introduced area now also supports Concentration; carrier collision
+and primary magnitude are not modified. All these paths retain the existing
+native damage adapter, status timer, area query, protection/LOS and finite budgets.
+
+Profile-cache keys now include component-scoping flags and introduction context,
+preventing a cached primary transformation from leaking into a secondary-only plan.
+The new18 tests include a valid six-Link Shatter graph, invalid introducers,
+conversion-removal rules, exact additive/multiplicative math, no double penalty,
+profile immutability and rollback when an introducer is removed. One initial
+negative fixture incorrectly assumed Fire Bolt had no finite duration; its
+authored Burn legitimately qualifies for Lingering. The fixture now uses Arcane
+Bolt; the production compatibility rule was not weakened.
+
+Full clean retained suite:1347 PASS, zero failures/errors/skips. Normal isolated
+three-mod server network boot, clean exit0, native asset checks and9 packaged UI
+documents PASS. Packaged bytecode/call-site evidence is in cohort-x/api. None of
+these gates proves connected damage, movement, rendering or casting.
+
+Artifact SHA256: `A28C6D8269E3425C638B2ACD1F29E8BB461D3939DC97BF6BA584A3EE267BDD71`.
+Rollback W: `1BB2E2C9A86AA49B46A29EC8A0EBB2C5C504EDCE46BE5ABAEB6A49CEAE0DFE0F`.
+Both are archived under evidence/stage-11/cohort-x. Connected gates remain
+UNVERIFIED; no live deployment, Google Drive write, owner-art mutation or native
+HUD/XP/input change. Legacy inactive-node and full matrix closure are next.

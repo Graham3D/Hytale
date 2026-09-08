@@ -7,7 +7,13 @@ import java.util.function.DoubleSupplier;
 public final class HitProcRuntime {
     public record Hit(UUID victim,String contact,String element,boolean direct,boolean canProc,boolean hostile,
                       boolean protectedTarget,boolean boss,boolean player,boolean frozenBefore,boolean cancelled,
-                      double healthBefore,double healthAfter,double healthMinimum,double preMitigation,double procCoefficient){
+                      double healthBefore,double healthAfter,double healthMinimum,double preMitigation,double procCoefficient,double increasedUnit){
+        public Hit(UUID victim,String contact,String element,boolean direct,boolean canProc,boolean hostile,
+                   boolean protectedTarget,boolean boss,boolean player,boolean frozenBefore,boolean cancelled,
+                   double healthBefore,double healthAfter,double healthMinimum,double preMitigation,double procCoefficient){
+            this(victim,contact,element,direct,canProc,hostile,protectedTarget,boss,player,frozenBefore,cancelled,
+                    healthBefore,healthAfter,healthMinimum,preMitigation,procCoefficient,Double.NaN);
+        }
         public boolean valid(){return victim!=null&&contact!=null&&!contact.isBlank()&&contact.length()<=480&&element!=null
                 &&Double.isFinite(healthBefore)&&Double.isFinite(healthAfter)&&Double.isFinite(healthMinimum)
                 &&Double.isFinite(preMitigation)&&preMitigation>0&&Double.isFinite(procCoefficient)&&procCoefficient>0&&procCoefficient<=1;}
@@ -35,7 +41,7 @@ public final class HitProcRuntime {
         fearReady.values().removeIf(at->at<=now);
         boolean alive=hit.healthAfter>hit.healthMinimum;
         if(mods.hemorrhage()&&direct&&alive&&hit.element.equals("PHYSICAL")&&roll(c,"hemorrhage",.25*hit.procCoefficient,port))
-            dispatch(c,"hemorrhage",hit.contact+"/"+hit.victim,port,child->port.bleed(child,hit,hit.preMitigation*.12,4));
+            dispatch(c,"hemorrhage",hit.contact+"/"+hit.victim,port,child->port.bleed(child,hit,hit.preMitigation*.12,4*(c.compiledPlan().foundationModifiers().lingering()?1.4:1)));
         var fearKey=new FearKey(c.request().actorId(),hit.victim);
         if(mods.terror()&&direct&&alive&&!hit.boss){
             if(fearReady.containsKey(fearKey))port.trace(c,"terror","TERROR_TARGET_ICD",fearReady.get(fearKey)-now);
@@ -49,7 +55,20 @@ public final class HitProcRuntime {
             }
         }
         if(mods.shatter()&&!alive&&hit.frozenBefore&&hit.element.equals("COLD"))
-            dispatch(c,"shatter",hit.victim.toString(),port,child->port.shatter(child,hit,3,hit.preMitigation*.5));
+            dispatch(c,"shatter",hit.victim.toString(),port,child->port.shatter(child,hit,shatterRadius(c.compiledPlan()),shatterAmount(c.compiledPlan(),hit)));
+    }
+    public static double shatterRadius(com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan){
+        return 3*plan.executionModifiers().radiusFactor()*(plan.foundationModifiers().concentration()?.7:1);
+    }
+    public static double shatterAmount(com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,Hit hit){
+        double base=hit.preMitigation;
+        if(plan.concentrationOnlyOnSecondary()){
+            if(!Double.isFinite(hit.increasedUnit)||hit.increasedUnit<0)throw new IllegalArgumentException("RESOLVED_ADDITIVE_UNIT_UNAVAILABLE");
+            base+=.30*hit.increasedUnit;
+        }
+        double amount=base*.5*(plan.radiusOnlyOnSecondary()?.9:1)*(plan.positionOnlyOnSecondary()?.9:1)*(plan.impactOnlyOnSecondary()?.9:1);
+        if(!Double.isFinite(amount)||amount<0||amount>Float.MAX_VALUE)throw new IllegalArgumentException("SHATTER_DAMAGE_OVERFLOW");
+        return amount;
     }
     private boolean roll(SkillExecutionContext c,String kind,double chance,Port port){
         double value=random.getAsDouble();if(!Double.isFinite(value)||value<0||value>=1){port.trace(c,kind,"INVALID_PROC_ROLL",chance);return false;}
