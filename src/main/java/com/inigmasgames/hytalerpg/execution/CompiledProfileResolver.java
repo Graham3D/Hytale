@@ -21,9 +21,9 @@ public final class CompiledProfileResolver {
             throw new IllegalArgumentException("Profile requires a current matching compiled plan");
         if(plan.zones().mobileDomain()&&!ProfileComponentPolicy.mobileZone(authored))
             throw new IllegalArgumentException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
-        var modifiers=plan.foundationModifiers();var geometry=plan.geometry();var pulses=plan.pulses();var dots=plan.dots();var controls=plan.controls();
-        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse()&&!dots.active()&&!controls.deepFreeze())return authored;
-        var key=new Key(authored,modifiers,geometry,pulses,dots,controls);
+        var modifiers=plan.foundationModifiers();var geometry=plan.geometry();var pulses=plan.pulses();var dots=plan.dots();var controls=plan.controls();var strikes=plan.strikes();
+        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active()&&!pulses.rapidPulse()&&!dots.active()&&!controls.deepFreeze()&&!strikes.multistrike())return authored;
+        var key=new Key(authored,modifiers,geometry,pulses,dots,controls,strikes);
         var prior=cache.get(key);if(prior!=null)return prior;
         JsonObject resolved=JSON.toJsonTree(authored).getAsJsonObject();
         resolved.addProperty("windupSeconds",modifiers.windup(authored.windupSeconds()));
@@ -68,6 +68,10 @@ public final class CompiledProfileResolver {
             scale(resolved,"projectile",.9,"coefficient");
             if(authored.area()!=null&&!authored.area().periodic())scale(resolved,"area",.9,"coefficient","innerCoefficient","finalCoefficient");
         }
+        if(strikes.multistrike()){
+            if(!ProfileComponentPolicy.discreteStrike(authored,true))throw new IllegalArgumentException("MULTISTRIKE_SINGLE_STRIKE_REQUIRED");
+            var strike=resolved.getAsJsonObject("strike");strike.addProperty("repeats",3);strike.addProperty("repeatIntervalSeconds",.25);
+        }
         var effective=JSON.fromJson(resolved,Stage04SkillProfile.class);
         if(cache.size()>=CAPACITY)cache.remove(cache.keySet().iterator().next());
         cache.put(key,effective);return effective;
@@ -76,6 +80,12 @@ public final class CompiledProfileResolver {
         if(!root.has(component)||root.get(component).isJsonNull())return;
         JsonObject value=root.getAsJsonObject(component);
         for(String field:fields)if(value.has(field))value.addProperty(field,value.get(field).getAsDouble()*factor);
+    }
+    /** Per-commit cadence, not a second static profile transform or a newly invented status payload. */
+    public static Stage04SkillProfile ruthless(Stage04SkillProfile compiled,boolean empowered){
+        if(!empowered||compiled.strike()==null||!compiled.strike().statusId().equals("STAGGER"))return compiled;
+        var result=JSON.toJsonTree(compiled).getAsJsonObject();scale(result,"strike",1.5,"statusSeconds");
+        return JSON.fromJson(result,Stage04SkillProfile.class);
     }
     public synchronized int cachedProfiles(){return cache.size();}
     private static void dots(Stage04SkillProfile p,JsonObject root,com.inigmasgames.hytalerpg.domain.DotModifiers dots){
@@ -186,5 +196,5 @@ public final class CompiledProfileResolver {
             }
         }
     }
-    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots,com.inigmasgames.hytalerpg.domain.ControlModifiers controls){}
+    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots,com.inigmasgames.hytalerpg.domain.ControlModifiers controls,com.inigmasgames.hytalerpg.domain.StrikeModifiers strikes){}
 }

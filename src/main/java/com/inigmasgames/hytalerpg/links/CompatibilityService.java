@@ -20,6 +20,11 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(Set.of("multistrike","ruthless").contains(passive.id().value())&&
+                com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.discreteStrike(skill.id().value(),passive.id().value().equals("multistrike")).filter(v->!v).isPresent())
+            return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,passive.name()+" requires an independent discrete damaging Strike; Multistrike excludes an already authored sequence.",Set.of("DISCRETE_STRIKE_COMPONENT"),actual);
+        if(passive.id().value().equals("multistrike")&&Set.of("dagger_flurry","whirlwind").contains(skill.id().value()))
+            return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,"Multistrike cannot repeat an authored multi-hit sequence.",Set.of("AUTHORED_MULTI_HIT"),actual);
         if(passive.id().value().equals("leeching")&&!Set.of("MANA","STAMINA").contains(skill.resourceType()))
             return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Leeching requires a declared Mana or Stamina resource.",Set.of("DECLARED_SPEND_RESOURCE"),actual);
 

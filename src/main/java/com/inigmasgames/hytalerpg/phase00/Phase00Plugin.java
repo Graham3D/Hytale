@@ -258,6 +258,8 @@ public final class Phase00Plugin extends JavaPlugin {
         com.inigmasgames.hytalerpg.input.NativeRuneControl.auditAssets();
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem.requireAssets();
         com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.requireAssets();
+        com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeActionLock.requireAsset();
+        LOGGER.atInfo().log("RPG_STAGE11_STRIKE_ACTION_LOCK asset=RPG_Strike_Action_Lock disabledInteractions=6 movementUnchanged=true result=PASS connectedProof=false");
         LOGGER.atInfo().log("RPG_STAGE06_ASSETS revision=%s areaProfiles=%d requiredStatusAssets=10 nativeDamageChannels=2 result=PASS connectedProof=false",
                 BuildIdentity.REVISION, Stage04SkillProfiles.EXPECTED_STAGE06_PROFILES);
         for(String cause:java.util.List.of("Wind","Lightning","RPG_Void","RPG_Nature","RPG_Necrotic"))

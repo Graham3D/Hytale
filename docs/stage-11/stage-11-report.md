@@ -893,3 +893,86 @@ Rollback: K, SHA-256
 No live deployment, save migration, native input/ability projection, HUD or art
 changes. Connected gates remain UNVERIFIED. Twenty-three of40 Stage11 primitives
 have local evidence;17 remain before matrix/hardening closure.
+
+## Cohort M — Multistrike and Ruthless
+
+Baseline L `dbc4bea`; master LP024/025 and installed EntityEffect/ApplicationEffects/
+EffectController/AbilityEffects implementation inspected before native wiring.
+R030/0.0.23, compiled-plan schema22, unchanged player schema6. Two passives;
+no new combat engine and no changes to canonical Stage04/05 skill assets.
+
+Multistrike refines compatibility to an independent damaging discrete Strike,
+excluding Reaction/Movement secondary strikes and authored multihit sequences
+(including the Dagger Flurry negative fixture). The effective profile preserves
+the primary coefficient and sets three hits with .25s spacing. The existing
+StrikeRepeatSchedule and world-tick dispatcher execute primary, .25s and .50s;
+each repeat receives a distinct `/multistrike-N` skillInstance child under the
+original rootCastId/correlationId and a .65 magnitude snapshot. Descendants share
+the root Leeching cap and cannot schedule another Multistrike, Echo or Barrage.
+Derived damage disables secondary procs. Payment and cooldown occur once at the
+original commit; children bypass activation/payment rather than receiving free
+synthetic activations. Hit ledgers are child-scoped and removed after each repeat.
+
+Committed facing is retained, but each repeat queries from the owner's current
+native position against current targets, range and LOS. Existing family selection
+is reused. A world-tick gap exceeding one second cancels the finite sequence
+instead of delivering a stale catch-up burst. Root lifecycle remains STRIKE_REPEAT
+until completion, so other RPG casts cannot interleave. Native basic attacks also
+need to be restricted: the new effect `RPG_Strike_Action_Lock` uses Hytale's existing
+AbilityEffects.Disabled list for Primary, Secondary and Ability1–4. It changes no
+movement, stats, HUD or key mapping and adds no damage. Explicit removal occurs
+after the final repeat or local cancellation; missing repeat ownership clears it
+on the next owner tick/rejoin. A finite five-second native expiry is crash/unload
+fallback, **not** the intended .50s action duration. Disconnect without an available
+world store cannot prove immediate removal; bounded expiry/rejoin cleanup and
+connected input-lock behavior must be tested. Native Signature Move ownership and
+Ability4 capability policy are not replaced by this temporary action restriction.
+
+Ruthless uses a bounded4096-entry actor/slot cadence ledger. Successful manual
+root commits advance modulo3, including misses; attempts rejected before commit
+do not. The third commit adds .60 to the existing Increased damage bucket and
+multiplies an existing authored Stagger duration by1.5 before control caps. It
+does not invent Stagger on Heavy Swing's current empty status payload. Derived
+repeats inherit the empowered snapshot without consuming another cadence count;
+triggered roots neither advance nor consume the manual third-use bonus. Counter
+state has no time expiry, but actual loadout changes and owner teardown clear it.
+Attribute-only edits and failed persistence mutations do not clear it. Existing
+pre-dispatch rollback and ordinary-resource refunded dispatch paths reverse the
+cadence transaction; paid Lifeblood/uncertain Health dispatch retains the committed
+use. Identity-checked rollback cannot overwrite a later commit or resurrect a
+cleared owner. This is ephemeral runtime state, not an offline progression grant.
+
+The shared native strike call previously applied its status after a cancelled or
+zero-Health-loss damage result. It now requires uncancelled actual Health loss
+before status application, preserving native protection/cancellation at the
+strike payload boundary. This correction applies to retained strikes as well;
+it does not change their coefficient, geometry, resource costs or cooldowns.
+
+### Cohort M local gate
+
+30 new deterministic tests: compatibility/copy rejection, exact repeat timing,
+root lifecycle lock, one cost and durable cooldown write, derived identities and
+shared Leech cap, recursion exclusion, third-use damage/Stagger, Potency/Impact
+composition, committed misses, triggered exclusions, interrupted windup, resource/
+cooldown persistence failures, paid versus refunded dispatch, loadout/attribute/
+disconnect semantics, and bounded ledger/rollback. The first focused build found
+a test-only wrong hit-ledger class name; after fixing that, one test compared two
+decreasing wall-clock cooldown readings. It was corrected to inspect durable
+cooldown write count and non-increasing remaining time. No production timer was
+disabled and no tolerance was used to hide duplicate payment.
+
+`clean build`: **997 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot and clean exit0. The native asset decoder resolved the
+action lock; startup audit verified exactly six disabled interaction types,
+unchanged movement and no damage calculator. Packaged CustomUI9 validation PASS.
+API bytecode and normal-server resolution evidence are under
+`evidence/stage-11/cohort-m/api`; these do not prove client input suppression,
+animations, native hit execution or repeat positioning.
+
+Artifact: `evidence/stage-11/cohort-m/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `DC931839E6A36129BFCD270F699B884FC7AE4EFE20D9F3049FFAD23044631977`.
+Rollback L: `B520F218707079CA855ECF6CDD7341CF333441C237DAD68179B979837A41F129`.
+No live deployment or save migration. All outputs remain in the GitHub repository;
+owner art/lost-and-found files remain untouched. Connected gates are UNVERIFIED.
+Twenty-five of40 Stage11 primitives have local evidence;15 remain, followed by
+full compatibility-matrix and legacy-state hardening before Stage11 closure.

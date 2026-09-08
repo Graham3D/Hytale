@@ -1,0 +1,155 @@
+Compiled from "NativeStrikeActionLock.java"
+public final class com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeActionLock {
+  public static final java.lang.String ID;
+
+  private com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeActionLock();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public static void requireAsset();
+    Code:
+         0: invokestatic  #7                  // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: ldc           #15                 // String RPG_Strike_Action_Lock
+         5: invokevirtual #17                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+         8: checkcast     #8                  // class com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect
+        11: astore_0
+        12: aload_0
+        13: ifnull        23
+        16: aload_0
+        17: invokevirtual #23                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getApplicationEffects:()Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/ApplicationEffects;
+        20: ifnonnull     33
+        23: new           #27                 // class java/lang/IllegalStateException
+        26: dup
+        27: ldc           #29                 // String MULTISTRIKE_ACTION_LOCK_ASSET_MISSING
+        29: invokespecial #31                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        32: athrow
+        33: aload_0
+        34: invokevirtual #23                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getApplicationEffects:()Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/ApplicationEffects;
+        37: invokevirtual #34                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/ApplicationEffects.toPacket:()Lcom/hypixel/hytale/protocol/ApplicationEffects;
+        40: astore_1
+        41: aload_1
+        42: getfield      #40                 // Field com/hypixel/hytale/protocol/ApplicationEffects.abilityEffects:Lcom/hypixel/hytale/protocol/AbilityEffects;
+        45: ifnull        123
+        48: aload_1
+        49: getfield      #40                 // Field com/hypixel/hytale/protocol/ApplicationEffects.abilityEffects:Lcom/hypixel/hytale/protocol/AbilityEffects;
+        52: getfield      #46                 // Field com/hypixel/hytale/protocol/AbilityEffects.disabled:[Lcom/hypixel/hytale/protocol/InteractionType;
+        55: ifnull        123
+        58: aload_1
+        59: getfield      #40                 // Field com/hypixel/hytale/protocol/ApplicationEffects.abilityEffects:Lcom/hypixel/hytale/protocol/AbilityEffects;
+        62: getfield      #46                 // Field com/hypixel/hytale/protocol/AbilityEffects.disabled:[Lcom/hypixel/hytale/protocol/InteractionType;
+        65: invokestatic  #52                 // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+        68: invokestatic  #58                 // InterfaceMethod java/util/Set.copyOf:(Ljava/util/Collection;)Ljava/util/Set;
+        71: getstatic     #64                 // Field com/hypixel/hytale/protocol/InteractionType.Primary:Lcom/hypixel/hytale/protocol/InteractionType;
+        74: getstatic     #70                 // Field com/hypixel/hytale/protocol/InteractionType.Secondary:Lcom/hypixel/hytale/protocol/InteractionType;
+        77: getstatic     #73                 // Field com/hypixel/hytale/protocol/InteractionType.Ability1:Lcom/hypixel/hytale/protocol/InteractionType;
+        80: getstatic     #76                 // Field com/hypixel/hytale/protocol/InteractionType.Ability2:Lcom/hypixel/hytale/protocol/InteractionType;
+        83: getstatic     #79                 // Field com/hypixel/hytale/protocol/InteractionType.Ability3:Lcom/hypixel/hytale/protocol/InteractionType;
+        86: getstatic     #82                 // Field com/hypixel/hytale/protocol/InteractionType.Ability4:Lcom/hypixel/hytale/protocol/InteractionType;
+        89: invokestatic  #85                 // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+        92: invokeinterface #89,  2           // InterfaceMethod java/util/Set.equals:(Ljava/lang/Object;)Z
+        97: ifeq          123
+       100: aload_1
+       101: getfield      #93                 // Field com/hypixel/hytale/protocol/ApplicationEffects.movementEffects:Lcom/hypixel/hytale/protocol/MovementEffects;
+       104: ifnonnull     123
+       107: aload_1
+       108: getfield      #97                 // Field com/hypixel/hytale/protocol/ApplicationEffects.horizontalSpeedMultiplier:F
+       111: fconst_1
+       112: fcmpl
+       113: ifne          123
+       116: aload_0
+       117: invokevirtual #101                // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getDamageCalculator:()Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/server/combat/DamageCalculator;
+       120: ifnull        133
+       123: new           #27                 // class java/lang/IllegalStateException
+       126: dup
+       127: ldc           #105                // String MULTISTRIKE_ACTION_LOCK_ASSET_INVALID
+       129: invokespecial #31                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       132: athrow
+       133: return
+
+  static boolean available(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: invokestatic  #7                  // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: ldc           #15                 // String RPG_Strike_Action_Lock
+         5: invokevirtual #17                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+         8: ifnull        26
+        11: aload_0
+        12: aload_1
+        13: invokestatic  #107                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        16: invokevirtual #113                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        19: ifnull        26
+        22: iconst_1
+        23: goto          27
+        26: iconst_0
+        27: ireturn
+
+  static void acquire(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokestatic  #107                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokevirtual #113                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #108                // class com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent
+        11: astore_2
+        12: invokestatic  #7                  // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        15: ldc           #15                 // String RPG_Strike_Action_Lock
+        17: invokevirtual #17                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+        20: checkcast     #8                  // class com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect
+        23: astore_3
+        24: aload_2
+        25: ifnull        48
+        28: aload_3
+        29: ifnull        48
+        32: aload_2
+        33: aload_1
+        34: aload_3
+        35: ldc           #119                // float 5.0f
+        37: getstatic     #120                // Field com/hypixel/hytale/server/core/asset/type/entityeffect/config/OverlapBehavior.OVERWRITE:Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/OverlapBehavior;
+        40: aload_0
+        41: aload_1
+        42: invokevirtual #126                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.addEffect:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect;FLcom/hypixel/hytale/server/core/asset/type/entityeffect/config/OverlapBehavior;Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;)Z
+        45: ifne          58
+        48: new           #27                 // class java/lang/IllegalStateException
+        51: dup
+        52: ldc           #130                // String MULTISTRIKE_NATIVE_ACTION_LOCK_REJECTED
+        54: invokespecial #31                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        57: athrow
+        58: return
+
+  static void clear(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_1
+         1: ifnull        11
+         4: aload_1
+         5: invokevirtual #132                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+         8: ifne          12
+        11: return
+        12: aload_0
+        13: aload_1
+        14: invokestatic  #107                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        17: invokevirtual #113                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        20: checkcast     #108                // class com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent
+        23: astore_2
+        24: invokestatic  #7                  // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        27: ldc           #15                 // String RPG_Strike_Action_Lock
+        29: invokevirtual #17                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+        32: checkcast     #8                  // class com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect
+        35: astore_3
+        36: aload_2
+        37: ifnull        66
+        40: aload_3
+        41: ifnull        66
+        44: aload_2
+        45: aload_3
+        46: invokevirtual #138                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.hasEffect:(Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect;)Z
+        49: ifeq          66
+        52: aload_2
+        53: aload_1
+        54: invokestatic  #7                  // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        57: ldc           #15                 // String RPG_Strike_Action_Lock
+        59: invokevirtual #142                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+        62: aload_0
+        63: invokevirtual #146                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.removeEffect:(Lcom/hypixel/hytale/component/Ref;ILcom/hypixel/hytale/component/ComponentAccessor;)V
+        66: return
+}

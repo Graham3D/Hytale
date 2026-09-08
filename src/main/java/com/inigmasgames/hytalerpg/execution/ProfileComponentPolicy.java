@@ -10,6 +10,13 @@ import java.util.Set;
 public final class ProfileComponentPolicy {
     private ProfileComponentPolicy(){}
     private static final class Canonical {static final Stage04SkillProfiles PROFILES=Stage04SkillProfiles.loadCanonical(RpgCatalog.loadCanonical());}
+    public static Optional<Boolean> discreteStrike(String skill,boolean excludeAuthoredSequence){
+        var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(discreteStrike(p,excludeAuthoredSequence));
+    }
+    public static boolean discreteStrike(Stage04SkillProfile p,boolean excludeAuthoredSequence){
+        return p.family()==Stage04SkillProfile.Family.STRIKE&&p.strike()!=null&&p.strike().coefficient()>0
+                &&(!excludeAuthoredSequence||p.strike().repeats()==1);
+    }
     public static Optional<Boolean> finiteUpfront(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(finiteUpfront(p));}
     public static boolean finiteUpfront(Stage04SkillProfile p){
         return Set.of("MANA","STAMINA").contains(p.resourceType())&&p.resourceCost()>0

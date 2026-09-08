@@ -1,0 +1,8 @@
+{
+  "Duration": 5,
+  "ApplicationEffects": {
+    "AbilityEffects": {
+      "Disabled": ["Primary", "Secondary", "Ability1", "Ability2", "Ability3", "Ability4"]
+    }
+  }
+}

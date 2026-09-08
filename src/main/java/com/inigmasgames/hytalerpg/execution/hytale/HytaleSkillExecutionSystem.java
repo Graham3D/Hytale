@@ -210,8 +210,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         Player player = chunk.getComponent(index, Player.getComponentType());
         EntityStatMap stats = chunk.getComponent(index, EntityStatMap.getComponentType());
         UUID actor = playerRef.getUuid();
+        var ownedRepeat=repeatingStrikes.get(actor);
+        if(ownedRepeat==null||!ownedRepeat.context.compiledPlan().strikes().multistrike())NativeStrikeActionLock.clear(store,ref);
         Port port = new Port(store, ref, playerRef, player, stats, null, buffer);
         if (!port.actorAliveAndUsable()) {
+            NativeStrikeActionLock.clear(store,ref);
             cancel(actor, "ACTOR_UNUSABLE", buffer); return;
         }
         Counter counter = counters.remove(actor);
@@ -367,6 +370,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
                                                         com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
             if(profile.cage()!=null)return Validation.reject(com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY);
+            if(plan.strikes().multistrike()&&!NativeStrikeActionLock.available(store,actor))return Validation.reject("MULTISTRIKE_NATIVE_ACTION_LOCK_UNAVAILABLE");
             if (motions.containsKey(playerRef.getUuid()) || windupEnds.containsKey(playerRef.getUuid())
                     || reactions.active(playerRef.getUuid()).isPresent()) return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
             if(profile.support()!=null)return support==null?Validation.reject("SUPPORT_NATIVE_ADAPTER_UNAVAILABLE"):
@@ -710,6 +714,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 projectileService.registry().abandonLaunch(context.request().actorId(),context.rootCastId());
         }
         @Override public SkillExecutionResult executeStrike(SkillExecutionContext context) {
+            if(context.multistrikeIndex()>0)throw new IllegalStateException("MULTISTRIKE_CHILD_MUST_NOT_SCHEDULE_REPEATS");
+            boolean multi=context.compiledPlan().strikes().multistrike();
+            if(multi)NativeStrikeActionLock.acquire(store,actor);
+            try{
             int applied = executeStrikeHit(context, 0);
             var strike = context.profile().strike();
             if (strike.repeats() > 1 && strike.repeatIntervalSeconds() > 0.0)
@@ -722,6 +730,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             vfx.present(store.getExternalData().getWorld(), player, context.compiledPlan().vfxRecipeId());
             return SkillExecutionResult.committed("STRIKE_COMPLETE", applied, 0.0);
+            }catch(RuntimeException failure){if(multi){repeatingStrikes.remove(playerRef.getUuid());NativeStrikeActionLock.clear(store,actor);}throw failure;}
         }
 
         @Override public SkillExecutionResult executeArea(SkillExecutionContext context) {
@@ -846,12 +855,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             for (var target : selected.accepted()) {
                 if (!hits.accept(context.skillInstanceId(), hitIndex, target.stableId())) continue;
                 DamageOutcome outcome = damage(context, target, hitIndex,
-                        context.profile().strike().coefficient(), context.snapshot().criticalChance(), DamageCause.PHYSICAL);
+                        context.profile().strike().coefficient(), context.snapshot().criticalChance(), DamageCause.PHYSICAL,false,context.skillInstanceId(),!context.derivedRelease());
                 emit(context, RpgTraceEventType.STRIKE_HIT,
                         Map.of("targetId", target.stableId(), "hitIndex", hitIndex,
                                 "preMitigationDamage", outcome.preMitigationDamage(),
                                 "actualHealthLoss", outcome.actualHealthLoss()));
-                if (!context.profile().strike().statusId().isBlank()) applyStatus(context, target);
+                if (!outcome.cancelled()&&outcome.actualHealthLoss()>0&&!context.profile().strike().statusId().isBlank()) applyStatus(context, target);
                 applied++;
             }
             return applied;
@@ -946,7 +955,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             Vec3 origin = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
             Vec3 direction=facing(store,actor);Vec3 currentOrigin=origin;
             if(context!=null && context.target()!=null && context.profile().family()==Stage04SkillProfile.Family.STRIKE) {
-                origin=context.target().origin();direction=context.target().direction();
+                origin=context.compiledPlan().strikes().multistrike()?currentOrigin:context.target().origin();direction=context.target().direction();
             }
             if(context!=null && strike.geometry()==Stage04SkillProfile.Geometry.RADIUS) {
                 strike=new Stage04SkillProfile.Strike(strike.geometry(),strike.range()*context.compiledPlan().executionModifiers().radiusFactor(),
@@ -1234,10 +1243,26 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             cancel(playerRef.getUuid(), "REPEATED_STRIKE_ACTOR_UNUSABLE", buffer); return;
         }
         long now = System.nanoTime();
-        for (var due = repeating.schedule.claimDue(now); due.isPresent(); due = repeating.schedule.claimDue(now))
-            port.executeStrikeHit(repeating.context, due.getAsInt());
+        boolean multi=repeating.context.compiledPlan().strikes().multistrike();
+        if(multi&&repeating.schedule.exceededMaximumAge(now,1)){
+            repeatingStrikes.remove(playerRef.getUuid());hits.clear(repeating.context.skillInstanceId());NativeStrikeActionLock.clear(store,ref);
+            executions.terminate(repeating.context,"MULTISTRIKE_STALE_SEQUENCE_CANCELLED");return;
+        }
+        try{
+            for (var due = repeating.schedule.claimDue(now); due.isPresent(); due = repeating.schedule.claimDue(now)){
+                if(multi){
+                    var child=repeating.context.multistrikeCopy(due.getAsInt());
+                    emit(child,RpgTraceEventType.EXECUTOR_DISPATCH,Map.of("family","STRIKE","multistrikeIndex",due.getAsInt(),"resourceCharged",false,"canProc",false));
+                    try{port.executeStrikeHit(child,0);}finally{hits.clear(child.skillInstanceId());}
+                }else port.executeStrikeHit(repeating.context,due.getAsInt());
+            }
+        }catch(RuntimeException failed){
+            repeatingStrikes.remove(playerRef.getUuid());hits.clear(repeating.context.skillInstanceId());if(multi)NativeStrikeActionLock.clear(store,ref);
+            executions.terminate(repeating.context,"STRIKE_REPEAT_ADAPTER_FAILED");return;
+        }
         if (repeating.schedule.complete()) {
             repeatingStrikes.remove(playerRef.getUuid());
+            if(multi)NativeStrikeActionLock.clear(store,ref);
             hits.clear(repeating.context.skillInstanceId());
             executions.terminate(repeating.context, "STRIKE_REPEATS_COMPLETE");
         }

@@ -8,11 +8,13 @@ public final class StrikeRepeatSchedule {
     private final long intervalNanos;
     private int nextHitIndex = 1;
     private long nextDueNanos;
+    private final long initialDispatchNanos;
 
     public StrikeRepeatSchedule(int repeats, double intervalSeconds, long initialDispatchNanos) {
         if (repeats < 1 || intervalSeconds < 0.0 || !Double.isFinite(intervalSeconds))
             throw new IllegalArgumentException("Invalid strike repeat schedule");
         this.repeats = repeats;
+        this.initialDispatchNanos=initialDispatchNanos;
         this.intervalNanos = Math.round(intervalSeconds * 1_000_000_000.0);
         this.nextDueNanos = initialDispatchNanos + intervalNanos;
     }
@@ -25,4 +27,5 @@ public final class StrikeRepeatSchedule {
     }
     public boolean complete() { return nextHitIndex >= repeats; }
     public long nextDueNanos() { return nextDueNanos; }
+    public boolean exceededMaximumAge(long nowNanos,double seconds){return (nowNanos-initialDispatchNanos)/1e9>seconds;}
 }

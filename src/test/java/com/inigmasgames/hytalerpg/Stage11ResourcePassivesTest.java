@@ -18,13 +18,13 @@ class Stage11ResourcePassivesTest {
         final UUID actor=UUID.randomUUID(); final Stage01BTestSupport.Bundle b=Stage01BTestSupport.bundle();
         final RpgCombatKernel kernel=RpgCombatKernel.createProduction();
         final SkillExecutionService service; final EnumMap<ResourceType,Double> current=new EnumMap<>(ResourceType.class);
-        final List<SkillExecutionContext> contexts=new ArrayList<>();double time;String weapon="LONGSWORD";int sequence,healthWrites;boolean failDispatch,failCooldown,alive=true;
+        final List<SkillExecutionContext> contexts=new ArrayList<>();double time;String weapon="LONGSWORD";int sequence,healthWrites,cooldownSaves;boolean failDispatch,failCooldown,alive=true;
         H(String skill){
             current.put(ResourceType.HEALTH,100d);current.put(ResourceType.MANA,100d);current.put(ResourceType.STAMINA,100d);
             assertTrue(b.service().equipSkill(actor,SkillSlot.SKILL01,new SkillId(skill)).success());
             kernel.cooldowns().bindPersistence(new RpgCooldownService.Persistence(){
                 public Map<String,SavedCooldown> load(UUID id){return Map.of();}
-                public void save(UUID id,Map<String,SavedCooldown> values){if(failCooldown)throw new IllegalStateException("fixture cooldown save failure");}
+                public void save(UUID id,Map<String,SavedCooldown> values){if(failCooldown)throw new IllegalStateException("fixture cooldown save failure");cooldownSaves++;}
             });
             service=new SkillExecutionService(b.service(),Stage04SkillProfiles.loadCanonical(b.catalog()),kernel,SkillExecutorRegistry.stage04(),new SkillInstanceLifecycle(),b.tracer(),()->(long)(time*1e9));
         }

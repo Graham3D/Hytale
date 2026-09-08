@@ -1,0 +1,803 @@
+Compiled from "ApplicationEffects.java"
+public class com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects implements com.hypixel.hytale.server.core.io.NetworkSerializable<com.hypixel.hytale.protocol.ApplicationEffects> {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects> CODEC;
+
+  protected com.hypixel.hytale.protocol.Color entityBottomTint;
+
+  protected com.hypixel.hytale.protocol.Color entityTopTint;
+
+  protected java.lang.String entityAnimationId;
+
+  protected com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle[] particles;
+
+  protected com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle[] firstPersonParticles;
+
+  protected java.lang.String screenEffect;
+
+  protected float horizontalSpeedMultiplier;
+
+  protected float knockbackMultiplier;
+
+  protected java.lang.String soundEventIdLocal;
+
+  protected transient int soundEventIndexLocal;
+
+  protected java.lang.String soundEventIdWorld;
+
+  protected transient int soundEventIndexWorld;
+
+  protected java.lang.String modelVFXId;
+
+  protected com.hypixel.hytale.server.core.asset.modifiers.MovementEffects movementEffects;
+
+  protected com.hypixel.hytale.server.core.asset.type.entityeffect.config.AbilityEffects abilityEffects;
+
+  private float mouseSensitivityAdjustmentTarget;
+
+  private float mouseSensitivityAdjustmentDuration;
+
+  protected com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: fconst_1
+         6: putfield      #7                  // Field horizontalSpeedMultiplier:F
+         9: aload_0
+        10: fconst_1
+        11: putfield      #13                 // Field knockbackMultiplier:F
+        14: aload_0
+        15: iconst_0
+        16: putfield      #18                 // Field soundEventIndexLocal:I
+        19: aload_0
+        20: iconst_0
+        21: putfield      #22                 // Field soundEventIndexWorld:I
+        24: return
+
+  public com.hypixel.hytale.protocol.ApplicationEffects toPacket();
+    Code:
+         0: new           #25                 // class com/hypixel/hytale/protocol/ApplicationEffects
+         3: dup
+         4: invokespecial #27                 // Method com/hypixel/hytale/protocol/ApplicationEffects."<init>":()V
+         7: astore_1
+         8: aload_1
+         9: aload_0
+        10: getfield      #28                 // Field entityBottomTint:Lcom/hypixel/hytale/protocol/Color;
+        13: putfield      #32                 // Field com/hypixel/hytale/protocol/ApplicationEffects.entityBottomTint:Lcom/hypixel/hytale/protocol/Color;
+        16: aload_1
+        17: aload_0
+        18: getfield      #33                 // Field entityTopTint:Lcom/hypixel/hytale/protocol/Color;
+        21: putfield      #36                 // Field com/hypixel/hytale/protocol/ApplicationEffects.entityTopTint:Lcom/hypixel/hytale/protocol/Color;
+        24: aload_1
+        25: aload_0
+        26: getfield      #37                 // Field entityAnimationId:Ljava/lang/String;
+        29: putfield      #41                 // Field com/hypixel/hytale/protocol/ApplicationEffects.entityAnimationId:Ljava/lang/String;
+        32: aload_0
+        33: getfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+        36: ifnull        91
+        39: aload_0
+        40: getfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+        43: arraylength
+        44: ifle          91
+        47: aload_1
+        48: aload_0
+        49: getfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+        52: arraylength
+        53: anewarray     #46                 // class com/hypixel/hytale/protocol/ModelParticle
+        56: putfield      #48                 // Field com/hypixel/hytale/protocol/ApplicationEffects.particles:[Lcom/hypixel/hytale/protocol/ModelParticle;
+        59: iconst_0
+        60: istore_2
+        61: iload_2
+        62: aload_0
+        63: getfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+        66: arraylength
+        67: if_icmpge     91
+        70: aload_1
+        71: getfield      #48                 // Field com/hypixel/hytale/protocol/ApplicationEffects.particles:[Lcom/hypixel/hytale/protocol/ModelParticle;
+        74: iload_2
+        75: aload_0
+        76: getfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+        79: iload_2
+        80: aaload
+        81: invokevirtual #51                 // Method com/hypixel/hytale/server/core/asset/type/model/config/ModelParticle.toPacket:()Lcom/hypixel/hytale/protocol/ModelParticle;
+        84: aastore
+        85: iinc          2, 1
+        88: goto          61
+        91: aload_0
+        92: getfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+        95: ifnull        150
+        98: aload_0
+        99: getfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+       102: arraylength
+       103: ifle          150
+       106: aload_1
+       107: aload_0
+       108: getfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+       111: arraylength
+       112: anewarray     #46                 // class com/hypixel/hytale/protocol/ModelParticle
+       115: putfield      #60                 // Field com/hypixel/hytale/protocol/ApplicationEffects.firstPersonParticles:[Lcom/hypixel/hytale/protocol/ModelParticle;
+       118: iconst_0
+       119: istore_2
+       120: iload_2
+       121: aload_0
+       122: getfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+       125: arraylength
+       126: if_icmpge     150
+       129: aload_1
+       130: getfield      #60                 // Field com/hypixel/hytale/protocol/ApplicationEffects.firstPersonParticles:[Lcom/hypixel/hytale/protocol/ModelParticle;
+       133: iload_2
+       134: aload_0
+       135: getfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+       138: iload_2
+       139: aaload
+       140: invokevirtual #51                 // Method com/hypixel/hytale/server/core/asset/type/model/config/ModelParticle.toPacket:()Lcom/hypixel/hytale/protocol/ModelParticle;
+       143: aastore
+       144: iinc          2, 1
+       147: goto          120
+       150: aload_1
+       151: aload_0
+       152: getfield      #62                 // Field screenEffect:Ljava/lang/String;
+       155: putfield      #65                 // Field com/hypixel/hytale/protocol/ApplicationEffects.screenEffect:Ljava/lang/String;
+       158: aload_1
+       159: aload_0
+       160: getfield      #7                  // Field horizontalSpeedMultiplier:F
+       163: putfield      #66                 // Field com/hypixel/hytale/protocol/ApplicationEffects.horizontalSpeedMultiplier:F
+       166: aload_1
+       167: aload_0
+       168: getfield      #18                 // Field soundEventIndexLocal:I
+       171: ifeq          181
+       174: aload_0
+       175: getfield      #18                 // Field soundEventIndexLocal:I
+       178: goto          185
+       181: aload_0
+       182: getfield      #22                 // Field soundEventIndexWorld:I
+       185: putfield      #67                 // Field com/hypixel/hytale/protocol/ApplicationEffects.soundEventIndexLocal:I
+       188: aload_1
+       189: aload_0
+       190: getfield      #22                 // Field soundEventIndexWorld:I
+       193: putfield      #68                 // Field com/hypixel/hytale/protocol/ApplicationEffects.soundEventIndexWorld:I
+       196: aload_1
+       197: aload_0
+       198: getfield      #69                 // Field modelVFXId:Ljava/lang/String;
+       201: putfield      #72                 // Field com/hypixel/hytale/protocol/ApplicationEffects.modelVFXId:Ljava/lang/String;
+       204: aload_0
+       205: getfield      #73                 // Field movementEffects:Lcom/hypixel/hytale/server/core/asset/modifiers/MovementEffects;
+       208: ifnull        222
+       211: aload_1
+       212: aload_0
+       213: getfield      #73                 // Field movementEffects:Lcom/hypixel/hytale/server/core/asset/modifiers/MovementEffects;
+       216: invokevirtual #77                 // Method com/hypixel/hytale/server/core/asset/modifiers/MovementEffects.toPacket:()Lcom/hypixel/hytale/protocol/MovementEffects;
+       219: putfield      #82                 // Field com/hypixel/hytale/protocol/ApplicationEffects.movementEffects:Lcom/hypixel/hytale/protocol/MovementEffects;
+       222: aload_0
+       223: getfield      #85                 // Field abilityEffects:Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/AbilityEffects;
+       226: ifnull        240
+       229: aload_1
+       230: aload_0
+       231: getfield      #85                 // Field abilityEffects:Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/AbilityEffects;
+       234: invokevirtual #89                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/AbilityEffects.toPacket:()Lcom/hypixel/hytale/protocol/AbilityEffects;
+       237: putfield      #94                 // Field com/hypixel/hytale/protocol/ApplicationEffects.abilityEffects:Lcom/hypixel/hytale/protocol/AbilityEffects;
+       240: aload_1
+       241: aload_0
+       242: getfield      #97                 // Field mouseSensitivityAdjustmentDuration:F
+       245: putfield      #100                // Field com/hypixel/hytale/protocol/ApplicationEffects.mouseSensitivityAdjustmentDuration:F
+       248: aload_1
+       249: aload_0
+       250: getfield      #101                // Field mouseSensitivityAdjustmentTarget:F
+       253: putfield      #104                // Field com/hypixel/hytale/protocol/ApplicationEffects.mouseSensitivityAdjustmentTarget:F
+       256: aload_1
+       257: areturn
+
+  public float getHorizontalSpeedMultiplier();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field horizontalSpeedMultiplier:F
+         4: freturn
+
+  public float getKnockbackMultiplier();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field knockbackMultiplier:F
+         4: freturn
+
+  protected void processConfig();
+    Code:
+         0: invokestatic  #105                // Method com/hypixel/hytale/server/core/asset/type/soundevent/config/SoundEvent.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: astore_1
+         4: aload_0
+         5: getfield      #109                // Field soundEventIdLocal:Ljava/lang/String;
+         8: ifnull        23
+        11: aload_0
+        12: aload_1
+        13: aload_0
+        14: getfield      #109                // Field soundEventIdLocal:Ljava/lang/String;
+        17: invokevirtual #112                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+        20: putfield      #18                 // Field soundEventIndexLocal:I
+        23: aload_0
+        24: getfield      #118                // Field soundEventIdWorld:Ljava/lang/String;
+        27: ifnull        42
+        30: aload_0
+        31: aload_1
+        32: aload_0
+        33: getfield      #118                // Field soundEventIdWorld:Ljava/lang/String;
+        36: invokevirtual #112                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+        39: putfield      #22                 // Field soundEventIndexWorld:I
+        42: return
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #28                 // Field entityBottomTint:Lcom/hypixel/hytale/protocol/Color;
+         4: invokestatic  #121                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+         7: aload_0
+         8: getfield      #33                 // Field entityTopTint:Lcom/hypixel/hytale/protocol/Color;
+        11: invokestatic  #121                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        14: aload_0
+        15: getfield      #37                 // Field entityAnimationId:Ljava/lang/String;
+        18: aload_0
+        19: getfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+        22: invokestatic  #127                // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+        25: aload_0
+        26: getfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+        29: invokestatic  #127                // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+        32: aload_0
+        33: getfield      #62                 // Field screenEffect:Ljava/lang/String;
+        36: aload_0
+        37: getfield      #7                  // Field horizontalSpeedMultiplier:F
+        40: aload_0
+        41: getfield      #18                 // Field soundEventIndexLocal:I
+        44: aload_0
+        45: getfield      #22                 // Field soundEventIndexWorld:I
+        48: aload_0
+        49: getfield      #73                 // Field movementEffects:Lcom/hypixel/hytale/server/core/asset/modifiers/MovementEffects;
+        52: invokestatic  #121                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        55: aload_0
+        56: getfield      #85                 // Field abilityEffects:Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/AbilityEffects;
+        59: invokestatic  #121                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        62: invokedynamic #133,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;FIILjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        67: areturn
+
+  public java.lang.Object toPacket();
+    Code:
+         0: aload_0
+         1: invokevirtual #137                // Method toPacket:()Lcom/hypixel/hytale/protocol/ApplicationEffects;
+         4: areturn
+
+  private static void lambda$static$44(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #97                 // Field mouseSensitivityAdjustmentDuration:F
+         5: putfield      #97                 // Field mouseSensitivityAdjustmentDuration:F
+         8: return
+
+  private static java.lang.Float lambda$static$43(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #97                 // Field mouseSensitivityAdjustmentDuration:F
+         4: invokestatic  #140                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$42(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #145                // Method java/lang/Float.floatValue:()F
+         5: putfield      #97                 // Field mouseSensitivityAdjustmentDuration:F
+         8: return
+
+  private static void lambda$static$41(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #101                // Field mouseSensitivityAdjustmentTarget:F
+         5: putfield      #101                // Field mouseSensitivityAdjustmentTarget:F
+         8: return
+
+  private static java.lang.Float lambda$static$40(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #101                // Field mouseSensitivityAdjustmentTarget:F
+         4: invokestatic  #140                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$39(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #145                // Method java/lang/Float.floatValue:()F
+         5: putfield      #101                // Field mouseSensitivityAdjustmentTarget:F
+         8: return
+
+  private static void lambda$static$38(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #85                 // Field abilityEffects:Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/AbilityEffects;
+         5: putfield      #85                 // Field abilityEffects:Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/AbilityEffects;
+         8: return
+
+  private static com.hypixel.hytale.server.core.asset.type.entityeffect.config.AbilityEffects lambda$static$37(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #85                 // Field abilityEffects:Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/AbilityEffects;
+         4: areturn
+
+  private static void lambda$static$36(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.AbilityEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #85                 // Field abilityEffects:Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/AbilityEffects;
+         5: return
+
+  private static void lambda$static$35(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #73                 // Field movementEffects:Lcom/hypixel/hytale/server/core/asset/modifiers/MovementEffects;
+         5: putfield      #73                 // Field movementEffects:Lcom/hypixel/hytale/server/core/asset/modifiers/MovementEffects;
+         8: return
+
+  private static com.hypixel.hytale.server.core.asset.modifiers.MovementEffects lambda$static$34(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #73                 // Field movementEffects:Lcom/hypixel/hytale/server/core/asset/modifiers/MovementEffects;
+         4: areturn
+
+  private static void lambda$static$33(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.modifiers.MovementEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #73                 // Field movementEffects:Lcom/hypixel/hytale/server/core/asset/modifiers/MovementEffects;
+         5: return
+
+  private static void lambda$static$32(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #69                 // Field modelVFXId:Ljava/lang/String;
+         5: putfield      #69                 // Field modelVFXId:Ljava/lang/String;
+         8: return
+
+  private static java.lang.String lambda$static$31(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #69                 // Field modelVFXId:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$30(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #69                 // Field modelVFXId:Ljava/lang/String;
+         5: return
+
+  private static void lambda$static$29(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #118                // Field soundEventIdWorld:Ljava/lang/String;
+         5: putfield      #118                // Field soundEventIdWorld:Ljava/lang/String;
+         8: return
+
+  private static java.lang.String lambda$static$28(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #118                // Field soundEventIdWorld:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$27(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #118                // Field soundEventIdWorld:Ljava/lang/String;
+         5: return
+
+  private static void lambda$static$26(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #109                // Field soundEventIdLocal:Ljava/lang/String;
+         5: putfield      #109                // Field soundEventIdLocal:Ljava/lang/String;
+         8: return
+
+  private static java.lang.String lambda$static$25(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #109                // Field soundEventIdLocal:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$24(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #109                // Field soundEventIdLocal:Ljava/lang/String;
+         5: return
+
+  private static void lambda$static$23(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #13                 // Field knockbackMultiplier:F
+         5: putfield      #13                 // Field knockbackMultiplier:F
+         8: return
+
+  private static java.lang.Double lambda$static$22(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field knockbackMultiplier:F
+         4: f2d
+         5: invokestatic  #149                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         8: areturn
+
+  private static void lambda$static$21(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #154                // Method java/lang/Double.floatValue:()F
+         5: putfield      #13                 // Field knockbackMultiplier:F
+         8: return
+
+  private static void lambda$static$20(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #7                  // Field horizontalSpeedMultiplier:F
+         5: putfield      #7                  // Field horizontalSpeedMultiplier:F
+         8: return
+
+  private static java.lang.Double lambda$static$19(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field horizontalSpeedMultiplier:F
+         4: f2d
+         5: invokestatic  #149                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         8: areturn
+
+  private static void lambda$static$18(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #154                // Method java/lang/Double.floatValue:()F
+         5: putfield      #7                  // Field horizontalSpeedMultiplier:F
+         8: return
+
+  private static void lambda$static$17(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #62                 // Field screenEffect:Ljava/lang/String;
+         5: putfield      #62                 // Field screenEffect:Ljava/lang/String;
+         8: return
+
+  private static java.lang.String lambda$static$16(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #62                 // Field screenEffect:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$15(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #62                 // Field screenEffect:Ljava/lang/String;
+         5: return
+
+  private static void lambda$static$14(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+         5: putfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+         8: return
+
+  private static com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle[] lambda$static$13(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+         4: areturn
+
+  private static void lambda$static$12(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #57                 // Field firstPersonParticles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+         5: return
+
+  private static void lambda$static$11(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+         5: putfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+         8: return
+
+  private static com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle[] lambda$static$10(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+         4: areturn
+
+  private static void lambda$static$9(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #42                 // Field particles:[Lcom/hypixel/hytale/server/core/asset/type/model/config/ModelParticle;
+         5: return
+
+  private static void lambda$static$8(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #37                 // Field entityAnimationId:Ljava/lang/String;
+         5: putfield      #37                 // Field entityAnimationId:Ljava/lang/String;
+         8: return
+
+  private static java.lang.String lambda$static$7(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #37                 // Field entityAnimationId:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$6(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #37                 // Field entityAnimationId:Ljava/lang/String;
+         5: return
+
+  private static void lambda$static$5(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #33                 // Field entityTopTint:Lcom/hypixel/hytale/protocol/Color;
+         5: putfield      #33                 // Field entityTopTint:Lcom/hypixel/hytale/protocol/Color;
+         8: return
+
+  private static com.hypixel.hytale.protocol.Color lambda$static$4(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #33                 // Field entityTopTint:Lcom/hypixel/hytale/protocol/Color;
+         4: areturn
+
+  private static void lambda$static$3(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.protocol.Color);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #33                 // Field entityTopTint:Lcom/hypixel/hytale/protocol/Color;
+         5: return
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #28                 // Field entityBottomTint:Lcom/hypixel/hytale/protocol/Color;
+         5: putfield      #28                 // Field entityBottomTint:Lcom/hypixel/hytale/protocol/Color;
+         8: return
+
+  private static com.hypixel.hytale.protocol.Color lambda$static$1(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects);
+    Code:
+         0: aload_0
+         1: getfield      #28                 // Field entityBottomTint:Lcom/hypixel/hytale/protocol/Color;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects, com.hypixel.hytale.protocol.Color);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #28                 // Field entityBottomTint:Lcom/hypixel/hytale/protocol/Color;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #8                  // class com/hypixel/hytale/server/core/asset/type/entityeffect/config/ApplicationEffects
+         2: invokedynamic #155,  0            // InvokeDynamic #1:get:()Ljava/util/function/Supplier;
+         7: invokestatic  #159                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        10: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+        13: dup
+        14: ldc           #167                // String EntityBottomTint
+        16: getstatic     #169                // Field com/hypixel/hytale/server/core/codec/ProtocolCodecs.COLOR:Lcom/hypixel/hytale/server/core/codec/protocol/ColorCodec;
+        19: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        22: invokedynamic #178,  0            // InvokeDynamic #2:accept:()Ljava/util/function/BiConsumer;
+        27: invokedynamic #182,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+        32: invokedynamic #186,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        37: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        40: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        43: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        46: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+        49: dup
+        50: ldc           #199                // String EntityTopTint
+        52: getstatic     #169                // Field com/hypixel/hytale/server/core/codec/ProtocolCodecs.COLOR:Lcom/hypixel/hytale/server/core/codec/protocol/ColorCodec;
+        55: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        58: invokedynamic #201,  0            // InvokeDynamic #5:accept:()Ljava/util/function/BiConsumer;
+        63: invokedynamic #202,  0            // InvokeDynamic #6:apply:()Ljava/util/function/Function;
+        68: invokedynamic #203,  0            // InvokeDynamic #7:accept:()Ljava/util/function/BiConsumer;
+        73: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        76: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        79: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        82: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+        85: dup
+        86: ldc           #204                // String EntityAnimationId
+        88: getstatic     #206                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+        91: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        94: invokedynamic #212,  0            // InvokeDynamic #8:accept:()Ljava/util/function/BiConsumer;
+        99: invokedynamic #213,  0            // InvokeDynamic #9:apply:()Ljava/util/function/Function;
+       104: invokedynamic #214,  0            // InvokeDynamic #10:accept:()Ljava/util/function/BiConsumer;
+       109: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       112: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       115: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       118: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       121: dup
+       122: ldc           #215                // String Particles
+       124: getstatic     #217                // Field com/hypixel/hytale/server/core/asset/type/model/config/ModelParticle.ARRAY_CODEC:Lcom/hypixel/hytale/codec/codecs/array/ArrayCodec;
+       127: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       130: invokedynamic #221,  0            // InvokeDynamic #11:accept:()Ljava/util/function/BiConsumer;
+       135: invokedynamic #222,  0            // InvokeDynamic #12:apply:()Ljava/util/function/Function;
+       140: invokedynamic #223,  0            // InvokeDynamic #13:accept:()Ljava/util/function/BiConsumer;
+       145: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       148: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       151: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       154: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       157: dup
+       158: ldc           #224                // String FirstPersonParticles
+       160: getstatic     #217                // Field com/hypixel/hytale/server/core/asset/type/model/config/ModelParticle.ARRAY_CODEC:Lcom/hypixel/hytale/codec/codecs/array/ArrayCodec;
+       163: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       166: invokedynamic #226,  0            // InvokeDynamic #14:accept:()Ljava/util/function/BiConsumer;
+       171: invokedynamic #227,  0            // InvokeDynamic #15:apply:()Ljava/util/function/Function;
+       176: invokedynamic #228,  0            // InvokeDynamic #16:accept:()Ljava/util/function/BiConsumer;
+       181: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       184: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       187: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       190: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       193: dup
+       194: ldc           #229                // String ScreenEffect
+       196: getstatic     #206                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       199: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       202: invokedynamic #231,  0            // InvokeDynamic #17:accept:()Ljava/util/function/BiConsumer;
+       207: invokedynamic #232,  0            // InvokeDynamic #18:apply:()Ljava/util/function/Function;
+       212: invokedynamic #233,  0            // InvokeDynamic #19:accept:()Ljava/util/function/BiConsumer;
+       217: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       220: getstatic     #234                // Field com/hypixel/hytale/server/core/asset/common/CommonAssetValidator.UI_SCREEN_EFFECT:Lcom/hypixel/hytale/server/core/asset/common/CommonAssetValidator;
+       223: invokevirtual #240                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       226: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       229: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       232: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       235: dup
+       236: ldc           #244                // String HorizontalSpeedMultiplier
+       238: getstatic     #246                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       241: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       244: invokedynamic #250,  0            // InvokeDynamic #20:accept:()Ljava/util/function/BiConsumer;
+       249: invokedynamic #251,  0            // InvokeDynamic #21:apply:()Ljava/util/function/Function;
+       254: invokedynamic #252,  0            // InvokeDynamic #22:accept:()Ljava/util/function/BiConsumer;
+       259: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       262: dconst_0
+       263: invokestatic  #149                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       266: invokestatic  #253                // Method com/hypixel/hytale/codec/validation/Validators.greaterThanOrEqual:(Ljava/lang/Comparable;)Lcom/hypixel/hytale/codec/validation/Validator;
+       269: invokevirtual #240                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       272: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       275: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       278: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       281: dup
+       282: ldc_w         #259                // String KnockbackMultiplier
+       285: getstatic     #246                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       288: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       291: invokedynamic #261,  0            // InvokeDynamic #23:accept:()Ljava/util/function/BiConsumer;
+       296: invokedynamic #262,  0            // InvokeDynamic #24:apply:()Ljava/util/function/Function;
+       301: invokedynamic #263,  0            // InvokeDynamic #25:accept:()Ljava/util/function/BiConsumer;
+       306: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       309: dconst_0
+       310: invokestatic  #149                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       313: invokestatic  #253                // Method com/hypixel/hytale/codec/validation/Validators.greaterThanOrEqual:(Ljava/lang/Comparable;)Lcom/hypixel/hytale/codec/validation/Validator;
+       316: invokevirtual #240                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       319: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       322: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       325: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       328: dup
+       329: ldc_w         #264                // String LocalSoundEventId
+       332: getstatic     #206                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       335: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       338: invokedynamic #266,  0            // InvokeDynamic #26:accept:()Ljava/util/function/BiConsumer;
+       343: invokedynamic #267,  0            // InvokeDynamic #27:apply:()Ljava/util/function/Function;
+       348: invokedynamic #268,  0            // InvokeDynamic #28:accept:()Ljava/util/function/BiConsumer;
+       353: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       356: ldc_w         #269                // String Local sound event played to the affected player
+       359: invokevirtual #271                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       362: getstatic     #275                // Field com/hypixel/hytale/server/core/asset/type/soundevent/config/SoundEvent.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+       365: invokevirtual #279                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getValidator:()Lcom/hypixel/hytale/codec/validation/Validator;
+       368: invokevirtual #240                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       371: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       374: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       377: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       380: dup
+       381: ldc_w         #285                // String WorldSoundEventId
+       384: getstatic     #206                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       387: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       390: invokedynamic #287,  0            // InvokeDynamic #29:accept:()Ljava/util/function/BiConsumer;
+       395: invokedynamic #288,  0            // InvokeDynamic #30:apply:()Ljava/util/function/Function;
+       400: invokedynamic #289,  0            // InvokeDynamic #31:accept:()Ljava/util/function/BiConsumer;
+       405: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       408: ldc_w         #290                // String World sound event played to surrounding players
+       411: invokevirtual #271                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       414: getstatic     #275                // Field com/hypixel/hytale/server/core/asset/type/soundevent/config/SoundEvent.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+       417: invokevirtual #279                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getValidator:()Lcom/hypixel/hytale/codec/validation/Validator;
+       420: invokevirtual #240                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       423: getstatic     #292                // Field com/hypixel/hytale/server/core/asset/type/soundevent/validator/SoundEventValidators.MONO:Lcom/hypixel/hytale/server/core/asset/type/soundevent/validator/SoundEventValidators$ChannelValidator;
+       426: invokevirtual #240                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       429: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       432: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       435: invokedynamic #298,  0            // InvokeDynamic #32:accept:()Ljava/util/function/Consumer;
+       440: invokevirtual #301                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.afterDecode:(Ljava/util/function/Consumer;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       443: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       446: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       449: dup
+       450: ldc_w         #305                // String ModelVFXId
+       453: getstatic     #206                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       456: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       459: invokedynamic #307,  0            // InvokeDynamic #33:accept:()Ljava/util/function/BiConsumer;
+       464: invokedynamic #308,  0            // InvokeDynamic #34:apply:()Ljava/util/function/Function;
+       469: invokedynamic #309,  0            // InvokeDynamic #35:accept:()Ljava/util/function/BiConsumer;
+       474: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       477: getstatic     #310                // Field com/hypixel/hytale/server/core/asset/type/modelvfx/config/ModelVFX.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+       480: invokevirtual #279                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getValidator:()Lcom/hypixel/hytale/codec/validation/Validator;
+       483: invokevirtual #240                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       486: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       489: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       492: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       495: dup
+       496: ldc_w         #313                // String MovementEffects
+       499: getstatic     #315                // Field com/hypixel/hytale/server/core/asset/modifiers/MovementEffects.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       502: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       505: invokedynamic #319,  0            // InvokeDynamic #36:accept:()Ljava/util/function/BiConsumer;
+       510: invokedynamic #320,  0            // InvokeDynamic #37:apply:()Ljava/util/function/Function;
+       515: invokedynamic #321,  0            // InvokeDynamic #38:accept:()Ljava/util/function/BiConsumer;
+       520: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       523: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       526: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       529: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       532: dup
+       533: ldc_w         #322                // String AbilityEffects
+       536: getstatic     #324                // Field com/hypixel/hytale/server/core/asset/type/entityeffect/config/AbilityEffects.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       539: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       542: invokedynamic #325,  0            // InvokeDynamic #39:accept:()Ljava/util/function/BiConsumer;
+       547: invokedynamic #326,  0            // InvokeDynamic #40:apply:()Ljava/util/function/Function;
+       552: invokedynamic #327,  0            // InvokeDynamic #41:accept:()Ljava/util/function/BiConsumer;
+       557: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       560: ldc_w         #328                // String Handles any effects applied that are affiliated with abilities
+       563: invokevirtual #271                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       566: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       569: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       572: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       575: dup
+       576: ldc_w         #330                // String MouseSensitivityAdjustmentTarget
+       579: getstatic     #332                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+       582: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       585: invokedynamic #336,  0            // InvokeDynamic #42:accept:()Ljava/util/function/BiConsumer;
+       590: invokedynamic #337,  0            // InvokeDynamic #43:apply:()Ljava/util/function/Function;
+       595: invokedynamic #338,  0            // InvokeDynamic #44:accept:()Ljava/util/function/BiConsumer;
+       600: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       603: ldc_w         #339                // String What is the target modifier to apply to mouse sensitivity while this interaction is active.
+       606: invokevirtual #271                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       609: fconst_0
+       610: invokestatic  #140                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+       613: fconst_1
+       614: invokestatic  #140                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+       617: invokestatic  #341                // Method com/hypixel/hytale/codec/validation/Validators.range:(Ljava/lang/Comparable;Ljava/lang/Comparable;)Lcom/hypixel/hytale/codec/validation/Validator;
+       620: invokevirtual #240                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       623: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       626: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       629: new           #165                // class com/hypixel/hytale/codec/KeyedCodec
+       632: dup
+       633: ldc_w         #345                // String MouseSensitivityAdjustmentDuration
+       636: getstatic     #332                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+       639: invokespecial #175                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       642: invokedynamic #347,  0            // InvokeDynamic #45:accept:()Ljava/util/function/BiConsumer;
+       647: invokedynamic #348,  0            // InvokeDynamic #46:apply:()Ljava/util/function/Function;
+       652: invokedynamic #349,  0            // InvokeDynamic #47:accept:()Ljava/util/function/BiConsumer;
+       657: invokevirtual #187                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       660: ldc_w         #350                // String Override the global linear modifier adjustment with this as the time to go from 1.0 to 0.0.
+       663: invokevirtual #271                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       666: invokevirtual #193                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       669: checkcast     #188                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       672: invokevirtual #352                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       675: putstatic     #356                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       678: return
+}

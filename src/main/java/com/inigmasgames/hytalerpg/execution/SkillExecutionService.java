@@ -31,6 +31,7 @@ public final class SkillExecutionService {
     private final SkillReleaseScheduler releases = new SkillReleaseScheduler();
     private final CompiledProfileResolver compiledProfiles = new CompiledProfileResolver();
     private final AttunementLedger attunement = new AttunementLedger();
+    private final com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger ruthless=new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger();
     private final java.util.function.LongSupplier nanoTime;
     private final Map<UUID, Prepared> windups = new LinkedHashMap<>();
     private final Map<UUID, SkillExecutionContext> activeContexts = new LinkedHashMap<>();
@@ -47,6 +48,7 @@ public final class SkillExecutionService {
         this.executors = executors; this.lifecycle = lifecycle; this.tracer = tracer;
         this.nanoTime=nanoTime;
         loadouts.addLoadoutMutationListener(attunement::forget);
+        loadouts.addLoadoutMutationListener(ruthless::forget);
     }
 
     public SkillExecutionResult request(SkillExecutionRequest request, SkillExecutionPort port) {
@@ -133,7 +135,8 @@ public final class SkillExecutionService {
     }
 
     /** Terminal owner cleanup; an ordinary interrupted windup retains earlier successful commits. */
-    public void forgetPassiveState(UUID actor){attunement.forget(actor);}
+    public void forgetPassiveState(UUID actor){attunement.forget(actor);ruthless.forget(actor);}
+    public boolean nextRuthless(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return ruthless.nextEmpowered(new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Key(actor,slot));}
     public int attunementStacks(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return attunement.stacks(new AttunementLedger.Key(actor,slot),now());}
 
     public void terminate(SkillExecutionContext context, String reason) {
@@ -179,6 +182,7 @@ public final class SkillExecutionService {
         }
         ResourceCost declared = new ResourceCost(ResourceType.valueOf(profile.resourceType()), profile.resourceCost());
         int stacks=attunementFor(request,plan);
+        ruthlessFor(request,plan); // Capacity and origin check before any payment or windup.
         ResourceCost cost = kernel.resources().evaluateActivation(declared, plan,stacks);
         if(profile.support()!=null&&profile.support().upkeepPerSecond()>0){
             var first=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,profile.support().upkeepPerSecond()*.25*plan.supportModifiers().commitmentFactor()),plan.kernelModifiers());
@@ -193,7 +197,7 @@ public final class SkillExecutionService {
             emitProjectileRejection(request, root, instance, profile, "COOLDOWN_ACTIVE");
             throw new Rejection("COOLDOWN_ACTIVE", instance);
         }
-        return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks);
+        return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks,false);
     }
 
     private int attunementFor(SkillExecutionRequest request,CompiledSkillPlan plan){
@@ -202,13 +206,21 @@ public final class SkillExecutionService {
         if(!attunement.hasCapacity(key,now()))throw new Rejection("ATTUNEMENT_LEDGER_CAPACITY",null);
         return attunement.stacks(key,now());
     }
+    private boolean ruthlessFor(SkillExecutionRequest request,CompiledSkillPlan plan){
+        if(!plan.strikes().ruthless()||request.origin()!=SkillExecutionRequest.Origin.MANUAL)return false;
+        var key=new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Key(request.actorId(),request.slot());
+        if(!ruthless.hasCapacity(key))throw new Rejection("RUTHLESS_LEDGER_CAPACITY",null);
+        return ruthless.nextEmpowered(key);
+    }
 
     private SkillExecutionResult commitAndDispatch(Prepared prepared, SkillExecutionPort port) {
         // Re-evaluate expiry at the actual commit, not when an interruptible windup began.
         try{
             int stacks=attunementFor(prepared.request,prepared.plan);
+            boolean powered=ruthlessFor(prepared.request,prepared.plan);
             var cost=kernel.resources().evaluateActivation(new ResourceCost(ResourceType.valueOf(prepared.profile.resourceType()),prepared.profile.resourceCost()),prepared.plan,stacks);
-            prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,prepared.profile,prepared.plan,cost,prepared.equipment,stacks);
+            var profile=CompiledProfileResolver.ruthless(compiledProfiles.resolve(profiles.require(prepared.profile.skillId()),prepared.plan),powered);
+            prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,profile,prepared.plan,cost,prepared.equipment,stacks,powered);
         }catch(RuntimeException failed){lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_RESOURCE_MODIFIER_REJECTED");}
         var releaseModifiers=prepared.plan.executionModifiers();
         String admission=releases.reserve(prepared.instanceId,prepared.request.actorId(),prepared.request.slot(),releaseModifiers);
@@ -218,7 +230,7 @@ public final class SkillExecutionService {
         }
         CommittedTarget target;
         try {
-            boolean capture=releaseModifiers.scheduled()||prepared.plan.zones().mobileDomain()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
+            boolean capture=releaseModifiers.scheduled()||prepared.plan.strikes().multistrike()||prepared.plan.zones().mobileDomain()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
                     ||prepared.profile.support()!=null||prepared.profile.summon()!=null||prepared.profile.summonAction()!=null||prepared.profile.conversion()!=null;
             target=capture?port.captureTarget(prepared.profile,prepared.plan,prepared.request):null;
             if(capture && target==null) throw new IllegalStateException("COMMITTED_TARGET_ADAPTER_UNAVAILABLE");
@@ -236,6 +248,7 @@ public final class SkillExecutionService {
         boolean cooldownStarted = false;
         com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend cooldownSpend=null;
         AttunementLedger.Commit attunementCommit=null;
+        com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Commit ruthlessCommit=null;
         SkillExecutionContext context;
         try {
             DerivedStats attributes = derive(prepared.request.actorId());
@@ -250,6 +263,7 @@ public final class SkillExecutionService {
             ModifierBuckets modifiers = new ModifierBuckets(prepared.attunementStacks>0?java.util.List.of(.03*prepared.attunementStacks):java.util.List.of(), java.util.List.of(),
                     releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
                     payloadLess);
+            if(prepared.ruthlessEmpowered)modifiers=modifiers.withIncreased(.60);
             if(prepared.profile.summon()!=null)modifiers=port.captureSummonModifiers(modifiers);
             var snapshot = kernel.snapshots().capture(prepared.rootCastId, prepared.instanceId,
                     prepared.request.actorId(), attributes, power, prepared.plan,
@@ -269,8 +283,11 @@ public final class SkillExecutionService {
             }
             if(prepared.plan.resources().attunement()&&prepared.request.origin()==SkillExecutionRequest.Origin.MANUAL)
                 attunementCommit=attunement.committed(new AttunementLedger.Key(prepared.request.actorId(),prepared.request.slot()),prepared.rootCastId,now());
+            if(prepared.plan.strikes().ruthless()&&prepared.request.origin()==SkillExecutionRequest.Origin.MANUAL)
+                ruthlessCommit=ruthless.committed(new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Key(prepared.request.actorId(),prepared.request.slot()),prepared.rootCastId);
         } catch (RuntimeException error) {
             attunement.rollback(attunementCommit);
+            ruthless.rollback(ruthlessCommit);
             if (cooldownStarted) kernel.cooldowns().refundCharge(cooldownSpend);
             try {
                 if (resourceCommitted) kernel.resources().refundCommittedCost(token, port.resources());
@@ -282,7 +299,7 @@ public final class SkillExecutionService {
                     "COMMIT_FAILED_" + error.getClass().getSimpleName());
         }
         emit(prepared.request, RpgTraceEventType.SKILL_COMMITTED, prepared.rootCastId, prepared.instanceId,
-                Map.of("skillId", prepared.profile.skillId(), "resourceCost", prepared.cost.amount(),"resourceType",prepared.cost.type(),"attunementStacksUsed",prepared.attunementStacks,
+                Map.of("skillId", prepared.profile.skillId(), "resourceCost", prepared.cost.amount(),"resourceType",prepared.cost.type(),"attunementStacksUsed",prepared.attunementStacks,"ruthlessEmpowered",prepared.ruthlessEmpowered,
                         "cooldownSeconds", context.snapshot().cooldownSeconds(),
                         "compiledPlanHash", prepared.plan.planHash(),"chargeCapacity",prepared.plan.foundationModifiers().chargeCapacity(),
                         "chargesRemaining",kernel.cooldowns().availableCharges(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity())));
@@ -315,7 +332,7 @@ public final class SkillExecutionService {
             // A paid area must not yield free native damage through the synchronous rollback path.
             // Once a Lifeblood executor was entered, a late adapter error cannot prove that no hit happened.
             if (cooldownStarted && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.cooldowns().refundCharge(cooldownSpend);
-            try { if (resourceCommitted && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) {kernel.resources().refundCommittedCost(token, port.resources());attunement.rollback(attunementCommit);}
+            try { if (resourceCommitted && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) {kernel.resources().refundCommittedCost(token, port.resources());attunement.rollback(attunementCommit);ruthless.rollback(ruthlessCommit);}
                   else if (resourceCommitted) kernel.resources().finish(token); }
             catch (RuntimeException ignored) { }
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());
@@ -480,7 +497,7 @@ public final class SkillExecutionService {
     }
     private record Prepared(SkillExecutionRequest request, String rootCastId, String instanceId,
                             Stage04SkillProfile profile, CompiledSkillPlan plan, ResourceCost cost,
-                            SkillExecutionPort.Equipment equipment,int attunementStacks) { }
+                            SkillExecutionPort.Equipment equipment,int attunementStacks,boolean ruthlessEmpowered) { }
     private static final class Rejection extends RuntimeException {
         private final String code; private final String skillInstanceId;
         private Rejection(String code, String skillInstanceId) { super(code); this.code = code; this.skillInstanceId = skillInstanceId; }
