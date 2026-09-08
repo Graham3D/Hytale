@@ -25,6 +25,7 @@ $passiveConfig=@{
     t=@{tests=1192;passives=@('hemorrhage','terror','shatter');planSchema=29;rollback='evidence\stage-11\cohort-s\artifacts\HytaleRPG-0.0.23.jar'}
     u=@{tests=1226;passives=@('proliferation');planSchema=30;rollback='evidence\stage-11\cohort-t\artifacts\HytaleRPG-0.0.23.jar'}
     v=@{tests=1279;passives=@('critical_trigger','kill_trigger');planSchema=31;rollback='evidence\stage-11\cohort-u\artifacts\HytaleRPG-0.0.23.jar'}
+    w=@{tests=1329;passives=@('retaliation');planSchema=32;rollback='evidence\stage-11\cohort-v\artifacts\HytaleRPG-0.0.23.jar'}
 }[$Cohort]
 if(-not $passiveConfig){throw 'Cohort must declare tested scope before evidence capture'}
 $passiveEvidence=Join-Path $passiveRoot "evidence\stage-11\cohort-$Cohort"

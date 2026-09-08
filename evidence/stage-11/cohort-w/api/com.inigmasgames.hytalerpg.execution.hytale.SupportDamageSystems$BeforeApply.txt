@@ -1,0 +1,57 @@
+Compiled from "SupportDamageSystems.java"
+public final class com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$BeforeApply extends com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem {
+  public com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$BeforeApply();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageEventSystem."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: invokestatic  #7                  // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         3: areturn
+
+  public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> getDependencies();
+    Code:
+         0: new           #13                 // class com/hypixel/hytale/component/dependency/SystemDependency
+         3: dup
+         4: getstatic     #15                 // Field com/hypixel/hytale/component/dependency/Order.AFTER:Lcom/hypixel/hytale/component/dependency/Order;
+         7: ldc           #21                 // class com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem$Absorb
+         9: invokespecial #23                 // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;)V
+        12: new           #13                 // class com/hypixel/hytale/component/dependency/SystemDependency
+        15: dup
+        16: getstatic     #15                 // Field com/hypixel/hytale/component/dependency/Order.AFTER:Lcom/hypixel/hytale/component/dependency/Order;
+        19: ldc           #26                 // class com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems$Shield
+        21: invokespecial #23                 // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;)V
+        24: new           #13                 // class com/hypixel/hytale/component/dependency/SystemDependency
+        27: dup
+        28: getstatic     #28                 // Field com/hypixel/hytale/component/dependency/Order.BEFORE:Lcom/hypixel/hytale/component/dependency/Order;
+        31: ldc           #31                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ApplyDamage
+        33: invokespecial #23                 // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;)V
+        36: invokestatic  #33                 // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+        39: areturn
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: aload         5
+         2: getstatic     #39                 // Field com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.BEFORE:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+         5: aload_2
+         6: iload_1
+         7: invokestatic  #44                 // Method com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.health:(Lcom/hypixel/hytale/component/ArchetypeChunk;I)D
+        10: invokestatic  #48                 // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+        13: invokevirtual #54                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+        16: pop
+        17: return
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk, com.hypixel.hytale.component.Store, com.hypixel.hytale.component.CommandBuffer, com.hypixel.hytale.component.system.EcsEvent);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: checkcast     #55                 // class com/hypixel/hytale/server/core/modules/entity/damage/Damage
+        11: invokevirtual #60                 // Method handle:(ILcom/hypixel/hytale/component/ArchetypeChunk;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)V
+        14: return
+}

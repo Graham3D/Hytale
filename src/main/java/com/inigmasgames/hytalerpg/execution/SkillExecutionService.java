@@ -30,6 +30,7 @@ public final class SkillExecutionService {
     private final RpgSkillTracer tracer;
     private final SkillReleaseScheduler releases = new SkillReleaseScheduler();
     private final ConditionalRepeatRuntime conditionalRepeats=new ConditionalRepeatRuntime();
+    private final RetaliationLedger retaliation=new RetaliationLedger();
     private final CompiledProfileResolver compiledProfiles = new CompiledProfileResolver();
     private final AttunementLedger attunement = new AttunementLedger();
     private final com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger ruthless=new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger();
@@ -50,6 +51,7 @@ public final class SkillExecutionService {
         this.nanoTime=nanoTime;
         loadouts.addLoadoutMutationListener(attunement::forget);
         loadouts.addLoadoutMutationListener(ruthless::forget);
+        loadouts.addLoadoutMutationListener(retaliation::clearPlans);
         loadouts.addLoadoutMutationListener(actor->{for(var c:releases.cancelConditional(actor))emit(c.request(),RpgTraceEventType.SKILL_RELEASE_CANCELLED,c.rootCastId(),c.skillInstanceId(),Map.of("reason","COMMITTED_LOADOUT_CHANGED","refund",false));});
     }
 
@@ -98,9 +100,10 @@ public final class SkillExecutionService {
                 SkillInstanceLifecycle.Phase.COMMITTED)) return SkillExecutionResult.rejected("WINDUP_CANCELLED");
         try {
             Prepared current = validate(prepared.request, port, prepared.rootCastId, prepared.instanceId);
-            return commitAndDispatch(current, port);
+            var result=commitAndDispatch(current, port);retaliation.complete(actor,current.request.correlationId(),result.committed(),now());return result;
         } catch (Rejection rejection) {
             lifecycle.terminate(actor, prepared.instanceId);
+            retaliation.complete(actor,prepared.request.correlationId(),false,now());
             return reject(prepared.request, prepared.rootCastId, prepared.instanceId, rejection.code);
         }
     }
@@ -118,6 +121,7 @@ public final class SkillExecutionService {
                 pending.rootCastId(),pending.skillInstanceId(),Map.of("reason",reason,"refund",false));
         Prepared windup;
         synchronized (windups) { windup = windups.remove(actor); }
+        if(windup!=null)retaliation.complete(actor,windup.request.correlationId(),false,now());
         SkillExecutionContext context;
         synchronized (activeContexts) { context = activeContexts.remove(actor); }
         Optional<SkillInstanceLifecycle.Active> cancelled = lifecycle.cancel(actor);
@@ -137,7 +141,29 @@ public final class SkillExecutionService {
     }
 
     /** Terminal owner cleanup; an ordinary interrupted windup retains earlier successful commits. */
-    public void forgetPassiveState(UUID actor){attunement.forget(actor);ruthless.forget(actor);conditionalRepeats.forget(actor);}
+    public void forgetPassiveState(UUID actor){attunement.forget(actor);ruthless.forget(actor);conditionalRepeats.forget(actor);retaliation.forget(actor);}
+    private Map<com.inigmasgames.hytalerpg.domain.SkillSlot,String> retaliationPlans(UUID actor){
+        var result=new java.util.EnumMap<com.inigmasgames.hytalerpg.domain.SkillSlot,String>(com.inigmasgames.hytalerpg.domain.SkillSlot.class);
+        for(var item:loadouts.getPresentationView(actor).plans().entrySet()){var p=item.getValue();if(!p.degraded()&&p.retaliation())result.put(item.getKey(),p.planHash());}return result;
+    }
+    public String observeRetaliation(UUID actor,String event,double before,double after,double maximum,boolean hostile,boolean recursive){
+        var plans=retaliationPlans(actor);if(plans.isEmpty())return "NO_RETALIATION_LINK";
+        String code=retaliation.observe(actor,plans,event,before,after,maximum,hostile,recursive,now());
+        try{tracer.trace(RpgTraceRecord.create(actor,RpgTraceEventType.RETALIATION_DAMAGE_OBSERVED,event,Map.of("verdict",code,"healthBefore",before,"healthAfter",after,"maximumHealth",maximum,"hostile",hostile,"recursive",recursive,"observationOnly",true)));}catch(RuntimeException ignored){}
+        return code;
+    }
+    public SkillExecutionResult tickRetaliation(UUID actor,SkillExecutionPort port){
+        if(!retaliation.tracked(actor)||releases.pendingRetaliation(actor))return null;
+        var ticket=retaliation.claim(actor,retaliationPlans(actor),port.resources().maximum(ResourceType.HEALTH),now()).orElse(null);
+        if(ticket==null)return null;
+        var request=new SkillExecutionRequest(actor,ticket.slot(),"RETALIATION",ticket.correlation().hashCode(),ticket.correlation(),com.inigmasgames.hytalerpg.execution.math.Vec3.ZERO,SkillExecutionRequest.Origin.TRIGGERED);
+        SkillExecutionResult result;
+        try{result=request(request,port);}catch(RuntimeException failed){result=SkillExecutionResult.rejected("RETALIATION_REQUEST_FAILED_"+failed.getClass().getSimpleName());}
+        if(result.status()!=SkillExecutionResult.Status.PENDING)retaliation.complete(actor,ticket.correlation(),result.committed(),now());
+        try{tracer.trace(RpgTraceRecord.create(actor,RpgTraceEventType.RETALIATION_ATTEMPT,ticket.correlation(),Map.of("slot",ticket.slot(),"verdict",result.code(),"status",result.status(),"threshold",ticket.threshold(),"magnitudeFactor",.70,"normalPaymentRequired",true)));}catch(RuntimeException ignored){}
+        return result;
+    }
+    public double retaliationAccumulated(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return retaliation.accumulated(actor,slot,now());}
     private boolean currentConditionalPlan(SkillExecutionContext c){
         var plan=loadouts.getPresentationView(c.request().actorId()).plans().get(c.request().slot());
         return plan!=null&&!plan.degraded()&&plan.planHash().equals(c.compiledPlan().planHash());
@@ -175,6 +201,10 @@ public final class SkillExecutionService {
         if (plan == null || plan.degraded()) throw new Rejection("COMPILED_PLAN_INVALID", retainedInstance);
         if (!profiles.supports(skill.value())) throw new Rejection("FAMILY_NOT_IMPLEMENTED", retainedInstance);
         Stage04SkillProfile profile = compiledProfiles.resolve(profiles.require(skill.value()),plan);
+        if(plan.retaliation()){
+            if(request.origin()==SkillExecutionRequest.Origin.MANUAL)throw new Rejection("RETALIATION_MANUAL_DISABLED",retainedInstance);
+            if(!ProfileComponentPolicy.retaliation(profile)||!retaliation.authorized(request.actorId(),request.slot(),plan.planHash(),request.correlationId()))throw new Rejection("RETALIATION_RECEIPT_REQUIRED",retainedInstance);
+        }
         if((plan.resources().lifeblood()||plan.resources().attunement())&&!ProfileComponentPolicy.finiteUpfront(profile))
             throw new Rejection("FINITE_UPFRONT_COMPONENT_REQUIRED",retainedInstance);
         if(plan.resources().lifeblood()&&(profile.reaction()!=null||request.origin()!=SkillExecutionRequest.Origin.MANUAL))
@@ -275,6 +305,7 @@ public final class SkillExecutionService {
             var payloadLess=new java.util.ArrayList<>(prepared.plan.projectileModifiers().payloadLess());
             if(releaseModifiers.expandedRadius()&&!prepared.plan.radiusOnlyOnSecondary())payloadLess.add(.10);
             if(prepared.plan.zones().mobileDomain())payloadLess.add(.20);
+            if(prepared.plan.retaliation())payloadLess.add(.30);
             if(prepared.plan.positions().active()&&!prepared.plan.positionOnlyOnSecondary())payloadLess.add(.10);
             if(prepared.plan.orbit())payloadLess.add(1-com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles.CONFIG.magnitudeFactor());
             ModifierBuckets modifiers = new ModifierBuckets(prepared.attunementStacks>0?java.util.List.of(.03*prepared.attunementStacks):java.util.List.of(), java.util.List.of(),
@@ -348,8 +379,8 @@ public final class SkillExecutionService {
             // Spatial dispatch can already have applied a hit before a later presentation/status adapter fails.
             // A paid area must not yield free native damage through the synchronous rollback path.
             // Once a Lifeblood executor was entered, a late adapter error cannot prove that no hit happened.
-            if (cooldownStarted && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.cooldowns().refundCharge(cooldownSpend);
-            try { if (resourceCommitted && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) {kernel.resources().refundCommittedCost(token, port.resources());attunement.rollback(attunementCommit);ruthless.rollback(ruthlessCommit);}
+            if (cooldownStarted && !prepared.plan.retaliation() && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.cooldowns().refundCharge(cooldownSpend);
+            try { if (resourceCommitted && !prepared.plan.retaliation() && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) {kernel.resources().refundCommittedCost(token, port.resources());attunement.rollback(attunementCommit);ruthless.rollback(ruthlessCommit);}
                   else if (resourceCommitted) kernel.resources().finish(token); }
             catch (RuntimeException ignored) { }
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());

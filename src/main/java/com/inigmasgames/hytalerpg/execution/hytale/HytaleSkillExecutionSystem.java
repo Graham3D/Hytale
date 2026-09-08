@@ -256,6 +256,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             emit(context, RpgTraceEventType.REACTION_EXPIRED, Map.of("windowSeconds", context.profile().reaction().windowSeconds()));
             executions.terminate(context, "REACTION_EXPIRED");
         });
+        var retaliated=executions.tickRetaliation(actor,port);
+        if(retaliated!=null&&retaliated.status()==SkillExecutionResult.Status.PENDING)executions.activeWindupSeconds(actor).ifPresent(seconds->windupEnds.put(actor,System.nanoTime()+Math.round(seconds*1e9)));
         inputs.drainFor(actor, request -> {
             SkillExecutionResult result = executions.request(new SkillExecutionRequest(request.player(), request.slot(),
                     request.action(), request.chainId(), request.correlationId(), request.desiredMovement()),
@@ -277,6 +279,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
 
     /** Native post-filter damage is an authoritative interruption for an active wind-up. */
+    public void onRetaliationDamage(UUID actor,String event,double before,double after,double maximum,boolean hostile,boolean recursive){executions.observeRetaliation(actor,event,before,after,maximum,hostile,recursive);}
+
     public void onIncomingDamage(UUID actor) {
         if (windupEnds.remove(actor) != null) executions.cancel(actor, "NATIVE_DAMAGE_INTERRUPT");
         for(var channel:connections.cancel(actor,true)) {
@@ -1213,7 +1217,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             var nativeResult = new HytaleDamageAdapter().applyObserved(target.handle(), store, actor, cause,
                     new HytaleDamageMetadata(playerRef.getUuid(), context.rootCastId(), context.skillInstanceId(),
                             context.request().correlationId(), result.preMitigationDamage(), Double.NaN,effectId,canProc,
-                            periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT), result,
+                            context.derivedRelease()||context.request().origin()==SkillExecutionRequest.Origin.TRIGGERED?HytaleDamageMetadata.Origin.TRIGGERED:periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT), result,
                     com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage.calculated(context.compiledPlan().hitConditions(),buckets,result,context.snapshot().criticalMultiplier()));
             double after = health(targetStats);
             if(leechEligible)recoverObservedLeech(context,target,nativeResult,effectId);
@@ -1251,7 +1255,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         private DamageOutcome resolvedProcDamage(SkillExecutionContext child,StrikeGeometryService.Candidate<Ref<EntityStore>> target,double amount,DamageCause cause,boolean periodic,String effect){
             var result=new HytaleDamageAdapter().applyResolved(target.handle(),store,actor,cause,new HytaleDamageMetadata(playerRef.getUuid(),child.rootCastId(),child.skillInstanceId(),child.request().correlationId(),amount,Double.NaN,effect,false,
-                    periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT),amount);
+                    child.derivedRelease()||child.request().origin()==SkillExecutionRequest.Origin.TRIGGERED?HytaleDamageMetadata.Origin.TRIGGERED:periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT),amount);
             if(child.compiledPlan().resources().leeching()&&HytaleAreaQueries.hostile(store,target.handle(),actor))recoverObservedLeech(child,target,result,effect);
             return new DamageOutcome(result.preMitigationAmount(),Math.max(0,result.healthBefore()-result.healthAfter()),result.cancelled());
         }

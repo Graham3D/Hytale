@@ -1605,3 +1605,81 @@ Rollback U: `B160EC472928883C07AA8264E58929214C5BF946675F9FEF0E84A419C604741F`.
 closure remain. Native HUD/XP/input, all87/66 records, the live three-mod set and owner
 art remain unchanged. No Google Drive writes or live deployment. Connected gates remain
 IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION, not PASS.
+
+## R030 cohort W — Retaliation
+
+LP064, master repeat-controller rules, the installed ApplyDamage system and existing
+SupportDamageSystems pre-Apply capture were reviewed. Plan schema32; player schema6
+unchanged. Manual activation of a Retaliation-linked skill now rejects before payment.
+An internal TRIGGERED request without the active, actor/slot/plan/correlation-bound
+native-loss permit also rejects. Corpse/minion consumers, conversion, movement,
+reaction, channel and Aura operations are excluded; existing repeat-group and
+Lifeblood conflicts remain authoritative.
+
+The native observer reads Health captured after absorption and before Apply, then
+actual post-Apply Health in Inspect. It requires a surviving player and a real,
+non-self hostile native EntitySource. Environmental/self costs, cancelled or shield-only
+damage do not accumulate. Reflected, redirected and triggered provenance is excluded.
+TRIGGERED metadata now follows automatic/derived damage through the existing adapter;
+it does not change native mitigation, damage calculation, ordinary Leech or reward
+ownership. The damage callback records history only. Activation occurs later on the
+owner's world tick, never recursively inside DamageSystems.executeDamage.
+
+RetaliationLedger keeps actual-loss samples for exactly10s against15% of current
+maximum Health. Each linked slot has its own history, capped at one threshold; an
+owner has at most one pending attempt/windup and one attempt per second across slots.
+Least-recently-attempted ready slots prevent an unaffordable first slot starving another.
+The native-loss event ID is deduplicated. Capacity is bounded512 owners,256 event IDs
+per owner and128 samples per slot; overflow rejects further credit with a typed reason
+instead of dropping safety limits. Local pruning is owner-scoped; global idle pruning
+occurs only on new-owner admission. Players with no recorded Retaliation history do
+not poll loadouts/resources from the extra tick path.
+
+Attempts use the existing SkillExecutionService, normal equipment/family/target,
+resource/cooldown checks, interruptible windup and durable commitment. Damage/healing/
+shield magnitude uses one.70 snapshot factor. Finite percentage support effects use
+70% of their authored bonus/reduction; Weakening correctly scales the reduction,
+not the remaining damage multiplier. Authored duration, reach, cooldown, resource
+cost, regeneration and attributes are unchanged. A paid Skill Delay blocks another
+queued Retaliation and does not pay again at release. Successful payment resets the
+history; failed validation retains at most one threshold without refreshing the
+original damage timestamps. Retaliation-specific late dispatch errors retain payment
+and reset the history because a native hit cannot be ruled out. No uncertain hit is
+automatically replayed for free. Existing non-Retaliation executor behavior is retained.
+
+Loadout mutation drops old plan credit/permits but preserves the attempt throttle and
+receipt deduplication. Windup interruption releases the pending permit without payment;
+revalidation runs again at commit. Death/logout/world teardown clears owned history.
+RETALIATION_DAMAGE_OBSERVED traces have no fabricated cast IDs: they precede a cast.
+RETALIATION_ATTEMPT and the real activation/payment/dispatch traces share the generated
+attempt correlation only once the normal request path is entered.
+
+50 new tests cover threshold/window math, sample expiry, actual-loss/dedup rules,
+reflection/recursion exclusions, actor/slot isolation, fair one-per-second attempts,
+manual/spoof rejection, normal costs, payment failure, interrupt/revalidate, Skill Delay,
+support magnitudes, max-HP changes, teardown and bounded capacity. Fixture corrections:
+the canonical IDs are Revive Fallen and Battle Cry, not inferred names; Weakening Hex
+requires Wand/Spellbook, so its Staff fixture correctly rejected and was corrected.
+Final full clean build: **1329 PASS**, no failures/errors/skips.
+
+The first normal server smoke failed at plugin setup with exit9:
+`SystemType dependency isn't registered: SupportDamageSystems$Reflect`.
+Retaliation declared a BEFORE-Reflect execution dependency while Reflect had not yet
+been registered. Registration now occurs after Reflect is registered; execution still
+orders Retaliation before Reflect in Inspect. No dependency was weakened. Failed log
+and summary are retained as `failed-setup-order-*` in cohort-w. The failed build hash
+was `3EF1DC3246EB859FBEECED729F1695E7D6AD0F3A5AF341E69634E4A490852525`.
+The audit script also checks this setup order to guard regression.
+
+Final normal isolated three-mod network boot, resolved asset gates, clean exit0 and
+nine packaged CustomUI documents PASS. The API/call-site audit is structural evidence
+only. Native connected incoming damage, exact observation timing, casting, payment,
+visuals and resource readback remain UNVERIFIED. No live world or mods were modified.
+
+Artifact `evidence/stage-11/cohort-w/artifacts/HytaleRPG-0.0.23.jar`:
+`1BB2E2C9A86AA49B46A29EC8A0EBB2C5C504EDCE46BE5ABAEB6A49CEAE0DFE0F`.
+Rollback V: `03B66B087149C940579D7A29A95AB2DC344F394B9CE9B97A9047058050EAB0AB`.
+All40 Stage11 primitives now have local cohort evidence. Component-introduction,
+complete matrix and legacy inactive-node closure still remain: this is not a Stage11
+connected PASS or final closure. All87/66 catalog records, native HUD/XP/input, owner
+art and the live three-mod set are retained; no Google Drive writes.

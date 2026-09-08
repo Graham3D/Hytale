@@ -33,6 +33,7 @@ public final class SupportDamageSystems {
             Ref<EntityStore> target,Store<EntityStore> store,DamageCause cause,double amount,HytaleDamageMetadata.Origin origin){
         return submit(support,effect,target,store,cause,amount,origin,null);
     }
+    public static double observedHealthBefore(Damage damage){var before=damage.getIfPresentMetaObject(BEFORE);return before==null?Double.NaN:before;}
     private static SecondaryDamageAttempt submit(HytaleSupportSystem support,FiniteSupportEffects.Effect effect,
             Ref<EntityStore> target,Store<EntityStore> store,DamageCause cause,double amount,HytaleDamageMetadata.Origin origin,
             com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional){

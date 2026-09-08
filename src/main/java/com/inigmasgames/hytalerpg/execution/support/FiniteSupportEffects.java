@@ -113,7 +113,13 @@ public final class FiniteSupportEffects {
         for(UUID target:targets){
             var key=new Key(world,actor,context.profile().skillId(),Objects.requireNonNull(target));
             double magnitude=p.kind()==SupportProfile.Kind.REFLECT?p.coefficient()*context.snapshot().modifiers().factor():p.coefficient();
-            next.put(key,new Effect(key,p.kind(),magnitude,p.movementIncreased(),now,now+seconds,
+            double movement=p.movementIncreased();
+            if(context.compiledPlan().retaliation()){
+                if(p.kind()==SupportProfile.Kind.WEAKEN)magnitude=1-(1-magnitude)*.70;
+                else if(Set.of(SupportProfile.Kind.RALLY,SupportProfile.Kind.HOWL,SupportProfile.Kind.MARK,SupportProfile.Kind.IMBUE).contains(p.kind()))magnitude*=.70;
+                movement*=.70;
+            }
+            next.put(key,new Effect(key,p.kind(),magnitude,movement,now,now+seconds,
                     context.rootCastId(),context.skillInstanceId(),context.request().correlationId(),context,0));
         }
         requireBudget(next,actor,targets);
