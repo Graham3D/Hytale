@@ -15,11 +15,33 @@ public final class EncounterContributions {
         public Participant {Objects.requireNonNull(player);Objects.requireNonNull(world);Objects.requireNonNull(position);
             if(level<1||level>99||partyId!=null&&(partyId.isBlank()||partyId.length()>128))throw new IllegalArgumentException("INVALID_PARTICIPANT");}
     }
-    public record Credit(UUID player,Kind kind,long observedAtMillis,double actualAmount){}
-    public record Share(UUID player,long xp,long insight,int commonPotPlayerLevel,int eligiblePartyMembers){}
+    public record Credit(UUID player,Kind kind,long observedAtMillis,double actualAmount){
+        public Credit {Objects.requireNonNull(player);Objects.requireNonNull(kind);if(observedAtMillis<0||!finitePositive(actualAmount))throw new IllegalArgumentException("INVALID_CONTRIBUTION");}
+    }
+    public record Share(UUID player,long xp,long insight,int commonPotPlayerLevel,int eligiblePartyMembers){
+        public Share {Objects.requireNonNull(player);if(xp<1||insight<1||commonPotPlayerLevel<1||commonPotPlayerLevel>99||eligiblePartyMembers<1||eligiblePartyMembers>MAX_CONTRIBUTORS)throw new IllegalArgumentException("INVALID_DEATH_SHARE");}
+    }
+    /** Save original context and anti-farm watermark with credits; reload must not start a fresh encounter. */
+    public record Snapshot(EnemyRewardRegistry.Spawn spawn,List<Credit> credits,long firstCombat,long progressAt,
+                           long lastObserved,double lowestHealthFraction,boolean disqualified){
+        public Snapshot {
+            Objects.requireNonNull(spawn);credits=List.copyOf(credits);
+            if(credits.size()>MAX_CONTRIBUTORS||lastObserved<spawn.spawnedAtMillis()||!Double.isFinite(lowestHealthFraction)
+                    ||lowestHealthFraction<0||lowestHealthFraction>1||firstCombat< -1||progressAt< -1
+                    ||(firstCombat==-1)!=(progressAt==-1)||firstCombat>lastObserved||progressAt>lastObserved
+                    ||(firstCombat>=0&&(firstCombat<spawn.spawnedAtMillis()||progressAt<firstCombat))
+                    ||(firstCombat<0&&(!credits.isEmpty()||lowestHealthFraction!=1)))throw new IllegalArgumentException("INVALID_ENCOUNTER_SNAPSHOT");
+            Set<UUID> unique=new HashSet<>();
+            for(var c:credits)if(!unique.add(c.player())||c.player().equals(spawn.enemy())||c.observedAtMillis()<firstCombat||c.observedAtMillis()>lastObserved)throw new IllegalArgumentException("INVALID_SNAPSHOT_CREDIT");
+        }
+        public Snapshot invalidated(){return new Snapshot(spawn,credits,firstCombat,progressAt,lastObserved,lowestHealthFraction,true);}
+    }
     public record DeathPlan(EnemyRewardRegistry.Spawn spawn,Vec3 deathPosition,long deathAtMillis,List<Share> shares){
         public DeathPlan {Objects.requireNonNull(spawn);Objects.requireNonNull(deathPosition);shares=List.copyOf(shares);
-            if(deathAtMillis<spawn.spawnedAtMillis()||shares.size()>MAX_CONTRIBUTORS)throw new IllegalArgumentException("INVALID_DEATH_PLAN");}
+            if(deathAtMillis<spawn.spawnedAtMillis()||shares.size()>MAX_CONTRIBUTORS)throw new IllegalArgumentException("INVALID_DEATH_PLAN");
+            Set<UUID> unique=new HashSet<>();
+            for(var share:shares)if(!unique.add(share.player())||share.insight()!=spawn.rank().insight
+                    ||share.xp()!=ProgressionMath.equalShare(ProgressionMath.enemyReward(spawn.level(),spawn.rank(),spawn.rarity(),share.commonPotPlayerLevel()),share.eligiblePartyMembers()))throw new IllegalArgumentException("DEATH_SHARE_PROFILE_MISMATCH");}
         public EarnedReward reward(Share share){
             if(!shares.contains(share))throw new IllegalArgumentException("NOT_AN_ELIGIBLE_DEATH_SHARE");
             return new EarnedReward(spawn.eventId(),share.xp(),share.insight(),Map.of(),"ELIGIBLE_ENEMY_DEATH","","",spawn.enemy().toString());
@@ -37,6 +59,24 @@ public final class EncounterContributions {
         var key=new Key(spawn.world(),spawn.enemy());var current=encounters.get(key);
         if(current!=null){if(!current.spawn.equals(spawn))throw new IllegalStateException("SPAWN_CONTEXT_CHANGED");return !current.disqualified;}
         if(encounters.size()>=MAX_ENCOUNTERS)return false;encounters.put(key,new Encounter(spawn));return true;
+    }
+    public synchronized Snapshot snapshot(UUID world,UUID enemy){
+        var e=encounters.get(new Key(world,enemy));if(e==null)throw new IllegalStateException("UNREGISTERED_ENCOUNTER");
+        var credits=e.contributors.values().stream().sorted(Comparator.comparing(c->c.player().toString())).toList();
+        return new Snapshot(e.spawn,credits,e.firstCombat,e.progressAt,e.lastObserved,e.lowestHealthFraction,e.disqualified);
+    }
+    /** Admission is checked in full before changing any index. Never overwrite a live encounter. */
+    public synchronized boolean restore(Snapshot saved){
+        var key=new Key(saved.spawn().world(),saved.spawn().enemy());
+        if(encounters.containsKey(key))throw new IllegalStateException("ENCOUNTER_ALREADY_LOADED");
+        if(encounters.size()>=MAX_ENCOUNTERS||contributionCount+saved.credits().size()>MAX_TOTAL_CONTRIBUTIONS)return false;
+        for(var credit:saved.credits())if(actorEncounters.getOrDefault(new ActorKey(key.world(),credit.player()),Set.of()).size()>=MAX_SUPPORT_ENCOUNTERS)return false;
+        var e=new Encounter(saved.spawn());e.firstCombat=saved.firstCombat();e.progressAt=saved.progressAt();e.lastObserved=saved.lastObserved();
+        e.lowestHealthFraction=saved.lowestHealthFraction();e.disqualified=saved.disqualified();
+        for(var credit:saved.credits()){
+            e.contributors.put(credit.player(),credit);actorEncounters.computeIfAbsent(new ActorKey(key.world(),credit.player()),ignored->new LinkedHashSet<>()).add(key);
+        }
+        contributionCount+=e.contributors.size();encounters.put(key,e);return true;
     }
     /** A conversion/ownership transition invalidates the encounter for its entire lifetime, even after restoration. */
     public synchronized void disqualify(UUID world,UUID enemy){var e=encounters.get(new Key(world,enemy));if(e!=null)e.disqualified=true;}

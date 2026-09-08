@@ -270,3 +270,80 @@ Evidence/archive/rollback: `evidence/stage-12/cohort-c/`.
 No live deployment, owner-world mutation, art change or Google Drive write.
 Local gate PASS; connected gate UNVERIFIED. Continue with durable encounters and
 native event hooks, retaining exact failure boundaries instead of fabricating XP.
+
+## Cohort D — persistent encounter context and interrupted-party delivery
+
+### What changed and why
+
+Added FileEncounterStore (encounter file schema1, independently versioned from
+player8/compiled35). The store preserves immutable spawn identity/biome/level,
+actual contribution timestamps, first-combat time and the record-low Health
+anti-farm watermark. Reload restores the bounded contribution indices; it does
+not begin a new encounter or refresh the 20-second window. A stale snapshot cannot
+roll back its time/progress watermark. A durable exclusion tombstone also covers
+ownership/conversion before a spawn context was captured. Restoring allegiance
+cannot clear this exclusion. The next native cohort will call these boundaries.
+
+Death processing has its own persistent fan-out transaction because per-player
+dedup alone would not freeze a partially paid party's membership or common pot.
+Before any award, freeze the entire validated death plan atomically in the bounded
+pending directory. Delivery uses the existing cohort-B award authority. Persist
+a delivery cursor only after that player's award succeeds. A crash between those
+two writes retries the same event/payload, which the player ledger deduplicates.
+After all recipients are committed, write a permanent completion receipt and
+remove only the finished pending file. A crash during that cleanup finds the
+completion receipt and removes the pending file without awarding again.
+
+Already frozen/completed deaths cannot be recreated, recalculated, reclassified
+by moving the corpse or changed into a different reward payload. The store also
+requires a persisted recent contribution for each share; it does not accept an
+in-memory hit as a substitute for durable attribution. Empty/ineligible deaths
+can be permanently completed without a player award. Deaths already frozen
+retain the eligibility decision made at death; later administrative changes do
+not retroactively reroll earned rewards.
+
+### Bounds and failure policy
+
+There are at most 256 pending death plans and at most 256 recipients/plan. Each
+drain has an explicit 1..256 award-attempt budget and persists partial progress.
+Recovery enumerates only that bounded pending directory, never permanent history.
+Context, exclusion and completed-death lookups use stable hashed world/entity IDs
+and sharded paths. Each file is bounded to 256 KiB, checksum/shape/schema checked,
+forced to storage and atomically renamed. In-process callers serialize through
+the store; a second file writer is refused by an OS lock. Corrupt/torn/foreign
+files are retained and fail closed, not reset or treated as new enemies.
+
+The store deliberately prioritizes authority over availability: a bad pending
+record or unavailable player writer can pause subsequent delivery until repaired.
+Admission exhaustion cannot silently discard an accepted payout. Permanent
+contexts/exclusions/death receipts grow on disk; sustained I/O cost and retention
+operations still require Stage13 measurement. These are process-crash guarantees
+on the local atomic filesystem, not whole-volume power-loss or arbitrary external
+tampering guarantees. Back up/restore **players + earned-rewards + encounters**
+together. Never remove dedup/exclusion files to make a rollback load.
+
+### Evidence
+
+43 new tests cover original-context reload, no unknown-LOAD classification,
+expired support, persistent captive-farm limits, immutable exclusions, all five
+death crash boundaries (freeze/award/cursor/completion/cleanup), interrupted
+context/exclusion writes, partial-party replay through the actual player award
+service, invalid shares, no persisted contribution, queue/restore admission,
+foreign/corrupt/oversized/shape-invalid files, orphan temps and writer exclusion.
+An initial filtered Gradle invocation also selected CanvasUI, which has no Stage12
+test names, and failed its empty filter. The root-qualified `:test` invocation
+passed; the subsequent **full** build ran all CanvasUI tests without filtering.
+
+Full clean retained build: **1529 tests, zero failures/errors/skips**, approximately
+one minute. Normal isolated three-mod network boot/clean stop and retained asset
+gates passed. Startup configures the encounter store and logs zero pending jobs,
+frozen plans, permanent exclusions, awardHook=false and connectedProof=false.
+The native event hookup remains explicitly incomplete in D; there is no claim
+that a live NPC death has yet caused an award.
+
+Artifact SHA-256: 45EA5583A7CCF25651B2BEB3BE9D41434110CB0888D3AB97E2AC89FE7720D320.
+Rollback cohort C: 0399B67A7F8279E578575D38985D5BA2A2B88F948A3C9A55533BF7C01365D652.
+Evidence/archive/rollback: `evidence/stage-12/cohort-d/`.
+No live deployment, owner-world mutation, native HUD/input/balance edit, art
+change or Google Drive write. Local gate PASS; connected gate UNVERIFIED.
+Continue with the audited native spawn, actual-damage and death adapters.

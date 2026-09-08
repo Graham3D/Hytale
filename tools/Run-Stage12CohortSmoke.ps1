@@ -74,6 +74,7 @@ $summary = [ordered]@{
     progressionProfilesResolved = [bool]($plain -match "RPG_STAGE12_PROFILES revision=R031 bands=5 difficulties=3 nativeBiomeBindings=$expectedNativeBiomes awardHook=false connectedProof=false")
     rewardStoreConfigured = [bool]($plain -match 'RPG_STAGE12_REWARD_STORE playerSchema=8 writeAhead=true immutableReceipts=true awardHook=false connectedProof=false')
     encounterRegistryResolved = [bool]($plain -match 'RPG_STAGE12_ENCOUNTER_REGISTRY roles=3 biomes=4 rankAuthority=RPG_PROFILE awardHook=false connectedProof=false')
+    encounterStoreConfigured = [bool]($plain -match 'RPG_STAGE12_ENCOUNTER_STORE schema=1 frozenDeathPlans=true permanentExclusions=true pending=0 awardHook=false connectedProof=false')
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8
