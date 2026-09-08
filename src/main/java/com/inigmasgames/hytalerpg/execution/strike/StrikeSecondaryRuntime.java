@@ -19,6 +19,7 @@ public final class StrikeSecondaryRuntime {
         default List<StrikeGeometryService.Candidate<T>> burstCandidates(AreaGeometry geometry){return candidates(geometry.origin(),geometry.radius());}
         /** null resolvedAmount: calculate from inherited snapshot; otherwise submit exactly the resolved amount. */
         void damage(SkillExecutionContext child,StrikeGeometryService.Candidate<T> target,Double resolvedAmount);
+        default void damage(SkillExecutionContext child,StrikeGeometryService.Candidate<T> target,Double resolvedAmount,Vec3 effectCenter){damage(child,target,resolvedAmount);}
         default void presentCleave(Vec3 origin,Vec3 facing,double range,double angle){}
         default void presentPhantom(Vec3 impact,Vec3 destination){}
         default void presentShockwave(AreaGeometry geometry){}
@@ -36,9 +37,10 @@ public final class StrikeSecondaryRuntime {
             try{port.presentCleave(origin,facing,range,angle);}catch(RuntimeException ignored){} // Cosmetics cannot reject a paid hit.
             for(var target:candidates.stream().filter(c->shape.intersects(port.bounds(c))).limit(4).toList()){
                 var child=root.secondaryCopy("cleaving_edge",++ordinal,.60);
+                if(root.compiledPlan().positionOnlyOnSecondary())child=child.withSnapshot(child.snapshot().withMagnitudeFactor(.90));
                 if(root.compiledPlan().concentrationOnlyOnSecondary())child=child.withSnapshot(child.snapshot().withModifiers(child.snapshot().modifiers().withIncreased(.30)));
                 String admission=root.effects().claim(child.skillInstanceId(),1,true);
-                if(admission.equals("PASS")){port.damage(child,target,null);count++;}else port.rejected(child.skillInstanceId(),admission);
+                if(admission.equals("PASS")){port.damage(child,target,null,origin);count++;}else port.rejected(child.skillInstanceId(),admission);
             }
         }
         if(mods.phantomReach()&&hitIndex==0&&!primary.isEmpty()){
@@ -68,7 +70,7 @@ public final class StrikeSecondaryRuntime {
                     double amount=shockwaveAmount(plan,hit);
                     // One burst effect/secondary admission, not one allocation per radial target.
                     for(var target:valid(port.burstCandidates(shape),shape.origin(),Set.of(),port).stream().filter(t->shape.intersects(port.bounds(t))).limit(64).toList()){
-                        port.damage(child,target,amount);count++;
+                        port.damage(child,target,amount,shape.origin());count++;
                     }
                     try{port.presentShockwave(shape);}catch(RuntimeException ignored){}
                 }else port.rejected(child.skillInstanceId(),admission);
@@ -82,7 +84,7 @@ public final class StrikeSecondaryRuntime {
             if(!Double.isFinite(hit.increasedUnit)||hit.increasedUnit<0)throw new IllegalArgumentException("RESOLVED_ADDITIVE_UNIT_UNAVAILABLE");
             base+=.30*hit.increasedUnit;
         }
-        double result=base*.40*(plan.radiusOnlyOnShockwave()?.90:1);
+        double result=base*.40*(plan.radiusOnlyOnShockwave()?.90:1)*(plan.positionOnlyOnSecondary()?.90:1);
         if(!Double.isFinite(result)||result<0||result>Float.MAX_VALUE)throw new IllegalArgumentException("SHOCKWAVE_DAMAGE_OVERFLOW");
         return result;
     }

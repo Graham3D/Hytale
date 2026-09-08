@@ -61,6 +61,13 @@ public final class ProfileComponentPolicy {
     public static Optional<Boolean> affectedArea(String skill){
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(affectedArea(p));
     }
+    public static Optional<Boolean> enemyPosition(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(enemyPosition(p));}
+    public static boolean enemyPosition(Stage04SkillProfile p){
+        return p.area()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().radius()>0
+                ||p.support()!=null&&p.support().radius()>0&&(p.support().damageInterval()>0||p.support().chillInterval()>0)
+                ||p.strike()!=null&&affectedArea(p)
+                ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.WAVE,ConnectionProfile.Kind.LINE,ConnectionProfile.Kind.BEAM,ConnectionProfile.Kind.ORB,ConnectionProfile.Kind.ORBIT).contains(p.connection().kind());
+    }
     public static Optional<Boolean> reactionWindow(String skill){
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(p.reaction()!=null);
     }

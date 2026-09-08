@@ -27,6 +27,7 @@ public interface ConnectionWorldPort {
     /** Uses the real resource service; false prevents this tick's hit. */
     boolean payUpkeep(SkillExecutionContext context,int tick,double seconds);
     double damage(SkillExecutionContext context,Target target,int tick,double coefficient,boolean periodic);
+    default double damage(SkillExecutionContext context,Target target,int tick,double coefficient,boolean periodic,Vec3 effectCenter){return damage(context,target,tick,coefficient,periodic);}
     default void healFromDamage(SkillExecutionContext context,int tick,double actualHealthLost){throw new IllegalStateException("DRAIN_HEAL_ADAPTER_UNAVAILABLE");}
     void present(SkillExecutionContext context,ConnectionShape shape,String phase,double seconds);
     void ended(SkillExecutionContext context,String reason);

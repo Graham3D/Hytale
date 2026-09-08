@@ -1156,3 +1156,79 @@ Rollback N: `BB39ABDAC3C80139F85134D12D7B3CD6E09678DB7B06D3B4D6B22F0A4221CA44`.
 No live deployment, save migration, HUD/input/ability projection or owner art
 changes. Twenty-eight of40 Stage11 primitives have local evidence;12 remain,
 followed by matrix/legacy-state closure. Connected gates remain UNVERIFIED.
+
+## Cohort P — Vacuum / Repulsion (R030, plan schema25)
+
+LP037/038 were reread against the supplied master. Vacuum requests2m toward the
+resolving area's centre; Repulsion requests2.5m away. The planner is horizontal,
+clamps a pull before it crosses the centre, and does not invent a push direction
+for an exactly centred target. Native control policy scales elite displacement
+and rejects immunity/protection. Existing Impact Force, where independently
+compatible, scales the new push by1.75, not the pull. No velocity unit is guessed
+to mean metres and no damage event is generated just to move an entity.
+
+The new native helper reads fresh NPC Role, Transform and BoundingBox on the
+owning world thread. It requires a hostile, live, unprotected NPC, positive native
+knockback support, ground-category role and physical support under its feet.
+Movement is planned in at-most.25m swept segments; every prospective endpoint
+must still have ground support. Invalid collision fractions fail closed. At most32
+segments are inspected; the largest current request4.375m needs18. The final
+validated Transform position is written once. This is a structural native adapter,
+**not** proof of client motion, animation, navmesh behaviour or replication.
+Connected tests must include slopes, ledges, walls, large NPCs and immune roles.
+
+Each committed root now owns one bounded rolling displacement ledger, shared by
+Echo, Multistrike and secondary contexts. A target receives at most one attempted
+passive position write per root per1s. Rejected/uncertain native writes consume the
+attempt, avoiding retries after an ambiguous mutation. The ledger holds at most256
+target/time pairs and prunes expired entries; reversed/invalid clocks cannot reset
+the allowance. Indefinite Aura control also consumes its existing8-per-second
+secondary allowance. New helper exceptions are recorded and contained: an already
+resolved damage hit never becomes free because optional position control failed.
+
+Integration covers existing area impacts/pulses, eligible frontal/radial/landing
+strike components, resolving Line/Beam/Orb/Orbit components, hostile damage/Chill
+Auras, corpse-area bursts, Cleaving Edge, Shockwave and Shrapnel. Connection runtime
+now passes its actual resolved shape centre into the native port; a target-locked
+Tether/Drain/Chain does not gain area-control semantics. Cleave passes caster
+origin; Shockwave/Shrapnel pass their impact centre. Position is applied only after
+an uncancelled native damage/application path; it is not repeated on DoT ticks.
+The old authored area push/pull paths are retained separately; this cohort's new
+support-path checks do not retroactively prove all older displacement behaviour.
+
+Compatibility uses implemented hostile resolving components, not an imported
+blanket capability tag. Frost Nova/Ground Slam are positive fixtures; Snipe,
+single-target heals, root-locked connections and support-only Auras reject.
+Vacuum/Repulsion conflict in one compiler stacking group. For a single-target
+parent with introduced Cleave/Shockwave/Shrapnel, POSITION_SCOPE=SECONDARY_ONLY
+keeps the parent's damage and geometry unchanged. The eligible area alone receives
+the.90 damage factor. Otherwise the root's inherited damage snapshot receives the
+factor once. Resolved Shockwave/Phantom arithmetic is not double-penalized;
+non-area Phantom does not gain the introduced-area movement. Costs/cooldowns and
+all native resource/HUD ownership remain unchanged. Dependent-component unlink
+rejects and rolls back instead of leaving an inert position passive.
+
+The full introduced-capability combination audit remains part of Stage11 closure:
+for example, Impact Force currently still requires its own authored impact gate;
+Repulsion alone does not yet satisfy that gate. This is a specific rejected pair,
+not a claim that every remaining passive combination is already implemented.
+
+### Cohort P validation and rollback
+
+29 new tests cover geometry/control/collision/support bounds, exact-second ICD,
+rolling capacity, identity/clock rejection, conflict/link rollback, component
+gates, scoped damage, centre propagation, shared root identity and unchanged
+single resource/cooldown commitment. An initial compile missed a Java import;
+one test used nonexistent arcane_tether instead of canonical root_lash. Both were
+corrected before the complete run; no safety/compatibility gate was weakened.
+
+`clean build`: **1081 tests PASS**, no failures/errors/skips. Normal isolated
+three-mod network boot and clean exit0 PASS; packaged CustomUI9 validation and
+retained native asset tests PASS. Bytecode/call-site evidence is saved under
+`evidence/stage-11/cohort-p/api`; connected execution remains UNVERIFIED.
+Artifact: `evidence/stage-11/cohort-p/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `20B6636A05D63C1B03CAB9ACE36A219A28950B406C618365247F2F6F818B58DD`.
+Rollback O: `0B5F56C8B256ED5D49B99C64E7F159EB3D5C4DF0894506F82E41143933671642`.
+Player schema6 unchanged. No live deployment, native input/HUD, art or Google Drive
+writes. Thirty of40 Stage11 primitives now have local cohort evidence;10 and the
+cross-catalog/legacy-state gate remain. Continue automatically under owner authority.

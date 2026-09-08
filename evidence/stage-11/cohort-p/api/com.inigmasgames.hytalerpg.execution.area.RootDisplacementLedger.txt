@@ -1,0 +1,100 @@
+Compiled from "RootDisplacementLedger.java"
+public final class com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger {
+  private final java.util.Map<java.lang.String, java.lang.Double> last;
+
+  private double latest;
+
+  public com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class java/util/HashMap
+         8: dup
+         9: invokespecial #9                  // Method java/util/HashMap."<init>":()V
+        12: putfield      #10                 // Field last:Ljava/util/Map;
+        15: aload_0
+        16: ldc2_w        #18                 // double -Infinityd
+        19: putfield      #20                 // Field latest:D
+        22: return
+
+  public synchronized java.lang.String claim(java.lang.String, double);
+    Code:
+         0: aload_1
+         1: ifnull        28
+         4: aload_1
+         5: invokevirtual #24                 // Method java/lang/String.isBlank:()Z
+         8: ifne          28
+        11: aload_1
+        12: invokevirtual #30                 // Method java/lang/String.length:()I
+        15: sipush        256
+        18: if_icmpgt     28
+        21: dload_2
+        22: invokestatic  #34                 // Method java/lang/Double.isFinite:(D)Z
+        25: ifne          31
+        28: ldc           #38                 // String INVALID_DISPLACEMENT_ID_OR_CLOCK
+        30: areturn
+        31: dload_2
+        32: aload_0
+        33: getfield      #20                 // Field latest:D
+        36: dcmpg
+        37: ifge          43
+        40: ldc           #40                 // String DISPLACEMENT_CLOCK_REVERSED
+        42: areturn
+        43: aload_0
+        44: dload_2
+        45: putfield      #20                 // Field latest:D
+        48: aload_0
+        49: getfield      #10                 // Field last:Ljava/util/Map;
+        52: invokeinterface #42,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        57: dload_2
+        58: invokedynamic #48,  0             // InvokeDynamic #0:test:(D)Ljava/util/function/Predicate;
+        63: invokeinterface #52,  2           // InterfaceMethod java/util/Set.removeIf:(Ljava/util/function/Predicate;)Z
+        68: pop
+        69: aload_0
+        70: getfield      #10                 // Field last:Ljava/util/Map;
+        73: aload_1
+        74: invokeinterface #58,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+        79: ifeq          85
+        82: ldc           #62                 // String ROOT_TARGET_DISPLACEMENT_ICD
+        84: areturn
+        85: aload_0
+        86: getfield      #10                 // Field last:Ljava/util/Map;
+        89: invokeinterface #64,  1           // InterfaceMethod java/util/Map.size:()I
+        94: sipush        256
+        97: if_icmplt     103
+       100: ldc           #67                 // String ROOT_DISPLACEMENT_TARGET_BUDGET
+       102: areturn
+       103: aload_0
+       104: getfield      #10                 // Field last:Ljava/util/Map;
+       107: aload_1
+       108: dload_2
+       109: invokestatic  #69                 // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       112: invokeinterface #73,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       117: pop
+       118: ldc           #77                 // String PASS
+       120: areturn
+
+  public synchronized int size();
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field last:Ljava/util/Map;
+         4: invokeinterface #64,  1           // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  private static boolean lambda$claim$0(double, java.util.Map$Entry);
+    Code:
+         0: dload_0
+         1: aload_2
+         2: invokeinterface #79,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+         7: checkcast     #16                 // class java/lang/Double
+        10: invokevirtual #85                 // Method java/lang/Double.doubleValue:()D
+        13: dsub
+        14: dconst_1
+        15: dcmpl
+        16: iflt          23
+        19: iconst_1
+        20: goto          24
+        23: iconst_0
+        24: ireturn
+}

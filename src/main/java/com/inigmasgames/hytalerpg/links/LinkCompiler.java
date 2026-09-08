@@ -71,6 +71,7 @@ public final class LinkCompiler {
             if (!result.accepted()) return CompilationResult.failure(result.code(), result.message());
             String group = binding.definition().stackingGroup();
             if(Set.of("widening","focused_channel").contains(binding.definition().id().value()))group="BEAM_WIDTH_MODE";
+            if(Set.of("vacuum","repulsion").contains(binding.definition().id().value()))group="AREA_POSITION_MODE";
             if (group != null && !group.isBlank()) {
                 PassiveDefinition prior = groups.putIfAbsent(group, binding.definition());
                 if (prior != null && !prior.id().equals(binding.definition().id())) {
@@ -157,6 +158,7 @@ public final class LinkCompiler {
                 geometry.add(prefix+"RADIUS_MULTIPLIER=1.25");
                 power.add(prefix+"MAGNITUDE_MULTIPLIER=0.90");
             }
+            if(Set.of("vacuum","repulsion").contains(passive.id().value())&&!compatibility.assess(skill,passive).accepted())geometry.add("POSITION_SCOPE=SECONDARY_ONLY");
         }
         continuation.sort(Comparator.comparingInt(LinkCompiler::continuationRank).thenComparing(String::compareTo));
         List<PassiveId> order = bindings.stream().map(binding -> binding.definition().id()).toList();
@@ -176,6 +178,7 @@ public final class LinkCompiler {
                 + "|" + com.inigmasgames.hytalerpg.domain.ControlModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.ResourceModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.StrikeModifiers.from(order)
+                + "|" + com.inigmasgames.hytalerpg.domain.PositionModifiers.from(order)
                 + "|planSchema=" + CompiledSkillPlan.CURRENT_SCHEMA;
         var kernelModifiers = new CompiledSkillPlan.KernelModifiers(scalablePayloadIncreased,
                 resourceCostMultiplier, cooldownRecoveryBonus);

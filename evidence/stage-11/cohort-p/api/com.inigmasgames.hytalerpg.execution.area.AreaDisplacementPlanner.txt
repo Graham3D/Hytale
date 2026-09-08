@@ -1,0 +1,202 @@
+Compiled from "AreaDisplacementPlanner.java"
+public final class com.inigmasgames.hytalerpg.execution.area.AreaDisplacementPlanner {
+  private com.inigmasgames.hytalerpg.execution.area.AreaDisplacementPlanner();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public static com.inigmasgames.hytalerpg.execution.area.AreaDisplacementPlanner$Plan plan(com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.math.Vec3, boolean, double, double, boolean, java.util.function.ToDoubleBiFunction<com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.math.Vec3>, java.util.function.Predicate<com.inigmasgames.hytalerpg.execution.math.Vec3>);
+    Code:
+         0: dload_3
+         1: invokestatic  #7                  // Method java/lang/Double.isFinite:(D)Z
+         4: ifeq          43
+         7: dload_3
+         8: dconst_0
+         9: dcmpg
+        10: iflt          43
+        13: dload_3
+        14: ldc2_w        #13                 // double 8.0d
+        17: dcmpl
+        18: ifgt          43
+        21: dload         5
+        23: invokestatic  #7                  // Method java/lang/Double.isFinite:(D)Z
+        26: ifeq          43
+        29: dload         5
+        31: dconst_0
+        32: dcmpg
+        33: iflt          43
+        36: dload         5
+        38: dconst_1
+        39: dcmpl
+        40: ifle          53
+        43: new           #15                 // class java/lang/IllegalArgumentException
+        46: dup
+        47: ldc           #17                 // String Invalid bounded area displacement
+        49: invokespecial #19                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        52: athrow
+        53: dload         5
+        55: dconst_0
+        56: dcmpl
+        57: ifne          72
+        60: new           #22                 // class com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan
+        63: dup
+        64: aload_0
+        65: dconst_0
+        66: ldc           #24                 // String CONTROL_RESISTANT
+        68: invokespecial #26                 // Method com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan."<init>":(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DLjava/lang/String;)V
+        71: areturn
+        72: iload         7
+        74: ifeq          88
+        77: aload         9
+        79: aload_0
+        80: invokeinterface #29,  2           // InterfaceMethod java/util/function/Predicate.test:(Ljava/lang/Object;)Z
+        85: ifne          100
+        88: new           #22                 // class com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan
+        91: dup
+        92: aload_0
+        93: dconst_0
+        94: ldc           #35                 // String NO_GROUNDED_ORIGIN
+        96: invokespecial #26                 // Method com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan."<init>":(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DLjava/lang/String;)V
+        99: areturn
+       100: aload_1
+       101: aload_0
+       102: invokevirtual #37                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.subtract:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       105: astore        10
+       107: aload         10
+       109: invokevirtual #43                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.horizontalLength:()D
+       112: dstore        11
+       114: dload         11
+       116: ldc2_w        #47                 // double 1.0E-9d
+       119: dcmpg
+       120: ifge          135
+       123: new           #22                 // class com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan
+       126: dup
+       127: aload_0
+       128: dconst_0
+       129: ldc           #49                 // String AT_EFFECT_CENTER
+       131: invokespecial #26                 // Method com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan."<init>":(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DLjava/lang/String;)V
+       134: areturn
+       135: iload_2
+       136: ifeq          151
+       139: dload_3
+       140: dload         5
+       142: dmul
+       143: dload         11
+       145: invokestatic  #51                 // Method java/lang/Math.min:(DD)D
+       148: goto          155
+       151: dload_3
+       152: dload         5
+       154: dmul
+       155: dstore        13
+       157: aload         10
+       159: invokevirtual #57                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.horizontalNormalized:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       162: iload_2
+       163: ifeq          170
+       166: dconst_1
+       167: goto          173
+       170: ldc2_w        #61                 // double -1.0d
+       173: invokevirtual #63                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.multiply:(D)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       176: astore        15
+       178: aload_0
+       179: astore        16
+       181: dload         13
+       183: dstore        17
+       185: iconst_0
+       186: istore        19
+       188: dload         17
+       190: ldc2_w        #47                 // double 1.0E-9d
+       193: dcmpl
+       194: ifle          377
+       197: iload         19
+       199: bipush        32
+       201: if_icmpge     377
+       204: aload         15
+       206: ldc2_w        #67                 // double 0.25d
+       209: dload         17
+       211: invokestatic  #51                 // Method java/lang/Math.min:(DD)D
+       214: invokevirtual #63                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.multiply:(D)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       217: astore        20
+       219: aload         8
+       221: aload         16
+       223: aload         20
+       225: invokeinterface #69,  3           // InterfaceMethod java/util/function/ToDoubleBiFunction.applyAsDouble:(Ljava/lang/Object;Ljava/lang/Object;)D
+       230: dstore        21
+       232: dload         21
+       234: invokestatic  #7                  // Method java/lang/Double.isFinite:(D)Z
+       237: ifeq          254
+       240: dload         21
+       242: dconst_0
+       243: dcmpg
+       244: iflt          254
+       247: dload         21
+       249: dconst_1
+       250: dcmpl
+       251: ifle          275
+       254: new           #22                 // class com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan
+       257: dup
+       258: aload         16
+       260: aload         16
+       262: aload_0
+       263: invokevirtual #37                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.subtract:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       266: invokevirtual #43                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.horizontalLength:()D
+       269: ldc           #75                 // String COLLISION_UNAVAILABLE
+       271: invokespecial #26                 // Method com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan."<init>":(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DLjava/lang/String;)V
+       274: areturn
+       275: aload         16
+       277: aload         20
+       279: dload         21
+       281: dconst_0
+       282: dconst_1
+       283: invokestatic  #77                 // Method java/lang/Math.clamp:(DDD)D
+       286: invokevirtual #63                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.multiply:(D)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       289: invokevirtual #81                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       292: astore        23
+       294: aload         9
+       296: aload         23
+       298: invokeinterface #29,  2           // InterfaceMethod java/util/function/Predicate.test:(Ljava/lang/Object;)Z
+       303: ifne          327
+       306: new           #22                 // class com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan
+       309: dup
+       310: aload         16
+       312: aload         16
+       314: aload_0
+       315: invokevirtual #37                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.subtract:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       318: invokevirtual #43                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.horizontalLength:()D
+       321: ldc           #84                 // String NO_SUPPORTED_PATH
+       323: invokespecial #26                 // Method com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan."<init>":(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DLjava/lang/String;)V
+       326: areturn
+       327: aload         23
+       329: astore        16
+       331: dload         21
+       333: ldc2_w        #86                 // double 0.999999d
+       336: dcmpg
+       337: ifge          361
+       340: new           #22                 // class com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan
+       343: dup
+       344: aload         16
+       346: aload         16
+       348: aload_0
+       349: invokevirtual #37                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.subtract:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       352: invokevirtual #43                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.horizontalLength:()D
+       355: ldc           #88                 // String NATIVE_COLLISION
+       357: invokespecial #26                 // Method com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan."<init>":(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DLjava/lang/String;)V
+       360: areturn
+       361: dload         17
+       363: aload         20
+       365: invokevirtual #43                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.horizontalLength:()D
+       368: dsub
+       369: dstore        17
+       371: iinc          19, 1
+       374: goto          188
+       377: new           #22                 // class com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan
+       380: dup
+       381: aload         16
+       383: aload         16
+       385: aload_0
+       386: invokevirtual #37                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.subtract:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       389: invokevirtual #43                 // Method com/inigmasgames/hytalerpg/execution/math/Vec3.horizontalLength:()D
+       392: ldc           #90                 // String APPLIED
+       394: invokespecial #26                 // Method com/inigmasgames/hytalerpg/execution/area/AreaDisplacementPlanner$Plan."<init>":(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DLjava/lang/String;)V
+       397: areturn
+}

@@ -1,0 +1,7 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "jarSha256": "20B6636A05D63C1B03CAB9ACE36A219A28950B406C618365247F2F6F818B58DD",
+  "scope": "Bounded horizontal swept/supported steps, native role control/grounding, hostile/protected filter, root target one-second ICD, Aura rolling secondary allowance, native Transform position write.",
+  "evidence": "Installed bytecode and packaged call-site structure; not connected NPC motion, collision, network replication or animation proof",
+  "connected": "UNVERIFIED"
+}

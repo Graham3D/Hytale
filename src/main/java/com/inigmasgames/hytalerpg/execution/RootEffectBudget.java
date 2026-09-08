@@ -7,6 +7,8 @@ public final class RootEffectBudget {
     private final UUID actor;private final String root;
     private final Set<String> effects=new HashSet<>(Set.of("PRIMARY")),controllers=new HashSet<>();
     private int triggered;
+    private final com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement=new com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger();
+    public com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement(){return displacement;}
     public RootEffectBudget(UUID actor,String root){this.actor=Objects.requireNonNull(actor);this.root=Objects.requireNonNull(root);}
     public boolean owns(UUID actor,String root){return this.actor.equals(actor)&&this.root.equals(root);}
     public synchronized boolean once(String controller){return controller!=null&&!controller.isBlank()&&controller.length()<=64&&controllers.size()<16&&controllers.add(controller);}

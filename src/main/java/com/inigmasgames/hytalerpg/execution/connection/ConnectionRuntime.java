@@ -75,7 +75,7 @@ public final class ConnectionRuntime {
             var targets=tether==null?targets(field,shape,port):List.of(tether);if(targets==null)return;
             if(profile.channel()&&!port.payUpkeep(field.context,tick,profile.intervalSeconds())){finish(field,"INSUFFICIENT_UPKEEP",port);return;}
             field.tick=tick;
-            hit(field,targets,tick,profile.coefficient()*(profile.channel()?profile.intervalSeconds():1),profile.channel(),port);
+            hit(field,targets,tick,profile.coefficient()*(profile.channel()?profile.intervalSeconds():1),profile.channel(),shape.start().add(shape.end()).multiply(.5),port);
             if(field.done)return;
             port.present(field.context,shape,"IMPACT",profile.channel()?.1:.15);
         }
@@ -108,7 +108,7 @@ public final class ConnectionRuntime {
         if(p.kind()==ConnectionProfile.Kind.TETHER){var target=boundTarget(field,field.origin,port);if(target==null){finish(field,"TETHER_TARGET_INVALID",port);return;}
             shape=ConnectionShape.line(field.origin,target.bounds().centre(),p.width(),p.height());targets=List.of(target);}
         else {shape=ConnectionShape.line(field.origin,port.unobstructedEndpoint(field.origin,field.origin.add(field.direction.multiply(p.range()))),p.width(),p.height());targets=targets(field,shape,port);}
-        if(targets==null)return;hit(field,targets,0,p.coefficient(),false,port);
+        if(targets==null)return;hit(field,targets,0,p.coefficient(),false,shape.start().add(shape.end()).multiply(.5),port);
         if(!field.done){port.present(field.context,shape,"IMPACT",p.kind()==ConnectionProfile.Kind.TETHER?.25:.15);finish(field,"LINE_COMPLETE",port);}
     }
     private void chain(Field field,double elapsed,ConnectionWorldPort port){
@@ -130,7 +130,7 @@ public final class ConnectionRuntime {
         if(!field.done&&field.tick+1>=coefficients.size())finish(field,"CHAIN_COMPLETE",port);
     }
     private void chainHit(Field field,ConnectionWorldPort.Target target,Vec3 origin,int tick,double coefficient,ConnectionWorldPort port){
-        field.tick=tick;field.targetId=target.id();field.position=target.bounds().centre();hit(field,List.of(target),tick,coefficient,false,port);
+        field.tick=tick;field.targetId=target.id();field.position=target.bounds().centre();hit(field,List.of(target),tick,coefficient,false,field.position,port);
         if(!field.done)port.present(field.context,ConnectionShape.line(origin,field.position,field.profile().width(),field.profile().width()),"IMPACT",.15);
     }
     private void orbit(Field field,double elapsed,ConnectionWorldPort port){
@@ -152,7 +152,7 @@ public final class ConnectionRuntime {
             long additions=unique.keySet().stream().filter(id->!field.lastHit.containsKey(id)).count();
             if(field.lastHit.size()+additions>256){finish(field,"TARGET_LEDGER_BUDGET",port);return;}
             var eligible=unique.values().stream().filter(t->(tick-field.lastHit.getOrDefault(t.id(),-1000000))*interval>=p.details().contactCooldown()-1e-9).toList();
-            field.tick=tick;field.position=center;hit(field,eligible,tick,p.coefficient(),false,port);
+            field.tick=tick;field.position=center;hit(field,eligible,tick,p.coefficient(),false,center,port);
             if(field.done)return;for(var shape:shapes)port.present(field.context,shape,"BLADE_CONTACT_PROXY",.08);
         }
         if(!field.done&&elapsed>=p.lifetimeSeconds()-1e-9)finish(field,"ORBIT_EXPIRED",port);
@@ -166,7 +166,7 @@ public final class ConnectionRuntime {
         if(to<from||limit<=1e-6){finish(field,"WAVE_BLOCKED",port);return;}
         var shape=ConnectionShape.line(field.origin.add(field.direction.multiply(from)),field.origin.add(field.direction.multiply(to)),profile.width(),profile.height());
         var targets=targets(field,shape,port);if(targets==null)return;
-        hit(field,targets,0,profile.coefficient(),false,port);field.travelled=distance;
+        hit(field,targets,0,profile.coefficient(),false,shape.start().add(shape.end()).multiply(.5),port);field.travelled=distance;
         if(field.done)return;
         if(now>=field.nextVisual){field.nextVisual=now+.05;port.present(field.context,shape,"FRONT_SWEEP",.08);}
         if(elapsed>=profile.lifetimeSeconds()-1e-9||distance>=limit-1e-9)finish(field,limit<profile.range()?"WAVE_BLOCKED":"WAVE_COMPLETE",port);
@@ -189,12 +189,12 @@ public final class ConnectionRuntime {
         if(field.lastHit.size()+additions>256){finish(field,"TARGET_LEDGER_BUDGET",port);return null;}
         return unique.values().stream().sorted(Comparator.comparingDouble((ConnectionWorldPort.Target t)->shape.entryDistance(t.bounds())).thenComparing(ConnectionWorldPort.Target::id)).toList();
     }
-    private void hit(Field field,List<ConnectionWorldPort.Target> targets,int tick,double coefficient,boolean periodic,ConnectionWorldPort port) {
+    private void hit(Field field,List<ConnectionWorldPort.Target> targets,int tick,double coefficient,boolean periodic,Vec3 center,ConnectionWorldPort port) {
         int attempts=0;double healthLost=0;
         for(var target:targets) {
             if(field.done)break;if(field.lastHit.getOrDefault(target.id(),-1)==tick)continue;
             field.lastHit.put(target.id(),tick);attempts++;
-            double lost=port.damage(field.pulseContext,target,tick,coefficient,periodic);if(Double.isFinite(lost)&&lost>0)healthLost+=lost;
+            double lost=port.damage(field.pulseContext,target,tick,coefficient,periodic,center);if(Double.isFinite(lost)&&lost>0)healthLost+=lost;
             if(!field.done&&field.profile().kind()==ConnectionProfile.Kind.DRAIN&&Double.isFinite(lost)&&lost>0)port.healFromDamage(field.pulseContext,tick,lost);
         }
         port.trace(field.context,"CONNECTION_TICK",Map.of("tick",tick,"coefficient",coefficient,"targetAttempts",attempts,"actualHealthLoss",healthLost,"periodic",periodic));
