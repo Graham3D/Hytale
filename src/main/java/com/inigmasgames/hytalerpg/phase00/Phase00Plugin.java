@@ -121,13 +121,15 @@ public final class Phase00Plugin extends JavaPlugin {
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
                 combatTrace, reactions, vfx, bosses);
         var supportSystem=skillExecutionSystem.configureSupport(loadouts);
-        var summonSystem=skillExecutionSystem.configureSummons();
+        var summonSystem=skillExecutionSystem.configureSummons(getDataDirectory().resolve("corpse-consumption"));
         com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.SummonProjection::new));
         getEntityStoreRegistry().registerSystem(summonSystem);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSummonSystem.Removal(summonSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSummonSystem.DamageGuard(summonSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleCorpseSystem(summonSystem.corpses(),bosses));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleCorpseSystem.Removal(summonSystem.corpses()));
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         var rpgCommand=new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
                 uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities);

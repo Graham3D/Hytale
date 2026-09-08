@@ -1,0 +1,70 @@
+Compiled from "DeferredCorpseRemoval.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DeferredCorpseRemoval implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  protected double timeRemaining;
+
+  protected java.lang.String deathParticles;
+
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.damage.DeferredCorpseRemoval> getComponentType();
+    Code:
+         0: invokestatic  #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+         3: invokevirtual #7                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getDeferredCorpseRemovalComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: areturn
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DeferredCorpseRemoval(double, java.lang.String);
+    Code:
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: dload_1
+         6: putfield      #17                 // Field timeRemaining:D
+         9: aload_0
+        10: aload_3
+        11: putfield      #23                 // Field deathParticles:Ljava/lang/String;
+        14: return
+
+  public void tick(float);
+    Code:
+         0: aload_0
+         1: dup
+         2: getfield      #17                 // Field timeRemaining:D
+         5: fload_1
+         6: f2d
+         7: dsub
+         8: putfield      #17                 // Field timeRemaining:D
+        11: return
+
+  public boolean shouldRemove();
+    Code:
+         0: aload_0
+         1: getfield      #17                 // Field timeRemaining:D
+         4: dconst_0
+         5: dcmpg
+         6: ifgt          13
+         9: iconst_1
+        10: goto          14
+        13: iconst_0
+        14: ireturn
+
+  public java.lang.String getDeathParticles();
+    Code:
+         0: aload_0
+         1: getfield      #23                 // Field deathParticles:Ljava/lang/String;
+         4: areturn
+
+  public com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> clone();
+    Code:
+         0: new           #18                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeferredCorpseRemoval
+         3: dup
+         4: aload_0
+         5: getfield      #17                 // Field timeRemaining:D
+         8: aload_0
+         9: getfield      #23                 // Field deathParticles:Ljava/lang/String;
+        12: invokespecial #27                 // Method "<init>":(DLjava/lang/String;)V
+        15: areturn
+
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+    Code:
+         0: aload_0
+         1: invokevirtual #30                 // Method clone:()Lcom/hypixel/hytale/component/Component;
+         4: areturn
+}

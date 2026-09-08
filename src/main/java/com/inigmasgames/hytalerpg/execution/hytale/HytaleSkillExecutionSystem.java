@@ -124,7 +124,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
     private HytaleSupportSystem support;
     private HytaleSummonSystem summons;
-    public HytaleSummonSystem configureSummons(){
+    public HytaleSummonSystem configureSummons(java.nio.file.Path consumptionDirectory){
         if(summons!=null)throw new IllegalStateException("Summons already configured");
         summons=new HytaleSummonSystem(trace,(store,buffer,owner,target,lease,attack)->{
             var playerRef=store.getComponent(owner,PlayerRef.getComponentType());
@@ -132,11 +132,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     store.getComponent(owner,EntityStatMap.getComponentType()),null,buffer);
             var candidate=port.candidate(target);var context=lease.context();
             if(candidate==null||candidate.protectedTarget()||!HytaleAreaQueries.hostile(store,target,owner))return;
-            var result=port.damage(context,candidate,attack,context.profile().summon().coefficient(),context.snapshot().criticalChance(),
+            var result=port.damage(context,candidate,attack,lease.coefficient(),context.snapshot().criticalChance(),
                     connectionCause(context.profile().summon().element()),false,lease.token()+"/attack/"+attack,false);
             summons.emit(lease,RpgTraceEventType.SUMMON_ATTACK,Map.of("entity",lease.entity(),"target",candidate.stableId(),
                     "attack",attack,"actualHealthLoss",result.actualHealthLoss(),"cancelled",result.cancelled()));
-        });return summons;
+        },new com.inigmasgames.hytalerpg.execution.summon.CorpseLedger(
+                new com.inigmasgames.hytalerpg.execution.summon.FileCorpseConsumptionStore(consumptionDirectory)));return summons;
     }
     public HytaleSupportSystem configureSupport(com.inigmasgames.hytalerpg.progress.RpgLoadoutService loadouts){
         if(support!=null)throw new IllegalStateException("Support already configured");
@@ -470,6 +471,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if(context.derivedRelease())return Validation.reject("SUMMON_REPEAT_FORBIDDEN");
                 if(feet.subtract(target.point()).length()>profile.summon().range())return Validation.reject("SUMMON_COMMITTED_TARGET_OUT_OF_RANGE");
                 if(!HytaleAreaQueries.clear(store,feet.add(new Vec3(0,1.35,0)),target.point()))return Validation.reject("SUMMON_COMMITTED_LOS_BLOCKED");
+                if(profile.summon().corpseRequired()){
+                    var corpse=summons.corpses().available(target.entityId(),target.worldId()).orElse(null);
+                    if(corpse==null||!HytaleCorpseSystem.valid(store,actor,corpse))return Validation.reject("CORPSE_EXPIRED_BEFORE_RELEASE");
+                }
                 String capacity=summons.registry().admission(playerRef.getUuid(),profile.summon().count());
                 return capacity.equals("PASS")?Validation.pass():Validation.reject(capacity);
             }

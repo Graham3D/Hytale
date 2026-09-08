@@ -1,7 +1,10 @@
 [CmdletBinding()]
-param([ValidateSet('a')][string]$Cohort='a')
+param([ValidateSet('a','b')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $summonRoot=(Resolve-Path "$PSScriptRoot\..").Path
+$summonExpectedTests=if($Cohort -eq 'a'){535}else{555}
+$summonExpectedTriggers=if($Cohort -eq 'a'){52}else{53}
+$summonSkills=if($Cohort -eq 'a'){@('wolf_summon')}else{@('revive_fallen')}
 $summonEvidence=Join-Path $summonRoot "evidence\stage-10\cohort-$Cohort"
 $summonJar=Join-Path $summonRoot 'build\libs\HytaleRPG-0.0.22.jar'
 $summonArchive=Join-Path $summonEvidence 'artifacts\HytaleRPG-0.0.22.jar'
@@ -14,7 +17,7 @@ foreach($summonFile in Get-ChildItem -Path "$summonRoot\build\test-results\test"
     $summonCount += [int]$summonSuite.tests
     $summonTests+=@{name=$summonSuite.name;tests=[int]$summonSuite.tests;seconds=$summonSuite.time;cases=@($summonSuite.testcase | ForEach-Object {$_.name})}
 }
-if($summonCount -lt 535){throw 'Incomplete retained regression suite'}
+if($summonCount -lt $summonExpectedTests){throw 'Incomplete retained regression suite'}
 $summonSmoke=Get-Content -Raw -LiteralPath (Join-Path $summonEvidence 'server-smoke-summary.json') | ConvertFrom-Json
 if($summonSmoke.jarSha256 -ne $summonHash -or $summonSmoke.processExitCode -ne 0 -or $summonSmoke.failure -or
     -not $summonSmoke.networkBooted -or -not $summonSmoke.cleanShutdown -or -not $summonSmoke.summonAssetsResolved -or -not $summonSmoke.exactlyThreeMods){throw 'Exact build must pass normal isolated smoke'}
@@ -28,7 +31,7 @@ if($summonChanged.Count){throw "Protected behavior changed: $summonChanged"}
 $summonZip=[IO.Compression.ZipFile]::OpenRead($summonJar)
 try{
     $summonAbilityAssets=@($summonZip.Entries | Where-Object {$_.FullName -like 'Server/Item/Items/RPG/Abilities/*.json'})
-    if($summonAbilityAssets.Count -ne 52){throw 'Unexpected native trigger inventory'}
+    if($summonAbilityAssets.Count -ne $summonExpectedTriggers){throw 'Unexpected native trigger inventory'}
     foreach($summonEntry in $summonAbilityAssets){
         $summonReader=[IO.StreamReader]::new($summonEntry.Open())
         try{$summonAbility=($summonReader.ReadToEnd() | ConvertFrom-Json).Ability}finally{$summonReader.Dispose()}
@@ -39,18 +42,19 @@ try{
 New-Item -ItemType Directory -Force -Path (Join-Path $summonEvidence 'artifacts'),(Join-Path $summonEvidence 'rollback') | Out-Null
 Copy-Item -LiteralPath $summonJar -Destination $summonArchive -Force
 $summonRollback=Join-Path $summonRoot 'evidence\stage-09\cohort-f\artifacts\HytaleRPG-0.0.21.jar'
-Copy-Item -LiteralPath $summonRollback -Destination (Join-Path $summonEvidence 'rollback\HytaleRPG-0.0.21.jar') -Force
+if($Cohort -eq 'b'){$summonRollback=Join-Path $summonRoot 'evidence\stage-10\cohort-a\artifacts\HytaleRPG-0.0.22.jar'}
+Copy-Item -LiteralPath $summonRollback -Destination (Join-Path $summonEvidence ('rollback\'+[IO.Path]::GetFileName($summonRollback))) -Force
 $summonTests | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $summonEvidence 'test-results.json') -Encoding utf8
 $summonApi=Get-Content -Raw -LiteralPath (Join-Path $summonRoot 'evidence\stage-10\api\manifest.json') | ConvertFrom-Json
 [ordered]@{
     capturedAtUtc=[DateTime]::UtcNow.ToString('o');stage=10;cohort=$Cohort;revision='R029';version='0.0.22';playerSchema=5;compiledPlanSchema=6
     sourceHead=(& git -C $summonRoot rev-parse HEAD).Trim();branch=(& git -C $summonRoot branch --show-current).Trim()
     status='IMPLEMENTATION_IN_PROGRESS';cohortStatus='IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION';localGate='PASS';connectedGate='UNVERIFIED'
-    cohortSkills=@('wolf_summon');cohortPassives=@();tests=$summonCount;failures=0;errors=0;skipped=0
+    cohortSkills=@($summonSkills);cohortPassives=@();tests=$summonCount;failures=0;errors=0;skipped=0
     jarSha256=$summonHash;rollbackSha256=(Get-FileHash -LiteralPath $summonRollback).Hash
     serverSha256=$summonApi.serverSha256;assetsSha256=$summonApi.assetsSha256;zeroNativeCostTriggers=$summonAbilityAssets.Count
     normalThreeModSmoke=$true;nativeSpawnOrMotionProven=$false;nativeCastingFixed=$false;liveDeploymentPerformed=$false
-    protectedPathsChanged=$summonChanged;remainingStage10Skills=8;stage10Complete=$false
+    protectedPathsChanged=$summonChanged;remainingStage10Skills=(60-$summonExpectedTriggers);stage10Complete=$false
     rollbackStateRequirement='No migration from Stage09 schema5. Earlier live R023 schema3 still needs its own backup before any eventual deployment.'
 } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $summonEvidence 'verification.json') -Encoding utf8
 [pscustomobject]@{tests=$summonCount;jarSha256=$summonHash;connectedGate='UNVERIFIED'}

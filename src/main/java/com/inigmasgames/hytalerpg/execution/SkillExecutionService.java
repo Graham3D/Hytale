@@ -270,8 +270,8 @@ public final class SkillExecutionService {
             releases.finish(prepared.instanceId);
             // Spatial dispatch can already have applied a hit before a later presentation/status adapter fails.
             // A paid area must not yield free native damage through the synchronous rollback path.
-            if (cooldownStarted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
-            try { if (resourceCommitted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null) kernel.resources().refundCommittedCost(token, port.resources());
+            if (cooldownStarted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
+            try { if (resourceCommitted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null) kernel.resources().refundCommittedCost(token, port.resources());
                   else if (resourceCommitted) kernel.resources().finish(token); }
             catch (RuntimeException ignored) { }
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());

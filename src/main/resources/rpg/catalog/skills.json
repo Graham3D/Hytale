@@ -5491,7 +5491,7 @@
     ],
     "weaponRequirement": "Spellbooks",
     "scalingClass": "Magic",
-    "basePowerSource": "INNATE",
+    "basePowerSource": "MAGIC_WEAPON",
     "innateBasePower": null,
     "resourceType": "MANA",
     "castCost": "Mana 30",

@@ -137,3 +137,108 @@ and death/logout/world-unload cleanup all require connected recordings.
 Next authorized cohort: Revive Fallen, reusing this actor boundary and adding
 exclusive death-anchor claims. It must not copy source combat/reward scripts or
 turn unclassified actors into eligible corpse rewards.
+
+## Cohort B — Revive Fallen pilot
+
+### Earliest native boundary and constrained source coverage
+
+The adapter observes actual `DeathComponent` addition on native NPCs, snapshots
+their authoritative maximum Health and position, and accepts only explicitly
+classified roles. It does not manufacture corpses from an RPG timer. Native body
+removal, death-component removal, and owner cancellation invalidate uncommitted
+claims. The body must still exist, be dead, be hostile to the caster, and pass the
+existing protected-target/LOS policy when selected and at release.
+
+The first audited source is shipped `Wolf_Black`: its modified Health is read
+from the native stat map, not assumed from the template's older default; its
+authored source power is 27. `Template_Predator` has attack pause range [2,3],
+pre-delay .3 and post-delay .4, rather than one universal attack cadence.
+The source profile deliberately uses a conservative authored 3-second interval;
+this is not a measurement of native attacks. Selected source/template bytecode
+and asset evidence are in `evidence/stage-10/cohort-b/api`.
+
+That template also gives a 1.5-second death animation. Hytale's deferred corpse
+removal follows the native death lifecycle. This pilot preserves that lifetime
+and original loot handling; it does not extend bodies or duplicate native loot.
+Consequently, the usable native corpse window is short and still needs connected
+testing. No generic encounter/story/boss classifier is inferred from role names.
+Unclassified roles reject with `NO_ELIGIBLE_CLASSIFIED_NATIVE_CORPSE` before
+payment. The domain rules admit common/specialist/elite and reject miniboss,
+boss, player, owned, protected and story sources; **elite native-source coverage
+is not proven by the fixture that tests those rules**. Broader audited source
+classification remains a coverage item, not an implied working feature.
+
+### Transaction, persistence and stat calculation
+
+Revive costs 30 Mana, starts a 30-second RPG cooldown, requires a Spellbook and a
+corpse within 15 metres, and creates one 25-second controlled projection. Its
+compiled target stores the corpse UUID/world/death anchor. Source archetype
+selects an audited RPG-owned role; source inventory, attack scripts, loot and
+encounter identity are never copied. The existing catalog's undefined INNATE
+source was corrected to MAGIC_WEAPON so its canonical resolved-Magic-Power cap
+has the same authoritative input as the runtime profile.
+
+The stat contract is `min(.60 sourceMaxHealth, 2 casterMaxHealth)` Health,
+`min(.60 sourceBasePower, .80 resolvedMagicPower)` hit power, and
+`max(sourceInterval, 1 second)` cadence. The clamped power becomes a coefficient
+against the captured resolved Magic Power, avoiding a second attribute multiplier.
+The same immutable cast/root/instance/correlation snapshot reaches summon attacks.
+The profile uses Necrotic damage; ordinary Wolf Summon retains Nature.
+
+Claims are exclusive across owners and use exact runtime claim identity. Duplicate
+claim calls for the same owner/root return the same claim; consumption succeeds
+once. A bounded 1024-entry runtime ledger follows native corpse lifetime. Before
+spawn dispatch, an immutable receipt is created with CREATE_NEW and flushed under
+the plugin data directory `corpse-consumption/<world>/<corpse>.consumed`. This
+avoids replay after process restart or native corpse reload. Even an empty/torn
+receipt means consumed. An IO failure rejects the operation conservatively; an
+ambiguous claim cannot become reusable. Native death observation catches receipt
+IO failure and rejects that corpse instead of throwing into native death handling.
+
+Receipts use filesystem lookups without a growing in-memory index or a full
+directory scan on each cast. They intentionally accumulate on disk; they must be
+backed up/restored with world and player state and must not be purged merely
+because a body disappeared. Hard power-loss/filesystem guarantees and live IO
+latency are not established by these tests. A crash after consumption but before
+spawn may lose that activation, but cannot create a second summon from the body.
+The system does not claim an atomic transaction with Hytale's world-save engine.
+
+Native spawn remains deferred through the world command buffer and validates
+space. If the corpse body prevents placement, the actual native rejection is
+reported; no collision bypass was invented to make the pilot appear complete.
+Spawn failure rolls back only actors created by that batch. An executor failure
+after a committed summon retains both its paid resource and cooldown, like other
+already-dispatched persistent families. The regression exposed the old cooldown
+clear path; it now excludes summon dispatch as well as excluding its refund.
+No existing Stage04/05 executor, resource formula, HUD or projectile is changed.
+
+### Local checks, rollback and connected gate
+
+The full retained gate is 555 passing tests, including 20 new corpse/revive tests,
+with no failures/skips. They cover contention, identity forgery, duplicate roots,
+world mismatch, owner/body cleanup, rank/ownership rules, stat caps, source
+allowlisting, capacity, durable reopening, torn receipts, two repository instances,
+IO failure, real cast payment/cooldown and post-consumption error behavior.
+The initial focused run had one failed assertion because a terminated paid cast
+correctly reports `committed=true`; the corrected test asserts TERMINATED while
+requiring payment/cooldown retention. It also exposed and fixed the cooldown clear.
+The initial compile caught the wrong native NetworkId package, fixed from the
+installed JAR before the gate. All failures were development failures, not waived
+regressions.
+
+There are 53 zero-cost/zero-cooldown native trigger assets, including Revive. The
+packaged UI is unchanged and validated. The final JAR must pass the ordinary
+three-mod loopback network boot/clean shutdown and be archived separately from A.
+Exact results and hashes: `evidence/stage-10/cohort-b/verification.json`.
+Rollback: cohort A .22, SHA-256
+`BD61D4692312E3CC30E0B00AE418BF3086C5B19867224BE47B842DFFDB1F8562`.
+Player schema remains 5 and compiled-plan schema 6. Keep the new receipt directory
+even when rolling back to A, which cannot consume corpses. No live deployment.
+
+**Connected gate remains UNVERIFIED.** Required observations include an actual
+eligible death, acquisition during the native corpse window, exactly one claim,
+native spawn acceptance, visible undead ownership/readability, measured Health
+and attack cadence, no duplicate native rewards, duplicate/restart rejection,
+and cleanup on death/logout/unload. The wolf model is an audited archetype
+placeholder, not verified undead art/animation. Neither the in-memory fixture nor
+server boot proves any of these connected behaviors. Stage 10 remains in progress.

@@ -23,6 +23,7 @@ import com.inigmasgames.hytalerpg.execution.*;
 import com.inigmasgames.hytalerpg.execution.area.AreaGeometry;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import com.inigmasgames.hytalerpg.execution.summon.SummonRegistry;
+import com.inigmasgames.hytalerpg.execution.summon.CorpseLedger;
 import java.util.*;
 import org.joml.Vector3d;
 
@@ -33,21 +34,38 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                    Ref<EntityStore> target,SummonRegistry.Lease lease,int attack);
     }
     private final SummonRegistry registry=new SummonRegistry();
+    private final CorpseLedger corpses;
     private final CombatTrace trace;
     private final Attack attack;
-    public HytaleSummonSystem(CombatTrace trace,Attack attack){this.trace=trace;this.attack=attack;}
+    public HytaleSummonSystem(CombatTrace trace,Attack attack,CorpseLedger corpses){this.trace=trace;this.attack=attack;this.corpses=corpses;}
     public SummonRegistry registry(){return registry;}
+    public CorpseLedger corpses(){return corpses;}
     public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,Vec3 aim){
         var spec=profile.summon();
         if(!NPCPlugin.get().hasRoleName(spec.roleId()))return SkillExecutionPort.Validation.reject("SUMMON_ROLE_UNAVAILABLE");
         String admission=registry.admission(store.getComponent(owner,PlayerRef.getComponentType()).getUuid(),spec.count());
         if(!admission.equals("PASS"))return SkillExecutionPort.Validation.reject(admission);
+        if(spec.corpseRequired())return selectCorpse(store,owner,aim,spec.range()).isPresent()?SkillExecutionPort.Validation.pass():
+                SkillExecutionPort.Validation.reject("NO_ELIGIBLE_CLASSIFIED_NATIVE_CORPSE");
         return placement(store,owner,aim,spec.range()).isPresent()?SkillExecutionPort.Validation.pass():
                 SkillExecutionPort.Validation.reject("SUMMON_NO_VALID_GROUND");
     }
     public CommittedTarget capture(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,Vec3 aim){
+        if(profile.summon().corpseRequired()){
+            var corpse=selectCorpse(store,owner,aim,profile.summon().range()).orElseThrow();
+            return new CommittedTarget(corpse.world(),position(store,owner),corpse.anchor(),aim,corpse.entity());
+        }
         var origin=position(store,owner);var point=placement(store,owner,aim,profile.summon().range()).orElseThrow();
         return new CommittedTarget(store.getComponent(owner,PlayerRef.getComponentType()).getWorldUuid(),origin,point,aim,null);
+    }
+    private Optional<CorpseLedger.Source> selectCorpse(Store<EntityStore> store,Ref<EntityStore> owner,Vec3 aim,double range){
+        var origin=position(store,owner).add(new Vec3(0,1.35,0));var direction=aim.normalized();
+        var world=store.getComponent(owner,PlayerRef.getComponentType()).getWorldUuid();
+        return corpses.available(world).stream().filter(c->c.anchor().subtract(origin).length()<=range)
+                .filter(c->{var delta=c.anchor().add(new Vec3(0,.4,0)).subtract(origin);double dot=delta.x()*direction.x()+delta.y()*direction.y()+delta.z()*direction.z();
+                    return dot>=0&&delta.subtract(direction.multiply(dot)).length()<=1.25;})
+                .filter(c->HytaleCorpseSystem.valid(store,owner,c)&&HytaleAreaQueries.clear(store,origin,c.anchor().add(new Vec3(0,.1,0))))
+                .min(Comparator.<CorpseLedger.Source>comparingDouble(c->c.anchor().subtract(origin).length()).thenComparing(CorpseLedger.Source::entity));
     }
     private Optional<Vec3> placement(Store<EntityStore> store,Ref<EntityStore> owner,Vec3 aim,double range){
         var origin=position(store,owner);
@@ -56,12 +74,25 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     }
     public SkillExecutionResult execute(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> owner,SkillExecutionContext context){
         if(buffer==null)throw new IllegalStateException("SUMMON_WORLD_COMMAND_BUFFER_REQUIRED");
-        var leases=registry.reserve(context,now());
+        CorpseLedger.Claim claim=null;
+        if(context.profile().summon().corpseRequired()){
+            var source=corpses.available(context.target().entityId(),context.target().worldId()).orElseThrow(()->new IllegalStateException("CORPSE_UNAVAILABLE"));
+            if(!HytaleCorpseSystem.valid(store,owner,source))throw new IllegalStateException("CORPSE_NO_LONGER_VALID");
+            claim=corpses.reserve(source.entity(),source.world(),context.request().actorId(),context.rootCastId());
+        }
+        List<SummonRegistry.Lease> leases;
+        try{leases=registry.reserve(context,now(),claim==null?null:claim.source());}
+        catch(RuntimeException failure){if(claim!=null)corpses.release(claim);throw failure;}
         try{
+            if(claim!=null){
+                emit(leases.getFirst(),RpgTraceEventType.CORPSE_CLAIMED,Map.of("corpse",claim.entity(),"claim",claim.nonce()));
+                if(!corpses.consume(claim))throw new IllegalStateException("CORPSE_COMMIT_REJECTED");
+                emit(leases.getFirst(),RpgTraceEventType.CORPSE_CONSUMED,Map.of("corpse",claim.entity(),"claim",claim.nonce(),"rewardCreated",false));
+            }
             emit(leases.getFirst(),RpgTraceEventType.SUMMON_SPAWN_REQUEST,Map.of("count",leases.size(),"role",context.profile().summon().roleId()));
             // NPCPlugin uses Store.addEntity: execute outside entity iteration, on this SAME native world thread.
             buffer.run(actual->spawnBatch(actual,owner,context,leases));
-        }catch(RuntimeException failure){leases.forEach(lease->registry.remove(lease.token()));throw failure;}
+        }catch(RuntimeException failure){leases.forEach(lease->registry.remove(lease.token()));if(claim!=null)corpses.release(claim);throw failure;}
         return SkillExecutionResult.committed("SUMMON_SPAWN_QUEUED",0,0);
     }
     private void spawnBatch(Store<EntityStore> store,Ref<EntityStore> owner,SkillExecutionContext context,List<SummonRegistry.Lease> leases){
@@ -76,7 +107,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                 var lease=leases.get(index);
                 if(registry.find(lease.token()).isEmpty()||now()>=lease.expires())throw new IllegalStateException("SUMMON_RESERVATION_CANCELLED");
                 var at=point.add(new Vec3(index*1.2,0,0));
-                var result=NPCPlugin.get().spawnNPCWithSpaceValidation(store,spec.roleId(),null,vector(at),
+                var result=NPCPlugin.get().spawnNPCWithSpaceValidation(store,lease.roleId(),null,vector(at),
                         store.getComponent(owner,TransformComponent.getComponentType()).getRotation(),(npc,ref,actual)->{
                             created.add(ref); // Track first; any subsequent failure has an exact rollback target.
                             actual.addComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType(),NonSerialized.get());
@@ -84,7 +115,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                             actual.addComponent(ref,SummonProjection.getComponentType(),new SummonProjection(lease.token()));
                             var stats=actual.getComponent(ref,EntityStatMap.getComponentType());
                             int health=DefaultEntityStatTypes.getHealth();var nativeHealth=stats.get(health);
-                            double maximum=context.snapshot().derivedStats().maxHealth()*spec.healthFactor();
+                            double maximum=lease.maximumHealth();
                             stats.putModifier(health,"RPG_SUMMON_MAX",new StaticModifier(Modifier.ModifierTarget.MAX,
                                     StaticModifier.CalculationType.ADDITIVE,(float)(maximum-nativeHealth.getMax())));
                             stats.update();stats.setStatValue(health,(float)maximum);
@@ -103,7 +134,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                     "rollbackEntities",created.size(),"resourceRefund",false));
         }
     }
-    public void cancel(UUID owner,String reason){for(var lease:registry.cancel(owner))emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason",reason));}
+    public void cancel(UUID owner,String reason){corpses.cancelUncommitted(owner);for(var lease:registry.cancel(owner))emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason",reason));}
     @Override public Query<EntityStore> getQuery(){return Query.and(SummonProjection.getComponentType(),NPCEntity.getComponentType(),TransformComponent.getComponentType());}
     @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.BEFORE,RoleSystems.BehaviourTickSystem.class));}
     @Override public void tick(float delta,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){

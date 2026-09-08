@@ -1,5 +1,7 @@
 npcRoles.RPG_Summon_Wolf.name = RPG Summoned Wolf
 items.RPG_Ability_Wolf_Summon.name = Wolf Summon
+items.RPG_Ability_Revive_Fallen.name = Revive Fallen
+items.RPG_Ability_Revive_Fallen.description = Requires an eligible classified native corpse; consumption cannot be repeated.
 items.RPG_Ability_Wolf_Summon.description = Temporary allied wolf; RPG owns its cost, cooldown and damage.
 items.RPG_Ability_Quick_Slash.name = Quick Slash
 items.RPG_Ability_Quick_Slash.description = RPG skill projected into Hytale's native ability slot.
