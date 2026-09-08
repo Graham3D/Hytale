@@ -124,9 +124,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
     private HytaleSupportSystem support;
     private HytaleSummonSystem summons;
+    private HytaleConversionSystem conversions;
+    public HytaleConversionSystem configureConversions(){
+        if(conversions!=null)throw new IllegalStateException("Conversions already configured");
+        conversions=new HytaleConversionSystem(trace,bosses,vfx);return conversions;
+    }
     public HytaleSummonSystem configureSummons(java.nio.file.Path consumptionDirectory){
         if(summons!=null)throw new IllegalStateException("Summons already configured");
-        summons=new HytaleSummonSystem(trace,(store,buffer,owner,target,lease,attack)->{
+        summons=new HytaleSummonSystem(trace,bosses,(store,buffer,owner,target,lease,attack)->{
             var playerRef=store.getComponent(owner,PlayerRef.getComponentType());
             var port=new Port(store,owner,playerRef,store.getComponent(owner,Player.getComponentType()),
                     store.getComponent(owner,EntityStatMap.getComponentType()),null,buffer);
@@ -270,6 +275,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
 
     private void cancel(UUID actor, String reason, CommandBuffer<EntityStore> buffer) {
         if(summons!=null)summons.cancel(actor,reason);
+        if(conversions!=null)conversions.cancel(actor);
         windupEnds.remove(actor); motions.remove(actor); counters.remove(actor);
         RepeatingStrike repeating = repeatingStrikes.remove(actor);
         if (repeating != null) hits.clear(repeating.context.skillInstanceId());
@@ -360,6 +366,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     || reactions.active(playerRef.getUuid()).isPresent()) return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
             if(profile.support()!=null)return support==null?Validation.reject("SUPPORT_NATIVE_ADAPTER_UNAVAILABLE"):
                     support.preflight(store,actor,profile,plan);
+            if(profile.conversion()!=null)return conversions==null?Validation.reject("CONVERSION_NATIVE_ADAPTER_UNAVAILABLE"):
+                    conversions.preflight(store,actor,profile,aim(store,actor));
             if(profile.summonAction()!=null)return summons==null?Validation.reject("SUMMON_NATIVE_ADAPTER_UNAVAILABLE"):
                     summons.preflightAction(store,actor,profile,aim(store,actor));
             if(profile.summon()!=null)return summons==null?Validation.reject("SUMMON_NATIVE_ADAPTER_UNAVAILABLE"):
@@ -437,6 +445,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public CommittedTarget captureTarget(Stage04SkillProfile profile,
                 com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,SkillExecutionRequest request) {
             if(profile.support()!=null)return support.capture(store,actor,profile);
+            if(profile.conversion()!=null)return conversions.capture(store,actor,profile,aim(store,actor));
             if(profile.summonAction()!=null)return summons.captureAction(store,actor,profile,aim(store,actor));
             if(profile.summon()!=null)return summons.capture(store,actor,profile,aim(store,actor));
             Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
@@ -482,6 +491,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(motions.containsKey(playerRef.getUuid())||windupEnds.containsKey(playerRef.getUuid())||reactions.active(playerRef.getUuid()).isPresent())
                 return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
             Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
+            if(profile.conversion()!=null)return conversions.validate(store,actor,context);
             if(profile.summonAction()!=null)return summons.validateAction(store,actor,context);
             if(profile.summon()!=null){
                 if(context.derivedRelease())return Validation.reject("SUMMON_REPEAT_FORBIDDEN");
@@ -561,6 +571,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             return SkillExecutionResult.committed("CONNECTION_STARTED",0,0);
         }
         @Override public SkillExecutionResult executeSupport(SkillExecutionContext context){return support.execute(store,actor,context,buffer);}
+        @Override public SkillExecutionResult executeConversion(SkillExecutionContext context){return conversions.execute(store,buffer,actor,context);}
         @Override public com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets captureSummonModifiers(com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets authored){
             return support==null?authored:support.runtime().finite().outgoingModifiers(playerRef.getWorldUuid(),playerRef.getUuid(),authored,System.nanoTime()/1e9);
         }

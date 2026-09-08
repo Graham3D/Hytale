@@ -25,6 +25,7 @@ public final class HytaleCorpseSystem extends DeathSystems.OnDeathSystem {
     @Override public void onComponentAdded(Ref<EntityStore> ref,DeathComponent death,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
         var npc=store.getComponent(ref,NPCEntity.getComponentType());var profile=profiles.find(npc.getRoleName()).orElse(null);
         if(profile==null||npc.getRole()==null||npc.isReserved()||store.getComponent(ref,SummonProjection.getComponentType())!=null
+                ||store.getComponent(ref,ConversionProjection.getComponentType())!=null
                 ||store.getComponent(ref,PlayerRef.getComponentType())!=null
                 ||store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())!=null)return;
         var stats=store.getComponent(ref,EntityStatMap.getComponentType());var hp=stats.get(DefaultEntityStatTypes.getHealth());
@@ -49,7 +50,7 @@ public final class HytaleCorpseSystem extends DeathSystems.OnDeathSystem {
     static boolean valid(Store<EntityStore> store,Ref<EntityStore> owner,CorpseLedger.Source source){
         var body=store.getExternalData().getRefFromUUID(source.entity());
         if(body==null||!body.isValid()||store.getComponent(body,DeathComponent.getComponentType())==null)return false;
-        return HytaleAreaQueries.hostile(store,body,owner)&&store.getComponent(body,SummonProjection.getComponentType())==null;
+        return HytaleAreaQueries.hostile(store,body,owner)&&store.getComponent(body,SummonProjection.getComponentType())==null&&store.getComponent(body,ConversionProjection.getComponentType())==null;
     }
     private static Vec3 position(Store<EntityStore> store,Ref<EntityStore> ref){var p=store.getComponent(ref,TransformComponent.getComponentType()).getPosition();return new Vec3(p.x(),p.y(),p.z());}
     public static final class Removal extends com.hypixel.hytale.component.system.RefSystem<EntityStore>{

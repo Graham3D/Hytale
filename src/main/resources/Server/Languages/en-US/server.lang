@@ -118,3 +118,5 @@ items.RPG_Ability_Reaping_Storm.description = Eight paid pulses; native executio
 items.RPG_Ability_Simulacrum.name = Simulacrum
 items.RPG_Ability_Simulacrum.description = Noncombat human-shaped decoy template; native attract requests require an explicitly compatible encounter.
 npcRoles.RPG_Summon_Decoy.name = Simulacrum (decoy template)
+items.RPG_Ability_Dominate.name = Dominate
+items.RPG_Ability_Dominate.description = Temporary native relationship lease; only explicitly Dominatable, unprotected targets with non-persistent threat are eligible.

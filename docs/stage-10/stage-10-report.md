@@ -528,3 +528,136 @@ newer threat owners, and expiry/death/logout/world-removal/restart cleanup.
 Dominate still requires a restoration-safe conversion implementation; the
 existence of a provider alone does not prove full conversion. Bone Cage still
 requires proven enemy-only collision before activation may be enabled.
+
+## Cohort F — Dominate native relationship leases
+
+### Native boundary and eligibility
+
+Dominate uses the audited native AttitudeView provider path; it does not spawn a
+replacement actor, call `NPCEntity.setRole`, overwrite an attitude-memory entry,
+change faction data, or copy inventory/skills. Its typed conversion component is
+separate from created summons and consumes the existing DIRECT_TARGET executor
+dispatch seam. The native NPC retains its original AI, damage interactions,
+Health, role and serialized identity. The RPG only owns a twelve-second
+relationship/targeting lease. The explicit project Dominatable opt-in currently
+covers **Wolf_Black common actors only**. This is authored coverage, not a claim
+that every vanilla common NPC is Dominatable. The policy supports specialist and
+explicit elite opt-in records in tests; no native elite role has been opted in.
+
+Admission rejects players, allies, bosses, native invulnerability, reserved or
+RPG-owned entities, NonSerialized actors, flock members, unclassified roles,
+dead actors, and actors with persistent marked-target bindings. Flock membership
+is read, never changed. Eligibility is checked before cost and at committed
+release, with authoritative range/LOS and stable target UUID. Selection scans
+at most 4096 NPCs and admits at most 64 spatial candidates; overflow rejects,
+never silently selects the first arbitrary subset. Nearest distance then UUID
+breaks ties. Later native role/protection/flock/persistent-owner changes cancel
+the temporary control instead of overwriting the new owner.
+
+The persistent-target exclusion follows a specific bytecode observation:
+MarkedEntitySupport's ordinary `setMarkedEntity` clears a slot's rebind entry.
+Its codec serializes `RebindTargets`, not ordinary live target references. Thus
+an arbitrary overwrite could destroy saved encounter ownership. This build
+only changes a non-persistent default target and captures its original UUID.
+On end, a still-valid original target is restored; an unavailable target is
+cleared according to native reference validity. A newer persistent owner is
+never erased. Other marked slots are not overwritten. The natural NPC remains
+serialized; only the RPG control marker and lease are unsaved. A restart cannot
+resume conversion or persist rewritten allegiance because no such rewrite is
+performed. Actual native unload/restart behavior still requires connected proof.
+
+### Gameplay, ownership and cleanup
+
+Wand/Spellbook, 30 Mana, authored 35-second cooldown, 15-metre target range and
+12-second duration are retained. The normal RPG resource/cooldown authority
+applies stats and charges once. The native ItemAbility remains zero-cost,
+zero-cooldown with CostType None. Conversion creates no direct damage, projectile
+or new actor. One pending/active conversion is allowed per caster and an existing
+target cannot be leased by two owners; the registry is capped at 256 leases.
+Expired pending leases are reclaimed before new admission, including a queued
+native actor that never became available. The created-summon registry remains
+separate because conversion does not create another NPC.
+
+A priority -10 provider supplies temporary relationships for the explicitly
+admitted actor without modifying the lower native providers or timed memories.
+It inherits other NPCs' attitude toward the caster and treats players and other
+converted actors as friendly to avoid indirect PvP. Returning null when the
+lease ends restores ordinary native provider evaluation; the native .1-second
+attitude cache remains native-owned. A 5 Hz bounded target update directs the
+existing AI toward an eligible hostile target or clears the default target when
+none is available. Native animation, perception and attack execution have not
+been observed. The native Filter guard rejects converted-source damage to
+players/allies/protected/owned targets, and rejects friendly EntitySource damage
+to an actively converted actor. It also rejects stale converted-source damage
+after lease expiry or owner loss. There is no second damage calculation engine.
+
+Expiry, owner death/logout, role/protection changes, native death and entity
+removal release control. The marker carries restoration metadata independently
+of registry cancellation, so removing the logical lease cannot lose the saved
+threat identity before the native cleanup callback. Death cleanup is ordered
+before native NPC DropDeathItems and marks the actual dead role's drops handled;
+it never changes a living natural NPC's loot state. The conversion marker stays
+on the dead body until native removal, preventing corpse reuse/reward eligibility.
+The corpse adapter now rejects converted bodies. If another native mechanism
+resurrects the body, the already-restored marker is removed rather than leaving a
+permanent no-damage conversion marker on a living actor. Stage12 reward handling
+must retain the same conversion exclusion.
+
+The presentation fallback is a bounded procedural overhead diamond and ground
+outline with a final-second blink. Each fragment lasts .21 seconds and is
+refreshed at most 5 Hz; cancellation stops refreshes. These verified DebugUtils
+calls do not mutate gameplay. They are not proof of a rendered crown, native
+allied silhouette outline, animation or artist approval. No speculative particle
+or sound asset was introduced.
+
+### Failures found and corrected locally
+
+The first conversion fixtures exposed an actual new-component integration
+omission: the shared service did not capture a committed target for conversion.
+Consequently an immediate activation reached dispatch without a target and
+entered its old refundable-failure branch. Conversion is now included in target
+capture and in the retained paid-failure policy for effects that may already
+have started. A delayed cast uses the original target; it cannot retarget during
+release. An uncertain post-dispatch failure keeps the charge/cooldown and leaves
+the finite lease to explicit cleanup/expiry instead of granting a free effect.
+Tests assert COMMITTED status explicitly; the historical `committed` boolean by
+itself is not sufficient because a paid termination can also carry that flag.
+No Stage04/05 family mechanics or resource formula was changed.
+
+The shared compatibility authority now explicitly rejects generic Echo,
+Retaliation, Critical Trigger and Kill Trigger for conversion targets. Summon
+operators also reject conversion. Compiled-plan schema is 9, forcing the changed
+compatibility contract to recompile; player schema remains 5. Three historical
+profile-inventory tests exclude the new typed conversion component while
+retaining their original 12/35-profile assertions.
+
+Review also tightened E's decoy admission and cleanup: native Invulnerable,
+observed boss and NonSerialized markers now reject explicitly, and persistent
+target bindings can neither be acquired nor overwritten during restoration.
+This corrects reliance on a spatial/hostility query that does not itself enforce
+every protected-target rule. It is a conservative safety change, not new proof
+that all external mod ownership schemes are recognized.
+
+### Evidence and rollback
+
+Full retained gate: **651 tests**, including 27 new conversion cases. Coverage
+includes exact payment/dispatch, owner/target/global caps, identity, typed
+eligibility, persistent-threat exclusion, elite opt-in, lifetime/expiry,
+cancellation, delayed target retention, generic repeat rollback, no replay from
+a recreated registry and paid failure after dispatch. One test executes the
+**actual installed AttitudeView class** to verify provider priority and null
+fallthrough; it uses no world/client and does not prove native NPC behavior.
+
+The normal isolated three-mod boot resolves eight Stage10 profiles and 59 neutral
+native triggers, registers the native conversion systems, reaches network boot
+and shuts down cleanly. Final artifact/smoke/test hashes are recorded in
+`evidence/stage-10/cohort-f/verification.json`. Rollback is cohort E, SHA-256
+`C9BA5B077674939605CE46C8E5F5D16CD1DFFCAEE8D3C37047390243624B55E8`.
+No live deployment or native HUD/XP geometry change occurred.
+
+Connected gates remain UNVERIFIED: a real eligible Wolf must accept the lease,
+retarget and use its native attacks, refuse friendly damage, then restore its
+original threat and ordinary allegiance at every terminal boundary. Native
+death/drop ordering, corpse exclusion, chunk unload/reload and restart still
+need connected evidence. The R024 ability-input boundary is not promoted by this
+cohort. **Bone Cage is the final independent Stage10 feature still to audit.**

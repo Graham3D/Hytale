@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {"skillId":"dominate","family":"DIRECT_TARGET","allowedMainHandKinds":["WAND","SPELLBOOK"],"requiredOffHandKinds":[],"secondaryFamilies":["CONVERSION"],
+      "resourceType":"MANA","resourceCost":30,"cooldownSeconds":35,"windupSeconds":0,
+      "basePowerSource":"NONE","innateBasePower":0,"scaling":"MAGIC",
+      "conversion":{"range":15,"duration":12}}
+  ]
+}

@@ -83,6 +83,16 @@ public final class LinkTreeVfxService {
         com.hypixel.hytale.server.core.modules.debug.DebugUtils.addLine(world,new org.joml.Vector3d(a.x(),a.y(),a.z()),new org.joml.Vector3d(b.x(),b.y(),b.z()),color,
                 .025,(float)seconds,com.hypixel.hytale.server.core.modules.debug.DebugUtils.FLAG_NONE);
     }
+    /** Finite fallback for conversion: crown-shaped diamond and ground outline, never gameplay authority. */
+    public void presentConversion(World world,com.inigmasgames.hytalerpg.execution.math.Vec3 feet,boolean warning,double now){
+        if(warning&&((long)Math.floor(now*5)&1)==0)return;
+        var color=new org.joml.Vector3f(.7f,.35f,1f);var center=feet.add(new com.inigmasgames.hytalerpg.execution.math.Vec3(0,2.1,0));
+        var ring=java.util.List.of(new com.inigmasgames.hytalerpg.execution.math.Vec3(0,.3,0),new com.inigmasgames.hytalerpg.execution.math.Vec3(.25,0,0),
+                new com.inigmasgames.hytalerpg.execution.math.Vec3(0,-.3,0),new com.inigmasgames.hytalerpg.execution.math.Vec3(-.25,0,0));
+        for(int i=0;i<4;i++)connectionLine(world,center.add(ring.get(i)),center.add(ring.get((i+1)%4)),color,.21);
+        com.hypixel.hytale.server.core.modules.debug.DebugUtils.addDisc(world,new org.joml.Vector3d(feet.x(),feet.y()+.05,feet.z()),.6,color,.21f,
+                com.hypixel.hytale.server.core.modules.debug.DebugUtils.FLAG_NO_SOLID);
+    }
     /** Bounded procedural overhead core; no native projectile or gameplay interaction is spawned. */
     public void presentDescending(World world, com.inigmasgames.hytalerpg.execution.math.Vec3 position, String element, double seconds) {
         com.hypixel.hytale.server.core.modules.debug.DebugUtils.addSphere(world,

@@ -1,12 +1,12 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c','d','e')][string]$Cohort='a')
+param([ValidateSet('a','b','c','d','e','f')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $summonRoot=(Resolve-Path "$PSScriptRoot\..").Path
-$summonExpectedTests=@{a=535;b=555;c=576;d=610;e=624}[$Cohort]
-$summonExpectedTriggers=@{a=52;b=53;c=55;d=57;e=58}[$Cohort]
-$summonSkills=switch($Cohort){'a'{@('wolf_summon')};'b'{@('revive_fallen')};'c'{@('summon_void_crawlers','brood_call')};'d'{@('consume_minion','corpse_burst')};'e'{@('simulacrum')}}
+$summonExpectedTests=@{a=535;b=555;c=576;d=610;e=624;f=651}[$Cohort]
+$summonExpectedTriggers=@{a=52;b=53;c=55;d=57;e=58;f=59}[$Cohort]
+$summonSkills=switch($Cohort){'a'{@('wolf_summon')};'b'{@('revive_fallen')};'c'{@('summon_void_crawlers','brood_call')};'d'{@('consume_minion','corpse_burst')};'e'{@('simulacrum')};'f'{@('dominate')}}
 $summonPassives=switch($Cohort){'c'{@('swarm','minion_empowerment')};'d'{@('death_pact')};default{@()}}
-$summonPlanSchema=@{a=6;b=6;c=7;d=8;e=8}[$Cohort]
+$summonPlanSchema=@{a=6;b=6;c=7;d=8;e=8;f=9}[$Cohort]
 $summonEvidence=Join-Path $summonRoot "evidence\stage-10\cohort-$Cohort"
 $summonJar=Join-Path $summonRoot 'build\libs\HytaleRPG-0.0.22.jar'
 $summonArchive=Join-Path $summonEvidence 'artifacts\HytaleRPG-0.0.22.jar'
@@ -22,7 +22,7 @@ foreach($summonFile in Get-ChildItem -Path "$summonRoot\build\test-results\test"
 if($summonCount -lt $summonExpectedTests){throw 'Incomplete retained regression suite'}
 $summonSmoke=Get-Content -Raw -LiteralPath (Join-Path $summonEvidence 'server-smoke-summary.json') | ConvertFrom-Json
 if($summonSmoke.jarSha256 -ne $summonHash -or $summonSmoke.processExitCode -ne 0 -or $summonSmoke.failure -or
-    -not $summonSmoke.networkBooted -or -not $summonSmoke.cleanShutdown -or -not $summonSmoke.summonAssetsResolved -or -not $summonSmoke.exactlyThreeMods -or ($Cohort -in @('c','d','e') -and -not $summonSmoke.batchRolesResolved) -or ($Cohort -eq 'e' -and -not $summonSmoke.decoyRoleResolved)){throw 'Exact build must pass normal isolated smoke'}
+    -not $summonSmoke.networkBooted -or -not $summonSmoke.cleanShutdown -or -not $summonSmoke.summonAssetsResolved -or -not $summonSmoke.exactlyThreeMods -or ($Cohort -in @('c','d','e','f') -and -not $summonSmoke.batchRolesResolved) -or ($Cohort -in @('e','f') -and -not $summonSmoke.decoyRoleResolved)){throw 'Exact build must pass normal isolated smoke'}
 & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $summonJar
 $summonProtected=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI','canvas-ui/src',
     'src/main/resources/rpg/runtime/stage-04-skills.json','src/main/resources/rpg/runtime/stage-05-projectiles.json',
@@ -48,6 +48,7 @@ if($Cohort -eq 'b'){$summonRollback=Join-Path $summonRoot 'evidence\stage-10\coh
 if($Cohort -eq 'c'){$summonRollback=Join-Path $summonRoot 'evidence\stage-10\cohort-b\artifacts\HytaleRPG-0.0.22.jar'}
 if($Cohort -eq 'd'){$summonRollback=Join-Path $summonRoot 'evidence\stage-10\cohort-c\artifacts\HytaleRPG-0.0.22.jar'}
 if($Cohort -eq 'e'){$summonRollback=Join-Path $summonRoot 'evidence\stage-10\cohort-d\artifacts\HytaleRPG-0.0.22.jar'}
+if($Cohort -eq 'f'){$summonRollback=Join-Path $summonRoot 'evidence\stage-10\cohort-e\artifacts\HytaleRPG-0.0.22.jar'}
 Copy-Item -LiteralPath $summonRollback -Destination (Join-Path $summonEvidence ('rollback\'+[IO.Path]::GetFileName($summonRollback))) -Force
 $summonTests | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $summonEvidence 'test-results.json') -Encoding utf8
 $summonApi=Get-Content -Raw -LiteralPath (Join-Path $summonRoot 'evidence\stage-10\api\manifest.json') | ConvertFrom-Json

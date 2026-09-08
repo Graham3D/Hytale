@@ -41,13 +41,14 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                   Vec3 point,double radius,double coefficient,String effect,boolean frozenSnapshot);
     }
     private final SummonRegistry registry=new SummonRegistry();
-    private final DecoyNativeAttraction decoyAttraction=new DecoyNativeAttraction(registry);
+    private final DecoyNativeAttraction decoyAttraction;
     private final CorpseLedger corpses;
     private final CombatTrace trace;
     private final Attack attack;
     private final Benefit benefit;
     private final Burst burst;
-    public HytaleSummonSystem(CombatTrace trace,Attack attack,CorpseLedger corpses,Benefit benefit,Burst burst){
+    public HytaleSummonSystem(CombatTrace trace,HytaleBossBarTracker bosses,Attack attack,CorpseLedger corpses,Benefit benefit,Burst burst){
+        decoyAttraction=new DecoyNativeAttraction(registry,bosses);
         this.trace=trace;this.attack=attack;this.corpses=corpses;this.benefit=benefit;this.burst=burst;
     }
     public SummonRegistry registry(){return registry;}

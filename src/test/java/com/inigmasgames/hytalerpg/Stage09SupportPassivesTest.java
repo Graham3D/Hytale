@@ -101,7 +101,7 @@ class Stage09SupportPassivesTest {
     @Test void typedOperatorsAreDeterministicAndCompiledSchemaIsBumped(){
         var a=SupportModifiers.from(List.of(new PassiveId("conservation"),new PassiveId("resonance")));
         var b=SupportModifiers.from(List.of(new PassiveId("resonance"),new PassiveId("conservation")));
-        assertEquals(a,b);assertEquals(.92,a.commitmentFactor(),1e-9);assertEquals(8,CompiledSkillPlan.CURRENT_SCHEMA);
+        assertEquals(a,b);assertEquals(.92,a.commitmentFactor(),1e-9);assertEquals(9,CompiledSkillPlan.CURRENT_SCHEMA);
     }
     @Test void overflowRegistryAcceptsHealingComponentsOutsideSupportFamily(){
         var h=heal(40);var c=h.context;

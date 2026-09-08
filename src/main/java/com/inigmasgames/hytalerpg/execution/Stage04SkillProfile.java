@@ -26,7 +26,20 @@ public record Stage04SkillProfile(
         com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile connection,
         com.inigmasgames.hytalerpg.execution.support.SupportProfile support,
         com.inigmasgames.hytalerpg.execution.summon.SummonProfile summon,
-        com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile summonAction) {
+        com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile summonAction,
+        com.inigmasgames.hytalerpg.execution.summon.ConversionProfile conversion) {
+
+    public Stage04SkillProfile(String skillId,Family family,Set<String> secondaryFamilies,Set<String> allowedMainHandKinds,
+            Set<String> requiredOffHandKinds,String resourceType,double resourceCost,double cooldownSeconds,double windupSeconds,
+            String basePowerSource,double innateBasePower,String scaling,Strike strike,Movement movement,Reaction reaction,Projectile projectile,
+            com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area,
+            com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile connection,
+            com.inigmasgames.hytalerpg.execution.support.SupportProfile support,
+            com.inigmasgames.hytalerpg.execution.summon.SummonProfile summon,
+            com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile summonAction) {
+        this(skillId,family,secondaryFamilies,allowedMainHandKinds,requiredOffHandKinds,resourceType,resourceCost,cooldownSeconds,
+                windupSeconds,basePowerSource,innateBasePower,scaling,strike,movement,reaction,projectile,area,connection,support,summon,summonAction,null);
+    }
 
     public Stage04SkillProfile(String skillId,Family family,Set<String> secondaryFamilies,Set<String> allowedMainHandKinds,
             Set<String> requiredOffHandKinds,String resourceType,double resourceCost,double cooldownSeconds,double windupSeconds,

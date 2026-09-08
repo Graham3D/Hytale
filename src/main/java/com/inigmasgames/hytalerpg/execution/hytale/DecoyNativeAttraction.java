@@ -21,13 +21,21 @@ final class DecoyNativeAttraction {
     private final Map<Key,Request> requests=new ConcurrentHashMap<>();
     private final Map<AttitudeView,Boolean> installed=Collections.synchronizedMap(new WeakHashMap<>());
     private final SummonRegistry registry;
-    DecoyNativeAttraction(SummonRegistry registry){this.registry=registry;}
+    private final HytaleBossBarTracker bosses;
+    DecoyNativeAttraction(SummonRegistry registry,HytaleBossBarTracker bosses){this.registry=registry;this.bosses=bosses;}
 
     boolean request(Store<EntityStore> store,Ref<EntityStore> owner,Ref<EntityStore> decoy,Ref<EntityStore> target,SummonRegistry.Lease lease){
         var npc=store.getComponent(target,NPCEntity.getComponentType());var marked=store.getComponent(target,MarkedEntitySupport.getComponentType());
         if(npc==null||marked==null)return false;
         var previous=marked.getMarkedEntityRef(MarkedEntitySupport.DEFAULT_TARGET_SLOT);
-        boolean protectedOrOwned=npc.isReserved()||npc.getRole().isInvulnerable()||store.getComponent(target,SummonProjection.getComponentType())!=null;
+        var network=store.getComponent(target,com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId.getComponentType());
+        boolean protectedOrOwned=npc.isReserved()||npc.getRole().isInvulnerable()||store.getComponent(target,SummonProjection.getComponentType())!=null
+                ||store.getComponent(target,com.hypixel.hytale.server.core.modules.entity.component.Invulnerable.getComponentType())!=null
+                ||store.getComponent(target,EntityStore.REGISTRY.getNonSerializedComponentType())!=null
+                ||network!=null&&bosses.isBoss(lease.world(),network.getId());
+        // setMarkedEntity without rebind removes persistence metadata: never call it on an owned/persistent slot.
+        if(marked.getMarkedEntitySlotCount()>64)return false;
+        for(int i=0;i<marked.getMarkedEntitySlotCount();i++)protectedOrOwned|=marked.isRebindSlot(i);
         if(!DecoyAttractionPolicy.accepts(npc.getRoleName(),owner.equals(previous),protectedOrOwned,HytaleAreaQueries.hostile(store,target,owner),true))return false;
         var key=new Key(lease.world(),store.getComponent(target,UUIDComponent.getComponentType()).getUuid());
         synchronized(requests){
@@ -58,6 +66,8 @@ final class DecoyNativeAttraction {
             var ref=store.getExternalData().getRefFromUUID(entry.getKey().target());
             if(ref==null||!ref.isValid())continue;
             var marked=store.getComponent(ref,MarkedEntitySupport.getComponentType());if(marked==null)continue;
+            boolean persistent=false;for(int i=0;i<marked.getMarkedEntitySlotCount();i++)persistent|=marked.isRebindSlot(i);
+            if(persistent)continue;
             var current=marked.getMarkedEntityRef(MarkedEntitySupport.DEFAULT_TARGET_SLOT);
             var id=current==null||!current.isValid()?null:store.getComponent(current,UUIDComponent.getComponentType());
             // Never overwrite a newer encounter/taunt owner.
