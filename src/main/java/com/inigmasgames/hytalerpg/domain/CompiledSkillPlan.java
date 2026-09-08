@@ -27,7 +27,8 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 13;
+    public static final int CURRENT_SCHEMA = 14;
+    public HitConditionModifiers hitConditions(){return HitConditionModifiers.from(passiveOrder);}
     public CompiledSkillPlan {
         finalTags = Set.copyOf(finalTags);
         passiveOrder = List.copyOf(passiveOrder);

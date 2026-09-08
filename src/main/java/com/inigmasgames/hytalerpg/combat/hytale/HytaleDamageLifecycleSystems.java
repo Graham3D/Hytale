@@ -41,11 +41,28 @@ public final class HytaleDamageLifecycleSystems {
         }
     }
     public static final class Gather extends TraceSystem {
-        public Gather(CombatTrace trace) { super(trace); }
+        private final com.inigmasgames.hytalerpg.combat.status.StatusService statuses;
+        public Gather(CombatTrace trace) { this(trace,null); }
+        public Gather(CombatTrace trace,com.inigmasgames.hytalerpg.combat.status.StatusService statuses) { super(trace);this.statuses=statuses; }
         @Override public SystemGroup<EntityStore> getGroup() { return DamageModule.get().getGatherDamageGroup(); }
         @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer, Damage damage) {
-            emit(damage, RpgTraceEventType.DAMAGE_GATHERED, Map.of("amount", damage.getAmount()));
+            var details=new java.util.HashMap<String,Object>();
+            if(HytaleConditionalDamage.pending(damage)){
+                var stats=chunk.getComponent(index,EntityStatMap.getComponentType());var health=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
+                var id=chunk.getComponent(index,com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+                var active=new java.util.HashSet<String>();
+                if(id!=null&&statuses!=null)for(var type:statuses.inspect(id.getUuid()).active().keySet())
+                    if(Set.of(com.inigmasgames.hytalerpg.combat.status.RpgStatusType.ROOT,com.inigmasgames.hytalerpg.combat.status.RpgStatusType.FROZEN,
+                            com.inigmasgames.hytalerpg.combat.status.RpgStatusType.FEAR).contains(type))active.add(type.name());
+                // STAGGER is not a semantic synonym for STUN. Require the actual installed stun effect.
+                var effects=chunk.getComponent(index,com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent.getComponentType());
+                var stun=com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect.getAssetMap().getAsset("Stun");
+                if(effects!=null&&stun!=null&&effects.hasEffect(stun))active.add("STUN");
+                details.putAll(HytaleConditionalDamage.gather(damage,health==null?Double.NaN:health.get(),health==null?Double.NaN:health.getMax(),active));
+            }
+            details.put("amount",damage.getAmount());details.put("cancelled",damage.isCancelled());
+            emit(damage, RpgTraceEventType.DAMAGE_GATHERED, details);
         }
     }
     public static final class Filter extends TraceSystem {

@@ -31,9 +31,18 @@ public final class HytaleDamageAdapter {
                       HytaleDamageMetadata metadata, DamageCalculationService.Result calculation) {
         return applyResolved(target,accessor,source,cause,metadata,calculation.preMitigationDamage());
     }
+    public NativeResult applyObserved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,Ref<EntityStore> source,DamageCause cause,
+            HytaleDamageMetadata metadata,DamageCalculationService.Result calculation,com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional){
+        return applyResolved(target,accessor,source,cause,metadata,calculation.preMitigationDamage(),conditional);
+    }
     /** Already-resolved secondary amount (e.g. a post-mitigation split), not another offensive scaling pass. */
     public NativeResult applyResolved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,
                       Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,double amount){
+        return applyResolved(target,accessor,source,cause,metadata,amount,null);
+    }
+    public NativeResult applyResolved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,
+                      Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,double amount,
+                      com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional){
         if(!Double.isFinite(amount)||amount<0||amount>Float.MAX_VALUE)throw new IllegalArgumentException("Invalid native damage amount");
         EntityStatMap targetStats = accessor.getComponent(target, EntityStatMap.getComponentType());
         double before = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
@@ -44,12 +53,15 @@ public final class HytaleDamageAdapter {
         Damage damage = new Damage(source == null ? Damage.NULL_SOURCE : new Damage.EntitySource(source),
                 cause, (float)amount);
         damage.putMetaObject(RPG_METADATA, GSON.toJson(complete));
+        HytaleConditionalDamage.attach(damage,conditional);
         DamageSystems.executeDamage(target, accessor, damage);
         double after = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
                 ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();
-        return new NativeResult(damage.isCancelled(), damage.getAmount(), before, after);
+        return new NativeResult(damage.isCancelled(), damage.getAmount(), before, after,metadata(damage).preMitigationDamage());
     }
-    public record NativeResult(boolean cancelled, double nativeAmount, double healthBefore, double healthAfter) { }
+    public record NativeResult(boolean cancelled, double nativeAmount, double healthBefore, double healthAfter,double preMitigationAmount) {
+        public NativeResult(boolean cancelled,double nativeAmount,double healthBefore,double healthAfter){this(cancelled,nativeAmount,healthBefore,healthAfter,nativeAmount);}
+    }
     public static HytaleDamageMetadata metadata(Damage damage) {
         String json = damage.getIfPresentMetaObject(RPG_METADATA);
         return json == null || json.isBlank() ? null : GSON.fromJson(json, HytaleDamageMetadata.class);

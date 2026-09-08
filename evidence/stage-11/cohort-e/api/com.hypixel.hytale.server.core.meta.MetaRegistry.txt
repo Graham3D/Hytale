@@ -1,0 +1,177 @@
+Compiled from "MetaRegistry.java"
+public class com.hypixel.hytale.server.core.meta.MetaRegistry<K> implements com.hypixel.hytale.server.core.meta.IMetaRegistry<K> {
+  private final java.util.Map<java.lang.String, com.hypixel.hytale.server.core.meta.MetaRegistry$MetaRegistryEntry> parameterMapping;
+
+  private final java.util.List<com.hypixel.hytale.server.core.meta.MetaRegistry$MetaRegistryEntry> suppliers;
+
+  private final java.util.concurrent.locks.ReentrantReadWriteLock lock;
+
+  public com.hypixel.hytale.server.core.meta.MetaRegistry();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap
+         8: dup
+         9: invokespecial #9                  // Method it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap."<init>":()V
+        12: putfield      #10                 // Field parameterMapping:Ljava/util/Map;
+        15: aload_0
+        16: new           #16                 // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+        19: dup
+        20: invokespecial #18                 // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+        23: putfield      #19                 // Field suppliers:Ljava/util/List;
+        26: aload_0
+        27: new           #23                 // class java/util/concurrent/locks/ReentrantReadWriteLock
+        30: dup
+        31: invokespecial #25                 // Method java/util/concurrent/locks/ReentrantReadWriteLock."<init>":()V
+        34: putfield      #26                 // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+        37: return
+
+  public <T> com.hypixel.hytale.server.core.meta.MetaKey<T> registerMetaObject(java.util.function.Function<K, T>, boolean, java.lang.String, com.hypixel.hytale.codec.Codec<T>);
+    Code:
+         0: aload_0
+         1: getfield      #26                 // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+         4: invokevirtual #30                 // Method java/util/concurrent/locks/ReentrantReadWriteLock.writeLock:()Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+         7: invokevirtual #34                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.lock:()V
+        10: iload_2
+        11: ifeq          29
+        14: aload         4
+        16: ifnonnull     29
+        19: new           #38                 // class java/lang/IllegalStateException
+        22: dup
+        23: ldc           #40                 // String Codec cannot be null if persistence is enabled.
+        25: invokespecial #42                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        28: athrow
+        29: aload_0
+        30: getfield      #19                 // Field suppliers:Ljava/util/List;
+        33: invokeinterface #45,  1           // InterfaceMethod java/util/List.size:()I
+        38: istore        5
+        40: iload_2
+        41: ifeq          61
+        44: new           #51                 // class com/hypixel/hytale/server/core/meta/PersistentMetaKey
+        47: dup
+        48: iload         5
+        50: aload_3
+        51: aload         4
+        53: invokespecial #53                 // Method com/hypixel/hytale/server/core/meta/PersistentMetaKey."<init>":(ILjava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        56: astore        6
+        58: goto          72
+        61: new           #56                 // class com/hypixel/hytale/server/core/meta/MetaKey
+        64: dup
+        65: iload         5
+        67: invokespecial #58                 // Method com/hypixel/hytale/server/core/meta/MetaKey."<init>":(I)V
+        70: astore        6
+        72: new           #61                 // class com/hypixel/hytale/server/core/meta/MetaRegistry$MetaRegistryEntry
+        75: dup
+        76: aload_0
+        77: aload_1
+        78: aload         6
+        80: invokespecial #63                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry$MetaRegistryEntry."<init>":(Lcom/hypixel/hytale/server/core/meta/MetaRegistry;Ljava/util/function/Function;Lcom/hypixel/hytale/server/core/meta/MetaKey;)V
+        83: astore        7
+        85: aload_0
+        86: getfield      #19                 // Field suppliers:Ljava/util/List;
+        89: aload         7
+        91: invokeinterface #66,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        96: pop
+        97: iload_2
+        98: ifeq          141
+       101: aload_0
+       102: getfield      #10                 // Field parameterMapping:Ljava/util/Map;
+       105: aload_3
+       106: invokeinterface #70,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       111: ifeq          128
+       114: new           #38                 // class java/lang/IllegalStateException
+       117: dup
+       118: aload_3
+       119: invokedynamic #75,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+       124: invokespecial #42                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       127: athrow
+       128: aload_0
+       129: getfield      #10                 // Field parameterMapping:Ljava/util/Map;
+       132: aload_3
+       133: aload         7
+       135: invokeinterface #79,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       140: pop
+       141: aload         7
+       143: invokevirtual #83                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry$MetaRegistryEntry.getKey:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       146: astore        8
+       148: aload_0
+       149: getfield      #26                 // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+       152: invokevirtual #30                 // Method java/util/concurrent/locks/ReentrantReadWriteLock.writeLock:()Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+       155: invokevirtual #87                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+       158: aload         8
+       160: areturn
+       161: astore        9
+       163: aload_0
+       164: getfield      #26                 // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+       167: invokevirtual #30                 // Method java/util/concurrent/locks/ReentrantReadWriteLock.writeLock:()Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+       170: invokevirtual #87                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+       173: aload         9
+       175: athrow
+      Exception table:
+         from    to  target type
+            10   148   161   any
+           161   163   161   any
+
+  public <T> T newMetaObject(com.hypixel.hytale.server.core.meta.MetaKey<T>, K);
+    Code:
+         0: aload_0
+         1: getfield      #26                 // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+         4: invokevirtual #90                 // Method java/util/concurrent/locks/ReentrantReadWriteLock.readLock:()Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+         7: invokevirtual #94                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock.lock:()V
+        10: aload_0
+        11: getfield      #19                 // Field suppliers:Ljava/util/List;
+        14: aload_1
+        15: invokevirtual #97                 // Method com/hypixel/hytale/server/core/meta/MetaKey.getId:()I
+        18: invokeinterface #100,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+        23: checkcast     #61                 // class com/hypixel/hytale/server/core/meta/MetaRegistry$MetaRegistryEntry
+        26: invokevirtual #104                // Method com/hypixel/hytale/server/core/meta/MetaRegistry$MetaRegistryEntry.getFunction:()Ljava/util/function/Function;
+        29: aload_2
+        30: invokeinterface #108,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+        35: astore_3
+        36: aload_0
+        37: getfield      #26                 // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+        40: invokevirtual #90                 // Method java/util/concurrent/locks/ReentrantReadWriteLock.readLock:()Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+        43: invokevirtual #114                // Method java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock.unlock:()V
+        46: aload_3
+        47: areturn
+        48: astore        4
+        50: aload_0
+        51: getfield      #26                 // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+        54: invokevirtual #90                 // Method java/util/concurrent/locks/ReentrantReadWriteLock.readLock:()Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+        57: invokevirtual #114                // Method java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock.unlock:()V
+        60: aload         4
+        62: athrow
+      Exception table:
+         from    to  target type
+            10    36    48   any
+            48    50    48   any
+
+  public void forEachMetaEntry(com.hypixel.hytale.server.core.meta.IMetaStore<K>, com.hypixel.hytale.server.core.meta.IMetaRegistry$MetaEntryConsumer);
+    Code:
+         0: aload_1
+         1: new           #115                // class com/hypixel/hytale/server/core/meta/MetaRegistry$1
+         4: dup
+         5: aload_0
+         6: aload_2
+         7: invokespecial #117                // Method com/hypixel/hytale/server/core/meta/MetaRegistry$1."<init>":(Lcom/hypixel/hytale/server/core/meta/MetaRegistry;Lcom/hypixel/hytale/server/core/meta/IMetaRegistry$MetaEntryConsumer;)V
+        10: invokeinterface #120,  2          // InterfaceMethod com/hypixel/hytale/server/core/meta/IMetaStore.forEachMetaObject:(Lcom/hypixel/hytale/server/core/meta/IMetaStore$MetaEntryConsumer;)V
+        15: return
+
+  public com.hypixel.hytale.server.core.meta.PersistentMetaKey<?> getMetaKeyForCodecKey(java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field parameterMapping:Ljava/util/Map;
+         4: aload_1
+         5: invokeinterface #126,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        10: checkcast     #61                 // class com/hypixel/hytale/server/core/meta/MetaRegistry$MetaRegistryEntry
+        13: astore_2
+        14: aload_2
+        15: ifnonnull     20
+        18: aconst_null
+        19: areturn
+        20: aload_2
+        21: invokevirtual #83                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry$MetaRegistryEntry.getKey:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        24: checkcast     #51                 // class com/hypixel/hytale/server/core/meta/PersistentMetaKey
+        27: areturn
+}

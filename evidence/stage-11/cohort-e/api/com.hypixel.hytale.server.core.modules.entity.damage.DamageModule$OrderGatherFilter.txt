@@ -1,0 +1,31 @@
+Compiled from "DamageModule.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DamageModule$OrderGatherFilter implements com.hypixel.hytale.component.system.ISystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  private final java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> dependencies;
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageModule$OrderGatherFilter();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class com/hypixel/hytale/component/dependency/SystemGroupDependency
+         8: dup
+         9: getstatic     #9                  // Field com/hypixel/hytale/component/dependency/Order.AFTER:Lcom/hypixel/hytale/component/dependency/Order;
+        12: invokestatic  #15                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+        15: invokevirtual #21                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getGatherDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+        18: invokespecial #25                 // Method com/hypixel/hytale/component/dependency/SystemGroupDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Lcom/hypixel/hytale/component/SystemGroup;)V
+        21: new           #7                  // class com/hypixel/hytale/component/dependency/SystemGroupDependency
+        24: dup
+        25: getstatic     #28                 // Field com/hypixel/hytale/component/dependency/Order.BEFORE:Lcom/hypixel/hytale/component/dependency/Order;
+        28: invokestatic  #15                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+        31: invokevirtual #31                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getFilterDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+        34: invokespecial #25                 // Method com/hypixel/hytale/component/dependency/SystemGroupDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Lcom/hypixel/hytale/component/SystemGroup;)V
+        37: invokestatic  #34                 // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+        40: putfield      #40                 // Field dependencies:Ljava/util/Set;
+        43: return
+
+  public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> getDependencies();
+    Code:
+         0: aload_0
+         1: getfield      #40                 // Field dependencies:Ljava/util/Set;
+         4: areturn
+}

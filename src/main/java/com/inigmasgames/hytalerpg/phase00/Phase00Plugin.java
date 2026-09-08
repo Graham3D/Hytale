@@ -146,7 +146,7 @@ public final class Phase00Plugin extends JavaPlugin {
         getCommandRegistry().registerCommand(rpgCommand);
         getEventRegistry().register(LoadedAssetsEvent.class, RootInteraction.class,
                 NativeAbilityBridgeAudit::onRootInteractionsLoaded);
-        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace));
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace,combatKernel.statuses()));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Filter(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Inspect(combatTrace, combatKernel.hostileCombat()));

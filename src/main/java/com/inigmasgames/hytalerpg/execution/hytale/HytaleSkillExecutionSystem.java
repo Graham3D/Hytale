@@ -1012,9 +1012,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             var nativeResult = new HytaleDamageAdapter().applyObserved(target.handle(), store, actor, cause,
                     new HytaleDamageMetadata(playerRef.getUuid(), context.rootCastId(), context.skillInstanceId(),
                             context.request().correlationId(), result.preMitigationDamage(), Double.NaN,effectId,canProc,
-                            periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT), result);
+                            periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT), result,
+                    com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage.calculated(context.compiledPlan().hitConditions(),buckets,result,context.snapshot().criticalMultiplier()));
             double after = health(targetStats);
-            return new DamageOutcome(result.preMitigationDamage(),
+            return new DamageOutcome(nativeResult.preMitigationAmount(),
                     Double.isFinite(before) && Double.isFinite(after) ? Math.max(0.0, before - after) : -1.0,
                     nativeResult.cancelled());
         }

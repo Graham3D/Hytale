@@ -307,3 +307,79 @@ Both use player schema6; ordinary stopped-world checkpoint precautions apply.
 Earlier schema5 rollback still requires the pre-migration checkpoint noted above.
 Local gate PASS; connected UNVERIFIED. Nine of40 Stage11 primitives now have local
 implementation evidence;31 remain before matrix/hardening closure.
+
+## Cohort E — Executioner and Opportunist
+
+Baseline D `9aa113a`. Master LP029/LP030 read in full. R030/0.0.23,
+compiled-plan schema14; player schema6 unchanged. This cohort adds two primitives,
+not a new executor, resource authority or native damage submission path.
+
+### Earliest authoritative boundary
+
+Installed bytecode confirms native Gather precedes Filter, and both
+ScaleOutgoingDamageFromEntityEffects and ArmorDamageReduction belong to Filter.
+The existing RPG Gather system now consumes an optional single-use per-Damage
+conditional input before recording DAMAGE_GATHERED. It samples native current/max
+Health at that point, and current server status state. Archived audit:
+`evidence/stage-11/cohort-e/api`. Normal boot proves registration is accepted; it
+does not prove this handler ran for connected damage.
+
+- Executioner adds0.35 Increased only when living target Health/max is strictly
+  below0.30. Exactly30%, unavailable/invalid Health and dead targets do not qualify.
+- Opportunist adds0.25 Increased for actual ROOT/FROZEN/FEAR in the existing server
+  status authority, or the installed native `Stun` effect. A STAGGER label alone
+  is insufficient: the native stun effect must exist on the target. Chill, Taunt,
+  ordinary Slow and immune-boss Frozen-substitute Slow do not qualify. Multiple
+  qualifying controls still grant only one0.25 bonus.
+- Conditions are evaluated separately for every target and hit, including DoT
+  slices. They are not folded into the commit snapshot. Frozen outgoing DoT or
+  summon snapshots preserve their original offensive data while the current
+  victim condition is still evaluated at Gather.
+- Increased is added to the original shared bucket. More/Less/Reduced retain their
+  existing semantics; the previously rolled crit is reused, never rolled again.
+  This also handles an original additive bucket clamped to zero without division.
+  An initial fixture used0.2 where the existing More representation expects1.2;
+  the fixture was corrected rather than changing the kernel's representation.
+- The per-Damage request is consumed before mutation, so repeated handler invocation
+  cannot amplify damage. Native cancellation remains authoritative. If another
+  earlier Gather writer changes the submitted amount unexpectedly, this hit is
+  cancelled with the exact `NATIVE_GATHER_AMOUNT_CHANGED` boundary; the integration
+  does not guess how to rebase an unknown modifier or overwrite it. This explicit
+  fail-closed interoperability boundary needs retesting when additional mods or a
+  different native build are introduced.
+
+All normal skill, projectile, area, connection, periodic and owned-summon hits
+already pass through the shared native damage adapter and now carry this optional
+input when their plan requests it. The adapter returns the gathered pre-mitigation
+amount, so hit traces and future secondary calculations do not use an obsolete
+pre-condition amount. Gather records targetHealthAtGather/targetMaxHealthAtGather,
+targetControlAtGather/targetConditionalIncreased/conditionalPreMitigation and the
+gate result. Inspect retains all three cast identifiers and the gathered amount.
+Earlier DAMAGE_CALC/MODIFIERS/CRIT events describe the initial calculation; Gather
+is explicitly where the additional victim-conditioned contribution appears.
+
+Native support reflection from a damaging skill uses that skill's own captured
+plan and already-scaled reflection basis. It keeps noProc/noLeech/noCredit and
+reflection-recursion guards. Redirected shield transfers are never amplified.
+Reflective Ward's fixed absorbed-damage secondary is not treated as a newly
+introduced generic damage capability on a shield-only parent.
+
+### Cohort E local gate
+
+23 new tests: canonical positive/two-negative compatibility fixtures; strict
+thresholds; control expiry/substitution; additive bucket composition; metadata
+identity and single-use consumption on actual Damage objects; per-hit changes;
+periodic/reflected/redirected distinctions; unchanged crit; float narrowing;
+unexpected native writers; and Thorns reflection composition. These are automated
+backend/native-object tests, **not connected native damage proof**.
+
+`clean build`: **786 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot and clean exit0 PASS. Packaged CustomUI9 documents PASS.
+No live deployment, HUD alteration, native ability mutation or save migration.
+
+Artifact: `evidence/stage-11/cohort-e/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `F878FC515E4BF7119A703A9C48469CDC2E5E7432ADE35A23D0EC43DAEA1861BA`.
+Rollback: D, SHA-256
+`3DB526C4211FEE01DC1F2F69843C312086689300FDA4FC9A47DB82C7B86D4FDA`.
+Local gate PASS; connected UNVERIFIED. Eleven of40 Stage11 primitives now have
+local implementation evidence;29 remain before matrix/hardening closure.

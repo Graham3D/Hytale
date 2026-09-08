@@ -31,11 +31,16 @@ public final class SupportDamageSystems {
     }
     private static SecondaryDamageAttempt submit(HytaleSupportSystem support,FiniteSupportEffects.Effect effect,
             Ref<EntityStore> target,Store<EntityStore> store,DamageCause cause,double amount,HytaleDamageMetadata.Origin origin){
+        return submit(support,effect,target,store,cause,amount,origin,null);
+    }
+    private static SecondaryDamageAttempt submit(HytaleSupportSystem support,FiniteSupportEffects.Effect effect,
+            Ref<EntityStore> target,Store<EntityStore> store,DamageCause cause,double amount,HytaleDamageMetadata.Origin origin,
+            com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional){
         var stats=store.getComponent(target,EntityStatMap.getComponentType());
         var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
         var attempt=SecondaryDamageAttempt.once(()->hp==null?Double.NaN:hp.get(),()->new HytaleDamageAdapter().applyResolved(target,store,null,cause,
                 new HytaleDamageMetadata(effect.key().owner(),effect.rootCastId(),effect.skillInstanceId(),effect.correlationId(),amount,Double.NaN,
-                        effect.skillInstanceId()+"/"+origin+"/"+UUID.randomUUID(),false,origin),amount));
+                        effect.skillInstanceId()+"/"+origin+"/"+UUID.randomUUID(),false,origin),amount,conditional));
         if(attempt.failure()!=null){
             // Disable this lease after an uncertain dispatch; never retry a possibly applied native hit.
             support.runtime().finite().remove(effect.key());
@@ -163,7 +168,8 @@ public final class SupportDamageSystems {
                 }
                 if(!claimSecondary(support,e,now))continue;
                 double amount=(before-after)*e.magnitude();
-                var attempt=submit(support,e,source,store,DamageCause.PHYSICAL,amount,HytaleDamageMetadata.Origin.REFLECTED);
+                var attempt=submit(support,e,source,store,DamageCause.PHYSICAL,amount,HytaleDamageMetadata.Origin.REFLECTED,
+                        com.inigmasgames.hytalerpg.execution.support.SupportMagnitude.reflectionConditional(e.context(),before-after,amount));
                 var outcome=attempt.completed();if(outcome==null)continue;
                 support.traceFinite(e,RpgTraceEventType.DAMAGE_REFLECTED,Map.of("eligibleHealthLoss",before-after,"requestedReflection",amount,
                         "healthBefore",outcome.healthBefore(),"healthAfter",outcome.healthAfter(),"cancelled",outcome.cancelled(),
