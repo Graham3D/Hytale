@@ -28,8 +28,9 @@ public final class StatusService {
         if (control.protectedEntity()) return new Result(Outcome.REJECTED, type, 0, 0, "protected target rejects hostile status");
         if (type == RpgStatusType.CHILL) return applyChill(target, control);
         if (isHardControl(type) && control.blocksHardControl()) {
-            if (type == RpgStatusType.FROZEN) return applySimple(target, RpgStatusType.FROZEN_SUBSTITUTE_SLOW,
-                    profile.frozenDurationSeconds, 1, true, "protected target: 30% Slow substitute");
+            if (type == RpgStatusType.FROZEN || type == RpgStatusType.ROOT && control.boss())
+                return applySimple(target, RpgStatusType.FROZEN_SUBSTITUTE_SLOW,
+                    profile.frozenDurationSeconds, 1, true, "control-resistant target: 30% Slow substitute");
             return new Result(Outcome.REJECTED, type, 0, 0.0, "target control profile rejects hard control");
         }
         if (type == RpgStatusType.FROZEN && frozenImmunityEnds.getOrDefault(target, 0L) > nanoTime.getAsLong())

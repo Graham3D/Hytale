@@ -300,12 +300,15 @@ class Stage02CombatKernelTest {
         assertTrue(statuses.inspect(target).active().containsKey(RpgStatusType.FROZEN));
     }
 
-    @Test void protectedFrozenUsesThirtyPercentSlowAndOtherHardControlsReject() {
+    @Test void bossFrozenAndRootUseThirtyPercentSlowWhileOtherHardControlsReject() {
         StatusService statuses = new StatusService(profile, () -> 0L); UUID target = UUID.randomUUID();
         ControlProfile boss = new ControlProfile(false, true, true);
         for (int i = 0; i < 5; i++) statuses.apply(target, RpgStatusType.CHILL, boss);
         assertTrue(statuses.inspect(target).active().containsKey(RpgStatusType.FROZEN_SUBSTITUTE_SLOW));
-        assertEquals(StatusService.Outcome.REJECTED, statuses.apply(target, RpgStatusType.ROOT, boss).outcome());
+        assertEquals(RpgStatusType.FROZEN_SUBSTITUTE_SLOW, statuses.apply(target, RpgStatusType.ROOT, boss).type());
+        assertEquals(.30,statuses.strongestSlow(target).magnitude());
+        assertEquals(StatusService.Outcome.REJECTED,statuses.apply(target,RpgStatusType.FEAR,boss).outcome());
+        assertEquals(StatusService.Outcome.REJECTED,statuses.apply(target,RpgStatusType.ROOT,new ControlProfile(true,false,false)).outcome());
     }
 
     @Test void burnPoisonAndNonstackingControlsRefreshTheirOwnTimers() {

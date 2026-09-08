@@ -35,7 +35,9 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     private final CombatTrace trace;
     private final LinkTreeVfxService vfx;
     private final SupportRuntime runtime;
-    public HytaleSupportSystem(RpgLoadoutService loadouts,RpgCombatKernel kernel,OwnedFieldBudget fields,CombatTrace trace,LinkTreeVfxService vfx){
+    private final HytaleBossBarTracker bosses;
+    public HytaleSupportSystem(RpgLoadoutService loadouts,RpgCombatKernel kernel,OwnedFieldBudget fields,CombatTrace trace,LinkTreeVfxService vfx,HytaleBossBarTracker bosses){
+        this.bosses=bosses;
         this.loadouts=loadouts;this.kernel=kernel;this.trace=trace;this.vfx=vfx;
         runtime=new SupportRuntime(kernel.reservations(),fields,new SupportProgressStore(){
             public SupportProgress read(UUID actor){return loadouts.getPresentationView(actor).state().support;}
@@ -43,6 +45,12 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         });
     }
     public SupportRuntime runtime(){return runtime;}
+    RpgCombatKernel kernel(){return kernel;}
+    HytaleBossBarTracker bosses(){return bosses;}
+    void traceFinite(FiniteSupportEffects.Effect effect,RpgTraceEventType event,Map<String,?> details){
+        var values=new HashMap<String,Object>(details);values.put("skillId",effect.key().skill());values.put("target",effect.key().target().toString());
+        trace.emit(effect.key().owner(),event,new CombatTrace.Context(effect.rootCastId(),effect.skillInstanceId(),effect.correlationId()),values);
+    }
     @Override public Query<EntityStore> getQuery(){return Query.and(PlayerRef.getComponentType(),EntityStatMap.getComponentType(),TransformComponent.getComponentType());}
     @Override public Set<Dependency<EntityStore>> getDependencies(){
         return Set.of(new SystemDependency<>(Order.AFTER,EntityStatsSystems.Recalculate.class),
@@ -72,33 +80,45 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             String result=runtime.preflight(id,profile.skillId(),profile.support(),port(store,actor));
             if(!result.equals("PASS"))return SkillExecutionPort.Validation.reject(result);
             if(profile.support().kind()==SupportProfile.Kind.HEAL)selectHealTarget(store,actor,profile.support().range());
+            if(profile.support().hostileTarget())SupportNativeEffects.requireTarget(store,actor,selectHostileTarget(store,actor,profile.support().range()),profile.support(),bosses);
+            if(profile.support().kind()==SupportProfile.Kind.RALLY){
+                SupportNativeEffects.requireAssets();
+                for(var ref:allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor()))SupportNativeEffects.requireRallyRecipient(store,ref);
+            }
             return SkillExecutionPort.Validation.pass();
         }catch(RuntimeException error){return SkillExecutionPort.Validation.reject("SUPPORT_PREFLIGHT_"+error.getMessage());}
     }
     public CommittedTarget capture(Store<EntityStore> store,Ref<EntityStore> actor,Stage04SkillProfile profile){
         var owner=store.getComponent(actor,PlayerRef.getComponentType());
-        var chosen=profile.support().kind()==SupportProfile.Kind.HEAL?selectHealTarget(store,actor,profile.support().range()):actor;
+        var chosen=profile.support().kind()==SupportProfile.Kind.HEAL?selectHealTarget(store,actor,profile.support().range()):
+                profile.support().hostileTarget()?selectHostileTarget(store,actor,profile.support().range()):actor;
         var id=store.getComponent(chosen,UUIDComponent.getComponentType());
         UUID target=chosen.equals(actor)?owner.getUuid():id.getUuid();
         return new CommittedTarget(owner.getWorldUuid(),position(store,actor),position(store,chosen),direction(store,actor),target);
     }
-    public SkillExecutionResult execute(Store<EntityStore> store,Ref<EntityStore> actor,SkillExecutionContext context){
-        return runtime.execute(context,System.nanoTime()/1e9,port(store,actor));
+    public SkillExecutionResult execute(Store<EntityStore> store,Ref<EntityStore> actor,SkillExecutionContext context,CommandBuffer<EntityStore> buffer){
+        return runtime.execute(context,System.nanoTime()/1e9,new Port(store,actor,buffer));
     }
     public SkillExecutionPort.Validation validateRelease(Store<EntityStore> store,Ref<EntityStore> actor,SkillExecutionContext context){
         String valid=port(store,actor).valid(context);
         if(!valid.equals("PASS"))return SkillExecutionPort.Validation.reject(valid);
         if(context.profile().support().aura())return SkillExecutionPort.Validation.reject("AURA_CANNOT_SCHEDULE_REPEAT");
+        if(context.profile().support().kind()==SupportProfile.Kind.RALLY)return SkillExecutionPort.Validation.pass();
         var owner=store.getComponent(actor,PlayerRef.getComponentType());
         var target=context.target().entityId();
         var ref=owner.getUuid().equals(target)?actor:target==null?null:store.getExternalData().getRefFromUUID(target);
+        if(context.profile().support().hostileTarget()){
+            try{SupportNativeEffects.requireTarget(store,actor,ref,context.profile().support(),bosses);return SkillExecutionPort.Validation.pass();}
+            catch(RuntimeException error){return SkillExecutionPort.Validation.reject("COMMITTED_SUPPORT_TARGET_"+error.getMessage());}
+        }
         return ref!=null&&eligibleAlly(store,actor,ref)&&inRange(store,actor,ref,context.profile().support().range())
                 ?SkillExecutionPort.Validation.pass():SkillExecutionPort.Validation.reject("COMMITTED_HEAL_TARGET_INVALID");
     }
     public SupportWorldPort port(Store<EntityStore> store,Ref<EntityStore> actor){return new Port(store,actor);}
     private final class Port implements SupportWorldPort {
-        final Store<EntityStore> store;final Ref<EntityStore> actor;final PlayerRef player;
-        Port(Store<EntityStore> store,Ref<EntityStore> actor){this.store=store;this.actor=actor;player=store.getComponent(actor,PlayerRef.getComponentType());}
+        final Store<EntityStore> store;final Ref<EntityStore> actor;final PlayerRef player;final CommandBuffer<EntityStore> buffer;
+        Port(Store<EntityStore> store,Ref<EntityStore> actor){this(store,actor,null);}
+        Port(Store<EntityStore> store,Ref<EntityStore> actor,CommandBuffer<EntityStore> buffer){this.store=store;this.actor=actor;this.buffer=buffer;player=store.getComponent(actor,PlayerRef.getComponentType());}
         public NativeResourcePort resources(){return new EntityStatResourcePort(store.getComponent(actor,EntityStatMap.getComponentType()));}
         public String valid(SkillExecutionContext context){
             if(!alive(store,actor))return "OWNER_DEAD";
@@ -132,9 +152,40 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             trace(context,"HEAL_APPLIED",Map.of("target",target.toString(),"requested",requested,"healthBefore",before,"healthAfter",after,"actualHealing",Math.max(0,after-before)));
             return Math.max(0,after-before);
         }
+        public void finiteEffect(SkillExecutionContext context,FiniteSupportEffects effects,double now){
+            if(!valid(context).equals("PASS"))throw new IllegalStateException("SUPPORT_OWNER_INVALID");
+            var p=context.profile().support();
+            var refs=p.kind()==SupportProfile.Kind.RALLY?allyRefs(store,actor,p.radius()*context.compiledPlan().executionModifiers().radiusFactor()):
+                    List.of(store.getExternalData().getRefFromUUID(context.target().entityId()));
+            double seconds=p.durationSeconds();
+            if(p.hostileTarget())SupportNativeEffects.requireTarget(store,actor,refs.getFirst(),p,bosses);
+            if(p.kind()==SupportProfile.Kind.RALLY)for(var ref:refs)SupportNativeEffects.requireRallyRecipient(store,ref);
+            var ids=refs.stream().map(ref->ref.equals(actor)?player.getUuid():store.getComponent(ref,UUIDComponent.getComponentType()).getUuid()).toList();
+            effects.requireAdmission(context,ids,seconds,now);
+            if(p.kind()==SupportProfile.Kind.FEAR){
+                var control=SupportNativeEffects.control(store,refs.getFirst(),bosses);
+                var result=kernel.statuses().apply(context.target().entityId(),com.inigmasgames.hytalerpg.combat.status.RpgStatusType.FEAR,control,seconds);
+                if(result.outcome()==com.inigmasgames.hytalerpg.combat.status.StatusService.Outcome.REJECTED)throw new IllegalStateException(result.detail());
+                seconds=result.remainingSeconds();
+            }
+            try{
+                effects.apply(context,ids,seconds,now);
+                for(var ref:refs){
+                    if(buffer!=null)buffer.ensureComponent(ref,SupportEffectProjection.getComponentType());
+                    else store.ensureComponent(ref,SupportEffectProjection.getComponentType());
+                }
+                for(var id:ids)trace(context,"FINITE_SUPPORT_APPLIED",Map.of("target",id.toString(),"kind",p.kind().name(),
+                        "durationSeconds",seconds,"magnitude",p.coefficient(),"movementIncreased",p.movementIncreased(),"authority","RPG_EFFECT_LEDGER","nativeBehaviorVerified",false));
+            }catch(RuntimeException failure){
+                if(p.kind()==SupportProfile.Kind.FEAR)kernel.statuses().remove(context.target().entityId(),com.inigmasgames.hytalerpg.combat.status.RpgStatusType.FEAR);
+                throw failure;
+            }
+        }
         public void present(SkillExecutionContext context,double radius,double duration){
+            // Tracking uses an entity-bound tint lease, never a world-broadcast debug outline.
+            if(context.profile().support().kind()==SupportProfile.Kind.MARK)return;
             var origin=position(store,actor).add(new Vec3(0,1,0));
-            if(context.profile().support().kind()==SupportProfile.Kind.HEAL&&context.target()!=null)origin=context.target().point().add(new Vec3(0,1,0));
+            if(!context.profile().support().aura()&&context.target()!=null)origin=context.target().point().add(new Vec3(0,1,0));
             try{vfx.presentConnection(store.getExternalData().getWorld(),ConnectionShape.cylinder(origin,Math.max(.5,radius),radius>0?3:2),
                     context.profile().support().kind()==SupportProfile.Kind.HEAL?"HOLY":"MAGIC","SUPPORT",duration);}
             catch(RuntimeException ignored){/* Missing presentation cannot refund applied healing or reservation. */}
@@ -160,7 +211,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         if(overflow)throw new IllegalStateException("SUPPORT_TARGET_BUDGET");
         return List.copyOf(selected);
     }
-    private static boolean eligibleAlly(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target){
+    static boolean eligibleAlly(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target){
         if(target==null||!target.isValid()||!alive(store,target))return false;
         if(actor.equals(target))return true;
         if(store.getComponent(target,Invulnerable.getComponentType())!=null)return false;
@@ -169,7 +220,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         if(faction==null)return false;var attitude=faction.getAttitude(target,actor,store);
         return attitude==Attitude.FRIENDLY||attitude==Attitude.REVERED;
     }
-    private static boolean inRange(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target,double range){
+    static boolean inRange(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target,double range){
         if(actor.equals(target))return true;var origin=position(store,actor).add(new Vec3(0,1.35,0));
         var bounds=bounds(store,target);
         return ConnectionShape.pointDistanceSquared(origin,bounds)<=range*range+1e-9&&HytaleAreaQueries.clear(store,origin,bounds.centre());
@@ -181,7 +232,18 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 .min(Comparator.<Ref<EntityStore>>comparingDouble(ref->ray.entryDistance(bounds(store,ref)))
                         .thenComparing(ref->store.getComponent(ref,UUIDComponent.getComponentType()).getUuid().toString())).orElse(actor);
     }
-    private static boolean alive(Store<EntityStore> store,Ref<EntityStore> ref){
+    private static Ref<EntityStore> selectHostileTarget(Store<EntityStore> store,Ref<EntityStore> actor,double range){
+        var origin=position(store,actor).add(new Vec3(0,1.35,0));
+        var ray=ConnectionShape.line(origin,origin.add(direction(store,actor).multiply(range)),.02,.02);
+        var found=HytaleAreaQueries.query(store,actor,ray::intersects,64);
+        if(found.overflow())throw new IllegalStateException("SUPPORT_TARGET_BUDGET");
+        return found.candidates().stream().filter(c->alive(store,c.ref())&&inRange(store,actor,c.ref(),range))
+                .min(Comparator.comparingDouble((HytaleAreaQueries.Candidate c)->ray.entryDistance(c.bounds()))
+                        .thenComparing(c->store.getComponent(c.ref(),UUIDComponent.getComponentType()).getUuid().toString()))
+                .orElseThrow(()->new IllegalStateException("NO_VALID_HOSTILE_TARGET")).ref();
+    }
+    static boolean alive(Store<EntityStore> store,Ref<EntityStore> ref){
+        if(ref==null)return false;
         if(!ref.isValid()||store.getComponent(ref,DeathComponent.getComponentType())!=null)return false;
         var stats=store.getComponent(ref,EntityStatMap.getComponentType());var health=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
         return health!=null&&health.get()>health.getMin();
@@ -190,7 +252,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         var box=store.getComponent(ref,BoundingBox.getComponentType()).getBoundingBox();var p=position(store,ref);
         return new AreaGeometry.Bounds(vec(box.min).add(p),vec(box.max).add(p));
     }
-    private static Vec3 position(Store<EntityStore> store,Ref<EntityStore> ref){return vec(store.getComponent(ref,TransformComponent.getComponentType()).getPosition());}
+    static Vec3 position(Store<EntityStore> store,Ref<EntityStore> ref){return vec(store.getComponent(ref,TransformComponent.getComponentType()).getPosition());}
     private static Vec3 direction(Store<EntityStore> store,Ref<EntityStore> ref){
         var head=store.getComponent(ref,HeadRotation.getComponentType());
         return head!=null?vec(head.getDirection()).normalized():Vec3.FORWARD;

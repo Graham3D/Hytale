@@ -1,0 +1,59 @@
+Compiled from "ActionSetMarkedTarget.java"
+public class com.hypixel.hytale.server.npc.corecomponents.entity.ActionSetMarkedTarget extends com.hypixel.hytale.server.npc.corecomponents.ActionBase {
+  protected final int targetSlot;
+
+  protected final boolean rebind;
+
+  public com.hypixel.hytale.server.npc.corecomponents.entity.ActionSetMarkedTarget(com.hypixel.hytale.server.npc.corecomponents.entity.builders.BuilderActionSetMarkedTarget, com.hypixel.hytale.server.npc.asset.builder.BuilderSupport);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokespecial #1                  // Method com/hypixel/hytale/server/npc/corecomponents/ActionBase."<init>":(Lcom/hypixel/hytale/server/npc/corecomponents/builders/BuilderActionBase;)V
+         5: aload_0
+         6: aload_1
+         7: aload_2
+         8: invokevirtual #7                  // Method com/hypixel/hytale/server/npc/corecomponents/entity/builders/BuilderActionSetMarkedTarget.getTargetSlot:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)I
+        11: putfield      #13                 // Field targetSlot:I
+        14: aload_0
+        15: aload_1
+        16: aload_2
+        17: invokevirtual #19                 // Method com/hypixel/hytale/server/npc/corecomponents/entity/builders/BuilderActionSetMarkedTarget.isRebind:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)Z
+        20: putfield      #23                 // Field rebind:Z
+        23: return
+
+  public boolean execute(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.instructions.ExecutionSupport, com.hypixel.hytale.server.npc.sensorinfo.InfoProvider, double, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: dload         4
+         6: aload         6
+         8: invokespecial #27                 // Method com/hypixel/hytale/server/npc/corecomponents/ActionBase.execute:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/npc/instructions/ExecutionSupport;Lcom/hypixel/hytale/server/npc/sensorinfo/InfoProvider;DLcom/hypixel/hytale/component/Store;)Z
+        11: pop
+        12: aload_3
+        13: ifnull        25
+        16: aload_3
+        17: invokeinterface #31,  1           // InterfaceMethod com/hypixel/hytale/server/npc/sensorinfo/InfoProvider.getPositionProvider:()Lcom/hypixel/hytale/server/npc/sensorinfo/IPositionProvider;
+        22: goto          26
+        25: aconst_null
+        26: astore        7
+        28: aload         7
+        30: ifnull        43
+        33: aload         7
+        35: invokeinterface #37,  1           // InterfaceMethod com/hypixel/hytale/server/npc/sensorinfo/IPositionProvider.getTarget:()Lcom/hypixel/hytale/component/Ref;
+        40: goto          44
+        43: aconst_null
+        44: astore        8
+        46: aload_2
+        47: invokevirtual #43                 // Method com/hypixel/hytale/server/npc/instructions/ExecutionSupport.getMarkedEntitySupport:()Lcom/hypixel/hytale/server/npc/role/support/MarkedEntitySupport;
+        50: aload_0
+        51: getfield      #13                 // Field targetSlot:I
+        54: aload         8
+        56: aload_0
+        57: getfield      #23                 // Field rebind:Z
+        60: aload         6
+        62: invokevirtual #49                 // Method com/hypixel/hytale/server/npc/role/support/MarkedEntitySupport.setMarkedEntity:(ILcom/hypixel/hytale/component/Ref;ZLcom/hypixel/hytale/component/ComponentAccessor;)V
+        65: iconst_1
+        66: ireturn
+}

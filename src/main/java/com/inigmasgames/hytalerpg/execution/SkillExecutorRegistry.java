@@ -30,7 +30,8 @@ public final class SkillExecutorRegistry {
                 forwarding(Stage04SkillProfile.Family.MOVEMENT, SkillExecutionPort::executeMovement),
                 forwarding(Stage04SkillProfile.Family.REACTION, SkillExecutionPort::executeReaction),
                 new ProjectileFamilyExecutor(),
-                forwarding(Stage04SkillProfile.Family.BURST, SkillExecutionPort::executeArea),
+                forwarding(Stage04SkillProfile.Family.BURST, (port,context)->context.profile().support()!=null
+                        ?port.executeSupport(context):port.executeArea(context)),
                 forwarding(Stage04SkillProfile.Family.CONE, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.TRAP, SkillExecutionPort::executeArea),
                 forwarding(Stage04SkillProfile.Family.GROUND_ZONE, SkillExecutionPort::executeArea),

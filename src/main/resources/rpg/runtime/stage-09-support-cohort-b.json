@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "taunt",
+      "family": "DIRECT_TARGET",
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "secondaryFamilies": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 5,
+      "cooldownSeconds": 8,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "TAUNT",
+        "range": 12,
+        "radius": 0,
+        "coefficient": 0,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 5,
+        "movementIncreased": 0
+      }
+    },
+    {
+      "skillId": "weakening_hex",
+      "family": "DIRECT_TARGET",
+      "allowedMainHandKinds": [
+        "WAND",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "secondaryFamilies": [],
+      "resourceType": "MANA",
+      "resourceCost": 10,
+      "cooldownSeconds": 8,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "WEAKEN",
+        "range": 18,
+        "radius": 0,
+        "coefficient": 0.85,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 8,
+        "movementIncreased": 0
+      }
+    },
+    {
+      "skillId": "hunter_s_mark",
+      "family": "DIRECT_TARGET",
+      "allowedMainHandKinds": [
+        "BOW",
+        "CROSSBOW",
+        "GUN"
+      ],
+      "requiredOffHandKinds": [],
+      "secondaryFamilies": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 5,
+      "cooldownSeconds": 6,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "MARK",
+        "range": 30,
+        "radius": 0,
+        "coefficient": 0.1,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 15,
+        "movementIncreased": 0
+      }
+    },
+    {
+      "skillId": "intimidate",
+      "family": "DIRECT_TARGET",
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "secondaryFamilies": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 6,
+      "cooldownSeconds": 3,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "FEAR",
+        "range": 16,
+        "radius": 0,
+        "coefficient": 0,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 2,
+        "movementIncreased": 0
+      }
+    },
+    {
+      "skillId": "battle_cry",
+      "family": "BURST",
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "secondaryFamilies": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 10,
+      "cooldownSeconds": 14,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "RALLY",
+        "range": 0,
+        "radius": 6,
+        "coefficient": 0.1,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 8,
+        "movementIncreased": 0.1
+      }
+    }
+  ]
+}

@@ -13,6 +13,7 @@ public interface SupportWorldPort {
     /** Owner plus positively established allies, alive/loaded/in range/LOS; >64 rejects the entire query. */
     List<UUID> allies(SkillExecutionContext context,double radius);
     double heal(SkillExecutionContext context,UUID target,double requested);
+    default void finiteEffect(SkillExecutionContext context,FiniteSupportEffects effects,double now){throw new IllegalStateException("FINITE_SUPPORT_UNAVAILABLE");}
     default double masteryMultiplier(SkillExecutionContext context){return 1;}
     void present(SkillExecutionContext context,double radius,double duration);
     void trace(SkillExecutionContext context,String event,Map<String,?> details);

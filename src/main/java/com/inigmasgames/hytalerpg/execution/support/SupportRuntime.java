@@ -18,6 +18,8 @@ public final class SupportRuntime {
     private final SupportProgressStore progress;
     private final Map<UUID,LinkedHashMap<String,Aura>> active=new HashMap<>();
     private final Map<UUID,Session> sessions=new HashMap<>();
+    private final FiniteSupportEffects finite=new FiniteSupportEffects();
+    public FiniteSupportEffects finite(){return finite;}
     public SupportRuntime(ReservationService reservations,OwnedFieldBudget fields,SupportProgressStore progress){
         this.reservations=reservations;this.fields=fields;this.progress=progress;
     }
@@ -65,6 +67,12 @@ public final class SupportRuntime {
         var actor=context.request().actorId();var profile=context.profile().support();var skill=context.profile().skillId();
         String allowed=preflight(actor,skill,profile,port);
         if(!allowed.equals("PASS"))throw new IllegalStateException(allowed);
+        if(profile.finiteEffect()){
+            port.finiteEffect(context,finite,now);
+            port.trace(context,"FINITE_SUPPORT_RESOLVED",Map.of("kind",profile.kind().name(),"damage",0));
+            port.present(context,radius(context),.3);
+            return SkillExecutionResult.committed("FINITE_SUPPORT_APPLIED",0,0);
+        }
         if(!profile.aura()){
             UUID target=context.target()==null?actor:context.target().entityId();
             if(target==null)throw new IllegalStateException("HEAL_TARGET_MISSING");
@@ -171,6 +179,7 @@ public final class SupportRuntime {
         return strongest;
     }
     public synchronized void cancel(UUID actor,String reason,SupportWorldPort port){
+        finite.forget(actor);
         RuntimeException failed=null;
         for(String skill:List.copyOf(active.getOrDefault(actor,new LinkedHashMap<>()).keySet())){
             try{end(actor,skill,reason,port);}catch(RuntimeException failure){if(failed==null)failed=failure;else failed.addSuppressed(failure);}

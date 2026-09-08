@@ -34,7 +34,7 @@ public final class HytaleDamageAdapter {
                 ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();
         HytaleDamageMetadata complete = new HytaleDamageMetadata(metadata.actorId(), metadata.rootCastId(),
                 metadata.skillInstanceId(), metadata.correlationId(), calculation.preMitigationDamage(), before,
-                metadata.effectInstanceId(),metadata.canProc());
+                metadata.effectInstanceId(),metadata.canProc(),metadata.origin());
         Damage damage = new Damage(source == null ? Damage.NULL_SOURCE : new Damage.EntitySource(source),
                 cause, calculation.toHytaleDamageFloat());
         damage.putMetaObject(RPG_METADATA, GSON.toJson(complete));
@@ -44,7 +44,7 @@ public final class HytaleDamageAdapter {
         return new NativeResult(damage.isCancelled(), damage.getAmount(), before, after);
     }
     public record NativeResult(boolean cancelled, double nativeAmount, double healthBefore, double healthAfter) { }
-    static HytaleDamageMetadata metadata(Damage damage) {
+    public static HytaleDamageMetadata metadata(Damage damage) {
         String json = damage.getIfPresentMetaObject(RPG_METADATA);
         return json == null || json.isBlank() ? null : GSON.fromJson(json, HytaleDamageMetadata.class);
     }

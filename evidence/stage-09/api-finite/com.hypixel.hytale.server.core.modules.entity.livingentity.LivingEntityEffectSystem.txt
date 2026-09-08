@@ -1,0 +1,225 @@
+Compiled from "LivingEntityEffectSystem.java"
+public class com.hypixel.hytale.server.core.modules.entity.livingentity.LivingEntityEffectSystem extends com.hypixel.hytale.component.system.tick.EntityTickingSystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> implements com.hypixel.hytale.component.DisableProcessingAssert {
+  private static final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> QUERY;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.core.modules.entity.livingentity.LivingEntityEffectSystem();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: getstatic     #7                  // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+         3: areturn
+
+  public boolean isParallel(int, int);
+    Code:
+         0: iconst_0
+         1: ireturn
+
+  public void tick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: iload_2
+         2: invokestatic  #13                 // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokevirtual #19                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #14                 // class com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent
+        11: astore        6
+        13: getstatic     #25                 // Field $assertionsDisabled:Z
+        16: ifne          32
+        19: aload         6
+        21: ifnonnull     32
+        24: new           #29                 // class java/lang/AssertionError
+        27: dup
+        28: invokespecial #31                 // Method java/lang/AssertionError."<init>":()V
+        31: athrow
+        32: aload         6
+        34: invokevirtual #32                 // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getActiveEffects:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        37: astore        7
+        39: aload         7
+        41: invokeinterface #36,  1           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.isEmpty:()Z
+        46: ifeq          50
+        49: return
+        50: invokestatic  #42                 // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        53: astore        8
+        55: aload_3
+        56: iload_2
+        57: invokevirtual #48                 // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+        60: astore        9
+        62: aload         5
+        64: aload         9
+        66: invokestatic  #52                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        69: invokevirtual #55                 // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        72: checkcast     #53                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+        75: astore        10
+        77: aload         10
+        79: ifnonnull     83
+        82: return
+        83: aconst_null
+        84: astore        11
+        86: iconst_0
+        87: istore        12
+        89: aload         7
+        91: invokeinterface #60,  1           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.values:()Lit/unimi/dsi/fastutil/objects/ObjectCollection;
+        96: invokeinterface #64,  1           // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectCollection.iterator:()Lit/unimi/dsi/fastutil/objects/ObjectIterator;
+       101: astore        13
+       103: aload         13
+       105: invokeinterface #70,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+       110: ifeq          308
+       113: aload         13
+       115: invokeinterface #75,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       120: checkcast     #79                 // class com/hypixel/hytale/server/core/entity/effect/ActiveEntityEffect
+       123: astore        14
+       125: aload         14
+       127: invokevirtual #81                 // Method com/hypixel/hytale/server/core/entity/effect/ActiveEntityEffect.getEntityEffectIndex:()I
+       130: istore        15
+       132: aload         8
+       134: iload         15
+       136: invokevirtual #85                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       139: checkcast     #43                 // class com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect
+       142: astore        16
+       144: aload         16
+       146: ifnonnull     176
+       149: aload         11
+       151: ifnonnull     163
+       154: new           #91                 // class it/unimi/dsi/fastutil/ints/IntArrayList
+       157: dup
+       158: invokespecial #93                 // Method it/unimi/dsi/fastutil/ints/IntArrayList."<init>":()V
+       161: astore        11
+       163: aload         11
+       165: iload         15
+       167: invokeinterface #94,  2           // InterfaceMethod it/unimi/dsi/fastutil/ints/IntList.add:(I)Z
+       172: pop
+       173: goto          103
+       176: aload         9
+       178: aload         16
+       180: aload         5
+       182: invokestatic  #100                // Method canApplyEffect:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect;Lcom/hypixel/hytale/component/ComponentAccessor;)Z
+       185: ifne          215
+       188: aload         11
+       190: ifnonnull     202
+       193: new           #91                 // class it/unimi/dsi/fastutil/ints/IntArrayList
+       196: dup
+       197: invokespecial #93                 // Method it/unimi/dsi/fastutil/ints/IntArrayList."<init>":()V
+       200: astore        11
+       202: aload         11
+       204: iload         15
+       206: invokeinterface #94,  2           // InterfaceMethod it/unimi/dsi/fastutil/ints/IntList.add:(I)Z
+       211: pop
+       212: goto          103
+       215: aload         14
+       217: invokevirtual #104                // Method com/hypixel/hytale/server/core/entity/effect/ActiveEntityEffect.getRemainingDuration:()F
+       220: fload_1
+       221: invokestatic  #108                // Method java/lang/Math.min:(FF)F
+       224: fstore        17
+       226: aload         14
+       228: aload         5
+       230: aload         9
+       232: aload         16
+       234: aload         10
+       236: fload         17
+       238: invokevirtual #114                // Method com/hypixel/hytale/server/core/entity/effect/ActiveEntityEffect.tick:(Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect;Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;F)V
+       241: aload         7
+       243: invokeinterface #36,  1           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.isEmpty:()Z
+       248: ifeq          252
+       251: return
+       252: aload         14
+       254: invokevirtual #118                // Method com/hypixel/hytale/server/core/entity/effect/ActiveEntityEffect.isInfinite:()Z
+       257: ifne          294
+       260: aload         14
+       262: invokevirtual #104                // Method com/hypixel/hytale/server/core/entity/effect/ActiveEntityEffect.getRemainingDuration:()F
+       265: fconst_0
+       266: fcmpg
+       267: ifgt          294
+       270: aload         11
+       272: ifnonnull     284
+       275: new           #91                 // class it/unimi/dsi/fastutil/ints/IntArrayList
+       278: dup
+       279: invokespecial #93                 // Method it/unimi/dsi/fastutil/ints/IntArrayList."<init>":()V
+       282: astore        11
+       284: aload         11
+       286: iload         15
+       288: invokeinterface #94,  2           // InterfaceMethod it/unimi/dsi/fastutil/ints/IntList.add:(I)Z
+       293: pop
+       294: aload         14
+       296: invokevirtual #121                // Method com/hypixel/hytale/server/core/entity/effect/ActiveEntityEffect.isInvulnerable:()Z
+       299: ifeq          305
+       302: iconst_1
+       303: istore        12
+       305: goto          103
+       308: aload         6
+       310: iload         12
+       312: invokevirtual #124                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.setInvulnerable:(Z)V
+       315: aload         11
+       317: ifnull        371
+       320: aload         11
+       322: invokeinterface #128,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/IntList.iterator:()Lit/unimi/dsi/fastutil/ints/IntListIterator;
+       327: astore        13
+       329: aload         13
+       331: invokeinterface #70,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+       336: ifeq          371
+       339: aload         13
+       341: invokeinterface #75,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       346: checkcast     #131                // class java/lang/Integer
+       349: invokevirtual #133                // Method java/lang/Integer.intValue:()I
+       352: istore        14
+       354: aload         6
+       356: aload         9
+       358: iload         14
+       360: getstatic     #136                // Field com/hypixel/hytale/server/core/asset/type/entityeffect/config/RemovalBehavior.COMPLETE:Lcom/hypixel/hytale/server/core/asset/type/entityeffect/config/RemovalBehavior;
+       363: aload         5
+       365: invokevirtual #142                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.removeEffect:(Lcom/hypixel/hytale/component/Ref;ILcom/hypixel/hytale/server/core/asset/type/entityeffect/config/RemovalBehavior;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+       368: goto          329
+       371: return
+
+  public com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getGroup();
+    Code:
+         0: invokestatic  #146                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+         3: invokevirtual #152                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getGatherDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+         6: areturn
+
+  public static boolean canApplyEffect(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_1
+         1: invokevirtual #156                // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getApplyConditions:()[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+         4: astore_3
+         5: aload_3
+         6: ifnull        14
+         9: aload_3
+        10: arraylength
+        11: ifne          16
+        14: iconst_1
+        15: ireturn
+        16: aload_2
+        17: aload_0
+        18: invokestatic  #160                // Method java/time/Instant.now:()Ljava/time/Instant;
+        21: aload_3
+        22: invokestatic  #166                // Method com/hypixel/hytale/server/core/modules/entity/condition/Condition.allConditionsMet:(Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;Ljava/time/Instant;[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;)Z
+        25: ireturn
+
+  static {};
+    Code:
+         0: ldc           #8                  // class com/hypixel/hytale/server/core/modules/entity/livingentity/LivingEntityEffectSystem
+         2: invokevirtual #172                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #25                 // Field $assertionsDisabled:Z
+        16: iconst_2
+        17: anewarray     #177                // class com/hypixel/hytale/component/query/Query
+        20: dup
+        21: iconst_0
+        22: invokestatic  #13                 // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        25: aastore
+        26: dup
+        27: iconst_1
+        28: invokestatic  #179                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        31: aastore
+        32: invokestatic  #182                // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        35: putstatic     #7                  // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+        38: return
+}

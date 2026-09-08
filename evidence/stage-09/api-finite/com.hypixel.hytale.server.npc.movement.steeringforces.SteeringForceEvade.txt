@@ -1,0 +1,229 @@
+Compiled from "SteeringForceEvade.java"
+public class com.hypixel.hytale.server.npc.movement.steeringforces.SteeringForceEvade extends com.hypixel.hytale.server.npc.movement.steeringforces.SteeringForceWithTarget {
+  private double slowdownDistance;
+
+  private double stopDistance;
+
+  private double falloff;
+
+  private double squaredSlowdownDistance;
+
+  private double squaredStopDistance;
+
+  private double distanceDelta;
+
+  private float directionHint;
+
+  private boolean adhereToDirectionHint;
+
+  public com.hypixel.hytale.server.npc.movement.steeringforces.SteeringForceEvade();
+    Code:
+         0: aload_0
+         1: ldc2_w        #1                  // double 20.0d
+         4: ldc2_w        #3                  // double 25.0d
+         7: invokespecial #5                  // Method "<init>":(DD)V
+        10: return
+
+  public com.hypixel.hytale.server.npc.movement.steeringforces.SteeringForceEvade(double, double);
+    Code:
+         0: aload_0
+         1: invokespecial #11                 // Method com/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceWithTarget."<init>":()V
+         4: aload_0
+         5: ldc2_w        #16                 // double 3.0d
+         8: putfield      #18                 // Field falloff:D
+        11: aload_0
+        12: dload_1
+        13: dload_3
+        14: invokevirtual #22                 // Method setDistances:(DD)V
+        17: return
+
+  public void setDistances(double, double);
+    Code:
+         0: aload_0
+         1: dload_1
+         2: putfield      #25                 // Field slowdownDistance:D
+         5: aload_0
+         6: dload_3
+         7: putfield      #28                 // Field stopDistance:D
+        10: aload_0
+        11: dload_1
+        12: dload_1
+        13: dmul
+        14: putfield      #31                 // Field squaredSlowdownDistance:D
+        17: aload_0
+        18: dload_3
+        19: dload_3
+        20: dmul
+        21: putfield      #34                 // Field squaredStopDistance:D
+        24: aload_0
+        25: dload_3
+        26: dload_1
+        27: dsub
+        28: putfield      #37                 // Field distanceDelta:D
+        31: return
+
+  public void setDirectionHint(float);
+    Code:
+         0: aload_0
+         1: fload_1
+         2: putfield      #40                 // Field directionHint:F
+         5: return
+
+  public void setAdhereToDirectionHint(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #44                 // Field adhereToDirectionHint:Z
+         5: return
+
+  public boolean compute(com.hypixel.hytale.server.npc.movement.Steering);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokespecial #48                 // Method com/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceWithTarget.compute:(Lcom/hypixel/hytale/server/npc/movement/Steering;)Z
+         5: ifeq          182
+         8: aload_1
+         9: aload_0
+        10: getfield      #52                 // Field selfPosition:Lorg/joml/Vector3d;
+        13: invokevirtual #56                 // Method com/hypixel/hytale/server/npc/movement/Steering.setTranslation:(Lorg/joml/Vector3d;)Lcom/hypixel/hytale/server/npc/movement/Steering;
+        16: invokevirtual #62                 // Method com/hypixel/hytale/server/npc/movement/Steering.getTranslation:()Lorg/joml/Vector3d;
+        19: aload_0
+        20: getfield      #66                 // Field targetPosition:Lorg/joml/Vector3d;
+        23: invokevirtual #69                 // Method org/joml/Vector3d.sub:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        26: pop
+        27: aload_1
+        28: invokevirtual #62                 // Method com/hypixel/hytale/server/npc/movement/Steering.getTranslation:()Lorg/joml/Vector3d;
+        31: invokevirtual #75                 // Method org/joml/Vector3d.lengthSquared:()D
+        34: dstore_2
+        35: dload_2
+        36: aload_0
+        37: getfield      #34                 // Field squaredStopDistance:D
+        40: dcmpl
+        41: iflt          51
+        44: aload_1
+        45: invokevirtual #79                 // Method com/hypixel/hytale/server/npc/movement/Steering.clear:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+        48: pop
+        49: iconst_0
+        50: ireturn
+        51: aload_1
+        52: invokevirtual #83                 // Method com/hypixel/hytale/server/npc/movement/Steering.clearRotation:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+        55: pop
+        56: dload_2
+        57: ldc2_w        #86                 // double 1.0E-6d
+        60: dcmpg
+        61: ifge          88
+        64: aload_1
+        65: aload_0
+        66: getfield      #40                 // Field directionHint:F
+        69: invokestatic  #88                 // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsMath.headingX:(F)F
+        72: f2d
+        73: dconst_0
+        74: aload_0
+        75: getfield      #40                 // Field directionHint:F
+        78: invokestatic  #94                 // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsMath.headingZ:(F)F
+        81: f2d
+        82: invokevirtual #97                 // Method com/hypixel/hytale/server/npc/movement/Steering.setTranslation:(DDD)Lcom/hypixel/hytale/server/npc/movement/Steering;
+        85: pop
+        86: iconst_1
+        87: ireturn
+        88: aload_0
+        89: getfield      #44                 // Field adhereToDirectionHint:Z
+        92: ifeq          117
+        95: aload_1
+        96: aload_0
+        97: getfield      #40                 // Field directionHint:F
+       100: invokestatic  #88                 // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsMath.headingX:(F)F
+       103: f2d
+       104: dconst_0
+       105: aload_0
+       106: getfield      #40                 // Field directionHint:F
+       109: invokestatic  #94                 // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsMath.headingZ:(F)F
+       112: f2d
+       113: invokevirtual #97                 // Method com/hypixel/hytale/server/npc/movement/Steering.setTranslation:(DDD)Lcom/hypixel/hytale/server/npc/movement/Steering;
+       116: pop
+       117: dload_2
+       118: aload_0
+       119: getfield      #31                 // Field squaredSlowdownDistance:D
+       122: dcmpg
+       123: iflt          135
+       126: aload_0
+       127: getfield      #37                 // Field distanceDelta:D
+       130: dconst_0
+       131: dcmpl
+       132: ifne          145
+       135: aload_1
+       136: invokevirtual #62                 // Method com/hypixel/hytale/server/npc/movement/Steering.getTranslation:()Lorg/joml/Vector3d;
+       139: invokevirtual #100                // Method org/joml/Vector3d.normalize:()Lorg/joml/Vector3d;
+       142: pop
+       143: iconst_1
+       144: ireturn
+       145: aload_0
+       146: getfield      #28                 // Field stopDistance:D
+       149: dload_2
+       150: invokestatic  #103                // Method java/lang/Math.sqrt:(D)D
+       153: dsub
+       154: aload_0
+       155: getfield      #37                 // Field distanceDelta:D
+       158: ddiv
+       159: dconst_1
+       160: aload_0
+       161: getfield      #18                 // Field falloff:D
+       164: ddiv
+       165: invokestatic  #109                // Method java/lang/Math.pow:(DD)D
+       168: dstore        4
+       170: aload_1
+       171: invokevirtual #62                 // Method com/hypixel/hytale/server/npc/movement/Steering.getTranslation:()Lorg/joml/Vector3d;
+       174: dload         4
+       176: invokevirtual #113                // Method org/joml/Vector3d.normalize:(D)Lorg/joml/Vector3d;
+       179: pop
+       180: iconst_1
+       181: ireturn
+       182: iconst_0
+       183: ireturn
+
+  public double getSlowdownDistance();
+    Code:
+         0: aload_0
+         1: getfield      #25                 // Field slowdownDistance:D
+         4: dreturn
+
+  public void setSlowdownDistance(double);
+    Code:
+         0: aload_0
+         1: dload_1
+         2: aload_0
+         3: invokevirtual #116                // Method getStopDistance:()D
+         6: invokevirtual #22                 // Method setDistances:(DD)V
+         9: return
+
+  public double getStopDistance();
+    Code:
+         0: aload_0
+         1: getfield      #28                 // Field stopDistance:D
+         4: dreturn
+
+  public void setStopDistance(double);
+    Code:
+         0: aload_0
+         1: aload_0
+         2: invokevirtual #119                // Method getSlowdownDistance:()D
+         5: dload_1
+         6: invokevirtual #22                 // Method setDistances:(DD)V
+         9: aload_0
+        10: dload_1
+        11: putfield      #28                 // Field stopDistance:D
+        14: return
+
+  public double getFalloff();
+    Code:
+         0: aload_0
+         1: getfield      #18                 // Field falloff:D
+         4: dreturn
+
+  public void setFalloff(double);
+    Code:
+         0: aload_0
+         1: dload_1
+         2: putfield      #18                 // Field falloff:D
+         5: return
+}

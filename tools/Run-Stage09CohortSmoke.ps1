@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a')][string]$Cohort = 'a')
+param([ValidateSet('a','b')][string]$Cohort = 'a')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
@@ -20,6 +20,7 @@ $expectedConnections = 8
 $expectedConnectionCauses = 5
 $expectedProfiles = 15
 $expectedStatusAssets = 10
+$expectedSupport = if($Cohort -eq 'a'){3}else{8}
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path
 if (-not $resolved.StartsWith($projectRoot, [StringComparison]::OrdinalIgnoreCase)) { throw "Unsafe smoke path: $resolved" }
@@ -61,7 +62,7 @@ $summary = [ordered]@{
     cleanShutdown = [bool]($plain -match 'Shutting down\.\.\. 0\s')
     areaAssetsResolved = [bool]($plain -match "RPG_STAGE06_ASSETS revision=R028 areaProfiles=$expectedProfiles requiredStatusAssets=$expectedStatusAssets nativeDamageChannels=2 result=PASS connectedProof=false")
     connectionAssetsResolved = [bool]($plain -match "RPG_STAGE08_ASSETS revision=R028 connectionProfiles=$expectedConnections nativeDamageChannels=$expectedConnectionCauses result=PASS connectedProof=false")
-    supportConfigured = [bool]($plain -match 'RPG_STAGE09_READY revision=R028 supportProfiles=3 playerSchema=4 regenAdapter=NATIVE_ENTRY_DECORATOR reservationProjection=STATIC_MAX allyPolicy=SELF_OR_NATIVE_FRIENDLY connectedProof=false')
+    supportConfigured = [bool]($plain -match "RPG_STAGE09_READY revision=R028 supportProfiles=$expectedSupport playerSchema=4 regenAdapter=NATIVE_ENTRY_DECORATOR reservationProjection=STATIC_MAX allyPolicy=SELF_OR_NATIVE_FRIENDLY connectedProof=false")
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8

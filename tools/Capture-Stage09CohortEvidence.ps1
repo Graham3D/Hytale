@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a')][string]$Cohort='a')
+param([ValidateSet('a','b')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $stage9Root=(Resolve-Path "$PSScriptRoot\..").Path
 $stage9Evidence=Join-Path $stage9Root "evidence\stage-09\cohort-$Cohort"
@@ -19,7 +19,8 @@ try {
         $stage9Results += @{name=$stage9Suite.name;tests=[int]$stage9Suite.tests;failures=[int]$stage9Suite.failures;
             errors=[int]$stage9Suite.errors;skipped=[int]$stage9Suite.skipped;seconds=$stage9Suite.time;cases=@($stage9Suite.testcase | ForEach-Object {$_.name})}
     }
-    if($stage9Count -lt 374 -or $stage9Failures -or $stage9Errors -or $stage9Skipped){throw 'Incomplete or failing retained regression suite.'}
+    $stage9Minimum=if($Cohort -eq 'a'){374}else{402}
+    if($stage9Count -lt $stage9Minimum -or $stage9Failures -or $stage9Errors -or $stage9Skipped){throw 'Incomplete or failing retained regression suite.'}
     & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $stage9Jar
     $stage9ProtectedPaths=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI','canvas-ui/src',
         'src/main/resources/rpg/runtime/stage-04-skills.json','src/main/resources/rpg/runtime/stage-05-projectiles.json',
@@ -35,7 +36,8 @@ try {
     $stage9Zip=[IO.Compression.ZipFile]::OpenRead($stage9Jar)
     try {
         $stage9AbilityAssets=@($stage9Zip.Entries | Where-Object {$_.FullName -like 'Server/Item/Items/RPG/Abilities/*.json'})
-        if($stage9AbilityAssets.Count -ne 38){throw 'Unexpected trigger inventory.'}
+        $stage9Triggers=if($Cohort -eq 'a'){38}else{43}
+        if($stage9AbilityAssets.Count -ne $stage9Triggers){throw 'Unexpected trigger inventory.'}
         foreach($stage9Entry in $stage9AbilityAssets) {
             $stage9Reader=[IO.StreamReader]::new($stage9Entry.Open())
             try{$stage9Asset=$stage9Reader.ReadToEnd() | ConvertFrom-Json}finally{$stage9Reader.Dispose()}
@@ -50,7 +52,7 @@ try {
         capturedAtUtc=[DateTime]::UtcNow.ToString('o');revision='R028';version='0.0.21';stage='09';cohort=$Cohort;playerSchema=4
         branch=(& git branch --show-current).Trim();sourceHead=(& git rev-parse HEAD).Trim();worktreeDirty=[bool](& git status --porcelain)
         stageStatus='IMPLEMENTATION_IN_PROGRESS';completeStageGate=$false;gateScope='LOCAL_ENGINEERING_ONLY'
-        cohortSkills=@('minor_heal','managuard','emanatism')
+        cohortSkills=$(if($Cohort -eq 'a'){@('minor_heal','managuard','emanatism')}else{@('taunt','weakening_hex','hunter_s_mark','intimidate','battle_cry')})
         tests=$stage9Count;failures=$stage9Failures;errors=$stage9Errors;skipped=$stage9Skipped
         connectedVerification='UNVERIFIED';nativeCastingFixed=$false;nativeSupportBehaviorVerified=$false;liveDeploymentPerformed=$false
         protectedPathsChanged=$stage9Protected;zeroNativeCostTriggerAssets=$stage9AbilityAssets.Count

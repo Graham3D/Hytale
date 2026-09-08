@@ -1,0 +1,453 @@
+Compiled from "BodyMotionMoveAway.java"
+public class com.hypixel.hytale.server.npc.corecomponents.movement.BodyMotionMoveAway extends com.hypixel.hytale.server.npc.corecomponents.movement.BodyMotionFindWithTarget {
+  protected final double stopDistance;
+
+  protected final double stopDistanceSquared;
+
+  protected final double[] holdDirectionDurationRange;
+
+  protected final float changeDirectionViewSector;
+
+  protected final float jitterAngle;
+
+  protected final double erraticDistanceSquared;
+
+  protected final float erraticJitter;
+
+  protected final double erraticChangeDurationMultiplier;
+
+  protected final com.hypixel.hytale.server.npc.movement.steeringforces.SteeringForceEvade evade;
+
+  private final org.joml.Vector3d tmpProbeDirection;
+
+  protected float fleeDirection;
+
+  protected double holdDirectionTimeRemaining;
+
+  protected boolean fleeDirectionBlocked;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.npc.corecomponents.movement.BodyMotionMoveAway(com.hypixel.hytale.server.npc.corecomponents.movement.builders.BuilderBodyMotionMoveAway, com.hypixel.hytale.server.npc.asset.builder.BuilderSupport);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: invokespecial #1                  // Method com/hypixel/hytale/server/npc/corecomponents/movement/BodyMotionFindWithTarget."<init>":(Lcom/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionFindWithTarget;Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)V
+         6: aload_0
+         7: new           #7                  // class com/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade
+        10: dup
+        11: invokespecial #9                  // Method com/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade."<init>":()V
+        14: putfield      #12                 // Field evade:Lcom/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade;
+        17: aload_0
+        18: new           #18                 // class org/joml/Vector3d
+        21: dup
+        22: invokespecial #20                 // Method org/joml/Vector3d."<init>":()V
+        25: putfield      #21                 // Field tmpProbeDirection:Lorg/joml/Vector3d;
+        28: aload_0
+        29: aload_1
+        30: aload_2
+        31: invokevirtual #25                 // Method com/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionMoveAway.getStopDistance:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)D
+        34: putfield      #31                 // Field stopDistance:D
+        37: aload_0
+        38: aload_0
+        39: getfield      #31                 // Field stopDistance:D
+        42: aload_0
+        43: getfield      #31                 // Field stopDistance:D
+        46: dmul
+        47: putfield      #35                 // Field stopDistanceSquared:D
+        50: aload_0
+        51: aload_1
+        52: aload_2
+        53: invokevirtual #38                 // Method com/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionMoveAway.getHoldDirectionDurationRange:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)[D
+        56: putfield      #42                 // Field holdDirectionDurationRange:[D
+        59: aload_0
+        60: aload_1
+        61: aload_2
+        62: invokevirtual #46                 // Method com/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionMoveAway.getChangeDirectionViewSectorRadians:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)F
+        65: putfield      #50                 // Field changeDirectionViewSector:F
+        68: aload_0
+        69: aload_1
+        70: aload_2
+        71: invokevirtual #54                 // Method com/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionMoveAway.getDirectionJitterRadians:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)F
+        74: putfield      #57                 // Field jitterAngle:F
+        77: aload_1
+        78: aload_2
+        79: invokevirtual #60                 // Method com/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionMoveAway.getErraticDistance:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)D
+        82: dstore_3
+        83: aload_0
+        84: dload_3
+        85: dload_3
+        86: dmul
+        87: putfield      #63                 // Field erraticDistanceSquared:D
+        90: aload_1
+        91: aload_2
+        92: invokevirtual #66                 // Method com/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionMoveAway.getErraticExtraJitterRadians:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)F
+        95: fstore        5
+        97: aload_0
+        98: aload_0
+        99: getfield      #57                 // Field jitterAngle:F
+       102: fload         5
+       104: fadd
+       105: fconst_0
+       106: ldc           #71                 // float 3.1415927f
+       108: invokestatic  #72                 // Method com/hypixel/hytale/math/util/MathUtil.clamp:(FFF)F
+       111: putfield      #78                 // Field erraticJitter:F
+       114: aload_0
+       115: aload_1
+       116: aload_2
+       117: invokevirtual #81                 // Method com/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionMoveAway.getErraticChangeDurationMultiplier:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)D
+       120: putfield      #84                 // Field erraticChangeDurationMultiplier:D
+       123: aload_0
+       124: getfield      #12                 // Field evade:Lcom/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade;
+       127: aload_1
+       128: aload_2
+       129: invokevirtual #87                 // Method com/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionMoveAway.getSlowdownDistance:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)D
+       132: aload_0
+       133: getfield      #31                 // Field stopDistance:D
+       136: invokevirtual #90                 // Method com/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade.setDistances:(DD)V
+       139: aload_0
+       140: getfield      #12                 // Field evade:Lcom/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade;
+       143: aload_1
+       144: aload_2
+       145: invokevirtual #94                 // Method com/hypixel/hytale/server/npc/corecomponents/movement/builders/BuilderBodyMotionMoveAway.getFalloff:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)D
+       148: invokevirtual #97                 // Method com/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade.setFalloff:(D)V
+       151: aload_0
+       152: getfield      #12                 // Field evade:Lcom/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade;
+       155: iconst_1
+       156: invokevirtual #101                // Method com/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade.setAdhereToDirectionHint:(Z)V
+       159: return
+
+  public void activate(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.instructions.ExecutionSupport, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: invokespecial #105                // Method com/hypixel/hytale/server/npc/corecomponents/movement/BodyMotionFindWithTarget.activate:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/npc/instructions/ExecutionSupport;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+         7: aload_0
+         8: dconst_0
+         9: putfield      #109                // Field holdDirectionTimeRemaining:D
+        12: aload_0
+        13: iconst_0
+        14: putfield      #112                // Field fleeDirectionBlocked:Z
+        17: return
+
+  public boolean computeSteering(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.instructions.ExecutionSupport, com.hypixel.hytale.server.npc.sensorinfo.InfoProvider, double, com.hypixel.hytale.server.npc.movement.Steering, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload         7
+         2: aload_1
+         3: invokestatic  #116                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: invokeinterface #122,  3          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        11: checkcast     #117                // class com/hypixel/hytale/server/npc/entities/NPCEntity
+        14: astore        8
+        16: getstatic     #128                // Field $assertionsDisabled:Z
+        19: ifne          35
+        22: aload         8
+        24: ifnonnull     35
+        27: new           #131                // class java/lang/AssertionError
+        30: dup
+        31: invokespecial #133                // Method java/lang/AssertionError."<init>":()V
+        34: athrow
+        35: aload         8
+        37: aload_1
+        38: aload         7
+        40: invokevirtual #134                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getCurrentHorizontalSpeedMultiplier:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)F
+        43: fstore        9
+        45: fload         9
+        47: fconst_0
+        48: fcmpl
+        49: ifne          60
+        52: aload         6
+        54: invokevirtual #138                // Method com/hypixel/hytale/server/npc/movement/Steering.clear:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+        57: pop
+        58: iconst_1
+        59: ireturn
+        60: aload_0
+        61: dup
+        62: getfield      #109                // Field holdDirectionTimeRemaining:D
+        65: dload         4
+        67: fload         9
+        69: f2d
+        70: dmul
+        71: dsub
+        72: putfield      #109                // Field holdDirectionTimeRemaining:D
+        75: aload_0
+        76: aload_1
+        77: aload_2
+        78: aload_3
+        79: dload         4
+        81: aload         6
+        83: aload         7
+        85: invokespecial #144                // Method com/hypixel/hytale/server/npc/corecomponents/movement/BodyMotionFindWithTarget.computeSteering:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/npc/instructions/ExecutionSupport;Lcom/hypixel/hytale/server/npc/sensorinfo/InfoProvider;DLcom/hypixel/hytale/server/npc/movement/Steering;Lcom/hypixel/hytale/component/ComponentAccessor;)Z
+        88: ireturn
+
+  protected boolean computeSteering(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.instructions.ExecutionSupport, org.joml.Vector3d, com.hypixel.hytale.server.npc.movement.Steering, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload         5
+         2: aload_1
+         3: invokestatic  #148                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: invokeinterface #122,  3          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        11: checkcast     #149                // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+        14: astore        6
+        16: getstatic     #128                // Field $assertionsDisabled:Z
+        19: ifne          35
+        22: aload         6
+        24: ifnonnull     35
+        27: new           #131                // class java/lang/AssertionError
+        30: dup
+        31: invokespecial #133                // Method java/lang/AssertionError."<init>":()V
+        34: athrow
+        35: aload         6
+        37: invokevirtual #151                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+        40: astore        7
+        42: aload         6
+        44: invokevirtual #155                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getRotation:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+        47: astore        8
+        49: aload_0
+        50: invokevirtual #159                // Method getLastTargetPosition:()Lorg/joml/Vector3d;
+        53: astore        9
+        55: aload         7
+        57: getfield      #162                // Field org/joml/Vector3d.x:D
+        60: aload         7
+        62: getfield      #165                // Field org/joml/Vector3d.z:D
+        65: aload         8
+        67: invokevirtual #168                // Method com/hypixel/hytale/math/vector/Rotation3f.yaw:()F
+        70: aload_0
+        71: getfield      #50                 // Field changeDirectionViewSector:F
+        74: aload         9
+        76: getfield      #162                // Field org/joml/Vector3d.x:D
+        79: aload         9
+        81: getfield      #165                // Field org/joml/Vector3d.z:D
+        84: invokestatic  #174                // Method com/hypixel/hytale/server/npc/util/NPCPhysicsMath.inViewSector:(DDFFDD)Z
+        87: ifeq          95
+        90: aload_0
+        91: dconst_0
+        92: putfield      #109                // Field holdDirectionTimeRemaining:D
+        95: aload_2
+        96: invokevirtual #180                // Method com/hypixel/hytale/server/npc/instructions/ExecutionSupport.getMotionContextSupport:()Lcom/hypixel/hytale/server/npc/role/support/MotionContextSupport;
+        99: invokevirtual #186                // Method com/hypixel/hytale/server/npc/role/support/MotionContextSupport.getActiveMotionController:()Lcom/hypixel/hytale/server/npc/movement/controllers/MotionController;
+       102: astore        10
+       104: aload_0
+       105: getfield      #109                // Field holdDirectionTimeRemaining:D
+       108: dconst_0
+       109: dcmpg
+       110: ifle          120
+       113: aload_0
+       114: getfield      #112                // Field fleeDirectionBlocked:Z
+       117: ifeq          332
+       120: aload         7
+       122: aload         9
+       124: invokevirtual #192                // Method org/joml/Vector3d.distanceSquared:(Lorg/joml/Vector3dc;)D
+       127: aload_0
+       128: getfield      #63                 // Field erraticDistanceSquared:D
+       131: dcmpg
+       132: ifge          139
+       135: iconst_1
+       136: goto          140
+       139: iconst_0
+       140: istore        11
+       142: iload         11
+       144: ifeq          154
+       147: aload_0
+       148: getfield      #78                 // Field erraticJitter:F
+       151: goto          158
+       154: aload_0
+       155: getfield      #57                 // Field jitterAngle:F
+       158: fstore        12
+       160: aload_0
+       161: aload         7
+       163: getfield      #162                // Field org/joml/Vector3d.x:D
+       166: aload         9
+       168: getfield      #162                // Field org/joml/Vector3d.x:D
+       171: dsub
+       172: aload         7
+       174: getfield      #165                // Field org/joml/Vector3d.z:D
+       177: aload         9
+       179: getfield      #165                // Field org/joml/Vector3d.z:D
+       182: dsub
+       183: invokestatic  #196                // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsMath.headingFromDirection:(DD)F
+       186: fload         12
+       188: fneg
+       189: fload         12
+       191: invokestatic  #202                // Method com/hypixel/hytale/math/random/RandomExtra.randomRange:(FF)F
+       194: fadd
+       195: putfield      #208                // Field fleeDirection:F
+       198: aload_0
+       199: aload_0
+       200: getfield      #42                 // Field holdDirectionDurationRange:[D
+       203: invokestatic  #211                // Method com/hypixel/hytale/math/random/RandomExtra.randomRange:([D)D
+       206: putfield      #109                // Field holdDirectionTimeRemaining:D
+       209: iload         11
+       211: ifeq          227
+       214: aload_0
+       215: dup
+       216: getfield      #109                // Field holdDirectionTimeRemaining:D
+       219: aload_0
+       220: getfield      #84                 // Field erraticChangeDurationMultiplier:D
+       223: dmul
+       224: putfield      #109                // Field holdDirectionTimeRemaining:D
+       227: aload_0
+       228: getfield      #208                // Field fleeDirection:F
+       231: invokestatic  #214                // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsMath.headingX:(F)F
+       234: f2d
+       235: aload_0
+       236: getfield      #31                 // Field stopDistance:D
+       239: dmul
+       240: dstore        13
+       242: aload_0
+       243: getfield      #208                // Field fleeDirection:F
+       246: invokestatic  #218                // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsMath.headingZ:(F)F
+       249: f2d
+       250: aload_0
+       251: getfield      #31                 // Field stopDistance:D
+       254: dmul
+       255: dstore        15
+       257: aload_0
+       258: getfield      #21                 // Field tmpProbeDirection:Lorg/joml/Vector3d;
+       261: dload         13
+       263: dconst_0
+       264: dload         15
+       266: invokevirtual #221                // Method org/joml/Vector3d.set:(DDD)Lorg/joml/Vector3d;
+       269: pop
+       270: aload         10
+       272: aload_1
+       273: aload         7
+       275: aload_0
+       276: getfield      #21                 // Field tmpProbeDirection:Lorg/joml/Vector3d;
+       279: aload_0
+       280: getfield      #225                // Field probeMoveData:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData;
+       283: aload         5
+       285: invokeinterface #229,  6          // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.probeMove:(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector3dc;Lorg/joml/Vector3dc;Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData;Lcom/hypixel/hytale/component/ComponentAccessor;)D
+       290: dstore        17
+       292: aload_0
+       293: dload         17
+       295: ldc2_w        #237                // double 1.0E-5d
+       298: dcmpg
+       299: ifge          306
+       302: iconst_1
+       303: goto          307
+       306: iconst_0
+       307: putfield      #112                // Field fleeDirectionBlocked:Z
+       310: aload_0
+       311: getfield      #112                // Field fleeDirectionBlocked:Z
+       314: ifne          332
+       317: aload_0
+       318: getfield      #225                // Field probeMoveData:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData;
+       321: getfield      #239                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData.edgeBlocked:Z
+       324: ifeq          332
+       327: aload_0
+       328: dconst_0
+       329: putfield      #109                // Field holdDirectionTimeRemaining:D
+       332: aload_0
+       333: getfield      #112                // Field fleeDirectionBlocked:Z
+       336: ifeq          341
+       339: iconst_0
+       340: ireturn
+       341: aload_0
+       342: getfield      #12                 // Field evade:Lcom/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade;
+       345: aload         7
+       347: aload         9
+       349: invokevirtual #244                // Method com/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade.setPositions:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;)V
+       352: aload_0
+       353: getfield      #12                 // Field evade:Lcom/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade;
+       356: aload_0
+       357: getfield      #208                // Field fleeDirection:F
+       360: invokevirtual #248                // Method com/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade.setDirectionHint:(F)V
+       363: aload_0
+       364: getfield      #252                // Field desiredAltitudeWeight:D
+       367: dconst_0
+       368: dcmpl
+       369: iflt          379
+       372: aload_0
+       373: getfield      #252                // Field desiredAltitudeWeight:D
+       376: goto          386
+       379: aload         10
+       381: invokeinterface #255,  1          // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.getDesiredAltitudeWeight:()D
+       386: dstore        11
+       388: aload_0
+       389: aload_1
+       390: aload_2
+       391: aload_0
+       392: getfield      #12                 // Field evade:Lcom/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceEvade;
+       395: aload         4
+       397: dload         11
+       399: aload         5
+       401: invokevirtual #259                // Method scaleSteering:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/npc/instructions/ExecutionSupport;Lcom/hypixel/hytale/server/npc/movement/steeringforces/SteeringForceWithTarget;Lcom/hypixel/hytale/server/npc/movement/Steering;DLcom/hypixel/hytale/component/ComponentAccessor;)Z
+       404: ireturn
+
+  public boolean isGoalReached(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.navigation.AStarBase, com.hypixel.hytale.server.npc.navigation.AStarNode, com.hypixel.hytale.server.npc.movement.controllers.MotionController, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: invokevirtual #263                // Method com/hypixel/hytale/server/npc/navigation/AStarNode.getEstimateToGoal:()F
+         4: fconst_0
+         5: fcmpg
+         6: ifgt          13
+         9: iconst_1
+        10: goto          14
+        13: iconst_0
+        14: ireturn
+
+  protected boolean isGoalReached(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.movement.controllers.MotionController, org.joml.Vector3d, org.joml.Vector3d, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_2
+         1: aload_3
+         2: aload         4
+         4: invokeinterface #268,  3          // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.waypointDistanceSquared:(Lorg/joml/Vector3dc;Lorg/joml/Vector3dc;)D
+         9: aload_0
+        10: getfield      #35                 // Field stopDistanceSquared:D
+        13: dcmpl
+        14: iflt          21
+        17: iconst_1
+        18: goto          22
+        21: iconst_0
+        22: ireturn
+
+  public float estimateToGoal(com.hypixel.hytale.server.npc.navigation.AStarBase, org.joml.Vector3d, com.hypixel.hytale.server.npc.movement.controllers.MotionController);
+    Code:
+         0: fconst_0
+         1: aload_0
+         2: getfield      #31                 // Field stopDistance:D
+         5: aload_3
+         6: aload_2
+         7: aload_1
+         8: checkcast     #272                // class com/hypixel/hytale/server/npc/navigation/AStarWithTarget
+        11: invokevirtual #274                // Method com/hypixel/hytale/server/npc/navigation/AStarWithTarget.getTargetPosition:()Lorg/joml/Vector3d;
+        14: invokeinterface #277,  3          // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.waypointDistance:(Lorg/joml/Vector3dc;Lorg/joml/Vector3dc;)D
+        19: dsub
+        20: d2f
+        21: invokestatic  #280                // Method java/lang/Math.max:(FF)F
+        24: freturn
+
+  public void findBestPath(com.hypixel.hytale.server.npc.navigation.AStarBase, com.hypixel.hytale.server.npc.movement.controllers.MotionController);
+    Code:
+         0: aload_1
+         1: invokedynamic #285,  0            // InvokeDynamic #0:applyAsFloat:()Lcom/hypixel/hytale/function/function/ToFloatFunction;
+         6: invokedynamic #289,  0            // InvokeDynamic #1:test:()Lcom/hypixel/hytale/function/predicate/BiFloatPredicate;
+        11: ldc_w         #295                // float 3.4028235E38f
+        14: invokevirtual #296                // Method com/hypixel/hytale/server/npc/navigation/AStarBase.buildBestPath:(Lcom/hypixel/hytale/function/function/ToFloatFunction;Lcom/hypixel/hytale/function/predicate/BiFloatPredicate;F)Lcom/hypixel/hytale/server/npc/navigation/AStarNode;
+        17: pop
+        18: return
+
+  private static boolean lambda$findBestPath$0(float, float);
+    Code:
+         0: fload_1
+         1: fload_0
+         2: fcmpg
+         3: ifge          10
+         6: iconst_1
+         7: goto          11
+        10: iconst_0
+        11: ireturn
+
+  static {};
+    Code:
+         0: ldc           #13                 // class com/hypixel/hytale/server/npc/corecomponents/movement/BodyMotionMoveAway
+         2: invokevirtual #302                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #128                // Field $assertionsDisabled:Z
+        16: return
+}

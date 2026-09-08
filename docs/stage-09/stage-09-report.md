@@ -2,7 +2,7 @@
 
 ## Current state
 
-**COHORT_A_LOCAL_GATE_COMPLETE / STAGE_IMPLEMENTATION_IN_PROGRESS**.
+**COHORT_B_LOCAL_GATE_COMPLETE / STAGE_IMPLEMENTATION_IN_PROGRESS**.
 Version is `.21` / R028, not deployed. Stage 08 local completion is committed/pushed as `31d4a74`, with 320
 passing retained tests and its final `.20` artifact preserved in
 `evidence/stage-08/cohort-b/`. Connected RPG casting remains UNVERIFIED after the
@@ -209,9 +209,123 @@ for downgrade. This program has not migrated or written live player state.
 
 ## Still required
 
-Implement the remaining 13 skills and seven passives in bounded cohorts, with
+Implement the remaining eight skills and seven passives in bounded cohorts, with
 their own retained regression gates, smoke, archives, evidence and commits.
 All client rendering/input/native execution
 outcomes will remain IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION until actual
 connected evidence exists. Native resource/Signature/AbilitySlots ownership, XP
 geometry and Ability4 capability policy remain unchanged.
+
+## Cohort B — finite support and hostile utility
+
+The five records are Taunt, Weakening Hex, Hunter's Mark, Intimidate and Battle
+Cry. Cohort A was archived and committed as `38e400d` before these changes.
+The exact records and master 04.1–04.3 were reread. The complete retained build
+now passes **402 tests**, zero failures/errors/skips: 374 retained, 21 finite
+support tests, four real native SteeringForceEvade tests with a fixture navigation
+predicate, and three packaged presentation-structure tests. None is a connected
+NPC, collision, movement, packet or rendering test.
+
+### Native audit and implementation rationale
+
+`evidence/stage-09/api-finite/` records the pinned default target-slot, role tick,
+native evade force, 2D navigation probe, avoidance/steering, effect codec and
+DamageEntityInteraction implementations. The default target slot is looked up
+by its actual name; a missing or durable rebind slot rejects. No NPC role is
+replaced and no permanent NPC rebind is written.
+
+- Taunt uses the native default marked-entity target immediately before role
+  evaluation for five seconds. Common and Elite retain the authored duration;
+  Taunt is not hard-CC DR. Bosses require an encounter opt-in provider, which has
+  not been authored here, and reject explicitly. After native role evaluation,
+  the selected target is read back. A role that supersedes it produces
+  `NATIVE_ROLE_SUPERSEDED_TAUNT_TARGET` and loses the override. This readback is
+  not proof of a native attack. On expiry, only this adapter's matching temporary
+  target is released; ordinary threat evaluation resumes, not a stale saved target.
+- Intimidate applies two-second Fear through the shared resistance/DR service.
+  Its native 2D evade request is generated after role evaluation, before native
+  avoidance and movement. The actual MotionController probe rejects unsafe steps
+  and edges; Steering.maxDistance bounds native translation to that probed step.
+  There is no teleport. Root/Frozen still stop movement; native action queues are
+  cleared while Fear is active. Flying/swimming controllers explicitly reject
+  until a safe corresponding navigation adapter is audited.
+- Direct damage after 0.25 s breaks Fear, not DoT or cancelled hits. RPG metadata
+  now distinguishes direct, periodic, reflected and redirected origins. Pinned
+  native DamageEntityInteraction supplies INTERACTION_TYPE; a bare EntitySource
+  alone is not treated as evidence of a direct weapon hit.
+- Weakening Hex contributes a single 0.85 outgoing multiplier for eight seconds.
+  Hunter's Mark contributes +0.10 to the existing Increased bucket, only for
+  that caster's RPG skill damage, for 15 seconds. One mark/caster replaces the
+  previous target atomically. Battle Cry samples self and confirmed allies once
+  in six metres, applies +0.10 Increased damage and +0.10 movement for eight
+  seconds, and is not an Aura emitter or reservation.
+- Source-owned finite effects share a bounded registry (4,096 global, 256/owner,
+  32/target; 64 recipients per atomic cast batch). Identical effects refresh or
+  choose strongest, never multiply by copy count. RPG damage combines the
+  appropriate buckets at the existing calculation boundary. A separate native
+  outgoing filter handles non-RPG hits; it skips tagged RPG hits to prevent double
+  application. No Stage 04/05 executor or projectile mechanic was redesigned.
+- Battle Cry's movement uses the actual EntityEffect HorizontalSpeedMultiplier.
+  Missing/rejected native effect projection removes the corresponding gameplay
+  lease and records the earliest native boundary, including exceptions. Short
+  native leases expire on teardown failure; there is no permanent speed modifier.
+
+### Catalog corrections and failures found
+
+Intimidate's legacy 0.90 damage placeholder and damage/crit capabilities conflicted
+with its normative zero-damage Fear closure. Its catalog now agrees with the
+executable profile; Potency correctly rejects this utility skill. Battle Cry's
+legacy moving-Aura description now states one-time recipient sampling. Canonical
+counts remain exactly 87 skills and 66 passives.
+
+The first compile used an incorrect NetworkId package, corrected against the
+installed class. A full regression then exposed an old Stage 02 expectation that
+boss Root must reject. Master 04.3 requires the eligible 30% Slow substitute for
+two seconds; the shared status implementation and assertion now follow that
+rule. Protected Root and boss Fear still reject, and the authored Root Snare
+exception remains unchanged. No lifecycle trace or connected gate was weakened.
+
+Before final validation, component additions during ECS processing were changed
+to CommandBuffer.ensureComponent. Native Walk bytecode inspection confirmed that
+Steering.maxDistance must be explicitly set to the successfully probed step.
+Finite-effect admission is checked before shared Fear/DR application, then checked
+again at publication; this prevents ordinary capacity rejection from consuming a
+control application.
+
+### Presentation and explicit remaining boundaries
+
+Hunter's Mark no longer broadcasts the initial debug shape as a tracking marker.
+An entity-bound, non-gameplay native tint fallback renews with a 0.2-second lease
+only while a loaded owner has range-bounded LOS (64 m visual cap, not a gameplay
+range extension). Four deterministic owner palette variants provide a bounded
+ownership cue; collisions are possible and do not imply unique player identity.
+When multiple marks share a recipient, stable owner ordering selects the visual;
+all separate caster gameplay modifiers remain correct. Hex uses a short native
+lower-body tint. Native model presentation remains the owner of rendering and
+occlusion. These are fallback art, not the final authored overhead diamond, and
+connected no-wall-reveal/visibility, lifetime and visual precedence still require
+QA. A presentation failure cannot refund or cancel applied gameplay.
+
+Native role behavior may reject a Taunt target despite the valid public target
+slot; post-role readback diagnoses that exact boundary rather than claiming
+success from the setter. Native retreat safety/movement, attack interruption,
+native outgoing damage, native effect overlap and all five skill activations need
+connected evidence. Gun equipment classification is currently unsupported by the
+existing weapon adapter; Bow/Crossbow classification is retained, not evidence
+of a working Gun path. Future third-party untagged reflection damage is not
+automatically classified by this adapter. Cross-family snapshot and load-volume
+hardening remains part of the stage's final cohort and Stage 13 gates.
+
+The `.20` rollback artifact and schema-3 backup requirement remain unchanged;
+cohort A's `.21` artifact is also retained. No live mods, player state, native
+resource/Signature HUD, XP assets, Ability4 policy or gameplay cost/cooldown
+formulas changed in this cohort.
+
+The exact `.21` cohort B build reached normal isolated three-mod network boot and
+clean exit 0. Native support and bridge assets resolved; the packaged audit found
+43 zero-native-cost trigger items and no protected HUD/XP/projectile/cost-formula
+changes. `evidence/stage-09/cohort-b/` contains the full smoke, 402-case results,
+machine verification, build and rollback. SHA-256:
+`5918C90D6F5B081388C74B4EA4DDDEB57F816560F2610D46D3405A87B9690EA3`.
+This closes only cohort B's local engineering gate; eight skills and seven
+passives remain before Stage 09 local completion.

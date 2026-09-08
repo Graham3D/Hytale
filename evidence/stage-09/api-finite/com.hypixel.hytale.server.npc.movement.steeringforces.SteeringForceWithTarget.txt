@@ -1,0 +1,110 @@
+Compiled from "SteeringForceWithTarget.java"
+public abstract class com.hypixel.hytale.server.npc.movement.steeringforces.SteeringForceWithTarget implements com.hypixel.hytale.server.npc.movement.steeringforces.SteeringForce {
+  protected final org.joml.Vector3d selfPosition;
+
+  protected final org.joml.Vector3d targetPosition;
+
+  private org.joml.Vector3d componentSelector;
+
+  public com.hypixel.hytale.server.npc.movement.steeringforces.SteeringForceWithTarget();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class org/joml/Vector3d
+         8: dup
+         9: invokespecial #9                  // Method org/joml/Vector3d."<init>":()V
+        12: putfield      #10                 // Field selfPosition:Lorg/joml/Vector3d;
+        15: aload_0
+        16: new           #7                  // class org/joml/Vector3d
+        19: dup
+        20: invokespecial #9                  // Method org/joml/Vector3d."<init>":()V
+        23: putfield      #16                 // Field targetPosition:Lorg/joml/Vector3d;
+        26: return
+
+  public org.joml.Vector3d getSelfPosition();
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field selfPosition:Lorg/joml/Vector3d;
+         4: areturn
+
+  public void setSelfPosition(org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field selfPosition:Lorg/joml/Vector3d;
+         4: aload_1
+         5: invokevirtual #19                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+         8: pop
+         9: return
+
+  public org.joml.Vector3d getTargetPosition();
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field targetPosition:Lorg/joml/Vector3d;
+         4: areturn
+
+  public void setTargetPosition(org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field targetPosition:Lorg/joml/Vector3d;
+         4: aload_1
+         5: invokevirtual #19                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+         8: pop
+         9: return
+
+  public void setTargetPosition(double, double, double);
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field targetPosition:Lorg/joml/Vector3d;
+         4: dload_1
+         5: dload_3
+         6: dload         5
+         8: invokevirtual #23                 // Method org/joml/Vector3d.set:(DDD)Lorg/joml/Vector3d;
+        11: pop
+        12: return
+
+  public void setPositions(org.joml.Vector3d, org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #26                 // Method setSelfPosition:(Lorg/joml/Vector3d;)V
+         5: aload_0
+         6: aload_2
+         7: invokevirtual #30                 // Method setTargetPosition:(Lorg/joml/Vector3d;)V
+        10: return
+
+  public void setSelfPosition(double, double, double);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field selfPosition:Lorg/joml/Vector3d;
+         4: dload_1
+         5: dload_3
+         6: dload         5
+         8: invokevirtual #23                 // Method org/joml/Vector3d.set:(DDD)Lorg/joml/Vector3d;
+        11: pop
+        12: return
+
+  public void setComponentSelector(org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #33                 // Field componentSelector:Lorg/joml/Vector3d;
+         5: return
+
+  public boolean compute(com.hypixel.hytale.server.npc.movement.Steering);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field selfPosition:Lorg/joml/Vector3d;
+         4: aload_0
+         5: getfield      #33                 // Field componentSelector:Lorg/joml/Vector3d;
+         8: invokevirtual #36                 // Method org/joml/Vector3d.mul:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        11: pop
+        12: aload_0
+        13: getfield      #16                 // Field targetPosition:Lorg/joml/Vector3d;
+        16: aload_0
+        17: getfield      #33                 // Field componentSelector:Lorg/joml/Vector3d;
+        20: invokevirtual #36                 // Method org/joml/Vector3d.mul:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        23: pop
+        24: iconst_1
+        25: ireturn
+}

@@ -112,7 +112,7 @@ class Stage09SupportRuntimeTest {
         assertEquals(0,h.mana);assertEquals(50,h.reserved);assertEquals(50,h.saved.managuard().allocationPercent());
         assertEquals(50,h.kernel.reservations().reserved(h.actor,100));
     }
-    static final class Harness implements SkillExecutionPort,NativeResourcePort,SupportWorldPort {
+    static class Harness implements SkillExecutionPort,NativeResourcePort,SupportWorldPort {
         final UUID actor=UUID.randomUUID(),world=UUID.randomUUID();
         final Stage01BTestSupport.Bundle bundle=Stage01BTestSupport.bundle();
         final RpgCombatKernel kernel=RpgCombatKernel.createProduction();

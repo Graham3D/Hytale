@@ -141,6 +141,14 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(supportSystem);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Absorb(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Removal(supportSystem));
+        com.inigmasgames.hytalerpg.execution.hytale.SupportEffectProjection.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.execution.hytale.SupportEffectProjection.class,
+                com.inigmasgames.hytalerpg.execution.hytale.SupportEffectProjection::new));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.Projection(supportSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.Retreat(supportSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.NativeOutgoing(supportSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.DirectDamageBreak(supportSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.Removal(supportSystem));
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection::new));
@@ -227,6 +235,7 @@ public final class Phase00Plugin extends JavaPlugin {
         // Assets are resolved before plugin start, including in --bare smoke mode (no BootEvent).
         com.inigmasgames.hytalerpg.input.NativeRuneControl.auditAssets();
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem.requireAssets();
+        com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.requireAssets();
         LOGGER.atInfo().log("RPG_STAGE06_ASSETS revision=%s areaProfiles=%d requiredStatusAssets=10 nativeDamageChannels=2 result=PASS connectedProof=false",
                 BuildIdentity.REVISION, Stage04SkillProfiles.EXPECTED_STAGE06_PROFILES);
         for(String cause:java.util.List.of("Wind","Lightning","RPG_Void","RPG_Nature","RPG_Necrotic"))

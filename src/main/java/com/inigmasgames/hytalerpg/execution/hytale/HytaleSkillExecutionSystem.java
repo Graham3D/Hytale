@@ -125,7 +125,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private HytaleSupportSystem support;
     public HytaleSupportSystem configureSupport(com.inigmasgames.hytalerpg.progress.RpgLoadoutService loadouts){
         if(support!=null)throw new IllegalStateException("Support already configured");
-        support=new HytaleSupportSystem(loadouts,kernel,fieldCapacity,trace,vfx);return support;
+        support=new HytaleSupportSystem(loadouts,kernel,fieldCapacity,trace,vfx,bosses);return support;
     }
     private final com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry areaControls =
             com.inigmasgames.hytalerpg.combat.status.ControlProfileRegistry.loadCanonical();
@@ -488,7 +488,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             connections.start(context,System.nanoTime()/1e9,connectionWorld());
             return SkillExecutionResult.committed("CONNECTION_STARTED",0,0);
         }
-        @Override public SkillExecutionResult executeSupport(SkillExecutionContext context){return support.execute(store,actor,context);}
+        @Override public SkillExecutionResult executeSupport(SkillExecutionContext context){return support.execute(store,actor,context,buffer);}
         private ConnectionWorldPort connectionWorld() {
             return new ConnectionWorldPort() {
                 private final Map<String,Ref<EntityStore>> refs=new HashMap<>();
@@ -868,7 +868,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             double effective = effectiveAttribute(context);
             DamageCalculationService.Result result = kernel.damage().calculate(new DamageCalculationService.Request(
                     context.snapshot().basePower(), effective, coefficient,
-                    context.snapshot().modifiers(), !periodic, criticalChance,
+                    support==null?context.snapshot().modifiers():support.runtime().finite().damageModifiers(
+                            playerRef.getWorldUuid(),playerRef.getUuid(),UUID.fromString(target.stableId()),context.snapshot().modifiers(),System.nanoTime()/1e9), !periodic, criticalChance,
                     context.snapshot().criticalMultiplier()));
             CombatTrace.Context ids = ids(context);
             trace.emit(playerRef.getUuid(), RpgTraceEventType.DAMAGE_CALC_BEGIN, ids,
@@ -888,7 +889,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             double before = health(targetStats);
             var nativeResult = new HytaleDamageAdapter().applyObserved(target.handle(), store, actor, cause,
                     new HytaleDamageMetadata(playerRef.getUuid(), context.rootCastId(), context.skillInstanceId(),
-                            context.request().correlationId(), result.preMitigationDamage(), Double.NaN,effectId,canProc), result);
+                            context.request().correlationId(), result.preMitigationDamage(), Double.NaN,effectId,canProc,
+                            periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT), result);
             double after = health(targetStats);
             return new DamageOutcome(result.preMitigationDamage(),
                     Double.isFinite(before) && Double.isFinite(after) ? Math.max(0.0, before - after) : -1.0,
