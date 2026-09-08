@@ -19,9 +19,9 @@ public final class CompiledProfileResolver {
     public synchronized Stage04SkillProfile resolve(Stage04SkillProfile authored,CompiledSkillPlan plan){
         if(!authored.skillId().equals(plan.skillId().value())||plan.degraded()||plan.schemaVersion()!=CompiledSkillPlan.CURRENT_SCHEMA)
             throw new IllegalArgumentException("Profile requires a current matching compiled plan");
-        var modifiers=plan.foundationModifiers();
-        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal())return authored;
-        var key=new Key(authored,modifiers);
+        var modifiers=plan.foundationModifiers();var geometry=plan.geometry();
+        if(!modifiers.longReach()&&!modifiers.rapidInvocation()&&!modifiers.concentration()&&!modifiers.lingering()&&!modifiers.reversal()&&!geometry.active())return authored;
+        var key=new Key(authored,modifiers,geometry);
         var prior=cache.get(key);if(prior!=null)return prior;
         JsonObject resolved=JSON.toJsonTree(authored).getAsJsonObject();
         resolved.addProperty("windupSeconds",modifiers.windup(authored.windupSeconds()));
@@ -52,6 +52,13 @@ public final class CompiledProfileResolver {
             if(authored.reaction()==null)throw new IllegalArgumentException("NO_REACTION_WINDOW_COMPONENT");
             scale(resolved,"reaction",1.3,"windowSeconds");
         }
+        if(geometry.impactForce())impact(authored,resolved);
+        if(geometry.widening()||geometry.focusedChannel()){
+            if(!ProfileComponentPolicy.resolvingWidth(authored))throw new IllegalArgumentException("NO_RESOLVING_WIDTH_COMPONENT");
+            var connection=resolved.getAsJsonObject("connection");
+            connection.addProperty("width",geometry.width(connection.get("width").getAsDouble()));
+            if(geometry.widening())scale(resolved,"connection",.85,"coefficient");
+        }
         var effective=JSON.fromJson(resolved,Stage04SkillProfile.class);
         if(cache.size()>=CAPACITY)cache.remove(cache.keySet().iterator().next());
         cache.put(key,effective);return effective;
@@ -62,6 +69,25 @@ public final class CompiledProfileResolver {
         for(String field:fields)if(value.has(field))value.addProperty(field,value.get(field).getAsDouble()*factor);
     }
     public synchronized int cachedProfiles(){return cache.size();}
+    private static void impact(Stage04SkillProfile p,JsonObject root){
+        if(!ProfileComponentPolicy.impact(p))throw new IllegalArgumentException("NO_IMPACT_COMPONENT");
+        if(p.strike()!=null){scale(root,"strike",.90,"coefficient");if(p.strike().statusId().equals("STAGGER"))scale(root,"strike",1.75,"statusSeconds");}
+        if(p.projectile()!=null){
+            scale(root,"projectile",.90,"coefficient");scale(root,"projectile",1.75,"knockbackDistance");
+            if(p.projectile().statusId().equals("STAGGER"))scale(root,"projectile",1.75,"statusSeconds");
+        }
+        if(p.area()!=null){
+            if(!p.area().periodic())scale(root,"area",.90,"coefficient","innerCoefficient","finalCoefficient");
+            scale(root,"area",1.75,"displacement");
+            if(p.area().status().equals("STAGGER"))scale(root,"area",1.75,"statusSeconds","statusInnerSeconds");
+        }
+        if(p.connection()!=null){
+            if(!p.connection().channel())scale(root,"connection",.90,"coefficient");
+            if(p.connection().details().status().equals("STAGGER")){
+                var detail=root.getAsJsonObject("connection").getAsJsonObject("details");detail.addProperty("statusSeconds",detail.get("statusSeconds").getAsDouble()*1.75);
+            }
+        }
+    }
     private static void concentrate(Stage04SkillProfile p,JsonObject root){
         if(p.strike()!=null)switch(p.strike().geometry()){
             case ARC,ASSIST_CONE->scale(root,"strike",.7,"angleDegrees");
@@ -112,5 +138,5 @@ public final class CompiledProfileResolver {
             }
         }
     }
-    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers){}
+    private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry){}
 }

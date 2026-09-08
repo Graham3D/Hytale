@@ -383,3 +383,62 @@ Rollback: D, SHA-256
 `3DB526C4211FEE01DC1F2F69843C312086689300FDA4FC9A47DB82C7B86D4FDA`.
 Local gate PASS; connected UNVERIFIED. Eleven of40 Stage11 primitives now have
 local implementation evidence;29 remain before matrix/hardening closure.
+
+## Cohort F — Impact Force, Widening and Focused Channel
+
+Baseline E `fd07ce3`. Master LP032/LP040/LP041 read in full before changes.
+R030/0.0.23, compiled-plan schema15, player schema6 unchanged. The cohort extends
+the existing resolve-before-validation profile step; no new native APIs are used.
+The existing native knockback, collision, area control, line bounds and status
+resistance adapters were inspected as consumers of these resolved fields.
+
+Impact Force scales authored knockback/Stagger fields×1.75, before the retained
+native displacement and hard-control resistance checks. Ground Slam's displacement
+2 becomes3.5; Stone Bolt's knockback parameter1.5 becomes2.625; Shield Bash's
+Stagger0.6s becomes1.05s (elite0.525s after the existing resistance multiplier).
+Direct damage coefficients×0.90, without changing projectile speed/collision,
+area radius/height, unrelated Root/Chill/Burn duration, DoT DPS, cost or cooldown.
+Knockback parameters are not proof of actual connected meters traveled. Protected
+and boss control rejection and the rolling control-resistance cap remain intact.
+
+Widening changes resolving Beam/Line full width×1.50 and damage/effect coefficient
+×0.85. Focused Channel uses full width×0.65 and+0.30 Increased in the kernel.
+Both retain reach, height, lifetime, speed, cadence, cost and cooldown. Focused
+Channel also applies to non-channelled Lightning Bolt. Minimum width0.10m is
+enforced after composition with Concentration. Long Reach remains independent.
+All changes reach the same geometry used by hit queries and existing presentation;
+no particle-only proxy hit area was introduced.
+
+Component policy distinguishes real resolving width from the small target-lock
+width on Root Lash/Life Drain/Chain Lightning. Those target-lock fields are not
+made into new beam geometry by equipping a width passive. Missing imported impact
+tags are resolved from authored fields, locally, without granting global tags.
+The profile cache key now includes typed geometry operators to prevent a focused
+plan from returning a cached widened profile.
+
+The catalog's Widening and Focused Channel entries name each other's conflicts,
+but the compiler previously only compared identical group strings. Both now
+normalize to BEAM_WIDTH_MODE. Linking the second conflicts and preserves the
+complete saved state, original plan and graph routes in either order. The typed
+record independently rejects contradictory flags. Owned passive copies are not
+deleted. Existing unsupported-graph migration remains part of Stage11 closure.
+
+23 new tests include each positive/two-negative fixture, unchanged unrelated
+fields, control safeguards, actual full-width hit queries, a shared wave fixture
+with exactly one cost, a twenty-slice Beam with unchanged upkeep/end cooldown, and
+a shared Ground Slam fixture receiving the new displacement/damage parameters.
+Fixture corrections: the local area runtime was renamed to avoid the inherited
+support runtime field; rollback compares serialized state content rather than
+object identity because the presentation service returns defensive copies.
+
+### Cohort F local gate
+
+`clean build`: **809 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot and clean exit0 PASS. Packaged CustomUI9 documents PASS.
+Artifact: `evidence/stage-11/cohort-f/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `352B10F04699FD7B360BF43435451D4A9F51BD2890D18DC94E8DF2657202DAC6`.
+Rollback: E, SHA-256
+`F878FC515E4BF7119A703A9C48469CDC2E5E7432ADE35A23D0EC43DAEA1861BA`.
+No live deployment, save migration, native ability or HUD changes. Local gate
+PASS; connected geometry, displacement, control and casting UNVERIFIED.
+Fourteen of40 Stage11 primitives now have local evidence;26 remain.

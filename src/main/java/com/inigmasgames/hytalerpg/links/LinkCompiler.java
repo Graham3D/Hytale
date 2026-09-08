@@ -70,6 +70,7 @@ public final class LinkCompiler {
             CompatibilityResult result = compatibility.assess(skill, binding.definition(),bindings.stream().map(PassiveBinding::definition).toList());
             if (!result.accepted()) return CompilationResult.failure(result.code(), result.message());
             String group = binding.definition().stackingGroup();
+            if(Set.of("widening","focused_channel").contains(binding.definition().id().value()))group="BEAM_WIDTH_MODE";
             if (group != null && !group.isBlank()) {
                 PassiveDefinition prior = groups.putIfAbsent(group, binding.definition());
                 if (prior != null && !prior.id().equals(binding.definition().id())) {
@@ -137,6 +138,7 @@ public final class LinkCompiler {
                 case "concentration" -> scalablePayloadIncreased+=.30;
                 case "lingering" -> resourceCostMultiplier*=1.15;
                 case "reversal" -> scalablePayloadIncreased+=.25;
+                case "focused_channel" -> scalablePayloadIncreased+=.30;
                 default -> { }
             }
             if (passive.id().value().equals("expanded_radius")) {
@@ -156,6 +158,7 @@ public final class LinkCompiler {
                 + "|" + com.inigmasgames.hytalerpg.domain.SummonModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.FoundationModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.HitConditionModifiers.from(order)
+                + "|" + com.inigmasgames.hytalerpg.domain.GeometryModifiers.from(order)
                 + "|planSchema=" + CompiledSkillPlan.CURRENT_SCHEMA;
         var kernelModifiers = new CompiledSkillPlan.KernelModifiers(scalablePayloadIncreased,
                 resourceCostMultiplier, cooldownRecoveryBonus);

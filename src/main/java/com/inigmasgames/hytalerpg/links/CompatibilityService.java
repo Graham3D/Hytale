@@ -21,6 +21,17 @@ public final class CompatibilityService {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
 
+        if(passive.id().value().equals("impact_force")){
+            var impact=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.impact(skill.id().value());
+            if(impact.filter(v->!v).isPresent())return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Impact Force requires authored knockback or Stagger, not any crowd control or pull.",Set.of("IMPACT_COMPONENT"),actual);
+            if(impact.orElse(false))actual.add("APPLIES_KNOCKBACK"); // Local OR gate only; not a global capability introduction.
+        }
+        if(Set.of("widening","focused_channel").contains(passive.id().value())){
+            var width=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.resolvingWidth(skill.id().value());
+            if(width.filter(v->!v).isPresent())return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Width modifiers require resolving Beam/Line geometry, not target-lock width.",Set.of("RESOLVING_WIDTH_COMPONENT"),actual);
+            if(width.orElse(false))actual.add("HAS_WIDTH");
+        }
+
         if(passive.id().value().equals("reversal")&&com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.reactionWindow(skill.id().value()).filter(value->!value).isPresent())
             return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,"Reversal requires an authored reaction window.",Set.of("REACTION_WINDOW_COMPONENT"),actual);
         if(passive.id().value().equals("momentum")){
