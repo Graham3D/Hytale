@@ -51,6 +51,13 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
                 if(!entry.getValue().isJsonObject())throw new IllegalStateException("Invalid saved cooldown "+entry.getKey());
                 for(String field:List.of("remainingWork","baseRecovery"))if(!entry.getValue().getAsJsonObject().has(field)||entry.getValue().getAsJsonObject().get(field).isJsonNull())
                     throw new IllegalStateException("Incomplete saved cooldown "+entry.getKey()+"/"+field);
+                var value=entry.getValue().getAsJsonObject();
+                if(!value.has("queued")||!value.get("queued").isJsonArray())throw new IllegalStateException("Missing schema-6 charge queue");
+                for(var queued:value.getAsJsonArray("queued")){
+                    if(!queued.isJsonObject())throw new IllegalStateException("Invalid queued recharge");
+                    for(String field:List.of("remainingWork","baseRecovery"))if(!queued.getAsJsonObject().has(field)||queued.getAsJsonObject().get(field).isJsonNull())
+                        throw new IllegalStateException("Incomplete queued recharge "+field);
+                }
             }
             for(String required:List.of("revision","lastAuraEpoch","managuard","toggleLocks"))
                 if(!supportJson.has(required)||supportJson.get(required).isJsonNull())throw new IllegalStateException("Incomplete support field "+required);

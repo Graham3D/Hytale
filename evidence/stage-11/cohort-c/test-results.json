@@ -1,0 +1,1198 @@
+[
+  {
+    "cases": [
+      "allPermanentSlotParsersAreExactAndBounded()",
+      "canonicalCatalogLoadsAndResolvesFormattingWithoutGuessing()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.CatalogAndSlotTest",
+    "seconds": "0.075",
+    "tests": 2
+  },
+  {
+    "cases": [
+      "persistenceFailureLeavesCachedStateUnchangedAndTraceFailureIsNonAuthoritative()",
+      "unknownUnlinkedContentProducesExplicitDegradedPlanWithoutCrash()",
+      "compilerIsIdempotentAndOrderingDoesNotFollowInsertionOrder()",
+      "requiredFireBoltForkSequenceCompilesCanonicalChildren()",
+      "equipAndUnequipFlowUsesOneTransactionalAuthority()",
+      "failedRelinkRollsBackExistingValidFireBoltRouteAndTracesRejection()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.CompilerAndTransactionTest",
+    "seconds": "0.137",
+    "tests": 6
+  },
+  {
+    "cases": [
+      "copyingConversionMetadataCannotRearmCompletedRestoration()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.execution.hytale.Stage10NativeMetadataTest",
+    "seconds": "0.001",
+    "tests": 1
+  },
+  {
+    "cases": [
+      "illegalRelationshipsCyclesAndJointCapacityAreRejected()",
+      "sixPassiveGlobalBudgetCanSpecializeOneSkill()",
+      "representativeCompatibilityGatesAreExplicit()",
+      "directJointAndChainedJointRoutesValidate()",
+      "everyCanonicalSkillPassiveAssessmentReturnsATypedVerdict()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.GraphAndCompatibilityTest",
+    "seconds": "0.121",
+    "tests": 5
+  },
+  {
+    "cases": [
+      "v2FourSkillMigrationPreservesOwnershipAndMasteryWhileRecordingSkill04Cleanup()",
+      "restartReloadPreservesRequiredCommandSequence()",
+      "v1MigrationIsDeterministicAndPersistsCurrentSchema()",
+      "corruptedGraphIsBackedUpAndRecoveredWithoutResettingProgress()",
+      "fileRoundtripPreservesSlotsJointsEdgesAndRevision()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.PersistenceAndMigrationTest",
+    "seconds": "0.073",
+    "tests": 5
+  },
+  {
+    "cases": [
+      "catalogProjectionSupportsTabsSearchWeaponFiltersDetailsAndPlaceholderIcon()",
+      "normalUiLoggerContainsActualValuesAndSuppressesRoutineHudInfo()",
+      "staticAssignmentsProduceAuthoritativeEdgesAndCompatibilityFailureRollsBackAtomically()",
+      "r021KeepsContinuousXpWithNoRpgResourceOrAbilityControls()",
+      "staticTopologyIsExactlyTheOwnerSuppliedThreeBranchAdjacency()",
+      "installedNativeHudExposesAbilitiesComponentAndAbilitySlotsProjectionApi()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.R016CorrectionTest",
+    "seconds": "0.051",
+    "tests": 6
+  },
+  {
+    "cases": [
+      "exactInstalledContainerGeometryMapsOnlyTwoRpgSlots()",
+      "productionSourceHasNoCustomAbilityHudOrDuplicatePhysicalKeyOwnership()",
+      "executableCohortHasTriggerOnlyNativeItemAssets()",
+      "itemIdsAreDeterministicAndOwnershipIsPrefixBounded()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.R021NativeAbilityCorrectionTest",
+    "seconds": "0.053",
+    "tests": 4
+  },
+  {
+    "cases": [
+      "bridgeIsBranchlessAndContainsNoGameplayMutation()",
+      "runtimeAuditTargetsThePackagedRootId()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.R022NativeAbilitySynchronizationTest",
+    "seconds": "0.001",
+    "tests": 2
+  },
+  {
+    "cases": [
+      "signatureAbility4ForeignRunesAndWrongSlotsNeverExecute()",
+      "inboundTrafficCannotAlsoActivateInProduction()",
+      "controlSuppressionAppliesAtBothEnqueueAndDrain()",
+      "perPlayerQueueIsBoundedAndTeardownClearsIt()",
+      "serverCallbackMapsTwoSlotsOncePerActualChainAndKeepsCorrelation()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.R024NativeExecutionInputTest",
+    "seconds": "0.01",
+    "tests": 5
+  },
+  {
+    "cases": [
+      "levelOneMaximaAreExactlyOneHundredNotBaselinePlusE10()",
+      "cooldownUsesGenericRecoveryModifierCapabilityAndRuntimeState()",
+      "diagnosticsFailureCannotChangeCombatResult()",
+      "declaredCostEnforcesManaStaminaOrNoneAndEfficiencyUsesMasterIntegerRule()",
+      "chillStacksRefreshAndFifthStackConsumesIntoFrozen()",
+      "damageMathKeepsDoublePrecisionUntilOneHytaleFloatBoundary()",
+      "balanceProfileIsVersionedAndCurveBreakpointsAreExact()",
+      "modifierBucketsUseAdditiveIncreasedReducedAndMultiplicativeMoreLess()",
+      "canonicalPotencyAndEfficiencyCompileIntoTypedKernelModifiersWithoutInventedContent()",
+      "primaryDerivedStatsUseEffectiveStrDexIntAndWis()",
+      "wisdomAndLuckSecondaryEquationsAndCapsAreApplied()",
+      "bedAndHomeRestorationHonorReservationAndTiming()",
+      "bossFrozenAndRootUseThirtyPercentSlowWhileOtherHardControlsReject()",
+      "combatSnapshotDefensivelyCopiesEveryMutableInput()",
+      "allFiveAttributesUseSameCurveAndRejectNegativeRawValues()",
+      "basePowerUsesExplicitClassificationAndNeverResourceTypeOrDisplayName()",
+      "resourceReserveCommitRefundAndInsufficientFailureAreTransactional()",
+      "hytaleDamageAdapterIsConcreteAndAcceptsNativePipelineTypes()",
+      "effectiveCurveIsContinuousAtEveryBreakpoint()",
+      "innateAndNoneBasePowerContractsAreExplicit()",
+      "burnPoisonAndNonstackingControlsRefreshTheirOwnTimers()",
+      "seededCritIsRepeatableDirectHitsCritAndPeriodicDoesNotByDefault()",
+      "potencyTypedModifierFeedsDamageIncreasedBucket()",
+      "passiveRegenAndNormalChargedHitRecoveryAreCappedAndDeduplicatedPerRoot()",
+      "frozenExpiresIntoThreeSecondImmunity()",
+      "cooldownRecoveryIsCappedAndDurationHasQuarterSecondFloor()",
+      "reservationsSumClampRegenerationRejectOversubscriptionAndReleaseWithoutMinting()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage02CombatKernelTest",
+    "seconds": "0.088",
+    "tests": 27
+  },
+  {
+    "cases": [
+      "uiTraceFailureIsIsolatedFromCaller()",
+      "allocationSaveFailureRollsBackAttributeAndBothPointCounters()",
+      "noPointAndNegativeRequestsAreRejectedWithoutMutation()",
+      "uiOpenAdapterHonestlyReportsCommandOnlyOnInstalledBuild()",
+      "allNinetyEightXpTransitionsUseCanonicalRoundHalfUpToTenFormula()",
+      "characterProjectionContainsAllAttributesDerivedStatsAndNativePools()",
+      "projectionHasThreeLogicalSlotsAndReadsLiveResourcesInCanonicalOrder()",
+      "persistentIndicatorFollowsPendingPointsUntilFinalAllocation()",
+      "allocationConsumesPendingFirstAndIsRevisionChecked()",
+      "abilityActivationStopsTypedBeforeResourceOrCooldownMutation()",
+      "tenPipProjectionMatchesRequiredBoundaryFixtures()",
+      "installedAbilityActionsLeaveSignatureNativeAndMapOnlyTheTwoNativeRunePrimaries()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage03PresentationTest",
+    "seconds": "0.13",
+    "tests": 12
+  },
+  {
+    "cases": [
+      "familyPrerequisiteRejectsBeforeResourceAndCooldownMutation()",
+      "bossClassificationUsesWorldScopedNativeBossBarIdentity()",
+      "pounceTrajectoryUsesBoundedTravelAndArrivalPayload()",
+      "shieldBashCarriesPointSixStaggerAndControlPolicyRejectsProtectedTargets()",
+      "authoredRepeatTimingDoesNotCollapseHitsIntoInitialDispatch()",
+      "quickstepIsFourMetersOverPointTwoTwoSecondsAndCollisionClamps()",
+      "lineGeometryRejectsLateralAndRearCandidates()",
+      "sixPilotProfilesAreCanonicalAndPounceUsesInnatePower()",
+      "hitLedgerDeduplicatesWithinRepeatButAllowsNextRepeat()",
+      "executorRegistryDispatchesExactlyOneSharedExecutorPerFamily()",
+      "strikeArcHonorsAngleRangeAndTargetCap()",
+      "heavySwingWindupCanCancelWithoutCostCooldownOrReplacementTraceIds()",
+      "commitConsumesResourceStartsCooldownBeforeFamilyDispatchAndKeepsTraceIds()",
+      "reactionExpiresTriggersOnceAndRejectsDuplicateIncomingEvent()",
+      "invalidWeaponAndInsufficientResourceRejectBeforeCommit()",
+      "cooldownSecondActivationRejectsWithoutAdditionalConsumption()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage04ExecutionTest",
+    "seconds": "0.209",
+    "tests": 16
+  },
+  {
+    "cases": [
+      "pinnedBuildExposesDurationOverriddenNativeEntityEffect()",
+      "pinnedBuildExposesSweptCollisionAndAuthoritativeMove()",
+      "pinnedBuildExposesMovementIntentAndOffhandUtility()",
+      "pinnedBuildExposesNativeDamageBlockMetadata()",
+      "pinnedBuildExposesAuthoritativeWorldScopedBossIdentity()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage04HytaleApiTest",
+    "seconds": "0.028",
+    "tests": 5
+  },
+  {
+    "cases": [
+      "pinnedServerExposesRequiredNativeProjectileAndAmmoBoundaries()",
+      "ownedProjectileAssetsContainNoNativeDamageInteraction()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage05NativeApiTest",
+    "seconds": "0.022",
+    "tests": 2
+  },
+  {
+    "cases": [
+      "lifecycleValidatesTargetDeduplicatesAndTerminatesTerrain()",
+      "quickShotAndAxeTossUsePhysicalSnapshotsAndExactCommit()",
+      "flightUsesTotalObservedPathAndExactDistanceDerivedLifetime()",
+      "arcaneBoltIsPlainSingleHitMagicAndStoneRequestsKnockback()",
+      "quickShotSelectsAuditedNativeBowAndCrossbowCarrierSpeeds()",
+      "sixProjectileProfilesPreserveCanonicalCohortAndExcludeSnipe()",
+      "ownerCancellationRemovesEveryRegisteredCarrierWithoutOrphans()",
+      "canonicalGenerationAndSpawnBudgetsRejectInvalidDerivedPlan()",
+      "fireBoltCommitsManaAndCapturesMagicDamageAndBurnRequest()",
+      "compiledForkRemainsMetadataAndDoesNotSpawnChildrenBeforeStage07()",
+      "projectileFamilyDispatchAndCorrelationStaySingular()",
+      "elementalAndPhysicalPayloadContractsAreExact()",
+      "frostBoltRequestsExactlyOneChillStack()",
+      "planNormalizesVelocityAndFreezesOwnerSnapshotAndEquipment()",
+      "synchronousSpawnFailureRefundsCostAndClearsCooldown()",
+      "stage02CritPolicyIsReusedWithoutProjectileFormula()",
+      "invalidWeaponInsufficientResourceAndMissingAmmoRejectBeforeSpawn()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage05ProjectileTest",
+    "seconds": "0.338",
+    "tests": 17
+  },
+  {
+    "cases": [
+      "wallUsesFullWidthLengthAndOrientedBounds()",
+      "cylinderUsesCollisionBoundsAndIndependentGroundHeight()",
+      "coneClipsBoundsBeforeTestingRangeAndUsesHalfAngle()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06AreaGeometryTest",
+    "seconds": "0.001",
+    "tests": 3
+  },
+  {
+    "cases": [
+      "groundSlamUsesOneAuthoritativeBurstAndLinearAuthoredFalloff()",
+      "trapExpiryCannotDetonateAndCleanupDropsLedgers()",
+      "trapArmsThenHitsOnlyFirstSusceptibleTargetAndTerminates()",
+      "overflowAndLosRejectWithoutPartialDamage()",
+      "frostNovaQueriesBoundsAndRequestsExactlyTwoChillWithoutExpandingArrivalHits()",
+      "expandedRadiusChangesDeclaredFootprintNotHeightOrConeAngle()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06AreaRuntimeTest",
+    "seconds": "0.156",
+    "tests": 6
+  },
+  {
+    "cases": [
+      "lateWorldTickCancelsAreaRatherThanFabricatingHistoricalContacts()",
+      "blizzardWarnsBeforeFirstImpactAndDoesNotHaveHiddenFullZoneDamage()",
+      "powderMineUsesSeparateTriggerAndExplosionAndNeverExpiresWithDamage()",
+      "blizzardCannotDamageBeforeWarningOrRetargetAfterWarnedTerrainDisappears()",
+      "coneHasFullAuthoredAngleAndDisjointInnerChillTier()",
+      "periodicZonesIntegrateEightSecondsAtAnySupportedTickRateAndThrottleStatus()",
+      "stratificationIsDeterministicBoundedAndRootSeeded()",
+      "everyAreaNativeItemIsTriggerOnlyAndPeriodicCatalogDoesNotAdvertiseCrit()",
+      "nativeBombFamilyAndAuditedPowerDoNotRequireAWeaponNameGuess()",
+      "proceduralConeAndWallUseExactGeometryAndBoundedOutlineSegments()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06CohortBTest",
+    "seconds": "0.391",
+    "tests": 10
+  },
+  {
+    "cases": [
+      "meteorUsesOneDisjointDamageTierAndSeparateBurnRadiusAfterFullWarning()",
+      "voidHasFiveSubImpactCapAndOneIndependentFinalBlastWithPullBeforeDamage()",
+      "pullUsesNativeCollisionSupportControlAndNeverMovesVerticallyOrPastCore()",
+      "cometKeepsFiveAndThreeChillTiersDisjoint()",
+      "earthquakeHasFourDiscretePulsesNotFrameRateDependentDamage()",
+      "overheadRejectsRoofAndChangedGroundInsteadOfMovingWarning()",
+      "avalanchePreservesAuthoredFirstHalfSecondAndAlternatesIceStoneWithRootCap()",
+      "voidFinalBlastCanHitAnEnemyMissedByEverySubImpactAndCoreAddsNoPacket()",
+      "vortexIntegratesDamageAndBoundedPullRequestsAtQuarterSecond()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06CohortCTest",
+    "seconds": "0.23",
+    "tests": 9
+  },
+  {
+    "cases": [
+      "NativeProtectionAndObservedBossOverrideProjectRank()",
+      "exactAuditedRolesSelectControlPolicyWithoutInferringNamesOrLevels()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06ControlRegistryTest",
+    "seconds": "0.003",
+    "tests": 2
+  },
+  {
+    "cases": [
+      "finiteFieldBudgetsRejectWithoutEvictionAndMalformedStartCannotLeakRoot()",
+      "sharedRootSpawnBudgetAndDuplicateInstanceCannotBeBypassed()",
+      "diagnosticSinkFailureCannotLeakFieldsOrPreventOtherOwnersCleanup()",
+      "claimedReleaseIsInvalidatedByOwnerTeardownAndRejectsInvalidClock()",
+      "ninetySixApexRootsAtMaximumOwnerDensityAndQueryBudgetExpireWithoutOrphans()",
+      "templateDimensionsAreAuthoritativeAndWarningIsNotOnlyAColorChange()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06HardeningTest",
+    "seconds": "0.203",
+    "tests": 6
+  },
+  {
+    "cases": [
+      "plainStrikePotencyIsFifteenPercentNotDuplicatedByExecutionAndSnapshotFactory()",
+      "compatibilityAndExclusiveRepeatControllerRemainExplicit()",
+      "schedulerReservesBoundedCapacityAndRejectsDuplicatePrimarySlots()",
+      "expandedRadiusChangesAuthoredGeometryAndMagnitudeExactlyOnce()",
+      "invalidCommittedTargetOrNativeFailureCannotReplayOrRetargetPaidCast()",
+      "ownerCancellationNeverRefundsPaidDelayOrLeavesFutureRelease()",
+      "unsupportedTargetCaptureFailsBeforePaymentAndReleasesReservation()",
+      "delayEchoAndPotencyPayOnceAndKeepCommittedSnapshotTargetAndIdentities()",
+      "echoCannotBypassAvalancheRootHitCap()",
+      "onePendingPrimaryPerSlotSurvivesLoadoutChangeWithoutChargingAnotherSkill()",
+      "echoCannotBypassBlizzardPerRootHitInterval()",
+      "nativeProjectilePlanDoesNotScaleCollisionRadiusForEchoOrDelay()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06LinksTest",
+    "seconds": "0.235",
+    "tests": 12
+  },
+  {
+    "cases": [
+      "frozenClearsSteeringAndInterruptsWhileStaggerDoesNotRoot()",
+      "rootRemovesOnlyVoluntaryTranslationAndPreservesTurningAndAttacks()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06NativeControlPolicyTest",
+    "seconds": "0.006",
+    "tests": 2
+  },
+  {
+    "cases": [
+      "oneSecondTicksAndFinalRemainderIgnoreFrameRateAndNeverUseDirectCoefficient()",
+      "expiredPoisonCannotRejectAnotherCastersLivePackage()",
+      "nativeFailureCannotReplayPartialTickAndLongGapDropsCatchup()",
+      "poisonVictimCapKeepsStrongestPackagesDeterministically()",
+      "lateCapturedApplicationClockCannotMoveRefreshBackwards()",
+      "competingApplicationSettlesOneSecondTickBeforeFractionalEviction()",
+      "weakerRefreshCannotReduceBurnAndStrongerSnapshotDoesNotRewriteAccruedTime()",
+      "differentSkillsDoNotOverwriteBurnAndOwnerTeardownKeepsOtherSources()",
+      "poisonAddsWithoutRetroactiveStackDamageAndCapsSourceAtThree()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest",
+    "seconds": "0.007",
+    "tests": 9
+  },
+  {
+    "cases": [
+      "pilotsReuseOneCommitOneCooldownAndSnapshotAuthority()",
+      "authoredSlowRejectsMalformedValuesAndCapsAtSixtyPercent()",
+      "chillRemainsAtFourDuringFrozenImmunityAndCanFreezeOnLaterLegalHit()",
+      "partialAreaAdapterFailureCannotRefundDamageAndEnableFreeRepeatedCasts()",
+      "lateInspectionDoesNotExtendImmunityAndRemovalDropsAllStatusMemory()",
+      "strongestSlowDoesNotMultiplyAndWeakerChillResumesAfterExpiry()",
+      "controlResistanceIsSharedRollingAndEliteDurationHalves()",
+      "rejectedNativePlacementDoesNotCommitAnyResourceOrCooldown()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage06PipelineTest",
+    "seconds": "0.313",
+    "tests": 8
+  },
+  {
+    "cases": [
+      "echoPromiseKeepsRootBudgetEvenWhenPrimaryTerminatesBeforeEchoLaunch()",
+      "returnHasSeparateHitLedgerAndOwnBoundedDistanceButDoesNotRearmContinuations()",
+      "chainUsesNearestVisibleUnvisitedWithinEightMetersWithStableTieBreak()",
+      "malformedFlightTimeIsRejectedAndYawPreservesSpeedAndElevation()",
+      "forkBatchOverflowIsAtomicAndCannotEvictAnotherRoot()",
+      "abandonedEchoCapacityIsIdempotentlyReleasedAndOwnerCancelDropsPromises()",
+      "firstFourCompatibilityHasPositiveAndNegativeTypedGatesWithoutLineLeaks()",
+      "hitThenPierceThenForkThenChainThenReturnGoldenOrderAndFiniteBudgets()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage07ContinuationTest",
+    "seconds": "0.22",
+    "tests": 8
+  },
+  {
+    "cases": [
+      "full512CarrierLoadHasBoundedBurstLedgersAndCompleteRootCleanup()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage07LoadTest",
+    "seconds": "0.708",
+    "tests": 1
+  },
+  {
+    "cases": [
+      "deathLogoutAndWorldDrainClearScheduledBatchesAndPendingOnlyRoots()",
+      "invalidLaterOriginOrEquipmentCancelsRemainingBatchesWithoutRefundOrReplay()",
+      "skillDelayMovesBarrageEpochButDoesNotAlterItsSpacingOrPayAgain()",
+      "volleyForkCombinationReservesWholeBatchesAndNeverReplenishesPierce()",
+      "echoVolleyHasSixCarriersAndExclusiveBarrageIsRejectedByCompiler()",
+      "volleySpreadPreservesElevationAndSharesSnapshotWithoutExtraPerProjectilePayment()",
+      "barrageVolleyHomingAndPotencyCreateNinePaidOnceShotsAtAuthoredOffsets()",
+      "fullNineShotCapacityIsRejectedBeforeAnyResourceOrCooldownCommit()",
+      "lateWorldTickDrainsOnlyTheTwoDueBatchesAndCannotRecursivelyRepeat()",
+      "batchPromisesSurviveEarlyPrimaryTerminationAndAreFullyDrained()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage07MultiplicityTest",
+    "seconds": "0.222",
+    "tests": 10
+  },
+  {
+    "cases": [
+      "sweepUsesThreeDimensionalBoundsAndBothDirections()",
+      "global512CapIncludesOtherOwnersAndNeverEvictsTheirProjectiles()",
+      "spentRootBudgetDoesNotResetWhenDerivedChildrenEnd()",
+      "returnCatchClipsAtFirstHalfMeterIntersectionNotAtNearestPointAfterCaster()",
+      "hitLedgersRemainBoundedAndDisposedInstancesCannotAcceptContacts()",
+      "returnGetsOnlyItsOwnExplicitLifetimeAndClockContinuesWithoutResettingAncestorAge()",
+      "callbacksAndTicksShareOneMonotonicClockAcrossRedirects()",
+      "rangeClipsBeforeSweepSoPackedTargetsBeyondRemainingPathCannotHit()",
+      "promisedEchoSlotsCountAgainstOwnerCapacityBeforeAnySecondLaunch()",
+      "sweepFindsEveryCloselyPackedBodyInDistanceOrder()",
+      "terminatedChildCannotReuseItsIdentityWhileRootLivesAndGenerationFourIsRejected()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage07SafetyTest",
+    "seconds": "0.872",
+    "tests": 11
+  },
+  {
+    "cases": [
+      "sourceSnapshotIsImmutableAndSecondaryContextPreservesAllExecutionIdentity()",
+      "damageMetadataRoundtripRetainsUnchangedRootIdsAndNonProccingSecondaryIdentity()",
+      "burstTargetLedgerIsIndependentFiniteAndRejectsBlankIDs()",
+      "generationThreeCanHitButCannotCreateAnyNewSecondaryGeneration()",
+      "accelerantCompilesSpeedDistanceLifetimeWithoutMagnitudeChange()",
+      "shrapnelRequiresPositiveAuthoritativeLossAndTriggersOnlyOnceAcrossBothLegs()",
+      "triggeredSecondaryBudgetIsSharedWithInstantBurstsAndHasNoPartialThreeChildAdmission()",
+      "goldenDelayEchoForkChainReturnPreservesPaidRootAndSnapshotAcrossBothWaves()",
+      "componentIntroductionIsOrderIndependentButNeedsShrapnelOnTheSameSkill()",
+      "independentLifetimeCapWinsAndGravityHasDefensiveRuntimeRejection()",
+      "introducedRadiusNeverEnlargesOrReducesThePrimaryAndMultipliesSecondaryExactlyOnce()",
+      "cancelledUnloadedAndBudgetRejectedCarriersCannotBurst()",
+      "splinterburstCreatesThreeHalfRangeScaledChildrenAndNeverCopiesItself()",
+      "ballisticsUsesAdditiveIncreasedBucketAndCombinesWithVolleySpeedAndDistance()",
+      "ownerCapacityRejectionIsAtomicAndCannotBurstLaterAfterCapacityFrees()",
+      "returnDefersBurstAndTerminalChildrenDoNotRestoreConsumedReturnCredit()",
+      "forkRetainsOriginalDistanceAndIndependentCapForTerminalHalfRangeChildren()",
+      "ballisticsRejectsAuthoredGravityCatalogWhileAllFourAcceptValidProjectileAndRejectLines()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage07SecondaryTest",
+    "seconds": "0.498",
+    "tests": 18
+  },
+  {
+    "cases": [
+      "homingReacquiresAtTenHertzWithinRangeConeAndLosUsingStableTieBreak()",
+      "antiparallelAndVerticalTurnsStayFiniteNormalizedAndAngleBounded()",
+      "homingTurnIsCappedAt120DegreesPerSecondAndNeverTurnsThroughOcclusion()",
+      "homingRejectsOverflowRatherThanPickingFromTruncatedTargets()",
+      "tooRapidBounceOrInvalidNormalFailsClosedWithoutEarlyReturnOrPhasing()",
+      "fourCohortBCompatibilityGatesRejectNonProjectileFamilies()",
+      "reflectionUsesObliqueNormalAndDoesNotConsumeEnemyChainCredits()",
+      "forkInheritsLastBounceTimeAndRemainingRicochetCredits()",
+      "twoRealNormalReflectionsPreserveSpeedThenReturnBeginsWithoutResettingCredits()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage07SteeringTest",
+    "seconds": "0.172",
+    "tests": 9
+  },
+  {
+    "cases": [
+      "chainCandidateOverflowRejectsNextWholeJump()",
+      "drainDebitsTwentyFractionalSlicesAndConvertsActualLossOnce()",
+      "lightningLineWaitsForCastThenHitsEachTargetOnce()",
+      "drainUsesActualOverkillLimitedLossAndNeverHealsForZeroLoss()",
+      "chainUsesFourDistinctTargetsAtExactOffsetsAndCoefficients()",
+      "requiredTargetAbsenceRejectsBeforeCostOrCooldown()",
+      "chainTieBreakIsStableAndPreviousDeathKeepsLastImpactPoint()",
+      "rootLashSelectsOneClosestAimedTargetWithoutMovingIt()",
+      "orbitAngularSpeedAndOwnerTranslationDriveSweptProxies()",
+      "fourBladeOffsetsShareOneTargetCooldownNotFourDpsClocks()",
+      "chainDoesNotRevisitOrJumpOutsideRadiusOrThroughWall()",
+      "drainTracksOneTargetAndBreaksOnLosRangeOrDespawnBeforePaying()",
+      "rootLashFullWidthAndLosAreUsedByAcquisition()",
+      "healingCapsAtActualNativeMaximumInPortAndReportsActualGain()",
+      "exactSweptSphereBoundsDoNotUseAnExpandedRectangularHitbox()",
+      "exactFiveProfilesCompleteStage08WithoutExpandingCatalog()",
+      "interruptedLightningWindupDoesNotCharge()",
+      "conversionAppliesHealingWisdomAndIncreasedOnceWithoutSourceDamageBuckets()",
+      "baseChainIsNotPermissionForProjectileChainPassive()",
+      "orbitFixedSamplingRemainsStableUnderJitter()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage08ConnectionCohortBTest",
+    "seconds": "0.407",
+    "tests": 20
+  },
+  {
+    "cases": [
+      "beamIntegrationDoesNotDependOnWorldTickJitter()",
+      "finiteOrbInheritsExpandedRadiusPotencyAndEchoWithoutExtraCost()",
+      "pilotProfilesRetainCatalogAndExactAuthoredGeometry()",
+      "diagonalAndVerticalPrismsDoNotBecomeAxisAlignedBoxes()",
+      "lineUsesFullWidthAndActualBoundsInsteadOfPointCenters()",
+      "windFrontTravelsAtTwentyAndHitsEachVictimOnce()",
+      "delayedWaveUsesCommittedAimAndPaysOnlyOnce()",
+      "orbWallStopKeepsPulsingUntilTotalFiveSeconds()",
+      "waveStopsAtWallAndRejectsTargetsBehindIt()",
+      "duplicateTargetsAndRepeatedSameTimeCannotDoubleDamage()",
+      "invalidWorldEquipmentDeathAndControlEndBeforeFurtherUpkeep()",
+      "fractionalUpkeepIsIndependentOfIntegerUpfrontCost()",
+      "insufficientUpkeepStopsBeforeTheUnpaidHitAndStartsOneCooldown()",
+      "beamPaysEveryQuarterSecondBeforeDamageAndEndsAtFiveSeconds()",
+      "largeSimulationGapDoesNotRetroactivelyDamageCurrentTargets()",
+      "candidateOverflowRejectsWholeSliceBeforePayment()",
+      "boundedVictimLedgerDoesNotEvictAndPermitRepeatedHits()",
+      "beamRejectsRepeatControllersAndLineRejectsProjectileContinuations()",
+      "sharedFieldCapacityIsNotDuplicatedAcrossAreasAndConnections()",
+      "orbHasSixAuthoredPulsesNoSpawnHitAndStopsAtRange()",
+      "nativeWriteFailureCannotProduceFreeChannelDamage()",
+      "disconnectCancellationReleasesChannelAndIsIdempotent()",
+      "beamSamplesCurrentAimClipsAtSolidAndCannotDamageThroughWalls()",
+      "cylinderHeightAndRadialCornerSemanticsAreIndependent()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage08ConnectionTest",
+    "seconds": "0.499",
+    "tests": 24
+  },
+  {
+    "cases": [
+      "maximumGlobalBeamLoadDrainsSlicesAndReleasesEveryHandle()",
+      "maximumOwnerAndGlobalOrbitLoadUsesSharedIcdAndReleasesAll()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage08LoadTest",
+    "seconds": "0.684",
+    "tests": 2
+  },
+  {
+    "cases": [
+      "thornsRecipientLeavingIsRemovedAtMembershipTick()",
+      "cooldownRateChangePreservesElapsedWork()",
+      "hasteCapAndExistingBaseFormulaRemainAuthoritative()",
+      "allSixteenSupportProfilesArePresent()",
+      "thornsHasNoInitialAttackAndReflectionEpochBudgetRenews()",
+      "thornsPaysFractionalFirstSliceBeforeGrantingReflection()",
+      "ownerDeathWorldChangeAndCancelClearPaidAuras()",
+      "finiteAuraManualStopDoesNotResetThirtyFiveSecondCooldown()",
+      "insufficientFirstUpkeepRejectsBeforeUpfrontCost()",
+      "toggleOffAtZeroManaIsNotASecondActivationPayment()",
+      "pedanticismReservesTwentyPercentWithoutCreatingUpkeepTimer()",
+      "duplicateOwnerTicksDoNotChargeOrPulseTwice()",
+      "upkeepNativeExceptionCleansEmitterAndDoesNotRefundUpfront()",
+      "earlyToggleRejectsWithoutNewPayment()",
+      "chillingDamageAndChillUseIndependentAuthoredClocks()",
+      "genericExplicitEnemyCooldownPenaltyMultipliesDurationNotAttackTiming()",
+      "expiredCooldownAuraLeaseDoesNotKeepAcceleratingOffline()",
+      "nativeCooldownGetterReturnsMaximumNotRemainingProgress()",
+      "thornsDoesNotReflectBeyondPaidSliceWithoutOwnerTick()",
+      "hostileMembershipOverflowEndsWholeAuraWithoutPartialPulse()",
+      "reapingPaysExactlyEightSecondsAndProducesEightPulses()",
+      "lastPaidPulseOccursBeforeRejectingNextSlice()",
+      "longUnobservedUpkeepGapTerminatesWithoutBackfilledHits()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest",
+    "seconds": "0.282",
+    "tests": 23
+  },
+  {
+    "cases": [
+      "howlSamplesRecipientsOnceWithoutAuraReservation()",
+      "shieldUsesWisdomPotencyAndNoCrit()",
+      "shieldExpiryAndOwnerRemovalHaveNoRefund()",
+      "secondaryExceptionBeforeApplyDoesNotAcceptOrRetryTransfer()",
+      "replacementDoesNotAddCapacityAndRespectsNewCap()",
+      "burnHasOneSecondPerTargetIcdButNewContactsStillGetFire()",
+      "rejectedRedirectDoesNotEraseTwentyPercentDamage()",
+      "reflectionAndRedirectFlagsBlockRecursionLeechAndCredit()",
+      "selfShieldDoesNotRedirectAndAbsorbsBeforeHealth()",
+      "dotOutgoingSnapshotSurvivesBuffExpiryWithoutReapplication()",
+      "allyShieldSplitsOnceBeforeAbsorb()",
+      "nativeCancellationAndIntegerRoundedZeroHaveDifferentTransferOutcomes()",
+      "howlAndBattleCryAddButSameNamedCopiesDoNot()",
+      "unavailableHealthAfterFailedSecondaryIsNotInvented()",
+      "rootImbueSecondaryBudgetIsSixteen()",
+      "nativeMovementAssetSelectionIsExactAndRejectsUnmappedMagnitude()",
+      "correctedCatalogDoesNotPretendReflectionAbsorbsOrShieldAttacks()",
+      "fourProfilesHaveAuthoredCostsAndDuration()",
+      "reflectionHasNoShieldOrInitialDamage()",
+      "severalCasterShieldsStillRedirectOnlyOnce()",
+      "swapAndExpiryTerminateImbue()",
+      "secondaryExceptionAfterHealthLossDoesNotDoubleChargeOriginal()",
+      "untrustedAndDerivedContactsDoNotCreateImbuePayload()",
+      "authenticatedFixtureImbueConsumesContactOnce()",
+      "flameWeaponNativeGateRejectsBeforeCostAndCooldown()",
+      "lateOutgoingBuffDoesNotEnterAlreadyCapturedDotSnapshot()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09BarrierSupportTest",
+    "seconds": "0.296",
+    "tests": 26
+  },
+  {
+    "cases": [
+      "auraRateExpiresAtDisconnectAndIsNeverSerialized()",
+      "failedStartSaveDoesNotPublishAnUnrecordedCooldown()",
+      "failedDisconnectSaveKeepsLiveWorkRatherThanClearingIt()",
+      "failedCheckpointRetriesAreBoundedToOnePerSecond()",
+      "cooldownSaveCannotClobberSupportRevisionOrRecompileTheLoadout()",
+      "explicitClearPersistsAndDoesNotClearAnotherSkill()",
+      "savedCooldownMapRejectsUnboundedOrMalformedState()",
+      "checkpointCadenceIsBoundedAndCrashCanOnlyRetainConservativeOlderWork()",
+      "playerRepositoryPersistsWorkWithDeficitAndLoadoutUnchanged()",
+      "startPersistsBeforeReturningAndDisconnectIsNotReset()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest",
+    "seconds": "0.034",
+    "tests": 10
+  },
+  {
+    "cases": [
+      "echoRechecksTriageAtItsOwnResolution()",
+      "savedSharedDeficitSurvivesRestartWithoutAnActiveRecipient()",
+      "triageRejectsInvalidHealthObservations()",
+      "finalPassiveCompatibilityUsesActualPayloads()",
+      "sharedSpiritShieldHasHalfCreatedCapacityAndSameExpiry()",
+      "auraWardSecondaryBudgetRenewsWithoutAccumulatingUnusedTokens()",
+      "endingManaguardRemovesSharedRecipientsAndReservationsWithoutRefund()",
+      "wardAndConservationComposeOnActualManaguardReservation()",
+      "wardReducesSpiritShieldCapacityOnce()",
+      "schemaFourMigrationDerivesSharedDeficitWithoutTouchingOldLoadout()",
+      "noEligibleAllyMeansNoDerivedShield()",
+      "sharedChildNeverRedirectsOrSharesRecursively()",
+      "toggleCannotCreateFreshSharedCapacity()",
+      "wardUsesActuallyConsumedCapacityNotIncomingDamageOrCurrentHealthLoss()",
+      "ownerDamageReducesSharedCeilingWithoutRestoringAlreadyConsumedAllyShield()",
+      "staleSharedMembershipCannotAbsorbAfterLeaseExpiry()",
+      "triageAddsToPotencyRatherThanMultiplyingIt()",
+      "triageNeverAmplifiesTheDrainFraction()",
+      "triageIsStrictlyBelowThirtyFivePercent()",
+      "lowerAndReRaiseCapacityCannotEraseSharedDeficit()",
+      "managuardShareChoosesOneRecipientAndPreservesDeficitWhenItChanges()",
+      "finiteSecondaryBudgetIsSharedWithTheDerivedAllyAndReportsOnlyFirstRejection()",
+      "allyTargetedSpiritShieldDoesNotCreateASecondAllyShield()",
+      "malformedSharedDeficitIsRejected()",
+      "failedDurableSharedAbsorptionGrantsNoShield()",
+      "sharedDamageDoesNotConsumeTheOwnersSeparateSelfShield()",
+      "sharedDeficitRechargeUsesTheSameObservedDelayAndHalfCapacityRate()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest",
+    "seconds": "0.406",
+    "tests": 27
+  },
+  {
+    "cases": [
+      "tauntEliteIsSeparateFromHardControlDR()",
+      "weakHexIsPointEightFiveAndRefreshesWithoutMultiplication()",
+      "worldIsolationAndWorldCleanup()",
+      "duplicateRallyDoesNotStackCopies()",
+      "finiteTargetBudgetRejectsWithoutDiscardingEarlierEffects()",
+      "markNeverBoostsOtherCastersOrNativeHits()",
+      "overfullBurstRejectsWholeBatch()",
+      "fearGraceExcludesFirstQuarterSecond()",
+      "tauntCommitsOneStaminaCostAndCooldown()",
+      "intimidateCatalogDoesNotAdvertiseDamageOrAcceptPotency()",
+      "newMarkReplacesPreviousTargetForSameCaster()",
+      "weakHexAndRallyUseSeparateOperators()",
+      "bossRootUsesNormativeThirtyPercentTwoSecondSubstitute()",
+      "identicalForeignRallyUsesStrongestNotSum()",
+      "finiteEffectPreservesAllExecutionTraceIds()",
+      "battleCrySamplesOnceAndDoesNotBecomeAura()",
+      "hunterMarkAddsToExistingIncreasedBucket()",
+      "ownerLogoutAndTargetRemovalForgetFiniteEffects()",
+      "cohortHasExactlyFiveFiniteZeroDamageProfiles()",
+      "intimidateHasNoPlaceholderDamageAndTwoSecondsFear()",
+      "periodicOrCancelledDamageDoesNotBreakFear()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09FiniteSupportTest",
+    "seconds": "0.297",
+    "tests": 21
+  },
+  {
+    "cases": [
+      "allocationHasExactlyOneToFiftyIntegerPercent()",
+      "absorptionConsumesDeficitNotManaAndCapsDamage()",
+      "minorHealUsesTwentyWisMasteryAndHealingBucket()",
+      "savedLedgerDoesNotResumeAuraOrCreditOfflineTime()",
+      "lowerAndReRaiseCapacityRetainsAllDeficit()",
+      "rechargeUsesTenPercentOfLastValidatedCapacityEvenUnequipped()",
+      "barrierModifiersUseActualReservedCapacity()",
+      "invalidEvidenceCannotCreditRecharge()",
+      "noEligibleTimeMeansNoRecharge()",
+      "toggleLocksNeedObservedTimeAndActivationEpochsIncrease()",
+      "baseShieldEqualsActualReservation()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09GuardLedgerTest",
+    "seconds": "0.021",
+    "tests": 11
+  },
+  {
+    "cases": [
+      "maximumFiniteEffectLoadIsBoundedAndExpiryReleasesEverything()",
+      "auraPulseAndUpkeepDoNotDependOnOwnerTickCadence()",
+      "paidThornsCanRunFiveMinutesWithoutLifetimeCapOrAccumulatedSecondaryBudget()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09LoadTest",
+    "seconds": "1.077",
+    "tests": 3
+  },
+  {
+    "cases": [
+      "unsafeTerrainPredicateSuppressesTranslation()",
+      "nativeEvadeRequestsDirectionAwayFromSource()",
+      "unboundedOrInvalidProbeStepsAreRejected()",
+      "groundSelectorDoesNotRequestVerticalTeleport()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09NativeRetreatTest",
+    "seconds": "0.004",
+    "tests": 4
+  },
+  {
+    "cases": [
+      "removeAndRemoveAllNeverRefundMana()",
+      "oversubscriptionDoesNotChargeOrPublish()",
+      "maximumIncreaseNeverRefills()",
+      "resizeKeepsOriginalActivationOrder()",
+      "failedReplacementPreservesOldAllocationAndMana()",
+      "fractionalDebitsDoNotUseUpfrontIntegerRounding()",
+      "invalidInputsNeverPublish()",
+      "percentagesUseTotalNotSuccessiveSpendable()",
+      "ignoredNativeWriteRejectsWithoutPublishing()",
+      "insufficientCurrentRejectsWithoutPublishing()",
+      "replacementChargesOnlyPositiveDelta()",
+      "exceptionAfterNativeWriteRollsBackWithoutPublishing()",
+      "activationDebitsEvenWhenBelowNewCap()",
+      "maximumReductionCancelsNewestFirst()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09ReservationTest",
+    "seconds": "0.003",
+    "tests": 14
+  },
+  {
+    "cases": [
+      "conservationResizePreservesDeficitAndDebitsOnlyAdditionalActualReservation()",
+      "noOverhealCreatesNoBarrier()",
+      "overflowSharesTheExistingFiniteOwnerBudgetAndFailureIsAtomic()",
+      "upkeepModifiersDoNotDiscountTheOneTimeActivationCost()",
+      "selflessnessRemovesCasterAndStrengthensOnlyAllies()",
+      "canonicalSupportCompatibilityHasExplicitPositiveAndNegativeCases()",
+      "strongerRemainingBarrierRefreshesRatherThanAdds()",
+      "typedOperatorsAreDeterministicAndCompiledSchemaIsBumped()",
+      "crossSourceOverhealStillHasOneRecipientCapAndKeepsStrongestAttribution()",
+      "resonanceFirstSliceIsIncludedInPreflight()",
+      "capIsReevaluatedAgainstCurrentMaximumOnRefresh()",
+      "combinedAuraPassivesComposeOnceAndKeepResourceCostKernelUnchanged()",
+      "finalOverhealBecomesOnlyTheExcess()",
+      "pedanticismSelflessnessAndConservationAffectBeneficialFieldOnly()",
+      "ownerRecipientAndWorldTeardownClearOverflow()",
+      "failedOrMalformedHealthWriteIsNotOverheal()",
+      "conservationUsesActualReservedManaForManaguardCapacity()",
+      "fullHealthOverhealIsCappedAndCannotEarnActualHealing()",
+      "overflowCannotRedirectTwentyPercentLikeSpiritShield()",
+      "resonanceChangesRadiusAndReservationBeforeAffordability()",
+      "selflessnessThornsDoesNotKeepOwnerReflection()",
+      "potencyIsAppliedToHealingOnceNotAgainToOverflow()",
+      "conservationReducesPassiveRegenAndReservationNotNativeBaseline()",
+      "overflowRegistryAcceptsHealingComponentsOutsideSupportFamily()",
+      "staleBarrierExpiresAndNeverAbsorbsAfterSixSeconds()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09SupportPassivesTest",
+    "seconds": "0.385",
+    "tests": 25
+  },
+  {
+    "cases": [
+      "rallyProjectionIsOnlyTheAuthoredMovementMultiplier()",
+      "tintFallbacksHaveNoGameplayOrWorldTrackingFields()",
+      "ownerPaletteIsStableAndBounded()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09SupportPresentationTest",
+    "seconds": "0.005",
+    "tests": 3
+  },
+  {
+    "cases": [
+      "damageBeyondShieldReachesNativeRemainder()",
+      "failedDownsizeAtZeroManaRestoresReservationWithoutTryingToPayAgain()",
+      "allocationChangesPreserveDeficitAndNeverRefundMana()",
+      "worldOrLoadoutChangeClearsAuraAndMembership()",
+      "unobservedLongGapDoesNotCreditRecharge()",
+      "expandedAuraRadiusDoesNotReduceUtilityRegenOrAlterReservation()",
+      "healPotencyAndEchoReuseSnapshotMagnitudeWithoutSecondCost()",
+      "auraConsumesReservationOnceAndIsIndefinite()",
+      "healRunsRealCommitAndWisdomHealingNotDamage()",
+      "fullyAbsorbedHostileHitRestartsRechargeDelay()",
+      "sixSecondDamageDelayThenTenPercentRecharge()",
+      "disconnectReleasesCapacityWithoutRefundAndPersistsDeficit()",
+      "noArbitraryMaxLifetimeAndTeardownHasNoFieldLeak()",
+      "staleMembershipCannotLeakARegenBonus()",
+      "toggleCannotMintManaOrShield()",
+      "failedAuraSaveRollsBackReservationBeforeAnyLiveEffect()",
+      "healingCapsToMissingAndNoOverhealWithoutOverflow()",
+      "allocationWhileInactiveIsSavedWithoutCreatingAuraOrChargingMana()",
+      "failedDurableAbsorptionCannotGiveFreeShield()",
+      "membershipChangesRemoveAndRestoreOnlyEligibleRecipient()",
+      "targetOverflowRejectsWholeAuraBeforeReservation()",
+      "insufficientCurrentManaRejectedBeforeActivation()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest",
+    "seconds": "0.285",
+    "tests": 22
+  },
+  {
+    "cases": [
+      "rejectedLinkRollsBackWithoutChangingExistingPlan()",
+      "duplicatePassiveIdsDoNotStackTypedOperator()",
+      "incompatibleDecoyAndConversionSwarmAreRejected()",
+      "wholeBatchRejectsBeforePaymentAtOwnerCap()",
+      "eachActorClaimsItsOwnIntervalOnlyOnce()",
+      "delayedBatchStartsReducedLifetimeAtRelease()",
+      "existingPotencyIsNotAppliedTwiceBySummonModifier()",
+      "formationHasAtLeastOneMetreBetweenAllActors()",
+      "swarmAddsOneWolfAndReducesEveryMember()",
+      "broodUsesInnateTwentyAndNoWeaponRequirement()",
+      "swarmBroodBatchContainsFive()",
+      "empowermentDoesNotApplyToConversion()",
+      "formationRejectsUnboundedCount()",
+      "crawlersUseOneCostAndCooldownForThreeActors()",
+      "swarmCrawlerBatchContainsFour()",
+      "twoUnmodifiedBroodBatchesReachExactlyEight()",
+      "swarmAndEmpowermentMultiplyInEitherPassiveOrder()",
+      "swarmCannotDuplicateReviveClaim()",
+      "formationIsCentredDeterministicAndCompact()",
+      "empowermentMultipliesSummonNotCaster()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage10BatchSummonTest",
+    "seconds": "0.192",
+    "tests": 20
+  },
+  {
+    "cases": [
+      "noNativeColliderOrAreaComponentIsPackagedAsAWorkingFallback()",
+      "gateRejectsBeforeAnyNativePreflightCostCooldownTargetOrDispatch()",
+      "malformedGeometryRejected()",
+      "canonicalGeometryAndCostsAreRetainedWithoutClaimingCollider()",
+      "repeatsCannotBypassGateOrAccumulateWork()",
+      "finalStage10InventoryIsExactlyNineNotAnExtraCanonicalSkill()",
+      "segmentsCloseWithEqualThirtyDegreeSpacing()",
+      "potencyDoesNotBypassSafetyGate()",
+      "allTwelveSegmentsUseAuthoritativeRadiusHeightAndThickness()",
+      "skillDelayCannotArmAnUnsafeCage()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage10CageGateTest",
+    "seconds": "0.162",
+    "tests": 10
+  },
+  {
+    "cases": [
+      "sacrificeIsNotAStaticSummonPassiveTarget()",
+      "familyCommitFailureCannotArmDelayedDamageOrRefundPaidCost()",
+      "abandonedDelayedBurstDoesNotRestoreCorpse()",
+      "genericRepeatAndTriggerConsumersAreRejected()",
+      "logoutAndWorldCleanupRemoveConsumeBenefits()",
+      "consumeCannotUseSameOwnedActorTwice()",
+      "corpseBurstUsesRealCastCostAndCapturedCoefficient()",
+      "wrongWorldCannotConsumeOrPublishBenefit()",
+      "depletedShieldDoesNotEraseRemainingDamageBonus()",
+      "expiredOwnedActorCannotBeConsumed()",
+      "unlinkedSummonDoesNotExplode()",
+      "consumeBonusDoesNotModifyNativeBasicAttackFactor()",
+      "voluntaryConsumeCannotTriggerDeathPact()",
+      "bothBenefitsExpireAtEightNotEighteen()",
+      "deathPactOnlyNaturalExpiryOrEnemyKill()",
+      "burstConsumptionAlsoRejectsFutureReviveClaim()",
+      "allSwarmMembersHaveIndependentSingleTerminalClaim()",
+      "summonOutgoingBonusCapturedOnce()",
+      "ownerCleanupCannotLeaveDeathPactTrigger()",
+      "noCorpseRejectsBeforeCostAndCooldown()",
+      "wrongOwnerCannotConsumeOrPublishBenefit()",
+      "duplicateCorpseDoesNotChargeOrDispatchAgain()",
+      "consumePaysOnceAndPublishesEightSecondBenefit()",
+      "delayedBurstConsumesAtPaidCommitNotAtRelease()",
+      "benefitFailureLeavesOwnedActorButRetainsPaidActivation()",
+      "pendingActorNeverExplodes()",
+      "expandedRadiusTargetsOnlyBurstRadius()",
+      "delayedConsumeLostActorNeverPublishesBenefit()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage10ConsumptionTest",
+    "seconds": "0.822",
+    "tests": 28
+  },
+  {
+    "cases": [
+      "protectedTargetRejectsBeforePayment()",
+      "ownerCapRejectsBeforeSecondCharge()",
+      "independentActorLeaseCannotBeEndedByUnknownToken()",
+      "endingReturnsExactOriginalIdentityOnlyOnce()",
+      "expiryPrunesPendingLeaseEvenIfNativeEntityNeverAppeared()",
+      "cannotConvertSelfOrNullIdentity()",
+      "exclusiveTargetAcrossOwners()",
+      "sameUuidDifferentWorldIsNotTheSameTarget()",
+      "genericRepeatsAndSummonOnlyModifiersRejectAndRollback()",
+      "playersAndAlliesAlwaysReject()",
+      "bossAlwaysRejectedEvenWithEliteOptIn()",
+      "cancelledDelayCannotStealAnNpc()",
+      "uncertainNativeDispatchDoesNotRefundAnAlreadyStartedConversion()",
+      "nativePersistentThreatCannotBeOverwritten()",
+      "realOrchestratorChargesOnceAndUsesConversionNotDamageOrSummon()",
+      "duplicateNativeInputCannotDispatchOrChargeTwice()",
+      "derivedReleaseCannotConvertAnotherActor()",
+      "globalAdmissionIsBoundedAndExpiryReclaimsIt()",
+      "oneOwnerCannotConvertAcrossTwoWorlds()",
+      "delayedReleaseKeepsOriginalTargetAndPaysOnce()",
+      "actualNativeProviderHonorsPriorityAndNullFallthroughWithoutRewritingBaseProvider()",
+      "sourceOwnershipIsNeverTransferredToAnotherRoot()",
+      "registryCannotReplayOrMintStateAfterRecreation()",
+      "commonAndSpecialistAreDeterministic()",
+      "eliteRequiresIndependentAuthoredOptIn()",
+      "rejectsUnknownUnlessExplicitlyDominatable()",
+      "finiteClockIsMandatory()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage10ConversionTest",
+    "seconds": "0.312",
+    "tests": 27
+  },
+  {
+    "cases": [
+      "corpseCannotBeInjectedIntoNonCorpseSummon()",
+      "twoRepositoryInstancesShareAtomicDecision()",
+      "forgedClaimCannotConsumeOrRelease()",
+      "rankRulesAllowEliteButNeverMiniBossOrBoss()",
+      "sameRootClaimIsIdempotentButConsumptionIsOnce()",
+      "nativeSourceAllowlistRejectsUnknownRoles()",
+      "reviveUsesRealCastChargeCooldownAndSnapshot()",
+      "runtimeCapacityIsBounded()",
+      "weakCorpseRetainsSixtyPercentSourceStats()",
+      "postClaimFailureDoesNotRefundCommittedSummonCost()",
+      "committedPermitRejectsWrongOwnerRootWorldAndInstance()",
+      "durableConsumptionSurvivesRuntimeRemovalAndRepositoryRecreation()",
+      "tornReceiptFailsClosed()",
+      "empowermentAppliesAfterReviveCapsWithoutDuplicatingCorpse()",
+      "invalidWorldCannotClaim()",
+      "playerOwnedProtectedAndStorySourcesRejected()",
+      "committedAnchorSurvivesNativeBodyRemovalUntilOneRelease()",
+      "nativeBodyRemovalInvalidatesUncommittedClaim()",
+      "ownerCancellationDropsPermitNotDurableConsumption()",
+      "concurrentOwnersCannotClaimSameBody()",
+      "reviveClampsHealthAndPowerBeforeLaterModifiers()",
+      "delayedReviveUsesConsumedSourceEvenAfterNativeBodyRemoval()",
+      "restartNeverRearmsAnAlreadyConsumedDelayedCorpse()",
+      "diskFailureCannotTurnAmbiguousCommitBackIntoReusableCorpse()",
+      "missingCorpseRejectsBeforePayment()",
+      "existingInstanceCannotConsumeASecondBody()",
+      "ownerCleanupReleasesOnlyUncommittedClaims()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage10CorpseTest",
+    "seconds": "0.229",
+    "tests": 27
+  },
+  {
+    "cases": [
+      "malformedDecoyCannotIntroduceCountOrDamage()",
+      "canonicalCostCooldownHealthAndLifetime()",
+      "deathPactAndSwarmCannotTurnDecoyIntoCombatSummon()",
+      "cancellationBlocksQueuedNativeSpawn()",
+      "onlyExplicitEncounterAlreadyAttackingCasterCanBeAttracted()",
+      "secondDecoyRejectsBeforeAnotherChargeEvenWhenCooldownCleared()",
+      "distinctOwnersCanEachHaveOneDecoy()",
+      "capIncludesPendingUnspawnedDecoy()",
+      "empowermentChangesOnlyHpAndLifetimeNotDamageOrCount()",
+      "combatSummonDoesNotConsumeDecoySingletonSlot()",
+      "neverClaimsDamageIncludingAfterLongTickStall()",
+      "terminationNeverCreatesDeathPact()",
+      "cannotSacrificeNoncombatDecoy()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage10DecoyTest",
+    "seconds": "0.228",
+    "tests": 13
+  },
+  {
+    "cases": [
+      "abilityTriggerOwnsNoNativeGameplayCharge()",
+      "nativeRoleContainsOnlyMotionNotCombatRewardOrFlockMutation()",
+      "decoyHasNoSeekingAttackInventoryOrRewardInstruction()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage10SummonAssetTest",
+    "seconds": "0.006",
+    "tests": 3
+  },
+  {
+    "cases": [
+      "cancelledDelayedSummonRetainsPaidCooldownAndCreatesNothing()",
+      "echoRejectedAndGraphRolledBack()",
+      "repeatCastDuringCooldownCannotMintAnotherSummon()",
+      "removalOfOneOwnerDoesNotFreeOthers()",
+      "globalCapIncludesPendingActorsAcrossWorlds()",
+      "expireBeforeQueuedSpawnPreventsActivation()",
+      "clockMustBeFinite()",
+      "insufficientManaCannotReserveNativeActor()",
+      "noTwoReservationsCanOwnSameNativeActor()",
+      "cancellationBeforeQueuedSpawnPreventsActivation()",
+      "pendingReservationCountsAgainstOwnerCap()",
+      "attackClaimedOnceBeforeDispatchAndNoCatchUpBurst()",
+      "delayedSummonPaysOnceAndStartsLifetimeAtRelease()",
+      "pilotUsesRealValidationCostCooldownAndSummonDispatch()",
+      "duplicateRootCannotReserveEvenBeforeEntityAppears()",
+      "activationAndRemovalAreIdempotent()",
+      "malformedProfileRejected()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage10SummonTest",
+    "seconds": "0.204",
+    "tests": 17
+  },
+  {
+    "cases": [
+      "efficiencyZeroAndOneFloorRetained()",
+      "efficiencyNeverCeilsContinuousSlices()",
+      "travelingWaveMaintainsSpeedAndReachesNewEndpoint()",
+      "rapidInvocationKeepsMinimumAndDoesNotMakeZeroNonzero()",
+      "reachRejectsRadiusOnlyEvenWhenImportedTagSaysRange()",
+      "rapidInvocationCannotAccelerateSkillDelay()",
+      "mismatchedPlanCannotRewriteAnotherSkill()",
+      "efficiencyRejectsManaguardReservation()",
+      "rapidInvocationRejectsReactionWindow()",
+      "efficiencyRejectsEmanatismReservationDespiteImportedFiniteCostTag()",
+      "compiledPlanIsSlotScopedAndHasNoRangeLeak()",
+      "reachRejectsSelfShield()",
+      "leapRangeDoesNotIncreaseLandingOrStrikeRadius()",
+      "reachAllowsSummonPlacementButNotLeash()",
+      "reachDoesNotScaleBeamDurationTicksOrUpkeep()",
+      "efficiencyCommitsSeventeenManaInsteadOfTwentyExactlyOnce()",
+      "rapidInvocationRejectsInstantSkill()",
+      "placementRangeLeavesTrapRadiusArmingAndStatusAlone()",
+      "coneReachNotAngleOrInnerStatusRadiusGetsReach()",
+      "projectileRangeChangesOnlyTravelAndDerivedTime()",
+      "rapidInvocationScalesWindupNotCooldownOrStrikeCadence()",
+      "reachNotAppliedTwiceWhenResolvingRepeatedly()",
+      "wallPlacementNotWallFootprintGetsReach()",
+      "realExecutionReceivesEffectiveWindupAndReachBeforeCommit()",
+      "efficiencyAcceptsUpkeepWithoutUpfrontSpend()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage11FoundationTest",
+    "seconds": "0.332",
+    "tests": 25
+  },
+  {
+    "cases": [
+      "concentrationShrinksRadialFootprintNotHeightOrKnockback()",
+      "overchargeRejectsPureReservationUtility()",
+      "realFiniteAreaRuntimeDeliversTheExtendedFractionalTailAndReleasesOwnership()",
+      "lingeringRejectsIndefiniteAura()",
+      "lingeringDoesNotScaleOverheadWarningOrWindup()",
+      "lingeringPreservesExplicitBombardmentHitCapsWarningsAndCadence()",
+      "concentrationRejectsSingleTargetUtility()",
+      "componentAdmissionDoesNotLeakNewGlobalTags()",
+      "concentrationShrinksConeAngleNotReach()",
+      "concentrationAndExpandedRadiusComposeOnceAtRuntime()",
+      "lingeringExtendsTrapLifetimeNotArmingOrRootControl()",
+      "concentrationUsesSingleIncreasedBucketWithPotency()",
+      "overchargeRejectsMovementWithoutScalablePayload()",
+      "lingeringRejectsChannelMaximumRatherThanExtendingActiveInputState()",
+      "lingeringExtendsFiniteAuraAndUpkeepButNotItsPulseClocks()",
+      "lingeringExtendsRealSummonLeaseAndPaysOnce()",
+      "overchargeAddsIncreasedNotSeparateMoreBucket()",
+      "newComponentRecordParticipatesInVersionedHash()",
+      "lingeringExtendsPeriodicZoneWithoutStoppingDamageAtOldScheduleCap()",
+      "overchargePaidBeforeDispatchAndCombinesWithEfficiency()",
+      "concentrationRuntimeFiltersAnEnemyOutsideNewFootprint()",
+      "lingeringExtendsFiniteShieldWithoutChangingCapacity()",
+      "lingeringCombinesWithEmpowermentWithoutRewritingPower()",
+      "lingeringExtendsBurnNotProjectileFlightOrDps()",
+      "concentrationShrinksWallWidthNotPlacementOrLength()",
+      "concentrationShrinksBeamWidthNotHeightOrRange()",
+      "concentrationRejectsProjectileCollisionRadius()",
+      "concentrationChangesOrbitRadiusNotBladeCollisionRadius()",
+      "lingeringBurnFeedsExistingPeriodicRuntimeWithoutIntegerTailInflation()",
+      "lingeringRejectsFlightOnlyAndCrowdControlOnlyDespiteImportedDurationTags()",
+      "overchargeRejectsPureReservationBarrier()",
+      "overchargeUsesRealUpkeepMultiplier()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage11MagnitudeDurationTest",
+    "seconds": "0.443",
+    "tests": 32
+  },
+  {
+    "cases": [
+      "twoChargesNotThreeAndBothPersist()",
+      "realRepositoryRoundTripsSerialQueue()",
+      "unsupportedCapacityCannotGrantExtraCharges()",
+      "failedSecondSpendSavePreservesFirstDebtAndAvailableCharge()",
+      "malformedQueuesRejectBeforePublication()",
+      "migrationThroughRepositoryRetainsRecoverableOriginalSchemaFiveFile()",
+      "failedRefundSaveDoesNotPublishFreeCharge()",
+      "realFailedSecondDispatchCannotClearFirstChargeDebt()",
+      "auraRateAndItsExpiryApplyAcrossSerialBoundary()",
+      "schemaSixMissingQueueIsCorruptionNotARefill()",
+      "compatibilityAcceptsQuickstepAndRejectsAuraAndChannel()",
+      "playerSchemaFiveMigratesDebtWithoutRefillingOrLosingLoadout()",
+      "realSkillServicePaysEachMovementChargeAndThirdCastRejects()",
+      "independentSkillsDoNotShareDebt()",
+      "failedSecondExecutionRefundsOnlyItsOwnCharge()",
+      "enablingSecondWindDoesNotRewriteAlreadyRunningNormalCooldown()",
+      "reconnectRestoresBothDebtsWithoutOfflineCredit()",
+      "swappingCapacityDoesNotRefillSpentCharges()",
+      "rechargeIsSerialNotParallel()",
+      "olderRefundCannotEraseNewerSpend()",
+      "elapsedTimeCarriesToSecondQueueEntryWithoutAFrameDelay()",
+      "newServiceRestoresQueueAfterProcessRestart()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage11SecondWindTest",
+    "seconds": "0.087",
+    "tests": 22
+  },
+  {
+    "cases": [
+      "requiredPortableAssetsExistAndEveryRpgResourceAssetIsRetired()",
+      "experienceUsesOwnerAssetsAtAuthoritativeDimensionsAndExactCenteredLayerGeometry()",
+      "customHudContainsNoRpgOwnedAbilityCellsOrArtwork()",
+      "vanillaHytaleExclusivelyOwnsAllResourceBarPresentation()",
+      "experienceFillUsesNewBackgroundUsableWidthAtEveryBoundaryFixture()",
+      "traceDescribesVanillaResourceOwnershipWithoutPollingResourcePresentation()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.ui.hud.R020HudCorrectionTest",
+    "seconds": "0.05",
+    "tests": 6
+  },
+  {
+    "cases": [
+      "foreignMutationBlocksRecoveryWithoutOverwritingAndCanBeRetried()",
+      "disabledControlDoesNotMutateSlots()",
+      "interruptedControlRestoresExactSnapshotsAndRetainsQuietPeriod()",
+      "rawObservationPrecedesInitialFilterAndRetainsNonAbilityTraffic()",
+      "nativeControlStillObservesBothSlotsButCannotExecuteRpg()",
+      "preControlQueuedRequestsAreBlockedAtDrainAndOtherPlayersAreUnaffected()",
+      "normalDeduplicationAndAbility4PolicyAreUnchanged()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.R023NativeRuneControlTest",
+    "seconds": "0.514",
+    "tests": 7
+  },
+  {
+    "cases": [
+      "registeredServerOperationSerializesAsSupportedSimpleWithServerWait()",
+      "simulationDoesNotCallGameplayAndMissingRuntimeContextFailsClosed()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.R024NativeInteractionAssetTest",
+    "seconds": "0.019",
+    "tests": 2
+  },
+  {
+    "cases": [
+      "nativeMultiplierIsSumOfFactorsNotIncreasedPercentage()",
+      "noAuraRestoresUnmodifiedOnePointFiveTotalManaRegen()",
+      "changingAuraMultiplierDoesNotResetNativeTimer()",
+      "auraUsesNativeTimerOnceAndTotalManaDespiteReservation()",
+      "reservationUsesClientSupportedStaticPacket()",
+      "nativePositiveDeltaIsUnclampedUntilStatApplication()",
+      "nativeStaticReservationClampsAndUnreserveDoesNotMint()"
+    ],
+    "name": "com.inigmasgames.hytalerpg.Stage09NativeManaTest",
+    "seconds": "0.008",
+    "tests": 7
+  },
+  {
+    "cases": [
+      "viewportPersistsAndNodeCoordinatesRemainIndependent()",
+      "deletingNodeCleansAttachedEdgesAndDeletingEdgeIsExact()",
+      "optionalAcyclicModeRejectsCycleWhileGenericDefaultAllowsIt()",
+      "consumerPolicyRejectsWithoutCreatingEdge()",
+      "eventsExposeSelectionMovementAndConnectionChanges()",
+      "connectionLimitsAndDuplicateEdgesAreRejected()",
+      "snapshotRoundTripPreservesGraphViewportSelectionAndConsumerMetadata()",
+      "danglingAndMissingPortSnapshotEdgesAreRejected()"
+    ],
+    "name": "com.inigmasgames.canvasui.api.CanvasGraphTest",
+    "seconds": "0.044",
+    "tests": 8
+  },
+  {
+    "cases": [
+      "cursorCenteredZoomPreservesPointUnderCursorAndClampsBounds()",
+      "searchCoversNameDescriptionTagsCasePartialEmptyAndMultipleMatches()",
+      "transformRoundTripsAtEverySupportedReferenceZoom()",
+      "snapshotPersistsZoomAndLegacyFormatDefaultsToOne()"
+    ],
+    "name": "com.inigmasgames.canvasui.api.CanvasViewportAndSearchTest",
+    "seconds": "0.005",
+    "tests": 4
+  },
+  {
+    "cases": [
+      "screenCanvasTransformsAreExactInversesAtFixedZoom()",
+      "hitTestingDraggingAndEdgeAnchorsRemainCorrectAtNonUnitZoom()",
+      "hitTestingUsesCanvasCoordinatesAndPrioritizesPorts()",
+      "viewportMovesBothEdgeEndpointsWithoutChangingGraphCoordinates()",
+      "panningChangesOnlyViewport()",
+      "dragPreservesGrabOffsetAndUsesFourUnitThreshold()"
+    ],
+    "name": "com.inigmasgames.canvasui.runtime.CoordinateAndDragTest",
+    "seconds": "0.006",
+    "tests": 6
+  },
+  {
+    "cases": [
+      "duplicatePlayerSessionIsRejected()",
+      "simultaneousPlayersRemainIsolated()",
+      "cleanupIsIdempotentAndIdentitySafe()"
+    ],
+    "name": "com.inigmasgames.canvasui.runtime.SessionRegistryTest",
+    "seconds": "0.002",
+    "tests": 3
+  }
+]

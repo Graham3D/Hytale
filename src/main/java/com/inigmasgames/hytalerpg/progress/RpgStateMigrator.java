@@ -16,6 +16,7 @@ public final class RpgStateMigrator {
                 case 2 -> migrateV2ToV3(state);
                 case 3 -> migrateV3ToV4(state);
                 case 4 -> migrateV4ToV5(state);
+                case 5 -> migrateV5ToV6(state);
                 default -> throw new IllegalStateException("No migration from RPG schema v" + version);
             };
             version = state.get("schemaVersion").getAsInt();
@@ -98,5 +99,14 @@ public final class RpgStateMigrator {
         guard.addProperty("sharedDeficit",deficit*.5);
         state.add("cooldowns",new JsonObject()); // Schema 4 never persisted this runtime state; historical values cannot be reconstructed.
         state.addProperty("schemaVersion",5);return state;
+    }
+    private static JsonObject migrateV5ToV6(JsonObject state){
+        if(!state.has("cooldowns")||!state.get("cooldowns").isJsonObject())throw new IllegalStateException("Missing legacy cooldown debt");
+        for(var entry:state.getAsJsonObject("cooldowns").entrySet()){
+            var value=entry.getValue().getAsJsonObject();
+            if(!value.has("remainingWork")||!value.has("baseRecovery"))throw new IllegalStateException("Incomplete legacy cooldown debt");
+            value.add("queued",new JsonArray()); // Preserve existing recovery; old builds had exactly one charge.
+        }
+        state.addProperty("schemaVersion",6);return state;
     }
 }

@@ -178,7 +178,7 @@ public final class SkillExecutionService {
             emitProjectileRejection(request, root, instance, profile, "INSUFFICIENT_RESOURCE");
             throw new Rejection("INSUFFICIENT_RESOURCE", instance);
         }
-        if (!kernel.cooldowns().canActivate(request.actorId(), profile.skillId())) {
+        if (!kernel.cooldowns().canActivate(request.actorId(), profile.skillId(),plan.foundationModifiers().chargeCapacity())) {
             emitProjectileRejection(request, root, instance, profile, "COOLDOWN_ACTIVE");
             throw new Rejection("COOLDOWN_ACTIVE", instance);
         }
@@ -210,11 +210,12 @@ public final class SkillExecutionService {
         }
         boolean resourceCommitted = false;
         boolean cooldownStarted = false;
+        com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend cooldownSpend=null;
         SkillExecutionContext context;
         try {
             DerivedStats attributes = derive(prepared.request.actorId());
             BasePowerResolver.Resolution power = resolvePower(prepared.profile, prepared.equipment);
-            var cooldown = kernel.cooldowns().calculate(prepared.request.actorId(),prepared.profile.cooldownSeconds(), 1.0,
+            var cooldown = kernel.cooldowns().calculate(prepared.request.actorId(),prepared.profile.cooldownSeconds(), prepared.plan.foundationModifiers().rechargeFactor(),
                     attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
             Map<String, Double> status = prepared.profile.authoredStatuses();
             // CombatSnapshotFactory alone installs compiled Increased modifiers (including Potency).
@@ -232,12 +233,12 @@ public final class SkillExecutionService {
                     prepared.profile, prepared.plan, snapshot, prepared.equipment,target,false);
             kernel.resources().commitCost(token, port.resources()); resourceCommitted = true;
             if(!channel(prepared.profile)) {
-                kernel.cooldowns().startCooldown(prepared.request.actorId(), prepared.profile.skillId(),
-                        prepared.profile.cooldownSeconds(), 1.0, attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
+                cooldownSpend=kernel.cooldowns().spendCharge(prepared.request.actorId(), prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity(),
+                        prepared.profile.cooldownSeconds(), prepared.plan.foundationModifiers().rechargeFactor(), attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
                 cooldownStarted = true;
             }
         } catch (RuntimeException error) {
-            if (cooldownStarted) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
+            if (cooldownStarted) kernel.cooldowns().refundCharge(cooldownSpend);
             try {
                 if (resourceCommitted) kernel.resources().refundCommittedCost(token, port.resources());
                 else kernel.resources().refundIfUncommitted(token);
@@ -250,7 +251,8 @@ public final class SkillExecutionService {
         emit(prepared.request, RpgTraceEventType.SKILL_COMMITTED, prepared.rootCastId, prepared.instanceId,
                 Map.of("skillId", prepared.profile.skillId(), "resourceCost", prepared.cost.amount(),
                         "cooldownSeconds", context.snapshot().cooldownSeconds(),
-                        "compiledPlanHash", prepared.plan.planHash()));
+                        "compiledPlanHash", prepared.plan.planHash(),"chargeCapacity",prepared.plan.foundationModifiers().chargeCapacity(),
+                        "chargesRemaining",kernel.cooldowns().availableCharges(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity())));
         try{port.commitConsumable(context);}catch(RuntimeException failure){
             kernel.resources().finish(token);releases.finish(prepared.instanceId);
             port.abandonRelease(context);terminate(context,"CONSUMABLE_COMMIT_FAILED_"+failure.getMessage());
@@ -278,7 +280,7 @@ public final class SkillExecutionService {
             releases.finish(prepared.instanceId);
             // Spatial dispatch can already have applied a hit before a later presentation/status adapter fails.
             // A paid area must not yield free native damage through the synchronous rollback path.
-            if (cooldownStarted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.cooldowns().clear(prepared.request.actorId(), prepared.profile.skillId());
+            if (cooldownStarted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.cooldowns().refundCharge(cooldownSpend);
             try { if (resourceCommitted && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.resources().refundCommittedCost(token, port.resources());
                   else if (resourceCommitted) kernel.resources().finish(token); }
             catch (RuntimeException ignored) { }

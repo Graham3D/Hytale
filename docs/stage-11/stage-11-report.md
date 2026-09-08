@@ -171,3 +171,73 @@ Rollback: cohort A, SHA-256
 Machine evidence and all test-case names are in `evidence/stage-11/cohort-b`.
 Local gate PASS; connected UNVERIFIED. Six of40 Stage11 passive primitives now
 have local implementation evidence;34 remain before matrix/hardening closure.
+
+## Cohort C — Second Wind
+
+Single primitive cohort because it changes durable cooldown state. Baseline:
+cohort B `bab6226`. Master LP005 reread in full before changes. R030/0.0.23,
+player schema6, compiled-plan schema12. Normal abilities retain their existing
+single-charge cost/cooldown math; Second Wind adds capacity2 and recharge×1.30.
+
+### Serial debt model and failure handling
+
+- Extended the existing `RpgCooldownService`, not a parallel cooldown authority.
+  Each skill stores at most two serial recharge debts. The head alone advances;
+  elapsed time remaining after its completion advances the second. Available
+  charges are `max(0,currentCapacity-pendingDebts)`. Capacity changes do not clear
+  debt, reset its progress, or reprice an already-running recharge. Re-enabling
+  Second Wind exposes its capacity again, not a newly refilled spent charge.
+- Each activation follows the existing resource transaction and spends one
+  charge. A third activation without recovery rejects. Aura/Wisdom recovery and
+  the0.25s cooldown minimum remain the same formulas; queued entries preserve
+  their own captured recovery values. The initial Aura-boundary fixture expected
+  a0.1s cooldown and was corrected to honor the retained0.25s minimum.
+- A spend receives an in-memory identity token for rollback. The old failed-cast
+  cleanup cleared the entire skill cooldown, which would erase an earlier charge
+  when a second cast failed. Cleanup now removes only its matching latest spend.
+  Replay/out-of-order refund requests reject; failed persistence cannot publish a
+  free charge. Paid persistent effects retain the earlier no-refund policy.
+- `SKILL_COMMITTED` now includes charge capacity and remaining charges alongside
+  the existing cost, cooldown, plan hash and correlation fields. No fake native
+  charge HUD or ItemAbility cost/cooldown was introduced.
+
+### Persistence and rollback
+
+SavedCooldown retains remainingWork/baseRecovery and adds a bounded queued list
+(at most one waiting entry). Schema5→6 migration adds an empty queue to each
+existing debt without changing remaining work, player progression or loadout.
+The repository refuses current-schema files missing queue fields or containing
+malformed nested debt. It does not interpret corruption as fully recovered.
+
+Disconnect checkpoints both entries before eviction. A new process restores
+remaining work without crediting unobserved offline time, matching the existing
+conservative Stage09 policy. Checkpoint cadence remains once per second. The
+repository migration test verifies the original schema5 file is recoverable in
+its `.bak`; this is not a substitute for an operator's full versioned checkpoint.
+
+Rollback requires cohortB code **and a pre-migration schema5 save checkpoint**.
+Do not load schema6 queued debt into old code, strip the queue, or reset charges.
+No live save was migrated or deployed. The live R023/schema3 installation remains
+independent and needs its own stopped-world backup before any future deployment.
+
+22 new tests cover serial ordering/carry, capacity swaps, normal→Second Wind debt
+preservation, persistence failures, reconnect/new-service restart, exact refund
+identity, Aura expiry across the queue boundary, malformed queues, positive and
+two negative compatibility fixtures, real movement charge payments, failed-second
+dispatch rollback, and file migration/backup. Native timing/input/HUD behavior
+still needs connected evidence; these are unit/runtime and disk tests only.
+
+### Cohort C local gate
+
+`clean build`: **741 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot and clean exit0 PASS, with readiness now reporting actual
+player schema6 instead of the historical hardcoded5. Native ability cost and
+cooldown assets remain zero. Packaged CustomUI9 documents PASS; no live deployment.
+
+Artifact: `evidence/stage-11/cohort-c/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `A7ED226057EEC5292524D84E4CE5162016BBD1E9E86EC8AF93451D2B89E3C30E`.
+Rollback code SHA-256:
+`F7000238722525048C3A018A858F6F590DEFBE38612054356A40FBDA883AD082`.
+Machine evidence and full test-case inventory: `evidence/stage-11/cohort-c`.
+Local gate PASS; connected UNVERIFIED. Seven of40 Stage11 primitives now have
+local evidence;33 remain before full matrix and hardening closure.

@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /** Versioned server-owned RPG player state. Live Hytale resources are intentionally not duplicated here. */
 public final class RpgPlayerState {
-    public static final int CURRENT_SCHEMA = 5;
+    public static final int CURRENT_SCHEMA = 6;
 
     public int schemaVersion = CURRENT_SCHEMA;
     public String playerUuid;

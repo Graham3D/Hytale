@@ -18,7 +18,7 @@ class Stage09CooldownPersistenceTest {
     }
     @Test void auraRateExpiresAtDisconnectAndIsNeverSerialized(){
         var h=new Harness();h.cd.setAuraRate(h.actor,.15,1,.25);h.start();h.now=200_000_000L;h.cd.detach(h.actor);h.now=10_000_000_000L;
-        assertEquals(9.77,h.cd.remaining(h.actor,"skill"),1e-9);assertEquals(Set.of("remainingWork","baseRecovery"),new com.google.gson.Gson().toJsonTree(h.saved.get("skill")).getAsJsonObject().keySet());
+        assertEquals(9.77,h.cd.remaining(h.actor,"skill"),1e-9);assertEquals(Set.of("remainingWork","baseRecovery","queued"),new com.google.gson.Gson().toJsonTree(h.saved.get("skill")).getAsJsonObject().keySet());
     }
     @Test void failedStartSaveDoesNotPublishAnUnrecordedCooldown(){
         var h=new Harness();h.fail=true;assertThrows(IllegalStateException.class,h::start);assertEquals(0,h.cd.remaining(h.actor,"skill"));assertTrue(h.saved.isEmpty());

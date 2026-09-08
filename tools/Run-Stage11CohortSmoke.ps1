@@ -21,6 +21,7 @@ $expectedConnectionCauses = 5
 $expectedProfiles = 15
 $expectedStatusAssets = 10
 $expectedSupport = 16
+$expectedPlayerSchema = if($Cohort -in @('a','b')){5}else{6}
 $expectedSummons = 9
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path
@@ -63,7 +64,7 @@ $summary = [ordered]@{
     cleanShutdown = [bool]($plain -match 'Shutting down\.\.\. 0\s')
     areaAssetsResolved = [bool]($plain -match "RPG_STAGE06_ASSETS revision=R030 areaProfiles=$expectedProfiles requiredStatusAssets=$expectedStatusAssets nativeDamageChannels=2 result=PASS connectedProof=false")
     connectionAssetsResolved = [bool]($plain -match "RPG_STAGE08_ASSETS revision=R030 connectionProfiles=$expectedConnections nativeDamageChannels=$expectedConnectionCauses result=PASS connectedProof=false")
-    supportConfigured = [bool]($plain -match "RPG_STAGE09_READY revision=R030 supportProfiles=$expectedSupport playerSchema=5 regenAdapter=NATIVE_ENTRY_DECORATOR reservationProjection=STATIC_MAX allyPolicy=SELF_OR_NATIVE_FRIENDLY connectedProof=false")
+    supportConfigured = [bool]($plain -match "RPG_STAGE09_READY revision=R030 supportProfiles=$expectedSupport playerSchema=$expectedPlayerSchema regenAdapter=NATIVE_ENTRY_DECORATOR reservationProjection=STATIC_MAX allyPolicy=SELF_OR_NATIVE_FRIENDLY connectedProof=false")
     summonAssetsResolved = [bool]($plain -match "RPG_STAGE10_ASSETS revision=R030 summonProfiles=$expectedSummons role=RPG_Summon_Wolf result=PASS connectedProof=false")
     batchRolesResolved = [bool]($plain -match 'RPG_STAGE10_BATCH_ROLES count=3 result=PASS connectedProof=false')
     decoyRoleResolved = [bool]($plain -match 'RPG_STAGE10_DECOY_ROLE appearance=Mannequin attacks=0 result=PASS connectedProof=false')

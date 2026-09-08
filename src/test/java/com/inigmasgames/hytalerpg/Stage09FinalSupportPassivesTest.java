@@ -108,7 +108,7 @@ class Stage09FinalSupportPassivesTest {
     @Test void schemaFourMigrationDerivesSharedDeficitWithoutTouchingOldLoadout(){
         var state=RpgPlayerState.create(UUID.randomUUID());state.support=state.support.guard(new ManaguardLedger(30,50,50));
         var json=new Gson().toJsonTree(state).getAsJsonObject();json.addProperty("schemaVersion",4);json.getAsJsonObject("support").getAsJsonObject("managuard").remove("sharedDeficit");
-        var result=new RpgStateMigrator().migrate(json);assertTrue(result.migrated());assertEquals(5,result.targetVersion());
+        var result=new RpgStateMigrator().migrate(json);assertTrue(result.migrated());assertEquals(RpgPlayerState.CURRENT_SCHEMA,result.targetVersion());
         var loaded=new Gson().fromJson(result.state(),RpgPlayerState.class);assertEquals(30,loaded.support.managuard().deficit());assertEquals(15,loaded.support.managuard().sharedDeficit());
         assertEquals(json.get("equippedSkills"),result.state().get("equippedSkills"));
     }

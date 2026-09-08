@@ -35,7 +35,7 @@ class Stage11MagnitudeDurationTest {
     @Test void lingeringRejectsIndefiniteAura(){assertFalse(f.accepts("emanatism","lingering"));}
     @Test void lingeringRejectsFlightOnlyAndCrowdControlOnlyDespiteImportedDurationTags(){for(String s:java.util.List.of("arcane_bolt","wind_cutter","frost_bolt","riposte","intimidate","dominate","comet"))assertFalse(f.accepts(s,"lingering"),s);}
     @Test void lingeringRejectsChannelMaximumRatherThanExtendingActiveInputState(){assertFalse(f.accepts("void_beam","lingering"));assertFalse(f.accepts("life_drain","lingering"));}
-    @Test void newComponentRecordParticipatesInVersionedHash(){var a=f.plan("wolf_summon");var b=f.plan("wolf_summon","lingering");assertEquals(11,b.schemaVersion());assertNotEquals(a.planHash(),b.planHash());}
+    @Test void newComponentRecordParticipatesInVersionedHash(){var a=f.plan("wolf_summon");var b=f.plan("wolf_summon","lingering");assertEquals(CompiledSkillPlan.CURRENT_SCHEMA,b.schemaVersion());assertNotEquals(a.planHash(),b.planHash());}
     @Test void componentAdmissionDoesNotLeakNewGlobalTags(){assertFalse(f.plan("void_beam","concentration").finalTags().contains("HAS_AREA_GEOMETRY"));}
     @Test void realFiniteAreaRuntimeDeliversTheExtendedFractionalTailAndReleasesOwnership(){
         var areaRuntime=new com.inigmasgames.hytalerpg.execution.area.AreaRuntime();var port=new Stage06AreaRuntimeTest.FakePort();
