@@ -24,6 +24,9 @@ public final class StatusService {
     }
     /** One payload opportunity, shared by projectile/area/Aura adapters. Children retain the same root. */
     public synchronized ChillApplication applyChill(UUID owner,String root,UUID target,ControlProfile control,int authoredStacks,boolean deepFreeze){
+        return applyChill(owner,root,target,control,authoredStacks,deepFreeze,Double.NaN);
+    }
+    public synchronized ChillApplication applyChill(UUID owner,String root,UUID target,ControlProfile control,int authoredStacks,boolean deepFreeze,double seconds){
         if(owner==null||target==null||root==null||root.isBlank()||root.length()>256||control==null||authoredStacks<1||authoredStacks>5)
             throw new IllegalArgumentException("Invalid source-owned Chill application");
         var results=new java.util.ArrayList<Result>();
@@ -31,7 +34,7 @@ public final class StatusService {
         if(inspect(target).active().containsKey(RpgStatusType.FROZEN))return new ChillApplication(java.util.List.of(
                 new Result(Outcome.REJECTED,RpgStatusType.CHILL,0,0,"Frozen already active")),"FROZEN_ACTIVE");
         for(int i=0;i<authoredStacks;i++){
-            var result=apply(target,RpgStatusType.CHILL,control);results.add(result);
+            var result=apply(target,RpgStatusType.CHILL,control,seconds);results.add(result);
             if(result.outcome()==Outcome.THRESHOLD)return new ChillApplication(results,"BASE_THRESHOLD");
             if(result.outcome()==Outcome.REJECTED)return new ChillApplication(results,"BASE_REJECTED");
         }
@@ -42,7 +45,7 @@ public final class StatusService {
         if(chillBonusEnds.size()>=4096||chillBonusEnds.keySet().stream().filter(k->k.owner.equals(owner)).count()>=256)
             return new ChillApplication(results,"CHILL_BONUS_BUDGET");
         chillBonusEnds.put(key,now+1_000_000_000L);
-        var extra=apply(target,RpgStatusType.CHILL,control);results.add(extra);
+        var extra=apply(target,RpgStatusType.CHILL,control,seconds);results.add(extra);
         return new ChillApplication(results,extra.outcome()==Outcome.REJECTED?"BONUS_REJECTED":"BONUS_APPLIED");
     }
     public synchronized void forgetSource(UUID owner){chillBonusEnds.keySet().removeIf(k->k.owner.equals(owner));}
@@ -57,7 +60,7 @@ public final class StatusService {
                                      double authoredDurationSeconds) {
         expire(target);
         if (control.protectedEntity()) return new Result(Outcome.REJECTED, type, 0, 0, "protected target rejects hostile status");
-        if (type == RpgStatusType.CHILL) return applyChill(target, control);
+        if (type == RpgStatusType.CHILL) return applyChill(target, control,Double.isFinite(authoredDurationSeconds)&&authoredDurationSeconds>0?authoredDurationSeconds:profile.chillDurationSeconds);
         if (isHardControl(type) && control.blocksHardControl()) {
             if (type == RpgStatusType.FROZEN || type == RpgStatusType.ROOT && control.boss())
                 return applySimple(target, RpgStatusType.FROZEN_SUBSTITUTE_SLOW,
@@ -86,22 +89,22 @@ public final class StatusService {
         }
         return applySimple(target, type, duration, 1, true, "applied");
     }
-    private Result applyChill(UUID target, ControlProfile control) {
+    private Result applyChill(UUID target, ControlProfile control,double seconds) {
         EnumMap<RpgStatusType, State> actor = states.computeIfAbsent(target, ignored -> new EnumMap<>(RpgStatusType.class));
         int stacks = actor.getOrDefault(RpgStatusType.CHILL, new State(0, 0L)).stacks + 1;
         if (stacks >= profile.chillMaximumStacks) {
             Result frozen = apply(target, RpgStatusType.FROZEN, control);
             if (frozen.outcome == Outcome.REJECTED) {
-                applySimple(target, RpgStatusType.CHILL, profile.chillDurationSeconds, profile.chillMaximumStacks - 1, true,
+                applySimple(target, RpgStatusType.CHILL, seconds, profile.chillMaximumStacks - 1, true,
                         "Chill held below threshold during control immunity");
                 return new Result(Outcome.REJECTED, RpgStatusType.CHILL, profile.chillMaximumStacks - 1,
-                        profile.chillDurationSeconds, frozen.detail);
+                        seconds, frozen.detail);
             }
             actor.remove(RpgStatusType.CHILL);
             return new Result(Outcome.THRESHOLD, frozen.type, frozen.stacks, frozen.remainingSeconds,
                     "consumed " + profile.chillMaximumStacks + " Chill; " + frozen.detail);
         }
-        return applySimple(target, RpgStatusType.CHILL, profile.chillDurationSeconds, stacks,
+        return applySimple(target, RpgStatusType.CHILL, seconds, stacks,
                 actor.containsKey(RpgStatusType.CHILL), "Chill movement penalty=" + (stacks * profile.chillMovementPenaltyPerStack));
     }
     private Result applySimple(UUID target, RpgStatusType type, double seconds, int stacks, boolean refreshable, String detail) {

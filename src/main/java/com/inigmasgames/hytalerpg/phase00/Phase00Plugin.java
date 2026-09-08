@@ -139,6 +139,8 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleConversionSystem.DamageGuard(conversionSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleCorpseSystem(summonSystem.corpses(),bosses));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleCorpseSystem.Removal(summonSystem.corpses()));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleStatusDeathSystem(skillExecutionSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleStatusDeathSystem.Removal(skillExecutionSystem));
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         var rpgCommand=new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
                 uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities);

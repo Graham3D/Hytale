@@ -1,0 +1,83 @@
+Compiled from "HytaleStatusDeathSystem.java"
+public final class com.inigmasgames.hytalerpg.execution.hytale.HytaleStatusDeathSystem extends com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems$OnDeathSystem {
+  private final com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem skills;
+
+  public com.inigmasgames.hytalerpg.execution.hytale.HytaleStatusDeathSystem(com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$OnDeathSystem."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field skills:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+         9: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: iconst_4
+         1: anewarray     #13                 // class com/hypixel/hytale/component/query/Query
+         4: dup
+         5: iconst_0
+         6: invokestatic  #15                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         9: aastore
+        10: dup
+        11: iconst_1
+        12: invokestatic  #21                 // Method com/hypixel/hytale/server/core/entity/UUIDComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        15: aastore
+        16: dup
+        17: iconst_2
+        18: invokestatic  #24                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        21: aastore
+        22: dup
+        23: iconst_3
+        24: invokestatic  #27                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        27: aastore
+        28: invokestatic  #30                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        31: areturn
+
+  public void onComponentAdded(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_2
+         1: invokevirtual #34                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent.getDeathInfo:()Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;
+         4: ifnull        18
+         7: aload_3
+         8: aload_1
+         9: invokestatic  #40                 // Method com/hypixel/hytale/server/core/universe/PlayerRef.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        12: invokevirtual #43                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        15: ifnull        19
+        18: return
+        19: aload_3
+        20: aload_1
+        21: invokestatic  #27                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        24: invokevirtual #43                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        27: checkcast     #28                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+        30: invokestatic  #49                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getHealth:()I
+        33: invokevirtual #55                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        36: astore        5
+        38: aload         5
+        40: ifnull        57
+        43: aload         5
+        45: invokevirtual #59                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        48: aload         5
+        50: invokevirtual #64                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+        53: fcmpl
+        54: ifle          58
+        57: return
+        58: aload_0
+        59: getfield      #7                  // Field skills:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+        62: aload_3
+        63: aload         4
+        65: aload_1
+        66: invokevirtual #67                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.nativeStatusDeath:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/component/Ref;)V
+        69: return
+
+  public void onComponentAdded(com.hypixel.hytale.component.Ref, com.hypixel.hytale.component.Component, com.hypixel.hytale.component.Store, com.hypixel.hytale.component.CommandBuffer);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: checkcast     #35                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+         6: aload_3
+         7: aload         4
+         9: invokevirtual #73                 // Method onComponentAdded:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/entity/damage/DeathComponent;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;)V
+        12: return
+}

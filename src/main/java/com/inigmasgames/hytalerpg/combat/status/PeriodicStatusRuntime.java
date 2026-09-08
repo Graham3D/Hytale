@@ -20,6 +20,17 @@ public final class PeriodicStatusRuntime<C, T> {
     }
     public record View(int stacks, double remainingSeconds) { }
     public record PackageView(int stacks,int sourceCap,double coefficientPerSecond,double remainingSeconds){}
+    public record DeathPackage<C>(Source source,C context,int stacks,int sourceCap,double coefficient,double strength,double remaining){}
+    /** Claim before callbacks: dead victims cannot receive pending ticks or replay status propagation. */
+    public synchronized List<DeathPackage<C>> takeForDeath(UUID victim,double now){
+        if(victim==null||!Double.isFinite(now))throw new IllegalArgumentException("Invalid periodic death observation");
+        var result=new ArrayList<DeathPackage<C>>();
+        for(var entry:new ArrayList<>(packages.entrySet()))if(entry.getKey().victim.equals(victim)){
+            var value=entry.getValue();packages.remove(entry.getKey());
+            if(value.endsAt>now)result.add(new DeathPackage<>(entry.getKey(),value.context,value.stacks,value.sourceCap,value.coefficient,value.strength,value.endsAt-now));
+        }
+        return List.copyOf(result);
+    }
     public synchronized java.util.Optional<PackageView> sourceView(Source source,double now){
         var value=packages.get(source);
         return value==null||value.endsAt<=now?java.util.Optional.empty():java.util.Optional.of(

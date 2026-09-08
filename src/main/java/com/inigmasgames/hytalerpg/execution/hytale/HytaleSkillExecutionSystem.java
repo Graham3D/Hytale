@@ -1,6 +1,8 @@
 package com.inigmasgames.hytalerpg.execution.hytale;
 import com.inigmasgames.hytalerpg.execution.HitProcRuntime;
 import com.inigmasgames.hytalerpg.execution.HitProcProfiles;
+import com.inigmasgames.hytalerpg.execution.ChillSourceRegistry;
+import com.inigmasgames.hytalerpg.execution.ProliferationRuntime;
 import com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy;
 
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -124,6 +126,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final ProjectileSecondaryEffects projectileSecondaries=new ProjectileSecondaryEffects(projectileService.registry());
     private final PeriodicStatusRuntime<SkillExecutionContext, PeriodicTarget> periodicStatuses = new PeriodicStatusRuntime<>();
     private final HitProcRuntime hitProcs=new HitProcRuntime();
+    private final ChillSourceRegistry chillSources=new ChillSourceRegistry();
+    private final ProliferationRuntime proliferation=new ProliferationRuntime();
     private final OwnedFieldBudget fieldCapacity=new OwnedFieldBudget();
     private final AreaRuntime areas = new AreaRuntime(fieldCapacity);
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
@@ -177,7 +181,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if(buffer==null||store.getComponent(ref,EffectControllerComponent.getComponentType())==null)throw new IllegalStateException("AURA_NATIVE_STATUS_ADAPTER_UNAVAILABLE");
                 buffer.ensureComponent(ref,AreaStatusProjection.getComponentType());
                 HytaleAreaStatuses.applyChill(kernel,context,id,SupportNativeEffects.control(store,ref,bosses),1,
-                        (event,details)->emit(context,event,details));
+                        (event,details)->emit(context,event,details),chillSources);
                 HytaleAreaStatuses.synchronize(kernel.statuses(),id,ref,store,actor);
                 port.applyPassiveAreaPosition(context,ref,vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition()));
             }else{
@@ -834,7 +838,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                                 payload.statusSeconds(), payload.status().equals("BURN") ? .10 : .06);
                     } else {
                         HytaleAreaStatuses.apply(kernel, context, candidate, payload, control, store, actor,
-                                (event, details) -> emit(context, event, details));
+                                (event, details) -> emit(context, event, details),chillSources);
                         if (!payload.status().isBlank()) buffer.ensureAndGetComponent(reference, AreaStatusProjection.getComponentType());
                     }
                     if (payload.displacement() > 0 && control.displacementMultiplier() > 0 && reference.isValid()
@@ -1358,7 +1362,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     emit(context,RpgTraceEventType.STATUS_REJECTED,Map.of("targetId",targetId,"status","CHILL","reason","PROJECTILE_NATIVE_STATUS_ADAPTER_UNAVAILABLE"));
                     return "PROJECTILE_NATIVE_STATUS_ADAPTER_UNAVAILABLE";
                 }
-                var batch=HytaleAreaStatuses.applyChill(kernel,context,targetId,SupportNativeEffects.control(store,target.handle(),bosses),1,(event,details)->emit(context,event,details));
+                var batch=HytaleAreaStatuses.applyChill(kernel,context,targetId,SupportNativeEffects.control(store,target.handle(),bosses),1,(event,details)->emit(context,event,details),chillSources);
                 buffer.ensureComponent(target.handle(),AreaStatusProjection.getComponentType());
                 HytaleAreaStatuses.synchronize(kernel.statuses(),targetId,target.handle(),store,actor);
                 var result=batch.results().getLast();return result.outcome().name()+':'+result.type().name()+":stacks="+result.stacks();
@@ -1703,6 +1707,62 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         };
     }
 
+    void forgetStatusVictim(UUID victim){chillSources.forget(victim);periodicStatuses.takeForDeath(victim,System.nanoTime()/1e9);}
+    void nativeStatusDeath(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> dead){
+        UUID victim=store.getComponent(dead,UUIDComponent.getComponentType()).getUuid();double now=System.nanoTime()/1e9;
+        UUID world=store.getExternalData().getWorld().getWorldConfig().getUuid();Vec3 origin=vec(store.getComponent(dead,TransformComponent.getComponentType()).getPosition());
+        var payloads=new ArrayList<ProliferationRuntime.Payload>();
+        var chill=kernel.statuses().inspect(victim).active().get(RpgStatusType.CHILL);
+        for(var source:chillSources.takeForDeath(victim,chill,now)){
+            if(source.context().target()!=null&&source.context().target().worldId().equals(world))payloads.add(new ProliferationRuntime.Payload(source.context(),ProliferationRuntime.Kind.CHILL,source.stacks(),4,1,source.stacks(),source.ends()-now));
+        }
+        for(var source:periodicStatuses.takeForDeath(victim,now)){
+            var c=source.context();emit(c,RpgTraceEventType.STATUS_REMOVED,Map.of("status",source.source().kind(),"targetId",victim,"reason","NATIVE_DEATH_PACKAGE_CLAIMED"));
+            if(source.source().kind()!=PeriodicStatusRuntime.Kind.BLEED&&c.target()!=null&&c.target().worldId().equals(world)&&c.compiledPlan().proliferation()&&!c.derivedRelease())
+                payloads.add(new ProliferationRuntime.Payload(c,ProliferationRuntime.Kind.valueOf(source.source().kind().name()),source.stacks(),source.sourceCap(),source.coefficient(),source.strength(),source.remaining()));
+        }
+        for(var kind:PeriodicStatusRuntime.Kind.values())kernel.statuses().projectPeriodic(victim,RpgStatusType.valueOf(kind.name()),0,0);
+        if(payloads.isEmpty())return;
+        proliferation.death(victim,origin,payloads,new ProliferationRuntime.Port(){
+            public String claimSecondary(SkillExecutionContext c,String token){
+                if(c.profile().support()!=null&&c.profile().support().aura())return support!=null&&support.runtime().claimAuraSecondary(c,System.nanoTime()/1e9)?"PASS":"AURA_EPOCH_SECONDARY_LIMIT_OR_INACTIVE";
+                return c.effects().claim(token,2,true);
+            }
+            private Port sourcePort(SkillExecutionContext c){
+                var owner=store.getExternalData().getRefFromUUID(c.request().actorId());
+                if(owner==null||!owner.isValid()||!HytaleAreaQueries.hostile(store,dead,owner))throw new IllegalStateException("PROLIFERATION_SOURCE_OWNER_OR_ALLEGIANCE_INVALID");
+                var playerRef=store.getComponent(owner,PlayerRef.getComponentType());var player=store.getComponent(owner,Player.getComponentType());var stats=store.getComponent(owner,EntityStatMap.getComponentType());
+                if(playerRef==null||player==null||stats==null||!playerRef.getWorldUuid().equals(world))throw new IllegalStateException("PROLIFERATION_OWNER_WORLD_INVALID");
+                var port=new Port(store,owner,playerRef,player,stats,null,buffer);if(!port.actorAliveAndUsable())throw new IllegalStateException("PROLIFERATION_OWNER_DEAD");return port;
+            }
+            public ProliferationRuntime.Query query(SkillExecutionContext c,Vec3 point,double radius,int budget){
+                var port=sourcePort(c);
+                var query=HytaleAreaQueries.query(store,port.actor,bounds->ConnectionShape.pointDistanceSquared(point,bounds)<=radius*radius+1e-9,budget);var targets=new ArrayList<ProliferationRuntime.Target>();
+                for(var value:query.candidates()){var candidate=port.candidate(value.ref());if(candidate!=null)targets.add(new ProliferationRuntime.Target(UUID.fromString(candidate.stableId()),value.bounds(),true,true,candidate.protectedTarget(),HytaleAreaQueries.clear(store,point.add(new Vec3(0,.1,0)),value.bounds().centre())));}
+                return new ProliferationRuntime.Query(targets,query.overflow());
+            }
+            public String apply(ProliferationRuntime.Payload payload,ProliferationRuntime.Target target){
+                var c=payload.context();var port=sourcePort(c);var ref=store.getExternalData().getRefFromUUID(target.id());var candidate=port.candidate(ref);
+                if(candidate==null||candidate.protectedTarget()||!HytaleAreaQueries.hostile(store,ref,port.actor)||!HytaleAreaQueries.clear(store,origin.add(new Vec3(0,.1,0)),target.bounds().centre()))return "PROLIFERATION_TARGET_REJECTED";
+                String result;
+                if(payload.kind()==ProliferationRuntime.Kind.CHILL){
+                    if(store.getComponent(ref,EffectControllerComponent.getComponentType())==null)return "PROLIFERATION_NATIVE_CHILL_CONTROLLER_MISSING";
+                    var before=kernel.statuses().inspect(target.id()).active().get(RpgStatusType.CHILL);
+                    var applied=kernel.statuses().applyChill(c.request().actorId(),c.rootCastId(),target.id(),SupportNativeEffects.control(store,ref,bosses),payload.stacks(),false,payload.remaining());
+                    chillSources.observed(c,target.id(),before,kernel.statuses().inspect(target.id()).active().get(RpgStatusType.CHILL),System.nanoTime()/1e9);
+                    buffer.ensureComponent(ref,AreaStatusProjection.getComponentType());HytaleAreaStatuses.synchronize(kernel.statuses(),target.id(),ref,store,port.actor);
+                    result=applied.results().getLast().outcome()+":"+applied.results().getLast().type();
+                }else{
+                    var source=new PeriodicStatusRuntime.Source(c.request().actorId(),c.profile().skillId(),target.id(),PeriodicStatusRuntime.Kind.valueOf(payload.kind().name()));
+                    result=periodicStatuses.apply(source,c,new PeriodicTarget(port.actor,ref),payload.coefficient(),payload.strength(),payload.remaining(),payload.stacks(),payload.sourceCap(),System.nanoTime()/1e9,periodicPort());
+                }
+                emit(c,RpgTraceEventType.PROLIFERATION_RESOLVED,Map.of("deathVictim",victim,"targetId",target.id(),"kind",payload.kind(),"stacks",payload.stacks(),"coefficientPerSecond",payload.coefficient(),"remainingSeconds",payload.remaining(),"result",result,"canProliferateAgain",false));
+                return result;
+            }
+            public void trace(SkillExecutionContext c,String verdict,UUID target){emit(c,RpgTraceEventType.PROLIFERATION_RESOLVED,Map.of("deathVictim",victim,"targetId",target,"verdict",verdict,"nativeDeathObserved",true));}
+        });
+    }
+
     private void removeOwnedProjectiles(UUID actorId, CommandBuffer<EntityStore> buffer) {
         List<ProjectileCarrier> owned = projectiles.values().stream()
                 .filter(value -> value.actorId.equals(actorId)).toList();
@@ -1989,6 +2049,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private void removeOwnedBurns(UUID actorId) {
         periodicStatuses.cancel(actorId, System.nanoTime() / 1e9, periodicPort());
         hitProcs.cancel(actorId);
+        chillSources.cancel(actorId);
+        proliferation.cancel(actorId);
     }
 
     private static Vec3 facing(Store<EntityStore> store, Ref<EntityStore> actor) {

@@ -1,0 +1,320 @@
+Compiled from "ChillSourceRegistry.java"
+public final class com.inigmasgames.hytalerpg.execution.ChillSourceRegistry {
+  private final java.util.Map<com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Key, com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Source> sources;
+
+  public com.inigmasgames.hytalerpg.execution.ChillSourceRegistry();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class java/util/HashMap
+         8: dup
+         9: invokespecial #9                  // Method java/util/HashMap."<init>":()V
+        12: putfield      #10                 // Field sources:Ljava/util/Map;
+        15: return
+
+  public synchronized java.lang.String observed(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, java.util.UUID, com.inigmasgames.hytalerpg.combat.status.StatusService$StatusView, com.inigmasgames.hytalerpg.combat.status.StatusService$StatusView, double);
+    Code:
+         0: aload_1
+         1: ifnull        16
+         4: aload_2
+         5: ifnull        16
+         8: dload         5
+        10: invokestatic  #16                 // Method java/lang/Double.isFinite:(D)Z
+        13: ifne          26
+        16: new           #22                 // class java/lang/IllegalArgumentException
+        19: dup
+        20: ldc           #24                 // String Invalid Chill provenance
+        22: invokespecial #26                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        25: athrow
+        26: aload_0
+        27: getfield      #10                 // Field sources:Ljava/util/Map;
+        30: invokeinterface #29,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        35: dload         5
+        37: invokedynamic #35,  0             // InvokeDynamic #0:test:(D)Ljava/util/function/Predicate;
+        42: invokeinterface #39,  2           // InterfaceMethod java/util/Collection.removeIf:(Ljava/util/function/Predicate;)Z
+        47: pop
+        48: aload_3
+        49: ifnull        57
+        52: aload         4
+        54: ifnonnull     78
+        57: aload_0
+        58: getfield      #10                 // Field sources:Ljava/util/Map;
+        61: invokeinterface #45,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+        66: aload_2
+        67: invokedynamic #49,  0             // InvokeDynamic #1:test:(Ljava/util/UUID;)Ljava/util/function/Predicate;
+        72: invokeinterface #52,  2           // InterfaceMethod java/util/Set.removeIf:(Ljava/util/function/Predicate;)Z
+        77: pop
+        78: aload         4
+        80: ifnonnull     86
+        83: ldc           #55                 // String NO_TRANSFERABLE_CHILL
+        85: areturn
+        86: aload_0
+        87: getfield      #10                 // Field sources:Ljava/util/Map;
+        90: aload_2
+        91: dload         5
+        93: aload         4
+        95: invokedynamic #57,  0             // InvokeDynamic #2:apply:(Ljava/util/UUID;DLcom/inigmasgames/hytalerpg/combat/status/StatusService$StatusView;)Ljava/util/function/BiFunction;
+       100: invokeinterface #61,  2           // InterfaceMethod java/util/Map.replaceAll:(Ljava/util/function/BiFunction;)V
+       105: aload         4
+       107: invokevirtual #65                 // Method com/inigmasgames/hytalerpg/combat/status/StatusService$StatusView.stacks:()I
+       110: aload_3
+       111: ifnonnull     118
+       114: iconst_0
+       115: goto          122
+       118: aload_3
+       119: invokevirtual #65                 // Method com/inigmasgames/hytalerpg/combat/status/StatusService$StatusView.stacks:()I
+       122: isub
+       123: istore        7
+       125: iload         7
+       127: ifle          147
+       130: aload_1
+       131: invokevirtual #71                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       134: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.proliferation:()Z
+       137: ifeq          147
+       140: aload_1
+       141: invokevirtual #83                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.derivedRelease:()Z
+       144: ifeq          150
+       147: ldc           #86                 // String NO_NEW_SOURCE_CONTRIBUTION
+       149: areturn
+       150: new           #88                 // class com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key
+       153: dup
+       154: aload_1
+       155: invokevirtual #90                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       158: invokevirtual #94                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+       161: aload_1
+       162: invokevirtual #100                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       165: invokevirtual #104                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.skillId:()Ljava/lang/String;
+       168: aload_2
+       169: invokespecial #110                // Method com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key."<init>":(Ljava/util/UUID;Ljava/lang/String;Ljava/util/UUID;)V
+       172: astore        8
+       174: aload_0
+       175: getfield      #10                 // Field sources:Ljava/util/Map;
+       178: aload         8
+       180: invokeinterface #113,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       185: checkcast     #117                // class com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source
+       188: astore        9
+       190: aload         9
+       192: ifnonnull     251
+       195: aload_0
+       196: getfield      #10                 // Field sources:Ljava/util/Map;
+       199: invokeinterface #119,  1          // InterfaceMethod java/util/Map.size:()I
+       204: sipush        4096
+       207: if_icmpge     248
+       210: aload_0
+       211: getfield      #10                 // Field sources:Ljava/util/Map;
+       214: invokeinterface #45,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+       219: invokeinterface #122,  1          // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+       224: aload         8
+       226: invokedynamic #126,  0            // InvokeDynamic #3:test:(Lcom/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key;)Ljava/util/function/Predicate;
+       231: invokeinterface #129,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       236: invokeinterface #135,  1          // InterfaceMethod java/util/stream/Stream.count:()J
+       241: ldc2_w        #139                // long 256l
+       244: lcmp
+       245: iflt          251
+       248: ldc           #141                // String CHILL_PROVENANCE_BUDGET
+       250: areturn
+       251: aload         4
+       253: invokevirtual #65                 // Method com/inigmasgames/hytalerpg/combat/status/StatusService$StatusView.stacks:()I
+       256: iload         7
+       258: aload         9
+       260: ifnonnull     267
+       263: iconst_0
+       264: goto          272
+       267: aload         9
+       269: getfield      #143                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source.stacks:I
+       272: iadd
+       273: invokestatic  #146                // Method java/lang/Math.min:(II)I
+       276: istore        10
+       278: aload_0
+       279: getfield      #10                 // Field sources:Ljava/util/Map;
+       282: aload         8
+       284: new           #117                // class com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source
+       287: dup
+       288: aload_1
+       289: iload         10
+       291: dload         5
+       293: aload         4
+       295: invokevirtual #152                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$StatusView.remainingSeconds:()D
+       298: dadd
+       299: invokespecial #156                // Method com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source."<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;ID)V
+       302: invokeinterface #159,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       307: pop
+       308: ldc           #163                // String CHILL_SOURCE_RECORDED
+       310: areturn
+
+  public synchronized java.util.List<com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Source> takeForDeath(java.util.UUID, com.inigmasgames.hytalerpg.combat.status.StatusService$StatusView, double);
+    Code:
+         0: new           #165                // class java/util/ArrayList
+         3: dup
+         4: invokespecial #167                // Method java/util/ArrayList."<init>":()V
+         7: astore        5
+         9: new           #165                // class java/util/ArrayList
+        12: dup
+        13: aload_0
+        14: getfield      #10                 // Field sources:Ljava/util/Map;
+        17: invokeinterface #168,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        22: invokespecial #171                // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+        25: invokevirtual #174                // Method java/util/ArrayList.iterator:()Ljava/util/Iterator;
+        28: astore        6
+        30: aload         6
+        32: invokeinterface #178,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        37: ifeq          162
+        40: aload         6
+        42: invokeinterface #183,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        47: checkcast     #187                // class java/util/Map$Entry
+        50: astore        7
+        52: aload         7
+        54: invokeinterface #189,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+        59: checkcast     #88                 // class com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key
+        62: getfield      #192                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key.victim:Ljava/util/UUID;
+        65: aload_1
+        66: invokevirtual #196                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        69: ifeq          159
+        72: aload_0
+        73: getfield      #10                 // Field sources:Ljava/util/Map;
+        76: aload         7
+        78: invokeinterface #189,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+        83: invokeinterface #202,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        88: pop
+        89: aload         7
+        91: invokeinterface #205,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+        96: checkcast     #117                // class com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source
+        99: astore        8
+       101: aload_2
+       102: ifnull        159
+       105: aload         8
+       107: getfield      #208                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source.ends:D
+       110: dload_3
+       111: dcmpl
+       112: ifle          159
+       115: aload         5
+       117: new           #117                // class com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source
+       120: dup
+       121: aload         8
+       123: getfield      #212                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       126: aload         8
+       128: getfield      #143                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source.stacks:I
+       131: aload_2
+       132: invokevirtual #65                 // Method com/inigmasgames/hytalerpg/combat/status/StatusService$StatusView.stacks:()I
+       135: invokestatic  #146                // Method java/lang/Math.min:(II)I
+       138: aload         8
+       140: getfield      #208                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source.ends:D
+       143: dload_3
+       144: aload_2
+       145: invokevirtual #152                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$StatusView.remainingSeconds:()D
+       148: dadd
+       149: invokestatic  #216                // Method java/lang/Math.min:(DD)D
+       152: invokespecial #156                // Method com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source."<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;ID)V
+       155: invokevirtual #219                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+       158: pop
+       159: goto          30
+       162: aload         5
+       164: invokestatic  #222                // InterfaceMethod java/util/List.copyOf:(Ljava/util/Collection;)Ljava/util/List;
+       167: areturn
+
+  public synchronized void cancel(java.util.UUID);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field sources:Ljava/util/Map;
+         4: invokeinterface #45,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+         9: aload_1
+        10: invokedynamic #228,  0            // InvokeDynamic #4:test:(Ljava/util/UUID;)Ljava/util/function/Predicate;
+        15: invokeinterface #52,  2           // InterfaceMethod java/util/Set.removeIf:(Ljava/util/function/Predicate;)Z
+        20: pop
+        21: return
+
+  public synchronized void forget(java.util.UUID);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field sources:Ljava/util/Map;
+         4: invokeinterface #45,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+         9: aload_1
+        10: invokedynamic #229,  0            // InvokeDynamic #5:test:(Ljava/util/UUID;)Ljava/util/function/Predicate;
+        15: invokeinterface #52,  2           // InterfaceMethod java/util/Set.removeIf:(Ljava/util/function/Predicate;)Z
+        20: pop
+        21: return
+
+  public synchronized int size();
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field sources:Ljava/util/Map;
+         4: invokeinterface #119,  1          // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  private static boolean lambda$forget$0(java.util.UUID, com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Key);
+    Code:
+         0: aload_1
+         1: getfield      #192                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key.victim:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #196                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ireturn
+
+  private static boolean lambda$cancel$0(java.util.UUID, com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Key);
+    Code:
+         0: aload_1
+         1: getfield      #230                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key.owner:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #196                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ifne          22
+        11: aload_1
+        12: getfield      #192                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key.victim:Ljava/util/UUID;
+        15: aload_0
+        16: invokevirtual #196                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        19: ifeq          26
+        22: iconst_1
+        23: goto          27
+        26: iconst_0
+        27: ireturn
+
+  private static boolean lambda$observed$3(com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Key, com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Key);
+    Code:
+         0: aload_1
+         1: getfield      #230                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key.owner:Ljava/util/UUID;
+         4: aload_0
+         5: getfield      #230                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key.owner:Ljava/util/UUID;
+         8: invokevirtual #196                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        11: ireturn
+
+  private static com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Source lambda$observed$2(java.util.UUID, double, com.inigmasgames.hytalerpg.combat.status.StatusService$StatusView, com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Key, com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Source);
+    Code:
+         0: aload         4
+         2: getfield      #192                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key.victim:Ljava/util/UUID;
+         5: aload_0
+         6: invokevirtual #196                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         9: ifeq          38
+        12: new           #117                // class com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source
+        15: dup
+        16: aload         5
+        18: getfield      #212                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        21: aload         5
+        23: getfield      #143                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source.stacks:I
+        26: dload_1
+        27: aload_3
+        28: invokevirtual #152                // Method com/inigmasgames/hytalerpg/combat/status/StatusService$StatusView.remainingSeconds:()D
+        31: dadd
+        32: invokespecial #156                // Method com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source."<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;ID)V
+        35: goto          40
+        38: aload         5
+        40: areturn
+
+  private static boolean lambda$observed$1(java.util.UUID, com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Key);
+    Code:
+         0: aload_1
+         1: getfield      #192                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Key.victim:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #196                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ireturn
+
+  private static boolean lambda$observed$0(double, com.inigmasgames.hytalerpg.execution.ChillSourceRegistry$Source);
+    Code:
+         0: aload_2
+         1: getfield      #208                // Field com/inigmasgames/hytalerpg/execution/ChillSourceRegistry$Source.ends:D
+         4: dload_0
+         5: dcmpg
+         6: ifgt          13
+         9: iconst_1
+        10: goto          14
+        13: iconst_0
+        14: ireturn
+}

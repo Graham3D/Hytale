@@ -1,0 +1,593 @@
+Compiled from "DeathComponent.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  public static final com.hypixel.hytale.logger.HytaleLogger LOGGER;
+
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent> CODEC;
+
+  private java.lang.String deathCause;
+
+  private com.hypixel.hytale.server.core.Message deathMessage;
+
+  private boolean showDeathMenu;
+
+  private com.hypixel.hytale.server.core.inventory.ItemStack[] itemsLostOnDeath;
+
+  private double itemsAmountLossPercentage;
+
+  private double itemsDurabilityLossPercentage;
+
+  private boolean displayDataOnDeathScreen;
+
+  private transient com.hypixel.hytale.server.core.modules.entity.damage.Damage deathInfo;
+
+  private transient com.hypixel.hytale.server.core.asset.type.gameplay.DeathConfig$ItemsLossMode itemsLossMode;
+
+  private transient com.hypixel.hytale.server.core.entity.InteractionChain interactionChain;
+
+  private transient java.util.concurrent.CompletableFuture<java.lang.Void> respawnFuture;
+
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent> getComponentType();
+    Code:
+         0: invokestatic  #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+         3: invokevirtual #7                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getDeathComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: areturn
+
+  protected com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent(com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iconst_1
+         6: putfield      #17                 // Field showDeathMenu:Z
+         9: aload_0
+        10: getstatic     #23                 // Field com/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode.ALL:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+        13: putfield      #29                 // Field itemsLossMode:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+        16: aload_0
+        17: aconst_null
+        18: putfield      #32                 // Field respawnFuture:Ljava/util/concurrent/CompletableFuture;
+        21: aload_0
+        22: aload_1
+        23: putfield      #36                 // Field deathInfo:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;
+        26: aload_0
+        27: aload_1
+        28: invokevirtual #40                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getCause:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;
+        31: invokevirtual #46                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getId:()Ljava/lang/String;
+        34: putfield      #52                 // Field deathCause:Ljava/lang/String;
+        37: return
+
+  protected com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent();
+    Code:
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iconst_1
+         6: putfield      #17                 // Field showDeathMenu:Z
+         9: aload_0
+        10: getstatic     #23                 // Field com/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode.ALL:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+        13: putfield      #29                 // Field itemsLossMode:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+        16: aload_0
+        17: aconst_null
+        18: putfield      #32                 // Field respawnFuture:Ljava/util/concurrent/CompletableFuture;
+        21: return
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageCause getDeathCause();
+    Code:
+         0: ldc           #47                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+         2: invokestatic  #56                 // Method com/hypixel/hytale/assetstore/AssetRegistry.getAssetStore:(Ljava/lang/Class;)Lcom/hypixel/hytale/assetstore/AssetStore;
+         5: invokevirtual #62                 // Method com/hypixel/hytale/assetstore/AssetStore.getAssetMap:()Lcom/hypixel/hytale/assetstore/AssetMap;
+         8: checkcast     #68                 // class com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap
+        11: aload_0
+        12: getfield      #52                 // Field deathCause:Ljava/lang/String;
+        15: invokevirtual #70                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+        18: checkcast     #47                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+        21: areturn
+
+  public com.hypixel.hytale.server.core.Message getDeathMessage();
+    Code:
+         0: aload_0
+         1: getfield      #74                 // Field deathMessage:Lcom/hypixel/hytale/server/core/Message;
+         4: areturn
+
+  public void setDeathMessage(com.hypixel.hytale.server.core.Message);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #74                 // Field deathMessage:Lcom/hypixel/hytale/server/core/Message;
+         5: return
+
+  public boolean isShowDeathMenu();
+    Code:
+         0: aload_0
+         1: getfield      #17                 // Field showDeathMenu:Z
+         4: ireturn
+
+  public void setShowDeathMenu(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #17                 // Field showDeathMenu:Z
+         5: return
+
+  public com.hypixel.hytale.server.core.inventory.ItemStack[] getItemsLostOnDeath();
+    Code:
+         0: aload_0
+         1: getfield      #78                 // Field itemsLostOnDeath:[Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+         4: areturn
+
+  public void setItemsLostOnDeath(java.util.List<com.hypixel.hytale.server.core.inventory.ItemStack>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokedynamic #82,  0             // InvokeDynamic #0:apply:()Ljava/util/function/IntFunction;
+         7: invokeinterface #86,  2           // InterfaceMethod java/util/List.toArray:(Ljava/util/function/IntFunction;)[Ljava/lang/Object;
+        12: checkcast     #92                 // class "[Lcom/hypixel/hytale/server/core/inventory/ItemStack;"
+        15: putfield      #78                 // Field itemsLostOnDeath:[Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+        18: return
+
+  public double getItemsAmountLossPercentage();
+    Code:
+         0: aload_0
+         1: getfield      #93                 // Field itemsAmountLossPercentage:D
+         4: dreturn
+
+  public void setItemsAmountLossPercentage(double);
+    Code:
+         0: aload_0
+         1: dload_1
+         2: putfield      #93                 // Field itemsAmountLossPercentage:D
+         5: return
+
+  public double getItemsDurabilityLossPercentage();
+    Code:
+         0: aload_0
+         1: getfield      #97                 // Field itemsDurabilityLossPercentage:D
+         4: dreturn
+
+  public void setItemsDurabilityLossPercentage(double);
+    Code:
+         0: aload_0
+         1: dload_1
+         2: putfield      #97                 // Field itemsDurabilityLossPercentage:D
+         5: return
+
+  public boolean displayDataOnDeathScreen();
+    Code:
+         0: aload_0
+         1: getfield      #100                // Field displayDataOnDeathScreen:Z
+         4: ireturn
+
+  public void setDisplayDataOnDeathScreen(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #100                // Field displayDataOnDeathScreen:Z
+         5: return
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.Damage getDeathInfo();
+    Code:
+         0: aload_0
+         1: getfield      #36                 // Field deathInfo:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.asset.type.gameplay.DeathConfig$ItemsLossMode getItemsLossMode();
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field itemsLossMode:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+         4: areturn
+
+  public void setItemsLossMode(com.hypixel.hytale.server.core.asset.type.gameplay.DeathConfig$ItemsLossMode);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #29                 // Field itemsLossMode:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+         5: return
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DeathItemLoss getDeathItemLoss();
+    Code:
+         0: new           #103                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathItemLoss
+         3: dup
+         4: aload_0
+         5: getfield      #29                 // Field itemsLossMode:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+         8: aload_0
+         9: getfield      #78                 // Field itemsLostOnDeath:[Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+        12: aload_0
+        13: getfield      #93                 // Field itemsAmountLossPercentage:D
+        16: aload_0
+        17: getfield      #97                 // Field itemsDurabilityLossPercentage:D
+        20: invokespecial #105                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathItemLoss."<init>":(Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;[Lcom/hypixel/hytale/server/core/inventory/ItemStack;DD)V
+        23: areturn
+
+  public com.hypixel.hytale.server.core.entity.InteractionChain getInteractionChain();
+    Code:
+         0: aload_0
+         1: getfield      #108                // Field interactionChain:Lcom/hypixel/hytale/server/core/entity/InteractionChain;
+         4: areturn
+
+  public void setInteractionChain(com.hypixel.hytale.server.core.entity.InteractionChain);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #108                // Field interactionChain:Lcom/hypixel/hytale/server/core/entity/InteractionChain;
+         5: return
+
+  public com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> clone();
+    Code:
+         0: new           #18                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+         3: dup
+         4: invokespecial #112                // Method "<init>":()V
+         7: astore_1
+         8: aload_1
+         9: aload_0
+        10: getfield      #52                 // Field deathCause:Ljava/lang/String;
+        13: putfield      #52                 // Field deathCause:Ljava/lang/String;
+        16: aload_1
+        17: aload_0
+        18: getfield      #74                 // Field deathMessage:Lcom/hypixel/hytale/server/core/Message;
+        21: putfield      #74                 // Field deathMessage:Lcom/hypixel/hytale/server/core/Message;
+        24: aload_1
+        25: aload_0
+        26: getfield      #17                 // Field showDeathMenu:Z
+        29: putfield      #17                 // Field showDeathMenu:Z
+        32: aload_1
+        33: aload_0
+        34: getfield      #78                 // Field itemsLostOnDeath:[Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+        37: putfield      #78                 // Field itemsLostOnDeath:[Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+        40: aload_1
+        41: aload_0
+        42: getfield      #93                 // Field itemsAmountLossPercentage:D
+        45: putfield      #93                 // Field itemsAmountLossPercentage:D
+        48: aload_1
+        49: aload_0
+        50: getfield      #97                 // Field itemsDurabilityLossPercentage:D
+        53: putfield      #97                 // Field itemsDurabilityLossPercentage:D
+        56: aload_1
+        57: aload_0
+        58: getfield      #100                // Field displayDataOnDeathScreen:Z
+        61: putfield      #100                // Field displayDataOnDeathScreen:Z
+        64: aload_1
+        65: aload_0
+        66: getfield      #36                 // Field deathInfo:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;
+        69: putfield      #36                 // Field deathInfo:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;
+        72: aload_1
+        73: aload_0
+        74: getfield      #29                 // Field itemsLossMode:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+        77: putfield      #29                 // Field itemsLossMode:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+        80: aload_1
+        81: areturn
+
+  public static void tryAddComponent(com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #113                // Method com/hypixel/hytale/component/CommandBuffer.getArchetype:(Lcom/hypixel/hytale/component/Ref;)Lcom/hypixel/hytale/component/Archetype;
+         5: invokestatic  #119                // Method getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         8: invokevirtual #122                // Method com/hypixel/hytale/component/Archetype.contains:(Lcom/hypixel/hytale/component/ComponentType;)Z
+        11: ifeq          15
+        14: return
+        15: aload_0
+        16: aload_1
+        17: aload_2
+        18: invokedynamic #128,  0            // InvokeDynamic #1:accept:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)Ljava/util/function/Consumer;
+        23: invokevirtual #132                // Method com/hypixel/hytale/component/CommandBuffer.run:(Ljava/util/function/Consumer;)V
+        26: return
+
+  public static void tryAddComponent(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #136                // Method com/hypixel/hytale/component/Store.getArchetype:(Lcom/hypixel/hytale/component/Ref;)Lcom/hypixel/hytale/component/Archetype;
+         5: invokestatic  #119                // Method getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         8: invokevirtual #122                // Method com/hypixel/hytale/component/Archetype.contains:(Lcom/hypixel/hytale/component/ComponentType;)Z
+        11: ifeq          15
+        14: return
+        15: aload_0
+        16: aload_1
+        17: invokestatic  #119                // Method getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        20: new           #18                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+        23: dup
+        24: aload_2
+        25: invokespecial #139                // Method "<init>":(Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)V
+        28: invokevirtual #142                // Method com/hypixel/hytale/component/Store.addComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/Component;)V
+        31: return
+
+  public static java.util.concurrent.CompletableFuture<java.lang.Void> respawn(com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokestatic  #119                // Method getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokeinterface #146,  3          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        10: checkcast     #18                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+        13: astore_2
+        14: aload_2
+        15: ifnonnull     23
+        18: aconst_null
+        19: invokestatic  #152                // Method java/util/concurrent/CompletableFuture.completedFuture:(Ljava/lang/Object;)Ljava/util/concurrent/CompletableFuture;
+        22: areturn
+        23: aload_2
+        24: getfield      #32                 // Field respawnFuture:Ljava/util/concurrent/CompletableFuture;
+        27: ifnull        35
+        30: aload_2
+        31: getfield      #32                 // Field respawnFuture:Ljava/util/concurrent/CompletableFuture;
+        34: areturn
+        35: new           #158                // class com/hypixel/hytale/server/core/event/events/ecs/RespawnEvent
+        38: dup
+        39: invokespecial #160                // Method com/hypixel/hytale/server/core/event/events/ecs/RespawnEvent."<init>":()V
+        42: astore_3
+        43: aload_0
+        44: aload_1
+        45: aload_3
+        46: invokeinterface #161,  3          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.invoke:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/system/EcsEvent;)V
+        51: aload_3
+        52: invokevirtual #165                // Method com/hypixel/hytale/server/core/event/events/ecs/RespawnEvent.isCancelled:()Z
+        55: ifeq          60
+        58: aconst_null
+        59: areturn
+        60: aload_0
+        61: invokeinterface #169,  1          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getExternalData:()Ljava/lang/Object;
+        66: checkcast     #173                // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+        69: invokevirtual #175                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+        72: astore        4
+        74: aload_0
+        75: aload_1
+        76: invokestatic  #179                // Method com/hypixel/hytale/server/core/universe/PlayerRef.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        79: invokeinterface #146,  3          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        84: checkcast     #180                // class com/hypixel/hytale/server/core/universe/PlayerRef
+        87: astore        5
+        89: aload         4
+        91: invokevirtual #182                // Method com/hypixel/hytale/server/core/universe/world/World.getDeathConfig:()Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig;
+        94: invokevirtual #188                // Method com/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig.getRespawnController:()Lcom/hypixel/hytale/server/core/asset/type/gameplay/respawn/RespawnController;
+        97: astore        6
+        99: aload_2
+       100: aload         6
+       102: aload         4
+       104: aload_1
+       105: aload_0
+       106: invokeinterface #194,  4          // InterfaceMethod com/hypixel/hytale/server/core/asset/type/gameplay/respawn/RespawnController.respawnPlayer:(Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Ljava/util/concurrent/CompletableFuture;
+       111: aload         5
+       113: invokedynamic #200,  0            // InvokeDynamic #2:accept:(Lcom/hypixel/hytale/server/core/universe/PlayerRef;)Ljava/util/function/BiConsumer;
+       118: invokevirtual #203                // Method java/util/concurrent/CompletableFuture.whenComplete:(Ljava/util/function/BiConsumer;)Ljava/util/concurrent/CompletableFuture;
+       121: putfield      #32                 // Field respawnFuture:Ljava/util/concurrent/CompletableFuture;
+       124: aload_2
+       125: getfield      #32                 // Field respawnFuture:Ljava/util/concurrent/CompletableFuture;
+       128: areturn
+
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+    Code:
+         0: aload_0
+         1: invokevirtual #207                // Method clone:()Lcom/hypixel/hytale/component/Component;
+         4: areturn
+
+  private static void lambda$respawn$0(com.hypixel.hytale.server.core.universe.PlayerRef, java.lang.Void, java.lang.Throwable);
+    Code:
+         0: aload_2
+         1: ifnull        29
+         4: getstatic     #211                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+         7: invokevirtual #215                // Method com/hypixel/hytale/logger/HytaleLogger.atSevere:()Lcom/google/common/flogger/LoggingApi;
+        10: checkcast     #221                // class com/hypixel/hytale/logger/HytaleLogger$Api
+        13: aload_2
+        14: invokeinterface #223,  2          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.withCause:(Ljava/lang/Throwable;)Lcom/google/common/flogger/LoggingApi;
+        19: checkcast     #221                // class com/hypixel/hytale/logger/HytaleLogger$Api
+        22: ldc           #227                // String Failed to respawn entity
+        24: invokeinterface #229,  2          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;)V
+        29: aload_0
+        30: invokevirtual #233                // Method com/hypixel/hytale/server/core/universe/PlayerRef.getReference:()Lcom/hypixel/hytale/component/Ref;
+        33: astore_3
+        34: aload_3
+        35: ifnull        45
+        38: aload_3
+        39: invokevirtual #237                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        42: ifne          46
+        45: return
+        46: aload_3
+        47: invokevirtual #242                // Method com/hypixel/hytale/component/Ref.getStore:()Lcom/hypixel/hytale/component/Store;
+        50: astore        4
+        52: aload         4
+        54: aload_3
+        55: invokestatic  #119                // Method getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        58: invokevirtual #246                // Method com/hypixel/hytale/component/Store.tryRemoveComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)V
+        61: return
+
+  private static void lambda$tryAddComponent$0(com.hypixel.hytale.component.Ref, com.hypixel.hytale.server.core.modules.entity.damage.Damage, com.hypixel.hytale.component.Store);
+    Code:
+         0: aload_2
+         1: aload_0
+         2: aload_1
+         3: invokestatic  #250                // Method tryAddComponent:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)V
+         6: return
+
+  private static com.hypixel.hytale.server.core.inventory.ItemStack[] lambda$setItemsLostOnDeath$0(int);
+    Code:
+         0: iload_0
+         1: anewarray     #254                // class com/hypixel/hytale/server/core/inventory/ItemStack
+         4: areturn
+
+  private static java.lang.Boolean lambda$static$13(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent);
+    Code:
+         0: aload_0
+         1: getfield      #100                // Field displayDataOnDeathScreen:Z
+         4: invokestatic  #256                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$12(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #262                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #100                // Field displayDataOnDeathScreen:Z
+         8: return
+
+  private static java.lang.Double lambda$static$11(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent);
+    Code:
+         0: aload_0
+         1: getfield      #97                 // Field itemsDurabilityLossPercentage:D
+         4: invokestatic  #265                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$10(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #270                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #97                 // Field itemsDurabilityLossPercentage:D
+         8: return
+
+  private static java.lang.Double lambda$static$9(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent);
+    Code:
+         0: aload_0
+         1: getfield      #93                 // Field itemsAmountLossPercentage:D
+         4: invokestatic  #265                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$8(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #270                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #93                 // Field itemsAmountLossPercentage:D
+         8: return
+
+  private static com.hypixel.hytale.server.core.inventory.ItemStack[] lambda$static$7(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent);
+    Code:
+         0: aload_0
+         1: getfield      #78                 // Field itemsLostOnDeath:[Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+         4: areturn
+
+  private static void lambda$static$6(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, com.hypixel.hytale.server.core.inventory.ItemStack[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #78                 // Field itemsLostOnDeath:[Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+         5: return
+
+  private static com.hypixel.hytale.server.core.inventory.ItemStack[] lambda$CODEC$0(int);
+    Code:
+         0: iload_0
+         1: anewarray     #254                // class com/hypixel/hytale/server/core/inventory/ItemStack
+         4: areturn
+
+  private static java.lang.Boolean lambda$static$5(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent);
+    Code:
+         0: aload_0
+         1: getfield      #17                 // Field showDeathMenu:Z
+         4: invokestatic  #256                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$4(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #262                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #17                 // Field showDeathMenu:Z
+         8: return
+
+  private static com.hypixel.hytale.server.core.Message lambda$static$3(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent);
+    Code:
+         0: aload_0
+         1: getfield      #74                 // Field deathMessage:Lcom/hypixel/hytale/server/core/Message;
+         4: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, com.hypixel.hytale.server.core.Message);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #74                 // Field deathMessage:Lcom/hypixel/hytale/server/core/Message;
+         5: return
+
+  private static java.lang.String lambda$static$1(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent);
+    Code:
+         0: aload_0
+         1: getfield      #52                 // Field deathCause:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #52                 // Field deathCause:Ljava/lang/String;
+         5: return
+
+  static {};
+    Code:
+         0: invokestatic  #274                // Method com/hypixel/hytale/logger/HytaleLogger.forEnclosingClass:()Lcom/hypixel/hytale/logger/HytaleLogger;
+         3: putstatic     #211                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+         6: ldc           #18                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+         8: invokedynamic #278,  0            // InvokeDynamic #3:get:()Ljava/util/function/Supplier;
+        13: invokestatic  #281                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        16: new           #287                // class com/hypixel/hytale/codec/KeyedCodec
+        19: dup
+        20: ldc_w         #289                // String DeathCause
+        23: getstatic     #291                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+        26: invokespecial #297                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        29: invokedynamic #300,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        34: invokedynamic #303,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        39: invokevirtual #306                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        42: invokevirtual #312                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        45: checkcast     #307                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        48: new           #287                // class com/hypixel/hytale/codec/KeyedCodec
+        51: dup
+        52: ldc_w         #318                // String DeathMessage
+        55: getstatic     #320                // Field com/hypixel/hytale/server/core/Message.CODEC:Lcom/hypixel/hytale/codec/function/FunctionCodec;
+        58: invokespecial #297                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        61: invokedynamic #326,  0            // InvokeDynamic #6:accept:()Ljava/util/function/BiConsumer;
+        66: invokedynamic #327,  0            // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+        71: invokevirtual #306                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        74: invokevirtual #312                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        77: checkcast     #307                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        80: new           #287                // class com/hypixel/hytale/codec/KeyedCodec
+        83: dup
+        84: ldc_w         #328                // String ShowDeathMenu
+        87: getstatic     #330                // Field com/hypixel/hytale/codec/builder/BuilderCodec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+        90: invokespecial #297                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        93: invokedynamic #334,  0            // InvokeDynamic #8:accept:()Ljava/util/function/BiConsumer;
+        98: invokedynamic #335,  0            // InvokeDynamic #9:apply:()Ljava/util/function/Function;
+       103: invokevirtual #306                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       106: invokevirtual #312                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       109: checkcast     #307                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       112: new           #287                // class com/hypixel/hytale/codec/KeyedCodec
+       115: dup
+       116: ldc_w         #336                // String ItemsLostOnDeath
+       119: new           #338                // class com/hypixel/hytale/codec/codecs/array/ArrayCodec
+       122: dup
+       123: getstatic     #340                // Field com/hypixel/hytale/server/core/inventory/ItemStack.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       126: invokedynamic #343,  0            // InvokeDynamic #10:apply:()Ljava/util/function/IntFunction;
+       131: invokespecial #344                // Method com/hypixel/hytale/codec/codecs/array/ArrayCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/IntFunction;)V
+       134: invokespecial #297                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       137: invokedynamic #347,  0            // InvokeDynamic #11:accept:()Ljava/util/function/BiConsumer;
+       142: invokedynamic #348,  0            // InvokeDynamic #12:apply:()Ljava/util/function/Function;
+       147: invokevirtual #306                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       150: invokevirtual #312                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       153: checkcast     #307                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       156: new           #287                // class com/hypixel/hytale/codec/KeyedCodec
+       159: dup
+       160: ldc_w         #349                // String ItemsAmountLossPercentage
+       163: getstatic     #351                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       166: invokespecial #297                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       169: invokedynamic #355,  0            // InvokeDynamic #13:accept:()Ljava/util/function/BiConsumer;
+       174: invokedynamic #356,  0            // InvokeDynamic #14:apply:()Ljava/util/function/Function;
+       179: invokevirtual #306                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       182: invokevirtual #312                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       185: checkcast     #307                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       188: new           #287                // class com/hypixel/hytale/codec/KeyedCodec
+       191: dup
+       192: ldc_w         #357                // String ItemsDurabilityLossPercentage
+       195: getstatic     #351                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       198: invokespecial #297                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       201: invokedynamic #359,  0            // InvokeDynamic #15:accept:()Ljava/util/function/BiConsumer;
+       206: invokedynamic #360,  0            // InvokeDynamic #16:apply:()Ljava/util/function/Function;
+       211: invokevirtual #306                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       214: invokevirtual #312                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       217: checkcast     #307                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       220: new           #287                // class com/hypixel/hytale/codec/KeyedCodec
+       223: dup
+       224: ldc_w         #361                // String DisplayDataOnDeathScreen
+       227: getstatic     #363                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       230: invokespecial #297                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       233: invokedynamic #364,  0            // InvokeDynamic #17:accept:()Ljava/util/function/BiConsumer;
+       238: invokedynamic #365,  0            // InvokeDynamic #18:apply:()Ljava/util/function/Function;
+       243: invokevirtual #306                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       246: invokevirtual #312                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       249: checkcast     #307                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       252: invokevirtual #366                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       255: putstatic     #370                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       258: return
+}

@@ -36,6 +36,13 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(passive.id().value().equals("proliferation")){
+            var burn=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.dotPayload(skill.id().value(),"BURN");
+            var poison=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.dotPayload(skill.id().value(),"POISON");
+            var chill=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.chillPayload(skill.id().value());
+            if(burn.isPresent()&&!burn.get()&&!poison.orElse(false)&&!chill.orElse(false))return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
+                    "Proliferation requires a source-owned Burn, Poison or Chill application, not elemental damage alone.",Set.of("TRANSFERABLE_STATUS_COMPONENT"),actual);
+        }
         if(passive.id().value().equals("hemorrhage")&&!actual.contains("PHYSICAL"))return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
                 "Hemorrhage requires direct Physical damage; elemental damage alone does not qualify.",Set.of("PHYSICAL_DAMAGE_COMPONENT"),actual);
         if(passive.id().value().equals("shatter")&&(!actual.contains("COLD")||!actual.contains("DAMAGE")||!actual.contains("CAN_KILL")))return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,

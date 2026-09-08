@@ -1485,3 +1485,50 @@ Rollback S: `771E6A1596D543F3642C6BD64D06593B79F169520B4C2859052CB59F47FD6CB6`.
 Native HUD/XP/input and the live three-mod set are unchanged. No owner art or Google
 Drive writes.36/40 Stage11 primitives have local cohort evidence; Proliferation,
 Retaliation, Critical Trigger, Kill Trigger and matrix/legacy-state closure remain.
+
+## R030 cohort U — Proliferation
+
+LP050 and the installed DeathSystems.OnDeathSystem implementation were reviewed.
+Plan schema30; player schema6 unchanged. HytaleStatusDeathSystem now consumes actual
+native NPC death-component additions with authoritative Health at/below minimum.
+Ordinary removal only discards ownership; it cannot manufacture a death or spread.
+The existing PeriodicStatusRuntime atomically exports/removes the dead victim's
+unexpired source-owned Burn/Poison packages before callbacks. Bleed is not eligible.
+ChillSourceRegistry tracks attributable contributions only, not another Slow/Health
+store. It does not assign another caster's stacks to the linked skill. Reaching
+Frozen clears transferable Chill provenance; Frozen itself is never a payload.
+
+One strongest package per owner/linked skill/status selects at most three nearest
+unique living hostile, unprotected NPCs within4m of the death point, with LOS and
+native AABB distance. Queries fail closed above256 candidates; a death permits at
+most32 source packages. Magnitude and remaining duration are multiplied by.70;
+Chill stack count floors at70%, minimum1. Poison's source cap/count are retained,
+without reapplying Virulence/Concentrated Venom. Burn/Poison use the existing periodic
+service and frozen offensive snapshot; Chill uses the real StatusService with the
+reduced remaining duration and no new Deep Freeze bonus. A recipient can naturally
+reach Frozen from its own accumulated Chill, distinct from transferring Frozen.
+
+Each child preserves rootCastId/correlationId, source skill/owner, snapshot and shared
+budgets while receiving a distinct skillInstanceId. Derived packages cannot spread
+again. Finite roots use their bounded contact and48-effect/16-secondary ledgers.
+Aura sources instead use the existing eight-secondary epoch budget, with a bounded
+4096-global/256-owner,120s death-deduplication window. This avoids incorrectly imposing
+a finite lifetime cap on an indefinite Aura. World/owner loss, expiry and removal
+discard provenance; failures never refund an already-applied parent effect.
+
+34 deterministic tests cover ownership, strongest-package selection, exact scaling,
+nearest-three/AABB/LOS rules, Frozen exclusion, duration, deduplication, recursion,
+bounded failure, Aura epochs, teardown and native-service payload semantics. Full
+clean build: **1226 PASS**, no failures/errors/skips. Normal isolated three-mod network
+boot and clean exit0 PASS; nine packaged CustomUI documents and retained asset gates
+PASS. Native hook registration/API inspection is recorded under
+`evidence/stage-11/cohort-u/api`. These are structural/local proofs only. Connected
+native death ordering, status transfer, visual effects and actual Health changes
+remain UNVERIFIED.
+
+Artifact `evidence/stage-11/cohort-u/artifacts/HytaleRPG-0.0.23.jar`:
+`B160EC472928883C07AA8264E58929214C5BF946675F9FEF0E84A419C604741F`.
+Rollback T: `3CBB13F9A8FC79A5D2991AFD4757F18BA2688AD594B67B6440324BE6688C1154`.
+Native HUD/XP/input, live three mods, owner art and Google Drive remain untouched.
+37/40 Stage11 primitives have local cohort evidence; the three trigger controllers
+and component-matrix/legacy-state closure remain. No connected PASS is asserted.
