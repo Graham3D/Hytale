@@ -4615,16 +4615,11 @@
     "travelSpeed": "N/A",
     "lifetime": "Instant",
     "powerCoefficient": "1.00x Healing Power",
-    "canCrit": true,
+    "canCrit": false,
     "statusApplications": null,
     "vfxRecipeId": "rpg.vfx.skill.minor_heal",
     "soundRecipeId": "rpg.sound.skill.minor_heal",
     "linkCompatibilityTags": [
-      "CAN_ACQUIRE_ENEMY_TARGET",
-      "CAN_CRIT",
-      "CAN_KILL",
-      "DAMAGE",
-      "DIRECT_HIT",
       "DIRECT_TARGET",
       "DISCRETE_ACTIVATION",
       "FINITE_RESOURCE_COST",
@@ -4682,7 +4677,9 @@
     "vfxRecipeId": "rpg.vfx.skill.thorns_aura",
     "soundRecipeId": "rpg.sound.skill.thorns_aura",
     "linkCompatibilityTags": [
+      "AFFECTS_CASTER",
       "AURA",
+      "BENEFICIAL_TO_ALLIES",
       "DAMAGE",
       "FINITE_RESOURCE_COST",
       "HAS_AREA_GEOMETRY",
@@ -4930,20 +4927,17 @@
     "travelSpeed": "N/A",
     "lifetime": "Toggle while reservation remains active",
     "powerCoefficient": "\\+25% Mana Regeneration to caster and allied entities currently inside the Aura.",
-    "canCrit": true,
+    "canCrit": false,
     "statusApplications": [
       "Buff is refreshed by Aura presence and removed when an affected ally leaves the radius or the Aura ends."
     ],
     "vfxRecipeId": "rpg.vfx.skill.emanatism",
     "soundRecipeId": "rpg.sound.skill.emanatism",
     "linkCompatibilityTags": [
+      "AFFECTS_CASTER",
       "AURA",
+      "BENEFICIAL_TO_ALLIES",
       "BUFF",
-      "CAN_ACQUIRE_ENEMY_TARGET",
-      "CAN_CRIT",
-      "CAN_KILL",
-      "DAMAGE",
-      "DIRECT_HIT",
       "FINITE_RESOURCE_COST",
       "HAS_AREA_GEOMETRY",
       "HAS_RADIUS",
@@ -4951,8 +4945,7 @@
       "MAGIC",
       "MANA_REGENERATION",
       "MANA_RESERVATION",
-      "MANA_RESOURCE",
-      "SCALABLE_PAYLOAD"
+      "MANA_RESOURCE"
     ],
     "sourceAcquisition": {
       "signatureEnemyId": "UNASSIGNED - distinct signature enemy required",
@@ -5070,7 +5063,9 @@
     "vfxRecipeId": "rpg.vfx.skill.pedanticism",
     "soundRecipeId": "rpg.sound.skill.pedanticism",
     "linkCompatibilityTags": [
+      "AFFECTS_CASTER",
       "AURA",
+      "BENEFICIAL_TO_ALLIES",
       "BUFF",
       "CAN_ACQUIRE_ENEMY_TARGET",
       "DEBUFF",

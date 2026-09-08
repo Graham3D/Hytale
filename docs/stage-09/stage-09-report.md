@@ -2,7 +2,7 @@
 
 ## Current state
 
-**COHORT_D_LOCAL_GATE_COMPLETE / STAGE_IMPLEMENTATION_IN_PROGRESS**.
+**COHORT_E_LOCAL_GATE_COMPLETE / STAGE_IMPLEMENTATION_IN_PROGRESS**.
 Version is `.21` / R028, not deployed. Stage 08 local completion is committed/pushed as `31d4a74`, with 320
 passing retained tests and its final `.20` artifact preserved in
 `evidence/stage-08/cohort-b/`. Connected RPG casting remains UNVERIFIED after the
@@ -527,3 +527,73 @@ build and `.20` rollback. JAR SHA-256:
 The evidence gate explicitly permits only RpgCooldownService's Pedanticism
 work-rate integration among cooldown files; balance coefficients remain protected.
 No live deployment or player migration was performed.
+
+## Cohort E — Selflessness, Conservation, Resonance, Overflow
+
+Exact LP-051–054 closures were read before implementation. This is a four-passive
+cohort, not the complete seven-passive Stage 09 gate. The installed native Health
+read/write, post-filter absorption, effect-controller and teardown paths audited
+in cohorts A–D are reused; no new native API or interaction primitive is assumed.
+
+Typed SupportModifiers are derived from the compiler's canonical passive order
+and included in the plan hash. Compiled-plan schema is now 5; player schema stays
+4. This invalidates stale compiled semantics without inventing a player migration.
+
+- Selflessness removes the owner from beneficial Aura recipients and multiplies
+  eligible ally magnitude by 1.35. Hostile membership is not removed. The existing
+  catalog lacked BeneficialToAllies/AffectsCaster on Emanatism, Thorns and
+  Pedanticism; those authored capabilities are now explicit. Managuard and the
+  hostile-only Auras reject it. The shared compatibility service also requires an
+  actual radius, not merely a misleading self-barrier tag.
+- Conservation multiplies reservation/upkeep by .80 and Aura magnitude by .90.
+  It does not alter one-time cost. Managuard consequently reserves 40 of a 100
+  maximum at its default 50% allocation and has 36 capacity before other modifiers;
+  it does not pretend to have reserved the original 50. Allocation changes and
+  recharge use the same actual-capacity calculation and preserve saved deficit.
+- Resonance multiplies radius by 1.40 and ongoing commitment by 1.15 before
+  reservation/initial-upkeep affordability checks. The query, presentation radius
+  and hit-time revalidation share the modified radius. Combined Conservation and
+  Resonance cost .92 of baseline commitment, not a discount to the upfront cost.
+- Overflow observes the final requested healing and a confirmed completed Health
+  write. Overheal is requested minus missing HP, not requested minus a failed
+  native write. It enters the existing bounded finite-effect/barrier ledger for
+  six seconds; the shared native post-filter absorber consumes it. Direct Minor
+  Heal and Life Drain use this post-write hook. The latter has no SupportProfile,
+  so native recipient validation no longer dereferences that nullable component.
+  This does not claim the still-missing Execution Strike executor is implemented.
+
+Overflow is one capped pool per recipient/world, including multiple casters and
+healing skills: refresh the stronger remaining result within 20% of current
+maximum Health, never add copies. A weaker refresh retains the stronger source's
+attribution and renews expiry. This source ownership also governs teardown. The
+registry retains the 4096-global/256-owner/32-target caps and atomic admission;
+it grants neither Spirit Shield's redirect nor another healing/mastery award.
+Its tint reuses the approved shield fallback. Post-heal failure records
+NATIVE_SUPPORT_REJECTED without rolling back the already-observed healing or
+refunding the cast. BARRIER_CREATED records actual healing/overheal, remaining
+barrier, cap, duration, winning source IDs and refreshing root ID.
+
+Minor Heal and Emanatism also had legacy direct-damage/crit/kill tags. Those were
+removed to enforce their actual payload contracts. Emanatism is not a Potency
+damage/heal/barrier payload. No canonical skill/passive count, resource formula,
+native HUD control, XP asset, Stage 04/05 profile or projectile carrier changed.
+
+Validation: 25 new deterministic tests cover positive/negative compatibility,
+self removal, membership loss, actual reserve/resize/deficit, commitment-first
+affordability, unchanged upfront cost, modifier composition, post-write overheal,
+cap/expiry, stronger cross-source refresh, no redirect, bounded admission and
+cleanup. An initial test accidentally named a nonexistent `precise` passive and
+was corrected to the real incompatible Fork record. A focused Gradle invocation
+also applied a Stage09 filter to the CanvasUI subproject (no matching tests);
+the corrected root `:test` invocation and subsequent full build ran successfully.
+
+Full retained build: **476 tests**, zero failures/errors/skips. Normal isolated
+three-mod network boot, all 51 zero-native-cost trigger assets, packaged UI audit
+and clean server exit 0 passed. Archive: `evidence/stage-09/cohort-e/`, with `.20`
+rollback and its schema-3 player-directory backup requirement. JAR SHA-256:
+`229690A672B39A100CEB57B6106681E8CBECAAA51B5D3AA9469346725FBE1F9B`.
+These are local engineering results only. Connected native Health/absorption,
+Aura membership, rendering and R024 input remain UNVERIFIED. Flame Weapon and
+the Pedanticism native-enemy branch retain their exact prior capability gates.
+No live mod files, control journal or player save were modified. Triage, Shared
+Aegis and Reflective Ward remain for cohort F before the Stage 09 local closure.

@@ -48,6 +48,25 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         });
     }
     public SupportRuntime runtime(){return runtime;}
+    /** Shared post-write hook for direct heals and drain healing; no second Health writer or mastery grant. */
+    public void healingResolved(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> target,
+                                SkillExecutionContext context,double requested,double before,double after,double maximum){
+        if(!context.compiledPlan().supportModifiers().overflow())return;
+        var id=store.getComponent(target,UUIDComponent.getComponentType());if(id==null)return;
+        try{
+            var created=runtime.finite().healingResolved(context,id.getUuid(),requested,before,after,maximum,System.nanoTime()/1e9);
+            if(created.isEmpty())return;
+            if(buffer!=null)buffer.ensureComponent(target,SupportEffectProjection.getComponentType());
+            else store.ensureComponent(target,SupportEffectProjection.getComponentType());
+            traceFinite(created.get(),RpgTraceEventType.BARRIER_CREATED,Map.of("actualOverheal",Math.max(0,requested-(maximum-before)),
+                    "actualHealing",Math.max(0,after-before),"barrierRemaining",created.get().shieldRemaining(),"cap",maximum*.2,
+                    "durationSeconds",6,"triggerRootCastId",context.rootCastId(),"masteryCredit",false));
+        }catch(RuntimeException failure){
+            trace.emit(context.request().actorId(),RpgTraceEventType.NATIVE_SUPPORT_REJECTED,
+                    new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),
+                    Map.of("boundary","OVERFLOW_POST_HEAL_"+failure.getClass().getSimpleName(),"detail",String.valueOf(failure.getMessage()),"healRolledBack",false));
+        }
+    }
     RpgCombatKernel kernel(){return kernel;}
     HytaleBossBarTracker bosses(){return bosses;}
     void traceFinite(FiniteSupportEffects.Effect effect,RpgTraceEventType event,Map<String,?> details){
@@ -81,7 +100,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         var id=store.getComponent(actor,PlayerRef.getComponentType()).getUuid();
         try{
             NativeManaReservationProjection.maximumMultiplier(store.getComponent(actor,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getMana()));
-            String result=runtime.preflight(id,profile.skillId(),profile.support(),port(store,actor));
+            String result=runtime.preflight(id,profile.skillId(),profile.support(),plan.supportModifiers(),port(store,actor));
             if(!result.equals("PASS"))return SkillExecutionPort.Validation.reject(result);
             if(profile.support().allyTarget())selectHealTarget(store,actor,profile.support().range());
             if(profile.support().hostileTarget())SupportNativeEffects.requireTarget(store,actor,selectHostileTarget(store,actor,profile.support().range()),profile.support(),bosses);
@@ -89,8 +108,8 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 SupportNativeEffects.requireAssets();
                 for(var ref:allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor(),true))SupportNativeEffects.requireRallyRecipient(store,ref);
             }
-            if(profile.support().allyAura())allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor(),true);
-            if(profile.support().hostileAura())hostileRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor());
+            if(profile.support().allyAura())allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor()*plan.supportModifiers().radiusFactor(),true);
+            if(profile.support().hostileAura())hostileRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor()*plan.supportModifiers().radiusFactor());
             return SkillExecutionPort.Validation.pass();
         }catch(RuntimeException error){return SkillExecutionPort.Validation.reject("SUPPORT_PREFLIGHT_"+error.getMessage());}
     }
@@ -151,7 +170,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 .map(ref->store.getComponent(ref,UUIDComponent.getComponentType()).getUuid()).toList();}
         public boolean upkeep(SkillExecutionContext context,double seconds,int quantum){
             var cost=kernel.resources().evaluateUpkeep(new com.inigmasgames.hytalerpg.combat.resource.ResourceCost(
-                    com.inigmasgames.hytalerpg.combat.resource.ResourceType.MANA,context.profile().support().upkeepPerSecond()*seconds),context.compiledPlan().kernelModifiers());
+                    com.inigmasgames.hytalerpg.combat.resource.ResourceType.MANA,context.profile().support().upkeepPerSecond()*seconds*context.compiledPlan().supportModifiers().commitmentFactor()),context.compiledPlan().kernelModifiers());
             var resources=resources();double before=resources.current(com.inigmasgames.hytalerpg.combat.resource.ResourceType.MANA);
             if(!kernel.resources().canAfford(player.getUuid(),cost,resources))return false;
             var token=kernel.resources().reserveCost(player.getUuid(),cost,resources);
@@ -186,6 +205,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             var stats=store.getComponent(ref,EntityStatMap.getComponentType());int index=DefaultEntityStatTypes.getHealth();
             double before=stats.get(index).get();stats.setStatValue(index,(float)Math.min(stats.get(index).getMax(),before+requested));
             double after=stats.get(index).get();
+            healingResolved(store,buffer,ref,context,requested,before,after,stats.get(index).getMax());
             trace(context,"HEAL_APPLIED",Map.of("target",target.toString(),"requested",requested,"healthBefore",before,"healthAfter",after,"actualHealing",Math.max(0,after-before)));
             return Math.max(0,after-before);
         }

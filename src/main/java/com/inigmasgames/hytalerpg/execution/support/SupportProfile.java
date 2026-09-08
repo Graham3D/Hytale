@@ -11,7 +11,7 @@ public record SupportProfile(Kind kind,double range,double radius,double coeffic
         this(kind,range,radius,coefficient,reservationFraction,toggleLockSeconds,0,0);
     }
     public enum Kind { HEAL, MANAGUARD, MANA_REGEN, TAUNT, WEAKEN, MARK, FEAR, RALLY, HOWL, REFLECT, SHIELD, IMBUE,
-        THORNS, CHILL_AURA, COOLDOWN_AURA, DAMAGE_AURA }
+        THORNS, CHILL_AURA, COOLDOWN_AURA, DAMAGE_AURA, OVERFLOW }
     public SupportProfile {
         if(kind==null)throw new IllegalArgumentException("Support kind missing");
         for(double value:new double[]{range,radius,coefficient,reservationFraction,toggleLockSeconds,durationSeconds,movementIncreased,upkeepPerSecond,damageInterval,chillInterval})

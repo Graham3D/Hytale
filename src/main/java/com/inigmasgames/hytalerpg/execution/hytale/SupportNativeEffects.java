@@ -98,7 +98,7 @@ public final class SupportNativeEffects {
                     return HytaleSupportSystem.alive(store,owner)&&HytaleSupportSystem.inRange(store,owner,ref,64);}).findFirst();
         String desired=mark.map(e->markTint(e.key().owner())).orElseGet(()->{
             if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.WEAKEN))return "RPG_Support_Hex_Tint";
-            if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.SHIELD&&e.shieldRemaining()>0))return "RPG_Support_Shield_Tint";
+            if(list.stream().anyMatch(e->FiniteSupportEffects.isShield(e)&&e.shieldRemaining()>0))return "RPG_Support_Shield_Tint";
             if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.REFLECT))return "RPG_Support_Reflect_Tint";
             if(list.stream().anyMatch(e->e.kind()==SupportProfile.Kind.HOWL))return "RPG_Support_Howl_Tint";
             return "";
@@ -150,7 +150,8 @@ public final class SupportNativeEffects {
             for(var effect:effects.forTarget(world,id,now)){
                 var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
                 boolean invalid=!HytaleSupportSystem.alive(store,owner);
-                if(!invalid)invalid=!effect.context().profile().support().hostileTarget()?!HytaleSupportSystem.eligibleAlly(store,owner,ref):
+                boolean hostile=effect.context().profile().support()!=null&&effect.context().profile().support().hostileTarget();
+                if(!invalid)invalid=!hostile?!HytaleSupportSystem.eligibleAlly(store,owner,ref):
                         control(store,ref,support.bosses()).protectedEntity()||!HytaleAreaQueries.hostile(store,ref,owner);
                 if(invalid)effects.remove(effect.key());
             }

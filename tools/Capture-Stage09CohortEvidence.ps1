@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c','d')][string]$Cohort='a')
+param([ValidateSet('a','b','c','d','e')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $stage9Root=(Resolve-Path "$PSScriptRoot\..").Path
 $stage9Evidence=Join-Path $stage9Root "evidence\stage-09\cohort-$Cohort"
@@ -19,7 +19,7 @@ try {
         $stage9Results += @{name=$stage9Suite.name;tests=[int]$stage9Suite.tests;failures=[int]$stage9Suite.failures;
             errors=[int]$stage9Suite.errors;skipped=[int]$stage9Suite.skipped;seconds=$stage9Suite.time;cases=@($stage9Suite.testcase | ForEach-Object {$_.name})}
     }
-    $stage9Minimum=switch($Cohort){'a'{374};'b'{402};'c'{428};'d'{451}}
+    $stage9Minimum=switch($Cohort){'a'{374};'b'{402};'c'{428};'d'{451};'e'{476}}
     if($stage9Count -lt $stage9Minimum -or $stage9Failures -or $stage9Errors -or $stage9Skipped){throw 'Incomplete or failing retained regression suite.'}
     & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $stage9Jar
     $stage9ProtectedPaths=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI','canvas-ui/src',
@@ -31,7 +31,7 @@ try {
     if($stage9Protected.Count){throw "Protected HUD/resource/profile changes: $stage9Protected"}
     $stage9CooldownChanges=@(& git diff --name-only 31d4a74 -- 'src/main/java/com/inigmasgames/hytalerpg/combat/cooldown')
     $stage9AllowedCooldown='src/main/java/com/inigmasgames/hytalerpg/combat/cooldown/RpgCooldownService.java'
-    if($stage9CooldownChanges | Where-Object {$Cohort -ne 'd' -or $_ -ne $stage9AllowedCooldown}){throw 'Unapproved cooldown changes outside the Pedanticism work-rate integration.'}
+    if($stage9CooldownChanges | Where-Object {$Cohort -notin @('d','e') -or $_ -ne $stage9AllowedCooldown}){throw 'Unapproved cooldown changes outside the Pedanticism work-rate integration.'}
     $stage9Smoke=Get-Content -Raw -LiteralPath (Join-Path $stage9Evidence 'server-smoke-summary.json') | ConvertFrom-Json
     $stage9Hash=(Get-FileHash -LiteralPath $stage9Jar).Hash
     if(-not $stage9Smoke.networkBooted -or -not $stage9Smoke.cleanShutdown -or -not $stage9Smoke.supportConfigured -or $stage9Smoke.failure -or
@@ -39,7 +39,7 @@ try {
     $stage9Zip=[IO.Compression.ZipFile]::OpenRead($stage9Jar)
     try {
         $stage9AbilityAssets=@($stage9Zip.Entries | Where-Object {$_.FullName -like 'Server/Item/Items/RPG/Abilities/*.json'})
-        $stage9Triggers=switch($Cohort){'a'{38};'b'{43};'c'{47};'d'{51}}
+        $stage9Triggers=switch($Cohort){'a'{38};'b'{43};'c'{47};'d'{51};'e'{51}}
         if($stage9AbilityAssets.Count -ne $stage9Triggers){throw 'Unexpected trigger inventory.'}
         foreach($stage9Entry in $stage9AbilityAssets) {
             $stage9Reader=[IO.StreamReader]::new($stage9Entry.Open())
@@ -56,7 +56,9 @@ try {
         branch=(& git branch --show-current).Trim();sourceHead=(& git rev-parse HEAD).Trim();worktreeDirty=[bool](& git status --porcelain)
         stageStatus='IMPLEMENTATION_IN_PROGRESS';completeStageGate=$false;gateScope='LOCAL_ENGINEERING_ONLY'
         cohortSkills=$(switch($Cohort){'a'{@('minor_heal','managuard','emanatism')};'b'{@('taunt','weakening_hex','hunter_s_mark','intimidate','battle_cry')};'c'{@('pack_howl','reflective_hide','flame_weapon','spirit_shield')};'d'{@('thorns_aura','chilling_aura','pedanticism','reaping_storm')}})
-        capabilityGates=$(if($Cohort -in @('c','d')){@{flame_weapon='NATIVE_ROOT_WEAPON_CONTACT_ID_UNAVAILABLE; no native hit callback is wired; rejects before cost/cooldown';pedanticismEnemy=$(if($Cohort -eq 'd'){'NATIVE_COOLDOWN_REMAINING_WORK_NOT_EXPOSED; ally RPG rate implemented, enemy native branch not modified'}else{'NOT_IN_COHORT'})}}else{@{}})
+        cohortPassives=$(if($Cohort -eq 'e'){@('selflessness','conservation','resonance','overflow')}else{@()})
+        compiledPlanSchema=$(if($Cohort -eq 'e'){5}else{4})
+        capabilityGates=$(if($Cohort -in @('c','d','e')){@{flame_weapon='NATIVE_ROOT_WEAPON_CONTACT_ID_UNAVAILABLE; no native hit callback is wired; rejects before cost/cooldown';pedanticismEnemy=$(if($Cohort -in @('d','e')){'NATIVE_COOLDOWN_REMAINING_WORK_NOT_EXPOSED; ally RPG rate implemented, enemy native branch not modified'}else{'NOT_IN_COHORT'})}}else{@{}})
         tests=$stage9Count;failures=$stage9Failures;errors=$stage9Errors;skipped=$stage9Skipped
         connectedVerification='UNVERIFIED';nativeCastingFixed=$false;nativeSupportBehaviorVerified=$false;liveDeploymentPerformed=$false
         protectedPathsChanged=$stage9Protected;zeroNativeCostTriggerAssets=$stage9AbilityAssets.Count

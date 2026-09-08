@@ -168,7 +168,7 @@ public final class SkillExecutionService {
         ResourceCost declared = new ResourceCost(ResourceType.valueOf(profile.resourceType()), profile.resourceCost());
         ResourceCost cost = kernel.resources().evaluate(declared, plan.kernelModifiers());
         if(profile.support()!=null&&profile.support().upkeepPerSecond()>0){
-            var first=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,profile.support().upkeepPerSecond()*.25),plan.kernelModifiers());
+            var first=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,profile.support().upkeepPerSecond()*.25*plan.supportModifiers().commitmentFactor()),plan.kernelModifiers());
             if(!kernel.resources().canAfford(request.actorId(),new ResourceCost(ResourceType.MANA,cost.amount()+first.amount()),port.resources()))
                 throw new Rejection("AURA_INITIAL_UPKEEP_UNAFFORDABLE",retainedInstance);
         }

@@ -147,7 +147,7 @@ class Stage09SupportRuntimeTest {
         public boolean actorAliveAndUsable(){return true;}
         public Equipment equipment(){return new Equipment(new Item("fixture","STAFF",new ItemPowerDescriptor("fixture",Set.of("RPG_WEAPON_MAGIC"),20d,20d)),null);}
         public NativeResourcePort resources(){return this;}
-        public Validation familyPrerequisites(Stage04SkillProfile p,CompiledSkillPlan plan){var v=runtime.preflight(actor,p.skillId(),p.support(),this);return v.equals("PASS")?Validation.pass():Validation.reject(v);}
+        public Validation familyPrerequisites(Stage04SkillProfile p,CompiledSkillPlan plan){var v=runtime.preflight(actor,p.skillId(),p.support(),plan.supportModifiers(),this);return v.equals("PASS")?Validation.pass():Validation.reject(v);}
         public CommittedTarget captureTarget(Stage04SkillProfile p,CompiledSkillPlan plan,SkillExecutionRequest request){return new CommittedTarget(world,Vec3.ZERO,Vec3.ZERO,Vec3.FORWARD,actor);}
         public Validation validateRelease(SkillExecutionContext context){return valid.equals("PASS")?Validation.pass():Validation.reject(valid);}
         public SkillExecutionResult executeSupport(SkillExecutionContext value){context=value;return runtime.execute(value,now,this);}
@@ -161,7 +161,8 @@ class Stage09SupportRuntimeTest {
         public void setReservedMana(double value){reserved=value;mana=Math.min(mana,100-reserved);}
         public String valid(SkillExecutionContext c){return valid;}
         public List<UUID> allies(SkillExecutionContext c,double radius){lastRadius=radius;return List.copyOf(members);}
-        public double heal(SkillExecutionContext c,UUID target,double amount){assertTrue(members.contains(target));double before=health;health=Math.min(100,health+amount);return health-before;}
+        public double heal(SkillExecutionContext c,UUID target,double amount){assertTrue(members.contains(target));double before=health;health=Math.min(100,health+amount);
+            runtime.finite().healingResolved(c,target,amount,before,health,100,now);return health-before;}
         public void present(SkillExecutionContext c,double radius,double seconds){}
         public void trace(SkillExecutionContext c,String event,Map<String,?> details){events.add(event);}
     }

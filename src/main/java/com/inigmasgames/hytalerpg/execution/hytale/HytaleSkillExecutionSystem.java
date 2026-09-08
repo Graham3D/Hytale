@@ -134,7 +134,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         for(var id:targets){
             var ref=store.getExternalData().getRefFromUUID(id);var target=port.candidate(ref);
             if(target==null||target.protectedTarget()||!HytaleAreaQueries.hostile(store,ref,actor)
-                    ||!HytaleSupportSystem.auraInRange(store,actor,ref,context.profile().support().radius()*context.compiledPlan().executionModifiers().radiusFactor()))continue;
+                    ||!HytaleSupportSystem.auraInRange(store,actor,ref,com.inigmasgames.hytalerpg.execution.support.SupportRuntime.radius(context)))continue;
             if(chill){
                 if(buffer==null||store.getComponent(ref,EffectControllerComponent.getComponentType())==null)throw new IllegalStateException("AURA_NATIVE_STATUS_ADAPTER_UNAVAILABLE");
                 buffer.ensureComponent(ref,AreaStatusProjection.getComponentType());
@@ -145,7 +145,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }else{
                 var cause=context.profile().support().element().equals("COLD")?DamageCause.getAssetMap().getAsset("Ice"):
                         connectionCause(context.profile().support().element());if(cause==null)throw new IllegalStateException("AURA_NATIVE_CAUSE_MISSING");
-                var outcome=port.damage(context,target,tick,context.profile().support().coefficient(),0,cause,true,
+                var outcome=port.damage(context,target,tick,context.profile().support().coefficient()*context.compiledPlan().supportModifiers().effectFactor(),0,cause,true,
                         context.skillInstanceId()+"/aura/"+tick,false);
                 emit(context,RpgTraceEventType.AURA_PULSE,Map.of("targetId",id,"tick",tick,"actualHealthLoss",outcome.actualHealthLoss(),"cancelled",outcome.cancelled()));
             }
@@ -595,6 +595,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             context.compiledPlan().kernelModifiers().scalablePayloadIncreased());
                     double before=value.get(),requested=Math.min(value.getMax(),before+healing.requestedHealing());
                     stats.setStatValue(DefaultEntityStatTypes.getHealth(),(float)requested);double after=value.get();
+                    if(support!=null)support.healingResolved(store,buffer,actor,context,healing.requestedHealing(),before,after,value.getMax());
                     emit(context,RpgTraceEventType.HEAL_APPLIED,Map.of("tick",tick,"sourceActualHealthLoss",actualHealthLost,
                             "baseHealing",healing.baseHealing(),"wisdomMultiplier",healing.wisdomMultiplier(),"healingIncreased",healing.healingIncreased(),
                             "requestedHealing",healing.requestedHealing(),"healthBefore",before,"healthAfter",after,"actualHealing",Math.max(0,after-before)));

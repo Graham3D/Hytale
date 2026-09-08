@@ -27,7 +27,7 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 4;
+    public static final int CURRENT_SCHEMA = 5;
     public CompiledSkillPlan {
         finalTags = Set.copyOf(finalTags);
         passiveOrder = List.copyOf(passiveOrder);
@@ -67,6 +67,7 @@ public record CompiledSkillPlan(
     /** Typed release/geometry contract derived from the compiler's validated, deduplicated passive order. */
     public ExecutionModifiers executionModifiers() { return ExecutionModifiers.from(passiveOrder); }
     public ProjectileModifiers projectileModifiers() { return ProjectileModifiers.from(passiveOrder); }
+    public SupportModifiers supportModifiers(){return SupportModifiers.from(passiveOrder);}
     public record ProjectileModifiers(int pierce,int fork,int chain,int returning,int ricochet,boolean volley,boolean barrage,boolean homing,
             boolean accelerant,boolean ballistics,boolean shrapnel,boolean splinterburst) {
         public static ProjectileModifiers from(List<PassiveId> order) {

@@ -73,6 +73,8 @@ public final class CompatibilityService {
         // The source contract has gates whose prose is richer than its token clauses. These are stable,
         // shared rules rather than command-specific exceptions.
         String id = passive.id().value();
+        if(id.equals("selflessness")&&!actual.contains("HAS_RADIUS"))return CompatibilityResult.rejected(ValidationCode.MISSING_CAPABILITY,
+                "Selflessness requires a beneficial ally-radius Aura, not a self-only shield.",Set.of("HAS_RADIUS"),actual);
         if(id.equals("ballistics")&&actual.contains("BALLISTIC_GRAVITY"))
             return CompatibilityResult.rejected(ValidationCode.UNSUPPORTED_BUILD,"Ballistics requires an implemented retargeted gravity solution",
                     Set.of("RETARGETED_BALLISTIC_SOLUTION"),actual);

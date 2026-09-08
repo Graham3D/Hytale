@@ -112,7 +112,7 @@ class Stage09AuraRuntimeTest {
         assertFalse(methods.contains("getRemainingCooldown"));assertFalse(methods.contains("getChargeTimer"));
     }
     private static RpgCooldownService cooldowns(long[] now){return new RpgCooldownService(CombatBalanceProfile.loadCanonical(),()->now[0]);}
-    static final class Harness extends Stage09SupportRuntimeTest.Harness {
+    static class Harness extends Stage09SupportRuntimeTest.Harness {
         final List<UUID> hostiles=new ArrayList<>(List.of(UUID.randomUUID()));
         final List<Integer> damagePulses=new ArrayList<>(),chillPulses=new ArrayList<>();final List<Double> slices=new ArrayList<>();boolean failUpkeep;
         Harness(String skill){super(skill);}
@@ -120,7 +120,7 @@ class Stage09AuraRuntimeTest {
         @Override public List<UUID> enemies(SkillExecutionContext c,double radius){return List.copyOf(hostiles);}
         @Override public boolean upkeep(SkillExecutionContext c,double seconds,int quantum){
             if(failUpkeep)throw new IllegalStateException("native failure");
-            var cost=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,c.profile().support().upkeepPerSecond()*seconds),c.compiledPlan().kernelModifiers());
+            var cost=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,c.profile().support().upkeepPerSecond()*seconds*c.compiledPlan().supportModifiers().commitmentFactor()),c.compiledPlan().kernelModifiers());
             if(!kernel.resources().canAfford(actor,cost,this))return false;var token=kernel.resources().reserveCost(actor,cost,this);
             try{kernel.resources().commitCost(token,this);slices.add(seconds);return true;}finally{kernel.resources().finish(token);}
         }

@@ -148,6 +148,7 @@ public final class LinkCompiler {
                 + "|" + resource + "|" + power + "|" + triggers + "|" + spawnCost
                 + "|" + scalablePayloadIncreased + "|" + resourceCostMultiplier + "|" + cooldownRecoveryBonus
                 + "|" + CompiledSkillPlan.ExecutionModifiers.from(order) + "|" + CompiledSkillPlan.ProjectileModifiers.from(order)
+                + "|" + com.inigmasgames.hytalerpg.domain.SupportModifiers.from(order)
                 + "|planSchema=" + CompiledSkillPlan.CURRENT_SCHEMA;
         var kernelModifiers = new CompiledSkillPlan.KernelModifiers(scalablePayloadIncreased,
                 resourceCostMultiplier, cooldownRecoveryBonus);

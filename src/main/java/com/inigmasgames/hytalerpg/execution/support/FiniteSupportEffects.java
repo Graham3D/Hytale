@@ -13,6 +13,32 @@ public final class FiniteSupportEffects {
         Effect remaining(double value){return new Effect(key,kind,magnitude,movement,starts,ends,rootCastId,skillInstanceId,correlationId,context,value);}
     }
     private final Map<Key,Effect> effects=new LinkedHashMap<>();
+    /** Observe the completed native heal, never equate a rejected write with overheal.
+     * Overflow is one capped recipient pool, including casts from different owners/skills. */
+    public synchronized Optional<Effect> healingResolved(SkillExecutionContext context,UUID target,double requested,
+                                                          double before,double after,double maximum,double now){
+        if(!context.compiledPlan().supportModifiers().overflow())return Optional.empty();
+        for(double value:new double[]{requested,before,after,maximum,now})
+            if(!Double.isFinite(value)||value<0)throw new IllegalArgumentException("INVALID_HEAL_OBSERVATION");
+        if(maximum<=0||before>maximum||after>maximum||Math.abs(after-Math.min(maximum,before+requested))>1e-4)
+            throw new IllegalStateException("HEAL_WRITE_NOT_CONFIRMED");
+        double overheal=Math.max(0,requested-(maximum-before));
+        if(overheal<=1e-9)return Optional.empty();
+        expire(now);UUID world=context.target().worldId();
+        double capacity=Math.min(maximum*.2,overheal);
+        var previous=forTarget(world,target,now).stream().filter(e->e.kind==SupportProfile.Kind.OVERFLOW)
+                .max(Comparator.comparingDouble(Effect::shieldRemaining).thenComparing(e->e.key.owner.toString()));
+        var ownerContext=previous.isPresent()&&previous.get().shieldRemaining>capacity?previous.get().context:context;
+        capacity=Math.min(maximum*.2,Math.max(capacity,previous.map(Effect::shieldRemaining).orElse(0d)));
+        var key=new Key(world,ownerContext.request().actorId(),ownerContext.profile().skillId(),Objects.requireNonNull(target));
+        var effect=new Effect(key,SupportProfile.Kind.OVERFLOW,capacity,0,now,now+6,ownerContext.rootCastId(),ownerContext.skillInstanceId(),
+                ownerContext.request().correlationId(),ownerContext,capacity);
+        var next=new LinkedHashMap<>(effects);
+        next.values().removeIf(e->e.key.world.equals(world)&&e.key.target.equals(target)&&e.kind==SupportProfile.Kind.OVERFLOW);
+        next.put(key,effect);requireBudget(next,key.owner,List.of(target));
+        effects.clear();effects.putAll(next);return Optional.of(effect);
+    }
+    public static boolean isShield(Effect e){return e.kind==SupportProfile.Kind.SHIELD||e.kind==SupportProfile.Kind.OVERFLOW;}
     public synchronized void apply(SkillExecutionContext context,List<UUID> targets,double seconds,double now){
         var next=prepare(context,targets,seconds,now);effects.clear();effects.putAll(next);
     }
@@ -48,11 +74,14 @@ public final class FiniteSupportEffects {
             next.put(key,new Effect(key,p.kind(),magnitude,p.movementIncreased(),now,now+seconds,
                     context.rootCastId(),context.skillInstanceId(),context.request().correlationId(),context,0));
         }
+        requireBudget(next,actor,targets);
+        return next;
+    }
+    private static void requireBudget(Map<Key,Effect> next,UUID actor,List<UUID> targets){
         if(next.size()>MAX_EFFECTS||next.values().stream().filter(e->e.key.owner.equals(actor)).count()>MAX_OWNER_EFFECTS)
             throw new IllegalStateException("FINITE_SUPPORT_OWNER_OR_GLOBAL_BUDGET");
         for(UUID target:targets)if(next.values().stream().filter(e->e.key.target.equals(target)).count()>MAX_TARGET_EFFECTS)
             throw new IllegalStateException("FINITE_SUPPORT_TARGET_BUDGET");
-        return next;
     }
     public synchronized List<Effect> forTarget(UUID world,UUID target,double now){
         expire(now);return effects.values().stream().filter(e->e.key.world.equals(world)&&e.key.target.equals(target)).toList();
@@ -110,11 +139,11 @@ public final class FiniteSupportEffects {
     /** Already-mitigated incoming damage: one redirect, then ordered bounded absorption; no direct Health writes. */
     public synchronized ShieldHit shieldHit(UUID world,UUID target,double incoming,boolean mayRedirect,double now,Transfer transfer){
         if(!Double.isFinite(incoming)||incoming<0)throw new IllegalArgumentException("Invalid incoming damage");
-        var shields=forTarget(world,target,now).stream().filter(e->e.kind==SupportProfile.Kind.SHIELD&&e.shieldRemaining>0)
+        var shields=forTarget(world,target,now).stream().filter(e->isShield(e)&&e.shieldRemaining>0)
                 .sorted(Comparator.comparingDouble(Effect::starts).thenComparing(e->e.key.owner.toString())).toList();
         double remaining=incoming,redirected=0,absorbed=0;var allocations=new ArrayList<Absorption>();
         if(mayRedirect){
-            var chosen=shields.stream().filter(e->!e.key.owner.equals(target)).findFirst();
+            var chosen=shields.stream().filter(e->e.kind==SupportProfile.Kind.SHIELD&&!e.key.owner.equals(target)).findFirst();
             if(chosen.isPresent()&&transfer.transfer(chosen.get(),incoming*.2)){redirected=incoming*.2;remaining-=redirected;}
         }
         for(var shield:shields){

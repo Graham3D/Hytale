@@ -70,7 +70,7 @@ public final class SupportDamageSystems {
             var id=chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid();var ref=chunk.getReferenceTo(index);
             double now=System.nanoTime()/1e9;var world=SupportNativeEffects.world(store);
             // Validate again here: membership/owner teardown ticks are not guaranteed to precede an incoming hit.
-            for(var effect:support.runtime().finite().forTarget(world,id,now))if(effect.kind()==com.inigmasgames.hytalerpg.execution.support.SupportProfile.Kind.SHIELD){
+            for(var effect:support.runtime().finite().forTarget(world,id,now))if(com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects.isShield(effect)){
                 var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
                 if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,ref))support.runtime().finite().remove(effect.key());
             }
@@ -90,7 +90,7 @@ public final class SupportDamageSystems {
             damage.setAmount((float)hit.remainder());
             for(var absorption:hit.allocations())support.traceFinite(absorption.effect(),RpgTraceEventType.BARRIER_ABSORBED,
                     Map.of("absorbed",absorption.amount(),"shieldRemaining",absorption.remaining(),"nativeAmountAfterShield",hit.remainder(),
-                            "redirected",hit.redirected(),"authority","SPIRIT_SHIELD_POST_FILTER"));
+                            "redirected",hit.redirected(),"authority",absorption.effect().kind().name()+"_POST_FILTER"));
         }
     }
     /** Captures actual pre-Apply HP after all absorption, including native non-RPG incoming damage. */
@@ -127,7 +127,7 @@ public final class SupportDamageSystems {
                 if(e.context().profile().support().aura()){
                     var owner=store.getExternalData().getRefFromUUID(e.key().owner());
                     if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,recipient)
-                            ||!HytaleSupportSystem.auraInRange(store,owner,recipient,e.context().profile().support().radius()*e.context().compiledPlan().executionModifiers().radiusFactor())
+                            ||!HytaleSupportSystem.auraInRange(store,owner,recipient,com.inigmasgames.hytalerpg.execution.support.SupportRuntime.radius(e.context()))
                             ||!support.runtime().claimAuraSecondary(e.context(),now))continue;
                 }
                 double amount=(before-after)*e.magnitude();
