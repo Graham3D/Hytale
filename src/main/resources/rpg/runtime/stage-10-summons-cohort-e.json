@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {"skillId":"simulacrum","family":"SUMMON","allowedMainHandKinds":["WAND","SPELLBOOK"],"requiredOffHandKinds":[],"secondaryFamilies":[],
+      "resourceType":"MANA","resourceCost":20,"cooldownSeconds":18,"windupSeconds":0,
+      "basePowerSource":"NONE","innateBasePower":0,"scaling":"MAGIC",
+      "summon":{"roleId":"RPG_Summon_Decoy","element":"ARCANE","range":4,"count":1,"healthFactor":0.25,"coefficient":0,"lifetime":8,"attackInterval":1,"leash":24,"decoy":true}}
+  ]
+}

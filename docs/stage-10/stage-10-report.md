@@ -433,3 +433,98 @@ behavior, native minion disappearance without loot, delayed corpse timing and
 rejoin/restart observations. The domain's once-only terminal tests do not prove
 the native event arrived. Unclassified corpse roles still reject; the source
 coverage limit remains explicit. Simulacrum, Dominate and Bone Cage remain next.
+
+## Cohort E — Simulacrum and native control audit
+
+This cohort deliberately contains only Simulacrum. Dominate remains the next
+independent native integration boundary, rather than being combined with a
+decoy prototype and described as completed conversion.
+
+### Native evidence and scope
+
+`tools/Capture-Stage10ControlAudit.ps1` archives installed bytecode for
+WorldSupport, MarkedEntitySupport, attitude providers, Blackboard, native role
+changes, flock membership and EntitySavingSystem, plus the shipped Mannequin
+model and Empty_Role. Sources are under `evidence/stage-10/cohort-e/api`.
+
+WorldSupport's direct attitude override writes a timed entry to an optionally
+allocated memory map. Its public API exposes the current override, but not the
+entry's remaining duration or an exact remove/restore operation. Using it as a
+general reversible conversion would overwrite native encounter state. Changing
+the whole NPC role would also replace execution support/AI state. Neither is
+used for the decoy.
+
+The audit found a supported alternative: native AttitudeView accepts a
+prioritised IAttitudeProvider. The new provider returns Hostile only for an
+active, explicitly recorded enemy-to-decoy request. It returns null otherwise,
+leaving the existing native providers and original allegiance untouched. Native
+explicit overrides have priority zero; this provider uses priority ten and does
+not supersede them. Native WorldSupport clears its attitude cache every .1s;
+this is a bytecode observation, not measured connected reaction latency.
+Registration is once per world view with weak-key tracking. Request storage is
+bounded at 1024, expires with the underlying summon lease, and is cleaned when
+the decoy terminates or is removed. No per-tick provider registrations occur.
+
+The same audit confirms that the installed periodic EntitySavingSystem query
+excludes NonSerialized entities. This strengthens the earlier structural
+serialization evidence; an actual connected crash/restart is still required.
+
+### Behavior and exclusions
+
+Simulacrum requires Wand/Spellbook, costs 20 Mana, starts the authored 18-second
+cooldown through the existing stat-adjusted cooldown authority, places within
+four metres, lasts eight seconds, and has 25% captured maximum Health. It has
+zero damage and never claims an attack or invokes the damage adapter. The shared
+registry enforces one pending-or-active decoy per owner, including at delayed
+release. A second decoy rejects without replacing the existing one or charging
+again when admission fails. Combat summons do not occupy this singleton slot;
+all actors still count toward the existing total caps.
+
+The role uses the exact installed human-shaped Mannequin appearance and an empty
+instruction, following the specification's labelled-template fallback. Its
+localized name is `Simulacrum (decoy template)`. It does not copy the player skin,
+inventory, equipment, quest state, permissions or skills. It has no Seek,
+attack, reward, interaction or flock instruction. Native summon cleanup, native
+Health projection, nonserialization and no-drop defenses are retained. This is
+not a claim of translucent appearance, visible label or fade quality.
+
+Attraction is an explicit encounter opt-in, initially Wolf_Black only. The NPC
+must already target the caster, remain hostile, have LOS, and pass the retained
+bounded/protected native query; reserved and RPG-created actors reject. No
+unknown NPC is inferred to be compatible. The request changes the default
+marked target to the decoy, preserving the prior caster identity. Cleanup
+restores that target only if the decoy still owns it; a newer encounter or taunt
+target is not overwritten. The native AI may reject or replace this request.
+`DECOY_ATTRACT_REQUEST` records the request, expressly not a fabricated native
+attack or connected success. Initial coverage is intentionally not all enemies.
+
+Swarm and Death Pact reject the noncombat decoy. Empowerment (canonical internal
+ID `minion_empowerment`) changes HP to 32.5% and life to six seconds, but cannot
+create damage or another decoy. Consume Minion rejects it. There is no second
+gameplay subsystem, HUD modification, stat rebalance or native input change.
+
+### Validation and remaining gate
+
+The full retained build passes 624 tests: fourteen new decoy/asset cases cover
+the canonical values, zero attack claims, singleton admission, pending actors,
+separate owners, shared caps, passive compatibility, consumption exclusion,
+termination reasons, cancellation and explicit encounter policy. A first test
+pass incorrectly compared the authored cooldown with the stat-adjusted snapshot
+and used the display name as a passive ID; those fixture errors were corrected
+without changing production cooldowns or modifier values. An initial Java
+compile also caught a wrong Candidate accessor; trace identity now reads the
+actual native UUID component. These failures were local, before any deployment.
+
+The normal three-mod boot must resolve seven Stage10 profiles, four RPG-created
+roles and 58 neutral native triggers, then stop cleanly. Exact hashes, retained
+test inventory and smoke result are in cohort E's verification.json. Rollback is
+cohort D, SHA-256
+`6480E6CDD352647E76C77378E663461DA11A212053826FEFF758A056670EECE8`.
+Player schema remains 5, compiled-plan schema 8. No live deployment occurred.
+
+Connected gates remain UNVERIFIED: static human appearance and name, actual
+native NPC attraction/attack delivery, decoy Health loss, protection against
+newer threat owners, and expiry/death/logout/world-removal/restart cleanup.
+Dominate still requires a restoration-safe conversion implementation; the
+existence of a provider alone does not prove full conversion. Bone Cage still
+requires proven enemy-only collision before activation may be enabled.

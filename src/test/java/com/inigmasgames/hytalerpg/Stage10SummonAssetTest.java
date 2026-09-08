@@ -24,11 +24,21 @@ class Stage10SummonAssetTest {
         }
     }
     @Test void abilityTriggerOwnsNoNativeGameplayCharge() throws Exception {
-        for(var name:java.util.List.of("Wolf_Summon","Revive_Fallen","Summon_Void_Crawlers","Brood_Call","Consume_Minion","Corpse_Burst")){
+        for(var name:java.util.List.of("Wolf_Summon","Revive_Fallen","Summon_Void_Crawlers","Brood_Call","Consume_Minion","Corpse_Burst","Simulacrum")){
         var ability=read("/Server/Item/Items/RPG/Abilities/RPG_Ability_"+name+".json").getAsJsonObject("Ability");
         assertEquals(0,ability.get("Cost").getAsInt());assertEquals("None",ability.get("CostType").getAsString());
         assertEquals(0,ability.get("Cooldown").getAsInt());assertEquals("Root_RPG_Ability_Bridge",ability.get("Cast").getAsString());
         }
+    }
+    @Test void decoyHasNoSeekingAttackInventoryOrRewardInstruction() throws Exception{
+        var role=read("/Server/NPC/Roles/RPG/RPG_Summon_Decoy.json");
+        assertEquals("Mannequin",role.get("Appearance").getAsString());
+        assertEquals(Set.of("Type","Appearance","MaxHealth","IsMemory","DefaultPlayerAttitude","DefaultNPCAttitude",
+                "PickupDropOnDeath","MotionControllerList","Instructions","NameTranslationKey"),role.keySet());
+        assertEquals(1,role.getAsJsonArray("Instructions").size());
+        assertEquals(0,role.getAsJsonArray("Instructions").get(0).getAsJsonObject().size());
+        assertFalse(role.get("PickupDropOnDeath").getAsBoolean());
+        assertFalse(role.get("IsMemory").getAsBoolean());
     }
     private static JsonObject read(String path)throws Exception{
         try(var stream=Stage10SummonAssetTest.class.getResourceAsStream(path)){

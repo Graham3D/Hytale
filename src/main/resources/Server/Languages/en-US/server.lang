@@ -115,3 +115,6 @@ items.RPG_Ability_Pedanticism.name = Pedanticism
 items.RPG_Ability_Pedanticism.description = Ally RPG cooldown recovery; native enemy cooldown progress adapter unavailable on this build.
 items.RPG_Ability_Reaping_Storm.name = Reaping Storm
 items.RPG_Ability_Reaping_Storm.description = Eight paid pulses; native execution and presentation await connected verification.
+items.RPG_Ability_Simulacrum.name = Simulacrum
+items.RPG_Ability_Simulacrum.description = Noncombat human-shaped decoy template; native attract requests require an explicitly compatible encounter.
+npcRoles.RPG_Summon_Decoy.name = Simulacrum (decoy template)

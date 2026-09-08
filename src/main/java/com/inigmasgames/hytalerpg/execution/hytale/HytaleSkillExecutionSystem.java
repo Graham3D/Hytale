@@ -490,7 +490,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if(profile.summon().corpseRequired()){
                     if(summons.committedCorpse(context).isEmpty())return Validation.reject("COMMITTED_CORPSE_PERMIT_UNAVAILABLE");
                 }
-                String capacity=summons.registry().admission(playerRef.getUuid(),context.compiledPlan().summonModifiers().count(profile.summon().count()));
+                String capacity=summons.registry().admission(playerRef.getUuid(),context.compiledPlan().summonModifiers().count(profile.summon().count()),profile.summon().decoy());
                 return capacity.equals("PASS")?Validation.pass():Validation.reject(capacity);
             }
             if(profile.connection()!=null) {

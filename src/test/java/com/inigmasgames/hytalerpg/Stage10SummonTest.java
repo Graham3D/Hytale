@@ -19,7 +19,7 @@ class Stage10SummonTest {
         @Override SkillExecutionResult cast(){return execution.request(new SkillExecutionRequest(actor,SkillSlot.SKILL01,"test",++inputs,UUID.randomUUID().toString(),Vec3.FORWARD),this);}
         @Override public Equipment equipment(){return new Equipment(new Item("fixture","SPELLBOOK",new ItemPowerDescriptor("fixture",Set.of("RPG_WEAPON_MAGIC"),20d,20d)),null);}
         @Override public Validation familyPrerequisites(Stage04SkillProfile p,CompiledSkillPlan plan){
-            String result=summons.admission(actor,plan.summonModifiers().count(p.summon().count()));return result.equals("PASS")?Validation.pass():Validation.reject(result);
+            String result=summons.admission(actor,plan.summonModifiers().count(p.summon().count()),p.summon().decoy());return result.equals("PASS")?Validation.pass():Validation.reject(result);
         }
         @Override public SkillExecutionResult executeSummon(SkillExecutionContext value){context=value;leases=summons.reserve(value,now);return SkillExecutionResult.committed("SUMMON_RESERVED",0,0);}
     }

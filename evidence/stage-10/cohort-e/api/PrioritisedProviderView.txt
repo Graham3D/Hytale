@@ -1,0 +1,33 @@
+Compiled from "PrioritisedProviderView.java"
+public abstract class com.hypixel.hytale.server.npc.blackboard.view.PrioritisedProviderView<T, ViewType extends com.hypixel.hytale.server.npc.blackboard.view.IBlackboardView<ViewType>> implements com.hypixel.hytale.server.npc.blackboard.view.IBlackboardView<ViewType> {
+  public static final int LOWEST_PRIORITY;
+
+  protected java.util.List<com.hypixel.hytale.server.npc.blackboard.view.PrioritisedProviderView$PrioritisedProvider<T>> providers;
+
+  public com.hypixel.hytale.server.npc.blackboard.view.PrioritisedProviderView();
+    Code:
+         0: aload_0
+         1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #9                  // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+         8: dup
+         9: invokespecial #11                 // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+        12: putfield      #12                 // Field providers:Ljava/util/List;
+        15: return
+
+  public void registerProvider(int, T);
+    Code:
+         0: aload_0
+         1: getfield      #12                 // Field providers:Ljava/util/List;
+         4: new           #18                 // class com/hypixel/hytale/server/npc/blackboard/view/PrioritisedProviderView$PrioritisedProvider
+         7: dup
+         8: iload_1
+         9: aload_2
+        10: invokespecial #20                 // Method com/hypixel/hytale/server/npc/blackboard/view/PrioritisedProviderView$PrioritisedProvider."<init>":(ILjava/lang/Object;)V
+        13: invokeinterface #23,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        18: pop
+        19: aload_0
+        20: getfield      #12                 // Field providers:Ljava/util/List;
+        23: invokestatic  #29                 // Method java/util/Collections.sort:(Ljava/util/List;)V
+        26: return
+}

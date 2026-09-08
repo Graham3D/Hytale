@@ -263,6 +263,8 @@ public final class Phase00Plugin extends JavaPlugin {
         com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Crawler");
         com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Broodling");
         LOGGER.atInfo().log("RPG_STAGE10_BATCH_ROLES count=3 result=PASS connectedProof=false");
+        com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Decoy");
+        LOGGER.atInfo().log("RPG_STAGE10_DECOY_ROLE appearance=Mannequin attacks=0 result=PASS connectedProof=false");
         LOGGER.atInfo().log("RPG_STAGE10_ASSETS revision=%s summonProfiles=%d role=RPG_Summon_Wolf result=PASS connectedProof=false",
                 BuildIdentity.REVISION,Stage04SkillProfiles.EXPECTED_STAGE10_PROFILES);
     }

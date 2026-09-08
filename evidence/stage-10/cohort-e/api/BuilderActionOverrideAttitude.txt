@@ -1,0 +1,113 @@
+Compiled from "BuilderActionOverrideAttitude.java"
+public class com.hypixel.hytale.server.npc.corecomponents.entity.builders.BuilderActionOverrideAttitude extends com.hypixel.hytale.server.npc.corecomponents.builders.BuilderActionBase {
+  protected final com.hypixel.hytale.server.npc.asset.builder.holder.EnumHolder<com.hypixel.hytale.server.core.asset.type.attitude.Attitude> attitude;
+
+  protected final com.hypixel.hytale.server.npc.asset.builder.holder.DoubleHolder duration;
+
+  public com.hypixel.hytale.server.npc.corecomponents.entity.builders.BuilderActionOverrideAttitude();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/npc/corecomponents/builders/BuilderActionBase."<init>":()V
+         4: aload_0
+         5: new           #7                  // class com/hypixel/hytale/server/npc/asset/builder/holder/EnumHolder
+         8: dup
+         9: invokespecial #9                  // Method com/hypixel/hytale/server/npc/asset/builder/holder/EnumHolder."<init>":()V
+        12: putfield      #10                 // Field attitude:Lcom/hypixel/hytale/server/npc/asset/builder/holder/EnumHolder;
+        15: aload_0
+        16: new           #16                 // class com/hypixel/hytale/server/npc/asset/builder/holder/DoubleHolder
+        19: dup
+        20: invokespecial #18                 // Method com/hypixel/hytale/server/npc/asset/builder/holder/DoubleHolder."<init>":()V
+        23: putfield      #19                 // Field duration:Lcom/hypixel/hytale/server/npc/asset/builder/holder/DoubleHolder;
+        26: return
+
+  public java.lang.String getShortDescription();
+    Code:
+         0: ldc           #23                 // String Override this NPCs attitude towards the provided target for a given duration
+         2: areturn
+
+  public java.lang.String getLongDescription();
+    Code:
+         0: aload_0
+         1: invokevirtual #25                 // Method getShortDescription:()Ljava/lang/String;
+         4: areturn
+
+  public com.hypixel.hytale.server.npc.instructions.Action build(com.hypixel.hytale.server.npc.asset.builder.BuilderSupport);
+    Code:
+         0: new           #29                 // class com/hypixel/hytale/server/npc/corecomponents/entity/ActionOverrideAttitude
+         3: dup
+         4: aload_0
+         5: aload_1
+         6: invokespecial #31                 // Method com/hypixel/hytale/server/npc/corecomponents/entity/ActionOverrideAttitude."<init>":(Lcom/hypixel/hytale/server/npc/corecomponents/entity/builders/BuilderActionOverrideAttitude;Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)V
+         9: areturn
+
+  public com.hypixel.hytale.server.npc.asset.builder.BuilderDescriptorState getBuilderDescriptorState();
+    Code:
+         0: getstatic     #34                 // Field com/hypixel/hytale/server/npc/asset/builder/BuilderDescriptorState.Stable:Lcom/hypixel/hytale/server/npc/asset/builder/BuilderDescriptorState;
+         3: areturn
+
+  public com.hypixel.hytale.server.npc.corecomponents.entity.builders.BuilderActionOverrideAttitude readConfig(com.google.gson.JsonElement);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: ldc           #40                 // String Attitude
+         4: aload_0
+         5: getfield      #10                 // Field attitude:Lcom/hypixel/hytale/server/npc/asset/builder/holder/EnumHolder;
+         8: ldc           #42                 // class com/hypixel/hytale/server/core/asset/type/attitude/Attitude
+        10: getstatic     #34                 // Field com/hypixel/hytale/server/npc/asset/builder/BuilderDescriptorState.Stable:Lcom/hypixel/hytale/server/npc/asset/builder/BuilderDescriptorState;
+        13: ldc           #44                 // String The attitude to set
+        15: aconst_null
+        16: invokevirtual #46                 // Method requireEnum:(Lcom/google/gson/JsonElement;Ljava/lang/String;Lcom/hypixel/hytale/server/npc/asset/builder/holder/EnumHolder;Ljava/lang/Class;Lcom/hypixel/hytale/server/npc/asset/builder/BuilderDescriptorState;Ljava/lang/String;Ljava/lang/String;)V
+        19: aload_0
+        20: aload_1
+        21: ldc           #50                 // String Duration
+        23: aload_0
+        24: getfield      #19                 // Field duration:Lcom/hypixel/hytale/server/npc/asset/builder/holder/DoubleHolder;
+        27: ldc2_w        #52                 // double 10.0d
+        30: invokestatic  #54                 // Method com/hypixel/hytale/server/npc/asset/builder/validators/DoubleSingleValidator.greater0:()Lcom/hypixel/hytale/server/npc/asset/builder/validators/DoubleSingleValidator;
+        33: getstatic     #34                 // Field com/hypixel/hytale/server/npc/asset/builder/BuilderDescriptorState.Stable:Lcom/hypixel/hytale/server/npc/asset/builder/BuilderDescriptorState;
+        36: ldc           #60                 // String The duration to override for
+        38: aconst_null
+        39: invokevirtual #62                 // Method getDouble:(Lcom/google/gson/JsonElement;Ljava/lang/String;Lcom/hypixel/hytale/server/npc/asset/builder/holder/DoubleHolder;DLcom/hypixel/hytale/server/npc/asset/builder/validators/DoubleValidator;Lcom/hypixel/hytale/server/npc/asset/builder/BuilderDescriptorState;Ljava/lang/String;Ljava/lang/String;)Z
+        42: pop
+        43: aload_0
+        44: getstatic     #66                 // Field com/hypixel/hytale/server/npc/asset/builder/Feature.LiveEntity:Ljava/util/EnumSet;
+        47: invokevirtual #72                 // Method requireFeature:(Ljava/util/EnumSet;)V
+        50: aload_0
+        51: getstatic     #76                 // Field com/hypixel/hytale/server/npc/asset/builder/InstructionType.NPCOnlyInstructions:Ljava/util/EnumSet;
+        54: invokevirtual #81                 // Method requireInstructionType:(Ljava/util/EnumSet;)V
+        57: aload_0
+        58: areturn
+
+  public com.hypixel.hytale.server.core.asset.type.attitude.Attitude getAttitude(com.hypixel.hytale.server.npc.asset.builder.BuilderSupport);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field attitude:Lcom/hypixel/hytale/server/npc/asset/builder/holder/EnumHolder;
+         4: aload_1
+         5: invokevirtual #84                 // Method com/hypixel/hytale/server/npc/asset/builder/BuilderSupport.getExecutionContext:()Lcom/hypixel/hytale/server/npc/util/expression/ExecutionContext;
+         8: invokevirtual #90                 // Method com/hypixel/hytale/server/npc/asset/builder/holder/EnumHolder.get:(Lcom/hypixel/hytale/server/npc/util/expression/ExecutionContext;)Ljava/lang/Enum;
+        11: checkcast     #42                 // class com/hypixel/hytale/server/core/asset/type/attitude/Attitude
+        14: areturn
+
+  public double getDuration(com.hypixel.hytale.server.npc.asset.builder.BuilderSupport);
+    Code:
+         0: aload_0
+         1: getfield      #19                 // Field duration:Lcom/hypixel/hytale/server/npc/asset/builder/holder/DoubleHolder;
+         4: aload_1
+         5: invokevirtual #84                 // Method com/hypixel/hytale/server/npc/asset/builder/BuilderSupport.getExecutionContext:()Lcom/hypixel/hytale/server/npc/util/expression/ExecutionContext;
+         8: invokevirtual #94                 // Method com/hypixel/hytale/server/npc/asset/builder/holder/DoubleHolder.get:(Lcom/hypixel/hytale/server/npc/util/expression/ExecutionContext;)D
+        11: dreturn
+
+  public com.hypixel.hytale.server.npc.asset.builder.Builder readConfig(com.google.gson.JsonElement);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #97                 // Method readConfig:(Lcom/google/gson/JsonElement;)Lcom/hypixel/hytale/server/npc/corecomponents/entity/builders/BuilderActionOverrideAttitude;
+         5: areturn
+
+  public java.lang.Object build(com.hypixel.hytale.server.npc.asset.builder.BuilderSupport);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #101                // Method build:(Lcom/hypixel/hytale/server/npc/asset/builder/BuilderSupport;)Lcom/hypixel/hytale/server/npc/instructions/Action;
+         5: areturn
+}

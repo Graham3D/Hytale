@@ -46,6 +46,10 @@ public final class SummonRegistry {
         if(leases.values().stream().filter(v->v.owner().equals(owner)).count()+count>OWNER_LIMIT)return "SUMMON_OWNER_CAP";
         return "PASS";
     }
+    public synchronized String admission(UUID owner, int count, boolean decoy){
+        if(decoy&&leases.values().stream().anyMatch(l->l.owner().equals(owner)&&l.context.profile().summon().decoy()))return "DECOY_ALREADY_ACTIVE";
+        return admission(owner,count);
+    }
     public synchronized List<Lease> reserve(SkillExecutionContext context,double now) {
         return reserve(context,now,null);
     }
@@ -56,7 +60,7 @@ public final class SummonRegistry {
                 ||!context.request().actorId().equals(context.snapshot().actorId()))throw new IllegalArgumentException("SUMMON_SNAPSHOT_IDENTITY_MISMATCH");
         if(leases.values().stream().anyMatch(v->v.owner().equals(context.request().actorId())&&v.context.rootCastId().equals(context.rootCastId())))
             throw new IllegalStateException("SUMMON_ROOT_ALREADY_ACTIVE");
-        int count=context.compiledPlan().summonModifiers().count(context.profile().summon().count());String admission=admission(context.request().actorId(),count);
+        int count=context.compiledPlan().summonModifiers().count(context.profile().summon().count());String admission=admission(context.request().actorId(),count,context.profile().summon().decoy());
         if(context.profile().summon().corpseRequired()!=(corpse!=null)||corpse!=null&&(!corpse.eligible()||count!=1
                 ||!corpse.entity().equals(context.target().entityId())||!corpse.world().equals(context.target().worldId())))
             throw new IllegalArgumentException("CORPSE_SOURCE_IDENTITY_MISMATCH");
@@ -92,7 +96,7 @@ public final class SummonRegistry {
     /** Claims before damage dispatch. Reentrant calls and a stalled tick never catch up multiple attacks. */
     public synchronized int claimAttack(UUID token,double now) {
         clock(now);var lease=leases.get(token);
-        if(lease==null||lease.entity==null||now>=lease.expires||now+1e-9<lease.nextAttack)return 0;
+        if(lease==null||lease.context.profile().summon().decoy()||lease.entity==null||now>=lease.expires||now+1e-9<lease.nextAttack)return 0;
         lease.nextAttack=now+lease.interval;return ++lease.attacks;
     }
     public synchronized Optional<Lease> remove(UUID token){return Optional.ofNullable(leases.remove(token));}

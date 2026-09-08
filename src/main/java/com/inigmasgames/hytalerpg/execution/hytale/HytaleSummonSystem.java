@@ -41,6 +41,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                   Vec3 point,double radius,double coefficient,String effect,boolean frozenSnapshot);
     }
     private final SummonRegistry registry=new SummonRegistry();
+    private final DecoyNativeAttraction decoyAttraction=new DecoyNativeAttraction(registry);
     private final CorpseLedger corpses;
     private final CombatTrace trace;
     private final Attack attack;
@@ -124,7 +125,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,Vec3 aim){
         var spec=profile.summon();
         if(!NPCPlugin.get().hasRoleName(spec.roleId()))return SkillExecutionPort.Validation.reject("SUMMON_ROLE_UNAVAILABLE");
-        String admission=registry.admission(store.getComponent(owner,PlayerRef.getComponentType()).getUuid(),plan.summonModifiers().count(spec.count()));
+        String admission=registry.admission(store.getComponent(owner,PlayerRef.getComponentType()).getUuid(),plan.summonModifiers().count(spec.count()),spec.decoy());
         if(!admission.equals("PASS"))return SkillExecutionPort.Validation.reject(admission);
         if(spec.corpseRequired())return selectCorpse(store,owner,aim,spec.range()).isPresent()?SkillExecutionPort.Validation.pass():
                 SkillExecutionPort.Validation.reject("NO_ELIGIBLE_CLASSIFIED_NATIVE_CORPSE");
@@ -223,7 +224,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     @Override public void tick(float delta,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
         var ref=chunk.getReferenceTo(index);var marker=chunk.getComponent(index,SummonProjection.getComponentType());
         var lease=registry.find(marker.token).orElse(null);
-        if(lease==null){buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);return;}
+        if(lease==null){decoyAttraction.release(store,marker.token);buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);return;}
         var owner=store.getExternalData().getRefFromUUID(lease.owner());
         double now=now();String ended=null;
         if(!alive(store,owner))ended="OWNER_GONE";
@@ -247,6 +248,11 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                     .sorted(Comparator.<HytaleAreaQueries.Candidate>comparingDouble(c->c.bounds().centre().subtract(here).length())
                             .thenComparing(c->store.getComponent(c.ref(),UUIDComponent.getComponentType()).getUuid())).toList();
             if(candidates.size()>64)throw new IllegalStateException("SUMMON_ACCEPTED_TARGET_CAP");
+            if(lease.context().profile().summon().decoy()){
+                for(var candidate:candidates)if(decoyAttraction.request(store,owner,ref,candidate.ref(),lease))
+                    emit(lease,RpgTraceEventType.DECOY_ATTRACT_REQUEST,Map.of("target",store.getComponent(candidate.ref(),UUIDComponent.getComponentType()).getUuid(),"nativeAttackObserved",false,"encounterRole","Wolf_Black"));
+                return; // Static idle: never seek, claim an attack, or invoke the damage adapter.
+            }
             var target=candidates.isEmpty()?owner:candidates.getFirst().ref();
             var marked=store.getComponent(ref,MarkedEntitySupport.getComponentType());
             marked.setMarkedEntity(MarkedEntitySupport.DEFAULT_TARGET_SLOT,target);
@@ -255,6 +261,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                 if(claimed>0)attack.apply(store,buffer,owner,target,lease,claimed);
             }
         }catch(RuntimeException failure){
+            decoyAttraction.release(store,lease.token());
             registry.remove(lease.token());buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);
             emit(lease,RpgTraceEventType.SUMMON_REJECTED,Map.of("boundary",String.valueOf(failure.getMessage()),"phase","TICK","quarantined",true));
         }
@@ -265,6 +272,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         return hp!=null&&hp.get()>0;
     }
     private void endNative(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> ref,SummonRegistry.Lease lease,SummonRegistry.EndReason reason){
+        decoyAttraction.release(store,lease.token());
         Vec3 anchor=position(store,ref);var end=registry.end(lease.token(),reason);
         buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);
         if(end.isEmpty())return;
@@ -298,6 +306,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){}
         @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
             var marker=store.getComponent(ref,SummonProjection.getComponentType());
+            summons.decoyAttraction.release(store,marker.token);
             summons.registry.remove(marker.token).ifPresent(lease->summons.emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason","NATIVE_REMOVE_"+reason)));
         }
     }
