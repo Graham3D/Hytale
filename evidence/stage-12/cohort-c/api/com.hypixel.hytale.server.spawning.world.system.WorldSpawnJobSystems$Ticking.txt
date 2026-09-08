@@ -1,0 +1,234 @@
+Compiled from "WorldSpawnJobSystems.java"
+public class com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems$Ticking extends com.hypixel.hytale.component.system.tick.EntityTickingSystem<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore> {
+  private final com.hypixel.hytale.component.ResourceType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData> worldSpawnDataResourceType;
+
+  private final com.hypixel.hytale.component.ResourceType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.spawning.suppression.component.SpawnSuppressionController> spawnSuppressionControllerResourceType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.SpawnJobData> spawnJobDataComponentType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk> worldChunkComponentType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnData> chunkSpawnDataComponentType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnedNPCData> chunkSpawnedNPCDataComponentType;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.spawning.world.system.WorldSpawnJobSystems$Ticking(com.hypixel.hytale.component.ResourceType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData>, com.hypixel.hytale.component.ResourceType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.spawning.suppression.component.SpawnSuppressionController>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.SpawnJobData>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnData>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnedNPCData>);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field worldSpawnDataResourceType:Lcom/hypixel/hytale/component/ResourceType;
+         9: aload_0
+        10: aload_2
+        11: putfield      #13                 // Field spawnSuppressionControllerResourceType:Lcom/hypixel/hytale/component/ResourceType;
+        14: aload_0
+        15: aload_3
+        16: putfield      #16                 // Field spawnJobDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        19: aload_0
+        20: invokestatic  #20                 // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        23: putfield      #26                 // Field worldChunkComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        26: aload_0
+        27: aload         4
+        29: putfield      #29                 // Field chunkSpawnDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        32: aload_0
+        33: aload         5
+        35: putfield      #32                 // Field chunkSpawnedNPCDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        38: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore> getQuery();
+    Code:
+         0: getstatic     #35                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems.QUERY:Lcom/hypixel/hytale/component/query/Query;
+         3: areturn
+
+  public boolean isParallel(int, int);
+    Code:
+         0: iconst_0
+         1: ireturn
+
+  public void tick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore>);
+    Code:
+         0: aload         4
+         2: invokevirtual #41                 // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+         5: checkcast     #47                 // class com/hypixel/hytale/server/core/universe/world/storage/ChunkStore
+         8: invokevirtual #49                 // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+        11: astore        6
+        13: aload         6
+        15: invokevirtual #53                 // Method com/hypixel/hytale/server/core/universe/world/World.getEntityStore:()Lcom/hypixel/hytale/server/core/universe/world/storage/EntityStore;
+        18: invokevirtual #59                 // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getStore:()Lcom/hypixel/hytale/component/Store;
+        21: astore        7
+        23: aload         7
+        25: aload_0
+        26: getfield      #7                  // Field worldSpawnDataResourceType:Lcom/hypixel/hytale/component/ResourceType;
+        29: invokevirtual #65                 // Method com/hypixel/hytale/component/Store.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+        32: checkcast     #69                 // class com/hypixel/hytale/server/spawning/world/component/WorldSpawnData
+        35: astore        8
+        37: aload_3
+        38: iload_2
+        39: aload_0
+        40: getfield      #16                 // Field spawnJobDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        43: invokevirtual #71                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        46: checkcast     #77                 // class com/hypixel/hytale/server/spawning/world/component/SpawnJobData
+        49: astore        9
+        51: getstatic     #79                 // Field $assertionsDisabled:Z
+        54: ifne          70
+        57: aload         9
+        59: ifnonnull     70
+        62: new           #83                 // class java/lang/AssertionError
+        65: dup
+        66: invokespecial #85                 // Method java/lang/AssertionError."<init>":()V
+        69: athrow
+        70: aload_3
+        71: iload_2
+        72: aload_0
+        73: getfield      #26                 // Field worldChunkComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        76: invokevirtual #71                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        79: checkcast     #21                 // class com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk
+        82: astore        10
+        84: getstatic     #79                 // Field $assertionsDisabled:Z
+        87: ifne          103
+        90: aload         10
+        92: ifnonnull     103
+        95: new           #83                 // class java/lang/AssertionError
+        98: dup
+        99: invokespecial #85                 // Method java/lang/AssertionError."<init>":()V
+       102: athrow
+       103: aload         9
+       105: invokevirtual #86                 // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.isTerminated:()Z
+       108: ifne          126
+       111: aload         8
+       113: invokevirtual #90                 // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.getActualNPCs:()I
+       116: i2d
+       117: aload         8
+       119: invokevirtual #94                 // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.getExpectedNPCs:()D
+       122: dcmpl
+       123: ifle          154
+       126: getstatic     #98                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.FAILED:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       129: aload         9
+       131: aload         10
+       133: aload         8
+       135: invokestatic  #104                // Method com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems.endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       138: pop
+       139: aload         5
+       141: aload_3
+       142: iload_2
+       143: invokevirtual #108                // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+       146: aload_0
+       147: getfield      #16                 // Field spawnJobDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       150: invokevirtual #112                // Method com/hypixel/hytale/component/CommandBuffer.removeComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)V
+       153: return
+       154: aload_3
+       155: iload_2
+       156: aload_0
+       157: getfield      #32                 // Field chunkSpawnedNPCDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       160: invokevirtual #71                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       163: checkcast     #118                // class com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData
+       166: astore        11
+       168: getstatic     #79                 // Field $assertionsDisabled:Z
+       171: ifne          187
+       174: aload         11
+       176: ifnonnull     187
+       179: new           #83                 // class java/lang/AssertionError
+       182: dup
+       183: invokespecial #85                 // Method java/lang/AssertionError."<init>":()V
+       186: athrow
+       187: aload_3
+       188: iload_2
+       189: aload_0
+       190: getfield      #29                 // Field chunkSpawnDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       193: invokevirtual #71                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       196: checkcast     #120                // class com/hypixel/hytale/server/spawning/world/component/ChunkSpawnData
+       199: astore        12
+       201: getstatic     #79                 // Field $assertionsDisabled:Z
+       204: ifne          220
+       207: aload         12
+       209: ifnonnull     220
+       212: new           #83                 // class java/lang/AssertionError
+       215: dup
+       216: invokespecial #85                 // Method java/lang/AssertionError."<init>":()V
+       219: athrow
+       220: aload         9
+       222: invokevirtual #122                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.getEnvironmentIndex:()I
+       225: istore        13
+       227: aload         11
+       229: iload         13
+       231: invokevirtual #125                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData.getEnvironmentSpawnCount:(I)D
+       234: dstore        14
+       236: aload         12
+       238: iload         13
+       240: invokevirtual #129                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnData.getEnvironmentSpawnData:(I)Lcom/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData;
+       243: astore        16
+       245: aload         16
+       247: invokevirtual #133                // Method com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData.allRolesUnspawnable:()Z
+       250: ifne          271
+       253: aload         9
+       255: invokevirtual #138                // Method com/hypixel/hytale/server/spawning/world/component/SpawnJobData.isIgnoreFullyPopulated:()Z
+       258: ifne          299
+       261: aload         16
+       263: dload         14
+       265: invokevirtual #141                // Method com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData.isFullyPopulated:(D)Z
+       268: ifeq          299
+       271: getstatic     #98                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.FAILED:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       274: aload         9
+       276: aload         10
+       278: aload         8
+       280: invokestatic  #104                // Method com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems.endProbing:(Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       283: pop
+       284: aload         5
+       286: aload_3
+       287: iload_2
+       288: invokevirtual #108                // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+       291: aload_0
+       292: getfield      #16                 // Field spawnJobDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       295: invokevirtual #112                // Method com/hypixel/hytale/component/CommandBuffer.removeComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)V
+       298: return
+       299: aload_3
+       300: iload_2
+       301: invokevirtual #108                // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+       304: astore        17
+       306: aload         7
+       308: aload_0
+       309: getfield      #13                 // Field spawnSuppressionControllerResourceType:Lcom/hypixel/hytale/component/ResourceType;
+       312: invokevirtual #65                 // Method com/hypixel/hytale/component/Store.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+       315: checkcast     #145                // class com/hypixel/hytale/server/spawning/suppression/component/SpawnSuppressionController
+       318: astore        18
+       320: aload         6
+       322: aload         17
+       324: aload         9
+       326: aload         10
+       328: aload         16
+       330: aload         8
+       332: aload         18
+       334: invokestatic  #147                // Method com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems.run:(Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/spawning/world/component/SpawnJobData;Lcom/hypixel/hytale/server/core/universe/world/chunk/WorldChunk;Lcom/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData;Lcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;Lcom/hypixel/hytale/server/spawning/suppression/component/SpawnSuppressionController;)Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       337: astore        19
+       339: aload         19
+       341: getstatic     #151                // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.SUCCESS:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       344: if_acmpne     355
+       347: aload         12
+       349: invokestatic  #154                // Method java/lang/System.nanoTime:()J
+       352: invokevirtual #160                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnData.setLastSpawn:(J)V
+       355: aload         19
+       357: getstatic     #164                // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result.TRY_AGAIN:Lcom/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems$Result;
+       360: if_acmpeq     377
+       363: aload         5
+       365: aload_3
+       366: iload_2
+       367: invokevirtual #108                // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+       370: aload_0
+       371: getfield      #16                 // Field spawnJobDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       374: invokevirtual #112                // Method com/hypixel/hytale/component/CommandBuffer.removeComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)V
+       377: return
+
+  static {};
+    Code:
+         0: ldc           #36                 // class com/hypixel/hytale/server/spawning/world/system/WorldSpawnJobSystems
+         2: invokevirtual #167                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #79                 // Field $assertionsDisabled:Z
+        16: return
+}

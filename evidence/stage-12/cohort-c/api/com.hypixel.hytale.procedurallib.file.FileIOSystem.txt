@@ -1,0 +1,98 @@
+Compiled from "FileIOSystem.java"
+public interface com.hypixel.hytale.procedurallib.file.FileIOSystem extends java.lang.AutoCloseable {
+  public abstract java.nio.file.Path baseRoot();
+
+  public abstract com.hypixel.hytale.procedurallib.file.FileIOSystem$PathArray roots();
+
+  public default com.hypixel.hytale.procedurallib.file.AssetPath resolve(java.nio.file.Path);
+    Code:
+         0: aload_1
+         1: aload_0
+         2: invokeinterface #1,  1            // InterfaceMethod baseRoot:()Ljava/nio/file/Path;
+         7: invokestatic  #7                  // InterfaceMethod com/hypixel/hytale/procedurallib/file/FileIO.relativize:(Ljava/nio/file/Path;Ljava/nio/file/Path;)Ljava/nio/file/Path;
+        10: astore_2
+        11: aload_0
+        12: invokeinterface #13,  1           // InterfaceMethod roots:()Lcom/hypixel/hytale/procedurallib/file/FileIOSystem$PathArray;
+        17: getfield      #17                 // Field com/hypixel/hytale/procedurallib/file/FileIOSystem$PathArray.paths:[Ljava/nio/file/Path;
+        20: astore_3
+        21: aload_3
+        22: arraylength
+        23: istore        4
+        25: iconst_0
+        26: istore        5
+        28: iload         5
+        30: iload         4
+        32: if_icmpge     66
+        35: aload_3
+        36: iload         5
+        38: aaload
+        39: astore        6
+        41: aload         6
+        43: aload_2
+        44: invokestatic  #23                 // Method com/hypixel/hytale/procedurallib/file/AssetPath.fromRelative:(Ljava/nio/file/Path;Ljava/nio/file/Path;)Lcom/hypixel/hytale/procedurallib/file/AssetPath;
+        47: astore        7
+        49: aload         7
+        51: invokestatic  #29                 // InterfaceMethod com/hypixel/hytale/procedurallib/file/FileIO.exists:(Lcom/hypixel/hytale/procedurallib/file/AssetPath;)Z
+        54: ifeq          60
+        57: aload         7
+        59: areturn
+        60: iinc          5, 1
+        63: goto          28
+        66: aload_0
+        67: invokeinterface #1,  1            // InterfaceMethod baseRoot:()Ljava/nio/file/Path;
+        72: aload_2
+        73: invokestatic  #23                 // Method com/hypixel/hytale/procedurallib/file/AssetPath.fromRelative:(Ljava/nio/file/Path;Ljava/nio/file/Path;)Lcom/hypixel/hytale/procedurallib/file/AssetPath;
+        76: areturn
+
+  public default <T> T load(com.hypixel.hytale.procedurallib.file.AssetPath, com.hypixel.hytale.procedurallib.file.AssetLoader<T>) throws java.io.IOException;
+    Code:
+         0: aload_1
+         1: invokevirtual #33                 // Method com/hypixel/hytale/procedurallib/file/AssetPath.filepath:()Ljava/nio/file/Path;
+         4: iconst_0
+         5: anewarray     #36                 // class java/nio/file/LinkOption
+         8: invokestatic  #38                 // Method java/nio/file/Files.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+        11: ifne          31
+        14: new           #43                 // class java/io/FileNotFoundException
+        17: dup
+        18: aload_1
+        19: invokestatic  #45                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        22: invokedynamic #51,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        27: invokespecial #55                 // Method java/io/FileNotFoundException."<init>":(Ljava/lang/String;)V
+        30: athrow
+        31: aload_1
+        32: invokevirtual #33                 // Method com/hypixel/hytale/procedurallib/file/AssetPath.filepath:()Ljava/nio/file/Path;
+        35: iconst_0
+        36: anewarray     #59                 // class java/nio/file/OpenOption
+        39: invokestatic  #61                 // Method java/nio/file/Files.newInputStream:(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;
+        42: astore_3
+        43: aload_2
+        44: aload_3
+        45: invokeinterface #65,  2           // InterfaceMethod com/hypixel/hytale/procedurallib/file/AssetLoader.load:(Ljava/io/InputStream;)Ljava/lang/Object;
+        50: astore        4
+        52: aload_3
+        53: ifnull        60
+        56: aload_3
+        57: invokevirtual #71                 // Method java/io/InputStream.close:()V
+        60: aload         4
+        62: areturn
+        63: astore        4
+        65: aload_3
+        66: ifnull        85
+        69: aload_3
+        70: invokevirtual #71                 // Method java/io/InputStream.close:()V
+        73: goto          85
+        76: astore        5
+        78: aload         4
+        80: aload         5
+        82: invokevirtual #79                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+        85: aload         4
+        87: athrow
+      Exception table:
+         from    to  target type
+            43    52    63   Class java/lang/Throwable
+            69    73    76   Class java/lang/Throwable
+
+  public default void close();
+    Code:
+         0: return
+}

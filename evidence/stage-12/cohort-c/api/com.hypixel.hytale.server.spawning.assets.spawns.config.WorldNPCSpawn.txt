@@ -1,0 +1,189 @@
+Compiled from "WorldNPCSpawn.java"
+public class com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn extends com.hypixel.hytale.server.spawning.assets.spawns.config.NPCSpawn implements com.hypixel.hytale.assetstore.map.JsonAssetWithMap<java.lang.String, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn>> {
+  public static final com.hypixel.hytale.assetstore.codec.AssetBuilderCodec<java.lang.String, com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn> CODEC;
+
+  private static com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn> ASSET_MAP;
+
+  protected double[] moonPhaseWeightModifiers;
+
+  public static com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn> getAssetMap();
+    Code:
+         0: getstatic     #1                  // Field ASSET_MAP:Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: ifnonnull     20
+         6: ldc           #2                  // class com/hypixel/hytale/server/spawning/assets/spawns/config/WorldNPCSpawn
+         8: invokestatic  #7                  // Method com/hypixel/hytale/assetstore/AssetRegistry.getAssetStore:(Ljava/lang/Class;)Lcom/hypixel/hytale/assetstore/AssetStore;
+        11: invokevirtual #13                 // Method com/hypixel/hytale/assetstore/AssetStore.getAssetMap:()Lcom/hypixel/hytale/assetstore/AssetMap;
+        14: checkcast     #19                 // class com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap
+        17: putstatic     #1                  // Field ASSET_MAP:Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        20: getstatic     #1                  // Field ASSET_MAP:Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        23: areturn
+
+  public com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn(java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokespecial #21                 // Method com/hypixel/hytale/server/spawning/assets/spawns/config/NPCSpawn."<init>":(Ljava/lang/String;)V
+         5: return
+
+  protected com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn();
+    Code:
+         0: aload_0
+         1: invokespecial #27                 // Method com/hypixel/hytale/server/spawning/assets/spawns/config/NPCSpawn."<init>":()V
+         4: return
+
+  public java.lang.String getId();
+    Code:
+         0: aload_0
+         1: getfield      #30                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  public double[] getMoonPhaseWeightModifiers();
+    Code:
+         0: aload_0
+         1: getfield      #34                 // Field moonPhaseWeightModifiers:[D
+         4: areturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #34                 // Field moonPhaseWeightModifiers:[D
+         4: invokestatic  #38                 // Method java/util/Arrays.toString:([D)Ljava/lang/String;
+         7: aload_0
+         8: invokespecial #44                 // Method com/hypixel/hytale/server/spawning/assets/spawns/config/NPCSpawn.toString:()Ljava/lang/String;
+        11: invokedynamic #47,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        16: areturn
+
+  public java.lang.Object getId();
+    Code:
+         0: aload_0
+         1: invokevirtual #51                 // Method getId:()Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$9(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn, com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #34                 // Field moonPhaseWeightModifiers:[D
+         5: putfield      #34                 // Field moonPhaseWeightModifiers:[D
+         8: return
+
+  private static double[] lambda$static$8(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn);
+    Code:
+         0: aload_0
+         1: getfield      #34                 // Field moonPhaseWeightModifiers:[D
+         4: areturn
+
+  private static void lambda$static$7(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn, double[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #34                 // Field moonPhaseWeightModifiers:[D
+         5: return
+
+  private static void lambda$static$6(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn, com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #54                 // Field environments:[Ljava/lang/String;
+         5: putfield      #54                 // Field environments:[Ljava/lang/String;
+         8: return
+
+  private static java.lang.String[] lambda$static$5(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn);
+    Code:
+         0: aload_0
+         1: getfield      #54                 // Field environments:[Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$4(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn, java.lang.String[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #54                 // Field environments:[Ljava/lang/String;
+         5: return
+
+  private static com.hypixel.hytale.assetstore.AssetExtraInfo$Data lambda$static$3(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn);
+    Code:
+         0: aload_0
+         1: getfield      #58                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         4: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn, com.hypixel.hytale.assetstore.AssetExtraInfo$Data);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #58                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         5: return
+
+  private static java.lang.String lambda$static$1(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn);
+    Code:
+         0: aload_0
+         1: getfield      #30                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.spawning.assets.spawns.config.WorldNPCSpawn, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #30                 // Field id:Ljava/lang/String;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #2                  // class com/hypixel/hytale/server/spawning/assets/spawns/config/WorldNPCSpawn
+         2: invokedynamic #62,  0             // InvokeDynamic #1:get:()Ljava/util/function/Supplier;
+         7: getstatic     #66                 // Field com/hypixel/hytale/server/spawning/assets/spawns/config/NPCSpawn.BASE_CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        10: getstatic     #70                 // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+        13: invokedynamic #76,  0             // InvokeDynamic #2:accept:()Ljava/util/function/BiConsumer;
+        18: invokedynamic #80,  0             // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+        23: invokedynamic #84,  0             // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        28: invokedynamic #85,  0             // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        33: invokestatic  #86                 // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;Lcom/hypixel/hytale/codec/builder/BuilderCodec;Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder;
+        36: ldc           #92                 // String A spawning configuration used to spawn NPCs around the world.
+        38: invokevirtual #94                 // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        41: checkcast     #95                 // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+        44: new           #100                // class com/hypixel/hytale/codec/KeyedCodec
+        47: dup
+        48: ldc           #102                // String Environments
+        50: getstatic     #104                // Field com/hypixel/hytale/codec/Codec.STRING_ARRAY:Lcom/hypixel/hytale/codec/codecs/array/ArrayCodec;
+        53: invokespecial #108                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        56: invokedynamic #111,  0            // InvokeDynamic #6:accept:()Ljava/util/function/BiConsumer;
+        61: invokedynamic #112,  0            // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+        66: invokedynamic #113,  0            // InvokeDynamic #8:accept:()Ljava/util/function/BiConsumer;
+        71: invokevirtual #114                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        74: ldc           #118                // String A required list of environments that this configuration covers. Each combination of environment and NPC in this configuration should be unique.
+        76: invokevirtual #120                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        79: invokestatic  #125                // Method com/hypixel/hytale/codec/validation/Validators.nonEmptyArray:()Lcom/hypixel/hytale/codec/validation/Validator;
+        82: invokevirtual #131                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        85: invokestatic  #135                // Method com/hypixel/hytale/codec/validation/Validators.uniqueInArray:()Lcom/hypixel/hytale/codec/validation/Validator;
+        88: invokevirtual #131                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        91: getstatic     #138                // Field com/hypixel/hytale/server/core/asset/type/environment/config/Environment.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+        94: invokevirtual #144                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getArrayValidator:()Lcom/hypixel/hytale/codec/validation/validator/ArrayValidator;
+        97: invokevirtual #131                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       100: invokevirtual #150                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       103: checkcast     #95                 // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       106: new           #100                // class com/hypixel/hytale/codec/KeyedCodec
+       109: dup
+       110: ldc           #154                // String MoonPhaseWeightModifiers
+       112: getstatic     #156                // Field com/hypixel/hytale/codec/Codec.DOUBLE_ARRAY:Lcom/hypixel/hytale/codec/codecs/array/DoubleArrayCodec;
+       115: invokespecial #108                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       118: invokedynamic #160,  0            // InvokeDynamic #9:accept:()Ljava/util/function/BiConsumer;
+       123: invokedynamic #161,  0            // InvokeDynamic #10:apply:()Ljava/util/function/Function;
+       128: invokedynamic #162,  0            // InvokeDynamic #11:accept:()Ljava/util/function/BiConsumer;
+       133: invokevirtual #114                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       136: ldc           #163                // String An array of modifiers which will be multiplied into the weights for each NPC in this config dependent on the current moon phase.\n\nAt present, Hytale has **5** moon phases, with day 0 being a full moon which gradually wanes up to day 4 which is a new moon. These are represented in the array indices.\n\nEach modifier can only be between 0 and 2, where 0 means the NPC will not spawn at all, 1 will use the standard weight, and 2 will result in twice the spawns\n\ne.g. `[ 0, 0, 0.5, 1, 2 ]` would result in NPCs that do not spawn during day 0 and day 1 (full moon and three quarters), would spawn half as much on day 2, the defined amount on day 3, and twice as many on day 4 (new moon).
+       138: invokevirtual #120                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       141: new           #165                // class com/hypixel/hytale/codec/validation/validator/DoubleArrayValidator
+       144: dup
+       145: dconst_0
+       146: invokestatic  #167                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       149: ldc2_w        #173                // double 2.0d
+       152: invokestatic  #167                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       155: invokestatic  #175                // Method com/hypixel/hytale/codec/validation/Validators.range:(Ljava/lang/Comparable;Ljava/lang/Comparable;)Lcom/hypixel/hytale/codec/validation/Validator;
+       158: invokespecial #179                // Method com/hypixel/hytale/codec/validation/validator/DoubleArrayValidator."<init>":(Lcom/hypixel/hytale/codec/validation/Validator;)V
+       161: invokevirtual #131                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       164: invokevirtual #150                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       167: checkcast     #95                 // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       170: invokevirtual #182                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.build:()Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       173: putstatic     #186                // Field CODEC:Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       176: return
+}

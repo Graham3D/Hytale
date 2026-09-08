@@ -23,6 +23,7 @@ $expectedStatusAssets = 10
 $expectedSupport = 16
 $expectedPlayerSchema = if($Cohort -eq 'a'){7}else{8}
 $expectedSummons = 9
+$expectedNativeBiomes = if($Cohort -in @('a','b')){0}else{4}
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path
 if (-not $resolved.StartsWith($projectRoot, [StringComparison]::OrdinalIgnoreCase)) { throw "Unsafe smoke path: $resolved" }
@@ -70,12 +71,13 @@ $summary = [ordered]@{
     decoyRoleResolved = [bool]($plain -match 'RPG_STAGE10_DECOY_ROLE appearance=Mannequin attacks=0 result=PASS connectedProof=false')
     strikeLockResolved = [bool]($plain -match 'RPG_STAGE11_STRIKE_ACTION_LOCK asset=RPG_Strike_Action_Lock disabledInteractions=6 movementUnchanged=true result=PASS connectedProof=false')
     hitProcAssetsResolved = [bool]($plain -match 'RPG_STAGE11_HIT_PROC_ASSETS bleedVisual=RPG_Bleed_Visual nativeDamage=false movementUnchanged=true result=PASS connectedProof=false')
-    progressionProfilesResolved = [bool]($plain -match 'RPG_STAGE12_PROFILES revision=R031 bands=5 difficulties=3 nativeBiomeBindings=0 awardHook=false connectedProof=false')
+    progressionProfilesResolved = [bool]($plain -match "RPG_STAGE12_PROFILES revision=R031 bands=5 difficulties=3 nativeBiomeBindings=$expectedNativeBiomes awardHook=false connectedProof=false")
     rewardStoreConfigured = [bool]($plain -match 'RPG_STAGE12_REWARD_STORE playerSchema=8 writeAhead=true immutableReceipts=true awardHook=false connectedProof=false')
+    encounterRegistryResolved = [bool]($plain -match 'RPG_STAGE12_ENCOUNTER_REGISTRY roles=3 biomes=4 rankAuthority=RPG_PROFILE awardHook=false connectedProof=false')
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8
 [pscustomobject]$summary | Format-List
-if (($Cohort -ne 'a' -and -not $summary.rewardStoreConfigured) -or -not ($summary.progressionProfilesResolved -and $summary.hitProcAssetsResolved -and $summary.strikeLockResolved -and $summary.exactlyThreeMods -and $summary.rpgDiscovered -and $summary.rpgSetup -and $summary.ready -and
+if (($Cohort -eq 'c' -and -not $summary.encounterRegistryResolved) -or ($Cohort -ne 'a' -and -not $summary.rewardStoreConfigured) -or -not ($summary.progressionProfilesResolved -and $summary.hitProcAssetsResolved -and $summary.strikeLockResolved -and $summary.exactlyThreeMods -and $summary.rpgDiscovered -and $summary.rpgSetup -and $summary.ready -and
     $summary.decoyRoleResolved -and $summary.batchRolesResolved -and $summary.summonAssetsResolved -and $summary.supportConfigured -and $summary.connectionAssetsResolved -and $summary.areaAssetsResolved -and $summary.packagedRootResolved -and $summary.shippedRuneResolved -and $summary.pluginEnabled -and $summary.managerStarted -and $summary.networkBooted -and $summary.cleanShutdown) -or
     $summary.nativeAbilityAssetsRejected -or $summary.failure) { throw 'R031 smoke gate failed.' }

@@ -1,0 +1,160 @@
+Compiled from "BiomeDataSystem.java"
+public class com.hypixel.hytale.server.worldgen.BiomeDataSystem extends com.hypixel.hytale.component.system.tick.DelayedEntitySystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.worldgen.BiomeDataSystem();
+    Code:
+         0: aload_0
+         1: fconst_1
+         2: invokespecial #1                  // Method com/hypixel/hytale/component/system/tick/DelayedEntitySystem."<init>":(F)V
+         5: return
+
+  public void tick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload         5
+         2: invokevirtual #7                  // Method com/hypixel/hytale/component/CommandBuffer.getExternalData:()Ljava/lang/Object;
+         5: checkcast     #13                 // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+         8: invokevirtual #15                 // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+        11: astore        6
+        13: aload         6
+        15: invokevirtual #19                 // Method com/hypixel/hytale/server/core/universe/world/World.getChunkStore:()Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;
+        18: invokevirtual #25                 // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getGenerator:()Lcom/hypixel/hytale/server/core/universe/world/worldgen/IWorldGen;
+        21: astore        7
+        23: aload_3
+        24: iload_2
+        25: invokestatic  #31                 // Method com/hypixel/hytale/server/core/entity/entities/Player.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        28: invokevirtual #37                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        31: checkcast     #32                 // class com/hypixel/hytale/server/core/entity/entities/Player
+        34: astore        8
+        36: getstatic     #43                 // Field $assertionsDisabled:Z
+        39: ifne          55
+        42: aload         8
+        44: ifnonnull     55
+        47: new           #49                 // class java/lang/AssertionError
+        50: dup
+        51: invokespecial #51                 // Method java/lang/AssertionError."<init>":()V
+        54: athrow
+        55: aload_3
+        56: iload_2
+        57: invokevirtual #54                 // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+        60: astore        9
+        62: aload         8
+        64: invokevirtual #58                 // Method com/hypixel/hytale/server/core/entity/entities/Player.getWorldMapTracker:()Lcom/hypixel/hytale/server/core/universe/world/WorldMapTracker;
+        67: astore        10
+        69: aload         7
+        71: instanceof    #62                 // class com/hypixel/hytale/server/worldgen/chunk/ChunkGenerator
+        74: ifeq          87
+        77: aload         7
+        79: checkcast     #62                 // class com/hypixel/hytale/server/worldgen/chunk/ChunkGenerator
+        82: astore        11
+        84: goto          99
+        87: aload         10
+        89: aload         9
+        91: aconst_null
+        92: aconst_null
+        93: aload         5
+        95: invokevirtual #64                 // Method com/hypixel/hytale/server/core/universe/world/WorldMapTracker.updateCurrentZoneAndBiome:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/universe/world/WorldMapTracker$ZoneDiscoveryInfo;Ljava/lang/String;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+        98: return
+        99: aload_3
+       100: iload_2
+       101: invokestatic  #70                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       104: invokevirtual #37                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       107: checkcast     #71                 // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+       110: astore        12
+       112: getstatic     #43                 // Field $assertionsDisabled:Z
+       115: ifne          131
+       118: aload         12
+       120: ifnonnull     131
+       123: new           #49                 // class java/lang/AssertionError
+       126: dup
+       127: invokespecial #51                 // Method java/lang/AssertionError."<init>":()V
+       130: athrow
+       131: aload         12
+       133: invokevirtual #73                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+       136: astore        13
+       138: aload         6
+       140: invokevirtual #77                 // Method com/hypixel/hytale/server/core/universe/world/World.getWorldConfig:()Lcom/hypixel/hytale/server/core/universe/world/WorldConfig;
+       143: invokevirtual #81                 // Method com/hypixel/hytale/server/core/universe/world/WorldConfig.getSeed:()J
+       146: l2i
+       147: istore        14
+       149: aload         13
+       151: invokevirtual #87                 // Method org/joml/Vector3d.x:()D
+       154: d2i
+       155: istore        15
+       157: aload         13
+       159: invokevirtual #93                 // Method org/joml/Vector3d.z:()D
+       162: d2i
+       163: istore        16
+       165: aload         11
+       167: iload         14
+       169: iload         15
+       171: iload         16
+       173: invokevirtual #96                 // Method com/hypixel/hytale/server/worldgen/chunk/ChunkGenerator.getZoneBiomeResultAt:(III)Lcom/hypixel/hytale/server/worldgen/chunk/ZoneBiomeResult;
+       176: astore        17
+       178: aload         17
+       180: invokevirtual #100                // Method com/hypixel/hytale/server/worldgen/chunk/ZoneBiomeResult.getBiome:()Lcom/hypixel/hytale/server/worldgen/biome/Biome;
+       183: astore        18
+       185: aload         17
+       187: invokevirtual #106                // Method com/hypixel/hytale/server/worldgen/chunk/ZoneBiomeResult.getZoneResult:()Lcom/hypixel/hytale/server/worldgen/zone/ZoneGeneratorResult;
+       190: invokevirtual #110                // Method com/hypixel/hytale/server/worldgen/zone/ZoneGeneratorResult.getZone:()Lcom/hypixel/hytale/server/worldgen/zone/Zone;
+       193: astore        19
+       195: aload         19
+       197: invokevirtual #116                // Method com/hypixel/hytale/server/worldgen/zone/Zone.discoveryConfig:()Lcom/hypixel/hytale/server/worldgen/zone/ZoneDiscoveryConfig;
+       200: astore        20
+       202: new           #122                // class com/hypixel/hytale/server/core/universe/world/WorldMapTracker$ZoneDiscoveryInfo
+       205: dup
+       206: aload         20
+       208: invokevirtual #124                // Method com/hypixel/hytale/server/worldgen/zone/ZoneDiscoveryConfig.zone:()Ljava/lang/String;
+       211: aload         19
+       213: invokevirtual #130                // Method com/hypixel/hytale/server/worldgen/zone/Zone.name:()Ljava/lang/String;
+       216: aload         20
+       218: invokevirtual #133                // Method com/hypixel/hytale/server/worldgen/zone/ZoneDiscoveryConfig.display:()Z
+       221: aload         20
+       223: invokevirtual #137                // Method com/hypixel/hytale/server/worldgen/zone/ZoneDiscoveryConfig.soundEventId:()Ljava/lang/String;
+       226: aload         20
+       228: invokevirtual #140                // Method com/hypixel/hytale/server/worldgen/zone/ZoneDiscoveryConfig.icon:()Ljava/lang/String;
+       231: aload         20
+       233: invokevirtual #143                // Method com/hypixel/hytale/server/worldgen/zone/ZoneDiscoveryConfig.major:()Z
+       236: aload         20
+       238: invokevirtual #146                // Method com/hypixel/hytale/server/worldgen/zone/ZoneDiscoveryConfig.duration:()F
+       241: aload         20
+       243: invokevirtual #150                // Method com/hypixel/hytale/server/worldgen/zone/ZoneDiscoveryConfig.fadeInDuration:()F
+       246: aload         20
+       248: invokevirtual #153                // Method com/hypixel/hytale/server/worldgen/zone/ZoneDiscoveryConfig.fadeOutDuration:()F
+       251: invokespecial #156                // Method com/hypixel/hytale/server/core/universe/world/WorldMapTracker$ZoneDiscoveryInfo."<init>":(Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;ZFFF)V
+       254: astore        21
+       256: aload         10
+       258: aload         9
+       260: aload         21
+       262: aload         18
+       264: invokevirtual #159                // Method com/hypixel/hytale/server/worldgen/biome/Biome.getName:()Ljava/lang/String;
+       267: aload         5
+       269: invokevirtual #64                 // Method com/hypixel/hytale/server/core/universe/world/WorldMapTracker.updateCurrentZoneAndBiome:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/universe/world/WorldMapTracker$ZoneDiscoveryInfo;Ljava/lang/String;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+       272: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: iconst_2
+         1: anewarray     #164                // class com/hypixel/hytale/component/ComponentType
+         4: dup
+         5: iconst_0
+         6: invokestatic  #31                 // Method com/hypixel/hytale/server/core/entity/entities/Player.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         9: aastore
+        10: dup
+        11: iconst_1
+        12: invokestatic  #70                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        15: aastore
+        16: invokestatic  #166                // Method com/hypixel/hytale/component/Archetype.of:([Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Archetype;
+        19: areturn
+
+  static {};
+    Code:
+         0: ldc           #44                 // class com/hypixel/hytale/server/worldgen/BiomeDataSystem
+         2: invokevirtual #172                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #43                 // Field $assertionsDisabled:Z
+        16: return
+}

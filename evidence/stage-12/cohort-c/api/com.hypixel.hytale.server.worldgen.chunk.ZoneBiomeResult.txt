@@ -1,0 +1,86 @@
+Compiled from "ZoneBiomeResult.java"
+public class com.hypixel.hytale.server.worldgen.chunk.ZoneBiomeResult {
+  public com.hypixel.hytale.server.worldgen.zone.ZoneGeneratorResult zoneResult;
+
+  public com.hypixel.hytale.server.worldgen.biome.Biome biome;
+
+  public double heightThresholdContext;
+
+  public double heightmapNoise;
+
+  public com.hypixel.hytale.server.worldgen.chunk.ZoneBiomeResult();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.server.worldgen.chunk.ZoneBiomeResult(com.hypixel.hytale.server.worldgen.zone.ZoneGeneratorResult, com.hypixel.hytale.server.worldgen.biome.Biome, double, double);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field zoneResult:Lcom/hypixel/hytale/server/worldgen/zone/ZoneGeneratorResult;
+         9: aload_0
+        10: aload_2
+        11: putfield      #13                 // Field biome:Lcom/hypixel/hytale/server/worldgen/biome/Biome;
+        14: aload_0
+        15: dload_3
+        16: putfield      #17                 // Field heightThresholdContext:D
+        19: aload_0
+        20: dload         5
+        22: putfield      #21                 // Field heightmapNoise:D
+        25: return
+
+  public com.hypixel.hytale.server.worldgen.zone.ZoneGeneratorResult getZoneResult();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field zoneResult:Lcom/hypixel/hytale/server/worldgen/zone/ZoneGeneratorResult;
+         4: areturn
+
+  public void setZoneResult(com.hypixel.hytale.server.worldgen.zone.ZoneGeneratorResult);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #7                  // Field zoneResult:Lcom/hypixel/hytale/server/worldgen/zone/ZoneGeneratorResult;
+         5: return
+
+  public com.hypixel.hytale.server.worldgen.biome.Biome getBiome();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field biome:Lcom/hypixel/hytale/server/worldgen/biome/Biome;
+         4: areturn
+
+  public void setBiome(com.hypixel.hytale.server.worldgen.biome.Biome);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #13                 // Field biome:Lcom/hypixel/hytale/server/worldgen/biome/Biome;
+         5: return
+
+  public double getHeightThresholdContext();
+    Code:
+         0: aload_0
+         1: getfield      #17                 // Field heightThresholdContext:D
+         4: dreturn
+
+  public void setHeightThresholdContext(double);
+    Code:
+         0: aload_0
+         1: dload_1
+         2: putfield      #17                 // Field heightThresholdContext:D
+         5: return
+
+  public double getHeightmapNoise();
+    Code:
+         0: aload_0
+         1: getfield      #21                 // Field heightmapNoise:D
+         4: dreturn
+
+  public void setHeightmapNoise(double);
+    Code:
+         0: aload_0
+         1: dload_1
+         2: putfield      #21                 // Field heightmapNoise:D
+         5: return
+}

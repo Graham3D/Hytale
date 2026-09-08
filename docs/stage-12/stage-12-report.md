@@ -170,3 +170,103 @@ No live deployment, owner-world mutation, Google Drive write or art change.
 
 This proves local transactional structure, not that a connected native enemy
 death earned anything. Continue with audited encounter/spawn/contribution paths.
+
+## Cohort C — audited enemy identities and bounded contribution eligibility
+
+### Installed evidence and deliberate scope
+
+Audited the exact pinned server/Assets.zip, retaining bytecode and the normalized
+asset inventory under `evidence/stage-12/cohort-c/api`. The inventory contains
+1053 named NPC role assets (73 Abstract, 159 Component, 322 Generic, 499 Variant),
+270 legacy Tile/Custom biome assets and 28 zones. These are asset counts, **not**
+verified combat-enemy population counts. All 87 catalog source rows remain in
+the audit: 66 proposed assignments and 21 UNASSIGNED; no source was promoted to
+VERIFIED_CONNECTED and no public learning opportunity was enabled.
+
+The first explicit RPG reward pilot classifies Wolf_Black, Trork_Warrior and
+Skeleton_Archer as COMMON/ORDINARY. Their installed role JSON hashes are recorded
+in `enemy-registry.json`. The choice is a small set of concrete predator, melee
+and ranged roles with auditable hostile kits. Patrol aliases are not assumed
+equivalent. All other roles, owned/summoned/revived/converted/training actors and
+unknown origins remain reward-disabled. Rank is an RPG authored profile, not a
+claim that native Hytale exposes that rank.
+
+Four qualified legacy biome identities are bound explicitly:
+
+| Native identity (Default generator) | RPG band | Pilot combat level |
+|---|---|---|
+| Zone1_Tier1/Forest_Birch | Emerald Wilds | 5 |
+| Zone2_Tier1/Savannah_Plains | Howling Sands | 25 |
+| Zone3_Tier1/Forest_Fir | Whisperfrost | 45 |
+| Zone4_Tier4/Wastes_Grasslands | Devastated Lands | 65 |
+
+These deliberately limited, low-band pilot levels are authored RPG values,
+not vanilla enemy levels or measured pacing. Registry identity and biome are
+captured in an immutable Spawn value; moving an enemy cannot change its reward.
+Other biomes, newer world generators and authored endgame remain unclassified.
+No difficulty multiplier is enabled by this assignment alone.
+
+The actual installed FileContextLoader resolves all four names from Assets.zip
+in automated native-control tests. Its zone requirement must be explicit (an
+empty set loads no zones), and its FileIO provider must point at the zip root.
+The first two test attempts exposed these setup requirements; both were corrected
+before the passing run. A second test matches all seven role/biome asset hashes.
+This proves installed asset identity and loader compatibility, not connected
+spawn provenance, rendering, combat behavior or skill-source eligibility.
+
+### Contribution/reward-plan implementation
+
+EncounterContributions accepts actual Health loss, actual hostile absorption,
+effective control/taunt, or non-overheal healing of a recent contributor from a
+trusted server caller. No last hit is required. Death eligibility enforces the
+inclusive 20-second contribution and 64-meter distance limits, same loaded world,
+unique players and immutable spawn profile. The death plan freezes recipients,
+amounts and event ID once; retries cannot recalculate using changed membership.
+
+Party members share one pot equally, without a multiplier. The master does not
+specify which player level resolves a mixed-level party's common pot. This cohort
+makes the conservative policy explicit: use the **highest eligible member level**
+for the level-difference factor, then split equally (minimum one for positive XP).
+An ineligible distant/high-level member does not affect the pot. Solo players use
+their own level. Each eligible participant receives the authored rank Insight.
+The party ID is a trusted-provider input; no native party API or live party
+integration is claimed from these fixtures.
+
+Mastery eligibility rejects 11+-level-under targets and stale/farm-like encounters.
+The 60-second progress watermark advances on a new record-low enemy Health
+fraction; healing and repeatedly damaging back to the same low point do not
+reset it. Effective support can qualify initially, but unchanged support alone
+cannot keep a captive encounter productive indefinitely. A conversion invalidates
+the encounter for its lifetime, including after allegiance restoration.
+
+Budgets are explicit: 4096 encounters, 256 contributors/encounter, 16384 total
+contributions and 64 indexed encounters/player for healing queries. No unbounded
+world scan is introduced. Exhausted admission rejects new credit. Removal/world
+unload clears the indices. Native hooks, durable spawn/farm state and durable
+partial-party death recovery are the **next cohort**, not implicitly completed
+by this in-memory primitive.
+
+### Local evidence and limitations
+
+37 contribution/registry tests plus two real loader/asset tests were added.
+Coverage includes disallowed origins, immutable biome context, real HP deltas,
+support credit and overheal rejection, expiry/distance/world boundaries, mixed
+parties, duplicate death callbacks, conversion exclusion, farm limits and bounded
+cleanup. A backend death-plan fixture passes through the real cohort-B durable
+award service into authoritative XP/level/5+5 points/Insight and the existing XP
+view; replay awards nothing. It is **not** a native death or connected HUD test.
+
+Full clean retained build: **1486 tests, zero failures/errors/skips**, 53 seconds.
+Normal isolated three-mod network boot/clean stop and retained asset gates pass.
+Startup validates the three actual spawnable roles and four configured biome
+bindings, explicitly logging awardHook=false and connectedProof=false.
+Player schema8 and compiled plan35 are unchanged. Native HUD, input, resource
+balance and old Stage04/05 profiles remain untouched; 87/66 and 60 neutral native
+ability triggers are retained.
+
+Artifact SHA-256: 0399B67A7F8279E578575D38985D5BA2A2B88F948A3C9A55533BF7C01365D652.
+Rollback cohort B: 7AAF6BB922BB3B615919963D81F55C28E6174B88931EABC2F27F879A60ED3932.
+Evidence/archive/rollback: `evidence/stage-12/cohort-c/`.
+No live deployment, owner-world mutation, art change or Google Drive write.
+Local gate PASS; connected gate UNVERIFIED. Continue with durable encounters and
+native event hooks, retaining exact failure boundaries instead of fabricating XP.

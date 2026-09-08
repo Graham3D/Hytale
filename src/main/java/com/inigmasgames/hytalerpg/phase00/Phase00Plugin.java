@@ -282,6 +282,10 @@ public final class Phase00Plugin extends JavaPlugin {
         LOGGER.atInfo().log("RPG_STAGE09_READY revision=%s supportProfiles=%d playerSchema=%d regenAdapter=NATIVE_ENTRY_DECORATOR reservationProjection=STATIC_MAX allyPolicy=SELF_OR_NATIVE_FRIENDLY connectedProof=false",
                 BuildIdentity.REVISION,Stage04SkillProfiles.EXPECTED_STAGE09_PROFILES,com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA);
         com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Wolf");
+        var encounterRegistry=com.inigmasgames.hytalerpg.progress.EnemyRewardRegistry.load();
+        for(var role:encounterRegistry.roles())com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole(role.roleId());
+        LOGGER.atInfo().log("RPG_STAGE12_ENCOUNTER_REGISTRY roles=%d biomes=%d rankAuthority=RPG_PROFILE awardHook=false connectedProof=false",
+                encounterRegistry.roles().size(),encounterRegistry.biomes().size());
         com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Crawler");
         com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Broodling");
         LOGGER.atInfo().log("RPG_STAGE10_BATCH_ROLES count=3 result=PASS connectedProof=false");

@@ -1,0 +1,173 @@
+Compiled from "FileContext.java"
+public class com.hypixel.hytale.server.worldgen.loader.context.FileContext<T extends com.hypixel.hytale.server.worldgen.loader.context.FileContext<?>> {
+  private final int id;
+
+  private final java.lang.String name;
+
+  private final java.nio.file.Path filepath;
+
+  private final T parentContext;
+
+  private transient java.lang.String rootPath;
+
+  private transient java.lang.String contentPath;
+
+  public com.hypixel.hytale.server.worldgen.loader.context.FileContext(int, java.lang.String, java.nio.file.Path, T);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aconst_null
+         6: putfield      #7                  // Field rootPath:Ljava/lang/String;
+         9: aload_0
+        10: aconst_null
+        11: putfield      #13                 // Field contentPath:Ljava/lang/String;
+        14: aload_0
+        15: iload_1
+        16: putfield      #16                 // Field id:I
+        19: aload_0
+        20: aload_2
+        21: putfield      #20                 // Field name:Ljava/lang/String;
+        24: aload_0
+        25: aload_3
+        26: putfield      #23                 // Field filepath:Ljava/nio/file/Path;
+        29: aload_0
+        30: aload         4
+        32: putfield      #27                 // Field parentContext:Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext;
+        35: return
+
+  public int getId();
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field id:I
+         4: ireturn
+
+  public java.lang.String getName();
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field name:Ljava/lang/String;
+         4: areturn
+
+  public java.nio.file.Path getPath();
+    Code:
+         0: aload_0
+         1: getfield      #23                 // Field filepath:Ljava/nio/file/Path;
+         4: areturn
+
+  public java.lang.String getRootPath();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field rootPath:Ljava/lang/String;
+         4: ifnonnull     28
+         7: aload_0
+         8: aload_0
+         9: invokevirtual #31                 // Method getRoot:()Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext;
+        12: getfield      #23                 // Field filepath:Ljava/nio/file/Path;
+        15: invokeinterface #35,  1           // InterfaceMethod java/nio/file/Path.getFileName:()Ljava/nio/file/Path;
+        20: invokeinterface #41,  1           // InterfaceMethod java/nio/file/Path.toString:()Ljava/lang/String;
+        25: putfield      #7                  // Field rootPath:Ljava/lang/String;
+        28: aload_0
+        29: getfield      #7                  // Field rootPath:Ljava/lang/String;
+        32: areturn
+
+  public T getParentContext();
+    Code:
+         0: aload_0
+         1: getfield      #27                 // Field parentContext:Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext;
+         4: areturn
+
+  public java.lang.String getContentPath();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field contentPath:Ljava/lang/String;
+         4: ifnonnull     22
+         7: aload_0
+         8: aload_0
+         9: getfield      #23                 // Field filepath:Ljava/nio/file/Path;
+        12: aload_0
+        13: getfield      #27                 // Field parentContext:Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext;
+        16: invokestatic  #45                 // Method toContentPath:(Ljava/nio/file/Path;Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext;)Ljava/lang/String;
+        19: putfield      #13                 // Field contentPath:Ljava/lang/String;
+        22: aload_0
+        23: getfield      #13                 // Field contentPath:Ljava/lang/String;
+        26: areturn
+
+  public com.hypixel.hytale.server.worldgen.loader.context.FileContext<?> getRoot();
+    Code:
+         0: aload_0
+         1: astore_1
+         2: aload_1
+         3: getfield      #27                 // Field parentContext:Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext;
+         6: getstatic     #49                 // Field com/hypixel/hytale/server/worldgen/loader/context/FileContext$RootContext.INSTANCE:Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext$RootContext;
+         9: if_acmpeq     20
+        12: aload_1
+        13: getfield      #27                 // Field parentContext:Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext;
+        16: astore_1
+        17: goto          2
+        20: aload_1
+        21: areturn
+
+  private static java.lang.String toContentPath(java.nio.file.Path, com.hypixel.hytale.server.worldgen.loader.context.FileContext<?>);
+    Code:
+         0: new           #55                 // class java/lang/StringBuilder
+         3: dup
+         4: invokespecial #57                 // Method java/lang/StringBuilder."<init>":()V
+         7: astore_2
+         8: aload_1
+         9: getstatic     #49                 // Field com/hypixel/hytale/server/worldgen/loader/context/FileContext$RootContext.INSTANCE:Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext$RootContext;
+        12: if_acmpne     19
+        15: iconst_0
+        16: goto          31
+        19: aload_1
+        20: invokevirtual #31                 // Method getRoot:()Lcom/hypixel/hytale/server/worldgen/loader/context/FileContext;
+        23: getfield      #23                 // Field filepath:Ljava/nio/file/Path;
+        26: invokeinterface #58,  1           // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        31: istore_3
+        32: iload_3
+        33: istore        4
+        35: iload         4
+        37: aload_0
+        38: invokeinterface #58,  1           // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        43: if_icmpge     129
+        46: iload         4
+        48: iload_3
+        49: if_icmple     59
+        52: aload_2
+        53: bipush        46
+        55: invokevirtual #62                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+        58: pop
+        59: aload_0
+        60: iload         4
+        62: invokeinterface #66,  2           // InterfaceMethod java/nio/file/Path.getName:(I)Ljava/nio/file/Path;
+        67: invokeinterface #41,  1           // InterfaceMethod java/nio/file/Path.toString:()Ljava/lang/String;
+        72: astore        5
+        74: aload         5
+        76: invokevirtual #70                 // Method java/lang/String.length:()I
+        79: istore        6
+        81: iload         4
+        83: aload_0
+        84: invokeinterface #58,  1           // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        89: iconst_1
+        90: isub
+        91: if_icmpne     113
+        94: aload         5
+        96: bipush        46
+        98: invokevirtual #75                 // Method java/lang/String.lastIndexOf:(I)I
+       101: istore        7
+       103: iload         7
+       105: iconst_m1
+       106: if_icmpeq     113
+       109: iload         7
+       111: istore        6
+       113: aload_2
+       114: aload         5
+       116: iconst_0
+       117: iload         6
+       119: invokevirtual #79                 // Method java/lang/StringBuilder.append:(Ljava/lang/CharSequence;II)Ljava/lang/StringBuilder;
+       122: pop
+       123: iinc          4, 1
+       126: goto          35
+       129: aload_2
+       130: invokevirtual #82                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+       133: areturn
+}

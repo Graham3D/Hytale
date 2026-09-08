@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "profileId": "rpg.progression.r031",
   "biomeBands": [
-    {"id":"emerald_wilds","minimumLevel":1,"maximumLevel":20,"verifiedNativeBiomeIds":[]},
-    {"id":"howling_sands","minimumLevel":21,"maximumLevel":40,"verifiedNativeBiomeIds":[]},
-    {"id":"whisperfrost","minimumLevel":41,"maximumLevel":60,"verifiedNativeBiomeIds":[]},
-    {"id":"devastated_lands","minimumLevel":61,"maximumLevel":80,"verifiedNativeBiomeIds":[]},
+    {"id":"emerald_wilds","minimumLevel":1,"maximumLevel":20,"verifiedNativeBiomeIds":["Default/Zone1_Tier1/Forest_Birch"]},
+    {"id":"howling_sands","minimumLevel":21,"maximumLevel":40,"verifiedNativeBiomeIds":["Default/Zone2_Tier1/Savannah_Plains"]},
+    {"id":"whisperfrost","minimumLevel":41,"maximumLevel":60,"verifiedNativeBiomeIds":["Default/Zone3_Tier1/Forest_Fir"]},
+    {"id":"devastated_lands","minimumLevel":61,"maximumLevel":80,"verifiedNativeBiomeIds":["Default/Zone4_Tier4/Wastes_Grasslands"]},
     {"id":"authored_endgame","minimumLevel":81,"maximumLevel":99,"verifiedNativeBiomeIds":[]}
   ],
   "difficulties": [
