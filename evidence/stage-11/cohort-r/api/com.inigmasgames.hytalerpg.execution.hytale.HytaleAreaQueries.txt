@@ -1,0 +1,394 @@
+Compiled from "HytaleAreaQueries.java"
+final class com.inigmasgames.hytalerpg.execution.hytale.HytaleAreaQueries {
+  private static final int MAX_SCANNED_NPCS;
+
+  private static final com.hypixel.hytale.math.shape.Box RAY;
+
+  com.inigmasgames.hytalerpg.execution.hytale.HytaleAreaQueries();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  static com.inigmasgames.hytalerpg.execution.hytale.HytaleAreaQueries$Result query(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.inigmasgames.hytalerpg.execution.area.AreaGeometry, int);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: dup
+         4: invokestatic  #7                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+         7: pop
+         8: invokedynamic #13,  0             // InvokeDynamic #0:test:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;)Ljava/util/function/Predicate;
+        13: iload_3
+        14: invokestatic  #17                 // Method query:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;Ljava/util/function/Predicate;I)Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Result;
+        17: areturn
+
+  static com.inigmasgames.hytalerpg.execution.hytale.HytaleAreaQueries$Result query(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.util.function.Predicate<com.inigmasgames.hytalerpg.execution.area.AreaGeometry$Bounds>, int);
+    Code:
+         0: iconst_4
+         1: anewarray     #23                 // class com/hypixel/hytale/component/query/Query
+         4: dup
+         5: iconst_0
+         6: invokestatic  #25                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         9: aastore
+        10: dup
+        11: iconst_1
+        12: invokestatic  #31                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        15: aastore
+        16: dup
+        17: iconst_2
+        18: invokestatic  #34                 // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        21: aastore
+        22: dup
+        23: iconst_3
+        24: invokestatic  #37                 // Method com/hypixel/hytale/server/core/entity/UUIDComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        27: aastore
+        28: invokestatic  #40                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        31: astore        4
+        33: aload_0
+        34: aload         4
+        36: invokevirtual #44                 // Method com/hypixel/hytale/component/Store.getEntityCountFor:(Lcom/hypixel/hytale/component/query/Query;)I
+        39: sipush        4096
+        42: if_icmple     57
+        45: new           #50                 // class com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Result
+        48: dup
+        49: invokestatic  #52                 // InterfaceMethod java/util/List.of:()Ljava/util/List;
+        52: iconst_1
+        53: invokespecial #58                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Result."<init>":(Ljava/util/List;Z)V
+        56: areturn
+        57: new           #61                 // class java/util/ArrayList
+        60: dup
+        61: invokespecial #63                 // Method java/util/ArrayList."<init>":()V
+        64: astore        5
+        66: aload_0
+        67: aload         4
+        69: aload_1
+        70: aload_2
+        71: aload_0
+        72: aload         5
+        74: iload_3
+        75: invokedynamic #64,  0             // InvokeDynamic #1:test:(Lcom/hypixel/hytale/component/Ref;Ljava/util/function/Predicate;Lcom/hypixel/hytale/component/Store;Ljava/util/List;I)Ljava/util/function/BiPredicate;
+        80: invokevirtual #67                 // Method com/hypixel/hytale/component/Store.forEachChunk:(Lcom/hypixel/hytale/component/query/Query;Ljava/util/function/BiPredicate;)Z
+        83: istore        6
+        85: new           #50                 // class com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Result
+        88: dup
+        89: iload         6
+        91: ifeq          100
+        94: invokestatic  #52                 // InterfaceMethod java/util/List.of:()Ljava/util/List;
+        97: goto          105
+       100: aload         5
+       102: invokestatic  #71                 // InterfaceMethod java/util/List.copyOf:(Ljava/util/Collection;)Ljava/util/List;
+       105: iload         6
+       107: invokespecial #58                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Result."<init>":(Ljava/util/List;Z)V
+       110: areturn
+
+  static boolean hostile(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_1
+         1: invokevirtual #75                 // Method com/hypixel/hytale/component/Ref.isValid:()Z
+         4: ifeq          22
+         7: aload_2
+         8: invokevirtual #75                 // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        11: ifeq          22
+        14: aload_1
+        15: aload_2
+        16: invokevirtual #81                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+        19: ifeq          24
+        22: iconst_0
+        23: ireturn
+        24: aload_0
+        25: aload_1
+        26: invokestatic  #85                 // Method com/hypixel/hytale/server/npc/role/support/WorldSupport.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        29: invokevirtual #88                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        32: checkcast     #86                 // class com/hypixel/hytale/server/npc/role/support/WorldSupport
+        35: astore_3
+        36: aload_3
+        37: ifnull        57
+        40: aload_3
+        41: aload_1
+        42: aload_2
+        43: aload_0
+        44: invokevirtual #92                 // Method com/hypixel/hytale/server/npc/role/support/WorldSupport.getAttitude:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/server/core/asset/type/attitude/Attitude;
+        47: getstatic     #96                 // Field com/hypixel/hytale/server/core/asset/type/attitude/Attitude.HOSTILE:Lcom/hypixel/hytale/server/core/asset/type/attitude/Attitude;
+        50: if_acmpne     57
+        53: iconst_1
+        54: goto          58
+        57: iconst_0
+        58: ireturn
+
+  static java.util.Optional<com.inigmasgames.hytalerpg.execution.math.Vec3> ground(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.math.Vec3, double);
+    Code:
+         0: aload_2
+         1: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.normalized:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+         4: dload_3
+         5: invokevirtual #108                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.multiply:(D)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+         8: astore        5
+        10: aload_0
+        11: aload_1
+        12: aload         5
+        14: invokestatic  #112                // Method first:(Lcom/hypixel/hytale/component/Store;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;
+        17: astore        6
+        19: aload         6
+        21: ifnull        59
+        24: aload         6
+        26: getfield      #116                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionNormal:Lorg/joml/Vector3d;
+        29: invokevirtual #122                // Method org/joml/Vector3d.y:()D
+        32: ldc2_w        #128                // double 0.5d
+        35: dcmpg
+        36: iflt          59
+        39: aload         6
+        41: getfield      #130                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+        44: dconst_0
+        45: dcmpg
+        46: iflt          59
+        49: aload         6
+        51: getfield      #130                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+        54: dconst_1
+        55: dcmpl
+        56: ifle          63
+        59: invokestatic  #134                // Method java/util/Optional.empty:()Ljava/util/Optional;
+        62: areturn
+        63: aload_1
+        64: aload         5
+        66: aload         6
+        68: getfield      #130                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+        71: invokevirtual #108                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.multiply:(D)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        74: invokevirtual #140                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        77: new           #103                // class com/inigmasgames/hytalerpg/execution/math/Vec3
+        80: dup
+        81: dconst_0
+        82: ldc2_w        #144                // double 0.01d
+        85: dconst_0
+        86: invokespecial #146                // Method com/inigmasgames/hytalerpg/execution/math/Vec3."<init>":(DDD)V
+        89: invokevirtual #140                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        92: invokestatic  #149                // Method java/util/Optional.of:(Ljava/lang/Object;)Ljava/util/Optional;
+        95: areturn
+
+  static boolean clear(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.math.Vec3);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_1
+         4: invokevirtual #152                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.subtract:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+         7: invokestatic  #112                // Method first:(Lcom/hypixel/hytale/component/Store;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;
+        10: astore_3
+        11: aload_3
+        12: ifnull        26
+        15: aload_3
+        16: getfield      #130                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+        19: ldc2_w        #155                // double 0.999999d
+        22: dcmpl
+        23: iflt          30
+        26: iconst_1
+        27: goto          31
+        30: iconst_0
+        31: ireturn
+
+  static com.inigmasgames.hytalerpg.execution.math.Vec3 rayEndpoint(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.math.Vec3, double);
+    Code:
+         0: aload_2
+         1: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.normalized:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+         4: dload_3
+         5: invokevirtual #108                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.multiply:(D)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+         8: astore        5
+        10: aload_0
+        11: aload_1
+        12: aload         5
+        14: invokestatic  #112                // Method first:(Lcom/hypixel/hytale/component/Store;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;
+        17: astore        6
+        19: aload         6
+        21: ifnonnull     28
+        24: dconst_1
+        25: goto          50
+        28: aload         6
+        30: getfield      #130                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+        33: ldc2_w        #157                // double 0.03d
+        36: ldc2_w        #157                // double 0.03d
+        39: dload_3
+        40: invokestatic  #159                // Method java/lang/Math.max:(DD)D
+        43: ddiv
+        44: dsub
+        45: dconst_0
+        46: dconst_1
+        47: invokestatic  #165                // Method java/lang/Math.clamp:(DDD)D
+        50: dstore        7
+        52: aload_1
+        53: aload         5
+        55: dload         7
+        57: invokevirtual #108                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.multiply:(D)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        60: invokevirtual #140                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        63: areturn
+
+  private static com.hypixel.hytale.server.core.modules.collision.BlockCollisionData first(com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.math.Vec3);
+    Code:
+         0: new           #169                // class com/hypixel/hytale/server/core/modules/collision/CollisionResult
+         3: dup
+         4: invokespecial #171                // Method com/hypixel/hytale/server/core/modules/collision/CollisionResult."<init>":()V
+         7: astore_3
+         8: aload_3
+         9: invokevirtual #172                // Method com/hypixel/hytale/server/core/modules/collision/CollisionResult.setDefaultPlayerSettings:()V
+        12: aload_3
+        13: invokevirtual #175                // Method com/hypixel/hytale/server/core/modules/collision/CollisionResult.disableCharacterCollisions:()V
+        16: aload_3
+        17: invokevirtual #178                // Method com/hypixel/hytale/server/core/modules/collision/CollisionResult.disableTriggerBlocks:()V
+        20: aload_3
+        21: invokevirtual #181                // Method com/hypixel/hytale/server/core/modules/collision/CollisionResult.disableDamageBlocks:()V
+        24: new           #184                // class com/hypixel/hytale/math/shape/Box
+        27: dup
+        28: getstatic     #186                // Field RAY:Lcom/hypixel/hytale/math/shape/Box;
+        31: invokespecial #190                // Method com/hypixel/hytale/math/shape/Box."<init>":(Lcom/hypixel/hytale/math/shape/Box;)V
+        34: aload_1
+        35: invokestatic  #193                // Method vector:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lorg/joml/Vector3d;
+        38: aload_2
+        39: invokestatic  #193                // Method vector:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lorg/joml/Vector3d;
+        42: aload_3
+        43: aload_0
+        44: invokestatic  #197                // Method com/hypixel/hytale/server/core/modules/collision/CollisionModule.findCollisions:(Lcom/hypixel/hytale/math/shape/Box;Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lcom/hypixel/hytale/server/core/modules/collision/CollisionResult;Lcom/hypixel/hytale/component/ComponentAccessor;)Z
+        47: pop
+        48: aconst_null
+        49: astore        4
+        51: iconst_0
+        52: istore        5
+        54: iload         5
+        56: aload_3
+        57: invokevirtual #203                // Method com/hypixel/hytale/server/core/modules/collision/CollisionResult.getBlockCollisionCount:()I
+        60: if_icmpge     100
+        63: aload_3
+        64: iload         5
+        66: invokevirtual #207                // Method com/hypixel/hytale/server/core/modules/collision/CollisionResult.getBlockCollision:(I)Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionData;
+        69: astore        6
+        71: aload         4
+        73: ifnull        90
+        76: aload         6
+        78: getfield      #130                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+        81: aload         4
+        83: getfield      #130                // Field com/hypixel/hytale/server/core/modules/collision/BlockCollisionData.collisionStart:D
+        86: dcmpg
+        87: ifge          94
+        90: aload         6
+        92: astore        4
+        94: iinc          5, 1
+        97: goto          54
+       100: aload         4
+       102: areturn
+
+  private static com.inigmasgames.hytalerpg.execution.math.Vec3 vec(org.joml.Vector3dc);
+    Code:
+         0: new           #103                // class com/inigmasgames/hytalerpg/execution/math/Vec3
+         3: dup
+         4: aload_0
+         5: invokeinterface #211,  1          // InterfaceMethod org/joml/Vector3dc.x:()D
+        10: aload_0
+        11: invokeinterface #216,  1          // InterfaceMethod org/joml/Vector3dc.y:()D
+        16: aload_0
+        17: invokeinterface #217,  1          // InterfaceMethod org/joml/Vector3dc.z:()D
+        22: invokespecial #146                // Method com/inigmasgames/hytalerpg/execution/math/Vec3."<init>":(DDD)V
+        25: areturn
+
+  private static org.joml.Vector3d vector(com.inigmasgames.hytalerpg.execution.math.Vec3);
+    Code:
+         0: new           #123                // class org/joml/Vector3d
+         3: dup
+         4: aload_0
+         5: invokevirtual #220                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.x:()D
+         8: aload_0
+         9: invokevirtual #221                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.y:()D
+        12: aload_0
+        13: invokevirtual #222                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.z:()D
+        16: invokespecial #223                // Method org/joml/Vector3d."<init>":(DDD)V
+        19: areturn
+
+  private static boolean lambda$query$0(com.hypixel.hytale.component.Ref, java.util.function.Predicate, com.hypixel.hytale.component.Store, java.util.List, int, com.hypixel.hytale.component.ArchetypeChunk, com.hypixel.hytale.component.CommandBuffer);
+    Code:
+         0: iconst_0
+         1: istore        7
+         3: iload         7
+         5: aload         5
+         7: invokevirtual #224                // Method com/hypixel/hytale/component/ArchetypeChunk.size:()I
+        10: if_icmpge     180
+        13: aload         5
+        15: iload         7
+        17: invokevirtual #229                // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+        20: astore        8
+        22: aload         8
+        24: aload_0
+        25: invokevirtual #81                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+        28: ifne          174
+        31: aload         8
+        33: invokevirtual #75                 // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        36: ifne          42
+        39: goto          174
+        42: aload         5
+        44: iload         7
+        46: invokestatic  #34                 // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        49: invokevirtual #233                // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        52: checkcast     #35                 // class com/hypixel/hytale/server/core/modules/entity/component/BoundingBox
+        55: invokevirtual #236                // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getBoundingBox:()Lcom/hypixel/hytale/math/shape/Box;
+        58: astore        9
+        60: aload         5
+        62: iload         7
+        64: invokestatic  #31                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        67: invokevirtual #233                // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        70: checkcast     #32                 // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+        73: invokevirtual #240                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+        76: astore        10
+        78: new           #244                // class com/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds
+        81: dup
+        82: aload         9
+        84: getfield      #246                // Field com/hypixel/hytale/math/shape/Box.min:Lorg/joml/Vector3d;
+        87: invokestatic  #249                // Method vec:(Lorg/joml/Vector3dc;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        90: aload         10
+        92: invokestatic  #249                // Method vec:(Lorg/joml/Vector3dc;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        95: invokevirtual #140                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        98: aload         9
+       100: getfield      #253                // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+       103: invokestatic  #249                // Method vec:(Lorg/joml/Vector3dc;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       106: aload         10
+       108: invokestatic  #249                // Method vec:(Lorg/joml/Vector3dc;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       111: invokevirtual #140                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       114: invokespecial #255                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds."<init>":(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)V
+       117: astore        11
+       119: aload_1
+       120: aload         11
+       122: invokeinterface #258,  2          // InterfaceMethod java/util/function/Predicate.test:(Ljava/lang/Object;)Z
+       127: ifeq          174
+       130: aload_2
+       131: aload         8
+       133: aload_0
+       134: invokestatic  #262                // Method hostile:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;)Z
+       137: ifne          143
+       140: goto          174
+       143: aload_3
+       144: invokeinterface #266,  1          // InterfaceMethod java/util/List.size:()I
+       149: iload         4
+       151: if_icmpne     156
+       154: iconst_1
+       155: ireturn
+       156: aload_3
+       157: new           #267                // class com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Candidate
+       160: dup
+       161: aload         8
+       163: aload         11
+       165: invokespecial #269                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries$Candidate."<init>":(Lcom/hypixel/hytale/component/Ref;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)V
+       168: invokeinterface #272,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       173: pop
+       174: iinc          7, 1
+       177: goto          3
+       180: iconst_0
+       181: ireturn
+
+  static {};
+    Code:
+         0: new           #184                // class com/hypixel/hytale/math/shape/Box
+         3: dup
+         4: ldc2_w        #274                // double -0.01d
+         7: ldc2_w        #274                // double -0.01d
+        10: ldc2_w        #274                // double -0.01d
+        13: ldc2_w        #144                // double 0.01d
+        16: ldc2_w        #144                // double 0.01d
+        19: ldc2_w        #144                // double 0.01d
+        22: invokespecial #276                // Method com/hypixel/hytale/math/shape/Box."<init>":(DDDDDD)V
+        25: putstatic     #186                // Field RAY:Lcom/hypixel/hytale/math/shape/Box;
+        28: return
+}

@@ -684,7 +684,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     DamageCause cause=connectionCause(context.profile().connection().element());
                     if(cause==null)throw new IllegalStateException("CONNECTION_DAMAGE_CAUSE_MISSING");
                     var outcome=Port.this.damage(context,value,tick,coefficient,periodic?0:context.snapshot().criticalChance(),cause,periodic,
-                            context.skillInstanceId()+"/connection/"+tick,!periodic);
+                            context.skillInstanceId()+"/connection/"+tick,!periodic&&!context.derivedRelease());
                     var authored=context.profile().connection().details();
                     if(!outcome.cancelled()&&!authored.status().isBlank()&&ref.isValid()) {
                         var npc=store.getComponent(ref,NPCEntity.getComponentType());

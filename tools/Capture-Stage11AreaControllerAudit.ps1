@@ -13,12 +13,14 @@ foreach($areaClass in @('com.hypixel.hytale.server.core.modules.collision.Collis
     'com.inigmasgames.hytalerpg.execution.hytale.HytaleAreaQueries',
     'com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem$Port',
     'com.inigmasgames.hytalerpg.execution.area.AreaRuntime',
+    'com.inigmasgames.hytalerpg.execution.connection.ConnectionRuntime',
     'com.inigmasgames.hytalerpg.execution.SkillExecutionContext',
     'com.inigmasgames.hytalerpg.execution.RootEffectBudget')){
     $areaText=(& $areaJavap -classpath "$areaJar;$areaServer" -c -p $areaClass) -join "`n"
     if($LASTEXITCODE -ne 0){throw "Area controller audit failed: $areaClass"}
     $areaText | Set-Content -LiteralPath (Join-Path $areaOut ($areaClass+'.txt')) -Encoding utf8
     if($areaClass.EndsWith('AreaRuntime') -and ($areaText -notmatch 'cascadeCopy' -or $areaText -notmatch 'RootEffectBudget.claim' -or $areaText -notmatch 'AreaWorldPort.prepareImpact')){throw 'Missing guarded derived-area admission'}
+    if($Cohort -eq 'r' -and ($areaClass.EndsWith('AreaRuntime') -or $areaClass.EndsWith('ConnectionRuntime')) -and $areaText -notmatch 'aftermathCopy'){throw 'Missing native-family natural-expiry child boundary'}
 }
 [ordered]@{serverSha256=(Get-FileHash -LiteralPath $areaServer).Hash;jarSha256=(Get-FileHash -LiteralPath $areaJar).Hash;
     scope='Derived area -> legal native terrain/collision path -> existing finite field registry -> shared root budgets/status limits -> existing native damage adapter';

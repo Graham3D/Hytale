@@ -29,6 +29,11 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(passive.id().value().equals("aftermath")){
+            if(!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.aftermath(skill.id().value()))return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
+                    "Aftermath requires a finite persistent area/Orb/Orbit, not a channel, Aura, collision wall, travelling carrier or recipient buff.",Set.of("EXPIRING_PERSISTENT_AREA_COMPONENT"),actual);
+            actual.add("PERSISTENT_FINITE_EFFECT");actual.add("HAS_AREA_GEOMETRY");
+        }
         if(passive.id().value().equals("cascade")){
             if(!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.cascade(skill.id().value()))return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
                     "Cascade requires a ground-targeted radial area, not a caster burst, trap, corpse, collision wall or Aura.",Set.of("GROUND_TARGETED_RADIAL_AREA"),actual);

@@ -16,14 +16,22 @@ public final class ConnectionRuntime {
         return capacity.admission(owner);
     }
     public synchronized void start(SkillExecutionContext context,double now,ConnectionWorldPort port) {
+        startAt(context,now,port,null,null);
+    }
+    private void startAt(SkillExecutionContext context,double now,ConnectionWorldPort port,Vec3 inheritedOrigin,Vec3 inheritedDirection){
         if(context.profile().connection()==null||!Double.isFinite(now))throw new IllegalArgumentException("Invalid connection start");
         var profile=context.profile().connection();var frame=port.frame();String verdict=port.validate(context,frame.world());
         if(!verdict.equals("PASS"))throw new IllegalStateException(verdict);
         verdict=admission(context.request().actorId(),profile.channel());if(!verdict.equals("PASS"))throw new IllegalStateException(verdict);
-        var origin=frame.feet().add(new Vec3(0,profile.originHeight(),0));
-        Vec3 direction=context.target()==null?frame.aim():context.target().point().subtract(origin).normalized();
+        var origin=inheritedOrigin==null?frame.feet().add(new Vec3(0,profile.originHeight(),0)):inheritedOrigin;
+        Vec3 direction=inheritedDirection!=null?inheritedDirection:context.target()==null?frame.aim():context.target().point().subtract(origin).normalized();
         if(profile.kind()==ConnectionProfile.Kind.WAVE)direction=direction.horizontalNormalized();
         var field=new Field(context,frame.world(),origin,direction,now);
+        if(context.secondaryKind().equals("aftermath")){
+            String claim=context.effects().claim(context.skillInstanceId(),1,true);if(!claim.equals("PASS"))throw new IllegalStateException(claim);
+            // Leave an expiring Orb's pulse at its final point; this is not another flight/reach grant.
+            field.stopped=profile.kind()==ConnectionProfile.Kind.ORB;
+        }
         if(profile.requiresTarget()) {
             if(context.target()==null||context.target().entityId()==null)throw new IllegalStateException("COMMITTED_ENTITY_TARGET_MISSING");
             field.targetId=context.target().entityId().toString();
@@ -203,6 +211,13 @@ public final class ConnectionRuntime {
         if(field.done)return;field.done=true;fields.remove(field.context.skillInstanceId(),field);capacity.release(field.owner(),field.context.skillInstanceId());
         try {port.trace(field.context,"CONNECTION_TERMINATED",Map.of("reason",reason,"ticks",field.tick,"travelled",field.travelled));}
         finally {port.ended(field.context,reason);}
+        if(field.context.compiledPlan().zones().aftermath()&&!field.context.derivedRelease()
+                &&Set.of("ORBIT_EXPIRED","CONNECTION_EXPIRED").contains(reason)
+                &&com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.aftermath(field.context.profile())
+                &&field.context.effects().once("AFTERMATH")){
+            try{startAt(field.context.aftermathCopy(),field.lastTick,port,field.position,field.direction);}
+            catch(RuntimeException failure){try{port.trace(field.context,"CONNECTION_TERMINATED",Map.of("reason","AFTERMATH_CHILD_REJECTED","boundary",String.valueOf(failure.getMessage())));}catch(RuntimeException ignored){}}
+        }
     }
     private static final class Field {
         final SkillExecutionContext context,pulseContext;final UUID world;final Vec3 origin,direction;final double started;

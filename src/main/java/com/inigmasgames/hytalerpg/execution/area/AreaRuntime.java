@@ -35,23 +35,24 @@ public final class AreaRuntime {
             throw new IllegalArgumentException("Invalid area start");
         boolean mobile=context.compiledPlan().zones().mobileDomain();
         boolean cascade=context.compiledPlan().zones().cascade();
+        boolean controlled=cascade||context.compiledPlan().zones().aftermath();
         if(cascade&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.cascade(context.profile()))throw new IllegalStateException("CASCADE_AREA_COMPONENT_REQUIRED");
         if(context.compiledPlan().pulses().rapidPulse()&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.periodicPulse(context.profile()))
             throw new IllegalStateException("PERIODIC_PULSE_COMPONENT_REQUIRED");
         if(mobile&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.mobileZone(context.profile()))
             throw new IllegalStateException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
         Vec3 anchor=mobile?mobileOrigin(context,port).orElseThrow(()->new IllegalStateException("MOBILE_OWNER_ANCHOR_UNAVAILABLE")):point;
-        Vec3 origin=mobile&&!context.secondaryKind().equals("cascade")?anchor:point;
+        Vec3 origin=mobile&&context.secondaryKind().isEmpty()?anchor:point;
         String admission = admission(context.request().actorId(), context.profile().skillId(), profile.trap());
         if (!admission.equals("PASS")) throw new IllegalStateException(admission);
         if (fields.containsKey(context.skillInstanceId())) throw new IllegalStateException("DUPLICATE_FIELD_INSTANCE");
-        int spawnCost=1+(profile.stratified()&&!cascade?profile.impactCount():0);
+        int spawnCost=1+(profile.stratified()&&!controlled?profile.impactCount():0);
         int spent=rootSpawned.getOrDefault(rootKey(context),0);
         if(spent+spawnCost>context.compiledPlan().safetyBudgets().maxSpawnedEffects()) throw new IllegalStateException("ROOT_SPAWN_EFFECT_BUDGET");
         Field field = new Field(context, profile.footprint(origin, direction, radiusFactor), now, radiusFactor);
         if(mobile)field.mobileOffset=origin.subtract(anchor);
-        if(cascade&&context.derivedRelease()){
-            String claim=context.effects().claim(context.skillInstanceId(),1,context.secondaryKind().equals("cascade"));
+        if(controlled&&context.derivedRelease()){
+            String claim=context.effects().claim(context.skillInstanceId(),1,!context.secondaryKind().isEmpty());
             if(!claim.equals("PASS"))throw new IllegalStateException(claim);
         }
         capacity.reserve(context.request().actorId(),context.skillInstanceId());
@@ -139,7 +140,7 @@ public final class AreaRuntime {
             finish(field, "SIMULATION_GAP_EXCEEDS_ONE_SECOND", port); return;
         }
         if (profile.periodic()) { tickPeriodic(field, now, port); return; }
-        if (profile.impactCount() > 1) { tickImpacts(field, now, port); return; }
+        if (profile.impactCount() > 1||field.context.secondaryKind().equals("aftermath")&&profile.impactCount()==1) { tickImpacts(field, now, port); return; }
         if (profile.overheadHeight() > 0) {
             if (!port.overheadClear(field.geometry, profile.overheadHeight())) { finish(field, "OVERHEAD_ROOF_BLOCKED", port); return; }
             if (elapsed >= profile.warningSeconds() - profile.descentSeconds() && elapsed < profile.warningSeconds()
@@ -175,7 +176,7 @@ public final class AreaRuntime {
         double end = Math.min(elapsed, profile.lifetimeSeconds());
         int index = field.nextImpact;
         while (field.integrated < end - 1e-9) {
-            if(field.context.compiledPlan().pulses().rapidPulse()&&field.integrated+profile.intervalSeconds()>profile.lifetimeSeconds()+1e-9)break;
+            if((field.context.compiledPlan().pulses().rapidPulse()||field.context.secondaryKind().equals("aftermath"))&&field.integrated+profile.intervalSeconds()>profile.lifetimeSeconds()+1e-9)break;
             double next = Math.min(field.integrated + profile.intervalSeconds(), profile.lifetimeSeconds());
             if (elapsed < next - 1e-9) break;
             List<AreaWorldPort.Target> targets = targets(field, field.geometry, port);
@@ -185,7 +186,7 @@ public final class AreaRuntime {
             field.integrated = next;
         }
         field.nextImpact = index;
-        if (elapsed >= profile.lifetimeSeconds()) finish(field, "AREA_EXPIRED", port);
+        if (elapsed >= profile.lifetimeSeconds()-1e-9) finish(field, "AREA_EXPIRED", port);
     }
 
     private void tickImpacts(Field field, double now, AreaWorldPort port) {
@@ -206,7 +207,7 @@ public final class AreaRuntime {
             if (profile.stratified()) {
                 if (!field.prepared[i]) {
                     field.prepared[i] = true;
-                    if(field.context.compiledPlan().zones().cascade()){
+                    if(field.context.compiledPlan().zones().cascade()||field.context.compiledPlan().zones().aftermath()){
                         String budget=field.context.effects().claim(field.context.skillInstanceId()+"/area-impact-"+i,field.context.derivedRelease()?2:1,false);
                         if(!budget.equals("PASS")){
                             field.impacted[i]=true;field.nextImpact++;port.trace(field.context,"AREA_QUERY_REJECTED",Map.of("reason",budget,"impactIndex",i));continue;
@@ -311,7 +312,7 @@ public final class AreaRuntime {
             boolean statusReady = now - field.statusLastHit.getOrDefault(target.id(), Double.NEGATIVE_INFINITY)
                     >= profile.statusIntervalSeconds() - 1e-9;
             String rootStatusKey=target.id()+"/"+status;
-            if(field.context.compiledPlan().zones().cascade())statusReady&=field.context.effects().statusReady(rootStatusKey,now,Math.max(profile.statusIntervalSeconds(),profile.targetIntervalSeconds()));
+            if(field.context.compiledPlan().zones().cascade()||field.context.compiledPlan().zones().aftermath())statusReady&=field.context.effects().statusReady(rootStatusKey,now,Math.max(profile.statusIntervalSeconds(),profile.targetIntervalSeconds()));
             if(statusReady&&status.equals("CHILL")&&field.context.compiledPlan().pulses().rapidPulse()){
                 chill=field.chill.grant(target.id(),impactIndex,chill);
                 if(chill==0)status="";
@@ -322,7 +323,7 @@ public final class AreaRuntime {
                     finalBlast ? 0 : profile.pullCoreRadius() * field.radiusFactor, finalBlast);
             if (!port.apply(finalBlast?field.context:field.pulseContext, target, payload)) continue;
             if (statusReady && !status.isBlank()) {field.statusLastHit.put(target.id(), now);
-                if(field.context.compiledPlan().zones().cascade())field.context.effects().statusApplied(rootStatusKey,now);
+                if(field.context.compiledPlan().zones().cascade()||field.context.compiledPlan().zones().aftermath())field.context.effects().statusApplied(rootStatusKey,now);
             }
             var accepted=new Ledger(previous == null ? 1 : previous.hits + 1, now, impactKey);
             ledger.put(target.id(),accepted);field.ledger.put(target.id(),accepted);
@@ -334,10 +335,23 @@ public final class AreaRuntime {
         return applied;
     }
     private void finish(Field field, String reason, AreaWorldPort port) {
+        if(field.done)return;
         field.done = true;
         // A failed diagnostic sink must not prevent cleanup or the next owner's field tick.
         try { port.trace(field.context, "AREA_TERMINATED", Map.of("reason", reason, "hitTargets", field.ledger.size())); }
         catch (RuntimeException ignored) { }
+        if(field.context.compiledPlan().zones().aftermath()&&!field.context.derivedRelease()
+                &&java.util.Set.of("AREA_EXPIRED","AREA_COMPLETE","TRAP_EXPIRED").contains(reason)
+                &&field.context.effects().once("AFTERMATH")){
+            removeField(field); // Release the expired field's lease before admitting its replacement.
+            try{
+                var child=field.context.aftermathCopy();
+                var shape=child.profile().area().footprint(field.geometry.origin(),field.geometry.direction(),field.radiusFactor);
+                var placed=port.prepareImpact(field.geometry.origin(),shape);
+                if(placed.isEmpty())throw new IllegalStateException("AFTERMATH_NO_LEGAL_TERRAIN");
+                start(child,placed.get().origin(),field.geometry.direction(),field.lastTick,field.radiusFactor,port);
+            }catch(RuntimeException failure){try{port.trace(field.context,"AREA_QUERY_REJECTED",Map.of("reason","AFTERMATH_CHILD_REJECTED","boundary",String.valueOf(failure.getMessage())));}catch(RuntimeException ignored){}}
+        }
     }
     private void removeField(Field field) {
         fields.remove(field.context.skillInstanceId());capacity.release(field.context.request().actorId(),field.context.skillInstanceId());cleanupRoot(rootKey(field.context));

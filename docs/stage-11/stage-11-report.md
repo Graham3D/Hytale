@@ -1294,3 +1294,71 @@ Player schema6, native HUD/input, existing art and live three-mod installation
 remain unchanged. All files are in the GitHub workspace, none on Google Drive.
 Thirty-one of40 Stage11 primitives have local cohort evidence; nine remain before
 the final compatibility/legacy-state gate. Connected gates remain UNVERIFIED.
+
+## Cohort R — Aftermath (R030, plan schema27)
+
+LP042 is implemented through the existing AreaRuntime and ConnectionRuntime expiry
+paths. On normal primary expiry, one shared root controller creates one child with
+.60 horizontal geometry,.40 resolved parent duration and.50 inherited magnitude.
+The child's profile is an immutable derived copy, not another Link compilation or
+another cost/cooldown/executor commit. Original authored profiles remain unchanged.
+Physical height, cadence, targeting safety and status-duration rules are retained.
+Sub-impact counts are truncated to scheduled instants inside the new lifetime;
+integrated areas suppress a partial final pulse. No extra catch-up pulse is added.
+
+Eligible components are finite persistent areas, noncolliding damage walls,
+untriggered finite traps, travelling pulse Orbs and native Orbit fields. A single
+impact's warning or applied DoT does not turn it into a persistent spatial field.
+Channels, Auras, recipient buffs, projectiles still in flight, collision cages and
+ordinary single bursts reject. Trap detonation is not expiry: it creates no child.
+A trap that expires unused leaves one smaller finite trap; that trap's later
+expiry cannot repeat Aftermath. Forced cancellation, owner/world loss, simulation
+gaps, candidate failures and any derived child's termination create no Aftermath.
+
+Areas release the expired lease before admitting the child, revalidate terrain,
+and reuse the same bounded field registry. This allows replacement at the8-field
+cap without borrowing a ninth slot. The shared finite effect/secondary limits
+remain authoritative. Root status/displacement/Leech limits and correlation are
+preserved across the transition. Existing Cascade children and Echo instances
+cannot independently create more Aftermath children. A Mobile Domain child retains
+its finite caster attachment and then expires; no Aura/reservation is introduced.
+
+For Ball Lightning, the child keeps the existing pulse/LOS/collision-bounds port
+but is stopped at the parent's final position: Aftermath does not grant another
+flight/reach segment. Its two-second child keeps the.75s interval, so exactly two
+complete pulses are possible. For Orbiting Shadow Blades, the same swept blade
+geometry remains: orbit/contact radius*.60, four-second duration, unchanged blade
+count, angular speed and shared.75s victim contact interval. It is not converted
+into a broad all-target disc. The usual owning-world validation continues on every
+tick. Native derived connection/area hits cannot restart generic hit procs.
+
+### Failures found and correction rationale
+
+The first focused run found that8+3.2 can compare below the nominal expiry due to
+binary floating-point subtraction. Periodic area expiry now uses the existing
+nanosecond-scale timing tolerance; it does not add a partial damage pulse. Two
+expiry fixtures caught this real boundary. A separate fixture incorrectly counted
+the channel-only COOLDOWN_STARTED trace on an upfront Orb; it now checks the one
+SKILL_COMMITTED event, one native-resource fixture write and actual active cooldown.
+No fake trace was added to satisfy the test. Single-impact derived schedules also
+retain their finite impact scheduler instead of accidentally entering instant-burst
+dispatch. All original retained area/connection regressions pass.
+
+### Cohort R evidence and rollback
+
+25 new tests cover expiry versus cancellation, every eligible canonical derived
+profile, finite geometry/magnitude/cadence, no partial tail, immutability, root
+identity, budget/terrain failures, full-capacity replacement, Cascade/echo recursion
+exclusion, trap expiry, Mobile Domain, Orb final-position ownership, Orbit blade
+semantics, unchanged payment/cooldown and cleanup. `clean build`: **1127 tests PASS**,
+zero failures/errors/skips. Normal isolated three-mod network boot/clean exit0,
+retained native asset checks and packaged CustomUI9 validation PASS. API evidence
+in `evidence/stage-11/cohort-r/api` remains structural, not connected execution.
+
+Artifact: `evidence/stage-11/cohort-r/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `0C7DA5E5D7DC652A442A2DCB249150E64ACD9115E77440D0AF51C176AC92C6EC`.
+Rollback Q: `95E2363F76FC71455FCCF0714EDE0ACFEA041A1F274AA5CF76CC99D0FDA51C81`.
+Player schema6 and native resource/HUD/input ownership unchanged. No art or live
+mods changed; no Google Drive writes. Thirty-two of40 Stage11 primitives have local
+cohort evidence; eight and compatibility/legacy-state closure remain. Connected
+damage, expiry timing, collision, NPC state and presentation remain UNVERIFIED.
