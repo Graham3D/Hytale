@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /** Versioned server-owned RPG player state. Live Hytale resources are intentionally not duplicated here. */
 public final class RpgPlayerState {
-    public static final int CURRENT_SCHEMA = 6;
+    public static final int CURRENT_SCHEMA = 7;
 
     public int schemaVersion = CURRENT_SCHEMA;
     public String playerUuid;
@@ -32,6 +32,8 @@ public final class RpgPlayerState {
     public Map<String, Integer> ownedPassives = new LinkedHashMap<>();
     public String[] equippedSkills = new String[3];
     public String[] equippedPassives = new String[6];
+    /** Saved topology is retained; only these unsupported passive nodes are omitted from execution. */
+    public Map<String,String> inactivePassives = new LinkedHashMap<>();
     public String[] joints = {"joint01", "joint02"};
     public List<PersistedLinkEdge> graphEdges = new ArrayList<>();
     public Map<String, Long> skillMastery = new LinkedHashMap<>();
@@ -60,7 +62,8 @@ public final class RpgPlayerState {
         return value == null || value.isBlank() ? Optional.empty() : Optional.of(new PassiveId(value));
     }
 
-    public void passive(PassiveSlot slot, PassiveId id) { equippedPassives[slot.index()] = id == null ? null : id.value(); }
+    public void passive(PassiveSlot slot, PassiveId id) { equippedPassives[slot.index()] = id == null ? null : id.value(); inactivePassives.remove(slot.externalId()); }
+    public boolean inactive(PassiveSlot slot){return inactivePassives.containsKey(slot.externalId());}
 
     public List<LinkEdge> linkEdges() {
         List<LinkEdge> result = new ArrayList<>(graphEdges.size());
@@ -85,6 +88,12 @@ public final class RpgPlayerState {
         if (graphEdges == null) graphEdges = new ArrayList<>();
         if (skillMastery == null) skillMastery = new LinkedHashMap<>();
         if (degradedReasons == null) degradedReasons = new ArrayList<>();
+        if(inactivePassives==null)throw new IllegalStateException("Missing inactive-passive state; migrate the saved schema first");
+        if(inactivePassives.size()>6)throw new IllegalStateException("Inactive passive budget exceeded");
+        for(var entry:inactivePassives.entrySet()){
+            if(!PassiveSlot.parse(entry.getKey()).externalId().equals(entry.getKey())||entry.getValue()==null||entry.getValue().isBlank()||entry.getValue().length()>1024)
+                throw new IllegalStateException("Invalid inactive passive reason");
+        }
         if (support == null) throw new IllegalStateException("Missing durable support ledger; refusing a free-shield reset");
         com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown.validate(cooldowns);
     }
@@ -102,6 +111,7 @@ public final class RpgPlayerState {
         copy.ownedPassives = new LinkedHashMap<>(ownedPassives);
         copy.equippedSkills = equippedSkills.clone();
         copy.equippedPassives = equippedPassives.clone();
+        copy.inactivePassives = new LinkedHashMap<>(inactivePassives);
         copy.joints = joints.clone();
         copy.graphEdges = graphEdges.stream().map(PersistedLinkEdge::copy).collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         copy.skillMastery = new LinkedHashMap<>(skillMastery);

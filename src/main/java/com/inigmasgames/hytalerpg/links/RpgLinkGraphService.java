@@ -49,6 +49,11 @@ public final class RpgLinkGraphService {
     }
 
     public GraphValidationResult validate(RpgPlayerState state) {
+        return validate(state,true);
+    }
+    /** Recovery first distinguishes malformed topology from content compatibility drift. */
+    public GraphValidationResult validateStructure(RpgPlayerState state){return validate(state,false);}
+    private GraphValidationResult validate(RpgPlayerState state,boolean checkContent) {
         List<GraphValidationResult.Issue> issues = new ArrayList<>();
         final List<LinkEdge> edges;
         try { edges = state.linkEdges(); }
@@ -108,7 +113,7 @@ public final class RpgLinkGraphService {
             } else if (skillId.isEmpty()) {
                 issues.add(new GraphValidationResult.Issue(ValidationCode.EMPTY_TARGET_NODE,
                         route.getLast().externalId() + " has no equipped Skill", passiveNode, route.getLast()));
-            } else {
+            } else if(checkContent&&!state.inactive(passiveSlot)) {
                 PassiveDefinition passive = catalog.passive(passiveId.get()).orElse(null);
                 SkillDefinition skill = catalog.skill(skillId.get()).orElse(null);
                 if (passive == null) issues.add(new GraphValidationResult.Issue(ValidationCode.UNKNOWN_PASSIVE,
@@ -134,6 +139,7 @@ public final class RpgLinkGraphService {
 
         Map<String, Integer> copiesPerSkill = new HashMap<>();
         for (var entry : routes.entrySet()) {
+            if(!checkContent||state.inactive(entry.getKey()))continue;
             var passiveId = state.passive(entry.getKey());
             if (passiveId.isEmpty()) continue;
             String key = entry.getValue().getLast().externalId() + ':' + passiveId.get().value();
@@ -161,6 +167,7 @@ public final class RpgLinkGraphService {
         var selected=new ArrayList<PassiveDefinition>();
         for(LinkNodeId node:LinkNodeId.values()) {
             if(node.kind()!=LinkNodeId.NodeKind.PASSIVE)continue;
+            if(state.inactive(node.passiveSlot()))continue;
             var nodes=route(node,outgoing);
             if(!nodes.isEmpty()&&nodes.getLast().kind()==LinkNodeId.NodeKind.SKILL&&nodes.getLast().skillSlot()==skill)
                 state.passive(node.passiveSlot()).flatMap(catalog::passive).ifPresent(selected::add);

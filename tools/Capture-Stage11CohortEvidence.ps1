@@ -27,6 +27,7 @@ $passiveConfig=@{
     v=@{tests=1279;passives=@('critical_trigger','kill_trigger');planSchema=31;rollback='evidence\stage-11\cohort-u\artifacts\HytaleRPG-0.0.23.jar'}
     w=@{tests=1329;passives=@('retaliation');planSchema=32;rollback='evidence\stage-11\cohort-v\artifacts\HytaleRPG-0.0.23.jar'}
     x=@{tests=1347;passives=@('impact_force','lingering','concentration','expanded_radius');planSchema=33;rollback='evidence\stage-11\cohort-w\artifacts\HytaleRPG-0.0.23.jar'}
+    y=@{tests=1372;passives=@();planSchema=34;rollback='evidence\stage-11\cohort-x\artifacts\HytaleRPG-0.0.23.jar'}
 }[$Cohort]
 if(-not $passiveConfig){throw 'Cohort must declare tested scope before evidence capture'}
 $passiveEvidence=Join-Path $passiveRoot "evidence\stage-11\cohort-$Cohort"
@@ -75,7 +76,7 @@ $passiveTests | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $p
 $passivePackage="$env:APPDATA\Hytale\install\pre-release\package\game\latest"
 $passiveLive=@(Get-ChildItem -LiteralPath "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\mods" -File -Filter '*.jar' | ForEach-Object {@{name=$_.Name;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash}})
 [ordered]@{
-    capturedAtUtc=[DateTime]::UtcNow.ToString('o');stage=11;cohort=$Cohort;revision='R030';version='0.0.23';playerSchema=$(if($Cohort -in @('a','b')){5}else{6});compiledPlanSchema=$passiveConfig.planSchema
+    capturedAtUtc=[DateTime]::UtcNow.ToString('o');stage=11;cohort=$Cohort;revision='R030';version='0.0.23';playerSchema=$(if($Cohort -in @('a','b')){5}elseif($Cohort -in @('y','z')){7}else{6});compiledPlanSchema=$passiveConfig.planSchema
     sourceHead=(& git -C $passiveRoot rev-parse HEAD).Trim();branch=(& git -C $passiveRoot branch --show-current).Trim()
     status='IMPLEMENTATION_IN_PROGRESS';cohortStatus='IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION';localGate='PASS';connectedGate='UNVERIFIED'
     cohortSkills=@();cohortPassives=$passiveConfig.passives;tests=$passiveCount;failures=0;errors=0;skipped=0
@@ -84,6 +85,6 @@ $passiveLive=@(Get-ChildItem -LiteralPath "$env:APPDATA\Hytale\data\pre-release\
     assetsSha256=(Get-FileHash -LiteralPath (Join-Path $passivePackage 'Assets.zip')).Hash
     normalThreeModSmoke=$true;zeroNativeCostTriggers=$passiveAbilities.Count;nativeCastingFixed=$false;liveDeploymentPerformed=$false;liveArtifacts=$passiveLive
     protectedPathsChanged=$passiveChanged;canonicalSkillCount=87;canonicalPassiveCount=66
-    rollbackStateRequirement=$(if($Cohort -in @('a','b')){'Player schema5 unchanged. Compiled cache invalidates by schema; prior-stage artifact retained. Live R023 schema3 requires its own backup before eventual deployment.'}else{'Player schema6 serial charge queue. Restore a pre-migration schema5 save checkpoint with cohortB code for rollback; do not downgrade queued state or refill debt. Live R023 schema3 remains untouched and requires a separate backup before any deployment.'})
+    rollbackStateRequirement=$(if($Cohort -in @('a','b')){'Player schema5 unchanged. Compiled cache invalidates by schema; prior-stage artifact retained. Live R023 schema3 requires its own backup before eventual deployment.'}elseif($Cohort -in @('y','z')){'Player schema7 inactive nodes. Restore the pre-migration .schema-v6.bak checkpoint with cohortX code; never downgrade schema7 or refill debt. Checkpoints are immutable on later saves. Live R023 schema3 remains untouched and requires its own backup.'}else{'Player schema6 serial charge queue. Restore a pre-migration schema5 save checkpoint with cohortB code for rollback; do not downgrade queued state or refill debt. Live R023 schema3 remains untouched and requires a separate backup before any deployment.'})
 } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $passiveEvidence 'verification.json') -Encoding utf8
 [pscustomobject]@{tests=$passiveCount;jarSha256=$passiveHash;connectedGate='UNVERIFIED'}

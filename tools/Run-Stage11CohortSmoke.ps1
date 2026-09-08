@@ -21,7 +21,7 @@ $expectedConnectionCauses = 5
 $expectedProfiles = 15
 $expectedStatusAssets = 10
 $expectedSupport = 16
-$expectedPlayerSchema = if($Cohort -in @('a','b')){5}else{6}
+$expectedPlayerSchema = if($Cohort -in @('a','b')){5}elseif($Cohort -in @('y','z')){7}else{6}
 $expectedSummons = 9
 New-Item -ItemType Directory -Force -Path $mods, $evidence | Out-Null
 $resolved = (Resolve-Path -LiteralPath $mods).Path

@@ -45,6 +45,8 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
             RpgStateMigrator.MigrationResult migration = migrator.migrate(rawState);
             if (!migration.state().has("support") || migration.state().get("support").isJsonNull())
                 throw new IllegalStateException("Missing schema-4 durable support ledger");
+            if(!migration.state().has("inactivePassives")||!migration.state().get("inactivePassives").isJsonObject())
+                throw new IllegalStateException("Missing schema-7 inactive passive state");
             var supportJson=migration.state().getAsJsonObject("support");
             if(!migration.state().has("cooldowns")||!migration.state().get("cooldowns").isJsonObject())throw new IllegalStateException("Missing schema-5 cooldown work ledger");
             for(var entry:migration.state().getAsJsonObject("cooldowns").entrySet()){
@@ -68,6 +70,9 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
             state.normalizeShape();
             if (!playerUuid.toString().equals(state.playerUuid)) throw new IllegalStateException("RPG state player UUID mismatch: " + path);
             if (migration.migrated()) {
+                // A later content-reconciliation save must not overwrite the only pre-schema rollback.
+                Path checkpoint=path.resolveSibling(path.getFileName()+".schema-v"+migration.sourceVersion()+".bak");
+                if(!Files.exists(checkpoint))Files.copy(path,checkpoint);
                 warnings.add("Migrated RPG schema v" + migration.sourceVersion() + " -> v" + migration.targetVersion());
                 save(state);
             }

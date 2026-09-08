@@ -1731,3 +1731,58 @@ Rollback W: `1BB2E2C9A86AA49B46A29EC8A0EBB2C5C504EDCE46BE5ABAEB6A49CEAE0DFE0F`.
 Both are archived under evidence/stage-11/cohort-x. Connected gates remain
 UNVERIFIED; no live deployment, Google Drive write, owner-art mutation or native
 HUD/XP/input change. Legacy inactive-node and full matrix closure are next.
+
+## R030 cohort Y — preserve unsupported saved passive nodes
+
+The Phase11 rollback contract requires retaining owned passives and marking
+unsupported equipped nodes inactive. Previous RpgLoadoutService.load cleared
+all graph edges when any compatibility check failed. It also missed conflicts
+detected only by final compiler groups. Structural corruption and changed content
+compatibility now have separate validation paths.
+
+Player schema7 adds a bounded map of inactive passive-slot reasons; plan schema34
+invalidates prior compiled output. On load, InactivePassiveRecovery checks at most
+64 subsets of the six linked passive nodes and retains the largest valid subset.
+Ties favor the earlier slots. Final compiler rules and implemented numeric-profile
+resolution are both checked. This is not a greedy pass: an introducer and its
+dependent modifiers can remain together even if the dependent occupies an earlier
+slot. Unknown definitions, duplicate copies, repeat conflicts and removed component
+capabilities receive specific reasons. Missing skills remain degraded, never given
+a fabricated executor. The separate27 legacy runtime-profile gaps are not concealed
+by this recovery and remain scheduled for Stage13 coverage completion.
+
+Saved edge identities/routes, equipped IDs, owned copies, learned skills, mastery,
+XP, levels, attributes, support deficit and cooldown debt are retained. The compiler
+omits inactive nodes only; retained routes still describe the actual saved topology.
+The existing read-model warning surface and loadout command display INACTIVE plus
+the node/reason. No packaged UI document or native HUD control changed. Actual
+connected warning readability remains unverified.
+
+This recovery runs only on load. A new link, reassignment, changed route or changed
+destination skill must pass strict normal validation; the mutation path cannot add
+inactive flags to hide an invalid edit. An explicit valid relink/reassignment
+reactivates a node. Invalid edits preserve revision, graph and prior inactive state.
+Unrelated edits can proceed while an unchanged legacy node remains inactive.
+Malformed/cyclic/dangling topology still uses the previous graph-backup recovery;
+inactive content is not permission to bypass structural safety.
+
+Migration6->7 adds an empty inactive map without altering other fields. Content
+reconciliation then saves only when needed. File migration now also preserves an
+immutable `<player>.json.schema-v6.bak` (or the actual source-schema suffix), because
+a subsequent reconciliation save would otherwise overwrite the sole pre-migration
+`.bak`. Rollback requires the matching old schema checkpoint and cohortX code;
+never run schema7 state on old code or refill resource/cooldown debt. No live save
+has been migrated by this implementation program.
+
+25 new tests cover maximal subset/dependencies, duplicates/conflicts, missing
+definitions, joint routes, rejoin idempotence, defensive views, explicit reactivation,
+strict edit rollback, failed save, structural recovery, migration and checkpoint
+survival. Full clean build1372 PASS in43s; zero failures/errors/skips. Normal isolated
+three-mod network boot, all retained native asset checks,9 packaged CustomUI files
+and clean exit0 PASS. No new native API is introduced in this cohort.
+
+Artifact: `C92890159DD27E9F0AA74E969B3AFB9D3DCC94A834F89B4BB39A98BFEC6756F7`.
+Rollback X: `A28C6D8269E3425C638B2ACD1F29E8BB461D3939DC97BF6BA584A3EE267BDD71`.
+Archived under evidence/stage-11/cohort-y. Connected gates remain UNVERIFIED.
+No live deployment, Google Drive write, owner-art mutation or HUD/input change.
+The complete eligibility/pair matrix and six-Link property regression close next.

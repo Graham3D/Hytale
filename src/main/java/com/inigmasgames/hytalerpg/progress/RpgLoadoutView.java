@@ -13,7 +13,10 @@ import java.util.Map;
 public record RpgLoadoutView(RpgPlayerState state, Map<SkillSlot, CompiledSkillPlan> plans,
                              Map<PassiveSlot, List<LinkNodeId>> routes, List<String> warnings) {
     public RpgLoadoutView {
-        state = state.copy(); plans = Map.copyOf(plans); routes = Map.copyOf(routes); warnings = List.copyOf(warnings);
+        state = state.copy(); plans = Map.copyOf(plans); routes = Map.copyOf(routes);
+        var messages=new ArrayList<>(warnings);
+        state.inactivePassives.forEach((slot,reason)->messages.add("INACTIVE "+slot+": "+reason));
+        warnings = List.copyOf(messages);
     }
 
     public String format(RpgCatalog catalog) {
@@ -30,6 +33,7 @@ public record RpgLoadoutView(RpgPlayerState state, Map<SkillSlot, CompiledSkillP
                 String passiveName = passiveId.flatMap(catalog::passive).map(definition -> definition.name())
                         .orElseGet(() -> passiveId.map(id -> "[missing:" + id.value() + ']').orElse("(empty)"));
                 out.append("\n  <- ").append(route.getKey().externalId()).append(' ').append(passiveName);
+                if(state.inactive(route.getKey()))out.append(" [INACTIVE: ").append(state.inactivePassives.get(route.getKey().externalId())).append(']');
                 if (route.getValue().size() > 1) {
                     out.append(" via ");
                     out.append(String.join(" -> ", route.getValue().subList(0, route.getValue().size() - 1)

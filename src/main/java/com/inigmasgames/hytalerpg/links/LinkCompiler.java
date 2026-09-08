@@ -196,6 +196,7 @@ public final class LinkCompiler {
     private List<PassiveBinding> bindingsFor(RpgPlayerState state, GraphValidationResult graph, SkillSlot skillSlot) {
         List<PassiveBinding> result = new ArrayList<>();
         for (var entry : graph.routes().entrySet()) {
+            if(state.inactive(entry.getKey()))continue;
             if (entry.getValue().getLast().skillSlot() != skillSlot) continue;
             var passiveId = state.passive(entry.getKey());
             if (passiveId.isEmpty()) continue;

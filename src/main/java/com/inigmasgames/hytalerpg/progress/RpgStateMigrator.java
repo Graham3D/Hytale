@@ -17,6 +17,7 @@ public final class RpgStateMigrator {
                 case 3 -> migrateV3ToV4(state);
                 case 4 -> migrateV4ToV5(state);
                 case 5 -> migrateV5ToV6(state);
+                case 6 -> migrateV6ToV7(state);
                 default -> throw new IllegalStateException("No migration from RPG schema v" + version);
             };
             version = state.get("schemaVersion").getAsInt();
@@ -108,5 +109,9 @@ public final class RpgStateMigrator {
             value.add("queued",new JsonArray()); // Preserve existing recovery; old builds had exactly one charge.
         }
         state.addProperty("schemaVersion",6);return state;
+    }
+    private static JsonObject migrateV6ToV7(JsonObject state){
+        state.add("inactivePassives",new JsonObject());
+        state.addProperty("schemaVersion",7);return state;
     }
 }

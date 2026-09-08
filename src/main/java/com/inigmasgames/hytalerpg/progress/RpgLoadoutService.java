@@ -40,6 +40,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     private final RpgLinkGraphService graphService;
     private final LinkCompiler compiler;
     private final EntitlementPolicy entitlements;
+    private final InactivePassiveRecovery inactiveRecovery;
     private final RpgSkillTracer tracer;
     private final Map<UUID, Holder> states = new ConcurrentHashMap<>();
     private final List<Consumer<UUID>> mutationListeners = new CopyOnWriteArrayList<>();
@@ -50,6 +51,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
                              EntitlementPolicy entitlements, RpgSkillTracer tracer) {
         this.catalog = catalog; this.repository = repository; this.graphService = graphService;
         this.compiler = compiler; this.entitlements = entitlements; this.tracer = tracer;
+        this.inactiveRecovery=new InactivePassiveRecovery(catalog,compiler,graphService);
     }
 
     /** Runtime projection hook. Listener failures cannot roll back or invalidate an already-saved RPG state. */
@@ -130,8 +132,10 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         synchronized (holder) {
             Map<String, Object> context = linkDetails(holder.state, source, target);
             trace(player, RpgTraceEventType.LINK_REQUEST, correlation, context);
-            MutationResult result = mutate(holder, player, correlation,
-                    candidate -> candidate.linkEdges(graphService.candidateLink(candidate, source, target)));
+            MutationResult result = mutate(holder, player, correlation, candidate -> {
+                if(source.kind()==LinkNodeId.NodeKind.PASSIVE)candidate.inactivePassives.remove(source.passiveSlot().externalId());
+                candidate.linkEdges(graphService.candidateLink(candidate, source, target));
+            });
             if (result.success()) {
                 context.put("validationResult", "PASS"); context.put("RPG revision", result.revision());
                 trace(player, RpgTraceEventType.LINK_ACCEPTED, correlation, context);
@@ -351,6 +355,9 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
                     error.getMessage(), holder.state.revision);
         }
         candidate.revision = holder.state.revision + 1;
+        candidate.inactivePassives.keySet().retainAll(holder.state.inactivePassives.keySet());
+        candidate.inactivePassives.replaceAll((slot,reason)->holder.state.inactivePassives.get(slot));
+        inactiveRecovery.revalidateChanged(holder.state,candidate);
         CompilationResult compiled = compileTraced(player, candidate, correlation);
         if (!compiled.success()) return MutationResult.failure(compiled.code(), compiled.message() + "\nTrace: " + correlation,
                 correlation, holder.state.revision);
@@ -413,18 +420,24 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
             loadWarnings.add("UNKNOWN_SKILL:" + id);
         for (String id : state.equippedPassives) if (id != null && catalog.passive(new PassiveId(id)).isEmpty())
             loadWarnings.add("UNKNOWN_PASSIVE:" + id);
-        GraphValidationResult graph = graphService.validate(state);
+        GraphValidationResult graph = graphService.validateStructure(state);
         boolean recoveredGraph = !graph.valid();
         if (recoveredGraph) {
             loadWarnings.add("GRAPH_RECOVERED:" + graph.firstIssue().code() + ':' + graph.firstIssue().message());
             state.degradedReasons.addAll(loadWarnings);
             state.linkEdges(List.of());
+            state.inactivePassives.clear();
             state.revision++;
             repository.save(state); // Atomic save retains the invalid graph as the .bak recovery source.
             trace(player, RpgTraceEventType.SAVE, reference(), details("RPG revision", state.revision,
                     "validationResult", "RECOVERED", "failureCode", graph.firstIssue().code().name()));
-        } else if (loaded.migrated()) {
-            repository.save(state);
+        } else {
+            boolean inactiveChanged=inactiveRecovery.reconcile(state);
+            if(inactiveChanged){
+                state.revision++;
+                loadWarnings.add("PASSIVE_NODES_RECONCILED:"+state.inactivePassives);
+            }
+            if(loaded.migrated()||inactiveChanged)repository.save(state);
         }
         if (loaded.migrated()) trace(player, RpgTraceEventType.MIGRATION, reference(),
                 details("sourceSchemaVersion", loaded.sourceSchema(), "schemaVersion", state.schemaVersion,
