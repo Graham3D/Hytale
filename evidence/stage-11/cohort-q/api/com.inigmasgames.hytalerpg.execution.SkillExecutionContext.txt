@@ -1,0 +1,935 @@
+Compiled from "SkillExecutionContext.java"
+public final class com.inigmasgames.hytalerpg.execution.SkillExecutionContext extends java.lang.Record {
+  private final com.inigmasgames.hytalerpg.execution.SkillExecutionRequest request;
+
+  private final java.lang.String rootCastId;
+
+  private final java.lang.String skillInstanceId;
+
+  private final com.inigmasgames.hytalerpg.execution.Stage04SkillProfile profile;
+
+  private final com.inigmasgames.hytalerpg.domain.CompiledSkillPlan compiledPlan;
+
+  private final com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot snapshot;
+
+  private final com.inigmasgames.hytalerpg.execution.SkillExecutionPort$Equipment equipment;
+
+  private final com.inigmasgames.hytalerpg.execution.CommittedTarget target;
+
+  private final boolean echo;
+
+  private final int barrageBatch;
+
+  private final com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget leechBudget;
+
+  private final int multistrikeIndex;
+
+  private final com.inigmasgames.hytalerpg.execution.RootEffectBudget effects;
+
+  private final java.lang.String secondaryKind;
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext(com.inigmasgames.hytalerpg.execution.SkillExecutionRequest, java.lang.String, java.lang.String, com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan, com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot, com.inigmasgames.hytalerpg.execution.SkillExecutionPort$Equipment, com.inigmasgames.hytalerpg.execution.CommittedTarget, boolean, int, com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget, int);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: aload         6
+        10: aload         7
+        12: aload         8
+        14: iload         9
+        16: iload         10
+        18: aload         11
+        20: iload         12
+        22: new           #1                  // class com/inigmasgames/hytalerpg/execution/RootEffectBudget
+        25: dup
+        26: aload_1
+        27: invokevirtual #3                  // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        30: aload_2
+        31: invokespecial #9                  // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget."<init>":(Ljava/util/UUID;Ljava/lang/String;)V
+        34: ldc           #13                 // String
+        36: invokespecial #15                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZILcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;ILcom/inigmasgames/hytalerpg/execution/RootEffectBudget;Ljava/lang/String;)V
+        39: return
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext(com.inigmasgames.hytalerpg.execution.SkillExecutionRequest, java.lang.String, java.lang.String, com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan, com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot, com.inigmasgames.hytalerpg.execution.SkillExecutionPort$Equipment, com.inigmasgames.hytalerpg.execution.CommittedTarget, boolean, int, com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: aload         6
+        10: aload         7
+        12: aload         8
+        14: iload         9
+        16: iload         10
+        18: aload         11
+        20: iconst_0
+        21: invokespecial #20                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZILcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;I)V
+        24: return
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext(com.inigmasgames.hytalerpg.execution.SkillExecutionRequest, java.lang.String, java.lang.String, com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan, com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot, com.inigmasgames.hytalerpg.execution.SkillExecutionPort$Equipment, com.inigmasgames.hytalerpg.execution.CommittedTarget, boolean, int);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: aload         6
+        10: aload         7
+        12: aload         8
+        14: iload         9
+        16: iload         10
+        18: new           #23                 // class com/inigmasgames/hytalerpg/combat/resource/RootLeechBudget
+        21: dup
+        22: aload_1
+        23: invokevirtual #3                  // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        26: aload_2
+        27: invokespecial #25                 // Method com/inigmasgames/hytalerpg/combat/resource/RootLeechBudget."<init>":(Ljava/util/UUID;Ljava/lang/String;)V
+        30: invokespecial #26                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZILcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;)V
+        33: return
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext(com.inigmasgames.hytalerpg.execution.SkillExecutionRequest, java.lang.String, java.lang.String, com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan, com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot, com.inigmasgames.hytalerpg.execution.SkillExecutionPort$Equipment, com.inigmasgames.hytalerpg.execution.CommittedTarget, boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: aload         6
+        10: aload         7
+        12: aload         8
+        14: iload         9
+        16: iconst_0
+        17: invokespecial #29                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZI)V
+        20: return
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext(com.inigmasgames.hytalerpg.execution.SkillExecutionRequest, java.lang.String, java.lang.String, com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan, com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot, com.inigmasgames.hytalerpg.execution.SkillExecutionPort$Equipment);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: aload         6
+        10: aload         7
+        12: aconst_null
+        13: iconst_0
+        14: invokespecial #32                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;Z)V
+        17: return
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext(com.inigmasgames.hytalerpg.execution.SkillExecutionRequest, java.lang.String, java.lang.String, com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan, com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot, com.inigmasgames.hytalerpg.execution.SkillExecutionPort$Equipment, com.inigmasgames.hytalerpg.execution.CommittedTarget, boolean, int, com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget, int, com.inigmasgames.hytalerpg.execution.RootEffectBudget, java.lang.String);
+    Code:
+         0: aload_0
+         1: invokespecial #35                 // Method java/lang/Record."<init>":()V
+         4: aload_1
+         5: ifnull        88
+         8: aload_2
+         9: ifnull        88
+        12: aload_3
+        13: ifnull        88
+        16: aload         4
+        18: ifnull        88
+        21: aload         5
+        23: ifnull        88
+        26: aload         6
+        28: ifnull        88
+        31: iload         10
+        33: iflt          88
+        36: iload         10
+        38: iconst_2
+        39: if_icmpgt     88
+        42: iload         9
+        44: ifeq          52
+        47: iload         10
+        49: ifgt          88
+        52: aload         11
+        54: ifnull        88
+        57: aload         11
+        59: aload_1
+        60: invokevirtual #3                  // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        63: aload_2
+        64: invokevirtual #40                 // Method com/inigmasgames/hytalerpg/combat/resource/RootLeechBudget.owns:(Ljava/util/UUID;Ljava/lang/String;)Z
+        67: ifeq          88
+        70: aload         13
+        72: ifnull        88
+        75: aload         13
+        77: aload_1
+        78: invokevirtual #3                  // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        81: aload_2
+        82: invokevirtual #44                 // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.owns:(Ljava/util/UUID;Ljava/lang/String;)Z
+        85: ifne          98
+        88: new           #45                 // class java/lang/IllegalArgumentException
+        91: dup
+        92: ldc           #47                 // String Committed execution context is incomplete
+        94: invokespecial #49                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        97: athrow
+        98: iload         12
+       100: iflt          124
+       103: iload         12
+       105: iconst_2
+       106: if_icmpgt     124
+       109: iload         12
+       111: ifle          134
+       114: iload         9
+       116: ifne          124
+       119: iload         10
+       121: ifle          134
+       124: new           #45                 // class java/lang/IllegalArgumentException
+       127: dup
+       128: ldc           #52                 // String Invalid Multistrike child identity
+       130: invokespecial #49                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       133: athrow
+       134: aload         14
+       136: ifnull        185
+       139: ldc           #13                 // String
+       141: ldc           #54                 // String cleaving_edge
+       143: ldc           #56                 // String phantom_reach
+       145: ldc           #58                 // String shockwave
+       147: ldc           #60                 // String cascade
+       149: invokestatic  #62                 // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+       152: aload         14
+       154: invokeinterface #68,  2           // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+       159: ifeq          185
+       162: aload         14
+       164: invokevirtual #72                 // Method java/lang/String.isEmpty:()Z
+       167: ifne          195
+       170: iload         9
+       172: ifne          185
+       175: iload         10
+       177: ifgt          185
+       180: iload         12
+       182: ifle          195
+       185: new           #45                 // class java/lang/IllegalArgumentException
+       188: dup
+       189: ldc           #78                 // String Invalid secondary identity
+       191: invokespecial #49                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       194: athrow
+       195: aload_0
+       196: aload_1
+       197: putfield      #80                 // Field request:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       200: aload_0
+       201: aload_2
+       202: putfield      #84                 // Field rootCastId:Ljava/lang/String;
+       205: aload_0
+       206: aload_3
+       207: putfield      #88                 // Field skillInstanceId:Ljava/lang/String;
+       210: aload_0
+       211: aload         4
+       213: putfield      #91                 // Field profile:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       216: aload_0
+       217: aload         5
+       219: putfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       222: aload_0
+       223: aload         6
+       225: putfield      #99                 // Field snapshot:Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+       228: aload_0
+       229: aload         7
+       231: putfield      #103                // Field equipment:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+       234: aload_0
+       235: aload         8
+       237: putfield      #107                // Field target:Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+       240: aload_0
+       241: iload         9
+       243: putfield      #111                // Field echo:Z
+       246: aload_0
+       247: iload         10
+       249: putfield      #115                // Field barrageBatch:I
+       252: aload_0
+       253: aload         11
+       255: putfield      #119                // Field leechBudget:Lcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;
+       258: aload_0
+       259: iload         12
+       261: putfield      #123                // Field multistrikeIndex:I
+       264: aload_0
+       265: aload         13
+       267: putfield      #126                // Field effects:Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       270: aload_0
+       271: aload         14
+       273: putfield      #130                // Field secondaryKind:Ljava/lang/String;
+       276: return
+
+  public boolean derivedRelease();
+    Code:
+         0: aload_0
+         1: getfield      #111                // Field echo:Z
+         4: ifne          31
+         7: aload_0
+         8: getfield      #115                // Field barrageBatch:I
+        11: ifgt          31
+        14: aload_0
+        15: getfield      #123                // Field multistrikeIndex:I
+        18: ifgt          31
+        21: aload_0
+        22: getfield      #130                // Field secondaryKind:Ljava/lang/String;
+        25: invokevirtual #72                 // Method java/lang/String.isEmpty:()Z
+        28: ifne          35
+        31: iconst_1
+        32: goto          36
+        35: iconst_0
+        36: ireturn
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext cascadeCopy(int);
+    Code:
+         0: aload_0
+         1: invokevirtual #133                // Method derivedRelease:()Z
+         4: ifne          30
+         7: aload_0
+         8: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        11: invokevirtual #136                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.zones:()Lcom/inigmasgames/hytalerpg/domain/ZoneModifiers;
+        14: invokevirtual #142                // Method com/inigmasgames/hytalerpg/domain/ZoneModifiers.cascade:()Z
+        17: ifeq          30
+        20: iload_1
+        21: iconst_1
+        22: if_icmplt     30
+        25: iload_1
+        26: iconst_2
+        27: if_icmple     40
+        30: new           #146                // class java/lang/IllegalStateException
+        33: dup
+        34: ldc           #148                // String CASCADE_CANNOT_RECURSE
+        36: invokespecial #150                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        39: athrow
+        40: aload_0
+        41: getfield      #88                 // Field skillInstanceId:Ljava/lang/String;
+        44: iload_1
+        45: invokedynamic #151,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+        50: astore_2
+        51: aload_0
+        52: getfield      #99                 // Field snapshot:Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+        55: ldc2_w        #155                // double 0.45d
+        58: invokevirtual #157                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.withMagnitudeFactor:(D)Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+        61: astore_3
+        62: new           #158                // class com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot
+        65: dup
+        66: aload_0
+        67: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+        70: aload_2
+        71: aload_3
+        72: invokevirtual #163                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.actorId:()Ljava/util/UUID;
+        75: aload_3
+        76: invokevirtual #164                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.rawAttributes:()Ljava/util/Map;
+        79: aload_3
+        80: invokevirtual #168                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.effectiveAttributes:()Ljava/util/Map;
+        83: aload_3
+        84: invokevirtual #171                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.derivedStats:()Lcom/inigmasgames/hytalerpg/combat/attribute/DerivedStats;
+        87: aload_3
+        88: invokevirtual #175                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.itemId:()Ljava/lang/String;
+        91: aload_3
+        92: invokevirtual #179                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.weaponClass:()Lcom/inigmasgames/hytalerpg/combat/power/LinkTreeWeaponClass;
+        95: aload_3
+        96: invokevirtual #183                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.basePowerSource:()Lcom/inigmasgames/hytalerpg/combat/power/BasePowerSource;
+        99: aload_3
+       100: invokevirtual #187                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.basePower:()D
+       103: aload_3
+       104: invokevirtual #191                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.compiledPlanHash:()Ljava/lang/String;
+       107: aload_3
+       108: invokevirtual #194                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.skillCoefficient:()D
+       111: aload_3
+       112: invokevirtual #197                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.criticalChance:()D
+       115: aload_3
+       116: invokevirtual #200                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.criticalMultiplier:()D
+       119: aload_3
+       120: invokevirtual #203                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.modifiers:()Lcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;
+       123: aload_3
+       124: invokevirtual #207                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.resourceCost:()Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;
+       127: aload_3
+       128: invokevirtual #211                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.cooldownSeconds:()D
+       131: aload_3
+       132: invokevirtual #214                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.statusModifiers:()Ljava/util/Map;
+       135: invokespecial #217                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/util/UUID;Ljava/util/Map;Ljava/util/Map;Lcom/inigmasgames/hytalerpg/combat/attribute/DerivedStats;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/combat/power/LinkTreeWeaponClass;Lcom/inigmasgames/hytalerpg/combat/power/BasePowerSource;DLjava/lang/String;DDDLcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;DLjava/util/Map;)V
+       138: astore        4
+       140: new           #16                 // class com/inigmasgames/hytalerpg/execution/SkillExecutionContext
+       143: dup
+       144: aload_0
+       145: getfield      #80                 // Field request:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       148: aload_0
+       149: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+       152: aload_2
+       153: aload_0
+       154: getfield      #91                 // Field profile:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       157: aload_0
+       158: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       161: aload         4
+       163: aload_0
+       164: getfield      #103                // Field equipment:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+       167: aload_0
+       168: getfield      #107                // Field target:Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+       171: iconst_0
+       172: iconst_0
+       173: aload_0
+       174: getfield      #119                // Field leechBudget:Lcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;
+       177: iconst_0
+       178: aload_0
+       179: getfield      #126                // Field effects:Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       182: ldc           #60                 // String cascade
+       184: invokespecial #15                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZILcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;ILcom/inigmasgames/hytalerpg/execution/RootEffectBudget;Ljava/lang/String;)V
+       187: areturn
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext withSnapshot(com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot);
+    Code:
+         0: aload_0
+         1: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+         4: aload_1
+         5: invokevirtual #220                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.rootCastId:()Ljava/lang/String;
+         8: invokevirtual #222                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        11: ifeq          45
+        14: aload_0
+        15: getfield      #88                 // Field skillInstanceId:Ljava/lang/String;
+        18: aload_1
+        19: invokevirtual #225                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.skillInstanceId:()Ljava/lang/String;
+        22: invokevirtual #222                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        25: ifeq          45
+        28: aload_0
+        29: getfield      #80                 // Field request:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+        32: invokevirtual #3                  // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        35: aload_1
+        36: invokevirtual #163                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.actorId:()Ljava/util/UUID;
+        39: invokevirtual #227                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        42: ifne          55
+        45: new           #45                 // class java/lang/IllegalArgumentException
+        48: dup
+        49: ldc           #230                // String Foreign derived snapshot
+        51: invokespecial #49                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        54: athrow
+        55: new           #16                 // class com/inigmasgames/hytalerpg/execution/SkillExecutionContext
+        58: dup
+        59: aload_0
+        60: getfield      #80                 // Field request:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+        63: aload_0
+        64: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+        67: aload_0
+        68: getfield      #88                 // Field skillInstanceId:Ljava/lang/String;
+        71: aload_0
+        72: getfield      #91                 // Field profile:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        75: aload_0
+        76: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        79: aload_1
+        80: aload_0
+        81: getfield      #103                // Field equipment:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+        84: aload_0
+        85: getfield      #107                // Field target:Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+        88: aload_0
+        89: getfield      #111                // Field echo:Z
+        92: aload_0
+        93: getfield      #115                // Field barrageBatch:I
+        96: aload_0
+        97: getfield      #119                // Field leechBudget:Lcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;
+       100: aload_0
+       101: getfield      #123                // Field multistrikeIndex:I
+       104: aload_0
+       105: getfield      #126                // Field effects:Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       108: aload_0
+       109: getfield      #130                // Field secondaryKind:Ljava/lang/String;
+       112: invokespecial #15                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZILcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;ILcom/inigmasgames/hytalerpg/execution/RootEffectBudget;Ljava/lang/String;)V
+       115: areturn
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext barrageCopy(int);
+    Code:
+         0: aload_0
+         1: getfield      #111                // Field echo:Z
+         4: ifne          43
+         7: aload_0
+         8: getfield      #123                // Field multistrikeIndex:I
+        11: ifgt          43
+        14: aload_0
+        15: getfield      #130                // Field secondaryKind:Ljava/lang/String;
+        18: invokevirtual #72                 // Method java/lang/String.isEmpty:()Z
+        21: ifeq          43
+        24: iload_1
+        25: iconst_1
+        26: if_icmplt     43
+        29: iload_1
+        30: aload_0
+        31: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        34: invokevirtual #232                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.executionModifiers:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+        37: invokevirtual #236                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.barrageBatches:()I
+        40: if_icmplt     53
+        43: new           #146                // class java/lang/IllegalStateException
+        46: dup
+        47: ldc           #242                // String INVALID_BARRAGE_BATCH
+        49: invokespecial #150                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        52: athrow
+        53: new           #16                 // class com/inigmasgames/hytalerpg/execution/SkillExecutionContext
+        56: dup
+        57: aload_0
+        58: getfield      #80                 // Field request:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+        61: aload_0
+        62: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+        65: aload_0
+        66: getfield      #88                 // Field skillInstanceId:Ljava/lang/String;
+        69: aload_0
+        70: getfield      #91                 // Field profile:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        73: aload_0
+        74: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        77: aload_0
+        78: getfield      #99                 // Field snapshot:Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+        81: aload_0
+        82: getfield      #103                // Field equipment:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+        85: aload_0
+        86: getfield      #107                // Field target:Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+        89: iconst_0
+        90: iload_1
+        91: aload_0
+        92: getfield      #119                // Field leechBudget:Lcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;
+        95: iconst_0
+        96: aload_0
+        97: getfield      #126                // Field effects:Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       100: ldc           #13                 // String
+       102: invokespecial #15                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZILcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;ILcom/inigmasgames/hytalerpg/execution/RootEffectBudget;Ljava/lang/String;)V
+       105: areturn
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext echoCopy();
+    Code:
+         0: aload_0
+         1: getfield      #111                // Field echo:Z
+         4: ifne          24
+         7: aload_0
+         8: getfield      #123                // Field multistrikeIndex:I
+        11: ifgt          24
+        14: aload_0
+        15: getfield      #130                // Field secondaryKind:Ljava/lang/String;
+        18: invokevirtual #72                 // Method java/lang/String.isEmpty:()Z
+        21: ifne          34
+        24: new           #146                // class java/lang/IllegalStateException
+        27: dup
+        28: ldc           #244                // String ECHO_CANNOT_REPEAT_ITSELF
+        30: invokespecial #150                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        33: athrow
+        34: aload_0
+        35: getfield      #88                 // Field skillInstanceId:Ljava/lang/String;
+        38: invokedynamic #246,  0            // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        43: astore_1
+        44: aload_0
+        45: getfield      #99                 // Field snapshot:Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+        48: astore_2
+        49: aload_2
+        50: invokevirtual #203                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.modifiers:()Lcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;
+        53: astore_3
+        54: new           #249                // class java/util/ArrayList
+        57: dup
+        58: aload_3
+        59: invokevirtual #251                // Method com/inigmasgames/hytalerpg/combat/damage/ModifierBuckets.less:()Ljava/util/List;
+        62: invokespecial #257                // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+        65: astore        4
+        67: aload         4
+        69: dconst_1
+        70: aload_0
+        71: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        74: invokevirtual #232                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.executionModifiers:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+        77: invokevirtual #260                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.echoMagnitude:()D
+        80: dsub
+        81: invokestatic  #263                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+        84: invokevirtual #269                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+        87: pop
+        88: new           #158                // class com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot
+        91: dup
+        92: aload_0
+        93: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+        96: aload_1
+        97: aload_2
+        98: invokevirtual #163                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.actorId:()Ljava/util/UUID;
+       101: aload_2
+       102: invokevirtual #164                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.rawAttributes:()Ljava/util/Map;
+       105: aload_2
+       106: invokevirtual #168                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.effectiveAttributes:()Ljava/util/Map;
+       109: aload_2
+       110: invokevirtual #171                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.derivedStats:()Lcom/inigmasgames/hytalerpg/combat/attribute/DerivedStats;
+       113: aload_2
+       114: invokevirtual #175                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.itemId:()Ljava/lang/String;
+       117: aload_2
+       118: invokevirtual #179                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.weaponClass:()Lcom/inigmasgames/hytalerpg/combat/power/LinkTreeWeaponClass;
+       121: aload_2
+       122: invokevirtual #183                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.basePowerSource:()Lcom/inigmasgames/hytalerpg/combat/power/BasePowerSource;
+       125: aload_2
+       126: invokevirtual #187                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.basePower:()D
+       129: aload_2
+       130: invokevirtual #191                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.compiledPlanHash:()Ljava/lang/String;
+       133: aload_2
+       134: invokevirtual #194                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.skillCoefficient:()D
+       137: aload_2
+       138: invokevirtual #197                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.criticalChance:()D
+       141: aload_2
+       142: invokevirtual #200                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.criticalMultiplier:()D
+       145: new           #252                // class com/inigmasgames/hytalerpg/combat/damage/ModifierBuckets
+       148: dup
+       149: aload_3
+       150: invokevirtual #272                // Method com/inigmasgames/hytalerpg/combat/damage/ModifierBuckets.increased:()Ljava/util/List;
+       153: aload_3
+       154: invokevirtual #275                // Method com/inigmasgames/hytalerpg/combat/damage/ModifierBuckets.reduced:()Ljava/util/List;
+       157: aload_3
+       158: invokevirtual #278                // Method com/inigmasgames/hytalerpg/combat/damage/ModifierBuckets.more:()Ljava/util/List;
+       161: aload         4
+       163: invokespecial #281                // Method com/inigmasgames/hytalerpg/combat/damage/ModifierBuckets."<init>":(Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+       166: aload_2
+       167: invokevirtual #207                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.resourceCost:()Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;
+       170: aload_2
+       171: invokevirtual #211                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.cooldownSeconds:()D
+       174: aload_2
+       175: invokevirtual #214                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.statusModifiers:()Ljava/util/Map;
+       178: invokespecial #217                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/util/UUID;Ljava/util/Map;Ljava/util/Map;Lcom/inigmasgames/hytalerpg/combat/attribute/DerivedStats;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/combat/power/LinkTreeWeaponClass;Lcom/inigmasgames/hytalerpg/combat/power/BasePowerSource;DLjava/lang/String;DDDLcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;DLjava/util/Map;)V
+       181: astore        5
+       183: new           #16                 // class com/inigmasgames/hytalerpg/execution/SkillExecutionContext
+       186: dup
+       187: aload_0
+       188: getfield      #80                 // Field request:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       191: aload_0
+       192: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+       195: aload_1
+       196: aload_0
+       197: getfield      #91                 // Field profile:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       200: aload_0
+       201: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       204: aload         5
+       206: aload_0
+       207: getfield      #103                // Field equipment:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+       210: aload_0
+       211: getfield      #107                // Field target:Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+       214: iconst_1
+       215: iconst_0
+       216: aload_0
+       217: getfield      #119                // Field leechBudget:Lcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;
+       220: iconst_0
+       221: aload_0
+       222: getfield      #126                // Field effects:Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       225: ldc           #13                 // String
+       227: invokespecial #15                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZILcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;ILcom/inigmasgames/hytalerpg/execution/RootEffectBudget;Ljava/lang/String;)V
+       230: areturn
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext multistrikeCopy(int);
+    Code:
+         0: aload_0
+         1: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+         4: invokevirtual #284                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.strikes:()Lcom/inigmasgames/hytalerpg/domain/StrikeModifiers;
+         7: invokevirtual #288                // Method com/inigmasgames/hytalerpg/domain/StrikeModifiers.multistrike:()Z
+        10: ifeq          30
+        13: aload_0
+        14: invokevirtual #133                // Method derivedRelease:()Z
+        17: ifne          30
+        20: iload_1
+        21: iconst_1
+        22: if_icmplt     30
+        25: iload_1
+        26: iconst_2
+        27: if_icmple     41
+        30: new           #146                // class java/lang/IllegalStateException
+        33: dup
+        34: ldc_w         #293                // String MULTISTRIKE_CANNOT_RECURSE
+        37: invokespecial #150                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        40: athrow
+        41: aload_0
+        42: getfield      #88                 // Field skillInstanceId:Ljava/lang/String;
+        45: iload_1
+        46: invokedynamic #295,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+        51: astore_2
+        52: aload_0
+        53: getfield      #99                 // Field snapshot:Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+        56: ldc2_w        #296                // double 0.65d
+        59: invokevirtual #157                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.withMagnitudeFactor:(D)Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+        62: astore_3
+        63: new           #158                // class com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot
+        66: dup
+        67: aload_0
+        68: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+        71: aload_2
+        72: aload_3
+        73: invokevirtual #163                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.actorId:()Ljava/util/UUID;
+        76: aload_3
+        77: invokevirtual #164                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.rawAttributes:()Ljava/util/Map;
+        80: aload_3
+        81: invokevirtual #168                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.effectiveAttributes:()Ljava/util/Map;
+        84: aload_3
+        85: invokevirtual #171                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.derivedStats:()Lcom/inigmasgames/hytalerpg/combat/attribute/DerivedStats;
+        88: aload_3
+        89: invokevirtual #175                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.itemId:()Ljava/lang/String;
+        92: aload_3
+        93: invokevirtual #179                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.weaponClass:()Lcom/inigmasgames/hytalerpg/combat/power/LinkTreeWeaponClass;
+        96: aload_3
+        97: invokevirtual #183                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.basePowerSource:()Lcom/inigmasgames/hytalerpg/combat/power/BasePowerSource;
+       100: aload_3
+       101: invokevirtual #187                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.basePower:()D
+       104: aload_3
+       105: invokevirtual #191                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.compiledPlanHash:()Ljava/lang/String;
+       108: aload_3
+       109: invokevirtual #194                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.skillCoefficient:()D
+       112: aload_3
+       113: invokevirtual #197                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.criticalChance:()D
+       116: aload_3
+       117: invokevirtual #200                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.criticalMultiplier:()D
+       120: aload_3
+       121: invokevirtual #203                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.modifiers:()Lcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;
+       124: aload_3
+       125: invokevirtual #207                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.resourceCost:()Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;
+       128: aload_3
+       129: invokevirtual #211                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.cooldownSeconds:()D
+       132: aload_3
+       133: invokevirtual #214                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.statusModifiers:()Ljava/util/Map;
+       136: invokespecial #217                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/util/UUID;Ljava/util/Map;Ljava/util/Map;Lcom/inigmasgames/hytalerpg/combat/attribute/DerivedStats;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/combat/power/LinkTreeWeaponClass;Lcom/inigmasgames/hytalerpg/combat/power/BasePowerSource;DLjava/lang/String;DDDLcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;DLjava/util/Map;)V
+       139: astore        4
+       141: new           #16                 // class com/inigmasgames/hytalerpg/execution/SkillExecutionContext
+       144: dup
+       145: aload_0
+       146: getfield      #80                 // Field request:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       149: aload_0
+       150: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+       153: aload_2
+       154: aload_0
+       155: getfield      #91                 // Field profile:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       158: aload_0
+       159: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       162: aload         4
+       164: aload_0
+       165: getfield      #103                // Field equipment:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+       168: aload_0
+       169: getfield      #107                // Field target:Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+       172: iconst_0
+       173: iconst_0
+       174: aload_0
+       175: getfield      #119                // Field leechBudget:Lcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;
+       178: iload_1
+       179: aload_0
+       180: getfield      #126                // Field effects:Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       183: ldc           #13                 // String
+       185: invokespecial #15                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZILcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;ILcom/inigmasgames/hytalerpg/execution/RootEffectBudget;Ljava/lang/String;)V
+       188: areturn
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionContext secondaryCopy(java.lang.String, int, double);
+    Code:
+         0: aload_0
+         1: invokevirtual #133                // Method derivedRelease:()Z
+         4: ifne          103
+         7: iload_2
+         8: iconst_1
+         9: if_icmplt     103
+        12: iload_2
+        13: bipush        16
+        15: if_icmpgt     103
+        18: dload_3
+        19: invokestatic  #298                // Method java/lang/Double.isFinite:(D)Z
+        22: ifeq          103
+        25: dload_3
+        26: dconst_0
+        27: dcmpg
+        28: iflt          103
+        31: dload_3
+        32: dconst_1
+        33: dcmpl
+        34: ifgt          103
+        37: aload_1
+        38: ldc           #54                 // String cleaving_edge
+        40: invokevirtual #222                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        43: ifeq          59
+        46: aload_0
+        47: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        50: invokevirtual #284                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.strikes:()Lcom/inigmasgames/hytalerpg/domain/StrikeModifiers;
+        53: invokevirtual #302                // Method com/inigmasgames/hytalerpg/domain/StrikeModifiers.cleavingEdge:()Z
+        56: ifne          114
+        59: aload_1
+        60: ldc           #56                 // String phantom_reach
+        62: invokevirtual #222                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        65: ifeq          81
+        68: aload_0
+        69: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        72: invokevirtual #284                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.strikes:()Lcom/inigmasgames/hytalerpg/domain/StrikeModifiers;
+        75: invokevirtual #305                // Method com/inigmasgames/hytalerpg/domain/StrikeModifiers.phantomReach:()Z
+        78: ifne          114
+        81: aload_1
+        82: ldc           #58                 // String shockwave
+        84: invokevirtual #222                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        87: ifeq          103
+        90: aload_0
+        91: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        94: invokevirtual #284                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.strikes:()Lcom/inigmasgames/hytalerpg/domain/StrikeModifiers;
+        97: invokevirtual #308                // Method com/inigmasgames/hytalerpg/domain/StrikeModifiers.shockwave:()Z
+       100: ifne          114
+       103: new           #146                // class java/lang/IllegalStateException
+       106: dup
+       107: ldc_w         #310                // String STRIKE_SECONDARY_CANNOT_RECURSE
+       110: invokespecial #150                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       113: athrow
+       114: aload_0
+       115: getfield      #88                 // Field skillInstanceId:Ljava/lang/String;
+       118: aload_1
+       119: iload_2
+       120: invokedynamic #312,  0            // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String;
+       125: astore        5
+       127: aload_0
+       128: getfield      #99                 // Field snapshot:Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+       131: dload_3
+       132: invokevirtual #157                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.withMagnitudeFactor:(D)Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+       135: astore        6
+       137: new           #158                // class com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot
+       140: dup
+       141: aload_0
+       142: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+       145: aload         5
+       147: aload         6
+       149: invokevirtual #163                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.actorId:()Ljava/util/UUID;
+       152: aload         6
+       154: invokevirtual #164                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.rawAttributes:()Ljava/util/Map;
+       157: aload         6
+       159: invokevirtual #168                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.effectiveAttributes:()Ljava/util/Map;
+       162: aload         6
+       164: invokevirtual #171                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.derivedStats:()Lcom/inigmasgames/hytalerpg/combat/attribute/DerivedStats;
+       167: aload         6
+       169: invokevirtual #175                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.itemId:()Ljava/lang/String;
+       172: aload         6
+       174: invokevirtual #179                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.weaponClass:()Lcom/inigmasgames/hytalerpg/combat/power/LinkTreeWeaponClass;
+       177: aload         6
+       179: invokevirtual #183                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.basePowerSource:()Lcom/inigmasgames/hytalerpg/combat/power/BasePowerSource;
+       182: aload         6
+       184: invokevirtual #187                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.basePower:()D
+       187: aload         6
+       189: invokevirtual #191                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.compiledPlanHash:()Ljava/lang/String;
+       192: aload         6
+       194: invokevirtual #194                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.skillCoefficient:()D
+       197: aload         6
+       199: invokevirtual #197                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.criticalChance:()D
+       202: aload         6
+       204: invokevirtual #200                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.criticalMultiplier:()D
+       207: aload         6
+       209: invokevirtual #203                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.modifiers:()Lcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;
+       212: aload         6
+       214: invokevirtual #207                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.resourceCost:()Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;
+       217: aload         6
+       219: invokevirtual #211                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.cooldownSeconds:()D
+       222: aload         6
+       224: invokevirtual #214                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.statusModifiers:()Ljava/util/Map;
+       227: invokespecial #217                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/util/UUID;Ljava/util/Map;Ljava/util/Map;Lcom/inigmasgames/hytalerpg/combat/attribute/DerivedStats;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/combat/power/LinkTreeWeaponClass;Lcom/inigmasgames/hytalerpg/combat/power/BasePowerSource;DLjava/lang/String;DDDLcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;Lcom/inigmasgames/hytalerpg/combat/resource/ResourceCost;DLjava/util/Map;)V
+       230: astore        7
+       232: new           #16                 // class com/inigmasgames/hytalerpg/execution/SkillExecutionContext
+       235: dup
+       236: aload_0
+       237: getfield      #80                 // Field request:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       240: aload_0
+       241: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+       244: aload         5
+       246: aload_0
+       247: getfield      #91                 // Field profile:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       250: aload_0
+       251: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       254: aload         7
+       256: aload_0
+       257: getfield      #103                // Field equipment:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+       260: aload_0
+       261: getfield      #107                // Field target:Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+       264: iconst_0
+       265: iconst_0
+       266: aload_0
+       267: getfield      #119                // Field leechBudget:Lcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;
+       270: iconst_0
+       271: aload_0
+       272: getfield      #126                // Field effects:Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       275: aload_1
+       276: invokespecial #15                 // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;ZILcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;ILcom/inigmasgames/hytalerpg/execution/RootEffectBudget;Ljava/lang/String;)V
+       279: areturn
+
+  public final java.lang.String toString();
+    Code:
+         0: aload_0
+         1: invokedynamic #315,  0            // InvokeDynamic #4:toString:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/lang/String;
+         6: areturn
+
+  public final int hashCode();
+    Code:
+         0: aload_0
+         1: invokedynamic #319,  0            // InvokeDynamic #4:hashCode:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)I
+         6: ireturn
+
+  public final boolean equals(java.lang.Object);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokedynamic #323,  0            // InvokeDynamic #4:equals:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/Object;)Z
+         7: ireturn
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionRequest request();
+    Code:
+         0: aload_0
+         1: getfield      #80                 // Field request:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+         4: areturn
+
+  public java.lang.String rootCastId();
+    Code:
+         0: aload_0
+         1: getfield      #84                 // Field rootCastId:Ljava/lang/String;
+         4: areturn
+
+  public java.lang.String skillInstanceId();
+    Code:
+         0: aload_0
+         1: getfield      #88                 // Field skillInstanceId:Ljava/lang/String;
+         4: areturn
+
+  public com.inigmasgames.hytalerpg.execution.Stage04SkillProfile profile();
+    Code:
+         0: aload_0
+         1: getfield      #91                 // Field profile:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+         4: areturn
+
+  public com.inigmasgames.hytalerpg.domain.CompiledSkillPlan compiledPlan();
+    Code:
+         0: aload_0
+         1: getfield      #95                 // Field compiledPlan:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+         4: areturn
+
+  public com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot snapshot();
+    Code:
+         0: aload_0
+         1: getfield      #99                 // Field snapshot:Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+         4: areturn
+
+  public com.inigmasgames.hytalerpg.execution.SkillExecutionPort$Equipment equipment();
+    Code:
+         0: aload_0
+         1: getfield      #103                // Field equipment:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionPort$Equipment;
+         4: areturn
+
+  public com.inigmasgames.hytalerpg.execution.CommittedTarget target();
+    Code:
+         0: aload_0
+         1: getfield      #107                // Field target:Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+         4: areturn
+
+  public boolean echo();
+    Code:
+         0: aload_0
+         1: getfield      #111                // Field echo:Z
+         4: ireturn
+
+  public int barrageBatch();
+    Code:
+         0: aload_0
+         1: getfield      #115                // Field barrageBatch:I
+         4: ireturn
+
+  public com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget leechBudget();
+    Code:
+         0: aload_0
+         1: getfield      #119                // Field leechBudget:Lcom/inigmasgames/hytalerpg/combat/resource/RootLeechBudget;
+         4: areturn
+
+  public int multistrikeIndex();
+    Code:
+         0: aload_0
+         1: getfield      #123                // Field multistrikeIndex:I
+         4: ireturn
+
+  public com.inigmasgames.hytalerpg.execution.RootEffectBudget effects();
+    Code:
+         0: aload_0
+         1: getfield      #126                // Field effects:Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+         4: areturn
+
+  public java.lang.String secondaryKind();
+    Code:
+         0: aload_0
+         1: getfield      #130                // Field secondaryKind:Ljava/lang/String;
+         4: areturn
+}

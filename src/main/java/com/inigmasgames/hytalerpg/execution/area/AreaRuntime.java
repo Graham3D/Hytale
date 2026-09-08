@@ -34,18 +34,26 @@ public final class AreaRuntime {
         if (profile == null || !Double.isFinite(now) || !Double.isFinite(radiusFactor) || radiusFactor <= 0)
             throw new IllegalArgumentException("Invalid area start");
         boolean mobile=context.compiledPlan().zones().mobileDomain();
+        boolean cascade=context.compiledPlan().zones().cascade();
+        if(cascade&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.cascade(context.profile()))throw new IllegalStateException("CASCADE_AREA_COMPONENT_REQUIRED");
         if(context.compiledPlan().pulses().rapidPulse()&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.periodicPulse(context.profile()))
             throw new IllegalStateException("PERIODIC_PULSE_COMPONENT_REQUIRED");
         if(mobile&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.mobileZone(context.profile()))
             throw new IllegalStateException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
-        Vec3 origin=mobile?mobileOrigin(context,port).orElseThrow(()->new IllegalStateException("MOBILE_OWNER_ANCHOR_UNAVAILABLE")):point;
+        Vec3 anchor=mobile?mobileOrigin(context,port).orElseThrow(()->new IllegalStateException("MOBILE_OWNER_ANCHOR_UNAVAILABLE")):point;
+        Vec3 origin=mobile&&!context.secondaryKind().equals("cascade")?anchor:point;
         String admission = admission(context.request().actorId(), context.profile().skillId(), profile.trap());
         if (!admission.equals("PASS")) throw new IllegalStateException(admission);
         if (fields.containsKey(context.skillInstanceId())) throw new IllegalStateException("DUPLICATE_FIELD_INSTANCE");
-        int spawnCost=1+(profile.stratified()?profile.impactCount():0);
+        int spawnCost=1+(profile.stratified()&&!cascade?profile.impactCount():0);
         int spent=rootSpawned.getOrDefault(rootKey(context),0);
         if(spent+spawnCost>context.compiledPlan().safetyBudgets().maxSpawnedEffects()) throw new IllegalStateException("ROOT_SPAWN_EFFECT_BUDGET");
         Field field = new Field(context, profile.footprint(origin, direction, radiusFactor), now, radiusFactor);
+        if(mobile)field.mobileOffset=origin.subtract(anchor);
+        if(cascade&&context.derivedRelease()){
+            String claim=context.effects().claim(context.skillInstanceId(),1,context.secondaryKind().equals("cascade"));
+            if(!claim.equals("PASS"))throw new IllegalStateException(claim);
+        }
         capacity.reserve(context.request().actorId(),context.skillInstanceId());
         rootSpawned.put(rootKey(context),spent+spawnCost);
         fields.put(context.skillInstanceId(), field);
@@ -53,9 +61,26 @@ public final class AreaRuntime {
             port.trace(context, "AREA_STARTED", Map.of("origin", origin.toString(), "radius", field.geometry.radius(),
                     "height", field.geometry.height(), "lifetimeSeconds", profile.lifetimeSeconds(),"mobileDomain",mobile));
             tickField(field, now, port);
+            if(cascade&&!context.derivedRelease()&&context.effects().once("CASCADE"))startCascade(field,now,port);
         }
         catch (RuntimeException error) { finish(field, "NATIVE_ADAPTER_FAILURE_" + error.getClass().getSimpleName(), port); throw error; }
         finally { if (field.done) removeField(field); }
+    }
+
+    private void startCascade(Field parent,double now,AreaWorldPort port){
+        var context=parent.context;var direction=parent.geometry.direction();var right=new Vec3(direction.z(),0,-direction.x()).horizontalNormalized();
+        double offset=1.2*com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.baseAreaRadius(context.profile().skillId());
+        for(int ordinal=1;ordinal<=2;ordinal++){
+            var child=context.cascadeCopy(ordinal);var point=parent.geometry.origin().add(right.multiply(ordinal==1?-offset:offset));
+            try{
+                var wanted=context.profile().area().footprint(point,direction,parent.radiusFactor*.6);
+                var placement=port.prepareImpact(parent.geometry.origin(),wanted);
+                if(placement.isEmpty()){port.trace(child,"AREA_QUERY_REJECTED",Map.of("reason","CASCADE_NO_LEGAL_TERRAIN","ordinal",ordinal));continue;}
+                start(child,placement.get().origin(),direction,now,parent.radiusFactor*.6,port);
+            }catch(RuntimeException failure){
+                try{port.trace(child,"AREA_QUERY_REJECTED",Map.of("reason","CASCADE_CHILD_REJECTED","boundary",String.valueOf(failure.getMessage()),"paidRootRetained",true));}catch(RuntimeException ignored){}
+            }
+        }
     }
 
     public synchronized void tick(UUID owner, double now, AreaWorldPort port) {
@@ -86,7 +111,7 @@ public final class AreaRuntime {
             var origin=mobileOrigin(field.context,port);
             if(origin.isEmpty()){finish(field,"MOBILE_OWNER_ANCHOR_UNAVAILABLE",port);return;}
             // One current footprint, never a swept damage trail or a restarted duration/ledger.
-            field.geometry=field.geometry.at(origin.get(),field.geometry.radius());
+            field.geometry=field.geometry.at(origin.get().add(field.mobileOffset),field.geometry.radius());
         }
         double gap = now - field.lastTick;
         field.lastTick = now;
@@ -181,6 +206,12 @@ public final class AreaRuntime {
             if (profile.stratified()) {
                 if (!field.prepared[i]) {
                     field.prepared[i] = true;
+                    if(field.context.compiledPlan().zones().cascade()){
+                        String budget=field.context.effects().claim(field.context.skillInstanceId()+"/area-impact-"+i,field.context.derivedRelease()?2:1,false);
+                        if(!budget.equals("PASS")){
+                            field.impacted[i]=true;field.nextImpact++;port.trace(field.context,"AREA_QUERY_REJECTED",Map.of("reason",budget,"impactIndex",i));continue;
+                        }
+                    }
                     field.impactGeometry[i] = port.prepareImpact(field.geometry.origin(), footprint).orElse(null);
                 }
                 footprint = field.impactGeometry[i];
@@ -279,6 +310,8 @@ public final class AreaRuntime {
             }
             boolean statusReady = now - field.statusLastHit.getOrDefault(target.id(), Double.NEGATIVE_INFINITY)
                     >= profile.statusIntervalSeconds() - 1e-9;
+            String rootStatusKey=target.id()+"/"+status;
+            if(field.context.compiledPlan().zones().cascade())statusReady&=field.context.effects().statusReady(rootStatusKey,now,Math.max(profile.statusIntervalSeconds(),profile.targetIntervalSeconds()));
             if(statusReady&&status.equals("CHILL")&&field.context.compiledPlan().pulses().rapidPulse()){
                 chill=field.chill.grant(target.id(),impactIndex,chill);
                 if(chill==0)status="";
@@ -288,7 +321,9 @@ public final class AreaRuntime {
                     finalBlast ? profile.finalPull() : profile.pullSpeed() * seconds,
                     finalBlast ? 0 : profile.pullCoreRadius() * field.radiusFactor, finalBlast);
             if (!port.apply(finalBlast?field.context:field.pulseContext, target, payload)) continue;
-            if (statusReady && !status.isBlank()) field.statusLastHit.put(target.id(), now);
+            if (statusReady && !status.isBlank()) {field.statusLastHit.put(target.id(), now);
+                if(field.context.compiledPlan().zones().cascade())field.context.effects().statusApplied(rootStatusKey,now);
+            }
             var accepted=new Ledger(previous == null ? 1 : previous.hits + 1, now, impactKey);
             ledger.put(target.id(),accepted);field.ledger.put(target.id(),accepted);
             applied++;
@@ -322,6 +357,7 @@ public final class AreaRuntime {
     private record Ledger(int hits, double lastHit, String lastImpact) { }
     private static final class Field {
         final SkillExecutionContext context,pulseContext; AreaGeometry geometry; final double started, radiusFactor;
+        Vec3 mobileOffset=Vec3.ZERO;
         final com.inigmasgames.hytalerpg.execution.ChillPulseLedger chill=new com.inigmasgames.hytalerpg.execution.ChillPulseLedger();
         final Map<String, Ledger> ledger = new HashMap<>();
         final Map<String, Double> statusLastHit = new HashMap<>();

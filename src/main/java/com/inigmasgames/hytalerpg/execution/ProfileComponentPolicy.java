@@ -62,6 +62,9 @@ public final class ProfileComponentPolicy {
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(affectedArea(p));
     }
     public static Optional<Boolean> enemyPosition(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(enemyPosition(p));}
+    public static boolean cascade(String skill){var p=Canonical.PROFILES.all().get(skill);return p!=null&&cascade(p);}
+    public static boolean cascade(Stage04SkillProfile p){return p.area()!=null&&p.area().geometry()==com.inigmasgames.hytalerpg.execution.area.AreaGeometry.Kind.DISC&&p.area().placementRange()>0&&!p.area().trap();}
+    public static double baseAreaRadius(String skill){var p=Canonical.PROFILES.require(skill);if(!cascade(p))throw new IllegalArgumentException("NO_CASCADE_AREA");return p.area().radius();}
     public static boolean enemyPosition(Stage04SkillProfile p){
         return p.area()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().radius()>0
                 ||p.support()!=null&&p.support().radius()>0&&(p.support().damageInterval()>0||p.support().chillInterval()>0)

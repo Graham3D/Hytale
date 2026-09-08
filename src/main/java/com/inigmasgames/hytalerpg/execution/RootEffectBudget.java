@@ -8,6 +8,10 @@ public final class RootEffectBudget {
     private final Set<String> effects=new HashSet<>(Set.of("PRIMARY")),controllers=new HashSet<>();
     private int triggered;
     private final com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement=new com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger();
+    private final Map<String,Double> statusTimes=new HashMap<>();
+    public synchronized boolean statusReady(String target,double now,double interval){return Double.isFinite(now)&&Double.isFinite(interval)&&interval>=0
+            &&(statusTimes.containsKey(target)||statusTimes.size()<256)&&now-statusTimes.getOrDefault(target,Double.NEGATIVE_INFINITY)>=interval-1e-9;}
+    public synchronized void statusApplied(String target,double now){if(statusTimes.containsKey(target)||statusTimes.size()<256)statusTimes.put(target,now);}
     public com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement(){return displacement;}
     public RootEffectBudget(UUID actor,String root){this.actor=Objects.requireNonNull(actor);this.root=Objects.requireNonNull(root);}
     public boolean owns(UUID actor,String root){return this.actor.equals(actor)&&this.root.equals(root);}

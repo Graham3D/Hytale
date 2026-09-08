@@ -3,8 +3,9 @@ package com.inigmasgames.hytalerpg.domain;
 import java.util.List;
 
 /** Finite zone ownership is independent of Aura resource/reservation ownership. */
-public record ZoneModifiers(boolean mobileDomain) {
+public record ZoneModifiers(boolean mobileDomain,boolean cascade) {
+    public ZoneModifiers(boolean mobileDomain){this(mobileDomain,false);}
     public static ZoneModifiers from(List<PassiveId> order) {
-        return new ZoneModifiers(order.stream().anyMatch(id -> id.value().equals("mobile_domain")));
+        return new ZoneModifiers(order.stream().anyMatch(id -> id.value().equals("mobile_domain")),order.stream().anyMatch(id -> id.value().equals("cascade")));
     }
 }

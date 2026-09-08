@@ -805,7 +805,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     if (cause == null) throw new IllegalStateException("MISSING_NATIVE_DAMAGE_CAUSE_" + causeId);
                     if (payload.pullBeforeDamage() && payload.pull() > 0) applyAreaPull(context, reference, npc, control, payload);
                     DamageOutcome outcome = damage(context, candidate, payload.impactIndex(), payload.coefficient(),
-                            payload.periodic() ? 0 : context.snapshot().criticalChance(), cause, payload.periodic());
+                            payload.periodic() ? 0 : context.snapshot().criticalChance(), cause, payload.periodic(),context.skillInstanceId(),!payload.periodic()&&!context.derivedRelease());
                     if (outcome.cancelled()) return false;
                     if (!payload.pullBeforeDamage() && payload.pull() > 0) applyAreaPull(context, reference, npc, control, payload);
                     if (payload.status().equals("BURN") || payload.status().equals("POISON")) {

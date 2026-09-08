@@ -1232,3 +1232,65 @@ Rollback O: `0B5F56C8B256ED5D49B99C64E7F159EB3D5C4DF0894506F82E41143933671642`.
 Player schema6 unchanged. No live deployment, native input/HUD, art or Google Drive
 writes. Thirty of40 Stage11 primitives now have local cohort evidence;10 and the
 cross-catalog/legacy-state gate remain. Continue automatically under owner authority.
+
+## Cohort Q — Cascade (R030, plan schema26)
+
+LP035 now uses the existing finite AreaRuntime, not another executor or paid cast.
+The primary is unchanged. One root controller attempts two child fields, offset
+along committed aim-right by ±1.2 times the canonical unmodified radius. Each child
+uses.60 of the parent's resolved radius, including its sub-impact/core radii, and
+inherits.45 of its magnitude snapshot with unchanged authored duration/cadence.
+Expanded Radius/Concentration affect the footprint, not the base offset. Native
+prepareImpact resolves each candidate onto legal terrain with the existing ground
+collision and parent-to-child LOS check. A rejected child records its boundary;
+no resource/cooldown is refunded and no primary hit is replayed. Missing terrain,
+adapter failure and field capacity are independently bounded per child.
+
+Ground-targeted radial profiles are positive targets, including Blizzard and
+overhead bombardments whose imported summary tags omitted AREA_OF_EFFECT. This is
+a local compatibility assessment, not a global family/capability conversion.
+Caster-only bursts, nonradial walls, traps, corpse consumers, collision cages,
+projectile carriers and Auras reject with a typed ground-radial-component reason.
+Children cannot Cascade/Echo or invoke secondary strike controllers. Echo of the
+primary adds only its own field. Native derived area damage is marked canProc=false.
+Root, correlation, Leech and displacement ledgers remain shared. Status application
+timers now also share the root where Cascade is active; overlapping areas cannot
+bypass an authored status/target interval. Status duration and integer-stack rules
+remain inherited from the original authored status service.
+
+Mobile Domain composition keeps the two committed lateral offsets while following
+the current owner position. No swept damage trail is created. All child fields
+share the existing8/caster and128/global field authority and clean up on expiry or
+owner cancellation. Losing a child does not terminate a valid sibling.
+
+### Important finite-budget interaction
+
+Three Blizzard containers plus their16 impacts each total51 gameplay effects.
+The master cap remains48. For Cascade roots, field containers are admitted first,
+then each stratified impact is admitted against the shared root budget as its
+warning is prepared. Both child fields therefore exist; later sub-impacts beyond
+the cap are explicitly skipped with ROOT_SPAWN_EFFECT_BUDGET. This preserves the
+hard safety gate rather than claiming all48 impacts plus3 containers fit it.
+The unchanged non-Cascade conservative pre-reservation path retains its existing
+regression coverage. A Cascade child consumes one of16 triggered-secondary slots;
+its authored sub-impacts consume spawn slots, not new replay controllers. The
+generation limit stays3. Lingering/Echo compositions can reach these limits sooner.
+
+### Cohort Q local evidence
+
+21 new tests cover exact offsets/radii/magnitude, immutable authoring, native-port
+terrain failure, cost conservation,8-field and16-secondary admission,48-effect
+clamping, cleanup, status-overlap intervals, mobile offsets, delay/echo composition,
+derived-controller rejection and independent child target footprints.
+`clean build`: **1102 tests PASS**, zero failures/errors/skips. Normal isolated
+three-mod network boot/clean exit0 and packaged CustomUI9 audit PASS. Bytecode
+evidence under `evidence/stage-11/cohort-q/api` verifies call structure only.
+No connected terrain, damage, timing, replication or VFX proof is claimed.
+
+Artifact: `evidence/stage-11/cohort-q/artifacts/HytaleRPG-0.0.23.jar`.
+SHA-256: `95E2363F76FC71455FCCF0714EDE0ACFEA041A1F274AA5CF76CC99D0FDA51C81`.
+Rollback P: `20B6636A05D63C1B03CAB9ACE36A219A28950B406C618365247F2F6F818B58DD`.
+Player schema6, native HUD/input, existing art and live three-mod installation
+remain unchanged. All files are in the GitHub workspace, none on Google Drive.
+Thirty-one of40 Stage11 primitives have local cohort evidence; nine remain before
+the final compatibility/legacy-state gate. Connected gates remain UNVERIFIED.

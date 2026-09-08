@@ -29,6 +29,11 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(passive.id().value().equals("cascade")){
+            if(!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.cascade(skill.id().value()))return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
+                    "Cascade requires a ground-targeted radial area, not a caster burst, trap, corpse, collision wall or Aura.",Set.of("GROUND_TARGETED_RADIAL_AREA"),actual);
+            actual.add("AREA_OF_EFFECT");actual.add("GROUND_TARGETED");
+        }
         if(Set.of("vacuum","repulsion").contains(passive.id().value())){
             var position=com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.enemyPosition(skill.id().value());
             if(position.filter(v->!v).isPresent())return CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
