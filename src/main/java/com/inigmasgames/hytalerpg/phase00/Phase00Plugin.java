@@ -173,6 +173,8 @@ public final class Phase00Plugin extends JavaPlugin {
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
         getCommandRegistry().registerCommand(rpgCommand);
         getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.RpgTraceCommand(skillTrace));
+        if(Boolean.getBoolean("rpg.projectileSpawnAudit"))getCommandRegistry().registerCommand(
+                new com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileSpawnAuditCommand(skillExecutionSystem));
         var productionPowers=com.inigmasgames.hytalerpg.combat.power.NativeItemPowerRegistry.loadProduction();
         getLogger().atInfo().log("RPG_STAGE13_N_POWER_REGISTRY entries=%s policy=NATIVE_UNCHARGED_OR_EXPLICIT_MAGIC_SHIELD_REFERENCE traceLevel=%s connectedProof=false",
                 productionPowers.all().size(),skillTrace.level());

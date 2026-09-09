@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c','d','e','f','g','g','h','i','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z')][string]$Cohort = 'a')
+param([ValidateSet('a','b','c','d','e','f','g','g','h','i','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z')][string]$Cohort = 'a',[switch]$NativeProjectileSpawnAudit)
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
@@ -37,13 +37,16 @@ Copy-Item -LiteralPath $savePermissions -Destination (Join-Path $runDirectory 'p
 
 Push-Location $runDirectory
 try {
-    $start = [Diagnostics.ProcessStartInfo]::new('java', "-jar `"$serverJar`" --bind 127.0.0.1:0 --auth-mode offline --allow-op --disable-sentry --assets=`"$assets`"")
+    $startedUtc=[DateTimeOffset]::UtcNow
+    $auditFlags=if($NativeProjectileSpawnAudit){"-Drpg.projectileSpawnAudit=true -Drpg.projectileSpawnAuditRoot=`"$runDirectory`" "}else{''}
+    $start = [Diagnostics.ProcessStartInfo]::new('java', "$auditFlags-jar `"$serverJar`" --bind 127.0.0.1:0 --auth-mode offline --allow-op --disable-sentry --assets=`"$assets`"")
     $start.WorkingDirectory = $runDirectory; $start.UseShellExecute = $false; $start.CreateNoWindow = $true
     $start.RedirectStandardInput = $true; $start.RedirectStandardOutput = $true; $start.RedirectStandardError = $true
     $process = [Diagnostics.Process]::new(); $process.StartInfo = $start
     if (-not $process.Start()) { throw 'Could not start R032 smoke server.' }
     $stdout = $process.StandardOutput.ReadToEndAsync(); $stderr = $process.StandardError.ReadToEndAsync()
     Start-Sleep -Seconds 30
+    if($NativeProjectileSpawnAudit -and -not $process.HasExited){$process.StandardInput.WriteLine('rpg-native-spawn-audit');$process.StandardInput.Flush();Start-Sleep -Seconds 5}
     if (-not $process.HasExited) { $process.StandardInput.WriteLine('stop'); $process.StandardInput.Flush() }
     if (-not $process.WaitForExit(30000)) { $process.Kill($true); throw 'R032 smoke server timeout.' }
     $plain = (($stdout.Result, $stderr.Result) -join [Environment]::NewLine) -replace "`e\[[0-9;]*[A-Za-z]", ''
@@ -86,6 +89,24 @@ $summary = [ordered]@{
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8
+if($NativeProjectileSpawnAudit){
+    $tracePath=Join-Path $runDirectory 'mods/InigmasGames_HytaleRPGPhase00Audit/logs/rpg/skill-trace.jsonl'
+    $records=@(Get-Content -LiteralPath $tracePath|ForEach-Object {$_|ConvertFrom-Json}|Where-Object {[DateTimeOffset]$_.timestamp -ge $startedUtc -and $_.correlationId -like 'isolated-native-spawn-*'})
+    $requests=@($records|Where-Object eventType -eq 'PROJECTILE_SPAWN_REQUEST')
+    $spawned=@($records|Where-Object eventType -eq 'PROJECTILE_SPAWNED')
+    $passed=$plain -match 'RPG_NATIVE_SPAWN_INTEGRATION result=PASS .* nativeRefValid=true physicsVelocity=24 interactionRoots=0 pendingRollback=true productionCarrier=true connectedProof=false'
+    if(-not $passed -or $plain -match 'RPG_NATIVE_SPAWN_INTEGRATION result=FAIL' -or $requests.Count -ne 2 -or $spawned.Count -ne 1 -or
+        @($records|Where-Object eventType -eq 'PROJECTILE_SPAWN_REJECTED').Count){throw 'Native Fire Bolt construction/queued rollback integration failed: no deployment allowed'}
+    $ack=$spawned[0];$request=@($requests|Where-Object correlationId -eq $ack.correlationId)
+    if($request.Count -ne 1 -or $ack.details.configId -ne 'Projectile_Config_RPG_Fire_Bolt' -or
+        $ack.details.rootCastId -ne $request[0].details.rootCastId -or $ack.details.skillInstanceId -ne $request[0].details.skillInstanceId){throw 'Native spawn correlation/config contract failed'}
+    $records|ConvertTo-Json -Depth 12|Set-Content -LiteralPath (Join-Path $evidence 'native-spawn-records.json') -Encoding utf8
+    [ordered]@{result='PASS';jarSha256=$summary.jarSha256;startedUtc=$startedUtc.ToString('o');nativeApi='ProjectileModule.spawnProjectile';
+        hytaleServerSha256=(Get-FileHash -LiteralPath $serverJar).Hash;assetsSha256=(Get-FileHash -LiteralPath $assets).Hash;
+        originalFailure='IllegalArgumentException: Specified map is empty';loadedMapClass='java.util.Collections$EmptyMap';
+        requests=2;spawned=1;pendingRollback='PASS';physicsVelocity=24;nativeInteractionRoots=0;nativeRefValidAfterQueue=$true;
+        connectedClientVerified=$false}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $evidence 'native-spawn-integration.json') -Encoding utf8
+}
 [pscustomobject]$summary | Format-List
 if($expectedPlayerSchema -eq 9 -and -not $summary.acquisitionConfigured){throw 'Stage12 acquisition/respec registration gate failed'}
 if($expectedMastery -eq 'true' -and -not ($summary.masteryHooksRegistered -and $summary.supportCreditHooksRegistered -and $summary.nativeRewardHooksRegistered -and $summary.encounterStoreConfigured -and $summary.encounterRegistryResolved)){throw 'Stage12 mastery/support native registration gate failed'}
@@ -100,12 +121,12 @@ if($Cohort -ne 'a'){
     if($audit.connectedProof -ne $false -or -not $audit.emptyNativeInteractions -or -not $audit.typedElements){throw 'Projectile audit authority mismatch'}
     if($Cohort -eq 'b' -and ($audit.resolvedConfigs -ne 13 -or $audit.shippedCrossbowSpeed -ne 40 -or $audit.shippedCrossbowRadius -ne .075 -or $audit.shippedCrossbowGravity -ne 10 -or
         $audit.equipment.Weapon_Crossbow_Iron.basicPower -ne 10 -or $audit.equipment.Weapon_Spear_Iron.basicPower -ne 6)){throw 'Cohort B native numeric contract mismatch'}
-    if($Cohort -in @('c','d','e','f','g','h','i','j','k','l','m','n') -and ($audit.resolvedConfigs -ne 19 -or $audit.equipment.Weapon_Gun_Blunderbuss.basicPower -ne 200 -or
+    if($Cohort -in @('c','d','e','f','g','h','i','j','k','l','m','n','o') -and ($audit.resolvedConfigs -ne 19 -or $audit.equipment.Weapon_Gun_Blunderbuss.basicPower -ne 200 -or
         $audit.nativeChargedBow.speed -ne 85 -or $audit.nativeChargedBow.gravity -ne 25 -or $audit.nativeChargedBow.radius -ne .075 -or
         $audit.snipeActivationGate -ne 'NATIVE_BOW_MAX_RANGE_UNVERIFIED')){throw 'Cohort C native source/capability audit mismatch'}
     $audit|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $evidence 'native-projectile-equipment-audit.json') -Encoding utf8
 }
-if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n')){
+if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n','o')){
     $movementLine=[regex]::Match($plain,'RPG_STAGE13_MOVEMENT_ASSETS result=PASS (\{[^\r\n]*\})')
     if(-not $movementLine.Success){throw 'Native movement/Guard control asset audit missing'}
     $movement=$movementLine.Groups[1].Value|ConvertFrom-Json
@@ -113,7 +134,7 @@ if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n')){
         $movement.activationGate -ne 'NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED' -or $movement.connectedProof){throw 'Guard native ownership/capability gate mismatch'}
     $movement|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $evidence 'native-movement-guard-audit.json') -Encoding utf8
 }
-if($Cohort -in @('e','f','g','h','i','j','k','l','m','n')){
+if($Cohort -in @('e','f','g','h','i','j','k','l','m','n','o')){
     $basicLine=[regex]::Match($plain,'RPG_STAGE13_NATIVE_BASIC_PATHS result=PASS (\{[^\r\n]*\})')
     if(-not $basicLine.Success){throw 'Installed native basic-attack path audit missing'}
     $basic=$basicLine.Groups[1].Value|ConvertFrom-Json

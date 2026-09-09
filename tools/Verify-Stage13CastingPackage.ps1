@@ -1,9 +1,9 @@
 [CmdletBinding()]
-param([ValidateSet('m','n')][string]$Cohort='m')
+param([ValidateSet('m','n','o')][string]$Cohort='m')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence/stage-13/cohort-$Cohort"
-$baseline=if($Cohort -eq 'n'){'m'}else{'l'}
+$baseline=if($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
 $previous=Join-Path $root "evidence/stage-13/cohort-$baseline/artifacts/HytaleRPG-0.0.25.jar"
 $candidate=Join-Path $out 'artifacts/HytaleRPG-0.0.25.jar'
 function EntryHashes([string]$path){
@@ -15,6 +15,10 @@ function EntryHashes([string]$path){
 $before=EntryHashes $previous;$after=EntryHashes $candidate
 $changed=@(foreach($name in @($before.Keys)+@($after.Keys)|Sort-Object -Unique){if($before[$name] -ne $after[$name]){$name}})
 foreach($name in $changed){
+    if($Cohort -eq 'o'){
+        if($name -match '^com/inigmasgames/hytalerpg/(phase00/Phase00Plugin|execution/hytale/(HytaleSkillExecutionSystem|NativeProjectileSpawnConfig|ProjectileSpawnDiagnostics|NativeProjectileSpawnAuditCommand))(\$[^/]*)?\.class$'){continue}
+        throw "Unexpected O packaged change outside native spawn correction: $name"
+    }
     if($Cohort -eq 'n'){
         if($name -eq 'rpg/runtime/native-item-power-vanilla-0.7-pre1.json'){continue}
         if($name -match '^com/inigmasgames/hytalerpg/(commands/RpgTraceCommand|combat/power/NativeItemPowerRegistry|diagnostics/(RpgSkillTraceService|RpgSkillTracer|RpgTraceEventType|SkillTraceConfiguration|SkillTraceLevel|SkillTraceRouter)|execution/hytale/HytaleEquipmentAdapter|phase00/Phase00Plugin|progress/RpgLoadoutService)(\$[^/]*)?\.class$'){continue}
@@ -43,8 +47,9 @@ if((Get-FileHash -LiteralPath $target).Hash -ne (Get-FileHash -LiteralPath $prev
 Copy-Item -LiteralPath $candidate -Destination $staged
 [IO.File]::Replace($staged,$target,[NullString]::Value)
 if((Get-FileHash -LiteralPath $target).Hash -ne (Get-FileHash -LiteralPath $candidate).Hash){throw 'Isolated roll-forward swap failed'}
-[ordered]@{changedEntries=$changed;allOtherEntriesIdentical=$true;resourcesHudPowerRegistryPersistenceFormatsUnchanged=($Cohort -eq 'm');
+[ordered]@{changedEntries=$changed;allOtherEntriesIdentical=$true;resourcesHudPowerRegistryPersistenceFormatsUnchanged=($Cohort -in @('m','o'));
     nativeHudInputExecutorsPersistenceAndOriginalPowerManifestUnchanged=($Cohort -eq 'n');expandedPowerManifest=($Cohort -eq 'n');
+    equipmentTargetingInputPersistenceResourcesCooldownsHudAndNormalTraceIdenticalToN=($Cohort -eq 'o');
     isolatedAtomicRollbackAndRollForward='PASS';retainedArchivedReaderTests='See full test-results.json; archived-reader tests unchanged';
     previousSha256=(Get-FileHash -LiteralPath $previous).Hash;candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash;
     connectedCastingVerified=$false}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $out 'jar-differential.json') -Encoding utf8

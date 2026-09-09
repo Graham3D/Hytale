@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([switch]$Deploy,[ValidateSet('l','m','n')][string]$Cohort='l')
+param([switch]$Deploy,[ValidateSet('l','m','n','o')][string]$Cohort='l')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence\stage-13\cohort-$Cohort"
@@ -27,6 +27,14 @@ if($Cohort -eq 'n'){
     $manifestName='power-trace-correction.json'
 }
 $names=@('HytaleRPG-0.0.25.jar','CanvasUI-0.1.0.jar','HYTALEDEVLIB-0.5.0.jar')
+if($Cohort -eq 'o'){
+    $oldHash='669B230DAC394A2CE1246125028C51DF446BBC5024FCBEED83059F65F8BDDF33'
+    $expectedTests=2128
+    $baselineCohort='n'
+    $baselineCommit='183601dbe46f3633c45d3f822852c7ea8738a4d2'
+    $archiveName='Hytale-RPG-Stage13-O-native-spawn-correction.zip'
+    $manifestName='native-spawn-correction.json'
+}
 $suites=@(foreach($path in @('build/test-results/test','build/test-results/nativeControlTest','canvas-ui/build/test-results/test')){
     foreach($file in Get-ChildItem -LiteralPath (Join-Path $root $path) -Filter 'TEST-*.xml'){
         [xml]$xml=Get-Content -Raw -LiteralPath $file.FullName
@@ -52,6 +60,10 @@ $smoke=Get-Content -Raw (Join-Path $out 'server-smoke-summary.json')|ConvertFrom
 $jar=Join-Path $root 'build/libs/HytaleRPG-0.0.25.jar'
 $hash=(Get-FileHash -LiteralPath $jar).Hash
 if($smoke.jarSha256 -ne $hash -or $smoke.processExitCode -ne 0 -or -not $smoke.exactlyThreeMods -or -not $smoke.networkBooted -or -not $smoke.cleanShutdown -or $smoke.failure){throw 'Exact candidate smoke required'}
+if($Cohort -eq 'o'){
+    $native=Get-Content -Raw (Join-Path $out 'native-spawn-integration.json')|ConvertFrom-Json
+    if($native.result -ne 'PASS' -or $native.jarSha256 -ne $hash -or $native.spawned -ne 1 -or $native.requests -ne 2 -or $native.pendingRollback -ne 'PASS' -or -not $native.nativeRefValidAfterQueue){throw 'Exact candidate native spawn proof required before packaging/deploy'}
+}
 $artifacts=Join-Path $out 'artifacts'
 New-Item -ItemType Directory -Force -Path $artifacts|Out-Null
 $expected=[ordered]@{

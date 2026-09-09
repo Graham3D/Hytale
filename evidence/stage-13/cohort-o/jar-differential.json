@@ -1,0 +1,31 @@
+{
+  "changedEntries": [
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Counter.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$DamageOutcome.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$GroundedProjectile.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Motion.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$PeriodicTarget.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$ProjectileCarrier.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$QueuedProjectile.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$RepeatingStrike.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/NativeProjectileSpawnAuditCommand.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/NativeProjectileSpawnConfig.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/NativeProjectileSpawnConfig$1.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/ProjectileSpawnDiagnostics.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/ProjectileSpawnDiagnostics$Boundary.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/ProjectileSpawnDiagnostics$Stage.class",
+    "com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class"
+  ],
+  "allOtherEntriesIdentical": true,
+  "resourcesHudPowerRegistryPersistenceFormatsUnchanged": true,
+  "nativeHudInputExecutorsPersistenceAndOriginalPowerManifestUnchanged": false,
+  "expandedPowerManifest": false,
+  "equipmentTargetingInputPersistenceResourcesCooldownsHudAndNormalTraceIdenticalToN": true,
+  "isolatedAtomicRollbackAndRollForward": "PASS",
+  "retainedArchivedReaderTests": "See full test-results.json; archived-reader tests unchanged",
+  "previousSha256": "669B230DAC394A2CE1246125028C51DF446BBC5024FCBEED83059F65F8BDDF33",
+  "candidateSha256": "B8BCCF7DCAA4E7949A32961F261504A0604E7A5671F8E32FBF1BEBBD0CEF0400",
+  "connectedCastingVerified": false
+}

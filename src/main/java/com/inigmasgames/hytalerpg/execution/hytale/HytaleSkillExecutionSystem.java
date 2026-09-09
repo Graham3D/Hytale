@@ -1288,15 +1288,15 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             } catch(RuntimeException error) {
                 for(var carrier:spawned) {
                     projectiles.remove(carrier.instance.plan().projectileInstanceId(),carrier);
-                    if(carrier.projectile.isValid())buffer.tryRemoveEntity(carrier.projectile,RemoveReason.REMOVE);
+                    buffer.tryRemoveEntity(carrier.projectile,RemoveReason.REMOVE); // Also queues removal of a pending native insertion.
                 }
                 for(var instance:instances){projectileLaunches.cancel(instance);projectileService.onForwardTermination(instance,"SPAWN_REJECTED",instance.plan().origin());}
                 projectileService.registry().abandonLaunch(context.request().actorId(),context.rootCastId());
                 if(ammo.quantity()>0&&!nativeAllocationEntered)ammunition.refund(actor,store,ammo);
                 if(authored.requiresAmmo())emit(context,RpgTraceEventType.AMMO_REJECTED,
                         Map.of("reason",nativeAllocationEntered?"NATIVE_ALLOCATION_ENTERED_AMMO_RETAINED":"PRE_NATIVE_ALLOCATION_AMMO_ROLLBACK","error",error.getClass().getSimpleName()));
-                emit(context,RpgTraceEventType.PROJECTILE_SPAWN_REJECTED,Map.of("reason","ATOMIC_BATCH_ROLLBACK",
-                        "error",error.getClass().getSimpleName(),"batchSize",instances.size(),"barrageBatch",context.barrageBatch()));
+                emit(context,RpgTraceEventType.PROJECTILE_SPAWN_REJECTED,ProjectileSpawnDiagnostics.describe(error,Map.of("reason","ATOMIC_BATCH_ROLLBACK",
+                        "error",error.getClass().getSimpleName(),"batchSize",instances.size(),"barrageBatch",context.barrageBatch())));
                 throw error;
             }
         }
@@ -1993,7 +1993,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 spawnProjectileCarrier(c.context,c.actor,instance,buffer);
             }catch(RuntimeException failure){
                 projectileService.onForwardTermination(instance,"SCHEDULED_PROJECTILE_REJECTED",instance.plan().origin());
-                emit(c.context,RpgTraceEventType.PROJECTILE_SPAWN_REJECTED,Map.of("projectileInstanceId",instance.plan().projectileInstanceId(),"reason",String.valueOf(failure.getMessage()),"resourceChargedAgain",false));
+                emit(c.context,RpgTraceEventType.PROJECTILE_SPAWN_REJECTED,ProjectileSpawnDiagnostics.describe(failure,Map.of("projectileInstanceId",instance.plan().projectileInstanceId(),"reason","SCHEDULED_PROJECTILE_REJECTED","resourceChargedAgain",false)));
                 finishProjectileContext(c.context,"SCHEDULED_PROJECTILE_REJECTED");
             }
         }
@@ -2338,35 +2338,65 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 Map.of("reason","HOMING_ACQUISITION","targetId",update.targetId()==null?"NONE":update.targetId(),"intervalSeconds",.10,"turnCapDegreesPerSecond",authored?pattern.homingTurnDegrees():120));
     }
 
+    /** Isolated native construction fixture only; does not activate a skill or claim client/gameplay proof. */
+    Ref<EntityStore> auditProjectileCarrier(SkillExecutionContext context,Ref<EntityStore> actor,CommandBuffer<EntityStore> buffer) {
+        if(!Boolean.getBoolean("rpg.projectileSpawnAudit"))throw new IllegalStateException("ISOLATED_AUDIT_DISABLED");
+        var instance=projectileService.onProjectileSpawn(projectileService.buildPlan(context,context.request().actorId(),
+                new Vec3(0,200,0),Vec3.FORWARD,"Projectile_Config_RPG_Fire_Bolt",24,System.nanoTime()));
+        return spawnProjectileCarrier(context,actor,instance,buffer).projectile;
+    }
+    void cleanupAuditProjectile(Ref<EntityStore> ref){
+        if(!Boolean.getBoolean("rpg.projectileSpawnAudit"))throw new IllegalStateException("ISOLATED_AUDIT_DISABLED");
+        for(var carrier:List.copyOf(projectiles.values()))if(carrier.projectile==ref){
+            projectiles.remove(carrier.instance.plan().projectileInstanceId());
+            projectileService.onForwardTermination(carrier.instance,"ISOLATED_AUDIT_CLEANUP",carrier.instance.plan().origin());
+        }
+    }
+
     private ProjectileCarrier spawnProjectileCarrier(SkillExecutionContext context,Ref<EntityStore> actor,ProjectileInstance instance,
             CommandBuffer<EntityStore> buffer) {
         context=context.withSnapshot(instance.plan().snapshot());
         var plan=instance.plan();var config=ProjectileConfig.getAssetMap().getAsset(plan.configId());
-        if(config==null)throw new IllegalStateException("PROJECTILE_CONFIG_MISSING");
+        if(config==null){var error=new IllegalStateException("PROJECTILE_CONFIG_MISSING");ProjectileSpawnDiagnostics.mark(error,ProjectileSpawnDiagnostics.Stage.CONFIG_LOOKUP);throw error;}
         emit(context,RpgTraceEventType.PROJECTILE_SPAWN_REQUEST,Map.of("projectileInstanceId",plan.projectileInstanceId(),"skillId",plan.skillId(),
                 "generation",plan.generation(),"caster",plan.ownerId().toString(),"compiledPlanHash",plan.compiledPlanHash(),"configId",plan.configId(),
                 "originX",plan.origin().x(),"originY",plan.origin().y(),"originZ",plan.origin().z()));
         Ref<EntityStore> ref=null;ProjectileCarrier carrier=null;
+        var spawnStage=ProjectileSpawnDiagnostics.Stage.NATIVE_ALLOCATION;
         try {
             instance.nativeSpawned(System.nanoTime());
-            ref=ProjectileModule.get().spawnProjectile(actor,buffer,config,vector(plan.origin()),vector(instance.direction()));
+            var nativeConfig=NativeProjectileSpawnConfig.forSpawn(config);
+            ref=ProjectileModule.get().spawnProjectile(actor,buffer,nativeConfig,vector(plan.origin()),vector(instance.direction()));
             carrier=new ProjectileCarrier(context,actor,plan.ownerId(),ref,instance);
-            var physics=buffer.getComponent(ref,StandardPhysicsProvider.getComponentType());
-            var velocity=buffer.getComponent(ref,com.hypixel.hytale.server.core.modules.physics.component.Velocity.getComponentType());
+            spawnStage=ProjectileSpawnDiagnostics.Stage.PHYSICS_COMPONENTS;
+            var holder=nativeConfig.preparedHolder();
+            var physics=holder.getComponent(StandardPhysicsProvider.getComponentType());
+            var velocity=holder.getComponent(com.hypixel.hytale.server.core.modules.physics.component.Velocity.getComponentType());
             if(physics==null||velocity==null)throw new IllegalStateException("PROJECTILE_PHYSICS_MISSING");
+            spawnStage=ProjectileSpawnDiagnostics.Stage.VELOCITY_ASSIGNMENT;
             physics.getVelocity().set(vector(plan.velocity()));velocity.set(physics.getVelocity());
+            spawnStage=ProjectileSpawnDiagnostics.Stage.CONTINUATION_SETUP;
             projectiles.put(plan.projectileInstanceId(),carrier);configureContinuationCarrier(carrier,buffer);
             var bound=carrier;
+            spawnStage=ProjectileSpawnDiagnostics.Stage.IMPACT_CALLBACK;
             physics.setImpactConsumer((p,position,block,entity,interaction,commands)->dispatchNativeProjectileImpact(bound,p,position,block,entity,commands));
-            emitProjectile(carrier,RpgTraceEventType.PROJECTILE_SPAWNED,Map.of("configId",plan.configId(),"speed",plan.velocity().length(),
-                    "maxDistance",plan.maxDistance(),"maximumLifetimeSeconds",plan.maxLifetimeSeconds(),"radius",plan.radius(),
-                    "nativeProjectileRef",ref.toString(),"barrageBatch",context.barrageBatch()));
+            spawnStage=ProjectileSpawnDiagnostics.Stage.SPAWN_EVENT;
+            // FIFO: native insertion, native spawn hook, continuation put, then this acknowledgement.
+            // A later failure in the same atomic batch removes tracking before the queue drains.
+            buffer.run(store->{
+                if(projectiles.get(plan.projectileInstanceId())==bound&&bound.projectile.isValid())
+                    emitProjectile(bound,RpgTraceEventType.PROJECTILE_SPAWNED,Map.of("configId",plan.configId(),"speed",plan.velocity().length(),
+                            "maxDistance",plan.maxDistance(),"maximumLifetimeSeconds",plan.maxLifetimeSeconds(),"radius",plan.radius(),
+                            "nativeProjectileRef",bound.projectile.toString(),"barrageBatch",bound.context.barrageBatch()));
+            });
+            spawnStage=ProjectileSpawnDiagnostics.Stage.PRESENTATION;
             if(context.effects().projectileVisuals().cast(context.skillInstanceId()+"/"+context.barrageBatch()))projectileVisual(carrier,buffer.getStore(),()->vfx.presentContact(buffer.getStore().getExternalData().getWorld(),plan.origin(),
                     bound.context.profile().projectile().details().element(),.10,1));
             return carrier;
         } catch(RuntimeException error) {
+            ProjectileSpawnDiagnostics.mark(error,spawnStage);
             if(carrier!=null)projectiles.remove(plan.projectileInstanceId(),carrier);
-            if(ref!=null&&ref.isValid())buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);
+            if(ref!=null)buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);
             throw error;
         }
     }
@@ -2426,10 +2456,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             } catch(RuntimeException error) {
                 for(var next:spawned) {
                     projectiles.remove(next.instance.plan().projectileInstanceId(),next);
-                    if(next.projectile.isValid())buffer.tryRemoveEntity(next.projectile,RemoveReason.REMOVE);
+                    buffer.tryRemoveEntity(next.projectile,RemoveReason.REMOVE);
                 }
                 for(var child:decision.children())projectileService.onForwardTermination(child,"CHILD_SPAWN_FAILED",point);
-                emitProjectile(carrier,RpgTraceEventType.PROJECTILE_SPAWN_REJECTED,Map.of("reason",action.name()+"_BATCH_FAILED","error",error.getClass().getSimpleName()));
+                emitProjectile(carrier,RpgTraceEventType.PROJECTILE_SPAWN_REJECTED,ProjectileSpawnDiagnostics.describe(error,Map.of("reason",action.name()+"_BATCH_FAILED","error",error.getClass().getSimpleName())));
             } finally {terminateProjectile(carrier,action.name()+"_PARENT_CONSUMED",point,buffer);}
         } else if(action==ProjectileContinuation.Action.CHAIN || action==ProjectileContinuation.Action.RETURN || action==ProjectileContinuation.Action.RICOCHET) {
             Vec3 offset=point.add((action==ProjectileContinuation.Action.RICOCHET?decision.surfaceNormal():decision.direction()).multiply(.03));
