@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /** Versioned server-owned RPG player state. Live Hytale resources are intentionally not duplicated here. */
 public final class RpgPlayerState {
-    public static final int CURRENT_SCHEMA = 8;
+    public static final int CURRENT_SCHEMA = 9;
 
     public int schemaVersion = CURRENT_SCHEMA;
     public String playerUuid;
@@ -38,6 +38,7 @@ public final class RpgPlayerState {
     public List<PersistedLinkEdge> graphEdges = new ArrayList<>();
     public Map<String, Long> skillMastery = new LinkedHashMap<>();
     public RewardLedger rewards=RewardLedger.INITIAL;
+    public AcquisitionProgress acquisition=AcquisitionProgress.INITIAL;
     public long revision;
     public SupportProgress support = SupportProgress.INITIAL;
     public Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> cooldowns=new LinkedHashMap<>();
@@ -97,6 +98,8 @@ public final class RpgPlayerState {
         }
         if (support == null) throw new IllegalStateException("Missing durable support ledger; refusing a free-shield reset");
         if (rewards == null) throw new IllegalStateException("Missing earned-reward checkpoint; refusing an award reset");
+        if(acquisition==null)throw new IllegalStateException("Missing schema-9 acquisition ledger; refusing pity or spending reset");
+        acquisition.availableInsight(rewards.insight());
         com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown.validate(cooldowns);
     }
 
@@ -118,6 +121,7 @@ public final class RpgPlayerState {
         copy.graphEdges = graphEdges.stream().map(PersistedLinkEdge::copy).collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         copy.skillMastery = new LinkedHashMap<>(skillMastery);
         copy.rewards = rewards;
+        copy.acquisition = acquisition;
         copy.revision = revision;
         copy.support = support;
         copy.cooldowns=new LinkedHashMap<>(cooldowns);

@@ -8,11 +8,14 @@ import java.util.function.*;
 public final class PersistentEncounterRuntime {
     private final EncounterContributions ledger=new EncounterContributions();
     private final FileEncounterStore store;
-    private final BiConsumer<UUID,EarnedReward> awards;
+    private final FileEncounterStore.AwardDelivery awards;
     private final Set<Key> loaded=new HashSet<>();
     private record Key(UUID world,UUID enemy){}
     private boolean unavailable;
-    public PersistentEncounterRuntime(FileEncounterStore store,BiConsumer<UUID,EarnedReward> awards){this.store=Objects.requireNonNull(store);this.awards=Objects.requireNonNull(awards);}
+    public PersistentEncounterRuntime(FileEncounterStore store,BiConsumer<UUID,EarnedReward> awards){this(store,(player,reward,learning)->{
+        if(learning!=null)throw new IllegalStateException("LEARNING_DELIVERY_ADAPTER_REQUIRED");awards.accept(player,reward);
+    });}
+    public PersistentEncounterRuntime(FileEncounterStore store,FileEncounterStore.AwardDelivery awards){this.store=Objects.requireNonNull(store);this.awards=Objects.requireNonNull(awards);}
     /** Only new native spawns may supply a classifier; loads must pass an empty candidate. */
     public synchronized boolean attach(UUID world,UUID enemy,String currentRole,Optional<EnemyRewardRegistry.Spawn> newSpawn){return guarded(()->{
         var key=new Key(world,enemy);if(loaded.contains(key))return true;
@@ -51,7 +54,7 @@ public final class PersistentEncounterRuntime {
         if(!loaded.contains(new Key(world,enemy)))return Optional.empty();
         var plan=ledger.death(world,enemy,position,now,participants);store.freeze(plan);detach(world,enemy);return Optional.of(plan);
     });}
-    public synchronized int drain(int budget){return guarded(()->store.drain(budget,awards));}
+    public synchronized int drain(int budget){return guarded(()->store.drainLearning(budget,awards));}
     public synchronized void detach(UUID world,UUID enemy){ledger.remove(world,enemy);loaded.remove(new Key(world,enemy));}
     public synchronized void unload(UUID world){ledger.unload(world);loaded.removeIf(k->k.world().equals(world));}
     public synchronized boolean unavailable(){return unavailable;}

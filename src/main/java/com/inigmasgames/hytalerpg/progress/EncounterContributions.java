@@ -11,14 +11,16 @@ public final class EncounterContributions {
     public enum Kind { DAMAGE, HEAL, ABSORB, CONTROL, TAUNT }
     private record Key(UUID world,UUID enemy){}
     private record ActorKey(UUID world,UUID player){}
-    public record Participant(UUID player,UUID world,Vec3 position,int level,boolean loaded,String partyId){
+    public record Participant(UUID player,UUID world,Vec3 position,int level,boolean loaded,String partyId,LearningSources.Opportunity learning){
+        public Participant(UUID player,UUID world,Vec3 position,int level,boolean loaded,String partyId){this(player,world,position,level,loaded,partyId,null);}
         public Participant {Objects.requireNonNull(player);Objects.requireNonNull(world);Objects.requireNonNull(position);
             if(level<1||level>99||partyId!=null&&(partyId.isBlank()||partyId.length()>128))throw new IllegalArgumentException("INVALID_PARTICIPANT");}
     }
     public record Credit(UUID player,Kind kind,long observedAtMillis,double actualAmount){
         public Credit {Objects.requireNonNull(player);Objects.requireNonNull(kind);if(observedAtMillis<0||!finitePositive(actualAmount))throw new IllegalArgumentException("INVALID_CONTRIBUTION");}
     }
-    public record Share(UUID player,long xp,long insight,int commonPotPlayerLevel,int eligiblePartyMembers){
+    public record Share(UUID player,long xp,long insight,int commonPotPlayerLevel,int eligiblePartyMembers,LearningSources.Opportunity learning){
+        public Share(UUID player,long xp,long insight,int commonPotPlayerLevel,int eligiblePartyMembers){this(player,xp,insight,commonPotPlayerLevel,eligiblePartyMembers,null);}
         public Share {Objects.requireNonNull(player);if(xp<1||insight<1||commonPotPlayerLevel<1||commonPotPlayerLevel>99||eligiblePartyMembers<1||eligiblePartyMembers>MAX_CONTRIBUTORS)throw new IllegalArgumentException("INVALID_DEATH_SHARE");}
     }
     /** Save original context and anti-farm watermark with credits; reload must not start a fresh encounter. */
@@ -139,7 +141,7 @@ public final class EncounterContributions {
             int commonLevel=group.stream().mapToInt(Participant::level).max().orElseThrow();
             long pot=ProgressionMath.enemyReward(e.spawn.level(),e.spawn.rank(),e.spawn.rarity(),commonLevel);
             long xp=ProgressionMath.equalShare(pot,group.size());
-            group.stream().sorted(Comparator.comparing(p->p.player().toString())).forEach(p->shares.add(new Share(p.player(),xp,e.spawn.rank().insight,commonLevel,group.size())));
+            group.stream().sorted(Comparator.comparing(p->p.player().toString())).forEach(p->shares.add(new Share(p.player(),xp,e.spawn.rank().insight,commonLevel,group.size(),p.learning())));
         }
         e.death=new DeathPlan(e.spawn,position,now,shares);return e.death;
     }

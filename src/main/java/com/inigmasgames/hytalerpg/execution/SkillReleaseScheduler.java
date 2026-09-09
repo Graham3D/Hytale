@@ -80,6 +80,7 @@ public final class SkillReleaseScheduler {
         return entries.values().stream().anyMatch(e->e.owner.equals(owner)&&e.slot==slot&&e.primaryPending);
     }
     public synchronized int size() { return entries.size(); }
+    public synchronized boolean pending(UUID owner){return entries.values().stream().anyMatch(e->e.owner.equals(owner));}
     public synchronized boolean pendingRetaliation(UUID owner){return entries.values().stream().anyMatch(e->e.owner.equals(owner)&&e.primaryPending&&e.context!=null&&e.context.compiledPlan().retaliation());}
     private static void requireClock(double now) {
         if(!Double.isFinite(now)) throw new IllegalArgumentException("Invalid release clock");

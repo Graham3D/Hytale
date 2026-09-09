@@ -114,6 +114,7 @@ public final class SkillExecutionService {
             return value == null ? OptionalDouble.empty() : OptionalDouble.of(value.profile.windupSeconds());
         }
     }
+    public boolean pendingCast(UUID actor){return lifecycle.active(actor).isPresent()||releases.pending(actor)||activeWindupSeconds(actor).isPresent();}
 
     public boolean cancel(UUID actor, String reason) {
         var queued=releases.cancel(actor);

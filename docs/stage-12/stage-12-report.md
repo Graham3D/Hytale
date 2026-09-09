@@ -2,7 +2,8 @@
 
 Revision R031, version 0.0.24. Work stays on RPG in the local GitHub checkout.
 Stage 11's preceding local closure is e9944e1. No live deployment has occurred.
-Stage status: IMPLEMENTATION_IN_PROGRESS. Connected gate: UNVERIFIED.
+Stage status: IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION. Local engineering
+closure: PASS (cohort H, 1653 retained tests). Connected gate: UNVERIFIED.
 
 ## Evidence contract
 
@@ -557,3 +558,139 @@ unchanged; restore players, earned-rewards and encounters together. No live
 deployment, owner-art edit or Google Drive write. Native control, healing,
 mastery, input/rendering and latency require connected verification. Acquisition,
 Insight spending and respec are next.
+
+## Cohort H — acquisition, Insight, respec and Stage12 local closure
+
+Continued from pushed 2667801. Changes remain in the C: GitHub checkout. No live
+world, mod deployment, owner art, lost-and-found file or Google Drive was changed.
+R031/0.0.24; player schema **9**, compiled-plan schema **35**. Catalog remains
+87 skills/66 passives. The 60 preceding runtime profiles/native zero-cost
+triggers remain; the 27 outstanding Stage04/05 records are explicitly not claimed
+implemented here and remain required coverage work before the final candidate.
+
+### Acquisition and transaction decisions
+
+Schema9 adds meaningful-use skill IDs, exact-source pity counters and spent
+Insight. Earned Insight remains the immutable reward ledger's cumulative total;
+available currency is earned minus spent. New typed progression operations use
+the existing write-ahead/player-save/receipt/head transaction. Ownership and
+counters commit together; no second wallet, random item drop or save authority
+was added. First eligible family use unlocks **purchase eligibility**, not a
+free copy: the master's 20/40/80 price applies to the first and additional copies.
+Family eligibility uses canonical requiredFamilies; actual Link compatibility
+still uses the existing component-scoped compiler and cannot be bypassed by buying.
+
+LearningSources indexes the 66 unique proposed signatures, excluding all 21
+UNASSIGNED rows. Combat aliases must be explicitly authored and share one source
+and rarity. Rank ceilings apply before an opportunity exists. The catalog's
+historical acquisitionRarity=NORMAL placeholders are not silently interpreted as
+Common acquisition rarity: explicit bindings must name COMMON/RARE/UNIQUE.
+`learning-sources.json` currently has **zero** bindings, with a reason. No source
+has VERIFIED_CONNECTED behavior, so public learning remains disabled. Tests use
+explicit verified fixtures only; no production evidence flag was promoted.
+
+Eligible death shares can freeze a verified source, rarity and authoritative
+effective Wisdom alongside XP/Insight and party membership. Pity and the random
+decision execute under the player transaction lock after permanent event dedup,
+before the intent is persisted. A replay never calls RNG again or recomputes
+pity from newer equipment. Known skills do not roll or change ownership/pity.
+Exact failure thresholds are 20/60/150, with a guaranteed next eligible defeat.
+Learning and existing XP/Insight are one transaction; a death delivery cursor
+crash cannot learn twice or lose one side of the award. Legacy death records
+without an opportunity remain valid and cannot retroactively acquire one.
+
+Purchase request UUIDs identify immutable payloads. Retrying the same purchase
+returns its receipt even after the revision changes; reusing its UUID for a
+different passive fails with a payload conflict. A new stale revision,
+insufficient balance or unobserved family is rejected before intent creation.
+Concurrent same-revision purchases cannot overspend. New mastery results also
+record meaningful first use in that same earned transaction.
+
+### Migration, persistence and rollback
+
+Old v1 reward hashes must remain valid. Optional new checkpoint/operation fields
+remain null when reading legacy receipts; Gson omits them, preserving original
+JSON/hash input. Only historical checkpoints may omit fields that did not exist
+when written. New checkpoints bind complete acquisition/ownership state. Tests
+recover old pending intents at all five crash boundaries and preserve immutable
+schema-v8 backups, XP, ownership and original receipt hashes. Migration does not
+infer first-use eligibility from development-granted mastery or ownership.
+
+Every player lock now rechecks persistence/reward recovery inside the critical
+section. Support/cooldown/generic save uncertainty freezes further writes. The
+full suite caught two regressions where that hardening also blocked last-known
+state inspection. **Both existing tests were kept unchanged.** Ordinary uncertain
+edits now expose a read-only cached view with no executable plans; writes remain
+blocked. Uncertain earned-reward recovery retains its stricter existing refusal
+until restart/recovery. Passive inactive-to-active changes now notify the existing
+loadout listeners, preventing stale per-loadout runtime state.
+
+An actual isolated classloader loads cohort G's archived JAR, writes a schema8
+player and reward receipt, and exercises a coordinated checkpoint restore. The
+old code rejects schema9 in place. Restoring players + earned-rewards + encounters
+to a fresh copied directory preserves all file hashes, returns schema8, rejects
+a duplicate reward, and honors a permanent encounter exclusion. This is local
+code/data rollback evidence, not a connected world-rejoin claim. Whole-volume
+power-loss durability remains outside the process-crash/atomic-replacement claim.
+
+### Respec, build transfer and interim commands
+
+Production configures a guard over the existing hostile-combat tracker and
+execution lifecycle/release queue. Loadout edits and attribute refunds require
+at least ten quiet seconds and no pending cast. A reconnect starts a conservative
+ten-second observation window so it cannot erase a recent combat restriction.
+Attribute respec refunds allocated points to unspent points, retaining pending
+notifications, cooldown/charge work, shield deficit, learned skills, ownership,
+mastery, XP and every reward/acquisition counter. Arithmetic overflow and invalid
+below-baseline states reject without partial mutation.
+
+BuildTransfer accepts only stable skill/passive IDs, edges and the existing fixed
+layout identifier. It does not introduce a movable CanvasUI layout. Payloads are
+bounded to 16 KiB; extra/unknown fields, unknown IDs, insufficient owned copies,
+stale revision and invalid graphs reject atomically. Even development entitlement
+mode cannot import unowned content. Fork -> Quick Slash import rolls back;
+Fork -> Fire Bolt remains valid. Export never includes XP, currency, ownership
+or absolute attributes.
+
+Self-only interim commands, with no public grant path:
+
+- `/rpg progress status` — revision, XP, available/earned/spent Insight, use/pity.
+- `/rpg progress buy <passiveId> <revision> <requestUUID>` — retry with the same UUID.
+- `/rpg progress respec <revision>` — guarded attribute refund.
+- `/rpg progress export` — bounded Base64url stable-ID build.
+- `/rpg progress import <exportedValue> <revision>` — ownership-checked atomic import.
+
+Normal remains enabled; Nightmare/Hell remain disabled for missing authored data.
+No difficulty variants, resistance penalties, prices, resource costs, native
+HUD/input ownership, XP artwork or geometry were changed.
+
+### Verification and remaining connected gates
+
+Targeted development tests preceded the closure run. The final **clean complete
+retained build passed 1653 tests**: 1608 main, 24 installed-API, 21 CanvasUI;
+zero failures/errors/skips, 66 seconds. H adds 42 tests including 23 acquisition,
+18 closure/persistence and one actual archived-code rollback drill. Initial test
+fixtures referenced nonexistent convenience methods and were corrected against
+the actual APIs. The first full run failed the two inspection regressions above;
+the corrected full run passed without changing those assertions.
+
+Normal isolated three-mod network boot and clean stop passed at
+2026-09-09T00:09:33Z. All retained asset/root/role/status/registration checks pass,
+including schema9 acquisition/respec startup. Packaged UI validation, 87/66
+counts, 60 zero-native-cost triggers, protected-path comparison and retained-test
+class-count checks pass. Archive and rollback are in `evidence/stage-12/cohort-h/`.
+
+Artifact SHA-256: C55DD5C1A939E5727AD01945FDC6DC0B7D7ECF1C185D94AC95B0BDAE885EB87B.
+Rollback G: 3DBB0CFC764CC68C1D29ABA20915C48286D6E8B640738466C6263FA333AAEF78.
+Pinned server: EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3.
+Pinned assets: 46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39.
+
+Local Stage12 engineering gate: **PASS**. Overall connected Stage12: **UNVERIFIED**,
+not PASS. Natural spawn/death awards, support/control/mastery, learning source
+behavior, party integration, native input, XP/level-up rendering and restart/rejoin
+still require connected evidence. Native party provider and movement-avoidance
+witness remain explicitly unavailable. Synchronous encounter/reward persistence
+latency, delivery throughput, bounded injury provenance and expensive projection
+reads remain required Stage13 load/hardening checks, not performance successes.
+Next authorized work: outstanding mechanics coverage and Stage13 hardening;
+no live deployment without operator approval.

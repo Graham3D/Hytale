@@ -92,6 +92,12 @@ public final class FileEncounterStore {
     });}
     /** The supplied authority must be the durable earned-reward service: it deduplicates a crash after award, before cursor. */
     public int drain(int awardBudget,BiConsumer<UUID,EarnedReward> award){
+        return drainLearning(awardBudget,(player,reward,learning)->{
+            if(learning!=null)throw new IllegalStateException("LEARNING_DELIVERY_ADAPTER_REQUIRED");award.accept(player,reward);
+        });
+    }
+    @FunctionalInterface public interface AwardDelivery {void accept(UUID player,EarnedReward reward,LearningSources.Opportunity learning);}
+    public int drainLearning(int awardBudget,AwardDelivery award){
         if(awardBudget<1||awardBudget>EncounterContributions.MAX_CONTRIBUTORS)throw new IllegalArgumentException("DEATH_AWARD_BUDGET");Objects.requireNonNull(award);
         return locked(()->{
             int attempts=0;
@@ -104,7 +110,7 @@ public final class FileEncounterStore {
                     deleteCompleted(path);continue;
                 }
                 while(delivery.next()<plan.shares().size()&&attempts<awardBudget){
-                    var share=plan.shares().get(delivery.next());award.accept(share.player(),plan.reward(share));attempts++;
+                    var share=plan.shares().get(delivery.next());award.accept(share.player(),plan.reward(share),share.learning());attempts++;
                     fault.accept(Boundary.AFTER_AWARD);
                     delivery=new Delivery(plan,delivery.next()+1);write(path,delivery,true);fault.accept(Boundary.AFTER_CURSOR);
                 }

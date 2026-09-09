@@ -35,6 +35,9 @@ public final class FileEarnedRewardStore implements EarnedRewardStore {
         this.directory=directory.toAbsolutePath().normalize();this.fault=Objects.requireNonNull(fault);
     }
     @Override public Result award(UUID player,EarnedReward reward,Authority authority){
+        return awardChecked(player,reward,ignored->{},authority);
+    }
+    @Override public Result awardChecked(UUID player,EarnedReward reward,Consumer<RewardCheckpoint> precondition,Authority authority){
         Objects.requireNonNull(reward);return locked(player,folder->{
             boolean recovered=recoverLocked(player,folder,authority);
             Path receipt=receipt(folder,reward.eventId());
@@ -45,7 +48,8 @@ public final class FileEarnedRewardStore implements EarnedRewardStore {
                 if(previous.after().ledger().sequence()>head.sequence())throw new IllegalStateException("REWARD_RECEIPT_AHEAD_OF_HEAD");
                 return new Result(Outcome.DUPLICATE,previous.after().ledger().sequence(),previous.hash(),recovered);
             }
-            RewardIntent intent=RewardIntent.create(player,reward,authority.current());
+            RewardCheckpoint before=authority.current();Objects.requireNonNull(precondition).accept(before);
+            RewardIntent intent=RewardIntent.create(player,reward,before);
             write(folder.resolve("pending.json"),intent,false);
             fault.accept(Boundary.AFTER_INTENT);
             finish(folder,intent,authority);
@@ -53,6 +57,25 @@ public final class FileEarnedRewardStore implements EarnedRewardStore {
         });
     }
     @Override public boolean recover(UUID player,Authority authority){return locked(player,folder->recoverLocked(player,folder,authority));}
+    @Override public Result awardGenerated(UUID player,String eventId,Function<RewardCheckpoint,EarnedReward> factory,Authority authority){
+        // Reuse ordinary request validation without running the state-dependent factory.
+        new EarnedReward(eventId,1,0,Map.of(),"GENERATED_EVENT_VALIDATION","","",eventId.length()<=128?eventId:"generated");
+        Objects.requireNonNull(factory);
+        return locked(player,folder->{
+            boolean recovered=recoverLocked(player,folder,authority);Path receipt=receipt(folder,eventId);
+            if(Files.exists(receipt)){
+                RewardIntent previous=read(receipt,RewardIntent.class);validatePlayer(previous,player);
+                if(!previous.reward().eventId().equals(eventId))throw new IllegalStateException("REWARD_EVENT_ID_MISMATCH");
+                if(previous.after().ledger().sequence()>head(folder).sequence())throw new IllegalStateException("REWARD_RECEIPT_AHEAD_OF_HEAD");
+                return new Result(Outcome.DUPLICATE,previous.after().ledger().sequence(),previous.hash(),recovered);
+            }
+            RewardCheckpoint before=authority.current();EarnedReward reward=Objects.requireNonNull(factory.apply(before));
+            if(!eventId.equals(reward.eventId()))throw new IllegalArgumentException("GENERATED_REWARD_ID_CHANGED");
+            RewardIntent intent=RewardIntent.create(player,reward,before);
+            write(folder.resolve("pending.json"),intent,false);fault.accept(Boundary.AFTER_INTENT);
+            finish(folder,intent,authority);return new Result(Outcome.COMMITTED,intent.after().ledger().sequence(),intent.hash(),recovered);
+        });
+    }
     private boolean recoverLocked(UUID player,Path folder,Authority authority){
         Head head=head(folder);Path pending=folder.resolve("pending.json");
         if(!Files.exists(pending)){
@@ -62,15 +85,15 @@ public final class FileEarnedRewardStore implements EarnedRewardStore {
         RewardIntent intent=read(pending,RewardIntent.class);validatePlayer(intent,player);
         if(!head.matches(intent.before().ledger())&&!head.matches(intent.after().ledger()))
             throw new IllegalStateException("REWARD_PENDING_HEAD_MISMATCH");
-        if(head.matches(intent.after().ledger())&&!authority.current().equals(intent.after()))
+        if(head.matches(intent.after().ledger())&&!intent.after().matches(authority.current()))
             throw new IllegalStateException("REWARD_COMMITTED_PLAYER_ROLLBACK");
         finish(folder,intent,authority);return true;
     }
     private void finish(Path folder,RewardIntent intent,Authority authority){
         RewardCheckpoint current=authority.current(),after=intent.after();
-        if(current.equals(intent.before()))authority.commit(intent);
-        else if(!current.equals(after))throw new IllegalStateException("REWARD_PENDING_PLAYER_MISMATCH");
-        if(!authority.current().equals(after))throw new IllegalStateException("REWARD_AUTHORITY_DID_NOT_COMMIT");
+        if(intent.before().matches(current))authority.commit(intent);
+        else if(!after.matches(current))throw new IllegalStateException("REWARD_PENDING_PLAYER_MISMATCH");
+        if(!after.matches(authority.current()))throw new IllegalStateException("REWARD_AUTHORITY_DID_NOT_COMMIT");
         fault.accept(Boundary.AFTER_PLAYER);
         Path receipt=receipt(folder,intent.reward().eventId());
         if(Files.exists(receipt)){

@@ -46,6 +46,10 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     private final List<Consumer<UUID>> mutationListeners = new CopyOnWriteArrayList<>();
     private final List<Consumer<UUID>> loadoutMutationListeners = new CopyOnWriteArrayList<>();
     private EarnedRewardStore earnedRewards;
+    private java.util.function.Function<UUID,String> respecRejection=ignored->""; // Pure fixtures; production configures before any player load.
+    public synchronized void configureRespecGuard(java.util.function.Function<UUID,String> guard){
+        if(!states.isEmpty())throw new IllegalStateException("RESPEC_GUARD_MUST_BE_CONFIGURED_BEFORE_LOAD");respecRejection=java.util.Objects.requireNonNull(guard);
+    }
 
     public RpgLoadoutService(RpgCatalog catalog, RpgPlayerStateRepository repository,
                              RpgLinkGraphService graphService, LinkCompiler compiler,
@@ -71,8 +75,9 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         for(String id:reward.mastery().keySet())if(catalog.skill(new SkillId(id)).isEmpty())throw new IllegalArgumentException("UNKNOWN_MASTERY_SKILL");
         Holder holder=holder(player);
         synchronized(holder){
+            ensureUsable(player,holder);
             try{
-                var result=earnedRewards.award(player,reward,rewardAuthority(player,holder));
+                var result=earnedRewards.awardChecked(player,reward,before->validateProgression(reward,before),rewardAuthority(player,holder));
                 if(result.outcome()==EarnedRewardStore.Outcome.DUPLICATE)
                     trace(player,RpgTraceEventType.PROGRESSION_REWARD_DUPLICATE,reward.correlationId(),
                             rewardDetails(reward,result.sequence(),result.receiptHash()));
@@ -90,8 +95,9 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         return new EarnedRewardStore.Authority(){
             @Override public RewardCheckpoint current(){return RewardCheckpoint.of(holder.state);}
             @Override public void commit(RewardIntent intent){
-                if(!intent.player().equals(player)||!current().equals(intent.before()))throw new IllegalStateException("STALE_REWARD_INTENT");
+                if(!intent.player().equals(player)||!intent.before().matches(current()))throw new IllegalStateException("STALE_REWARD_INTENT");
                 for(String id:intent.reward().mastery().keySet())if(catalog.skill(new SkillId(id)).isEmpty())throw new IllegalStateException("RECOVERY_UNKNOWN_MASTERY_SKILL");
+                validateProgression(intent.reward(),intent.before());
                 var candidate=holder.state.copy();intent.after().applyTo(candidate);candidate.revision=Math.addExact(candidate.revision,1);
                 try{repository.save(candidate);}catch(RuntimeException error){holder.persistenceUncertain=true;throw error;}
                 holder.state=candidate;
@@ -105,7 +111,56 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     private static Map<String,Object> rewardDetails(EarnedReward reward,long sequence,String hash){
         return details("eventId",reward.eventId(),"reason",reward.reason(),"characterXp",reward.characterXp(),"insight",reward.insight(),
                 "mastery",reward.mastery(),"rootCastId",reward.rootCastId(),"skillInstanceId",reward.skillInstanceId(),
-                "correlationId",reward.correlationId(),"sequence",sequence,"receiptHash",hash,"playerPersisted",true);
+                "correlationId",reward.correlationId(),"sequence",sequence,"receiptHash",hash,"playerPersisted",true,
+                "progression",reward.progression()==null?"NONE":reward.progression());
+    }
+
+    /** No client-provided grant payload: callers own a stable server event and a bounded decision factory. */
+    public EarnedRewardStore.Result awardGenerated(UUID player,String eventId,java.util.function.Function<RewardCheckpoint,EarnedReward> factory){
+        if(earnedRewards==null)throw new IllegalStateException("EARNED_REWARDS_NOT_CONFIGURED");
+        Holder holder=holder(player);synchronized(holder){
+            ensureUsable(player,holder);
+            try{return earnedRewards.awardGenerated(player,eventId,before->{
+                var reward=java.util.Objects.requireNonNull(factory.apply(before));validateProgression(reward,before);return reward;
+            },rewardAuthority(player,holder));}
+            catch(RuntimeException error){holder.rewardRecoveryRequired=true;throw error;}
+        }
+    }
+    private void validateProgression(EarnedReward reward,RewardCheckpoint before){
+        for(String id:reward.mastery().keySet())if(catalog.skill(new SkillId(id)).isEmpty())throw new IllegalArgumentException("UNKNOWN_MASTERY_SKILL");
+        var delta=reward.progression();if(delta==null)return;
+        if(before.acquisition()==null)throw new IllegalArgumentException("PROGRESSION_REQUIRES_VERSIONED_CHECKPOINT");
+        if(delta.kind()==ProgressionDelta.Kind.PASSIVE_PURCHASE){
+            var passive=catalog.passive(new PassiveId(delta.subject())).orElseThrow(()->new IllegalArgumentException("UNKNOWN_PASSIVE"));
+            if(delta.insightCost()!=ProgressionMath.insightCost(passive.tier()))throw new IllegalArgumentException("INSIGHT_PRICE_MISMATCH");
+            boolean unlocked=before.acquisition().progress().meaningfulSkills().stream().map(id->catalog.skill(new SkillId(id)).orElseThrow())
+                    .anyMatch(skill->passive.requiredFamilies().isEmpty()||skill.tags().stream().anyMatch(passive.requiredFamilies()::contains));
+            if(!unlocked)throw new IllegalArgumentException("PASSIVE_REQUIRED_ELIGIBLE_USE_NOT_OBSERVED");
+        }else{
+            var skill=catalog.skill(new SkillId(delta.subject())).orElseThrow(()->new IllegalArgumentException("UNKNOWN_PROGRESSION_SKILL"));
+            if(delta.kind()==ProgressionDelta.Kind.MEANINGFUL_USE){
+                if(!reward.mastery().containsKey(skill.id().value())||!reward.reason().equals("MEANINGFUL_MANUAL_ROOT"))throw new IllegalArgumentException("MEANINGFUL_USE_REQUIRES_MASTERY_EVIDENCE");
+            }else{
+                if(!skill.sourceAcquisition().validationState().equals("VERIFIED_CONNECTED"))throw new IllegalArgumentException("SOURCE_NOT_VERIFIED_CONNECTED");
+                if(!LearningSources.sourceKey(skill.sourceAcquisition().signatureEnemyId()).equals(delta.source()))throw new IllegalArgumentException("LEARNING_SOURCE_MISMATCH");
+            }
+        }
+    }
+    /** Revision applies only to a new request. A repeated request returns its original immutable result. */
+    public EarnedRewardStore.Result purchasePassive(UUID player,PassiveId passive,long expectedRevision,UUID requestId){
+        if(earnedRewards==null)throw new IllegalStateException("EARNED_REWARDS_NOT_CONFIGURED");
+        java.util.Objects.requireNonNull(requestId);if(expectedRevision<0)throw new IllegalArgumentException("INVALID_EXPECTED_REVISION");
+        var definition=catalog.passive(passive).orElseThrow(()->new IllegalArgumentException("UNKNOWN_PASSIVE"));
+        var reward=new EarnedReward("passive-purchase/"+requestId,0,0,Map.of(),"LINK_INSIGHT_PURCHASE","","",requestId.toString(),
+                new ProgressionDelta(ProgressionDelta.Kind.PASSIVE_PURCHASE,passive.value(),"",ProgressionMath.insightCost(definition.tier())));
+        Holder holder=holder(player);synchronized(holder){
+            ensureUsable(player,holder);
+            try{return earnedRewards.awardChecked(player,reward,before->{
+                if(holder.state.revision!=expectedRevision)throw new IllegalArgumentException("STALE_REVISION");
+                validateProgression(reward,before);
+            },rewardAuthority(player,holder));}
+            catch(RuntimeException error){holder.rewardRecoveryRequired=true;throw error;}
+        }
     }
 
     @Override public MutationResult equipSkill(UUID player, SkillSlot slot, SkillId skill) {
@@ -115,7 +170,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         if (catalog.skill(skill).isEmpty()) return fail(player, correlation, RpgTraceEventType.COMPILE_FAILURE,
                 ValidationCode.UNKNOWN_SKILL, "Unknown Skill: " + skill.value(), revision(player));
         Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             EntitlementPolicy.EntitlementVerdict entitlement = entitlements.skill(holder.state, skill);
             if (!entitlement.allowed()) return fail(player, correlation, RpgTraceEventType.COMPILE_FAILURE,
                     ValidationCode.SOURCE_UNAVAILABLE, entitlement.reason(), holder.state.revision);
@@ -131,7 +186,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         String correlation = reference();
         trace(player, RpgTraceEventType.UNEQUIP_SKILL_REQUEST, correlation, details("skillSlot", slot.externalId()));
         Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             MutationResult result = mutate(holder, player, correlation, candidate -> {
                 removeRoutesToSkill(candidate, slot);
                 candidate.skill(slot, null);
@@ -149,7 +204,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         if (catalog.passive(passive).isEmpty()) return fail(player, correlation, RpgTraceEventType.COMPILE_FAILURE,
                 ValidationCode.UNKNOWN_PASSIVE, "Unknown Passive: " + passive.value(), revision(player));
         Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             EntitlementPolicy.EntitlementVerdict entitlement = entitlements.passive(holder.state, passive);
             if (!entitlement.allowed()) return fail(player, correlation, RpgTraceEventType.COMPILE_FAILURE,
                     ValidationCode.NO_OWNED_COPY, entitlement.reason(), holder.state.revision);
@@ -165,7 +220,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         String correlation = reference();
         trace(player, RpgTraceEventType.UNEQUIP_PASSIVE_REQUEST, correlation, details("passiveSlot", slot.externalId()));
         Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             MutationResult result = mutate(holder, player, correlation, candidate -> {
                 candidate.linkEdges(graphService.candidateUnlinkSource(candidate, LinkNodeId.valueOf(slot.name())));
                 candidate.passive(slot, null);
@@ -179,7 +234,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     @Override public MutationResult link(UUID player, LinkNodeId source, LinkNodeId target) {
         String correlation = reference();
         Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             Map<String, Object> context = linkDetails(holder.state, source, target);
             trace(player, RpgTraceEventType.LINK_REQUEST, correlation, context);
             MutationResult result = mutate(holder, player, correlation, candidate -> {
@@ -204,7 +259,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     @Override public MutationResult unlink(UUID player, EdgeId edge) {
         String correlation = reference(); Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             MutationResult result = mutate(holder, player, correlation,
                     candidate -> candidate.linkEdges(graphService.candidateUnlinkEdge(candidate, edge.value())));
             if (result.success()) trace(player, RpgTraceEventType.UNLINK, correlation,
@@ -215,7 +270,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     @Override public MutationResult unlinkSource(UUID player, LinkNodeId source) {
         String correlation = reference(); Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             MutationResult result = mutate(holder, player, correlation,
                     candidate -> candidate.linkEdges(graphService.candidateUnlinkSource(candidate, source)));
             if (result.success()) trace(player, RpgTraceEventType.UNLINK, correlation,
@@ -226,16 +281,45 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     @Override public CompilationResult compile(UUID player) {
         Holder holder = holder(player);
-        synchronized (holder) { return compileTraced(player, holder.state, reference()); }
+        synchronized (holder) { ensureUsable(player,holder); return compileTraced(player, holder.state, reference()); }
     }
 
     /** Progression eligibility needs no graph compilation or native HUD projection. */
-    public int characterLevel(UUID player) {Holder holder=holder(player);synchronized(holder){return holder.state.level;}}
-    @Override public long masteryXp(UUID player,String skill){Holder holder=holder(player);synchronized(holder){return holder.state.skillMastery.getOrDefault(skill,0L);}}
+    public int characterLevel(UUID player) {Holder holder=holder(player);synchronized(holder){ ensureUsable(player,holder);return holder.state.level;}}
+    public int rawAttribute(UUID player,RpgAttribute attribute){Holder holder=holder(player);synchronized(holder){ensureUsable(player,holder);return holder.state.attributes.getOrDefault(attribute.name(),10);}}
+    public String exportBuild(UUID player){Holder holder=holder(player);synchronized(holder){ensureUsable(player,holder);return BuildTransfer.of(holder.state).encode();}}
+    public MutationResult importBuild(UUID player,long expectedRevision,String json,String correlation){
+        final BuildTransfer build;try{build=BuildTransfer.decode(json);}catch(RuntimeException error){return MutationResult.failure(ValidationCode.INVALID_REQUEST,error.getMessage(),correlation,revision(player));}
+        return mutateProgress(player,expectedRevision,correlation,candidate->{
+            for(String skill:build.skills().values()){
+                if(catalog.skill(new SkillId(skill)).isEmpty())throw new IllegalArgumentException("UNKNOWN_SKILL:"+skill);
+                if(!candidate.learnedSkills.contains(skill))throw new IllegalArgumentException("BUILD_SKILL_NOT_OWNED:"+skill);
+            }
+            var counts=new HashMap<String,Integer>();for(String passive:build.passives().values()){
+                if(catalog.passive(new PassiveId(passive)).isEmpty())throw new IllegalArgumentException("UNKNOWN_PASSIVE:"+passive);
+                if(counts.merge(passive,1,Integer::sum)>candidate.ownedPassives.getOrDefault(passive,0))throw new IllegalArgumentException("BUILD_PASSIVE_COPIES_NOT_OWNED:"+passive);
+            }
+            build.applyTo(candidate);
+        });
+    }
+    public MutationResult respecAttributes(UUID player,long expectedRevision,String correlation){
+        return mutateProgress(player,expectedRevision,correlation,candidate->{
+            String denial=respecRejection.apply(player);if(!denial.isEmpty())throw new IllegalArgumentException(denial);
+            int refund=0;for(var attribute:RpgAttribute.values()){
+                int value=candidate.attributes.getOrDefault(attribute.name(),10);if(value<10)throw new IllegalArgumentException("ATTRIBUTES_BELOW_RESPEC_BASELINE");
+                refund=Math.addExact(refund,value-10);
+            }
+            candidate.unspentAttributePoints=Math.addExact(candidate.unspentAttributePoints,refund);
+            for(var attribute:RpgAttribute.values())candidate.attributes.put(attribute.name(),10);
+        });
+    }
+    @Override public long masteryXp(UUID player,String skill){Holder holder=holder(player);synchronized(holder){ ensureUsable(player,holder);return holder.state.skillMastery.getOrDefault(skill,0L);}}
 
     @Override public RpgLoadoutView getLoadout(UUID player) {
-        Holder holder = holder(player);
+        Holder holder = states.computeIfAbsent(player,ignored->load(player));
         synchronized (holder) {
+            if(holder.persistenceUncertain&&!holder.rewardRecoveryRequired)return readOnlyUncertain(holder);
+            ensureUsable(player,holder);
             CompilationResult compiled = compileTraced(player, holder.state, reference());
             GraphValidationResult graph = graphService.validate(holder.state);
             List<String> warnings = new ArrayList<>(holder.state.degradedReasons);
@@ -246,8 +330,10 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     /** Read-only hot presentation path; unlike command inspection it emits no compile trace. */
     @Override public RpgLoadoutView getPresentationView(UUID player) {
-        Holder holder = holder(player);
+        Holder holder = states.computeIfAbsent(player,ignored->load(player));
         synchronized (holder) {
+            if(holder.persistenceUncertain&&!holder.rewardRecoveryRequired)return readOnlyUncertain(holder);
+            ensureUsable(player,holder);
             CompilationResult compiled = compiler.compile(holder.state);
             GraphValidationResult graph = graphService.validate(holder.state);
             List<String> warnings = new ArrayList<>(holder.state.degradedReasons);
@@ -259,7 +345,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     @Override public Map<LinkNodeId, CompatibilityResult> getCompatibleTargets(UUID player, LinkNodeId source) {
         Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             Map<LinkNodeId, CompatibilityResult> result = new EnumMap<>(LinkNodeId.class);
             if (source.kind() == LinkNodeId.NodeKind.PASSIVE) {
                 for (SkillSlot slot : SkillSlot.values()) {
@@ -288,7 +374,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     @Override public MutationResult setDevelopmentAttribute(UUID player, RpgAttribute attribute, int rawValue) {
         if (rawValue < 0) throw new IllegalArgumentException("Raw attribute cannot be negative");
         String correlation = reference(); Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             trace(player, RpgTraceEventType.ATTRIBUTE_SNAPSHOT, correlation,
                     details("operation", "DEV_SET_REQUEST", "attribute", attribute.name(), "raw", rawValue));
             MutationResult result = mutate(holder, player, correlation,
@@ -302,7 +388,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     @Override public MutationResult resetDevelopmentAttributes(UUID player) {
         String correlation = reference(); Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             MutationResult result = mutate(holder, player, correlation, candidate -> {
                 for (RpgAttribute attribute : RpgAttribute.values()) candidate.attributes.put(attribute.name(), 10);
             });
@@ -317,7 +403,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     public MutationResult mutateProgress(UUID player, long expectedRevision, String correlation,
                                          Consumer<RpgPlayerState> mutation) {
         Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             if (holder.state.revision != expectedRevision) {
                 return MutationResult.failure(ValidationCode.STALE_REVISION,
                         "Expected RPG revision " + expectedRevision + " but authoritative revision is "
@@ -331,8 +417,10 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     public void saveCooldowns(UUID player,java.util.Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> values){
         var checked=com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown.validate(values);Holder holder=holder(player);
         synchronized(holder){
+            ensureUsable(player,holder);
             if(holder.state.cooldowns.equals(checked))return;
-            var candidate=holder.state.copy();candidate.cooldowns=new java.util.LinkedHashMap<>(checked);repository.save(candidate);holder.state=candidate;
+            var candidate=holder.state.copy();candidate.cooldowns=new java.util.LinkedHashMap<>(checked);
+            try{repository.save(candidate);}catch(RuntimeException error){holder.persistenceUncertain=true;throw error;}holder.state=candidate;
         }
     }
     /** Atomic support-ledger mutation, independent of the fixed Skill Tree topology. */
@@ -340,12 +428,13 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
                                           java.util.function.UnaryOperator<SupportProgress> mutation) {
         Holder holder=holder(player);
         synchronized(holder){
+            ensureUsable(player,holder);
             if(holder.state.support.revision()!=expectedRevision)throw new IllegalStateException("Stale support revision");
             SupportProgress next=mutation.apply(holder.state.support);
             if(next.revision()!=expectedRevision)throw new IllegalArgumentException("Support revision is service-owned");
             if(next.equals(holder.state.support))return next;
             RpgPlayerState candidate=holder.state.copy();candidate.support=next.nextRevision();
-            repository.save(candidate); // Failure leaves the authoritative in-memory ledger unchanged.
+            try{repository.save(candidate);}catch(RuntimeException error){holder.persistenceUncertain=true;throw error;}
             holder.state=candidate;
             trace(player,RpgTraceEventType.SAVE,reference(),details("scope","SUPPORT_LEDGER",
                     "supportRevision",candidate.support.revision(),"RPG revision",candidate.revision,
@@ -363,7 +452,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
             return MutationResult.failure(ValidationCode.INVALID_REQUEST, "Joint nodes do not hold content.",
                     correlation, revision(player));
         Holder holder = holder(player);
-        synchronized (holder) {
+        synchronized (holder) { ensureUsable(player,holder);
             if (holder.state.revision != expectedRevision)
                 return MutationResult.failure(ValidationCode.STALE_REVISION,
                         "Expected RPG revision " + expectedRevision + " but authoritative revision is "
@@ -402,6 +491,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     }
 
     private MutationResult mutate(Holder holder, UUID player, String correlation, Consumer<RpgPlayerState> mutation) {
+        ensureUsable(player,holder);
         RpgPlayerState candidate = holder.state.copy();
         try { mutation.accept(candidate); }
         catch (RuntimeException error) {
@@ -411,9 +501,17 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         candidate.revision = holder.state.revision + 1;
         if(!java.util.Objects.equals(candidate.rewards,holder.state.rewards))return fail(player,correlation,RpgTraceEventType.COMPILE_FAILURE,
                 ValidationCode.INVALID_REQUEST,"Reward checkpoint is owned by the earned-reward authority",holder.state.revision);
+        if(!java.util.Objects.equals(candidate.acquisition,holder.state.acquisition))return fail(player,correlation,RpgTraceEventType.COMPILE_FAILURE,
+                ValidationCode.INVALID_REQUEST,"Acquisition counters are owned by the earned-reward authority",holder.state.revision);
         candidate.inactivePassives.keySet().retainAll(holder.state.inactivePassives.keySet());
         candidate.inactivePassives.replaceAll((slot,reason)->holder.state.inactivePassives.get(slot));
         inactiveRecovery.revalidateChanged(holder.state,candidate);
+        boolean changesLoadout=!java.util.Arrays.equals(holder.state.equippedSkills,candidate.equippedSkills)
+                ||!java.util.Arrays.equals(holder.state.equippedPassives,candidate.equippedPassives)
+                ||!java.util.Arrays.equals(holder.state.joints,candidate.joints)||!holder.state.linkEdges().equals(candidate.linkEdges())
+                ||!holder.state.inactivePassives.equals(candidate.inactivePassives);
+        boolean refundsAttributes=holder.state.attributes.entrySet().stream().anyMatch(e->candidate.attributes.getOrDefault(e.getKey(),0)<e.getValue());
+        if(changesLoadout||refundsAttributes){String denial=respecRejection.apply(player);if(!denial.isEmpty())return fail(player,correlation,RpgTraceEventType.COMPILE_FAILURE,ValidationCode.INVALID_REQUEST,denial,holder.state.revision);}
         CompilationResult compiled = compileTraced(player, candidate, correlation);
         if (!compiled.success()) return MutationResult.failure(compiled.code(), compiled.message() + "\nTrace: " + correlation,
                 correlation, holder.state.revision);
@@ -423,13 +521,11 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
                     details("RPG revision", candidate.revision, "schemaVersion", candidate.schemaVersion,
                             "validationResult", "PASS"));
         } catch (RuntimeException error) {
+            holder.persistenceUncertain=true;
             return fail(player, correlation, RpgTraceEventType.COMPILE_FAILURE, ValidationCode.PERSISTENCE_FAILURE,
-                    "RPG state was not changed because persistence failed: " + error.getMessage(), holder.state.revision);
+                    "Persistence outcome is uncertain; restart and recover before further changes: " + error.getMessage(), holder.state.revision);
         }
-        boolean loadoutChanged=!java.util.Arrays.equals(holder.state.equippedSkills,candidate.equippedSkills)
-                ||!java.util.Arrays.equals(holder.state.equippedPassives,candidate.equippedPassives)
-                ||!java.util.Arrays.equals(holder.state.joints,candidate.joints)
-                ||!holder.state.linkEdges().equals(candidate.linkEdges());
+        boolean loadoutChanged=changesLoadout;
         holder.state = candidate;
         if(loadoutChanged)for(var listener:loadoutMutationListeners){try{listener.accept(player);}catch(RuntimeException ignored){}}
         for (Consumer<UUID> listener : mutationListeners) {
@@ -467,12 +563,17 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     private Holder holder(UUID player) {
         Holder holder=states.computeIfAbsent(player, ignored -> load(player));
         synchronized(holder){
-            if(holder.persistenceUncertain)throw new IllegalStateException("PLAYER_PERSISTENCE_UNCERTAIN: restart and recover durable intent before further mutations");
-            if(holder.rewardRecoveryRequired){
-                earnedRewards.recover(player,rewardAuthority(player,holder));holder.rewardRecoveryRequired=false;
-            }
+            ensureUsable(player,holder);
         }
         return holder;
+    }
+    private static RpgLoadoutView readOnlyUncertain(Holder holder){
+        // Inspect the last published checkpoint, never execute a possibly stale loadout after an uncertain write.
+        return new RpgLoadoutView(holder.state,Map.of(),Map.of(),List.of("PLAYER_PERSISTENCE_UNCERTAIN_READ_ONLY: restart before gameplay or edits"));
+    }
+    private void ensureUsable(UUID player,Holder holder){
+        if(holder.persistenceUncertain)throw new IllegalStateException("PLAYER_PERSISTENCE_UNCERTAIN: restart and recover durable intent before further mutations");
+        if(holder.rewardRecoveryRequired){earnedRewards.recover(player,rewardAuthority(player,holder));holder.rewardRecoveryRequired=false;}
     }
 
     private Holder load(UUID player) {

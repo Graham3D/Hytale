@@ -21,7 +21,7 @@ $expectedConnectionCauses = 5
 $expectedProfiles = 15
 $expectedStatusAssets = 10
 $expectedSupport = 16
-$expectedPlayerSchema = if($Cohort -eq 'a'){7}else{8}
+$expectedPlayerSchema = if($Cohort -eq 'a'){7}elseif($Cohort -in @('b','c','d','e','f','g')){8}else{9}
 $expectedSummons = 9
 $expectedNativeBiomes = if($Cohort -in @('a','b')){0}else{4}
 $expectedAwardHook = if($Cohort -in @('a','b','c','d')){'false'}else{'true'}
@@ -74,16 +74,18 @@ $summary = [ordered]@{
     strikeLockResolved = [bool]($plain -match 'RPG_STAGE11_STRIKE_ACTION_LOCK asset=RPG_Strike_Action_Lock disabledInteractions=6 movementUnchanged=true result=PASS connectedProof=false')
     hitProcAssetsResolved = [bool]($plain -match 'RPG_STAGE11_HIT_PROC_ASSETS bleedVisual=RPG_Bleed_Visual nativeDamage=false movementUnchanged=true result=PASS connectedProof=false')
     progressionProfilesResolved = [bool]($plain -match "RPG_STAGE12_PROFILES revision=R031 bands=5 difficulties=3 nativeBiomeBindings=$expectedNativeBiomes awardHook=$expectedAwardHook connectedProof=false")
-    rewardStoreConfigured = [bool]($plain -match "RPG_STAGE12_REWARD_STORE playerSchema=8 writeAhead=true immutableReceipts=true awardHook=$expectedAwardHook connectedProof=false")
+    rewardStoreConfigured = [bool]($plain -match "RPG_STAGE12_REWARD_STORE playerSchema=$expectedPlayerSchema writeAhead=true immutableReceipts=true awardHook=$expectedAwardHook connectedProof=false")
     encounterRegistryResolved = [bool]($plain -match "RPG_STAGE12_ENCOUNTER_REGISTRY roles=3 biomes=4 rankAuthority=RPG_PROFILE awardHook=$expectedAwardHook connectedProof=false")
     encounterStoreConfigured = [bool]($plain -match "RPG_STAGE12_ENCOUNTER_STORE schema=1 frozenDeathPlans=true permanentExclusions=true pending=0 awardHook=$expectedAwardHook connectedProof=false")
     nativeRewardHooksRegistered = [bool]($plain -match 'RPG_STAGE12_NATIVE_REWARDS spawn=LEGACY_WORLD_SPAWN contribution=POST_APPLY_HEALTH_LOSS death=NATIVE_DEATH_COMPONENT deliveryBudget=8_per_second party=SOLO_ONLY connectedProof=false')
     supportCreditHooksRegistered = [bool]($plain -match "RPG_STAGE12_SUPPORT_CREDIT healing=POST_NATIVE_WRITE absorption=ACTUAL_CONSUMPTION partyProvider=NATIVE_PARTY_PROVIDER_UNAVAILABLE_SOLO_ONLY mastery=$expectedMastery connectedProof=false")
     masteryHooksRegistered = [bool]($plain -match 'RPG_STAGE12_MASTERY damage=INSPECT_BEFORE_DEATH control=NATIVE_STATE_CHANGE healing=HOSTILE_INJURY_ONLY rootDedup=DURABLE sustainedIntervalSeconds=5 movementAvoidance=UNAVAILABLE connectedProof=false')
+    acquisitionConfigured = [bool]($plain -match 'RPG_STAGE12_ACQUISITION playerSchema=9 verifiedLearningBindings=0 pity=DURABLE spending=SAME_REWARD_AUTHORITY respec=TEN_SECONDS_AND_NO_PENDING_CAST import=IDS_AND_FIXED_LAYOUT_ONLY connectedProof=false')
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8
 [pscustomobject]$summary | Format-List
+if($expectedPlayerSchema -eq 9 -and -not $summary.acquisitionConfigured){throw 'Stage12 acquisition/respec registration gate failed'}
 if($expectedMastery -eq 'true' -and -not ($summary.masteryHooksRegistered -and $summary.supportCreditHooksRegistered -and $summary.nativeRewardHooksRegistered -and $summary.encounterStoreConfigured -and $summary.encounterRegistryResolved)){throw 'Stage12 mastery/support native registration gate failed'}
 if (($Cohort -eq 'c' -and -not $summary.encounterRegistryResolved) -or ($Cohort -ne 'a' -and -not $summary.rewardStoreConfigured) -or -not ($summary.progressionProfilesResolved -and $summary.hitProcAssetsResolved -and $summary.strikeLockResolved -and $summary.exactlyThreeMods -and $summary.rpgDiscovered -and $summary.rpgSetup -and $summary.ready -and
     $summary.decoyRoleResolved -and $summary.batchRolesResolved -and $summary.summonAssetsResolved -and $summary.supportConfigured -and $summary.connectionAssetsResolved -and $summary.areaAssetsResolved -and $summary.packagedRootResolved -and $summary.shippedRuneResolved -and $summary.pluginEnabled -and $summary.managerStarted -and $summary.networkBooted -and $summary.cleanShutdown) -or

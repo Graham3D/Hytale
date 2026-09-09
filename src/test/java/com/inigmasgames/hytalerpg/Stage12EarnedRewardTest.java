@@ -234,7 +234,8 @@ class Stage12EarnedRewardTest {
         state.cooldowns.put("fire_bolt",new SavedCooldown(4,1));state.inactivePassives.put("passive06","UNKNOWN_PASSIVE");
         var old=new Gson().toJsonTree(state).getAsJsonObject();old.addProperty("schemaVersion",7);old.remove("rewards");
         String original=old.toString();Files.createDirectories(repository().path(player).getParent());Files.writeString(repository().path(player),original);
-        var loaded=repository().load(player);assertTrue(loaded.migrated());assertEquals(8,loaded.state().schemaVersion);assertEquals(RewardLedger.INITIAL,loaded.state().rewards);
+        var loaded=repository().load(player);assertTrue(loaded.migrated());assertEquals(9,loaded.state().schemaVersion);assertEquals(RewardLedger.INITIAL,loaded.state().rewards);
+        assertEquals(AcquisitionProgress.INITIAL,loaded.state().acquisition);
         assertEquals(state.currentXp,loaded.state().currentXp);assertEquals(state.skillMastery,loaded.state().skillMastery);assertEquals(state.cooldowns,loaded.state().cooldowns);
         assertEquals(state.ownedPassives,loaded.state().ownedPassives);assertEquals(state.learnedSkills,loaded.state().learnedSkills);assertEquals(state.inactivePassives,loaded.state().inactivePassives);
         service().awardEarned(player,reward("earned",20));assertEquals(12,state().unspentAttributePoints);assertEquals(8,state().pendingLevelUpPoints);

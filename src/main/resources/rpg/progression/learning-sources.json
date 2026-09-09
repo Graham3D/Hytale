@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "bindings": [],
+  "reason": "No source has VERIFIED_CONNECTED signature behavior. Explicit combat identity, canonical source and acquisition rarity bindings must be authored and connected-verified before public learning. Catalog NORMAL placeholders are not evidence of Common acquisition rarity."
+}

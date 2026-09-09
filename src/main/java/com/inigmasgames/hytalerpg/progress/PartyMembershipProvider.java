@@ -19,6 +19,6 @@ public interface PartyMembershipProvider {
         Map<UUID,String> membership=Map.copyOf(Objects.requireNonNull(provider.snapshot(world,Set.copyOf(ids))));
         if(membership.size()>ids.size()||!ids.containsAll(membership.keySet()))throw new IllegalArgumentException("PARTY_PROVIDER_UNKNOWN_MEMBER");
         for(String id:membership.values())if(id.isBlank()||id.length()>128||id.chars().anyMatch(Character::isISOControl))throw new IllegalArgumentException("INVALID_PARTY_ID");
-        return candidates.stream().map(p->new EncounterContributions.Participant(p.player(),p.world(),p.position(),p.level(),p.loaded(),membership.get(p.player()))).toList();
+        return candidates.stream().map(p->new EncounterContributions.Participant(p.player(),p.world(),p.position(),p.level(),p.loaded(),membership.get(p.player()),p.learning())).toList();
     }
 }

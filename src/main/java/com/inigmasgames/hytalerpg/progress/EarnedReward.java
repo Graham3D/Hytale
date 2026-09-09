@@ -4,7 +4,11 @@ import java.util.*;
 
 /** Internal award request, never a public client grant API. Caller must establish native eligibility. */
 public record EarnedReward(String eventId,long characterXp,long insight,Map<String,Long> mastery,
-                          String reason,String rootCastId,String skillInstanceId,String correlationId) {
+                          String reason,String rootCastId,String skillInstanceId,String correlationId,ProgressionDelta progression) {
+    /** Retain the exact v1 JSON/hash shape for old pending intents and receipts (Gson omits null). */
+    public EarnedReward(String eventId,long characterXp,long insight,Map<String,Long> mastery,String reason,String rootCastId,String skillInstanceId,String correlationId){
+        this(eventId,characterXp,insight,mastery,reason,rootCastId,skillInstanceId,correlationId,null);
+    }
     public EarnedReward {
         text(eventId,256);text(reason,128);text(correlationId,128);
         optionalId(rootCastId);optionalId(skillInstanceId);
@@ -16,7 +20,7 @@ public record EarnedReward(String eventId,long characterXp,long insight,Map<Stri
             sorted.put(skill,value);
         });
         mastery=Collections.unmodifiableMap(sorted);
-        if(characterXp==0&&insight==0&&mastery.isEmpty())throw new IllegalArgumentException("EMPTY_REWARD");
+        if(characterXp==0&&insight==0&&mastery.isEmpty()&&progression==null)throw new IllegalArgumentException("EMPTY_REWARD");
     }
     private static void optionalId(String value){if(value==null)throw new IllegalArgumentException("NULL_REWARD_ID");if(!value.isEmpty())text(value,128);}
     private static void text(String value,int limit){

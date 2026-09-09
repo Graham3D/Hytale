@@ -27,15 +27,21 @@ public final class HytaleEncounterRewards {
     private final PersistentEncounterRuntime runtime;
     private final RpgLoadoutService loadouts;
     private final RpgSkillTracer trace;
+    private final LearningSources learning=LearningSources.load(com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical());
+    private final com.inigmasgames.hytalerpg.combat.RpgCombatKernel kernel;
     private final HostileInjuryLedger injuries=new HostileInjuryLedger();
     public void invalidateHealthCredit(UUID world,UUID recipient){injuries.invalidate(world,recipient);}
     public void forgetPlayer(UUID actor){injuries.forget(actor);}
     private boolean failureLogged;
     private long nextDeliveryNanos;
     private volatile PartyMembershipProvider parties=PartyMembershipProvider.UNAVAILABLE;
-    public HytaleEncounterRewards(FileEncounterStore store,RpgLoadoutService loadouts,RpgSkillTracer trace){
-        this.runtime=new PersistentEncounterRuntime(store,loadouts::awardEarned);this.loadouts=loadouts;this.trace=trace;
+    public HytaleEncounterRewards(FileEncounterStore store,RpgLoadoutService loadouts,RpgSkillTracer trace,com.inigmasgames.hytalerpg.combat.RpgCombatKernel kernel){
+        this.runtime=new PersistentEncounterRuntime(store,(player,reward,opportunity)->{
+            if(opportunity==null)loadouts.awardEarned(player,reward);
+            else loadouts.awardGenerated(player,reward.eventId(),before->opportunity.decide(reward,before,Math::random));
+        });this.loadouts=loadouts;this.trace=trace;this.kernel=Objects.requireNonNull(kernel);
     }
+    public int verifiedLearningBindings(){return learning.verifiedBindings();}
     public void invalidateConverted(UUID world,UUID enemy){runtime.disqualify(world,enemy);}
     public void configurePartyProvider(PartyMembershipProvider provider){parties=Objects.requireNonNull(provider);}
     public String partyAvailability(){return parties.availability();}
@@ -46,7 +52,7 @@ public final class HytaleEncounterRewards {
                 meaningful,runtime.masteryEligible(world(store),enemy,actor,loadouts.characterLevel(actor),now),sustained,System.nanoTime(),ordinal->{
             // Primary and every derived child share rootCastId + ordinal; never use victim/child/tick as the dedup identity.
             loadouts.awardEarned(actor,new EarnedReward("mastery/"+context.effects().mastery().primaryInstance()+"/"+ordinal,0,0,Map.of(p.skillId(),1L),
-                    "MEANINGFUL_MANUAL_ROOT",context.rootCastId(),context.effects().mastery().primaryInstance(),context.request().correlationId()));
+                    "MEANINGFUL_MANUAL_ROOT",context.rootCastId(),context.effects().mastery().primaryInstance(),context.request().correlationId(),ProgressionDelta.meaningful(p.skillId())));
         });
     }
     public void controlResolved(Store<EntityStore> store,Ref<EntityStore> target,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,boolean taunt,String evidence){
@@ -179,7 +185,10 @@ public final class HytaleEncounterRewards {
         for(var player:runtime.contributors(world,enemy)){
             var actor=store.getExternalData().getRefFromUUID(player);
             if(actor==null||!actor.isValid()||store.getComponent(actor,PlayerRef.getComponentType())==null||store.getComponent(actor,TransformComponent.getComponentType())==null)continue;
-            participants.add(new EncounterContributions.Participant(player,world,position(store,actor),loadouts.characterLevel(player),true,null));
+            var spawn=runtime.spawn(world,enemy).orElseThrow();
+            double wisdom=kernel.effectiveAttributes().effective(loadouts.rawAttribute(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS));
+            participants.add(new EncounterContributions.Participant(player,world,position(store,actor),loadouts.characterLevel(player),true,null,
+                    learning.resolve(spawn.combatIdentity(),spawn.rank(),wisdom).orElse(null)));
         }
         var provider=parties;
         var plan=runtime.death(world,enemy,position(store,ref),System.currentTimeMillis(),PartyMembershipProvider.apply(world,participants,provider));

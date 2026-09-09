@@ -134,6 +134,7 @@ public final class Phase00Plugin extends JavaPlugin {
         var reactions = new ReactionWindowService(System::nanoTime);
         var executions = new SkillExecutionService(loadouts, runtimeProfiles, combatKernel,
                 SkillExecutorRegistry.runtime(), new SkillInstanceLifecycle(), skillTrace);
+        loadouts.configureRespecGuard(actor->com.inigmasgames.hytalerpg.progress.RespecGate.rejection(combatKernel.hostileCombat().secondsSinceHostile(actor),executions.pendingCast(actor)));
         var vfx = new LinkTreeVfxService(new HtDevLibVfxAdapter(), Map.of());
         var bosses = new HytaleBossBarTracker();
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
@@ -151,7 +152,7 @@ public final class Phase00Plugin extends JavaPlugin {
                 com.inigmasgames.hytalerpg.execution.hytale.ConversionProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.ConversionProjection::new));
         var conversionSystem=skillExecutionSystem.configureConversions();
-        encounterRewards=new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards(encounterStore,loadouts,skillTrace);
+        encounterRewards=new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards(encounterStore,loadouts,skillTrace,combatKernel);
         supportSystem.configureEncounterRewards(encounterRewards);
         conversionSystem.configureRewardExclusion(encounterRewards::invalidateConverted);
         getEntityStoreRegistry().registerSystem(conversionSystem);
@@ -203,6 +204,7 @@ public final class Phase00Plugin extends JavaPlugin {
         LOGGER.atInfo().log("RPG_STAGE12_NATIVE_REWARDS spawn=LEGACY_WORLD_SPAWN contribution=POST_APPLY_HEALTH_LOSS death=NATIVE_DEATH_COMPONENT deliveryBudget=8_per_second party=SOLO_ONLY connectedProof=false");
         LOGGER.atInfo().log("RPG_STAGE12_SUPPORT_CREDIT healing=POST_NATIVE_WRITE absorption=ACTUAL_CONSUMPTION partyProvider=%s mastery=true connectedProof=false",encounterRewards.partyAvailability());
         LOGGER.atInfo().log("RPG_STAGE12_MASTERY damage=INSPECT_BEFORE_DEATH control=NATIVE_STATE_CHANGE healing=HOSTILE_INJURY_ONLY rootDedup=DURABLE sustainedIntervalSeconds=5 movementAvoidance=UNAVAILABLE connectedProof=false");
+        LOGGER.atInfo().log("RPG_STAGE12_ACQUISITION playerSchema=9 verifiedLearningBindings=%d pity=DURABLE spending=SAME_REWARD_AUTHORITY respec=TEN_SECONDS_AND_NO_PENDING_CAST import=IDS_AND_FIXED_LAYOUT_ONLY connectedProof=false",encounterRewards.verifiedLearningBindings());
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjection::new));
@@ -229,6 +231,8 @@ public final class Phase00Plugin extends JavaPlugin {
             var playerRef = ref.getStore().getComponent(ref,
                     com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
             if (playerRef != null) {
+                // Reconnect/restart cannot erase a recent combat restriction; observe a fresh bounded quiet window.
+                combatKernel.hostileCombat().markHostile(playerRef.getUuid());
                 abilityInputs.clear(playerRef.getUuid());
                 skillExecutionSystem.cancel(playerRef.getUuid(), "PLAYER_READY_RESET");
                 var view = loadouts.getLoadout(playerRef.getUuid());

@@ -86,6 +86,7 @@ public final class RpgCommand extends AbstractCommandCollection {
         addSubCommand(new UnlinkCommand(loadouts));
         addSubCommand(new LoadoutCommand(catalog, loadouts));
         addSubCommand(new CompileCommand(loadouts));
+        if(loadouts instanceof com.inigmasgames.hytalerpg.progress.RpgLoadoutService authority)addSubCommand(new RpgProgressionCommand(authority));
         addSubCommand(new StatsCommand(loadouts, kernel, combatTrace));
         addSubCommand(new DevCommand(catalog, loadouts, kernel, combatTrace, allocation, uiTrace, hud, nativeAbilities));
     }

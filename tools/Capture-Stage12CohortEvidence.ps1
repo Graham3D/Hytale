@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c','d','e','f','g')][string]$Cohort='a')
+param([ValidateSet('a','b','c','d','e','f','g','h')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $passiveRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $passiveConfig=@{
@@ -10,6 +10,7 @@ $passiveConfig=@{
     e=@{tests=1552;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-d\artifacts\HytaleRPG-0.0.24.jar'}
     f=@{tests=1576;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-e\artifacts\HytaleRPG-0.0.24.jar'}
     g=@{tests=530;targeted=$true;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-f\artifacts\HytaleRPG-0.0.24.jar'}
+    h=@{tests=1653;closure=$true;passives=@();planSchema=35;rollback='evidence\stage-12\cohort-g\artifacts\HytaleRPG-0.0.24.jar'}
 }[$Cohort]
 if(-not $passiveConfig){throw 'Cohort must declare tested scope before evidence capture'}
 $passiveEvidence=Join-Path $passiveRoot "evidence\stage-12\cohort-$Cohort"
@@ -34,10 +35,19 @@ if($passiveSmoke.jarSha256 -ne $passiveHash -or $passiveSmoke.processExitCode -n
 & "$PSScriptRoot\Test-CustomUIDocuments.ps1" -Path $passiveJar
 if($Cohort -ne 'a' -and -not $passiveSmoke.rewardStoreConfigured){throw 'Durable reward store must be configured at startup'}
 if($Cohort -notin @('a','b') -and -not $passiveSmoke.encounterRegistryResolved){throw 'Audited native pilot roles must resolve at startup'}
-if($Cohort -in @('d','e','f','g') -and -not $passiveSmoke.encounterStoreConfigured){throw 'Persistent encounter store must be configured at startup'}
-if($Cohort -in @('e','f','g') -and -not $passiveSmoke.nativeRewardHooksRegistered){throw 'Native reward hooks must be registered at startup'}
-if($Cohort -in @('f','g') -and -not $passiveSmoke.supportCreditHooksRegistered){throw 'Support credit callbacks must be configured at startup'}
-if($Cohort -eq 'g' -and -not $passiveSmoke.masteryHooksRegistered){throw 'Meaningful mastery callbacks must be configured at startup'}
+if($Cohort -in @('d','e','f','g','h') -and -not $passiveSmoke.encounterStoreConfigured){throw 'Persistent encounter store must be configured at startup'}
+if($Cohort -in @('e','f','g','h') -and -not $passiveSmoke.nativeRewardHooksRegistered){throw 'Native reward hooks must be registered at startup'}
+if($Cohort -in @('f','g','h') -and -not $passiveSmoke.supportCreditHooksRegistered){throw 'Support credit callbacks must be configured at startup'}
+if($Cohort -in @('g','h') -and -not $passiveSmoke.masteryHooksRegistered){throw 'Meaningful mastery callbacks must be configured at startup'}
+if($Cohort -eq 'h'){
+    if(-not $passiveSmoke.acquisitionConfigured){throw 'Acquisition/respec startup gate missing'}
+    if(-not ($passiveTests | Where-Object {$_.name -eq 'com.inigmasgames.hytalerpg.Stage12ArchivedRollbackTest' -and $_.tests -eq 1})){throw 'Actual archived-JAR rollback drill must pass'}
+    # Count each retained class, not only the aggregate, so added tests cannot mask a removed suite.
+    foreach($baseline in (Get-Content -Raw -LiteralPath (Join-Path $passiveRoot 'evidence\stage-12\cohort-f\test-results.json') | ConvertFrom-Json)){
+        $current=@($passiveTests | Where-Object {$_.name -eq $baseline.name})
+        if($current.Count -ne 1 -or $current[0].tests -lt $baseline.tests){throw "Retained regression class reduced: $($baseline.name)"}
+    }
+}
 $passiveProtected=@('src/main/java/com/inigmasgames/hytalerpg/ui','src/main/resources/Common/UI','canvas-ui/src',
     'src/main/resources/rpg/runtime/stage-04-skills.json','src/main/resources/rpg/runtime/stage-05-projectiles.json',
     'src/main/resources/Server/ProjectileConfigs','src/main/resources/rpg/balance',
@@ -66,16 +76,17 @@ $passiveTests | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $p
 $passivePackage="$env:APPDATA\Hytale\install\pre-release\package\game\latest"
 $passiveLive=@(Get-ChildItem -LiteralPath "$env:APPDATA\Hytale\data\pre-release\Saves\RPG\mods" -File -Filter '*.jar' | ForEach-Object {@{name=$_.Name;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash}})
 [ordered]@{
-    capturedAtUtc=[DateTime]::UtcNow.ToString('o');stage=12;cohort=$Cohort;revision='R031';version='0.0.24';playerSchema=$(if($Cohort -eq 'a'){7}else{8});compiledPlanSchema=$passiveConfig.planSchema
+    capturedAtUtc=[DateTime]::UtcNow.ToString('o');stage=12;cohort=$Cohort;revision='R031';version='0.0.24';playerSchema=$(if($Cohort -eq 'a'){7}elseif($Cohort -eq 'h'){9}else{8});compiledPlanSchema=$passiveConfig.planSchema
     sourceHead=(& git -C $passiveRoot rev-parse HEAD).Trim();branch=(& git -C $passiveRoot branch --show-current).Trim()
-    status='IMPLEMENTATION_IN_PROGRESS';cohortStatus='IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION';localGate='PASS';connectedGate='UNVERIFIED'
+    status=$(if($passiveConfig.closure){'IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION'}else{'IMPLEMENTATION_IN_PROGRESS'});cohortStatus='IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION';localGate='PASS';connectedGate='UNVERIFIED'
     cohortSkills=@();cohortPassives=$passiveConfig.passives;tests=$passiveCount;failures=0;errors=0;skipped=0
     regressionScope=$(if($passiveConfig.targeted){'TARGETED_INTERMEDIATE_NOT_STAGE_CLOSURE'}else{'FULL_RETAINED'})
     jarSha256=$passiveHash;rollbackSha256=(Get-FileHash -LiteralPath $passiveRollback).Hash
     serverSha256=(Get-FileHash -LiteralPath (Join-Path $passivePackage 'Server\HytaleServer.jar')).Hash
     assetsSha256=(Get-FileHash -LiteralPath (Join-Path $passivePackage 'Assets.zip')).Hash
     normalThreeModSmoke=$true;zeroNativeCostTriggers=$passiveAbilities.Count;nativeCastingFixed=$false;liveDeploymentPerformed=$false;liveArtifacts=$passiveLive
+    archivedCodeRollbackDrill=$(if($passiveConfig.closure){'PASS_SCHEMA8_ARCHIVE_READER_COORDINATED_RESTORE_AND_DEDUP'}else{'NOT_A_STAGE_CLOSURE'})
     protectedPathsChanged=$passiveChanged;canonicalSkillCount=87;canonicalPassiveCount=66
-    rollbackStateRequirement=$(if($Cohort -eq 'a'){'Player schema7 and compiled schema35 unchanged in cohort A; prior-stage code artifact retained. Live R023 schema3 remains untouched.'}else{'Player schema8 adds earned-reward checkpoint. Full rollback requires coordinated players + earned-rewards directory backup, never one side. To run cohortA restore pre-migration .schema-v7.bak with its matching pre-award ledger checkpoint; do not downgrade schema8. Live R023 remains untouched.'})
+    rollbackStateRequirement=$(if($Cohort -eq 'a'){'Player schema7 and compiled schema35 unchanged in cohort A; prior-stage code artifact retained. Live R023 schema3 remains untouched.'}elseif($Cohort -eq 'h'){'Schema9 adds acquisition/pity/spending; original schema8 pending/receipt hashes remain readable. Restore the complete pre-migration players + earned-rewards + encounters checkpoint to run G. Schema-v8 backup alone is insufficient. Archived G rejects schema9 in place. Live R023 untouched.'}else{'Player schema8 adds earned-reward checkpoint. Full rollback requires coordinated players + earned-rewards directory backup, never one side. To run cohortA restore pre-migration .schema-v7.bak with its matching pre-award ledger checkpoint; do not downgrade schema8. Live R023 remains untouched.'})
 } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $passiveEvidence 'verification.json') -Encoding utf8
 [pscustomobject]@{tests=$passiveCount;jarSha256=$passiveHash;connectedGate='UNVERIFIED'}
