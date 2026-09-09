@@ -327,26 +327,48 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             emit(motion.context, RpgTraceEventType.MOVEMENT_CANCELLED, Map.of("reason", "DEATH_OR_REMOVAL"));
             executions.terminate(motion.context, "MOVEMENT_CANCELLED"); return;
         }
-        motion.elapsed += Math.max(0.0, deltaSeconds);
-        double progress = Math.min(1.0, motion.elapsed / Math.max(0.001, motion.plan.durationSeconds()));
-        Vec3 requested = movementPlanner.sample(motion.plan, progress);
-        TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
-        Vec3 current = vec(transform.getPosition());
-        Vec3 segment = requested.subtract(current);
-        double fraction = collisionFraction(store, ref, current, segment);
-        Vec3 applied = current.add(segment.multiply(fraction));
-        double fall = player.getCurrentFallDistance();
-        player.moveTo(ref, applied.x(), applied.y(), applied.z(), store);
-        Vec3 observed=vec(store.getComponent(ref,TransformComponent.getComponentType()).getPosition());
-        motion.travel.observe(current,applied,observed,deltaSeconds);
-        player.setCurrentFallDistance(Math.max(fall, player.getCurrentFallDistance()));
-        if (fraction < 1.0 - 1.0e-6) {
-            emit(motion.context, RpgTraceEventType.MOVEMENT_CLAMPED,
-                    Map.of("requestedSegment", segment.horizontalLength(), "appliedFraction", fraction,
-                            "reason", "NATIVE_BLOCK_COLLISION"));
-            finishMotion(motion, observed, true, buffer); return;
+        try {
+            if(!Float.isFinite(deltaSeconds)||deltaSeconds<0)throw new IllegalStateException("INVALID_MOVEMENT_CLOCK");
+            if(deltaSeconds==0)return;
+            var playerRef=store.getComponent(ref,PlayerRef.getComponentType());var stats=store.getComponent(ref,EntityStatMap.getComponentType());
+            if(playerRef==null||stats==null||motion.context.target()!=null&&!playerRef.getWorldUuid().equals(motion.context.target().worldId()))
+                throw new IllegalStateException("MOVEMENT_OWNER_WORLD_CHANGED");
+            var port=new Port(store,ref,playerRef,player,stats,null,buffer);
+            var allowed=motion.context.profile().allowedMainHandKinds();var held=port.equipment().mainHand();
+            if(!port.actorAliveAndUsable()||!allowed.isEmpty()&&(held==null||!allowed.contains(held.weaponKind())))throw new IllegalStateException("MOVEMENT_OWNER_OR_EQUIPMENT_INVALID");
+            double prior=Math.min(1,motion.elapsed/Math.max(.001,motion.plan.durationSeconds()));motion.elapsed+=deltaSeconds;
+            double progress=Math.min(1,motion.elapsed/Math.max(.001,motion.plan.durationSeconds()));
+            var segments=movementPlanner.segments(motion.plan,prior,progress);
+            var details=motion.context.profile().movement().details();
+            for(Vec3 requested:segments){
+                var transform=store.getComponent(ref,TransformComponent.getComponentType());if(transform==null)throw new IllegalStateException("MOVEMENT_TRANSFORM_MISSING");
+                Vec3 current=vec(transform.getPosition()),segment=requested.subtract(current);
+                if(current.distanceSquared(motion.lastObserved)>.0001)throw new IllegalStateException("MOVEMENT_EXTERNAL_DISCONTINUITY");
+                double fraction=collisionFraction(store,ref,current,segment);Vec3 applied=current.add(segment.multiply(fraction));
+                if(details.pathDamage()&&!movementSupported(store,ref,applied)){finishMotion(motion,current,true,buffer);return;}
+                var contacts=details.pathDamage()?port.movementContacts(motion,current,applied):List.<com.inigmasgames.hytalerpg.execution.movement.MovementContacts.Contact>of();
+                boolean first=details.stopAtFirstEnemy()&&!contacts.isEmpty();
+                if(first)applied=current.add(applied.subtract(current).multiply(contacts.getFirst().fraction()));
+                double fall=player.getCurrentFallDistance();player.moveTo(ref,applied.x(),applied.y(),applied.z(),store);
+                Vec3 observed=vec(store.getComponent(ref,TransformComponent.getComponentType()).getPosition());
+                motion.travel.observe(current,applied,observed,deltaSeconds/segments.size());motion.lastObserved=observed;
+                player.setCurrentFallDistance(Math.max(fall,player.getCurrentFallDistance()));
+                if(!motion.travel.valid()||observed.distanceSquared(applied)>.0001)throw new IllegalStateException("MOVEMENT_NATIVE_WRITE_NOT_CONFIRMED");
+                if(details.pathDamage()){
+                    var actual=first?List.of(contacts.getFirst()):port.movementContacts(motion,current,observed);
+                    for(var contact:actual)port.applyMovementContact(motion,contact.id(),observed);
+                }
+                if(first||fraction<1-1e-6){
+                    emit(motion.context,RpgTraceEventType.MOVEMENT_CLAMPED,Map.of("reason",first?"FIRST_ELIGIBLE_ENEMY":"NATIVE_BLOCK_OR_UNLOADED_PATH","appliedFraction",fraction));
+                    finishMotion(motion,observed,true,buffer);return;
+                }
+            }
+            if(progress>=1)finishMotion(motion,motion.lastObserved,motion.plan.clamped(),buffer);
+        }catch(RuntimeException failure){
+            motions.remove(motion.context.request().actorId(),motion);hits.clear(motion.context.skillInstanceId());
+            emit(motion.context,RpgTraceEventType.MOVEMENT_CANCELLED,Map.of("reason",String.valueOf(failure.getMessage()),"paidRootRetained",true));
+            executions.terminate(motion.context,"MOVEMENT_NATIVE_BOUNDARY_FAILED");
         }
-        if (progress >= 1.0) finishMotion(motion, observed, motion.plan.clamped(), buffer);
     }
 
     private void finishMotion(Motion motion, Vec3 finalPosition, boolean clamped, CommandBuffer<EntityStore> buffer) {
@@ -355,7 +377,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 Map.of("distance", finalPosition.subtract(motion.plan.origin()).horizontalLength(), "clamped", clamped,
                         "durationSeconds", motion.elapsed,"validatedTravelMeters",motion.travel.meters(),
                         "travelEvidenceValid",motion.travel.valid(),"momentumIncreased",motion.travel.increased(motion.context)));
-        if (motion.context.profile().hasFamily(Stage04SkillProfile.Family.STRIKE)) {
+        if (motion.context.profile().hasFamily(Stage04SkillProfile.Family.STRIKE)&&!motion.context.profile().movement().details().pathDamage()
+                &&movementSupported(buffer.getStore(),motion.actor,finalPosition)) {
             Ref<EntityStore> ref = motion.actor;
             if (ref.isValid()) {
                 Store<EntityStore> store = ref.getStore();
@@ -378,6 +401,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private Ref<EntityStore> pounceTarget;
         private Vec3 areaPlacement;
         private Vec3 areaDirection;
+        private Vec3 movementGround;
         Port(Store<EntityStore> store, Ref<EntityStore> actor, PlayerRef playerRef, Player player,
              EntityStatMap stats, Ref<EntityStore> forcedTarget, CommandBuffer<EntityStore> buffer) {
             this.store = store; this.actor = actor; this.playerRef = playerRef; this.player = player;
@@ -394,9 +418,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 support.runtime().stopActive(playerRef.getUuid(),profile.skillId(),support.port(store,actor));}
         @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
                                                         com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
-            if(profile.cage()!=null)return Validation.reject(com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY);
-            if(profile.projectile()!=null&&!profile.projectile().details().nativeCapabilityGate().isEmpty())
-                return Validation.reject(profile.projectile().details().nativeCapabilityGate());
+            if(!profile.activationGate().isEmpty())return Validation.reject(profile.activationGate());
             if (profile.family() == Stage04SkillProfile.Family.STRIKE) {
                 var probe = profile.strike().geometry() == Stage04SkillProfile.Geometry.RADIUS
                         ? profile.strike().withRange(profile.strike().range() * plan.executionModifiers().radiusFactor()) : profile.strike();
@@ -496,6 +518,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 return Validation.pass();
             }
             if (profile.family() == Stage04SkillProfile.Family.REACTION) return Validation.pass();
+            if(profile.movement()!=null&&profile.movement().details().groundTarget()) {
+                Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
+                movementGround=HytaleAreaQueries.ground(store,feet.add(new Vec3(0,1.35,0)),aim(store,actor),profile.movement().maxDistance()+1.35).orElse(null);
+                if(movementGround==null)return Validation.reject("NO_VALID_LOADED_MOVEMENT_GROUND");
+                try{movementPlanner.groundPlan(feet,movementGround,profile.movement(),(a,b)->collisionFraction(store,actor,a,b),p->movementSupported(store,actor,p));}
+                catch(IllegalArgumentException failure){return Validation.reject(failure.getMessage());}
+                return Validation.pass();
+            }
             if (profile.family() == Stage04SkillProfile.Family.MOVEMENT
                     && profile.movement().kind() == Stage04SkillProfile.MovementKind.DASH) return Validation.pass();
             if (profile.family() == Stage04SkillProfile.Family.MOVEMENT) {
@@ -533,7 +563,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     if(selected!=null){targetId=store.getComponent(selected,UUIDComponent.getComponentType()).getUuid();point=vec(store.getComponent(selected,TransformComponent.getComponentType()).getPosition()).add(new Vec3(0,.5,0));}
                 }
             } else if(profile.movement()!=null) {
-                if(profile.movement().kind()==Stage04SkillProfile.MovementKind.LEAP) {
+                if(profile.movement().details().groundTarget()) {
+                    if(movementGround==null)throw new IllegalStateException("COMMITTED_MOVEMENT_GROUND_MISSING");
+                    point=movementGround;direction=point.subtract(feet).horizontalNormalized();
+                }else if(profile.movement().kind()==Stage04SkillProfile.MovementKind.LEAP) {
                     if(pounceTarget==null || !pounceTarget.isValid()) throw new IllegalStateException("COMMITTED_ENTITY_TARGET_MISSING");
                     var id=store.getComponent(pounceTarget,UUIDComponent.getComponentType());
                     if(id==null) throw new IllegalStateException("COMMITTED_TARGET_UUID_MISSING");
@@ -645,6 +678,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(profile.movement()!=null) {
                 if(feet.subtract(target.point()).horizontalLength()>profile.movement().maxDistance()+1e-6)
                     return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
+                if(profile.movement().details().groundTarget()){
+                    try{movementPlanner.groundPlan(feet,target.point(),profile.movement(),(a,b)->collisionFraction(store,actor,a,b),p->movementSupported(store,actor,p));}
+                    catch(IllegalArgumentException failure){return Validation.reject(failure.getMessage());}
+                    return Validation.pass();
+                }
                 if(target.entityId()!=null) {
                     var ref=store.getExternalData().getRefFromUUID(target.entityId());
                     var selected=candidate(ref);
@@ -1125,8 +1163,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 direction = context.request().desiredMovement();
                 if (direction.horizontalLengthSquared() < 1.0e-6) direction = facing(store, actor);
             }
-            MovementPlanner.Plan plan = movementPlanner.plan(origin, direction, distance,
-                    context.profile().movement(), (start, displacement) -> collisionFraction(store, actor, start, displacement));
+            MovementPlanner.Plan plan = context.profile().movement().details().groundTarget()
+                    ?movementPlanner.groundPlan(origin,context.target().point(),context.profile().movement(),(a,b)->collisionFraction(store,actor,a,b),p->movementSupported(store,actor,p))
+                    :movementPlanner.plan(origin, direction, distance,context.profile().movement(), (start, displacement) -> collisionFraction(store, actor, start, displacement));
             motions.put(playerRef.getUuid(), new Motion(context, actor, plan));
             emit(context, RpgTraceEventType.MOVEMENT_BEGIN,
                     Map.of("kind", plan.kind().name(), "requestedDistance", distance,
@@ -1136,6 +1175,39 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             "reason", "NATIVE_PATH_COLLISION"));
             vfx.present(store.getExternalData().getWorld(), player, context.compiledPlan().vfxRecipeId());
             return SkillExecutionResult.committed("MOVEMENT_STARTED", 0, plan.appliedDistance());
+        }
+        private List<com.inigmasgames.hytalerpg.execution.movement.MovementContacts.Contact> movementContacts(Motion motion,Vec3 from,Vec3 to){
+            double width=motion.context.profile().movement().details().pathWidth();double span=from.subtract(to).length()/2+width+2.5;
+            Vec3 middle=from.add(to).multiply(.5);
+            var query=HytaleAreaQueries.query(store,actor,new AreaGeometry(AreaGeometry.Kind.DISC,middle.add(new Vec3(0,-span,0)),Vec3.FORWARD,span,360,0,0,span*2),64);
+            if(query.overflow())throw new IllegalStateException("MOVEMENT_TARGET_BUDGET");
+            var candidates=new ArrayList<com.inigmasgames.hytalerpg.execution.movement.MovementContacts.Target>();
+            for(var t:query.candidates()){
+                var target=candidate(t.ref());if(target==null||target.protectedTarget()||!HytaleAreaQueries.clear(store,from.add(new Vec3(0,.1,0)),t.bounds().centre()))continue;
+                candidates.add(new com.inigmasgames.hytalerpg.execution.movement.MovementContacts.Target(target.stableId(),t.bounds()));
+            }
+            return motion.contacts.query(from,to,width,motion.context.profile().strike().details().height(),candidates);
+        }
+        private void applyMovementContact(Motion motion,String id,Vec3 point){
+            var reference=store.getExternalData().getRefFromUUID(UUID.fromString(id));var target=candidate(reference);
+            if(target==null||target.protectedTarget()||!HytaleAreaQueries.hostile(store,reference,actor)||!motion.contacts.claim(id))return;
+            var context=motion.travel.impact(motion.context);var strike=context.profile().strike();
+            var outcome=damage(context,target,0,strike.coefficient(),context.snapshot().criticalChance(),strikeCause(strike),false,context.skillInstanceId()+"/movement",!context.derivedRelease());
+            if(outcome.actualHealthLoss()>0){
+                double requested=context.profile().movement().details().knockback();
+                if(requested>0&&applyKnockback(context,target,requested,"MOVEMENT")<=1e-6){
+                    observeControl(store,reference,context,()->{
+                        var control=SupportNativeEffects.control(store,reference,bosses);
+                        var status=kernel.statuses().apply(UUID.fromString(id),RpgStatusType.STAGGER,control,.4*(context.compiledPlan().geometry().impactForce()?1.75:1));
+                        buffer.ensureComponent(reference,AreaStatusProjection.getComponentType());
+                        HytaleAreaStatuses.synchronize(kernel.statuses(),UUID.fromString(id),reference,store,actor);
+                        emit(context,status.outcome()==com.inigmasgames.hytalerpg.combat.status.StatusService.Outcome.REJECTED?RpgTraceEventType.STATUS_REJECTED:RpgTraceEventType.STATUS_APPLIED,Map.of("source","CHARGE_DISPLACEMENT_FALLBACK","result",status.outcome().name(),"seconds",status.remainingSeconds(),"targetId",id));
+                    });
+                }
+                if(!context.compiledPlan().positionOnlyOnSecondary()&&ProfileComponentPolicy.enemyPosition(context.profile()))applyPassiveAreaPosition(context,reference,point);
+            }
+            emit(context,RpgTraceEventType.STRIKE_HIT,Map.of("component","MOVEMENT_PATH","targetId",id,"coefficient",strike.coefficient(),"actualHealthLoss",outcome.actualHealthLoss(),"nativeBehaviorVerified",false));
+            try{vfx.presentContact(store.getExternalData().getWorld(),point,strike.details().element(),.12,1);}catch(RuntimeException ignored){}
         }
         @Override public SkillExecutionResult executeReaction(SkillExecutionContext context) {
             if (!reactions.arm(playerRef.getUuid(), context, context.profile().reaction().windowSeconds()))
@@ -1545,7 +1617,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
 
         private double applyProjectileKnockback(SkillExecutionContext context,
                                                 StrikeGeometryService.Candidate<Ref<EntityStore>> target) {
-            double requested = context.profile().projectile().knockbackDistance();
+            return applyKnockback(context,target,context.profile().projectile().knockbackDistance(),"PROJECTILE");
+        }
+        private double applyKnockback(SkillExecutionContext context,StrikeGeometryService.Candidate<Ref<EntityStore>> target,double requested,String source) {
             if (requested <= 0.0 || target.protectedTarget() || !target.handle().isValid()) return 0.0;
             TransformComponent sourceTransform = store.getComponent(actor, TransformComponent.getComponentType());
             TransformComponent targetTransform = store.getComponent(target.handle(), TransformComponent.getComponentType());
@@ -1561,7 +1635,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     point->HytaleAreaQueries.ground(store,point.add(new Vec3(0,bounds.getBoundingBox().min.y()+.15,0)),new Vec3(0,-1,0),.35).isPresent());
             if(plan.distance()>0)targetTransform.setPosition(vector(plan.destination()));
             double observed=vec(targetTransform.getPosition()).subtract(start).horizontalLength();
-            emit(context,RpgTraceEventType.AREA_DISPLACEMENT,Map.of("source","PROJECTILE","targetId",target.stableId(),
+            emit(context,RpgTraceEventType.AREA_DISPLACEMENT,Map.of("source",source,"targetId",target.stableId(),
                     "requested",requested,"planned",plan.distance(),"applied",observed,"reason",plan.reason(),"nativeBehaviorVerified",false));
             return observed;
         }
@@ -1571,6 +1645,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         if (displacement.distanceSquared(new Vec3(0, 0, 0)) < 1.0e-12) return 1.0;
         BoundingBox bounds = store.getComponent(actor, BoundingBox.getComponentType());
         if (bounds == null) return 0.0;
+        var box=bounds.getBoundingBox();
+        int samples=Math.max(1,(int)Math.ceil(displacement.length()/.25));
+        if(samples>256)return 0;
+        for(int i=0;i<=samples;i++){
+            Vec3 p=origin.add(displacement.multiply((double)i/samples));
+            for(double x:new double[]{box.min.x(),box.max.x()})for(double z:new double[]{box.min.z(),box.max.z()})
+                if(!HytaleAreaQueries.loaded(store,p.add(new Vec3(x,0,z))))return Math.max(0,(i-1d)/samples);
+        }
         CollisionResult result = new CollisionResult(); result.setDefaultPlayerSettings(); result.disableCharacterCollisions();
         CollisionModule.findCollisions(new Box(bounds.getBoundingBox()),
                 new Vector3d(origin.x(), origin.y(), origin.z()),
@@ -1580,6 +1662,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             fraction = Math.min(fraction, result.getBlockCollision(i).collisionStart);
         double margin = 0.025 / Math.max(0.025, Math.sqrt(displacement.distanceSquared(new Vec3(0, 0, 0))));
         return Math.max(0.0, Math.min(1.0, fraction - (fraction < 1.0 ? margin : 0.0)));
+    }
+    private boolean movementSupported(Store<EntityStore> store,Ref<EntityStore> actor,Vec3 point){
+        var box=store.getComponent(actor,BoundingBox.getComponentType());
+        if(box==null||!HytaleAreaQueries.loaded(store,point))return false;
+        return HytaleAreaQueries.ground(store,point.add(new Vec3(0,box.getBoundingBox().min.y()+.15,0)),new Vec3(0,-1,0),.35).isPresent();
     }
 
     private void advanceRepeatingStrike(Store<EntityStore> store, Ref<EntityStore> ref, PlayerRef playerRef,
@@ -2452,9 +2539,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
     private static final class Motion {
         final SkillExecutionContext context; final Ref<EntityStore> actor; final MovementPlanner.Plan plan; double elapsed;
+        Vec3 lastObserved;
+        final com.inigmasgames.hytalerpg.execution.movement.MovementContacts contacts=new com.inigmasgames.hytalerpg.execution.movement.MovementContacts();
         final com.inigmasgames.hytalerpg.execution.movement.ValidatedTravel travel;
         Motion(SkillExecutionContext context, Ref<EntityStore> actor, MovementPlanner.Plan plan) {
             this.context = context; this.actor = actor; this.plan = plan;
+            lastObserved=plan.origin();
             travel=new com.inigmasgames.hytalerpg.execution.movement.ValidatedTravel(plan.origin());
         }
     }

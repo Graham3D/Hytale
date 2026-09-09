@@ -412,10 +412,108 @@ six-Link graphs have no numeric profile-construction failures; explicit runtime
 capability gates remain visible. Protected native resource HUD, XP assets/input,
 balance formulas and canonical87/66 catalogs are unchanged.
 
+## Cohort D — ground-targeted movement and an honest native Guard boundary
+
+Local intermediate gate: PASS,1329 affected-family/native-control tests (1305+24),
+zero failures/errors/skips. Includes31 movement tests and the retained1298-test
+scope. The normal isolated three-mod server reached boot and clean exit0 at
+2026-09-09T02:43:46.5731707Z. Exact JAR SHA256:
+`4756B50FD4AE31348041AB36CBB619A3E64CD6BB871257BA71E03245A2B55E3C`.
+Evidence/archive/rollback hashes are in `evidence/stage-13/cohort-d/`. Player
+schema9 remains unchanged; compiled plan schema39 records movement component
+and capability semantics.83 runtime records now exist; that is not83 proven
+working native skills. The full Stage13 closure/RC/rollback gates remain open.
+
+| Record | Authored behavior | Local/native boundary |
+|---|---|---|
+| Dive Strike | Stamina8, CD6;10m ground-targeted leap,clamp(distance/16,.25,.8)s,apex1.8; innate20/DEX,one1.15 landing burst,r2 | Full arc and loaded supported destination validated before payment/release; connected leap/landing unverified |
+| Jump Strike | Stamina12, CD7;10m leap,clamp(distance/16,.25,.8)s,apex1.5; sword/longsword/spear selects attribute,one1.40 landing burst,r2.2 | No native weapon attack root, extra swing damage or midair landing burst; connected animation/hit unverified |
+| Charge | Stamina14, CD8;spear,12m,clamp(distance/20,.25,.8)s,full width1.1;first enemy1.50,request3m push | Stop on first eligible enemy/wall/unloaded path; observed positive displacement excludes fallback; otherwise0.4s Stagger through existing native status/rank policy |
+| Void Dash | Mana12, CD6;innate20/INT,9m/.25s,full width1.4;one0.65 Void hit per crossed target | Swept solid collision,loaded supported path,actual position readback; no immunity/teleport/wall phasing |
+| Guard | Stamina0 RPG upfront,CD0.3;native held block only | Explicitly disabled at `NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED`; not a timed RPG reaction/reduction/drain |
+
+### Movement authority and shared corrections
+
+The previous leap path assumed a selected hostile entity and reduced the endpoint
+to a horizontal displacement. Ground leaps now capture their terrain point and
+height. A pure planner subdivides the actual parabola into bounded chords no
+longer than0.25m (conservative arc bound,maximum256 per operation), testing the
+avatar's full native box. It no longer preflights a straight chord through a hill
+instead of the leap arc. Collision fractions outside[0,1] or nonfinite values
+reject rather than becoming allowed movement.
+
+Native movement checks loaded chunks under each sampled box footprint without
+requesting chunk loads. It revalidates owner/world/equipment and live swept
+collision, then reads the actual transform after Player.moveTo. An external
+discontinuity or unconfirmed write cancels rather than crediting requested travel.
+Native fall distance is preserved; no immunity or fall-distance reset is added.
+Only valid observed travel contributes to the retained Momentum calculation.
+Landing strikes require current supported ground; a ceiling/wall interruption
+in midair does not fabricate an arrival hit. Existing Quickstep/Pounce tests
+remain, now with the shared bounded collision path.
+
+Charge/Void Dash use continuous swept bounds with a direction-relative full
+width and2.5m full height. Their SAT includes the forward axis, so expanding
+width does not add unauthorized forward endpoint range; diagonal travel does
+not silently widen into an axis-aligned square. Contacts are sorted by geometric
+fraction and UUID, not registry order. Each cast has a bounded256-victim ledger
+and ordinary64-candidate rejection; revisiting a target cannot produce another
+path hit. Charge stops before dispatching a later target. There is no final
+landing strike for path-damage skills. Both use the existing damage adapter,
+resource/CD authority, hostile/protection/LOS rules and observed native outcomes.
+
+The native push helper is shared with projectile knockback and returns measured
+position change, not requested velocity. Charge's fallback is exclusive: no
+positive observed push means the existing0.4s Stagger request; protection,
+resistance and native status projection still apply. A failed/rejected status
+emits its actual result, not an unconditional applied claim. Impact Force scales
+the authored displacement/fallback and hit penalty; Concentration changes the
+real movement footprint. These remain local implementation tests, not native
+connected control evidence.
+
+### Guard is not an invented defensive subsystem
+
+The exact installed Sword guard source is Wielding, Angle0/AngleDistance90°,
+OnItemChangeBehavior=Finish, generic Damage-cost7. Sword Iron overrides that
+cost with10 in its own Guard_Wield interaction variable. The shipped entry also
+has its own startup Stamina condition/change and post-guard regeneration delay.
+Spear's named block starts with Simple then its Spear_Block_Damage replacement;
+the name is not proof of an equivalent held block.
+
+The startup audit resolves the actual Wielding asset and checks angle/cost
+fields; `native-movement-guard-audit.json` records that evidence with
+connectedProof=false. A separate installed-archive regression verifies the Sword
+Iron override and Spear structure. These checks never execute native block/drain.
+
+The current RPG bridge queues a one-shot skill request from a projected Rune
+item. It does not carry a verified held-main-hand/release route into Wielding.
+Copying generic7 over the actual item10, adding an RPG reduction, or arming a
+zero/finite timer would violate Guard's contract. Its record therefore rejects
+before RPG payment/dispatch and has no RPG barrier or drain. The central
+activation-gate policy is reused by compiler evidence and execution; Reversal
+does not mistake this missing held route for a scalable reaction timer.
+
+This is an explicit unfinished native integration boundary, not proof that
+Hytale's API can never support Guard and not permission to omit it from the
+final capability ledger. Guard requires a verified route/control experiment
+before its gate can be lifted. Do not count its profile or resolved Wielding
+asset as a working connected Guard.
+
+The first new paid-dispatch-failure fixture incorrectly expected committed=false.
+The existing service correctly returns TERMINATED/EXECUTOR_ERROR with
+committed=true after the irreversible boundary. All four failure cases now
+assert that exact result plus retained cost, cooldown and one dispatch; source
+mechanics were not weakened. Original failure XML is retained in
+`failed-new-assertion-1/`. Final matrix counts5742/2145/1000 remain exact with
+empty numeric profile-failure maps and three separately recorded runtime gates.
+All83 projected native ability items remain zero-cost/cooldown bridge items.
+Protected HUD/XP/input/catalog/balance paths and owner art are unchanged.
+
 ## Remaining required Stage13 work — not optional refinements
 
-- 9 remaining profiles: Dive Strike, Guard, Jump Strike, Charge, Finishing Strike,
-  Execution Strike, Backstab, Frenzy and Void Dash. Next content batches stay
+- 4 remaining records: Finishing Strike, Execution Strike, Backstab and Frenzy.
+  Guard still needs the native held-item/release integration described above;
+  Snipe still needs validated native bow range. Next content batches stay
   at most six each and extend shared family primitives.
 - Complete shared-authority audit: ordinary/basic-attack recovery hooks, partial
   native failures, admission/derived-work overflow, cancellation, movement

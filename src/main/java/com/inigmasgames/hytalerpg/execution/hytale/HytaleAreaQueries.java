@@ -26,6 +26,9 @@ final class HytaleAreaQueries {
     private static final Box RAY = new Box(-.01, -.01, -.01, .01, .01, .01);
     record Candidate(Ref<EntityStore> ref, AreaGeometry.Bounds bounds) { }
     record Result(List<Candidate> candidates, boolean overflow) { }
+    static boolean loaded(Store<EntityStore> store,Vec3 point) {
+        return store.getExternalData().getWorld().getChunkIfLoaded(com.hypixel.hytale.math.util.ChunkUtil.indexChunkFromBlock(point.x(),point.z()))!=null;
+    }
 
     static Result query(Store<EntityStore> store, Ref<EntityStore> owner, AreaGeometry geometry, int budget) {
         return query(store,owner,geometry::intersects,budget);

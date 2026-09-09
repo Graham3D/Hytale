@@ -145,11 +145,16 @@ public record Stage04SkillProfile(
         for (double value : values) if (!Double.isFinite(value)) return false;
         return true;
     }
+    public String activationGate() {
+        if(cage!=null)return com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY;
+        if(reaction!=null&&reaction.nativeHeld())return "NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED";
+        return projectile==null?"":projectile.details().nativeCapabilityGate();
+    }
 
     public record StrikeDetails(String element, double height, double actionLockSeconds, double movementFactor) {
         public static final StrikeDetails DEFAULT = new StrikeDetails("PHYSICAL", 2.5, 0, 1);
         public StrikeDetails {
-            if (!Set.of("PHYSICAL", "FIRE", "NECROTIC").contains(element)
+            if (!Set.of("PHYSICAL", "FIRE", "NECROTIC", "VOID").contains(element)
                     || !finite(height, actionLockSeconds, movementFactor) || height <= 0 || height > 64
                     || actionLockSeconds < 0 || actionLockSeconds > 10 || movementFactor <= 0 || movementFactor > 1)
                 throw new IllegalArgumentException("Invalid strike element/geometry/cadence");
@@ -184,9 +189,21 @@ public record Stage04SkillProfile(
         }
     }
 
+    public record MovementDetails(boolean groundTarget,double travelSpeed,double pathWidth,boolean stopAtFirstEnemy,double knockback) {
+        public static final MovementDetails DEFAULT=new MovementDetails(false,0,0,false,0);
+        public MovementDetails {
+            if(!finite(travelSpeed,pathWidth,knockback)||travelSpeed<0||travelSpeed>100||pathWidth<0||pathWidth>8||knockback<0||knockback>8
+                    ||stopAtFirstEnemy&&pathWidth==0||knockback>0&&!stopAtFirstEnemy)throw new IllegalArgumentException("Invalid movement contact policy");
+        }
+        public boolean pathDamage(){return pathWidth>0;}
+    }
     public record Movement(MovementKind kind, double maxDistance, double minimumDurationSeconds,
-                           double maximumDurationSeconds, double apexHeight, double landingRadius) {
+                           double maximumDurationSeconds, double apexHeight, double landingRadius,MovementDetails details) {
+        public Movement(MovementKind kind,double maxDistance,double minimumDurationSeconds,double maximumDurationSeconds,double apexHeight,double landingRadius){
+            this(kind,maxDistance,minimumDurationSeconds,maximumDurationSeconds,apexHeight,landingRadius,MovementDetails.DEFAULT);
+        }
         public Movement {
+            details=details==null?MovementDetails.DEFAULT:details;
             if (kind == null || !finite(maxDistance, minimumDurationSeconds, maximumDurationSeconds, apexHeight, landingRadius)
                     || maxDistance < 0.0 || minimumDurationSeconds < 0.0
                     || maximumDurationSeconds < minimumDurationSeconds || apexHeight < 0.0 || landingRadius < 0.0)
@@ -194,9 +211,10 @@ public record Stage04SkillProfile(
         }
     }
 
-    public record Reaction(double windowSeconds, List<String> qualifyingSignals) {
+    public record Reaction(double windowSeconds, List<String> qualifyingSignals,boolean nativeHeld) {
+        public Reaction(double windowSeconds,List<String> qualifyingSignals){this(windowSeconds,qualifyingSignals,false);}
         public Reaction {
-            if (!Double.isFinite(windowSeconds) || windowSeconds <= 0.0) throw new IllegalArgumentException("Reaction window must be finite and positive");
+            if (!Double.isFinite(windowSeconds) || (nativeHeld?windowSeconds!=0:windowSeconds<=0)) throw new IllegalArgumentException("Reaction window must be finite; native held has no RPG timer");
             qualifyingSignals = List.copyOf(qualifyingSignals == null ? List.of() : qualifyingSignals);
         }
     }

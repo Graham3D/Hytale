@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "family": "MOVEMENT",
+      "secondaryFamilies": [
+        "STRIKE"
+      ],
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "windupSeconds": 0,
+      "skillId": "dive_strike",
+      "resourceCost": 8,
+      "cooldownSeconds": 6,
+      "basePowerSource": "INNATE",
+      "innateBasePower": 20,
+      "scaling": "LIGHT",
+      "movement": {
+        "kind": "LEAP",
+        "maxDistance": 10,
+        "minimumDurationSeconds": 0.25,
+        "maximumDurationSeconds": 0.8,
+        "apexHeight": 1.8,
+        "landingRadius": 2,
+        "details": {
+          "groundTarget": true,
+          "travelSpeed": 16
+        }
+      },
+      "strike": {
+        "geometry": "RADIUS",
+        "angleDegrees": 360,
+        "lineHalfWidth": 0,
+        "repeats": 1,
+        "repeatIntervalSeconds": 0,
+        "targetCap": 64,
+        "statusId": "",
+        "statusSeconds": 0,
+        "range": 2,
+        "coefficient": 1.15
+      }
+    },
+    {
+      "family": "MOVEMENT",
+      "secondaryFamilies": [
+        "STRIKE"
+      ],
+      "allowedMainHandKinds": [
+        "SWORD",
+        "LONGSWORD",
+        "SPEAR"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "windupSeconds": 0,
+      "skillId": "jump_strike",
+      "resourceCost": 12,
+      "cooldownSeconds": 7,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "WEAPON_CLASS",
+      "movement": {
+        "kind": "LEAP",
+        "maxDistance": 10,
+        "minimumDurationSeconds": 0.25,
+        "maximumDurationSeconds": 0.8,
+        "apexHeight": 1.5,
+        "landingRadius": 2.2,
+        "details": {
+          "groundTarget": true,
+          "travelSpeed": 16
+        }
+      },
+      "strike": {
+        "geometry": "RADIUS",
+        "angleDegrees": 360,
+        "lineHalfWidth": 0,
+        "repeats": 1,
+        "repeatIntervalSeconds": 0,
+        "targetCap": 64,
+        "statusId": "",
+        "statusSeconds": 0,
+        "range": 2.2,
+        "coefficient": 1.4
+      }
+    },
+    {
+      "family": "MOVEMENT",
+      "secondaryFamilies": [
+        "STRIKE"
+      ],
+      "allowedMainHandKinds": [
+        "SPEAR"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "windupSeconds": 0,
+      "skillId": "charge",
+      "resourceCost": 14,
+      "cooldownSeconds": 8,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "HEAVY",
+      "movement": {
+        "kind": "DASH",
+        "maxDistance": 12,
+        "minimumDurationSeconds": 0.25,
+        "maximumDurationSeconds": 0.8,
+        "apexHeight": 0,
+        "landingRadius": 0,
+        "details": {
+          "travelSpeed": 20,
+          "pathWidth": 1.1,
+          "stopAtFirstEnemy": true,
+          "knockback": 3
+        }
+      },
+      "strike": {
+        "geometry": "LINE",
+        "angleDegrees": 360,
+        "lineHalfWidth": 0.55,
+        "repeats": 1,
+        "repeatIntervalSeconds": 0,
+        "targetCap": 1,
+        "statusId": "",
+        "statusSeconds": 0,
+        "range": 12,
+        "coefficient": 1.5
+      }
+    },
+    {
+      "family": "MOVEMENT",
+      "secondaryFamilies": [
+        "STRIKE"
+      ],
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "windupSeconds": 0,
+      "skillId": "void_dash",
+      "resourceCost": 12,
+      "cooldownSeconds": 6,
+      "basePowerSource": "INNATE",
+      "innateBasePower": 20,
+      "scaling": "MAGIC",
+      "movement": {
+        "kind": "DASH",
+        "maxDistance": 9,
+        "minimumDurationSeconds": 0.25,
+        "maximumDurationSeconds": 0.25,
+        "apexHeight": 0,
+        "landingRadius": 0,
+        "details": {
+          "pathWidth": 1.4
+        }
+      },
+      "strike": {
+        "geometry": "LINE",
+        "angleDegrees": 360,
+        "lineHalfWidth": 0.7,
+        "repeats": 1,
+        "repeatIntervalSeconds": 0,
+        "targetCap": 64,
+        "statusId": "",
+        "statusSeconds": 0,
+        "range": 9,
+        "coefficient": 0.65,
+        "details": {
+          "element": "VOID",
+          "height": 2.5,
+          "actionLockSeconds": 0,
+          "movementFactor": 1
+        }
+      }
+    },
+    {
+      "family": "REACTION",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "SWORD",
+        "LONGSWORD",
+        "MACE",
+        "SPEAR"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "windupSeconds": 0,
+      "skillId": "guard",
+      "resourceCost": 0,
+      "cooldownSeconds": 0.3,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "NONE",
+      "reaction": {
+        "windowSeconds": 0,
+        "qualifyingSignals": [],
+        "nativeHeld": true
+      }
+    }
+  ]
+}

@@ -57,15 +57,22 @@ public final class CompiledProfileResolver {
             // Introduced Bleed is timed by HitProcRuntime, not by a fabricated primary duration.
         }
         if(modifiers.reversal()){
-            if(authored.reaction()==null)throw new IllegalArgumentException("NO_REACTION_WINDOW_COMPONENT");
+            if(authored.reaction()==null||authored.reaction().nativeHeld())throw new IllegalArgumentException("NO_REACTION_WINDOW_COMPONENT");
             scale(resolved,"reaction",1.3,"windowSeconds");
         }
         if(geometry.impactForce()&&!plan.impactOnlyOnSecondary())impact(authored,resolved,plan.positions().repulsion());
         if(geometry.widening()||geometry.focusedChannel()){
             if(!ProfileComponentPolicy.resolvingWidth(authored))throw new IllegalArgumentException("NO_RESOLVING_WIDTH_COMPONENT");
-            var connection=resolved.getAsJsonObject("connection");
-            connection.addProperty("width",geometry.width(connection.get("width").getAsDouble()));
-            if(geometry.widening())scale(resolved,"connection",.85,"coefficient");
+            if(authored.movement()!=null&&authored.movement().details().pathDamage()){
+                var detail=resolved.getAsJsonObject("movement").getAsJsonObject("details");
+                detail.addProperty("pathWidth",geometry.width(detail.get("pathWidth").getAsDouble()));
+                var strike=resolved.getAsJsonObject("strike");strike.addProperty("lineHalfWidth",detail.get("pathWidth").getAsDouble()/2);
+                if(geometry.widening())scale(resolved,"strike",.85,"coefficient");
+            }else{
+                var connection=resolved.getAsJsonObject("connection");
+                connection.addProperty("width",geometry.width(connection.get("width").getAsDouble()));
+                if(geometry.widening())scale(resolved,"connection",.85,"coefficient");
+            }
         }
         if(pulses.rapidPulse())rapidPulse(authored,resolved);
         if(dots.active())dots(authored,resolved,dots);
@@ -146,6 +153,9 @@ public final class CompiledProfileResolver {
     private static void impact(Stage04SkillProfile p,JsonObject root,boolean introducedPush){
         if(!ProfileComponentPolicy.impact(p)&&!introducedPush)throw new IllegalArgumentException("NO_IMPACT_COMPONENT");
         if(p.strike()!=null){scale(root,"strike",.90,"coefficient");if(p.strike().statusId().equals("STAGGER"))scale(root,"strike",1.75,"statusSeconds");}
+        if(p.movement()!=null&&p.movement().details().knockback()>0){
+            var detail=root.getAsJsonObject("movement").getAsJsonObject("details");detail.addProperty("knockback",detail.get("knockback").getAsDouble()*1.75);
+        }
         if(p.projectile()!=null){
             scale(root,"projectile",.90,"coefficient");scale(root,"projectile",1.75,"knockbackDistance");
             scaleExplosion(root,.90,"coefficient");
@@ -171,6 +181,9 @@ public final class CompiledProfileResolver {
             case RADIUS->scale(root,"strike",.7,"range");
         }
         scale(root,"movement",.7,"landingRadius");
+        if(p.movement()!=null&&p.movement().details().pathDamage()){
+            var detail=root.getAsJsonObject("movement").getAsJsonObject("details");detail.addProperty("pathWidth",detail.get("pathWidth").getAsDouble()*.7);
+        }
         if(p.area()!=null)switch(p.area().geometry()){
             case DISC->scale(root,"area",.7,"radius","innerRadius","impactRadius","statusInnerRadius","pullCoreRadius","visualCoreRadius");
             case SECTOR->scale(root,"area",.7,"angleDegrees");

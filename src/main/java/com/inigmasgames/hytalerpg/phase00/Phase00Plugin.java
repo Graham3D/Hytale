@@ -300,6 +300,9 @@ public final class Phase00Plugin extends JavaPlugin {
         var projectileAudit=com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileAssetAudit.requireAssets(
                 Stage04SkillProfiles.loadCanonical(com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical()));
         LOGGER.atInfo().log("RPG_STAGE13_PROJECTILE_ASSETS result=PASS %s",new com.google.gson.Gson().toJson(projectileAudit));
+        var movementAudit=com.inigmasgames.hytalerpg.execution.hytale.NativeMovementAssetAudit.requireAssets(
+                Stage04SkillProfiles.loadCanonical(com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical()));
+        LOGGER.atInfo().log("RPG_STAGE13_MOVEMENT_ASSETS result=PASS %s",new com.google.gson.Gson().toJson(movementAudit));
         LOGGER.atInfo().log("RPG_STAGE13_STRIKE_ASSETS ordinaryQueryLimit=64 fullHeight=2.5 finiteAnimationProfiles=7 actionLockAssets=2 result=PASS connectedProof=false");
         com.inigmasgames.hytalerpg.execution.hytale.NativeHitProcAssets.requireAssets();
         LOGGER.atInfo().log("RPG_STAGE11_HIT_PROC_ASSETS bleedVisual=RPG_Bleed_Visual nativeDamage=false movementUnchanged=true result=PASS connectedProof=false");

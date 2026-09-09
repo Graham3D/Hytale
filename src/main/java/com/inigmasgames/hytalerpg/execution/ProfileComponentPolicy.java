@@ -88,7 +88,7 @@ public final class ProfileComponentPolicy {
                 ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.WAVE,ConnectionProfile.Kind.LINE,ConnectionProfile.Kind.BEAM,ConnectionProfile.Kind.ORB,ConnectionProfile.Kind.ORBIT).contains(p.connection().kind());
     }
     public static Optional<Boolean> reactionWindow(String skill){
-        var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(p.reaction()!=null);
+        var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(p.reaction()!=null&&!p.reaction().nativeHeld());
     }
     public static Optional<Boolean> damagingMovement(String skill){
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(p.movement()!=null&&p.strike()!=null);
@@ -97,7 +97,7 @@ public final class ProfileComponentPolicy {
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(impact(p));
     }
     public static boolean impact(Stage04SkillProfile p){
-        return p.strike()!=null&&p.strike().statusId().equals("STAGGER")&&p.strike().statusSeconds()>0
+        return p.movement()!=null&&p.movement().details().knockback()>0||p.strike()!=null&&p.strike().statusId().equals("STAGGER")&&p.strike().statusSeconds()>0
                 ||p.projectile()!=null&&(p.projectile().knockbackDistance()>0||p.projectile().statusId().equals("STAGGER")&&p.projectile().statusSeconds()>0)
                 ||p.area()!=null&&(p.area().displacement()>0||p.area().status().equals("STAGGER")&&p.area().statusSeconds()>0)
                 ||p.connection()!=null&&p.connection().details().status().equals("STAGGER")&&p.connection().details().statusSeconds()>0;
@@ -106,11 +106,11 @@ public final class ProfileComponentPolicy {
         var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(resolvingWidth(p));
     }
     public static boolean resolvingWidth(Stage04SkillProfile p){
-        return p.connection()!=null&&Set.of(ConnectionProfile.Kind.WAVE,ConnectionProfile.Kind.LINE,ConnectionProfile.Kind.BEAM).contains(p.connection().kind());
+        return p.movement()!=null&&p.movement().details().pathDamage()||p.connection()!=null&&Set.of(ConnectionProfile.Kind.WAVE,ConnectionProfile.Kind.LINE,ConnectionProfile.Kind.BEAM).contains(p.connection().kind());
     }
     public static boolean affectedArea(Stage04SkillProfile p){
         return p.projectile()!=null&&p.projectile().details().explosion().active()||p.area()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().radius()>0
-                ||p.support()!=null&&p.support().radius()>0||p.movement()!=null&&p.movement().landingRadius()>0
+                ||p.support()!=null&&p.support().radius()>0||p.movement()!=null&&(p.movement().landingRadius()>0||p.movement().details().pathDamage())
                 ||p.strike()!=null&&(p.strike().geometry()==Stage04SkillProfile.Geometry.RADIUS||p.strike().targetCap()>1&&p.strike().geometry()!=Stage04SkillProfile.Geometry.ASSIST_CONE)
                 ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.WAVE,ConnectionProfile.Kind.LINE,ConnectionProfile.Kind.BEAM,
                     ConnectionProfile.Kind.ORB,ConnectionProfile.Kind.ORBIT).contains(p.connection().kind());

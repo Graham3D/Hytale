@@ -1,11 +1,11 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c')][string]$Cohort='a')
+param([ValidateSet('a','b','c','d')][string]$Cohort='a')
 $ErrorActionPreference='Stop'
 $closureRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $closureOut=Join-Path $closureRoot "evidence\stage-13\cohort-$Cohort"
-$expectedTests=@{a=815;b=1251;c=1298}[$Cohort]
-$expectedRuntime=@{a=66;b=72;c=78}[$Cohort]
-$expectedPlan=@{a=36;b=37;c=38}[$Cohort]
+$expectedTests=@{a=815;b=1251;c=1298;d=1329}[$Cohort]
+$expectedRuntime=@{a=66;b=72;c=78;d=83}[$Cohort]
+$expectedPlan=@{a=36;b=37;c=38;d=39}[$Cohort]
 $closureJar=Join-Path $closureRoot 'build\libs\HytaleRPG-0.0.25.jar'
 $closureHash=(Get-FileHash -LiteralPath $closureJar).Hash
 $closureArchive=Join-Path $closureOut 'artifacts\HytaleRPG-0.0.25.jar'
@@ -37,10 +37,16 @@ if($Cohort -ne 'a'){
         if(-not ($closureTests|Where-Object {$_.name -eq "com.inigmasgames.hytalerpg.$($entry.name)" -and $_.tests -eq $entry.count})){throw "Missing exact cohort B tests: $($entry.name)"}
     }
 }
-if($Cohort -eq 'c'){
+if($Cohort -in @('c','d')){
     foreach($entry in @(@{name='Stage13AuthoredProjectileTest';count=40},@{name='Stage13SharedRootBudgetTest';count=7})){
         if(-not ($closureTests|Where-Object {$_.name -eq "com.inigmasgames.hytalerpg.$($entry.name)" -and $_.tests -eq $entry.count})){throw "Missing exact cohort C tests: $($entry.name)"}
     }
+}
+if($Cohort -eq 'd'){
+    if(-not ($closureTests|Where-Object {$_.name -eq 'com.inigmasgames.hytalerpg.Stage13MovementClosureTest' -and $_.tests -eq 31})){throw 'Missing exact movement closure tests'}
+    $movement=Get-Content -Raw -LiteralPath (Join-Path $closureOut 'native-movement-guard-audit.json')|ConvertFrom-Json
+    if($movement.operation -ne 'WieldingInteraction' -or $movement.baseDrain -ne 7 -or
+        $movement.activationGate -ne 'NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED' -or $movement.connectedProof){throw 'Guard control audit missing or altered'}
 }
 $closureSmoke=Get-Content -Raw -LiteralPath (Join-Path $closureOut 'server-smoke-summary.json')|ConvertFrom-Json
 foreach($gate in @('exactlyThreeMods','rpgDiscovered','rpgSetup','ready','packagedRootResolved','shippedRuneResolved',
@@ -78,13 +84,17 @@ try{
             $required+="Server/ProjectileConfigs/RPG/Projectile_Config_RPG_$skill.json"
             $required+="Server/Models/Projectiles/RPG_$skill.json"
         }
-        if($Cohort -eq 'c'){
+        if($Cohort -in @('c','d')){
             $required+='rpg/runtime/stage-13-projectiles-cohort-c.json'
             foreach($skill in @('Blunderbuss_Shot','Snipe','Explosive_Flask','Bomb_Toss','Arcane_Missiles','Fireball')){
                 $required+="Server/ProjectileConfigs/RPG/Projectile_Config_RPG_$skill.json"
                 $required+="Server/Models/Projectiles/RPG_$skill.json"
                 $required+="Server/Item/Items/RPG/Abilities/RPG_Ability_$skill.json"
             }
+        }
+        if($Cohort -eq 'd'){
+            $required+='rpg/runtime/stage-13-movement-cohort-d.json'
+            foreach($skill in @('Dive_Strike','Jump_Strike','Charge','Void_Dash','Guard')){$required+="Server/Item/Items/RPG/Abilities/RPG_Ability_$skill.json"}
         }
         foreach($path in $required){
             $entry=$archive.GetEntry($path);if(-not $entry){throw "Cohort B asset missing: $path"}
@@ -101,8 +111,10 @@ $singles=Get-Content -Raw -LiteralPath (Join-Path $matrixSource 'skill-passive-m
 $pairs=Get-Content -Raw -LiteralPath (Join-Path $matrixSource 'passive-pair-matrix.json')|ConvertFrom-Json
 $properties=Get-Content -Raw -LiteralPath (Join-Path $matrixSource 'six-link-property-summary.json')|ConvertFrom-Json
 if($singles.Count -ne 5742 -or $pairs.Count -ne 2145 -or $properties.validGraphs -ne 1000 -or $properties.connectedEvidence){throw 'Matrix/property evidence incomplete'}
-if($Cohort -eq 'c'){
-    foreach($gate in @('NATIVE_BOW_MAX_RANGE_UNVERIFIED','BONE_CAGE_NATIVE_ENEMY_ONLY_COLLISION_UNVERIFIED')){
+if($Cohort -in @('c','d')){
+    $gates=@('NATIVE_BOW_MAX_RANGE_UNVERIFIED','BONE_CAGE_NATIVE_ENEMY_ONLY_COLLISION_UNVERIFIED')
+    if($Cohort -eq 'd'){$gates+='NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED'}
+    foreach($gate in $gates){
         if(-not @($singles|Where-Object {$_.gate -eq 'COMPILED_PROFILE_WITH_EXPLICIT_RUNTIME_GATE' -and $_.detail -eq $gate}).Count){throw "Missing explicit runtime capability evidence: $gate"}
     }
     $native=Get-Content -Raw -LiteralPath (Join-Path $closureOut 'native-projectile-equipment-audit.json')|ConvertFrom-Json
@@ -131,7 +143,7 @@ $inputHashes|ConvertTo-Json -Depth 3|Set-Content -LiteralPath (Join-Path $closur
     jarSha256=$closureHash;rollbackSha256=(Get-FileHash -LiteralPath $rollback).Hash;normalThreeModSmoke=$true;
     protectedPathsChanged=$changed;skillPassiveCells=5742;passivePairs=2145;sixLinkGraphs=1000;
     liveDeploymentPerformed=$false;nativeCastingFixed=$false;stage13RollbackDrill='REQUIRED_AT_CLOSURE_AND_RELEASE_CANDIDATE';
-    explicitRuntimeGates=if($Cohort -eq 'c'){@('NATIVE_BOW_MAX_RANGE_UNVERIFIED','BONE_CAGE_NATIVE_ENEMY_ONLY_COLLISION_UNVERIFIED')}else{@('BONE_CAGE_NATIVE_ENEMY_ONLY_COLLISION_UNVERIFIED')};
+    explicitRuntimeGates=if($Cohort -in @('c','d')){$gates}else{@('BONE_CAGE_NATIVE_ENEMY_ONLY_COLLISION_UNVERIFIED')};
     artifacts=@(Get-ChildItem -LiteralPath (Join-Path $closureOut 'artifacts') -Filter '*.jar'|ForEach-Object{@{name=$_.Name;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash}})
 }|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $closureOut 'verification.json') -Encoding utf8
 [pscustomobject]@{tests=$closureCount;jarSha256=$closureHash;localCohort='PASS';stage13='IN_PROGRESS';connected='UNVERIFIED'}

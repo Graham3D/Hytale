@@ -41,8 +41,7 @@ class Stage11CompatibilityMatrixTest {
         if(profile==null)return new Result("CATALOG_ELIGIBLE_RUNTIME_NOT_IMPLEMENTED","STAGE04_05_REMAINDER",p);
         try{
             var resolved=resolver.resolve(profile,p);
-            String gate=resolved.cage()!=null?com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY
-                    :resolved.projectile()!=null?resolved.projectile().details().nativeCapabilityGate():"";
+            String gate=resolved.activationGate();
             return new Result(gate.isEmpty()?"COMPILED_PROFILE_RESOLVED_CONNECTED_UNVERIFIED":"COMPILED_PROFILE_WITH_EXPLICIT_RUNTIME_GATE",gate,p);
         }
         catch(RuntimeException invalid){Throwable cause=invalid;while(cause.getCause()!=null)cause=cause.getCause();return new Result("PROFILE_GATE",cause.getClass().getSimpleName()+":"+cause.getMessage(),p);}
