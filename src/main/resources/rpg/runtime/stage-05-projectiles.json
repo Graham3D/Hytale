@@ -8,6 +8,7 @@
       "basePowerSource": "MAGIC_WEAPON", "innateBasePower": 0.0, "scaling": "MAGIC",
       "projectile": {
         "configId": "Projectile_Config_RPG_Fire_Bolt", "speed": 24.0,
+        "details": { "element": "FIRE", "chillStacks": 0, "bossRootSlow": 0, "bossSlowOptInRoles": [] },
         "maxDistance": 24.0, "radius": 0.30, "gravity": 0.0, "targetCap": 1,
         "coefficient": 0.95, "statusId": "BURN", "statusSeconds": 4.0,
         "periodicCoefficient": 0.10, "periodicTicks": 4, "periodicIntervalSeconds": 1.0,
@@ -22,6 +23,7 @@
       "basePowerSource": "MAGIC_WEAPON", "innateBasePower": 0.0, "scaling": "MAGIC",
       "projectile": {
         "configId": "Projectile_Config_RPG_Frost_Bolt", "speed": 22.0,
+        "details": { "element": "COLD", "chillStacks": 1, "bossRootSlow": 0, "bossSlowOptInRoles": [] },
         "maxDistance": 24.0, "radius": 0.30, "gravity": 0.0, "targetCap": 1,
         "coefficient": 0.85, "statusId": "CHILL", "statusSeconds": 0.0,
         "periodicCoefficient": 0.0, "periodicTicks": 0, "periodicIntervalSeconds": 0.0,
@@ -36,6 +38,7 @@
       "basePowerSource": "MAGIC_WEAPON", "innateBasePower": 0.0, "scaling": "MAGIC",
       "projectile": {
         "configId": "Projectile_Config_RPG_Arcane_Bolt", "speed": 26.0,
+        "details": { "element": "ARCANE", "chillStacks": 0, "bossRootSlow": 0, "bossSlowOptInRoles": [] },
         "maxDistance": 26.0, "radius": 0.28, "gravity": 0.0, "targetCap": 1,
         "coefficient": 0.90, "statusId": "", "statusSeconds": 0.0,
         "periodicCoefficient": 0.0, "periodicTicks": 0, "periodicIntervalSeconds": 0.0,

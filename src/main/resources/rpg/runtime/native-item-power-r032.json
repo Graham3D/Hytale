@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "registryId": "rpg.native-item-power.r032",
+  "installedVersion": "0.7.0-pre.1",
+  "installedAssetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "policy": "Explicit RPG base per item; no charged/combo/signature min-max average. SourceProperty identifies the selected uncharged native base where available. RPG_AUTHORED_BASE entries explicitly use the master reference base 20; this is an RPG content selection, not a claim that native attacks deal 20. Unknown production items are unsupported.",
+  "items": [
+    {
+      "itemId": "Weapon_Sword_Iron",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Iron.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10
+    },
+    {
+      "itemId": "Weapon_Sword_Copper",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Copper.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8
+    },
+    {
+      "itemId": "Weapon_Longsword_Iron",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Iron.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 16
+    },
+    {
+      "itemId": "Weapon_Daggers_Iron",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Iron.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Iron",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Iron.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 18
+    },
+    {
+      "itemId": "Weapon_Mace_Iron",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Iron.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 29
+    },
+    {
+      "itemId": "Weapon_Spear_Iron",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Iron.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6
+    },
+    {
+      "itemId": "Weapon_Crossbow_Iron",
+      "kind": "CROSSBOW",
+      "nativeFamily": "Crossbow",
+      "sourceAsset": "Server/Item/Items/Weapon/Crossbow/Weapon_Crossbow_Iron.json",
+      "sourceProperty": "InteractionVars/Standard_Projectile_Damage/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10
+    },
+    {
+      "itemId": "Weapon_Shortbow_Iron",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Iron.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1
+    },
+    {
+      "itemId": "Weapon_Staff_Crystal_Flame",
+      "kind": "STAFF",
+      "nativeFamily": "Magic",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Flame.json",
+      "sourceProperty": "InteractionVars/Fireball_Impact_0/Interactions/0/Config/EntityDamage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10
+    },
+    {
+      "itemId": "Weapon_Staff_Crystal_Ice",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Ice.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20
+    },
+    {
+      "itemId": "Weapon_Spellbook_Demon",
+      "kind": "SPELLBOOK",
+      "nativeFamily": "Spellbook",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Demon.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20
+    },
+    {
+      "itemId": "Weapon_Wand_Wood",
+      "kind": "WAND",
+      "nativeFamily": "Wand",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20
+    },
+    {
+      "itemId": "Weapon_Shield_Iron",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Iron.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20
+    }
+  ]
+}

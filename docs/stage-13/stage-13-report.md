@@ -171,25 +171,148 @@ failed/skipped tests, reduced retained class counts, unmatched build/smoke hashe
 missing packaged assets, native gameplay costs and changed protected paths.
 Never overwrite an archived cohort with a different build.
 
+## Cohort B — projectile payloads and native equipment authority
+
+Targeted local gate: PASS,1251 tests (1227 root +24 native-control), zero
+failures/errors/skips. Retained affected Stage02/04/05/06/07/08/09/11/13 tests
+ran, including all30 cohort-A tests,43 new projectile-closure tests and7 native
+equipment/source tests. This is not the complete retained regression suite.
+Normal isolated three-mod smoke passed at2026-09-09T01:26:19.8147772Z, exit0,
+normal boot and clean shutdown. Build SHA256:
+`EBF09AB702D8CAC5DA9EE0A3F39201499B8CDFC494C49396ECE068262AD559F6`.
+Evidence and exact three JARs: `evidence/stage-13/cohort-b/`. Player schema9 is
+unchanged; plan schema37 invalidates old compiled projectile interpretation.
+The Stage12 H rollback JAR remains archived; the Stage13 rollback drill has
+not yet run. Nothing was deployed to the live RPG world.
+
+### Canonical profiles and payload routing
+
+| Skill | Implemented data |
+|---|---|
+| Spear Toss | Spear/Heavy, Stamina7, CD5,1.15 weapon, speed22, range24, radius.25, gravity0; no spear consumption |
+| Crossbow Bolt | Crossbow/Light, Stamina5, CD2,1.25 weapon, speed40, range32, radius.075, gravity10, one Weapon_Arrow_Crude |
+| Web Shot | Empty-hand allowed, innate20/DEX, Stamina7, CD7,.25, speed16, range18, radius.35; Root2.5s |
+| Void Bolt | Wand/Spellbook, Mana8, CD1.6,1.00, speed21, range24, radius.32; Void, no invented Fear/Leech |
+| Bone Shard | Wand/Spellbook, Mana8, CD1.8,1.00, speed25, range25, radius.25; Necrotic, lifetime1s |
+| Cold Blast | Staff/Wand, Mana14, CD5,1.10, speed19, range22, radius.45; Cold and two Chill stacks on actual Health loss |
+
+Crossbow uses the exact installed registered native physics, not the development
+fallback numbers. The projectile family now carries typed elements through
+direct, orbit-converted and explosion-derived damage. Existing Fire/Frost/Arcane
+profiles gain explicit element metadata without coefficient/cost/CD changes;
+Arcane gets a registered Elemental child cause. Burn ticks use Fire. Missing
+damage causes reject before payment. Nonzero native gravity combined with the
+existing zero-gravity Ballistics passive rejects before payment rather than
+throwing after commitment; that combination is explicitly unsupported, not
+silently flattened to zero gravity.
+
+Root uses the existing status authority and native RPG_Root effect projection,
+including protected-target checks, elite duration reduction and hard-control DR.
+Boss substitution is a source-owned30% Slow only when an exact encounter role
+opts in. The production opt-in set is empty; the test-only boss fixture is not
+a shipped encounter classification. Cold Blast atomically applies two Chill
+stacks and composes with Deep Freeze without inventing extra stacks after Frozen.
+
+Shared projectile knockback previously returned the requested displacement after
+setting a velocity, with no observation of displacement. It now reuses the
+bounded area displacement planner: rank/protection, grounded support, swept
+obstruction checks and ledge safety, then native Transform write/readback.
+Only measured authoritative position delta is returned. This is still not
+connected-client movement proof. Strike-secondary queries now reject more than
+64 candidates explicitly; Shockwave no longer silently truncates a100-target
+query to64. The old truncation assertion was replaced with a64-target success
+case and65/100/257-target rejection cases with an exact overflow reason, following
+the master's explicit overflow contract, not weakening the gate for green tests.
+
+### Audited base power, not aggregate native damage summaries
+
+Master04.1 requires versioned per-item base power before attributes, mastery,
+crit, charge and native bonuses. The prior production adapter instead inferred
+families from names and averaged native BasicDamageBreakdown. The initial real
+asset smoke exposed why that is unsafe: Crossbow Iron's summary is44 although
+its ordinary projectile base is10 and Signature damage is78; Sword Iron's
+summary40 differs from its basic swing10. Those are not interchangeable values.
+
+`rpg/runtime/native-item-power-r032.json` now explicitly records14 supported
+item IDs, their resolved native family/type constraints, chosen base, selection
+policy and installed source provenance. Audited uncharged native bases are:
+Sword Iron10, Sword Copper8, Longsword Iron16, Daggers Iron6, Battleaxe Iron18,
+Mace Iron29, Spear Iron6, Crossbow Iron10, Shortbow Iron1 and Crystal Flame
+Staff10. Crystal Ice Staff, Demon Spellbook, Wooden Wand and Iron Shield use an
+explicit RPG-authored reference base20, separately labeled; no claim is made
+that their native attack deals20. These explicit choices correct production
+power authority and can change effective damage versus the old aggregate
+summary. They do not change resource, attribute or damage-scaling formulas.
+
+Unknown item IDs are unsupported, not guessed. Crystal Flame Staff's shipped
+Family=Magic exception is tied to that exact registered ID. Battleaxe Iron has
+no Family tag at all: its explicit audited absence is valid only for that exact
+ID with Type=Weapon, not an absent-family wildcard. Unexpected/ambiguous tags
+fail closed. Diagnostic summary extraction remains read-only and is never used
+as production base power. Gun power still needs its own audit in the next cohort.
+
+The startup audit resolves actual native assets, checking13 projectile configs,
+models/bounds, typed causes, empty gameplay interactions, exact speed/gravity/
+radius, the shipped Crossbow configuration, and all14 registered weapon IDs.
+`native-projectile-equipment-audit.json` preserves the resolved results and raw
+summary comparisons with connectedProof=false. Static JSON checks alone are
+not the native asset-load gate, and asset-load success is not native execution.
+
+Two informative builds are retained. `pre-power-boundary-audit/` preserves the
+initial summary-based adapter, SHA256
+`6367306B41AA486EDED48D30FC5190B1A250CF26B325394B3101CA64934B7388`.
+`failed-equipment-audit-1/` preserves the strict-family failure, SHA256
+`364860E1263CE222881254442D3227587ED1AA43010691E652BD99FBE803CC71`:
+exit9 before network boot, earliest boundary
+`NATIVE_EQUIPMENT_FAMILY_UNRESOLVED:Weapon_Battleaxe_Iron`. Installed template
+inspection established the missing Family tag; the fix is the narrow audited
+absence rule above, not removal of native type/family validation.
+
+### Readability and regression evidence limits
+
+Projectile presentation adds finite cast/contact/expiry primitives and10Hz trail
+sampling without catch-up bursts; presentation failure logs once per carrier.
+It uses existing finite animation packets and procedural world primitives only,
+never native gameplay roots. Native projectile configs have empty Interactions;
+all72 native ability items retain Cost0/Cooldown0/CostTypeNone. Reused art is
+installed art, not newly designed owner graphics. Web Shot's pale orb and Bone
+Shard's Fishbone model are provisional templates needing visual review. No
+third-person animation, trail readability, control effect or casting success is
+claimed. All remain connected UNVERIFIED.
+
+The first broader regression run also identified two stale global count/schema
+assertions: Stage08's35 base profiles now additionally include Stage13 profiles,
+and Stage09's current plan-schema expectation is37. Their substantive profile
+and migration assertions remain. A new test initially incorrectly assumed the
+NONE pseudo-resource held100; it now snapshots every resource and proves exact
+pre-payment preservation, including NONE=0. No failing tests were deleted/skipped.
+
+The matrix was regenerated:5742 cells,2145 pairs,1000 valid six-Link graphs,
+empty single/pair profile-failure maps. Packaged CustomUI and asset bytes passed.
+Protected native-HUD/XP/input/Canvas, balance-formula and catalog paths are
+unchanged. The freeze tool captures/checksums RPG-owned player/reward/encounter/
+control-journal state before each cohort without stopping a live world. Private
+raw save copies are git-ignored; this limited snapshot is not a full-world backup
+or a completed rollback exercise.
+
 ## Remaining required Stage13 work — not optional refinements
 
--21 remaining profiles: Dive Strike, Guard, Jump Strike, Charge, Finishing Strike,
-  Execution Strike, Backstab, Frenzy, Void Dash; Spear Toss, Crossbow Bolt,
-  Blunderbuss Shot, Web Shot, Void Bolt, Bone Shard, Snipe, Explosive Flask,
-  Bomb Toss, Arcane Missiles, Fireball and Cold Blast. Next content batches stay
+- 15 remaining profiles: Dive Strike, Guard, Jump Strike, Charge, Finishing Strike,
+  Execution Strike, Backstab, Frenzy, Void Dash; Blunderbuss Shot, Snipe,
+  Explosive Flask, Bomb Toss, Arcane Missiles and Fireball. Next content batches stay
   at most six each and extend shared family primitives.
--Complete shared-authority audit: ordinary/basic-attack recovery hooks, partial
+- Complete shared-authority audit: ordinary/basic-attack recovery hooks, partial
   native failures, admission/derived-work overflow, cancellation, movement
   witnesses, profile/equipment resolution, cross-family mastery and resource
   accounting. A source-gated capability is not a fabricated completed feature.
--Required performance/soak/fault work, including per-frame/per-victim compilation,
+- Required performance/soak/fault work, including per-frame/per-victim compilation,
   unbounded tracing work, synchronous durable encounter writes and bounded reward
   delivery. Measure declared four-player and scaling profiles; do not turn local
   microbenchmarks into connected tick-budget claims.
--Complete87/66 runtime/eligibility/capability ledger; retained full regressions,
+- Complete87/66 runtime/eligibility/capability ledger; retained full regressions,
   isolated three-mod smoke, exact packaging/archive, coordinated rollback drill
   and final RC rerun. Stage13 remains IN_PROGRESS until these pass.
--Connected native input, skill execution/hit geometry, animation/readability,
+- Connected native input, skill execution/hit geometry, animation/readability,
   resource/CD exactly-once behavior, death/logout/unload cleanup, multiplayer,
   C/K UI capability gates, and restart/rejoin remain explicitly UNVERIFIED.
 

@@ -208,7 +208,16 @@ public record Stage04SkillProfile(
                              String ammoItemId, int ammoQuantity, boolean fullyCharged,
                              double knockbackDistance,
                              Map<String, String> configIdsByWeaponKind,
-                             Map<String, Double> speedsByWeaponKind,double independentLifetimeSeconds) {
+                             Map<String, Double> speedsByWeaponKind,double independentLifetimeSeconds,
+                             ProjectileDetails details) {
+        public Projectile(String configId,double speed,double maxDistance,double radius,double gravity,int targetCap,double coefficient,
+                String statusId,double statusSeconds,double periodicCoefficient,int periodicTicks,double periodicIntervalSeconds,
+                String ammoItemId,int ammoQuantity,boolean fullyCharged,double knockbackDistance,Map<String,String> configIdsByWeaponKind,
+                Map<String,Double> speedsByWeaponKind,double independentLifetimeSeconds) {
+            this(configId,speed,maxDistance,radius,gravity,targetCap,coefficient,statusId,statusSeconds,periodicCoefficient,periodicTicks,
+                    periodicIntervalSeconds,ammoItemId,ammoQuantity,fullyCharged,knockbackDistance,configIdsByWeaponKind,speedsByWeaponKind,
+                    independentLifetimeSeconds,null);
+        }
         public Projectile(String configId,double speed,double maxDistance,double radius,double gravity,int targetCap,double coefficient,
                 String statusId,double statusSeconds,double periodicCoefficient,int periodicTicks,double periodicIntervalSeconds,
                 String ammoItemId,int ammoQuantity,boolean fullyCharged,double knockbackDistance,Map<String,String> configIdsByWeaponKind,
@@ -220,12 +229,16 @@ public record Stage04SkillProfile(
             configId = configId == null ? "" : configId;
             statusId = statusId == null ? "" : statusId;
             ammoItemId = ammoItemId == null ? "" : ammoItemId;
+            details = details == null ? new ProjectileDetails("PHYSICAL", statusId.equals("CHILL") ? 1 : 0, 0, Set.of()) : details;
+            if (statusId.equals("CHILL") != (details.chillStacks() > 0)
+                    || details.bossRootSlow() > 0 && (!statusId.equals("ROOT") || statusSeconds <= 0))
+                throw new IllegalArgumentException("Projectile control details must match the authored payload");
             configIdsByWeaponKind = Map.copyOf(configIdsByWeaponKind == null ? Map.of() : configIdsByWeaponKind);
             speedsByWeaponKind = Map.copyOf(speedsByWeaponKind == null ? Map.of() : speedsByWeaponKind);
             if (configId.isBlank() || !Double.isFinite(speed)||!Double.isFinite(maxDistance)||!Double.isFinite(radius)
                     || !Double.isFinite(independentLifetimeSeconds)||independentLifetimeSeconds<0 || speed <= 0.0 || maxDistance <= 0.0 || radius <= 0.0
                     || !finite(gravity, coefficient, statusSeconds, periodicCoefficient, periodicIntervalSeconds, knockbackDistance)
-                    || targetCap < 1 || coefficient < 0.0
+                    || targetCap < 1 || targetCap > 64 || gravity < 0 || coefficient < 0.0
                     || statusSeconds < 0.0 || periodicCoefficient < 0.0 || periodicTicks < 0
                     || periodicIntervalSeconds < 0.0 || ammoQuantity < 0 || knockbackDistance < 0.0
                     || speedsByWeaponKind.values().stream().anyMatch(value -> value == null || !Double.isFinite(value) || value <= 0.0))
@@ -246,5 +259,19 @@ public record Stage04SkillProfile(
         public double capLifetime(double computed){return independentLifetimeSeconds>0?Math.min(computed,independentLifetimeSeconds):computed;}
         public boolean requiresAmmo() { return ammoQuantity > 0; }
         public boolean hasPeriodicStatus() { return periodicTicks > 0; }
+    }
+
+    /** Typed payload authority, independent of the cosmetic native carrier or its collision transport. */
+    public record ProjectileDetails(String element, int chillStacks, double bossRootSlow, Set<String> bossSlowOptInRoles) {
+        public ProjectileDetails {
+            bossSlowOptInRoles = Set.copyOf(bossSlowOptInRoles == null ? Set.of() : bossSlowOptInRoles);
+            if (!Set.of("PHYSICAL", "FIRE", "COLD", "ARCANE", "VOID", "NECROTIC").contains(element)
+                    || chillStacks < 0 || chillStacks > 5 || !Double.isFinite(bossRootSlow)
+                    || bossRootSlow < 0 || bossRootSlow > 1 || bossSlowOptInRoles.size() > 256
+                    || bossSlowOptInRoles.stream().anyMatch(role -> role == null || role.isBlank())
+                    || bossRootSlow == 0 && !bossSlowOptInRoles.isEmpty())
+                throw new IllegalArgumentException("Invalid projectile element/control policy");
+        }
+        public boolean allowsBossSlow(String role) { return bossRootSlow > 0 && bossSlowOptInRoles.contains(role); }
     }
 }

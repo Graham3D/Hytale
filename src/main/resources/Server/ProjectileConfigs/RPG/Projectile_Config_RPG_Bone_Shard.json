@@ -1,0 +1,19 @@
+{
+  "Model": "RPG_Bone_Shard",
+  "UseModelScale": true,
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 0,
+    "TerminalVelocityAir": 25,
+    "TerminalVelocityWater": 25,
+    "RotationMode": "Velocity",
+    "Bounciness": 0
+  },
+  "LaunchForce": 25,
+  "SpawnOffset": {
+    "X": 0,
+    "Y": 0,
+    "Z": 0
+  },
+  "Interactions": {}
+}

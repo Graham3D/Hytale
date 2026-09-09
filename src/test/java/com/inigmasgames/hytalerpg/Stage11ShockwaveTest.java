@@ -44,7 +44,18 @@ class Stage11ShockwaveTest {
     @Test void conditionalPrimaryIncreasedRemainsInResolvedAmountWithoutAnotherVictimCheck(){var p=f.plan("shield_bash","shockwave","concentration","executioner","potency");assertEquals((150+30)*.4,StrikeSecondaryRuntime.shockwaveAmount(p,hit(150,100).getFirst()),1e-9);}
     @Test void missingResolvedAdditiveUnitFailsClosedOnlyWhenNeeded(){var p=f.plan("shield_bash","shockwave","concentration");assertThrows(IllegalArgumentException.class,()->StrikeSecondaryRuntime.shockwaveAmount(p,hit(100,Double.NaN).getFirst()));assertEquals(40,StrikeSecondaryRuntime.shockwaveAmount(f.plan("quick_slash","shockwave"),hit(100,Double.NaN).getFirst()));assertThrows(IllegalArgumentException.class,()->StrikeSecondaryRuntime.shockwaveAmount(p,hit(Double.POSITIVE_INFINITY,100).getFirst()));}
     @Test void shockwaveHasOneResourceCooldownAndSharedRootLeechBudget(){var h=h("quick_slash","shockwave","leeching");var p=new P();p.candidates=List.of(target("other",0,0,2));n.run(h.last(),hit(100,100),p);assertEquals(95,h.current(ResourceType.STAMINA));assertEquals(1,h.cooldownSaves);var c=p.delivered.getFirst().child();assertSame(h.last().effects(),c.effects());assertSame(h.last().leechBudget(),c.leechBudget());assertEquals("shockwave",c.secondaryKind());assertTrue(c.derivedRelease());}
-    @Test void shockwaveTargetCountAndSpatialOverflowBounded(){var h=h("quick_slash","shockwave");var p=new P();for(int i=0;i<100;i++)p.candidates.add(target("enemy"+i,0,0,2));assertEquals(64,n.run(h.last(),hit(100,100),p));assertEquals(1,h.last().effects().triggered());var other=h("quick_slash","shockwave");for(int i=100;i<257;i++)p.candidates.add(target("enemy"+i,0,0,2));p.delivered.clear();assertEquals(0,n.run(other.last(),hit(100,100),p));}
+    @Test void shockwaveTargetCountAndSpatialOverflowBounded(){
+        var h=h("quick_slash","shockwave");var rejected=new ArrayList<String>();
+        var p=new P(){@Override public void rejected(String effect,String reason){rejected.add(reason);}};
+        for(int i=0;i<64;i++)p.candidates.add(target("enemy"+i,0,0,2));
+        assertEquals(64,n.run(h.last(),hit(100,100),p));assertEquals(64,p.delivered.size());assertEquals(1,h.last().effects().triggered());
+        for(int size:List.of(65,100,257)){
+            while(p.candidates.size()<size)p.candidates.add(target("enemy"+p.candidates.size(),0,0,2));
+            p.delivered.clear();rejected.clear();var other=h("quick_slash","shockwave");
+            assertEquals(0,n.run(other.last(),hit(100,100),p));assertTrue(p.delivered.isEmpty());
+            assertEquals(List.of("STRIKE_SECONDARY_QUERY_OVERFLOW"),rejected);
+        }
+    }
     @Test void shockwaveConsumesSharedSecondaryBudgetBeforeNativeDispatch(){var h=h("quick_slash","shockwave","cleaving_edge");for(int i=0;i<16;i++)h.last().effects().claim("prior"+i,1,true);var p=new P();p.candidates=List.of(target("other",0,0,2));assertEquals(0,n.run(h.last(),hit(100,100),p));assertTrue(p.delivered.isEmpty());}
     @Test void uncertainBurstDamageCannotRepeatItsOnceOnlyController(){var h=h("quick_slash","shockwave");var p=new P();p.candidates=List.of(target("other",0,0,2));p.fail=true;assertThrows(IllegalStateException.class,()->n.run(h.last(),hit(100,100),p));assertEquals(0,n.run(h.last(),hit(100,100),p));assertEquals(1,p.delivered.size());assertEquals(1,h.last().effects().triggered());}
     @Test void introducedCleaveConcentrationLeavesSingleTargetParentAlone(){var h=h("shield_bash","cleaving_edge","concentration","potency");assertTrue(h.last().compiledPlan().concentrationOnlyOnSecondary());assertEquals(1.15,h.last().snapshot().modifiers().factor(),1e-9);assertEquals(60,h.last().profile().strike().angleDegrees());var p=new P();p.candidates=List.of(target("other",0,0,2));n.run(h.last(),hit(115,100),p);assertEquals(1.45*.6,p.delivered.getFirst().child().snapshot().modifiers().factor(),1e-9);}

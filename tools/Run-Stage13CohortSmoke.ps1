@@ -82,6 +82,7 @@ $summary = [ordered]@{
     masteryHooksRegistered = [bool]($plain -match 'RPG_STAGE12_MASTERY damage=INSPECT_BEFORE_DEATH control=NATIVE_STATE_CHANGE healing=HOSTILE_INJURY_ONLY rootDedup=DURABLE sustainedIntervalSeconds=5 movementAvoidance=UNAVAILABLE connectedProof=false')
     acquisitionConfigured = [bool]($plain -match 'RPG_STAGE12_ACQUISITION playerSchema=9 verifiedLearningBindings=0 pity=DURABLE spending=SAME_REWARD_AUTHORITY respec=TEN_SECONDS_AND_NO_PENDING_CAST import=IDS_AND_FIXED_LAYOUT_ONLY connectedProof=false')
     strikeClosureAssetsResolved = [bool]($plain -match 'RPG_STAGE13_STRIKE_ASSETS ordinaryQueryLimit=64 fullHeight=2.5 finiteAnimationProfiles=7 actionLockAssets=2 result=PASS connectedProof=false')
+    projectileClosureAssetsResolved = [bool]($plain -match 'RPG_STAGE13_PROJECTILE_ASSETS result=PASS')
     failure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:HytaleRPGPhase00Audit|shutdownReason\.pluginError|reason: mod_error|Failed to create HytaleServer|Failed to shutdown Hytale:ServerManager|Listeners is empty)')
 }
 $summary | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'server-smoke-summary.json') -Encoding utf8
@@ -92,4 +93,12 @@ if (($Cohort -eq 'c' -and -not $summary.encounterRegistryResolved) -or ($Cohort 
     $summary.decoyRoleResolved -and $summary.batchRolesResolved -and $summary.summonAssetsResolved -and $summary.supportConfigured -and $summary.connectionAssetsResolved -and $summary.areaAssetsResolved -and $summary.packagedRootResolved -and $summary.shippedRuneResolved -and $summary.pluginEnabled -and $summary.managerStarted -and $summary.networkBooted -and $summary.cleanShutdown) -or
     $summary.nativeAbilityAssetsRejected -or $summary.failure) { throw 'R032 smoke gate failed.' }
 if(-not $summary.strikeClosureAssetsResolved -or -not $summary.rewardStoreConfigured -or $summary.processExitCode -ne 0){throw 'Stage13 strike assets or retained durability smoke gate failed'}
-
+if($Cohort -ne 'a'){
+    $auditLine=[regex]::Match($plain,'RPG_STAGE13_PROJECTILE_ASSETS result=PASS (\{[^\r\n]*\})')
+    if(-not $auditLine.Success){throw 'Stage13 resolved projectile/equipment audit missing'}
+    $audit=$auditLine.Groups[1].Value|ConvertFrom-Json
+    if($audit.connectedProof -ne $false -or -not $audit.emptyNativeInteractions -or -not $audit.typedElements){throw 'Projectile audit authority mismatch'}
+    if($Cohort -eq 'b' -and ($audit.resolvedConfigs -ne 13 -or $audit.shippedCrossbowSpeed -ne 40 -or $audit.shippedCrossbowRadius -ne .075 -or $audit.shippedCrossbowGravity -ne 10 -or
+        $audit.equipment.Weapon_Crossbow_Iron.basicPower -ne 10 -or $audit.equipment.Weapon_Spear_Iron.basicPower -ne 6)){throw 'Cohort B native numeric contract mismatch'}
+    $audit|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $evidence 'native-projectile-equipment-audit.json') -Encoding utf8
+}

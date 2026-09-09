@@ -70,7 +70,7 @@ public final class StrikeSecondaryRuntime {
                 if(admission.equals("PASS")){
                     double amount=shockwaveAmount(plan,hit);
                     // One burst effect/secondary admission, not one allocation per radial target.
-                    for(var target:valid(port.burstCandidates(shape),shape.origin(),Set.of(),port).stream().filter(t->shape.intersects(port.bounds(t))).limit(64).toList()){
+                    for(var target:valid(port.burstCandidates(shape),shape.origin(),Set.of(),port).stream().filter(t->shape.intersects(port.bounds(t))).toList()){
                         port.damage(child,target,amount,shape.origin());count++;
                     }
                     try{port.presentShockwave(shape);}catch(RuntimeException ignored){}
@@ -90,7 +90,7 @@ public final class StrikeSecondaryRuntime {
         return result;
     }
     private static <T> List<StrikeGeometryService.Candidate<T>> valid(List<StrikeGeometryService.Candidate<T>> candidates,Vec3 origin,Set<String> excluded,Port<T> port){
-        if(candidates.size()>256)return List.of();
+        if(candidates.size()>64){port.rejected("STRIKE_SECONDARY_QUERY","STRIKE_SECONDARY_QUERY_OVERFLOW");return List.of();}
         // Deterministic distance/UUID ties, and de-duplicate even if a spatial index repeats a handle.
         var unique=new TreeMap<String,StrikeGeometryService.Candidate<T>>();
         for(var c:candidates)if(c!=null&&c.damageable()&&!c.protectedTarget()&&!excluded.contains(c.stableId())&&port.lineOfSight(origin,c))unique.putIfAbsent(c.stableId(),c);

@@ -101,4 +101,25 @@ public final class LinkTreeVfxService {
                 .45,(float)seconds);
     }
     public record Result(boolean presented, String reason) { }
+
+    /** Small contact cross, never an explosion. It cannot advertise a radius damage payload. */
+    public void presentContact(World world,com.inigmasgames.hytalerpg.execution.math.Vec3 point,String element,double seconds,int accents){
+        if(!Double.isFinite(seconds)||seconds<=0||seconds>.6||accents<1||accents>2)throw new IllegalArgumentException("Unbounded contact presentation");
+        var palette=AreaPresentationTemplate.color(element,"IMPACT");var color=new org.joml.Vector3f(palette.red(),palette.green(),palette.blue());
+        for(int i=0;i<accents;i++){
+            var p=point.add(new com.inigmasgames.hytalerpg.execution.math.Vec3((i-(accents-1)*.5)*.18,0,0));
+            connectionLine(world,p.add(new com.inigmasgames.hytalerpg.execution.math.Vec3(-.10,-.10,0)),p.add(new com.inigmasgames.hytalerpg.execution.math.Vec3(.10,.10,0)),color,seconds);
+            connectionLine(world,p.add(new com.inigmasgames.hytalerpg.execution.math.Vec3(-.10,.10,0)),p.add(new com.inigmasgames.hytalerpg.execution.math.Vec3(.10,-.10,0)),color,seconds);
+        }
+    }
+    public void presentProjectileTrail(World world,ProjectileReadability.Segment segment,String element){
+        var palette=AreaPresentationTemplate.color(element,"TRAIL");
+        connectionLine(world,segment.from(),segment.to(),new org.joml.Vector3f(palette.red(),palette.green(),palette.blue()),ProjectileReadability.TRAIL_SECONDS);
+    }
+    public void presentProjectileExpiry(World world,com.inigmasgames.hytalerpg.execution.math.Vec3 point,String element){
+        var palette=AreaPresentationTemplate.color(element,"EXPIRY");
+        // One fading tail at expiry, not the contact cross or a damaging-looking radial burst.
+        connectionLine(world,point,point.add(new com.inigmasgames.hytalerpg.execution.math.Vec3(0,.10,0)),
+                new org.joml.Vector3f(palette.red(),palette.green(),palette.blue()),ProjectileReadability.EXPIRY_SECONDS);
+    }
 }

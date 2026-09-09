@@ -1,0 +1,19 @@
+{
+  "Model": "RPG_Cold_Blast",
+  "UseModelScale": true,
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 0,
+    "TerminalVelocityAir": 19,
+    "TerminalVelocityWater": 19,
+    "RotationMode": "Velocity",
+    "Bounciness": 0
+  },
+  "LaunchForce": 19,
+  "SpawnOffset": {
+    "X": 0,
+    "Y": 0,
+    "Z": 0
+  },
+  "Interactions": {}
+}
