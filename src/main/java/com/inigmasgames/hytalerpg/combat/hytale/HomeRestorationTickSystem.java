@@ -27,11 +27,14 @@ public final class HomeRestorationTickSystem extends EntityTickingSystem<EntityS
     }
     @Override public void tick(float deltaSeconds, int index, ArchetypeChunk<EntityStore> chunk,
                                Store<EntityStore> store, CommandBuffer<EntityStore> buffer) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.EXECUTION)){
         PlayerRef player = chunk.getComponent(index, PlayerRef.getComponentType());
         EntityStatMap stats = chunk.getComponent(index, EntityStatMap.getComponentType());
         if (player == null || stats == null) return;
         boolean isHome = region.isHome(store.getExternalData().getWorld(), player);
         home.observe(player.getUuid(), isHome, combat.secondsSinceHostile(player.getUuid()), deltaSeconds,
                 resources, new EntityStatResourcePort(stats));
+
+        }
     }
 }

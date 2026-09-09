@@ -1,0 +1,106 @@
+{
+  "fullBuild": {
+    "rootSuites": 130,
+    "jarSha256": "B7A16F07C446AA8ED81FB8BA4F2052E7DA1D70C2A919C205649F3A1F03964C6E",
+    "retainedNativeAndCanvasIncluded": true,
+    "command": ".\\gradlew.bat build --console=plain",
+    "exitCode": 0
+  },
+  "resultComposition": "Unaffected full-run XML plus replacement affected rerun XML. Original 64-update benchmark and crash results preserved; no duplicate full run.",
+  "affectedRerun": {
+    "jarSha256": "529F7601D69F9DBDA54ABAD87FBF2C674A31C3944E641602AE1BC79225A696AC",
+    "changedProductionFiles": [
+      "execution/hytale/HytalePlayerPersistenceReady.java",
+      "execution/hytale/HytaleConversionSystem.java"
+    ],
+    "exitCode": 0,
+    "command": ":test --tests *Stage13NativeTickMetricsTest --tests *Stage13PlayerReadIsolationTest --tests *Stage13LifecycleEdgeHandoffTest --tests *Stage10* --tests *Stage13Summon* :jar",
+    "reason": "Post-full-review atomic readiness admission and thread-safe conversion receipt removal; no persistence protocol or benchmark path changed",
+    "suites": [
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 3,
+        "suite": "com.inigmasgames.hytalerpg.diagnostics.Stage13NativeTickMetricsTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 1,
+        "suite": "com.inigmasgames.hytalerpg.execution.hytale.Stage10NativeMetadataTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 20,
+        "suite": "com.inigmasgames.hytalerpg.Stage10BatchSummonTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 10,
+        "suite": "com.inigmasgames.hytalerpg.Stage10CageGateTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 28,
+        "suite": "com.inigmasgames.hytalerpg.Stage10ConsumptionTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 27,
+        "suite": "com.inigmasgames.hytalerpg.Stage10ConversionTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 27,
+        "suite": "com.inigmasgames.hytalerpg.Stage10CorpseTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 13,
+        "suite": "com.inigmasgames.hytalerpg.Stage10DecoyTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 3,
+        "suite": "com.inigmasgames.hytalerpg.Stage10SummonAssetTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 17,
+        "suite": "com.inigmasgames.hytalerpg.Stage10SummonTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 3,
+        "suite": "com.inigmasgames.hytalerpg.Stage13LifecycleEdgeHandoffTest"
+      },
+      {
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "tests": 4,
+        "suite": "com.inigmasgames.hytalerpg.Stage13PlayerReadIsolationTest"
+      }
+    ]
+  }
+}

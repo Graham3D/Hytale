@@ -24,7 +24,7 @@ public final class RpgManaguardCommand extends AbstractPlayerCommand {
         try{
             int value=context.get(percent);
             support.runtime().allocateManaguard(player.getUuid(),value,support.port(store,ref));
-            context.sendMessage(Message.raw("Managuard allocation: "+value+"%. Mana is not refunded; shield deficit is retained."));
+            context.sendMessage(Message.raw("Managuard allocation requested: "+value+"%. Pending durable authorization; Mana is not refunded and shield deficit is retained."));
         }catch(RuntimeException error){context.sendMessage(Message.raw("Managuard allocation rejected: "+error.getMessage()));}
     }
 }

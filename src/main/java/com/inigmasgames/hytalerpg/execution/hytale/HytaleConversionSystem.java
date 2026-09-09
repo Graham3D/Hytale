@@ -31,8 +31,14 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
     private final CombatTrace trace;
     private final HytaleBossBarTracker bosses;
     private final com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService vfx;
-    private java.util.function.BiConsumer<UUID,UUID> rewardExclusion=(world,enemy)->{};
-    public void configureRewardExclusion(java.util.function.BiConsumer<UUID,UUID> exclusion){rewardExclusion=Objects.requireNonNull(exclusion);}
+    private java.util.function.BiFunction<UUID,UUID,java.util.concurrent.CompletionStage<Void>> rewardExclusion=(world,enemy)->java.util.concurrent.CompletableFuture.completedStage(null);
+    public void configureRewardExclusion(java.util.function.BiFunction<UUID,UUID,java.util.concurrent.CompletionStage<Void>> exclusion){rewardExclusion=Objects.requireNonNull(exclusion);}
+    private final Map<String,java.util.concurrent.CompletableFuture<Void>> exclusionReceipts=new java.util.concurrent.ConcurrentHashMap<>();
+    public synchronized java.util.concurrent.CompletionStage<Void> prepareDurable(SkillExecutionContext context){
+        if(exclusionReceipts.size()>=256)throw new IllegalStateException("CONVERSION_PERSISTENCE_CAPACITY");
+        return exclusionReceipts.computeIfAbsent(context.skillInstanceId(),ignored->rewardExclusion.apply(context.target().worldId(),context.target().entityId()).toCompletableFuture());
+    }
+    public synchronized void abandonDurable(SkillExecutionContext context){exclusionReceipts.remove(context.skillInstanceId());}
     public HytaleConversionSystem(CombatTrace trace,HytaleBossBarTracker bosses,com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService vfx){this.trace=trace;this.bosses=bosses;this.vfx=vfx;}
     public void cancel(UUID owner){for(var lease:registry.owned(owner))registry.end(lease.token());}
     private static UUID world(ComponentAccessor<EntityStore> store){return store.getExternalData().getWorld().getWorldConfig().getUuid();}
@@ -94,7 +100,10 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
         var verdict=validate(store,owner,context);if(!verdict.accepted())throw new IllegalStateException(verdict.code());
         var target=store.getExternalData().getRefFromUUID(context.target().entityId());var marked=store.getComponent(target,MarkedEntitySupport.getComponentType());
         var lease=registry.begin(context,eligibility(store,target,owner),id(store,marked.getMarkedEntityRef(MarkedEntitySupport.DEFAULT_TARGET_SLOT)),System.nanoTime()/1e9);
-        try{rewardExclusion.accept(world(store),id(store,target));install(store,owner);buffer.addComponent(target,ConversionProjection.getComponentType(),new ConversionProjection(lease));
+        try{
+            var receipt=exclusionReceipts.remove(context.skillInstanceId());
+            if(receipt==null||!receipt.isDone())throw new IllegalStateException("CONVERSION_EXCLUSION_NOT_DURABLE");
+            receipt.getNow(null);install(store,owner);buffer.addComponent(target,ConversionProjection.getComponentType(),new ConversionProjection(lease));
             // The non-persistent default target can be restored; persistent marked targets reject at admission.
             marked.setMarkedEntity(MarkedEntitySupport.DEFAULT_TARGET_SLOT,null);
         }catch(RuntimeException failure){registry.end(lease.token());throw failure;}
@@ -125,6 +134,7 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
     @Override public Query<EntityStore> getQuery(){return Query.and(ConversionProjection.getComponentType(),NPCEntity.getComponentType(),MarkedEntitySupport.getComponentType(),TransformComponent.getComponentType());}
     @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.BEFORE,RoleSystems.BehaviourTickSystem.class));}
     @Override public void tick(float dt,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUMMON)){
         var ref=chunk.getReferenceTo(index);var marker=chunk.getComponent(index,ConversionProjection.getComponentType());var lease=marker.lease;
         if(lease==null){buffer.tryRemoveComponent(ref,ConversionProjection.getComponentType());return;}
         if(marker.restored){if(HytaleSummonSystem.alive(store,ref))buffer.tryRemoveComponent(ref,ConversionProjection.getComponentType());return;}
@@ -149,6 +159,8 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
                 .filter(r->HytaleAreaQueries.clear(store,point(store,ref).add(new Vec3(0,.5,0)),point(store,r).add(new Vec3(0,.5,0))))
                 .min(Comparator.<Ref<EntityStore>>comparingDouble(r->point(store,r).subtract(point(store,ref)).length()).thenComparing(r->id(store,r))).orElse(null);
         store.getComponent(ref,MarkedEntitySupport.getComponentType()).setMarkedEntity(MarkedEntitySupport.DEFAULT_TARGET_SLOT,target);
+
+        }
     }
     private void restore(Store<EntityStore> store,Ref<EntityStore> ref,ConversionRegistry.Lease lease){
         var marked=store.getComponent(ref,MarkedEntitySupport.getComponentType());if(marked==null)return;
@@ -171,9 +183,12 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
         @Override public Query<EntityStore> getQuery(){return ConversionProjection.getComponentType();}
         @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){}
         @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUMMON)){
             var marker=store.getComponent(ref,ConversionProjection.getComponentType());if(marker.lease==null)return;
             conversions.end(store,buffer,ref,marker,"NATIVE_REMOVE_"+reason,true);
+
         }
+    }
     }
     public static final class Death extends DeathSystems.OnDeathSystem {
         private final HytaleConversionSystem conversions;
@@ -181,9 +196,12 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
         @Override public Query<EntityStore> getQuery(){return Query.and(ConversionProjection.getComponentType(),NPCEntity.getComponentType());}
         @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.BEFORE,NPCDamageSystems.DropDeathItems.class));}
         @Override public void onComponentAdded(Ref<EntityStore> ref,DeathComponent death,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUMMON)){
             store.getComponent(ref,NPCEntity.getComponentType()).getRole().setDeathItemsDropped();
             conversions.end(store,buffer,ref,store.getComponent(ref,ConversionProjection.getComponentType()),"NATIVE_DEATH",true);
+
         }
+    }
     }
     public static final class DamageGuard extends DamageEventSystem {
         private final HytaleConversionSystem conversions;
@@ -191,6 +209,7 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
         @Override public Query<EntityStore> getQuery(){return Query.any();}
         @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getFilterDamageGroup();}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUMMON)){
             if(!(damage.getSource() instanceof Damage.EntitySource source)||source.getRef()==null||!source.getRef().isValid())return;
             var victim=store.getComponent(chunk.getReferenceTo(index),ConversionProjection.getComponentType());
             if(victim!=null&&victim.lease!=null&&conversions.registry.find(victim.lease.token()).isPresent()&&System.nanoTime()/1e9<victim.lease.expires()){
@@ -204,6 +223,8 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
                     ||npc==null||npc.getRole()==null||npc.isReserved()||npc.getRole().isInvulnerable()||store.getComponent(target,Invulnerable.getComponentType())!=null
                     ||store.getComponent(target,SummonProjection.getComponentType())!=null||store.getComponent(target,ConversionProjection.getComponentType())!=null
                     ||network!=null&&conversions.bosses.isBoss(world(store),network.getId())||!HytaleAreaQueries.hostile(store,target,owner))damage.setCancelled(true);
+
         }
+    }
     }
 }

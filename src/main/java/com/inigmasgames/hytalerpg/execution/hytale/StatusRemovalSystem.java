@@ -19,7 +19,10 @@ public final class StatusRemovalSystem extends RefSystem<EntityStore> {
     @Override public Query<EntityStore> getQuery() { return Query.and(NPCEntity.getComponentType(), UUIDComponent.getComponentType()); }
     @Override public void onEntityAdded(Ref<EntityStore> ref, AddReason reason, Store<EntityStore> store, CommandBuffer<EntityStore> buffer) { }
     @Override public void onEntityRemove(Ref<EntityStore> ref, RemoveReason reason, Store<EntityStore> store, CommandBuffer<EntityStore> buffer) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.STATUS_FIELD)){
         var id = store.getComponent(ref, UUIDComponent.getComponentType());
         if (id != null) statuses.forget(id.getUuid());
+
+        }
     }
 }

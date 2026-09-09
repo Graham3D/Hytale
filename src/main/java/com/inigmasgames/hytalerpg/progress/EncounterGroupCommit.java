@@ -14,6 +14,7 @@ final class EncounterGroupCommit {
     private final FileEncounterStore store;
     private final ArrayDeque<Work> queue=new ArrayDeque<>();
     private final Map<EncounterJournal.Key,Integer> contexts=new HashMap<>();
+    private final Set<Lease> leases=new HashSet<>();
     private int pendingRecords,pendingOperations;
     private boolean stopping;
     private Throwable failure;
@@ -22,6 +23,7 @@ final class EncounterGroupCommit {
     private record Work(List<EncounterContributions.Snapshot> snapshots,Lease lease,CompletableFuture<Void> receipt,long submitted){}
     EncounterGroupCommit(FileEncounterStore store){this.store=store;}
     final class Lease implements AutoCloseable {
+        final long admitted=System.nanoTime();
         final List<EncounterJournal.Key> keys;boolean queued,closed;
         Lease(List<EncounterJournal.Key> keys){this.keys=keys;}
         @Override public void close(){synchronized(EncounterGroupCommit.this){if(!queued&&!closed)release(this);}}
@@ -35,7 +37,7 @@ final class EncounterGroupCommit {
             store.timings().admissionRejected();throw new FileEncounterStore.CapacityRejected();
         }
         for(var entry:counts.entrySet())contexts.merge(entry.getKey(),entry.getValue(),Integer::sum);
-        pendingRecords+=keys.size();pendingOperations++;return new Lease(List.copyOf(keys));
+        pendingRecords+=keys.size();pendingOperations++;var lease=new Lease(List.copyOf(keys));leases.add(lease);return lease;
     }
     synchronized CompletableFuture<Void> submit(Lease lease,List<EncounterContributions.Snapshot> snapshots){
         if(lease.closed||lease.queued||snapshots.size()>lease.keys.size())throw new FileEncounterStore.CapacityRejected();
@@ -95,8 +97,12 @@ final class EncounterGroupCommit {
         }catch(Throwable error){if(error instanceof InterruptedException)Thread.currentThread().interrupt();store.markUncertain(error);synchronized(this){failure=error;failQueued(error);}}
     }
     private void failQueued(Throwable error){while(!queue.isEmpty()){var work=queue.remove();release(work.lease());work.receipt().completeExceptionally(error);}notifyAll();}
-    private void release(Lease lease){if(lease.closed)return;lease.closed=true;if(lease.queued)store.foregroundCompleted();pendingOperations--;pendingRecords-=lease.keys.size();for(var key:lease.keys)contexts.compute(key,(ignored,count)->count==1?null:count-1);notifyAll();}
+    private void release(Lease lease){if(lease.closed)return;lease.closed=true;leases.remove(lease);if(lease.queued)store.foregroundCompleted();pendingOperations--;pendingRecords-=lease.keys.size();for(var key:lease.keys)contexts.compute(key,(ignored,count)->count==1?null:count-1);notifyAll();}
+    synchronized Map<String,Object> metrics(){long now=System.nanoTime();return Map.of("pendingRecords",pendingRecords,"pendingOperations",pendingOperations,
+            "reservedSnapshotBytes",(long)pendingRecords*FileEncounterStore.MAX_FILE_BYTES,"contexts",contexts.size(),
+            "oldestReceiptMs",leases.stream().mapToLong(v->now-v.admitted).max().orElse(0)/1e6,"failure",failure!=null);}
     synchronized boolean pending(){return pendingOperations!=0;}
+    synchronized CompletionStage<Void> frontier(){return tail.minimalCompletionStage();}
     void await(){CompletableFuture<Void> receipt;synchronized(this){receipt=tail;}await(receipt);}
     static void await(CompletableFuture<?> receipt){
         try{receipt.get(DEADLINE_MILLIS,TimeUnit.MILLISECONDS);}catch(InterruptedException error){Thread.currentThread().interrupt();throw new IllegalStateException("ENCOUNTER_PERSISTENCE_UNCERTAIN_RESTART_REQUIRED",error);}

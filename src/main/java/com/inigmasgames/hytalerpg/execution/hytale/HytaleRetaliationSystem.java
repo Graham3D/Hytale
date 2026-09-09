@@ -20,6 +20,7 @@ public final class HytaleRetaliationSystem extends DamageEventSystem {
     @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getInspectDamageGroup();}
     @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.AFTER,DamageSystems.ApplyDamage.class),new SystemDependency<>(Order.BEFORE,SupportDamageSystems.Reflect.class));}
     @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
         if(Boolean.TRUE.equals(damage.getIfPresentMetaObject(OBSERVED)))return;damage.putMetaObject(OBSERVED,true);
         var stats=chunk.getComponent(index,EntityStatMap.getComponentType());var hp=stats.get(DefaultEntityStatTypes.getHealth());
         if(hp==null||hp.get()<=hp.getMin()||damage.isCancelled())return;
@@ -28,5 +29,7 @@ public final class HytaleRetaliationSystem extends DamageEventSystem {
         boolean hostile=damage.getSource() instanceof Damage.EntitySource source&&source.getRef()!=null&&source.getRef().isValid()
                 &&!source.getRef().equals(recipient)&&HytaleAreaQueries.hostile(store,source.getRef(),recipient);
         skills.onRetaliationDamage(chunk.getComponent(index,PlayerRef.getComponentType()).getUuid(),"native-loss-"+UUID.randomUUID(),before,hp.get(),hp.getMax(),hostile,metadata!=null&&metadata.noRetaliation());
+
+        }
     }
 }

@@ -14,6 +14,68 @@ public final class RpgCooldownService {
     private final Map<Key, Work> work = new HashMap<>();
     private final Map<UUID, AuraRate> auraRates = new HashMap<>();
     public interface Persistence {Map<String,SavedCooldown> load(UUID actor);void save(UUID actor,Map<String,SavedCooldown> values);}
+    public interface AsyncPersistence extends Persistence {
+        java.util.concurrent.CompletionStage<Void> submit(UUID actor,Map<String,SavedCooldown> values);
+    }
+    private final Map<UUID,PendingSpend> pendingSpends=new HashMap<>();
+    private final Map<UUID,PendingSave> pendingSaves=new HashMap<>();
+    private final Map<UUID,Long> detaching=new HashMap<>();
+    private record PendingSave(java.util.concurrent.CompletableFuture<Void> receipt,Runnable ownerApply,boolean blocksActivation,int depth){}
+    private record PendingSpend(Spend spend,Work next,java.util.concurrent.CompletableFuture<Void> receipt){}
+    public synchronized java.util.concurrent.CompletionStage<Spend> submitSpend(UUID actor,String skill,int capacity,double base,double factor,double wisdom,CompiledSkillPlan.KernelModifiers modifiers){
+        if(!(persistence instanceof AsyncPersistence async))return java.util.concurrent.CompletableFuture.completedStage(spendCharge(actor,skill,capacity,base,factor,wisdom,modifiers));
+        if(pendingSpends.size()>=256||pendingSpends.containsKey(actor))throw new IllegalStateException("COOLDOWN_PERSISTENCE_CAPACITY");
+        if(!canActivate(actor,skill,capacity))throw new IllegalStateException("Skill has no available charge");
+        var calculation=calculate(actor,base,factor,wisdom,modifiers);long now=nanoTime.getAsLong();
+        double recovery=wisdom+(modifiers==null?0:modifiers.cooldownRecoveryBonus());
+        var saved=new HashMap<>(snapshot(actor));var current=work.get(new Key(actor,skill));var next=current==null?new Work(now):current.copy();
+        var spend=new Spend(actor,skill,UUID.randomUUID(),calculation);
+        next.queue.addLast(new Charge(spend.token(),calculation.finalSeconds()*rate(actor,recovery,now),recovery));saved.put(skill,next.saved());
+        var receipt=async.submit(actor,SavedCooldown.validate(saved)).toCompletableFuture();
+        pendingSpends.put(actor,new PendingSpend(spend,next,receipt));
+        return receipt.thenApply(ignored->spend).minimalCompletionStage();
+    }
+    /** Owner-thread adoption only; never submits or waits for IO. */
+    public synchronized void acceptSpend(Spend spend){
+        var p=pendingSpends.get(spend.actor());if(p==null)return;
+        if(!p.spend().equals(spend)||!p.receipt().isDone())throw new IllegalStateException("COOLDOWN_DEBT_NOT_DURABLE");
+        p.receipt().getNow(null);p.next().last=nanoTime.getAsLong();work.put(new Key(spend.actor(),spend.skill()),p.next());pendingSpends.remove(spend.actor());
+    }
+    public synchronized void pollPersistence(UUID actor){
+        var save=pendingSaves.get(actor);if(save!=null&&save.receipt().isDone()){
+            save.receipt().getNow(null);save.ownerApply().run();pendingSaves.remove(actor);
+        }
+    }
+    public synchronized boolean persistenceReady(UUID actor){pollPersistence(actor);return !detaching.containsKey(actor)&&!pendingSaves.containsKey(actor)&&!pendingSpends.containsKey(actor);}
+    public synchronized void pollMaintenance(){
+        int count=0;for(var actor:java.util.List.copyOf(pendingSaves.keySet())){if(++count>8)break;pollPersistence(actor);}
+        count=0;for(var actor:java.util.List.copyOf(detaching.keySet())){
+            if(++count>8)break;if(pendingSpends.containsKey(actor)||pendingSaves.containsKey(actor))continue;
+            try{queueSave(actor,snapshot(actor),()->{work.keySet().removeIf(k->k.actor.equals(actor));auraRates.remove(actor);restored.remove(actor);checkpoints.remove(actor);detaching.remove(actor);},true);}
+            catch(RuntimeException unavailable){/* Retain bounded settlement intent and deny reconnect authority. */}
+        }
+    }
+    private java.util.concurrent.CompletionStage<Void> queueSave(UUID actor,Map<String,SavedCooldown> values,Runnable ownerApply,boolean blocksActivation){
+        if(pendingSaves.size()>=256&&!pendingSaves.containsKey(actor))throw new IllegalStateException("COOLDOWN_PERSISTENCE_CAPACITY");
+        var prior=pendingSaves.get(actor);
+        if(prior!=null&&prior.depth()>=2)throw new IllegalStateException("COOLDOWN_SETTLEMENT_CAPACITY");
+        var receipt=((AsyncPersistence)persistence).submit(actor,values).toCompletableFuture();
+        // A player queue is ordered. Preserve any earlier owner adoption rather than overwriting it.
+        Runnable apply=prior==null?ownerApply:()->{prior.receipt().getNow(null);prior.ownerApply().run();ownerApply.run();};
+        pendingSaves.put(actor,new PendingSave(receipt,apply,blocksActivation||prior!=null&&prior.blocksActivation(),prior==null?1:prior.depth()+1));return receipt;
+    }
+    public synchronized java.util.concurrent.CompletionStage<Boolean> submitRefund(Spend spend){
+        if(!(persistence instanceof AsyncPersistence))return java.util.concurrent.CompletableFuture.completedStage(refundCharge(spend));
+        if(spend==null)return java.util.concurrent.CompletableFuture.completedStage(false);
+        acceptSpend(spend);var current=work.get(new Key(spend.actor(),spend.skill()));
+        if(current==null||current.queue.isEmpty()||!current.queue.getLast().token.equals(spend.token()))return java.util.concurrent.CompletableFuture.completedStage(false);
+        var saved=new HashMap<>(snapshot(spend.actor()));var next=current.copy();next.queue.removeLast();
+        if(next.queue.isEmpty())saved.remove(spend.skill());else saved.put(spend.skill(),next.saved());
+        return queueSave(spend.actor(),SavedCooldown.validate(saved),()->{
+            var live=work.get(new Key(spend.actor(),spend.skill()));
+            if(live!=null){live.queue.removeIf(c->c.token.equals(spend.token()));if(live.queue.isEmpty())work.remove(new Key(spend.actor(),spend.skill()));}
+        },true).thenApply(ignored->true);
+    }
     private Persistence persistence;
     private final java.util.Set<UUID> restored=new java.util.HashSet<>();
     private final Map<UUID,Long> checkpoints=new HashMap<>();
@@ -34,12 +96,21 @@ public final class RpgCooldownService {
     }
     public synchronized boolean checkpoint(UUID actor){
         if(persistence==null)return false;restore(actor);long now=nanoTime.getAsLong();
+        if(persistence instanceof AsyncPersistence async){
+            pollPersistence(actor);if(pendingSpends.containsKey(actor)||pendingSaves.containsKey(actor)||now-checkpoints.getOrDefault(actor,now)<1_000_000_000L)return false;
+            queueSave(actor,snapshot(actor),()->{},false);checkpoints.put(actor,now);return true;
+        }
         if(now-checkpoints.getOrDefault(actor,now)<1_000_000_000L)return false;
         checkpoints.put(actor,now); // Failed disk writes must not retry at frame rate.
         persistence.save(actor,snapshot(actor));return true;
     }
     /** Disconnect is not an explicit reset. Save observed work, then evict; do not credit unobserved offline time. */
     public synchronized void detach(UUID actor){
+        if(persistence instanceof AsyncPersistence){
+            if(detaching.size()>=256&&!detaching.containsKey(actor))throw new IllegalStateException("COOLDOWN_SETTLEMENT_CAPACITY");
+            detaching.putIfAbsent(actor,nanoTime.getAsLong());pollMaintenance();
+            return;
+        }
         if(persistence!=null)persistence.save(actor,snapshot(actor));
         work.keySet().removeIf(k->k.actor.equals(actor));auraRates.remove(actor);restored.remove(actor);checkpoints.remove(actor);
     }
@@ -50,6 +121,7 @@ public final class RpgCooldownService {
     public synchronized boolean canActivate(UUID actor,String skillId,int capacity){return availableCharges(actor,skillId,capacity)>0;}
     public synchronized int availableCharges(UUID actor,String skillId,int capacity){
         if(capacity<1||capacity>2)throw new IllegalArgumentException("Unsupported charge capacity");
+        pollPersistence(actor);if(detaching.containsKey(actor)||pendingSpends.containsKey(actor)||pendingSaves.containsKey(actor)&&pendingSaves.get(actor).blocksActivation())return 0;
         remaining(actor,skillId);var value=work.get(new Key(actor,skillId));
         return Math.max(0,capacity-(value==null?0:value.queue.size()));
     }
@@ -114,6 +186,7 @@ public final class RpgCooldownService {
         var first=value.queue.getFirst();return first.remaining/rate(actor,first.baseRecovery,now);
     }
     private void advance(UUID actor,Work value,long now){
+        if(detaching.containsKey(actor))now=Math.max(value.last,Math.min(now,detaching.get(actor)));
         if(now<value.last)throw new IllegalStateException("Cooldown clock moved backwards");
         var aura=auraRates.get(actor);long boundary=aura==null?value.last:Math.max(value.last,Math.min(now,aura.expires));
         if(boundary>value.last)advanceSegment(actor,value,(boundary-value.last)/1e9,value.last);

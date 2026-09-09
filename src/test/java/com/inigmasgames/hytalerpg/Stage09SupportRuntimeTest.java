@@ -126,8 +126,11 @@ class Stage09SupportRuntimeTest {
         final List<UUID> members=new ArrayList<>();final List<String> events=new ArrayList<>();
         SkillExecutionContext context;
         Harness(String skill){
+            this(skill,null);
+        }
+        Harness(String skill,java.util.function.Function<Harness,SupportProgressStore> storeFactory){
             profile=profiles.require(skill);members.add(actor);
-            runtime=new SupportRuntime(kernel.reservations(),budget,new SupportProgressStore(){
+            runtime=new SupportRuntime(kernel.reservations(),budget,storeFactory!=null?storeFactory.apply(this):new SupportProgressStore(){
                 public SupportProgress read(UUID id){return saved;}
                 public SupportProgress save(UUID id,SupportProgress next){
                     if(failSave)throw new IllegalStateException("fixture disk failure");

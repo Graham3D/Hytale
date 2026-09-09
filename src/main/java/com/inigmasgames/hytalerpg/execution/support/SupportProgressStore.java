@@ -6,4 +6,8 @@ import java.util.UUID;
 public interface SupportProgressStore {
     SupportProgress read(UUID actor);
     SupportProgress save(UUID actor,SupportProgress next);
+    interface Async extends SupportProgressStore {
+        java.util.concurrent.CompletionStage<SupportProgress> submit(UUID actor,SupportProgress next);
+        java.util.concurrent.CompletionStage<SupportProgress> settle(UUID actor,java.util.concurrent.CompletionStage<SupportProgress> predecessor,SupportProgress actual);
+    }
 }

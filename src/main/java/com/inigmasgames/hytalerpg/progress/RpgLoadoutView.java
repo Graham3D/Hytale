@@ -19,6 +19,9 @@ public record RpgLoadoutView(RpgPlayerState state, Map<SkillSlot, CompiledSkillP
         warnings = List.copyOf(messages);
     }
 
+    /** The stored published snapshot is private; a caller can only mutate its own copy. */
+    @Override public RpgPlayerState state() { return state.copy(); }
+
     public String format(RpgCatalog catalog) {
         StringBuilder out = new StringBuilder("RPG loadout revision ").append(state.revision).append(':');
         for (SkillSlot slot : SkillSlot.values()) {

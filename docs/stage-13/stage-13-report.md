@@ -4,14 +4,29 @@ Revision R032, version 0.0.25; branch RPG. Resumed from pushed Stage12 H
 `de60a02`. All work is in the C: GitHub checkout. Owner art, including
 `art/lost and found`, is untouched. No Google Drive writes or live deployment.
 
-Status: **BLOCKED — integrated release hardening**, after isolated cohort H group-commit correction. This is not a release candidate or a
+Status: **BLOCKED — native tick work NOT_MEASURED and connected integration**, after cohort J native persistence handoff. This is not a release candidate or a
 Stage13 closure. Connected status: **UNVERIFIED**. The latest historical completed local
 stage is Stage12 H: 1653 retained tests, isolated normal three-mod smoke,
 packaging/archive checks, and the actual archived schema8 reader rollback drill.
 
 ## Evidence and scope
 
-Latest correction: [bounded encounter group-commit report](encounter-group-commit-report.md).
+Latest correction: [native persistence handoff and shield escrow report](native-persistence-handoff-correction.md).
+Cohort J is **ELIGIBLE_FOR_ISOLATED_CONNECTED_QA**, with 2,087 tests (all 2,053
+Stage I identities retained), isolated three-mod smoke, archive and actual
+archived-reader rollback checks passing. Hits consume pre-durable shield escrow;
+native encounter/progression callbacks no longer wait for durability. No live
+deployment or connected QA occurred. Native tick 4 ms p95 / 8 ms p99 remains
+**NOT_MEASURED**, not PASS. The unchanged 64-update acknowledgement diagnostic
+measured 4.6011 / 8.1914 / 19.2184 ms p50/p95/p99; it does not measure native ticks.
+See the [single isolated QA procedure](native-persistence-isolated-qa.md).
+
+Stage I's [durability boundary report](encounter-durability-final-boundary-report.md)
+and G/H/I artifacts remain historical and unchanged. Their application of the
+nominal 4/8 ms comparison to disk completion is explicitly superseded by the
+owner-authorized requirement mapping in J, not retroactively relabeled PASS.
+
+Historical correction: [bounded encounter group-commit report](encounter-group-commit-report.md).
 H retains force-before-durable-completion, adds real queued grouping and immutable
 asynchronous checkpoint publication. Full suite: **1,963 tests**, zero failures/errors/skips;
 normal isolated three-mod smoke, packaging/archive and actual rollback checks pass.

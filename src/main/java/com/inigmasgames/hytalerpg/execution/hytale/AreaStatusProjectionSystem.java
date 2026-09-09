@@ -29,6 +29,7 @@ public final class AreaStatusProjectionSystem extends EntityTickingSystem<Entity
     }
     @Override public void tick(float deltaSeconds, int index, ArchetypeChunk<EntityStore> chunk,
                                Store<EntityStore> store, CommandBuffer<EntityStore> buffer) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.STATUS_FIELD)){
         var marker = chunk.getComponent(index, AreaStatusProjection.getComponentType());
         marker.retryAfter = Math.max(0, marker.retryAfter - deltaSeconds);
         marker.elapsed += deltaSeconds;
@@ -49,5 +50,7 @@ public final class AreaStatusProjectionSystem extends EntityTickingSystem<Entity
         }
         if (statuses.inspect(id).active().isEmpty() && statuses.strongestSlow(id).magnitude() == 0)
             buffer.removeComponent(ref, AreaStatusProjection.getComponentType());
+
+        }
     }
 }

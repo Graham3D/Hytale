@@ -36,6 +36,7 @@ public final class AreaNpcControlSystem extends EntityTickingSystem<EntityStore>
     }
     @Override public void tick(float delta, int index, ArchetypeChunk<EntityStore> chunk,
                                Store<EntityStore> store, CommandBuffer<EntityStore> buffer) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.STATUS_FIELD)){
         var ref = chunk.getReferenceTo(index);
         if (store.getComponent(ref, DeathComponent.getComponentType()) != null) return;
         var role = chunk.getComponent(index, NPCEntity.getComponentType()).getRole();
@@ -44,6 +45,8 @@ public final class AreaNpcControlSystem extends EntityTickingSystem<EntityStore>
         var active = statuses.inspect(id).active().keySet();
         var manager = store.getComponent(ref, InteractionModule.get().getInteractionManagerComponent());
         constrain(active, role.getBodySteering(), role.getHeadSteering(), () -> { if (manager != null) manager.clear(); });
+
+        }
     }
     /** Testable policy over the actual native Steering type; does not establish connected NPC behavior. */
     public static void constrain(Set<RpgStatusType> active, Steering body, Steering head, Runnable interrupt) {

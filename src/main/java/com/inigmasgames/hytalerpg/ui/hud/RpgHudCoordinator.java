@@ -23,6 +23,8 @@ public final class RpgHudCoordinator {
     private final HytaleResourceViewAdapter resources = new HytaleResourceViewAdapter();
     private final RpgUiTraceService trace;
     private java.util.function.ToIntFunction<UUID> finisherPips=ignored->0;
+    private java.util.function.Consumer<UUID> ownerPublished=ignored->{};
+    public void configureOwnerPublication(java.util.function.Consumer<UUID> observer){ownerPublished=java.util.Objects.requireNonNull(observer);}
     public void configureFinisherPips(java.util.function.ToIntFunction<UUID> reader){this.finisherPips=java.util.Objects.requireNonNull(reader);}
     private final Map<UUID, Session> sessions = new ConcurrentHashMap<>();
     private final Map<UUID, XpView> xpFixtures = new ConcurrentHashMap<>();
@@ -64,6 +66,7 @@ public final class RpgHudCoordinator {
             RpgHudViewModel previous = session.model;
             RpgHudViewModel next = projection.hud(playerRef.getUuid(), resources.read(stats), xpFixtures.get(playerRef.getUuid()));
             session.combo.refresh(next,finisherPips.applyAsInt(playerRef.getUuid()));
+            ownerPublished.accept(playerRef.getUuid());
             if (next.equals(previous)) return;
             boolean xpChanged = !next.xp().equals(previous.xp());
             boolean noticeChanged = next.showLevelUpNotice() != previous.showLevelUpNotice();

@@ -223,6 +223,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     @Override public Query<EntityStore> getQuery(){return Query.and(SummonProjection.getComponentType(),NPCEntity.getComponentType(),TransformComponent.getComponentType());}
     @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.BEFORE,RoleSystems.BehaviourTickSystem.class));}
     @Override public void tick(float delta,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUMMON)){
         var ref=chunk.getReferenceTo(index);var marker=chunk.getComponent(index,SummonProjection.getComponentType());
         var lease=registry.find(marker.token).orElse(null);
         if(lease==null){decoyAttraction.release(store,marker.token);buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);return;}
@@ -266,6 +267,8 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
             registry.remove(lease.token());buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);
             emit(lease,RpgTraceEventType.SUMMON_REJECTED,Map.of("boundary",String.valueOf(failure.getMessage()),"phase","TICK","quarantined",true));
         }
+
+        }
     }
     public static boolean alive(Store<EntityStore> store,Ref<EntityStore> ref){
         if(ref==null||!ref.isValid()||store.getComponent(ref,DeathComponent.getComponentType())!=null)return false;
@@ -306,10 +309,13 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         @Override public Query<EntityStore> getQuery(){return SummonProjection.getComponentType();}
         @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){}
         @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUMMON)){
             var marker=store.getComponent(ref,SummonProjection.getComponentType());
             summons.decoyAttraction.release(store,marker.token);
             summons.registry.remove(marker.token).ifPresent(lease->summons.emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason","NATIVE_REMOVE_"+reason)));
+
         }
+    }
     }
     /** Native death event claims termination before native corpse removal can win the next tick. */
     public static final class Death extends DeathSystems.OnDeathSystem {
@@ -317,12 +323,15 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         public Death(HytaleSummonSystem summons){this.summons=summons;}
         @Override public Query<EntityStore> getQuery(){return Query.and(SummonProjection.getComponentType(),TransformComponent.getComponentType());}
         @Override public void onComponentAdded(Ref<EntityStore> ref,DeathComponent death,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUMMON)){
             var marker=store.getComponent(ref,SummonProjection.getComponentType());var lease=summons.registry.find(marker.token).orElse(null);
             if(lease==null)return;var owner=store.getExternalData().getRefFromUUID(lease.owner());
             var damage=death.getDeathInfo();boolean enemy=alive(store,owner)&&damage!=null&&damage.getSource() instanceof Damage.EntitySource source
                     &&source.getRef()!=null&&source.getRef().isValid()&&HytaleAreaQueries.hostile(store,source.getRef(),owner);
             summons.endNative(store,buffer,ref,lease,enemy?SummonRegistry.EndReason.ENEMY_KILL:SummonRegistry.EndReason.OTHER_DEATH);
+
         }
+    }
     }
     /** Defense in depth: owned actors have no native attack roots, and cannot damage or farm each other. */
     public static final class DamageGuard extends DamageEventSystem {
@@ -331,6 +340,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         @Override public Query<EntityStore> getQuery(){return Query.any();}
         @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getFilterDamageGroup();}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUMMON)){
             if(damage.getSource() instanceof Damage.EntitySource source){
                 var attacker=source.getRef();
                 if(attacker!=null&&attacker.isValid()&&store.getComponent(attacker,SummonProjection.getComponentType())!=null)
@@ -342,6 +352,8 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                     if(owner==null||attacker==null||!attacker.isValid()||!HytaleAreaQueries.hostile(store,attacker,owner))damage.setCancelled(true);
                 }
             }
+
         }
+    }
     }
 }

@@ -100,8 +100,13 @@ public final class EncounterContributions {
     }
     /** No last-hit requirement. Native adapter must exclude overheal/self-cost/friendly-sparring restoration. */
     public synchronized int heal(UUID world,UUID healer,UUID beneficiary,double actualEligibleHealing,boolean allyAllowed,long now){
+        return healSelected(world,healer,beneficiary,actualEligibleHealing,allyAllowed,now,null);
+    }
+    /** Deferred native observations cannot acquire a context that joined AFTER their event-time frontier. */
+    public synchronized int healSelected(UUID world,UUID healer,UUID beneficiary,double actualEligibleHealing,boolean allyAllowed,long now,Set<UUID> selected){
         if(!allyAllowed||!finitePositive(actualEligibleHealing))return 0;int credited=0,examined=0;
         for(var key:List.copyOf(actorEncounters.getOrDefault(new ActorKey(world,beneficiary),Set.of()))){
+            if(selected!=null&&!selected.contains(key.enemy()))continue;
             var e=encounters.get(key);if(e==null||e.death!=null||e.disqualified)continue;
             var recipient=e.contributors.get(beneficiary);if(recipient==null||!recent(recipient.observedAtMillis(),now))continue;
             if(++examined>MAX_SUPPORT_ENCOUNTERS)break;

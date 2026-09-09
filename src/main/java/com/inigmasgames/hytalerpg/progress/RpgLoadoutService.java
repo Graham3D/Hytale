@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
 
 /** Single transaction boundary for all loadout and gameplay graph mutations. */
-public final class RpgLoadoutService implements RpgLoadoutOperations {
+public final class RpgLoadoutService implements RpgLoadoutOperations, AutoCloseable {
     private final RpgCatalog catalog;
     private final RpgPlayerStateRepository repository;
     private final RpgLinkGraphService graphService;
@@ -46,6 +46,36 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     private final List<Consumer<UUID>> mutationListeners = new CopyOnWriteArrayList<>();
     private final List<Consumer<UUID>> loadoutMutationListeners = new CopyOnWriteArrayList<>();
     private EarnedRewardStore earnedRewards;
+    private final DurableEncounterEffects playerWork = new DurableEncounterEffects();
+    private final Map<UUID,java.util.concurrent.CompletionStage<Void>> loading = new ConcurrentHashMap<>();
+    private volatile boolean nonblockingReads;
+    public void enableNonblockingReads(){nonblockingReads=true;}
+    /** No native handles or callbacks enter this queue. The holder remains the sole mutation authority. */
+    public synchronized java.util.concurrent.CompletionStage<Void> preload(UUID player){
+        if(states.containsKey(player))return java.util.concurrent.CompletableFuture.completedStage(null);
+        var prior=loading.get(player);if(prior!=null)return prior;
+        // Bound ready state as well as queued loads; no completion callback takes this lock.
+        if(states.size()+loading.size()>=4096)throw new IllegalStateException("PLAYER_READ_VIEW_CAPACITY");
+        loading.entrySet().removeIf(e->e.getValue().toCompletableFuture().isDone()&&states.containsKey(e.getKey()));
+        var receipt=playerWork.<Void>submit(()->{holder(player);return null;});loading.put(player,receipt);return receipt;
+    }
+    public boolean ready(UUID player){var h=states.get(player);return playerWork.failure()==null&&h!=null&&!h.persistenceUncertain&&!h.rewardRecoveryRequired;}
+    public Map<String,Object> persistenceMetrics(){return playerWork.metrics();}
+    public java.util.concurrent.CompletionStage<SupportProgress> submitSupport(UUID player,SupportProgress value){
+        return playerWork.submit(()->mutateSupport(player,value.revision(),ignored->value));
+    }
+    public java.util.concurrent.CompletionStage<SupportProgress> settleSupport(UUID player,java.util.concurrent.CompletionStage<SupportProgress> predecessor,SupportProgress actual){
+        return playerWork.submit(()->{
+            var prior=predecessor.toCompletableFuture();EncounterGroupCommit.await(prior);var saved=prior.getNow(null);
+            var next=new SupportProgress(saved.revision(),actual.lastAuraEpoch(),actual.managuard(),actual.toggleLocks());
+            return mutateSupport(player,saved.revision(),ignored->next);
+        });
+    }
+    public java.util.concurrent.CompletionStage<Void> submitCooldowns(UUID player,Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> values){
+        var immutable=com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown.validate(values);
+        return playerWork.submit(()->{saveCooldowns(player,immutable);return null;});
+    }
+    @Override public void close(){playerWork.close();}
     private java.util.function.Function<UUID,String> respecRejection=ignored->""; // Pure fixtures; production configures before any player load.
     public synchronized void configureRespecGuard(java.util.function.Function<UUID,String> guard){
         if(!states.isEmpty())throw new IllegalStateException("RESPEC_GUARD_MUST_BE_CONFIGURED_BEFORE_LOAD");respecRejection=java.util.Objects.requireNonNull(guard);
@@ -285,8 +315,8 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     }
 
     /** Progression eligibility needs no graph compilation or native HUD projection. */
-    public int characterLevel(UUID player) {Holder holder=holder(player);synchronized(holder){ ensureUsable(player,holder);return holder.state.level;}}
-    public int rawAttribute(UUID player,RpgAttribute attribute){Holder holder=holder(player);synchronized(holder){ensureUsable(player,holder);return holder.state.attributes.getOrDefault(attribute.name(),10);}}
+    public int characterLevel(UUID player) {return readHolder(player,false).state.level;}
+    public int rawAttribute(UUID player,RpgAttribute attribute){return readHolder(player,false).state.attributes.getOrDefault(attribute.name(),10);}
     public String exportBuild(UUID player){Holder holder=holder(player);synchronized(holder){ensureUsable(player,holder);return BuildTransfer.of(holder.state).encode();}}
     public MutationResult importBuild(UUID player,long expectedRevision,String json,String correlation){
         final BuildTransfer build;try{build=BuildTransfer.decode(json);}catch(RuntimeException error){return MutationResult.failure(ValidationCode.INVALID_REQUEST,error.getMessage(),correlation,revision(player));}
@@ -313,44 +343,44 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
             for(var attribute:RpgAttribute.values())candidate.attributes.put(attribute.name(),10);
         });
     }
-    @Override public long masteryXp(UUID player,String skill){Holder holder=holder(player);synchronized(holder){ ensureUsable(player,holder);return holder.state.skillMastery.getOrDefault(skill,0L);}}
+    @Override public long masteryXp(UUID player,String skill){return readHolder(player,false).state.skillMastery.getOrDefault(skill,0L);}
 
     @Override public RpgLoadoutView getLoadout(UUID player) {
-        Holder holder = states.computeIfAbsent(player,ignored->load(player));
-        synchronized (holder) {
-            if(holder.persistenceUncertain&&!holder.rewardRecoveryRequired)return readOnlyUncertain(holder);
-            ensureUsable(player,holder);
-            CompilationResult compiled = compileTraced(player, holder.state, reference());
-            GraphValidationResult graph = graphService.validate(holder.state);
-            List<String> warnings = new ArrayList<>(holder.state.degradedReasons);
+        Holder holder = readHolder(player,true);
+        {
+            if(playerWork.failure()!=null||holder.persistenceUncertain&&!holder.rewardRecoveryRequired)return readOnlyUncertain(holder);
+            var state=holder.state;
+            CompilationResult compiled = compileTraced(player, state, reference());
+            GraphValidationResult graph = graphService.validate(state);
+            List<String> warnings = new ArrayList<>(state.degradedReasons);
             if (!compiled.success()) warnings.add(compiled.code() + ": " + compiled.message());
-            return new RpgLoadoutView(holder.state, compiled.plans(), graph.valid() ? graph.routes() : Map.of(), warnings);
+            return new RpgLoadoutView(state, compiled.plans(), graph.valid() ? graph.routes() : Map.of(), warnings);
         }
     }
 
     /** Read-only hot presentation path; unlike command inspection it emits no compile trace. */
     @Override public RpgLoadoutView getPresentationView(UUID player) {
-        Holder holder = states.computeIfAbsent(player,ignored->load(player));
-        synchronized (holder) {
-            if(holder.persistenceUncertain&&!holder.rewardRecoveryRequired)return readOnlyUncertain(holder);
-            ensureUsable(player,holder);
-            if(holder.presentationState==null||!sameCompiledInputs(holder.presentationState,holder.state)){
-                holder.presentationCompiled=compiler.compile(holder.state);
-                holder.presentationGraph=graphService.validate(holder.state);
+        Holder holder = readHolder(player,true);
+        synchronized (holder.presentationLock) {
+            if(playerWork.failure()!=null||holder.persistenceUncertain&&!holder.rewardRecoveryRequired)return readOnlyUncertain(holder);
+            var state=holder.state;
+            if(holder.presentationState==null||!sameCompiledInputs(holder.presentationState,state)){
+                holder.presentationCompiled=compiler.compile(state);
+                holder.presentationGraph=graphService.validate(state);
                 holder.presentationCompilations++;
             }
-            holder.presentationState=holder.state;
+            holder.presentationState=state;
             CompilationResult compiled = holder.presentationCompiled;
             GraphValidationResult graph = holder.presentationGraph;
-            List<String> warnings = new ArrayList<>(holder.state.degradedReasons);
+            List<String> warnings = new ArrayList<>(state.degradedReasons);
             if (!compiled.success()) warnings.add(compiled.code() + ": " + compiled.message());
-            return new RpgLoadoutView(holder.state, compiled.plans(),
+            return new RpgLoadoutView(state, compiled.plans(),
                     graph.valid() ? graph.routes() : Map.of(), warnings);
         }
     }
 
     /** Bounded, read-only diagnostic counter. No game decision depends on cache statistics. */
-    public long presentationCompilations(UUID player){var holder=states.get(player);if(holder==null)return 0;synchronized(holder){return holder.presentationCompilations;}}
+    public long presentationCompilations(UUID player){var holder=states.get(player);return holder==null?0:holder.presentationCompilations;}
     private static boolean sameCompiledInputs(RpgPlayerState a,RpgPlayerState b){
         // Published holder states are copy-before-write. Progress, resource ledgers and attributes do not compile Links.
         return a==b||java.util.Arrays.equals(a.equippedSkills,b.equippedSkills)
@@ -583,6 +613,21 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         }
         return holder;
     }
+    /** Reads never acquire the writer monitor once loaded. Production loading/recovery is explicit. */
+    private Holder readHolder(UUID player,boolean inspectUncertain){
+        if(playerWork.failure()!=null&&!inspectUncertain)throw new IllegalStateException("PLAYER_PERSISTENCE_UNCERTAIN",playerWork.failure());
+        var h=states.get(player);
+        if(h==null){
+            if(nonblockingReads){preload(player);throw new IllegalStateException("PLAYER_PERSISTENCE_NOT_READY");}
+            h=holder(player); // Offline tools / retained synchronous API, never enabled native reads.
+        }
+        if(h.rewardRecoveryRequired){
+            if(nonblockingReads)throw new IllegalStateException("PLAYER_REWARD_RECOVERY_REQUIRED");
+            synchronized(h){ensureUsable(player,h);}
+        }
+        if(h.persistenceUncertain&&!inspectUncertain)throw new IllegalStateException("PLAYER_PERSISTENCE_UNCERTAIN");
+        return h;
+    }
     private static RpgLoadoutView readOnlyUncertain(Holder holder){
         // Inspect the last published checkpoint, never execute a possibly stale loadout after an uncertain write.
         return new RpgLoadoutView(holder.state,Map.of(),Map.of(),List.of("PLAYER_PERSISTENCE_UNCERTAIN_READ_ONLY: restart before gameplay or edits"));
@@ -723,9 +768,10 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
     private static String reference() { return UUID.randomUUID().toString().substring(0, 12); }
 
     private static final class Holder {
-        private RpgPlayerState state,presentationState;private CompilationResult presentationCompiled;
-        private GraphValidationResult presentationGraph;private long presentationCompilations;
-        private volatile boolean persistenceUncertain;private boolean rewardRecoveryRequired;
+        private volatile RpgPlayerState state;private RpgPlayerState presentationState;private CompilationResult presentationCompiled;
+        private final Object presentationLock=new Object();
+        private GraphValidationResult presentationGraph;private volatile long presentationCompilations;
+        private volatile boolean persistenceUncertain;private volatile boolean rewardRecoveryRequired;
         private Holder(RpgPlayerState state){this.state=state;}
     }
 }

@@ -13,6 +13,10 @@ public interface SkillExecutionPort {
     default CommittedTarget captureTarget(Stage04SkillProfile profile, CompiledSkillPlan plan, SkillExecutionRequest request) { return null; }
     default Validation validateRelease(SkillExecutionContext context) { return Validation.reject("COMMITTED_TARGET_ADAPTER_UNAVAILABLE"); }
     default void abandonRelease(SkillExecutionContext context) { }
+    /** Immutable persistence requests only. Native effects remain pending until the owner polls. */
+    default java.util.concurrent.CompletionStage<Void> prepareDurable(SkillExecutionContext context){return java.util.concurrent.CompletableFuture.completedStage(null);}
+    default void abandonDurable(SkillExecutionContext context){}
+    default Validation validateDurableCompletion(SkillExecutionContext context){return Validation.pass();}
     default CommittedTarget conditionalKillTarget(SkillExecutionContext source,ConditionalRepeatRuntime.Hit hit){return null;}
     /** Optional family-specific irreversible decision after payment, before arming any delayed release. */
     default void commitConsumable(SkillExecutionContext context) { }

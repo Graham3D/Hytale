@@ -37,19 +37,35 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     private final SupportRuntime runtime;
     private final HytaleBossBarTracker bosses;
     private final Set<UUID> cooldownSaveWarnings=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Set<UUID> initialized=java.util.concurrent.ConcurrentHashMap.newKeySet(),initializing=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    public void beginReady(UUID actor){initialized.remove(actor);initializing.remove(actor);}
+    public boolean sessionReady(UUID actor){return initialized.contains(actor)&&loadouts.ready(actor);}
+    public boolean connectionReady(Store<EntityStore> store,Ref<EntityStore> actor){
+        var id=store.getComponent(actor,PlayerRef.getComponentType()).getUuid();
+        if(!loadouts.ready(id))return false;
+        if(initialized.contains(id))return true;
+        if(initializing.add(id))runtime.detach(id,"PLAYER_READY_RESET",port(store,actor));
+        if(!runtime.settled(id)||!kernel.cooldowns().persistenceReady(id))return false;
+        kernel.cooldowns().restore(id);
+        kernel.reservations().removeAll(id,new EntityStatResourcePort(store.getComponent(actor,EntityStatMap.getComponentType())));
+        initialized.add(id);return true;
+    }
     @FunctionalInterface public interface AuraPayload {void apply(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> actor,SkillExecutionContext context,List<UUID> targets,int tick,boolean chill);}
     private final AuraPayload auraPayload;
     public HytaleSupportSystem(RpgLoadoutService loadouts,RpgCombatKernel kernel,OwnedFieldBudget fields,CombatTrace trace,LinkTreeVfxService vfx,HytaleBossBarTracker bosses,AuraPayload auraPayload){
         this.auraPayload=auraPayload;
         this.bosses=bosses;
         this.loadouts=loadouts;this.kernel=kernel;this.trace=trace;this.vfx=vfx;
-        kernel.cooldowns().bindPersistence(new com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Persistence(){
+        kernel.cooldowns().bindPersistence(new com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.AsyncPersistence(){
             public Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> load(UUID actor){return loadouts.getPresentationView(actor).state().cooldowns;}
-            public void save(UUID actor,Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> values){loadouts.saveCooldowns(actor,values);}
+            public void save(UUID actor,Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> values){throw new IllegalStateException("NATIVE_SYNCHRONOUS_COOLDOWN_SAVE_FORBIDDEN");}
+            public java.util.concurrent.CompletionStage<Void> submit(UUID actor,Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> values){return loadouts.submitCooldowns(actor,values);}
         });
-        runtime=new SupportRuntime(kernel.reservations(),fields,new SupportProgressStore(){
+        runtime=new SupportRuntime(kernel.reservations(),fields,new SupportProgressStore.Async(){
             public SupportProgress read(UUID actor){return loadouts.getPresentationView(actor).state().support;}
-            public SupportProgress save(UUID actor,SupportProgress next){return loadouts.mutateSupport(actor,next.revision(),ignored->next);}
+            public SupportProgress save(UUID actor,SupportProgress next){throw new IllegalStateException("NATIVE_SYNCHRONOUS_SUPPORT_SAVE_FORBIDDEN");}
+            public java.util.concurrent.CompletionStage<SupportProgress> submit(UUID actor,SupportProgress next){return loadouts.submitSupport(actor,next);}
+            public java.util.concurrent.CompletionStage<SupportProgress> settle(UUID actor,java.util.concurrent.CompletionStage<SupportProgress> prior,SupportProgress actual){return loadouts.settleSupport(actor,prior,actual);}
         });
     }
     public SupportRuntime runtime(){return runtime;}
@@ -100,7 +116,10 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 new SystemDependency<>(Order.BEFORE,HytaleSkillExecutionSystem.class));
     }
     @Override public void tick(float delta,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
         var ref=chunk.getReferenceTo(index);var player=chunk.getComponent(index,PlayerRef.getComponentType());
+        runtime.pollMaintenance();
+        if(!sessionReady(player.getUuid()))return;
         var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
         NativeManaRegenerationAdapter.install(stats,()->runtime.manaRegenerationIncreased(player.getUuid(),System.nanoTime()/1e9));
         runtime.tick(player.getUuid(),System.nanoTime()/1e9,alive(store,ref),new Port(store,ref,buffer));
@@ -108,6 +127,8 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         try{if(kernel.cooldowns().checkpoint(player.getUuid()))cooldownSaveWarnings.remove(player.getUuid());}
         catch(RuntimeException failure){if(cooldownSaveWarnings.add(player.getUuid()))
             com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure).log("RPG_COOLDOWN_CHECKPOINT_FAILED player=%s",player.getUuid());}
+
+        }
     }
     public void ready(Store<EntityStore> store,Ref<EntityStore> actor){
         var player=store.getComponent(actor,PlayerRef.getComponentType());
@@ -118,7 +139,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     }
     public void detach(Store<EntityStore> store,Ref<EntityStore> actor,String reason){
         var player=store.getComponent(actor,PlayerRef.getComponentType());
-        if(player!=null){cooldownSaveWarnings.remove(player.getUuid());runtime.detach(player.getUuid(),reason,port(store,actor));}
+        if(player!=null){beginReady(player.getUuid());cooldownSaveWarnings.remove(player.getUuid());runtime.detach(player.getUuid(),reason,port(store,actor));}
     }
     public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> actor,Stage04SkillProfile profile,CompiledSkillPlan plan){
         var id=store.getComponent(actor,PlayerRef.getComponentType()).getUuid();
@@ -172,6 +193,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         Port(Store<EntityStore> store,Ref<EntityStore> actor,CommandBuffer<EntityStore> buffer){this.store=store;this.actor=actor;this.buffer=buffer;player=store.getComponent(actor,PlayerRef.getComponentType());}
         public NativeResourcePort resources(){return new EntityStatResourcePort(store.getComponent(actor,EntityStatMap.getComponentType()));}
         public String valid(SkillExecutionContext context){
+            if(!sessionReady(player.getUuid()))return "PLAYER_PERSISTENCE_NOT_READY";
             if(!alive(store,actor))return "OWNER_DEAD";
             if(context.target()==null||!context.target().worldId().equals(player.getWorldUuid()))return "WORLD_CHANGED";
             var view=loadouts.getPresentationView(player.getUuid());var plan=view.plans().get(context.request().slot());
@@ -396,10 +418,12 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 new SystemDependency<>(Order.BEFORE,HytaleDamageLifecycleSystems.Filter.class),
                 new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             if(damage.isCancelled()||damage.getAmount()<=0)return;
             var metadata=HytaleDamageAdapter.metadata(damage);
             if(metadata!=null&&metadata.origin()==HytaleDamageMetadata.Origin.REDIRECTED)return;
             var ref=chunk.getReferenceTo(index);var actor=chunk.getComponent(index,PlayerRef.getComponentType()).getUuid();double now=System.nanoTime()/1e9;
+            if(!support.sessionReady(actor))return;
             if(damage.getSource() instanceof Damage.EntitySource source&&HytaleAreaQueries.hostile(store,source.getRef(),ref)){
                 support.runtime.hostileDamage(actor,now);support.kernel.hostileCombat().markHostile(actor);
             }
@@ -409,7 +433,9 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 // Failed persistence leaves the original native amount unchanged; never grant unrecorded shielding.
                 com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure).log("RPG_BARRIER_REJECTED player=%s",actor);
             }
+
         }
+    }
     }
     public static final class Removal extends com.hypixel.hytale.component.system.RefSystem<EntityStore>{
         private final HytaleSupportSystem support;
@@ -417,9 +443,12 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         @Override public Query<EntityStore> getQuery(){return Query.and(PlayerRef.getComponentType(),EntityStatMap.getComponentType());}
         @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){}
         @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             try{support.detach(store,ref,"NATIVE_ENTITY_REMOVE_"+reason);}
             catch(RuntimeException failure){com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
                     .log("RPG support teardown failed; no active Aura is retained");}
+
         }
+    }
     }
 }

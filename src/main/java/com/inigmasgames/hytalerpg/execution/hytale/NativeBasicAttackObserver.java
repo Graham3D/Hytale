@@ -97,9 +97,12 @@ public final class NativeBasicAttackObserver {
         public Start(NativeBasicAttackObserver owner){super(InteractionChainStartEvent.class);this.owner=owner;}
         @Override public Query<EntityStore> getQuery(){return PlayerRef.getComponentType();}
         @Override public void handle(int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,InteractionChainStartEvent event){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
             var actor=chunk.getComponent(i,PlayerRef.getComponentType()).getUuid();
             try{owner.start(actor,chunk.getReferenceTo(i),event);}catch(RuntimeException boundary){owner.failure(actor,boundary.getMessage());}
+
         }
+    }
     }
     public static final class Before extends DamageEventSystem {
         private final NativeBasicAttackObserver owner;
@@ -107,6 +110,7 @@ public final class NativeBasicAttackObserver {
         @Override public Query<EntityStore> getQuery(){return Query.and(EntityStatMap.getComponentType(),UUIDComponent.getComponentType());}
         @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemGroupDependency<>(Order.AFTER,DamageModule.get().getFilterDamageGroup()),new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
             if(damage.isCancelled()||damage.getAmount()<=0||HytaleDamageAdapter.metadata(damage)!=null
                     ||damage.getSource()==null||damage.getSource().getClass()!=Damage.EntitySource.class||damage.getIfPresentMetaObject(Damage.INTERACTION_TYPE)!=InteractionType.Primary)return;
             var source=((Damage.EntitySource)damage.getSource()).getRef();var target=chunk.getReferenceTo(i);
@@ -118,7 +122,9 @@ public final class NativeBasicAttackObserver {
                 var witness=owner.find(player.getUuid(),source,target,hp.get(),chunk.getComponent(i,UUIDComponent.getComponentType()).getUuid().toString());
                 if(witness!=null)damage.putMetaObject(WITNESS,witness);
             }catch(RuntimeException boundary){owner.failure(player.getUuid(),boundary.getMessage());}
+
         }
+    }
     }
     public static final class After extends DamageEventSystem {
         private final NativeBasicAttackObserver owner;
@@ -126,6 +132,7 @@ public final class NativeBasicAttackObserver {
         @Override public Query<EntityStore> getQuery(){return EntityStatMap.getComponentType();}
         @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.AFTER,DamageSystems.ApplyDamage.class),new SystemGroupDependency<>(Order.BEFORE,DamageModule.get().getInspectDamageGroup()));}
         @Override public void handle(int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
             var witness=damage.getIfPresentMetaObject(WITNESS);if(witness==null)return;
             damage.putMetaObject(WITNESS,null);
             var hp=chunk.getComponent(i,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());if(hp==null)return;
@@ -141,6 +148,8 @@ public final class NativeBasicAttackObserver {
             try{owner.onHit.accept(receipt.actor(),System.nanoTime()/1e9);}
             catch(RuntimeException boundary){details.put("comboFailure",String.valueOf(boundary.getMessage()));}
             owner.trace.emit(receipt.actor(),RpgTraceEventType.NATIVE_BASIC_HIT_OBSERVED,new CombatTrace.Context(receipt.id(),receipt.id(),receipt.id()),details);
+
         }
+    }
     }
 }

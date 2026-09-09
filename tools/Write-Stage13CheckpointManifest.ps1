@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('f','g','h','i')][string]$Cohort='f')
+param([ValidateSet('f','g','h','i','j')][string]$Cohort='f')
 $ErrorActionPreference='Stop'
 $manifestRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $manifestEvidence=Join-Path $manifestRoot "evidence\stage-13\cohort-$Cohort"
@@ -44,6 +44,15 @@ if($Cohort -eq 'i'){
     $manifest.rollback.compatibilityTests='Stage13V2RecoveryEdgesTest actual H rejection and preserved coordinated legacy copy; retained G/F/Stage12 rollback tests'
     $manifest.durability=@{submission='PROVISIONAL_NOT_DURABLE';acknowledgement='AFTER_COVERING_FORCE_TRUE';grouping='SEALED_OPERATIONS_DRAIN_ALREADY_QUEUED_NO_SYNTHETIC_64_DAMAGE_EPOCH';checkpoint='BOUNDED_BUNDLES_AND_SINGLE_V2_MANIFEST';connected='UNVERIFIED'}
     $manifest.report=@{path='docs/stage-13/encounter-durability-final-boundary-report.md';sha256=(Get-FileHash -LiteralPath (Join-Path $manifestRoot 'docs/stage-13/encounter-durability-final-boundary-report.md')).Hash}
+}
+if($Cohort -eq 'j'){
+    $manifest.schema.encounterJournal=2;$manifest.schema.encounterCheckpoint=2
+    $manifest.schema.rollback='STOP_ALL_WRITERS_AND_RESTORE_MATCHING_PLAYER_REWARD_ENCOUNTER_WORLD_CHECKPOINT_NO_ONE_SIDED_REWIND'
+    $manifest.rollback.immediateCheckpoint='Stage13I efe9e159b13de005a67a69bb90b84066d0e4efd6'
+    $manifest.rollback.immediateSha256='0082FA775EB2C7C42445194E3E0736515ED21CBCEF77BEC42E04ECA1CFBF3D36'
+    $manifest.rollback.compatibilityTests='Stage13EscrowArchiveRollbackTest actual I debit/reward reader plus all retained rollback tests; native world reopening still unverified'
+    $manifest.durability=@{submission='PROVISIONAL_NOT_DURABLE';acknowledgement='AFTER_COVERING_FORCE_TRUE';shield='PRE_DURABLE_ESCROW_CRASH_FORFEITURE';nativeTick='NOT_MEASURED';connected='UNVERIFIED'}
+    $manifest.report=@{path='docs/stage-13/native-persistence-handoff-correction.md';sha256=(Get-FileHash -LiteralPath (Join-Path $manifestRoot 'docs/stage-13/native-persistence-handoff-correction.md')).Hash}
 }
 $manifest|ConvertTo-Json -Depth 8|Set-Content -LiteralPath $path -Encoding utf8
 $read=Get-Content -Raw -LiteralPath $path|ConvertFrom-Json -AsHashtable

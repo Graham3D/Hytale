@@ -18,8 +18,11 @@ public final class RpgHudTickSystem extends EntityTickingSystem<EntityStore> {
     }
     @Override public void tick(float deltaSeconds, int index, ArchetypeChunk<EntityStore> chunk,
                                Store<EntityStore> store, CommandBuffer<EntityStore> buffer) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.HUD)){
         PlayerRef player = chunk.getComponent(index, PlayerRef.getComponentType());
         EntityStatMap stats = chunk.getComponent(index, EntityStatMap.getComponentType());
         if (player != null && stats != null) coordinator.tick(player, stats);
+
+        }
     }
 }

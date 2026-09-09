@@ -127,6 +127,8 @@ public final class FileEncounterStore implements AutoCloseable {
     public void checkpoint(){awaitSubmissions();locked(()->{try{journal.checkpoint();}catch(IOException|RuntimeException error){throw persistenceFailure(error);}return null;});awaitCheckpoints();}
     public void awaitCheckpoints(){try{EncounterGroupCommit.await(checkpointTail);}catch(RuntimeException error){throw persistenceFailure(error);}}
     public void awaitSubmissions(){try{groups.await();}catch(RuntimeException error){throw persistenceFailure(error);}}
+    public CompletionStage<Void> submissionFrontier(){return groups.frontier();}
+    public Map<String,Object> submissionMetrics(){return groups.metrics();}
     /** The receipt, not successful submission, is the durability boundary. */
     public final class SubmissionReservation implements AutoCloseable {
         private final EncounterGroupCommit.Lease lease;
@@ -176,7 +178,9 @@ public final class FileEncounterStore implements AutoCloseable {
         try{return operation.get();}finally{legacyReservation=false;}
     });}
     /** Separate durable tombstone also covers conversion/ownership before context capture. */
-    public void disqualify(UUID world,UUID enemy){awaitSubmissions();locked(()->{
+    public void disqualify(UUID world,UUID enemy){awaitSubmissions();disqualifyPrepared(world,enemy);}
+    /** Worker-only: caller has closed context admission and awaited its finite predecessor. */
+    void disqualifyPrepared(UUID world,UUID enemy){locked(()->{
         admissionStates.remove(new EncounterJournal.Key(world,enemy));
         Path path=keyPath("excluded",world,enemy);if(!Files.exists(path))write(path,new Rejected(world,enemy),false);
         else if(!read(path,Rejected.class).equals(new Rejected(world,enemy)))throw new IllegalStateException("ENCOUNTER_ID_MISMATCH");
@@ -195,7 +199,9 @@ public final class FileEncounterStore implements AutoCloseable {
         if(plan!=null)identity(plan.spawn(),world,enemy);return Optional.ofNullable(plan);
     }
     /** Atomically record the full immutable plan before the first player award. */
-    public EncounterContributions.DeathPlan freeze(EncounterContributions.DeathPlan plan){awaitSubmissions();return locked(()->{
+    public EncounterContributions.DeathPlan freeze(EncounterContributions.DeathPlan plan){awaitSubmissions();return freezePrepared(plan);}
+    /** Worker-only: no wait on unrelated submissions admitted after death capture. */
+    EncounterContributions.DeathPlan freezePrepared(EncounterContributions.DeathPlan plan){return locked(()->{
         var spawn=plan.spawn();admissionStates.remove(new EncounterJournal.Key(spawn.world(),spawn.enemy()));var previous=deathLocked(spawn.world(),spawn.enemy());
         if(previous.isPresent()){
             if(!previous.get().equals(plan))throw new IllegalStateException("DEATH_PLAN_CONFLICT");return previous.get();
@@ -218,6 +224,10 @@ public final class FileEncounterStore implements AutoCloseable {
     @FunctionalInterface public interface AwardDelivery {void accept(UUID player,EarnedReward reward,LearningSources.Opportunity learning);}
     public int drainLearning(int awardBudget,AwardDelivery award){
         awaitSubmissions();
+        return drainPrepared(awardBudget,award);
+    }
+    /** Only already frozen plans are discoverable here. No dependency on active-context WAL tails. */
+    int drainPrepared(int awardBudget,AwardDelivery award){
         if(awardBudget<1||awardBudget>EncounterContributions.MAX_CONTRIBUTORS)throw new IllegalArgumentException("DEATH_AWARD_BUDGET");Objects.requireNonNull(award);
         return locked(()->{
             int attempts=0;

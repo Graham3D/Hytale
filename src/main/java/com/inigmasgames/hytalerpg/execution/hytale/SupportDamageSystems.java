@@ -93,6 +93,7 @@ public final class SupportDamageSystems {
                 new SystemDependency<>(Order.BEFORE,HytaleDamageLifecycleSystems.Filter.class),
                 new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             var metadata=HytaleDamageAdapter.metadata(damage);
             if(damage.isCancelled()||damage.getAmount()<=0||metadata!=null&&metadata.origin()==HytaleDamageMetadata.Origin.REDIRECTED)return;
             var id=chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid();var ref=chunk.getReferenceTo(index);
@@ -130,7 +131,9 @@ public final class SupportDamageSystems {
                 }catch(RuntimeException failure){support.traceFinite(offered,RpgTraceEventType.NATIVE_SUPPORT_REJECTED,
                         Map.of("boundary","SHARED_AEGIS_DURABLE_ABSORB_FAILED","exception",failure.getClass().getName()));}
             }
+
         }
+    }
     }
     /** Captures actual pre-Apply HP after all absorption, including native non-RPG incoming damage. */
     public static final class BeforeApply extends DamageEventSystem {
@@ -140,8 +143,11 @@ public final class SupportDamageSystems {
                 new SystemDependency<>(Order.AFTER,Shield.class),
                 new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             damage.putMetaObject(BEFORE,health(chunk,index));
+
         }
+    }
     }
     public static final class Reflect extends DamageEventSystem {
         private final HytaleSupportSystem support;
@@ -149,6 +155,7 @@ public final class SupportDamageSystems {
         @Override public Query<EntityStore> getQuery(){return Query.and(UUIDComponent.getComponentType(),EntityStatMap.getComponentType());}
         @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getInspectDamageGroup();}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             if(Boolean.TRUE.equals(damage.getIfPresentMetaObject(OBSERVED)))return;damage.putMetaObject(OBSERVED,true);
             if(damage.isCancelled()||secondaryCannotReflect(HytaleDamageAdapter.metadata(damage))||!(damage.getSource() instanceof Damage.EntitySource attacker))return;
             var recipient=chunk.getReferenceTo(index);var source=attacker.getRef();
@@ -178,6 +185,8 @@ public final class SupportDamageSystems {
                         "healthBefore",outcome.healthBefore(),"healthAfter",outcome.healthAfter(),"cancelled",outcome.cancelled(),
                         "noProc",true,"noLeech",true,"noCredit",true));
             }
+
         }
+    }
     }
 }

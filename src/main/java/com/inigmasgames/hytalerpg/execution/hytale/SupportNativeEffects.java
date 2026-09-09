@@ -144,6 +144,7 @@ public final class SupportNativeEffects {
         @Override public Query<EntityStore> getQuery(){return recipientQuery();}
         @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.BEFORE,RoleSystems.BehaviourTickSystem.class));}
         @Override public void tick(float delta,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             var ref=chunk.getReferenceTo(index);var id=chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid();
             var marker=chunk.getComponent(index,SupportEffectProjection.getComponentType());double now=System.nanoTime()/1e9;var world=world(store);
             var effects=support.runtime().finite();
@@ -199,7 +200,9 @@ public final class SupportNativeEffects {
                 }}catch(RuntimeException ignored){/* Bounded native leases expire even if removal fails during teardown. */}
                 buffer.removeComponent(ref,SupportEffectProjection.getComponentType());
             }
+
         }
+    }
     }
     /** Retreat request is generated after AI and before native avoidance, steering and interaction execution. */
     public static final class Retreat extends EntityTickingSystem<EntityStore> {
@@ -211,6 +214,7 @@ public final class SupportNativeEffects {
                 new SystemDependency<>(Order.BEFORE,AvoidanceSystem.class),
                 new SystemDependency<>(Order.BEFORE,InteractionSystems.TickInteractionManagerSystem.class));}
         @Override public void tick(float delta,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             var ref=chunk.getReferenceTo(index);var id=chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid();
             double now=System.nanoTime()/1e9;
             var taunt=support.runtime().finite().control(world(store),id,SupportProfile.Kind.TAUNT,now);
@@ -261,7 +265,9 @@ public final class SupportNativeEffects {
             marker.fearCandidate=effect.get().skillInstanceId();marker.fearPosition=observedPosition;
             marker.fearSource=new com.inigmasgames.hytalerpg.execution.math.Vec3(source.x(),source.y(),source.z());
             marker.fearRequestedAt=now;marker.fearRequested=candidate.getTranslation().lengthSquared()>1e-8;
+
         }
+    }
     }
     public static final class NativeOutgoing extends DamageEventSystem {
         private final HytaleSupportSystem support;
@@ -271,12 +277,15 @@ public final class SupportNativeEffects {
                 new SystemGroupDependency<>(Order.AFTER,DamageModule.get().getGatherDamageGroup()),
                 new SystemGroupDependency<>(Order.BEFORE,DamageModule.get().getFilterDamageGroup()));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             // RPG skill hits already use the combined additive bucket at calculation. Never apply it twice.
             if(damage.isCancelled()||damage.getAmount()<=0||HytaleDamageAdapter.metadata(damage)!=null||!(damage.getSource() instanceof Damage.EntitySource source))return;
             if(!source.getRef().isValid()||source.getRef().equals(chunk.getReferenceTo(index)))return;
             var id=store.getComponent(source.getRef(),UUIDComponent.getComponentType());if(id==null)return;
             damage.setAmount((float)(damage.getAmount()*support.runtime().finite().nativeOutgoingFactor(world(store),id.getUuid(),System.nanoTime()/1e9)));
+
         }
+    }
     }
     public static final class DirectDamageBreak extends DamageEventSystem {
         private final HytaleSupportSystem support;
@@ -284,6 +293,7 @@ public final class SupportNativeEffects {
         @Override public Query<EntityStore> getQuery(){return Query.and(UUIDComponent.getComponentType(),SupportEffectProjection.getComponentType());}
         @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getInspectDamageGroup();}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             var meta=HytaleDamageAdapter.metadata(damage);
             // The pinned DamageEntityInteraction supplies INTERACTION_TYPE; a bare source is not proof of direct damage.
             boolean direct=meta!=null?meta.origin()==HytaleDamageMetadata.Origin.DIRECT:
@@ -291,7 +301,9 @@ public final class SupportNativeEffects {
             var id=chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid();
             if(support.runtime().finite().directDamage(world(store),id,System.nanoTime()/1e9,direct,!damage.isCancelled()&&damage.getAmount()>0))
                 support.kernel().statuses().remove(id,RpgStatusType.FEAR);
+
         }
+    }
     }
     public static final class Removal extends RefSystem<EntityStore> {
         private final HytaleSupportSystem support;
@@ -299,9 +311,12 @@ public final class SupportNativeEffects {
         @Override public Query<EntityStore> getQuery(){return UUIDComponent.getComponentType();}
         @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){}
         @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             var marker=store.getComponent(ref,SupportEffectProjection.getComponentType());if(marker!=null)releaseTaunt(store,ref,marker);
             var id=store.getComponent(ref,UUIDComponent.getComponentType());support.runtime().finite().forget(id.getUuid());
             support.runtime().imbues().forget(id.getUuid());
+
         }
+    }
     }
 }

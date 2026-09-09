@@ -47,6 +47,7 @@ public final class HytaleDamageLifecycleSystems {
         @Override public SystemGroup<EntityStore> getGroup() { return DamageModule.get().getGatherDamageGroup(); }
         @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer, Damage damage) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
             var details=new java.util.HashMap<String,Object>();
             if(HytaleConditionalDamage.pending(damage)){
                 var stats=chunk.getComponent(index,EntityStatMap.getComponentType());var health=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
@@ -76,7 +77,9 @@ public final class HytaleDamageLifecycleSystems {
             }
             details.put("amount",damage.getAmount());details.put("cancelled",damage.isCancelled());
             emit(damage, RpgTraceEventType.DAMAGE_GATHERED, details);
+
         }
+    }
     }
     public static final class Filter extends TraceSystem {
         public Filter(CombatTrace trace) { super(trace); }
@@ -86,9 +89,12 @@ public final class HytaleDamageLifecycleSystems {
         }
         @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer, Damage damage) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
             emit(damage, RpgTraceEventType.DAMAGE_FILTERED,
                     Map.of("amount", damage.getAmount(), "cancelled", damage.isCancelled()));
+
         }
+    }
     }
     public static final class Application extends TraceSystem {
         public Application(CombatTrace trace) { super(trace); }
@@ -98,9 +104,12 @@ public final class HytaleDamageLifecycleSystems {
         }
         @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer, Damage damage) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
             emit(damage, RpgTraceEventType.DAMAGE_APPLIED,
                     Map.of("nativeAmount", damage.getAmount(), "cancelled", damage.isCancelled()));
+
         }
+    }
     }
     public static final class Inspect extends TraceSystem {
         private final HostileCombatTracker combat;
@@ -108,6 +117,7 @@ public final class HytaleDamageLifecycleSystems {
         @Override public SystemGroup<EntityStore> getGroup() { return DamageModule.get().getInspectDamageGroup(); }
         @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer, Damage damage) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
             if (!damage.isCancelled() && damage.getAmount() > 0.0f) {
                 PlayerRef targetPlayer = chunk.getComponent(index, PlayerRef.getComponentType());
                 if (targetPlayer != null) combat.markHostile(targetPlayer.getUuid());
@@ -129,7 +139,9 @@ public final class HytaleDamageLifecycleSystems {
                             "actualHealthLoss", Double.isFinite(after) && Double.isFinite(metadata.targetHealthBefore())
                                     ? Math.max(0.0, metadata.targetHealthBefore() - after) : -1.0,
                             "cancelled", damage.isCancelled(),"effectInstanceId",metadata.effectInstanceId(),"canProc",metadata.canProc()));
+
         }
+    }
     }
 
     /** Observes Hytale's authenticated block result after native stamina handling. */
@@ -143,6 +155,7 @@ public final class HytaleDamageLifecycleSystems {
         }
         @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer, Damage damage) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
             PlayerRef defender = chunk.getComponent(index, PlayerRef.getComponentType());
             if (defender != null && !damage.isCancelled() && damage.getAmount() > 0.0f)
                 skills.onIncomingDamage(defender.getUuid());
@@ -151,6 +164,8 @@ public final class HytaleDamageLifecycleSystems {
                     || source.getRef() == chunk.getReferenceTo(index)) return;
             String eventId = Integer.toHexString(System.identityHashCode(damage)) + ':' + index;
             skills.onNativeBlocked(chunk.getReferenceTo(index), source.getRef(), store, eventId);
+
         }
+    }
     }
 }

@@ -65,6 +65,7 @@ public final class SkillExecutionService {
     public SkillExecutionResult request(SkillExecutionRequest request, SkillExecutionPort port) {
         String root = "input-" + request.chainId() + '-' + request.correlationId().substring(0, Math.min(8, request.correlationId().length()));
         String pendingInstance = "activation-" + UUID.randomUUID();
+        if(persistenceCommits.containsKey(request.actorId())||channelCooldowns.containsKey(request.actorId()))return SkillExecutionResult.pending("PREVIOUS_DURABLE_COMMIT_PENDING");
         emit(request, RpgTraceEventType.SKILL_ACTIVATION_REQUEST, root, pendingInstance,
                 Map.of("action", request.action(), "skillSlot", request.slot().externalId(),"origin",request.origin()));
         Prepared prepared;
@@ -74,7 +75,7 @@ public final class SkillExecutionService {
                 var profile=profiles.require(equipped.get().value());
                 if(profile.support()!=null&&profile.support().aura()){
                     var stopped=port.stopActiveSupport(profile);
-                    if(stopped!=null)return stopped.committed()?stopped:reject(request,root,pendingInstance,stopped.code());
+                    if(stopped!=null)return stopped.committed()||stopped.status()==SkillExecutionResult.Status.PENDING?stopped:reject(request,root,pendingInstance,stopped.code());
                 }
             }
             prepared = validate(request, port, root, pendingInstance);
@@ -126,9 +127,11 @@ public final class SkillExecutionService {
             return value == null ? OptionalDouble.empty() : OptionalDouble.of(value.profile.windupSeconds());
         }
     }
-    public boolean pendingCast(UUID actor){return lifecycle.active(actor).isPresent()||releases.pending(actor)||activeWindupSeconds(actor).isPresent();}
+    public boolean pendingCast(UUID actor){return persistenceCommits.containsKey(actor)||lifecycle.active(actor).isPresent()||releases.pending(actor)||activeWindupSeconds(actor).isPresent();}
 
     public boolean cancel(UUID actor, String reason) {
+        var persistence=persistenceCommits.get(actor);
+        if(persistence!=null){cancelledPersistence.add(actor);kernel.resources().refundIfUncommitted(persistence.token);durableAbandon.accept(persistence.context);}
         var queued=releases.cancel(actor);
         for(var pending:queued) emit(pending.request(),RpgTraceEventType.SKILL_RELEASE_CANCELLED,
                 pending.rootCastId(),pending.skillInstanceId(),Map.of("reason",reason,"refund",false));
@@ -302,11 +305,6 @@ public final class SkillExecutionService {
             releases.finish(prepared.instanceId);lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);
             return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"RESOURCE_RESERVATION_FAILED");
         }
-        boolean resourceCommitted = false;
-        boolean cooldownStarted = false;
-        com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend cooldownSpend=null;
-        AttunementLedger.Commit attunementCommit=null;
-        com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Commit ruthlessCommit=null;
         SkillExecutionContext context;
         try {
             DerivedStats attributes = derive(prepared.request.actorId());
@@ -341,28 +339,106 @@ public final class SkillExecutionService {
                 var resource=ResourceType.valueOf(prepared.profile.resourceType());
                 context.leechBudget().initialize(resource,kernel.resources().spendableMaximum(prepared.request.actorId(),resource,port.resources()));
             }
-            kernel.resources().commitCost(token, port.resources()); resourceCommitted = true;
-            if(!channel(prepared.profile)) {
-                cooldownSpend=kernel.cooldowns().spendCharge(prepared.request.actorId(), prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity(),
-                        prepared.profile.cooldownSeconds(), prepared.plan.foundationModifiers().rechargeFactor(), attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
-                cooldownStarted = true;
+            return preparePersistence(prepared,context,token,attributes,port);
+        } catch(RuntimeException error){
+            kernel.resources().refundIfUncommitted(token);releases.finish(prepared.instanceId);lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);
+            return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_PREPARATION_FAILED_"+error.getClass().getSimpleName());
+        }
+    }
+    private final Map<UUID,PendingCommit> persistenceCommits=new java.util.concurrent.ConcurrentHashMap<>();
+    private final java.util.Set<UUID> cancelledPersistence=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private java.util.function.Consumer<SkillExecutionContext> durableAbandon=ignored->{};
+    public void configureDurableAbandon(java.util.function.Consumer<SkillExecutionContext> valuesOnly){durableAbandon=java.util.Objects.requireNonNull(valuesOnly);}
+    /** Bounded owner polling also settles disconnected actors; no native reference is retained. */
+    public void pollCancelledPersistence(){
+        int count=0;for(var actor:cancelledPersistence){if(++count>8)break;var pending=persistenceCommits.get(actor);
+            if(pending==null){cancelledPersistence.remove(actor);continue;}
+            if(!pending.cooldown.isDone()||!pending.authority.isDone())continue;
+            try{
+                var spend=pending.cooldown.getNow(null);if(spend!=null){kernel.cooldowns().acceptSpend(spend);kernel.cooldowns().submitRefund(spend);}
+            }catch(RuntimeException error){
+                if(!pending.cooldown.isCompletedExceptionally())continue; // capacity rejection is retried, never a failed uncertain debt
             }
+            if(channel(pending.prepared.profile))channelCooldowns.remove(actor);
+            persistenceCommits.remove(actor,pending);cancelledPersistence.remove(actor);
+        }
+    }
+    private record PendingCommit(Prepared prepared,SkillExecutionContext context,
+            com.inigmasgames.hytalerpg.combat.resource.RpgResourceService.CostToken token,
+            java.util.concurrent.CompletableFuture<com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend> cooldown,
+            java.util.concurrent.CompletableFuture<Void> authority){}
+    private SkillExecutionResult preparePersistence(Prepared prepared,SkillExecutionContext context,
+            com.inigmasgames.hytalerpg.combat.resource.RpgResourceService.CostToken token,DerivedStats attributes,SkillExecutionPort port){
+        var authority=new java.util.concurrent.CompletableFuture<Void>();
+        var cooldown=new java.util.concurrent.CompletableFuture<com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend>();
+        var pending=new PendingCommit(prepared,context,token,cooldown,authority);
+        // The completion/settlement ticket exists BEFORE either downstream submission. Even
+        // partial admission has a bounded owner; cancellation never discards an in-flight debt.
+        synchronized(persistenceCommits){
+            if(persistenceCommits.size()>=256||persistenceCommits.containsKey(prepared.request.actorId()))throw new IllegalStateException("PENDING_COMMIT_CAPACITY");
+            persistenceCommits.put(prepared.request.actorId(),pending);
+        }
+        try{
+            port.prepareDurable(context).whenComplete((value,error)->{if(error==null)authority.complete(null);else authority.completeExceptionally(error);});
+        }catch(RuntimeException error){authority.completeExceptionally(error);cooldown.complete(null);}
+        if(!cooldown.isDone())try{
+            if(channel(prepared.profile)){
+                synchronized(channelCooldowns){
+                    if(channelCooldowns.size()>=256)throw new IllegalStateException("CHANNEL_COOLDOWN_PERSISTENCE_CAPACITY");
+                    channelCooldowns.put(prepared.request.actorId(),new ChannelCooldown(context));
+                }
+                cooldown.complete(null);
+            }else kernel.cooldowns().submitSpend(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity(),
+                    prepared.profile.cooldownSeconds(),prepared.plan.foundationModifiers().rechargeFactor(),attributes.cooldownRecovery(),prepared.plan.kernelModifiers())
+                    .whenComplete((value,error)->{if(error==null)cooldown.complete(value);else cooldown.completeExceptionally(error);});
+        }catch(RuntimeException error){cooldown.completeExceptionally(error);}
+        if(cooldown.isDone()&&authority.isDone())return completePersistence(prepared.request.actorId(),port);
+        return SkillExecutionResult.pending("DURABLE_COMMIT_PENDING");
+    }
+    /** Existing native owner tick calls this; a ready check never starts a blocking storage operation. */
+    public SkillExecutionResult completePersistence(UUID actor,SkillExecutionPort port){
+        pollCancelledPersistence();
+        pollChannelCooldowns();
+        if(cancelledPersistence.contains(actor))return SkillExecutionResult.pending("CANCELLED_COMMIT_SETTLEMENT_PENDING");
+        var pending=persistenceCommits.get(actor);
+        if(pending==null)return null;
+        if(!pending.cooldown.isDone()||!pending.authority.isDone())return SkillExecutionResult.pending("DURABLE_COMMIT_PENDING");
+        persistenceCommits.remove(actor,pending);
+        return finishPersistence(pending,port);
+    }
+    private SkillExecutionResult finishPersistence(PendingCommit pending,SkillExecutionPort port){
+        var prepared=pending.prepared;var context=pending.context;var token=pending.token;
+        var releaseModifiers=prepared.plan.executionModifiers();
+        boolean resourceCommitted=false;boolean cooldownStarted=false;
+        com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend cooldownSpend=null;
+        AttunementLedger.Commit attunementCommit=null;
+        com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Commit ruthlessCommit=null;
+        try{
+            cooldownSpend=pending.cooldown.getNow(null);
+            if(cooldownSpend!=null){kernel.cooldowns().acceptSpend(cooldownSpend);cooldownStarted=true;}
+            pending.authority.getNow(null);
+            if(!port.actorAliveAndUsable()||!port.equipment().equals(prepared.equipment)
+                    ||!lifecycle.active(prepared.request.actorId()).map(a->a.instanceId().equals(prepared.instanceId)).orElse(false))
+                throw new IllegalStateException("PENDING_COMMIT_OWNER_CHANGED");
+            var plan=loadouts.getPresentationView(prepared.request.actorId()).plans().get(prepared.request.slot());
+            if(plan==null||!plan.planHash().equals(prepared.plan.planHash()))throw new IllegalStateException("PENDING_COMMIT_LOADOUT_CHANGED");
+            var ownerValidation=port.validateDurableCompletion(context);
+            if(!ownerValidation.accepted())throw new IllegalStateException(ownerValidation.code());
+            kernel.resources().commitCost(token,port.resources());resourceCommitted=true;
             if(prepared.plan.resources().attunement()&&prepared.request.origin()==SkillExecutionRequest.Origin.MANUAL)
                 attunementCommit=attunement.committed(new AttunementLedger.Key(prepared.request.actorId(),prepared.request.slot()),prepared.rootCastId,now());
             if(prepared.plan.strikes().ruthless()&&prepared.request.origin()==SkillExecutionRequest.Origin.MANUAL)
                 ruthlessCommit=ruthless.committed(new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Key(prepared.request.actorId(),prepared.request.slot()),prepared.rootCastId);
-        } catch (RuntimeException error) {
-            attunement.rollback(attunementCommit);
-            ruthless.rollback(ruthlessCommit);
-            if (cooldownStarted) kernel.cooldowns().refundCharge(cooldownSpend);
-            try {
-                if (resourceCommitted) kernel.resources().refundCommittedCost(token, port.resources());
-                else kernel.resources().refundIfUncommitted(token);
-            } catch (RuntimeException ignored) { }
-            lifecycle.terminate(prepared.request.actorId(), prepared.instanceId);
-            releases.finish(prepared.instanceId);
-            return reject(prepared.request, prepared.rootCastId, prepared.instanceId,
-                    "COMMIT_FAILED_" + error.getClass().getSimpleName());
+        }catch(RuntimeException error){
+            attunement.rollback(attunementCommit);ruthless.rollback(ruthlessCommit);
+            if(cooldownStarted)try{kernel.cooldowns().submitRefund(cooldownSpend);}catch(RuntimeException settlementRejected){
+                // Reuse this cast's reserved ticket; a full queue cannot erase owed settlement.
+                persistenceCommits.put(prepared.request.actorId(),pending);cancelledPersistence.add(prepared.request.actorId());
+            }
+            try{if(resourceCommitted)kernel.resources().refundCommittedCost(token,port.resources());else kernel.resources().refundIfUncommitted(token);}catch(RuntimeException ignored){}
+            if(channel(prepared.profile))channelCooldowns.remove(prepared.request.actorId());
+            port.abandonDurable(context);lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);releases.finish(prepared.instanceId);
+            return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_FAILED_"+error.getClass().getSimpleName());
         }
         emit(prepared.request, RpgTraceEventType.SKILL_COMMITTED, prepared.rootCastId, prepared.instanceId,
                 Map.of("skillId", prepared.profile.skillId(), "resourceCost", prepared.cost.amount(),"resourceType",prepared.cost.type(),"attunementStacksUsed",prepared.attunementStacks,"ruthlessEmpowered",prepared.ruthlessEmpowered,
@@ -449,10 +525,31 @@ public final class SkillExecutionService {
     private static boolean channel(Stage04SkillProfile profile){return profile.connection()!=null&&profile.connection().channel();}
     private void startEndedChannelCooldown(SkillExecutionContext context) {
         if(!channel(context.profile())||context.derivedRelease())return;
-        var calculation=kernel.cooldowns().startCooldown(context.request().actorId(),context.profile().skillId(),context.profile().cooldownSeconds(),
-                1,context.snapshot().derivedStats().cooldownRecovery(),context.compiledPlan().kernelModifiers());
-        emit(context.request(),RpgTraceEventType.COOLDOWN_STARTED,context.rootCastId(),context.skillInstanceId(),
-                Map.of("skillId",context.profile().skillId(),"afterChannelEnd",true,"seconds",calculation.finalSeconds()));
+        var pending=channelCooldowns.get(context.request().actorId());
+        if(pending==null)throw new IllegalStateException("CHANNEL_COOLDOWN_TICKET_MISSING");
+        pending.ended=true;pollChannelCooldowns();
+    }
+    private static final class ChannelCooldown {
+        final SkillExecutionContext context;boolean ended;
+        java.util.concurrent.CompletableFuture<com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend> receipt;
+        ChannelCooldown(SkillExecutionContext context){this.context=context;}
+    }
+    private final Map<UUID,ChannelCooldown> channelCooldowns=new java.util.concurrent.ConcurrentHashMap<>();
+    public void pollChannelCooldowns(){synchronized(channelCooldowns){
+        int count=0;for(var entry:channelCooldowns.entrySet()){
+            if(++count>8)break;var pending=entry.getValue();if(!pending.ended)continue;
+            if(pending.receipt==null){
+                var c=pending.context;
+                try{pending.receipt=kernel.cooldowns().submitSpend(c.request().actorId(),c.profile().skillId(),1,c.profile().cooldownSeconds(),
+                        1,c.snapshot().derivedStats().cooldownRecovery(),c.compiledPlan().kernelModifiers()).toCompletableFuture();}
+                catch(RuntimeException unavailable){continue;} // Reserved intent survives capacity/uncertainty; no new cast is admitted.
+            }
+            if(!pending.receipt.isDone())continue;
+            var spend=pending.receipt.getNow(null);kernel.cooldowns().acceptSpend(spend);channelCooldowns.remove(entry.getKey(),pending);
+            var context=pending.context;
+            emit(context.request(),RpgTraceEventType.COOLDOWN_STARTED,context.rootCastId(),context.skillInstanceId(),
+                    Map.of("skillId",context.profile().skillId(),"afterChannelEnd",true,"seconds",spend.calculation().finalSeconds()));
+        }}
     }
     public int pendingReleaseCount() { return releases.size(); }
 

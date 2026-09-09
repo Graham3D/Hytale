@@ -228,6 +228,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
 
     @Override public void tick(float deltaSeconds, int index, ArchetypeChunk<EntityStore> chunk,
                                Store<EntityStore> store, CommandBuffer<EntityStore> buffer) {
+        try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.EXECUTION)){
         Ref<EntityStore> ref = chunk.getReferenceTo(index);
         PlayerRef playerRef = chunk.getComponent(index, PlayerRef.getComponentType());
         Player player = chunk.getComponent(index, Player.getComponentType());
@@ -236,6 +237,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         var ownedRepeat=repeatingStrikes.get(actor);
         if(ownedRepeat==null||!NativeStrikeActionLock.required(ownedRepeat.context))NativeStrikeActionLock.clear(store,ref);
         Port port = new Port(store, ref, playerRef, player, stats, null, buffer);
+        executions.completePersistence(actor,port);
         if (!port.actorAliveAndUsable()) {
             NativeStrikeActionLock.clear(store,ref);
             cancel(actor, "ACTOR_UNUSABLE", buffer); return;
@@ -250,9 +252,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         advanceRepeatingStrike(store, ref, playerRef, player, stats, buffer);
         advanceProjectiles(actor, deltaSeconds, store, buffer);
-        periodicStatuses.tick(actor, System.nanoTime() / 1e9, periodicPort());
-        areas.tick(actor, System.nanoTime() / 1_000_000_000.0, port.areaWorld());
-        connections.tick(actor,System.nanoTime()/1e9,port.connectionWorld());
+        try(var fieldSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.STATUS_FIELD)){
+            periodicStatuses.tick(actor, System.nanoTime() / 1e9, periodicPort());
+            areas.tick(actor, System.nanoTime() / 1_000_000_000.0, port.areaWorld());
+            connections.tick(actor,System.nanoTime()/1e9,port.connectionWorld());
+        }
         executions.tickScheduled(actor,port);
         Motion motion = motions.get(actor);
         if (motion != null) advanceMotion(deltaSeconds, store, ref, player, motion, buffer);
@@ -275,6 +279,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 executions.activeWindupSeconds(actor).ifPresent(seconds ->
                         windupEnds.put(actor, System.nanoTime() + Math.round(seconds * 1_000_000_000.0)));
         }, 8);
+
+        }
     }
 
     /** Queues a counter for the next world tick; never nests Damage execution inside a Damage callback. */
@@ -413,11 +419,20 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         @Override public boolean actorAliveAndUsable() {
             var health = stats == null ? null : stats.get(DefaultEntityStatTypes.getHealth());
-            return actor.isValid() && health != null && health.get() > health.getMin()
+            return (support==null||support.sessionReady(playerRef.getUuid()))&&actor.isValid() && health != null && health.get() > health.getMin()
                     && store.getComponent(actor, DeathComponent.getComponentType()) == null;
         }
         @Override public Equipment equipment() { return equipment.read(actor, store); }
         @Override public NativeResourcePort resources() { return new EntityStatResourcePort(stats,()->{if(support!=null)support.invalidateHealthCredit(playerRef.getWorldUuid(),playerRef.getUuid());}); }
+        @Override public java.util.concurrent.CompletionStage<Void> prepareDurable(SkillExecutionContext context){
+            if(context.profile().support()!=null)return support.runtime().prepareDurable(context,support.port(store,actor));
+            if(context.profile().conversion()!=null)return conversions.prepareDurable(context);
+            return java.util.concurrent.CompletableFuture.completedStage(null);
+        }
+        @Override public void abandonDurable(SkillExecutionContext context){
+            if(context.profile().support()!=null)support.runtime().abandonDurable(context);
+            if(context.profile().conversion()!=null)conversions.abandonDurable(context);
+        }
         @Override public SkillExecutionResult stopActiveSupport(Stage04SkillProfile profile){return support==null?null:
                 support.runtime().stopActive(playerRef.getUuid(),profile.skillId(),support.port(store,actor));}
         @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
@@ -590,6 +605,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private java.util.Optional<ProjectileBallistics.Solution> ballisticSolution(Stage04SkillProfile profile,com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,Vec3 origin,Vec3 point) {
             var p=profile.projectile();return ProjectileBallistics.low(origin,point,p.speedFor(equipment().mainHand().weaponKind())*plan.projectileModifiers().speedFactor(),
                     p.gravity(),p.maxDistance()*plan.projectileModifiers().distanceFactor(),p.independentLifetimeSeconds());
+        }
+        @Override public Validation validateDurableCompletion(SkillExecutionContext context){
+            if(context.target()==null||!context.target().worldId().equals(playerRef.getWorldUuid()))return Validation.reject("PENDING_WORLD_CHANGED");
+            if(context.profile().support()!=null&&context.profile().support().aura()){
+                String code=support.port(store,actor,buffer).valid(context);return code.equals("PASS")?Validation.pass():Validation.reject(code);
+            }
+            if(context.profile().summon()!=null)return familyPrerequisites(context.profile(),context.compiledPlan());
+            return validateRelease(context);
         }
         @Override public Validation validateRelease(SkillExecutionContext context) {
             if(context.profile().support()!=null)return support.validateRelease(store,actor,context);

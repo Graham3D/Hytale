@@ -1,6 +1,7 @@
 [CmdletBinding()]
-param([ValidateSet('f','g','h','i')][string]$Cohort='f')
+param([ValidateSet('f','g','h','i','j')][string]$Cohort='f')
 $ErrorActionPreference='Stop'
+if($Cohort -eq 'j'){ & "$PSScriptRoot\Test-Stage13HandoffReadiness.ps1";return }
 $releaseRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $releaseEvidence=Join-Path $releaseRoot "evidence\stage-13\cohort-$Cohort"
 $verification=Get-Content -Raw -LiteralPath (Join-Path $releaseEvidence 'verification.json')|ConvertFrom-Json
