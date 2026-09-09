@@ -120,7 +120,7 @@ public final class Phase00Plugin extends JavaPlugin {
         var skillTreeMutations = new RpgSkillTreeMutationService(loadouts, staticLayout);
         var allocation = new AttributeAllocationService(loadouts);
         var runtimeProfiles = Stage04SkillProfiles.loadCanonical(catalog);
-        nativeAbilities = new NativeAbilityProjectionService(loadouts, runtimeProfiles, skillTrace);
+        nativeAbilities = new NativeAbilityProjectionService(loadouts, runtimeProfiles, skillTrace, loadouts::ready);
         loadouts.addMutationListener(nativeAbilities::onLoadoutMutation);
         abilityInputs = new HytaleAbilitySkillInputAdapter(nativeAbilities::observeInput);
         abilityInputs.useNativeExecution();

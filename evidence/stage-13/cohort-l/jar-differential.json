@@ -1,0 +1,13 @@
+{
+  "previousSha256": "9083F89CB224BAC55B5D1B1CB9F5F5BA90C104D23A55B447A8E8029B4156B06F",
+  "candidateSha256": "1E4A5CAA1344CE71C8701EBCFBFCB3883BD288DC90BE9732066338A5F6A5B0F6",
+  "changedEntries": [
+    "com/inigmasgames/hytalerpg/input/NativeAbilityProjectionService.class",
+    "com/inigmasgames/hytalerpg/input/NativeAbilityProjectionService$1.class",
+    "com/inigmasgames/hytalerpg/input/NativeAbilityProjectionService$Session.class",
+    "com/inigmasgames/hytalerpg/input/NativeAbilityProjectionService$SlotStatus.class",
+    "com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class"
+  ],
+  "removedEntries": [],
+  "allResourcesUnchanged": true
+}

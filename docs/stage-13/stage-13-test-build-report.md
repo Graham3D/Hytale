@@ -1,5 +1,7 @@
 # Stage 13 K — complete current ARPG/RPG testing build
 
+**Superseded for testing by [Stage 13 L startup hotfix](stage-13-startup-hotfix-report.md).** The owner's connected K test exposed a first-join persistence-readiness race. L corrects that boundary and is deployed; K artifacts below remain immutable rollback/history evidence. Connected verification of L is pending.
+
 2026-09-09, branch `RPG`, starting HEAD `eb42b1c8a437c2dbf0210b2b7b38be2e63d2ad28`.
 
 **Requested testing build: COMPLETE / PACKAGED_FOR_TESTING.** This packages the entire current RPG implementation, not a reduced persistence demo. The bounded encounter-load correction is finished. No further optimization or architecture work is part of this handoff. Production release acceptance remains unverified where connected evidence is required; that does not prevent delivery of this owner-requested testing package.

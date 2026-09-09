@@ -1,0 +1,16 @@
+[2026/09/09 18:14:32 SEVERE]                     [Hytale] Exception in thread Thread[#132,WorldThread - default,5,InnocuousForkJoinWorkerThreadGroup] potentially caused by InigmasGames:HytaleRPGPhase00Audit:
+java.lang.IllegalStateException: PLAYER_PERSISTENCE_NOT_READY
+	at ThirdParty(InigmasGames:HytaleRPGPhase00Audit)//com.inigmasgames.hytalerpg.progress.RpgLoadoutService.readHolder(RpgLoadoutService.java:621)
+	at ThirdParty(InigmasGames:HytaleRPGPhase00Audit)//com.inigmasgames.hytalerpg.progress.RpgLoadoutService.getPresentationView(RpgLoadoutService.java:363)
+	at ThirdParty(InigmasGames:HytaleRPGPhase00Audit)//com.inigmasgames.hytalerpg.input.NativeAbilityProjectionService.reconcile(NativeAbilityProjectionService.java:144)
+	at ThirdParty(InigmasGames:HytaleRPGPhase00Audit)//com.inigmasgames.hytalerpg.input.NativeAbilityProjectionService.tick(NativeAbilityProjectionService.java:83)
+	at ThirdParty(InigmasGames:HytaleRPGPhase00Audit)//com.inigmasgames.hytalerpg.input.NativeAbilityProjectionTickSystem.tick(NativeAbilityProjectionTickSystem.java:26)
+	at com.hypixel.hytale.component.system.tick.EntityTickingSystem.doTick(EntityTickingSystem.java:92)
+	at com.hypixel.hytale.component.system.tick.EntityTickingSystem.tick(EntityTickingSystem.java:36)
+	at com.hypixel.hytale.component.Store.tick(Store.java:2000)
+	at com.hypixel.hytale.component.system.tick.ArchetypeTickingSystem.tick(ArchetypeTickingSystem.java:36)
+	at com.hypixel.hytale.component.Store.tickInternal(Store.java:1956)
+	at com.hypixel.hytale.component.Store.tick(Store.java:1926)
+	at com.hypixel.hytale.server.core.universe.world.World.tick(World.java:456)
+	at com.hypixel.hytale.server.core.util.thread.TickingThread.run(TickingThread.java:108)
+	at java.base/java.lang.Thread.run(Unknown Source)

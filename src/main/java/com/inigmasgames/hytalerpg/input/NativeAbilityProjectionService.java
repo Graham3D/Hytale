@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 /**
  * Projects the first two logical RPG skills into Hytale's two native Primary rune cells.
@@ -36,6 +37,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
     private final RpgLoadoutOperations loadouts;
     private final Stage04SkillProfiles executable;
     private final RpgSkillTracer tracer;
+    private final Predicate<UUID> persistenceReady;
     private final Map<UUID, Session> sessions = new ConcurrentHashMap<>();
     private NativeRuneControl runeControl;
 
@@ -54,12 +56,19 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
 
     public NativeAbilityProjectionService(RpgLoadoutOperations loadouts, Stage04SkillProfiles executable,
                                           RpgSkillTracer tracer) {
+        this(loadouts, executable, tracer, ignored -> true);
+    }
+
+    public NativeAbilityProjectionService(RpgLoadoutOperations loadouts, Stage04SkillProfiles executable,
+                                          RpgSkillTracer tracer, Predicate<UUID> persistenceReady) {
         this.loadouts = loadouts;
         this.executable = executable;
         this.tracer = tracer;
+        this.persistenceReady = java.util.Objects.requireNonNull(persistenceReady);
     }
 
     public void install(UUID player, InventoryComponent.AbilitySlots slots) {
+        if (!persistenceReady.test(player)) return;
         if (runeControl != null) runeControl.onJoin(player);
         sessions.put(player, new Session(slots));
         reconcile(player, slots, "PLAYER_READY");
@@ -72,7 +81,10 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
     }
 
     public void tick(UUID player, InventoryComponent.AbilitySlots slots) {
-        Session session = sessions.computeIfAbsent(player, ignored -> new Session(slots));
+        // Only the deferred player-ready callback may open a session. ECS ticks can run before
+        // that callback, while the player's durable load is still in flight.
+        Session session = sessions.get(player);
+        if (session == null || !persistenceReady.test(player)) return;
         if (session.slots != slots) {
             session = new Session(slots);
             sessions.put(player, session);
@@ -99,6 +111,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
         Session session = sessions.get(player);
         if (session == null) return "Native ability projection: NO_ACTIVE_WORLD_SESSION\nHudComponent.Abilities visible="
                 + nativeAbilitiesVisible;
+        if (!persistenceReady.test(player)) return "Native ability projection: PLAYER_PERSISTENCE_NOT_READY";
         reconcile(player, session.slots, "STATUS_COMMAND");
         ItemContainer container = session.slots.getInventory();
         StringBuilder out = new StringBuilder("Native ability projection (safe ownership: never overwrite native runes):")
@@ -131,8 +144,10 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
     }
 
     private void reconcile(UUID player, InventoryComponent.AbilitySlots slots, String reason) {
+        if (!persistenceReady.test(player)) return;
+        Session session = sessions.get(player);
+        if (session == null) return;
         if (runeControl != null && runeControl.pauseProjection(player, slots.getInventory())) return;
-        Session session = sessions.computeIfAbsent(player, ignored -> new Session(slots));
         ItemContainer container = slots.getInventory();
         if (container.getCapacity() < InventoryComponent.DEFAULT_ABILITIES_CAPACITY) {
             updateStatus(player, session, SkillSlot.SKILL01, new SlotStatus("", "", "NATIVE_CONTAINER_TOO_SMALL"), reason);

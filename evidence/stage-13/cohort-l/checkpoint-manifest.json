@@ -1,0 +1,92 @@
+{
+  "baseline": "84e29cb57175d9b6ade33654f38c77305ff5c91d",
+  "cohort": "L",
+  "connectedProof": false,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 72,
+      "sha256": "308A40FA1D89AE5EA4390B4C9B46A0108B09F171F07898F25D451FA0C69C4E9F"
+    },
+    {
+      "path": "artifacts/CanvasUI-0.1.0.jar",
+      "bytes": 117075,
+      "sha256": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6"
+    },
+    {
+      "path": "artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "bytes": 265646,
+      "sha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+    },
+    {
+      "path": "artifacts/HytaleRPG-0.0.25.jar",
+      "bytes": 1893474,
+      "sha256": "1E4A5CAA1344CE71C8701EBCFBFCB3883BD288DC90BE9732066338A5F6A5B0F6"
+    },
+    {
+      "path": "connected-crash-excerpt.txt",
+      "bytes": 1793,
+      "sha256": "911C48C2A91C72F38F63C0A7452C941E1C5A4E913996F37F072977B0BCEDBB3F"
+    },
+    {
+      "path": "connected-crash-source.json",
+      "bytes": 210,
+      "sha256": "74F719C2B42EED1E1D3B675B3FEB8B5A6CB22DCF6C12BBEAD19094752180565D"
+    },
+    {
+      "path": "full-validation.txt",
+      "bytes": 2292,
+      "sha256": "E1760FAE6B42DD4B9B42AEAFA26B9B66069053482DE3476DD8771638F96DA6E1"
+    },
+    {
+      "path": "Hytale-RPG-Stage13-L-startup-hotfix.zip",
+      "bytes": 2094237,
+      "sha256": "271C41613A94F32826D7BD8FE45BAE4D57BF44DD5CDDABD38B9A4052D90A95A5"
+    },
+    {
+      "path": "jar-differential.json",
+      "bytes": 667,
+      "sha256": "D1127D202E4872681A4B0B5F2686AB04CA25287C241C2C232126E97135D46D9D"
+    },
+    {
+      "path": "native-basic-path-audit.json",
+      "bytes": 3595,
+      "sha256": "0EEEE5F2B0BDACFA04B11BF64793E3FEAB2906D6236A24671A6AB03FACD2F6E5"
+    },
+    {
+      "path": "native-movement-guard-audit.json",
+      "bytes": 319,
+      "sha256": "D3C8F584870E648EA4B35F64796A77D58774D3B6B2DC04DB620D67FE5A3CD81B"
+    },
+    {
+      "path": "native-projectile-equipment-audit.json",
+      "bytes": 3145,
+      "sha256": "F0F8129F04F4330349FB5B6D63094218C5FD6D7DB42D91E04DECEB0DA11089AA"
+    },
+    {
+      "path": "rollback/HytaleRPG-0.0.25.jar",
+      "bytes": 1893246,
+      "sha256": "9083F89CB224BAC55B5D1B1CB9F5F5BA90C104D23A55B447A8E8029B4156B06F"
+    },
+    {
+      "path": "server-smoke-summary.json",
+      "bytes": 1132,
+      "sha256": "94A56BE218B0952479C3EBCECFA7C83722F40EA64A75B0ACB37ABF3C7A2BF261"
+    },
+    {
+      "path": "server-smoke.txt",
+      "bytes": 111057,
+      "sha256": "8D2547CA33A0C2794176CD5215A374253AF50997770A3DE9D0F8EA0D04D6AFAB"
+    },
+    {
+      "path": "startup-hotfix.json",
+      "bytes": 1084,
+      "sha256": "8F2B17EFA70FCB358A58F12AF2566693AC7C758954D39F7D219DB57E8A6F72A4"
+    },
+    {
+      "path": "test-results.json",
+      "bytes": 147146,
+      "sha256": "2A723F600F5C5545104DDBE7FC6A73E91C67D72771EA6FFA3C7B711E0CC1F6EF"
+    }
+  ]
+}
