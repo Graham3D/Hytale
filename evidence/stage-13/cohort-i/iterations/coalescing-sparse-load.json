@@ -1,0 +1,578 @@
+{
+  "scope": "SPARSE_PRODUCTION_V2_NOT_NATIVE_PROOF",
+  "orderedSamplesMs": [
+    3.7286,
+    4.2155,
+    2.7767,
+    2.5216,
+    2.541,
+    4.2531,
+    3.0816,
+    3.999,
+    2.6385,
+    3.0876,
+    4.5037,
+    4.6052,
+    2.9205,
+    2.9988,
+    3.371,
+    2.7097,
+    3.0833,
+    4.7509,
+    3.2582,
+    4.1185,
+    3.9752,
+    4.0657,
+    3.0113,
+    3.4526,
+    2.8677,
+    3.858,
+    2.52,
+    3.7147,
+    4.8306,
+    2.9406,
+    3.3469,
+    3.0945,
+    3.4395,
+    2.5304,
+    3.9959,
+    2.527,
+    3.0054,
+    2.4598,
+    3.1251,
+    4.1173,
+    4.0552,
+    2.6333,
+    3.8678,
+    3.686,
+    2.468,
+    3.4964,
+    3.564,
+    2.5284,
+    3.6689,
+    3.0348,
+    2.4733,
+    2.5362,
+    3.5022,
+    2.8292,
+    2.8009,
+    3.1041,
+    3.5219,
+    2.9612,
+    3.2383,
+    4.1699
+  ],
+  "p50Ms": 3.1251,
+  "p95Ms": 4.5037,
+  "p99Ms": 4.8306,
+  "collectionWindowNanos": 500000,
+  "discardedSamples": 0,
+  "timings": {
+    "JOURNAL_APPEND": {
+      "count": 60,
+      "p50Ms": 0.0143,
+      "p95Ms": 0.0203,
+      "maxMs": 0.0456,
+      "retainedSamples": 60,
+      "p99Ms": 0.0456,
+      "totalMs": 0.8895
+    },
+    "JOURNAL_FORCE": {
+      "count": 60,
+      "p50Ms": 1.8829,
+      "p95Ms": 2.0958,
+      "maxMs": 2.2798,
+      "retainedSamples": 60,
+      "p99Ms": 2.2798,
+      "totalMs": 114.7381
+    },
+    "CHECKPOINT_SERIALIZATION": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "CHECKPOINT_WRITE": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "CHECKPOINT_FORCE": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "GROUP_WAIT": {
+      "count": 60,
+      "p50Ms": 1.08,
+      "p95Ms": 2.5036,
+      "maxMs": 2.866,
+      "retainedSamples": 60,
+      "p99Ms": 2.866,
+      "totalMs": 78.0888
+    },
+    "DURABLE_ACK": {
+      "count": 60,
+      "p50Ms": 3.0978,
+      "p95Ms": 4.468,
+      "maxMs": 4.7996,
+      "retainedSamples": 60,
+      "p99Ms": 4.7996,
+      "totalMs": 198.1268
+    },
+    "CHECKPOINT_QUEUE": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "CHECKPOINT_SCHEDULING": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "CHECKPOINT_ROTATION": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "CHECKPOINT_BACKPRESSURE": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "GROUP_CPU": {
+      "count": 60,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 60,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "GROUP_WALL": {
+      "count": 60,
+      "p50Ms": 1.9377,
+      "p95Ms": 2.3166,
+      "maxMs": 2.9737,
+      "retainedSamples": 60,
+      "p99Ms": 2.9737,
+      "totalMs": 119.7317
+    },
+    "ENCODE_VALIDATE": {
+      "count": 60,
+      "p50Ms": 0.0183,
+      "p95Ms": 0.0683,
+      "maxMs": 0.8509,
+      "retainedSamples": 60,
+      "p99Ms": 0.8509,
+      "totalMs": 2.3859
+    },
+    "FOREGROUND_BARRIER_WAIT": {
+      "count": 60,
+      "p50Ms": 0.0069,
+      "p95Ms": 0.0113,
+      "maxMs": 0.0393,
+      "retainedSamples": 60,
+      "p99Ms": 0.0393,
+      "totalMs": 0.4743
+    },
+    "MAINTENANCE_BARRIER_WAIT": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "SUCCESSOR_PREPARATION": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "SUCCESSOR_ACTIVATION": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "PREPARED_WAIT": {
+      "count": 0,
+      "p50Ms": 0.0,
+      "p95Ms": 0.0,
+      "maxMs": 0.0,
+      "retainedSamples": 0,
+      "p99Ms": 0.0,
+      "totalMs": 0.0
+    },
+    "FORCE_TO_COMPLETION": {
+      "count": 60,
+      "p50Ms": 0.0089,
+      "p95Ms": 0.0217,
+      "maxMs": 0.0457,
+      "retainedSamples": 60,
+      "p99Ms": 0.0457,
+      "totalMs": 0.6486
+    },
+    "PRECOMMIT_VALIDATION": {
+      "count": 60,
+      "p50Ms": 7.0E-4,
+      "p95Ms": 0.0035,
+      "maxMs": 0.2048,
+      "retainedSamples": 60,
+      "p99Ms": 0.2048,
+      "totalMs": 0.2927
+    },
+    "COLLECTION_WAIT": {
+      "count": 60,
+      "p50Ms": 1.07,
+      "p95Ms": 2.4931,
+      "maxMs": 2.8556,
+      "retainedSamples": 60,
+      "p99Ms": 2.8556,
+      "totalMs": 77.1185
+    }
+  },
+  "barriers": {
+    "forceEvents": [
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      },
+      {
+        "writerSuspended": false,
+        "queuedOperations": 1,
+        "kind": "FOREGROUND"
+      }
+    ],
+    "overlapAttempts": 0,
+    "forcesByClass": {
+      "FOREGROUND": 60
+    }
+  }
+}

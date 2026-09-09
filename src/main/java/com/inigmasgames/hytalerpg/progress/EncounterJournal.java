@@ -10,7 +10,7 @@ import java.util.zip.CRC32C;
 import static java.nio.file.StandardOpenOption.*;
 
 /** Store-monitor confined. Only immutable encounter values cross this boundary; no ECS references. */
-final class EncounterJournal implements AutoCloseable {
+final class EncounterJournal implements EncounterLog {
     static final int MAX_RECORD=16384, CHECKPOINT_RECORDS=1024;
     private static final long MAGIC=0x52504757414c3031L;
     record Key(UUID world,UUID enemy) {}
@@ -130,7 +130,7 @@ final class EncounterJournal implements AutoCloseable {
             }
         }
     }
-    Entry entry(Key key){
+    public Entry entry(Key key){
         Entry value=cache.get(key);if(value!=null)return value;
         if(cache.size()>=EncounterContributions.MAX_ENCOUNTERS) {
             var evict=cache.keySet().stream().filter(k->!dirty.contains(k)&&!pinned.containsKey(k)).findFirst().orElseThrow(()->corrupt("CACHE_CAPACITY"));cache.remove(evict);
@@ -138,20 +138,20 @@ final class EncounterJournal implements AutoCloseable {
         value=checkpoints.load(key);
         if(value!=null){if(!replaying&&value.sequence()>sequence)throw corrupt("CHECKPOINT_AHEAD_OF_JOURNAL");cache.put(key,value);}return value;
     }
-    void reserve(int count)throws IOException {
+    public void reserve(int count)throws IOException {
         if(count<0||count>EncounterContributions.MAX_SUPPORT_ENCOUNTERS)throw new FileEncounterStore.CapacityRejected();
         if(admission)throw new FileEncounterStore.CapacityRejected();
         if(records+count>CHECKPOINT_RECORDS)checkpoint();
         reserved=count;admission=true;
     }
-    void release(){reserved=0;admission=false;}
-    void append(EncounterContributions.Snapshot value)throws IOException {
+    public void release(){reserved=0;admission=false;}
+    public void append(EncounterContributions.Snapshot value)throws IOException {
         if(!admission||reserved<=0)throw new FileEncounterStore.CapacityRejected();
         appendGroup(List.of(value));reserved--;
     }
-    private record Frame(Key key,Entry value,byte[] bytes){}
+    record Frame(Key key,Entry value,byte[] bytes){}
     /** One owner assigns every predecessor before any bytes are written. Never expose this provisional map. */
-    void appendGroup(List<EncounterContributions.Snapshot> values)throws IOException {
+    public void appendGroup(List<EncounterContributions.Snapshot> values)throws IOException {
         if(values.isEmpty()||values.size()>EncounterGroupCommit.MAX_GROUP_RECORDS)throw new FileEncounterStore.CapacityRejected();
         if(records+values.size()>CHECKPOINT_RECORDS)checkpoint();
         var provisional=new HashMap<Key,Entry>();var frames=new ArrayList<Frame>();long next=sequence;
@@ -182,7 +182,7 @@ final class EncounterJournal implements AutoCloseable {
             timings.group(end-first,bytes);first=end;
         }
     }
-    private Frame encode(EncounterContributions.Snapshot value,Entry old,long next)throws IOException {
+    static Frame encode(EncounterContributions.Snapshot value,Entry old,long next)throws IOException {
         var key=new Key(value.spawn().world(),value.spawn().enemy());
         if(old==null)throw new IllegalStateException("UNREGISTERED_ENCOUNTER");
         FileEncounterStore.validateTransition(old.snapshot(),value);
@@ -200,7 +200,7 @@ final class EncounterJournal implements AutoCloseable {
         var frame=ByteBuffer.allocate(4+payload.length+8).putInt(payload.length+8).put(payload).putLong(checksum(payload));frame.flip();
         return new Frame(key,new Entry(next,value),frame.array());
     }
-    void checkpoint()throws IOException {
+    public void checkpoint()throws IOException {
         if(admission)throw new FileEncounterStore.CapacityRejected();
         if(sequence==floor||dirty.isEmpty()&&channel.size()==24)return;
         checkpoints.reserveCheckpoint(); // Backpressure BEFORE creating another sealed segment.
@@ -227,7 +227,7 @@ final class EncounterJournal implements AutoCloseable {
         timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_SCHEDULING,System.nanoTime()-scheduled);
         dirty.clear();records=0;
     }
-    long sequence(){return sequence;}
+    public long sequence(){return sequence;}
     private static List<EncounterContributions.Credit> sorted(Collection<EncounterContributions.Credit> values){return values.stream().sorted(Comparator.comparing(c->c.player().toString())).toList();}
     private static long checksum(byte[] value){var crc=new CRC32C();crc.update(value,0,value.length);return crc.getValue();}
     private static UUID uuid(DataInputStream in)throws IOException{return new UUID(in.readLong(),in.readLong());}

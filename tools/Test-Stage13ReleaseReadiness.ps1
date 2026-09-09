@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('f','g','h')][string]$Cohort='f')
+param([ValidateSet('f','g','h','i')][string]$Cohort='f')
 $ErrorActionPreference='Stop'
 $releaseRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $releaseEvidence=Join-Path $releaseRoot "evidence\stage-13\cohort-$Cohort"
@@ -35,7 +35,7 @@ if($Cohort -eq 'g'){
     $result.storageDevice=@(Get-Partition -DriveLetter C|Get-Disk|ForEach-Object{@{model=$_.FriendlyName;bus=$_.BusType.ToString()}})
     if($performance.persistenceTimings.JOURNAL_FORCE.count -ne 3840 -or $performance.persistenceTimings.JOURNAL_APPEND.count -ne 3840){throw 'WAL force-per-contribution evidence missing'}
 }
-if($Cohort -eq 'h'){
+if($Cohort -in @('h','i')){
     $result.persistenceImplementation='BOUNDED_GROUP_COMMIT_FORCE_BEFORE_DURABLE_COMPLETION_WAL_V1_ASYNC_CHECKPOINT'
     $result.persistenceTimings=$performance.persistenceTimings
     $result.grouping=$performance.grouping
@@ -48,6 +48,20 @@ if($Cohort -eq 'h'){
     if($verification.tests -lt 1963 -or $performance.samples -ne 60 -or $performance.actors -ne 4 -or $performance.victims -ne 16 -or $performance.updatesPerSample -ne 64 -or
         $records -ne 3840 -or $performance.persistenceTimings.DURABLE_ACK.count -ne 3840 -or $forces -ne $performance.persistenceTimings.JOURNAL_FORCE.count -or $forces -ge 3840 -or
         $performance.persistenceTimings.JOURNAL_APPEND.count -ne $forces -or -not $performance.sampleEndsAfterAll64DurableAcknowledgements -or -not $performance.checkpointWorkerConcurrentWithSamples){throw 'Group-commit production workload or force/completion evidence missing'}
+}
+if($Cohort -eq 'i'){
+    $result.persistenceImplementation='V2_PREPARED_CONTENT_LINKED_WAL_BUNDLED_CHECKPOINT_PRIORITY_FORCE_TRUE'
+    $result.barriers=$performance.barriers;$result.version2=$performance.version2
+    $result.storageBoundary='RPG_PERSISTENCE_ARCHITECTURE_BLOCKED'
+    $result.storageQualification=@(Get-ChildItem -LiteralPath (Join-Path $releaseEvidence 'storage-qualification') -Filter '*force-true.json'|ForEach-Object {
+        $probe=Get-Content -Raw -LiteralPath $_.FullName|ConvertFrom-Json
+        if($probe.force.samples -ne 10000 -or $probe.discardedSamples -ne 0){throw 'Storage qualification samples weakened'}
+        @{mode=$probe.mode;force=$probe.force;fileBytes=$probe.fileBytes;forceMetadata=$probe.forceMetadata;preallocated=$probe.preallocated}
+    })
+    if($result.storageQualification.Count -ne 4){throw 'Growing/preallocated sparse/group qualification incomplete'}
+    if($performance.p95Ms -le 4 -and $performance.p99Ms -le 8){$result.storageBoundary='PERFORMANCE_GATE_PASS'}
+    # Standalone slow maximum alone does NOT fail a p95/p99 gate. No platform-only attribution
+    # while the remaining producer/closure boundary is concrete application overhead.
 }
 $result|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $releaseEvidence 'release-readiness.json') -Encoding utf8
 Write-Output ($result|ConvertTo-Json -Depth 6)

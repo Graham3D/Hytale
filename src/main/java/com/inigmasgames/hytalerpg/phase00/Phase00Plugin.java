@@ -106,7 +106,7 @@ public final class Phase00Plugin extends JavaPlugin {
         loadouts.configureEarnedRewards(new com.inigmasgames.hytalerpg.progress.FileEarnedRewardStore(getDataDirectory().resolve("earned-rewards")));
         LOGGER.atInfo().log("RPG_STAGE12_REWARD_STORE playerSchema=%d writeAhead=true immutableReceipts=true awardHook=true connectedProof=false",
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA);
-        encounterStore=new com.inigmasgames.hytalerpg.progress.FileEncounterStore(getDataDirectory().resolve("encounters"));
+        encounterStore=com.inigmasgames.hytalerpg.progress.FileEncounterStore.durableV2(getDataDirectory().resolve("encounters"));
         LOGGER.atInfo().log("RPG_STAGE12_ENCOUNTER_STORE schema=1 frozenDeathPlans=true permanentExclusions=true pending=%d awardHook=true connectedProof=false",
                 encounterStore.pendingCount());
         CombatTrace combatTrace = new CombatTrace(skillTrace);

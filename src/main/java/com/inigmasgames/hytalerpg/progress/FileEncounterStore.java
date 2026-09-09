@@ -21,6 +21,7 @@ public final class FileEncounterStore implements AutoCloseable {
     public enum Boundary { AFTER_CONTEXT, AFTER_DISQUALIFY, AFTER_FREEZE, AFTER_AWARD, AFTER_CURSOR, AFTER_COMPLETION, AFTER_CLEANUP }
     public enum JournalBoundary { AFTER_APPEND, AFTER_FORCE, AFTER_CHECKPOINT_FILE, AFTER_CHECKPOINT_POINTER, AFTER_CHECKPOINTS, AFTER_ROTATION, AFTER_FLOOR }
     public enum GroupBoundary { BEFORE_DEQUEUE, AFTER_FIRST_FRAME, AFTER_GROUP_APPEND, BEFORE_FORCE, AFTER_GROUP_FORCE, BEFORE_ACKNOWLEDGEMENTS, MID_ACKNOWLEDGEMENTS, ANOTHER_GROUP_QUEUED, CHECKPOINT_WORKER_STARTED }
+    public enum DurabilityBoundary { PREPARE_CREATED, PREPARE_HEADER_WRITTEN, PREPARE_FORCED, ACTIVATION_WRITTEN, ACTIVATION_FORCED, BEFORE_ACTIVE_SWITCH, AFTER_ACTIVE_SWITCH, BUNDLE_SERIALIZATION, BUNDLE_PARTIAL_WRITE, BUNDLE_BEFORE_FORCE, BUNDLE_AFTER_FORCE, BUNDLES_DURABLE, MANIFEST_PARTIAL_WRITE, MANIFEST_BEFORE_FORCE, MANIFEST_AFTER_FORCE, MANIFEST_PUBLISHED, BEFORE_WAL_RETIRE, DURING_WAL_RETIRE }
     public static final class CapacityRejected extends IllegalStateException { public CapacityRejected(){super("ENCOUNTER_PERSISTENCE_CAPACITY");} }
     private record Checkpoint(UUID world,UUID enemy,long sequence){Checkpoint{Objects.requireNonNull(world);Objects.requireNonNull(enemy);if(sequence<1)throw new IllegalArgumentException("CHECKPOINT_SEQUENCE");}}
     private record Floor(long sequence){Floor{if(sequence<0)throw new IllegalArgumentException("CHECKPOINT_FLOOR");}}
@@ -40,15 +41,38 @@ public final class FileEncounterStore implements AutoCloseable {
     private volatile CompletableFuture<Void> checkpointTail=CompletableFuture.completedFuture(null);
     private FileChannel writerChannel;
     private java.nio.channels.FileLock writerLock;
-    private volatile EncounterJournal journal;
+    private volatile EncounterLog journal;
+    private boolean durabilityV2,preallocate=true;
+    private Consumer<DurabilityBoundary> durabilityFault=ignored->{};
     private volatile boolean closed,uncertain,closing,legacyReservation;
     private final EncounterPersistenceTimings timings=new EncounterPersistenceTimings();
+    private final EncounterBarrierArbiter barriers=new EncounterBarrierArbiter(timings);
+    private record AdmissionState(boolean dead,boolean excluded){}
+    // Lifetime writer lock excludes other legitimate writers. Immutable tombstones/death state
+    // need validation once per cached context, not three filesystem probes for every WAL frame.
+    private final Map<EncounterJournal.Key,AdmissionState> admissionStates=new LinkedHashMap<>(16,.75f,true);
     public EncounterPersistenceTimings timings(){return timings;}
     public FileEncounterStore(Path directory){this(directory,ignored->{});}
     /** Fault injection is for process-interruption tests only. */
     public FileEncounterStore(Path directory,Consumer<Boundary> fault){this(directory,fault,ignored->{});}
     public FileEncounterStore(Path directory,Consumer<Boundary> fault,Consumer<JournalBoundary> journalFault){this(directory,fault,journalFault,ignored->{});}
     public FileEncounterStore(Path directory,Consumer<Boundary> fault,Consumer<JournalBoundary> journalFault,Consumer<GroupBoundary> groupFault){this.directory=directory.toAbsolutePath().normalize();this.fault=Objects.requireNonNull(fault);this.journalFault=Objects.requireNonNull(journalFault);this.groupFault=Objects.requireNonNull(groupFault);}
+    /** Explicit version transition, never an implicit in-place downgrade. Legacy constructors keep
+     * the maintained G/H v1 compatibility API; production selects this versioned factory. */
+    public static FileEncounterStore durableV2(Path directory){return durableV2(directory,ignored->{},ignored->{},true);}
+    public static FileEncounterStore durableV2(Path directory,Consumer<DurabilityBoundary> fault,Consumer<GroupBoundary> groupFault,boolean preallocate){
+        return durableV2(directory,ignored->{},fault,groupFault,preallocate);
+    }
+    public static FileEncounterStore durableV2(Path directory,Consumer<Boundary> legacyFault,Consumer<DurabilityBoundary> fault,Consumer<GroupBoundary> groupFault,boolean preallocate){
+        var store=new FileEncounterStore(directory,legacyFault,ignored->{},groupFault);store.durabilityV2=true;store.durabilityFault=Objects.requireNonNull(fault);store.preallocate=preallocate;return store;
+    }
+    public Map<String,Object> barrierMetrics(){return barriers.snapshot();}
+    public Map<String,Object> journalDiagnostics(){return locked(()->journal instanceof EncounterJournalV2 v2?v2.diagnostics():Map.of("format",1));}
+    /** Explicit diagnostic setup fence, not used to omit any workload rotation/checkpoint. */
+    public void awaitPreparation(){locked(()->{if(journal instanceof EncounterJournalV2 v2)try{v2.awaitPreparation();}catch(IOException e){throw persistenceFailure(e);}return null;});}
+    public void resetTimings(){awaitPreparation();timings.reset();barriers.reset();}
+    void foregroundQueued(){if(durabilityV2)barriers.queued();}
+    void foregroundCompleted(){if(durabilityV2)barriers.completed();}
 
     public Optional<EncounterContributions.Snapshot> load(UUID world,UUID enemy){awaitSubmissions();awaitCheckpoints();return locked(()->loadLocked(world,enemy));}
     private Optional<EncounterContributions.Snapshot> loadLocked(UUID world,UUID enemy){
@@ -89,7 +113,8 @@ public final class FileEncounterStore implements AutoCloseable {
         var spawn=value.spawn();
         if(deathLocked(spawn.world(),spawn.enemy()).isPresent())throw new IllegalStateException("ENCOUNTER_ALREADY_DIED");
         if(rejected(spawn.world(),spawn.enemy())&&!value.disqualified())throw new IllegalStateException("ENCOUNTER_DISQUALIFICATION_ROLLBACK");
-        try{journal.append(value);fault.accept(Boundary.AFTER_CONTEXT);}catch(IOException|RuntimeException error){throw persistenceFailure(error);}return null;
+        foregroundQueued();
+        try{journal.append(value);fault.accept(Boundary.AFTER_CONTEXT);}catch(IOException|RuntimeException error){throw persistenceFailure(error);}finally{foregroundCompleted();}return null;
     });}
     static void validateTransition(EncounterContributions.Snapshot old,EncounterContributions.Snapshot value){
         if(!old.spawn().equals(value.spawn()))throw new IllegalStateException("SPAWN_CONTEXT_CHANGED");
@@ -121,7 +146,14 @@ public final class FileEncounterStore implements AutoCloseable {
     void groupFault(GroupBoundary boundary){groupFault.accept(boundary);}
     void commitGroup(List<EncounterContributions.Snapshot> values){locked(()->{
         if(legacyReservation)throw new CapacityRejected();
-        for(var value:values){var spawn=value.spawn();if(deathLocked(spawn.world(),spawn.enemy()).isPresent())throw new IllegalStateException("ENCOUNTER_ALREADY_DIED");if(rejected(spawn.world(),spawn.enemy())&&!value.disqualified())throw new IllegalStateException("ENCOUNTER_DISQUALIFICATION_ROLLBACK");}
+        long validationStart=System.nanoTime();
+        for(var value:values){var spawn=value.spawn();var key=new EncounterJournal.Key(spawn.world(),spawn.enemy());
+            AdmissionState state=durabilityV2?admissionStates.get(key):null;
+            if(state==null){state=new AdmissionState(deathLocked(spawn.world(),spawn.enemy()).isPresent(),rejected(spawn.world(),spawn.enemy()));
+                if(durabilityV2){if(admissionStates.size()>=EncounterContributions.MAX_ENCOUNTERS)admissionStates.remove(admissionStates.keySet().iterator().next());admissionStates.put(key,state);}}
+            if(state.dead())throw new IllegalStateException("ENCOUNTER_ALREADY_DIED");if(state.excluded()&&!value.disqualified())throw new IllegalStateException("ENCOUNTER_DISQUALIFICATION_ROLLBACK");
+        }
+        timings.record(EncounterPersistenceTimings.Phase.PRECOMMIT_VALIDATION,System.nanoTime()-validationStart);
         try{journal.appendGroup(values);fault.accept(Boundary.AFTER_CONTEXT);}catch(IOException|RuntimeException error){throw persistenceFailure(error);}return null;
     });}
     private void reserveCheckpoint(){
@@ -145,6 +177,7 @@ public final class FileEncounterStore implements AutoCloseable {
     });}
     /** Separate durable tombstone also covers conversion/ownership before context capture. */
     public void disqualify(UUID world,UUID enemy){awaitSubmissions();locked(()->{
+        admissionStates.remove(new EncounterJournal.Key(world,enemy));
         Path path=keyPath("excluded",world,enemy);if(!Files.exists(path))write(path,new Rejected(world,enemy),false);
         else if(!read(path,Rejected.class).equals(new Rejected(world,enemy)))throw new IllegalStateException("ENCOUNTER_ID_MISMATCH");
         fault.accept(Boundary.AFTER_DISQUALIFY);return null;
@@ -163,7 +196,7 @@ public final class FileEncounterStore implements AutoCloseable {
     }
     /** Atomically record the full immutable plan before the first player award. */
     public EncounterContributions.DeathPlan freeze(EncounterContributions.DeathPlan plan){awaitSubmissions();return locked(()->{
-        var spawn=plan.spawn();var previous=deathLocked(spawn.world(),spawn.enemy());
+        var spawn=plan.spawn();admissionStates.remove(new EncounterJournal.Key(spawn.world(),spawn.enemy()));var previous=deathLocked(spawn.world(),spawn.enemy());
         if(previous.isPresent()){
             if(!previous.get().equals(plan))throw new IllegalStateException("DEATH_PLAN_CONFLICT");return previous.get();
         }
@@ -232,7 +265,7 @@ public final class FileEncounterStore implements AutoCloseable {
         try {
             Files.createDirectories(directory);writerChannel=FileChannel.open(directory.resolve("writer.lock"),CREATE,WRITE);
             writerLock=writerChannel.tryLock();if(writerLock==null)throw new IllegalStateException("ENCOUNTER_WRITER_BUSY");
-            journal=new EncounterJournal(directory.resolve("journal"),new EncounterJournal.Checkpoints(){
+            var legacy=new EncounterJournal.Checkpoints(){
                 public EncounterJournal.Entry load(EncounterJournal.Key key){return baseline(key);}
                 public long floor(){Path path=directory.resolve("checkpoint-floor.json");return Files.exists(path)?read(path,Floor.class).sequence():0;}
                 public void floor(long sequence){write(directory.resolve("checkpoint-floor.json"),new Floor(sequence),true);}
@@ -240,7 +273,21 @@ public final class FileEncounterStore implements AutoCloseable {
                 public void submit(Runnable publication){scheduleCheckpoint(publication);}
                 public void reserveCheckpoint(){FileEncounterStore.this.reserveCheckpoint();}
                 public void groupFault(GroupBoundary boundary){FileEncounterStore.this.groupFault(boundary);}
-            },timings,journalFault);
+            };
+            if(!durabilityV2)journal=new EncounterJournal(directory.resolve("journal"),legacy,timings,journalFault);
+            else {
+                Path floor=directory.resolve("checkpoint-floor.json");
+                boolean v2=Files.exists(floor)&&JsonParser.parseString(Files.readString(floor)).getAsJsonObject().get("schema").getAsInt()==2;
+                long legacyFloor=0;
+                if(!v2){
+                    // Finish the old reader's own replay/checkpoint before publishing any new format.
+                    // A crash before v2 manifest publication leaves the complete v1 directory valid.
+                    try(var previous=new EncounterJournal(directory.resolve("journal"),legacy,timings,journalFault)){
+                        previous.checkpoint();awaitCheckpoints();legacyFloor=previous.sequence();
+                    }
+                }
+                journal=new EncounterJournalV2(directory,legacy,barriers,timings,durabilityFault,journalFault,v2,legacyFloor,preallocate);
+            }
         }catch(IOException|RuntimeException error){releaseHandles();uncertain=true;throw failure("ENCOUNTER_STORE_UNAVAILABLE",error);}
     }
     private EncounterJournal.Entry baseline(EncounterJournal.Key key){
@@ -304,6 +351,7 @@ public final class FileEncounterStore implements AutoCloseable {
     }
     private void write(Path path,Object value,boolean replace){
         Path temporary=path.resolveSibling(path.getFileName()+"."+UUID.randomUUID()+".tmp");
+        foregroundQueued();
         try{
             Files.createDirectories(path.getParent());if(!replace&&Files.exists(path))throw new IllegalStateException("ENCOUNTER_IMMUTABLE_FILE_EXISTS");
             long serializationStart=System.nanoTime();
@@ -313,11 +361,11 @@ public final class FileEncounterStore implements AutoCloseable {
             timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_SERIALIZATION,System.nanoTime()-serializationStart);
             long writeStart=System.nanoTime(),forceTime=0;
             try(var channel=FileChannel.open(temporary,CREATE_NEW,WRITE)){var buffer=ByteBuffer.wrap(bytes);while(buffer.hasRemaining())channel.write(buffer);
-                long forceStart=System.nanoTime();try{channel.force(true);}finally{forceTime=System.nanoTime()-forceStart;timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_FORCE,forceTime);}}
+                long forceStart=System.nanoTime();try{if(durabilityV2)barriers.force(channel,EncounterBarrierArbiter.Kind.AUTHORITY);else channel.force(true);}finally{forceTime=System.nanoTime()-forceStart;if(!durabilityV2)timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_FORCE,forceTime);}}
             if(replace)Files.move(temporary,path,StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING);else Files.move(temporary,path,StandardCopyOption.ATOMIC_MOVE);
             timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_WRITE,System.nanoTime()-writeStart-forceTime);
-        }catch(IOException error){throw failure("ENCOUNTER_WRITE_FAILED",error);}
-        finally{try{Files.deleteIfExists(temporary);}catch(IOException ignored){/* Incomplete uniquely named files are not replayable. */}}
+        }catch(IOException error){if(durabilityV2)throw persistenceFailure(error);throw failure("ENCOUNTER_WRITE_FAILED",error);}
+        finally{foregroundCompleted();try{Files.deleteIfExists(temporary);}catch(IOException ignored){/* Incomplete uniquely named files are not replayable. */}}
     }
     private static IllegalStateException failure(String boundary,Exception cause){return new IllegalStateException(boundary,cause);}
 }

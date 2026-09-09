@@ -1,0 +1,1030 @@
+{
+  "scope": "REAL_FILE_ENCOUNTER_CONTRIBUTIONS_ONLY_NOT_NATIVE_TICK_PROOF",
+  "actors": 4,
+  "victims": 16,
+  "updatesPerSample": 64,
+  "samples": 60,
+  "p50Ms": 7.5661,
+  "p95Ms": 10.6814,
+  "p99Ms": 43.6712,
+  "targetP95Ms": 4,
+  "targetP99Ms": 8,
+  "withinNominalRpgTickBudget": false,
+  "connectedProof": false,
+  "restoredContributorCounts": true,
+  "nativePhysicsAiNetworkRenderingMeasured": false,
+  "persistenceTimings": {
+    "JOURNAL_APPEND": {
+      "totalMs": 11.1883,
+      "p99Ms": 0.461,
+      "retainedSamples": 119,
+      "maxMs": 0.4861,
+      "p95Ms": 0.2419,
+      "p50Ms": 0.128,
+      "count": 119
+    },
+    "JOURNAL_FORCE": {
+      "totalMs": 223.2189,
+      "p99Ms": 2.1498,
+      "retainedSamples": 119,
+      "maxMs": 2.3914,
+      "p95Ms": 2.0858,
+      "p50Ms": 1.8537,
+      "count": 119
+    },
+    "CHECKPOINT_SERIALIZATION": {
+      "totalMs": 16.4469,
+      "p99Ms": 8.3218,
+      "retainedSamples": 3,
+      "maxMs": 8.3218,
+      "p95Ms": 8.3218,
+      "p50Ms": 4.1517,
+      "count": 3
+    },
+    "CHECKPOINT_WRITE": {
+      "totalMs": 1.8533,
+      "p99Ms": 0.4754,
+      "retainedSamples": 6,
+      "maxMs": 0.4754,
+      "p95Ms": 0.4754,
+      "p50Ms": 0.2586,
+      "count": 6
+    },
+    "CHECKPOINT_FORCE": {
+      "totalMs": 22.7252,
+      "p99Ms": 3.733,
+      "retainedSamples": 9,
+      "maxMs": 3.733,
+      "p95Ms": 3.733,
+      "p50Ms": 2.046,
+      "count": 9
+    },
+    "GROUP_WAIT": {
+      "totalMs": 8653.462,
+      "p99Ms": 5.5494,
+      "retainedSamples": 3840,
+      "maxMs": 5.8102,
+      "p95Ms": 4.0944,
+      "p50Ms": 1.9524,
+      "count": 3840
+    },
+    "DURABLE_ACK": {
+      "totalMs": 30642.8245,
+      "p99Ms": 33.7592,
+      "retainedSamples": 3840,
+      "maxMs": 35.9696,
+      "p95Ms": 10.3185,
+      "p50Ms": 7.2719,
+      "count": 3840
+    },
+    "CHECKPOINT_QUEUE": {
+      "totalMs": 1.1092,
+      "p99Ms": 1.0194,
+      "retainedSamples": 3,
+      "maxMs": 1.0194,
+      "p95Ms": 1.0194,
+      "p50Ms": 0.0467,
+      "count": 3
+    },
+    "CHECKPOINT_SCHEDULING": {
+      "totalMs": 0.9328,
+      "p99Ms": 0.8806,
+      "retainedSamples": 3,
+      "maxMs": 0.8806,
+      "p95Ms": 0.8806,
+      "p50Ms": 0.0274,
+      "count": 3
+    },
+    "CHECKPOINT_ROTATION": {
+      "totalMs": 0.0488,
+      "p99Ms": 0.0327,
+      "retainedSamples": 3,
+      "maxMs": 0.0327,
+      "p95Ms": 0.0327,
+      "p50Ms": 0.0086,
+      "count": 3
+    },
+    "CHECKPOINT_BACKPRESSURE": {
+      "totalMs": 0.026,
+      "p99Ms": 0.0181,
+      "retainedSamples": 3,
+      "maxMs": 0.0181,
+      "p95Ms": 0.0181,
+      "p50Ms": 0.0043,
+      "count": 3
+    },
+    "GROUP_CPU": {
+      "totalMs": 203.125,
+      "p99Ms": 15.625,
+      "retainedSamples": 119,
+      "maxMs": 31.25,
+      "p95Ms": 15.625,
+      "p50Ms": 0.0,
+      "count": 119
+    },
+    "GROUP_WALL": {
+      "totalMs": 485.1492,
+      "p99Ms": 7.4407,
+      "retainedSamples": 119,
+      "maxMs": 30.9699,
+      "p95Ms": 6.4167,
+      "p50Ms": 4.5347,
+      "count": 119
+    },
+    "ENCODE_VALIDATE": {
+      "totalMs": 33.962,
+      "p99Ms": 0.904,
+      "retainedSamples": 119,
+      "maxMs": 20.6224,
+      "p95Ms": 0.4298,
+      "p50Ms": 0.0766,
+      "count": 119
+    },
+    "FOREGROUND_BARRIER_WAIT": {
+      "totalMs": 21.5413,
+      "p99Ms": 3.431,
+      "retainedSamples": 119,
+      "maxMs": 3.4718,
+      "p95Ms": 1.7823,
+      "p50Ms": 0.0071,
+      "count": 119
+    },
+    "MAINTENANCE_BARRIER_WAIT": {
+      "totalMs": 73.1999,
+      "p99Ms": 25.0774,
+      "retainedSamples": 9,
+      "maxMs": 25.0774,
+      "p95Ms": 25.0774,
+      "p50Ms": 6.4913,
+      "count": 9
+    },
+    "SUCCESSOR_PREPARATION": {
+      "totalMs": 44.4106,
+      "p99Ms": 28.135,
+      "retainedSamples": 3,
+      "maxMs": 28.135,
+      "p95Ms": 28.135,
+      "p50Ms": 8.2431,
+      "count": 3
+    },
+    "SUCCESSOR_ACTIVATION": {
+      "totalMs": 0.151,
+      "p99Ms": 0.053,
+      "retainedSamples": 3,
+      "maxMs": 0.053,
+      "p95Ms": 0.053,
+      "p50Ms": 0.0507,
+      "count": 3
+    },
+    "PREPARED_WAIT": {
+      "totalMs": 0.0061,
+      "p99Ms": 0.0039,
+      "retainedSamples": 3,
+      "maxMs": 0.0039,
+      "p95Ms": 0.0039,
+      "p50Ms": 0.0012,
+      "count": 3
+    },
+    "FORCE_TO_COMPLETION": {
+      "totalMs": 473.7387,
+      "p99Ms": 0.592,
+      "retainedSamples": 3840,
+      "maxMs": 0.8743,
+      "p95Ms": 0.3222,
+      "p50Ms": 0.1022,
+      "count": 3840
+    }
+  },
+  "grouping": {
+    "bytesPerGroup": {
+      "130": 41,
+      "260": 17,
+      "390": 1,
+      "7930": 1,
+      "8060": 17,
+      "8190": 41,
+      "8320": 1
+    },
+    "maxCheckpointBacklog": 1,
+    "maxPendingRecords": 64,
+    "admissionRejections": 0,
+    "recordsPerGroup": {
+      "1": 41,
+      "2": 17,
+      "3": 1,
+      "61": 1,
+      "62": 17,
+      "63": 41,
+      "64": 1
+    },
+    "maxPendingOperations": 64
+  },
+  "forcesPerSample": [
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "orderedSamplesMs": [
+    43.6712,
+    10.9682,
+    10.2261,
+    10.074,
+    9.7936,
+    9.4108,
+    8.8999,
+    8.3798,
+    8.5206,
+    8.2909,
+    7.971,
+    7.4175,
+    7.3117,
+    7.3047,
+    7.1062,
+    7.2833,
+    9.9617,
+    9.5734,
+    9.323,
+    11.7297,
+    7.6564,
+    7.6462,
+    7.5661,
+    7.468,
+    7.4606,
+    7.7894,
+    8.2932,
+    7.9912,
+    8.1399,
+    7.8947,
+    6.9822,
+    7.5675,
+    8.1349,
+    9.7446,
+    8.9357,
+    10.5274,
+    6.8438,
+    6.7557,
+    6.8,
+    6.9056,
+    7.1606,
+    7.1598,
+    7.2078,
+    7.031,
+    7.1043,
+    7.1694,
+    6.6815,
+    6.8281,
+    7.5356,
+    9.5053,
+    10.6814,
+    9.3307,
+    7.5366,
+    6.8744,
+    6.9323,
+    6.8276,
+    6.9613,
+    6.8037,
+    6.518,
+    6.9316
+  ],
+  "barriers": {
+    "forcesByClass": {
+      "FOREGROUND": 119,
+      "PREPARATION": 6,
+      "BUNDLE": 3,
+      "MANIFEST": 4
+    },
+    "overlapAttempts": 18,
+    "forceEvents": [
+      {
+        "kind": "PREPARATION",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "PREPARATION",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "MANIFEST",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "PREPARATION",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 13,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 3,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 15,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 22,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 22,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 36,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 22,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 10,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 26,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 46,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 24,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 21,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 23,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 23,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 28,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "PREPARATION",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "BUNDLE",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "MANIFEST",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 61,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 30,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 39,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 36,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 27,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 28,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 21,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 27,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 54,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 41,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 25,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 45,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "PREPARATION",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "BUNDLE",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "MANIFEST",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 28,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 21,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 39,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 44,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 21,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 24,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 32,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 36,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 43,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 58,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 51,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 27,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "BUNDLE",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "MANIFEST",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "PREPARATION",
+        "queuedOperations": 0,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 64,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 36,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 38,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 48,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 34,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 20,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 63,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 52,
+        "writerSuspended": false
+      },
+      {
+        "kind": "FOREGROUND",
+        "queuedOperations": 62,
+        "writerSuspended": false
+      }
+    ]
+  },
+  "version2": {
+    "preparedMisses": 0,
+    "bundleBytes": 43332,
+    "bundleCount": 3
+  },
+  "sampleEndsAfterAll64DurableAcknowledgements": true,
+  "checkpointWorkerConcurrentWithSamples": true,
+  "finalCheckpointDrainMs": 0.0058,
+  "journalForcePer64UpdateSampleMs": {
+    "p95": 4.017,
+    "p50": 3.7067,
+    "p99": 4.2825
+  }
+}

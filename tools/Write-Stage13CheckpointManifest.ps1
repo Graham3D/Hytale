@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('f','g','h')][string]$Cohort='f')
+param([ValidateSet('f','g','h','i')][string]$Cohort='f')
 $ErrorActionPreference='Stop'
 $manifestRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $manifestEvidence=Join-Path $manifestRoot "evidence\stage-13\cohort-$Cohort"
@@ -20,7 +20,7 @@ $manifest=[ordered]@{manifestSchema=1;purpose='CHECKSUM_VERIFIED_BLOCKED_DEVELOP
     rollback=@{checkpoint='Stage12H de60a02';sha256=$verification.rollbackSha256;liveSaveUntouched=$true;copiedCheckpointTest='Stage13ArchivedRollbackTest'};
     signing='CHECKSUM_VERIFIED_NOT_CRYPTOGRAPHICALLY_SIGNED';files=$files}
 $path=Join-Path $manifestEvidence 'checkpoint-manifest.json'
-if($Cohort -in @('g','h')){
+if($Cohort -in @('g','h','i')){
     $manifest.schema.encounterJournal=1
     $manifest.schema.rollback='STOP_WRITERS_AND_RESTORE_MATCHING_PRE_WAL_COORDINATED_COPY_NEVER_OLD_BINARY_ON_WAL_STATE'
     $manifest.rollback.preWalCheckpoint='Stage13F 14a0f42; documentation checkpoint 344bfed'
@@ -35,6 +35,15 @@ if($Cohort -eq 'h'){
     $manifest.rollback.preflight='tools/Test-EncounterRollbackCompatibility.ps1; F is forbidden on any WAL directory'
     $manifest.durability=@{submission='PROVISIONAL_NOT_DURABLE';acknowledgement='AFTER_COVERING_FORCE_TRUE';grouping='DRAIN_ALREADY_QUEUED';checkpoint='IMMUTABLE_SEQUENCE_CAPTURE_ASYNC_PUBLICATION';connected='UNVERIFIED'}
     $manifest.report=@{path='docs/stage-13/encounter-group-commit-report.md';sha256=(Get-FileHash -LiteralPath (Join-Path $manifestRoot 'docs/stage-13/encounter-group-commit-report.md')).Hash}
+}
+if($Cohort -eq 'i'){
+    $manifest.schema.encounterJournal=2;$manifest.schema.encounterCheckpoint=2
+    $manifest.schema.rollback='NO_IN_PLACE_DOWNGRADE_RESTORE_MATCHING_PLAYER_REWARD_ENCOUNTER_COORDINATED_COPY'
+    $manifest.rollback.immediateCheckpoint='Stage13H eecd64cc4b7c5345288ffef51083fadc3c8348e4'
+    $manifest.rollback.immediateSha256='8849F88CB9225E847C05580CE1EBE3E2FB6BE0D487C73AA4408526C1ED6381D6'
+    $manifest.rollback.compatibilityTests='Stage13V2RecoveryEdgesTest actual H rejection and preserved coordinated legacy copy; retained G/F/Stage12 rollback tests'
+    $manifest.durability=@{submission='PROVISIONAL_NOT_DURABLE';acknowledgement='AFTER_COVERING_FORCE_TRUE';grouping='SEALED_OPERATIONS_DRAIN_ALREADY_QUEUED_NO_SYNTHETIC_64_DAMAGE_EPOCH';checkpoint='BOUNDED_BUNDLES_AND_SINGLE_V2_MANIFEST';connected='UNVERIFIED'}
+    $manifest.report=@{path='docs/stage-13/encounter-durability-final-boundary-report.md';sha256=(Get-FileHash -LiteralPath (Join-Path $manifestRoot 'docs/stage-13/encounter-durability-final-boundary-report.md')).Hash}
 }
 $manifest|ConvertTo-Json -Depth 8|Set-Content -LiteralPath $path -Encoding utf8
 $read=Get-Content -Raw -LiteralPath $path|ConvertFrom-Json -AsHashtable

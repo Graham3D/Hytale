@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage13DurabilityLoadTest {
     @TempDir Path temp;
     @Test void fourActorSixteenVictimDurableContributionLoadIsMeasuredAndRestores()throws Exception {
-        var registry=EnemyRewardRegistry.load();try(var store=new FileEncounterStore(temp.resolve("encounters"))){
+        var registry=EnemyRewardRegistry.load();try(var store=FileEncounterStore.durableV2(temp.resolve("encounters"))){
         var runtime=new PersistentEncounterRuntime(store,(player,reward)->fail("No death was observed"));
         UUID world=new UUID(1,1);var actors=new ArrayList<UUID>();var enemies=new ArrayList<UUID>();
         for(int i=0;i<4;i++)actors.add(new UUID(2,i+1));
@@ -25,7 +25,7 @@ class Stage13DurabilityLoadTest {
         double[] forceSamples=new double[samples.length];
         long[] forcesPerSample=new long[samples.length];
         double[] orderedSamples=new double[samples.length];
-        store.timings().reset();
+        store.resetTimings();
         for(int tick=0;tick<samples.length;tick++){
             long forceBefore=store.timings().totalNanos(EncounterPersistenceTimings.Phase.JOURNAL_FORCE);
             long countBefore=store.timings().count(EncounterPersistenceTimings.Phase.JOURNAL_FORCE);
@@ -48,6 +48,9 @@ class Stage13DurabilityLoadTest {
         result.put("connectedProof",false);result.put("restoredContributorCounts",true);result.put("nativePhysicsAiNetworkRenderingMeasured",false);
         result.put("persistenceTimings",store.timings().snapshot());
         result.put("grouping",store.timings().grouping());result.put("forcesPerSample",forcesPerSample);result.put("orderedSamplesMs",orderedSamples);
+        result.put("barriers",store.barrierMetrics());result.put("version2",store.timings().v2());
+        result.put("collectionWindowNanos",0);result.put("sharedGameplayEpoch",false);
+        result.put("journalState",store.journalDiagnostics());
         result.put("sampleEndsAfterAll64DurableAcknowledgements",true);result.put("checkpointWorkerConcurrentWithSamples",true);result.put("finalCheckpointDrainMs",checkpointDrainMs);
         Arrays.sort(forceSamples);result.put("journalForcePer64UpdateSampleMs",Map.of("p50",forceSamples[29],"p95",forceSamples[56],"p99",forceSamples[59]));
         Path out=Path.of("build/stage13-hardening/durable-load.json");Files.createDirectories(out.getParent());Files.writeString(out,new GsonBuilder().setPrettyPrinting().create().toJson(result));

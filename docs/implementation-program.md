@@ -4,12 +4,19 @@
 
 Latest consolidated owner/ChatGPT checkpoint report:
 [master implementation status](stage-13/master-implementation-status.md).
-Latest isolated correction: [Stage13 H bounded encounter group commit](stage-13/encounter-group-commit-report.md).
-H reduces contribution forces from 3,840 to 119 and publishes checkpoints asynchronously,
-while preserving force-before-durable-completion. Its 1,963-test suite, isolated smoke,
-archive and rollback checks pass, but p95 16.0318 ms / p99 19.8859 ms still exceed
-the unchanged 4/8 ms gate. Stage13 remains BLOCKED; no live deployment or connected QA.
-The [G WAL report](stage-13/encounter-wal-correction-report.md) remains historical evidence.
+Latest isolated correction: [Stage13 I final encounter durability boundary](stage-13/encounter-durability-final-boundary-report.md).
+I preserves all 1,963 H tests and adds 90 (2,053 total), with 48 real process-halt
+boundary cases, isolated three-mod smoke, archive and coordinated rollback checks passing.
+Prepared WAL v2 removes a standalone foreground rotation barrier; checkpoint-related
+forces fall from 102 to 9. Independent damage submissions still require 119 forces
+per 3,840 updates: no production 64-damage epoch was invented for the benchmark.
+Final p95 7.8891 ms / p99 16.1037 ms fails the unchanged 4/8 ms gate.
+All four 10,000-barrier standalone force modes pass aggregate p95/p99, despite rare
+large outliers. Classification: RPG_PERSISTENCE_ARCHITECTURE_BLOCKED; further
+optimization stops at the identified submission/group-closure/barrier-admission owner.
+Stage13 remains BLOCKED; connected QA is not cleared and no live deployment occurred.
+The [H group-commit report](stage-13/encounter-group-commit-report.md) and
+[G WAL report](stage-13/encounter-wal-correction-report.md) remain historical evidence.
 
 Owner authorization: attachment `4be7b0e7-6165-4222-9c28-5ef5ca1faddf`, followed by
 the supplied master v1.2 Markdown and explicit connected-evidence requirements.
@@ -74,7 +81,7 @@ definitions are read before each corresponding implementation.
 | 10 | 9 summon/corpse/conversion skills and 3 passives | R029 cohorts A–G local scope complete: eight native skill implementations plus Bone Cage intentionally disabled by master collision safety gate; 662 retained tests, plan schema 9; corpse/decoy/conversion role coverage restricted; connected verification outstanding |
 | 11 | remaining 40 passives; component-scoped matrix/combinations | R030 cohorts A–Z local scope complete: all forty primitives, 1377 tests, plan schema35, player schema7; 5742 cells,2145 pairs,1000 valid six-Link property fixtures and saved inactive-node recovery; connected verification outstanding |
 | 12 | progression, attribution, exact-once rewards and acquisition | R031 cohorts A–H local engineering closure: 1653 retained tests, normal three-mod smoke, packaged/archive checks and actual schema8 archived-JAR rollback drill; schema9 durable learning/pity/Insight/respec, fixed-layout build transfer; zero connected-verified acquisition sources; native party/movement witness unavailable; connected verification outstanding |
-| 13 | full 87/66 coverage, hardening, release-candidate assessment | R032 cohorts A–F: 1886 complete retained tests, normal three-mod smoke, exact archive and actual archived-H copied-checkpoint rollback passed; 87 runtime records / plan schema41, four explicit gates. Release BLOCKED by measured synchronous durable contribution latency and unresolved native integration; final combined load/fault/RC gates incomplete; connected UNVERIFIED |
+| 13 | full 87/66 coverage, hardening, release-candidate assessment | R032 through cohort I: 2053 complete retained tests, 48 real halt cases, normal three-mod smoke, exact archive and actual archived-reader/coordinated rollback checks passed; 87 runtime records / plan schema41, four explicit gates. WAL/checkpoint v2; no in-place downgrade. Release BLOCKED: 7.8891 ms p95 / 16.1037 ms p99 vs 4/8; RPG submission/group-closure/barrier-admission architecture remains the measured owner. Final combined load/fault/RC gates incomplete; connected UNVERIFIED; no live deployment |
 
 Advance only after each local engineering gate passes. Each stage has a report,
 machine-readable evidence, archived build/rollback and an independent commit.

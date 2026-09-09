@@ -46,6 +46,8 @@ final class EncounterGroupCommit {
         var receipt=new CompletableFuture<Void>();lease.queued=true;
         receipt.orTimeout(DEADLINE_MILLIS,TimeUnit.MILLISECONDS).whenComplete((ignored,error)->{if(error!=null)store.markUncertain(error);});
         queue.add(new Work(List.copyOf(snapshots),lease,receipt,System.nanoTime()));tail=receipt;
+        store.foregroundQueued();
+        store.timings().operation(snapshots.size());
         store.timings().pending(pendingRecords,pendingOperations);
         if(worker==null){worker=Thread.ofPlatform().daemon().name("RPG-encounter-group-writer").start(this::run);}
         notifyAll();return receipt;
@@ -66,17 +68,22 @@ final class EncounterGroupCommit {
                 try{
                     long started=System.nanoTime();for(var work:group)store.timings().record(EncounterPersistenceTimings.Phase.GROUP_WAIT,started-work.submitted());
                     long wallStart=System.nanoTime(),cpuStart=cpu.isCurrentThreadCpuTimeSupported()?cpu.getCurrentThreadCpuTime():-1;
+                    long forcesBefore=store.timings().count(EncounterPersistenceTimings.Phase.JOURNAL_FORCE);
                     try{store.commitGroup(snapshots);}finally{
                         store.timings().record(EncounterPersistenceTimings.Phase.GROUP_WALL,System.nanoTime()-wallStart);
                         if(cpuStart>=0)store.timings().record(EncounterPersistenceTimings.Phase.GROUP_CPU,cpu.getCurrentThreadCpuTime()-cpuStart);
                     }
+                    store.timings().commitBatch(snapshots.size(),(int)(store.timings().count(EncounterPersistenceTimings.Phase.JOURNAL_FORCE)-forcesBefore));
+                    long forcedAt=store.timings().forceCompletedNanos();
                     store.groupFault(FileEncounterStore.GroupBoundary.BEFORE_ACKNOWLEDGEMENTS);
                     boolean queued;synchronized(this){queued=!queue.isEmpty();}if(queued)store.groupFault(FileEncounterStore.GroupBoundary.ANOTHER_GROUP_QUEUED);
                     for(int i=0;i<group.size();i++){
                         var work=group.get(i);store.checkSubmissionState();
+                        store.timings().record(EncounterPersistenceTimings.Phase.SEALED_OPERATION_TO_FORCE,forcedAt-work.submitted());
                         long latency=System.nanoTime()-work.submitted();for(var ignored:work.snapshots())store.timings().record(EncounterPersistenceTimings.Phase.DURABLE_ACK,latency);
                         synchronized(this){release(work.lease());}
                         work.receipt().complete(null);
+                        store.timings().record(EncounterPersistenceTimings.Phase.FORCE_TO_COMPLETION,System.nanoTime()-forcedAt);
                         if(i==0)store.groupFault(FileEncounterStore.GroupBoundary.MID_ACKNOWLEDGEMENTS);
                     }
                 }catch(Throwable error){
@@ -88,7 +95,7 @@ final class EncounterGroupCommit {
         }catch(Throwable error){if(error instanceof InterruptedException)Thread.currentThread().interrupt();store.markUncertain(error);synchronized(this){failure=error;failQueued(error);}}
     }
     private void failQueued(Throwable error){while(!queue.isEmpty()){var work=queue.remove();release(work.lease());work.receipt().completeExceptionally(error);}notifyAll();}
-    private void release(Lease lease){if(lease.closed)return;lease.closed=true;pendingOperations--;pendingRecords-=lease.keys.size();for(var key:lease.keys)contexts.compute(key,(ignored,count)->count==1?null:count-1);notifyAll();}
+    private void release(Lease lease){if(lease.closed)return;lease.closed=true;if(lease.queued)store.foregroundCompleted();pendingOperations--;pendingRecords-=lease.keys.size();for(var key:lease.keys)contexts.compute(key,(ignored,count)->count==1?null:count-1);notifyAll();}
     synchronized boolean pending(){return pendingOperations!=0;}
     void await(){CompletableFuture<Void> receipt;synchronized(this){receipt=tail;}await(receipt);}
     static void await(CompletableFuture<?> receipt){
