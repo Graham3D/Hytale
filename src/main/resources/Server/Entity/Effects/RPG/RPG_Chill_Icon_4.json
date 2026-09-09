@@ -1,0 +1,6 @@
+{
+  "Duration": 6,
+  "Debuff": true,
+  "StatusEffectIcon": "UI/StatusEffects/RPG/StatusChill04.png",
+  "OverlapBehavior": "Overwrite"
+}

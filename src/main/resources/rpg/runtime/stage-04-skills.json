@@ -7,8 +7,8 @@
       "resourceType": "STAMINA", "resourceCost": 5.0, "cooldownSeconds": 0.8, "windupSeconds": 0.0,
       "basePowerSource": "WEAPON", "innateBasePower": 0.0, "scaling": "WEAPON_CLASS",
       "strike": {"geometry":"ARC", "range":2.6, "angleDegrees":120.0, "lineHalfWidth":0.0,
-        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":64, "coefficient":0.85,
-        "statusId":"", "statusSeconds":0.0}
+        "repeats":2, "repeatIntervalSeconds":0.2777777777777778, "targetCap":64, "coefficient":0.85,
+        "statusId":"", "statusSeconds":0.0, "details":{"element":"PHYSICAL","height":2.5,"actionLockSeconds":0.7,"movementFactor":1}}
     },
     {
       "skillId": "heavy_swing", "family": "STRIKE", "secondaryFamilies": [],

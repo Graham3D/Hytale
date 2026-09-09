@@ -13,6 +13,9 @@ public final class NativeStrikeFeedback {
     private static final Map<String,String> PROFILES = Map.of("SWORD","Sword","LONGSWORD","Longsword",
             "DAGGER","Daggers","MACE","Mace","BATTLEAXE","RPG_Strike_Battleaxe","SPEAR","Spear");
     private NativeStrikeFeedback() { }
+    public static double quickSlashInterval(String kind){
+        return switch(kind){case "SWORD"->25.0/60/1.5;case "LONGSWORD"->25.0/60/1.2;case "DAGGER"->20.0/60/1.8;default->throw new IllegalArgumentException("QUICK_SLASH_WEAPON_KIND");};
+    }
     public static void requireAssets() {
         var failures = new java.util.ArrayList<String>();
         for (String profile : java.util.stream.Stream.concat(PROFILES.values().stream(), java.util.stream.Stream.of("Staff")).distinct().toList()) {
@@ -26,12 +29,23 @@ public final class NativeStrikeFeedback {
             }
         }
         if(!failures.isEmpty())throw new IllegalStateException("STRIKE_FEEDBACK_ASSET_INVALID:"+String.join("; ",failures));
+        for(String kind:java.util.List.of("SWORD","LONGSWORD","DAGGER"))for(String action:java.util.List.of("SwingLeft","SwingRight")){
+            var base=ItemPlayerAnimations.getAssetMap().getAsset(PROFILES.get(kind)).getAnimations().get(action);
+            var quick=ItemPlayerAnimations.getAssetMap().getAsset("RPG_QuickSlash_"+PROFILES.get(kind)).getAnimations().get(action);
+            var first=com.hypixel.hytale.server.core.asset.common.BlockyAnimationCache.getNow(quick.firstPerson);
+            var third=com.hypixel.hytale.server.core.asset.common.BlockyAnimationCache.getNow(quick.thirdPerson);
+            if(!base.firstPerson.equals(quick.firstPerson)||!base.thirdPerson.equals(quick.thirdPerson)||quick.looping
+                    ||Math.abs(quick.speed-base.speed*1.5)>1e-5||first==null||third==null
+                    ||Math.abs(Math.max(first.getDurationSeconds(),third.getDurationSeconds())/quick.speed-quickSlashInterval(kind))>1e-6)
+                throw new IllegalStateException("QUICK_SLASH_NATIVE_ANIMATION_CONTRACT:"+kind+"/"+action);
+        }
     }
     static void play(Store<EntityStore> store, Ref<EntityStore> actor, SkillExecutionContext context, int hit) {
         var held=context.equipment().mainHand();
         String profile=context.profile().basePowerSource().equals("INNATE") ? "Staff"
                 : held==null ? "Staff" : PROFILES.getOrDefault(held.weaponKind(),"Staff");
         String action=profile.equals("Spear")?"Stab":(hit%2==0?"SwingLeft":"SwingRight");
+        if(context.profile().skillId().equals("quick_slash"))profile="RPG_QuickSlash_"+profile;
         // true includes the invoking player; the no-boolean overload excludes that player.
         AnimationUtils.playAnimation(actor,AnimationSlot.Action,profile,action,true,store);
     }

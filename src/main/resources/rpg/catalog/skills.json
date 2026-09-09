@@ -4,7 +4,7 @@
     "id": "quick_slash",
     "skillId": "rpg.skill.quick_slash",
     "name": "Quick Slash",
-    "description": "Deliver a fast, low-commitment melee slash intended for reliable close-range pressure.",
+    "description": "Deliver two alternating light-attack slashes at 1.5x normal animation speed. Each slash deals full damage; pay once for the sequence.",
     "tier": "I",
     "phase": 4,
     "tags": [
@@ -25,7 +25,7 @@
     "geometry": "120° frontal arc",
     "travelSpeed": "N/A",
     "lifetime": "Instant",
-    "powerCoefficient": "0.85x Weapon Power",
+    "powerCoefficient": "2 hits x 0.85x Weapon Power",
     "canCrit": true,
     "statusApplications": null,
     "vfxRecipeId": "rpg.vfx.skill.quick_slash",

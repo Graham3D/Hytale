@@ -1,5 +1,7 @@
 # Owner / ChatGPT review packet
 
+**Latest correction:** [Stage 13 P player feedback report](../stage-13/stage-13-player-feedback-correction-report.md) contains the projectile orphan-race diagnosis and stronger native regression, two-hit Quick Slash plus its owner-authorized Multistrike exception, native Chill icons, R032-P revision badge, all 2,135 test results, deployed hashes, rollback and connected checklist. P is deployed for testing; connected rendering/animation/impact and formal performance remain unverified. The O paragraph below is historical.
+
 **Latest correction:** [Stage 13 O native projectile spawn report](../stage-13/stage-13-native-projectile-spawn-correction-report.md) contains the exact empty-EnumMap failure, queued native entity setup correction, real native construction/rollback proof, deployed hashes and connected retest checklist. O passed 2,128 retained tests and exact three-mod/native smoke. Corrected connected rendering/flight/impact and formal performance remain unverified. [N's power/trace report](../stage-13/stage-13-power-trace-correction-report.md) remains the authoritative unchanged weapon/trace correction history.
 
 The consolidated packet below is the historical Stage 13 L checkpoint, `cd7cdbd0299de4bf18740b2cca08756b64b77f69`. The owner reported that L loads. Current gameplay/production acceptance is not inferred from that statement; later corrections must be read separately.

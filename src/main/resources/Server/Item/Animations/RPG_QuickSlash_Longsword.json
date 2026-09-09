@@ -1,0 +1,21 @@
+{
+  "Animations": {
+    "SwingLeft": {
+      "ThirdPerson": "Characters/Animations/Items/Dual_Handed/Longsword/Attacks/Swing_Left/Swing_Left.blockyanim",
+      "ThirdPersonMoving": "Characters/Animations/Items/Dual_Handed/Longsword/Attacks/Swing_Left/Swing_Left_Moving.blockyanim",
+      "ThirdPersonFace": "Characters/Animations/Expressions/Frown.blockyanim",
+      "FirstPerson": "Characters/Animations/Items/Dual_Handed/Longsword/Attacks/Swing_Left/Swing_Left_FPS.blockyanim",
+      "KeepPreviousFirstPersonAnimation": true,
+      "Speed": 1.2000000000000002
+    },
+    "SwingRight": {
+      "ThirdPerson": "Characters/Animations/Items/Dual_Handed/Longsword/Attacks/Swing_Right/Swing_Right.blockyanim",
+      "ThirdPersonMoving": "Characters/Animations/Items/Dual_Handed/Longsword/Attacks/Swing_Right/Swing_Right_Moving.blockyanim",
+      "ThirdPersonFace": "Characters/Animations/Expressions/Frown.blockyanim",
+      "FirstPerson": "Characters/Animations/Items/Dual_Handed/Longsword/Attacks/Swing_Right/Swing_Right_FPS.blockyanim",
+      "KeepPreviousFirstPersonAnimation": true,
+      "Speed": 1.2000000000000002
+    }
+  },
+  "Parent": "Longsword"
+}

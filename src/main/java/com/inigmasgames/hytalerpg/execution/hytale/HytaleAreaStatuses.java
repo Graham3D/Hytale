@@ -35,7 +35,8 @@ final class HytaleAreaStatuses {
         var effect=EntityEffect.getAssetMap().getAsset(id);return effect!=null&&controller.hasEffect(effect);
     }
     static boolean available() {
-        return java.util.stream.Stream.concat(SLOWS.stream(), java.util.stream.Stream.of("RPG_Frozen", "RPG_Root"))
+        return java.util.stream.Stream.concat(SLOWS.stream(), java.util.stream.Stream.of("RPG_Frozen", "RPG_Root",
+                        "RPG_Chill_Icon_1","RPG_Chill_Icon_2","RPG_Chill_Icon_3","RPG_Chill_Icon_4"))
                 .allMatch(id -> EntityEffect.getAssetMap().getAsset(id) != null);
     }
     static void apply(RpgCombatKernel kernel, SkillExecutionContext context,
@@ -74,6 +75,10 @@ final class HytaleAreaStatuses {
         EffectControllerComponent controller = store.getComponent(target, EffectControllerComponent.getComponentType());
         if (controller == null) return;
         var states = statuses.inspect(id).active();
+        // Presentation follows actual Chill stacks, independent of the strongest-only movement channel.
+        var chill=states.get(RpgStatusType.CHILL);
+        for(int stack=1;stack<=4;stack++)project(controller,target,store,owner,"RPG_Chill_Icon_"+stack,
+                chill!=null&&chill.stacks()==stack?chill:null);
         project(controller, target, store, owner, "RPG_Root", states.get(RpgStatusType.ROOT));
         project(controller, target, store, owner, "RPG_Frozen", states.get(RpgStatusType.FROZEN));
         var slow = statuses.strongestSlow(id);

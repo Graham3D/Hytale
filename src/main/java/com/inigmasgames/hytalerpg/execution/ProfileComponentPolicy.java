@@ -29,7 +29,8 @@ public final class ProfileComponentPolicy {
     }
     public static boolean discreteStrike(Stage04SkillProfile p,boolean excludeAuthoredSequence){
         return p.family()==Stage04SkillProfile.Family.STRIKE&&p.strike()!=null&&p.strike().coefficient()>0
-                &&(!excludeAuthoredSequence||p.strike().repeats()==1);
+                // Owner-authored exception: Multistrike repeats Quick Slash's complete pair.
+                &&(!excludeAuthoredSequence||p.strike().repeats()==1||p.skillId().equals("quick_slash"));
     }
     public static Optional<Boolean> finiteUpfront(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(finiteUpfront(p));}
     public static boolean finiteUpfront(Stage04SkillProfile p){

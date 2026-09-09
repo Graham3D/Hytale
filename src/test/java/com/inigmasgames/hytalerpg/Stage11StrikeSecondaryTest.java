@@ -19,7 +19,7 @@ class Stage11StrikeSecondaryTest {
         public boolean lineOfSight(Vec3 p,StrikeGeometryService.Candidate<String> t){return !blocked.contains(t.stableId());}
         public void damage(SkillExecutionContext c,StrikeGeometryService.Candidate<String> t,Double resolved){delivered.add(new Delivery(c,t.stableId(),resolved));if(fail)throw new IllegalStateException("fixture native write uncertain");}
     }
-    Stage11ResourcePassivesTest.H h(String...passives){var h=new Stage11ResourcePassivesTest.H("quick_slash");for(int i=0;i<passives.length;i++)h.link(passives[i],PassiveSlot.values()[i]);assertEquals(SkillExecutionResult.Status.COMMITTED,h.cast().status());return h;}
+    Stage11ResourcePassivesTest.H h(String...passives){boolean multi=Arrays.asList(passives).contains("multistrike");var h=new Stage11ResourcePassivesTest.H(multi?"spear_thrust":"quick_slash");if(multi)h.weapon="SPEAR";for(int i=0;i<passives.length;i++)h.link(passives[i],PassiveSlot.values()[i]);assertEquals(SkillExecutionResult.Status.COMMITTED,h.cast().status());return h;}
     List<StrikeSecondaryRuntime.Hit<String>> primary(){return List.of(new StrikeSecondaryRuntime.Hit<>(target("primary",0,0,1),100,7,false));}
     int run(SkillExecutionContext c,List<StrikeSecondaryRuntime.Hit<String>> hits,P p){return new StrikeSecondaryRuntime().afterPrimary(c,0,Vec3.ZERO,Vec3.FORWARD,hits,p);}
     @Test void cleavingPositiveAndRadialWrongFamilyNegativeGates(){assertTrue(f.accepts("shield_bash","cleaving_edge"));assertTrue(f.accepts("quick_slash","cleaving_edge"));assertFalse(f.accepts("ground_slam","cleaving_edge"));assertFalse(f.accepts("fire_bolt","cleaving_edge"));assertFalse(f.accepts("riposte","cleaving_edge"));}

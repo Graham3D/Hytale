@@ -83,7 +83,11 @@ public final class CompiledProfileResolver {
         }
         if(strikes.multistrike()){
             if(!ProfileComponentPolicy.discreteStrike(authored,true))throw new IllegalArgumentException("MULTISTRIKE_SINGLE_STRIKE_REQUIRED");
-            var strike=resolved.getAsJsonObject("strike");strike.addProperty("repeats",3);strike.addProperty("repeatIntervalSeconds",.25);
+            var strike=resolved.getAsJsonObject("strike");
+            boolean pair=authored.skillId().equals("quick_slash");
+            strike.addProperty("repeats",pair?6:3);strike.addProperty("repeatIntervalSeconds",pair?authored.strike().repeatIntervalSeconds():.25);
+            // Longsword is the slowest supported pair; cover all six accelerated swings.
+            if(pair)strike.getAsJsonObject("details").addProperty("actionLockSeconds",2.1);
         }
         if(plan.orbit()&&authored.projectile()!=null){
             var p=resolved.getAsJsonObject("projectile");double coefficient=p.get("coefficient").getAsDouble();

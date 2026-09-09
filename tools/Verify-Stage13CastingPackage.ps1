@@ -1,9 +1,9 @@
 [CmdletBinding()]
-param([ValidateSet('m','n','o')][string]$Cohort='m')
+param([ValidateSet('m','n','o','p')][string]$Cohort='m')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence/stage-13/cohort-$Cohort"
-$baseline=if($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
+$baseline=if($Cohort -eq 'p'){'o'}elseif($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
 $previous=Join-Path $root "evidence/stage-13/cohort-$baseline/artifacts/HytaleRPG-0.0.25.jar"
 $candidate=Join-Path $out 'artifacts/HytaleRPG-0.0.25.jar'
 function EntryHashes([string]$path){
@@ -15,6 +15,14 @@ function EntryHashes([string]$path){
 $before=EntryHashes $previous;$after=EntryHashes $candidate
 $changed=@(foreach($name in @($before.Keys)+@($after.Keys)|Sort-Object -Unique){if($before[$name] -ne $after[$name]){$name}})
 foreach($name in $changed){
+    if($Cohort -eq 'p'){
+        if($name -in @('Common/UI/StatusEffects/','Common/UI/StatusEffects/RPG/')){continue}
+        if($name -match '^com/inigmasgames/hytalerpg/execution/(ProfileComponentPolicy|CompiledProfileResolver)(\$[^/]*)?\.class$'){continue}
+        if($name -match '^com/inigmasgames/hytalerpg/(ui/hud/RpgHud|execution/hytale/(HytaleSkillExecutionSystem|NativeStrikeFeedback|HytaleAreaStatuses|NativeProjectileSpawnAuditCommand))(\$[^/]*)?\.class$'){continue}
+        if($name -in @('rpg/catalog/skills.json','rpg/catalog/passives.json','rpg/runtime/stage-04-skills.json','Common/UI/Custom/Phase00RevisionHud.ui')){continue}
+        if($name -match '^Server/Item/Animations/RPG_QuickSlash_(Sword|Longsword|Daggers)\.json$|^Server/Entity/Effects/RPG/(RPG_Chill_Icon_[1-4]|RPG_Frozen|RPG_Frozen_Slow)\.json$|^Common/UI/StatusEffects/RPG/StatusChill0[1-5]\.png$'){continue}
+        throw "Unexpected P packaged change outside player feedback correction: $name"
+    }
     if($Cohort -eq 'o'){
         if($name -match '^com/inigmasgames/hytalerpg/(phase00/Phase00Plugin|execution/hytale/(HytaleSkillExecutionSystem|NativeProjectileSpawnConfig|ProjectileSpawnDiagnostics|NativeProjectileSpawnAuditCommand))(\$[^/]*)?\.class$'){continue}
         throw "Unexpected O packaged change outside native spawn correction: $name"
@@ -50,6 +58,7 @@ if((Get-FileHash -LiteralPath $target).Hash -ne (Get-FileHash -LiteralPath $cand
 [ordered]@{changedEntries=$changed;allOtherEntriesIdentical=$true;resourcesHudPowerRegistryPersistenceFormatsUnchanged=($Cohort -in @('m','o'));
     nativeHudInputExecutorsPersistenceAndOriginalPowerManifestUnchanged=($Cohort -eq 'n');expandedPowerManifest=($Cohort -eq 'n');
     equipmentTargetingInputPersistenceResourcesCooldownsHudAndNormalTraceIdenticalToN=($Cohort -eq 'o');
+    powerInputPersistenceResourceCooldownAndTraceImplementationsIdenticalToO=($Cohort -eq 'p');
     isolatedAtomicRollbackAndRollForward='PASS';retainedArchivedReaderTests='See full test-results.json; archived-reader tests unchanged';
     previousSha256=(Get-FileHash -LiteralPath $previous).Hash;candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash;
     connectedCastingVerified=$false}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $out 'jar-differential.json') -Encoding utf8

@@ -1,0 +1,250 @@
+{
+  "connectedBuild": "O",
+  "window": "2026-09-09 23:00:11 through 23:06:10 UTC exclusive",
+  "eventCounts": {
+    "AMMO_CHECK": 1,
+    "EXECUTOR_DISPATCH": 2,
+    "LOAD": 1,
+    "NATIVE_ABILITY_INPUT_OBSERVED": 8,
+    "NATIVE_ABILITY_SLOT_CLEARED": 1,
+    "NATIVE_ABILITY_SLOT_CONFLICT": 2,
+    "NATIVE_ABILITY_SLOT_PROJECTED": 2,
+    "NATIVE_RPG_TICK_SUMMARY": 41,
+    "PERSISTENCE_HANDOFF_METRICS": 341,
+    "PROJECTILE_CANCELLED": 1,
+    "PROJECTILE_SPAWN_REJECTED": 6,
+    "PROJECTILE_SPAWN_REQUEST": 1,
+    "PROJECTILE_TERMINATED": 1,
+    "SKILL_ACTIVATION_REJECTED": 6,
+    "SKILL_ACTIVATION_REQUEST": 8,
+    "SKILL_COMMITTED": 2,
+    "SKILL_TERMINATED": 2,
+    "SKILL_VALIDATION_PASS": 2,
+    "SKILL_VALIDATION_REJECTED": 6,
+    "STRIKE_QUERY": 2,
+    "TRACE_LEVEL_CHANGED": 1
+  },
+  "cancellationDelayMs": 7.5035,
+  "sourceHashes": [
+    {
+      "Algorithm": "SHA256",
+      "Hash": "13B8F993437D3EBA5BA20E759E9EDD22FBD4D96A52131AD41EE0370A3F4F3583",
+      "Path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\InigmasGames_HytaleRPGPhase00Audit\\logs\\rpg\\skill-trace.jsonl"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "FDD9DA4218A7C5CEC971E55FD928252A664C4555A35EF17B2CEBDA0A0BD9017D",
+      "Path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\InigmasGames_HytaleRPGPhase00Audit\\logs\\rpg\\ui-trace.jsonl"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "7D7CE1443F53E60BF86167E9559BB8E48EDED1885EC84EBC36F28B9D095976AD",
+      "Path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\logs\\2026-09-09_19-00-11_server.log"
+    }
+  ],
+  "pipeline": [
+    {
+      "timestamp": "2026-09-09T23:00:29.832356200Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "NATIVE_ABILITY_INPUT_OBSERVED",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "action": "Ability3",
+        "mapped": true,
+        "result": "NATIVE_EXECUTION_MAPPED",
+        "logicalSlot": "skill02",
+        "chainId": 8
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:00:29.833355400Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "SKILL_ACTIVATION_REQUEST",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "action": "Ability3",
+        "skillSlot": "skill02",
+        "rootCastId": "input-8-0c86913a",
+        "skillInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336",
+        "origin": "MANUAL"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:00:29.837356Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "SKILL_VALIDATION_PASS",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "windupSeconds": 0.0,
+        "family": "PROJECTILE",
+        "rootCastId": "input-8-0c86913a",
+        "skillInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336",
+        "skillId": "fire_bolt"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:00:29.891207600Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "SKILL_COMMITTED",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "attunementStacksUsed": 0,
+        "cooldownSeconds": 1.3757225433526012,
+        "skillInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336",
+        "ruthlessEmpowered": false,
+        "chargesRemaining": 0,
+        "rootCastId": "input-8-0c86913a",
+        "compiledPlanHash": "168ae35d84272eb42e4cc914ab1dfc1c212f1573925b60a1b0a7e4b6bc604591",
+        "resourceCost": 8.0,
+        "chargeCapacity": 1,
+        "resourceType": "MANA",
+        "skillId": "fire_bolt"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:00:29.892212600Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "EXECUTOR_DISPATCH",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "family": "PROJECTILE",
+        "skillInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336",
+        "rootCastId": "input-8-0c86913a"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:00:29.894212Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "AMMO_CHECK",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "rootCastId": "input-8-0c86913a",
+        "quantity": 0,
+        "required": false,
+        "skillInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336",
+        "derivedRelease": false,
+        "available": true,
+        "itemId": ""
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:00:29.894212Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "PROJECTILE_SPAWN_REQUEST",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "skillInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336",
+        "configId": "Projectile_Config_RPG_Fire_Bolt",
+        "generation": 0,
+        "caster": "73f9b698-2494-480d-8406-2943e4a7505b",
+        "originX": -28.098244970241364,
+        "originY": 125.21781746343838,
+        "rootCastId": "input-8-0c86913a",
+        "compiledPlanHash": "168ae35d84272eb42e4cc914ab1dfc1c212f1573925b60a1b0a7e4b6bc604591",
+        "projectileInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336-projectile-0",
+        "originZ": 191.01219057323644,
+        "skillId": "fire_bolt"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:00:29.901715500Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "PROJECTILE_CANCELLED",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "reason": "NATIVE_PROJECTILE_REMOVED_WITHOUT_IMPACT",
+        "generation": 0,
+        "projectileInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336-projectile-0",
+        "compiledPlanHash": "168ae35d84272eb42e4cc914ab1dfc1c212f1573925b60a1b0a7e4b6bc604591",
+        "rootCastId": "input-8-0c86913a",
+        "caster": "73f9b698-2494-480d-8406-2943e4a7505b",
+        "skillId": "fire_bolt",
+        "skillInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:00:29.901715500Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "PROJECTILE_TERMINATED",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "reason": "NATIVE_PROJECTILE_REMOVED_WITHOUT_IMPACT",
+        "generation": 0,
+        "projectileInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336-projectile-0",
+        "compiledPlanHash": "168ae35d84272eb42e4cc914ab1dfc1c212f1573925b60a1b0a7e4b6bc604591",
+        "rootCastId": "input-8-0c86913a",
+        "caster": "73f9b698-2494-480d-8406-2943e4a7505b",
+        "skillId": "fire_bolt",
+        "skillInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:00:29.901715500Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "SKILL_TERMINATED",
+      "correlationId": "0c86913a-b5f2-429f-90cd-4c599105a6df",
+      "details": {
+        "reason": "PROJECTILE_NATIVE_REMOVAL",
+        "skillInstanceId": "activation-842032c7-86c8-4e4f-93b9-f5eb845e7336",
+        "rootCastId": "input-8-0c86913a"
+      }
+    }
+  ],
+  "ownerIcons": [
+    {
+      "file": "StatusChill01.png",
+      "sourceSha256": "625EA57899B82863197D5D48ABC82ABAD5136FCF01560747F533BF2D9A26EA39",
+      "packagedSourceIdentical": true
+    },
+    {
+      "file": "StatusChill02.png",
+      "sourceSha256": "578B0247F2EF803555D7577D4BE488083463338B1E949E0BCE25950F5F3C240A",
+      "packagedSourceIdentical": true
+    },
+    {
+      "file": "StatusChill03.png",
+      "sourceSha256": "4360493FF7482DF78EFD2D98A00D2C597051B930CCD741E32DE0E3B69AD9886A",
+      "packagedSourceIdentical": true
+    },
+    {
+      "file": "StatusChill04.png",
+      "sourceSha256": "93317D08889B6846A1D9D4C6CD33C38138967A44F428C0B25259E3542C2EBECA",
+      "packagedSourceIdentical": true
+    },
+    {
+      "file": "StatusChill05.png",
+      "sourceSha256": "21774008FFDB3D0C7087F38D157341DA15D3B5E0CE1FEF00123836EFEDA92CE7",
+      "packagedSourceIdentical": true
+    }
+  ]
+}

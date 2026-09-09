@@ -1,0 +1,345 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/C:/Users/Zemio/.gradle/wrapper/dists/gradle-9.2.0-bin/11i5gvueggl8a5cioxuftxrik/gradle-9.2.0/lib/native-platform-0.22-milestone-29.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+
+> Task :compileJava
+Note: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSkillExecutionSystem.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :validateCustomUi
+Validated 32 CustomUI document(s): no invalid escapes, unterminated strings, unbalanced delimiters, labeled Button misuse, or late imported-control macro arguments.
+
+> Task :processResources
+> Task :classes
+> Task :compileTestJava
+> Task :processTestResources UP-TO-DATE
+> Task :testClasses
+
+> Task :test
+
+Stage11StrikeCadenceTest > paidHealthDispatchFailureStillConsumesEmpoweredCommittedUse() FAILED
+    java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.RuntimeException at Stage11StrikeCadenceTest.java:14
+            Caused by: java.lang.NullPointerException at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > multistrikePositiveAndAuthoredSequenceReactionNegativeGates() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > cadenceIsAtQuarterAndHalfSecondWithNoDuplicateClaim() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > profileUsesThreeHitsAndQuarterSecondCadenceWithoutChangingCanonical() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > ledgerBoundIsExplicitAndOwnerCleanupReleasesCapacity() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > singleRepeatControllerAndCopyLimitsStillApply() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > staleRollbackCannotEraseNewCommitOrRestoreClearedOwner() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > repeatedHitLedgersAreIndependentAndCannotDoubleClaim() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > ledgerSeparatesActorsSlotsAndDeduplicatesLatestRoot() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > derivedChildrenNeverChargeResourcesOrStartAnotherCooldown() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > failedLoadoutSaveAndOrdinaryInterruptDoNotClearPriorCommits() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > rootActionLockRejectsOtherCastUntilExplicitFinalTermination() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > repeatsCannotRecursivelyRepeatEchoOrBarrage() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > everyThirdManualRootCommitIncludingMissIsEmpowered() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > finiteSequenceLateWorldTickGuardAndMonotonicOrigin() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > thirdMultistrikeChildrenInheritEmpowermentWithoutAdvancingCadence() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > snapshotCopyPreservesRepeatIdentityAndSharedLeechCap() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > cooldownAndResourceFailuresDoNotAdvanceRuthless() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > paidNormalDispatchFailureConsumesEmpoweredCommittedUse() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > impactAndRuthlessScaleAuthoredStaggerOnceEach() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > increasedDamageAddsToPotencyNotAnotherSixtyPercentMore() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > committedPrimaryFullAndExactlyTwoDerivedChildrenAtSixtyFivePercent() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > resolverCacheDoesNotCrossContaminateOtherPlans() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > ruthlessPositiveAndTwoNegativeGates() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > unlinkedContextCannotCreateMultistrikeChildren() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > empoweredStaggerScalesExistingPayloadBeforeCapsWithoutInventingOne() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > noExpiryButLoadoutChangeResetsCadence() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > failedCooldownPersistenceDoesNotConsumeThirdUse() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > triggeredRootNeitherConsumesNorReceivesThirdManualUse() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeCadenceTest > windupInterruptedBeforeCommitDoesNotAdvanceCounter() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeCadenceTest.java:14
+        Caused by: java.lang.ExceptionInInitializerError at Stage11StrikeCadenceTest.java:14
+
+Stage11StrikeSecondaryTest > fortyEightTotalEffectsAndGenerationThreeBounds() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > phantomPositiveAndTwoNegativeGates() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > noAdditionalResourceCostOrCooldownOrCommit() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > secondaryPreservesRootCorrelationAndCannotProcOrRepeat() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > uncertainNativeWriteDoesNotRefundBudgetOrReplayController() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > cleaveControllerOnlyRunsOnceAndDoesNotRepeatOnAuthoredHits() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > phantomCopiesResolvedPremitigationNotPostMitigationOrOffenseAgain() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > controllersBoundedAndDifferentRootBudgetsIndependent() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > bothPassivesUseDistinctEffectsAndOneSharedRootBudget() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > repeatedChildDoesNotProcEitherPassive() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > cleaveKeepsPrimarySnapshotAndExcludesPrimaryFromSixtyPercentChildren() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > protectedUndamageableBlockedAndDuplicateCandidatesExcluded() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > phantomAtExactlyThreeMetresAllowedAndVerticalDistanceCounts() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > phantomOnlyInitialPrimaryNotLaterAuthoredHit() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > phantomDoesNotFireForCancelledZeroLossOrInvalidHit() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > childCreationCannotFabricateUnknownUnlinkedOrUnboundedEffect() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > cleavingPositiveAndRadialWrongFamilyNegativeGates() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > presentationAdapterFailureCannotEraseOrRepeatGameplay() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > allOriginalArcTargetsExcludedNotOnlyFirst() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > duplicateEffectDoesNotConsumeAdditionalBudget() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > rootTriggeredBudgetSharedAcrossBothPassives() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > cleaveCapsFourSortedStableSecondaryTargets() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > phantomUsesImpactCentredDistanceRatherThanCasterDistance() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > queryOverflowFailsClosedBeforeAnyDamage() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > cleaveReachAndConcentrationChangeMatchingPresentationGeometry() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > phantomExcludesPrimaryAndAllOriginalMultiTargetHits() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > compiledModifiersStayTypedWithoutProjectileConversion() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > cleaveIsExactlyEightyDegreeThreeMetreFrontalGeometry() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > phantomNearestTieUsesStableIdentityAndLos() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage11StrikeSecondaryTest > cleaveCanStillResolveItsOwnArcWhenPrimaryMissesAtRelease() FAILED
+    java.lang.NoClassDefFoundError at Stage11StrikeSecondaryTest.java:13
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > preparationDiagnosticsRecordStageWithoutRawExceptionOrSensitiveItemData() FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:124
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > geometryAdmissionRetainsBothOverloadGuardsAndDoesNotSuppressOtherErrors() FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:120
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > unauditedStaffReproducesExactMissingMagicPowerThenRejectsBeforeCommit() FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:70
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > scheduledEmptyStrikeKeepsValidPaidMissContract() FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:114
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > fireBoltEquipmentResourceAndCooldownGuardsRemain() FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:103
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > spatialWorldAnchorSurvivesPendingPersistenceAndWorldChangeRejectsWithoutDispatch() FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:107
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > emptyStrikeStillRejectsWrongEquipmentAndInsufficientStamina() FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:87
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > auditedMagicWeaponsCommitLaunchExpireAndNeverRefundMiss(String) > [1] Weapon_Staff_Crystal_Flame FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:92
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > auditedMagicWeaponsCommitLaunchExpireAndNeverRefundMiss(String) > [2] Weapon_Staff_Crystal_Ice FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:92
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > auditedMagicWeaponsCommitLaunchExpireAndNeverRefundMiss(String) > [3] Weapon_Wand_Wood FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:92
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > quickSlashEmptyGeometryCommitsOnePaidZeroHitSwing() FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:81
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13ConnectedCastingCorrectionTest > everyAuthoredStrikeGeometryAllowsZeroCandidatesWithoutWeakeningEntityConnections() FAILED
+    java.lang.NoClassDefFoundError at Stage13ConnectedCastingCorrectionTest.java:134
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13VanillaPowerExpansionTest > expandedItemsRetainWrongEquipmentAndResourceGuards() FAILED
+    java.lang.NoClassDefFoundError at Stage13VanillaPowerExpansionTest.java:64
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13VanillaPowerExpansionTest > connectedMithrilStaffCommitsOneTargetlessFireBoltAndExpiryIsPaid() FAILED
+    java.lang.NoClassDefFoundError at Stage13VanillaPowerExpansionTest.java:51
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+Stage13VanillaPowerExpansionTest > connectedFlameLongswordDescriptionCommitsOneEmptyQuickSlash() FAILED
+    java.lang.NoClassDefFoundError at Stage13VanillaPowerExpansionTest.java:42
+        Caused by: java.lang.ExceptionInInitializerError at ReflectiveTypeAdapterFactory.java:666
+
+85 tests completed, 75 failed
+
+> Task :test FAILED
+
+[Incubating] Problems report is available at: file:///C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':test'.
+> There were failing tests. See the report at: file:///C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to generate a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.2.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 6s
+6 actionable tasks: 5 executed, 1 up-to-date

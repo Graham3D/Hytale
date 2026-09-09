@@ -1,0 +1,30 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/C:/Users/Zemio/.gradle/wrapper/dists/gradle-9.2.0-bin/11i5gvueggl8a5cioxuftxrik/gradle-9.2.0/lib/native-platform-0.22-milestone-29.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+
+> Task :compileJava
+Note: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSkillExecutionSystem.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :validateCustomUi
+Validated 32 CustomUI document(s): no invalid escapes, unterminated strings, unbalanced delimiters, labeled Button misuse, or late imported-control macro arguments.
+
+> Task :processResources
+> Task :classes
+> Task :compileTestJava
+> Task :processTestResources UP-TO-DATE
+> Task :testClasses
+> Task :test
+
+[Incubating] Problems report is available at: file:///C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.2.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 7s
+6 actionable tasks: 5 executed, 1 up-to-date

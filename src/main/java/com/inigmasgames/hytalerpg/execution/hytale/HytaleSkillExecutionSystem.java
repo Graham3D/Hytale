@@ -927,9 +927,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             try{
             int applied = executeStrikeHit(context, 0);
             var strike = context.profile().strike();
+            double interval=context.profile().skillId().equals("quick_slash")?NativeStrikeFeedback.quickSlashInterval(context.equipment().mainHand().weaponKind()):strike.repeatIntervalSeconds();
+            double window=context.profile().skillId().equals("quick_slash")?interval*strike.repeats():strike.details().actionLockSeconds();
             if (strike.repeats() > 1 && strike.repeatIntervalSeconds() > 0.0 || strike.details().actionLockSeconds()>0)
                 repeatingStrikes.put(playerRef.getUuid(), new RepeatingStrike(context,
-                        new StrikeRepeatSchedule(strike.repeats(), strike.repeatIntervalSeconds(), releasedAt,strike.details().actionLockSeconds())));
+                        new StrikeRepeatSchedule(strike.repeats(), interval, releasedAt,window)));
             else {
                 for (int hitIndex = 1; hitIndex < strike.repeats(); hitIndex++)
                     applied += executeStrikeHit(context, hitIndex);
@@ -1716,12 +1718,15 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         try{
             for (var due = repeating.schedule.claimDue(now); due.isPresent(); due = repeating.schedule.claimDue(now)){
-                if(multi){
-                    var child=repeating.context.multistrikeCopy(due.getAsInt());
-                    String admission=child.effects().claim(child.skillInstanceId(),1,false);
+                boolean pair=repeating.context.profile().skillId().equals("quick_slash");
+                int group=pair?due.getAsInt()/2:due.getAsInt();
+                int swing=pair?due.getAsInt()%2:0;
+                if(multi&&group>0){
+                    var child=repeating.context.multistrikeCopy(group);
+                    String admission=pair&&swing==1?child.effects().authoredComponent(child.skillInstanceId()):child.effects().claim(child.skillInstanceId(),1,false);
                     if(!admission.equals("PASS"))throw new IllegalStateException(admission);
-                    emit(child,RpgTraceEventType.EXECUTOR_DISPATCH,Map.of("family","STRIKE","multistrikeIndex",due.getAsInt(),"resourceCharged",false,"canProc",false));
-                    try{port.executeStrikeHit(child,0);}finally{hits.clear(child.skillInstanceId());}
+                    emit(child,RpgTraceEventType.EXECUTOR_DISPATCH,Map.of("family","STRIKE","multistrikeIndex",group,"swingIndex",swing,"resourceCharged",false,"canProc",false));
+                    try{port.executeStrikeHit(child,swing);}finally{hits.clear(child.skillInstanceId());}
                 }else port.executeStrikeHit(repeating.context,due.getAsInt());
             }
         }catch(RuntimeException failed){
@@ -1917,6 +1922,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         projectiles.remove(projectileId, carrier);
         if (projectileRef != null && projectileRef.isValid()) buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
         projectileService.onTerrainContact(carrier.instance, vec(position));
+        projectileVisual(carrier,store,()->vfx.presentProjectileExpiry(store.getExternalData().getWorld(),vec(position),carrier.context.profile().projectile().details().element()));
         emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
                 Map.of("reason", "TERRAIN_HIT", "travelledDistance", carrier.instance.flight().travelled()));
         finishProjectileContext(carrier.context, "PROJECTILE_TERRAIN_HIT");
@@ -1929,6 +1935,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 .filter(value -> value.actorId.equals(actorId)).toList();
         for (ProjectileCarrier carrier : owned) {
             String projectileId = carrier.instance.plan().projectileInstanceId();
+            // A spawn and this update may share one owner tick/CommandBuffer. Pending is not removed.
+            if(!carrier.insertion.completed)continue;
             if (!carrier.projectile.isValid()) {
                 if (projectiles.remove(projectileId, carrier)) {
                     projectileService.onForwardTermination(carrier.instance,
@@ -2352,6 +2360,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             projectileService.onForwardTermination(carrier.instance,"ISOLATED_AUDIT_CLEANUP",carrier.instance.plan().origin());
         }
     }
+    void advancePendingAuditProjectile(UUID owner,CommandBuffer<EntityStore> buffer){
+        if(!Boolean.getBoolean("rpg.projectileSpawnAudit"))throw new IllegalStateException("ISOLATED_AUDIT_DISABLED");
+        advanceProjectiles(owner,0,buffer.getStore(),buffer);
+    }
 
     private ProjectileCarrier spawnProjectileCarrier(SkillExecutionContext context,Ref<EntityStore> actor,ProjectileInstance instance,
             CommandBuffer<EntityStore> buffer) {
@@ -2384,7 +2396,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             // FIFO: native insertion, native spawn hook, continuation put, then this acknowledgement.
             // A later failure in the same atomic batch removes tracking before the queue drains.
             buffer.run(store->{
-                if(projectiles.get(plan.projectileInstanceId())==bound&&bound.projectile.isValid())
+                bound.insertion.completed=true;
+                if(projectiles.get(plan.projectileInstanceId())!=bound){buffer.tryRemoveEntity(bound.projectile,RemoveReason.REMOVE);return;}
+                if(bound.projectile.isValid())
                     emitProjectile(bound,RpgTraceEventType.PROJECTILE_SPAWNED,Map.of("configId",plan.configId(),"speed",plan.velocity().length(),
                             "maxDistance",plan.maxDistance(),"maximumLifetimeSeconds",plan.maxLifetimeSeconds(),"radius",plan.radius(),
                             "nativeProjectileRef",bound.projectile.toString(),"barrageBatch",bound.context.barrageBatch()));
@@ -2621,11 +2635,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             emitProjectile(carrier,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","PROJECTILE_TEMPLATE_UNAVAILABLE","connectedProof",false));}
     }
     private record ProjectileCarrier(SkillExecutionContext context, Ref<EntityStore> actor, UUID actorId,
-            Ref<EntityStore> projectile, ProjectileInstance instance,com.inigmasgames.hytalerpg.vfx.ProjectileReadability visuals,ProjectileDetonation detonation) {
+            Ref<EntityStore> projectile, ProjectileInstance instance,com.inigmasgames.hytalerpg.vfx.ProjectileReadability visuals,ProjectileDetonation detonation,NativeInsertion insertion) {
         ProjectileCarrier(SkillExecutionContext context,Ref<EntityStore> actor,UUID actorId,Ref<EntityStore> projectile,ProjectileInstance instance){
-            this(context,actor,actorId,projectile,instance,new com.inigmasgames.hytalerpg.vfx.ProjectileReadability(instance.plan().origin(),System.nanoTime()),new ProjectileDetonation(context.profile().projectile().details().explosion()));
+            this(context,actor,actorId,projectile,instance,new com.inigmasgames.hytalerpg.vfx.ProjectileReadability(instance.plan().origin(),System.nanoTime()),new ProjectileDetonation(context.profile().projectile().details().explosion()),new NativeInsertion());
         }
     }
+    private static final class NativeInsertion { boolean completed; }
     private record PeriodicTarget(Ref<EntityStore> actor, Ref<EntityStore> victim) { }
     private record DamageOutcome(double preMitigationDamage, double actualHealthLoss, boolean cancelled,double increasedUnit,double victimCoefficientFactor) {
         private DamageOutcome(double preMitigationDamage,double actualHealthLoss,boolean cancelled,double increasedUnit){this(preMitigationDamage,actualHealthLoss,cancelled,increasedUnit,1);}

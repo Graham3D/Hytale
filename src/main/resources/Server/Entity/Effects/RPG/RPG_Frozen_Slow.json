@@ -1,5 +1,7 @@
 {
   "Duration": 6,
+  "Debuff": true,
+  "StatusEffectIcon": "UI/StatusEffects/RPG/StatusChill05.png",
   "ApplicationEffects": {
     "HorizontalSpeedMultiplier": 0.7
   }

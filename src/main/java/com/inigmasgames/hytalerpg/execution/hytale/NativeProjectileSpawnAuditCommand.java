@@ -34,8 +34,11 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
         var expected=java.nio.file.Path.of(System.getProperty("rpg.projectileSpawnAuditRoot","UNSET")).toAbsolutePath().normalize();
         if(!Boolean.getBoolean("rpg.projectileSpawnAudit")||world==null||!world.getSavePath().toAbsolutePath().normalize().startsWith(expected)
                 ||Universe.get().getWorlds().values().stream().anyMatch(w->w.getPlayerCount()!=0))return CompletableFuture.failedFuture(new IllegalStateException("ISOLATED_EMPTY_WORLD_REQUIRED"));
-        world.execute(()->{
-            var store=world.getEntityStore().getStore();Ref<EntityStore> actor=null;var spawned=new AtomicReference<Ref<EntityStore>>();
+        world.getChunkAsync(0L).whenComplete((auditChunk,loadFailure)->{
+            if(loadFailure!=null){result.completeExceptionally(loadFailure);return;}
+            world.execute(()->{
+            auditChunk.addKeepLoaded();
+            var store=world.getEntityStore().getStore();Ref<EntityStore> actor=null;var spawned=new AtomicReference<Ref<EntityStore>>();var deferred=new AtomicBoolean();
             try{
                 UUID owner=UUID.randomUUID();var holder=EntityStore.REGISTRY.newHolder();
                 holder.addComponent(UUIDComponent.getComponentType(),new UUIDComponent(owner));
@@ -54,6 +57,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                     }
                     spawned.set(system.auditProjectileCarrier(context,nativeActor,buffer));
                     if(spawned.get().isValid())throw new IllegalStateException("EXPECTED_NATIVE_INSERTION_TO_BE_QUEUED");
+                    system.advancePendingAuditProjectile(owner,buffer);
                 });
                 var ref=Objects.requireNonNull(spawned.get(),"NATIVE_CARRIER_NOT_CREATED");
                 if(!ref.isValid())throw new IllegalStateException("NATIVE_CARRIER_NOT_COMMITTED");
@@ -68,11 +72,25 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                     system.cleanupAuditProjectile(pending);buffer.tryRemoveEntity(pending,RemoveReason.REMOVE);
                 });
                 if(rolledBack.get()==null||rolledBack.get().isValid())throw new IllegalStateException("PENDING_NATIVE_ROLLBACK_FAILED");
-                command.sendMessage(Message.raw("RPG_NATIVE_SPAWN_INTEGRATION result=PASS config=Projectile_Config_RPG_Fire_Bolt nativeRefValid=true physicsVelocity=24 interactionRoots=0 pendingRollback=true productionCarrier=true connectedProof=false"));
-                result.complete(null);
+                // A grounded/resting carrier must still expire by RPG's real monotonic lifetime.
+                physics.setState(StandardPhysicsProvider.STATE.RESTING);
+                CompletableFuture.delayedExecutor(1300,TimeUnit.MILLISECONDS).execute(()->world.execute(()->{
+                    try{
+                        var once=new AtomicBoolean();
+                        store.forEachChunk((java.util.function.BiConsumer<ArchetypeChunk<EntityStore>,CommandBuffer<EntityStore>>)(chunk,buffer)->{
+                            if(once.compareAndSet(false,true))system.advancePendingAuditProjectile(owner,buffer);
+                        });
+                        if(!once.get())throw new IllegalStateException("EXPIRY_OWNER_ADVANCE_NOT_EXECUTED");
+                        if(ref.isValid())throw new IllegalStateException("RESTING_PROJECTILE_DID_NOT_EXPIRE");
+                        command.sendMessage(Message.raw("RPG_NATIVE_SPAWN_INTEGRATION result=PASS config=Projectile_Config_RPG_Fire_Bolt nativeRefValid=true physicsVelocity=24 interactionRoots=0 pendingRollback=true productionCarrier=true connectedProof=false sameTickAdvance=true restingExpiry=true"));
+                        result.complete(null);
+                    }catch(Throwable failure){com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass().atSevere().withCause(failure).log("RPG_NATIVE_SPAWN_INTEGRATION result=FAIL");result.completeExceptionally(failure);}
+                    finally{system.cleanupAuditProjectile(ref);if(ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);if(nativeActor.isValid())store.removeEntity(nativeActor,RemoveReason.REMOVE);auditChunk.removeKeepLoaded();}
+                }));
+                deferred.set(true);
             }catch(Throwable failure){com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass().atSevere().withCause(failure).log("RPG_NATIVE_SPAWN_INTEGRATION result=FAIL");result.completeExceptionally(failure);}
-            finally{if(spawned.get()!=null){system.cleanupAuditProjectile(spawned.get());if(spawned.get().isValid())store.removeEntity(spawned.get(),RemoveReason.REMOVE);}if(actor!=null&&actor.isValid())store.removeEntity(actor,RemoveReason.REMOVE);}
-        });return result;
+            finally{if(!deferred.get()){if(spawned.get()!=null){system.cleanupAuditProjectile(spawned.get());if(spawned.get().isValid())store.removeEntity(spawned.get(),RemoveReason.REMOVE);}if(actor!=null&&actor.isValid())store.removeEntity(actor,RemoveReason.REMOVE);auditChunk.removeKeepLoaded();}}
+        });});return result;
     }
     private static SkillExecutionContext context(UUID owner){
         var catalog=RpgCatalog.loadCanonical();var compatibility=new CompatibilityService();var state=RpgPlayerState.create(owner);
