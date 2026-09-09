@@ -592,7 +592,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
                             "failureCode", result.code().name(), "failureMessage", result.message()));
             return result;
         }
-        for (CompiledSkillPlan plan : result.plans().values()) {
+        if(tracer.wantsCompileStages())for (CompiledSkillPlan plan : result.plans().values()) {
             for (String stage : List.of("BASE_SKILL", "FAMILY_CONVERSION", "TARGETING", "GEOMETRY", "MULTIPLICITY",
                     "CONTINUATION_BUDGETS", "RESOURCE_COOLDOWN", "DAMAGE_HEALING", "VFX_SOUND")) {
                 trace(player, RpgTraceEventType.COMPILE_STAGE, correlation,

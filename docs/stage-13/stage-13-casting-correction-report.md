@@ -1,5 +1,7 @@
 # Stage 13 L connected casting defects — correction M
 
+**Historical M report.** The subsequent connected test exposed missing Flame Longsword/Mithril Staff power. [Correction N](stage-13-power-trace-correction-report.md) now supersedes M's unsupported-Mithril policy/checklist and records the expanded audit, trace levels, validation and deployed hashes. The M evidence below is retained, not retroactively relabeled successful connected casting.
+
 Date: 2026-09-09. Branch: `RPG`. Baseline: `24efcdfd203e209cae5b34ec4d0d34f19d02e7f6` (documentation checkpoint over deployed L implementation `cd7cdbd`). Build identity remains **R032 / 0.0.25**; distinguish this correction by **cohort M and SHA256**, not filename.
 
 Status: **IMPLEMENTED / RETAINED_VALIDATION_PASS / DEPLOYED_FOR_CONNECTED_RETEST**. **Connected casting after this correction: NOT_RUN. Stage 13 production acceptance is not PASS.** The owner previously confirmed L loads; that statement does not prove M's input, animation, native projectiles, or damage.

@@ -1,0 +1,27 @@
+{
+  "changedEntries": [
+    "com/inigmasgames/hytalerpg/combat/power/NativeItemPowerRegistry.class",
+    "com/inigmasgames/hytalerpg/combat/power/NativeItemPowerRegistry$Data.class",
+    "com/inigmasgames/hytalerpg/commands/RpgTraceCommand.class",
+    "com/inigmasgames/hytalerpg/diagnostics/RpgSkillTracer.class",
+    "com/inigmasgames/hytalerpg/diagnostics/RpgSkillTraceService.class",
+    "com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.class",
+    "com/inigmasgames/hytalerpg/diagnostics/SkillTraceConfiguration.class",
+    "com/inigmasgames/hytalerpg/diagnostics/SkillTraceLevel.class",
+    "com/inigmasgames/hytalerpg/diagnostics/SkillTraceRouter.class",
+    "com/inigmasgames/hytalerpg/diagnostics/SkillTraceRouter$Window.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleEquipmentAdapter.class",
+    "com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class",
+    "com/inigmasgames/hytalerpg/progress/RpgLoadoutService.class",
+    "rpg/runtime/native-item-power-vanilla-0.7-pre1.json"
+  ],
+  "allOtherEntriesIdentical": true,
+  "resourcesHudPowerRegistryPersistenceFormatsUnchanged": false,
+  "nativeHudInputExecutorsPersistenceAndOriginalPowerManifestUnchanged": true,
+  "expandedPowerManifest": true,
+  "isolatedAtomicRollbackAndRollForward": "PASS",
+  "retainedArchivedReaderTests": "See full test-results.json; archived-reader tests unchanged",
+  "previousSha256": "AABF71F03C31014A092C471C45965013DBD3FE491D50E17AB817148ACBA1D410",
+  "candidateSha256": "669B230DAC394A2CE1246125028C51DF446BBC5024FCBEED83059F65F8BDDF33",
+  "connectedCastingVerified": false
+}

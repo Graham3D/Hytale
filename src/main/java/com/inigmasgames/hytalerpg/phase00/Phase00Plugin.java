@@ -172,6 +172,10 @@ public final class Phase00Plugin extends JavaPlugin {
                 uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities);
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
         getCommandRegistry().registerCommand(rpgCommand);
+        getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.RpgTraceCommand(skillTrace));
+        var productionPowers=com.inigmasgames.hytalerpg.combat.power.NativeItemPowerRegistry.loadProduction();
+        getLogger().atInfo().log("RPG_STAGE13_N_POWER_REGISTRY entries=%s policy=NATIVE_UNCHARGED_OR_EXPLICIT_MAGIC_SHIELD_REFERENCE traceLevel=%s connectedProof=false",
+                productionPowers.all().size(),skillTrace.level());
         getEventRegistry().register(LoadedAssetsEvent.class, RootInteraction.class,
                 NativeAbilityBridgeAudit::onRootInteractionsLoaded);
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace,combatKernel.statuses()));

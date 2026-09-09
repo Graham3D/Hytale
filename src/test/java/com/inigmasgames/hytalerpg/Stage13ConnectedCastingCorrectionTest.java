@@ -64,16 +64,17 @@ class Stage13ConnectedCastingCorrectionTest {
         }
         List<RpgTraceRecord> trace(){return ((Stage01BTestSupport.RecordingTracer)b.tracer()).records;}
     }
-    @Test void nativeMithrilReproducesExactMissingMagicPowerThenRejectsBeforeCommit() throws Exception {
+    // N expands Mithril support. Retain the same fail-closed assertions using a genuinely unaudited ID.
+    @Test void unauditedStaffReproducesExactMissingMagicPowerThenRejectsBeforeCommit() throws Exception {
         var tags=installedTags("Weapon_Staff_Mithril");assertArrayEquals(new String[]{"Staff"},tags.get("Family"));assertArrayEquals(new String[]{"Weapon"},tags.get("Type"));
-        var h=new H("fire_bolt");h.held=HytaleEquipmentAdapter.describe("Weapon_Staff_Mithril",tags);
+        var h=new H("fire_bolt");h.held=HytaleEquipmentAdapter.describe("Unaudited_Staff_Test",tags);
         assertEquals("STAFF",h.held.weaponKind());assertNull(h.held.power().magicPower());
         var exception=assertThrows(IllegalArgumentException.class,()->h.kernel.basePower().resolve(new BasePowerResolver.Request(BasePowerSource.MAGIC_WEAPON,h.held.power(),null)));
-        assertEquals("Item has no authored MagicPower: Weapon_Staff_Mithril",exception.getMessage());
+        assertEquals("Item has no authored MagicPower: Unaudited_Staff_Test",exception.getMessage());
         assertEquals("EQUIPMENT_POWER_UNAVAILABLE",h.cast().code());assertEquals(0,h.resourceWrites);assertEquals(0,h.cooldownSaves);assertTrue(h.contexts.isEmpty());
         var trace=h.trace().stream().filter(r->r.eventType()==RpgTraceEventType.SKILL_PREPARATION_FAILED).findFirst().orElseThrow();
         assertEquals("EQUIPMENT_POWER_VALIDATION",trace.details().get("failureStage"));assertEquals("MISSING_AUTHORED_MAGIC_POWER",trace.details().get("failureCode"));
-        assertEquals("Weapon_Staff_Mithril",trace.details().get("itemId"));assertTrue(trace.details().containsKey("rootCastId"));assertTrue(trace.details().containsKey("skillInstanceId"));
+        assertEquals("Unaudited_Staff_Test",trace.details().get("itemId"));assertTrue(trace.details().containsKey("rootCastId"));assertTrue(trace.details().containsKey("skillInstanceId"));
         assertTrue(h.trace().stream().noneMatch(r->r.eventType()==RpgTraceEventType.SKILL_VALIDATION_PASS));
     }
     @Test void quickSlashEmptyGeometryCommitsOnePaidZeroHitSwing(){

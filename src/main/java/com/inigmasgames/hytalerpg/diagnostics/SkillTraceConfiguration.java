@@ -6,6 +6,7 @@ import java.util.Properties;
 public record SkillTraceConfiguration(boolean enabled, String level, int maxFileMb, int retainedFiles,
                                       boolean developmentEntitlements) {
     public SkillTraceConfiguration {
+        level=SkillTraceLevel.parse(level).name();
         if (maxFileMb < 1||maxFileMb>64) throw new IllegalArgumentException("skillTrace.maxFileMb must be 1..64");
         if (retainedFiles < 1||retainedFiles>32) throw new IllegalArgumentException("skillTrace.retainedFiles must be 1..32");
     }
@@ -16,7 +17,7 @@ public record SkillTraceConfiguration(boolean enabled, String level, int maxFile
             properties.load(input);
             return new SkillTraceConfiguration(
                     Boolean.parseBoolean(properties.getProperty("skillTrace.enabled", "true")),
-                    properties.getProperty("skillTrace.level", "NORMAL"),
+                    System.getProperty("rpg.skillTrace.level",properties.getProperty("skillTrace.level", "NORMAL")),
                     Integer.parseInt(properties.getProperty("skillTrace.maxFileMb", "8")),
                     Integer.parseInt(properties.getProperty("skillTrace.retainedFiles", "4")),
                     Boolean.parseBoolean(properties.getProperty("developmentEntitlements.enabled", "true")));

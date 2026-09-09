@@ -1,6 +1,8 @@
 # Owner / ChatGPT review packet
 
-Current implementation: Stage 13 L, `cd7cdbd0299de4bf18740b2cca08756b64b77f69`. The owner reports that the mod now loads. Current gameplay/production acceptance is not inferred from that statement.
+**Latest correction:** [Stage 13 N power/trace report](../stage-13/stage-13-power-trace-correction-report.md) contains current deployed hashes, expanded vanilla weapon power, trace-level commands and the connected retest checklist. N passed 2,119 tests and isolated smoke; connected casting/performance remain unverified.
+
+The consolidated packet below is the historical Stage 13 L checkpoint, `cd7cdbd0299de4bf18740b2cca08756b64b77f69`. The owner reported that L loads. Current gameplay/production acceptance is not inferred from that statement; later corrections must be read separately.
 
 1. [Implementation history, Stages 00–13](implementation-history-00-13.md) — technical synthesis, corrections, failures, decisions, current state and unresolved gates.
 2. [Complete historical record](implementation-history-full.md) — all 50 retained Markdown documents at the checkpoint plus full Git commit/stat chronology. Historical instructions are not the current test procedure.

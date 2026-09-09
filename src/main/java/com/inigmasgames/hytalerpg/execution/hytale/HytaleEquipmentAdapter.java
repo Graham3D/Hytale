@@ -14,7 +14,7 @@ import java.util.Set;
 /** Audits authoritative equipped item IDs and Hytale-authored basic damage data. */
 public final class HytaleEquipmentAdapter {
     private static final com.inigmasgames.hytalerpg.combat.power.NativeItemPowerRegistry POWERS=
-            com.inigmasgames.hytalerpg.combat.power.NativeItemPowerRegistry.loadCanonical();
+            com.inigmasgames.hytalerpg.combat.power.NativeItemPowerRegistry.loadProduction();
     public SkillExecutionPort.Equipment read(Ref<EntityStore> actor, ComponentAccessor<EntityStore> accessor) {
         ItemStack main = InventoryComponent.getItemInHand(accessor, actor);
         InventoryComponent.Utility utility = accessor.getComponent(actor, InventoryComponent.Utility.getComponentType());

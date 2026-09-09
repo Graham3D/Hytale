@@ -1,0 +1,86 @@
+[
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/combat/power/NativeItemPowerRegistry.java",
+    "sha256": "B4B60FA01CE343FC601BD872F9000E3FD95D34F9D502857B2E500CD10596DEDD"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgTraceCommand.java",
+    "sha256": "F09DDC1A82BE1CC495586D4752ADFABC5E0820E5A1A6C7D0AD8FDFBEFDE28D76"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/RpgSkillTracer.java",
+    "sha256": "3FCC604E18B447DB8C9AC785E854E3EDEF9FA3C8153379BC685699F93433D541"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/RpgSkillTraceService.java",
+    "sha256": "C922534865C6A6D98D44241189A90269391ADCAE3CAB9E1A08C096B0B58F9756"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.java",
+    "sha256": "0DAE4B0E40C069DC5862E67DAFDBB300E882816D84217DB929361139D054972E"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/SkillTraceConfiguration.java",
+    "sha256": "629C76C1D84E4405B088417CD2813637CB83F9573217AC7D333DD97371B9AAEB"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/SkillTraceLevel.java",
+    "sha256": "D42D051375285AB4CE9341AD11D96693F97E4E390163AFE5C68DC7BA762FD966"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/SkillTraceRouter.java",
+    "sha256": "E14D2AFB3748D62E195410EB7F0914E9CA8CA5F62CE5CC66D6AB6E26CDCC7896"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleEquipmentAdapter.java",
+    "sha256": "D6B2BE9750E9B60CC3F720750852988C67B2D68641F757E5C1E4A24AA45AEB40"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/phase00/Phase00Plugin.java",
+    "sha256": "3AE1426A4404274CA03C21F59E231F8296B0651CE383C83231F42FE5F45A3447"
+  },
+  {
+    "path": "src/main/java/com/inigmasgames/hytalerpg/progress/RpgLoadoutService.java",
+    "sha256": "5EE31745C3B24755478F597E4C23DE14C1690BF8E2B8586A9EA979DE6683738B"
+  },
+  {
+    "path": "src/main/resources/rpg/runtime/native-item-power-vanilla-0.7-pre1.json",
+    "sha256": "66C9F06B391A06EF5FDB955D4CFD302492EC6D2F82EF4E7F3A3A83377480289A"
+  },
+  {
+    "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13ConnectedCastingCorrectionTest.java",
+    "sha256": "DA5C5113E7437C6EF5CB501F02D027CF82E0C816399AEB93EED9DD6850ADD234"
+  },
+  {
+    "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13TraceLevelsTest.java",
+    "sha256": "A6C54C50DC8251CB3BD658B05517D7E7DFD1E6B63C4153CB58B73339DB149748"
+  },
+  {
+    "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13VanillaPowerExpansionTest.java",
+    "sha256": "5E1932F68D444CB6560F9C017E0AEC7F4BE7FFB16DC203CC00285E8791408FDB"
+  },
+  {
+    "path": "tools/AuditVanillaWeaponPower.java",
+    "sha256": "99444B7C723EDC1081AE700AD6C9ACA93906FAC8B206E50483EEEB0A21D494CA"
+  },
+  {
+    "path": "tools/Capture-Stage13PowerTraceEvidence.ps1",
+    "sha256": "99DBE8A3A43B38D6D05F31266CF12AE59EE43ED35C02846D26BE8F3D7E1B1B1C"
+  },
+  {
+    "path": "tools/Publish-Stage13StartupHotfix.ps1",
+    "sha256": "935ED41222556DAF3B4E1BB1CE07E8E663D918C06F3FDB11AA832936ED37297A"
+  },
+  {
+    "path": "tools/ReplayStage13TraceLevels.java",
+    "sha256": "AF14083026BE6E30456EE89C7F1A611444A3EDC3D7ED51EB3B24026D144B546D"
+  },
+  {
+    "path": "tools/Run-Stage13CohortSmoke.ps1",
+    "sha256": "A0D6B16AF6B4C287060B6A66B2B022BC9F7746AF5E9C313E7A73FC889036C902"
+  },
+  {
+    "path": "tools/Verify-Stage13CastingPackage.ps1",
+    "sha256": "50A7C082FB45DFD945843FE2D79A9EC631DCDCC94BE92DAD5E42358DFDE75D40"
+  }
+]

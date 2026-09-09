@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([switch]$Deploy,[ValidateSet('l','m')][string]$Cohort='l')
+param([switch]$Deploy,[ValidateSet('l','m','n')][string]$Cohort='l')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence\stage-13\cohort-$Cohort"
@@ -18,6 +18,14 @@ if($Cohort -eq 'm'){
     $archiveName='Hytale-RPG-Stage13-M-casting-correction.zip'
     $manifestName='casting-correction.json'
 }
+if($Cohort -eq 'n'){
+    $oldHash='AABF71F03C31014A092C471C45965013DBD3FE491D50E17AB817148ACBA1D410'
+    $expectedTests=2119
+    $baselineCohort='m'
+    $baselineCommit='e6ef501772464ae867d18ee92a8146d87a780689'
+    $archiveName='Hytale-RPG-Stage13-N-power-trace-correction.zip'
+    $manifestName='power-trace-correction.json'
+}
 $names=@('HytaleRPG-0.0.25.jar','CanvasUI-0.1.0.jar','HYTALEDEVLIB-0.5.0.jar')
 $suites=@(foreach($path in @('build/test-results/test','build/test-results/nativeControlTest','canvas-ui/build/test-results/test')){
     foreach($file in Get-ChildItem -LiteralPath (Join-Path $root $path) -Filter 'TEST-*.xml'){
@@ -30,7 +38,14 @@ if(($suites|Measure-Object tests -Sum).Sum -ne $expectedTests -or @($suites|Wher
 foreach($baseline in (Get-Content -Raw (Join-Path $root "evidence/stage-13/cohort-$baselineCohort/test-results.json")|ConvertFrom-Json)){
     $current=@($suites|Where-Object name -eq $baseline.name)
     if($current.Count -ne 1){throw "Missing retained suite $($baseline.name)"}
-    foreach($case in $baseline.cases){if($case -notin $current[0].cases){throw "Missing retained case $case"}}
+    foreach($case in $baseline.cases){
+        # Owner explicitly changes Mithril from unsupported to supported. The same missing-power
+        # safety assertions remain on an unaudited fixture; a new positive test covers real Mithril.
+        if($Cohort -eq 'n' -and $baseline.name -eq 'com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest' -and $case -eq 'nativeMithrilReproducesExactMissingMagicPowerThenRejectsBeforeCommit()'){
+            $case='unauditedStaffReproducesExactMissingMagicPowerThenRejectsBeforeCommit()'
+        }
+        if($case -notin $current[0].cases){throw "Missing retained case $case"}
+    }
 }
 $suites|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $out 'test-results.json') -Encoding utf8
 $smoke=Get-Content -Raw (Join-Path $out 'server-smoke-summary.json')|ConvertFrom-Json
@@ -65,6 +80,7 @@ try{
 $result=[ordered]@{cohort=$Cohort.ToUpperInvariant();revision='R032';version='0.0.25';baselineCommit=$baselineCommit;
     tests=$expectedTests;failures=0;errors=0;skipped=0;retainedBaselineCaseIdentities='PASS';retainedBaselineCohort=$baselineCohort;threeModSmoke='PASS';archiveHashes='PASS';
     jarHashes=$expected;zipSha256=(Get-FileHash -LiteralPath $zip).Hash;connectedClientVerified=$false;deploymentPerformed=$false}
+if($Cohort -eq 'n'){$result.baselineCaseMigration='Mithril missing-power negative fixture moved to Unaudited_Staff_Test with all safety assertions retained; actual Mithril positive regression added per owner request.'}
 if($Deploy){
     if(Get-CimInstance Win32_Process|Where-Object {$_.Name -match '^(java|javaw|HytaleServer).*' -and $_.CommandLine -match 'HytaleServer'}){throw 'Stop the Hytale server before deployment'}
     if(@(Get-ChildItem -LiteralPath $mods -Filter '*.jar' -File).Count -ne 3){throw 'Unexpected installed mod inventory'}

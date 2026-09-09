@@ -1,0 +1,32 @@
+{
+  "fromUtc": "2026-09-09T21:46:11Z",
+  "connectedProof": false,
+  "levels": {
+    "NORMAL": {
+      "rawTicks": 0,
+      "eventDrivenRecordsPreserved": true,
+      "outputRecords": 97,
+      "serializedOutputBytes": 71970,
+      "inputRecords": 1940,
+      "aggregatedTicks": 1850
+    },
+    "DETAILED": {
+      "rawTicks": 0,
+      "eventDrivenRecordsPreserved": true,
+      "outputRecords": 97,
+      "serializedOutputBytes": 71978,
+      "inputRecords": 1940,
+      "aggregatedTicks": 1850
+    },
+    "PERFORMANCE": {
+      "rawTicks": 1850,
+      "eventDrivenRecordsPreserved": true,
+      "outputRecords": 1940,
+      "serializedOutputBytes": 1208016,
+      "inputRecords": 1940,
+      "aggregatedTicks": 0
+    }
+  },
+  "performanceQualification": false,
+  "scope": "Offline replay of retained latest M session; same Gson serialization in all modes"
+}

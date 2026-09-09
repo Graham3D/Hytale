@@ -29,10 +29,17 @@ public final class NativeItemPowerRegistry {
         this.entries=Map.copyOf(indexed);
     }
     public static NativeItemPowerRegistry loadCanonical(){
-        try(var stream=NativeItemPowerRegistry.class.getResourceAsStream("/rpg/runtime/native-item-power-r032.json")){
+        return load("/rpg/runtime/native-item-power-r032.json","rpg.native-item-power.r032");
+    }
+    /** Expanded pinned vanilla audit; the original R032 fixture remains available for historical audits. */
+    public static NativeItemPowerRegistry loadProduction(){
+        return load("/rpg/runtime/native-item-power-vanilla-0.7-pre1.json","rpg.native-item-power.vanilla-0.7-pre1");
+    }
+    private static NativeItemPowerRegistry load(String path,String registryId){
+        try(var stream=NativeItemPowerRegistry.class.getResourceAsStream(path)){
             if(stream==null)throw new IllegalStateException("Native item power registry missing");
             var data=new Gson().fromJson(new InputStreamReader(stream,StandardCharsets.UTF_8),Data.class);
-            if(data.schemaVersion()!=1||!data.registryId().equals("rpg.native-item-power.r032"))throw new IllegalStateException("Unsupported native item registry");
+            if(data.schemaVersion()!=1||!data.registryId().equals(registryId))throw new IllegalStateException("Unsupported native item registry");
             return new NativeItemPowerRegistry(data.items());
         }catch(java.io.IOException e){throw new IllegalStateException("Native item power registry unreadable",e);}
     }

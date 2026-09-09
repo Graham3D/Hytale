@@ -1,0 +1,1780 @@
+{
+  "policy": "Pinned native uncharged family selectors; STAFF/WAND/SPELLBOOK/SHIELD lacking an uncharged spell/shield base use the existing explicit RPG reference base 20. No name or charged/combo averaging.",
+  "items": [
+    {
+      "itemId": "Debug_Stick",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/_Debug/Debug_Stick.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Debug_Stick_Delay",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/_Debug/Debug_Stick_Delay.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Debug_Stick_Parry",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/_Debug/Debug_Stick_Parry.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Debug_Stick_Slow",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/_Debug/Debug_Stick_Slow.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Debug_Stick_Spawn_Deployable",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/_Debug/Debug_Stick_Spawn_Deployable.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Debug_Stick_Stun",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/_Debug/Debug_Stick_Stun.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Halloween_Broomstick",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Halloween_Broomstick.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Template_Weapon_Crossbow",
+      "kind": "CROSSBOW",
+      "nativeFamily": "Crossbow",
+      "sourceAsset": "Server/Item/Items/Weapon/Crossbow/Template_Weapon_Crossbow.json",
+      "sourceProperty": "InteractionVars/Standard_Projectile_Damage/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 3.0
+    },
+    {
+      "itemId": "Template_Weapon_Shield",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Template_Weapon_Shield.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Template_Weapon_Shortbow",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Template_Weapon_Shortbow.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Test_Camera_Item",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/_Debug/Test_Camera_Item.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Test_Spawn_Marker_Trigger",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/_Debug/Test_Spawn_Marker_Trigger.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Axe_Adamantite",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Adamantite.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 52.0
+    },
+    {
+      "itemId": "Weapon_Axe_Bone",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Bone.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 14.0
+    },
+    {
+      "itemId": "Weapon_Axe_Cobalt",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Cobalt.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 36.0
+    },
+    {
+      "itemId": "Weapon_Axe_Copper",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Copper.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 12.0
+    },
+    {
+      "itemId": "Weapon_Axe_Crude",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Crude.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Axe_Doomed",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Doomed.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 43.0
+    },
+    {
+      "itemId": "Weapon_Axe_Iron",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Iron.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 17.0
+    },
+    {
+      "itemId": "Weapon_Axe_Iron_Rusty",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Iron_Rusty.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 19.0
+    },
+    {
+      "itemId": "Weapon_Axe_Mithril",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Mithril.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 75.0
+    },
+    {
+      "itemId": "Weapon_Axe_Onyxium",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Onyxium.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 108.0
+    },
+    {
+      "itemId": "Weapon_Axe_Stone_Trork",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Stone_Trork.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10.0
+    },
+    {
+      "itemId": "Weapon_Axe_Thorium",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Thorium.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 24.0
+    },
+    {
+      "itemId": "Weapon_Axe_Tribal",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "Axe",
+      "sourceAsset": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Tribal.json",
+      "sourceProperty": "InteractionVars/Axe_Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 17.0
+    },
+    {
+      "itemId": "Weapon_Bangstick",
+      "kind": "BOMB",
+      "nativeFamily": "Bomb",
+      "sourceAsset": "Server/Item/Interactions/Weapons/Bomb/Bangstick_Explode.json",
+      "sourceProperty": "Config/EntityDamage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 50.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Adamantite",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Adamantite.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 28.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Cobalt",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Cobalt.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 22.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Copper",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Copper.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 14.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Crude",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Crude.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 11.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Doomed",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Doomed.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 22.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Iron",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Iron.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 18.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Mithril",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Mithril.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 36.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Onyxium",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Onyxium.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 36.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Scythe_Void",
+      "kind": "SPEAR",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Scythe_Void.json",
+      "sourceProperty": "InteractionVars/Spear_Spin_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 112.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Steel_Rusty",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Steel_Rusty.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 16.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Stone_Trork",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Stone_Trork.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Battleaxe_Thorium",
+      "kind": "BATTLEAXE",
+      "nativeFamily": "",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Thorium.json",
+      "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 22.0
+    },
+    {
+      "itemId": "Weapon_Bomb",
+      "kind": "BOMB",
+      "nativeFamily": "Bomb",
+      "sourceAsset": "Server/Item/Interactions/Explosions/Explode_Generic.json",
+      "sourceProperty": "Config/EntityDamage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Bomb_Continuous",
+      "kind": "BOMB",
+      "nativeFamily": "Bomb",
+      "sourceAsset": "Server/Item/Interactions/Explosions/Explode_Generic.json",
+      "sourceProperty": "Config/EntityDamage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Bomb_Fire",
+      "kind": "BOMB",
+      "nativeFamily": "Bomb",
+      "sourceAsset": "Server/Item/Interactions/Explosions/Explode_Generic.json",
+      "sourceProperty": "Config/EntityDamage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Bomb_Large_Fire",
+      "kind": "BOMB",
+      "nativeFamily": "Bomb",
+      "sourceAsset": "Server/Item/Interactions/Explosions/Explode_Generic.json",
+      "sourceProperty": "Config/EntityDamage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Bomb_Popberry",
+      "kind": "BOMB",
+      "nativeFamily": "Bomb",
+      "sourceAsset": "Server/Item/Interactions/Explosions/Explode_Generic.json",
+      "sourceProperty": "Config/EntityDamage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Bomb_Potion_Poison",
+      "kind": "BOMB",
+      "nativeFamily": "Bomb",
+      "sourceAsset": "Server/Projectiles/Player/Bomb/Bomb_Potion_Poison.json",
+      "sourceProperty": "Damage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 22.0
+    },
+    {
+      "itemId": "Weapon_Bomb_Stun",
+      "kind": "BOMB",
+      "nativeFamily": "Bomb",
+      "sourceAsset": "Server/Item/Interactions/Weapons/Bomb/Bomb_Explode_Stun.json",
+      "sourceProperty": "HitEntity/Interactions/0/Next/Interactions/3/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 15.0
+    },
+    {
+      "itemId": "Weapon_Claws_Tribal",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Interactions/Weapons/Daggers/Deprecated/Attacks/Swing_Left_Right/Daggers_Swing_Left_Right_Damage.json",
+      "sourceProperty": "DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 5.0
+    },
+    {
+      "itemId": "Weapon_Crossbow_Ancient_Steel",
+      "kind": "CROSSBOW",
+      "nativeFamily": "Crossbow",
+      "sourceAsset": "Server/Item/Items/Weapon/Crossbow/Weapon_Crossbow_Ancient_Steel.json",
+      "sourceProperty": "InteractionVars/Standard_Projectile_Damage/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 16.0
+    },
+    {
+      "itemId": "Weapon_Crossbow_Iron",
+      "kind": "CROSSBOW",
+      "nativeFamily": "Crossbow",
+      "sourceAsset": "Server/Item/Items/Weapon/Crossbow/Weapon_Crossbow_Iron.json",
+      "sourceProperty": "InteractionVars/Standard_Projectile_Damage/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Adamantite",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Adamantite.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 9.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Adamantite_Saurian",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Adamantite_Saurian.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 9.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Bone",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Bone.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Bronze",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Bronze.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 5.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Bronze_Ancient",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Bronze_Ancient.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 5.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Claw_Bone",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Claw_Bone.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 5.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Cobalt",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Cobalt.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Copper",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Copper.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 5.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Crude",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Crude.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 3.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Doomed",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Doomed.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Fang_Doomed",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Fang_Doomed.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Iron",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Iron.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Mithril",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Mithril.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 12.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Onyxium",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Onyxium.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 12.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Stone_Trork",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Stone_Trork.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6.0
+    },
+    {
+      "itemId": "Weapon_Daggers_Thorium",
+      "kind": "DAGGER",
+      "nativeFamily": "Dagger",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Thorium.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Flamethrower_Scrap",
+      "kind": "GUN",
+      "nativeFamily": "Gun",
+      "sourceAsset": "Server/Item/Items/Weapon/Flamethrower/Weapon_Flamethrower_Scrap.json",
+      "sourceProperty": "InteractionVars/Burn_Damage/Interactions/0/DamageCalculator/BaseDamage/Fire",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 12.0
+    },
+    {
+      "itemId": "Weapon_Gun_Blunderbuss",
+      "kind": "GUN",
+      "nativeFamily": "Gun",
+      "sourceAsset": "Server/Projectiles/Player/Gun/Gun_Blunderbuss_Bullet.json",
+      "sourceProperty": "Damage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 200.0
+    },
+    {
+      "itemId": "Weapon_Gun_Blunderbuss_Rusty",
+      "kind": "GUN",
+      "nativeFamily": "Gun",
+      "sourceAsset": "Server/Projectiles/Player/Gun/Gun_Blunderbuss_Bullet.json",
+      "sourceProperty": "Damage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 200.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Adamantite",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Adamantite.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 48.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Adamantite_Saurian",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Adamantite_Saurian.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 31.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Cobalt",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Cobalt.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 33.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Copper",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Copper.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 11.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Crude",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Crude.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Flame",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Flame.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Fire",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 31.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Iron",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Iron.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 16.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Katana",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Katana.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 31.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Mithril",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Mithril.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 70.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Onyxium",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Onyxium.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 102.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Praetorian",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Praetorian.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 195.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Praetorian_NPC",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Praetorian.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 195.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Ruined_Giant",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Ruined_Giant.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 195.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Ruined_Giant_Dual_NPC",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Ruined_Giant.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 195.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Ruined_Giant_NPC",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Ruined_Giant.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 195.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Scarab",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Scarab.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 31.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Spectral",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Spectral.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 31.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Stone_Trork",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Stone_Trork.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 9.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Thorium",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Thorium.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 23.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Tribal",
+      "kind": "LONGSWORD",
+      "nativeFamily": "Longsword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Tribal.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 31.0
+    },
+    {
+      "itemId": "Weapon_Longsword_Void",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Void.json",
+      "sourceProperty": "InteractionVars/Longsword_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 47.0
+    },
+    {
+      "itemId": "Weapon_Mace_Adamantite",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Adamantite.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 45.0
+    },
+    {
+      "itemId": "Weapon_Mace_Cobalt",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Cobalt.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 36.0
+    },
+    {
+      "itemId": "Weapon_Mace_Copper",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Copper.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 23.0
+    },
+    {
+      "itemId": "Weapon_Mace_Crude",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Crude.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 19.0
+    },
+    {
+      "itemId": "Weapon_Mace_Iron",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Iron.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 29.0
+    },
+    {
+      "itemId": "Weapon_Mace_Mithril",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Mithril.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 56.0
+    },
+    {
+      "itemId": "Weapon_Mace_Onyxium",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Onyxium.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 56.0
+    },
+    {
+      "itemId": "Weapon_Mace_Scrap",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Scrap.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 26.0
+    },
+    {
+      "itemId": "Weapon_Mace_Scrap_NPC",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Scrap_NPC.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 21.0
+    },
+    {
+      "itemId": "Weapon_Mace_Stone_Trork",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Stone_Trork.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 33.0
+    },
+    {
+      "itemId": "Weapon_Mace_Thorium",
+      "kind": "MACE",
+      "nativeFamily": "Mace",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Thorium.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 36.0
+    },
+    {
+      "itemId": "Weapon_Shield_Adamantite",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Adamantite.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Cobalt",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Cobalt.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Copper",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Copper.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Doomed",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Doomed.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Iron",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Iron.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Mithril",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Mithril.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Onyxium",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Onyxium.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Orbis_Incandescent",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Orbis_Incandescent.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Orbis_Knight",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Orbis_Knight.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Praetorian",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Praetorian.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Ruined_Giant",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Ruined_Giant.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Rusty",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Rusty.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Scrap",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Scrap.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Scrap_Spiked",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Scrap_Spiked.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Thorium",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Thorium.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shield_Wood",
+      "kind": "SHIELD",
+      "nativeFamily": "Shield",
+      "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Wood.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Adamantite",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Adamantite.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Bronze",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Bronze.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Cobalt",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Cobalt.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Copper",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Copper.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Crude",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Crude.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Doomed",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Doomed.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Flame",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Template_Weapon_Shortbow.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Frost",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Template_Weapon_Shortbow.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Iron",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Iron.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Iron_Rusty",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Iron_Rusty.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Mithril",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Mithril.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 2.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Onyxium",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Onyxium.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 2.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Test_Zoom",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Template_Weapon_Shortbow.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Shortbow_Thorium",
+      "kind": "BOW",
+      "nativeFamily": "Bow",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Thorium.json",
+      "sourceProperty": "InteractionVars/Primary_Shoot_Damage_Strength_0/Interactions/0/DamageCalculator/BaseDamage/Projectile",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 1.0
+    },
+    {
+      "itemId": "Weapon_Spear_Adamantite",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Adamantite.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10.0
+    },
+    {
+      "itemId": "Weapon_Spear_Adamantite_Saurian",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Adamantite_Saurian.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10.0
+    },
+    {
+      "itemId": "Weapon_Spear_Bone",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Bone.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Spear_Bronze",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Bronze.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6.0
+    },
+    {
+      "itemId": "Weapon_Spear_Cobalt",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Cobalt.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Spear_Copper",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Copper.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 5.0
+    },
+    {
+      "itemId": "Weapon_Spear_Crude",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Crude.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 4.0
+    },
+    {
+      "itemId": "Weapon_Spear_Double_Incandescent",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Double_Incandescent.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10.0
+    },
+    {
+      "itemId": "Weapon_Spear_Fishbone",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Fishbone.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Spear_Iron",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Iron.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6.0
+    },
+    {
+      "itemId": "Weapon_Spear_Leaf",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Leaf.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6.0
+    },
+    {
+      "itemId": "Weapon_Spear_Mithril",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Mithril.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 12.0
+    },
+    {
+      "itemId": "Weapon_Spear_Onyxium",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Onyxium.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6.0
+    },
+    {
+      "itemId": "Weapon_Spear_Scrap",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Scrap.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6.0
+    },
+    {
+      "itemId": "Weapon_Spear_Stone_Trork",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Stone_Trork.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 7.0
+    },
+    {
+      "itemId": "Weapon_Spear_Thorium",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Thorium.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Spear_Tribal",
+      "kind": "SPEAR",
+      "nativeFamily": "Spear",
+      "sourceAsset": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Tribal.json",
+      "sourceProperty": "InteractionVars/Spear_Stab_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Spellbook_Demon",
+      "kind": "SPELLBOOK",
+      "nativeFamily": "Spellbook",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Demon.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Spellbook_Fire",
+      "kind": "SPELLBOOK",
+      "nativeFamily": "Spellbook",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Fire.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Spellbook_Frost",
+      "kind": "SPELLBOOK",
+      "nativeFamily": "Spellbook",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Frost.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Spellbook_Grimoire_Brown",
+      "kind": "SPELLBOOK",
+      "nativeFamily": "Spellbook",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Brown.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Spellbook_Grimoire_Purple",
+      "kind": "SPELLBOOK",
+      "nativeFamily": "Spellbook",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Purple.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Spellbook_Rekindle_Embers",
+      "kind": "SPELLBOOK",
+      "nativeFamily": "Spellbook",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Rekindle_Embers.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Adamantite",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Adamantite.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Bo_Bamboo",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bo_Bamboo.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Bo_Wood",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bo_Wood.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Bone",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bone.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Bronze",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bronze.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Cane",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Cane.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Cobalt",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Cobalt.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Copper",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Copper.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Crystal_Fire_Trork",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Fire_Trork.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Crystal_Flame",
+      "kind": "STAFF",
+      "nativeFamily": "Magic",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Flame.json",
+      "sourceProperty": "InteractionVars/Fireball_Impact_0/Interactions/0/Config/EntityDamage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10.0
+    },
+    {
+      "itemId": "Weapon_Staff_Crystal_Ice",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Ice.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Crystal_Purple",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Purple.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Crystal_Red",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Red.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Doomed",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Doomed.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Frost",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Frost.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Iron",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Iron.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Mithril",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Mithril.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Onion",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onion.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Onyxium",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onyxium.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Scrap_Lightbulb",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Scrap_Lightbulb.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Thorium",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Thorium.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Wizard",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wizard.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Wood",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wood.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Wood_Kweebec",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wood_Kweebec.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Staff_Wood_Rotten",
+      "kind": "STAFF",
+      "nativeFamily": "Staff",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wood_Rotten.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Sword_Adamantite",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Adamantite.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 14.0
+    },
+    {
+      "itemId": "Weapon_Sword_Bone",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Bone.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 12.0
+    },
+    {
+      "itemId": "Weapon_Sword_Bronze",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Bronze.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 9.0
+    },
+    {
+      "itemId": "Weapon_Sword_Bronze_Ancient",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Bronze_Ancient.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 9.0
+    },
+    {
+      "itemId": "Weapon_Sword_Cobalt",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Cobalt.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 12.0
+    },
+    {
+      "itemId": "Weapon_Sword_Copper",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Copper.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 8.0
+    },
+    {
+      "itemId": "Weapon_Sword_Crude",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Crude.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 6.0
+    },
+    {
+      "itemId": "Weapon_Sword_Doomed",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Doomed.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 12.0
+    },
+    {
+      "itemId": "Weapon_Sword_Iron",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Iron.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 10.0
+    },
+    {
+      "itemId": "Weapon_Sword_Mithril",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Mithril.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 18.0
+    },
+    {
+      "itemId": "Weapon_Sword_Onyxium",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Onyxium.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 18.0
+    },
+    {
+      "itemId": "Weapon_Sword_Scrap",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Scrap.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 9.0
+    },
+    {
+      "itemId": "Weapon_Sword_Steel_Rusty",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Steel_Rusty.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 9.0
+    },
+    {
+      "itemId": "Weapon_Sword_Stone_Trork",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Stone_Trork.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 11.0
+    },
+    {
+      "itemId": "Weapon_Sword_Thorium",
+      "kind": "SWORD",
+      "nativeFamily": "Sword",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Thorium.json",
+      "sourceProperty": "InteractionVars/Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 12.0
+    },
+    {
+      "itemId": "Weapon_Wand_Root",
+      "kind": "WAND",
+      "nativeFamily": "Wand",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Root.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Wand_Stoneskin",
+      "kind": "WAND",
+      "nativeFamily": "Wand",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Stoneskin.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Wand_Tribal",
+      "kind": "WAND",
+      "nativeFamily": "Wand",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Tribal.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Wand_Wood",
+      "kind": "WAND",
+      "nativeFamily": "Wand",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    },
+    {
+      "itemId": "Weapon_Wand_Wood_Rotten",
+      "kind": "WAND",
+      "nativeFamily": "Wand",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood_Rotten.json",
+      "sourceProperty": "",
+      "selectionPolicy": "RPG_AUTHORED_BASE",
+      "basePower": 20.0
+    }
+  ],
+  "registryId": "rpg.native-item-power.vanilla-0.7-pre1",
+  "schemaVersion": 1
+}
