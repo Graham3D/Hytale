@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage13DurabilityLoadTest {
     @TempDir Path temp;
     @Test void fourActorSixteenVictimDurableContributionLoadIsMeasuredAndRestores()throws Exception {
-        var registry=EnemyRewardRegistry.load();var store=new FileEncounterStore(temp.resolve("encounters"));
+        var registry=EnemyRewardRegistry.load();try(var store=new FileEncounterStore(temp.resolve("encounters"))){
         var runtime=new PersistentEncounterRuntime(store,(player,reward)->fail("No death was observed"));
         UUID world=new UUID(1,1);var actors=new ArrayList<UUID>();var enemies=new ArrayList<UUID>();
         for(int i=0;i<4;i++)actors.add(new UUID(2,i+1));
@@ -22,10 +22,14 @@ class Stage13DurabilityLoadTest {
             assertTrue(runtime.attach(world,enemy,"Wolf_Black",Optional.of(spawn)));
         }
         double[] samples=new double[60];
+        double[] forceSamples=new double[samples.length];
+        store.timings().reset();
         for(int tick=0;tick<samples.length;tick++){
+            long forceBefore=store.timings().totalNanos(EncounterPersistenceTimings.Phase.JOURNAL_FORCE);
             long start=System.nanoTime();
             for(var actor:actors)for(var enemy:enemies)assertTrue(runtime.damage(world,enemy,actor,100,99,100,true,1000+tick*100));
             samples[tick]=(System.nanoTime()-start)/1e6;
+            forceSamples[tick]=(store.timings().totalNanos(EncounterPersistenceTimings.Phase.JOURNAL_FORCE)-forceBefore)/1e6;
         }
         runtime.unload(world);
         for(var enemy:enemies){assertTrue(runtime.attach(world,enemy,"Wolf_Black",Optional.empty()));assertEquals(4,runtime.contributors(world,enemy).size());}
@@ -34,7 +38,10 @@ class Stage13DurabilityLoadTest {
         result.put("updatesPerSample",64);result.put("samples",samples.length);result.put("p50Ms",samples[29]);result.put("p95Ms",samples[56]);result.put("p99Ms",samples[59]);
         result.put("targetP95Ms",4);result.put("targetP99Ms",8);result.put("withinNominalRpgTickBudget",samples[56]<=4&&samples[59]<=8);
         result.put("connectedProof",false);result.put("restoredContributorCounts",true);result.put("nativePhysicsAiNetworkRenderingMeasured",false);
+        result.put("persistenceTimings",store.timings().snapshot());
+        Arrays.sort(forceSamples);result.put("journalForcePer64UpdateSampleMs",Map.of("p50",forceSamples[29],"p95",forceSamples[56],"p99",forceSamples[59]));
         Path out=Path.of("build/stage13-hardening/durable-load.json");Files.createDirectories(out.getParent());Files.writeString(out,new GsonBuilder().setPrettyPrinting().create().toJson(result));
         System.out.println("STAGE13_DURABILITY_LOAD "+new com.google.gson.Gson().toJson(result));
+        }
     }
 }

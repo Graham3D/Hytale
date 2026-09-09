@@ -41,18 +41,23 @@ public final class PersistentEncounterRuntime {
     public synchronized boolean control(UUID world,UUID enemy,UUID actor,boolean changed,boolean taunt,boolean hostile,long now){return contribute(world,enemy,()->ledger.control(world,enemy,actor,changed,taunt,hostile,now));}
     public synchronized int heal(UUID world,UUID healer,UUID beneficiary,double actualEligibleHealing,boolean allyAllowed,long now){return guarded(()->{
         var encounters=ledger.healingEncounters(world,beneficiary,now);
-        int count=ledger.heal(world,healer,beneficiary,actualEligibleHealing,allyAllowed,now);
-        if(count>0)for(var enemy:encounters)store.save(ledger.snapshot(world,enemy));return count;
+        try(var reservation=store.reserve(encounters.size())){
+            int count=ledger.heal(world,healer,beneficiary,actualEligibleHealing,allyAllowed,now);
+            if(count>0)for(var enemy:encounters)store.save(ledger.snapshot(world,enemy),reservation);return count;
+        }
     });}
     private boolean contribute(UUID world,UUID enemy,BooleanSupplier operation){return guarded(()->{
-        if(!loaded.contains(new Key(world,enemy))||!operation.getAsBoolean())return false;
-        store.save(ledger.snapshot(world,enemy));return true;
+        if(!loaded.contains(new Key(world,enemy)))return false;
+        try(var reservation=store.reserve(1)){
+            if(!operation.getAsBoolean())return false;
+            store.save(ledger.snapshot(world,enemy),reservation);return true;
+        }
     });}
     public synchronized boolean masteryEligible(UUID world,UUID enemy,UUID actor,int level,long now){return contains(world,enemy)&&ledger.masteryEligible(world,enemy,actor,level,now);}
     public synchronized Optional<EncounterContributions.DeathPlan> death(UUID world,UUID enemy,Vec3 position,long now,List<EncounterContributions.Participant> participants){return guarded(()->{
         var previous=store.death(world,enemy);if(previous.isPresent())return previous;
         if(!loaded.contains(new Key(world,enemy)))return Optional.empty();
-        var plan=ledger.death(world,enemy,position,now,participants);store.freeze(plan);detach(world,enemy);return Optional.of(plan);
+        return store.withDeathCapacity(()->{var plan=ledger.death(world,enemy,position,now,participants);store.freeze(plan);detach(world,enemy);return Optional.of(plan);});
     });}
     public synchronized int drain(int budget){return guarded(()->store.drainLearning(budget,awards));}
     public synchronized void detach(UUID world,UUID enemy){ledger.remove(world,enemy);loaded.remove(new Key(world,enemy));}
@@ -60,6 +65,6 @@ public final class PersistentEncounterRuntime {
     public synchronized boolean unavailable(){return unavailable;}
     private <T> T guarded(Supplier<T> operation){
         if(unavailable)throw new IllegalStateException("ENCOUNTER_PERSISTENCE_UNCERTAIN_RESTART_REQUIRED");
-        try{return operation.get();}catch(RuntimeException failure){unavailable=true;throw failure;}
+        try{return operation.get();}catch(FileEncounterStore.CapacityRejected rejection){throw rejection;}catch(RuntimeException failure){unavailable=true;throw failure;}
     }
 }

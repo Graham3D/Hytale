@@ -4,12 +4,20 @@ Revision R032, version 0.0.25; branch RPG. Resumed from pushed Stage12 H
 `de60a02`. All work is in the C: GitHub checkout. Owner art, including
 `art/lost and found`, is untouched. No Google Drive writes or live deployment.
 
-Status: **BLOCKED — integrated release hardening**, after cohort F. This is not a release candidate or a
+Status: **BLOCKED — integrated release hardening**, after isolated cohort G WAL correction. This is not a release candidate or a
 Stage13 closure. Connected status: **UNVERIFIED**. The latest historical completed local
 stage is Stage12 H: 1653 retained tests, isolated normal three-mod smoke,
 packaging/archive checks, and the actual archived schema8 reader rollback drill.
 
 ## Evidence and scope
+
+Latest correction: [durable encounter WAL report](encounter-wal-correction-report.md).
+G replaces F's full-snapshot-per-contribution implementation without weakening
+force-before-acknowledgement. Full regression: 1,913 tests, zero failures/errors/skips.
+The unchanged 64-update benchmark remains blocked: p95 258.6245 ms / p99 508.1182 ms;
+journal force alone contributes p95 126.7933 ms per sample, versus the 4 ms limit.
+Existing F evidence below is historical and retained. G's detailed report covers
+the architecture, timings, fault matrix, rollback restrictions and evidence paths.
 
 Master v1.2 Markdown SHA256:
 `750483855846FF6DB2564B4D6D626C2A12F1AC6EBBBBF12232B2C3ECCF667010`.

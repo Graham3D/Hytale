@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('f')][string]$Cohort='f')
+param([ValidateSet('f','g')][string]$Cohort='f')
 $ErrorActionPreference='Stop'
 $releaseRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $releaseEvidence=Join-Path $releaseRoot "evidence\stage-13\cohort-$Cohort"
@@ -27,6 +27,14 @@ $result=[ordered]@{stage=13;revision='R032';version='0.0.25';status='BLOCKED';re
     physicalMemoryGiB=[math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory/1GB,2);
     os=(Get-CimInstance Win32_OperatingSystem).Caption;storagePath='JUnit @TempDir on the Java system temporary C: directory; not the live RPG save';
     capturedAtUtc=[DateTime]::UtcNow.ToString('o')}
+if($Cohort -eq 'g'){
+    $result.persistenceImplementation='APPEND_ONLY_FORCE_BEFORE_ACK_WAL_V1'
+    $result.persistenceTimings=$performance.persistenceTimings
+    $result.journalForcePer64UpdateSampleMs=$performance.journalForcePer64UpdateSampleMs
+    $result.storageBoundary='SERIAL_FILECHANNEL_FORCE_TRUE_REFERENCE_STORAGE_STACK'
+    $result.storageDevice=@(Get-Partition -DriveLetter C|Get-Disk|ForEach-Object{@{model=$_.FriendlyName;bus=$_.BusType.ToString()}})
+    if($performance.persistenceTimings.JOURNAL_FORCE.count -ne 3840 -or $performance.persistenceTimings.JOURNAL_APPEND.count -ne 3840){throw 'WAL force-per-contribution evidence missing'}
+}
 $result|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $releaseEvidence 'release-readiness.json') -Encoding utf8
 Write-Output ($result|ConvertTo-Json -Depth 6)
 throw "Stage13 release blocked: $($blockers -join '; ')"

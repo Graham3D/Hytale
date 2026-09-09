@@ -2,6 +2,13 @@
 
 ## Read this first
 
+Latest isolated correction: [Stage13 G durable encounter WAL report](encounter-wal-correction-report.md).
+It supersedes F's description of the per-contribution snapshot write path, not F's
+unresolved gameplay/connected gates. G's full retained suite passes; the unchanged
+64-update release benchmark remains BLOCKED (p95 258.6245 ms, p99 508.1182 ms).
+Journal force alone totals p95 126.7933 ms per sample. See G's report and manifest
+for the exact new binary/evidence; the F checkpoint description below is historical.
+
 This is a detailed **checkpoint report, not a completion or release certificate**.
 The implementation checkpoint is
 [`14a0f42954d1ac45215664591921372997f90596`](https://github.com/Graham3D/Hytale/commit/14a0f42954d1ac45215664591921372997f90596)

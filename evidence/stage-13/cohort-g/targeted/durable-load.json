@@ -1,0 +1,63 @@
+{
+  "scope": "REAL_FILE_ENCOUNTER_CONTRIBUTIONS_ONLY_NOT_NATIVE_TICK_PROOF",
+  "actors": 4,
+  "victims": 16,
+  "updatesPerSample": 64,
+  "samples": 60,
+  "p50Ms": 128.7582,
+  "p95Ms": 262.7196,
+  "p99Ms": 488.9012,
+  "targetP95Ms": 4,
+  "targetP99Ms": 8,
+  "withinNominalRpgTickBudget": false,
+  "connectedProof": false,
+  "restoredContributorCounts": true,
+  "nativePhysicsAiNetworkRenderingMeasured": false,
+  "persistenceTimings": {
+    "JOURNAL_APPEND": {
+      "maxMs": 0.1677,
+      "retainedSamples": 3840,
+      "p99Ms": 0.0451,
+      "totalMs": 42.5735,
+      "count": 3840,
+      "p50Ms": 0.0091,
+      "p95Ms": 0.0192
+    },
+    "JOURNAL_FORCE": {
+      "maxMs": 351.2227,
+      "retainedSamples": 3840,
+      "p99Ms": 2.3533,
+      "totalMs": 7498.5658,
+      "count": 3840,
+      "p50Ms": 1.8313,
+      "p95Ms": 1.9844
+    },
+    "CHECKPOINT_SERIALIZATION": {
+      "maxMs": 0.9105,
+      "retainedSamples": 99,
+      "p99Ms": 0.9105,
+      "totalMs": 11.3879,
+      "count": 99,
+      "p50Ms": 0.0855,
+      "p95Ms": 0.2305
+    },
+    "CHECKPOINT_WRITE": {
+      "maxMs": 0.9795,
+      "retainedSamples": 99,
+      "p99Ms": 0.9795,
+      "totalMs": 53.7293,
+      "count": 99,
+      "p50Ms": 0.5294,
+      "p95Ms": 0.7427
+    },
+    "CHECKPOINT_FORCE": {
+      "maxMs": 4.7922,
+      "retainedSamples": 99,
+      "p99Ms": 4.7922,
+      "totalMs": 276.3272,
+      "count": 99,
+      "p50Ms": 3.464,
+      "p95Ms": 3.7529
+    }
+  }
+}

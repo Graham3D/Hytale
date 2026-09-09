@@ -131,9 +131,11 @@ class Stage12ProgressionClosureTest {
         var plan=ledger.death(world,enemy,Vec3.ZERO,2,PartyMembershipProvider.apply(world,List.of(member),PartyMembershipProvider.UNAVAILABLE));
         var store=new FileEncounterStore(temp.resolve("encounters"));store.create(spawn);store.save(ledger.snapshot(world,enemy));store.freeze(plan);
         assertEquals(op,store.death(world,enemy).orElseThrow().shares().getFirst().learning());
+        store.close();
         var rolls=new AtomicInteger();FileEncounterStore.AwardDelivery deliver=(id,reward,learning)->s.awardGenerated(id,reward.eventId(),before->learning.decide(reward,before,()->{rolls.incrementAndGet();return .3;}));
         var broken=new FileEncounterStore(temp.resolve("encounters"),at->{if(at==FileEncounterStore.Boundary.AFTER_AWARD)throw new IllegalStateException("cursor-crash");});
         assertThrows(IllegalStateException.class,()->broken.drainLearning(8,deliver));assertTrue(repo().load(player).state().learnedSkills.contains("quick_slash"));
-        new FileEncounterStore(temp.resolve("encounters")).drainLearning(8,deliver);assertEquals(1,rolls.get());assertEquals(1,repo().load(player).state().rewards.sequence());
+        broken.close();
+        try(var restored=new FileEncounterStore(temp.resolve("encounters"))){restored.drainLearning(8,deliver);}assertEquals(1,rolls.get());assertEquals(1,repo().load(player).state().rewards.sequence());
     }
 }

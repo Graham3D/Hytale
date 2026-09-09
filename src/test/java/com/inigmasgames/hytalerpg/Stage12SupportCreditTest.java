@@ -11,9 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage12SupportCreditTest {
     @TempDir Path directory;
     private final UUID world=UUID.randomUUID(),enemy=UUID.randomUUID(),actor=UUID.randomUUID(),healer=UUID.randomUUID();
-    private FileEncounterStore store(){return new FileEncounterStore(directory.resolve("encounters"));}
+    private FileEncounterStore current;
+    @AfterEach void closeStore(){if(current!=null)current.close();}
+    private FileEncounterStore store(){if(current==null)current=new FileEncounterStore(directory.resolve("encounters"));return current;}
     private EnemyRewardRegistry.Spawn spawn(UUID id){return EnemyRewardRegistry.load().classify(world,id,"Wolf_Black","Default/Zone1_Tier1/Forest_Birch",EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN,0).orElseThrow();}
-    private PersistentEncounterRuntime runtime(){return new PersistentEncounterRuntime(store(),(id,reward)->{});}
+    private PersistentEncounterRuntime runtime(){closeStore();current=null;return new PersistentEncounterRuntime(store(),(id,reward)->{});}
     private PersistentEncounterRuntime combat(){var r=runtime();r.attach(world,enemy,"Wolf_Black",Optional.of(spawn(enemy)));assertTrue(r.damage(world,enemy,actor,100,80,100,true,0));return r;}
     private EncounterContributions.Participant member(UUID id){return new EncounterContributions.Participant(id,world,Vec3.ZERO,5,true,null);}
     private List<EncounterContributions.Participant> members(){return List.of(member(actor),member(healer));}

@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('f')][string]$Cohort='f')
+param([ValidateSet('f','g')][string]$Cohort='f')
 $ErrorActionPreference='Stop'
 $manifestRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $manifestEvidence=Join-Path $manifestRoot "evidence\stage-13\cohort-$Cohort"
@@ -20,6 +20,13 @@ $manifest=[ordered]@{manifestSchema=1;purpose='CHECKSUM_VERIFIED_BLOCKED_DEVELOP
     rollback=@{checkpoint='Stage12H de60a02';sha256=$verification.rollbackSha256;liveSaveUntouched=$true;copiedCheckpointTest='Stage13ArchivedRollbackTest'};
     signing='CHECKSUM_VERIFIED_NOT_CRYPTOGRAPHICALLY_SIGNED';files=$files}
 $path=Join-Path $manifestEvidence 'checkpoint-manifest.json'
+if($Cohort -eq 'g'){
+    $manifest.schema.encounterJournal=1
+    $manifest.schema.rollback='STOP_WRITERS_AND_RESTORE_MATCHING_PRE_WAL_COORDINATED_COPY_NEVER_OLD_BINARY_ON_WAL_STATE'
+    $manifest.rollback.preWalCheckpoint='Stage13F 14a0f42; documentation checkpoint 344bfed'
+    $manifest.rollback.preWalSha256='F7F55FCF05AFEA2A985AC2801CB4F78D346389C2E135E2DCEA22E1F193BCFA83'
+    $manifest.rollback.preWalCopyTest='Stage13JournalRollbackTest'
+}
 $manifest|ConvertTo-Json -Depth 8|Set-Content -LiteralPath $path -Encoding utf8
 $read=Get-Content -Raw -LiteralPath $path|ConvertFrom-Json -AsHashtable
 foreach($entry in $read.files.GetEnumerator()){

@@ -35,7 +35,7 @@ class Stage12ArchivedRollbackTest {
             Object reward=rewardClass.getConstructors()[0].newInstance("rollback-fixture",10L,1L,Map.of(),"ELIGIBLE_ENEMY_DEATH","","","rollback");
             storeClass.getMethod("award",UUID.class,rewardClass,authorityClass).invoke(store,player,reward,authority);
             // Include permanent encounter exclusion authority in the coordinated filesystem checkpoint.
-            var encounters=new FileEncounterStore(running.resolve("encounters"));UUID world=UUID.randomUUID(),enemy=UUID.randomUUID();encounters.disqualify(world,enemy);
+            var encounters=new FileEncounterStore(running.resolve("encounters"));UUID world=UUID.randomUUID(),enemy=UUID.randomUUID();encounters.disqualify(world,enemy);encounters.close();
             copy(running,backup);Map<String,String> baseline=hashes(backup);
             var upgraded=new FileRpgPlayerStateRepository(running.resolve("players")).load(player).state();assertEquals(9,upgraded.schemaVersion);assertEquals(10,upgraded.currentXp);
             var downgrade=assertThrows(InvocationTargetException.class,()->repoClass.getMethod("load",UUID.class).invoke(repository,player));
