@@ -1,5 +1,7 @@
 # Stage 13 L — first-join world crash correction
 
+**Owner follow-up, 2026-09-09:** “The mod loads.” Startup recovery now has owner-reported connected load confirmation. No new trace audit, casting, full restart persistence or all-mechanics verification is implied. The pending-retest language below is the original deployment-time record; use the [current QA checklist](../review/qa-qc-checklist.md) for further testing.
+
 2026-09-09. Branch `RPG`; baseline `84e29cb57175d9b6ade33654f38c77305ff5c91d` (Stage 13 K).
 
 **Status: corrected, locally validated, packaged and deployed for connected retest.** Connected rejoin success is still unverified. This is a bounded startup-order correction, not a new gameplay stage or persistence redesign.

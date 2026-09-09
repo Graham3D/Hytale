@@ -1,0 +1,295 @@
+{
+  "implementationCheckpoint": "cd7cdbd0299de4bf18740b2cca08756b64b77f69",
+  "archivedDocumentCount": 50,
+  "gitCommitCount": 140,
+  "skills": 87,
+  "passives": 66,
+  "ownerReportedLoading": true,
+  "connectedAllMechanicsVerified": false,
+  "skillInventorySource": "evidence/stage-13/cohort-f/hardening/coverage.json",
+  "profileInputs": "Pinned checkpoint src/main/resources/rpg/runtime/stage-*.json",
+  "files": [
+    {
+      "name": "README.md",
+      "bytes": 1790,
+      "sha256": "822C2D0168029F801AB4F80A9BCF04E93BBEFFD1802E93567A3E56892633CB3C"
+    },
+    {
+      "name": "implementation-history-00-13.md",
+      "bytes": 27191,
+      "sha256": "596F6A2FE94371D21C5FA08CEE1E9144991893150CE3C6EC71080CB7018FE611"
+    },
+    {
+      "name": "implementation-history-full.md",
+      "bytes": 1088090,
+      "sha256": "2967C263449FDCBA42AF5C127CC9289147E0263B6F64F16A9F844D3E85B38EDA"
+    },
+    {
+      "name": "qa-qc-checklist.md",
+      "bytes": 28996,
+      "sha256": "0E914421F7BE0A74B8F9439F6B6E58A5E7E03B268183A06CAF7B8136956B6908"
+    },
+    {
+      "name": "qa-skills.csv",
+      "bytes": 91624,
+      "sha256": "4497209A52FC631A9D7C2C9388F48DF8506042BBF8985D1BC25818E4ED144340"
+    },
+    {
+      "name": "qa-passives.csv",
+      "bytes": 29111,
+      "sha256": "0B14985B698E28DE4C5B205DD52CD86D73525555665C3DB8F4335CD2FCABE178"
+    }
+  ],
+  "historicalSources": [
+    {
+      "path": "docs/canvas-ui/client-verification-R002.md",
+      "gitBlob": "92d3bc4d29b5000428932bc552351e6df648c8e7",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/canvas-ui/client-verification-R002.md"
+    },
+    {
+      "path": "docs/canvas-ui/development-report.md",
+      "gitBlob": "58b19ed71e005647f41064d6e9e3efd6ecf84c86",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/canvas-ui/development-report.md"
+    },
+    {
+      "path": "docs/canvas-ui/report-R002.md",
+      "gitBlob": "d1f7e3c05c8c4d0943e7c583b68ed3f068d0532f",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/canvas-ui/report-R002.md"
+    },
+    {
+      "path": "docs/corrections/R016-client-verification.md",
+      "gitBlob": "345e3928821d4d7f7ab45aac94ccaf702c5471d9",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R016-client-verification.md"
+    },
+    {
+      "path": "docs/corrections/R016-correction-report.md",
+      "gitBlob": "323cace77268bbe1c3d22d52d2d411ec6d7ed77b",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R016-correction-report.md"
+    },
+    {
+      "path": "docs/corrections/R017-customui-load-fix.md",
+      "gitBlob": "a8764edbc65aca944c568da969a5653997ba6261",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R017-customui-load-fix.md"
+    },
+    {
+      "path": "docs/corrections/R018-client-verification.md",
+      "gitBlob": "be38aa3dfd0a7209bb67f2ff9092e980693f1455",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R018-client-verification.md"
+    },
+    {
+      "path": "docs/corrections/R018-hud-correction-report.md",
+      "gitBlob": "9e89a76b53271833c581b099c3efcf0d191048f7",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R018-hud-correction-report.md"
+    },
+    {
+      "path": "docs/corrections/R019-client-verification.md",
+      "gitBlob": "6840c6b3a58f33de25989f7c6f863203b62b5246",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R019-client-verification.md"
+    },
+    {
+      "path": "docs/corrections/R019-native-resources-xp-correction.md",
+      "gitBlob": "9f40d800d99d9570c67a7d40d2e4a204a39e92be",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R019-native-resources-xp-correction.md"
+    },
+    {
+      "path": "docs/corrections/R020-client-verification.md",
+      "gitBlob": "5177bde540d204e937c38459f70c498794cb214f",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R020-client-verification.md"
+    },
+    {
+      "path": "docs/corrections/R020-vanilla-resources-resized-xp.md",
+      "gitBlob": "6aa720407f2bffae3d01401153b5aff7a0860c3a",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R020-vanilla-resources-resized-xp.md"
+    },
+    {
+      "path": "docs/corrections/R021-client-verification.md",
+      "gitBlob": "4e0472d946e9564401ec204c7240e026cca6c040",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R021-client-verification.md"
+    },
+    {
+      "path": "docs/corrections/R021-native-ability-integration.md",
+      "gitBlob": "1829317d5133e996fc86d35e141a4f4aa10fd499",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R021-native-ability-integration.md"
+    },
+    {
+      "path": "docs/corrections/R022-client-verification.md",
+      "gitBlob": "ad8fa273b6e2a380adb40b533570a25447556828",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R022-client-verification.md"
+    },
+    {
+      "path": "docs/corrections/R022-native-ability-synchronization.md",
+      "gitBlob": "aa7db94abeca75603775938232c815842cbb3a77",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R022-native-ability-synchronization.md"
+    },
+    {
+      "path": "docs/corrections/R023-client-verification.md",
+      "gitBlob": "51bb1d0b3516b098303fa00c008095e8bb09359c",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R023-client-verification.md"
+    },
+    {
+      "path": "docs/corrections/R023-native-rune-control.md",
+      "gitBlob": "f804957a7ee7b1a8be5071bcd90091bf0506b4ae",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R023-native-rune-control.md"
+    },
+    {
+      "path": "docs/corrections/R024-native-execution-boundary.md",
+      "gitBlob": "757863c782922ec31684e0cb24e9b3af66b5ec20",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/corrections/R024-native-execution-boundary.md"
+    },
+    {
+      "path": "docs/implementation-program.md",
+      "gitBlob": "16acd9ee59393ea39d4b8aa13eef7e94b5ba5c34",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/implementation-program.md"
+    },
+    {
+      "path": "docs/phase-00/client-verification.md",
+      "gitBlob": "6de2d26b2ed48707c6a83f207bde60a775131f1d",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/phase-00/client-verification.md"
+    },
+    {
+      "path": "docs/phase-00/history/client-verification-0.6.3.md",
+      "gitBlob": "190b3940c6edad6575e1877014e96415d85f6f15",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/phase-00/history/client-verification-0.6.3.md"
+    },
+    {
+      "path": "docs/phase-00/history/phase-00-report-0.6.3.md",
+      "gitBlob": "5a8d3453cf1ba7a822ecf7800d39423c905f2752",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/phase-00/history/phase-00-report-0.6.3.md"
+    },
+    {
+      "path": "docs/phase-00/phase-00-report.md",
+      "gitBlob": "5a8d3453cf1ba7a822ecf7800d39423c905f2752",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/phase-00/phase-00-report.md"
+    },
+    {
+      "path": "docs/stage-01b/client-verification-R009.md",
+      "gitBlob": "498e7cb7d5ef95dc67eba47db936b503fb32a0e7",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-01b/client-verification-R009.md"
+    },
+    {
+      "path": "docs/stage-01b/stage-01b-report.md",
+      "gitBlob": "049375c2dc4c6625a0776f30b9f1e86e09ee2bf9",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-01b/stage-01b-report.md"
+    },
+    {
+      "path": "docs/stage-02/stage-02-report.md",
+      "gitBlob": "e1ec8b079f1c44da8a32e72f8346a9ba15b004ef",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-02/stage-02-report.md"
+    },
+    {
+      "path": "docs/stage-03/stage-03-report.md",
+      "gitBlob": "91f1df5e79e8f302e41a7df786c46083ed0e6d18",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-03/stage-03-report.md"
+    },
+    {
+      "path": "docs/stage-04/client-verification.md",
+      "gitBlob": "895d566e8b6096f2d68b18430f58594441b4b12e",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-04/client-verification.md"
+    },
+    {
+      "path": "docs/stage-04/stage-04-report.md",
+      "gitBlob": "e6abf5edb58c965e9b27c424aa3e1f2e2643bf68",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-04/stage-04-report.md"
+    },
+    {
+      "path": "docs/stage-05/client-verification.md",
+      "gitBlob": "affbc6a26d86b41cda92a89b8c9e97d94374355d",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-05/client-verification.md"
+    },
+    {
+      "path": "docs/stage-05/stage-05-report.md",
+      "gitBlob": "896819d89d496f998b6be0b70110be3f92308c8b",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-05/stage-05-report.md"
+    },
+    {
+      "path": "docs/stage-06/stage-06-report.md",
+      "gitBlob": "fccb46d3ea38c06cce8c20c2a7843a6f93e92a6a",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-06/stage-06-report.md"
+    },
+    {
+      "path": "docs/stage-07/stage-07-report.md",
+      "gitBlob": "a156bc5e6ea221bc886ebe0c7a7e5b7fdcb7e0bf",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-07/stage-07-report.md"
+    },
+    {
+      "path": "docs/stage-08/stage-08-report.md",
+      "gitBlob": "7273cb7293b1965e7e20b3d083eb7e1a46b05019",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-08/stage-08-report.md"
+    },
+    {
+      "path": "docs/stage-09/stage-09-report.md",
+      "gitBlob": "30a540edd734c14df8304e04b4f20964fb01ee6a",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-09/stage-09-report.md"
+    },
+    {
+      "path": "docs/stage-10/stage-10-report.md",
+      "gitBlob": "0eeb126ae99ec7236fbec5ccad5c1fe9df06c324",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-10/stage-10-report.md"
+    },
+    {
+      "path": "docs/stage-11/stage-11-report.md",
+      "gitBlob": "9e324d49209a9efa60fa8fdcce5ffe79f87273ae",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-11/stage-11-report.md"
+    },
+    {
+      "path": "docs/stage-12/stage-12-report.md",
+      "gitBlob": "3c26e23bc0cd805b2d4f045bfe6c19197ec26860",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-12/stage-12-report.md"
+    },
+    {
+      "path": "docs/stage-13/encounter-durability-final-boundary-report.md",
+      "gitBlob": "cf7eac83f404cd53a16fd73b93ad2e8d30e992ec",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/encounter-durability-final-boundary-report.md"
+    },
+    {
+      "path": "docs/stage-13/encounter-group-commit-report.md",
+      "gitBlob": "9e63484b940822f1fa3d3361cc965f462d63c9a5",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/encounter-group-commit-report.md"
+    },
+    {
+      "path": "docs/stage-13/encounter-wal-correction-report.md",
+      "gitBlob": "a50febfa230a99ff1aace78f5003f68f20093447",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/encounter-wal-correction-report.md"
+    },
+    {
+      "path": "docs/stage-13/master-implementation-status.md",
+      "gitBlob": "27b9bfdbe2b013749dc4a9d32037635a7da934b2",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/master-implementation-status.md"
+    },
+    {
+      "path": "docs/stage-13/native-persistence-handoff-audit.md",
+      "gitBlob": "9fa920199a5d6bfc4695a7905cce1353e6351e16",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/native-persistence-handoff-audit.md"
+    },
+    {
+      "path": "docs/stage-13/native-persistence-handoff-correction.md",
+      "gitBlob": "c13fa1c44a0fdb22cf9231d97976bb6d4cd1baf8",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/native-persistence-handoff-correction.md"
+    },
+    {
+      "path": "docs/stage-13/native-persistence-isolated-qa.md",
+      "gitBlob": "6b09541662705f7f1e624218d969f8c94e2bc875",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/native-persistence-isolated-qa.md"
+    },
+    {
+      "path": "docs/stage-13/stage-13-report.md",
+      "gitBlob": "3d9966d0c2eb7b3d6b7681bc790d127bef8320ae",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/stage-13-report.md"
+    },
+    {
+      "path": "docs/stage-13/stage-13-startup-hotfix-report.md",
+      "gitBlob": "c0f6061cb382532d2f719f56a30c4de8c1b539bb",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/stage-13-startup-hotfix-report.md"
+    },
+    {
+      "path": "docs/stage-13/stage-13-test-build-report.md",
+      "gitBlob": "dcdd75e21b93363b4c913d62deb95a7d8ecd6573",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/stage-13/stage-13-test-build-report.md"
+    },
+    {
+      "path": "docs/workspace-recovery-20260908.md",
+      "gitBlob": "f36f7ab8ab3af49b8c5370a824dc4e143723a5c3",
+      "url": "https://github.com/Graham3D/Hytale/blob/cd7cdbd0299de4bf18740b2cca08756b64b77f69/docs/workspace-recovery-20260908.md"
+    }
+  ]
+}

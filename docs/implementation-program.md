@@ -2,6 +2,8 @@
 
 ## Authority and evidence rules
 
+**Current owner-review entry point (2026-09-09):** [Stage 00–13 review packet](review/README.md). Stage 13 L is deployed, with 2,093 local tests passing and owner-reported successful loading. The I/R023 checkpoint statements below are historical; remaining connected gameplay/performance gates are not promoted by the load confirmation. Follow the new QA checklist instead of old stage-specific operational instructions.
+
 Latest consolidated owner/ChatGPT checkpoint report:
 [master implementation status](stage-13/master-implementation-status.md).
 Latest isolated correction: [Stage13 I final encounter durability boundary](stage-13/encounter-durability-final-boundary-report.md).

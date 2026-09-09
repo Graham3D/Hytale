@@ -1,5 +1,7 @@
 # Stage 13 — runtime completion and release hardening
 
+**Latest update, 2026-09-09:** [cohort L](stage-13-startup-hotfix-report.md) corrects K's connected first-join crash and is deployed. The owner reports “The mod loads.” This establishes owner-reported load success only, not all-gameplay or native-tick PASS. See the [consolidated history and current QA packet](../review/README.md). Earlier cohort/no-deployment statements below retain their historical scope.
+
 Revision R032, version 0.0.25; branch RPG. Resumed from pushed Stage12 H
 `de60a02`. All work is in the C: GitHub checkout. Owner art, including
 `art/lost and found`, is untouched. No Google Drive writes or live deployment.

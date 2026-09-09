@@ -2,6 +2,8 @@
 
 ## Read this first
 
+**2026-09-09 supersession:** this page's H/F checkpoint narrative below is historical. The current implementation is Stage 13 L (`cd7cdbd`), deployed with 2,093 local tests passing; the owner subsequently reports that the mod loads. Current all-mechanics/production connected acceptance remains unverified. Use the [complete current review packet](../review/README.md), [stage history](../review/implementation-history-00-13.md) and [QA/QC checklist](../review/qa-qc-checklist.md). No older result below is retroactively upgraded.
+
 Latest isolated correction: [Stage13 H encounter group-commit report](encounter-group-commit-report.md).
 H adds bounded submission/durable-completion separation, real WAL grouping and
 asynchronous checkpoint publication. It passes 1,963 tests, isolated three-mod smoke,
