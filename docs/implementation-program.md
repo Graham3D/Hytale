@@ -4,10 +4,12 @@
 
 Latest consolidated owner/ChatGPT checkpoint report:
 [master implementation status](stage-13/master-implementation-status.md).
-Latest isolated correction: [Stage13 G durable encounter WAL](stage-13/encounter-wal-correction-report.md).
-G replaces the per-contribution snapshot writes but the measured serial durable
-force path still exceeds the unchanged release budget. Stage13 remains BLOCKED;
-this is not a final completion certificate or a live deployment.
+Latest isolated correction: [Stage13 H bounded encounter group commit](stage-13/encounter-group-commit-report.md).
+H reduces contribution forces from 3,840 to 119 and publishes checkpoints asynchronously,
+while preserving force-before-durable-completion. Its 1,963-test suite, isolated smoke,
+archive and rollback checks pass, but p95 16.0318 ms / p99 19.8859 ms still exceed
+the unchanged 4/8 ms gate. Stage13 remains BLOCKED; no live deployment or connected QA.
+The [G WAL report](stage-13/encounter-wal-correction-report.md) remains historical evidence.
 
 Owner authorization: attachment `4be7b0e7-6165-4222-9c28-5ef5ca1faddf`, followed by
 the supplied master v1.2 Markdown and explicit connected-evidence requirements.

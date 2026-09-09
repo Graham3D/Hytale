@@ -1,0 +1,251 @@
+{
+  "stage": 13,
+  "revision": "R032",
+  "version": "0.0.25",
+  "status": "BLOCKED",
+  "releaseCandidate": false,
+  "jarSha256": "8849F88CB9225E847C05580CE1EBE3E2FB6BE0D487C73AA4408526C1ED6381D6",
+  "earliestFailingBoundary": "SYNCHRONOUS_DURABLE_ENCOUNTER_CONTRIBUTION_EXCEEDS_RPG_TICK_BUDGET",
+  "blockers": [
+    "SYNCHRONOUS_DURABLE_ENCOUNTER_CONTRIBUTION_EXCEEDS_RPG_TICK_BUDGET",
+    "NATIVE_INTEGRATION_EXCEPTIONS_NOT_PROVEN_CAPABILITY_IMPOSSIBILITIES",
+    "COMBINED_FOUR_PLAYER_NATIVE_LOAD_AND_200_PLAYER_SCALING_NOT_VERIFIED",
+    "REMAINING_MASTER_FAULT_INJECTION_MATRIX_NOT_CLOSED",
+    "FINAL_STAGE13_REGRESSION_SMOKE_ARCHIVE_ROLLBACK_RERUN_NOT_PERFORMED"
+  ],
+  "connectedGate": "UNVERIFIED",
+  "functionalRegressionPass": true,
+  "performanceIsSeparateGate": true,
+  "durableAcknowledgementWeakened": false,
+  "testsOrExpectedBehaviorWeakened": false,
+  "measuredScope": "REAL_FILE_ENCOUNTER_CONTRIBUTIONS_ONLY_NOT_NATIVE_TICK_PROOF",
+  "p95Ms": 16.0318,
+  "p99Ms": 19.8859,
+  "requiredP95Ms": 4,
+  "requiredP99Ms": 8,
+  "cpu": [
+    {
+      "logicalProcessors": 24,
+      "physicalCores": 12,
+      "model": "AMD Ryzen 9 7900X 12-Core Processor            "
+    }
+  ],
+  "physicalMemoryGiB": 63.15,
+  "os": "Microsoft Windows 11 Home",
+  "storagePath": "JUnit @TempDir on the Java system temporary C: directory; not the live RPG save",
+  "capturedAtUtc": "2026-09-09T13:42:42.8658005Z",
+  "persistenceImplementation": "BOUNDED_GROUP_COMMIT_FORCE_BEFORE_DURABLE_COMPLETION_WAL_V1_ASYNC_CHECKPOINT",
+  "persistenceTimings": {
+    "JOURNAL_APPEND": {
+      "count": 119,
+      "totalMs": 3.6431,
+      "p99Ms": 0.1732,
+      "retainedSamples": 119,
+      "maxMs": 0.213,
+      "p95Ms": 0.1147,
+      "p50Ms": 0.0173
+    },
+    "JOURNAL_FORCE": {
+      "count": 119,
+      "totalMs": 290.4329,
+      "p99Ms": 4.2529,
+      "retainedSamples": 119,
+      "maxMs": 5.893,
+      "p95Ms": 3.3796,
+      "p50Ms": 2.1532
+    },
+    "CHECKPOINT_SERIALIZATION": {
+      "count": 99,
+      "totalMs": 3.8405,
+      "p99Ms": 0.3319,
+      "retainedSamples": 99,
+      "maxMs": 0.3319,
+      "p95Ms": 0.0693,
+      "p50Ms": 0.0408
+    },
+    "CHECKPOINT_WRITE": {
+      "count": 102,
+      "totalMs": 55.9172,
+      "p99Ms": 1.425,
+      "retainedSamples": 102,
+      "maxMs": 2.2316,
+      "p95Ms": 0.6851,
+      "p50Ms": 0.5164
+    },
+    "CHECKPOINT_FORCE": {
+      "count": 102,
+      "totalMs": 365.903,
+      "p99Ms": 5.096,
+      "retainedSamples": 102,
+      "maxMs": 6.1354,
+      "p95Ms": 4.9717,
+      "p50Ms": 3.6219
+    },
+    "GROUP_WAIT": {
+      "count": 3840,
+      "totalMs": 10969.246,
+      "p99Ms": 10.1681,
+      "retainedSamples": 3840,
+      "maxMs": 10.3742,
+      "p95Ms": 3.4821,
+      "p50Ms": 2.8055
+    },
+    "DURABLE_ACK": {
+      "count": 3840,
+      "totalMs": 34003.5527,
+      "p99Ms": 17.4096,
+      "retainedSamples": 3840,
+      "maxMs": 17.4965,
+      "p95Ms": 14.6169,
+      "p50Ms": 8.6024
+    },
+    "CHECKPOINT_QUEUE": {
+      "count": 3,
+      "totalMs": 0.8514,
+      "p99Ms": 0.7678,
+      "retainedSamples": 3,
+      "maxMs": 0.7678,
+      "p95Ms": 0.7678,
+      "p50Ms": 0.0433
+    },
+    "CHECKPOINT_SCHEDULING": {
+      "count": 3,
+      "totalMs": 0.6677,
+      "p99Ms": 0.6118,
+      "retainedSamples": 3,
+      "maxMs": 0.6118,
+      "p95Ms": 0.6118,
+      "p50Ms": 0.0288
+    },
+    "CHECKPOINT_ROTATION": {
+      "count": 3,
+      "totalMs": 16.5659,
+      "p99Ms": 5.8976,
+      "retainedSamples": 3,
+      "maxMs": 5.8976,
+      "p95Ms": 5.8976,
+      "p50Ms": 5.4913
+    },
+    "CHECKPOINT_BACKPRESSURE": {
+      "count": 3,
+      "totalMs": 0.0417,
+      "p99Ms": 0.0234,
+      "retainedSamples": 3,
+      "maxMs": 0.0234,
+      "p95Ms": 0.0234,
+      "p50Ms": 0.0138
+    },
+    "GROUP_CPU": {
+      "count": 119,
+      "totalMs": 140.625,
+      "p99Ms": 15.625,
+      "retainedSamples": 119,
+      "maxMs": 15.625,
+      "p95Ms": 15.625,
+      "p50Ms": 0.0
+    },
+    "GROUP_WALL": {
+      "count": 119,
+      "totalMs": 534.5992,
+      "p99Ms": 10.2916,
+      "retainedSamples": 119,
+      "maxMs": 11.0729,
+      "p95Ms": 7.3675,
+      "p50Ms": 4.9052
+    }
+  },
+  "grouping": {
+    "bytesPerGroup": {
+      "130": 45,
+      "260": 14,
+      "8060": 14,
+      "8190": 45,
+      "8320": 1
+    },
+    "maxCheckpointBacklog": 2,
+    "maxPendingRecords": 64,
+    "admissionRejections": 0,
+    "recordsPerGroup": {
+      "1": 45,
+      "2": 14,
+      "62": 14,
+      "63": 45,
+      "64": 1
+    },
+    "maxPendingOperations": 64
+  },
+  "forcesPerSample": [
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "journalForcePer64UpdateSampleMs": {
+    "p95": 5.9862,
+    "p50": 4.9073,
+    "p99": 8.8125
+  },
+  "storageBoundary": "GROUPED_FORCE_TRUE_PLUS_GROUP_PREPARATION_ROTATION_AND_CHECKPOINT_STORAGE_CONTENTION",
+  "storageDevice": [
+    {
+      "bus": "NVMe",
+      "model": "Samsung SSD 980 PRO 2TB"
+    }
+  ]
+}

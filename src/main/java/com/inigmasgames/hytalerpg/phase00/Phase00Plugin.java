@@ -352,7 +352,8 @@ public final class Phase00Plugin extends JavaPlugin {
         if (rpgHud != null) { rpgHud.close(); rpgHud = null; }
         skillExecutionSystem = null;
         abilityInputs = null;
-        if (encounterStore != null) { encounterStore.close(); encounterStore = null; }
+        try { if (encounterRewards != null) { encounterRewards.close(); encounterRewards = null; } }
+        finally { if (encounterStore != null) { encounterStore.close(); encounterStore = null; } }
         if (uiTrace != null) { uiTrace.close(); uiTrace = null; }
         if (skillTrace != null) { skillTrace.close(); skillTrace = null; }
         combatKernel = null;

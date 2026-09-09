@@ -2,12 +2,15 @@
 
 ## Read this first
 
-Latest isolated correction: [Stage13 G durable encounter WAL report](encounter-wal-correction-report.md).
-It supersedes F's description of the per-contribution snapshot write path, not F's
-unresolved gameplay/connected gates. G's full retained suite passes; the unchanged
-64-update release benchmark remains BLOCKED (p95 258.6245 ms, p99 508.1182 ms).
-Journal force alone totals p95 126.7933 ms per sample. See G's report and manifest
-for the exact new binary/evidence; the F checkpoint description below is historical.
+Latest isolated correction: [Stage13 H encounter group-commit report](encounter-group-commit-report.md).
+H adds bounded submission/durable-completion separation, real WAL grouping and
+asynchronous checkpoint publication. It passes 1,963 tests, isolated three-mod smoke,
+archive and rollback checks. The unchanged 64-update gate remains **BLOCKED**:
+p50 9.0060 ms, p95 16.0318 ms, p99 19.8859 ms versus 4/8 ms p95/p99 limits.
+Forces fell from 3,840 to 119, but force-only p95 is still 5.9862 ms per sample.
+The separate sparse test retained a 653.0265 ms force stall. No live deployment or
+connected QA was performed. H's report/manifest identify the exact binary and
+remaining boundary; [G](encounter-wal-correction-report.md) and F below are historical.
 
 This is a detailed **checkpoint report, not a completion or release certificate**.
 The implementation checkpoint is

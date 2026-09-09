@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('f','g')][string]$Cohort='f')
+param([ValidateSet('f','g','h')][string]$Cohort='f')
 $ErrorActionPreference='Stop'
 $releaseRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $releaseEvidence=Join-Path $releaseRoot "evidence\stage-13\cohort-$Cohort"
@@ -35,6 +35,20 @@ if($Cohort -eq 'g'){
     $result.storageDevice=@(Get-Partition -DriveLetter C|Get-Disk|ForEach-Object{@{model=$_.FriendlyName;bus=$_.BusType.ToString()}})
     if($performance.persistenceTimings.JOURNAL_FORCE.count -ne 3840 -or $performance.persistenceTimings.JOURNAL_APPEND.count -ne 3840){throw 'WAL force-per-contribution evidence missing'}
 }
-$result|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $releaseEvidence 'release-readiness.json') -Encoding utf8
+if($Cohort -eq 'h'){
+    $result.persistenceImplementation='BOUNDED_GROUP_COMMIT_FORCE_BEFORE_DURABLE_COMPLETION_WAL_V1_ASYNC_CHECKPOINT'
+    $result.persistenceTimings=$performance.persistenceTimings
+    $result.grouping=$performance.grouping
+    $result.forcesPerSample=$performance.forcesPerSample
+    $result.journalForcePer64UpdateSampleMs=$performance.journalForcePer64UpdateSampleMs
+    $result.storageBoundary='GROUPED_FORCE_TRUE_PLUS_GROUP_PREPARATION_ROTATION_AND_CHECKPOINT_STORAGE_CONTENTION'
+    $result.storageDevice=@(Get-Partition -DriveLetter C|Get-Disk|ForEach-Object{@{model=$_.FriendlyName;bus=$_.BusType.ToString()}})
+    $records=0;foreach($entry in $performance.grouping.recordsPerGroup.PSObject.Properties){$records+=[int]$entry.Name*[long]$entry.Value}
+    $forces=($performance.forcesPerSample|Measure-Object -Sum).Sum
+    if($verification.tests -lt 1963 -or $performance.samples -ne 60 -or $performance.actors -ne 4 -or $performance.victims -ne 16 -or $performance.updatesPerSample -ne 64 -or
+        $records -ne 3840 -or $performance.persistenceTimings.DURABLE_ACK.count -ne 3840 -or $forces -ne $performance.persistenceTimings.JOURNAL_FORCE.count -or $forces -ge 3840 -or
+        $performance.persistenceTimings.JOURNAL_APPEND.count -ne $forces -or -not $performance.sampleEndsAfterAll64DurableAcknowledgements -or -not $performance.checkpointWorkerConcurrentWithSamples){throw 'Group-commit production workload or force/completion evidence missing'}
+}
+$result|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $releaseEvidence 'release-readiness.json') -Encoding utf8
 Write-Output ($result|ConvertTo-Json -Depth 6)
 throw "Stage13 release blocked: $($blockers -join '; ')"

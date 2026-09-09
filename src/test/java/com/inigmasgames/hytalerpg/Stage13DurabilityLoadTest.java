@@ -23,14 +23,22 @@ class Stage13DurabilityLoadTest {
         }
         double[] samples=new double[60];
         double[] forceSamples=new double[samples.length];
+        long[] forcesPerSample=new long[samples.length];
+        double[] orderedSamples=new double[samples.length];
         store.timings().reset();
         for(int tick=0;tick<samples.length;tick++){
             long forceBefore=store.timings().totalNanos(EncounterPersistenceTimings.Phase.JOURNAL_FORCE);
+            long countBefore=store.timings().count(EncounterPersistenceTimings.Phase.JOURNAL_FORCE);
             long start=System.nanoTime();
-            for(var actor:actors)for(var enemy:enemies)assertTrue(runtime.damage(world,enemy,actor,100,99,100,true,1000+tick*100));
+            var receipts=new ArrayList<java.util.concurrent.CompletionStage<Boolean>>(64);
+            for(var actor:actors)for(var enemy:enemies)receipts.add(runtime.submitDamage(world,enemy,actor,100,99,100,true,1000+tick*100).durable());
+            for(var receipt:receipts)assertTrue(receipt.toCompletableFuture().get(5,java.util.concurrent.TimeUnit.SECONDS));
             samples[tick]=(System.nanoTime()-start)/1e6;
+            orderedSamples[tick]=samples[tick];
             forceSamples[tick]=(store.timings().totalNanos(EncounterPersistenceTimings.Phase.JOURNAL_FORCE)-forceBefore)/1e6;
+            forcesPerSample[tick]=store.timings().count(EncounterPersistenceTimings.Phase.JOURNAL_FORCE)-countBefore;
         }
+        long checkpointDrainStart=System.nanoTime();store.awaitCheckpoints();double checkpointDrainMs=(System.nanoTime()-checkpointDrainStart)/1e6;
         runtime.unload(world);
         for(var enemy:enemies){assertTrue(runtime.attach(world,enemy,"Wolf_Black",Optional.empty()));assertEquals(4,runtime.contributors(world,enemy).size());}
         Arrays.sort(samples);var result=new LinkedHashMap<String,Object>();
@@ -39,6 +47,8 @@ class Stage13DurabilityLoadTest {
         result.put("targetP95Ms",4);result.put("targetP99Ms",8);result.put("withinNominalRpgTickBudget",samples[56]<=4&&samples[59]<=8);
         result.put("connectedProof",false);result.put("restoredContributorCounts",true);result.put("nativePhysicsAiNetworkRenderingMeasured",false);
         result.put("persistenceTimings",store.timings().snapshot());
+        result.put("grouping",store.timings().grouping());result.put("forcesPerSample",forcesPerSample);result.put("orderedSamplesMs",orderedSamples);
+        result.put("sampleEndsAfterAll64DurableAcknowledgements",true);result.put("checkpointWorkerConcurrentWithSamples",true);result.put("finalCheckpointDrainMs",checkpointDrainMs);
         Arrays.sort(forceSamples);result.put("journalForcePer64UpdateSampleMs",Map.of("p50",forceSamples[29],"p95",forceSamples[56],"p99",forceSamples[59]));
         Path out=Path.of("build/stage13-hardening/durable-load.json");Files.createDirectories(out.getParent());Files.writeString(out,new GsonBuilder().setPrettyPrinting().create().toJson(result));
         System.out.println("STAGE13_DURABILITY_LOAD "+new com.google.gson.Gson().toJson(result));

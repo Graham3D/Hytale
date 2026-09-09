@@ -4,14 +4,24 @@ Revision R032, version 0.0.25; branch RPG. Resumed from pushed Stage12 H
 `de60a02`. All work is in the C: GitHub checkout. Owner art, including
 `art/lost and found`, is untouched. No Google Drive writes or live deployment.
 
-Status: **BLOCKED — integrated release hardening**, after isolated cohort G WAL correction. This is not a release candidate or a
+Status: **BLOCKED — integrated release hardening**, after isolated cohort H group-commit correction. This is not a release candidate or a
 Stage13 closure. Connected status: **UNVERIFIED**. The latest historical completed local
 stage is Stage12 H: 1653 retained tests, isolated normal three-mod smoke,
 packaging/archive checks, and the actual archived schema8 reader rollback drill.
 
 ## Evidence and scope
 
-Latest correction: [durable encounter WAL report](encounter-wal-correction-report.md).
+Latest correction: [bounded encounter group-commit report](encounter-group-commit-report.md).
+H retains force-before-durable-completion, adds real queued grouping and immutable
+asynchronous checkpoint publication. Full suite: **1,963 tests**, zero failures/errors/skips;
+normal isolated three-mod smoke, packaging/archive and actual rollback checks pass.
+The unchanged benchmark is still **BLOCKED**: p50 9.0060 ms / p95 16.0318 ms /
+p99 19.8859 ms. Contribution forces fell from 3,840 to 119 across 3,840 updates;
+force-only p95 5.9862 ms still exceeds the 4 ms gate. No live deployment or connected QA.
+The detailed H report records all phases, real crash tests, boundedness and the
+next measured boundary. G/F evidence below is historical and preserved.
+
+Previous correction: [durable encounter WAL report](encounter-wal-correction-report.md).
 G replaces F's full-snapshot-per-contribution implementation without weakening
 force-before-acknowledgement. Full regression: 1,913 tests, zero failures/errors/skips.
 The unchanged 64-update benchmark remains blocked: p95 258.6245 ms / p99 508.1182 ms;

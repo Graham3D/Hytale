@@ -4,12 +4,20 @@ import java.util.*;
 
 /** Bounded diagnostic samples; never consulted for persistence or gameplay decisions. */
 public final class EncounterPersistenceTimings {
-    public enum Phase { JOURNAL_APPEND, JOURNAL_FORCE, CHECKPOINT_SERIALIZATION, CHECKPOINT_WRITE, CHECKPOINT_FORCE }
+    public enum Phase { JOURNAL_APPEND, JOURNAL_FORCE, CHECKPOINT_SERIALIZATION, CHECKPOINT_WRITE, CHECKPOINT_FORCE, GROUP_WAIT, DURABLE_ACK, CHECKPOINT_QUEUE, CHECKPOINT_SCHEDULING, CHECKPOINT_ROTATION, CHECKPOINT_BACKPRESSURE, GROUP_CPU, GROUP_WALL }
     private static final int LIMIT=8192;
     private static final class Samples {long count,total,max;final long[] values=new long[LIMIT];}
     private final EnumMap<Phase,Samples> phases=new EnumMap<>(Phase.class);
+    private final TreeMap<Integer,Long> groupSizes=new TreeMap<>(),groupBytes=new TreeMap<>();
+    private long rejections;private int maxPendingRecords,maxPendingOperations,maxCheckpointBacklog;
     public EncounterPersistenceTimings(){reset();}
-    public synchronized void reset(){for(var p:Phase.values())phases.put(p,new Samples());}
+    public synchronized void reset(){for(var p:Phase.values())phases.put(p,new Samples());groupSizes.clear();groupBytes.clear();rejections=0;maxPendingRecords=0;maxPendingOperations=0;maxCheckpointBacklog=0;}
+    public synchronized void group(int records,int bytes){groupSizes.merge(records,1L,Long::sum);groupBytes.merge(bytes,1L,Long::sum);}
+    public synchronized void admissionRejected(){rejections++;}
+    public synchronized void pending(int records,int operations){maxPendingRecords=Math.max(maxPendingRecords,records);maxPendingOperations=Math.max(maxPendingOperations,operations);}
+    public synchronized void checkpointBacklog(int count){maxCheckpointBacklog=Math.max(maxCheckpointBacklog,count);}
+    public synchronized long count(Phase phase){return phases.get(phase).count;}
+    public synchronized Map<String,Object> grouping(){return Map.of("recordsPerGroup",new TreeMap<>(groupSizes),"bytesPerGroup",new TreeMap<>(groupBytes),"admissionRejections",rejections,"maxPendingRecords",maxPendingRecords,"maxPendingOperations",maxPendingOperations,"maxCheckpointBacklog",maxCheckpointBacklog);}
     public synchronized void record(Phase phase,long nanos){var s=phases.get(phase);s.values[(int)(s.count++%LIMIT)]=nanos;s.total+=nanos;s.max=Math.max(s.max,nanos);}
     public synchronized long totalNanos(Phase phase){return phases.get(phase).total;}
     public synchronized Map<String,Object> snapshot(){

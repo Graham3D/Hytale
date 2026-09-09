@@ -22,7 +22,7 @@ import com.inigmasgames.hytalerpg.progress.*;
 import java.util.*;
 
 /** Exact 0.7 legacy natural spawn -> real post-Apply contribution -> native DeathComponent -> durable awards. */
-public final class HytaleEncounterRewards {
+public final class HytaleEncounterRewards implements AutoCloseable {
     private final EnemyRewardRegistry registry=EnemyRewardRegistry.load();
     private final PersistentEncounterRuntime runtime;
     private final RpgLoadoutService loadouts;
@@ -30,6 +30,7 @@ public final class HytaleEncounterRewards {
     private final LearningSources learning=LearningSources.load(com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical());
     private final com.inigmasgames.hytalerpg.combat.RpgCombatKernel kernel;
     private final HostileInjuryLedger injuries=new HostileInjuryLedger();
+    private final DurableEncounterEffects durableEffects=new DurableEncounterEffects();
     public void invalidateHealthCredit(UUID world,UUID recipient){injuries.invalidate(world,recipient);}
     public void forgetPlayer(UUID actor){injuries.forget(actor);}
     private boolean failureLogged;
@@ -42,17 +43,22 @@ public final class HytaleEncounterRewards {
         });this.loadouts=loadouts;this.trace=trace;this.kernel=Objects.requireNonNull(kernel);
     }
     public int verifiedLearningBindings(){return learning.verifiedBindings();}
-    public void invalidateConverted(UUID world,UUID enemy){runtime.disqualify(world,enemy);}
+    public synchronized void invalidateConverted(UUID world,UUID enemy){durableEffects.await();runtime.disqualify(world,enemy);}
+    @Override public synchronized void close(){durableEffects.close();runtime.awaitDurable();}
     public void configurePartyProvider(PartyMembershipProvider provider){parties=Objects.requireNonNull(provider);}
     public String partyAvailability(){return parties.availability();}
-    private void mastery(Store<EntityStore> store,UUID enemy,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,boolean meaningful,String evidence){
+    private Runnable prepareMastery(UUID world,UUID enemy,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,boolean meaningful){
         var actor=context.request().actorId();long now=System.currentTimeMillis();var p=context.profile();
-        boolean sustained=context.effects().mastery().sustained();
-        context.effects().mastery().award(context.request().origin()==com.inigmasgames.hytalerpg.execution.SkillExecutionRequest.Origin.MANUAL,
-                meaningful,runtime.masteryEligible(world(store),enemy,actor,loadouts.characterLevel(actor),now),sustained,System.nanoTime(),ordinal->{
+        var budget=context.effects().mastery();boolean sustained=budget.sustained();
+        boolean manual=context.request().origin()==com.inigmasgames.hytalerpg.execution.SkillExecutionRequest.Origin.MANUAL;
+        boolean eligible=runtime.provisionalMasteryEligible(world,enemy,actor,loadouts.characterLevel(actor),now);
+        long observed=System.nanoTime();String skill=p.skillId(),root=context.rootCastId(),primary=budget.primaryInstance(),correlation=context.request().correlationId();
+        // Capture the observation-time predicate before death/detach; only the durable worker awards it.
+        // No Store, Ref, context/effect graph, position or other ECS reference crosses this boundary.
+        return ()->budget.award(manual,meaningful,eligible,sustained,observed,ordinal->{
             // Primary and every derived child share rootCastId + ordinal; never use victim/child/tick as the dedup identity.
-            loadouts.awardEarned(actor,new EarnedReward("mastery/"+context.effects().mastery().primaryInstance()+"/"+ordinal,0,0,Map.of(p.skillId(),1L),
-                    "MEANINGFUL_MANUAL_ROOT",context.rootCastId(),context.effects().mastery().primaryInstance(),context.request().correlationId(),ProgressionDelta.meaningful(p.skillId())));
+            loadouts.awardEarned(actor,new EarnedReward("mastery/"+primary+"/"+ordinal,0,0,Map.of(skill,1L),
+                    "MEANINGFUL_MANUAL_ROOT",root,primary,correlation,ProgressionDelta.meaningful(skill)));
         });
     }
     public void controlResolved(Store<EntityStore> store,Ref<EntityStore> target,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,boolean taunt,String evidence){
@@ -60,10 +66,12 @@ public final class HytaleEncounterRewards {
             var actor=store.getExternalData().getRefFromUUID(context.request().actorId());var enemy=id(store,target);
             if(actor==null||!actor.isValid()||enemy==null||store.getComponent(actor,PlayerRef.getComponentType())==null
                     ||!HytaleAreaQueries.hostile(store,target,actor)||excluded(store,target))return;
-            if(runtime.control(world(store),enemy,context.request().actorId(),true,taunt,true,System.currentTimeMillis())){
-                emit(context.request().actorId(),RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,context.request().correlationId(),
-                    Map.of("kind",taunt?"TAUNT":"CONTROL","enemy",enemy,"evidence",evidence,"rootCastId",context.rootCastId(),"skillInstanceId",context.skillInstanceId(),"connectedProof",false));
-                mastery(store,enemy,context,true,evidence);
+            try(var effect=durableEffects.reserve()){
+                var submission=runtime.submitControl(world(store),enemy,context.request().actorId(),true,taunt,true,System.currentTimeMillis());
+                if(!submission.provisional())return;
+                var award=prepareMastery(world(store),enemy,context,true);var player=context.request().actorId();var correlation=context.request().correlationId();
+                var details=Map.of("kind",taunt?"TAUNT":"CONTROL","enemy",enemy,"evidence",evidence,"rootCastId",context.rootCastId(),"skillInstanceId",context.skillInstanceId(),"connectedProof",false);
+                effect.submit(submission.durable(),accepted->{if(accepted){emit(player,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,correlation,details);award.run();}});
             }
         });
     }
@@ -74,12 +82,16 @@ public final class HytaleEncounterRewards {
             var healer=store.getExternalData().getRefFromUUID(context.request().actorId());
             if(healer==null||!healer.isValid()||store.getComponent(healer,PlayerRef.getComponentType())==null||!HytaleSupportSystem.eligibleAlly(store,healer,beneficiary))return;
             var recipient=id(store,beneficiary);if(recipient==null)return;
+            try(var effect=durableEffects.reserve()){
             long now=System.currentTimeMillis();var restored=injuries.healed(world(store),recipient,before,after,now);
             double eligibleHealing=restored.entrySet().stream().filter(e->runtime.contains(world(store),e.getKey())).mapToDouble(Map.Entry::getValue).sum();
-            int count=runtime.heal(world(store),context.request().actorId(),recipient,eligibleHealing,true,now);
-            if(count>0)emit(context.request().actorId(),RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,context.request().correlationId(),
-                    Map.of("kind","HEAL","beneficiary",recipient,"healthBefore",before,"healthAfter",after,"actualHealing",after-before,"hostileInjuryRestored",eligibleHealing,"eligibleEncounters",count,"rootCastId",context.rootCastId(),"skillInstanceId",context.skillInstanceId()));
-            if(count>0)for(var enemy:restored.keySet())mastery(store,enemy,context,true,"ACTUAL_HOSTILE_INJURY_RESTORED");
+            var submission=runtime.submitHeal(world(store),context.request().actorId(),recipient,eligibleHealing,true,now);
+            if(submission.provisional()<=0)return;
+            var awards=restored.keySet().stream().map(enemy->prepareMastery(world(store),enemy,context,true)).toList();
+            var player=context.request().actorId();var correlation=context.request().correlationId();
+            var details=Map.of("kind","HEAL","beneficiary",recipient,"healthBefore",before,"healthAfter",after,"actualHealing",after-before,"hostileInjuryRestored",eligibleHealing,"eligibleEncounters",submission.provisional(),"rootCastId",context.rootCastId(),"skillInstanceId",context.skillInstanceId());
+            effect.submit(submission.durable(),count->{if(count>0){emit(player,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,correlation,details);awards.forEach(Runnable::run);}});
+            }
         });
     }
     /** Actual post-filter consumed shield amount, regardless of whether its optional reflection is configured. */
@@ -91,9 +103,12 @@ public final class HytaleEncounterRewards {
             var enemy=id(store,enemyRef);var actor=absorption.effect().key().owner();var owner=store.getExternalData().getRefFromUUID(actor);
             if(enemy==null||owner==null||!owner.isValid()||store.getComponent(owner,PlayerRef.getComponentType())==null)return;
             var c=absorption.effect().context();
-            if(runtime.absorb(world(store),enemy,actor,absorption.amount(),true,System.currentTimeMillis())){
-                emit(actor,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,c.request().correlationId(),Map.of("kind","ABSORB","enemy",enemy,"beneficiary",id(store,recipient),"actuallyAbsorbed",absorption.amount(),"rootCastId",c.rootCastId(),"skillInstanceId",c.skillInstanceId()));
-                mastery(store,enemy,c,true,"ACTUAL_HOSTILE_ABSORPTION");
+            try(var effect=durableEffects.reserve()){
+                var submission=runtime.submitAbsorb(world(store),enemy,actor,absorption.amount(),true,System.currentTimeMillis());
+                if(!submission.provisional())return;
+                var award=prepareMastery(world(store),enemy,c,true);var correlation=c.request().correlationId();
+                var details=Map.of("kind","ABSORB","enemy",enemy,"beneficiary",id(store,recipient),"actuallyAbsorbed",absorption.amount(),"rootCastId",c.rootCastId(),"skillInstanceId",c.skillInstanceId());
+                effect.submit(submission.durable(),accepted->{if(accepted){emit(actor,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,correlation,details);award.run();}});
             }
         });
     }
@@ -140,7 +155,7 @@ public final class HytaleEncounterRewards {
     private void damage(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,Damage damage){
         var target=chunk.getReferenceTo(index);var world=world(store);var enemy=id(store,target);
         if(!runtime.contains(world,enemy)||damage.isCancelled())return;
-        if(excluded(store,target)||!runtime.spawn(world,enemy).orElseThrow().roleId().equals(store.getComponent(target,NPCEntity.getComponentType()).getRoleName())){runtime.disqualify(world,enemy);return;}
+        if(excluded(store,target)||!runtime.spawn(world,enemy).orElseThrow().roleId().equals(store.getComponent(target,NPCEntity.getComponentType()).getRoleName())){invalidateConverted(world,enemy);return;}
         var metadata=HytaleDamageAdapter.metadata(damage);if(metadata!=null&&metadata.noCredit())return;
         Ref<EntityStore> actor=null;
         if(metadata!=null)actor=store.getExternalData().getRefFromUUID(metadata.actorId());
@@ -154,15 +169,17 @@ public final class HytaleEncounterRewards {
         if(actor==null||!actor.isValid()||store.getComponent(actor,PlayerRef.getComponentType())==null||!HytaleAreaQueries.hostile(store,target,actor))return;
         var hp=chunk.getComponent(index,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());if(hp==null)return;
         double before=SupportDamageSystems.observedHealthBefore(damage);var player=id(store,actor);
-        if(runtime.damage(world,enemy,player,before,hp.get(),hp.getMax(),true,System.currentTimeMillis())){
+        try(var effect=durableEffects.reserve()){
+            var submission=runtime.submitDamage(world,enemy,player,before,hp.get(),hp.getMax(),true,System.currentTimeMillis());
+            if(!submission.provisional())return;
             var details=new LinkedHashMap<String,Object>();details.put("world",world);details.put("enemy",enemy);details.put("kind","DAMAGE");
             details.put("healthBefore",before);details.put("healthAfter",hp.get());details.put("actualHealthLost",before-hp.get());details.put("nativeAmount",damage.getAmount());
             details.put("rootCastId",metadata==null?"":metadata.rootCastId());details.put("skillInstanceId",metadata==null?"":metadata.skillInstanceId());
-            emit(player,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,metadata==null?enemy.toString():metadata.correlationId(),details);
+            var correlation=metadata==null?enemy.toString():metadata.correlationId();
             var context=HytaleDamageAdapter.executionContext(damage);
-            // Store.invoke consumes queued death work before it returns. Observe mastery inside Inspect,
-            // after actual loss and persisted contribution but before death freezes/detaches this encounter.
-            if(context!=null&&context.request().actorId().equals(player))mastery(store,enemy,context,true,"POST_APPLY_INSPECT_HEALTH_LOSS");
+            var award=context!=null&&context.request().actorId().equals(player)?prepareMastery(world,enemy,context,true):(Runnable)()->{};
+            var captured=Map.copyOf(details);
+            effect.submit(submission.durable(),accepted->{if(accepted){emit(player,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,correlation,captured);award.run();}});
         }
     }
     private void playerDamaged(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,Damage damage){
@@ -176,6 +193,7 @@ public final class HytaleEncounterRewards {
         injuries.damage(world(store),id(store,ref),enemy,SupportDamageSystems.observedHealthBefore(damage),hp.get(),System.currentTimeMillis());
     }
     private void died(Ref<EntityStore> ref,DeathComponent death,Store<EntityStore> store){
+        durableEffects.await();
         if(death.getDeathInfo()==null)return;
         var hp=store.getComponent(ref,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());if(hp==null||hp.get()>hp.getMin())return;
         var world=world(store);var enemy=id(store,ref);if(!runtime.contains(world,enemy))return;
@@ -196,9 +214,9 @@ public final class HytaleEncounterRewards {
     }
     private synchronized void deliver(){
         long now=System.nanoTime();if(now<nextDeliveryNanos)return;nextDeliveryNanos=now+1_000_000_000L;
-        runtime.drain(8); // Global, not multiplied by world/player count. Existing player ledger traces actual commits.
+        durableEffects.await();runtime.drain(8); // Global, not multiplied by world/player count. Existing player ledger traces actual commits.
     }
-    private void safely(String boundary,Runnable operation){
+    private synchronized void safely(String boundary,Runnable operation){
         try{operation.run();}catch(RuntimeException error){
             synchronized(this){if(failureLogged)return;failureLogged=true;}
             com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log("RPG_ENCOUNTER_FAILURE boundary=%s error=%s detail=%s awardsUnavailable=%s nativeCombatUnchanged=true",boundary,error.getClass().getName(),String.valueOf(error.getMessage()),runtime.unavailable());
@@ -210,7 +228,7 @@ public final class HytaleEncounterRewards {
         private final HytaleEncounterRewards rewards;public Tracking(HytaleEncounterRewards rewards){this.rewards=rewards;}
         @Override public Query<EntityStore> getQuery(){return Query.and(NPCEntity.getComponentType(),UUIDComponent.getComponentType(),TransformComponent.getComponentType());}
         @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){rewards.safely("NATIVE_SPAWN_CONTEXT",()->rewards.added(ref,reason,store));}
-        @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){rewards.runtime.detach(world(store),id(store,ref));}
+        @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){rewards.safely("ENCOUNTER_DETACH",()->{rewards.durableEffects.await();rewards.runtime.detach(world(store),id(store,ref));});}
     }
     public static final class Inspect extends DamageEventSystem{
         private static final com.hypixel.hytale.server.core.meta.MetaKey<Boolean> OBSERVED=Damage.META_REGISTRY.registerMetaObject(ignored->false,false,"InigmasGames:EncounterObserved",Codec.BOOLEAN);

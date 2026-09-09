@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 import java.util.function.*;
+import java.util.concurrent.*;
 import static java.nio.file.StandardOpenOption.*;
 
 /**
@@ -19,6 +20,7 @@ public final class FileEncounterStore implements AutoCloseable {
     public static final int MAX_PENDING=256,MAX_FILE_BYTES=262144;
     public enum Boundary { AFTER_CONTEXT, AFTER_DISQUALIFY, AFTER_FREEZE, AFTER_AWARD, AFTER_CURSOR, AFTER_COMPLETION, AFTER_CLEANUP }
     public enum JournalBoundary { AFTER_APPEND, AFTER_FORCE, AFTER_CHECKPOINT_FILE, AFTER_CHECKPOINT_POINTER, AFTER_CHECKPOINTS, AFTER_ROTATION, AFTER_FLOOR }
+    public enum GroupBoundary { BEFORE_DEQUEUE, AFTER_FIRST_FRAME, AFTER_GROUP_APPEND, BEFORE_FORCE, AFTER_GROUP_FORCE, BEFORE_ACKNOWLEDGEMENTS, MID_ACKNOWLEDGEMENTS, ANOTHER_GROUP_QUEUED, CHECKPOINT_WORKER_STARTED }
     public static final class CapacityRejected extends IllegalStateException { public CapacityRejected(){super("ENCOUNTER_PERSISTENCE_CAPACITY");} }
     private record Checkpoint(UUID world,UUID enemy,long sequence){Checkpoint{Objects.requireNonNull(world);Objects.requireNonNull(enemy);if(sequence<1)throw new IllegalArgumentException("CHECKPOINT_SEQUENCE");}}
     private record Floor(long sequence){Floor{if(sequence<0)throw new IllegalArgumentException("CHECKPOINT_FLOOR");}}
@@ -30,18 +32,25 @@ public final class FileEncounterStore implements AutoCloseable {
     private final Path directory;
     private final Consumer<Boundary> fault;
     private final Consumer<JournalBoundary> journalFault;
+    private final Consumer<GroupBoundary> groupFault;
+    private final EncounterGroupCommit groups=new EncounterGroupCommit(this);
+    private final Object checkpointPublication=new Object();
+    private final Semaphore checkpointSlots=new Semaphore(2,true);
+    private final ExecutorService checkpointWorker=Executors.newSingleThreadExecutor(r->{var thread=new Thread(r,"RPG-encounter-checkpoint");thread.setDaemon(true);thread.setPriority(Thread.MIN_PRIORITY);return thread;});
+    private volatile CompletableFuture<Void> checkpointTail=CompletableFuture.completedFuture(null);
     private FileChannel writerChannel;
     private java.nio.channels.FileLock writerLock;
-    private EncounterJournal journal;
-    private boolean closed,uncertain;
+    private volatile EncounterJournal journal;
+    private volatile boolean closed,uncertain,closing,legacyReservation;
     private final EncounterPersistenceTimings timings=new EncounterPersistenceTimings();
     public EncounterPersistenceTimings timings(){return timings;}
     public FileEncounterStore(Path directory){this(directory,ignored->{});}
     /** Fault injection is for process-interruption tests only. */
     public FileEncounterStore(Path directory,Consumer<Boundary> fault){this(directory,fault,ignored->{});}
-    public FileEncounterStore(Path directory,Consumer<Boundary> fault,Consumer<JournalBoundary> journalFault){this.directory=directory.toAbsolutePath().normalize();this.fault=Objects.requireNonNull(fault);this.journalFault=Objects.requireNonNull(journalFault);}
+    public FileEncounterStore(Path directory,Consumer<Boundary> fault,Consumer<JournalBoundary> journalFault){this(directory,fault,journalFault,ignored->{});}
+    public FileEncounterStore(Path directory,Consumer<Boundary> fault,Consumer<JournalBoundary> journalFault,Consumer<GroupBoundary> groupFault){this.directory=directory.toAbsolutePath().normalize();this.fault=Objects.requireNonNull(fault);this.journalFault=Objects.requireNonNull(journalFault);this.groupFault=Objects.requireNonNull(groupFault);}
 
-    public Optional<EncounterContributions.Snapshot> load(UUID world,UUID enemy){return locked(()->loadLocked(world,enemy));}
+    public Optional<EncounterContributions.Snapshot> load(UUID world,UUID enemy){awaitSubmissions();awaitCheckpoints();return locked(()->loadLocked(world,enemy));}
     private Optional<EncounterContributions.Snapshot> loadLocked(UUID world,UUID enemy){
         // Public reads retain on-disk validation. Hot-path save uses the replayed durable mirror.
         var baseline=baseline(new EncounterJournal.Key(world,enemy));if(baseline==null)return Optional.empty();
@@ -61,14 +70,18 @@ public final class FileEncounterStore implements AutoCloseable {
     });}
     /** Reserve storage capacity before mutating the runtime ledger, including multi-encounter healing. */
     public Reservation reserve(int records){return locked(()->{
+        synchronized(groups){
+        if(groups.pending())throw new CapacityRejected();
         try{journal.reserve(records);}catch(CapacityRejected rejection){throw rejection;}catch(IOException|RuntimeException error){throw persistenceFailure(error);}
+        legacyReservation=true;
         return new Reservation();
+        }
     });}
     public final class Reservation implements AutoCloseable {
         private final FileEncounterStore owner=FileEncounterStore.this;
         private boolean released;
         private Reservation(){}
-        @Override public void close(){synchronized(FileEncounterStore.this){if(!released){journal.release();released=true;}}}
+        @Override public void close(){synchronized(FileEncounterStore.this){if(!released){journal.release();legacyReservation=false;released=true;}}}
     }
     public void save(EncounterContributions.Snapshot value){try(var reservation=reserve(1)){save(value,reservation);}}
     public void save(EncounterContributions.Snapshot value,Reservation reservation){locked(()->{
@@ -86,12 +99,52 @@ public final class FileEncounterStore implements AutoCloseable {
         if(value.lastObserved()<old.lastObserved()||value.lowestHealthFraction()>old.lowestHealthFraction()
                 ||old.firstCombat()>=0&&(value.firstCombat()!=old.firstCombat()||value.progressAt()<old.progressAt()))throw new IllegalStateException("ENCOUNTER_WATERMARK_ROLLBACK");
     }
-    public void checkpoint(){locked(()->{try{journal.checkpoint();}catch(IOException|RuntimeException error){throw persistenceFailure(error);}return null;});}
+    public void checkpoint(){awaitSubmissions();locked(()->{try{journal.checkpoint();}catch(IOException|RuntimeException error){throw persistenceFailure(error);}return null;});awaitCheckpoints();}
+    public void awaitCheckpoints(){try{EncounterGroupCommit.await(checkpointTail);}catch(RuntimeException error){throw persistenceFailure(error);}}
+    public void awaitSubmissions(){try{groups.await();}catch(RuntimeException error){throw persistenceFailure(error);}}
+    /** The receipt, not successful submission, is the durability boundary. */
+    public final class SubmissionReservation implements AutoCloseable {
+        private final EncounterGroupCommit.Lease lease;
+        private SubmissionReservation(EncounterGroupCommit.Lease lease){this.lease=lease;}
+        public CompletionStage<Void> submit(List<EncounterContributions.Snapshot> values){return groups.submit(lease,values).minimalCompletionStage();}
+        @Override public void close(){lease.close();}
+    }
+    public SubmissionReservation reserveSubmission(UUID world,List<UUID> enemies){
+        if(journal==null)locked(()->null);
+        synchronized(groups){
+        if(closing||legacyReservation)throw new CapacityRejected();
+        return new SubmissionReservation(groups.reserve(enemies.stream().map(enemy->new EncounterJournal.Key(world,enemy)).toList()));
+        }
+    }
+    void checkSubmissionState(){if(closed||uncertain)throw new IllegalStateException("ENCOUNTER_PERSISTENCE_UNCERTAIN_RESTART_REQUIRED");}
+    void markUncertain(Throwable error){uncertain=true;}
+    void groupFault(GroupBoundary boundary){groupFault.accept(boundary);}
+    void commitGroup(List<EncounterContributions.Snapshot> values){locked(()->{
+        if(legacyReservation)throw new CapacityRejected();
+        for(var value:values){var spawn=value.spawn();if(deathLocked(spawn.world(),spawn.enemy()).isPresent())throw new IllegalStateException("ENCOUNTER_ALREADY_DIED");if(rejected(spawn.world(),spawn.enemy())&&!value.disqualified())throw new IllegalStateException("ENCOUNTER_DISQUALIFICATION_ROLLBACK");}
+        try{journal.appendGroup(values);fault.accept(Boundary.AFTER_CONTEXT);}catch(IOException|RuntimeException error){throw persistenceFailure(error);}return null;
+    });}
+    private void reserveCheckpoint(){
+        long start=System.nanoTime();
+        try{if(!checkpointSlots.tryAcquire(EncounterGroupCommit.DEADLINE_MILLIS,TimeUnit.MILLISECONDS))throw new IllegalStateException("CHECKPOINT_BACKLOG_TIMEOUT");}
+        catch(InterruptedException error){Thread.currentThread().interrupt();throw persistenceFailure(error);}
+        finally{timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_BACKPRESSURE,System.nanoTime()-start);}
+        timings.checkpointBacklog(2-checkpointSlots.availablePermits());
+    }
+    private void scheduleCheckpoint(Runnable publication){
+        var future=new CompletableFuture<Void>();checkpointTail=future;
+        try{checkpointWorker.execute(()->{
+            try{checkSubmissionState();publication.run();future.complete(null);}catch(Throwable error){markUncertain(error);future.completeExceptionally(error);}finally{checkpointSlots.release();}
+        });}catch(RuntimeException error){checkpointSlots.release();throw persistenceFailure(error);}
+    }
     public long journalSequence(){return locked(()->journal.sequence());}
     /** Runs under the runtime's serialized callback before freezing its in-memory death plan. */
-    public <T> T withDeathCapacity(Supplier<T> operation){return locked(()->{if(pendingFiles().size()>=MAX_PENDING)throw new CapacityRejected();return operation.get();});}
+    public <T> T withDeathCapacity(Supplier<T> operation){awaitSubmissions();return locked(()->{
+        synchronized(groups){if(groups.pending()||legacyReservation||pendingFiles().size()>=MAX_PENDING)throw new CapacityRejected();legacyReservation=true;}
+        try{return operation.get();}finally{legacyReservation=false;}
+    });}
     /** Separate durable tombstone also covers conversion/ownership before context capture. */
-    public void disqualify(UUID world,UUID enemy){locked(()->{
+    public void disqualify(UUID world,UUID enemy){awaitSubmissions();locked(()->{
         Path path=keyPath("excluded",world,enemy);if(!Files.exists(path))write(path,new Rejected(world,enemy),false);
         else if(!read(path,Rejected.class).equals(new Rejected(world,enemy)))throw new IllegalStateException("ENCOUNTER_ID_MISMATCH");
         fault.accept(Boundary.AFTER_DISQUALIFY);return null;
@@ -109,7 +162,7 @@ public final class FileEncounterStore implements AutoCloseable {
         if(plan!=null)identity(plan.spawn(),world,enemy);return Optional.ofNullable(plan);
     }
     /** Atomically record the full immutable plan before the first player award. */
-    public EncounterContributions.DeathPlan freeze(EncounterContributions.DeathPlan plan){return locked(()->{
+    public EncounterContributions.DeathPlan freeze(EncounterContributions.DeathPlan plan){awaitSubmissions();return locked(()->{
         var spawn=plan.spawn();var previous=deathLocked(spawn.world(),spawn.enemy());
         if(previous.isPresent()){
             if(!previous.get().equals(plan))throw new IllegalStateException("DEATH_PLAN_CONFLICT");return previous.get();
@@ -131,6 +184,7 @@ public final class FileEncounterStore implements AutoCloseable {
     }
     @FunctionalInterface public interface AwardDelivery {void accept(UUID player,EarnedReward reward,LearningSources.Opportunity learning);}
     public int drainLearning(int awardBudget,AwardDelivery award){
+        awaitSubmissions();
         if(awardBudget<1||awardBudget>EncounterContributions.MAX_CONTRIBUTORS)throw new IllegalArgumentException("DEATH_AWARD_BUDGET");Objects.requireNonNull(award);
         return locked(()->{
             int attempts=0;
@@ -183,10 +237,16 @@ public final class FileEncounterStore implements AutoCloseable {
                 public long floor(){Path path=directory.resolve("checkpoint-floor.json");return Files.exists(path)?read(path,Floor.class).sequence():0;}
                 public void floor(long sequence){write(directory.resolve("checkpoint-floor.json"),new Floor(sequence),true);}
                 public void save(EncounterJournal.Key key,EncounterJournal.Entry value){saveCheckpoint(key,value);}
+                public void submit(Runnable publication){scheduleCheckpoint(publication);}
+                public void reserveCheckpoint(){FileEncounterStore.this.reserveCheckpoint();}
+                public void groupFault(GroupBoundary boundary){FileEncounterStore.this.groupFault(boundary);}
             },timings,journalFault);
         }catch(IOException|RuntimeException error){releaseHandles();uncertain=true;throw failure("ENCOUNTER_STORE_UNAVAILABLE",error);}
     }
     private EncounterJournal.Entry baseline(EncounterJournal.Key key){
+        synchronized(checkpointPublication){return readBaseline(key);}
+    }
+    private EncounterJournal.Entry readBaseline(EncounterJournal.Key key){
         Path original=keyPath("contexts",key.world(),key.enemy());if(!Files.exists(original))return null;
         var value=read(original,EncounterContributions.Snapshot.class);identity(value.spawn(),key.world(),key.enemy());
         Path pointer=keyPath("checkpoints",key.world(),key.enemy());long sequence=0;
@@ -199,6 +259,9 @@ public final class FileEncounterStore implements AutoCloseable {
     }
     private static Path checkpointFile(Path pointer,long sequence){return pointer.resolveSibling(pointer.getFileName()+"."+sequence+".snapshot");}
     private void saveCheckpoint(EncounterJournal.Key key,EncounterJournal.Entry value){
+        synchronized(checkpointPublication){publishCheckpoint(key,value);}
+    }
+    private void publishCheckpoint(EncounterJournal.Key key,EncounterJournal.Entry value){
         Path pointer=keyPath("checkpoints",key.world(),key.enemy());Path snapshot=checkpointFile(pointer,value.sequence());
         Checkpoint old=Files.exists(pointer)?read(pointer,Checkpoint.class):null;
         if(Files.exists(snapshot)) {
@@ -217,7 +280,19 @@ public final class FileEncounterStore implements AutoCloseable {
         writerLock=null;writerChannel=null;
     }
     /** Close is not a durability boundary: each acknowledged append was already forced. */
-    @Override public synchronized void close(){if(!closed){releaseHandles();closed=true;}}
+    @Override public void close(){
+        // Never acquire the store monitor before stopping the writer: it may be in force().
+        synchronized(groups){if(closed||closing)return;closing=true;}
+        try{
+            groups.close();checkpointWorker.shutdown();
+            if(!checkpointWorker.awaitTermination(EncounterGroupCommit.DEADLINE_MILLIS,TimeUnit.MILLISECONDS)){
+                checkpointWorker.shutdownNow();
+                if(!checkpointWorker.awaitTermination(EncounterGroupCommit.DEADLINE_MILLIS,TimeUnit.MILLISECONDS))throw new IllegalStateException("CHECKPOINT_SHUTDOWN_TIMEOUT");
+            }
+            synchronized(this){releaseHandles();closed=true;}
+        }catch(InterruptedException error){checkpointWorker.shutdownNow();Thread.currentThread().interrupt();throw persistenceFailure(error);}
+        catch(RuntimeException error){checkpointWorker.shutdownNow();throw persistenceFailure(error);}
+    }
     private static <T> T read(Path path,Class<T> type){
         try{
             if(!Files.isRegularFile(path)||Files.size(path)>MAX_FILE_BYTES)throw new IllegalStateException("ENCOUNTER_FILE_BOUNDS");

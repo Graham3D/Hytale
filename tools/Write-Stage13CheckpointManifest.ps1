@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('f','g')][string]$Cohort='f')
+param([ValidateSet('f','g','h')][string]$Cohort='f')
 $ErrorActionPreference='Stop'
 $manifestRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $manifestEvidence=Join-Path $manifestRoot "evidence\stage-13\cohort-$Cohort"
@@ -20,12 +20,21 @@ $manifest=[ordered]@{manifestSchema=1;purpose='CHECKSUM_VERIFIED_BLOCKED_DEVELOP
     rollback=@{checkpoint='Stage12H de60a02';sha256=$verification.rollbackSha256;liveSaveUntouched=$true;copiedCheckpointTest='Stage13ArchivedRollbackTest'};
     signing='CHECKSUM_VERIFIED_NOT_CRYPTOGRAPHICALLY_SIGNED';files=$files}
 $path=Join-Path $manifestEvidence 'checkpoint-manifest.json'
-if($Cohort -eq 'g'){
+if($Cohort -in @('g','h')){
     $manifest.schema.encounterJournal=1
     $manifest.schema.rollback='STOP_WRITERS_AND_RESTORE_MATCHING_PRE_WAL_COORDINATED_COPY_NEVER_OLD_BINARY_ON_WAL_STATE'
     $manifest.rollback.preWalCheckpoint='Stage13F 14a0f42; documentation checkpoint 344bfed'
     $manifest.rollback.preWalSha256='F7F55FCF05AFEA2A985AC2801CB4F78D346389C2E135E2DCEA22E1F193BCFA83'
     $manifest.rollback.preWalCopyTest='Stage13JournalRollbackTest'
+}
+if($Cohort -eq 'h'){
+    $manifest.schema.rollback='WAL_V1_G_READER_COMPATIBLE_STOP_WRITERS_AND_RESTORE_COORDINATED_COPY_FOR_ROLLBACK'
+    $manifest.rollback.immediateCheckpoint='Stage13G f25bf99764285e3fb340bad4bd693a9fe5cd03d8'
+    $manifest.rollback.immediateSha256='9B81FAA34D8F41D5C7B43205C52F3E17A44F585D1420C87EB1EEADAB0B7D4FEE'
+    $manifest.rollback.compatibilityTests='Stage13GroupRollbackTest plus retained Stage13JournalRollbackTest and Stage13ArchivedRollbackTest'
+    $manifest.rollback.preflight='tools/Test-EncounterRollbackCompatibility.ps1; F is forbidden on any WAL directory'
+    $manifest.durability=@{submission='PROVISIONAL_NOT_DURABLE';acknowledgement='AFTER_COVERING_FORCE_TRUE';grouping='DRAIN_ALREADY_QUEUED';checkpoint='IMMUTABLE_SEQUENCE_CAPTURE_ASYNC_PUBLICATION';connected='UNVERIFIED'}
+    $manifest.report=@{path='docs/stage-13/encounter-group-commit-report.md';sha256=(Get-FileHash -LiteralPath (Join-Path $manifestRoot 'docs/stage-13/encounter-group-commit-report.md')).Hash}
 }
 $manifest|ConvertTo-Json -Depth 8|Set-Content -LiteralPath $path -Encoding utf8
 $read=Get-Content -Raw -LiteralPath $path|ConvertFrom-Json -AsHashtable

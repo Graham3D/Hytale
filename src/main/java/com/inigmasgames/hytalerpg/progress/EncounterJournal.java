@@ -20,6 +20,9 @@ final class EncounterJournal implements AutoCloseable {
         long floor();
         void save(Key key,Entry value);
         void floor(long value);
+        void submit(Runnable publication);
+        void reserveCheckpoint();
+        void groupFault(FileEncounterStore.GroupBoundary boundary);
     }
     private final Path directory;
     private final Checkpoints checkpoints;
@@ -28,7 +31,9 @@ final class EncounterJournal implements AutoCloseable {
     private final LinkedHashMap<Key,Entry> cache=new LinkedHashMap<>(16,.75f,true);
     private final Set<Key> dirty=new HashSet<>();
     private FileChannel channel;
-    private long sequence,floor;
+    private long sequence;
+    private volatile long floor;
+    private final java.util.concurrent.ConcurrentHashMap<Key,Integer> pinned=new java.util.concurrent.ConcurrentHashMap<>();
     private int records,reserved;
     private boolean admission;
     private boolean replaying=true;
@@ -128,7 +133,7 @@ final class EncounterJournal implements AutoCloseable {
     Entry entry(Key key){
         Entry value=cache.get(key);if(value!=null)return value;
         if(cache.size()>=EncounterContributions.MAX_ENCOUNTERS) {
-            var evict=cache.keySet().stream().filter(k->!dirty.contains(k)).findFirst().orElseThrow(()->corrupt("CACHE_CAPACITY"));cache.remove(evict);
+            var evict=cache.keySet().stream().filter(k->!dirty.contains(k)&&!pinned.containsKey(k)).findFirst().orElseThrow(()->corrupt("CACHE_CAPACITY"));cache.remove(evict);
         }
         value=checkpoints.load(key);
         if(value!=null){if(!replaying&&value.sequence()>sequence)throw corrupt("CHECKPOINT_AHEAD_OF_JOURNAL");cache.put(key,value);}return value;
@@ -142,10 +147,45 @@ final class EncounterJournal implements AutoCloseable {
     void release(){reserved=0;admission=false;}
     void append(EncounterContributions.Snapshot value)throws IOException {
         if(!admission||reserved<=0)throw new FileEncounterStore.CapacityRejected();
-        var key=new Key(value.spawn().world(),value.spawn().enemy());var old=entry(key);
+        appendGroup(List.of(value));reserved--;
+    }
+    private record Frame(Key key,Entry value,byte[] bytes){}
+    /** One owner assigns every predecessor before any bytes are written. Never expose this provisional map. */
+    void appendGroup(List<EncounterContributions.Snapshot> values)throws IOException {
+        if(values.isEmpty()||values.size()>EncounterGroupCommit.MAX_GROUP_RECORDS)throw new FileEncounterStore.CapacityRejected();
+        if(records+values.size()>CHECKPOINT_RECORDS)checkpoint();
+        var provisional=new HashMap<Key,Entry>();var frames=new ArrayList<Frame>();long next=sequence;
+        for(var value:values){
+            var key=new Key(value.spawn().world(),value.spawn().enemy());var old=provisional.containsKey(key)?provisional.get(key):entry(key);
+            var frame=encode(value,old,Math.addExact(next,1));next++;frames.add(frame);provisional.put(key,frame.value());
+        }
+        int first=0;
+        while(first<frames.size()){
+            int end=first,bytes=0;
+            while(end<frames.size()&&bytes+frames.get(end).bytes().length<=EncounterGroupCommit.MAX_GROUP_BYTES){bytes+=frames.get(end++).bytes().length;}
+            if(end==first)throw corrupt("GROUP_BYTE_BOUNDS");
+            var buffer=ByteBuffer.allocate(bytes);for(int i=first;i<end;i++)buffer.put(frames.get(i).bytes());buffer.flip();
+            long started=System.nanoTime();
+            try{
+                // Two bounded writes permit a real-process crash exactly after the first complete frame.
+                int limit=buffer.limit();buffer.limit(frames.get(first).bytes().length);writeAll(channel,buffer);
+                checkpoints.groupFault(FileEncounterStore.GroupBoundary.AFTER_FIRST_FRAME);
+                buffer.limit(limit);writeAll(channel,buffer);
+            }finally{timings.record(EncounterPersistenceTimings.Phase.JOURNAL_APPEND,System.nanoTime()-started);}
+            fault.accept(FileEncounterStore.JournalBoundary.AFTER_APPEND);
+            checkpoints.groupFault(FileEncounterStore.GroupBoundary.AFTER_GROUP_APPEND);
+            checkpoints.groupFault(FileEncounterStore.GroupBoundary.BEFORE_FORCE);
+            started=System.nanoTime();try{channel.force(true);}finally{timings.record(EncounterPersistenceTimings.Phase.JOURNAL_FORCE,System.nanoTime()-started);}
+            fault.accept(FileEncounterStore.JournalBoundary.AFTER_FORCE);
+            checkpoints.groupFault(FileEncounterStore.GroupBoundary.AFTER_GROUP_FORCE);
+            for(int i=first;i<end;i++){var frame=frames.get(i);cache.put(frame.key(),frame.value());dirty.add(frame.key());sequence=frame.value().sequence();records++;}
+            timings.group(end-first,bytes);first=end;
+        }
+    }
+    private Frame encode(EncounterContributions.Snapshot value,Entry old,long next)throws IOException {
+        var key=new Key(value.spawn().world(),value.spawn().enemy());
         if(old==null)throw new IllegalStateException("UNREGISTERED_ENCOUNTER");
         FileEncounterStore.validateTransition(old.snapshot(),value);
-        long next=Math.addExact(sequence,1);
         var previous=new HashMap<UUID,EncounterContributions.Credit>();for(var c:old.snapshot().credits())previous.put(c.player(),c);
         var changed=new ArrayList<EncounterContributions.Credit>();
         for(var c:value.credits())if(!c.equals(previous.remove(c.player())))changed.add(c);
@@ -158,24 +198,33 @@ final class EncounterJournal implements AutoCloseable {
         }
         byte[] payload=bytes.toByteArray();if(payload.length+8>MAX_RECORD)throw corrupt("RECORD_BOUNDS");
         var frame=ByteBuffer.allocate(4+payload.length+8).putInt(payload.length+8).put(payload).putLong(checksum(payload));frame.flip();
-        long started=System.nanoTime();try{writeAll(channel,frame);}finally{timings.record(EncounterPersistenceTimings.Phase.JOURNAL_APPEND,System.nanoTime()-started);}
-        fault.accept(FileEncounterStore.JournalBoundary.AFTER_APPEND);
-        started=System.nanoTime();try{channel.force(true);}finally{timings.record(EncounterPersistenceTimings.Phase.JOURNAL_FORCE,System.nanoTime()-started);}
-        fault.accept(FileEncounterStore.JournalBoundary.AFTER_FORCE);
-        cache.put(key,new Entry(next,value));dirty.add(key);sequence=next;records++;reserved--;
+        return new Frame(key,new Entry(next,value),frame.array());
     }
     void checkpoint()throws IOException {
         if(admission)throw new FileEncounterStore.CapacityRejected();
-        if(sequence==floor)return;
-        for(var key:dirty.stream().sorted(Comparator.comparing(k->k.world()+"/"+k.enemy())).toList())checkpoints.save(key,cache.get(key));
-        fault.accept(FileEncounterStore.JournalBoundary.AFTER_CHECKPOINTS);
+        if(sequence==floor||dirty.isEmpty()&&channel.size()==24)return;
+        checkpoints.reserveCheckpoint(); // Backpressure BEFORE creating another sealed segment.
+        long rotationStart=System.nanoTime();
+        long through=sequence;var captured=new LinkedHashMap<Key,Entry>();
+        for(var key:dirty.stream().sorted(Comparator.comparing(k->k.world()+"/"+k.enemy())).toList())captured.put(key,cache.get(key));
+        var retired=segments().stream().filter(path->start(path)<=through).toList();
         // Recovery may already have the empty successor from an interrupted rotation.
         if(channel.size()>24){channel.close();channel=newSegment(sequence+1);}
         fault.accept(FileEncounterStore.JournalBoundary.AFTER_ROTATION);
-        checkpoints.floor(sequence);floor=sequence;
-        fault.accept(FileEncounterStore.JournalBoundary.AFTER_FLOOR);
-        // All snapshots and the successor segment are published before advancing the recovery floor.
-        for(Path segment:segments())if(start(segment)<=floor)Files.delete(segment);
+        timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_ROTATION,System.nanoTime()-rotationStart);
+        for(var key:captured.keySet())pinned.merge(key,1,Integer::sum);
+        long scheduled=System.nanoTime();
+        checkpoints.submit(()->{
+            timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_QUEUE,System.nanoTime()-scheduled);
+            checkpoints.groupFault(FileEncounterStore.GroupBoundary.CHECKPOINT_WORKER_STARTED);
+            for(var entry:captured.entrySet())checkpoints.save(entry.getKey(),entry.getValue());
+            fault.accept(FileEncounterStore.JournalBoundary.AFTER_CHECKPOINTS);
+            checkpoints.floor(through);floor=through;fault.accept(FileEncounterStore.JournalBoundary.AFTER_FLOOR);
+            // Newer commits live in the durable successor. Never retire beyond this immutable capture.
+            try{for(Path segment:retired)Files.deleteIfExists(segment);}catch(IOException error){throw new IllegalStateException("CHECKPOINT_RETIRE_FAILED",error);}
+            for(var key:captured.keySet())pinned.compute(key,(ignored,count)->count==1?null:count-1);
+        });
+        timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_SCHEDULING,System.nanoTime()-scheduled);
         dirty.clear();records=0;
     }
     long sequence(){return sequence;}
