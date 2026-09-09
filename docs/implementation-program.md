@@ -2,6 +2,10 @@
 
 ## Authority and evidence rules
 
+Latest consolidated owner/ChatGPT checkpoint report:
+[master implementation status](stage-13/master-implementation-status.md).
+It records Stage13 F's release blocker; it is not a final completion certificate.
+
 Owner authorization: attachment `4be7b0e7-6165-4222-9c28-5ef5ca1faddf`, followed by
 the supplied master v1.2 Markdown and explicit connected-evidence requirements.
 Master v1.2 SHA-256: `750483855846FF6DB2564B4D6D626C2A12F1AC6EBBBBF12232B2C3ECCF667010`.
