@@ -509,9 +509,122 @@ empty numeric profile-failure maps and three separately recorded runtime gates.
 All83 projected native ability items remain zero-cost/cooldown bridge items.
 Protected HUD/XP/input/catalog/balance paths and owner art are unchanged.
 
+## Cohort E — native basic-hit witness and victim/combo strikes
+
+Scope: Finishing Strike, Execution Strike and Backstab, with shared native-hit
+observation and release-time conditional damage. Starting commit is `55a551b`.
+R032/0.0.25; player schema remains9; compiled plan schema is40. There are86
+runtime records out of87 canonical skills; all66 passives remain canonical.
+This is an intermediate implementation checkpoint, not Stage13 closure.
+
+### Native evidence and implementation boundary
+
+The exact installed0.7.0-pre.1 server exposes `InteractionChainStartEvent` on
+native execution. Its live context's chain/entry are installed during tick and
+cleared by deinitEntry. `DamageEntityInteraction` synchronously invokes native
+Damage with Primary metadata, but does not attach a root identity. Merely
+finding an active chain, Primary metadata, a pressed button, or a client packet
+is therefore insufficient proof of a root basic hit.
+
+The new observer retains the actual root object at its native start, walks
+installed Replace/Charging branches with the actual item's variables, and
+matches the currently executing non-simulated DamageEntity operation, source,
+target, held item and Primary type. It stamps a transient per-Damage witness
+after native filtering and reads authoritative Health after Apply. No positive
+Health loss means no basic receipt. One root object has one UUID receipt;
+further victims, multi-component damage and repeated observer calls cannot mint
+another recovery or finisher hit. RPG-marked damage and projectile sources do
+not enter this melee witness. Native damage is neither replaced nor increased.
+
+The installed path audit covers seven exact items: Iron/Copper Sword, Iron
+Longsword, Daggers, Battleaxe, Mace and Spear. It is asset resolution evidence,
+**not connected execution proof**. Other native item paths, especially ranged
+projectile parent/root ownership, remain unfinished integration work.
+
+Two initial asset audits failed and their original smoke logs/hashes are kept.
+Battleaxe's held entry can fail a Stamina condition and execute the ordinary
+swing; that Failed branch must clear charged classification. Sword adds a
+second Charging stage whose zero branch returns to ordinary swings; the inner
+threshold supersedes the outer one rather than OR-ing a historical button hold.
+Ambiguous operation identities remain rejected. Damage below another damage
+operation cannot manufacture a basic hit. The third, pre-hook audit passed and
+is retained separately in `pre-hit-hook-asset-audit`; it is not the final build's
+smoke result.
+
+Root recovery uses the existing service's normal4%/charged12% maximum Mana and
+Stamina rule, actual bounded native write/readback and reservation cap. It claims
+the root before writes so a partial native failure cannot retry the first credit.
+Native regeneration is unchanged. The older development-ID path is bounded and
+does not evict/replay old IDs. All basic-hit trace identities use the same receipt
+ID; the trace includes native root/item, victim, pre/post Health, actual loss,
+charged classification and actual credits or the precise failure.
+
+### Authored mechanics and presentation
+
+- Execution Strike: Longsword/Battleaxe,18 Stamina,10s cooldown,3m/110° arc.
+  Gather reads current victim Health; strictly below25% replaces1.40 by2.40.
+  It is not an instant kill. The already-rolled crit and existing additive and
+  multiplicative buckets are preserved, including Executioner and Potency.
+- Backstab: Dagger,10 Stamina,6s cooldown,one target within2.4m. The existing
+  single-target assisted-cone selector uses60° caster acquisition (engineering
+  choice where the catalog supplies no separate acquisition angle). The actual
+  damage condition independently rechecks the normative rear120° dot<=-0.5
+  against live victim facing and caster position at Gather:1.90 rear,0.90 otherwise.
+  Missing/nonfinite direction fails closed rather than inventing a rear hit.
+- Finishing Strike: Sword/Longsword/Dagger,12 Stamina,5s cooldown,2.8m/100°,
+  held-item damage attribute. Three observed unique basic roots in the rolling
+  inclusive4s window grant one token. The token persists until release or terminal
+  owner cleanup; extra hits cannot bank more tokens. Release consumes it even
+  on a miss, for1.80 instead of1.20. Payment rejection preserves it; paid delayed
+  release consumes on release, not commit. Repeats share the resolved root scalar.
+
+Conditional requests/factors are transient typed native Damage metadata, not
+JSON parsing in the Gather loop or persisted state. The resolved victim factor
+also accompanies the observed result for secondary modifier arithmetic and the
+stronger contact accent; no visual re-evaluation races against changed Health.
+Finisher gets a brighter0.12s procedural trail only with its empowered scalar.
+All of these visuals remain client-unreviewed templates.
+
+The master explicitly requires three small finisher combo pips. A separate,
+noninteractive HUD document provides them only when Finishing Strike is equipped.
+It adds no buttons, event bindings, inline documents, resource/ability controls
+or XP changes. Native Health/Mana/Stamina/Signature and native ability ownership
+remain unchanged. The packaging gate compares every pre-existing UI asset byte
+against the Stage12H archive; only the new pip document is added. Coordinator
+changes are confined to installing, refreshing and removing that separate HUD.
+Placement, rendering, parsing and readability still need connected-client QA.
+
+### Failures retained, not hidden
+
+Three new native-codec fixtures initially ran in the ordinary JUL test JVM. They
+were moved intact to the existing Hytale-logger nativeControlTest JVM; assertions
+were retained. A delayed-release fixture used nonexistent `deliberation`; the
+canonical ID is `skill_delay`. A new Long Reach fixture incorrectly expected20%;
+master LP-003 requires25%, which production already implemented. Both fixture
+mistakes were corrected to canonical content without changing gameplay.
+
+The first complete retained run also found a historical Stage10 test assuming
+the entire runtime would forever contain60 records. It now asserts the exact
+nine Stage10 IDs, all original60 plus the explicit Stage13 cohort count, and
+the unchanged87 canonical count. The original failure XML is preserved. No
+test was deleted, skipped or weakened to permit different mechanics.
+
+The isolated final E smoke booted the exact three mods and cleanly shut down at
+`2026-09-09T11:17:48.1076973Z`, process exit0. Native basic witness registration,
+all seven installed melee paths, previous native asset gates and zero-cost
+native ability bridges resolved. RPG JAR SHA256:
+`27A81C892A33FC4F9DF14FDFC591F3B97C215A655D05E59522E3673DB8714383`.
+Complete retained regression: **1866 tests** (1818 RPG,27 native-control,21
+CanvasUI), zero failures/errors/skips. Exact three-JAR archive and retained
+Stage12H rollback JAR are in cohort E evidence, together with all matrix/source
+hashes and unchanged pre-existing packaged UI-byte checks. This full intermediate
+run does not replace the required stage-closure/final-RC rollback drills.
+Live RPG mods, saves and owner art were not deployed, migrated or overwritten.
+
 ## Remaining required Stage13 work — not optional refinements
 
-- 4 remaining records: Finishing Strike, Execution Strike, Backstab and Frenzy.
+- 1 remaining record: Frenzy (native per-actor attack cadence, toggle/upkeep,
+  root-hit stacks and cleanup; no guessed global animation-speed substitute).
   Guard still needs the native held-item/release integration described above;
   Snipe still needs validated native bow range. Next content batches stay
   at most six each and extend shared family primitives.

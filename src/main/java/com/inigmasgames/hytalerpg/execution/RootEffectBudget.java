@@ -7,6 +7,9 @@ public final class RootEffectBudget {
     private final UUID actor;private final String root;
     private final Set<String> effects=new HashSet<>(Set.of("PRIMARY")),controllers=new HashSet<>();
     private int triggered;
+    private Boolean finisher;
+    public synchronized void resolveFinisher(java.util.function.BooleanSupplier consume){if(finisher==null)finisher=consume.getAsBoolean();}
+    public synchronized double finisherFactor(){return Boolean.TRUE.equals(finisher)?1.5:1;}
     private final com.inigmasgames.hytalerpg.vfx.ProjectileReadability.Group projectileVisuals=new com.inigmasgames.hytalerpg.vfx.ProjectileReadability.Group();
     public com.inigmasgames.hytalerpg.vfx.ProjectileReadability.Group projectileVisuals(){return projectileVisuals;}
     private final com.inigmasgames.hytalerpg.progress.MasteryRootBudget mastery=new com.inigmasgames.hytalerpg.progress.MasteryRootBudget();

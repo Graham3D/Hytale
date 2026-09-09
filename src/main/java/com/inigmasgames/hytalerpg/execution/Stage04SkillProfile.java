@@ -151,9 +151,15 @@ public record Stage04SkillProfile(
         return projectile==null?"":projectile.details().nativeCapabilityGate();
     }
 
-    public record StrikeDetails(String element, double height, double actionLockSeconds, double movementFactor) {
+    public record StrikeDetails(String element, double height, double actionLockSeconds, double movementFactor,
+                               com.inigmasgames.hytalerpg.combat.damage.VictimCoefficient victimCoefficient,boolean finisher) {
+        public StrikeDetails(String element,double height,double actionLockSeconds,double movementFactor){
+            this(element,height,actionLockSeconds,movementFactor,com.inigmasgames.hytalerpg.combat.damage.VictimCoefficient.NONE,false);
+        }
         public static final StrikeDetails DEFAULT = new StrikeDetails("PHYSICAL", 2.5, 0, 1);
         public StrikeDetails {
+            victimCoefficient=victimCoefficient==null?com.inigmasgames.hytalerpg.combat.damage.VictimCoefficient.NONE:victimCoefficient;
+            if(finisher&&victimCoefficient!=com.inigmasgames.hytalerpg.combat.damage.VictimCoefficient.NONE)throw new IllegalArgumentException("Conflicting authored strike conditions");
             if (!Set.of("PHYSICAL", "FIRE", "NECROTIC", "VOID").contains(element)
                     || !finite(height, actionLockSeconds, movementFactor) || height <= 0 || height > 64
                     || actionLockSeconds < 0 || actionLockSeconds > 10 || movementFactor <= 0 || movementFactor > 1)

@@ -27,7 +27,7 @@ public record CompiledSkillPlan(
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 39;
+    public static final int CURRENT_SCHEMA = 40;
     public boolean impactOnlyOnSecondary(){return geometryModifiers.contains("IMPACT_SCOPE=SECONDARY_ONLY");}
     public boolean retaliation(){return passiveOrder.stream().anyMatch(p->p.value().equals("retaliation"));}
     public String conditionalRepeat(){return passiveOrder.stream().map(PassiveId::value).filter(p->p.equals("critical_trigger")||p.equals("kill_trigger")).findFirst().orElse("");}

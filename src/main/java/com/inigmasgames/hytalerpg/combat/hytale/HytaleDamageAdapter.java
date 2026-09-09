@@ -80,9 +80,10 @@ public final class HytaleDamageAdapter {
         DamageSystems.executeDamage(target, accessor, damage);
         double after = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
                 ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();
-        return new NativeResult(damage.isCancelled(), damage.getAmount(), before, after,metadata(damage).preMitigationDamage());
+        return new NativeResult(damage.isCancelled(), damage.getAmount(), before, after,metadata(damage).preMitigationDamage(),HytaleConditionalDamage.victimFactor(damage));
     }
-    public record NativeResult(boolean cancelled, double nativeAmount, double healthBefore, double healthAfter,double preMitigationAmount) {
+    public record NativeResult(boolean cancelled, double nativeAmount, double healthBefore, double healthAfter,double preMitigationAmount,double victimCoefficientFactor) {
+        public NativeResult(boolean cancelled,double nativeAmount,double healthBefore,double healthAfter,double preMitigationAmount){this(cancelled,nativeAmount,healthBefore,healthAfter,preMitigationAmount,1);}
         public NativeResult(boolean cancelled,double nativeAmount,double healthBefore,double healthAfter){this(cancelled,nativeAmount,healthBefore,healthAfter,nativeAmount);}
     }
     public static HytaleDamageMetadata metadata(Damage damage) {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13FinisherPresentationTest" tests="3" skipped="0" failures="1" errors="0" timestamp="2026-09-09T11:13:17.229Z" hostname="GRAHAM" time="0.038">
+  <properties/>
+  <testcase name="brighterTrailRequiresTheExplicitEmpoweredPhase()" classname="com.inigmasgames.hytalerpg.Stage13FinisherPresentationTest" time="0.001"/>
+  <testcase name="sharedProfileTransformsPreserveFinisherRatherThanCreatingAnotherCombo()" classname="com.inigmasgames.hytalerpg.Stage13FinisherPresentationTest" time="0.036">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;3.36&gt; but was: &lt;3.5&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;3.36&gt; but was: &lt;3.5&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:86)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:81)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1014)
+	at app//com.inigmasgames.hytalerpg.Stage13FinisherPresentationTest.sharedProfileTransformsPreserveFinisherRatherThanCreatingAnotherCombo(Stage13FinisherPresentationTest.java:26)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="exactlyThreeNoninteractivePipsDoNotTouchNativeControls()" classname="com.inigmasgames.hytalerpg.Stage13FinisherPresentationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

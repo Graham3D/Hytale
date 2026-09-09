@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage10CageGateTest" tests="10" skipped="0" failures="1" errors="0" timestamp="2026-09-09T11:15:25.560Z" hostname="GRAHAM" time="0.349">
+  <properties/>
+  <testcase name="noNativeColliderOrAreaComponentIsPackagedAsAWorkingFallback()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.0"/>
+  <testcase name="gateRejectsBeforeAnyNativePreflightCostCooldownTargetOrDispatch()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.024"/>
+  <testcase name="malformedGeometryRejected()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.0"/>
+  <testcase name="canonicalGeometryAndCostsAreRetainedWithoutClaimingCollider()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.0"/>
+  <testcase name="repeatsCannotBypassGateOrAccumulateWork()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.026"/>
+  <testcase name="finalStage10InventoryIsExactlyNineNotAnExtraCanonicalSkill()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.029">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;60&gt; but was: &lt;86&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;60&gt; but was: &lt;86&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:531)
+	at app//com.inigmasgames.hytalerpg.Stage10CageGateTest.finalStage10InventoryIsExactlyNineNotAnExtraCanonicalSkill(Stage10CageGateTest.java:29)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="segmentsCloseWithEqualThirtyDegreeSpacing()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.001"/>
+  <testcase name="potencyDoesNotBypassSafetyGate()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.025"/>
+  <testcase name="allTwelveSegmentsUseAuthoritativeRadiusHeightAndThickness()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.0"/>
+  <testcase name="skillDelayCannotArmAnUnsafeCage()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.025"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

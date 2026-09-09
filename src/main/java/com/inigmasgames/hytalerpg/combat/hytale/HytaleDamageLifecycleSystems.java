@@ -59,7 +59,20 @@ public final class HytaleDamageLifecycleSystems {
                 var effects=chunk.getComponent(index,com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent.getComponentType());
                 var stun=com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect.getAssetMap().getAsset("Stun");
                 if(effects!=null&&stun!=null&&effects.hasEffect(stun))active.add("STUN");
-                details.putAll(HytaleConditionalDamage.gather(damage,health==null?Double.NaN:health.get(),health==null?Double.NaN:health.getMax(),active));
+                com.inigmasgames.hytalerpg.execution.math.Vec3 forward=null,offset=null;
+                var victim=chunk.getComponent(index,com.hypixel.hytale.server.core.modules.entity.component.TransformComponent.getComponentType());
+                if(HytaleConditionalDamage.requiresFacing(damage)&&victim!=null&&damage.getSource() instanceof Damage.EntitySource source&&source.getRef()!=null&&source.getRef().isValid()){
+                    var attacker=buffer.getComponent(source.getRef(),com.hypixel.hytale.server.core.modules.entity.component.TransformComponent.getComponentType());
+                    if(attacker!=null){
+                        var direction=victim.getRotation().transform(new org.joml.Vector3d(0,0,1));
+                        var delta=new org.joml.Vector3d(attacker.getPosition()).sub(victim.getPosition());
+                        if(direction.isFinite()&&delta.isFinite()){
+                            forward=new com.inigmasgames.hytalerpg.execution.math.Vec3(direction.x,direction.y,direction.z);
+                            offset=new com.inigmasgames.hytalerpg.execution.math.Vec3(delta.x,delta.y,delta.z);
+                        } // Missing/nonfinite native geometry is rejected by the conditional Gather, not a world-thread exception.
+                    }
+                }
+                details.putAll(HytaleConditionalDamage.gather(damage,health==null?Double.NaN:health.get(),health==null?Double.NaN:health.getMax(),active,forward,offset));
             }
             details.put("amount",damage.getAmount());details.put("cancelled",damage.isCancelled());
             emit(damage, RpgTraceEventType.DAMAGE_GATHERED, details);

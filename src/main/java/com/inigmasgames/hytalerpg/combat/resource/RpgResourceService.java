@@ -111,13 +111,25 @@ public final class RpgResourceService {
     }
     public synchronized RecoveryResult recoverHostileWeaponHit(UUID actor, String rootAttackId, boolean charged,
                                                                 NativeResourcePort resources) {
+        if(actor==null||rootAttackId==null||rootAttackId.isBlank()||rootAttackId.length()>512)throw new IllegalArgumentException("Invalid diagnostic root identity");
         String dedup = actor + ":" + rootAttackId;
+        // Retained command/test API, not the production hook. Fail closed at capacity; never evict and replay.
+        if(recoveredRootAttacks.size()>=65536)return new RecoveryResult(false,0,0);
         if (!recoveredRootAttacks.add(dedup)) return new RecoveryResult(false, 0.0, 0.0);
+        return recoverWeaponHit(actor,charged,resources);
+    }
+    public RecoveryResult recoverHostileWeaponHit(RootWeaponHit receipt,NativeResourcePort resources){
+        if(!receipt.claimRecovery())return new RecoveryResult(false,0,0);
+        return recoverWeaponHit(receipt.actor(),receipt.charged(),resources);
+    }
+    private RecoveryResult recoverWeaponHit(UUID actor,boolean charged,NativeResourcePort resources){
         double fraction = charged ? profile.chargedHostileHitRecovery : profile.normalHostileHitRecovery;
-        double mana = addCapped(ResourceType.MANA, resources.maximum(ResourceType.MANA) * fraction,
-                reservations.spendableMaximum(actor, resources.maximum(ResourceType.MANA)), resources);
-        double stamina = addCapped(ResourceType.STAMINA, resources.maximum(ResourceType.STAMINA) * fraction,
-                resources.maximum(ResourceType.STAMINA), resources);
+        double manaMaximum=resources.maximum(ResourceType.MANA),staminaMaximum=resources.maximum(ResourceType.STAMINA);
+        if(!Double.isFinite(manaMaximum)||!Double.isFinite(staminaMaximum)||manaMaximum<=0||staminaMaximum<=0)
+            throw new IllegalStateException("NATIVE_RECOVERY_MAXIMUM_UNAVAILABLE");
+        double mana = resources.restoreResourceAtMost(ResourceType.MANA,manaMaximum*fraction,
+                reservations.spendableMaximum(actor,manaMaximum));
+        double stamina = resources.restoreResourceAtMost(ResourceType.STAMINA,staminaMaximum*fraction,staminaMaximum);
         return new RecoveryResult(true, mana, stamina);
     }
     public void restoreBed(UUID actor, NativeResourcePort resources) { restoreFull(actor, resources); }

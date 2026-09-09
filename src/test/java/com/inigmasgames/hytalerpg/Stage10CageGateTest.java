@@ -26,5 +26,13 @@ class Stage10CageGateTest {
     @Test void potencyDoesNotBypassSafetyGate(){var h=new Harness();h.link("potency",PassiveSlot.PASSIVE01);assertEquals(SelectiveCageProfile.BLOCKED_BOUNDARY,h.cast().code());assertEquals(0,h.dispatches);}
     @Test void noNativeColliderOrAreaComponentIsPackagedAsAWorkingFallback(){assertNull(profile.area());assertNull(profile.summon());assertNull(profile.conversion());assertEquals(Stage04SkillProfile.Family.WALL,profile.family());}
     @Test void malformedGeometryRejected(){assertThrows(IllegalArgumentException.class,()->new SelectiveCageProfile(18,4,11,2.5,.25,5,.6,1));assertThrows(IllegalArgumentException.class,()->new SelectiveCageProfile(18,Double.NaN,12,2.5,.25,5,.6,1));}
-    @Test void finalStage10InventoryIsExactlyNineNotAnExtraCanonicalSkill(){var profiles=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(9,Stage04SkillProfiles.EXPECTED_STAGE10_PROFILES);assertEquals(60,profiles.all().size());assertEquals(87,Stage01BTestSupport.bundle().catalog().skills().size());}
+    @Test void finalStage10InventoryIsExactlyNineNotAnExtraCanonicalSkill(){
+        var profiles=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());
+        var stage10=Set.of("consume_minion","simulacrum","corpse_burst","wolf_summon","bone_cage","revive_fallen","summon_void_crawlers","brood_call","dominate");
+        assertEquals(9,Stage04SkillProfiles.EXPECTED_STAGE10_PROFILES);assertEquals(9,stage10.size());
+        for(var id:stage10)assertTrue(profiles.supports(id),id);
+        // The original 60 profiles remain; Stage13 explicitly adds the previously absent catalog records.
+        assertEquals(60,profiles.all().size()-Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES);
+        assertEquals(87,Stage01BTestSupport.bundle().catalog().skills().size());
+    }
 }

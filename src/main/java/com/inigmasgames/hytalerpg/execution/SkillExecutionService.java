@@ -33,6 +33,13 @@ public final class SkillExecutionService {
     private final RetaliationLedger retaliation=new RetaliationLedger();
     private final CompiledProfileResolver compiledProfiles = new CompiledProfileResolver();
     private final AttunementLedger attunement = new AttunementLedger();
+    private final com.inigmasgames.hytalerpg.execution.strike.FinisherLedger finisher=new com.inigmasgames.hytalerpg.execution.strike.FinisherLedger();
+    public void observeNativeBasicRootHit(UUID actor,double now){finisher.observedRoot(actor,now);}
+    public int finisherPips(UUID actor){return finisher.pips(actor,now());}
+    private void resolveAuthoredRelease(SkillExecutionContext context){
+        if(context.profile().strike()!=null&&context.profile().strike().details().finisher()&&!context.derivedRelease())
+            context.effects().resolveFinisher(()->finisher.consume(context.request().actorId()));
+    }
     private final com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger ruthless=new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger();
     private final java.util.function.LongSupplier nanoTime;
     private final Map<UUID, Prepared> windups = new LinkedHashMap<>();
@@ -147,7 +154,7 @@ public final class SkillExecutionService {
     }
 
     /** Terminal owner cleanup; an ordinary interrupted windup retains earlier successful commits. */
-    public void forgetPassiveState(UUID actor){attunement.forget(actor);ruthless.forget(actor);conditionalRepeats.forget(actor);retaliation.forget(actor);}
+    public void forgetPassiveState(UUID actor){attunement.forget(actor);ruthless.forget(actor);conditionalRepeats.forget(actor);retaliation.forget(actor);finisher.forget(actor);}
     private Map<com.inigmasgames.hytalerpg.domain.SkillSlot,String> retaliationPlans(UUID actor){
         var result=new java.util.EnumMap<com.inigmasgames.hytalerpg.domain.SkillSlot,String>(com.inigmasgames.hytalerpg.domain.SkillSlot.class);
         for(var item:loadouts.getPresentationView(actor).plans().entrySet()){var p=item.getValue();if(!p.degraded()&&p.retaliation())result.put(item.getKey(),p.planHash());}return result;
@@ -378,6 +385,7 @@ public final class SkillExecutionService {
                 Map.of("family", prepared.profile.family().name()));
         SkillExecutionResult result;
         try {
+            resolveAuthoredRelease(context);
             result = executors.require(prepared.profile.family()).execute(context, port);
             kernel.resources().finish(token);
             if (result.committed()) {
@@ -471,6 +479,7 @@ public final class SkillExecutionService {
                         Map.of("echo",context.echo(),"barrageBatch",context.barrageBatch(),"resourceCharged",false));
                 emit(context.request(),RpgTraceEventType.EXECUTOR_DISPATCH,context.rootCastId(),context.skillInstanceId(),
                         Map.of("family",context.profile().family().name(),"echo",context.echo(),"barrageBatch",context.barrageBatch()));
+                resolveAuthoredRelease(context);
                 var outcome=executors.require(context.profile().family()).execute(context,port);
                 if(!outcome.committed()) {
                     port.abandonRelease(context);

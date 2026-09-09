@@ -22,6 +22,8 @@ public final class RpgHudCoordinator {
     private final RpgUiProjectionService projection;
     private final HytaleResourceViewAdapter resources = new HytaleResourceViewAdapter();
     private final RpgUiTraceService trace;
+    private java.util.function.ToIntFunction<UUID> finisherPips=ignored->0;
+    public void configureFinisherPips(java.util.function.ToIntFunction<UUID> reader){this.finisherPips=java.util.Objects.requireNonNull(reader);}
     private final Map<UUID, Session> sessions = new ConcurrentHashMap<>();
     private final Map<UUID, XpView> xpFixtures = new ConcurrentHashMap<>();
 
@@ -36,7 +38,10 @@ public final class RpgHudCoordinator {
         RpgHudViewModel model = projection.hud(id, resources.read(stats), xpFixtures.get(id));
         RpgHud hud = new RpgHud(playerRef, model);
         manager.addCustomHud(playerRef, hud);
-        sessions.put(id, new Session(playerRef, manager, hud, model, System.nanoTime()));
+        var combo=new FinisherHud(playerRef,model,finisherPips.applyAsInt(id));
+        try{manager.addCustomHud(playerRef,combo);}
+        catch(RuntimeException failure){manager.removeCustomHud(playerRef,RpgHud.KEY);throw failure;}
+        sessions.put(id, new Session(playerRef, manager, hud, combo, model, System.nanoTime()));
         trace.trace(id, "HUD_LAYOUT_READY", ref(), Map.of(
                 "resourcePresentation", "VANILLA_HYTALE", "rpgResourceControls", 0,
                 "nativeResourceVisibilityMutation", false,
@@ -58,6 +63,7 @@ public final class RpgHudCoordinator {
         try {
             RpgHudViewModel previous = session.model;
             RpgHudViewModel next = projection.hud(playerRef.getUuid(), resources.read(stats), xpFixtures.get(playerRef.getUuid()));
+            session.combo.refresh(next,finisherPips.applyAsInt(playerRef.getUuid()));
             if (next.equals(previous)) return;
             boolean xpChanged = !next.xp().equals(previous.xp());
             boolean noticeChanged = next.showLevelUpNotice() != previous.showLevelUpNotice();
@@ -84,6 +90,8 @@ public final class RpgHudCoordinator {
         xpFixtures.remove(player);
         if (session == null) return;
         RuntimeException failure = null;
+        try { if(session.manager.getCustomHud(FinisherHud.KEY)!=null)session.manager.removeCustomHud(session.playerRef,FinisherHud.KEY); }
+        catch(RuntimeException error){failure=error;}
         try {
             if (session.manager.getCustomHud(RpgHud.KEY) != null)
                 session.manager.removeCustomHud(session.playerRef, RpgHud.KEY);
@@ -110,8 +118,10 @@ public final class RpgHudCoordinator {
     private static final class Session {
         private final PlayerRef playerRef; private final HudManager manager;
         private final RpgHud hud; private RpgHudViewModel model; private long lastPollNanos;
-        private Session(PlayerRef playerRef, HudManager manager, RpgHud hud,
+        private final FinisherHud combo;
+        private Session(PlayerRef playerRef, HudManager manager, RpgHud hud,FinisherHud combo,
                         RpgHudViewModel model, long now) {
+            this.combo=combo;
             this.playerRef = playerRef; this.manager = manager; this.hud = hud;
             this.model = model; this.lastPollNanos = now;
         }

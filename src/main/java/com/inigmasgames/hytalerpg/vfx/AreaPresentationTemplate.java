@@ -19,6 +19,7 @@ public final class AreaPresentationTemplate {
             case "LIGHTNING" -> new Color(.85f,.9f,1);
             default -> new Color(.4f,.5f,1);
         };
+        if(phase.equals("IMPACT_FINISHER"))return new Color((3+base.red)/4,(3+base.green)/4,(3+base.blue)/4);
         return phase.startsWith("IMPACT") ? new Color((1+base.red)/2,(1+base.green)/2,(1+base.blue)/2) : base;
     }
     public static boolean warning(String phase) { return phase.startsWith("WARNING")||phase.equals("ARMING"); }
