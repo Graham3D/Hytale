@@ -108,8 +108,8 @@ public record Stage04SkillProfile(
         secondaryFamilies = Set.copyOf(secondaryFamilies == null ? Set.of() : secondaryFamilies);
         allowedMainHandKinds = Set.copyOf(allowedMainHandKinds == null ? Set.of() : allowedMainHandKinds);
         requiredOffHandKinds = Set.copyOf(requiredOffHandKinds == null ? Set.of() : requiredOffHandKinds);
-        if (skillId == null || skillId.isBlank() || family == null || resourceCost < 0.0
-                || cooldownSeconds < 0.0 || windupSeconds < 0.0)
+        if (skillId == null || skillId.isBlank() || family == null || !finite(resourceCost, cooldownSeconds, windupSeconds, innateBasePower)
+                || resourceCost < 0.0 || cooldownSeconds < 0.0 || windupSeconds < 0.0 || innateBasePower < 0)
             throw new IllegalArgumentException("Invalid runtime skill profile");
     }
 
@@ -141,21 +141,54 @@ public record Stage04SkillProfile(
     public enum Geometry { ARC, LINE, ASSIST_CONE, RADIUS }
     public enum MovementKind { DASH, LEAP }
 
+    private static boolean finite(double... values) {
+        for (double value : values) if (!Double.isFinite(value)) return false;
+        return true;
+    }
+
+    public record StrikeDetails(String element, double height, double actionLockSeconds, double movementFactor) {
+        public static final StrikeDetails DEFAULT = new StrikeDetails("PHYSICAL", 2.5, 0, 1);
+        public StrikeDetails {
+            if (!Set.of("PHYSICAL", "FIRE", "NECROTIC").contains(element)
+                    || !finite(height, actionLockSeconds, movementFactor) || height <= 0 || height > 64
+                    || actionLockSeconds < 0 || actionLockSeconds > 10 || movementFactor <= 0 || movementFactor > 1)
+                throw new IllegalArgumentException("Invalid strike element/geometry/cadence");
+            if (movementFactor != 1 && actionLockSeconds == 0)
+                throw new IllegalArgumentException("Strike movement restriction requires an owned action window");
+        }
+    }
+
     public record Strike(Geometry geometry, double range, double angleDegrees, double lineHalfWidth,
                          int repeats, double repeatIntervalSeconds, int targetCap,
-                         double coefficient, String statusId, double statusSeconds) {
+                         double coefficient, String statusId, double statusSeconds, StrikeDetails details) {
+        public Strike(Geometry geometry, double range, double angleDegrees, double lineHalfWidth,
+                      int repeats, double repeatIntervalSeconds, int targetCap, double coefficient,
+                      String statusId, double statusSeconds) {
+            this(geometry, range, angleDegrees, lineHalfWidth, repeats, repeatIntervalSeconds,
+                    targetCap, coefficient, statusId, statusSeconds, StrikeDetails.DEFAULT);
+        }
         public Strike {
-            if (geometry == null || range < 0.0 || angleDegrees < 0.0 || lineHalfWidth < 0.0
-                    || repeats < 1 || repeatIntervalSeconds < 0.0 || targetCap < 1 || coefficient < 0.0)
+            details = details == null ? StrikeDetails.DEFAULT : details;
+            if (geometry == null || !finite(range, angleDegrees, lineHalfWidth, repeatIntervalSeconds, coefficient, statusSeconds)
+                    || range < 0.0 || angleDegrees < 0.0 || angleDegrees > 360 || lineHalfWidth < 0.0
+                    || repeats < 1 || repeats > 256 || repeatIntervalSeconds < 0.0 || targetCap < 1 || targetCap > 256
+                    || coefficient < 0.0 || statusSeconds < 0)
                 throw new IllegalArgumentException("Invalid strike profile");
+            if (details.actionLockSeconds() > 0 && details.actionLockSeconds() < (repeats - 1) * repeatIntervalSeconds)
+                throw new IllegalArgumentException("Strike action lock ends before authored hits");
             statusId = statusId == null ? "" : statusId;
+        }
+        public Strike withRange(double value) {
+            return new Strike(geometry, value, angleDegrees, lineHalfWidth, repeats, repeatIntervalSeconds,
+                    targetCap, coefficient, statusId, statusSeconds, details);
         }
     }
 
     public record Movement(MovementKind kind, double maxDistance, double minimumDurationSeconds,
                            double maximumDurationSeconds, double apexHeight, double landingRadius) {
         public Movement {
-            if (kind == null || maxDistance < 0.0 || minimumDurationSeconds < 0.0
+            if (kind == null || !finite(maxDistance, minimumDurationSeconds, maximumDurationSeconds, apexHeight, landingRadius)
+                    || maxDistance < 0.0 || minimumDurationSeconds < 0.0
                     || maximumDurationSeconds < minimumDurationSeconds || apexHeight < 0.0 || landingRadius < 0.0)
                 throw new IllegalArgumentException("Invalid movement profile");
         }
@@ -163,7 +196,7 @@ public record Stage04SkillProfile(
 
     public record Reaction(double windowSeconds, List<String> qualifyingSignals) {
         public Reaction {
-            if (windowSeconds <= 0.0) throw new IllegalArgumentException("Reaction window must be positive");
+            if (!Double.isFinite(windowSeconds) || windowSeconds <= 0.0) throw new IllegalArgumentException("Reaction window must be finite and positive");
             qualifyingSignals = List.copyOf(qualifyingSignals == null ? List.of() : qualifyingSignals);
         }
     }
@@ -191,10 +224,11 @@ public record Stage04SkillProfile(
             speedsByWeaponKind = Map.copyOf(speedsByWeaponKind == null ? Map.of() : speedsByWeaponKind);
             if (configId.isBlank() || !Double.isFinite(speed)||!Double.isFinite(maxDistance)||!Double.isFinite(radius)
                     || !Double.isFinite(independentLifetimeSeconds)||independentLifetimeSeconds<0 || speed <= 0.0 || maxDistance <= 0.0 || radius <= 0.0
-                    || !Double.isFinite(gravity) || targetCap < 1 || coefficient < 0.0
+                    || !finite(gravity, coefficient, statusSeconds, periodicCoefficient, periodicIntervalSeconds, knockbackDistance)
+                    || targetCap < 1 || coefficient < 0.0
                     || statusSeconds < 0.0 || periodicCoefficient < 0.0 || periodicTicks < 0
                     || periodicIntervalSeconds < 0.0 || ammoQuantity < 0 || knockbackDistance < 0.0
-                    || speedsByWeaponKind.values().stream().anyMatch(value -> value == null || value <= 0.0))
+                    || speedsByWeaponKind.values().stream().anyMatch(value -> value == null || !Double.isFinite(value) || value <= 0.0))
                 throw new IllegalArgumentException("Invalid projectile profile");
             if ((ammoItemId.isBlank()) != (ammoQuantity == 0))
                 throw new IllegalArgumentException("Projectile ammunition ID and quantity must be declared together");

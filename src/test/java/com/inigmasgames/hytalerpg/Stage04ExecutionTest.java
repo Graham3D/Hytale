@@ -46,7 +46,7 @@ class Stage04ExecutionTest {
         assertTrue(profiles.all().keySet().containsAll(Set.of(
                 "quick_slash", "heavy_swing", "shield_bash", "quickstep", "pounce", "riposte")));
         assertEquals(Stage04SkillProfiles.EXPECTED_STAGE04_PILOTS
-                + Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS,
+                + Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS + Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES,
                 profiles.all().values().stream().filter(profile -> profile.area() == null && profile.connection() == null && profile.support() == null && profile.summon() == null && profile.summonAction() == null && profile.conversion() == null && profile.cage() == null).count());
         assertEquals("INNATE", profiles.require("pounce").basePowerSource());
         assertEquals(20.0, profiles.require("pounce").innateBasePower());
@@ -158,6 +158,50 @@ class Stage04ExecutionTest {
         assertEquals(1, harness.port.dispatches);
     }
 
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {"quick_slash", "fire_bolt", "quickstep", "riposte"})
+    void lateExecutorFailureCannotRefundAnAlreadyObservedGameplayEffect(String skill) {
+        var weapon = skill.equals("fire_bolt")
+                ? new SkillExecutionPort.Item("test:wand", "WAND",
+                    new ItemPowerDescriptor("test:wand", Set.of("WAND"), null, 10.0))
+                : item("SWORD", 10);
+        Harness harness = harness(skill, 100, weapon, null);
+        var profile = profiles().require(skill);
+        var resource = ResourceType.valueOf(profile.resourceType());
+        double[] authoritativeTargetHealth = {100};
+        harness.port.onDispatch = () -> {
+            authoritativeTargetHealth[0] -= 10; // Test double: effect precedes failing presentation adapter.
+            throw new IllegalStateException("LATE_PRESENTATION_FAILURE");
+        };
+        var result = harness.execute();
+        if (result.status() == SkillExecutionResult.Status.PENDING)
+            result = harness.service.completeWindup(harness.actor, harness.port);
+        assertEquals(SkillExecutionResult.Status.TERMINATED, result.status());
+        assertTrue(result.committed());
+        assertEquals("EXECUTOR_ERROR", result.code());
+        assertEquals(90, authoritativeTargetHealth[0]);
+        assertEquals(100 - profile.resourceCost(), harness.port.resources.current(resource), 1e-9);
+        assertTrue(harness.kernel.cooldowns().remaining(harness.actor, skill) > 0);
+        assertFalse(harness.service.pendingCast(harness.actor));
+        assertEquals("COOLDOWN_ACTIVE", harness.execute().code());
+        assertEquals(1, harness.port.dispatches);
+        assertEquals(90, authoritativeTargetHealth[0]);
+    }
+
+    @Test void executorRejectionAfterCommitDoesNotRetainPhantomMovementLifecycle() {
+        Harness harness = harness("quickstep", 100, item("SWORD", 10), null);
+        harness.port.dispatchResult = SkillExecutionResult.rejected("NATIVE_ADAPTER_REFUSED");
+        var result = harness.execute();
+        assertEquals("EXECUTOR_DID_NOT_RELEASE", result.code());
+        assertTrue(result.committed());
+        assertEquals(SkillExecutionResult.Status.TERMINATED, result.status());
+        assertFalse(harness.service.pendingCast(harness.actor));
+        assertEquals(100 - profiles().require("quickstep").resourceCost(),
+                harness.port.resources.current(ResourceType.STAMINA), 1e-9);
+        assertEquals("COOLDOWN_ACTIVE", harness.execute().code());
+        assertEquals(1, harness.port.dispatches);
+    }
+
     @Test void heavySwingWindupCanCancelWithoutCostCooldownOrReplacementTraceIds() {
         Harness harness = harness("heavy_swing", 100, item("LONGSWORD", 10), null);
         assertEquals(SkillExecutionResult.Status.PENDING, harness.execute().status());
@@ -185,6 +229,20 @@ class Stage04ExecutionTest {
                 RpgStatusType.STAGGER, new ControlProfile(true, false, false), .6).outcome());
         assertEquals(StatusService.Outcome.REJECTED, harness.kernel.statuses().apply(UUID.randomUUID(),
                 RpgStatusType.STAGGER, new ControlProfile(false, true, false), .6).outcome());
+    }
+
+    @Test void windupRevalidationAdapterFailureClearsLifecycleBeforeAnyPayment() {
+        Harness harness = harness("heavy_swing", 100, item("LONGSWORD", 10), null);
+        assertEquals(SkillExecutionResult.Status.PENDING, harness.execute().status());
+        harness.port.validationFailure = new IllegalStateException("NATIVE_VALIDATION_UNAVAILABLE");
+        assertEquals("WINDUP_REVALIDATION_ERROR_IllegalStateException",
+                harness.service.completeWindup(harness.actor, harness.port).code());
+        assertFalse(harness.service.pendingCast(harness.actor));
+        assertEquals(100, harness.port.resources.current(ResourceType.STAMINA));
+        assertEquals(0, harness.kernel.cooldowns().remaining(harness.actor, "heavy_swing"));
+        assertEquals(0, harness.port.dispatches);
+        harness.port.validationFailure = null;
+        assertEquals(SkillExecutionResult.Status.PENDING, harness.execute().status());
     }
 
     @Test void reactionExpiresTriggersOnceAndRejectsDuplicateIncomingEvent() {
@@ -277,8 +335,10 @@ class Stage04ExecutionTest {
         final Resources resources;
         final Equipment equipment;
         Validation validation = Validation.pass();
+        RuntimeException validationFailure;
         SkillExecutionContext context;
         Runnable onDispatch = () -> { };
+        SkillExecutionResult dispatchResult;
         int dispatches;
         FakePort(double stamina, Item main, Item offhand) {
             resources = new Resources(stamina); equipment = new Equipment(main, offhand);
@@ -288,6 +348,7 @@ class Stage04ExecutionTest {
         @Override public NativeResourcePort resources() { return resources; }
         @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
                                                         com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
+            if (validationFailure != null) throw validationFailure;
             return validation;
         }
         @Override public SkillExecutionResult executeStrike(SkillExecutionContext value) { return dispatched(value, 1, 0); }
@@ -300,7 +361,7 @@ class Stage04ExecutionTest {
         }
         private SkillExecutionResult dispatched(SkillExecutionContext value, int targets, double distance) {
             context = value; dispatches++; onDispatch.run();
-            return SkillExecutionResult.committed("DISPATCHED", targets, distance);
+            return dispatchResult != null ? dispatchResult : SkillExecutionResult.committed("DISPATCHED", targets, distance);
         }
     }
 

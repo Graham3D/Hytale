@@ -1,0 +1,9 @@
+{
+  "Duration": 3,
+  "ApplicationEffects": {
+    "HorizontalSpeedMultiplier": 0.7,
+    "AbilityEffects": {
+      "Disabled": ["Primary", "Secondary", "Ability1", "Ability2", "Ability3", "Ability4"]
+    }
+  }
+}

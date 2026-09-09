@@ -57,7 +57,8 @@ class Stage11SecondWindTest {
             @Override public SkillExecutionResult executeMovement(SkillExecutionContext c){context=c;if(++casts==2)throw new IllegalStateException("NO_EFFECT_CREATED");return SkillExecutionResult.committed("FIXTURE_MOVEMENT",0,4);}
         };
         h.link("second_wind",PassiveSlot.PASSIVE01);assertEquals(SkillExecutionResult.Status.COMMITTED,h.cast().status());h.execution.terminate(h.context,"FIRST_MOVEMENT_DONE");
-        assertEquals(SkillExecutionResult.Status.TERMINATED,h.cast().status());assertEquals(92,h.mana);assertEquals(1,h.kernel.cooldowns().availableCharges(h.actor,"quickstep",2));assertTrue(h.kernel.cooldowns().remaining(h.actor,"quickstep")>0);
+        assertEquals(SkillExecutionResult.Status.TERMINATED,h.cast().status());assertEquals(84,h.mana);assertEquals(0,h.kernel.cooldowns().availableCharges(h.actor,"quickstep",2));assertTrue(h.kernel.cooldowns().remaining(h.actor,"quickstep")>0);
+        assertEquals(1,h.kernel.cooldowns().snapshot(h.actor).get("quickstep").queued().size());assertEquals("COOLDOWN_ACTIVE",h.cast().code());
     }
     @Test void migrationThroughRepositoryRetainsRecoverableOriginalSchemaFiveFile(){
         var state=RpgPlayerState.create(UUID.randomUUID());state.cooldowns.put("quickstep",new SavedCooldown(2,0));var json=new com.google.gson.Gson().toJsonTree(state).getAsJsonObject();json.addProperty("schemaVersion",5);json.getAsJsonObject("cooldowns").getAsJsonObject("quickstep").remove("queued");

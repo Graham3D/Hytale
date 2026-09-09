@@ -105,6 +105,11 @@ public final class SkillExecutionService {
             lifecycle.terminate(actor, prepared.instanceId);
             retaliation.complete(actor,prepared.request.correlationId(),false,now());
             return reject(prepared.request, prepared.rootCastId, prepared.instanceId, rejection.code);
+        } catch (RuntimeException error) {
+            lifecycle.terminate(actor, prepared.instanceId);
+            retaliation.complete(actor, prepared.request.correlationId(), false, now());
+            return reject(prepared.request, prepared.rootCastId, prepared.instanceId,
+                    "WINDUP_REVALIDATION_ERROR_" + error.getClass().getSimpleName());
         }
     }
 
@@ -378,17 +383,19 @@ public final class SkillExecutionService {
             if (result.committed()) {
                 releases.primaryReleased(context,now());
                 traceEchoSchedule(context);
-            } else releases.finish(prepared.instanceId);
+            } else {
+                releases.finish(prepared.instanceId);
+                terminate(context, "EXECUTOR_DID_NOT_RELEASE");
+                return new SkillExecutionResult(SkillExecutionResult.Status.TERMINATED,
+                        "EXECUTOR_DID_NOT_RELEASE", true, 0, 0);
+            }
         }
         catch (RuntimeException error) {
             releases.finish(prepared.instanceId);
-            // Spatial dispatch can already have applied a hit before a later presentation/status adapter fails.
-            // A paid area must not yield free native damage through the synchronous rollback path.
-            // Once a Lifeblood executor was entered, a late adapter error cannot prove that no hit happened.
-            if (cooldownStarted && !prepared.plan.retaliation() && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) kernel.cooldowns().refundCharge(cooldownSpend);
-            try { if (resourceCommitted && !prepared.plan.retaliation() && prepared.cost.type()!=ResourceType.HEALTH && prepared.profile.area() == null && prepared.profile.connection()==null&&prepared.profile.support()==null&&prepared.profile.summon()==null&&prepared.profile.summonAction()==null&&prepared.profile.conversion()==null) {kernel.resources().refundCommittedCost(token, port.resources());attunement.rollback(attunementCommit);ruthless.rollback(ruthlessCommit);}
-                  else if (resourceCommitted) kernel.resources().finish(token); }
-            catch (RuntimeException ignored) { }
+            // Dispatch is the irreversible boundary for EVERY family: a hit, movement, projectile,
+            // or defensive effect may precede a late adapter failure. Retain the committed cost,
+            // cooldown and commit counters; only pre-dispatch transaction failures may roll back.
+            kernel.resources().finish(token);
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());
             return new SkillExecutionResult(SkillExecutionResult.Status.TERMINATED,
                     "EXECUTOR_ERROR", true, 0, 0.0);
@@ -406,8 +413,8 @@ public final class SkillExecutionService {
             // The area registry owns the finite effect after dispatch; it does not lock unrelated casts for its lifetime.
             lifecycle.terminate(context.request().actorId(), context.skillInstanceId());
         } else if (context.profile().family() == Stage04SkillProfile.Family.STRIKE
-                && context.profile().strike().repeats() > 1
-                && context.profile().strike().repeatIntervalSeconds() > 0.0) {
+                && (context.profile().strike().repeats() > 1 && context.profile().strike().repeatIntervalSeconds() > 0.0
+                    || context.profile().strike().details().actionLockSeconds()>0)) {
             if (!lifecycle.transition(context.request().actorId(), context.skillInstanceId(),
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.STRIKE_REPEAT))
                 throw new IllegalStateException("Strike-repeat lifecycle transition failed");

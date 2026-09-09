@@ -228,7 +228,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         EntityStatMap stats = chunk.getComponent(index, EntityStatMap.getComponentType());
         UUID actor = playerRef.getUuid();
         var ownedRepeat=repeatingStrikes.get(actor);
-        if(ownedRepeat==null||!ownedRepeat.context.compiledPlan().strikes().multistrike())NativeStrikeActionLock.clear(store,ref);
+        if(ownedRepeat==null||!NativeStrikeActionLock.required(ownedRepeat.context))NativeStrikeActionLock.clear(store,ref);
         Port port = new Port(store, ref, playerRef, player, stats, null, buffer);
         if (!port.actorAliveAndUsable()) {
             NativeStrikeActionLock.clear(store,ref);
@@ -392,7 +392,20 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
                                                         com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
             if(profile.cage()!=null)return Validation.reject(com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY);
+            if (profile.family() == Stage04SkillProfile.Family.STRIKE) {
+                var probe = profile.strike().geometry() == Stage04SkillProfile.Geometry.RADIUS
+                        ? profile.strike().withRange(profile.strike().range() * plan.executionModifiers().radiusFactor()) : profile.strike();
+                try { select(probe, false); }
+                catch (IllegalStateException overflow) {
+                    if (overflow.getMessage().startsWith("STRIKE_")) return Validation.reject(overflow.getMessage());
+                    throw overflow;
+                }
+            }
             if(plan.strikes().multistrike()&&!NativeStrikeActionLock.available(store,actor))return Validation.reject("MULTISTRIKE_NATIVE_ACTION_LOCK_UNAVAILABLE");
+            if(profile.strike()!=null && profile.strike().details().actionLockSeconds()>0
+                    && !NativeStrikeActionLock.available(store,actor,profile.strike().details().movementFactor()))
+                return Validation.reject("STRIKE_NATIVE_ACTION_LOCK_UNAVAILABLE");
+            if(profile.strike()!=null && strikeCause(profile.strike())==null)return Validation.reject("STRIKE_NATIVE_DAMAGE_CAUSE_MISSING");
             if (motions.containsKey(playerRef.getUuid()) || windupEnds.containsKey(playerRef.getUuid())
                     || reactions.active(playerRef.getUuid()).isPresent()) return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
             if(profile.support()!=null)return support==null?Validation.reject("SUPPORT_NATIVE_ADAPTER_UNAVAILABLE"):
@@ -805,13 +818,15 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public SkillExecutionResult executeStrike(SkillExecutionContext context) {
             if(context.multistrikeIndex()>0)throw new IllegalStateException("MULTISTRIKE_CHILD_MUST_NOT_SCHEDULE_REPEATS");
             boolean multi=context.compiledPlan().strikes().multistrike();
-            if(multi)NativeStrikeActionLock.acquire(store,actor);
+            boolean locked=NativeStrikeActionLock.required(context);
+            long releasedAt=System.nanoTime();
+            if(locked)NativeStrikeActionLock.acquire(store,actor,context);
             try{
             int applied = executeStrikeHit(context, 0);
             var strike = context.profile().strike();
-            if (strike.repeats() > 1 && strike.repeatIntervalSeconds() > 0.0)
+            if (strike.repeats() > 1 && strike.repeatIntervalSeconds() > 0.0 || strike.details().actionLockSeconds()>0)
                 repeatingStrikes.put(playerRef.getUuid(), new RepeatingStrike(context,
-                        new StrikeRepeatSchedule(strike.repeats(), strike.repeatIntervalSeconds(), System.nanoTime())));
+                        new StrikeRepeatSchedule(strike.repeats(), strike.repeatIntervalSeconds(), releasedAt,strike.details().actionLockSeconds())));
             else {
                 for (int hitIndex = 1; hitIndex < strike.repeats(); hitIndex++)
                     applied += executeStrikeHit(context, hitIndex);
@@ -819,7 +834,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             vfx.present(store.getExternalData().getWorld(), player, context.compiledPlan().vfxRecipeId());
             return SkillExecutionResult.committed("STRIKE_COMPLETE", applied, 0.0);
-            }catch(RuntimeException failure){if(multi){repeatingStrikes.remove(playerRef.getUuid());NativeStrikeActionLock.clear(store,actor);}throw failure;}
+            }catch(RuntimeException failure){repeatingStrikes.remove(playerRef.getUuid());hits.clear(context.skillInstanceId());if(locked)NativeStrikeActionLock.clear(store,actor);throw failure;}
         }
 
         @Override public SkillExecutionResult executeArea(SkillExecutionContext context) {
@@ -971,13 +986,22 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             StrikeGeometryService.QueryResult<Ref<EntityStore>> selected = select(context, context.profile().strike());
             Vec3 origin=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
             Vec3 direction=context.target()==null?facing(store,actor):context.target().direction();
-            if(context.target()!=null&&!context.compiledPlan().strikes().multistrike()&&!context.conditionalRepeat())origin=context.target().origin();
+            try {
+                NativeStrikeFeedback.play(store,actor,context,hitIndex);
+                var shape=context.profile().strike();
+                if(shape.geometry()==Stage04SkillProfile.Geometry.RADIUS)
+                    shape=shape.withRange(shape.range()*context.compiledPlan().executionModifiers().radiusFactor());
+                for(var footprint:StrikeGeometryService.footprints(origin,direction,shape))
+                    vfx.presentArea(store.getExternalData().getWorld(),footprint,"IMPACT_STRIKE",shape.details().element(),false,.12);
+            } catch(RuntimeException unavailable) {
+                emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","STRIKE_FEEDBACK_UNAVAILABLE","connectedProof",false));
+            }
             var primaryHits=new ArrayList<StrikeSecondaryRuntime.Hit<Ref<EntityStore>>>();
             int applied = 0;
             for (var target : selected.accepted()) {
                 if (!hits.accept(context.skillInstanceId(), hitIndex, target.stableId())) continue;
                 DamageOutcome outcome = damage(context, target, hitIndex,
-                        context.profile().strike().coefficient(), context.snapshot().criticalChance(), DamageCause.PHYSICAL,false,context.skillInstanceId(),!context.derivedRelease());
+                        context.profile().strike().coefficient(), context.snapshot().criticalChance(), strikeCause(context.profile().strike()),false,context.skillInstanceId(),!context.derivedRelease());
                 primaryHits.add(new StrikeSecondaryRuntime.Hit<>(target,outcome.preMitigationDamage(),outcome.actualHealthLoss(),outcome.cancelled(),outcome.increasedUnit()));
                 emit(context, RpgTraceEventType.STRIKE_HIT,
                         Map.of("targetId", target.stableId(), "hitIndex", hitIndex,
@@ -1025,7 +1049,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 public void damage(SkillExecutionContext child,StrikeGeometryService.Candidate<Ref<EntityStore>> target,Double resolved,Vec3 effectCenter){
                     // No second family dispatch, root commit, status/proc controller or native projectile.
                     emit(child,RpgTraceEventType.STRIKE_SECONDARY_DISPATCH,Map.of("kind",child.secondaryKind(),"parentExecutionId",context.skillInstanceId(),"targetId",target.stableId(),"resourceCharged",false,"canProc",false));
-                    DamageOutcome result=resolved==null?Port.this.damage(child,target,0,child.profile().strike().coefficient(),child.snapshot().criticalChance(),DamageCause.PHYSICAL,false,child.skillInstanceId(),false):resolvedStrikeSecondary(child,target,resolved);
+                    DamageOutcome result=resolved==null?Port.this.damage(child,target,0,child.profile().strike().coefficient(),child.snapshot().criticalChance(),strikeCause(child.profile().strike()),false,child.skillInstanceId(),false):resolvedStrikeSecondary(child,target,resolved);
                     if(!result.cancelled()&&effectCenter!=null)applyPassiveAreaPosition(child,target.handle(),effectCenter);
                     emit(child,RpgTraceEventType.STRIKE_SECONDARY_RESOLVED,Map.of("kind",child.secondaryKind(),"targetId",target.stableId(),"preMitigationDamage",result.preMitigationDamage(),"actualHealthLoss",result.actualHealthLoss(),"cancelled",result.cancelled(),"offenseRecalculated",resolved==null));
                 }
@@ -1037,7 +1061,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         private DamageOutcome resolvedStrikeSecondary(SkillExecutionContext child,StrikeGeometryService.Candidate<Ref<EntityStore>> target,double amount){
             boolean eligible=child.compiledPlan().resources().leeching()&&!target.protectedTarget()&&HytaleAreaQueries.hostile(store,target.handle(),actor);
-            var nativeResult=new HytaleDamageAdapter().applyResolved(target.handle(),store,actor,DamageCause.PHYSICAL,
+            var nativeResult=new HytaleDamageAdapter().applyResolved(target.handle(),store,actor,strikeCause(child.profile().strike()),
                     new HytaleDamageMetadata(playerRef.getUuid(),child.rootCastId(),child.skillInstanceId(),child.request().correlationId(),amount,Double.NaN,child.skillInstanceId(),false,HytaleDamageMetadata.Origin.DIRECT),amount,null,child);
             if(eligible)recoverObservedLeech(child,target,nativeResult,child.skillInstanceId());
             double lost=Double.isFinite(nativeResult.healthBefore())&&Double.isFinite(nativeResult.healthAfter())?Math.max(0,nativeResult.healthBefore()-nativeResult.healthAfter()):-1;
@@ -1134,19 +1158,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             Vec3 origin = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
             Vec3 direction=facing(store,actor);Vec3 currentOrigin=origin;
             if(context!=null && context.target()!=null && context.profile().family()==Stage04SkillProfile.Family.STRIKE) {
-                origin=context.compiledPlan().strikes().multistrike()||context.conditionalRepeat()?currentOrigin:context.target().origin();direction=context.target().direction();
+                direction=context.target().direction();
             }
             if(context!=null && strike.geometry()==Stage04SkillProfile.Geometry.RADIUS) {
-                strike=new Stage04SkillProfile.Strike(strike.geometry(),strike.range()*context.compiledPlan().executionModifiers().radiusFactor(),
-                        strike.angleDegrees(),strike.lineHalfWidth(),strike.repeats(),strike.repeatIntervalSeconds(),strike.targetCap(),
-                        strike.coefficient(),strike.statusId(),strike.statusSeconds());
+                strike=strike.withRange(strike.range()*context.compiledPlan().executionModifiers().radiusFactor());
             }
-            List<StrikeGeometryService.Candidate<Ref<EntityStore>>> candidates = candidates(origin, strike.range());
-            if(context!=null && context.target()!=null) {
-                double reach=strike.range();
-                candidates=candidates.stream().filter(c->c.position().subtract(currentOrigin).horizontalLength()<=reach)
-                        .filter(c->HytaleAreaQueries.clear(store,currentOrigin.add(new Vec3(0,1.35,0)),c.position().add(new Vec3(0,.5,0)))).toList();
-            }
+            List<StrikeGeometryService.Candidate<Ref<EntityStore>>> candidates = strikeCandidates(origin, direction, strike);
             if (forcedTarget != null && forcedTarget.isValid())
                 candidates = candidates.stream().filter(value -> value.handle().equals(forcedTarget)).toList();
             var result = geometry.query(origin, direction, strike, candidates);
@@ -1338,17 +1355,15 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             return controller != null && effect != null && controller.addEffect(target, effect, (float) seconds,
                     OverlapBehavior.OVERWRITE, store, actor);
         }
-        private List<StrikeGeometryService.Candidate<Ref<EntityStore>>> candidates(Vec3 origin, double radius) {
-            SpatialResource<Ref<EntityStore>, EntityStore> spatial = store.getResource(
-                    EntityModule.get().getEntitySpatialResourceType());
-            if (spatial == null) return List.of();
-            List<Ref<EntityStore>> refs = new ArrayList<>();
-            spatial.getSpatialStructure().collect(new Vector3d(origin.x(), origin.y(), origin.z()), radius + 1.0, refs);
+        private List<StrikeGeometryService.Candidate<Ref<EntityStore>>> strikeCandidates(Vec3 origin, Vec3 facing, Stage04SkillProfile.Strike strike) {
+            var shapes=StrikeGeometryService.footprints(origin,facing,strike);
+            var query = HytaleAreaQueries.query(store, actor,
+                    bounds -> shapes.stream().anyMatch(shape->shape.intersects(bounds)), StrikeGeometryService.ORDINARY_QUERY_LIMIT);
+            if (query.overflow()) throw new IllegalStateException("STRIKE_QUERY_OVERFLOW");
             List<StrikeGeometryService.Candidate<Ref<EntityStore>>> result = new ArrayList<>();
-            for (Ref<EntityStore> target : refs) {
-                if (target == null || !target.isValid() || target.equals(actor)) continue;
-                StrikeGeometryService.Candidate<Ref<EntityStore>> candidate = candidate(target);
-                if (candidate != null) result.add(candidate);
+            for (var value : query.candidates()) {
+                var candidate = candidate(value.ref());
+                if (candidate != null && HytaleAreaQueries.clear(store, origin.add(new Vec3(0, 1.35, 0)), value.bounds().centre())) result.add(candidate);
             }
             return result;
         }
@@ -1358,11 +1373,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             NPCEntity npc = store.getComponent(target, NPCEntity.getComponentType());
             TransformComponent targetTransform = store.getComponent(target, TransformComponent.getComponentType());
             EntityStatMap targetStats = store.getComponent(target, EntityStatMap.getComponentType());
-            if (npc == null || targetTransform == null || targetStats == null) return null;
+            if (npc == null || targetTransform == null || targetStats == null || !HytaleAreaQueries.hostile(store,target,actor)) return null;
             var targetHealth = targetStats.get(DefaultEntityStatTypes.getHealth());
             if (targetHealth == null || targetHealth.get() <= targetHealth.getMin()) return null;
             UUIDComponent uuid = store.getComponent(target, UUIDComponent.getComponentType());
-            UUID id = uuid == null ? UUID.nameUUIDFromBytes(target.toString().getBytes(StandardCharsets.UTF_8)) : uuid.getUuid();
+            var bounding = store.getComponent(target, com.hypixel.hytale.server.core.modules.entity.component.BoundingBox.getComponentType());
+            if (uuid == null || bounding == null) return null;
+            UUID id = uuid.getUuid();
             boolean protectedTarget = store.getComponent(target, Invulnerable.getComponentType()) != null
                     || npc.getRole() != null && npc.getRole().isInvulnerable();
             EffectControllerComponent effects = store.getComponent(target, EffectControllerComponent.getComponentType());
@@ -1370,7 +1387,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             NetworkId networkId = store.getComponent(target, NetworkId.getComponentType());
             boolean boss = networkId != null && bosses.isBoss(playerRef.getWorldUuid(), networkId.getId());
             return new StrikeGeometryService.Candidate<>(id.toString(), target,
-                    vec(targetTransform.getPosition()), true, protectedTarget, boss);
+                    vec(targetTransform.getPosition()), true, protectedTarget, boss,
+                    new AreaGeometry.Bounds(vec(bounding.getBoundingBox().min).add(vec(targetTransform.getPosition())),
+                            vec(bounding.getBoundingBox().max).add(vec(targetTransform.getPosition()))));
         }
 
         private boolean applyProjectilePeriodicStatus(SkillExecutionContext context,
@@ -1498,9 +1517,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         long now = System.nanoTime();
         boolean multi=repeating.context.compiledPlan().strikes().multistrike();
-        if(multi&&repeating.schedule.exceededMaximumAge(now,1)){
+        boolean locked=NativeStrikeActionLock.required(repeating.context);
+        if(locked&&repeating.schedule.exceededMaximumAge(now,Math.max(1,repeating.context.profile().strike().details().actionLockSeconds()+.5))){
             repeatingStrikes.remove(playerRef.getUuid());hits.clear(repeating.context.skillInstanceId());NativeStrikeActionLock.clear(store,ref);
-            executions.terminate(repeating.context,"MULTISTRIKE_STALE_SEQUENCE_CANCELLED");return;
+            executions.terminate(repeating.context,"STRIKE_STALE_SEQUENCE_CANCELLED");return;
         }
         try{
             for (var due = repeating.schedule.claimDue(now); due.isPresent(); due = repeating.schedule.claimDue(now)){
@@ -1513,12 +1533,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 }else port.executeStrikeHit(repeating.context,due.getAsInt());
             }
         }catch(RuntimeException failed){
-            repeatingStrikes.remove(playerRef.getUuid());hits.clear(repeating.context.skillInstanceId());if(multi)NativeStrikeActionLock.clear(store,ref);
+            repeatingStrikes.remove(playerRef.getUuid());hits.clear(repeating.context.skillInstanceId());if(locked)NativeStrikeActionLock.clear(store,ref);
             executions.terminate(repeating.context,"STRIKE_REPEAT_ADAPTER_FAILED");return;
         }
-        if (repeating.schedule.complete()) {
+        if (repeating.schedule.complete(now)) {
             repeatingStrikes.remove(playerRef.getUuid());
-            if(multi)NativeStrikeActionLock.clear(store,ref);
+            if(locked)NativeStrikeActionLock.clear(store,ref);
             hits.clear(repeating.context.skillInstanceId());
             executions.terminate(repeating.context, "STRIKE_REPEATS_COMPLETE");
         }
@@ -1868,6 +1888,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         var modifiers=context.compiledPlan().projectileModifiers();
         return modifiers.pierce()+modifiers.fork()+modifiers.chain()+modifiers.returning()+modifiers.ricochet()>0
                 || modifiers.homing() || modifiers.shrapnel() || modifiers.splinterburst() || modifiers.accelerant() || modifiers.ballistics();
+    }
+    private static DamageCause strikeCause(Stage04SkillProfile.Strike strike) {
+        return switch(strike.details().element()) {
+            case "PHYSICAL" -> DamageCause.PHYSICAL;
+            case "FIRE" -> DamageCause.getAssetMap().getAsset("Fire");
+            default -> connectionCause(strike.details().element());
+        };
     }
     private static DamageCause connectionCause(String element) {
         String id=switch(element){case "WIND"->"Wind";case "LIGHTNING"->"Lightning";case "VOID"->"RPG_Void";case "NATURE"->"RPG_Nature";case "NECROTIC"->"RPG_Necrotic";default->null;};

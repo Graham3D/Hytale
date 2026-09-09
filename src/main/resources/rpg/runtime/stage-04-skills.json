@@ -7,7 +7,7 @@
       "resourceType": "STAMINA", "resourceCost": 5.0, "cooldownSeconds": 0.8, "windupSeconds": 0.0,
       "basePowerSource": "WEAPON", "innateBasePower": 0.0, "scaling": "WEAPON_CLASS",
       "strike": {"geometry":"ARC", "range":2.6, "angleDegrees":120.0, "lineHalfWidth":0.0,
-        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":16, "coefficient":0.85,
+        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":64, "coefficient":0.85,
         "statusId":"", "statusSeconds":0.0}
     },
     {
@@ -16,7 +16,7 @@
       "resourceType": "STAMINA", "resourceCost": 9.0, "cooldownSeconds": 1.8, "windupSeconds": 0.45,
       "basePowerSource": "WEAPON", "innateBasePower": 0.0, "scaling": "HEAVY",
       "strike": {"geometry":"ARC", "range":3.0, "angleDegrees":140.0, "lineHalfWidth":0.0,
-        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":16, "coefficient":1.45,
+        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":64, "coefficient":1.45,
         "statusId":"", "statusSeconds":0.0}
     },
     {
@@ -42,7 +42,7 @@
       "resourceType": "STAMINA", "resourceCost": 8.0, "cooldownSeconds": 5.0, "windupSeconds": 0.0,
       "basePowerSource": "INNATE", "innateBasePower": 20.0, "scaling": "LIGHT",
       "strike": {"geometry":"RADIUS", "range":1.5, "angleDegrees":360.0, "lineHalfWidth":0.0,
-        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":16, "coefficient":1.05,
+        "repeats":1, "repeatIntervalSeconds":0.0, "targetCap":64, "coefficient":1.05,
         "statusId":"", "statusSeconds":0.0},
       "movement": {"kind":"LEAP", "maxDistance":8.0, "minimumDurationSeconds":0.25,
         "maximumDurationSeconds":0.8, "apexHeight":1.2, "landingRadius":1.5}

@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage05ProjectileTest {
     @Test void sixProjectileProfilesPreserveCanonicalCohortAndExcludeSnipe() {
         Stage04SkillProfiles profiles = profiles();
-        assertEquals(12, profiles.all().values().stream().filter(profile -> profile.area() == null && profile.connection() == null && profile.support() == null && profile.summon() == null && profile.summonAction() == null && profile.conversion() == null && profile.cage() == null).count());
+        assertEquals(12 + Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES, profiles.all().values().stream().filter(profile -> profile.area() == null && profile.connection() == null && profile.support() == null && profile.summon() == null && profile.summonAction() == null && profile.conversion() == null && profile.cage() == null).count());
         assertFalse(profiles.supports("snipe"));
         assertProjectile(profiles.require("fire_bolt"), Set.of("STAFF", "WAND"), "MANA", 8, 1.4,
                 "MAGIC_WEAPON", "MAGIC", "Projectile_Config_RPG_Fire_Bolt", 24, 24, .30, .95);
@@ -189,13 +189,16 @@ class Stage05ProjectileTest {
         assertEquals(0, ammo.kernel.cooldowns().remaining(ammo.actor, "quick_shot"));
     }
 
-    @Test void synchronousSpawnFailureRefundsCostAndClearsCooldown() {
+    @Test void executorSpawnExceptionCannotProveNoEffectsAndRetainsCommittedPayment() {
         Harness harness = harness("quick_shot", item("BOW", 20.0, null), 100, 100);
         harness.port.throwOnDispatch = true;
         SkillExecutionResult result = harness.execute();
         assertEquals(SkillExecutionResult.Status.TERMINATED, result.status());
-        assertEquals(100, harness.port.resources.current(ResourceType.STAMINA), 1e-12);
-        assertEquals(0, harness.kernel.cooldowns().remaining(harness.actor, "quick_shot"));
+        assertTrue(result.committed());
+        assertEquals(96, harness.port.resources.current(ResourceType.STAMINA), 1e-12);
+        assertTrue(harness.kernel.cooldowns().remaining(harness.actor, "quick_shot") > 0);
+        assertEquals("COOLDOWN_ACTIVE", harness.execute().code());
+        assertEquals(1, harness.port.dispatches);
     }
 
     @Test void projectileFamilyDispatchAndCorrelationStaySingular() {
