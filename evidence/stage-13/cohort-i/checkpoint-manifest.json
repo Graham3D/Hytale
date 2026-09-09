@@ -2,49 +2,49 @@
   "manifestSchema": 1,
   "purpose": "CHECKSUM_VERIFIED_BLOCKED_DEVELOPMENT_CHECKPOINT_NOT_RELEASE",
   "code": {
-    "version": "0.0.25",
     "revision": "R032",
+    "version": "0.0.25",
     "sha256": "0082FA775EB2C7C42445194E3E0736515ED21CBCEF77BEC42E04ECA1CFBF3D36"
   },
   "content": {
     "compiledPlanSchema": 41,
+    "canonicalPassives": 66,
     "runtimeProfiles": 87,
-    "canonicalSkills": 87,
-    "canonicalPassives": 66
+    "canonicalSkills": 87
   },
   "adapter": {
-    "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
     "connected": "UNVERIFIED",
-    "hytaleVersion": "0.7.0-pre.1",
+    "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
     "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
-    "build": "e8b4d191fc98a977bf5546a951a7b25473d323e3"
+    "build": "e8b4d191fc98a977bf5546a951a7b25473d323e3",
+    "hytaleVersion": "0.7.0-pre.1"
   },
   "schema": {
-    "player": 9,
+    "encounterJournal": 2,
+    "encounterCheckpoint": 2,
     "earnedRewardIntent": 1,
     "encounterEnvelope": 1,
-    "rollback": "NO_IN_PLACE_DOWNGRADE_RESTORE_MATCHING_PLAYER_REWARD_ENCOUNTER_COORDINATED_COPY",
-    "encounterJournal": 2,
-    "encounterCheckpoint": 2
+    "player": 9,
+    "rollback": "NO_IN_PLACE_DOWNGRADE_RESTORE_MATCHING_PLAYER_REWARD_ENCOUNTER_COORDINATED_COPY"
   },
   "art": {
     "xpFill": "1x22",
+    "xpBackground": "696x28",
     "version": "R020_XP_UNCHANGED_PLUS_STAGE13_E_FINISHER_TEMPLATE",
-    "xpFrame": "702x28",
     "connectedVisualQa": "UNVERIFIED",
-    "xpBackground": "696x28"
+    "xpFrame": "702x28"
   },
   "rollback": {
-    "immediateSha256": "8849F88CB9225E847C05580CE1EBE3E2FB6BE0D487C73AA4408526C1ED6381D6",
     "sha256": "C55DD5C1A939E5727AD01945FDC6DC0B7D7ECF1C185D94AC95B0BDAE885EB87B",
-    "immediateCheckpoint": "Stage13H eecd64cc4b7c5345288ffef51083fadc3c8348e4",
-    "copiedCheckpointTest": "Stage13ArchivedRollbackTest",
-    "liveSaveUntouched": true,
-    "compatibilityTests": "Stage13V2RecoveryEdgesTest actual H rejection and preserved coordinated legacy copy; retained G/F/Stage12 rollback tests",
-    "preWalSha256": "F7F55FCF05AFEA2A985AC2801CB4F78D346389C2E135E2DCEA22E1F193BCFA83",
     "checkpoint": "Stage12H de60a02",
+    "immediateSha256": "8849F88CB9225E847C05580CE1EBE3E2FB6BE0D487C73AA4408526C1ED6381D6",
+    "liveSaveUntouched": true,
+    "preWalSha256": "F7F55FCF05AFEA2A985AC2801CB4F78D346389C2E135E2DCEA22E1F193BCFA83",
+    "compatibilityTests": "Stage13V2RecoveryEdgesTest actual H rejection and preserved coordinated legacy copy; retained G/F/Stage12 rollback tests",
     "preWalCheckpoint": "Stage13F 14a0f42; documentation checkpoint 344bfed",
-    "preWalCopyTest": "Stage13JournalRollbackTest"
+    "copiedCheckpointTest": "Stage13ArchivedRollbackTest",
+    "preWalCopyTest": "Stage13JournalRollbackTest",
+    "immediateCheckpoint": "Stage13H eecd64cc4b7c5345288ffef51083fadc3c8348e4"
   },
   "signing": "CHECKSUM_VERIFIED_NOT_CRYPTOGRAPHICALLY_SIGNED",
   "files": {
@@ -98,14 +98,14 @@
     "verification.json": "13864240F88BD479F36111FD1FA3FC272098CCEE43723233A54454C32A855346"
   },
   "durability": {
-    "connected": "UNVERIFIED",
+    "checkpoint": "BOUNDED_BUNDLES_AND_SINGLE_V2_MANIFEST",
     "acknowledgement": "AFTER_COVERING_FORCE_TRUE",
-    "grouping": "SEALED_OPERATIONS_DRAIN_ALREADY_QUEUED_NO_SYNTHETIC_64_DAMAGE_EPOCH",
+    "connected": "UNVERIFIED",
     "submission": "PROVISIONAL_NOT_DURABLE",
-    "checkpoint": "BOUNDED_BUNDLES_AND_SINGLE_V2_MANIFEST"
+    "grouping": "SEALED_OPERATIONS_DRAIN_ALREADY_QUEUED_NO_SYNTHETIC_64_DAMAGE_EPOCH"
   },
   "report": {
-    "sha256": "D57B271E9F03AD05D871B69E84E6DF8B1E0761B06013FBA0472734BCE92CC64E",
-    "path": "docs/stage-13/encounter-durability-final-boundary-report.md"
+    "path": "docs/stage-13/encounter-durability-final-boundary-report.md",
+    "sha256": "4D7D979A8C3AE959B0F8F659DF5C5690DDBBFA6A8FAAFED87118C0A34D411FB7"
   }
 }

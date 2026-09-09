@@ -13,7 +13,7 @@ This correction removed standalone foreground successor-preparation forces and c
 | Identity | Exact value |
 |---|---|
 | Starting pushed H HEAD, verified before implementation | `eecd64cc4b7c5345288ffef51083fadc3c8348e4` |
-| Validated Stage I implementation commit | `PENDING_VALIDATED_IMPLEMENTATION_COMMIT` |
+| Validated Stage I implementation commit | `f5f9cb3f9859b55ca263d85f9d63a099933512eb` |
 | RPG binary metadata, unchanged by this bounded correction | R032 / `0.0.25` |
 | Final archived RPG SHA-256 | `0082FA775EB2C7C42445194E3E0736515ED21CBCEF77BEC42E04ECA1CFBF3D36` |
 | Final archived RPG size | 1,812,529 bytes |
