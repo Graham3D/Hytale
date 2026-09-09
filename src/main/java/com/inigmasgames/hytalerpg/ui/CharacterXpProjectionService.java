@@ -10,25 +10,32 @@ import java.util.List;
 /** Canonical character-XP formula and presentation-only ten-pip projection. */
 public final class CharacterXpProjectionService {
     public static final int LEVEL_CAP = 99;
+    private static final long[] NEXT=new long[LEVEL_CAP+1];
+    private static final long[] START=new long[LEVEL_CAP+1];
+    static {
+        for(int level=1;level<LEVEL_CAP;level++){
+            double pressure=1+5*Math.pow(Math.max(0,level-80d)/18d,3);
+            double raw=100*Math.pow(level,1.6)*pressure;
+            NEXT[level]=BigDecimal.valueOf(raw/10).setScale(0,RoundingMode.HALF_UP).longValueExact()*10L;
+            START[level+1]=Math.addExact(START[level],NEXT[level]);
+        }
+    }
 
     public long xpToNext(int level) {
         if (level < 1 || level >= LEVEL_CAP) return 0;
-        double pressure = 1.0 + 5.0 * Math.pow(Math.max(0.0, level - 80.0) / 18.0, 3.0);
-        double raw = 100.0 * Math.pow(level, 1.6) * pressure;
-        return BigDecimal.valueOf(raw / 10.0).setScale(0, RoundingMode.HALF_UP).longValueExact() * 10L;
+        return NEXT[level];
     }
 
     public long levelStartXp(int level) {
         if (level < 1 || level > LEVEL_CAP) throw new IllegalArgumentException("Level must be 1..99");
-        long total = 0;
-        for (int current = 1; current < level; current++) total = Math.addExact(total, xpToNext(current));
-        return total;
+        return START[level];
     }
 
     public XpView project(long totalXp) {
         if (totalXp < 0) throw new IllegalArgumentException("Total XP cannot be negative");
-        int level = 1;
-        while (level < LEVEL_CAP && totalXp >= levelStartXp(level + 1)) level++;
+        int low=1,high=LEVEL_CAP;
+        while(low<high){int middle=(low+high+1)>>>1;if(START[middle]<=totalXp)low=middle;else high=middle-1;}
+        int level=low;
         long start = levelStartXp(level);
         long next = xpToNext(level);
         long into = Math.max(0, totalXp - start);

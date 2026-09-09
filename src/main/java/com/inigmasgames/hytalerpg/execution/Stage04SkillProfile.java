@@ -28,7 +28,22 @@ public record Stage04SkillProfile(
         com.inigmasgames.hytalerpg.execution.summon.SummonProfile summon,
         com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile summonAction,
         com.inigmasgames.hytalerpg.execution.summon.ConversionProfile conversion,
-        com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile cage) {
+        com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile cage,
+        com.inigmasgames.hytalerpg.execution.strike.NativeStanceProfile nativeStance) {
+
+    public Stage04SkillProfile(String skillId,Family family,Set<String> secondaryFamilies,Set<String> allowedMainHandKinds,
+            Set<String> requiredOffHandKinds,String resourceType,double resourceCost,double cooldownSeconds,double windupSeconds,
+            String basePowerSource,double innateBasePower,String scaling,Strike strike,Movement movement,Reaction reaction,Projectile projectile,
+            com.inigmasgames.hytalerpg.execution.area.AreaSkillProfile area,
+            com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile connection,
+            com.inigmasgames.hytalerpg.execution.support.SupportProfile support,
+            com.inigmasgames.hytalerpg.execution.summon.SummonProfile summon,
+            com.inigmasgames.hytalerpg.execution.summon.SummonActionProfile summonAction,
+            com.inigmasgames.hytalerpg.execution.summon.ConversionProfile conversion,
+            com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile cage) {
+        this(skillId,family,secondaryFamilies,allowedMainHandKinds,requiredOffHandKinds,resourceType,resourceCost,cooldownSeconds,
+                windupSeconds,basePowerSource,innateBasePower,scaling,strike,movement,reaction,projectile,area,connection,support,summon,summonAction,conversion,cage,null);
+    }
 
     public Stage04SkillProfile(String skillId,Family family,Set<String> secondaryFamilies,Set<String> allowedMainHandKinds,
             Set<String> requiredOffHandKinds,String resourceType,double resourceCost,double cooldownSeconds,double windupSeconds,
@@ -146,6 +161,7 @@ public record Stage04SkillProfile(
         return true;
     }
     public String activationGate() {
+        if(nativeStance!=null)return com.inigmasgames.hytalerpg.execution.strike.NativeStanceProfile.GATE;
         if(cage!=null)return com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY;
         if(reaction!=null&&reaction.nativeHeld())return "NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED";
         return projectile==null?"":projectile.details().nativeCapabilityGate();

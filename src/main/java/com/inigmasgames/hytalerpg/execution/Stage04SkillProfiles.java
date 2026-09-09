@@ -18,7 +18,7 @@ public final class Stage04SkillProfiles {
     public static final int EXPECTED_STAGE08_PROFILES = 8;
     public static final int EXPECTED_STAGE09_PROFILES = 16;
     public static final int EXPECTED_STAGE10_PROFILES = 9;
-    public static final int EXPECTED_STAGE13_PROFILES = 26;
+    public static final int EXPECTED_STAGE13_PROFILES = 27;
     private final Map<String, Stage04SkillProfile> profiles;
 
     public Stage04SkillProfiles(List<Stage04SkillProfile> profiles) {
@@ -29,7 +29,14 @@ public final class Stage04SkillProfiles {
         this.profiles = Map.copyOf(indexed);
     }
 
+    private static final class Canonical { static final Stage04SkillProfiles INSTANCE=loadResources(); }
     public static Stage04SkillProfiles loadCanonical(RpgCatalog catalog) {
+        var loaded=Canonical.INSTANCE;
+        loaded.profiles.keySet().forEach(id->catalog.skill(new SkillId(id)).orElseThrow(
+                ()->new IllegalStateException("Runtime skill is absent from catalog: "+id)));
+        return loaded;
+    }
+    private static Stage04SkillProfiles loadResources() {
         try {
             List<Stage04SkillProfile> profiles = new ArrayList<>();
             profiles.addAll(load("/rpg/runtime/stage-04-skills.json", EXPECTED_STAGE04_PILOTS));
@@ -55,12 +62,11 @@ public final class Stage04SkillProfiles {
             profiles.addAll(load("/rpg/runtime/stage-13-projectiles-cohort-c.json", 6));
             profiles.addAll(load("/rpg/runtime/stage-13-movement-cohort-d.json", 5));
             profiles.addAll(load("/rpg/runtime/stage-13-combat-cohort-e.json", 3));
+            profiles.addAll(load("/rpg/runtime/stage-13-stance-cohort-f.json", 1));
             Stage04SkillProfiles loaded = new Stage04SkillProfiles(profiles);
             int expected = EXPECTED_STAGE04_PILOTS + EXPECTED_STAGE05_PILOTS + EXPECTED_STAGE06_PROFILES + EXPECTED_STAGE08_PROFILES + EXPECTED_STAGE09_PROFILES + EXPECTED_STAGE10_PROFILES + EXPECTED_STAGE13_PROFILES;
             if (loaded.profiles.size() != expected)
                 throw new IllegalStateException("Expected " + expected + " runtime pilot skills, got " + loaded.profiles.size());
-            loaded.profiles.keySet().forEach(id -> catalog.skill(new SkillId(id)).orElseThrow(
-                    () -> new IllegalStateException("Runtime skill is absent from catalog: " + id)));
             return loaded;
         } catch (RuntimeException error) { throw error; }
         catch (Exception error) { throw new IllegalStateException("Cannot load runtime skill data", error); }

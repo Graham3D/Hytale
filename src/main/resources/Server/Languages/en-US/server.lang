@@ -174,3 +174,5 @@ server.items.RPG_Ability_Backstab.name=Backstab
 server.items.RPG_Ability_Backstab.description=RPG native ability trigger; gameplay owned by RPG.
 server.items.RPG_Ability_Finishing_Strike.name=Finishing Strike
 server.items.RPG_Ability_Finishing_Strike.description=RPG native ability trigger; gameplay owned by RPG.
+server.items.RPG_Ability_Frenzy.name=Frenzy (native cadence unavailable)
+server.items.RPG_Ability_Frenzy.description=Disabled before payment: native per-actor basic-attack cadence is not verified. No simulated speed or damage buff.

@@ -11,7 +11,7 @@ public final class ProfileComponentPolicy {
     private ProfileComponentPolicy(){}
     private static final class Canonical {static final Stage04SkillProfiles PROFILES=Stage04SkillProfiles.loadCanonical(RpgCatalog.loadCanonical());}
     public static Optional<Boolean> retaliation(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(retaliation(p));}
-    public static boolean retaliation(Stage04SkillProfile p){return p.movement()==null&&p.reaction()==null&&p.summonAction()==null&&p.conversion()==null&&p.cage()==null
+    public static boolean retaliation(Stage04SkillProfile p){return p.nativeStance()==null&&p.movement()==null&&p.reaction()==null&&p.summonAction()==null&&p.conversion()==null&&p.cage()==null
             &&!(p.summon()!=null&&p.summon().corpseRequired())&&!(p.connection()!=null&&p.connection().channel())&&!(p.support()!=null&&p.support().aura());}
     public static Optional<Boolean> conditionalRepeat(String skill,boolean critical){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(conditionalRepeat(p,critical));}
     public static boolean conditionalRepeat(Stage04SkillProfile p,boolean critical){
@@ -33,7 +33,7 @@ public final class ProfileComponentPolicy {
     }
     public static Optional<Boolean> finiteUpfront(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(finiteUpfront(p));}
     public static boolean finiteUpfront(Stage04SkillProfile p){
-        return Set.of("MANA","STAMINA").contains(p.resourceType())&&p.resourceCost()>0
+        return p.nativeStance()==null&&Set.of("MANA","STAMINA").contains(p.resourceType())&&p.resourceCost()>0
                 &&!(p.connection()!=null&&p.connection().channel())
                 &&!(p.support()!=null&&(p.support().aura()||p.support().upkeepPerSecond()>0));
     }

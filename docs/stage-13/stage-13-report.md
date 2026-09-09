@@ -4,8 +4,8 @@ Revision R032, version 0.0.25; branch RPG. Resumed from pushed Stage12 H
 `de60a02`. All work is in the C: GitHub checkout. Owner art, including
 `art/lost and found`, is untouched. No Google Drive writes or live deployment.
 
-Status: **IMPLEMENTATION_IN_PROGRESS**. This is not a release candidate or a
-Stage13 closure. Connected status: **UNVERIFIED**. The latest completed local
+Status: **BLOCKED — integrated release hardening**, after cohort F. This is not a release candidate or a
+Stage13 closure. Connected status: **UNVERIFIED**. The latest historical completed local
 stage is Stage12 H: 1653 retained tests, isolated normal three-mod smoke,
 packaging/archive checks, and the actual archived schema8 reader rollback drill.
 
@@ -621,7 +621,7 @@ hashes and unchanged pre-existing packaged UI-byte checks. This full intermediat
 run does not replace the required stage-closure/final-RC rollback drills.
 Live RPG mods, saves and owner art were not deployed, migrated or overwritten.
 
-## Remaining required Stage13 work — not optional refinements
+## Remaining work recorded at cohort E (superseded by F findings below)
 
 - 1 remaining record: Frenzy (native per-actor attack cadence, toggle/upkeep,
   root-hit stacks and cleanup; no guessed global animation-speed substitute).
@@ -645,3 +645,137 @@ Live RPG mods, saves and owner art were not deployed, migrated or overwritten.
 
 No Stage13 PASS, final release candidate, live deployment or owner-connected
 test result is implied by this report.
+
+## Cohort F — bounded diagnostics, compile hot path, complete inventory, release blocker
+
+Continuation baseline: pushed `845e371`. Build R032 / 0.0.25; player schema9
+unchanged; ephemeral compiled-plan schema41. Runtime inventory now contains
+87 records, but four have explicit activation gates. A record is not proof of a
+working skill. In particular, the new Frenzy record is deliberately disabled.
+
+### Changes and their reasoning
+
+1. `getPresentationView` was recompiling unchanged Links on HUD/combat reads.
+   Its one-entry-per-existing-player cache now keys the exact compiler inputs:
+   equipped skills/passives, joints, inactive-node decisions and graph edges.
+   All actual graph edits still validate and compile transactionally. XP,
+   attributes and other published state remain fresh; uncertain persistence
+   still hides executable plans. Tests prove four actors ×200 reads ×16 targets
+   compile once per unchanged loadout, topology invalidates, invalid Fork into
+   Quick Slash rolls back, and caller-owned views cannot poison the cache.
+2. Immutable runtime content loads once, while each caller's catalog membership
+   is still checked. Canonical XP thresholds are precomputed with the identical
+   HALF_UP formula and binary-searched. Every level transition is independently
+   checked against the old formula. No XP assets, dimensions, layers, resource
+   HUD ownership, resource costs, formulas or native input projection changed.
+3. Combat/UI trace queues were unbounded. Both now use a shared bounded writer:
+   256 queued records, 8MiB queued/active encoded payloads, 32,768 character limit
+   per JSON record, bounded rotated files, no caller-runs I/O. Oversize, saturation,
+   closed writers and filesystem failures expose counts and `TRACE_GAP` records
+   with `evidenceComplete=false`. No partial/truncated JSON is accepted. Console
+   summaries are limited to one/sec for combat and twenty/sec for UI; accepted
+   full JSONL records retain root/instance/correlation identifiers and details.
+   Retention is intentionally finite; archive complete sessions before rotation.
+   **Do not infer event absence from sampled console output. Inspect JSONL and
+   loss metrics; a gap invalidates an absence-based connected diagnosis.**
+   Eight tests cover stalled I/O, queue/byte bounds, oversized UTF-8 records,
+   failure isolation, exact order/identity, close rejection and whole-line rotation.
+4. Frenzy's canonical cost12 Stamina, cooldown10, five4% stacks, three-second
+   inactivity and2 Stamina/sec upkeep are recorded; its native cadence route is
+   not implemented. Ten attempted activations fail before cost/cooldown/dispatch.
+   Actual installed `InteractionManager` calls prove `setGlobalTimeShift(.2)`
+   followed by `clearAllGlobalTimeShift(.05)` yields .25, then0 on the next clear.
+   This is an additive transient offset, not an attack-rate lease. It rejects
+   negative shifts. **That finding is not proof that all possible native cadence
+   integrations are impossible.** No guessed global animation-speed substitute,
+   fake damage multiplier or working-stance claim was introduced.
+
+### Full regression, smoke and rollback evidence
+
+`clean build`: **1886 tests** (1837 RPG,28 native-control,21 CanvasUI), zero
+failures/errors/skips,51 seconds for the captured full run. All Stage12H baseline
+test classes and counts are retained. The generated5742 skill/passive cells,
+2145 passive-pair classifications and1000 valid six-Link graphs have no unresolved
+numeric-profile exceptions. Four explicit native runtime gates remain visible.
+
+Normal isolated three-mod smoke at `2026-09-09T11:51:19.8090271Z`: booted network,
+all retained startup/asset gates, clean stop, process0. Exactly the established
+three JARs were archived. Every previous packaged UI byte matches Stage12H;
+only the already documented separate Finisher pip document is additional.
+RPG JAR SHA256:
+`F7F55FCF05AFEA2A985AC2801CB4F78D346389C2E135E2DCEA22E1F193BCFA83`.
+
+The new actual archived Stage12H JAR test loads old classes in an isolated class
+loader, creates a coordinated players/earned-rewards/encounters checkpoint,
+advances the copied player using current durable reward code, restores the
+whole checkpoint into a fresh directory, and proves old-reader XP10, duplicate
+reward rejection and permanent encounter exclusion. The earlier schema8→9
+migration/rejected downgrade drill is also retained. This is not a connected
+world restart and does not replace the final closure/RC reruns. One newly typed
+expected archive hash initially contained an extra `e`; its failed XML is
+retained under `first-failures`, and the literal was corrected to the independently
+hashed archived JAR. No production behavior or assertion was relaxed.
+
+### Blocking performance result — no release promotion
+
+The new benchmark executes the **real** `PersistentEncounterRuntime.damage` →
+`FileEncounterStore.save` path, four actor identities ×16 victims =64 durable
+updates per sample,60 samples. It verifies reloaded contributor counts afterward.
+This measures accepted synthetic contribution workload, not native combat,
+rendering, physics, AI, network or the full combined-field scenario. Samples are
+not discarded as warm-up or replaced with an in-memory repository.
+
+| Run | p50 ms | p95 ms | p99 ms |
+|---|---:|---:|---:|
+| Initial targeted measurement |189.6511|270.7072|3349.7013|
+| Full retained run |187.8359|731.5307|4053.5935|
+
+Declared machine: Ryzen9 7900X,12 physical/24 logical cores,63.15GiB RAM, Windows11,
+JDK25.0.4. The test uses JUnit's C: system temporary directory, not the live RPG
+save. Hardware/software contention and cold-path effects are included; this is
+not a base-game versus RPG tick profile. Nonetheless this component alone cannot
+fit the required nominal p95≤4ms/p99≤8ms budget under the tested burst. The
+standalone release-readiness command exits1 and records the exact failing boundary:
+
+`SYNCHRONOUS_DURABLE_ENCOUNTER_CONTRIBUTION_EXCEEDS_RPG_TICK_BUDGET`.
+
+The code path synchronously locks, reads/checks prior state, serializes and hashes
+the full snapshot, writes a temporary file, forces it, then atomically replaces
+the context **for every accepted hit**. It runs from native Inspect/control/heal
+callbacks. Mastery writes and death delivery also use synchronous durable player
+authority. Functional JUnit success does not certify this separate performance
+gate. The result reopens the Stage12 integration's release readiness.
+
+No batching, dropped observations, unforced acknowledgement, volatile-only reward
+queue or gameplay change was used to hide the cost. Moving writes onto a thread
+without a crash-safe ordered handoff would weaken the current guarantee and is
+not a completed fix. Required next work is that shared persistence boundary,
+including durable admission/acknowledgement, ordering through death/mastery,
+bounded overload/backpressure, cancellation/crash recovery, and no ECS access
+off the world thread. Rerun this same measurement and the exact-once fault suite
+after the fix, before other closure work or RC promotion.
+
+### Release disposition and remaining mandatory gates
+
+- Coverage inventory: `hardening/coverage.md` and `.json` enumerate87 skills/66
+  passives. Three unresolved native implementations (Frenzy, Guard, Snipe) are
+  explicitly **not** relabeled `BLOCKED_BY_PROVEN_HYTALE_CAPABILITY`. Bone Cage
+  remains the master's authorized collision-safety disable. Final release
+  classification is therefore not yet complete.
+- Native ordinary ranged/projectile-parent recovery remains unincluded in the
+  audited melee-only receipt observer. Flame Weapon native-contact and Pedanticism
+  native enemy-cooldown adapters remain limited. These are real integration gaps.
+- Combined four-player16-hostile/24-projectile/8-field/8-summon workload, 200-player
+  scaling, all master fault-injection cases, and final RC reruns are incomplete.
+  Previous family-specific bounded-load tests do not substitute for these.
+- C/K/native Inventory capability checks, native input, client HUD/animation,
+  geometry, multiplayer, authoritative resource/damage, restart/rejoin and
+  acquisition-source proof remain connected **UNVERIFIED**.
+- Local progression arithmetic, persistence/idempotence tests, ordinary regression
+  suite and smoke passed; the integrated release gate did not. Stage13 is
+  **BLOCKED**, not PASS, RELEASED, or RELEASE_CANDIDATE_AWAITING_CONNECTED_QA.
+
+Evidence: `evidence/stage-13/cohort-f/verification.json`, `release-readiness.json`,
+`test-results.json`, `server-smoke-summary.json`, `hardening/`, `matrix/`,
+`source-sha256.json`, `artifacts/` and retained `rollback/`. No live deployment,
+live-save edits, owner-art changes or Google Drive writes were performed.

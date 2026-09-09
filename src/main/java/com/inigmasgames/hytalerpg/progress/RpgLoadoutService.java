@@ -334,13 +334,29 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
         synchronized (holder) {
             if(holder.persistenceUncertain&&!holder.rewardRecoveryRequired)return readOnlyUncertain(holder);
             ensureUsable(player,holder);
-            CompilationResult compiled = compiler.compile(holder.state);
-            GraphValidationResult graph = graphService.validate(holder.state);
+            if(holder.presentationState==null||!sameCompiledInputs(holder.presentationState,holder.state)){
+                holder.presentationCompiled=compiler.compile(holder.state);
+                holder.presentationGraph=graphService.validate(holder.state);
+                holder.presentationCompilations++;
+            }
+            holder.presentationState=holder.state;
+            CompilationResult compiled = holder.presentationCompiled;
+            GraphValidationResult graph = holder.presentationGraph;
             List<String> warnings = new ArrayList<>(holder.state.degradedReasons);
             if (!compiled.success()) warnings.add(compiled.code() + ": " + compiled.message());
             return new RpgLoadoutView(holder.state, compiled.plans(),
                     graph.valid() ? graph.routes() : Map.of(), warnings);
         }
+    }
+
+    /** Bounded, read-only diagnostic counter. No game decision depends on cache statistics. */
+    public long presentationCompilations(UUID player){var holder=states.get(player);if(holder==null)return 0;synchronized(holder){return holder.presentationCompilations;}}
+    private static boolean sameCompiledInputs(RpgPlayerState a,RpgPlayerState b){
+        // Published holder states are copy-before-write. Progress, resource ledgers and attributes do not compile Links.
+        return a==b||java.util.Arrays.equals(a.equippedSkills,b.equippedSkills)
+                &&java.util.Arrays.equals(a.equippedPassives,b.equippedPassives)
+                &&java.util.Arrays.equals(a.joints,b.joints)&&a.inactivePassives.equals(b.inactivePassives)
+                &&a.linkEdges().equals(b.linkEdges());
     }
 
     @Override public Map<LinkNodeId, CompatibilityResult> getCompatibleTargets(UUID player, LinkNodeId source) {
@@ -706,5 +722,10 @@ public final class RpgLoadoutService implements RpgLoadoutOperations {
 
     private static String reference() { return UUID.randomUUID().toString().substring(0, 12); }
 
-    private static final class Holder { private RpgPlayerState state; private volatile boolean persistenceUncertain; private boolean rewardRecoveryRequired; private Holder(RpgPlayerState state) { this.state = state; } }
+    private static final class Holder {
+        private RpgPlayerState state,presentationState;private CompilationResult presentationCompiled;
+        private GraphValidationResult presentationGraph;private long presentationCompilations;
+        private volatile boolean persistenceUncertain;private boolean rewardRecoveryRequired;
+        private Holder(RpgPlayerState state){this.state=state;}
+    }
 }

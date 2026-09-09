@@ -5,6 +5,13 @@ Stage 11's preceding local closure is e9944e1. No live deployment has occurred.
 Stage status: IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION. Local engineering
 closure: PASS (cohort H, 1653 retained tests). Connected gate: UNVERIFIED.
 
+Post-closure integration finding (Stage13 F,2026-09-09): the real synchronous
+encounter-contribution persistence path fails the nominal RPG tick budget under
+the new four-actor/16-victim burst test. The historical functional/rollback gate
+above is preserved, but integrated **release readiness is BLOCKED** until that
+shared storage boundary is corrected without weakening durability. See
+`../stage-13/stage-13-report.md`, cohort F, and its exact performance evidence.
+
 ## Evidence contract
 
 The updated master v1.2 Markdown is authoritative (SHA-256

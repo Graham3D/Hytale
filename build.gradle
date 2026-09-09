@@ -54,6 +54,7 @@ tasks.test {
     exclude '**/Stage09NativeManaTest*'
     exclude '**/Stage12NativeBiomeAssetTest*'
     exclude '**/Stage13NativeBasicPathTest*'
+    exclude '**/Stage13NativeCadenceAuditTest*'
 }
 
 tasks.register('nativeControlTest', Test) {
@@ -66,6 +67,7 @@ tasks.register('nativeControlTest', Test) {
         includeTestsMatching '*Stage09NativeManaTest'
         includeTestsMatching '*Stage12NativeBiomeAssetTest'
         includeTestsMatching '*Stage13NativeBasicPathTest'
+        includeTestsMatching '*Stage13NativeCadenceAuditTest'
     }
     // Separate JVM: native codecs require Hytale's logger; retained UI tests exercise the JUL fallback.
     systemProperty 'java.util.logging.manager', 'com.hypixel.hytale.logger.backend.HytaleLogManager'

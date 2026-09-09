@@ -6,8 +6,8 @@ import java.util.Properties;
 public record SkillTraceConfiguration(boolean enabled, String level, int maxFileMb, int retainedFiles,
                                       boolean developmentEntitlements) {
     public SkillTraceConfiguration {
-        if (maxFileMb < 1) throw new IllegalArgumentException("skillTrace.maxFileMb must be positive");
-        if (retainedFiles < 1) throw new IllegalArgumentException("skillTrace.retainedFiles must be positive");
+        if (maxFileMb < 1||maxFileMb>64) throw new IllegalArgumentException("skillTrace.maxFileMb must be 1..64");
+        if (retainedFiles < 1||retainedFiles>32) throw new IllegalArgumentException("skillTrace.retainedFiles must be 1..32");
     }
     public static SkillTraceConfiguration load() {
         Properties properties = new Properties();
