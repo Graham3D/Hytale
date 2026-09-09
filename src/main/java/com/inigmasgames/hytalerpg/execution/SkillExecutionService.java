@@ -236,6 +236,15 @@ public final class SkillExecutionService {
             emitProjectileRejection(request, root, instance, profile, rejection.code);
             throw rejection;
         }
+        // A native Family classification alone is not authored damage authority. Reject before payment.
+        if (java.util.Set.of("WEAPON", "MAGIC_WEAPON", "OFFHAND_WEAPON").contains(profile.basePowerSource())) {
+            try { resolvePower(profile, equipment); }
+            catch (IllegalArgumentException failure) {
+                preparationFailure(request, root, instance, profile, equipment, "EQUIPMENT_POWER_VALIDATION", failure);
+                emitProjectileRejection(request, root, instance, profile, "EQUIPMENT_POWER_UNAVAILABLE");
+                throw new Rejection("EQUIPMENT_POWER_UNAVAILABLE", instance);
+            }
+        }
         SkillExecutionPort.Validation family = port.familyPrerequisites(profile, plan);
         if (!family.accepted()) {
             emitProjectileRejection(request, root, instance, profile, family.code());
@@ -291,7 +300,7 @@ public final class SkillExecutionService {
         }
         CommittedTarget target;
         try {
-            boolean capture=releaseModifiers.scheduled()||!prepared.plan.conditionalRepeat().isEmpty()||prepared.plan.strikes().multistrike()||prepared.plan.zones().mobileDomain()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
+            boolean capture=port.requiresSpatialCommitContext()||releaseModifiers.scheduled()||!prepared.plan.conditionalRepeat().isEmpty()||prepared.plan.strikes().multistrike()||prepared.plan.zones().mobileDomain()||prepared.profile.connection()!=null&&prepared.profile.connection().requiresTarget()
                     ||prepared.profile.support()!=null||prepared.profile.summon()!=null||prepared.profile.summonAction()!=null||prepared.profile.conversion()!=null;
             target=capture?port.captureTarget(prepared.profile,prepared.plan,prepared.request):null;
             if(capture && target==null) throw new IllegalStateException("COMMITTED_TARGET_ADAPTER_UNAVAILABLE");
@@ -306,11 +315,15 @@ public final class SkillExecutionService {
             return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"RESOURCE_RESERVATION_FAILED");
         }
         SkillExecutionContext context;
+        String preparationStage="ATTRIBUTE_SNAPSHOT";
         try {
             DerivedStats attributes = derive(prepared.request.actorId());
+            preparationStage="POWER_RESOLUTION";
             BasePowerResolver.Resolution power = resolvePower(prepared.profile, prepared.equipment);
+            preparationStage="COOLDOWN_PREPARATION";
             var cooldown = kernel.cooldowns().calculate(prepared.request.actorId(),prepared.profile.cooldownSeconds(), prepared.plan.foundationModifiers().rechargeFactor(),
                     attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
+            preparationStage="MODIFIER_CONSTRUCTION";
             Map<String, Double> status = prepared.profile.authoredStatuses();
             // CombatSnapshotFactory alone installs compiled Increased modifiers (including Potency).
             var payloadLess=new java.util.ArrayList<>(prepared.plan.projectileModifiers().payloadLess());
@@ -322,25 +335,33 @@ public final class SkillExecutionService {
             ModifierBuckets modifiers = new ModifierBuckets(prepared.attunementStacks>0?java.util.List.of(.03*prepared.attunementStacks):java.util.List.of(), java.util.List.of(),
                     releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
                     payloadLess);
+            preparationStage="MASTERY_PREPARATION";
             double mastery=com.inigmasgames.hytalerpg.progress.ProgressionMath.masteryMagnitude(loadouts.masteryXp(prepared.request.actorId(),prepared.profile.skillId()));
             if(mastery!=1){
                 var more=new java.util.ArrayList<>(modifiers.more());more.add(mastery);
                 modifiers=new ModifierBuckets(modifiers.increased(),modifiers.reduced(),more,modifiers.less());
             }
             if(prepared.ruthlessEmpowered)modifiers=modifiers.withIncreased(.60);
+            preparationStage="SUMMON_MODIFIERS";
             if(prepared.profile.summon()!=null)modifiers=port.captureSummonModifiers(modifiers);
+            preparationStage="SNAPSHOT_CONSTRUCTION";
             var snapshot = kernel.snapshots().capture(prepared.rootCastId, prepared.instanceId,
                     prepared.request.actorId(), attributes, power, prepared.plan,
                     prepared.profile.damageCoefficient(),
                     modifiers, prepared.cost, cooldown.finalSeconds(), status);
+            preparationStage="CONTEXT_CONSTRUCTION";
             context = new SkillExecutionContext(prepared.request, prepared.rootCastId, prepared.instanceId,
                     prepared.profile, prepared.plan, snapshot, prepared.equipment,target,false);
+            preparationStage="LEECH_BUDGET";
             if(prepared.plan.resources().leeching()){
                 var resource=ResourceType.valueOf(prepared.profile.resourceType());
                 context.leechBudget().initialize(resource,kernel.resources().spendableMaximum(prepared.request.actorId(),resource,port.resources()));
             }
+            preparationStage="PERSISTENCE_PREPARATION";
             return preparePersistence(prepared,context,token,attributes,port);
         } catch(RuntimeException error){
+            preparationFailure(prepared.request, prepared.rootCastId, prepared.instanceId, prepared.profile,
+                    prepared.equipment, preparationStage, error);
             kernel.resources().refundIfUncommitted(token);releases.finish(prepared.instanceId);lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);
             return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_PREPARATION_FAILED_"+error.getClass().getSimpleName());
         }
@@ -648,6 +669,11 @@ public final class SkillExecutionService {
         emit(request, RpgTraceEventType.SKILL_VALIDATION_REJECTED, root, id, Map.of("failureCode", code));
         emit(request, RpgTraceEventType.SKILL_ACTIVATION_REJECTED, root, id, Map.of("failureCode", code));
         return SkillExecutionResult.rejected(code);
+    }
+    private void preparationFailure(SkillExecutionRequest request, String root, String instance,
+            Stage04SkillProfile profile, SkillExecutionPort.Equipment equipment, String stage, RuntimeException failure) {
+        emit(request, RpgTraceEventType.SKILL_PREPARATION_FAILED, root, instance,
+                PreparationFailureDiagnostics.describe(stage, profile, equipment, failure));
     }
     private void emitProjectileRejection(SkillExecutionRequest request, String root, String instance,
                                           Stage04SkillProfile profile, String code) {

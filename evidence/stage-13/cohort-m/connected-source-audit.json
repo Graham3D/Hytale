@@ -1,0 +1,140 @@
+{
+  "capturedAtUtc": "2026-09-09T21:12:03.4930346Z",
+  "sources": [
+    {
+      "name": "skill-trace.jsonl",
+      "sha256": "85EE343B4D4D45A837F762284BA2B52617E9E0E3E0AA22FE2BA23897557A79D8",
+      "bytes": 4802500,
+      "lastWriteUtc": "2026-09-09T20:33:04.5572449Z"
+    },
+    {
+      "name": "ui-trace.jsonl",
+      "sha256": "7FEBC40A31C25A970ADBDFB2B8C74A4E7C825DF355B7BE8B09B56FB26262625F",
+      "bytes": 222799,
+      "lastWriteUtc": "2026-09-09T20:33:04.5011519Z"
+    },
+    {
+      "name": "2026-09-09_16-32-27_server.log",
+      "sha256": "A71EBFC60829AE3F2B3420C62E8C4D4984C9FE7008D16FF5814F0678DF9EE05B",
+      "bytes": 161665,
+      "lastWriteUtc": "2026-09-09T20:33:04.7030035Z"
+    },
+    {
+      "name": "73f9b698-2494-480d-8406-2943e4a7505b.json",
+      "sha256": "46490A4C67E85765A17E54C8B837C6C118990B18FE06D00584FA9AFFB10908BB",
+      "bytes": 14961,
+      "lastWriteUtc": "2026-09-09T20:33:04.5329671Z"
+    }
+  ],
+  "qaDay": "2026-09-09",
+  "nativeInputs": 12,
+  "failureCounts": [
+    {
+      "code": "COMMIT_PREPARATION_FAILED_IllegalArgumentException",
+      "records": 8
+    },
+    {
+      "code": "NO_VALID_TARGET",
+      "records": 6
+    }
+  ],
+  "uiRecords": 9,
+  "uiEventCounts": [
+    {
+      "event": "HUD_LAYOUT_READY",
+      "records": 1
+    },
+    {
+      "event": "HUD_TEARDOWN",
+      "records": 2
+    },
+    {
+      "event": "SKILLTREE_CLOSED",
+      "records": 2
+    },
+    {
+      "event": "SKILLTREE_OPENED",
+      "records": 2
+    },
+    {
+      "event": "XP_HUD_REFRESH",
+      "records": 2
+    }
+  ],
+  "sessionEndActiveSlot": 5,
+  "sessionEndItemId": "Weapon_Staff_Mithril",
+  "historicalExceptionMessageAvailable": false,
+  "causality": "Saved session-end item plus deterministic production resolver reproduction; old trace did not capture item-at-cast or exception message.",
+  "installedServerSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "installedAssetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "nativeItemAudit": [
+    {
+      "itemId": "Weapon_Staff_Mithril",
+      "nativeAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Mithril.json",
+      "rawFamily": [
+        "Staff"
+      ],
+      "rawType": [
+        "Weapon"
+      ],
+      "registryEntry": null
+    },
+    {
+      "itemId": "Weapon_Staff_Crystal_Flame",
+      "nativeAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Flame.json",
+      "rawFamily": [
+        "Magic"
+      ],
+      "rawType": [
+        "Weapon"
+      ],
+      "registryEntry": {
+        "itemId": "Weapon_Staff_Crystal_Flame",
+        "kind": "STAFF",
+        "nativeFamily": "Magic",
+        "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Flame.json",
+        "sourceProperty": "InteractionVars/Fireball_Impact_0/Interactions/0/Config/EntityDamage",
+        "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+        "basePower": 10
+      }
+    },
+    {
+      "itemId": "Weapon_Staff_Crystal_Ice",
+      "nativeAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Ice.json",
+      "rawFamily": [
+        "Staff"
+      ],
+      "rawType": [
+        "Weapon"
+      ],
+      "registryEntry": {
+        "itemId": "Weapon_Staff_Crystal_Ice",
+        "kind": "STAFF",
+        "nativeFamily": "Staff",
+        "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Ice.json",
+        "sourceProperty": "",
+        "selectionPolicy": "RPG_AUTHORED_BASE",
+        "basePower": 20
+      }
+    },
+    {
+      "itemId": "Weapon_Wand_Wood",
+      "nativeAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "rawFamily": [
+        "Wand"
+      ],
+      "rawType": [
+        "Weapon"
+      ],
+      "registryEntry": {
+        "itemId": "Weapon_Wand_Wood",
+        "kind": "WAND",
+        "nativeFamily": "Wand",
+        "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+        "sourceProperty": "",
+        "selectionPolicy": "RPG_AUTHORED_BASE",
+        "basePower": 20
+      }
+    }
+  ]
+}

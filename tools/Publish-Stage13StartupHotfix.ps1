@@ -1,10 +1,23 @@
 [CmdletBinding()]
-param([switch]$Deploy)
+param([switch]$Deploy,[ValidateSet('l','m')][string]$Cohort='l')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
-$out=Join-Path $root 'evidence\stage-13\cohort-l'
+$out=Join-Path $root "evidence\stage-13\cohort-$Cohort"
 $mods=(Resolve-Path 'C:\Users\Zemio\AppData\Roaming\Hytale\data\pre-release\Saves\RPG\mods').Path
 $oldHash='9083F89CB224BAC55B5D1B1CB9F5F5BA90C104D23A55B447A8E8029B4156B06F'
+$expectedTests=2093
+$baselineCohort='k'
+$baselineCommit='84e29cb57175d9b6ade33654f38c77305ff5c91d'
+$archiveName='Hytale-RPG-Stage13-L-startup-hotfix.zip'
+$manifestName='startup-hotfix.json'
+if($Cohort -eq 'm'){
+    $oldHash='1E4A5CAA1344CE71C8701EBCFBFCB3883BD288DC90BE9732066338A5F6A5B0F6'
+    $expectedTests=2106
+    $baselineCohort='l'
+    $baselineCommit='24efcdf'
+    $archiveName='Hytale-RPG-Stage13-M-casting-correction.zip'
+    $manifestName='casting-correction.json'
+}
 $names=@('HytaleRPG-0.0.25.jar','CanvasUI-0.1.0.jar','HYTALEDEVLIB-0.5.0.jar')
 $suites=@(foreach($path in @('build/test-results/test','build/test-results/nativeControlTest','canvas-ui/build/test-results/test')){
     foreach($file in Get-ChildItem -LiteralPath (Join-Path $root $path) -Filter 'TEST-*.xml'){
@@ -13,8 +26,8 @@ $suites=@(foreach($path in @('build/test-results/test','build/test-results/nativ
         [pscustomobject]@{name=$s.name;tests=[int]$s.tests;failures=[int]$s.failures;errors=[int]$s.errors;skipped=[int]$s.skipped;cases=@($s.testcase|ForEach-Object {$_.name})}
     }
 })
-if(($suites|Measure-Object tests -Sum).Sum -ne 2093 -or @($suites|Where-Object {$_.failures -or $_.errors -or $_.skipped}).Count){throw 'Expected all 2093 tests successful, none skipped'}
-foreach($baseline in (Get-Content -Raw (Join-Path $root 'evidence/stage-13/cohort-k/test-results.json')|ConvertFrom-Json)){
+if(($suites|Measure-Object tests -Sum).Sum -ne $expectedTests -or @($suites|Where-Object {$_.failures -or $_.errors -or $_.skipped}).Count){throw "Expected all $expectedTests tests successful, none skipped"}
+foreach($baseline in (Get-Content -Raw (Join-Path $root "evidence/stage-13/cohort-$baselineCohort/test-results.json")|ConvertFrom-Json)){
     $current=@($suites|Where-Object name -eq $baseline.name)
     if($current.Count -ne 1){throw "Missing retained suite $($baseline.name)"}
     foreach($case in $baseline.cases){if($case -notin $current[0].cases){throw "Missing retained case $case"}}
@@ -38,7 +51,7 @@ foreach($name in $names){
     if((Test-Path -LiteralPath $destination) -and (Get-FileHash -LiteralPath $destination).Hash -ne $expected[$name]){throw 'Do not overwrite different archived build'}
     Copy-Item -LiteralPath $source -Destination $destination
 }
-$zip=Join-Path $out 'Hytale-RPG-Stage13-L-startup-hotfix.zip'
+$zip=Join-Path $out $archiveName
 if(-not (Test-Path -LiteralPath $zip)){Compress-Archive -LiteralPath @($names|ForEach-Object {Join-Path $artifacts $_}) -DestinationPath $zip -CompressionLevel Optimal}
 $archive=[IO.Compression.ZipFile]::OpenRead($zip)
 try{
@@ -49,8 +62,8 @@ try{
         if($entryHash -ne $expected[$entry.FullName]){throw 'ZIP entry integrity failure'}
     }
 }finally{$archive.Dispose()}
-$result=[ordered]@{cohort='L';revision='R032';version='0.0.25';baselineCommit='84e29cb57175d9b6ade33654f38c77305ff5c91d';
-    tests=2093;failures=0;errors=0;skipped=0;retainedKCaseIdentities='PASS';threeModSmoke='PASS';archiveHashes='PASS';
+$result=[ordered]@{cohort=$Cohort.ToUpperInvariant();revision='R032';version='0.0.25';baselineCommit=$baselineCommit;
+    tests=$expectedTests;failures=0;errors=0;skipped=0;retainedBaselineCaseIdentities='PASS';retainedBaselineCohort=$baselineCohort;threeModSmoke='PASS';archiveHashes='PASS';
     jarHashes=$expected;zipSha256=(Get-FileHash -LiteralPath $zip).Hash;connectedClientVerified=$false;deploymentPerformed=$false}
 if($Deploy){
     if(Get-CimInstance Win32_Process|Where-Object {$_.Name -match '^(java|javaw|HytaleServer).*' -and $_.CommandLine -match 'HytaleServer'}){throw 'Stop the Hytale server before deployment'}
@@ -82,5 +95,5 @@ if($Deploy){
     $result.liveSaveDataModified=$false
 }
 $result.capturedAtUtc=[DateTime]::UtcNow.ToString('o')
-$result|ConvertTo-Json -Depth 7|Set-Content -LiteralPath (Join-Path $out 'startup-hotfix.json') -Encoding utf8
+$result|ConvertTo-Json -Depth 7|Set-Content -LiteralPath (Join-Path $out $manifestName) -Encoding utf8
 $result|ConvertTo-Json -Depth 7

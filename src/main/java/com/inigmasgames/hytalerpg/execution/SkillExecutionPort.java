@@ -10,6 +10,8 @@ public interface SkillExecutionPort {
     Equipment equipment();
     NativeResourcePort resources();
     Validation familyPrerequisites(Stage04SkillProfile profile, CompiledSkillPlan plan);
+    /** Native handoff needs an immutable world/aim anchor, not necessarily an entity target. */
+    default boolean requiresSpatialCommitContext() { return false; }
     default CommittedTarget captureTarget(Stage04SkillProfile profile, CompiledSkillPlan plan, SkillExecutionRequest request) { return null; }
     default Validation validateRelease(SkillExecutionContext context) { return Validation.reject("COMMITTED_TARGET_ADAPTER_UNAVAILABLE"); }
     default void abandonRelease(SkillExecutionContext context) { }

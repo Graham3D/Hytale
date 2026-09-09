@@ -1,6 +1,6 @@
 # Stage 13 — runtime completion and release hardening
 
-**Latest update, 2026-09-09:** [cohort L](stage-13-startup-hotfix-report.md) corrects K's connected first-join crash and is deployed. The owner reports “The mod loads.” This establishes owner-reported load success only, not all-gameplay or native-tick PASS. See the [consolidated history and current QA packet](../review/README.md). Earlier cohort/no-deployment statements below retain their historical scope.
+**Latest update, 2026-09-09:** [cohort M casting correction](stage-13-casting-correction-report.md) fixes L's shared empty-strike rejection, captures native spatial commit context, and diagnoses/rejects missing authored weapon power before payment. All 2,106 retained/new tests pass; exact three-mod smoke, packaging and rollback checks pass; M is deployed for connected retest. Mithril Staff remains unsupported; use the audited Flame/Ice staff or Wooden Wand. Connected casting after M is **NOT_RUN**, not PASS. [Cohort L](stage-13-startup-hotfix-report.md) had owner-reported load success only. The [consolidated history/QA packet](../review/README.md) remains the historical L checkpoint; use M's report for this correction's current checklist. Earlier cohort/no-deployment statements below retain their historical scope.
 
 Revision R032, version 0.0.25; branch RPG. Resumed from pushed Stage12 H
 `de60a02`. All work is in the C: GitHub checkout. Owner art, including

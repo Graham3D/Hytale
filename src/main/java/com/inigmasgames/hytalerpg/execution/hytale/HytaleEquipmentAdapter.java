@@ -26,14 +26,19 @@ public final class HytaleEquipmentAdapter {
         if (stack == null || stack.isEmpty() || !stack.isValid()) return null;
         var item = stack.getItem();
         var nativeTags=item == null || item.getData() == null ? Map.<String,String[]>of() : item.getData().getRawTags();
-        var registered=POWERS.resolve(stack.getItemId(),nativeTags);
-        if(registered.isPresent())return new SkillExecutionPort.Item(stack.getItemId(),registered.get().kind(),registered.get().descriptor());
+        return describe(stack.getItemId(), nativeTags);
+    }
+
+    /** Same exact-ID/raw-tag resolution used by native inventory reads; no name-derived authority. */
+    public static SkillExecutionPort.Item describe(String itemId, Map<String,String[]> nativeTags) {
+        var registered=POWERS.resolve(itemId,nativeTags);
+        if(registered.isPresent())return new SkillExecutionPort.Item(itemId,registered.get().kind(),registered.get().descriptor());
         // Unknown production items have no power. The old explicitly audited bomb/development registry
         // can still supply a descriptor downstream; no min/max or name heuristic is used here.
-        String kind = POWERS.find(stack.getItemId()).isPresent()?"UNKNOWN":nativeKind(nativeTags);
+        String kind = POWERS.find(itemId).isPresent()?"UNKNOWN":nativeKind(nativeTags);
         Set<String> tags = weaponTags(kind);
-        return new SkillExecutionPort.Item(stack.getItemId(), kind,
-                new ItemPowerDescriptor(stack.getItemId(), tags, null, null));
+        return new SkillExecutionPort.Item(itemId, kind,
+                new ItemPowerDescriptor(itemId, tags, null, null));
     }
 
     public static Set<String> weaponTags(String kind) {

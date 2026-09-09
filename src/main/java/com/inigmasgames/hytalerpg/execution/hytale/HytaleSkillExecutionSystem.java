@@ -441,11 +441,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if (profile.family() == Stage04SkillProfile.Family.STRIKE) {
                 var probe = profile.strike().geometry() == Stage04SkillProfile.Geometry.RADIUS
                         ? profile.strike().withRange(profile.strike().range() * plan.executionModifiers().radiusFactor()) : profile.strike();
-                try { select(probe, false); }
-                catch (IllegalStateException overflow) {
-                    if (overflow.getMessage().startsWith("STRIKE_")) return Validation.reject(overflow.getMessage());
-                    throw overflow;
-                }
+                var admitted=com.inigmasgames.hytalerpg.execution.strike.StrikeCastPrerequisites.check(()->select(probe,false));
+                if(!admitted.accepted())return admitted;
             }
             if(plan.strikes().multistrike()&&!NativeStrikeActionLock.available(store,actor))return Validation.reject("MULTISTRIKE_NATIVE_ACTION_LOCK_UNAVAILABLE");
             if(profile.strike()!=null && profile.strike().details().actionLockSeconds()>0
@@ -551,9 +548,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 pounceTarget = nearestTarget(profile.movement().maxDistance(), 120.0);
                 return pounceTarget == null ? Validation.reject("NO_VALID_TARGET") : Validation.pass();
             }
-            return select(profile.strike(), false).accepted().isEmpty()&&!profile.strike().details().finisher()
-                    ? Validation.reject("NO_VALID_TARGET") : Validation.pass();
+            // Geometry targets are discovered at execution; a legal manual swing may hit nothing.
+            return Validation.pass();
         }
+        @Override public boolean requiresSpatialCommitContext() { return true; }
         @Override public CommittedTarget captureTarget(Stage04SkillProfile profile,
                 com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,SkillExecutionRequest request) {
             if(profile.support()!=null)return support.capture(store,actor,profile);
@@ -722,8 +720,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             if(profile.strike()!=null) {
                 if(feet.subtract(target.origin()).horizontalLength()>profile.strike().range())return Validation.reject("COMMITTED_TARGET_OUT_OF_RANGE");
-                return select(context,profile.strike()).accepted().isEmpty()&&!profile.strike().details().finisher()?Validation.reject("COMMITTED_STRIKE_EMPTY"):Validation.pass();
+                return com.inigmasgames.hytalerpg.execution.strike.StrikeCastPrerequisites.check(()->select(context,profile.strike()));
             }
+            if(profile.reaction()!=null)return Validation.pass(); // Self-armed reaction; world/equipment/state already checked.
             return Validation.reject("COMMITTED_TARGET_FAMILY_UNAVAILABLE");
         }
         private double conditionalReach(SkillExecutionContext c){

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-09T21:06:12.901Z" hostname="GRAHAM" time="0.108">
+  <properties/>
+  <testcase name="preparationDiagnosticsRecordStageWithoutRawExceptionOrSensitiveItemData()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.005"/>
+  <testcase name="geometryAdmissionRetainsBothOverloadGuardsAndDoesNotSuppressOtherErrors()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.004"/>
+  <testcase name="scheduledEmptyStrikeKeepsValidPaidMissContract()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.004"/>
+  <testcase name="fireBoltEquipmentResourceAndCooldownGuardsRemain()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.007"/>
+  <testcase name="nativeAdapterWiresSharedAdmissionAndWorldAnchorWithoutRemovingIntrinsicTargetGuards()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.002"/>
+  <testcase name="spatialWorldAnchorSurvivesPendingPersistenceAndWorldChangeRejectsWithoutDispatch()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.009"/>
+  <testcase name="emptyStrikeStillRejectsWrongEquipmentAndInsufficientStamina()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.006"/>
+  <testcase name="[1] Weapon_Staff_Crystal_Flame" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.015"/>
+  <testcase name="[2] Weapon_Staff_Crystal_Ice" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.013"/>
+  <testcase name="[3] Weapon_Wand_Wood" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.012"/>
+  <testcase name="quickSlashEmptyGeometryCommitsOnePaidZeroHitSwing()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.004"/>
+  <testcase name="everyAuthoredStrikeGeometryAllowsZeroCandidatesWithoutWeakeningEntityConnections()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.014"/>
+  <testcase name="nativeMithrilReproducesExactMissingMagicPowerThenRejectsBeforeCommit()" classname="com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest" time="0.013"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
