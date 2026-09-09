@@ -1,0 +1,10 @@
+{
+  "angleRadians": 0.0,
+  "connectedProof": false,
+  "angleDistanceRadians": 1.5707963705062866,
+  "costType": "DAMAGE",
+  "baseDrain": 7.0,
+  "operation": "WieldingInteraction",
+  "nativeControl": "Weapon_Sword_Secondary_Guard_Wield",
+  "activationGate": "NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED"
+}

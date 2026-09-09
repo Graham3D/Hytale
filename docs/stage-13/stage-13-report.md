@@ -4,14 +4,19 @@ Revision R032, version 0.0.25; branch RPG. Resumed from pushed Stage12 H
 `de60a02`. All work is in the C: GitHub checkout. Owner art, including
 `art/lost and found`, is untouched. No Google Drive writes or live deployment.
 
-Status: **BLOCKED — native tick work NOT_MEASURED and connected integration**, after cohort J native persistence handoff. This is not a release candidate or a
-Stage13 closure. Connected status: **UNVERIFIED**. The latest historical completed local
+Current deliverable: **cohort K testing build COMPLETE / PACKAGED_FOR_TESTING**.
+The bounded encounter-load ordering correction, one full 2,090-test retained run,
+three-mod smoke, packaging and rollback checks are complete. Download the build
+and read its hashes/known issues in the [Stage 13 testing-build report](stage-13-test-build-report.md).
+No live saves or JARs were changed. Production qualification remains
+**BLOCKED — native tick work NOT_MEASURED and connected integration**; this is not a production release or Stage13 acceptance closure.
+Connected status: **UNVERIFIED**. The latest historical completed local
 stage is Stage12 H: 1653 retained tests, isolated normal three-mod smoke,
 packaging/archive checks, and the actual archived schema8 reader rollback drill.
 
 ## Evidence and scope
 
-Latest correction: [native persistence handoff and shield escrow report](native-persistence-handoff-correction.md).
+Previous correction: [native persistence handoff and shield escrow report](native-persistence-handoff-correction.md).
 Cohort J is **ELIGIBLE_FOR_ISOLATED_CONNECTED_QA**, with 2,087 tests (all 2,053
 Stage I identities retained), isolated three-mod smoke, archive and actual
 archived-reader rollback checks passing. Hits consume pre-durable shield escrow;

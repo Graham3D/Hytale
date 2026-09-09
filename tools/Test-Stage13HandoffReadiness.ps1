@@ -1,19 +1,19 @@
 [CmdletBinding()]
-param()
+param([ValidateSet('j','k')][string]$Cohort='j')
 $ErrorActionPreference='Stop'
 $taskRoot=(Resolve-Path "$PSScriptRoot\..").Path
-$out=Join-Path $taskRoot 'evidence\stage-13\cohort-j'
+$out=Join-Path $taskRoot "evidence\stage-13\cohort-$Cohort"
 $verification=Get-Content -Raw -LiteralPath (Join-Path $out 'verification.json')|ConvertFrom-Json
 $performance=Get-Content -Raw -LiteralPath (Join-Path $out 'hardening\durable-load.json')|ConvertFrom-Json
 $tests=Get-Content -Raw -LiteralPath (Join-Path $out 'test-results.json')|ConvertFrom-Json
-& "$PSScriptRoot\Test-Stage13HandoffScope.ps1" -Tests $tests
+& "$PSScriptRoot\Test-Stage13HandoffScope.ps1" -Tests $tests -Cohort $Cohort
 if($verification.failures -or $verification.errors -or $verification.skipped -or -not $verification.normalThreeModSmoke -or $verification.tests -lt 2087){throw 'Nonblocking candidate local gate incomplete'}
 $records=0;foreach($entry in $performance.grouping.recordsPerGroup.PSObject.Properties){$records+=[int]$entry.Name*[long]$entry.Value}
 if($performance.samples -ne 60 -or $performance.actors -ne 4 -or $performance.victims -ne 16 -or $performance.updatesPerSample -ne 64 -or
     $records -ne 3840 -or $performance.persistenceTimings.DURABLE_ACK.count -ne 3840 -or
     -not $performance.sampleEndsAfterAll64DurableAcknowledgements -or -not $performance.checkpointWorkerConcurrentWithSamples){throw 'Original real-storage diagnostic incomplete'}
 $result=[ordered]@{
-    stage=13;cohort='j';revision='R032';version='0.0.25';startingCommit='d28a9f2006f4bdd56878b3c81637ba1eb9d691dd';jarSha256=$verification.jarSha256
+    stage=13;cohort=$Cohort;revision='R032';version='0.0.25';startingCommit=if($Cohort -eq 'k'){'eb42b1c8a437c2dbf0210b2b7b38be2e63d2ad28'}else{'d28a9f2006f4bdd56878b3c81637ba1eb9d691dd'};jarSha256=$verification.jarSha256
     status='BLOCKED';releaseCandidate=$false;isolatedQaEligibility='ELIGIBLE_FOR_ISOLATED_CONNECTED_QA';connectedGate='UNVERIFIED'
     earliestFailingBoundary='NATIVE_RPG_TICK_WORK_NOT_MEASURED'
     blockers=@('NATIVE_RPG_TICK_WORK_NOT_MEASURED','COMBINED_FOUR_PLAYER_NATIVE_LOAD_AND_INTENDED_PLAYER_SCALING_NOT_VERIFIED','NATIVE_INTEGRATION_EXCEPTIONS_NOT_PROVEN_CAPABILITY_IMPOSSIBILITIES','REMAINING_MASTER_FAULT_MATRIX_AND_FINAL_STAGE13_RELEASE_CANDIDATE_NOT_CLOSED')

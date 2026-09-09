@@ -100,12 +100,12 @@ if($Cohort -ne 'a'){
     if($audit.connectedProof -ne $false -or -not $audit.emptyNativeInteractions -or -not $audit.typedElements){throw 'Projectile audit authority mismatch'}
     if($Cohort -eq 'b' -and ($audit.resolvedConfigs -ne 13 -or $audit.shippedCrossbowSpeed -ne 40 -or $audit.shippedCrossbowRadius -ne .075 -or $audit.shippedCrossbowGravity -ne 10 -or
         $audit.equipment.Weapon_Crossbow_Iron.basicPower -ne 10 -or $audit.equipment.Weapon_Spear_Iron.basicPower -ne 6)){throw 'Cohort B native numeric contract mismatch'}
-    if($Cohort -in @('c','d','e','f','g','h','i','j') -and ($audit.resolvedConfigs -ne 19 -or $audit.equipment.Weapon_Gun_Blunderbuss.basicPower -ne 200 -or
+    if($Cohort -in @('c','d','e','f','g','h','i','j','k') -and ($audit.resolvedConfigs -ne 19 -or $audit.equipment.Weapon_Gun_Blunderbuss.basicPower -ne 200 -or
         $audit.nativeChargedBow.speed -ne 85 -or $audit.nativeChargedBow.gravity -ne 25 -or $audit.nativeChargedBow.radius -ne .075 -or
         $audit.snipeActivationGate -ne 'NATIVE_BOW_MAX_RANGE_UNVERIFIED')){throw 'Cohort C native source/capability audit mismatch'}
     $audit|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $evidence 'native-projectile-equipment-audit.json') -Encoding utf8
 }
-if($Cohort -in @('d','e','f','g','h','i','j')){
+if($Cohort -in @('d','e','f','g','h','i','j','k')){
     $movementLine=[regex]::Match($plain,'RPG_STAGE13_MOVEMENT_ASSETS result=PASS (\{[^\r\n]*\})')
     if(-not $movementLine.Success){throw 'Native movement/Guard control asset audit missing'}
     $movement=$movementLine.Groups[1].Value|ConvertFrom-Json
@@ -113,7 +113,7 @@ if($Cohort -in @('d','e','f','g','h','i','j')){
         $movement.activationGate -ne 'NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED' -or $movement.connectedProof){throw 'Guard native ownership/capability gate mismatch'}
     $movement|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $evidence 'native-movement-guard-audit.json') -Encoding utf8
 }
-if($Cohort -in @('e','f','g','h','i','j')){
+if($Cohort -in @('e','f','g','h','i','j','k')){
     $basicLine=[regex]::Match($plain,'RPG_STAGE13_NATIVE_BASIC_PATHS result=PASS (\{[^\r\n]*\})')
     if(-not $basicLine.Success){throw 'Installed native basic-attack path audit missing'}
     $basic=$basicLine.Groups[1].Value|ConvertFrom-Json

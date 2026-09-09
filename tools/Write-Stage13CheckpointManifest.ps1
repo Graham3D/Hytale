@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('f','g','h','i','j')][string]$Cohort='f')
+param([ValidateSet('f','g','h','i','j','k')][string]$Cohort='f')
 $ErrorActionPreference='Stop'
 $manifestRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $manifestEvidence=Join-Path $manifestRoot "evidence\stage-13\cohort-$Cohort"
@@ -45,7 +45,7 @@ if($Cohort -eq 'i'){
     $manifest.durability=@{submission='PROVISIONAL_NOT_DURABLE';acknowledgement='AFTER_COVERING_FORCE_TRUE';grouping='SEALED_OPERATIONS_DRAIN_ALREADY_QUEUED_NO_SYNTHETIC_64_DAMAGE_EPOCH';checkpoint='BOUNDED_BUNDLES_AND_SINGLE_V2_MANIFEST';connected='UNVERIFIED'}
     $manifest.report=@{path='docs/stage-13/encounter-durability-final-boundary-report.md';sha256=(Get-FileHash -LiteralPath (Join-Path $manifestRoot 'docs/stage-13/encounter-durability-final-boundary-report.md')).Hash}
 }
-if($Cohort -eq 'j'){
+if($Cohort -in @('j','k')){
     $manifest.schema.encounterJournal=2;$manifest.schema.encounterCheckpoint=2
     $manifest.schema.rollback='STOP_ALL_WRITERS_AND_RESTORE_MATCHING_PLAYER_REWARD_ENCOUNTER_WORLD_CHECKPOINT_NO_ONE_SIDED_REWIND'
     $manifest.rollback.immediateCheckpoint='Stage13I efe9e159b13de005a67a69bb90b84066d0e4efd6'
@@ -53,6 +53,12 @@ if($Cohort -eq 'j'){
     $manifest.rollback.compatibilityTests='Stage13EscrowArchiveRollbackTest actual I debit/reward reader plus all retained rollback tests; native world reopening still unverified'
     $manifest.durability=@{submission='PROVISIONAL_NOT_DURABLE';acknowledgement='AFTER_COVERING_FORCE_TRUE';shield='PRE_DURABLE_ESCROW_CRASH_FORFEITURE';nativeTick='NOT_MEASURED';connected='UNVERIFIED'}
     $manifest.report=@{path='docs/stage-13/native-persistence-handoff-correction.md';sha256=(Get-FileHash -LiteralPath (Join-Path $manifestRoot 'docs/stage-13/native-persistence-handoff-correction.md')).Hash}
+}
+if($Cohort -eq 'k'){
+    $manifest.purpose='COMPLETE_CURRENT_ARPG_TEST_BUILD_NOT_PRODUCTION_RELEASE'
+    $manifest.rollback.immediateCheckpoint='Stage13J eb42b1c8a437c2dbf0210b2b7b38be2e63d2ad28'
+    $manifest.rollback.immediateSha256='529F7601D69F9DBDA54ABAD87FBF2C674A31C3944E641602AE1BC79225A696AC'
+    $manifest.report=@{path='docs/stage-13/stage-13-test-build-report.md';sha256=(Get-FileHash -LiteralPath (Join-Path $manifestRoot 'docs/stage-13/stage-13-test-build-report.md')).Hash}
 }
 $manifest|ConvertTo-Json -Depth 8|Set-Content -LiteralPath $path -Encoding utf8
 $read=Get-Content -Raw -LiteralPath $path|ConvertFrom-Json -AsHashtable

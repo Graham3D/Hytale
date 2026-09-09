@@ -34,10 +34,11 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
         var key=new Key(world,enemy);if(attachments.containsKey(key)||finalizing.containsKey(key))throw new IllegalStateException("ENCOUNTER_CONTEXT_GENERATION_BUSY");
         if(attachments.size()>=EncounterContributions.MAX_ENCOUNTERS)throw new FileEncounterStore.CapacityRejected();
         try(var lease=contextLoads.reserve()){
+            var predecessor=store.loadFrontier();
             var attachment=new Attachment();var receipt=new CompletableFuture<Boolean>();attachments.put(key,attachment);
             attachment.tail=receipt.thenApply(ignored->null);
             var task=lease.submit(CompletableFuture.completedStage(null),ignored->{
-                try{receipt.complete(attach(world,enemy,role,candidate));}
+                try{receipt.complete(attachPrepared(world,enemy,role,candidate,predecessor));}
                 catch(Throwable error){unavailable=true;receipt.completeExceptionally(error);throw error;}
             });
             task.whenComplete((ignored,error)->{if(error!=null){unavailable=true;receipt.completeExceptionally(error);}});
@@ -137,17 +138,22 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
     private int freeDeathTickets;
     public PersistentEncounterRuntime(FileEncounterStore store,FileEncounterStore.AwardDelivery awards){this.store=Objects.requireNonNull(store);this.awards=Objects.requireNonNull(awards);freeDeathTickets=FileEncounterStore.MAX_PENDING-store.pendingCount();}
     /** Only new native spawns may supply a classifier; loads must pass an empty candidate. */
-    public boolean attach(UUID world,UUID enemy,String currentRole,Optional<EnemyRewardRegistry.Spawn> newSpawn){return guarded(()->{
+    public boolean attach(UUID world,UUID enemy,String currentRole,Optional<EnemyRewardRegistry.Spawn> newSpawn){return attachPrepared(world,enemy,currentRole,newSpawn,null);}
+    private boolean attachPrepared(UUID world,UUID enemy,String currentRole,Optional<EnemyRewardRegistry.Spawn> newSpawn,CompletionStage<Void> predecessor){return guarded(()->{
+        if(predecessor!=null)EncounterGroupCommit.await(predecessor.toCompletableFuture());
         var key=new Key(world,enemy);
         synchronized(this){if(loaded.contains(key))return true;if(loaded.size()>=EncounterContributions.MAX_ENCOUNTERS||finalizing.containsKey(key))return false;}
         if(store.death(world,enemy).isPresent())return false;
-        var saved=store.load(world,enemy);
+        var saved=predecessor==null?store.load(world,enemy):store.loadPrepared(world,enemy);
         if(saved.isEmpty()){
             if(newSpawn.isEmpty())return false;
             var candidate=newSpawn.get();if(!candidate.world().equals(world)||!candidate.enemy().equals(enemy))throw new IllegalArgumentException("ENCOUNTER_ID_MISMATCH");
             saved=Optional.of(store.create(candidate));
         }
-        if(!saved.get().spawn().roleId().equals(currentRole)){store.disqualify(world,enemy);return false;}
+        if(!saved.get().spawn().roleId().equals(currentRole)){
+            if(predecessor==null)store.disqualify(world,enemy);else store.disqualifyPrepared(world,enemy);
+            return false;
+        }
         synchronized(this){
             if(saved.get().disqualified()||finalizing.containsKey(key)||!ledger.restore(saved.get()))return false;
             loaded.add(key);return true;

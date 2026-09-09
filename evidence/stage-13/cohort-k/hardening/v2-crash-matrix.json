@@ -1,0 +1,177 @@
+[
+  {
+    "restarts": 3,
+    "boundary": "BOOTSTRAP_PREPARE_CREATED",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 0
+  },
+  {
+    "restarts": 3,
+    "boundary": "BOOTSTRAP_PREPARE_HEADER_WRITTEN",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 0
+  },
+  {
+    "restarts": 3,
+    "boundary": "BOOTSTRAP_PREPARE_FORCED",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 0
+  },
+  {
+    "restarts": 3,
+    "boundary": "BOOTSTRAP_MANIFEST_PARTIAL_WRITE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 0
+  },
+  {
+    "restarts": 3,
+    "boundary": "BOOTSTRAP_MANIFEST_BEFORE_FORCE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 0
+  },
+  {
+    "restarts": 3,
+    "boundary": "BOOTSTRAP_MANIFEST_AFTER_FORCE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 0
+  },
+  {
+    "restarts": 3,
+    "boundary": "BOOTSTRAP_MANIFEST_PUBLISHED",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 0
+  },
+  {
+    "restarts": 3,
+    "boundary": "PREPARE_CREATED",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "PREPARE_HEADER_WRITTEN",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "PREPARE_FORCED",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "ACTIVATION_WRITTEN",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1024
+  },
+  {
+    "restarts": 3,
+    "boundary": "ACTIVATION_FORCED",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "BEFORE_ACTIVE_SWITCH",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "AFTER_ACTIVE_SWITCH",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "BUNDLE_SERIALIZATION",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "BUNDLE_PARTIAL_WRITE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "BUNDLE_BEFORE_FORCE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "BUNDLE_AFTER_FORCE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "BUNDLES_DURABLE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "MANIFEST_PARTIAL_WRITE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "MANIFEST_BEFORE_FORCE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "MANIFEST_AFTER_FORCE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "MANIFEST_PUBLISHED",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "BEFORE_WAL_RETIRE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  },
+  {
+    "restarts": 3,
+    "boundary": "DURING_WAL_RETIRE",
+    "processHaltNotPowerLoss": true,
+    "exitCode": 73,
+    "replayed": 1025
+  }
+]

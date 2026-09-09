@@ -75,6 +75,10 @@ public final class FileEncounterStore implements AutoCloseable {
     void foregroundCompleted(){if(durabilityV2)barriers.completed();}
 
     public Optional<EncounterContributions.Snapshot> load(UUID world,UUID enemy){awaitSubmissions();awaitCheckpoints();return locked(()->loadLocked(world,enemy));}
+    /** Immutable admission-time fence. Later unrelated writes cannot become load prerequisites. */
+    CompletionStage<Void> loadFrontier(){return CompletableFuture.allOf(groups.frontier().toCompletableFuture(),checkpointTail).minimalCompletionStage();}
+    /** Worker only, after the captured load frontier; the attachment gates new same-context mutations. */
+    Optional<EncounterContributions.Snapshot> loadPrepared(UUID world,UUID enemy){return locked(()->loadLocked(world,enemy));}
     private Optional<EncounterContributions.Snapshot> loadLocked(UUID world,UUID enemy){
         // Public reads retain on-disk validation. Hot-path save uses the replayed durable mirror.
         var baseline=baseline(new EncounterJournal.Key(world,enemy));if(baseline==null)return Optional.empty();

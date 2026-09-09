@@ -1,8 +1,8 @@
 [CmdletBinding()]
-param()
+param([ValidateSet('j','k')][string]$Cohort='j')
 $ErrorActionPreference='Stop'
 $taskRoot=(Resolve-Path "$PSScriptRoot\..").Path
-$out=Join-Path $taskRoot 'evidence\stage-13\cohort-j'
+$out=Join-Path $taskRoot "evidence\stage-13\cohort-$Cohort"
 $prior=Get-Content -Raw -LiteralPath (Join-Path $taskRoot 'evidence\stage-13\cohort-i\before\checkpoint.json')|ConvertFrom-Json -AsHashtable
 $priorLive=Get-Content -Raw -LiteralPath (Join-Path $taskRoot 'evidence\stage-13\cohort-i\live-state-verification.json')|ConvertFrom-Json -AsHashtable
 $liveMods=Join-Path $env:APPDATA 'Hytale\data\pre-release\Saves\RPG\mods'

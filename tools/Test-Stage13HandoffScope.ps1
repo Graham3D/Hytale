@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([Parameter(Mandatory)][object[]]$Tests)
+param([Parameter(Mandatory)][object[]]$Tests,[ValidateSet('j','k')][string]$Cohort='j')
 $ErrorActionPreference='Stop'
 $taskRoot=(Resolve-Path "$PSScriptRoot\..").Path
 $baseline=Get-Content -Raw -LiteralPath (Join-Path $taskRoot 'evidence\stage-13\cohort-i\test-results.json')|ConvertFrom-Json
@@ -64,3 +64,18 @@ if($crashes.Count -ne 7 -or @($crashes|Where-Object {$_.exitCode -ne 73 -or $_.r
 # Original workload source, including all 64 waits, is immutable for this correction.
 if(@(& git -c core.safecrlf=false -C $taskRoot diff --name-only d28a9f2006f4bdd56878b3c81637ba1eb9d691dd -- src/test/java/com/inigmasgames/hytalerpg/Stage13DurabilityLoadTest.java).Count){throw 'Original 64-update diagnostic changed'}
 Write-Output 'All 2053 Stage I test identities retained; new nonblocking/escrow/rollback gates present.'
+if($Cohort -eq 'k'){
+    $previous=Get-Content -Raw -LiteralPath (Join-Path $taskRoot 'evidence\stage-13\cohort-j\test-results.json')|ConvertFrom-Json
+    if(($previous|Measure-Object -Property tests -Sum).Sum -ne 2087){throw 'Stage J baseline mismatch'}
+    foreach($suite in $previous){
+        $current=@($Tests|Where-Object {$_.name -eq $suite.name})
+        if($current.Count -ne 1){throw "Missing J suite: $($suite.name)"}
+        foreach($case in $suite.cases){if($case -notin $current[0].cases){throw "Missing J test: $($suite.name) $case"}}
+    }
+    if(-not ($Tests|Where-Object {$_.name -eq 'com.inigmasgames.hytalerpg.Stage13EncounterLoadOrderingTest' -and $_.tests -eq 3})){throw 'Bounded load-ordering tests missing'}
+    $changed=@(& git -c core.safecrlf=false -C $taskRoot diff --name-only eb42b1c8a437c2dbf0210b2b7b38be2e63d2ad28 -- src/main canvas-ui/src)
+    $changed+=@(& git -C $taskRoot ls-files --others --exclude-standard -- src/main canvas-ui/src)
+    $bounded=@('src/main/java/com/inigmasgames/hytalerpg/progress/FileEncounterStore.java','src/main/java/com/inigmasgames/hytalerpg/progress/PersistentEncounterRuntime.java')
+    if(@($changed|Where-Object {$_ -notin $bounded}).Count){throw 'K expanded beyond encounter-load ordering'}
+    Write-Output 'All 2087 J identities plus three load-ordering cases verified; production scope limited to two files.'
+}
