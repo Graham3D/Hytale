@@ -37,10 +37,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Stage05ProjectileTest {
-    @Test void sixProjectileProfilesPreserveCanonicalCohortAndExcludeSnipe() {
+    @Test void sixProjectilePilotsRemainCanonicalAndSnipeRemainsNativeGated() {
         Stage04SkillProfiles profiles = profiles();
         assertEquals(12 + Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES, profiles.all().values().stream().filter(profile -> profile.area() == null && profile.connection() == null && profile.support() == null && profile.summon() == null && profile.summonAction() == null && profile.conversion() == null && profile.cage() == null).count());
-        assertFalse(profiles.supports("snipe"));
+        assertEquals("NATIVE_BOW_MAX_RANGE_UNVERIFIED",profiles.require("snipe").projectile().details().nativeCapabilityGate());
         assertProjectile(profiles.require("fire_bolt"), Set.of("STAFF", "WAND"), "MANA", 8, 1.4,
                 "MAGIC_WEAPON", "MAGIC", "Projectile_Config_RPG_Fire_Bolt", 24, 24, .30, .95);
         assertProjectile(profiles.require("frost_bolt"), Set.of("STAFF", "WAND"), "MANA", 8, 1.5,

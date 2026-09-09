@@ -10,12 +10,17 @@ public final class ProjectileLifecycleRegistry {
     private record RootKey(UUID owner,String id) { }
     private static RootKey key(ProjectileExecutionPlan p) { return new RootKey(p.ownerId(),p.rootCastId()); }
     /** Retains bounded original registry accounting while an owning skill/status context can still trigger a release. */
-    public static final class Lifetime {private RootKey key;private Root state;}
+    public static final class Lifetime {
+        private RootKey key;private Root state;
+        private final com.inigmasgames.hytalerpg.execution.RootWorkBudget work=new com.inigmasgames.hytalerpg.execution.RootWorkBudget();
+        public com.inigmasgames.hytalerpg.execution.RootWorkBudget work(){return work;}
+    }
     private static final class Root {
         int pending,spent,triggered;final Set<String> seen=new HashSet<>();final Lifetime lifetime;
+        final com.inigmasgames.hytalerpg.execution.RootWorkBudget work;
         Root(int launches){this(launches,null);}
-        Root(int launches,Lifetime lifetime){pending=launches;spent=launches;this.lifetime=lifetime;}
-        Root(Root prior){pending=prior.pending;spent=prior.spent;triggered=prior.triggered;seen.addAll(prior.seen);lifetime=prior.lifetime;}
+        Root(int launches,Lifetime lifetime){pending=launches;spent=launches;this.lifetime=lifetime;work=lifetime==null?new com.inigmasgames.hytalerpg.execution.RootWorkBudget():lifetime.work();}
+        Root(Root prior){pending=prior.pending;spent=prior.spent;triggered=prior.triggered;seen.addAll(prior.seen);lifetime=prior.lifetime;work=prior.work;}
     }
     public synchronized String admission(UUID owner,int launches) {
         if(launches<1||launches>48)return "INVALID_PROJECTILE_BATCH";
@@ -67,6 +72,7 @@ public final class ProjectileLifecycleRegistry {
         }
         if(next.spent>48)throw new IllegalStateException("ROOT_SPAWN_EFFECT_BUDGET");
         if(extra>0) {String admission=admission(first.ownerId(),extra);if(!admission.equals("PASS"))throw new IllegalStateException(admission);}
+        String shared=next.work.projectiles(next.spent,next.triggered);if(!shared.equals("PASS"))throw new IllegalStateException(shared);
         roots.put(key,next);if(next.lifetime!=null){next.lifetime.key=key;next.lifetime.state=next;}for(var instance:batch)active.put(instance.plan().projectileInstanceId(),instance);
     }
     /** Instant secondary effects spend root budgets, but hold no native carrier capacity. */
@@ -77,6 +83,7 @@ public final class ProjectileLifecycleRegistry {
         if(parent.plan().generation()>=3)return "MAX_GENERATION";
         if(root.triggered>=16)return "ROOT_TRIGGERED_SECONDARY_BUDGET";
         if(root.spent>=48)return "ROOT_SPAWN_EFFECT_BUDGET";
+        String shared=root.work.projectiles(root.spent+1,root.triggered+1);if(!shared.equals("PASS"))return shared;
         root.seen.add(id);root.spent++;root.triggered++;return "PASS";
     }
     public synchronized Optional<ProjectileInstance> get(String id){return Optional.ofNullable(active.get(id));}

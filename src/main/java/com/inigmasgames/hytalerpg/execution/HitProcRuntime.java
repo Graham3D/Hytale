@@ -85,7 +85,8 @@ public final class HitProcRuntime {
     public synchronized int size(){return fearReady.size();}
     public static double coefficient(SkillExecutionContext c){
         int simultaneous=c.profile().connection()!=null&&c.profile().connection().kind()==com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile.Kind.ORBIT?
-                c.profile().connection().details().bladeCount():c.profile().projectile()!=null?c.compiledPlan().projectileModifiers().batchSize():1;
+                c.profile().connection().details().bladeCount():c.profile().projectile()!=null?
+                c.compiledPlan().projectileModifiers().batchSize()*c.profile().projectile().details().pattern().count():1;
         return 1d/Math.max(1,simultaneous);
     }
 }

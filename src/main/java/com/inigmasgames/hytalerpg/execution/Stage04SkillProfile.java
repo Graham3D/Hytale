@@ -119,7 +119,7 @@ public record Stage04SkillProfile(
 
     public double damageCoefficient() {
         if (strike != null) return strike.coefficient();
-        if (projectile != null) return projectile.coefficient();
+        if (projectile != null) return projectile.coefficient()>0?projectile.coefficient():projectile.details().explosion().coefficient();
         if (area != null) return area.coefficient();
         if (connection != null) return connection.coefficient();
         if (summon != null) return summon.coefficient();
@@ -256,14 +256,29 @@ public record Stage04SkillProfile(
             return speedsByWeaponKind.getOrDefault(weaponKind, speed);
         }
         public double maximumLifetimeSeconds(String weaponKind) { return capLifetime(maxDistance/speedFor(weaponKind)); }
-        public double capLifetime(double computed){return independentLifetimeSeconds>0?Math.min(computed,independentLifetimeSeconds):computed;}
+        public double capLifetime(double computed){
+            if (independentLifetimeSeconds > 0 && (details.pattern().ballisticAim() || details.pattern().homingTurnDegrees() > 0))
+                return independentLifetimeSeconds;
+            return independentLifetimeSeconds>0?Math.min(computed,independentLifetimeSeconds):computed;
+        }
         public boolean requiresAmmo() { return ammoQuantity > 0; }
         public boolean hasPeriodicStatus() { return periodicTicks > 0; }
     }
 
     /** Typed payload authority, independent of the cosmetic native carrier or its collision transport. */
-    public record ProjectileDetails(String element, int chillStacks, double bossRootSlow, Set<String> bossSlowOptInRoles) {
+    public record ProjectileDetails(String element, int chillStacks, double bossRootSlow, Set<String> bossSlowOptInRoles,
+                                    com.inigmasgames.hytalerpg.execution.projectile.ProjectilePattern pattern,
+                                    com.inigmasgames.hytalerpg.execution.projectile.ProjectileExplosion explosion,
+                                    String nativeCapabilityGate) {
+        public ProjectileDetails(String element,int chillStacks,double bossRootSlow,Set<String> roles) {
+            this(element,chillStacks,bossRootSlow,roles,null,null,"");
+        }
         public ProjectileDetails {
+            pattern = pattern == null ? com.inigmasgames.hytalerpg.execution.projectile.ProjectilePattern.SINGLE : pattern;
+            explosion = explosion == null ? com.inigmasgames.hytalerpg.execution.projectile.ProjectileExplosion.NONE : explosion;
+            nativeCapabilityGate = nativeCapabilityGate == null ? "" : nativeCapabilityGate;
+            if (!Set.of("", "NATIVE_BOW_MAX_RANGE_UNVERIFIED").contains(nativeCapabilityGate))
+                throw new IllegalArgumentException("Unknown projectile capability gate");
             bossSlowOptInRoles = Set.copyOf(bossSlowOptInRoles == null ? Set.of() : bossSlowOptInRoles);
             if (!Set.of("PHYSICAL", "FIRE", "COLD", "ARCANE", "VOID", "NECROTIC").contains(element)
                     || chillStacks < 0 || chillStacks > 5 || !Double.isFinite(bossRootSlow)

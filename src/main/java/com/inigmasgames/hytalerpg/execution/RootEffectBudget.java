@@ -7,6 +7,8 @@ public final class RootEffectBudget {
     private final UUID actor;private final String root;
     private final Set<String> effects=new HashSet<>(Set.of("PRIMARY")),controllers=new HashSet<>();
     private int triggered;
+    private final com.inigmasgames.hytalerpg.vfx.ProjectileReadability.Group projectileVisuals=new com.inigmasgames.hytalerpg.vfx.ProjectileReadability.Group();
+    public com.inigmasgames.hytalerpg.vfx.ProjectileReadability.Group projectileVisuals(){return projectileVisuals;}
     private final com.inigmasgames.hytalerpg.progress.MasteryRootBudget mastery=new com.inigmasgames.hytalerpg.progress.MasteryRootBudget();
     public com.inigmasgames.hytalerpg.progress.MasteryRootBudget mastery(){return mastery;}
     private final com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement=new com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger();
@@ -14,6 +16,7 @@ public final class RootEffectBudget {
     private final Map<String,Double> orbitContacts=new HashMap<>();
     private final Set<String> procContacts=new HashSet<>();
     private final com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry.Lifetime projectileLifetime=new com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry.Lifetime();
+    private final RootWorkBudget work=projectileLifetime.work();
     public com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry.Lifetime projectileLifetime(){return projectileLifetime;}
     public synchronized String claimProcContact(String id){
         if(id==null||id.isBlank()||id.length()>512)return "INVALID_PROC_CONTACT";
@@ -38,10 +41,14 @@ public final class RootEffectBudget {
         if(id==null||id.isBlank()||id.length()>512)return "INVALID_EFFECT_ID";
         if(generation<1||generation>3)return "MAX_GENERATION";
         if(effects.contains(id))return "DUPLICATE_EFFECT";
-        if(effects.size()>=48)return "ROOT_SPAWN_EFFECT_BUDGET";
-        if(secondary&&triggered>=16)return "ROOT_TRIGGERED_SECONDARY_BUDGET";
+        String capacity=work.additionalEffect(secondary);if(!capacity.equals("PASS"))return capacity;
         effects.add(id);if(secondary)triggered++;return "PASS";
     }
-    public synchronized int spawned(){return effects.size();}
-    public synchronized int triggered(){return triggered;}
+    /** A persistent/authored component can resolve many contacts without becoming a new spawned effect each tick. */
+    public synchronized String authoredComponent(String id){
+        if(effects.contains(id))return "PASS";
+        return claim(id,1,false);
+    }
+    public synchronized int spawned(){return work.totalEffects();}
+    public synchronized int triggered(){return work.totalTriggered();}
 }

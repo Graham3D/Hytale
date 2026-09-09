@@ -217,6 +217,8 @@ public final class SkillExecutionService {
             throw new Rejection("LIFEBLOOD_MANUAL_UPFRONT_ONLY",retainedInstance);
         String instance = retainedInstance == null ? skill.value() + '-' + UUID.randomUUID() : retainedInstance;
         if(profile.cage()!=null)throw new Rejection(com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY,instance);
+        if(profile.projectile()!=null&&!profile.projectile().details().nativeCapabilityGate().isEmpty())
+            throw new Rejection(profile.projectile().details().nativeCapabilityGate(),instance);
         if (!profile.family().name().equals(plan.finalFamily())
                 && !plan.finalTags().contains(profile.family().name()))
             throw new Rejection("COMPILED_FAMILY_UNSUPPORTED", instance);

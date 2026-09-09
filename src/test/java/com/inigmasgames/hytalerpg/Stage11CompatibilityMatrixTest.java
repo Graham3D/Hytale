@@ -39,7 +39,12 @@ class Stage11CompatibilityMatrixTest {
         var p=c.plans().get(SkillSlot.SKILL01);assertNotNull(p);assertFalse(p.degraded());
         var profile=profiles.all().get(skill.id().value());
         if(profile==null)return new Result("CATALOG_ELIGIBLE_RUNTIME_NOT_IMPLEMENTED","STAGE04_05_REMAINDER",p);
-        try{resolver.resolve(profile,p);return new Result("COMPILED_PROFILE_RESOLVED_CONNECTED_UNVERIFIED","",p);}
+        try{
+            var resolved=resolver.resolve(profile,p);
+            String gate=resolved.cage()!=null?com.inigmasgames.hytalerpg.execution.summon.SelectiveCageProfile.BLOCKED_BOUNDARY
+                    :resolved.projectile()!=null?resolved.projectile().details().nativeCapabilityGate():"";
+            return new Result(gate.isEmpty()?"COMPILED_PROFILE_RESOLVED_CONNECTED_UNVERIFIED":"COMPILED_PROFILE_WITH_EXPLICIT_RUNTIME_GATE",gate,p);
+        }
         catch(RuntimeException invalid){Throwable cause=invalid;while(cause.getCause()!=null)cause=cause.getCause();return new Result("PROFILE_GATE",cause.getClass().getSimpleName()+":"+cause.getMessage(),p);}
     }
     void write(String file,Object value)throws Exception{Files.createDirectories(output);Files.writeString(output.resolve(file),new GsonBuilder().setPrettyPrinting().create().toJson(value));}
@@ -70,16 +75,17 @@ class Stage11CompatibilityMatrixTest {
     @Test void all2145PairsClassifiedAgainstAll87Skills()throws Exception{
         var rows=new ArrayList<Map<String,Object>>();var profileFailures=new TreeMap<String,String>();
         for(int a=0;a<passives.size();a++)for(int b=a+1;b<passives.size();b++){
-            var selected=List.of(passives.get(a),passives.get(b));var accepted=new ArrayList<String>();var missing=new ArrayList<String>();var rejected=new TreeMap<String,Integer>();var gated=new TreeMap<String,String>();
+            var selected=List.of(passives.get(a),passives.get(b));var accepted=new ArrayList<String>();var missing=new ArrayList<String>();var rejected=new TreeMap<String,Integer>();var gated=new TreeMap<String,String>();var capabilities=new TreeMap<String,String>();
             for(var skill:skills){var r=assess(skill,selected,false);
                 switch(r.gate){case "COMPILED_PROFILE_RESOLVED_CONNECTED_UNVERIFIED"->accepted.add(skill.id().value());
+                    case "COMPILED_PROFILE_WITH_EXPLICIT_RUNTIME_GATE"->capabilities.put(skill.id().value(),r.detail);
                     case "CATALOG_ELIGIBLE_RUNTIME_NOT_IMPLEMENTED"->missing.add(skill.id().value());
                     case "PROFILE_GATE"->{gated.put(skill.id().value(),r.detail);profileFailures.put(skill.id()+"/"+selected.getFirst().id()+"/"+selected.getLast().id(),r.detail);}
                     default->rejected.merge(r.detail,1,Integer::sum);}
             }
-            rows.add(Map.of("first",selected.getFirst().id().value(),"second",selected.getLast().id().value(),"classification",accepted.isEmpty()?missing.isEmpty()?"NO_VALID_IMPLEMENTED_SKILL":"CATALOG_ONLY_PENDING_LEGACY_RUNTIME":"VALID_ON_LISTED_PROFILES",
-                    "compiledProfileSkillsConnectedUnverified",accepted,"catalogOnlySkills",missing,"rejectedByCode",rejected,"profileGates",gated));
-            assertEquals(87,accepted.size()+missing.size()+gated.size()+rejected.values().stream().mapToInt(Integer::intValue).sum());
+            rows.add(Map.of("first",selected.getFirst().id().value(),"second",selected.getLast().id().value(),"classification",accepted.isEmpty()?capabilities.isEmpty()?missing.isEmpty()?"NO_VALID_IMPLEMENTED_SKILL":"CATALOG_ONLY_PENDING_LEGACY_RUNTIME":"COMPILED_BUT_RUNTIME_CAPABILITY_GATED":"VALID_ON_LISTED_PROFILES",
+                    "compiledProfileSkillsConnectedUnverified",accepted,"catalogOnlySkills",missing,"rejectedByCode",rejected,"profileGates",gated,"runtimeCapabilityGates",capabilities));
+            assertEquals(87,accepted.size()+missing.size()+gated.size()+capabilities.size()+rejected.values().stream().mapToInt(Integer::intValue).sum());
         }
         write("passive-pair-matrix.json",rows);write("pair-profile-gates.json",profileFailures);
         assertEquals(2145,rows.size());assertTrue(profileFailures.isEmpty(),profileFailures.toString());

@@ -17,6 +17,7 @@ public final class ProjectileInstance {
     private double completedDistance,completedSeconds,returnDistance,originalLifetime;
     private int motionRevision;
     private long nativeClockNanos;
+    private boolean nativeStarted,flightObserved;
     private double lastBounceSeconds=Double.NEGATIVE_INFINITY;
     private final ProjectileHoming homing=new ProjectileHoming();
     private Termination termination;
@@ -73,14 +74,26 @@ public final class ProjectileInstance {
         direction=caster.subtract(position).normalized();motionRevision++;return true;
     }
     public synchronized ProjectileFlight.Observation observe(double seconds, Vec3 position) {
+        flightObserved=true;
         return flight.observe(seconds, position);
+    }
+    /** The plan timestamp is a launch deadline, not time spent flying while waiting in the queue. */
+    public synchronized void nativeSpawned(long now) {
+        if(nativeStarted||flightObserved||termination!=null||now<plan.spawnTimestampNanos())
+            throw new IllegalStateException("INVALID_NATIVE_PROJECTILE_START");
+        nativeStarted=true;nativeClockNanos=now;
     }
     /** Native callbacks and player ticks share one clock; redirects cannot skip or double-charge elapsed time. */
     public synchronized ProjectileFlight.Observation sampleNativeClock(long now) {
+        flightObserved=true;
         long elapsed=now-nativeClockNanos;
         if(elapsed<0)return flight.observe(0,flight.lastPosition());
         nativeClockNanos=now;
         return flight.observe(elapsed/1e9,flight.lastPosition());
+    }
+    /** Clamp before any contact payload; an out-of-range native callback never extends authority. */
+    public synchronized boolean contactWithinRange(Vec3 point) {
+        return point.distanceSquared(flight.lastPosition())<=Math.pow(flight.remainingDistance()+1e-6,2);
     }
     public synchronized boolean terminate(String reason, Vec3 position) {
         if (termination != null) return false;

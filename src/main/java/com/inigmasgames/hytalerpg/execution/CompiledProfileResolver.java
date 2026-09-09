@@ -78,7 +78,11 @@ public final class CompiledProfileResolver {
             if(!ProfileComponentPolicy.discreteStrike(authored,true))throw new IllegalArgumentException("MULTISTRIKE_SINGLE_STRIKE_REQUIRED");
             var strike=resolved.getAsJsonObject("strike");strike.addProperty("repeats",3);strike.addProperty("repeatIntervalSeconds",.25);
         }
-        if(plan.orbit()&&authored.projectile()!=null)resolved.getAsJsonObject("connection").add("coefficient",resolved.getAsJsonObject("projectile").get("coefficient"));
+        if(plan.orbit()&&authored.projectile()!=null){
+            var p=resolved.getAsJsonObject("projectile");double coefficient=p.get("coefficient").getAsDouble();
+            if(coefficient==0)coefficient=p.getAsJsonObject("details").getAsJsonObject("explosion").get("coefficient").getAsDouble();
+            resolved.getAsJsonObject("connection").addProperty("coefficient",coefficient);
+        }
         final Stage04SkillProfile effective;
         try{effective=JSON.fromJson(resolved,Stage04SkillProfile.class);}catch(RuntimeException failure){
             Throwable cause=failure;while(cause.getCause()!=null)cause=cause.getCause();
@@ -104,7 +108,7 @@ public final class CompiledProfileResolver {
         if(dots.combustion()){
             if(!ProfileComponentPolicy.dotPayload(p,"BURN"))throw new IllegalArgumentException("BURN_APPLICATION_COMPONENT_REQUIRED");
             // Hit-only penalty never enters the offensive base captured for Burn.
-            if(p.projectile()!=null)scale(root,"projectile",.85,"coefficient");
+            if(p.projectile()!=null){scale(root,"projectile",.85,"coefficient");scaleExplosion(root,.85,"coefficient");}
             if(p.area()!=null&&!p.area().periodic())scale(root,"area",.85,"coefficient","innerCoefficient","finalCoefficient");
         }
         if((dots.virulence()||dots.concentratedVenom())&&!ProfileComponentPolicy.dotPayload(p,"POISON"))throw new IllegalArgumentException("POISON_APPLICATION_COMPONENT_REQUIRED");
@@ -144,6 +148,7 @@ public final class CompiledProfileResolver {
         if(p.strike()!=null){scale(root,"strike",.90,"coefficient");if(p.strike().statusId().equals("STAGGER"))scale(root,"strike",1.75,"statusSeconds");}
         if(p.projectile()!=null){
             scale(root,"projectile",.90,"coefficient");scale(root,"projectile",1.75,"knockbackDistance");
+            scaleExplosion(root,.90,"coefficient");
             if(p.projectile().statusId().equals("STAGGER"))scale(root,"projectile",1.75,"statusSeconds");
         }
         if(p.area()!=null){
@@ -159,6 +164,7 @@ public final class CompiledProfileResolver {
         }
     }
     private static void concentrate(Stage04SkillProfile p,JsonObject root){
+        if(p.projectile()!=null)scaleExplosion(root,.7,"radius","burnRadius");
         if(p.strike()!=null)switch(p.strike().geometry()){
             case ARC,ASSIST_CONE->scale(root,"strike",.7,"angleDegrees");
             case LINE->scale(root,"strike",.7,"lineHalfWidth");
@@ -207,6 +213,11 @@ public final class CompiledProfileResolver {
                 if(!a.trap()&&a.perTargetHitCap()==before)value.addProperty("perTargetHitCap",after);
             }
         }
+    }
+    private static void scaleExplosion(JsonObject root,double factor,String... fields){
+        if(!root.has("projectile")||root.get("projectile").isJsonNull())return;
+        var details=root.getAsJsonObject("projectile").getAsJsonObject("details");
+        if(details!=null&&details.has("explosion"))scale(details,"explosion",factor,fields);
     }
     private record Key(Stage04SkillProfile authored,FoundationModifiers modifiers,com.inigmasgames.hytalerpg.domain.GeometryModifiers geometry,com.inigmasgames.hytalerpg.domain.PulseModifiers pulses,com.inigmasgames.hytalerpg.domain.DotModifiers dots,com.inigmasgames.hytalerpg.domain.ControlModifiers controls,com.inigmasgames.hytalerpg.domain.StrikeModifiers strikes,int orbitCount,boolean secondaryConcentration,boolean secondaryImpact,boolean repulsion,boolean hemorrhage){}
 }

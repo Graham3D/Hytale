@@ -10,6 +10,32 @@ public final class ProjectileHoming {
     private double nextAcquisition=Double.NEGATIVE_INFINITY,lastUpdate=Double.NaN;
     public record Target(String id,Vec3 point,boolean visible) { }
     public record Update(Vec3 direction,String targetId,boolean reacquired) { }
+    public static boolean withinAuthoredLock(Target target,Vec3 committedOrigin,double range) {
+        if(committedOrigin==null||!Double.isFinite(range)||range<=0)throw new IllegalArgumentException("INVALID_HOMING_LOCK_RANGE");
+        return target!=null&&target.visible()&&target.point().distanceSquared(committedOrigin)<=range*range+1e-9;
+    }
+    /** Authored lock policy: selected entity first; otherwise nearest valid enemy to committed aim. */
+    public Update authored(double now,Vec3 point,Vec3 direction,String selectedId,Vec3 aim,ProjectilePattern pattern,
+                           Supplier<List<Target>> candidates,Function<String,Optional<Target>> live) {
+        if(!Double.isFinite(now)||pattern.homingTurnDegrees()<=0||aim==null)throw new IllegalArgumentException("INVALID_AUTHORED_HOMING");
+        double delta=Double.isNaN(lastUpdate)?0:Math.max(0,now-lastUpdate);lastUpdate=Double.isNaN(lastUpdate)?now:Math.max(lastUpdate,now);
+        boolean reacquired=false;
+        if(now+1e-9>=nextAcquisition){
+            var selected=selectedId==null?Optional.<Target>empty():live.apply(selectedId).filter(Target::visible);
+            if(selected.isPresent())targetId=selectedId;
+            else {
+                var options=candidates.get();if(options.size()>64)throw new IllegalStateException("HOMING_CANDIDATE_BUDGET");
+                targetId=options.stream().filter(Target::visible).filter(t->t.point().distanceSquared(aim)<=pattern.acquisitionRadius()*pattern.acquisitionRadius()+1e-9)
+                        .sorted(Comparator.comparingDouble((Target t)->t.point().distanceSquared(aim)).thenComparing(Target::id))
+                        .map(Target::id).findFirst().orElse(null);
+            }
+            nextAcquisition=now+.10;reacquired=true;
+        }
+        var selected=targetId==null?Optional.<Target>empty():live.apply(targetId).filter(Target::visible);
+        if(selected.isEmpty()){targetId=null;return new Update(direction,null,reacquired);}
+        Vec3 deltaTarget=selected.get().point().subtract(point);
+        return new Update(deltaTarget.lengthSquared()<1e-12?direction:turn(direction,deltaTarget,Math.toRadians(pattern.homingTurnDegrees())*delta),targetId,reacquired);
+    }
     public Update update(double now,Vec3 point,Vec3 direction,Supplier<List<Target>> candidates,Function<String,Optional<Target>> live) {
         if(!Double.isFinite(now))throw new IllegalArgumentException("Invalid homing clock");
         double delta=Double.isNaN(lastUpdate)?0:Math.max(0,now-lastUpdate);lastUpdate=Double.isNaN(lastUpdate)?now:Math.max(lastUpdate,now);

@@ -67,6 +67,14 @@ final class HytaleAreaQueries {
         BlockCollisionData hit = first(store, origin, destination.subtract(origin));
         return hit == null || hit.collisionStart >= 1 - 1e-6;
     }
+    static boolean projectileClear(Store<EntityStore> store,Vec3 origin,Vec3 destination,double radius) {
+        if(!Double.isFinite(radius)||radius<=0)throw new IllegalArgumentException("Invalid projectile sweep radius");
+        var result=new CollisionResult();result.setDefaultPlayerSettings();
+        result.disableCharacterCollisions();result.disableTriggerBlocks();result.disableDamageBlocks();
+        CollisionModule.findCollisions(new Box(-radius,-radius,-radius,radius,radius,radius),vector(origin),vector(destination.subtract(origin)),result,store);
+        for(int i=0;i<result.getBlockCollisionCount();i++)if(result.getBlockCollision(i).collisionStart<1-1e-6)return false;
+        return true;
+    }
     /** Saves the original aiming ray's world endpoint; does not acquire an enemy or cross its first blocking surface. */
     static Vec3 rayEndpoint(Store<EntityStore> store,Vec3 origin,Vec3 direction,double range) {
         Vec3 delta=direction.normalized().multiply(range);var hit=first(store,origin,delta);

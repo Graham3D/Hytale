@@ -6,6 +6,15 @@
   "policy": "Explicit RPG base per item; no charged/combo/signature min-max average. SourceProperty identifies the selected uncharged native base where available. RPG_AUTHORED_BASE entries explicitly use the master reference base 20; this is an RPG content selection, not a claim that native attacks deal 20. Unknown production items are unsupported.",
   "items": [
     {
+      "itemId": "Weapon_Gun_Blunderbuss",
+      "kind": "GUN",
+      "nativeFamily": "Gun",
+      "sourceAsset": "Server/Projectiles/Player/Gun/Gun_Blunderbuss_Bullet.json",
+      "sourceProperty": "Damage",
+      "selectionPolicy": "NATIVE_UNCHARGED_BASE",
+      "basePower": 200
+    },
+    {
       "itemId": "Weapon_Sword_Iron",
       "kind": "SWORD",
       "nativeFamily": "Sword",

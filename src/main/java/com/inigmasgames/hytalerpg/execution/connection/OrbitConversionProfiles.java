@@ -17,7 +17,7 @@ public final class OrbitConversionProfiles {
     private static Config load(){try(var in=OrbitConversionProfiles.class.getResourceAsStream("/rpg/runtime/orbit-conversion.json")){if(in==null)throw new IllegalStateException("ORBIT_CONFIG_MISSING");return JSON.fromJson(new InputStreamReader(in,StandardCharsets.UTF_8),Config.class);}catch(java.io.IOException e){throw new IllegalStateException(e);}}
     public static boolean eligible(Stage04SkillProfile p){return p.family()==Stage04SkillProfile.Family.PROJECTILE&&p.projectile()!=null
             ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.ORB,ConnectionProfile.Kind.ORBIT).contains(p.connection().kind());}
-    public static int count(Stage04SkillProfile p,CompiledSkillPlan plan){return plan.projectileModifiers().volley()?3:p.connection()!=null&&p.connection().kind()==ConnectionProfile.Kind.ORBIT?Math.min(CONFIG.maxOrbs(),p.connection().details().bladeCount()):1;}
+    public static int count(Stage04SkillProfile p,CompiledSkillPlan plan){return plan.projectileModifiers().volley()?3:p.connection()!=null&&p.connection().kind()==ConnectionProfile.Kind.ORBIT?Math.min(CONFIG.maxOrbs(),p.connection().details().bladeCount()):p.projectile()!=null?Math.min(CONFIG.maxOrbs(),p.projectile().details().pattern().count()):1;}
     public static Stage04SkillProfile convert(Stage04SkillProfile p,CompiledSkillPlan plan){
         if(!eligible(p))throw new IllegalArgumentException("NO_ORBIT_CONVERSION_COMPONENT");
         var result=JSON.toJsonTree(p).getAsJsonObject();var cfg=CONFIG;

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Exact installed source evidence, distinct from runtime resolution and connected gameplay. */
 class Stage13NativeEquipmentSourceTest {
     @Test void everySelectedProductionBaseHasAnExactSourceOrExplicitAuthoredPolicy() throws Exception {
-        var registry=NativeItemPowerRegistry.loadCanonical();assertEquals(14,registry.all().size());
+        var registry=NativeItemPowerRegistry.loadCanonical();assertEquals(15,registry.all().size());
         var path=Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install","pre-release","package","game","latest","Assets.zip");
         assertTrue(Files.isRegularFile(path));
         try(var zip=new ZipFile(path.toFile())){

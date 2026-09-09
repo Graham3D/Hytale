@@ -75,14 +75,14 @@ public final class ProfileComponentPolicy {
     public static Optional<Boolean> enemyPosition(String skill){var p=Canonical.PROFILES.all().get(skill);return p==null?Optional.empty():Optional.of(enemyPosition(p));}
     public static boolean cascade(String skill){var p=Canonical.PROFILES.all().get(skill);return p!=null&&cascade(p);}
     public static boolean orbit(String skill){var p=Canonical.PROFILES.all().get(skill);return p!=null&&com.inigmasgames.hytalerpg.execution.connection.OrbitConversionProfiles.eligible(p);}
-    public static int baseOrbitCount(String skill){var p=Canonical.PROFILES.require(skill);return p.connection()!=null&&p.connection().kind()==ConnectionProfile.Kind.ORBIT?Math.min(3,p.connection().details().bladeCount()):1;}
+    public static int baseOrbitCount(String skill){var p=Canonical.PROFILES.require(skill);return p.connection()!=null&&p.connection().kind()==ConnectionProfile.Kind.ORBIT?Math.min(3,p.connection().details().bladeCount()):p.projectile()!=null?Math.min(3,p.projectile().details().pattern().count()):1;}
     public static boolean cascade(Stage04SkillProfile p){return p.area()!=null&&p.area().geometry()==com.inigmasgames.hytalerpg.execution.area.AreaGeometry.Kind.DISC&&p.area().placementRange()>0&&!p.area().trap();}
     public static boolean aftermath(String skill){var p=Canonical.PROFILES.all().get(skill);return p!=null&&aftermath(p);}
     public static boolean aftermath(Stage04SkillProfile p){return p.area()!=null&&p.area().lifetimeSeconds()>0&&(p.area().periodic()||p.area().impactCount()>1||p.area().trap())
             ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.ORB,ConnectionProfile.Kind.ORBIT).contains(p.connection().kind());}
     public static double baseAreaRadius(String skill){var p=Canonical.PROFILES.require(skill);if(!cascade(p))throw new IllegalArgumentException("NO_CASCADE_AREA");return p.area().radius();}
     public static boolean enemyPosition(Stage04SkillProfile p){
-        return p.area()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().radius()>0
+        return p.projectile()!=null&&p.projectile().details().explosion().active()||p.area()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().radius()>0
                 ||p.support()!=null&&p.support().radius()>0&&(p.support().damageInterval()>0||p.support().chillInterval()>0)
                 ||p.strike()!=null&&affectedArea(p)
                 ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.WAVE,ConnectionProfile.Kind.LINE,ConnectionProfile.Kind.BEAM,ConnectionProfile.Kind.ORB,ConnectionProfile.Kind.ORBIT).contains(p.connection().kind());
@@ -109,7 +109,7 @@ public final class ProfileComponentPolicy {
         return p.connection()!=null&&Set.of(ConnectionProfile.Kind.WAVE,ConnectionProfile.Kind.LINE,ConnectionProfile.Kind.BEAM).contains(p.connection().kind());
     }
     public static boolean affectedArea(Stage04SkillProfile p){
-        return p.area()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().radius()>0
+        return p.projectile()!=null&&p.projectile().details().explosion().active()||p.area()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().radius()>0
                 ||p.support()!=null&&p.support().radius()>0||p.movement()!=null&&p.movement().landingRadius()>0
                 ||p.strike()!=null&&(p.strike().geometry()==Stage04SkillProfile.Geometry.RADIUS||p.strike().targetCap()>1&&p.strike().geometry()!=Stage04SkillProfile.Geometry.ASSIST_CONE)
                 ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.WAVE,ConnectionProfile.Kind.LINE,ConnectionProfile.Kind.BEAM,

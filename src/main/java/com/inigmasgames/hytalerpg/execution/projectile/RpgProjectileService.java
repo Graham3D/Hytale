@@ -13,7 +13,8 @@ public final class RpgProjectileService {
 
     public ProjectileExecutionPlan buildPlan(SkillExecutionContext context, UUID owner, Vec3 origin,
                                                Vec3 direction, String configId, double speed, long nowNanos) {
-        if(context.compiledPlan().projectileModifiers().batchSize()>1)throw new IllegalStateException("USE_COMPLETE_PROJECTILE_BATCH");
+        if(context.compiledPlan().projectileModifiers().batchSize()>1||context.profile().projectile().details().pattern().count()>1)
+            throw new IllegalStateException("USE_COMPLETE_PROJECTILE_BATCH");
         return ProjectileExecutionPlan.generationZero(context, owner, origin, direction, configId, speed, nowNanos);
     }
     public List<ProjectileExecutionPlan> buildBatch(SkillExecutionContext context,UUID owner,Vec3 origin,

@@ -52,9 +52,19 @@ public final class NativeProjectileAssetAudit {
                     "nativeSummaryIsNotBasePower",summary==null?"UNAVAILABLE":summary));
         }
         if(!equipmentFailures.isEmpty())throw new IllegalStateException("NATIVE_EQUIPMENT_FAMILY_UNRESOLVED:"+equipmentFailures);
+        var bow=ProjectileConfig.getAssetMap().getAsset("Projectile_Config_Arrow_Shortbow_Strength_4");
+        if(bow==null||bow.getModel()==null)throw new IllegalStateException("NATIVE_CHARGED_BOW_CONTROL_UNRESOLVED");
+        requireEqual(bow.getLaunchForce(),85,"nativeChargedBow/speed");requireEqual(bow.getGravity(),25,"nativeChargedBow/gravity");
+        var bowBox=bow.getModel().getBoundingBox();
+        for(double actual:new double[]{bowBox.min.x(),bowBox.min.y(),bowBox.min.z()})requireEqual(actual,-.075,"nativeChargedBow/min");
+        for(double actual:new double[]{bowBox.max.x(),bowBox.max.y(),bowBox.max.z()})requireEqual(actual,.075,"nativeChargedBow/max");
+        var snipe=profiles.require("snipe").projectile();
+        if(!snipe.details().nativeCapabilityGate().equals("NATIVE_BOW_MAX_RANGE_UNVERIFIED"))throw new IllegalStateException("SNIPE_GATE_WAS_WEAKENED");
         return Map.of("resolvedConfigs",checked,"emptyNativeInteractions",true,"typedElements",true,
                 "shippedCrossbowSpeed",nativeCrossbow.getLaunchForce(),"shippedCrossbowRadius",payload.radius(),
-                "shippedCrossbowGravity",nativeCrossbow.getGravity(),"equipment",equipment,"connectedProof",false);
+                "shippedCrossbowGravity",nativeCrossbow.getGravity(),"equipment",equipment,"connectedProof",false,
+                "nativeChargedBow",Map.of("speed",85,"gravity",25,"radius",.075,"maximumRange","NOT_DEFINED_BY_CONFIG_API_OR_AUDITED_ASSET_CHAIN"),
+                "snipeActivationGate",snipe.details().nativeCapabilityGate());
     }
     private static void requireEqual(double actual,double expected,String boundary) {
         if(!Double.isFinite(actual)||Math.abs(actual-expected)>1e-6)

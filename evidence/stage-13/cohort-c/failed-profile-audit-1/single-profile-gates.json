@@ -1,0 +1,4 @@
+{
+  "SkillId[value\u003dbomb_toss]/PassiveId[value\u003dorbit]": "IllegalArgumentException:Unsupported connection parameters",
+  "SkillId[value\u003dexplosive_flask]/PassiveId[value\u003dorbit]": "IllegalArgumentException:Unsupported connection parameters"
+}

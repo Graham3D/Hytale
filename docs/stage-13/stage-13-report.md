@@ -295,11 +295,127 @@ control-journal state before each cohort without stopping a live world. Private
 raw save copies are git-ignored; this limited snapshot is not a full-world backup
 or a completed rollback exercise.
 
+## Cohort C — authored projectile patterns, explosions and shared lifetime safety
+
+Local intermediate gate: PASS. Final affected-family suite is1298 tests (1274
+root tests plus24 native-control tests), zero failures/errors/skips. All retained
+Stage02/04/05/06/07/08/09/11 classes are present without reduced counts. This
+includes40 authored-projectile tests and7 shared-root-budget tests, plus retained
+A/B tests. Full CanvasUI/Stage12 regressions are still required at closure/final
+RC; this intermediate run is not that gate.
+
+Normal isolated three-mod smoke reached network boot and clean shutdown, exit0,
+captured2026-09-09T02:20:15.3713422Z. Final JAR SHA256:
+`B63A16E291713E3DE9D659F796F571B9B126D03AC1AB94C0F4AE25243EC35614`.
+Artifacts, source hashes, tests, matrix and native resolved-asset evidence are in
+`evidence/stage-13/cohort-c/`. Exactly three established mods are archived.
+Stage12 H rollback JAR is retained and hash-checked; this is not a newly completed
+Stage13 coordinated save/reader rollback drill. Player schema9 is unchanged;
+compiled plan schema38 records new component semantics. No live deployment.
+
+### Six canonical records, with one explicit activation blocker
+
+| Skill | Implemented authored contract | Evidence limit |
+|---|---|---|
+| Blunderbuss Shot | Stamina6, CD3;8 deterministic symmetric pellets, each0.22,8m,22m/s,radius0.04;55° horizontal/20° vertical cone; proc1/8 | Native gun base200 is the actual uncharged bullet Damage field, not melee5 or summary DPS; connected scatter/hits unverified |
+| Snipe | Stamina12, CD10,2.00 uncharged Weapon Power,one eligible arrow; fully-charged metadata | Production activation rejected before payment: `NATIVE_BOW_MAX_RANGE_UNVERIFIED`. The48m/45m/s/r0.10/g0 values are explicitly the master's development fallback, not a native-production claim |
+| Explosive Flask | Stamina8, CD8;14m/s,g9.81,18m placement reach,r0.20,low-angle solution,3s safety; impact-only1.30 explosion,r3 | No extra direct damage, status or expiry explosion; connected collision unverified |
+| Bomb Toss | Stamina8, CD9;15m/s,g9.81,20m placement reach,r0.20,3s airborne limit;1.50 explosion,r3.5 | Enemy impact or first-ground+1.5s fuse, once; airborne expiry safely detonates at last valid observed point; connected timing unverified |
+| Arcane Missiles | Mana16, CD7;5×0.42,18m/s,26m travel/lock,r0.22,2s life; releases0/.08/.16/.24/.32s,180°/s steering,proc1/5 | Selected live eligible target first, otherwise nearest LOS enemy within6m of committed aim; connected steering/launch timing unverified |
+| Fireball | Mana18, CD7;18m/s,30m,r0.50; direct1.55 plus splash0.90/r4; Burn5s/r3 | Separate direct/splash contact components; radius modifiers do not enlarge primary carrier; connected damage/status unverified |
+
+Installed charged Shortbow Strength4 resolves85m/s,g25,radius0.075. The audited
+root/config/parent/model path and ProjectileConfig/BallisticData API do not
+provide the required finite maximum bow range. That missing native validation
+boundary is preserved; absence in these paths is not proof that Hytale can never
+support it. Snipe is not silently converted to the development fallback. The
+gate survives Orbit conversion. Both Snipe and Bone Cage are now distinguished
+in the matrix as `COMPILED_PROFILE_WITH_EXPLICIT_RUNTIME_GATE`, not mislabeled
+as ordinary implemented profiles awaiting only client QA. Numeric construction
+failures still fail the test independently.
+
+Native startup resolves19 RPG projectile configs/models and15 exact registered
+equipment IDs. Configs retain empty native gameplay Interactions and78 projected
+ability items retain zero cost/cooldown, CostTypeNone, the existing bridge only.
+Gun's native charged interaction cost is never invoked by the RPG bullet carrier.
+Unknown equipment IDs still fail closed. Existing native damage causes, resource
+and cooldown authority remain the sole gameplay path.
+
+### Shared mechanisms and why they changed
+
+- A pattern is planned as one committed cast. Every pellet/missile keeps root,
+  skill instance and correlation identity; generation0 does not become a child
+  merely because it is missile2. Volley multiplies carriers and normalizes proc
+  coefficient without multiplying payment. Admission reserves the whole pattern
+  plus promised Barrage/Echo work atomically, with24/caster and512 global carriers.
+- Delayed missiles are removed from the bounded queue before allocation. Actor,
+  world and full-radius muzzle clearance are revalidated. A launch more than100ms
+  overdue is explicitly rejected, not emitted in an unbounded catch-up burst.
+  The immutable plan time remains its scheduled deadline; native flight time
+  starts once at allocation, cannot be rebased after observation, and excludes
+  queue waiting. Ammo is refunded only before native allocation has been entered;
+  an exception after possible native effects never proves a refund is safe.
+- Ballistic placement uses a finite low-angle solver and full-radius swept block
+  validation before payment and again at release. Placement reach is not confused
+  with curved path length. The latter has a conservative finite physics bound,
+  while the independent3s lifetime prevents immortal throws.
+- Native ticks and impact callbacks share a monotonic flight clock. Unmodified
+  contacts also enforce lifetime and clamp range before payload dispatch. Missing
+  transforms cancel owned carriers instead of leaving them alive indefinitely.
+  Bomb's3s airborne deadline terminates in one safe detonation even with Links;
+  cancellation/logout never becomes a detonation trigger.
+- First ground contact transfers Bomb to an owned stationary fuse and removes
+  its native carrier. A bounded10Hz/full-radius hostile-body check can trigger
+  that pending fuse before1.5s. It rejects candidate overflow and respects
+  protection/LOS. Removing the fuse entry precedes payload dispatch, preventing
+  duplicate detonation on a later tick. Owner/world invalidation cancels it.
+- Explosion geometry is an actual sphere/bounds intersection, not a cylinder
+  silently including its corners. Ordinary candidate overflow rejects above64;
+  UUID ordering is stable. Payloads call the existing native damage adapter;
+  Burn requires actual positive Health loss and its own inner radius. Pure
+  explosion skills do not receive invented direct damage. Orbit conversion
+  returns observed splash Health loss to the existing connection accounting.
+- RootEffectBudget and ProjectileLifecycleRegistry previously tracked separate
+  effect totals, permitting combined work to exceed the shared48/16 contract.
+  They now share one monotonic RootWorkBudget. PRIMARY and its first carrier are
+  one effect, while promised carriers, other effects and triggered work compete
+  for the same limits. Failed admission publishes no partial batch; carrier
+  removal does not refund lifetime work. Tests exercise both allocation orders
+  and combined native-secondary/hit-proc limits.
+- An authored explosion is a reusable owned contact component, not a newly
+  spawned controller for every Orbit sampling tick. Existing projectile/Orbit
+  contact ledgers still own deduplication. The three-orb conversion cap and
+  shared0.75s victim interval are retained. Cosmetic glints coalesce within50ms
+  per victim, but all eight independent damage ledgers remain independent.
+
+Reused models/textures are verified installed templates (bullet, arrow, potion,
+bangstick, Fireball/Void orb), not newly designed art. VFX is finite procedural
+presentation with10Hz trail sampling. These choices do not prove humanoid
+animation, separated missile trails, bomb readability or artist approval.
+
+### Failure evidence and preserved assertions
+
+`failed-profile-audit-1/` retains the failing JAR SHA256
+`F7CEB95433B41D279232A8BCAA0700B5502F13A7925B1327B6B37668854D8C87`,
+failure XML and matrix gates. The substantive failure was pure-explosion Orbit:
+resolver normalization overwrote its positive contact coefficient with a zero
+direct coefficient. The fix uses the authored explosion coefficient, leaving
+the positive connection validator intact. Two stale assertions were updated:
+Snipe is now explicitly gated instead of absent, and current plan schema is38.
+No failing test was deleted, skipped, or weakened to accept a broken profile.
+
+The intermediate1286-test/19-config-smoke build before shared-budget corrections
+is retained under `pre-shared-budget-audit/`, SHA256
+`8ABB2315CC3A80EDFA471CAE91C4916E805D1332AEE5419B24E6BF9E98C69C9F`.
+The final1298-test build supersedes it. Final5742 cells/2145 pairs/1000 valid
+six-Link graphs have no numeric profile-construction failures; explicit runtime
+capability gates remain visible. Protected native resource HUD, XP assets/input,
+balance formulas and canonical87/66 catalogs are unchanged.
+
 ## Remaining required Stage13 work — not optional refinements
 
-- 15 remaining profiles: Dive Strike, Guard, Jump Strike, Charge, Finishing Strike,
-  Execution Strike, Backstab, Frenzy, Void Dash; Blunderbuss Shot, Snipe,
-  Explosive Flask, Bomb Toss, Arcane Missiles and Fireball. Next content batches stay
+- 9 remaining profiles: Dive Strike, Guard, Jump Strike, Charge, Finishing Strike,
+  Execution Strike, Backstab, Frenzy and Void Dash. Next content batches stay
   at most six each and extend shared family primitives.
 - Complete shared-authority audit: ordinary/basic-attack recovery hooks, partial
   native failures, admission/derived-work overflow, cancellation, movement

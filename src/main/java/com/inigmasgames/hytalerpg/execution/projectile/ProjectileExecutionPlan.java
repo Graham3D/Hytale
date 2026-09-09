@@ -56,13 +56,17 @@ public record ProjectileExecutionPlan(
         var modifiers=context.compiledPlan().projectileModifiers();
         if(modifiers.ballistics()&&projectile.gravity()!=0)throw new IllegalStateException("BALLISTICS_GRAVITY_UNSUPPORTED");
         speed*=modifiers.speedFactor();double distance=projectile.maxDistance()*modifiers.distanceFactor();
+        if(projectile.details().pattern().ballisticAim()) {
+            double seconds=projectile.independentLifetimeSeconds();
+            distance=speed*seconds+.5*projectile.gravity()*seconds*seconds;
+        }
         return new ProjectileExecutionPlan(context.rootCastId(), context.skillInstanceId(),
                 context.skillInstanceId() + (context.barrageBatch()>0?"-batch-"+context.barrageBatch():"")+"-projectile-0", owner, context.profile().skillId(),
                 context.compiledPlan().planHash(), context.snapshot(), context.derivedRelease()?1:0,
                 Map.of("SHRAPNEL",modifiers.shrapnel()?1:0,"SPLINTERBURST",modifiers.splinterburst()?1:0,
                         "PIERCE", modifiers.pierce(), "FORK", modifiers.fork(), "CHAIN", modifiers.chain(),
                         "RICOCHET", modifiers.ricochet(), "RETURN", modifiers.returning(),
-                        "ROOT_LAUNCHES",modifiers.rootLaunches(context.compiledPlan().executionModifiers().echoDelaySeconds()>0),"IS_LAUNCH",1),
+                        "ROOT_LAUNCHES",projectile.details().pattern().rootLaunches(context.compiledPlan()),"IS_LAUNCH",1),
                 // Echo is the second authorized release of this root, not another first release.
                 // The retained registry validates the declared ordinal against existing root carriers.
                 budgets.maxSpawnedEffects() - (context.echo() ? 2 : 1), budgets.maxTriggeredSecondaries(),
@@ -73,12 +77,16 @@ public record ProjectileExecutionPlan(
     public static java.util.List<ProjectileExecutionPlan> launchBatch(SkillExecutionContext context,UUID owner,Vec3 origin,
             Vec3 direction,String configId,double speed,long now) {
         var center=generationZero(context,owner,origin,direction,configId,speed,now);
-        if(!context.compiledPlan().projectileModifiers().volley())return java.util.List.of(center);
+        var pattern=context.profile().projectile().details().pattern();
+        int volley=context.compiledPlan().projectileModifiers().batchSize();
+        if(volley==1&&pattern.count()==1)return java.util.List.of(center);
         var batch=new java.util.ArrayList<ProjectileExecutionPlan>();
-        for(int index=0;index<3;index++)batch.add(new ProjectileExecutionPlan(center.rootCastId(),center.skillInstanceId(),
-                context.skillInstanceId()+"-batch-"+context.barrageBatch()+"-projectile-"+index,owner,center.skillId(),center.compiledPlanHash(),
+        for(int authored=0;authored<pattern.count();authored++)for(int index=0;index<volley;index++)batch.add(new ProjectileExecutionPlan(center.rootCastId(),center.skillInstanceId(),
+                context.skillInstanceId()+"-batch-"+context.barrageBatch()+"-projectile-"+(authored*volley+index),owner,center.skillId(),center.compiledPlanHash(),
                 center.snapshot(),center.generation(),center.remainingContinuationBudgets(),center.remainingSpawnedEffects(),center.remainingTriggeredSecondaries(),
-                now,configId,origin,ProjectileContinuation.yaw(direction,(index-1)*12).multiply(center.velocity().length()),center.radius(),center.maxDistance(),center.maxLifetimeSeconds()));
+                now+Math.round(authored*pattern.intervalSeconds()*1e9),configId,origin,
+                ProjectileContinuation.yaw(pattern.direction(direction,authored),volley==3?(index-1)*12:0).multiply(center.velocity().length()),
+                center.radius(),center.maxDistance(),center.maxLifetimeSeconds()));
         return java.util.List.copyOf(batch);
     }
 }

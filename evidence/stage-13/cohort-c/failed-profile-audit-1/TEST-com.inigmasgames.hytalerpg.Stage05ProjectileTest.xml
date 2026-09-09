@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage05ProjectileTest" tests="17" skipped="0" failures="1" errors="0" timestamp="2026-09-09T01:58:03.431Z" hostname="GRAHAM" time="0.59">
+  <properties/>
+  <testcase name="lifecycleValidatesTargetDeduplicatesAndTerminatesTerrain()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.041"/>
+  <testcase name="quickShotAndAxeTossUsePhysicalSnapshotsAndExactCommit()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.065"/>
+  <testcase name="flightUsesTotalObservedPathAndExactDistanceDerivedLifetime()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.001"/>
+  <testcase name="arcaneBoltIsPlainSingleHitMagicAndStoneRequestsKnockback()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.062"/>
+  <testcase name="quickShotSelectsAuditedNativeBowAndCrossbowCarrierSpeeds()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.014"/>
+  <testcase name="sixProjectileProfilesPreserveCanonicalCohortAndExcludeSnipe()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.02">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;false&gt; but was: &lt;true&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;false&gt; but was: &lt;true&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertFalse.failNotFalse(AssertFalse.java:63)
+	at app//org.junit.jupiter.api.AssertFalse.assertFalse(AssertFalse.java:36)
+	at app//org.junit.jupiter.api.AssertFalse.assertFalse(AssertFalse.java:31)
+	at app//org.junit.jupiter.api.Assertions.assertFalse(Assertions.java:231)
+	at app//com.inigmasgames.hytalerpg.Stage05ProjectileTest.sixProjectileProfilesPreserveCanonicalCohortAndExcludeSnipe(Stage05ProjectileTest.java:43)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="ownerCancellationRemovesEveryRegisteredCarrierWithoutOrphans()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.033"/>
+  <testcase name="canonicalGenerationAndSpawnBudgetsRejectInvalidDerivedPlan()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.03"/>
+  <testcase name="fireBoltCommitsManaAndCapturesMagicDamageAndBurnRequest()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.032"/>
+  <testcase name="compiledForkRemainsMetadataAndDoesNotSpawnChildrenBeforeStage07()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.033"/>
+  <testcase name="projectileFamilyDispatchAndCorrelationStaySingular()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.031"/>
+  <testcase name="elementalAndPhysicalPayloadContractsAreExact()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.015"/>
+  <testcase name="frostBoltRequestsExactlyOneChillStack()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.029"/>
+  <testcase name="planNormalizesVelocityAndFreezesOwnerSnapshotAndEquipment()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.032"/>
+  <testcase name="executorSpawnExceptionCannotProveNoEffectsAndRetainsCommittedPayment()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.031"/>
+  <testcase name="stage02CritPolicyIsReusedWithoutProjectileFormula()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.03"/>
+  <testcase name="invalidWeaponInsufficientResourceAndMissingAmmoRejectBeforeSpawn()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.09"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

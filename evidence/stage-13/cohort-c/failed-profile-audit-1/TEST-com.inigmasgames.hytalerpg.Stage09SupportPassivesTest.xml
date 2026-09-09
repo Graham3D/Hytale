@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" tests="25" skipped="0" failures="1" errors="0" timestamp="2026-09-09T01:58:18.109Z" hostname="GRAHAM" time="0.897">
+  <properties/>
+  <testcase name="conservationResizePreservesDeficitAndDebitsOnlyAdditionalActualReservation()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.028"/>
+  <testcase name="noOverhealCreatesNoBarrier()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.028"/>
+  <testcase name="overflowSharesTheExistingFiniteOwnerBudgetAndFailureIsAtomic()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.029"/>
+  <testcase name="upkeepModifiersDoNotDiscountTheOneTimeActivationCost()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.025"/>
+  <testcase name="selflessnessRemovesCasterAndStrengthensOnlyAllies()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.025"/>
+  <testcase name="canonicalSupportCompatibilityHasExplicitPositiveAndNegativeCases()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.203"/>
+  <testcase name="strongerRemainingBarrierRefreshesRatherThanAdds()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.027"/>
+  <testcase name="typedOperatorsAreDeterministicAndCompiledSchemaIsBumped()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.001">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;37&gt; but was: &lt;38&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;37&gt; but was: &lt;38&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:531)
+	at app//com.inigmasgames.hytalerpg.Stage09SupportPassivesTest.typedOperatorsAreDeterministicAndCompiledSchemaIsBumped(Stage09SupportPassivesTest.java:104)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="crossSourceOverhealStillHasOneRecipientCapAndKeepsStrongestAttribution()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.052"/>
+  <testcase name="resonanceFirstSliceIsIncludedInPreflight()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.025"/>
+  <testcase name="capIsReevaluatedAgainstCurrentMaximumOnRefresh()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.027"/>
+  <testcase name="combinedAuraPassivesComposeOnceAndKeepResourceCostKernelUnchanged()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.026"/>
+  <testcase name="finalOverhealBecomesOnlyTheExcess()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.025"/>
+  <testcase name="pedanticismSelflessnessAndConservationAffectBeneficialFieldOnly()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.025"/>
+  <testcase name="ownerRecipientAndWorldTeardownClearOverflow()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.074"/>
+  <testcase name="failedOrMalformedHealthWriteIsNotOverheal()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.025"/>
+  <testcase name="conservationUsesActualReservedManaForManaguardCapacity()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.026"/>
+  <testcase name="fullHealthOverhealIsCappedAndCannotEarnActualHealing()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.024"/>
+  <testcase name="overflowCannotRedirectTwentyPercentLikeSpiritShield()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.026"/>
+  <testcase name="resonanceChangesRadiusAndReservationBeforeAffordability()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.049"/>
+  <testcase name="selflessnessThornsDoesNotKeepOwnerReflection()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.024"/>
+  <testcase name="potencyIsAppliedToHealingOnceNotAgainToOverflow()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.025"/>
+  <testcase name="conservationReducesPassiveRegenAndReservationNotNativeBaseline()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.024"/>
+  <testcase name="overflowRegistryAcceptsHealingComponentsOutsideSupportFamily()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.024"/>
+  <testcase name="staleBarrierExpiresAndNeverAbsorbsAfterSixSeconds()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.025"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
