@@ -135,7 +135,7 @@ Whole-skill exceptions:
 |---|---|---|
 |Frenzy|Per-actor native basic-attack cadence and held stance lifecycle|Disabled before payment. Canonical parameters recorded; no implemented upkeep/stacks/native rate lease. Unresolved integration, not universal engine impossibility.|
 |Guard|Native held main-hand reaction and release route|Disabled before payment; shipped Wielding control audited, not yet safely integrated.|
-|Snipe|Connected hold/release and animation verification|Correction T implements the owner's revised hold-to-full-draw/release-to-fire contract, native charged physics and an explicitly RPG-authored 48 m cap. The old native-maximum prerequisite is superseded, not falsely proven. Connected behavior remains unverified; see stage-13-snipe-release-report.md.|
+|Snipe|Connected U hold/effect/arrow/straight-flight verification|Correction U preserves T's held-release path, changes gravity to zero per owner instruction, references the exact shipped arrow model and reuses native yellow charged-bow emitters. 85 m/s and authored 48 m cap remain. Connected presentation/trajectory remains unverified; see stage-13-snipe-native-visuals-report.md.|
 |Bone Cage|Enemy-only native collision/protection contract|Explicit master-authorized safety disable; no decorative cage masquerades as confinement.|
 
 Other limitations must remain visible: native ranged/projectile-parent basic

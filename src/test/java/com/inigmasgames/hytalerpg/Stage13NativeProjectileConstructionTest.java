@@ -14,6 +14,34 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Native codec -> native Interactions constructor contract; companion isolated three-mod test invokes the full native spawn API. */
 class Stage13NativeProjectileConstructionTest {
+    @Test void snipeUsesNativeArrowAndInstalledPhysicsCodecHasNoGravity() throws Exception {
+        var json=org.bson.BsonDocument.parse(java.nio.file.Files.readString(java.nio.file.Path.of(
+                "src/main/resources/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Snipe.json")));
+        assertEquals("Arrow_Crude",json.getString("Model").getValue());
+        assertEquals(85,json.getNumber("LaunchForce").doubleValue());
+        assertTrue(json.getDocument("Interactions").isEmpty());
+        var physics=com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig.CODEC
+                .decode(json.getDocument("Physics"),new ExtraInfo());
+        assertEquals(0,physics.getGravity());assertEquals(0,physics.toPacket().gravity);
+        assertEquals(com.hypixel.hytale.protocol.RotationMode.Velocity,physics.toPacket().rotationMode);
+        assertEquals(0,physics.getBounciness());
+        // StandardPhysicsProvider derives drag from gravity and terminal speed. Zero gravity
+        // must not leave a residual native terminal-speed drag after removing ballistic drop.
+        var packet=physics.toPacket();
+        assertEquals(0,com.hypixel.hytale.server.core.modules.physics.util.PhysicsMath.computeDragCoefficient(
+                packet.terminalVelocityAir,packet.densityAir,.075*.075*.075*8*packet.density,packet.gravity));
+        assertFalse(java.nio.file.Files.exists(java.nio.file.Path.of("src/main/resources/Server/Models/Projectiles/RPG_Snipe.json")));
+    }
+    @Test void snipeReadyParticlesReuseNativeEmittersWithoutNormalDrawDelay() throws Exception {
+        var json=JsonParser.parseString(java.nio.file.Files.readString(java.nio.file.Path.of(
+                "src/main/resources/Server/Particles/RPG/RPG_Snipe_Ready.particlesystem"))).getAsJsonObject();
+        var emitters=new HashSet<String>();
+        for(var entry:json.getAsJsonArray("Spawners")) {
+            var e=entry.getAsJsonObject();emitters.add(e.get("SpawnerId").getAsString());
+            assertEquals(0,e.get("StartDelay").getAsDouble());assertEquals(4,e.get("MaxConcurrent").getAsInt());
+        }
+        assertEquals(Set.of("Bow_Charging_Circles","Bow_Charging_Sparks"),emitters);
+    }
     static Map<InteractionType,String> decodedFireBoltRoots()throws Exception{
         try(var r=new java.io.InputStreamReader(Objects.requireNonNull(Stage13NativeProjectileConstructionTest.class.getResourceAsStream("/Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Fire_Bolt.json")))){
             var json=JsonParser.parseReader(r).getAsJsonObject().getAsJsonObject("Interactions");

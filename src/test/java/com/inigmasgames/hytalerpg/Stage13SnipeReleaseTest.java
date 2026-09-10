@@ -19,7 +19,7 @@ class Stage13SnipeReleaseTest {
     @Test void releasedRootPaysOnceAndUsesNativeChargedPhysicsIntoEmptySpace(){
         var h=new EmptySpace();assertTrue(h.service.requestNative(request(h),h,"snipe").committed());
         assertNull(h.last().target());assertEquals(88,h.current(ResourceType.STAMINA));assertEquals(1,h.cooldownSaves);
-        var p=h.last().profile().projectile();assertEquals(85,p.speed());assertEquals(25,p.gravity());assertEquals(.075,p.radius());
+        var p=h.last().profile().projectile();assertEquals(85,p.speed());assertEquals(0,p.gravity());assertEquals(.075,p.radius());
         assertEquals(48,p.maxDistance());assertEquals(2,p.coefficient());assertTrue(p.fullyCharged());assertEquals(1,p.ammoQuantity());
         h.service.terminate(h.last(),"EMPTY_SPACE_EXPIRY");assertEquals(88,h.current(ResourceType.STAMINA));
         assertEquals("COOLDOWN_ACTIVE",h.service.requestNative(request(h),h,"snipe").code());assertEquals(1,h.contexts.size());

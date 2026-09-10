@@ -2186,7 +2186,7 @@
     "targetMode": "Hold to aim; release along current aim; single projectile / native charged arrow hitbox",
     "maxRange": "48 m RPG-authored travel cap; not a claimed native maximum",
     "geometry": "native arrow hitbox",
-    "travelSpeed": "85 m/s; native fully charged shortbow physics, gravity 25 m/s2",
+    "travelSpeed": "85 m/s; straight flight with zero gravity, native arrow presentation",
     "lifetime": "Instant",
     "powerCoefficient": "2.00x Weapon Power",
     "canCrit": true,

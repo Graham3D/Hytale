@@ -81,7 +81,7 @@
         "speed": 85,
         "maxDistance": 48,
         "radius": 0.075,
-        "gravity": 25,
+        "gravity": 0,
         "targetCap": 1,
         "coefficient": 2,
         "statusId": "",

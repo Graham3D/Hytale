@@ -1,0 +1,20 @@
+{
+  "$Comment": "Native Bow_Charging emitters, without its 0.75/0.95 second charge delays: Snipe is already fully drawn. No new particle artwork.",
+  "Spawners": [
+    {
+      "SpawnerId": "Bow_Charging_Circles",
+      "StartDelay": 0,
+      "SpawnRate": { "Min": 2.0, "Max": 2.0 },
+      "MaxConcurrent": 4,
+      "TotalSpawners": 100
+    },
+    {
+      "SpawnerId": "Bow_Charging_Sparks",
+      "StartDelay": 0,
+      "SpawnRate": { "Min": 2.0, "Max": 2.0 },
+      "MaxConcurrent": 4,
+      "TotalSpawners": 100
+    }
+  ],
+  "BoundingRadius": 10
+}

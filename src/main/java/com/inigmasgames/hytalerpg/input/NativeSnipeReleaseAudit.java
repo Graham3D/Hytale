@@ -33,7 +33,16 @@ public final class NativeSnipeReleaseAudit {
             if(a==null||a.firstPerson==null||a.thirdPerson==null||a.looping!=action.equals("ShootChargingHold"))
                 throw new IllegalStateException("SNIPE_NATIVE_ANIMATION_MISSING:"+action);
         }
-        return Map.of("root",root.getId(),"operations",operations,"fullyDrawnImmediately",true,
+        var particles=com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.getAssetMap().getAsset("RPG_Snipe_Ready");
+        if(particles==null||particles.getSpawners().length!=2)throw new IllegalStateException("SNIPE_READY_PARTICLES_MISSING");
+        var emitterIds=new HashSet<String>();
+        for(var emitter:particles.getSpawners()) {
+            emitterIds.add(emitter.getSpawnerId());
+            if(emitter.getStartDelay()!=0)throw new IllegalStateException("SNIPE_READY_PARTICLES_DELAYED");
+        }
+        if(!emitterIds.equals(Set.of("Bow_Charging_Circles","Bow_Charging_Sparks")))
+            throw new IllegalStateException("SNIPE_NON_NATIVE_READY_EMITTERS");
+        return Map.of("root",root.getId(),"operations",operations,"fullyDrawnImmediately",true,"nativeChargeEmitters",emitterIds,
                 "releaseThresholdSeconds",0,"nativeGameplayBranches",false,"connectedProof",false);
     }
     private static Operation unwrap(Operation op) {
@@ -49,10 +58,14 @@ public final class NativeSnipeReleaseAudit {
                 ||p.chargedNext==null||!p.chargedNext.keySet().equals(Set.of(0f))||p.failed!=Integer.MIN_VALUE
                 ||p.forks!=null&&!p.forks.isEmpty()||p.effects==null
                 ||!"Shortbow".equals(p.effects.itemPlayerAnimationsId)||!"ShootChargingHold".equals(p.effects.itemAnimationId)
-                ||!p.effects.clearAnimationOnFinish)
+                ||!p.effects.clearAnimationOnFinish||p.effects.particles==null||p.effects.particles.length!=1)
             throw new IllegalStateException("SNIPE_NATIVE_RELEASE_CONTRACT_INVALID:wait="+p.waitForDataFrom+",hold="+p.allowIndefiniteHold+
                     ",progress="+p.displayProgress+",cancel="+p.cancelOnOtherClick+",damage="+p.failOnDamage+",next="+p.chargedNext+
                     ",failed="+p.failed+",forks="+p.forks+",effects="+(p.effects==null?"null":
                     p.effects.itemPlayerAnimationsId+"/"+p.effects.itemAnimationId+"/clear="+p.effects.clearAnimationOnFinish));
+        var effect=p.effects.particles[0];
+        if(!"RPG_Snipe_Ready".equals(effect.systemId)||effect.targetEntityPart!=com.hypixel.hytale.protocol.EntityPart.PrimaryItem
+                ||!"Handle".equals(effect.targetNodeName)||!effect.clearParticlesOnRemove||effect.detachedFromModel)
+            throw new IllegalStateException("SNIPE_READY_PARTICLE_ATTACHMENT_INVALID");
     }
 }

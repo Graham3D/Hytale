@@ -19,6 +19,11 @@ class R024NativeInteractionAssetTest {
         assertEquals("RPG_ActivateSkill",next.getDocument("0").getString("Type").getValue());
         assertEquals("Shortbow",json.getDocument("Effects").getString("ItemPlayerAnimationsId").getValue());
         assertEquals("ShootChargingHold",json.getDocument("Effects").getString("ItemAnimationId").getValue());
+        var particle=json.getDocument("Effects").getArray("Particles").get(0).asDocument();
+        assertEquals("RPG_Snipe_Ready",particle.getString("SystemId").getValue());
+        assertEquals("PrimaryItem",particle.getString("TargetEntityPart").getValue());
+        assertEquals("Handle",particle.getString("TargetNodeName").getValue());
+        assertTrue(particle.getBoolean("ClearParticlesOnRemove").getValue());
         // This narrow codec fixture has no global AssetStore. Validate scalar hold semantics here;
         // full Next/Effects contained-asset resolution is a mandatory exact-JAR server audit.
         json.remove("Next");json.remove("Effects");

@@ -36,12 +36,12 @@ class Stage13AuthoredProjectileTest {
     @Test void snipeCannotPromoteDevelopmentFallbackIntoAProductionCast(){
         var h=new Stage11ResourcePassivesTest.H("snipe");h.weapon="BOW";
         // Retained test identity; owner explicitly replaced the old native-maximum requirement.
-        // The zero-gravity development projectile must NOT be promoted unchanged.
+        // Owner now explicitly requires zero drop; retain audited speed/radius, paid release and authored range.
         assertTrue(h.cast().committed());assertEquals(1,h.contexts.size());
         assertEquals(88,h.current(ResourceType.STAMINA));assertEquals(1,h.cooldownSaves);
         var p=profiles.require("snipe").projectile();assertEquals(2,p.coefficient());assertTrue(p.fullyCharged());
         assertEquals(1,p.ammoQuantity());assertEquals("Weapon_Arrow_Crude",p.ammoItemId());
-        assertEquals(48,p.maxDistance());assertEquals(85,p.speed());assertEquals(.075,p.radius());assertEquals(25,p.gravity());
+        assertEquals(48,p.maxDistance());assertEquals(85,p.speed());assertEquals(.075,p.radius());assertEquals(0,p.gravity());
         assertEquals("",p.details().nativeCapabilityGate());
     }
     @Test void deterministicEightPelletsAreSymmetricAndIndependentlyHitTheSameVictim(){

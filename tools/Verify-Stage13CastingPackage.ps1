@@ -1,10 +1,11 @@
 [CmdletBinding()]
-param([ValidateSet('m','n','o','p','q','r','s','t')][string]$Cohort='m')
+param([ValidateSet('m','n','o','p','q','r','s','t','u')][string]$Cohort='m')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence/stage-13/cohort-$Cohort"
 $baseline=if($Cohort -eq 's'){'r'}elseif($Cohort -eq 'r'){'q'}elseif($Cohort -eq 'q'){'p'}elseif($Cohort -eq 'p'){'o'}elseif($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
 if($Cohort -eq 't'){$baseline='s'}
+if($Cohort -eq 'u'){$baseline='t'}
 $previous=Join-Path $root "evidence/stage-13/cohort-$baseline/artifacts/HytaleRPG-0.0.25.jar"
 $candidate=Join-Path $out 'artifacts/HytaleRPG-0.0.25.jar'
 function EntryHashes([string]$path){
@@ -14,8 +15,25 @@ function EntryHashes([string]$path){
     return $result
 }
 $before=EntryHashes $previous;$after=EntryHashes $candidate
+if($Cohort -eq 'u'){
+    $compiled=Join-Path $root 'build/classes/java/main'
+    foreach($entry in $after.Keys|Where-Object {$_ -like '*.class'}){
+        $file=Join-Path $compiled $entry
+        if(-not (Test-Path -LiteralPath $file) -or (Get-FileHash -LiteralPath $file).Hash -ne $after[$entry]){
+            throw "Packaged class differs from full retained test candidate: $entry"
+        }
+    }
+}
 $changed=@(foreach($name in @($before.Keys)+@($after.Keys)|Sort-Object -Unique){if($before[$name] -ne $after[$name]){$name}})
 foreach($name in $changed){
+    if($Cohort -eq 'u'){
+        if($name -match '^com/inigmasgames/hytalerpg/(ui/hud/RpgHud|input/NativeSnipeReleaseAudit|execution/hytale/NativeProjectileAssetAudit)(\$[^/]*)?\.class$'){continue}
+        if($name -in @('Common/UI/Custom/Phase00RevisionHud.ui','rpg/catalog/skills.json','rpg/runtime/stage-13-projectiles-cohort-c.json',
+            'Server/Item/RootInteractions/RPG/Root_RPG_Snipe_Release.json','Server/Models/Projectiles/RPG_Snipe.json',
+            'Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Snipe.json','Server/Particles/','Server/Particles/RPG/',
+            'Server/Particles/RPG/RPG_Snipe_Ready.particlesystem')){continue}
+        throw "Unexpected U change outside Snipe visuals/gravity/audit/badge: $name"
+    }
     if($Cohort -eq 't'){
         if($name -match '^com/inigmasgames/hytalerpg/(ui/hud/RpgHud|input/(NativeAbilityBridgeAudit|NativeSnipeReleaseAudit|NativeSkillActivationInteraction|HytaleAbilitySkillInputAdapter)|execution/(SkillExecutionService|hytale/(HytaleSkillExecutionSystem|NativeProjectileAssetAudit)))(\$[^/]*)?\.class$'){continue}
         if($name -in @('Common/UI/Custom/Phase00RevisionHud.ui','rpg/catalog/skills.json','rpg/runtime/stage-13-projectiles-cohort-c.json',
@@ -107,7 +125,7 @@ if($Cohort -eq 'r'){
         }
     }finally{$baselineZip.Dispose();$candidateZip.Dispose()}
 }
-if($Cohort -eq 't'){
+if($Cohort -in @('t','u')){
     $baselineZip=[IO.Compression.ZipFile]::OpenRead($previous);$candidateZip=[IO.Compression.ZipFile]::OpenRead($candidate)
     function Read-TJson($zip,[string]$name){$r=[IO.StreamReader]::new($zip.GetEntry($name).Open());try{return ($r.ReadToEnd()|ConvertFrom-Json)}finally{$r.Dispose()}}
     try{
@@ -123,7 +141,8 @@ if($Cohort -eq 't'){
         }
         $oldProfile=(Read-TJson $baselineZip 'rpg/runtime/stage-13-projectiles-cohort-c.json').skills|Where-Object skillId -eq 'snipe'
         $newProfile=(Read-TJson $candidateZip 'rpg/runtime/stage-13-projectiles-cohort-c.json').skills|Where-Object skillId -eq 'snipe'
-        $oldProfile.projectile.speed=85;$oldProfile.projectile.gravity=25;$oldProfile.projectile.radius=.075;$oldProfile.projectile.details.nativeCapabilityGate=''
+        if($Cohort -eq 'u'){$oldProfile.projectile.gravity=0}
+        else{$oldProfile.projectile.speed=85;$oldProfile.projectile.gravity=25;$oldProfile.projectile.radius=.075;$oldProfile.projectile.details.nativeCapabilityGate=''}
         if(($oldProfile|ConvertTo-Json -Depth 64 -Compress) -cne ($newProfile|ConvertTo-Json -Depth 64 -Compress)){throw 'Snipe payment/damage/ammo or other unexpected profile mutation'}
         $sourceHash=(Get-FileHash -LiteralPath (Join-Path $root 'art/Skills/SkillSnipe.png')).Hash
         foreach($path in @('Common/Icons/Items/RPG/SkillSnipe.png','Common/UI/Custom/Icons/RPG/SkillSnipe.png')){
@@ -159,6 +178,7 @@ if((Get-FileHash -LiteralPath $target).Hash -ne (Get-FileHash -LiteralPath $cand
     skillIconsSearchAndBadgeOnly=($Cohort -eq 'r');
     optionalIconLookupPassiveSurfacesAndBadgeOnly=($Cohort -eq 's');
     snipeHoldReleaseOnlyWithCostsDamageAmmoAndOtherProfilesUnchanged=($Cohort -eq 't');
+    snipeVisualsAndGravityOnlyWithInputExecutorsCostsDamageAmmoPersistenceUnchanged=($Cohort -eq 'u');
     isolatedAtomicRollbackAndRollForward='PASS';retainedArchivedReaderTests='See full test-results.json; archived-reader tests unchanged';
     previousSha256=(Get-FileHash -LiteralPath $previous).Hash;candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash;
     connectedCastingVerified=$false}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $out 'jar-differential.json') -Encoding utf8

@@ -1,0 +1,126 @@
+{
+  "installedServerSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "nativeAssetHashes": {
+    "Server/Models/Projectiles/Weapons/Arrow/Arrow_Crude.json": "3B0AE96A00AF818CB62B1A3B50079AEA633C026CD2927309DD1895A43FF0AC84",
+    "Server/Item/Interactions/Weapons/Shortbow/Primary/Shoot/Weapon_Shortbow_Primary_Shoot_Charge.json": "577F7ED086C551F1987461D32FAB0C3112FD27F9125511E2EB7AD2DB3197BA36",
+    "Server/Item/Animations/Shortbow.json": "957368EF792093542005D2F1BFB6DAC70FAC9A1A87687AF0CC84328FC2D1A1F5",
+    "Common/Characters/Animations/Items/Dual_Handed/Shortbow/Attacks/Shoot_Charged/Shoot_Charging_Hold_FPS.blockyanim": "E07A4C97A62E57A5C945B56D3DC6A9A1EA5D8EC5FCF3CFF71318EE8473EED3C0",
+    "Server/Particles/Weapon/Bow/Bow_Charging.particlesystem": "12C1F25699CB0DBEDBD83EA7A6C61CA8283CC70DC6738ABA4B0865FE5BB1341A",
+    "Server/Particles/Weapon/Bow/Bow_Charging_Circles.particlespawner": "64571A25119B39CC4803C4E597D66DB5B418C02B0C7D230C7DFF8CB5B1EBFB87",
+    "Server/Particles/Weapon/Bow/Bow_Charging_Sparks.particlespawner": "134A88AC94DE15B953F7245FF504FE3E7A5C99F218ECB27586668A6D2F5D8A17",
+    "Server/ProjectileConfigs/Weapons/Shortbow/Projectile_Config_Arrow_Shortbow_Strength_4.json": "3724F1F06DE35FCC18653FB2061D358B7A8E008C482A01338867FEF9097AA71C"
+  },
+  "nativeArrowModel": {
+    "HitBox": {
+      "Max": {
+        "X": 0.075,
+        "Y": 0.075,
+        "Z": 0.075
+      },
+      "Min": {
+        "X": -0.075,
+        "Y": -0.075,
+        "Z": -0.075
+      }
+    },
+    "MinScale": 1,
+    "MaxScale": 1,
+    "Trails": [
+      {
+        "PositionOffset": {
+          "X": 0.5,
+          "Y": 0,
+          "Z": 0
+        },
+        "TargetNodeName": "Handle",
+        "TrailId": "Arrow",
+        "RotationOffset": {
+          "Yaw": 90,
+          "Pitch": 0,
+          "Roll": 45
+        }
+      },
+      {
+        "PositionOffset": {
+          "X": 0.5,
+          "Y": 0,
+          "Z": 0
+        },
+        "TargetNodeName": "Handle",
+        "TrailId": "Arrow",
+        "RotationOffset": {
+          "Yaw": 0,
+          "Pitch": 45,
+          "Roll": 90
+        }
+      }
+    ],
+    "DefaultAttachments": [
+      {
+        "Model": "Items/Weapons/Arrow/Arrow.blockymodel",
+        "Texture": "Items/Weapons/Arrow/Arrow_Crude.png"
+      }
+    ],
+    "Model": "Items/Projectiles/Projectile.blockymodel",
+    "Texture": "Items/Projectiles/Projectile_default.png",
+    "AnimationSets": {
+      "FlyIdle": {
+        "Animations": [
+          {
+            "Animation": "Items/Animations/Fly/Fly_Vertical.blockyanim"
+          }
+        ]
+      }
+    }
+  },
+  "nativeHold": {
+    "Speed": 2,
+    "ThirdPersonFace": "Characters/Animations/Expressions/Frown.blockyanim",
+    "ThirdPerson": "Characters/Animations/Items/Dual_Handed/Shortbow/Attacks/Shoot_Charged/Shoot_Charging_Hold.blockyanim",
+    "ThirdPersonMoving": "Characters/Animations/Items/Dual_Handed/Shortbow/Attacks/Shoot_Charged/Shoot_Charging_Hold_Moving.blockyanim",
+    "FirstPerson": "Characters/Animations/Items/Dual_Handed/Shortbow/Attacks/Shoot_Charged/Shoot_Charging_Hold_FPS.blockyanim",
+    "Looping": true,
+    "BlendingDuration": 0.1
+  },
+  "nativeHoldShowsArrowAtFrameZero": true,
+  "nativeChargedRelease": {
+    "ThirdPerson": "Characters/Animations/Items/Dual_Handed/Shortbow/Attacks/Shoot_Charged/Shoot_Charged.blockyanim",
+    "ThirdPersonMoving": "Characters/Animations/Items/Dual_Handed/Shortbow/Attacks/Shoot_Charged/Shoot_Charged_Moving.blockyanim",
+    "FirstPerson": "Characters/Animations/Items/Dual_Handed/Shortbow/Attacks/Shoot_Charged/Shoot_Charged_FPS.blockyanim",
+    "Speed": 1,
+    "BlendingDuration": 0,
+    "ThirdPersonFace": "Characters/Animations/Expressions/Rage.blockyanim"
+  },
+  "nativeChargeEffects": {
+    "ItemAnimationId": "ShootCharging",
+    "ClearAnimationOnFinish": true,
+    "ClearSoundEventOnFinish": true,
+    "WorldSoundEventId": "SFX_Bow_T2_Draw",
+    "LocalSoundEventId": "SFX_Bow_T2_Draw_Local",
+    "Particles": [
+      {
+        "PositionOffset": {
+          "X": 0.075,
+          "Y": -0.4,
+          "Z": 0.075
+        },
+        "RotationOffset": {
+          "Pitch": 0,
+          "Roll": 0,
+          "Yaw": 90
+        },
+        "Scale": 0.5,
+        "TargetNodeName": "Handle",
+        "SystemId": "Bow_Charging"
+      }
+    ]
+  },
+  "nativeYellowRingColor": "#ffd323",
+  "nativeSparksColor": "#ffad2f",
+  "nativeEmittersUnchanged": true,
+  "delayOnlyOverrideSeconds": 0,
+  "nativeHeavyArrowSpeed": 85,
+  "nativeHeavyArrowGravity": 25,
+  "ownerRequestedSnipeGravity": 0,
+  "connectedRenderingVerified": false
+}

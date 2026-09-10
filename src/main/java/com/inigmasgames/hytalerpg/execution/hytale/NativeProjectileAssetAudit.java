@@ -59,17 +59,24 @@ public final class NativeProjectileAssetAudit {
         for(double actual:new double[]{bowBox.min.x(),bowBox.min.y(),bowBox.min.z()})requireEqual(actual,-.075,"nativeChargedBow/min");
         for(double actual:new double[]{bowBox.max.x(),bowBox.max.y(),bowBox.max.z()})requireEqual(actual,.075,"nativeChargedBow/max");
         var snipe=profiles.require("snipe").projectile();
-        // Owner's revised hold/release contract: native charged physics, explicitly RPG-authored range cap.
+        // Owner explicitly requests no drop, not native heavy-arrow gravity; retain native speed and model.
         if(!snipe.details().nativeCapabilityGate().isEmpty())throw new IllegalStateException("SNIPE_OBSOLETE_RANGE_GATE");
         requireEqual(snipe.speed(),bow.getLaunchForce(),"snipe/chargedSpeed");
-        requireEqual(snipe.gravity(),bow.getGravity(),"snipe/chargedGravity");
+        requireEqual(snipe.gravity(),0,"snipe/straightGravity");
         requireEqual(snipe.radius(),.075,"snipe/nativeRadius");
         requireEqual(snipe.maxDistance(),48,"snipe/authoredRpgRange");
+        var snipeConfig=ProjectileConfig.getAssetMap().getAsset(snipe.configId());
+        var snipeModel=snipeConfig.getModel();
+        if(!"Arrow_Crude".equals(snipeModel.getModelAssetId())||!snipeModel.equals(bow.getModel())
+                ||!snipeModel.getAnimationSetMap().containsKey("FlyIdle")||snipeModel.getTrails().length!=2)
+            throw new IllegalStateException("SNIPE_NOT_EXACT_NATIVE_ARROW_MODEL");
+        requireEqual(snipeConfig.getPhysicsConfig().toPacket().gravity,0,"snipe/nativePhysicsPacketGravity");
         var release=com.inigmasgames.hytalerpg.input.NativeSnipeReleaseAudit.requireAssets();
         return Map.of("resolvedConfigs",checked,"emptyNativeInteractions",true,"typedElements",true,
                 "shippedCrossbowSpeed",nativeCrossbow.getLaunchForce(),"shippedCrossbowRadius",payload.radius(),
                 "shippedCrossbowGravity",nativeCrossbow.getGravity(),"equipment",equipment,"connectedProof",false,
-                "nativeChargedBow",Map.of("speed",85,"gravity",25,"radius",.075,"maximumRange","RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM","release",release),
+                "nativeChargedBow",Map.of("speed",85,"gravity",25,"radius",.075,"maximumRange","RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM","release",release,
+                        "snipeGravity",0,"snipeModel",snipeModel.getModelAssetId(),"snipeModelEqualsNative",true),
                 "snipeActivationGate",snipe.details().nativeCapabilityGate());
     }
     private static void requireEqual(double actual,double expected,String boundary) {
