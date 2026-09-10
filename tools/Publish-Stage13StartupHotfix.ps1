@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([switch]$Deploy,[ValidateSet('l','m','n','o','p','q','r','s')][string]$Cohort='l')
+param([switch]$Deploy,[ValidateSet('l','m','n','o','p','q','r','s','t')][string]$Cohort='l')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence\stage-13\cohort-$Cohort"
@@ -67,6 +67,14 @@ if($Cohort -eq 's'){
     $archiveName='Hytale-RPG-Stage13-S-owner-icon-workflow.zip'
     $manifestName='owner-icon-workflow.json'
 }
+if($Cohort -eq 't'){
+    $oldHash='E3B6F793F66164807EFC53E992C9B68383E05569A580F2D32B92AE105160C3BC'
+    $expectedTests=2164
+    $baselineCohort='s'
+    $baselineCommit='0b03d92'
+    $archiveName='Hytale-RPG-Stage13-T-snipe-hold-release.zip'
+    $manifestName='snipe-hold-release.json'
+}
 $suites=@(foreach($path in @('build/test-results/test','build/test-results/nativeControlTest','canvas-ui/build/test-results/test')){
     foreach($file in Get-ChildItem -LiteralPath (Join-Path $root $path) -Filter 'TEST-*.xml'){
         [xml]$xml=Get-Content -Raw -LiteralPath $file.FullName
@@ -92,10 +100,10 @@ $smoke=Get-Content -Raw (Join-Path $out 'server-smoke-summary.json')|ConvertFrom
 $jar=Join-Path $root 'build/libs/HytaleRPG-0.0.25.jar'
 $hash=(Get-FileHash -LiteralPath $jar).Hash
 if($smoke.jarSha256 -ne $hash -or $smoke.processExitCode -ne 0 -or -not $smoke.exactlyThreeMods -or -not $smoke.networkBooted -or -not $smoke.cleanShutdown -or $smoke.failure){throw 'Exact candidate smoke required'}
-if($Cohort -in @('o','p','q','r','s')){
+if($Cohort -in @('o','p','q','r','s','t')){
     $native=Get-Content -Raw (Join-Path $out 'native-spawn-integration.json')|ConvertFrom-Json
     if($native.result -ne 'PASS' -or $native.jarSha256 -ne $hash -or $native.spawned -ne 1 -or $native.requests -ne 2 -or $native.pendingRollback -ne 'PASS' -or -not $native.nativeRefValidAfterQueue){throw 'Exact candidate native spawn proof required before packaging/deploy'}
-    if($Cohort -in @('p','q','r','s') -and -not $native.sameTickAdvanceAndRestingExpiry){throw 'Retained P same-tick/expiry proof required'}
+    if($Cohort -in @('p','q','r','s','t') -and -not $native.sameTickAdvanceAndRestingExpiry){throw 'Retained P same-tick/expiry proof required'}
 }
 $artifacts=Join-Path $out 'artifacts'
 New-Item -ItemType Directory -Force -Path $artifacts|Out-Null

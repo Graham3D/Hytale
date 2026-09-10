@@ -51,7 +51,8 @@ public final class HytaleAbilitySkillInputAdapter {
                 : full ? "NATIVE_INPUT_QUEUE_FULL" : "NATIVE_EXECUTION_MAPPED";
         observations.accept(new Observation(player, slot, action.name(), chainId, correlation, result));
         if (!suppressed && !full) requests.add(new Request(player, slot, action.name(), chainId, correlation,
-                desiredMovement.getOrDefault(player, new Vec3(0, 0, 0))));
+                desiredMovement.getOrDefault(player, new Vec3(0, 0, 0)),
+                "RPG_Ability_Snipe".equals(itemId) ? "snipe" : ""));
     }
 
     /** Installed once during setup; the control observes the same inbound watcher before filtering. */
@@ -154,7 +155,10 @@ public final class HytaleAbilitySkillInputAdapter {
     }
 
     public record Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId,
-                          Vec3 desiredMovement) {
+                          Vec3 desiredMovement, String expectedSkill) {
+        public Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId, Vec3 movement) {
+            this(player, slot, action, chainId, correlationId, movement, "");
+        }
         public Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId) {
             this(player, slot, action, chainId, correlationId, new Vec3(0, 0, 0));
         }

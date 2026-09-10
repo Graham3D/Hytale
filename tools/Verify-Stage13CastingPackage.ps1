@@ -1,9 +1,10 @@
 [CmdletBinding()]
-param([ValidateSet('m','n','o','p','q','r','s')][string]$Cohort='m')
+param([ValidateSet('m','n','o','p','q','r','s','t')][string]$Cohort='m')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence/stage-13/cohort-$Cohort"
 $baseline=if($Cohort -eq 's'){'r'}elseif($Cohort -eq 'r'){'q'}elseif($Cohort -eq 'q'){'p'}elseif($Cohort -eq 'p'){'o'}elseif($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
+if($Cohort -eq 't'){$baseline='s'}
 $previous=Join-Path $root "evidence/stage-13/cohort-$baseline/artifacts/HytaleRPG-0.0.25.jar"
 $candidate=Join-Path $out 'artifacts/HytaleRPG-0.0.25.jar'
 function EntryHashes([string]$path){
@@ -15,6 +16,14 @@ function EntryHashes([string]$path){
 $before=EntryHashes $previous;$after=EntryHashes $candidate
 $changed=@(foreach($name in @($before.Keys)+@($after.Keys)|Sort-Object -Unique){if($before[$name] -ne $after[$name]){$name}})
 foreach($name in $changed){
+    if($Cohort -eq 't'){
+        if($name -match '^com/inigmasgames/hytalerpg/(ui/hud/RpgHud|input/(NativeAbilityBridgeAudit|NativeSnipeReleaseAudit|NativeSkillActivationInteraction|HytaleAbilitySkillInputAdapter)|execution/(SkillExecutionService|hytale/(HytaleSkillExecutionSystem|NativeProjectileAssetAudit)))(\$[^/]*)?\.class$'){continue}
+        if($name -in @('Common/UI/Custom/Phase00RevisionHud.ui','rpg/catalog/skills.json','rpg/runtime/stage-13-projectiles-cohort-c.json',
+            'Server/Item/Items/RPG/Abilities/RPG_Ability_Snipe.json','Server/Item/RootInteractions/RPG/Root_RPG_Snipe_Release.json',
+            'Server/Models/Projectiles/RPG_Snipe.json','Server/ProjectileConfigs/RPG/Projectile_Config_RPG_Snipe.json',
+            'Common/Icons/Items/RPG/SkillSnipe.png','Common/UI/Custom/Icons/RPG/SkillSnipe.png','Server/Languages/en-US/server.lang')){continue}
+        throw "Unexpected T change outside Snipe hold/release and badge: $name"
+    }
     if($Cohort -eq 's'){
         if($name -match '^com/inigmasgames/hytalerpg/ui/(hud/RpgHud|skilltree/(RpgSkillIcons|RpgSkillTreePage|RpgSkillTreeProjectionService))(\$[^/]*)?\.class$'){continue}
         if($name -in @('rpg/presentation/','rpg/presentation/icon-index.json','Common/UI/Custom/Phase00RevisionHud.ui','Common/UI/Custom/RpgSkillTree.ui')){continue}
@@ -98,6 +107,32 @@ if($Cohort -eq 'r'){
         }
     }finally{$baselineZip.Dispose();$candidateZip.Dispose()}
 }
+if($Cohort -eq 't'){
+    $baselineZip=[IO.Compression.ZipFile]::OpenRead($previous);$candidateZip=[IO.Compression.ZipFile]::OpenRead($candidate)
+    function Read-TJson($zip,[string]$name){$r=[IO.StreamReader]::new($zip.GetEntry($name).Open());try{return ($r.ReadToEnd()|ConvertFrom-Json)}finally{$r.Dispose()}}
+    try{
+        foreach($path in @('rpg/catalog/skills.json','rpg/runtime/stage-13-projectiles-cohort-c.json')){
+            $a=Read-TJson $baselineZip $path;$b=Read-TJson $candidateZip $path
+            $rowsA=if($path -like '*cohort-c*'){$a.skills}else{$a};$rowsB=if($path -like '*cohort-c*'){$b.skills}else{$b}
+            $key=if($path -like '*cohort-c*'){'skillId'}else{'id'}
+            if(@($rowsA).Count -ne @($rowsB).Count){throw 'Content count changed'}
+            foreach($row in $rowsA | Where-Object {$_.$key -ne 'snipe'}){
+                $match=@($rowsB|Where-Object {$_.$key -eq $row.$key})
+                if($match.Count -ne 1 -or ($row|ConvertTo-Json -Depth 64 -Compress) -cne ($match[0]|ConvertTo-Json -Depth 64 -Compress)){throw "Unrelated skill changed: $($row.$key)"}
+            }
+        }
+        $oldProfile=(Read-TJson $baselineZip 'rpg/runtime/stage-13-projectiles-cohort-c.json').skills|Where-Object skillId -eq 'snipe'
+        $newProfile=(Read-TJson $candidateZip 'rpg/runtime/stage-13-projectiles-cohort-c.json').skills|Where-Object skillId -eq 'snipe'
+        $oldProfile.projectile.speed=85;$oldProfile.projectile.gravity=25;$oldProfile.projectile.radius=.075;$oldProfile.projectile.details.nativeCapabilityGate=''
+        if(($oldProfile|ConvertTo-Json -Depth 64 -Compress) -cne ($newProfile|ConvertTo-Json -Depth 64 -Compress)){throw 'Snipe payment/damage/ammo or other unexpected profile mutation'}
+        $sourceHash=(Get-FileHash -LiteralPath (Join-Path $root 'art/Skills/SkillSnipe.png')).Hash
+        foreach($path in @('Common/Icons/Items/RPG/SkillSnipe.png','Common/UI/Custom/Icons/RPG/SkillSnipe.png')){
+            if($after[$path] -ne $sourceHash){throw 'Owner Snipe artwork byte mismatch'}
+        }
+        $ability=(Read-TJson $candidateZip 'Server/Item/Items/RPG/Abilities/RPG_Ability_Snipe.json').Ability
+        if($ability.Cost -ne 0 -or $ability.Cooldown -ne 0 -or $ability.CostType -ne 'None' -or $ability.Cast -ne 'Root_RPG_Snipe_Release'){throw 'Snipe native authority changed'}
+    }finally{$baselineZip.Dispose();$candidateZip.Dispose()}
+}
 Copy-Item -LiteralPath (Join-Path $root 'build/test-results/test/TEST-com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest.xml') -Destination $out
 [xml]$benchmark=Get-Content -Raw (Join-Path $root 'build/test-results/test/TEST-com.inigmasgames.hytalerpg.Stage13DurabilityLoadTest.xml')
 $line=($benchmark.testsuite.'system-out'.InnerText -split "`n"|Where-Object {$_ -like 'STAGE13_DURABILITY_LOAD *'}|Select-Object -First 1)
@@ -123,6 +158,7 @@ if((Get-FileHash -LiteralPath $target).Hash -ne (Get-FileHash -LiteralPath $cand
     quickSlashSpeedAndFailureDiagnosticsOnly=($Cohort -eq 'q');
     skillIconsSearchAndBadgeOnly=($Cohort -eq 'r');
     optionalIconLookupPassiveSurfacesAndBadgeOnly=($Cohort -eq 's');
+    snipeHoldReleaseOnlyWithCostsDamageAmmoAndOtherProfilesUnchanged=($Cohort -eq 't');
     isolatedAtomicRollbackAndRollForward='PASS';retainedArchivedReaderTests='See full test-results.json; archived-reader tests unchanged';
     previousSha256=(Get-FileHash -LiteralPath $previous).Hash;candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash;
     connectedCastingVerified=$false}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $out 'jar-differential.json') -Encoding utf8

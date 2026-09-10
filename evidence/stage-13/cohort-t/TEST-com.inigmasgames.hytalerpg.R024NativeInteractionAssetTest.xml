@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.R024NativeInteractionAssetTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-10T02:55:26.691Z" hostname="GRAHAM" time="0.039">
+  <properties/>
+  <testcase name="nativeChargingCodecSupportsImmediateThresholdAndIndefiniteHold()" classname="com.inigmasgames.hytalerpg.R024NativeInteractionAssetTest" time="0.015"/>
+  <testcase name="registeredServerOperationSerializesAsSupportedSimpleWithServerWait()" classname="com.inigmasgames.hytalerpg.R024NativeInteractionAssetTest" time="0.02"/>
+  <testcase name="simulationDoesNotCallGameplayAndMissingRuntimeContextFailsClosed()" classname="com.inigmasgames.hytalerpg.R024NativeInteractionAssetTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

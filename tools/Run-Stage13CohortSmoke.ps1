@@ -130,7 +130,12 @@ if($Cohort -ne 'a'){
         $audit.equipment.Weapon_Crossbow_Iron.basicPower -ne 10 -or $audit.equipment.Weapon_Spear_Iron.basicPower -ne 6)){throw 'Cohort B native numeric contract mismatch'}
     if($Cohort -in @('c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t') -and ($audit.resolvedConfigs -ne 19 -or $audit.equipment.Weapon_Gun_Blunderbuss.basicPower -ne 200 -or
         $audit.nativeChargedBow.speed -ne 85 -or $audit.nativeChargedBow.gravity -ne 25 -or $audit.nativeChargedBow.radius -ne .075 -or
-        $audit.snipeActivationGate -ne 'NATIVE_BOW_MAX_RANGE_UNVERIFIED')){throw 'Cohort C native source/capability audit mismatch'}
+        $audit.snipeActivationGate -ne $(if($Cohort -eq 't'){''}else{'NATIVE_BOW_MAX_RANGE_UNVERIFIED'}))){throw 'Cohort C native source/capability audit mismatch'}
+    if($Cohort -eq 't' -and ($audit.nativeChargedBow.maximumRange -ne 'RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM' -or
+        $audit.nativeChargedBow.release.root -ne 'Root_RPG_Snipe_Release' -or
+        $audit.nativeChargedBow.release.releaseThresholdSeconds -ne 0 -or $audit.nativeChargedBow.release.connectedProof)){
+        throw 'Snipe native hold/release contract audit failed'
+    }
     $audit|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $evidence 'native-projectile-equipment-audit.json') -Encoding utf8
 }
 if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t')){

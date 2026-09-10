@@ -40,7 +40,9 @@ class Stage05ProjectileTest {
     @Test void sixProjectilePilotsRemainCanonicalAndSnipeRemainsNativeGated() {
         Stage04SkillProfiles profiles = profiles();
         assertEquals(12 + Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES, profiles.all().values().stream().filter(profile -> profile.area() == null && profile.connection() == null && profile.support() == null && profile.summon() == null && profile.summonAction() == null && profile.conversion() == null && profile.cage() == null).count());
-        assertEquals("NATIVE_BOW_MAX_RANGE_UNVERIFIED",profiles.require("snipe").projectile().details().nativeCapabilityGate());
+        // Retained identity; T owner contract replaces the unverified native maximum with an authored cap.
+        assertEquals("",profiles.require("snipe").projectile().details().nativeCapabilityGate());
+        assertEquals(85,profiles.require("snipe").projectile().speed());
         assertProjectile(profiles.require("fire_bolt"), Set.of("STAFF", "WAND"), "MANA", 8, 1.4,
                 "MAGIC_WEAPON", "MAGIC", "Projectile_Config_RPG_Fire_Bolt", 24, 24, .30, .95);
         assertProjectile(profiles.require("frost_bolt"), Set.of("STAFF", "WAND"), "MANA", 8, 1.5,

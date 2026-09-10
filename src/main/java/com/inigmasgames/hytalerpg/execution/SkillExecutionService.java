@@ -62,6 +62,14 @@ public final class SkillExecutionService {
         loadouts.addLoadoutMutationListener(actor->{for(var c:releases.cancelConditional(actor))emit(c.request(),RpgTraceEventType.SKILL_RELEASE_CANCELLED,c.rootCastId(),c.skillInstanceId(),Map.of("reason","COMMITTED_LOADOUT_CHANGED","refund",false));});
     }
 
+    /** A held native chain must not release a different skill assigned while the key was held. */
+    public SkillExecutionResult requestNative(SkillExecutionRequest request, SkillExecutionPort port, String expectedSkill) {
+        if (!expectedSkill.isEmpty() && !loadouts.getPresentationView(request.actorId()).state().skill(request.slot())
+                .map(id -> id.value().equals(expectedSkill)).orElse(false))
+            return reject(request, "input-" + request.chainId(), "activation-" + UUID.randomUUID(), "HELD_SKILL_CHANGED");
+        return request(request, port);
+    }
+
     public SkillExecutionResult request(SkillExecutionRequest request, SkillExecutionPort port) {
         String root = "input-" + request.chainId() + '-' + request.correlationId().substring(0, Math.min(8, request.correlationId().length()));
         String pendingInstance = "activation-" + UUID.randomUUID();

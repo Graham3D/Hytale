@@ -33,7 +33,7 @@ public final class NativeSkillActivationInteraction extends SimpleInstantInterac
         var player = buffer.getComponent(owner, PlayerRef.getComponentType());
         var original = context.getOriginalItemType();
         var ability = original == null ? null : original.getAbility();
-        if (player == null || ability == null || !NativeAbilityBridgeAudit.ROOT_ID.equals(ability.getCastRootId())) return;
+        if (player == null || ability == null || !NativeAbilityBridgeAudit.rootForItem(original.getId()).equals(ability.getCastRootId())) return;
         inputs.acceptNativeExecution(player.getUuid(), type, chain.getChainId(), chain,
                 original.getId(), context.getHeldItemSlot());
     }

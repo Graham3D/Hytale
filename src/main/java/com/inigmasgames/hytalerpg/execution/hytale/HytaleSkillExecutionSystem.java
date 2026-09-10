@@ -272,9 +272,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         var retaliated=executions.tickRetaliation(actor,port);
         if(retaliated!=null&&retaliated.status()==SkillExecutionResult.Status.PENDING)executions.activeWindupSeconds(actor).ifPresent(seconds->windupEnds.put(actor,System.nanoTime()+Math.round(seconds*1e9)));
         inputs.drainFor(actor, request -> {
-            SkillExecutionResult result = executions.request(new SkillExecutionRequest(request.player(), request.slot(),
+            SkillExecutionResult result = executions.requestNative(new SkillExecutionRequest(request.player(), request.slot(),
                     request.action(), request.chainId(), request.correlationId(), request.desiredMovement()),
-                    new Port(store, ref, playerRef, player, stats, null, buffer));
+                    new Port(store, ref, playerRef, player, stats, null, buffer), request.expectedSkill());
             if (result.status() == SkillExecutionResult.Status.PENDING)
                 executions.activeWindupSeconds(actor).ifPresent(seconds ->
                         windupEnds.put(actor, System.nanoTime() + Math.round(seconds * 1_000_000_000.0)));
@@ -1281,7 +1281,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     if(instance.plan().spawnTimestampNanos()>launchedAt)projectileLaunches.add(instance,new QueuedProjectile(context,actor));
                     else {nativeAllocationEntered=true;spawned.add(spawnProjectileCarrier(context,actor,instance,buffer));}
                 }
-                try{NativeStrikeFeedback.play(store,actor,context,0);}catch(RuntimeException unavailable){
+                try{
+                    if(context.profile().skillId().equals("snipe"))
+                        com.hypixel.hytale.server.core.entity.AnimationUtils.playAnimation(actor,
+                                com.hypixel.hytale.protocol.AnimationSlot.Action,"Shortbow","ShootCharged",true,store);
+                    else NativeStrikeFeedback.play(store,actor,context,0);
+                }catch(RuntimeException unavailable){
                     emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","PROJECTILE_CAST_ANIMATION_UNAVAILABLE","connectedProof",false));
                 }
                 try{vfx.present(store.getExternalData().getWorld(),player,context.compiledPlan().vfxRecipeId());}

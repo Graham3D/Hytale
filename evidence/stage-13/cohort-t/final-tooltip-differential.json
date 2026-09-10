@@ -1,0 +1,15 @@
+{
+  "afterFullSuiteChanges": [
+    "Snipe tooltip",
+    "owner updated SkillSnipe.png during work"
+  ],
+  "changedEntries": [
+    "Server/Languages/en-US/server.lang",
+    "Common/Icons/Items/RPG/SkillSnipe.png",
+    "Common/UI/Custom/Icons/RPG/SkillSnipe.png"
+  ],
+  "allOtherEntriesIdentical": true,
+  "recompiledClassHashesVerified": 760,
+  "sourceSnipeSha256": "D17952E698B1DA67E7D578D0F9B85459F352F23AF3BF2456BD40493FCC05B198",
+  "finalJarSha256": "0082B9149831E9BDE13F82E32F2907FAC2EF943C14CC230A16BF3B54A77D77F9"
+}

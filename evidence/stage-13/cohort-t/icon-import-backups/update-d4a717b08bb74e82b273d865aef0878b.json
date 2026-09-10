@@ -1,0 +1,39 @@
+{
+    "schemaVersion":  1,
+    "target":  "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\build\\libs\\HytaleRPG-0.0.25.jar",
+    "beforeSha256":  "7237B6B198AD47CB85F05645811AFCD0CF35624EE9E5D4CCB5886EA3418EE83B",
+    "afterSha256":  "0082B9149831E9BDE13F82E32F2907FAC2EF943C14CC230A16BF3B54A77D77F9",
+    "backup":  "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-t\\icon-import-backups\\HytaleRPG-before-7237B6B198AD47CB85F05645811AFCD0CF35624EE9E5D4CCB5886EA3418EE83B.jar",
+    "icons":  [
+                  {
+                      "name":  "Fire Bolt",
+                      "fileName":  "SkillFirebolt.png",
+                      "sha256":  "8B4E285602E6A13A37A594F9E23B4C53E8A3AF0A0BC403D0083553910D6A7C7C"
+                  },
+                  {
+                      "name":  "Quick Slash",
+                      "fileName":  "SkillQuickslash.png",
+                      "sha256":  "D3DBBBF03497A5CE845A48FE6F816955934271C668A6461F0D44CD1AEC077EC1"
+                  },
+                  {
+                      "name":  "Snipe",
+                      "fileName":  "SkillSnipe.png",
+                      "sha256":  "D17952E698B1DA67E7D578D0F9B85459F352F23AF3BF2456BD40493FCC05B198"
+                  },
+                  {
+                      "name":  "Whirlwind",
+                      "fileName":  "SkillWhirlwind.png",
+                      "sha256":  "60797552980435AA0E959269A0184DD1E2926C3173C7F525C11CCAA30281561D"
+                  }
+              ],
+    "changedEntries":  [
+                           "Common/UI/Custom/Icons/RPG/SkillSnipe.png",
+                           "Common/Icons/Items/RPG/SkillSnipe.png",
+                           "Server/Item/Items/RPG/Abilities/RPG_Ability_Snipe.json",
+                           "Common/UI/Custom/Icons/RPG/SkillWhirlwind.png",
+                           "Common/Icons/Items/RPG/SkillWhirlwind.png",
+                           "Server/Item/Items/RPG/Abilities/RPG_Ability_Whirlwind.json"
+                       ],
+    "utc":  "2026-09-10T02:57:08.9078140Z",
+    "savesModified":  false
+}

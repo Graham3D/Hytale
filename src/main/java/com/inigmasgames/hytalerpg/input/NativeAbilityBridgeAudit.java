@@ -10,7 +10,11 @@ import com.inigmasgames.hytalerpg.phase00.BuildIdentity;
 /** One-shot runtime proof that the packaged native bridge resolves through Hytale's asset store. */
 public final class NativeAbilityBridgeAudit {
     public static final String ROOT_ID = "Root_RPG_Ability_Bridge";
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    public static final String SNIPE_ROOT_ID = "Root_RPG_Snipe_Release";
+    public static String rootForItem(String item) {
+        return "RPG_Ability_Snipe".equals(item) ? SNIPE_ROOT_ID : ROOT_ID;
+    }
+    private static final class Log { static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass(); }
 
     private NativeAbilityBridgeAudit() { }
 
@@ -18,7 +22,7 @@ public final class NativeAbilityBridgeAudit {
         RootInteraction root = event.getLoadedAssets().get(ROOT_ID);
         if (root == null) return;
         Result result = inspect(root);
-        LOGGER.atInfo().log("RPG_NATIVE_BRIDGE_AUDIT revision=%s root=%s exists=true operations=%d operation=%s waitFor=%s operationRemote=%s rootRemote=%s effectFree=%s result=%s",
+        Log.LOGGER.atInfo().log("RPG_NATIVE_BRIDGE_AUDIT revision=%s root=%s exists=true operations=%d operation=%s waitFor=%s operationRemote=%s rootRemote=%s effectFree=%s result=%s",
                 BuildIdentity.REVISION, ROOT_ID, result.operationCount(), result.operationType(),
                 result.waitFor(), result.operationRemote(), result.rootRemote(), result.effectFree(),
                 result.pass() ? "PASS" : "FAIL");

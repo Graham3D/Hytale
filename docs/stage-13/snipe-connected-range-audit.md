@@ -1,5 +1,10 @@
 # Snipe connected rejection audit — after R032-S
 
+**Historical diagnosis:** the owner subsequently replaced Snipe's contract with
+hold-to-full-draw / release-to-fire. [Correction T](stage-13-snipe-release-report.md)
+implements that new contract with an authored cap; it does not claim the missing
+native maximum was discovered. The original investigation below is preserved.
+
 Audit date: September 9 local / September 10 UTC, 2026.
 Branch RPG; code checkpoint `219c335`. Investigation only: no correction JAR,
 no deployment, no gameplay/profile/test edits and no live save changes.

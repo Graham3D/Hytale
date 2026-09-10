@@ -78,10 +78,10 @@
       "scaling": "LIGHT",
       "projectile": {
         "configId": "Projectile_Config_RPG_Snipe",
-        "speed": 45,
+        "speed": 85,
         "maxDistance": 48,
-        "radius": 0.1,
-        "gravity": 0,
+        "radius": 0.075,
+        "gravity": 25,
         "targetCap": 1,
         "coefficient": 2,
         "statusId": "",
@@ -117,7 +117,7 @@
             "groundFuseSeconds": 0,
             "detonateAtAirborneLimit": false
           },
-          "nativeCapabilityGate": "NATIVE_BOW_MAX_RANGE_UNVERIFIED"
+          "nativeCapabilityGate": ""
         }
       }
     },

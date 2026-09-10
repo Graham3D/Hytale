@@ -35,11 +35,14 @@ class Stage13AuthoredProjectileTest {
     }
     @Test void snipeCannotPromoteDevelopmentFallbackIntoAProductionCast(){
         var h=new Stage11ResourcePassivesTest.H("snipe");h.weapon="BOW";
-        assertEquals("NATIVE_BOW_MAX_RANGE_UNVERIFIED",h.cast().code());assertTrue(h.contexts.isEmpty());
-        assertEquals(100,h.current(ResourceType.STAMINA));assertEquals(0,h.cooldownSaves);
+        // Retained test identity; owner explicitly replaced the old native-maximum requirement.
+        // The zero-gravity development projectile must NOT be promoted unchanged.
+        assertTrue(h.cast().committed());assertEquals(1,h.contexts.size());
+        assertEquals(88,h.current(ResourceType.STAMINA));assertEquals(1,h.cooldownSaves);
         var p=profiles.require("snipe").projectile();assertEquals(2,p.coefficient());assertTrue(p.fullyCharged());
         assertEquals(1,p.ammoQuantity());assertEquals("Weapon_Arrow_Crude",p.ammoItemId());
-        assertEquals(48,p.maxDistance());assertEquals(45,p.speed());assertEquals(.1,p.radius());assertEquals(0,p.gravity());
+        assertEquals(48,p.maxDistance());assertEquals(85,p.speed());assertEquals(.075,p.radius());assertEquals(25,p.gravity());
+        assertEquals("",p.details().nativeCapabilityGate());
     }
     @Test void deterministicEightPelletsAreSymmetricAndIndependentlyHitTheSameVictim(){
         var h=cast("blunderbuss_shot","GUN");var list=plans(h,0);assertEquals(list,plans(h,0));
@@ -211,7 +214,7 @@ class Stage13AuthoredProjectileTest {
     }
     @Test void explicitRuntimeBlockersAreNotAdvertisedAsOnlyAwaitingConnectedQA(){
         var matrix=new Stage11CompatibilityMatrixTest();
-        for(String id:List.of("snipe","bone_cage")) {
+        for(String id:List.of("bone_cage")) {
             var skill=matrix.skills.stream().filter(s->s.id().value().equals(id)).findFirst().orElseThrow();
             var result=matrix.assess(skill,List.of(),false);
             assertEquals("COMPILED_PROFILE_WITH_EXPLICIT_RUNTIME_GATE",result.gate());

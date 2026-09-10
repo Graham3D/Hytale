@@ -43,7 +43,7 @@ class R021NativeAbilityCorrectionTest {
             assertTrue(json.contains("\"Cooldown\": 0"), skill);
             assertTrue(json.contains("\"Cost\": 0"), skill);
             assertTrue(json.contains("\"CostType\": \"None\""), skill);
-            assertTrue(json.contains("\"Cast\": \"Root_RPG_Ability_Bridge\""), skill);
+            assertTrue(json.contains("\"Cast\": \"" + com.inigmasgames.hytalerpg.input.NativeAbilityBridgeAudit.rootForItem("RPG_Ability_"+skill) + "\""), skill);
         }
         String root = Files.readString(Path.of(
                 "src/main/resources/Server/Item/RootInteractions/RPG/Root_RPG_Ability_Bridge.json"));

@@ -1,0 +1,20 @@
+{
+  "Interactions": [
+    {
+      "Type": "Charging",
+      "AllowIndefiniteHold": true,
+      "DisplayProgress": false,
+      "CancelOnOtherClick": true,
+      "FailOnDamage": true,
+      "Effects": {
+        "ItemPlayerAnimationsId": "Shortbow",
+        "ItemAnimationId": "ShootChargingHold",
+        "ClearAnimationOnFinish": true
+      },
+      "Next": {
+        "0": { "Type": "RPG_ActivateSkill" }
+      }
+    }
+  ],
+  "RequireNewClick": true
+}

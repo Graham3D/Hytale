@@ -1,5 +1,7 @@
 # Owner / ChatGPT review packet
 
+**Latest correction:** [Stage 13 T Snipe hold/release](../stage-13/stage-13-snipe-release-report.md) records the explicit owner contract change, native charged-bow asset/operation audit, hold/release implementation, stale-slot protection, 2,164 passing tests and connected checklist. Snipe's old range gate was superseded with an authored 48 m cap; native maximum range and connected release/rendering are not falsely claimed verified. Other skill mechanics and persistence remain unchanged.
+
 **Latest correction:** [Stage 13 S owner-managed icons](../stage-13/stage-13-owner-icons-report.md) documents the complete 153-filename index, optional skill/passive artwork wiring, Windows PowerShell importer and undo, compatibility defects found by tests, 2,157 passing tests, exact native smoke and deployed artifact hashes. R032-S includes the owner's Whirlwind PNG. [Owner instructions](../../art/ADDING-ICONS.md) provide the drop-PNG/one-click/restart workflow. Connected rendering remains unverified; gameplay and unresolved encounter issues are unchanged.
 
 **Latest correction:** [Stage 13 R skill icons/search report](../stage-13/stage-13-skill-icons-search-report.md) documents the actual search codec defect, original-art overlay wiring, native item-icon namespace validation, 2,145 passing tests, exact-JAR smoke, deployed hashes, rollback and a focused connected UI checklist. R032-R is deployed; Q gameplay and unresolved encounter/post-lethal issues are unchanged. Client typing/focus/rendering still requires owner testing.
