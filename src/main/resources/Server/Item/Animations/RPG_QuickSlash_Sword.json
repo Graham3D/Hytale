@@ -6,7 +6,7 @@
       "ThirdPersonFace": "Characters/Animations/Expressions/Frown.blockyanim",
       "FirstPerson": "Characters/Animations/Items/Main_Handed/Sword/Attacks/Swing_Left/Swing_Left_FPS.blockyanim",
       "KeepPreviousFirstPersonAnimation": true,
-      "Speed": 1.5,
+      "Speed": 3.0,
       "ClipsGeometry": true
     },
     "SwingRight": {
@@ -15,7 +15,7 @@
       "ThirdPersonFace": "Characters/Animations/Expressions/Frown.blockyanim",
       "FirstPerson": "Characters/Animations/Items/Main_Handed/Sword/Attacks/Swing_Right/Swing_Right_FPS.blockyanim",
       "KeepPreviousFirstPersonAnimation": true,
-      "Speed": 1.5,
+      "Speed": 3.0,
       "ClipsGeometry": true
     }
   },

@@ -1007,7 +1007,7 @@
     "spawnBudgetCost": 1,
     "childProjectileCount": 0,
     "executionNotes": "One activation pays one cost/cooldown. Repeats preserve the committed facing/target logic where possible, use derived SkillInstance children, and cannot Multistrike themselves.",
-    "safetyNotes": "Keep the primary at full power; ordinary repeats at 0.25 s and 0.50 s each receive 65% effect. Quick Slash is the owner-authorized exception: two additional complete pairs at 65% per hit, retaining its weapon-specific 1.5x light-animation cadence. Lock the root action until its final repeat. Revalidate live geometry; exclude other authored multi-hit sequences.",
+    "safetyNotes": "Keep the primary at full power; ordinary repeats at 0.25 s and 0.50 s each receive 65% effect. Quick Slash is the owner-authorized exception: two additional complete pairs at 65% per hit, retaining its weapon-specific 3x light-animation cadence. Lock the root action until its final repeat. Revalidate live geometry; exclude other authored multi-hit sequences.",
     "fixture": "accept Spear Thrust and Quick Slash (owner-authorized two-hit exception; repeat the complete pair twice at 65% damage per hit); reject Dagger Flurry (authored multi-hit sequence). Maximum one copy per skill. Display the rejected gate in UI and revalidate it server-side.",
     "aliases": [
       "Multistrike",

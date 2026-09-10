@@ -87,7 +87,7 @@ public final class CompiledProfileResolver {
             boolean pair=authored.skillId().equals("quick_slash");
             strike.addProperty("repeats",pair?6:3);strike.addProperty("repeatIntervalSeconds",pair?authored.strike().repeatIntervalSeconds():.25);
             // Longsword is the slowest supported pair; cover all six accelerated swings.
-            if(pair)strike.getAsJsonObject("details").addProperty("actionLockSeconds",2.1);
+            if(pair)strike.getAsJsonObject("details").addProperty("actionLockSeconds",1.05);
         }
         if(plan.orbit()&&authored.projectile()!=null){
             var p=resolved.getAsJsonObject("projectile");double coefficient=p.get("coefficient").getAsDouble();

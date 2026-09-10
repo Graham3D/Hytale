@@ -54,7 +54,7 @@ class Stage13PlayerFeedbackCorrectionTest {
                 JsonObject source;try(var reader=new java.io.InputStreamReader(zip.getInputStream(zip.getEntry("Server/Item/Animations/"+profile+".json")))){source=JsonParser.parseReader(reader).getAsJsonObject().getAsJsonObject("Animations");}
                 var replacement=json("/Server/Item/Animations/RPG_QuickSlash_"+profile+".json");assertEquals(profile,replacement.get("Parent").getAsString());
                 for(String action:List.of("SwingLeft","SwingRight")){
-                    var expected=source.getAsJsonObject(action).deepCopy();expected.addProperty("Speed",expected.get("Speed").getAsDouble()*1.5);
+                    var expected=source.getAsJsonObject(action).deepCopy();expected.addProperty("Speed",expected.get("Speed").getAsDouble()*3.0);
                     assertEquals(expected,replacement.getAsJsonObject("Animations").getAsJsonObject(action));
                 }
             }
@@ -75,7 +75,7 @@ class Stage13PlayerFeedbackCorrectionTest {
     }
     @Test void revisionBadgeIsTopRightWithoutNativeResourceControls()throws Exception{
         String badge=Files.readString(Path.of("src/main/resources/Common/UI/Custom/Phase00RevisionHud.ui"));
-        assertTrue(badge.contains("Right: 18, Top: 18"));assertTrue(badge.contains("R032-P"));
+        assertTrue(badge.contains("Right: 18, Top: 18"));assertTrue(badge.contains("R032-Q"));
         String hud=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/ui/hud/RpgHud.java"));
         assertTrue(hud.contains("commands.append(\"Phase00RevisionHud.ui\")"));assertTrue(hud.contains("BuildIdentity.REVISION"));
         for(String forbidden:List.of("#Health","#Stamina","#Mana"))assertFalse(hud.contains(forbidden));

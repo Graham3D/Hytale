@@ -4,7 +4,7 @@
     "id": "quick_slash",
     "skillId": "rpg.skill.quick_slash",
     "name": "Quick Slash",
-    "description": "Deliver two alternating light-attack slashes at 1.5x normal animation speed. Each slash deals full damage; pay once for the sequence.",
+    "description": "Deliver two alternating light-attack slashes at 3x normal animation speed (+200%). Each slash deals full damage; pay once for the sequence.",
     "tier": "I",
     "phase": 4,
     "tags": [

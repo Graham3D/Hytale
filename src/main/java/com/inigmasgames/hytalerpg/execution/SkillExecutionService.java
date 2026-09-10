@@ -196,6 +196,10 @@ public final class SkillExecutionService {
     public boolean nextRuthless(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return ruthless.nextEmpowered(new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Key(actor,slot));}
     public int attunementStacks(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return attunement.stacks(new AttunementLedger.Key(actor,slot),now());}
 
+    public void recordExecutionFailure(SkillExecutionContext context,String stage,RuntimeException failure){
+        emit(context.request(),RpgTraceEventType.SKILL_EXECUTION_FAILED,context.rootCastId(),context.skillInstanceId(),
+                ExecutionFailureDiagnostics.describe(stage,failure));
+    }
     public void terminate(SkillExecutionContext context, String reason) {
         if (lifecycle.terminate(context.request().actorId(), context.skillInstanceId())) {
             startEndedChannelCooldown(context);
@@ -501,6 +505,7 @@ public final class SkillExecutionService {
             // or defensive effect may precede a late adapter failure. Retain the committed cost,
             // cooldown and commit counters; only pre-dispatch transaction failures may roll back.
             kernel.resources().finish(token);
+            recordExecutionFailure(context,"EXECUTOR_DISPATCH",error);
             terminate(context, "EXECUTOR_ERROR_" + error.getClass().getSimpleName());
             return new SkillExecutionResult(SkillExecutionResult.Status.TERMINATED,
                     "EXECUTOR_ERROR", true, 0, 0.0);

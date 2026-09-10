@@ -14,7 +14,7 @@ public final class NativeStrikeFeedback {
             "DAGGER","Daggers","MACE","Mace","BATTLEAXE","RPG_Strike_Battleaxe","SPEAR","Spear");
     private NativeStrikeFeedback() { }
     public static double quickSlashInterval(String kind){
-        return switch(kind){case "SWORD"->25.0/60/1.5;case "LONGSWORD"->25.0/60/1.2;case "DAGGER"->20.0/60/1.8;default->throw new IllegalArgumentException("QUICK_SLASH_WEAPON_KIND");};
+        return switch(kind){case "SWORD"->25.0/60/3.0;case "LONGSWORD"->25.0/60/2.4;case "DAGGER"->20.0/60/3.6;default->throw new IllegalArgumentException("QUICK_SLASH_WEAPON_KIND");};
     }
     public static void requireAssets() {
         var failures = new java.util.ArrayList<String>();
@@ -35,7 +35,7 @@ public final class NativeStrikeFeedback {
             var first=com.hypixel.hytale.server.core.asset.common.BlockyAnimationCache.getNow(quick.firstPerson);
             var third=com.hypixel.hytale.server.core.asset.common.BlockyAnimationCache.getNow(quick.thirdPerson);
             if(!base.firstPerson.equals(quick.firstPerson)||!base.thirdPerson.equals(quick.thirdPerson)||quick.looping
-                    ||Math.abs(quick.speed-base.speed*1.5)>1e-5||first==null||third==null
+                    ||Math.abs(quick.speed-base.speed*3.0)>1e-5||first==null||third==null
                     ||Math.abs(Math.max(first.getDurationSeconds(),third.getDurationSeconds())/quick.speed-quickSlashInterval(kind))>1e-6)
                 throw new IllegalStateException("QUICK_SLASH_NATIVE_ANIMATION_CONTRACT:"+kind+"/"+action);
         }

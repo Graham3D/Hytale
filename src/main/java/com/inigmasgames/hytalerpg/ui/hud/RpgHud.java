@@ -23,7 +23,7 @@ final class RpgHud extends CustomUIHud {
     @Override protected void build(@Nonnull UICommandBuilder commands) {
         commands.append("RpgHud.ui");
         commands.append("Phase00RevisionHud.ui");
-        commands.set("#BuildRevision.TextSpans", Message.raw(com.inigmasgames.hytalerpg.phase00.BuildIdentity.REVISION + "-P"));
+        commands.set("#BuildRevision.TextSpans", Message.raw(com.inigmasgames.hytalerpg.phase00.BuildIdentity.REVISION + "-Q"));
         writeAll(commands, model);
     }
 

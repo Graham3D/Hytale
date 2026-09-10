@@ -1,0 +1,1391 @@
+{
+  "connectedBuild": "P",
+  "windowUtc": "2026-09-09 23:45:01 through 23:52:50 exclusive",
+  "rotationsIncluded": [
+    "skill-trace.jsonl",
+    "skill-trace.jsonl.1"
+  ],
+  "sourceHashes": [
+    {
+      "Algorithm": "SHA256",
+      "Hash": "BA3CD72DB55BB4FA8669A7166D06A357BE2CFDD7085B267CF8226367DDE95F16",
+      "Path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\InigmasGames_HytaleRPGPhase00Audit\\logs\\rpg\\skill-trace.jsonl"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "A9F689F1B16BAD113C893B8944FCF7CBA7CF6C6123A24CAF455BE9D149DDBD78",
+      "Path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\InigmasGames_HytaleRPGPhase00Audit\\logs\\rpg\\skill-trace.jsonl.1"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "19BC61E54FA9C37D2B61B03E82B5557979FFB628C094CF10C2196AB1DCEDCE28",
+      "Path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\logs\\2026-09-09_19-45-01_server.log"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "4D60AC7C7566CFA36926299E54EC50E87199D6C0C2633EF88747358E9265792A",
+      "Path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\InigmasGames_HytaleRPGPhase00Audit\\logs\\rpg\\ui-trace.jsonl"
+    }
+  ],
+  "eventCounts": {
+    "AMMO_CHECK": 11,
+    "BASE_POWER_RESOLVED": 16,
+    "BURN_TICK": 7,
+    "COMPILE_BEGIN": 7,
+    "COMPILE_FAILURE": 3,
+    "COMPILE_SUCCESS": 4,
+    "CRIT_ROLL": 16,
+    "DAMAGE_APPLIED": 16,
+    "DAMAGE_CALC_BEGIN": 16,
+    "DAMAGE_FILTERED": 16,
+    "DAMAGE_GATHERED": 16,
+    "DAMAGE_INSPECTED": 16,
+    "ENCOUNTER_REWARD_REJECTED": 1,
+    "EXECUTOR_DISPATCH": 54,
+    "FORK": 2,
+    "LINK_ACCEPTED": 4,
+    "LINK_REJECTED": 3,
+    "LOAD": 1,
+    "MODIFIERS_APPLIED": 16,
+    "NATIVE_ABILITY_INPUT_OBSERVED": 32,
+    "NATIVE_ABILITY_SLOT_CLEARED": 1,
+    "NATIVE_ABILITY_SLOT_CONFLICT": 2,
+    "NATIVE_ABILITY_SLOT_PROJECTED": 2,
+    "NATIVE_RPG_TICK_SUMMARY": 91,
+    "PERSISTENCE_HANDOFF_METRICS": 456,
+    "PROJECTILE_ENTITY_HIT": 2,
+    "PROJECTILE_HOMING_QUERY": 8,
+    "PROJECTILE_MAX_RANGE": 2,
+    "PROJECTILE_SPAWN_REJECTED": 1,
+    "PROJECTILE_SPAWN_REQUEST": 15,
+    "PROJECTILE_SPAWNED": 15,
+    "PROJECTILE_TERMINATED": 15,
+    "PROJECTILE_TERRAIN_HIT": 9,
+    "SAVE": 4,
+    "SCALING_APPLIED": 16,
+    "SKILL_ACTIVATION_REJECTED": 8,
+    "SKILL_ACTIVATION_REQUEST": 32,
+    "SKILL_COMMITTED": 24,
+    "SKILL_TERMINATED": 24,
+    "SKILL_VALIDATION_PASS": 27,
+    "SKILL_VALIDATION_REJECTED": 8,
+    "STATUS_APPLIED": 2,
+    "STATUS_REMOVED": 2,
+    "STRIKE_HIT": 4,
+    "STRIKE_QUERY": 68,
+    "STRIKE_TARGET_ACCEPTED": 10,
+    "TRACE_LEVEL_CHANGED": 1
+  },
+  "casts": [
+    {
+      "timestamp": "2026-09-09T23:45:20.764989600Z",
+      "skill": "fire_bolt",
+      "correlationId": "4f24f677-999d-4294-b442-c8e4fdc3838a",
+      "queries": [],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "PROJECTILE_TERRAIN_HIT"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:45:22.564308Z",
+      "skill": "fire_bolt",
+      "correlationId": "440bec62-1911-4357-811a-22ca4c8e7eb3",
+      "queries": [],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "PROJECTILE_TERRAIN_HIT"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:45:24.496549200Z",
+      "skill": "fire_bolt",
+      "correlationId": "9c268d57-cb5f-48e2-81dc-7fcf9b98f518",
+      "queries": [],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "PROJECTILE_TERRAIN_HIT"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:45:33.930027200Z",
+      "skill": "fire_bolt",
+      "correlationId": "ea1f689a-a708-4f0e-b833-cfeac12111ab",
+      "queries": [],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "PROJECTILE_TERRAIN_HIT"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:45:37.164332600Z",
+      "skill": "fire_bolt",
+      "correlationId": "45609110-5d70-4cd5-8647-7d2e30d9f04b",
+      "queries": [],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "PROJECTILE_MAX_RANGE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:45:39.263980100Z",
+      "skill": "fire_bolt",
+      "correlationId": "fabfd012-3511-4b39-b707-d4ffe49919b5",
+      "queries": [],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "PROJECTILE_MAX_RANGE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:45:42.297296600Z",
+      "skill": "fire_bolt",
+      "correlationId": "e2862cf7-3115-4b9c-830c-1ce013ad73db",
+      "queries": [],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "PROJECTILE_TERRAIN_HIT"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:45:46.097132300Z",
+      "skill": "quick_slash",
+      "correlationId": "4db1b253-f797-49be-861d-cc7f8922a9cc",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-b145b3d2-ff2f-41fe-8821-5b5eb0839be9",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-16-4db1b253",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-b145b3d2-ff2f-41fe-8821-5b5eb0839be9",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-16-4db1b253",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-b145b3d2-ff2f-41fe-8821-5b5eb0839be9",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-16-4db1b253",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:45:50.297562100Z",
+      "skill": "quick_slash",
+      "correlationId": "c460402a-824c-47b1-bc7d-b6df00303685",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-01396613-0954-4e5f-95c4-30e40a094ea0",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-19-c460402a",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-01396613-0954-4e5f-95c4-30e40a094ea0",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-19-c460402a",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-01396613-0954-4e5f-95c4-30e40a094ea0",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-19-c460402a",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:45:53.995087500Z",
+      "skill": "quick_slash",
+      "correlationId": "c62504e9-4954-41fa-a262-5012d48d2d6d",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0048047c-97eb-436e-9929-15e9c290e2d0",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-20-c62504e9",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0048047c-97eb-436e-9929-15e9c290e2d0",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-20-c62504e9",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0048047c-97eb-436e-9929-15e9c290e2d0",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-20-c62504e9",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:46:49.063081100Z",
+      "skill": "quick_slash",
+      "correlationId": "92b1f71f-2890-4362-89e5-95fbeb300c24",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-cccba677-8e7e-4216-a908-69d3b4c62f97",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-22-92b1f71f",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-cccba677-8e7e-4216-a908-69d3b4c62f97",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-22-92b1f71f",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-cccba677-8e7e-4216-a908-69d3b4c62f97",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-22-92b1f71f",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-cccba677-8e7e-4216-a908-69d3b4c62f97/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-22-92b1f71f",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-cccba677-8e7e-4216-a908-69d3b4c62f97/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-22-92b1f71f",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-cccba677-8e7e-4216-a908-69d3b4c62f97/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-22-92b1f71f",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-cccba677-8e7e-4216-a908-69d3b4c62f97/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-22-92b1f71f",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:46:56.628960300Z",
+      "skill": "quick_slash",
+      "correlationId": "33fdbcdc-2b70-404d-aa04-e557dff362ab",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-62e85467-897e-4e6d-b48f-8dfd78031545",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-23-33fdbcdc",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-62e85467-897e-4e6d-b48f-8dfd78031545",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-23-33fdbcdc",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-62e85467-897e-4e6d-b48f-8dfd78031545",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-23-33fdbcdc",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-62e85467-897e-4e6d-b48f-8dfd78031545/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-23-33fdbcdc",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-62e85467-897e-4e6d-b48f-8dfd78031545/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-23-33fdbcdc",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-62e85467-897e-4e6d-b48f-8dfd78031545/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-23-33fdbcdc",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-62e85467-897e-4e6d-b48f-8dfd78031545/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-23-33fdbcdc",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:47:58.629276800Z",
+      "skill": "fire_bolt",
+      "correlationId": "25bde67a-581e-4119-ba78-b1c5f5ca809b",
+      "queries": [],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "PROJECTILE_MAX_RANGE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:48:00.629047600Z",
+      "skill": "fire_bolt",
+      "correlationId": "907c47af-5e4f-418f-bbc8-c878a83b8b04",
+      "queries": [],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "PROJECTILE_MAX_RANGE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:00.776556800Z",
+      "skill": "quick_slash",
+      "correlationId": "4fadd251-538a-4be7-a810-224c5b2b6bcd",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-34-4fadd251",
+          "acceptedCount": 1
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-34-4fadd251",
+          "acceptedCount": 1
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-34-4fadd251",
+          "acceptedCount": 1
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-34-4fadd251",
+          "acceptedCount": 1
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-34-4fadd251",
+          "acceptedCount": 1
+        }
+      ],
+      "damageReceipts": [
+        {
+          "rootCastId": "input-34-4fadd251",
+          "cancelled": false,
+          "preMitigation": 27.219549999999995,
+          "canProc": true,
+          "healthAfter": 53.0,
+          "filteredAmount": 27.0,
+          "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+          "effectInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+          "actualHealthLoss": 27.0,
+          "healthBefore": 80.0
+        },
+        {
+          "rootCastId": "input-34-4fadd251",
+          "cancelled": false,
+          "preMitigation": 27.219549999999995,
+          "canProc": true,
+          "healthAfter": 26.0,
+          "filteredAmount": 27.0,
+          "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+          "effectInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+          "actualHealthLoss": 27.0,
+          "healthBefore": 53.0
+        },
+        {
+          "rootCastId": "input-34-4fadd251",
+          "cancelled": false,
+          "preMitigation": 17.692707499999997,
+          "canProc": false,
+          "healthAfter": 8.0,
+          "filteredAmount": 18.0,
+          "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+          "effectInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+          "actualHealthLoss": 18.0,
+          "healthBefore": 26.0
+        },
+        {
+          "rootCastId": "input-34-4fadd251",
+          "cancelled": false,
+          "preMitigation": 17.692707499999997,
+          "canProc": false,
+          "healthAfter": 0.0,
+          "filteredAmount": 18.0,
+          "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+          "effectInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+          "actualHealthLoss": 8.0,
+          "healthBefore": 8.0
+        }
+      ],
+      "actualHealthLoss": 80.0,
+      "terminalReasons": [
+        "STRIKE_REPEAT_ADAPTER_FAILED"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:02.701584500Z",
+      "skill": "quick_slash",
+      "correlationId": "584d3132-5452-41de-9823-4e161d3c3e59",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-ecef3107-1172-4064-8529-447893f523dd",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-35-584d3132",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-ecef3107-1172-4064-8529-447893f523dd",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-35-584d3132",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-ecef3107-1172-4064-8529-447893f523dd",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-35-584d3132",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-ecef3107-1172-4064-8529-447893f523dd/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-35-584d3132",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-ecef3107-1172-4064-8529-447893f523dd/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-35-584d3132",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-ecef3107-1172-4064-8529-447893f523dd/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-35-584d3132",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-ecef3107-1172-4064-8529-447893f523dd/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-35-584d3132",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:10.776298600Z",
+      "skill": "fire_bolt",
+      "correlationId": "06082511-7892-4b8b-bbd7-96431ad30d0c",
+      "queries": [],
+      "damageReceipts": [
+        {
+          "rootCastId": "input-38-06082511",
+          "cancelled": false,
+          "preMitigation": 17.613,
+          "canProc": true,
+          "healthAfter": 62.0,
+          "filteredAmount": 18.0,
+          "skillInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0",
+          "effectInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0-projectile-0",
+          "actualHealthLoss": 18.0,
+          "healthBefore": 80.0
+        },
+        {
+          "rootCastId": "input-38-06082511",
+          "cancelled": false,
+          "preMitigation": 1.854,
+          "canProc": false,
+          "healthAfter": 60.0,
+          "filteredAmount": 2.0,
+          "skillInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0",
+          "effectInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0/dot/BURN/1",
+          "actualHealthLoss": 2.0,
+          "healthBefore": 62.0
+        },
+        {
+          "rootCastId": "input-38-06082511",
+          "cancelled": false,
+          "preMitigation": 1.8540000000000005,
+          "canProc": false,
+          "healthAfter": 58.0,
+          "filteredAmount": 2.0,
+          "skillInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0",
+          "effectInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0/dot/BURN/2",
+          "actualHealthLoss": 2.0,
+          "healthBefore": 60.0
+        },
+        {
+          "rootCastId": "input-38-06082511",
+          "cancelled": false,
+          "preMitigation": 1.854,
+          "canProc": false,
+          "healthAfter": 56.0,
+          "filteredAmount": 2.0,
+          "skillInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0",
+          "effectInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0/dot/BURN/3",
+          "actualHealthLoss": 2.0,
+          "healthBefore": 58.0
+        },
+        {
+          "rootCastId": "input-38-06082511",
+          "cancelled": false,
+          "preMitigation": 1.8539999999999996,
+          "canProc": false,
+          "healthAfter": 54.0,
+          "filteredAmount": 2.0,
+          "skillInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0",
+          "effectInstanceId": "activation-6c1d9855-cb6d-4fc6-90ce-d8c5dc8ad3d0/dot/BURN/4",
+          "actualHealthLoss": 2.0,
+          "healthBefore": 56.0
+        }
+      ],
+      "actualHealthLoss": 26.0,
+      "terminalReasons": [
+        "PROJECTILE_TERRAIN_CONTINUATION_EXHAUSTED"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:15.667821500Z",
+      "skill": "fire_bolt",
+      "correlationId": "177feba2-6842-44e6-af87-e815879d9ef4",
+      "queries": [],
+      "damageReceipts": [
+        {
+          "rootCastId": "input-40-177feba2",
+          "cancelled": false,
+          "preMitigation": 17.613,
+          "canProc": true,
+          "healthAfter": 36.0,
+          "filteredAmount": 18.0,
+          "skillInstanceId": "activation-f8f4b8e1-5b42-403d-b1b6-1534c3447eba",
+          "effectInstanceId": "activation-f8f4b8e1-5b42-403d-b1b6-1534c3447eba-projectile-0",
+          "actualHealthLoss": 18.0,
+          "healthBefore": 54.0
+        },
+        {
+          "rootCastId": "input-40-177feba2",
+          "cancelled": false,
+          "preMitigation": 1.8540000000000005,
+          "canProc": false,
+          "healthAfter": 34.0,
+          "filteredAmount": 2.0,
+          "skillInstanceId": "activation-f8f4b8e1-5b42-403d-b1b6-1534c3447eba",
+          "effectInstanceId": "activation-f8f4b8e1-5b42-403d-b1b6-1534c3447eba/dot/BURN/1",
+          "actualHealthLoss": 2.0,
+          "healthBefore": 36.0
+        },
+        {
+          "rootCastId": "input-40-177feba2",
+          "cancelled": false,
+          "preMitigation": 1.854,
+          "canProc": false,
+          "healthAfter": 27.0,
+          "filteredAmount": 2.0,
+          "skillInstanceId": "activation-f8f4b8e1-5b42-403d-b1b6-1534c3447eba",
+          "effectInstanceId": "activation-f8f4b8e1-5b42-403d-b1b6-1534c3447eba/dot/BURN/2",
+          "actualHealthLoss": 2.0,
+          "healthBefore": 29.0
+        },
+        {
+          "rootCastId": "input-40-177feba2",
+          "cancelled": false,
+          "preMitigation": 1.8540000000000005,
+          "canProc": false,
+          "healthAfter": 25.0,
+          "filteredAmount": 2.0,
+          "skillInstanceId": "activation-f8f4b8e1-5b42-403d-b1b6-1534c3447eba",
+          "effectInstanceId": "activation-f8f4b8e1-5b42-403d-b1b6-1534c3447eba/dot/BURN/3",
+          "actualHealthLoss": 2.0,
+          "healthBefore": 27.0
+        }
+      ],
+      "actualHealthLoss": 24.0,
+      "terminalReasons": [
+        "PROJECTILE_TERRAIN_CONTINUATION_EXHAUSTED"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:19.734504800Z",
+      "skill": "quick_slash",
+      "correlationId": "a531a4db-80a4-4001-bac8-b0ef0b290a37",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-83eadcb3-c588-4d8e-9bf6-eb1101a9f6dc",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-43-a531a4db",
+          "acceptedCount": 1
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-83eadcb3-c588-4d8e-9bf6-eb1101a9f6dc",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-43-a531a4db",
+          "acceptedCount": 1
+        }
+      ],
+      "damageReceipts": [
+        {
+          "rootCastId": "input-43-a531a4db",
+          "cancelled": false,
+          "preMitigation": 27.219549999999995,
+          "canProc": true,
+          "healthAfter": 0.0,
+          "filteredAmount": 27.0,
+          "skillInstanceId": "activation-83eadcb3-c588-4d8e-9bf6-eb1101a9f6dc",
+          "effectInstanceId": "activation-83eadcb3-c588-4d8e-9bf6-eb1101a9f6dc",
+          "actualHealthLoss": 25.0,
+          "healthBefore": 25.0
+        }
+      ],
+      "actualHealthLoss": 25.0,
+      "terminalReasons": [
+        "EXECUTOR_ERROR_IllegalStateException"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:21.501354Z",
+      "skill": "quick_slash",
+      "correlationId": "13899321-6b56-44b4-a5ca-e1fa1950fffa",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-15d1311c-ba65-454a-9043-2e13bbe1a18c",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-44-13899321",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-15d1311c-ba65-454a-9043-2e13bbe1a18c",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-44-13899321",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-15d1311c-ba65-454a-9043-2e13bbe1a18c",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-44-13899321",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-15d1311c-ba65-454a-9043-2e13bbe1a18c/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-44-13899321",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-15d1311c-ba65-454a-9043-2e13bbe1a18c/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-44-13899321",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-15d1311c-ba65-454a-9043-2e13bbe1a18c/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-44-13899321",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-15d1311c-ba65-454a-9043-2e13bbe1a18c/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-44-13899321",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:33.634595100Z",
+      "skill": "quick_slash",
+      "correlationId": "1c796983-7c0b-4556-8ca4-07d127e6304a",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-47-1c796983",
+          "acceptedCount": 1
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-47-1c796983",
+          "acceptedCount": 1
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+          "angleDegrees": 120.0,
+          "candidateCount": 1,
+          "rootCastId": "input-47-1c796983",
+          "acceptedCount": 1
+        }
+      ],
+      "damageReceipts": [
+        {
+          "rootCastId": "input-47-1c796983",
+          "cancelled": false,
+          "preMitigation": 27.219549999999995,
+          "canProc": true,
+          "healthAfter": 25.0,
+          "filteredAmount": 27.0,
+          "skillInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+          "effectInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+          "actualHealthLoss": 27.0,
+          "healthBefore": 52.0
+        },
+        {
+          "rootCastId": "input-47-1c796983",
+          "cancelled": false,
+          "preMitigation": 27.219549999999995,
+          "canProc": true,
+          "healthAfter": 0.0,
+          "filteredAmount": 27.0,
+          "skillInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+          "effectInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+          "actualHealthLoss": 25.0,
+          "healthBefore": 25.0
+        }
+      ],
+      "actualHealthLoss": 52.0,
+      "terminalReasons": [
+        "STRIKE_REPEAT_ADAPTER_FAILED"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:35.167619300Z",
+      "skill": "quick_slash",
+      "correlationId": "fd8c7bd1-dbf2-4955-9a91-8ecd706a8b53",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-081f00c7-d7e2-41f8-ab58-e2e121325dbf",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-48-fd8c7bd1",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-081f00c7-d7e2-41f8-ab58-e2e121325dbf",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-48-fd8c7bd1",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-081f00c7-d7e2-41f8-ab58-e2e121325dbf",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-48-fd8c7bd1",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-081f00c7-d7e2-41f8-ab58-e2e121325dbf/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-48-fd8c7bd1",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-081f00c7-d7e2-41f8-ab58-e2e121325dbf/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-48-fd8c7bd1",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-081f00c7-d7e2-41f8-ab58-e2e121325dbf/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-48-fd8c7bd1",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-081f00c7-d7e2-41f8-ab58-e2e121325dbf/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-48-fd8c7bd1",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:38.067436Z",
+      "skill": "quick_slash",
+      "correlationId": "bdcc2b45-a9bf-4633-901f-b888db651208",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0ad864ca-880c-4eee-b8d8-896cf61e070b",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-49-bdcc2b45",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0ad864ca-880c-4eee-b8d8-896cf61e070b",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-49-bdcc2b45",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0ad864ca-880c-4eee-b8d8-896cf61e070b",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-49-bdcc2b45",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0ad864ca-880c-4eee-b8d8-896cf61e070b/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-49-bdcc2b45",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0ad864ca-880c-4eee-b8d8-896cf61e070b/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-49-bdcc2b45",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0ad864ca-880c-4eee-b8d8-896cf61e070b/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-49-bdcc2b45",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-0ad864ca-880c-4eee-b8d8-896cf61e070b/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-49-bdcc2b45",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T23:52:40.834625400Z",
+      "skill": "quick_slash",
+      "correlationId": "99fbe9dd-6626-4fff-b393-f684203bbd6c",
+      "queries": [
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-5a67b4cd-7b9d-465f-a4e6-3242e32647a3",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-51-99fbe9dd",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-5a67b4cd-7b9d-465f-a4e6-3242e32647a3",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-51-99fbe9dd",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-5a67b4cd-7b9d-465f-a4e6-3242e32647a3",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-51-99fbe9dd",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-5a67b4cd-7b9d-465f-a4e6-3242e32647a3/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-51-99fbe9dd",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-5a67b4cd-7b9d-465f-a4e6-3242e32647a3/multistrike-1",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-51-99fbe9dd",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-5a67b4cd-7b9d-465f-a4e6-3242e32647a3/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-51-99fbe9dd",
+          "acceptedCount": 0
+        },
+        {
+          "geometry": "ARC",
+          "range": 2.6,
+          "skillInstanceId": "activation-5a67b4cd-7b9d-465f-a4e6-3242e32647a3/multistrike-2",
+          "angleDegrees": 120.0,
+          "candidateCount": 0,
+          "rootCastId": "input-51-99fbe9dd",
+          "acceptedCount": 0
+        }
+      ],
+      "damageReceipts": [],
+      "actualHealthLoss": 0.0,
+      "terminalReasons": [
+        "STRIKE_REPEATS_COMPLETE"
+      ]
+    }
+  ],
+  "serverFailureLines": [
+    "[2026/09/09 23:52:00   WARN]                [Hytale] RPG_ENCOUNTER_FAILURE boundary=NATIVE_CONTRIBUTION_INSPECT error=java.util.NoSuchElementException detail=No value present awardsUnavailable=true nativeCombatUnchanged=true",
+    "java.lang.IllegalStateException: ENCOUNTER_PERSISTENCE_UNCERTAIN_RESTART_REQUIRED",
+    "Caused by: java.util.concurrent.ExecutionException: java.lang.IllegalStateException: ENCOUNTER_PERSISTENCE_UNCERTAIN_RESTART_REQUIRED",
+    "Caused by: java.lang.IllegalStateException: ENCOUNTER_PERSISTENCE_UNCERTAIN_RESTART_REQUIRED"
+  ],
+  "quickSlashDamageEvents": [
+    {
+      "timestamp": "2026-09-09T23:52:00.786066500Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "DAMAGE_INSPECTED",
+      "correlationId": "4fadd251-538a-4be7-a810-224c5b2b6bcd",
+      "details": {
+        "rootCastId": "input-34-4fadd251",
+        "cancelled": false,
+        "preMitigation": 27.219549999999995,
+        "canProc": true,
+        "healthAfter": 53.0,
+        "filteredAmount": 27.0,
+        "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+        "effectInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+        "actualHealthLoss": 27.0,
+        "healthBefore": 80.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:00.788065300Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "STRIKE_HIT",
+      "correlationId": "4fadd251-538a-4be7-a810-224c5b2b6bcd",
+      "details": {
+        "targetId": "3985812d-351c-33a8-b00c-5e8acde6e60a",
+        "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+        "preMitigationDamage": 27.219549999999995,
+        "hitIndex": 0,
+        "rootCastId": "input-34-4fadd251",
+        "actualHealthLoss": 27.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:01.134827500Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "DAMAGE_INSPECTED",
+      "correlationId": "4fadd251-538a-4be7-a810-224c5b2b6bcd",
+      "details": {
+        "rootCastId": "input-34-4fadd251",
+        "cancelled": false,
+        "preMitigation": 27.219549999999995,
+        "canProc": true,
+        "healthAfter": 26.0,
+        "filteredAmount": 27.0,
+        "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+        "effectInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+        "actualHealthLoss": 27.0,
+        "healthBefore": 53.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:01.135828400Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "STRIKE_HIT",
+      "correlationId": "4fadd251-538a-4be7-a810-224c5b2b6bcd",
+      "details": {
+        "targetId": "3985812d-351c-33a8-b00c-5e8acde6e60a",
+        "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85",
+        "preMitigationDamage": 27.219549999999995,
+        "hitIndex": 1,
+        "rootCastId": "input-34-4fadd251",
+        "actualHealthLoss": 27.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:01.501339700Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "DAMAGE_INSPECTED",
+      "correlationId": "4fadd251-538a-4be7-a810-224c5b2b6bcd",
+      "details": {
+        "rootCastId": "input-34-4fadd251",
+        "cancelled": false,
+        "preMitigation": 17.692707499999997,
+        "canProc": false,
+        "healthAfter": 8.0,
+        "filteredAmount": 18.0,
+        "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+        "effectInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+        "actualHealthLoss": 18.0,
+        "healthBefore": 26.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:01.502343700Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "STRIKE_HIT",
+      "correlationId": "4fadd251-538a-4be7-a810-224c5b2b6bcd",
+      "details": {
+        "targetId": "3985812d-351c-33a8-b00c-5e8acde6e60a",
+        "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+        "preMitigationDamage": 17.692707499999997,
+        "hitIndex": 0,
+        "rootCastId": "input-34-4fadd251",
+        "actualHealthLoss": 18.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:01.835285200Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "DAMAGE_INSPECTED",
+      "correlationId": "4fadd251-538a-4be7-a810-224c5b2b6bcd",
+      "details": {
+        "rootCastId": "input-34-4fadd251",
+        "cancelled": false,
+        "preMitigation": 17.692707499999997,
+        "canProc": false,
+        "healthAfter": 0.0,
+        "filteredAmount": 18.0,
+        "skillInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+        "effectInstanceId": "activation-a3889d86-503e-4ed0-aef9-67eb3105bb85/multistrike-1",
+        "actualHealthLoss": 8.0,
+        "healthBefore": 8.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:19.735505800Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "DAMAGE_INSPECTED",
+      "correlationId": "a531a4db-80a4-4001-bac8-b0ef0b290a37",
+      "details": {
+        "rootCastId": "input-43-a531a4db",
+        "cancelled": false,
+        "preMitigation": 27.219549999999995,
+        "canProc": true,
+        "healthAfter": 0.0,
+        "filteredAmount": 27.0,
+        "skillInstanceId": "activation-83eadcb3-c588-4d8e-9bf6-eb1101a9f6dc",
+        "effectInstanceId": "activation-83eadcb3-c588-4d8e-9bf6-eb1101a9f6dc",
+        "actualHealthLoss": 25.0,
+        "healthBefore": 25.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:33.635596Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "STRIKE_HIT",
+      "correlationId": "1c796983-7c0b-4556-8ca4-07d127e6304a",
+      "details": {
+        "targetId": "f62930dd-dcd5-3670-ae66-d5d1356d97ab",
+        "skillInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+        "preMitigationDamage": 27.219549999999995,
+        "hitIndex": 0,
+        "rootCastId": "input-47-1c796983",
+        "actualHealthLoss": 27.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:33.635596Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "DAMAGE_INSPECTED",
+      "correlationId": "1c796983-7c0b-4556-8ca4-07d127e6304a",
+      "details": {
+        "rootCastId": "input-47-1c796983",
+        "cancelled": false,
+        "preMitigation": 27.219549999999995,
+        "canProc": true,
+        "healthAfter": 25.0,
+        "filteredAmount": 27.0,
+        "skillInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+        "effectInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+        "actualHealthLoss": 27.0,
+        "healthBefore": 52.0
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:52:34.001145500Z",
+      "rpgRevision": "R032",
+      "buildVersion": "0.0.25",
+      "hytaleBuild": "0.7.0-pre.1",
+      "playerUuid": "73f9b698-2494-480d-8406-2943e4a7505b",
+      "eventType": "DAMAGE_INSPECTED",
+      "correlationId": "1c796983-7c0b-4556-8ca4-07d127e6304a",
+      "details": {
+        "rootCastId": "input-47-1c796983",
+        "cancelled": false,
+        "preMitigation": 27.219549999999995,
+        "canProc": true,
+        "healthAfter": 0.0,
+        "filteredAmount": 27.0,
+        "skillInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+        "effectInstanceId": "activation-3083e569-5382-437d-b448-73ee0f78c705",
+        "actualHealthLoss": 25.0,
+        "healthBefore": 25.0
+      }
+    }
+  ],
+  "connectedNewSpeedVerified": false
+}

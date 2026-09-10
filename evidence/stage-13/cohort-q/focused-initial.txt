@@ -1,0 +1,72 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/C:/Users/Zemio/.gradle/wrapper/dists/gradle-9.2.0-bin/11i5gvueggl8a5cioxuftxrik/gradle-9.2.0/lib/native-platform-0.22-milestone-29.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+
+> Task :compileJava
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgCharacterCommand.java:27: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        setPermissionGroup(GameMode.Adventure);
+        ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgCommand.java:97: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+            super(name, description); this.loadouts = loadouts; setPermissionGroup(GameMode.Adventure);
+                                                                ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgCommand.java:250: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+            setPermissionGroup(GameMode.Adventure);
+            ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgDevPointsCommand.java:35: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+            setPermissionGroup(GameMode.Adventure);
+            ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgManaguardCommand.java:21: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        this.support=support;setPermissionGroup(GameMode.Adventure);
+                             ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgProgressionCommand.java:29: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+            super(action,"Server-authoritative progression "+action);this.action=action;this.service=service;setPermissionGroup(GameMode.Adventure);
+                                                                                                             ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgSkillTreeCommand.java:27: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        setPermissionGroup(GameMode.Adventure);
+        ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\execution\hytale\NativeProjectileSpawnAuditCommand.java:37: warning: [removal] getChunkAsync(long) in World has been deprecated and marked for removal
+        world.getChunkAsync(0L).whenComplete((auditChunk,loadFailure)->{
+             ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+8 warnings
+
+> Task :validateCustomUi
+Validated 32 CustomUI document(s): no invalid escapes, unterminated strings, unbalanced delimiters, labeled Button misuse, or late imported-control macro arguments.
+
+> Task :processResources
+> Task :classes
+> Task :compileTestJava
+> Task :processTestResources UP-TO-DATE
+> Task :testClasses
+
+> Task :test
+
+Stage13PlayerFeedbackCorrectionTest > animationAssetsReuseInstalledLightSwingsAtExactlyOneAndHalfSpeed() FAILED
+
+    org.opentest4j.AssertionFailedError at Stage13PlayerFeedbackCorrectionTest.java:58
+91 tests completed, 1 failed
+
+> Task :test FAILED
+
+[Incubating] Problems report is available at: file:///C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':test'.
+> There were failing tests. See the report at: file:///C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to generate a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.2.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 8s
+6 actionable tasks: 5 executed, 1 up-to-date

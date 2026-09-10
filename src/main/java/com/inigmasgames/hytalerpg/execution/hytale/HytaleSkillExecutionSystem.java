@@ -1731,6 +1731,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
         }catch(RuntimeException failed){
             repeatingStrikes.remove(playerRef.getUuid());hits.clear(repeating.context.skillInstanceId());if(locked)NativeStrikeActionLock.clear(store,ref);
+            executions.recordExecutionFailure(repeating.context,"STRIKE_REPEAT",failed);
             executions.terminate(repeating.context,"STRIKE_REPEAT_ADAPTER_FAILED");return;
         }
         if (repeating.schedule.complete(now)) {
