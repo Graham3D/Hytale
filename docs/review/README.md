@@ -1,5 +1,7 @@
 # Owner / ChatGPT review packet
 
+**Latest correction:** [Stage 13 R skill icons/search report](../stage-13/stage-13-skill-icons-search-report.md) documents the actual search codec defect, original-art overlay wiring, native item-icon namespace validation, 2,145 passing tests, exact-JAR smoke, deployed hashes, rollback and a focused connected UI checklist. R032-R is deployed; Q gameplay and unresolved encounter/post-lethal issues are unchanged. Client typing/focus/rendering still requires owner testing.
+
 **Latest correction:** [Stage 13 Q Quick Slash review](../stage-13/stage-13-quick-slash-review-report.md) contains the complete rotated-trace review, authoritative damage receipts, requested +200% speed change, new bounded exception telemetry, 2,137 passing tests and deployed hashes. **Post-lethal errors and encounter/reward uncertainty remain unresolved**; do not interpret successful local validation as progression acceptance. Q's report supersedes P's connected checklist for this retest.
 
 **Latest correction:** [Stage 13 P player feedback report](../stage-13/stage-13-player-feedback-correction-report.md) contains the projectile orphan-race diagnosis and stronger native regression, two-hit Quick Slash plus its owner-authorized Multistrike exception, native Chill icons, R032-P revision badge, all 2,135 test results, deployed hashes, rollback and connected checklist. P is deployed for testing; connected rendering/animation/impact and formal performance remain unverified. The O paragraph below is historical.

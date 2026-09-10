@@ -65,7 +65,7 @@ public final class RpgSkillTreeProjectionService {
                 .filter(def -> weaponMatches(def.weaponRequirement(), weaponFilter, currentWeaponKind))
                 .sorted(Comparator.comparing(SkillDefinition::name))
                 .map(def -> new StaticSkillTreeViewModel.LibraryItem(def.id().value(), def.name(), def.family(),
-                        def.description(), PLACEHOLDER_ICON, def.weaponRequirement())).toList();
+                        def.description(), RpgSkillIcons.forSkill(def.id().value()), def.weaponRequirement())).toList();
     }
 
     List<StaticSkillTreeViewModel.LibraryItem> passives(RpgLoadoutView view, String query) {
@@ -86,7 +86,8 @@ public final class RpgSkillTreeProjectionService {
                 var id = view.state().skill(node.skillSlot());
                 String name = id.flatMap(catalog::skill).map(SkillDefinition::name).orElse("Empty Skill");
                 String family = id.flatMap(catalog::skill).map(SkillDefinition::family).orElse("Select to assign");
-                result.put(node, new StaticSkillTreeViewModel.TreeNode(node, name, family, id.isPresent()));
+                result.put(node, new StaticSkillTreeViewModel.TreeNode(node, name, family, id.isPresent(),
+                        RpgSkillIcons.forSkill(id.map(SkillId::value).orElse(""))));
             } else {
                 var id = view.state().passive(node.passiveSlot());
                 String name = id.flatMap(catalog::passive).map(PassiveDefinition::name).orElse("Empty Passive");
@@ -155,10 +156,14 @@ public final class RpgSkillTreeProjectionService {
 
     private static boolean matches(String name, String description, Iterable<String> keywords, String needle) {
         if (needle.isBlank()) return true;
+        // Owner-facing compact spellings and canonical underscore IDs both find spaced names.
+        String compact = compact(needle);
+        if (!compact.isEmpty() && compact(name).contains(compact)) return true;
         if ((name + " " + description).toLowerCase(Locale.ROOT).contains(needle)) return true;
         for (String keyword : keywords) if (keyword.toLowerCase(Locale.ROOT).contains(needle)) return true;
         return false;
     }
+    private static String compact(String text) { return text.toLowerCase(Locale.ROOT).replaceAll("[\\s_-]+", ""); }
     private static boolean weaponMatches(String requirement, String filter, String currentKind) {
         String selected = clean(filter);
         if (selected.isBlank()) return true;

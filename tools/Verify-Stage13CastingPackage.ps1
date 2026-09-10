@@ -1,9 +1,9 @@
 [CmdletBinding()]
-param([ValidateSet('m','n','o','p','q')][string]$Cohort='m')
+param([ValidateSet('m','n','o','p','q','r')][string]$Cohort='m')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence/stage-13/cohort-$Cohort"
-$baseline=if($Cohort -eq 'q'){'p'}elseif($Cohort -eq 'p'){'o'}elseif($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
+$baseline=if($Cohort -eq 'r'){'q'}elseif($Cohort -eq 'q'){'p'}elseif($Cohort -eq 'p'){'o'}elseif($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
 $previous=Join-Path $root "evidence/stage-13/cohort-$baseline/artifacts/HytaleRPG-0.0.25.jar"
 $candidate=Join-Path $out 'artifacts/HytaleRPG-0.0.25.jar'
 function EntryHashes([string]$path){
@@ -15,6 +15,14 @@ function EntryHashes([string]$path){
 $before=EntryHashes $previous;$after=EntryHashes $candidate
 $changed=@(foreach($name in @($before.Keys)+@($after.Keys)|Sort-Object -Unique){if($before[$name] -ne $after[$name]){$name}})
 foreach($name in $changed){
+    if($Cohort -eq 'r'){
+        if($name -match '^com/inigmasgames/hytalerpg/ui/(hud/RpgHud|skilltree/(RpgSkillIcons|RpgSkillTreePage|RpgSkillTreeProjectionService|StaticSkillTreeViewModel))(\$[^/]*)?\.class$'){continue}
+        if($name -in @('Common/Icons/','Common/Icons/Items/','Common/Icons/Items/RPG/','Common/UI/Custom/Icons/','Common/UI/Custom/Icons/RPG/',
+            'Common/UI/Custom/Phase00RevisionHud.ui','Common/UI/Custom/RpgSkillTree.ui','Common/UI/Custom/RpgSkillTreeLibraryRow.ui',
+            'Server/Item/Items/RPG/Abilities/RPG_Ability_Fire_Bolt.json','Server/Item/Items/RPG/Abilities/RPG_Ability_Quick_Slash.json')){continue}
+        if($name -match '^Common/(Icons/Items/RPG|UI/Custom/Icons/RPG)/(SkillFirebolt|SkillQuickslash|Background_Ability_Ready|Frame_Ability_Ready)\.png$'){continue}
+        throw "Unexpected R packaged change outside icons/search/badge: $name"
+    }
     if($Cohort -eq 'q'){
         if($name -match '^com/inigmasgames/hytalerpg/(execution/(CompiledProfileResolver|ExecutionFailureDiagnostics|SkillExecutionService|hytale/(NativeStrikeFeedback|HytaleSkillExecutionSystem))|diagnostics/RpgTraceEventType|ui/hud/RpgHud)(\$[^/]*)?\.class$'){continue}
         if($name -in @('rpg/catalog/skills.json','rpg/catalog/passives.json','rpg/runtime/stage-04-skills.json','Common/UI/Custom/Phase00RevisionHud.ui')){continue}
@@ -43,6 +51,28 @@ foreach($name in $changed){
     }
 }
 if(-not $changed.Count){throw 'No correction classes changed'}
+if($Cohort -eq 'r'){
+    foreach($icon in @('SkillFirebolt.png','SkillQuickslash.png')){
+        $sourceHash=(Get-FileHash -LiteralPath (Join-Path $root "art/Skills/$icon")).Hash
+        foreach($entry in @("Common/Icons/Items/RPG/$icon","Common/UI/Custom/Icons/RPG/$icon")){
+            if($after[$entry] -ne $sourceHash){throw "Owner icon bytes differ in package: $entry"}
+        }
+    }
+    $baselineZip=[IO.Compression.ZipFile]::OpenRead($previous)
+    $candidateZip=[IO.Compression.ZipFile]::OpenRead($candidate)
+    try{
+        foreach($id in @('Fire_Bolt','Quick_Slash')){
+            $entry="Server/Item/Items/RPG/Abilities/RPG_Ability_$id.json"
+            $documents=@(foreach($zip in @($baselineZip,$candidateZip)){
+                $reader=[IO.StreamReader]::new($zip.GetEntry($entry).Open())
+                try{$json=$reader.ReadToEnd()|ConvertFrom-Json -AsHashtable}finally{$reader.Dispose()}
+                [void]$json.Remove('Icon')
+                $json|ConvertTo-Json -Depth 20 -Compress
+            })
+            if($documents.Count -ne 2 -or $documents[0] -cne $documents[1]){throw "Native item fields other than Icon changed: $id"}
+        }
+    }finally{$baselineZip.Dispose();$candidateZip.Dispose()}
+}
 Copy-Item -LiteralPath (Join-Path $root 'build/test-results/test/TEST-com.inigmasgames.hytalerpg.Stage13ConnectedCastingCorrectionTest.xml') -Destination $out
 [xml]$benchmark=Get-Content -Raw (Join-Path $root 'build/test-results/test/TEST-com.inigmasgames.hytalerpg.Stage13DurabilityLoadTest.xml')
 $line=($benchmark.testsuite.'system-out'.InnerText -split "`n"|Where-Object {$_ -like 'STAGE13_DURABILITY_LOAD *'}|Select-Object -First 1)
@@ -66,6 +96,7 @@ if((Get-FileHash -LiteralPath $target).Hash -ne (Get-FileHash -LiteralPath $cand
     equipmentTargetingInputPersistenceResourcesCooldownsHudAndNormalTraceIdenticalToN=($Cohort -eq 'o');
     powerInputPersistenceResourceCooldownAndTraceImplementationsIdenticalToO=($Cohort -eq 'p');
     quickSlashSpeedAndFailureDiagnosticsOnly=($Cohort -eq 'q');
+    skillIconsSearchAndBadgeOnly=($Cohort -eq 'r');
     isolatedAtomicRollbackAndRollForward='PASS';retainedArchivedReaderTests='See full test-results.json; archived-reader tests unchanged';
     previousSha256=(Get-FileHash -LiteralPath $previous).Hash;candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash;
     connectedCastingVerified=$false}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $out 'jar-differential.json') -Encoding utf8

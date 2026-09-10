@@ -1,0 +1,102 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/C:/Users/Zemio/.gradle/wrapper/dists/gradle-9.2.0-bin/11i5gvueggl8a5cioxuftxrik/gradle-9.2.0/lib/native-platform-0.22-milestone-29.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+
+> Task :compileJava
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgCharacterCommand.java:27: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        setPermissionGroup(GameMode.Adventure);
+        ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgCommand.java:97: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+            super(name, description); this.loadouts = loadouts; setPermissionGroup(GameMode.Adventure);
+                                                                ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgCommand.java:250: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+            setPermissionGroup(GameMode.Adventure);
+            ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgDevPointsCommand.java:35: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+            setPermissionGroup(GameMode.Adventure);
+            ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgDevXpDisplayCommand.java:24: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        setPermissionGroup(GameMode.Adventure);
+        ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgManaguardCommand.java:21: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        this.support=support;setPermissionGroup(GameMode.Adventure);
+                             ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgProgressionCommand.java:29: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+            super(action,"Server-authoritative progression "+action);this.action=action;this.service=service;setPermissionGroup(GameMode.Adventure);
+                                                                                                             ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\commands\RpgSkillTreeCommand.java:27: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        setPermissionGroup(GameMode.Adventure);
+        ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\execution\hytale\HytaleAreaQueries.java:30: warning: [removal] getChunkIfLoaded(long) in World has been deprecated and marked for removal
+        return store.getExternalData().getWorld().getChunkIfLoaded(com.hypixel.hytale.math.util.ChunkUtil.indexChunkFromBlock(point.x(),point.z()))!=null;
+                                                 ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\execution\hytale\NativeProjectileSpawnAuditCommand.java:37: warning: [removal] getChunkAsync(long) in World has been deprecated and marked for removal
+        world.getChunkAsync(0L).whenComplete((auditChunk,loadFailure)->{
+             ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\main\java\com\inigmasgames\hytalerpg\phase00\PlayerProbeCommand.java:17: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        setPermissionGroup(GameMode.Adventure);
+        ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+11 warnings
+
+> Task :validateCustomUi
+Validated 32 CustomUI document(s): no invalid escapes, unterminated strings, unbalanced delimiters, labeled Button misuse, or late imported-control macro arguments.
+
+> Task :processResources
+> Task :classes
+> Task :jar
+
+> Task :compileTestJava
+Note: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\src\test\java\com\inigmasgames\hytalerpg\Stage06CohortBTest.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :processTestResources
+> Task :testClasses
+> Task :test
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.hypixel.fastutil.ints.Int2ObjectConcurrentHashMap (file:/C:/Users/Zemio/AppData/Roaming/Hytale/install/pre-release/package/game/latest/Server/HytaleServer.jar)
+WARNING: Please consider reporting this to the maintainers of class com.hypixel.fastutil.ints.Int2ObjectConcurrentHashMap
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+> Task :nativeControlTest
+
+> Task :canvas-ui:compileJava
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\canvas-ui-demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasDemoCommand.java:27: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        setPermissionGroup(GameMode.Adventure);
+        ^
+C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\canvas-ui-demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasInputProbeCommand.java:18: warning: [removal] setPermissionGroup(GameMode) in AbstractCommand has been deprecated and marked for removal
+        setPermissionGroup(GameMode.Adventure);
+        ^
+2 warnings
+
+> Task :canvas-ui:processResources
+> Task :canvas-ui:classes
+> Task :canvas-ui:jar
+> Task :canvas-ui:javadoc
+> Task :canvas-ui:javadocJar
+> Task :canvas-ui:sourcesJar
+> Task :canvas-ui:compileTestJava
+> Task :canvas-ui:processTestResources NO-SOURCE
+> Task :canvas-ui:testClasses
+> Task :canvas-ui:test
+> Task :assemble
+> Task :check
+> Task :build
+> Task :canvas-ui:assemble
+> Task :canvas-ui:check
+> Task :canvas-ui:build
+
+[Incubating] Problems report is available at: file:///C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.2.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 21s
+16 actionable tasks: 16 executed

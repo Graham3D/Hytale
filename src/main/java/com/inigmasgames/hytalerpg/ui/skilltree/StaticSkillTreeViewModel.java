@@ -20,7 +20,11 @@ public record StaticSkillTreeViewModel(
     public enum Tab { SKILLS, PASSIVES }
     public record LibraryItem(String id, String name, String category, String description,
                               String iconPath, String weaponRequirement) {}
-    public record TreeNode(LinkNodeId id, String title, String subtitle, boolean occupied) {}
+    public record TreeNode(LinkNodeId id, String title, String subtitle, boolean occupied, String iconPath) {
+        public TreeNode(LinkNodeId id, String title, String subtitle, boolean occupied) {
+            this(id, title, subtitle, occupied, RpgSkillTreeProjectionService.PLACEHOLDER_ICON);
+        }
+    }
     public record Details(String kind, String id, String name, String category, String description,
                           List<String> facts, String validation) {}
 }

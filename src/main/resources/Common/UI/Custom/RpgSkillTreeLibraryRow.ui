@@ -3,6 +3,10 @@ $Common = "Common.ui";
 Group {
   Anchor: (Height: 82, Bottom: 6);
   Background: (Color: #122338ee);
-  Group #Icon { Anchor: (Left: 7, Top: 7, Width: 68, Height: 68); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+  Group #Icon { Anchor: (Left: 7, Top: 7, Width: 68, Height: 68);
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png"); }
+          Group #Overlay { Anchor: (Full: 6); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Frame_Ability_Ready.png"); }
+        }
   $Common.@TextButton #Select { Anchor: (Left: 82, Right: 7, Top: 7, Height: 68); Text: "Content - Category"; }
 }

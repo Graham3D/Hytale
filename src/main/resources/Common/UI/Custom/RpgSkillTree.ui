@@ -19,12 +19,13 @@ Group {
         Label #LibraryHeading { Anchor: (Width: 310); Text: "Available Skills"; Style: (FontSize: 20, TextColor: #f2d488, VerticalAlignment: Center); }
         $Common.@TextButton #FilterButton { Text: "Filter"; Anchor: (Width: 72, Height: 38); }
       }
-      $Common.@TextField #SearchInput { Anchor: (Height: 40, Bottom: 8); PlaceholderText: "Search canonical content..."; }
+      Label #SearchLabel { Anchor: (Height: 20); Text: "Search skills"; Style: (FontSize: 13, TextColor: #93a4b6); }
+      $Common.@TextField #SearchInput { Anchor: (Height: 40, Bottom: 8); PlaceholderText: "Type a name or keyword..."; }
       Group #FilterPanel { Visible: false; Anchor: (Height: 230, Bottom: 8); Background: (Color: #132438f4); Padding: (Full: 8); LayoutMode: TopScrolling; ScrollbarStyle: $Common.@DefaultScrollbarStyle;
         Group #FilterRows { LayoutMode: Top; }
       }
       Label #LibraryCount { Anchor: (Height: 28); Text: "0 entries"; Style: (FontSize: 13, TextColor: #93a4b6); }
-      Group { Anchor: (Height: 748); LayoutMode: TopScrolling; ScrollbarStyle: $Common.@DefaultScrollbarStyle;
+      Group { Anchor: (Height: 728); LayoutMode: TopScrolling; ScrollbarStyle: $Common.@DefaultScrollbarStyle;
         Group #LibraryRows { LayoutMode: Top; }
       }
     }
@@ -44,6 +45,21 @@ Group {
         Group { Anchor: (Left: 469, Top: 329, Width: 3, Height: 126); Background: (Color: #54b9ed); }
         Group { Anchor: (Left: 793, Top: 136, Width: 3, Height: 319); Background: (Color: #6bdc83); }
 
+        Group #Skill01Icon { Visible: false; Anchor: (Left: 121, Top: 0, Width: 54, Height: 54);
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png"); }
+          Group #Overlay { Anchor: (Full: 6); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Frame_Ability_Ready.png"); }
+        }
+        Group #Skill02Icon { Visible: false; Anchor: (Left: 444, Top: 0, Width: 54, Height: 54);
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png"); }
+          Group #Overlay { Anchor: (Full: 6); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Frame_Ability_Ready.png"); }
+        }
+        Group #Skill03Icon { Visible: false; Anchor: (Left: 768, Top: 0, Width: 54, Height: 54);
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png"); }
+          Group #Overlay { Anchor: (Full: 6); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Frame_Ability_Ready.png"); }
+        }
         $Common.@TextButton #Skill01 { Anchor: (Left: 78, Top: 58, Width: 140, Height: 78); Text: "Empty Skill"; }
         $Common.@TextButton #Skill02 { Anchor: (Left: 401, Top: 58, Width: 140, Height: 78); Text: "Empty Skill"; }
         $Common.@TextButton #Skill03 { Anchor: (Left: 725, Top: 58, Width: 140, Height: 78); Text: "Empty Skill"; }
@@ -74,7 +90,11 @@ Group {
     Group { Anchor: (Width: 16); }
     Group { Anchor: (Width: 410); Background: (Color: #0d1c2bed); Padding: (Full: 16); LayoutMode: Top;
       Label { Anchor: (Height: 45); Text: "DETAILS"; Style: (FontSize: 22, TextColor: #f2d488); }
-      Group #DetailsIcon { Anchor: (Width: 128, Height: 128, Bottom: 12); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+      Group #DetailsIcon { Anchor: (Width: 128, Height: 128, Bottom: 12);
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png"); }
+          Group #Overlay { Anchor: (Full: 6); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Frame_Ability_Ready.png"); }
+        }
       Label #DetailsName { Anchor: (Height: 40); Text: "Select content"; Style: (FontSize: 22, TextColor: #dce6ed); }
       Label #DetailsCategory { Anchor: (Height: 30); Text: ""; Style: (FontSize: 15, TextColor: #78c6d0); }
       Label #DetailsDescription { Anchor: (Height: 104); Text: "Choose a tree node or library entry."; Style: (FontSize: 14, TextColor: #b6c2cf, Wrap: true); }

@@ -8,6 +8,8 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.ui.PatchStyle;
+import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -50,6 +52,7 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
         commands.append("RpgSkillTree.ui");
         currentWeaponKind = currentWeapon(ref, store);
         project();
+        bindStatic(events);
         render(commands, events);
         trace("SKILLTREE_OPENED", "page", Map.of("result", "PASS", "schemaRevision", model.revision(),
                 "currentWeaponKind", currentWeaponKind, "hotkey", "BLOCKED_PUBLIC_API"));
@@ -60,8 +63,8 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
         currentWeaponKind = currentWeapon(ref, store);
         String action = clean(data.action);
         switch (action) {
-            case "tab-skills" -> { tab = StaticSkillTreeViewModel.Tab.SKILLS; selectedItemId = ""; }
-            case "tab-passives" -> { tab = StaticSkillTreeViewModel.Tab.PASSIVES; selectedItemId = ""; }
+            case "tab-skills" -> { tab = StaticSkillTreeViewModel.Tab.SKILLS; selectedItemId = ""; query = ""; }
+            case "tab-passives" -> { tab = StaticSkillTreeViewModel.Tab.PASSIVES; selectedItemId = ""; query = ""; }
             case "search" -> query = clean(data.value);
             case "filter-open" -> filterOpen = !filterOpen;
             case "filter" -> weaponFilter = clean(data.id).equals(weaponFilter) ? "" : clean(data.id);
@@ -74,6 +77,7 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
         project();
         UICommandBuilder commands = new UICommandBuilder();
         UIEventBuilder events = new UIEventBuilder();
+        if (action.startsWith("tab-") || action.equals("node")) commands.set("#SearchInput.Value", query);
         render(commands, events);
         sendUpdate(commands, events, false);
         trace("SKILLTREE_INTERACTION", action, Map.of("nodeId", nodeId(), "itemId", selectedItemId,
@@ -114,6 +118,7 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
             LinkNodeId node = LinkNodeId.parse(value);
             if (node.kind() == LinkNodeId.NodeKind.JOINT) { status = "Joints are fixed routing nodes, not content slots."; return; }
             selectedNode = node;
+            query = "";
             tab = node.kind() == LinkNodeId.NodeKind.SKILL
                     ? StaticSkillTreeViewModel.Tab.SKILLS : StaticSkillTreeViewModel.Tab.PASSIVES;
             selectedItemId = "";
@@ -129,28 +134,39 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
     private void render(UICommandBuilder commands, UIEventBuilder events) {
         commands.set("#LibraryHeading.TextSpans", Message.raw(tab == StaticSkillTreeViewModel.Tab.SKILLS
                 ? "Available Skills" : "Available Passives"));
+        commands.set("#SearchLabel.TextSpans", Message.raw(tab == StaticSkillTreeViewModel.Tab.SKILLS
+                ? "Search skills" : "Search passives"));
         commands.set("#FilterButton.Visible", tab == StaticSkillTreeViewModel.Tab.SKILLS);
         commands.set("#FilterPanel.Visible", tab == StaticSkillTreeViewModel.Tab.SKILLS && filterOpen);
         commands.set("#LibraryCount.TextSpans", Message.raw(model.library().size() + " entries"));
         commands.set("#TreeStatus.TextSpans", Message.raw(status));
+        renderNodes(commands);
+        renderLibrary(commands, events);
+        renderFilters(commands, events);
+        renderDetails(commands);
+    }
+
+    // These controls survive incremental updates. Only newly appended library/filter rows need rebinding.
+    private static void bindStatic(UIEventBuilder events) {
         bind(events, CustomUIEventBindingType.Activating, "#SkillsTab", "tab-skills", "", "");
         bind(events, CustomUIEventBindingType.Activating, "#PassivesTab", "tab-passives", "", "");
         bind(events, CustomUIEventBindingType.Activating, "#FilterButton", "filter-open", "", "");
         bind(events, CustomUIEventBindingType.ValueChanged, "#SearchInput", "search", "", "#SearchInput.Value");
         bind(events, CustomUIEventBindingType.Activating, "#Apply", "apply", "", "");
         bind(events, CustomUIEventBindingType.Activating, "#Clear", "clear", "", "");
-        renderNodes(commands, events);
-        renderLibrary(commands, events);
-        renderFilters(commands, events);
-        renderDetails(commands);
+        for (LinkNodeId node : StaticSkillTreeLayout.CONTENT_NODES)
+            bind(events, CustomUIEventBindingType.Activating, "#" + title(node.externalId()), "node", node.externalId(), "");
     }
 
-    private void renderNodes(UICommandBuilder commands, UIEventBuilder events) {
+    private void renderNodes(UICommandBuilder commands) {
         for (LinkNodeId node : StaticSkillTreeLayout.CONTENT_NODES) {
             StaticSkillTreeViewModel.TreeNode value = model.nodes().get(node);
             String selector = "#" + title(node.externalId());
             commands.set(selector + ".Text", value.title() + "\n" + value.subtitle());
-            bind(events, CustomUIEventBindingType.Activating, selector, "node", node.externalId(), "");
+            if (node.kind() == LinkNodeId.NodeKind.SKILL) {
+                commands.set(selector + "Icon.Visible", value.occupied());
+                icon(commands, selector + "Icon #Overlay", value.iconPath());
+            }
         }
     }
 
@@ -161,6 +177,7 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
             commands.append("#LibraryRows", "RpgSkillTreeLibraryRow.ui");
             String row = "#LibraryRows[" + index + "]";
             commands.set(row + " #Select.Text", item.name() + "\n" + item.category());
+            icon(commands, row + " #Icon #Overlay", item.iconPath());
             bind(events, CustomUIEventBindingType.Activating, row + " #Select", "item", item.id(), "");
         }
     }
@@ -179,6 +196,8 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
 
     private void renderDetails(UICommandBuilder commands) {
         var details = model.details();
+        icon(commands, "#DetailsIcon #Overlay", details.kind().equals("SKILL")
+                ? RpgSkillIcons.forSkill(details.id()) : RpgSkillTreeProjectionService.PLACEHOLDER_ICON);
         commands.set("#DetailsName.TextSpans", Message.raw(details.name()));
         commands.set("#DetailsCategory.TextSpans", Message.raw(details.category()));
         commands.set("#DetailsDescription.TextSpans", Message.raw(details.description()));
@@ -211,6 +230,9 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
     private static String title(String externalId) { return Character.toUpperCase(externalId.charAt(0)) + externalId.substring(1); }
     private static String clean(String value) { return value == null ? "" : value.trim(); }
     private static String id() { return UUID.randomUUID().toString().substring(0, 12); }
+    private static void icon(UICommandBuilder commands, String selector, String path) {
+        commands.setObject(selector + ".Background", new PatchStyle().setTexturePath(Value.of(path)));
+    }
     private static void bind(UIEventBuilder events, CustomUIEventBindingType type, String selector,
                              String action, String id, String dynamicValue) {
         EventData data = new EventData().append("Action", action).append("Id", id);
@@ -222,7 +244,7 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
         static final BuilderCodec<Data> CODEC = BuilderCodec.builder(Data.class, Data::new)
                 .append(new KeyedCodec<>("Action", Codec.STRING), (d, v) -> d.action = v, d -> d.action).add()
                 .append(new KeyedCodec<>("Id", Codec.STRING), (d, v) -> d.id = v, d -> d.id).add()
-                .append(new KeyedCodec<>("Value", Codec.STRING), (d, v) -> d.value = v, d -> d.value).add()
+                .append(new KeyedCodec<>("@Value", Codec.STRING), (d, v) -> d.value = v, d -> d.value).add()
                 .build();
         private String action = "";
         private String id = "";
