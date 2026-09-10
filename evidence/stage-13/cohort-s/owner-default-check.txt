@@ -1,0 +1,4 @@
+Fire Bolt <- SkillFirebolt.png
+Quick Slash <- SkillQuickslash.png
+Whirlwind <- SkillWhirlwind.png
+CHECK PASSED: 3 supplied icons, 0 JAR entries would change. Nothing written.

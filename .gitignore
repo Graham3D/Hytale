@@ -3,6 +3,7 @@ build/
 run/
 config.json
 telemetry/
+icon-backups/
 evidence/stage-13/cohort-*/before/save/
 *.log
 evidence/stage-01b/*/rollback/*.jar

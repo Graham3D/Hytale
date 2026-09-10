@@ -1,0 +1,91 @@
+[
+  {
+    "timestamp": "2026-09-10T02:04:38.084978Z",
+    "rpgRevision": "R032",
+    "buildVersion": "0.0.25",
+    "hytaleBuild": "0.7.0-pre.1",
+    "playerUuid": "6486eceb-0030-4695-a868-445e592f8daf",
+    "eventType": "PROJECTILE_SPAWN_REQUEST",
+    "correlationId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467",
+    "details": {
+      "generation": 0,
+      "caster": "6486eceb-0030-4695-a868-445e592f8daf",
+      "originX": 0.0,
+      "originY": 200.0,
+      "rootCastId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467",
+      "originZ": 0.0,
+      "compiledPlanHash": "2a6dae71dbaef9b83cd500c5a37eb46cdcbfe75db33325d1eac70abe9fbc70f4",
+      "projectileInstanceId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467-projectile-0",
+      "skillId": "fire_bolt",
+      "skillInstanceId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467",
+      "configId": "Projectile_Config_RPG_Fire_Bolt"
+    }
+  },
+  {
+    "timestamp": "2026-09-10T02:04:38.094943700Z",
+    "rpgRevision": "R032",
+    "buildVersion": "0.0.25",
+    "hytaleBuild": "0.7.0-pre.1",
+    "playerUuid": "6486eceb-0030-4695-a868-445e592f8daf",
+    "eventType": "PROJECTILE_SPAWNED",
+    "correlationId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467",
+    "details": {
+      "speed": 24.0,
+      "radius": 0.3,
+      "caster": "6486eceb-0030-4695-a868-445e592f8daf",
+      "barrageBatch": 0,
+      "skillInstanceId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467",
+      "projectileInstanceId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467-projectile-0",
+      "configId": "Projectile_Config_RPG_Fire_Bolt",
+      "rootCastId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467",
+      "generation": 0,
+      "skillId": "fire_bolt",
+      "maximumLifetimeSeconds": 1.0,
+      "maxDistance": 24.0,
+      "nativeProjectileRef": "Ref{store=class com.hypixel.hytale.component.Store@661259719, index=2}",
+      "compiledPlanHash": "2a6dae71dbaef9b83cd500c5a37eb46cdcbfe75db33325d1eac70abe9fbc70f4"
+    }
+  },
+  {
+    "timestamp": "2026-09-10T02:04:38.101006900Z",
+    "rpgRevision": "R032",
+    "buildVersion": "0.0.25",
+    "hytaleBuild": "0.7.0-pre.1",
+    "playerUuid": "6486eceb-0030-4695-a868-445e592f8daf",
+    "eventType": "PROJECTILE_SPAWN_REQUEST",
+    "correlationId": "isolated-native-spawn-f0e46a44-1a44-4cb3-8f0f-1005001b86ff",
+    "details": {
+      "generation": 0,
+      "caster": "6486eceb-0030-4695-a868-445e592f8daf",
+      "originX": 0.0,
+      "originY": 200.0,
+      "rootCastId": "isolated-native-spawn-f0e46a44-1a44-4cb3-8f0f-1005001b86ff",
+      "originZ": 0.0,
+      "compiledPlanHash": "2a6dae71dbaef9b83cd500c5a37eb46cdcbfe75db33325d1eac70abe9fbc70f4",
+      "projectileInstanceId": "isolated-native-spawn-f0e46a44-1a44-4cb3-8f0f-1005001b86ff-projectile-0",
+      "skillId": "fire_bolt",
+      "skillInstanceId": "isolated-native-spawn-f0e46a44-1a44-4cb3-8f0f-1005001b86ff",
+      "configId": "Projectile_Config_RPG_Fire_Bolt"
+    }
+  },
+  {
+    "timestamp": "2026-09-10T02:04:39.418192500Z",
+    "rpgRevision": "R032",
+    "buildVersion": "0.0.25",
+    "hytaleBuild": "0.7.0-pre.1",
+    "playerUuid": "6486eceb-0030-4695-a868-445e592f8daf",
+    "eventType": "PROJECTILE_TERMINATED",
+    "correlationId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467",
+    "details": {
+      "generation": 0,
+      "skillId": "fire_bolt",
+      "travelledDistance": 0.0,
+      "caster": "6486eceb-0030-4695-a868-445e592f8daf",
+      "skillInstanceId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467",
+      "rootCastId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467",
+      "reason": "MAX_LIFETIME",
+      "projectileInstanceId": "isolated-native-spawn-d8e5dccc-9002-49ae-9acd-79a1392d4467-projectile-0",
+      "compiledPlanHash": "2a6dae71dbaef9b83cd500c5a37eb46cdcbfe75db33325d1eac70abe9fbc70f4"
+    }
+  }
+]

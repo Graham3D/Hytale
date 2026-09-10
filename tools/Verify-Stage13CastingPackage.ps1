@@ -1,9 +1,9 @@
 [CmdletBinding()]
-param([ValidateSet('m','n','o','p','q','r')][string]$Cohort='m')
+param([ValidateSet('m','n','o','p','q','r','s')][string]$Cohort='m')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence/stage-13/cohort-$Cohort"
-$baseline=if($Cohort -eq 'r'){'q'}elseif($Cohort -eq 'q'){'p'}elseif($Cohort -eq 'p'){'o'}elseif($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
+$baseline=if($Cohort -eq 's'){'r'}elseif($Cohort -eq 'r'){'q'}elseif($Cohort -eq 'q'){'p'}elseif($Cohort -eq 'p'){'o'}elseif($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
 $previous=Join-Path $root "evidence/stage-13/cohort-$baseline/artifacts/HytaleRPG-0.0.25.jar"
 $candidate=Join-Path $out 'artifacts/HytaleRPG-0.0.25.jar'
 function EntryHashes([string]$path){
@@ -15,6 +15,13 @@ function EntryHashes([string]$path){
 $before=EntryHashes $previous;$after=EntryHashes $candidate
 $changed=@(foreach($name in @($before.Keys)+@($after.Keys)|Sort-Object -Unique){if($before[$name] -ne $after[$name]){$name}})
 foreach($name in $changed){
+    if($Cohort -eq 's'){
+        if($name -match '^com/inigmasgames/hytalerpg/ui/(hud/RpgHud|skilltree/(RpgSkillIcons|RpgSkillTreePage|RpgSkillTreeProjectionService))(\$[^/]*)?\.class$'){continue}
+        if($name -in @('rpg/presentation/','rpg/presentation/icon-index.json','Common/UI/Custom/Phase00RevisionHud.ui','Common/UI/Custom/RpgSkillTree.ui')){continue}
+        if($name -in @('Common/Icons/Items/RPG/SkillWhirlwind.png','Common/UI/Custom/Icons/RPG/SkillWhirlwind.png',
+            'Server/Item/Items/RPG/Abilities/RPG_Ability_Whirlwind.json')){continue}
+        throw "Unexpected S packaged change outside optional icons/passive surfaces/badge: $name"
+    }
     if($Cohort -eq 'r'){
         if($name -match '^com/inigmasgames/hytalerpg/ui/(hud/RpgHud|skilltree/(RpgSkillIcons|RpgSkillTreePage|RpgSkillTreeProjectionService|StaticSkillTreeViewModel))(\$[^/]*)?\.class$'){continue}
         if($name -in @('Common/Icons/','Common/Icons/Items/','Common/Icons/Items/RPG/','Common/UI/Custom/Icons/','Common/UI/Custom/Icons/RPG/',
@@ -51,6 +58,24 @@ foreach($name in $changed){
     }
 }
 if(-not $changed.Count){throw 'No correction classes changed'}
+if($Cohort -eq 's'){
+    $import=Get-Content -Raw (Join-Path $out 'candidate-icon-backups/last-update.json')|ConvertFrom-Json
+    if($import.afterSha256 -ne (Get-FileHash -LiteralPath $candidate).Hash){throw 'Candidate icon import receipt mismatch'}
+    $iconHash=(Get-FileHash -LiteralPath (Join-Path $root 'art/Skills/SkillWhirlwind.png')).Hash
+    foreach($entry in @('Common/Icons/Items/RPG/SkillWhirlwind.png','Common/UI/Custom/Icons/RPG/SkillWhirlwind.png')){
+        if($after[$entry] -ne $iconHash){throw 'Owner Whirlwind icon differs in package'}
+    }
+    $documents=@(foreach($path in @($previous,$candidate)){
+        $zip=[IO.Compression.ZipFile]::OpenRead($path)
+        try{
+            $reader=[IO.StreamReader]::new($zip.GetEntry('Server/Item/Items/RPG/Abilities/RPG_Ability_Whirlwind.json').Open())
+            try{$json=$reader.ReadToEnd()|ConvertFrom-Json -AsHashtable}finally{$reader.Dispose()}
+            [void]$json.Remove('Icon')
+            $json|ConvertTo-Json -Depth 20 -Compress
+        }finally{$zip.Dispose()}
+    })
+    if($documents.Count -ne 2 -or $documents[0] -cne $documents[1]){throw 'Whirlwind native fields other than Icon changed'}
+}
 if($Cohort -eq 'r'){
     foreach($icon in @('SkillFirebolt.png','SkillQuickslash.png')){
         $sourceHash=(Get-FileHash -LiteralPath (Join-Path $root "art/Skills/$icon")).Hash
@@ -97,6 +122,7 @@ if((Get-FileHash -LiteralPath $target).Hash -ne (Get-FileHash -LiteralPath $cand
     powerInputPersistenceResourceCooldownAndTraceImplementationsIdenticalToO=($Cohort -eq 'p');
     quickSlashSpeedAndFailureDiagnosticsOnly=($Cohort -eq 'q');
     skillIconsSearchAndBadgeOnly=($Cohort -eq 'r');
+    optionalIconLookupPassiveSurfacesAndBadgeOnly=($Cohort -eq 's');
     isolatedAtomicRollbackAndRollForward='PASS';retainedArchivedReaderTests='See full test-results.json; archived-reader tests unchanged';
     previousSha256=(Get-FileHash -LiteralPath $previous).Hash;candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash;
     connectedCastingVerified=$false}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $out 'jar-differential.json') -Encoding utf8

@@ -1,0 +1,32 @@
+{
+  "changedEntries": [
+    "com/inigmasgames/hytalerpg/ui/hud/RpgHud.class",
+    "com/inigmasgames/hytalerpg/ui/skilltree/RpgSkillIcons.class",
+    "com/inigmasgames/hytalerpg/ui/skilltree/RpgSkillIcons$Entry.class",
+    "com/inigmasgames/hytalerpg/ui/skilltree/RpgSkillIcons$Index.class",
+    "com/inigmasgames/hytalerpg/ui/skilltree/RpgSkillTreePage.class",
+    "com/inigmasgames/hytalerpg/ui/skilltree/RpgSkillTreePage$Data.class",
+    "com/inigmasgames/hytalerpg/ui/skilltree/RpgSkillTreeProjectionService.class",
+    "Common/Icons/Items/RPG/SkillWhirlwind.png",
+    "Common/UI/Custom/Icons/RPG/SkillWhirlwind.png",
+    "Common/UI/Custom/Phase00RevisionHud.ui",
+    "Common/UI/Custom/RpgSkillTree.ui",
+    "rpg/presentation/",
+    "rpg/presentation/icon-index.json",
+    "Server/Item/Items/RPG/Abilities/RPG_Ability_Whirlwind.json"
+  ],
+  "allOtherEntriesIdentical": true,
+  "resourcesHudPowerRegistryPersistenceFormatsUnchanged": false,
+  "nativeHudInputExecutorsPersistenceAndOriginalPowerManifestUnchanged": false,
+  "expandedPowerManifest": false,
+  "equipmentTargetingInputPersistenceResourcesCooldownsHudAndNormalTraceIdenticalToN": false,
+  "powerInputPersistenceResourceCooldownAndTraceImplementationsIdenticalToO": false,
+  "quickSlashSpeedAndFailureDiagnosticsOnly": false,
+  "skillIconsSearchAndBadgeOnly": false,
+  "optionalIconLookupPassiveSurfacesAndBadgeOnly": true,
+  "isolatedAtomicRollbackAndRollForward": "PASS",
+  "retainedArchivedReaderTests": "See full test-results.json; archived-reader tests unchanged",
+  "previousSha256": "8D0A2B286839B433D38DF436C0ADE0B307E1FB38B2653F251D387928BF1488F0",
+  "candidateSha256": "E3B6F793F66164807EFC53E992C9B68383E05569A580F2D32B92AE105160C3BC",
+  "connectedCastingVerified": false
+}

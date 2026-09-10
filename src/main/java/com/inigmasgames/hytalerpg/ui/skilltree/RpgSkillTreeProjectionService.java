@@ -76,7 +76,7 @@ public final class RpgSkillTreeProjectionService {
                         def.requiredCapabilities(), def.aliases()), needle))
                 .sorted(Comparator.comparing(PassiveDefinition::name))
                 .map(def -> new StaticSkillTreeViewModel.LibraryItem(def.id().value(), def.name(), def.tier(),
-                        def.description(), PLACEHOLDER_ICON, "")).toList();
+                        def.description(), RpgSkillIcons.forPassive(def.id().value()), "")).toList();
     }
 
     private Map<LinkNodeId, StaticSkillTreeViewModel.TreeNode> nodes(RpgLoadoutView view) {
@@ -92,7 +92,8 @@ public final class RpgSkillTreeProjectionService {
                 var id = view.state().passive(node.passiveSlot());
                 String name = id.flatMap(catalog::passive).map(PassiveDefinition::name).orElse("Empty Passive");
                 String category = id.flatMap(catalog::passive).map(PassiveDefinition::tier).orElse("Select to assign");
-                result.put(node, new StaticSkillTreeViewModel.TreeNode(node, name, category, id.isPresent()));
+                result.put(node, new StaticSkillTreeViewModel.TreeNode(node, name, category, id.isPresent(),
+                        RpgSkillIcons.forPassive(id.map(PassiveId::value).orElse(""))));
             }
         }
         for (LinkNodeId joint : StaticSkillTreeLayout.JOINTS)

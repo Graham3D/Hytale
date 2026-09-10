@@ -1,0 +1,1076 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "kind": "Skill",
+      "id": "quick_slash",
+      "name": "Quick Slash",
+      "fileName": "SkillQuickslash.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Quick_Slash.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "heavy_swing",
+      "name": "Heavy Swing",
+      "fileName": "SkillHeavyswing.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Heavy_Swing.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "spear_thrust",
+      "name": "Spear Thrust",
+      "fileName": "SkillSpearthrust.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Spear_Thrust.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "shield_bash",
+      "name": "Shield Bash",
+      "fileName": "SkillShieldbash.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Shield_Bash.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "guard",
+      "name": "Guard",
+      "fileName": "SkillGuard.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Guard.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "quickstep",
+      "name": "Quickstep",
+      "fileName": "SkillQuickstep.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Quickstep.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "dagger_flurry",
+      "name": "Dagger Flurry",
+      "fileName": "SkillDaggerflurry.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Dagger_Flurry.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "maul_swing",
+      "name": "Maul Swing",
+      "fileName": "SkillMaulswing.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Maul_Swing.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "scythe_sweep",
+      "name": "Scythe Sweep",
+      "fileName": "SkillScythesweep.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Scythe_Sweep.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "pounce",
+      "name": "Pounce",
+      "fileName": "SkillPounce.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Pounce.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "dive_strike",
+      "name": "Dive Strike",
+      "fileName": "SkillDivestrike.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Dive_Strike.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "spark",
+      "name": "Spark",
+      "fileName": "SkillSpark.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Spark.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "jump_strike",
+      "name": "Jump Strike",
+      "fileName": "SkillJumpstrike.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Jump_Strike.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "charge",
+      "name": "Charge",
+      "fileName": "SkillCharge.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Charge.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "finishing_strike",
+      "name": "Finishing Strike",
+      "fileName": "SkillFinishingstrike.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Finishing_Strike.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "whirlwind",
+      "name": "Whirlwind",
+      "fileName": "SkillWhirlwind.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Whirlwind.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "execution_strike",
+      "name": "Execution Strike",
+      "fileName": "SkillExecutionstrike.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Execution_Strike.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "riposte",
+      "name": "Riposte",
+      "fileName": "SkillRiposte.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Riposte.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "backstab",
+      "name": "Backstab",
+      "fileName": "SkillBackstab.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Backstab.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "frenzy",
+      "name": "Frenzy",
+      "fileName": "SkillFrenzy.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Frenzy.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "void_dash",
+      "name": "Void Dash",
+      "fileName": "SkillVoiddash.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Void_Dash.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "axe_toss",
+      "name": "Axe Toss",
+      "fileName": "SkillAxetoss.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Axe_Toss.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "spear_toss",
+      "name": "Spear Toss",
+      "fileName": "SkillSpeartoss.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Spear_Toss.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "quick_shot",
+      "name": "Quick Shot",
+      "fileName": "SkillQuickshot.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Quick_Shot.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "crossbow_bolt",
+      "name": "Crossbow Bolt",
+      "fileName": "SkillCrossbowbolt.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Crossbow_Bolt.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "blunderbuss_shot",
+      "name": "Blunderbuss Shot",
+      "fileName": "SkillBlunderbussshot.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Blunderbuss_Shot.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "web_shot",
+      "name": "Web Shot",
+      "fileName": "SkillWebshot.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Web_Shot.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "fire_bolt",
+      "name": "Fire Bolt",
+      "fileName": "SkillFirebolt.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Fire_Bolt.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "frost_bolt",
+      "name": "Frost Bolt",
+      "fileName": "SkillFrostbolt.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Frost_Bolt.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "arcane_bolt",
+      "name": "Arcane Bolt",
+      "fileName": "SkillArcanebolt.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Arcane_Bolt.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "void_bolt",
+      "name": "Void Bolt",
+      "fileName": "SkillVoidbolt.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Void_Bolt.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "stone_bolt",
+      "name": "Stone Bolt",
+      "fileName": "SkillStonebolt.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Stone_Bolt.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "bone_shard",
+      "name": "Bone Shard",
+      "fileName": "SkillBoneshard.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Bone_Shard.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "snipe",
+      "name": "Snipe",
+      "fileName": "SkillSnipe.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Snipe.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "explosive_flask",
+      "name": "Explosive Flask",
+      "fileName": "SkillExplosiveflask.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Explosive_Flask.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "bomb_toss",
+      "name": "Bomb Toss",
+      "fileName": "SkillBombtoss.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Bomb_Toss.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "arcane_missiles",
+      "name": "Arcane Missiles",
+      "fileName": "SkillArcanemissiles.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Arcane_Missiles.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "fireball",
+      "name": "Fireball",
+      "fileName": "SkillFireball.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Fireball.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "cold_blast",
+      "name": "Cold Blast",
+      "fileName": "SkillColdblast.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Cold_Blast.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "ground_slam",
+      "name": "Ground Slam",
+      "fileName": "SkillGroundslam.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Ground_Slam.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "powder_mine",
+      "name": "Powder Mine",
+      "fileName": "SkillPowdermine.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Powder_Mine.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "frost_nova",
+      "name": "Frost Nova",
+      "fileName": "SkillFrostnova.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Frost_Nova.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "cold_wave",
+      "name": "Cold Wave",
+      "fileName": "SkillColdwave.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Cold_Wave.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "root_snare",
+      "name": "Root Snare",
+      "fileName": "SkillRootsnare.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Root_Snare.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "venom_spray",
+      "name": "Venom Spray",
+      "fileName": "SkillVenomspray.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Venom_Spray.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "blizzard",
+      "name": "Blizzard",
+      "fileName": "SkillBlizzard.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Blizzard.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "wall_of_fire",
+      "name": "Wall of Fire",
+      "fileName": "SkillWalloffire.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Wall_Of_Fire.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "poison_cloud",
+      "name": "Poison Cloud",
+      "fileName": "SkillPoisoncloud.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Poison_Cloud.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "vortex",
+      "name": "Vortex",
+      "fileName": "SkillVortex.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Vortex.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "earthquake",
+      "name": "Earthquake",
+      "fileName": "SkillEarthquake.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Earthquake.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "meteor",
+      "name": "Meteor",
+      "fileName": "SkillMeteor.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Meteor.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "comet",
+      "name": "Comet",
+      "fileName": "SkillComet.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Comet.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "avalanche",
+      "name": "Avalanche",
+      "fileName": "SkillAvalanche.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Avalanche.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "void_cataclysm",
+      "name": "Void Cataclysm",
+      "fileName": "SkillVoidcataclysm.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Void_Cataclysm.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "root_lash",
+      "name": "Root Lash",
+      "fileName": "SkillRootlash.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Root_Lash.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "wind_cutter",
+      "name": "Wind Cutter",
+      "fileName": "SkillWindcutter.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Wind_Cutter.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "lightning_bolt",
+      "name": "Lightning Bolt",
+      "fileName": "SkillLightningbolt.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Lightning_Bolt.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "ball_lightning",
+      "name": "Ball Lightning",
+      "fileName": "SkillBalllightning.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Ball_Lightning.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "void_beam",
+      "name": "Void Beam",
+      "fileName": "SkillVoidbeam.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Void_Beam.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "chain_lightning",
+      "name": "Chain Lightning",
+      "fileName": "SkillChainlightning.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Chain_Lightning.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "orbiting_shadow_blades",
+      "name": "Orbiting Shadow Blades",
+      "fileName": "SkillOrbitingshadowblades.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Orbiting_Shadow_Blades.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "life_drain",
+      "name": "Life Drain",
+      "fileName": "SkillLifedrain.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Life_Drain.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "taunt",
+      "name": "Taunt",
+      "fileName": "SkillTaunt.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Taunt.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "weakening_hex",
+      "name": "Weakening Hex",
+      "fileName": "SkillWeakeninghex.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Weakening_Hex.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "hunter_s_mark",
+      "name": "Hunter's Mark",
+      "fileName": "SkillHuntersmark.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Hunter_S_Mark.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "battle_cry",
+      "name": "Battle Cry",
+      "fileName": "SkillBattlecry.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Battle_Cry.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "pack_howl",
+      "name": "Pack Howl",
+      "fileName": "SkillPackhowl.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Pack_Howl.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "reflective_hide",
+      "name": "Reflective Hide",
+      "fileName": "SkillReflectivehide.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Reflective_Hide.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "intimidate",
+      "name": "Intimidate",
+      "fileName": "SkillIntimidate.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Intimidate.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "minor_heal",
+      "name": "Minor Heal",
+      "fileName": "SkillMinorheal.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Minor_Heal.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "thorns_aura",
+      "name": "Thorns Aura",
+      "fileName": "SkillThornsaura.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Thorns_Aura.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "flame_weapon",
+      "name": "Flame Weapon",
+      "fileName": "SkillFlameweapon.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Flame_Weapon.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "spirit_shield",
+      "name": "Spirit Shield",
+      "fileName": "SkillSpiritshield.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Spirit_Shield.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "managuard",
+      "name": "Managuard",
+      "fileName": "SkillManaguard.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Managuard.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "emanatism",
+      "name": "Emanatism",
+      "fileName": "SkillEmanatism.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Emanatism.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "chilling_aura",
+      "name": "Chilling Aura",
+      "fileName": "SkillChillingaura.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Chilling_Aura.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "pedanticism",
+      "name": "Pedanticism",
+      "fileName": "SkillPedanticism.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Pedanticism.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "reaping_storm",
+      "name": "Reaping Storm",
+      "fileName": "SkillReapingstorm.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Reaping_Storm.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "consume_minion",
+      "name": "Consume Minion",
+      "fileName": "SkillConsumeminion.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Consume_Minion.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "simulacrum",
+      "name": "Simulacrum",
+      "fileName": "SkillSimulacrum.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Simulacrum.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "corpse_burst",
+      "name": "Corpse Burst",
+      "fileName": "SkillCorpseburst.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Corpse_Burst.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "wolf_summon",
+      "name": "Wolf Summon",
+      "fileName": "SkillWolfsummon.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Wolf_Summon.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "bone_cage",
+      "name": "Bone Cage",
+      "fileName": "SkillBonecage.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Bone_Cage.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "revive_fallen",
+      "name": "Revive Fallen",
+      "fileName": "SkillRevivefallen.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Revive_Fallen.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "summon_void_crawlers",
+      "name": "Summon Void Crawlers",
+      "fileName": "SkillSummonvoidcrawlers.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Summon_Void_Crawlers.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "brood_call",
+      "name": "Brood Call",
+      "fileName": "SkillBroodcall.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Brood_Call.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "dominate",
+      "name": "Dominate",
+      "fileName": "SkillDominate.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Dominate.json"
+    },
+    {
+      "kind": "Passive",
+      "id": "potency",
+      "name": "Potency",
+      "fileName": "PassivePotency.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "efficiency",
+      "name": "Efficiency",
+      "fileName": "PassiveEfficiency.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "long_reach",
+      "name": "Long Reach",
+      "fileName": "PassiveLongreach.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "rapid_invocation",
+      "name": "Rapid Invocation",
+      "fileName": "PassiveRapidinvocation.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "second_wind",
+      "name": "Second Wind",
+      "fileName": "PassiveSecondwind.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "overcharge",
+      "name": "Overcharge",
+      "fileName": "PassiveOvercharge.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "concentration",
+      "name": "Concentration",
+      "fileName": "PassiveConcentration.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "expanded_radius",
+      "name": "Expanded Radius",
+      "fileName": "PassiveExpandedradius.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "lingering",
+      "name": "Lingering",
+      "fileName": "PassiveLingering.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "echo",
+      "name": "Echo",
+      "fileName": "PassiveEcho.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "piercing",
+      "name": "Piercing",
+      "fileName": "PassivePiercing.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "fork",
+      "name": "Fork",
+      "fileName": "PassiveFork.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "chain",
+      "name": "Chain",
+      "fileName": "PassiveChain.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "ricochet",
+      "name": "Ricochet",
+      "fileName": "PassiveRicochet.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "return",
+      "name": "Return",
+      "fileName": "PassiveReturn.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "volley",
+      "name": "Volley",
+      "fileName": "PassiveVolley.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "barrage",
+      "name": "Barrage",
+      "fileName": "PassiveBarrage.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "homing",
+      "name": "Homing",
+      "fileName": "PassiveHoming.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "accelerant",
+      "name": "Accelerant",
+      "fileName": "PassiveAccelerant.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "ballistics",
+      "name": "Ballistics",
+      "fileName": "PassiveBallistics.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "shrapnel",
+      "name": "Shrapnel",
+      "fileName": "PassiveShrapnel.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "splinterburst",
+      "name": "Splinterburst",
+      "fileName": "PassiveSplinterburst.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "cleaving_edge",
+      "name": "Cleaving Edge",
+      "fileName": "PassiveCleavingedge.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "multistrike",
+      "name": "Multistrike",
+      "fileName": "PassiveMultistrike.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "ruthless",
+      "name": "Ruthless",
+      "fileName": "PassiveRuthless.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "shockwave",
+      "name": "Shockwave",
+      "fileName": "PassiveShockwave.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "phantom_reach",
+      "name": "Phantom Reach",
+      "fileName": "PassivePhantomreach.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "momentum",
+      "name": "Momentum",
+      "fileName": "PassiveMomentum.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "executioner",
+      "name": "Executioner",
+      "fileName": "PassiveExecutioner.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "opportunist",
+      "name": "Opportunist",
+      "fileName": "PassiveOpportunist.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "reversal",
+      "name": "Reversal",
+      "fileName": "PassiveReversal.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "impact_force",
+      "name": "Impact Force",
+      "fileName": "PassiveImpactforce.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "mobile_domain",
+      "name": "Mobile Domain",
+      "fileName": "PassiveMobiledomain.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "rapid_pulse",
+      "name": "Rapid Pulse",
+      "fileName": "PassiveRapidpulse.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "cascade",
+      "name": "Cascade",
+      "fileName": "PassiveCascade.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "skill_delay",
+      "name": "Skill Delay",
+      "fileName": "PassiveSkilldelay.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "vacuum",
+      "name": "Vacuum",
+      "fileName": "PassiveVacuum.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "repulsion",
+      "name": "Repulsion",
+      "fileName": "PassiveRepulsion.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "orbit",
+      "name": "Orbit",
+      "fileName": "PassiveOrbit.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "widening",
+      "name": "Widening",
+      "fileName": "PassiveWidening.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "focused_channel",
+      "name": "Focused Channel",
+      "fileName": "PassiveFocusedchannel.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "aftermath",
+      "name": "Aftermath",
+      "fileName": "PassiveAftermath.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "combustion",
+      "name": "Combustion",
+      "fileName": "PassiveCombustion.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "deep_freeze",
+      "name": "Deep Freeze",
+      "fileName": "PassiveDeepfreeze.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "shatter",
+      "name": "Shatter",
+      "fileName": "PassiveShatter.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "virulence",
+      "name": "Virulence",
+      "fileName": "PassiveVirulence.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "concentrated_venom",
+      "name": "Concentrated Venom",
+      "fileName": "PassiveConcentratedvenom.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "hemorrhage",
+      "name": "Hemorrhage",
+      "fileName": "PassiveHemorrhage.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "terror",
+      "name": "Terror",
+      "fileName": "PassiveTerror.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "proliferation",
+      "name": "Proliferation",
+      "fileName": "PassiveProliferation.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "selflessness",
+      "name": "Selflessness",
+      "fileName": "PassiveSelflessness.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "conservation",
+      "name": "Conservation",
+      "fileName": "PassiveConservation.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "resonance",
+      "name": "Resonance",
+      "fileName": "PassiveResonance.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "overflow",
+      "name": "Overflow",
+      "fileName": "PassiveOverflow.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "triage",
+      "name": "Triage",
+      "fileName": "PassiveTriage.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "shared_aegis",
+      "name": "Shared Aegis",
+      "fileName": "PassiveSharedaegis.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "reflective_ward",
+      "name": "Reflective Ward",
+      "fileName": "PassiveReflectiveward.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "swarm",
+      "name": "Swarm",
+      "fileName": "PassiveSwarm.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "minion_empowerment",
+      "name": "Minion Empowerment",
+      "fileName": "PassiveMinionempowerment.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "death_pact",
+      "name": "Death Pact",
+      "fileName": "PassiveDeathpact.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "lifeblood",
+      "name": "Lifeblood",
+      "fileName": "PassiveLifeblood.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "attunement",
+      "name": "Attunement",
+      "fileName": "PassiveAttunement.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "leeching",
+      "name": "Leeching",
+      "fileName": "PassiveLeeching.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "retaliation",
+      "name": "Retaliation",
+      "fileName": "PassiveRetaliation.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "critical_trigger",
+      "name": "Critical Trigger",
+      "fileName": "PassiveCriticaltrigger.png",
+      "itemAsset": ""
+    },
+    {
+      "kind": "Passive",
+      "id": "kill_trigger",
+      "name": "Kill Trigger",
+      "fileName": "PassiveKilltrigger.png",
+      "itemAsset": ""
+    }
+  ]
+}

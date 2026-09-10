@@ -1,5 +1,7 @@
 # Owner / ChatGPT review packet
 
+**Latest correction:** [Stage 13 S owner-managed icons](../stage-13/stage-13-owner-icons-report.md) documents the complete 153-filename index, optional skill/passive artwork wiring, Windows PowerShell importer and undo, compatibility defects found by tests, 2,157 passing tests, exact native smoke and deployed artifact hashes. R032-S includes the owner's Whirlwind PNG. [Owner instructions](../../art/ADDING-ICONS.md) provide the drop-PNG/one-click/restart workflow. Connected rendering remains unverified; gameplay and unresolved encounter issues are unchanged.
+
 **Latest correction:** [Stage 13 R skill icons/search report](../stage-13/stage-13-skill-icons-search-report.md) documents the actual search codec defect, original-art overlay wiring, native item-icon namespace validation, 2,145 passing tests, exact-JAR smoke, deployed hashes, rollback and a focused connected UI checklist. R032-R is deployed; Q gameplay and unresolved encounter/post-lethal issues are unchanged. Client typing/focus/rendering still requires owner testing.
 
 **Latest correction:** [Stage 13 Q Quick Slash review](../stage-13/stage-13-quick-slash-review-report.md) contains the complete rotated-trace review, authoritative damage receipts, requested +200% speed change, new bounded exception telemetry, 2,137 passing tests and deployed hashes. **Post-lethal errors and encounter/reward uncertainty remain unresolved**; do not interpret successful local validation as progression acceptance. Q's report supersedes P's connected checklist for this retest.

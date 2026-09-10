@@ -148,7 +148,7 @@ class Stage13SkillTreeIconsSearchTest {
                 int overlay = ui.indexOf("#Overlay", start), frame = ui.indexOf("Icons/RPG/Frame_Ability_Ready.png", start);
                 assertTrue(overlay > start && frame > overlay); count++; start = frame + 1;
             }
-            assertEquals(file.equals("RpgSkillTree.ui") ? 4 : 1, count);
+            assertEquals(file.equals("RpgSkillTree.ui") ? 10 : 1, count);
         }
         String ui = Files.readString(RES.resolve("Common/UI/Custom/RpgSkillTree.ui"));
         assertTrue(ui.indexOf("#SearchLabel") < ui.indexOf("#SearchInput"));

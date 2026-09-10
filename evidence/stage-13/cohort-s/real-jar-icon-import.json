@@ -1,0 +1,27 @@
+{
+    "schemaVersion":  1,
+    "target":  "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\run\\stage13-icon-owner-integration\\HytaleRPG-0.0.25.jar",
+    "beforeSha256":  "EAAD9DFEC2111EE02BCC19C41F95DAEA15CAFE46B1FDA0C31DEAD80F322E976C",
+    "afterSha256":  "A25F5C8536BC4D2DD3B074AFFABEAAC62E0FE9B40E5D6067D68995195EA49C9D",
+    "backup":  "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\run\\stage13-icon-owner-integration\\backups\\HytaleRPG-before-EAAD9DFEC2111EE02BCC19C41F95DAEA15CAFE46B1FDA0C31DEAD80F322E976C.jar",
+    "icons":  [
+                  {
+                      "name":  "Whirlwind",
+                      "fileName":  "SkillWhirlwind.png",
+                      "sha256":  "8B4E285602E6A13A37A594F9E23B4C53E8A3AF0A0BC403D0083553910D6A7C7C"
+                  },
+                  {
+                      "name":  "Potency",
+                      "fileName":  "PassivePotency.png",
+                      "sha256":  "8B4E285602E6A13A37A594F9E23B4C53E8A3AF0A0BC403D0083553910D6A7C7C"
+                  }
+              ],
+    "changedEntries":  [
+                           "Common/UI/Custom/Icons/RPG/SkillWhirlwind.png",
+                           "Common/Icons/Items/RPG/SkillWhirlwind.png",
+                           "Server/Item/Items/RPG/Abilities/RPG_Ability_Whirlwind.json",
+                           "Common/UI/Custom/Icons/RPG/PassivePotency.png"
+                       ],
+    "utc":  "2026-09-10T02:04:05.3573020Z",
+    "savesModified":  false
+}

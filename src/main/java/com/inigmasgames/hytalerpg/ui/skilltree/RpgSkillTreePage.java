@@ -163,10 +163,8 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
             StaticSkillTreeViewModel.TreeNode value = model.nodes().get(node);
             String selector = "#" + title(node.externalId());
             commands.set(selector + ".Text", value.title() + "\n" + value.subtitle());
-            if (node.kind() == LinkNodeId.NodeKind.SKILL) {
-                commands.set(selector + "Icon.Visible", value.occupied());
-                icon(commands, selector + "Icon #Overlay", value.iconPath());
-            }
+            commands.set(selector + "Icon.Visible", value.occupied());
+            icon(commands, selector + "Icon #Overlay", value.iconPath());
         }
     }
 
@@ -197,7 +195,7 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
     private void renderDetails(UICommandBuilder commands) {
         var details = model.details();
         icon(commands, "#DetailsIcon #Overlay", details.kind().equals("SKILL")
-                ? RpgSkillIcons.forSkill(details.id()) : RpgSkillTreeProjectionService.PLACEHOLDER_ICON);
+                ? RpgSkillIcons.forSkill(details.id()) : RpgSkillIcons.forPassive(details.id()));
         commands.set("#DetailsName.TextSpans", Message.raw(details.name()));
         commands.set("#DetailsCategory.TextSpans", Message.raw(details.category()));
         commands.set("#DetailsDescription.TextSpans", Message.raw(details.description()));
