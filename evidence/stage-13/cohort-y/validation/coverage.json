@@ -1,0 +1,9 @@
+{
+  "tests": 2215,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "rootTests": 2141,
+  "nativeTests": 53,
+  "canvasTests": 21
+}

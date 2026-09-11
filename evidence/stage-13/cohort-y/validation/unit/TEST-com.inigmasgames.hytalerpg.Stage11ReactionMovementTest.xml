@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-09-11T23:45:06.292Z" hostname="GRAHAM" time="0.101">
+  <properties/>
+  <testcase name="acceptedThreeDimensionalPathNotEndpointDistance()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.001"/>
+  <testcase name="requestedTenMetersButObservedTwoGrantsOnlyTenPercent()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.005"/>
+  <testcase name="zeroTimeUnmovedTickDoesNotEraseEarlierTravel()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.0"/>
+  <testcase name="reversalChangesOnlyAuthoredWindowAndRetaliationBucket()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.001"/>
+  <testcase name="sidewaysNativeDisplacementCannotCountAsApprovedTravel()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.0"/>
+  <testcase name="dynamicBonusAddsOnceAtImpactWithoutAnotherPaymentOrCooldown()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.004"/>
+  <testcase name="plainMovementNeverReceivesMomentumEvenIfTravelWasMeasured()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.004"/>
+  <testcase name="zeroTimeTeleportCannotQualify()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.001"/>
+  <testcase name="reversalCannotExtendAnActiveShield()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.0"/>
+  <testcase name="extendedWindowUsesExistingOneShotReactionAndSameIds()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.004"/>
+  <testcase name="externalTeleportInvalidatesAllMomentumButDoesNotMutateContext()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.004"/>
+  <testcase name="collisionBlockedSegmentAndZeroTravelGiveNoBonus()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.004"/>
+  <testcase name="reactionCancelRemovesExtendedWindow()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.005"/>
+  <testcase name="accumulatedPathIsBoundedAtTenMeters()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.003"/>
+  <testcase name="momentumRejectsProjectileAndNonDamagingTravel()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.0"/>
+  <testcase name="momentumCapabilityIsNotLeakedGlobally()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.001"/>
+  <testcase name="extensionDoesNotPermitActivationAtOrBeyondExpiry()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.004"/>
+  <testcase name="reversalCannotCreateOrdinaryStrikeWindow()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.0"/>
+  <testcase name="newCastLedgerDoesNotInheritPriorTravel()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.0"/>
+  <testcase name="movementBonusIsNotAppliedToTheCommitSnapshotBeforeImpact()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.003"/>
+  <testcase name="momentumAcceptsPounceAndCanonicalChargeDespiteImportedConjunction()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.0"/>
+  <testcase name="UnapprovedOvershootCannotCountAsMovement()" classname="com.inigmasgames.hytalerpg.Stage11ReactionMovementTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

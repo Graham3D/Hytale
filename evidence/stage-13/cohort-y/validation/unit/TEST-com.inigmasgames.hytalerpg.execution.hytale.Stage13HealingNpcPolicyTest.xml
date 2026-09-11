@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.execution.hytale.Stage13HealingNpcPolicyTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-11T23:45:51.482Z" hostname="GRAHAM" time="0.002">
+  <properties/>
+  <testcase name="nativeTetherUsesSameHealingPolicyForAcquisitionRevalidationAndSecondaryInjury()" classname="com.inigmasgames.hytalerpg.execution.hytale.Stage13HealingNpcPolicyTest" time="0.001"/>
+  <testcase name="healingNeverConvertsNeutralHostileIgnoredOrMissingAttitudeIntoFriendship()" classname="com.inigmasgames.hytalerpg.execution.hytale.Stage13HealingNpcPolicyTest" time="0.001"/>
+  <testcase name="otherSupportSkillsRetainTheirProtectionPolicy()" classname="com.inigmasgames.hytalerpg.execution.hytale.Stage13HealingNpcPolicyTest" time="0.0"/>
+  <testcase name="damageImmunityDoesNotBlockHealingOfAffirmativeAllies()" classname="com.inigmasgames.hytalerpg.execution.hytale.Stage13HealingNpcPolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -2,6 +2,8 @@ package com.inigmasgames.hytalerpg.ui.trace;
 
 import com.inigmasgames.hytalerpg.phase00.BuildIdentity;
 import com.inigmasgames.hytalerpg.diagnostics.BoundedTraceWriter;
+import com.inigmasgames.hytalerpg.diagnostics.SkillTraceConfiguration;
+import com.inigmasgames.hytalerpg.diagnostics.TraceArchiveManager;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -18,7 +20,10 @@ public final class RpgUiTraceService implements AutoCloseable {
     private final Path path;private final BoundedTraceWriter writer;
     private final AtomicBoolean failureLogged=new AtomicBoolean();
     private final AtomicLong lastConsole=new AtomicLong(Long.MIN_VALUE);
-    public RpgUiTraceService(Path path){this.path=path;writer=new BoundedTraceWriter(path,4L*1024*1024,4,this::logFailureOnce);}
+    public RpgUiTraceService(Path path){this(path,new SkillTraceConfiguration(true,"NORMAL",4,4,true));}
+    public RpgUiTraceService(Path path,SkillTraceConfiguration configuration){this.path=path;
+        writer=new BoundedTraceWriter(path,configuration.maxFileMb()*1024L*1024L,configuration.retainedFiles(),this::logFailureOnce,
+                TraceArchiveManager.Compression.valueOf(configuration.archiveCompression()),configuration.archiveVerify());}
     public void trace(UUID player,String event,String correlationId,Map<String,?> details){
         var enriched=new LinkedHashMap<String,Object>();enriched.put("page",inferredPage(event));
         enriched.put("component",event.toLowerCase(java.util.Locale.ROOT));enriched.putAll(details);
@@ -43,6 +48,7 @@ public final class RpgUiTraceService implements AutoCloseable {
             LOGGER.log(Level.WARNING,"RPG UI trace incomplete; inspect TRACE_GAP/metrics; gameplay active path="+path,error);
     }
     public BoundedTraceWriter.Metrics metrics(){return writer.metrics();}
+    public TraceArchiveManager.Metrics archiveMetrics(){return writer.archiveMetrics();}
     public Path path(){return path;}
     @Override public void close(){writer.close();}
     private record Record(String timestamp,String rpgRevision,String buildVersion,String hytaleBuild,

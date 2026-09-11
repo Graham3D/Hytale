@@ -1,0 +1,39 @@
+{
+  "cohort": "R032-Y",
+  "tests": {
+    "tests": 2215,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "changedEntries": [
+    "com/inigmasgames/hytalerpg/diagnostics/BoundedTraceWriter$LimitedWriter.class",
+    "com/inigmasgames/hytalerpg/diagnostics/BoundedTraceWriter$Metrics.class",
+    "com/inigmasgames/hytalerpg/diagnostics/BoundedTraceWriter.class",
+    "com/inigmasgames/hytalerpg/diagnostics/RpgSkillTraceService.class",
+    "com/inigmasgames/hytalerpg/diagnostics/SkillTraceConfiguration.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveExport.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveManager$Compression.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveManager$FaultInjector.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveManager$FaultPoint.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveManager$Metrics.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveManager$SegmentStats.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveManager.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveManifest.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveReader$ArchiveEntry.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceArchiveReader.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceInput.class",
+    "com/inigmasgames/hytalerpg/diagnostics/TraceSegmentWriter.class",
+    "com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class",
+    "com/inigmasgames/hytalerpg/ui/trace/RpgUiTraceService$Record.class",
+    "com/inigmasgames/hytalerpg/ui/trace/RpgUiTraceService.class",
+    "rpg-skill-trace.properties"
+  ],
+  "allOtherXEntriesByteIdentical": true,
+  "jarSha256": "655AC07586D07216D2130EDD81333D7121CD8889AE847049ED6F59707C314B9F",
+  "archiveSha256": "D26954F2421FF9C41018536385355A1111B8D964F621B0BCD0A0A99EFF3FBD87",
+  "archiveEntries": 3,
+  "rollback": "PASS",
+  "deployed": false,
+  "connectedClientVerified": false
+}

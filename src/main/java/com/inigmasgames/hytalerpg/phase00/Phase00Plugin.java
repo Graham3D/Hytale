@@ -112,7 +112,7 @@ public final class Phase00Plugin extends JavaPlugin {
         LOGGER.atInfo().log("RPG_STAGE12_ENCOUNTER_STORE schema=1 frozenDeathPlans=true permanentExclusions=true pending=%d awardHook=true connectedProof=false",
                 encounterStore.pendingCount());
         CombatTrace combatTrace = new CombatTrace(skillTrace);
-        uiTrace = new RpgUiTraceService(getDataDirectory().resolve("logs").resolve("rpg").resolve("ui-trace.jsonl"));
+        uiTrace = new RpgUiTraceService(getDataDirectory().resolve("logs").resolve("rpg").resolve("ui-trace.jsonl"),configuration);
         var uiProjection = new RpgUiProjectionService(catalog, loadouts, combatKernel.derivedStats(), combatKernel.cooldowns());
         var staticLayout = new StaticSkillTreeLayout();
         var skillTreeProjection = new RpgSkillTreeProjectionService(catalog, loadouts, staticLayout,

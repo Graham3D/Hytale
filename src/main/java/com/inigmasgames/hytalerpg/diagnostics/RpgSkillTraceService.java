@@ -13,7 +13,8 @@ public final class RpgSkillTraceService implements RpgSkillTracer {
     private final AtomicBoolean failureLogged=new AtomicBoolean();private final AtomicLong lastConsole=new AtomicLong(Long.MIN_VALUE);
     public RpgSkillTraceService(Path path,SkillTraceConfiguration configuration){
         this.path=path;enabled=configuration.enabled();
-        writer=new BoundedTraceWriter(path,configuration.maxFileMb()*1024L*1024L,configuration.retainedFiles(),this::failure);
+        writer=new BoundedTraceWriter(path,configuration.maxFileMb()*1024L*1024L,configuration.retainedFiles(),this::failure,
+                TraceArchiveManager.Compression.valueOf(configuration.archiveCompression()),configuration.archiveVerify());
         router=new SkillTraceRouter(SkillTraceLevel.parse(configuration.level()),this::write);
         if(enabled)router.setLevel(router.level());
     }
@@ -30,6 +31,7 @@ public final class RpgSkillTraceService implements RpgSkillTracer {
     }
     private void failure(Throwable error){if(failureLogged.compareAndSet(false,true))LOGGER.atWarning().withCause(error).log("RPG skill trace incomplete; inspect TRACE_GAP/metrics; gameplay active path=%s",path);}
     public BoundedTraceWriter.Metrics metrics(){return writer.metrics();}
+    public TraceArchiveManager.Metrics archiveMetrics(){return writer.archiveMetrics();}
     public SkillTraceLevel level(){return router.level();}
     public void setLevel(SkillTraceLevel level){if(!enabled)throw new IllegalStateException("SKILL_TRACE_DISABLED");router.setLevel(level);}
     @Override public boolean wantsCompileStages(){return enabled&&router.level()==SkillTraceLevel.DETAILED;}

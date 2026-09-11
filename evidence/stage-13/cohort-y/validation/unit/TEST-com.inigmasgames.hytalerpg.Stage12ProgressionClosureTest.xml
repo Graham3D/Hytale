@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-09-11T23:45:16.872Z" hostname="GRAHAM" time="0.354">
+  <properties/>
+  <testcase name="respecRefundsAllocatedPointsAndPreservesEveryDebtAndRewardCounter()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.018"/>
+  <testcase name="twoSkillsRequireTwoOwnedPassiveCopies()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.017"/>
+  <testcase name="respecOverflowRejectsWithoutSave()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.014"/>
+  <testcase name="fullBuildRoundTripContainsOnlyStableIdsTopologyAndFixedLayout()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.014"/>
+  <testcase name="uncertainOrdinarySaveKeepsInspectionReadOnlyAndBlocksFurtherAuthority()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.005"/>
+  <testcase name="frozenWisdomAndLearningSurviveDeathCursorCrashAndDoNotReroll()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.066"/>
+  <testcase name="invalidForkStrikeImportRollsBackWholeBuild()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.01"/>
+  <testcase name="[1] AFTER_INTENT" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.034"/>
+  <testcase name="[2] AFTER_PLAYER" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.03"/>
+  <testcase name="[3] AFTER_RECEIPT" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.03"/>
+  <testcase name="[4] AFTER_HEAD" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.036"/>
+  <testcase name="[5] AFTER_CLEANUP" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.03"/>
+  <testcase name="newCheckpointCannotUseLegacyWildcardToHideAcquisitionRollback()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.002"/>
+  <testcase name="respecDoesNotResetChargesOrCreatePointsFromBelowBaseline()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.014"/>
+  <testcase name="currentSchemaCannotSilentlyInitializeMissingAcquisitionFields()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.006"/>
+  <testcase name="tenSecondCombatAndPendingGateApplyToAllLoadoutMutations()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.014"/>
+  <testcase name="importCannotBypassOwnershipEvenWhenDevEntitlementsAreEnabled()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.005"/>
+  <testcase name="unknownAndInjectedProgressionFieldsAreRejected()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionClosureTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,20 @@
+{
+  "ui": {
+    "originalBytes": 350967,
+    "compressedBytes": 30223,
+    "sourceEventCount": 882,
+    "expandedEventCount": 882,
+    "uncompressedSha256": "58ce4e019c219ba41f2a97661b4bdb727306c598e6df7d8e979bb2ccf22a3fe9",
+    "sha256RoundTrip": true,
+    "diskReductionFraction": 0.9138864907526918
+  },
+  "skill": {
+    "originalBytes": 6508417,
+    "compressedBytes": 341313,
+    "sourceEventCount": 9146,
+    "expandedEventCount": 9146,
+    "uncompressedSha256": "bac7c3e92bb4dd1015122fd4c7e079a37f17eaad7a45d764e7dcc8e0cb7dca0f",
+    "sha256RoundTrip": true,
+    "diskReductionFraction": 0.9475582157689035
+  }
+}
