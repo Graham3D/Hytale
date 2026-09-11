@@ -8,7 +8,7 @@ import java.util.Map;
 public record SupportProgress(long revision,long lastAuraEpoch,ManaguardLedger managuard,Map<String,Double> toggleLocks) {
     public static final SupportProgress INITIAL=new SupportProgress(0,0,ManaguardLedger.INITIAL,Map.of());
     public SupportProgress {
-        if(revision<0||lastAuraEpoch<0||managuard==null||toggleLocks==null||toggleLocks.size()>87)
+        if(revision<0||lastAuraEpoch<0||managuard==null||toggleLocks==null||toggleLocks.size()>89)
             throw new IllegalArgumentException("Invalid durable support state");
         for(var entry:toggleLocks.entrySet())
             if(entry.getKey()==null||entry.getKey().isBlank()||entry.getValue()==null

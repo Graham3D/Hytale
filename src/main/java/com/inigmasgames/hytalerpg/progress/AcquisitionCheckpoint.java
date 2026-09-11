@@ -6,7 +6,7 @@ import java.util.*;
 public record AcquisitionCheckpoint(AcquisitionProgress progress,Set<String> learnedSkills,Map<String,Integer> ownedPassives) {
     public AcquisitionCheckpoint {
         Objects.requireNonNull(progress);
-        if(learnedSkills==null||learnedSkills.size()>87||ownedPassives==null||ownedPassives.size()>66)
+        if(learnedSkills==null||learnedSkills.size()>89||ownedPassives==null||ownedPassives.size()>67)
             throw new IllegalArgumentException("INVALID_ACQUISITION_OWNERSHIP");
         var learned=new TreeSet<String>();for(String id:learnedSkills){AcquisitionProgress.id(id);learned.add(id);}
         var owned=new TreeMap<String,Integer>();ownedPassives.forEach((id,count)->{

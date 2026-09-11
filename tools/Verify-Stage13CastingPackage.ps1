@@ -1,11 +1,12 @@
 [CmdletBinding()]
-param([ValidateSet('m','n','o','p','q','r','s','t','u')][string]$Cohort='m')
+param([ValidateSet('m','n','o','p','q','r','s','t','u','v')][string]$Cohort='m')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence/stage-13/cohort-$Cohort"
 $baseline=if($Cohort -eq 's'){'r'}elseif($Cohort -eq 'r'){'q'}elseif($Cohort -eq 'q'){'p'}elseif($Cohort -eq 'p'){'o'}elseif($Cohort -eq 'o'){'n'}elseif($Cohort -eq 'n'){'m'}else{'l'}
 if($Cohort -eq 't'){$baseline='s'}
 if($Cohort -eq 'u'){$baseline='t'}
+if($Cohort -eq 'v'){$baseline='u'}
 $previous=Join-Path $root "evidence/stage-13/cohort-$baseline/artifacts/HytaleRPG-0.0.25.jar"
 $candidate=Join-Path $out 'artifacts/HytaleRPG-0.0.25.jar'
 function EntryHashes([string]$path){
@@ -15,7 +16,7 @@ function EntryHashes([string]$path){
     return $result
 }
 $before=EntryHashes $previous;$after=EntryHashes $candidate
-if($Cohort -eq 'u'){
+if($Cohort -in @('u','v')){
     $compiled=Join-Path $root 'build/classes/java/main'
     foreach($entry in $after.Keys|Where-Object {$_ -like '*.class'}){
         $file=Join-Path $compiled $entry
@@ -26,6 +27,15 @@ if($Cohort -eq 'u'){
 }
 $changed=@(foreach($name in @($before.Keys)+@($after.Keys)|Sort-Object -Unique){if($before[$name] -ne $after[$name]){$name}})
 foreach($name in $changed){
+    if($Cohort -eq 'v'){
+        if($name -match '^Server/Item/Items/RPG/Abilities/RPG_Ability_(Fire_Bolt|Quick_Slash|Snipe|Whirlwind)\.json$'){continue} # Exact semantic equality checked below; PowerShell versions format JSON differently.
+        if($name -match '^com/inigmasgames/hytalerpg/(combat/(cooldown/SavedCooldown|damage/MaxHealthDamageCap)|content/RpgCatalog|execution/(CompiledProfileResolver|ProfileComponentPolicy|Stage04SkillProfiles|connection/(ConnectionProfile|ConnectionRuntime|ConnectionTargeting|ConnectionWorldPort|TetherContinuations)|hytale/(HytaleSkillExecutionSystem|HytaleSupportSystem|SupportDamageSystems|SupportNativeEffects)|support/(FiniteSupportEffects|SupportMagnitude|SupportProfile))|input/(HytaleAbilitySkillInputAdapter|NativeAbilityBridgeAudit|NativeHeldChannelInteraction|NativeSupportTetherAudit)|links/(CompatibilityService|LinkCompiler)|phase00/Phase00Plugin|progress/(AcquisitionCheckpoint|AcquisitionProgress|EarnedReward|RewardCheckpoint|SupportProgress))(\$[^/]*)?\.class$'){continue}
+        if($name -in @('rpg/catalog/skills.json','rpg/catalog/passives.json','rpg/presentation/icon-index.json','rpg/runtime/stage-13-support-tether-cohort-v.json','Server/Languages/en-US/server.lang',
+            'Server/Item/Items/RPG/Abilities/RPG_Ability_Healing_Beam.json','Server/Item/Items/RPG/Abilities/RPG_Ability_Blessing_Of_Protection.json',
+            'Server/Item/RootInteractions/RPG/Root_RPG_Healing_Beam_Held.json','Server/Particles/RPG/RPG_Protection_Glow.particlesystem',
+            'Server/Entity/Effects/RPG/RPG_Protection_Visual.json')){continue}
+        throw "Unexpected V change outside support/tether content and catalog capacities: $name"
+    }
     if($Cohort -eq 'u'){
         if($name -match '^com/inigmasgames/hytalerpg/(ui/hud/RpgHud|input/NativeSnipeReleaseAudit|execution/hytale/NativeProjectileAssetAudit)(\$[^/]*)?\.class$'){continue}
         if($name -in @('Common/UI/Custom/Phase00RevisionHud.ui','rpg/catalog/skills.json','rpg/runtime/stage-13-projectiles-cohort-c.json',
@@ -85,6 +95,39 @@ foreach($name in $changed){
     }
 }
 if(-not $changed.Count){throw 'No correction classes changed'}
+if($Cohort -eq 'v'){
+    $a=[IO.Compression.ZipFile]::OpenRead($previous);$b=[IO.Compression.ZipFile]::OpenRead($candidate)
+    function Read-VJson($zip,[string]$path){$r=[IO.StreamReader]::new($zip.GetEntry($path).Open());try{return ($r.ReadToEnd()|ConvertFrom-Json -AsHashtable)}finally{$r.Dispose()}}
+    try{
+        foreach($path in @('rpg/catalog/skills.json','rpg/catalog/passives.json')){
+            $oldRows=Read-VJson $a $path;$newRows=Read-VJson $b $path
+            if(@($newRows).Count -ne $(if($path -like '*skills*'){89}else{67})){throw 'V catalog cardinality mismatch'}
+            foreach($row in $oldRows){
+                $next=@($newRows|Where-Object id -eq $row.id)
+                if($next.Count -ne 1){throw "Existing catalog ID disappeared: $($row.id)"}
+                if($path -like '*passives*' -and $row.id -in @('fork','chain')){
+                    foreach($field in @('description','compatibilityExpression')){$row[$field]=$next[0][$field]}
+                }
+                if(($row|ConvertTo-Json -Depth 64 -Compress) -cne ($next[0]|ConvertTo-Json -Depth 64 -Compress)){throw "Unexpected existing content mutation: $($row.id)"}
+            }
+        }
+        foreach($id in @('Healing_Beam','Blessing_Of_Protection')){
+            $ability=(Read-VJson $b "Server/Item/Items/RPG/Abilities/RPG_Ability_$id.json").Ability
+            if($ability.Cost -ne 0 -or $ability.Cooldown -ne 0 -or $ability.CostType -ne 'None'){throw 'V native gameplay ownership violation'}
+        }
+        foreach($icon in @('SkillFirebolt.png','SkillQuickslash.png','SkillSnipe.png','SkillWhirlwind.png')){
+            foreach($entry in @("Common/Icons/Items/RPG/$icon","Common/UI/Custom/Icons/RPG/$icon")){
+                if($after[$entry] -ne (Get-FileHash -LiteralPath (Join-Path $root "art/Skills/$icon")).Hash){throw "Owner artwork mismatch: $entry"}
+            }
+        }
+        foreach($id in @('Fire_Bolt','Quick_Slash','Snipe','Whirlwind')){
+            $path="Server/Item/Items/RPG/Abilities/RPG_Ability_$id.json"
+            if(((Read-VJson $a $path)|ConvertTo-Json -Depth 64 -Compress) -cne ((Read-VJson $b $path)|ConvertTo-Json -Depth 64 -Compress)){
+                throw "Existing owner-icon item changed semantically: $id"
+            }
+        }
+    }finally{$a.Dispose();$b.Dispose()}
+}
 if($Cohort -eq 's'){
     $import=Get-Content -Raw (Join-Path $out 'candidate-icon-backups/last-update.json')|ConvertFrom-Json
     if($import.afterSha256 -ne (Get-FileHash -LiteralPath $candidate).Hash){throw 'Candidate icon import receipt mismatch'}
@@ -179,6 +222,7 @@ if((Get-FileHash -LiteralPath $target).Hash -ne (Get-FileHash -LiteralPath $cand
     optionalIconLookupPassiveSurfacesAndBadgeOnly=($Cohort -eq 's');
     snipeHoldReleaseOnlyWithCostsDamageAmmoAndOtherProfilesUnchanged=($Cohort -eq 't');
     snipeVisualsAndGravityOnlyWithInputExecutorsCostsDamageAmmoPersistenceUnchanged=($Cohort -eq 'u');
+    supportTetherAdditionsOnlyWithExistingSkillsAndProjectileContinuationsPreserved=($Cohort -eq 'v');
     isolatedAtomicRollbackAndRollForward='PASS';retainedArchivedReaderTests='See full test-results.json; archived-reader tests unchanged';
     previousSha256=(Get-FileHash -LiteralPath $previous).Hash;candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash;
     connectedCastingVerified=$false}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $out 'jar-differential.json') -Encoding utf8

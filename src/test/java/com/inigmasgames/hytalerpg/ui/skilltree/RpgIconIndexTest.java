@@ -14,12 +14,12 @@ class RpgIconIndexTest {
     }
     @Test void indexAndOwnerCsvCoverEveryCanonicalSkillAndPassiveWithoutFilenameCollisions() throws Exception {
         var entries = List.of(index().entries()); var catalog = RpgCatalog.loadCanonical();
-        assertEquals(153, entries.size());
+        assertEquals(156, entries.size());
         assertEquals(catalog.skills().stream().map(s -> s.id().value()).collect(Collectors.toSet()),
                 entries.stream().filter(e -> e.kind().equals("Skill")).map(RpgSkillIcons.Entry::id).collect(Collectors.toSet()));
         assertEquals(catalog.passives().stream().map(p -> p.id().value()).collect(Collectors.toSet()),
                 entries.stream().filter(e -> e.kind().equals("Passive")).map(RpgSkillIcons.Entry::id).collect(Collectors.toSet()));
-        assertEquals(153, entries.stream().map(e -> e.fileName().toLowerCase(Locale.ROOT)).distinct().count());
+        assertEquals(156, entries.stream().map(e -> e.fileName().toLowerCase(Locale.ROOT)).distinct().count());
         var csv = Files.readString(Path.of("art/ICON-FILENAMES.csv"));
         for (var e : entries) {
             assertTrue(csv.contains("\"" + e.name() + "\",\"" + e.fileName() + "\""));

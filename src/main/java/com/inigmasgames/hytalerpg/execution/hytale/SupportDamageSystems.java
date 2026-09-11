@@ -83,6 +83,47 @@ public final class SupportDamageSystems {
         if(result==-1)support.traceFinite(effect,RpgTraceEventType.NATIVE_SUPPORT_REJECTED,Map.of("boundary","SUPPORT_SECONDARY_BUDGET","oncePerBudgetWindow",true));
         return result==1;
     }
+    /** Typed direct-hit component between native mitigation and every RPG absorption path. */
+    public static final class HealthCap extends DamageEventSystem {
+        private final HytaleSupportSystem support;
+        private final Map<com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.combat.DamageCalculator,Boolean> effectCalculators=Collections.synchronizedMap(new WeakHashMap<>());
+        public HealthCap(HytaleSupportSystem support){this.support=support;}
+        private boolean nativeStatusDamage(Damage damage){
+            var sequence=damage.getIfPresentMetaObject(DamageCalculatorSystems.DAMAGE_SEQUENCE);
+            if(sequence==null)return false;
+            // ActiveEntityEffect.tickDamage uses EntitySource when attributed, but carries the
+            // actual effect asset's calculator in DAMAGE_SEQUENCE. Cause (e.g. Fire) is not provenance.
+            return effectCalculators.computeIfAbsent(sequence.getDamageCalculator(),calculator->
+                    com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect.getAssetMap().getAssetMap().values().stream()
+                            .anyMatch(effect->effect.getDamageCalculator()==calculator));
+        }
+        @Override public Query<EntityStore> getQuery(){return Query.and(UUIDComponent.getComponentType(),EntityStatMap.getComponentType());}
+        @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(
+                new SystemGroupDependency<>(Order.AFTER,DamageModule.get().getFilterDamageGroup()),
+                new SystemDependency<>(Order.BEFORE,Shield.class),new SystemDependency<>(Order.BEFORE,HytaleSupportSystem.Absorb.class),
+                new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
+        @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+            if(damage.isCancelled()||damage.getAmount()<=0||!(damage.getSource() instanceof Damage.EntitySource source))return;
+            var recipient=chunk.getReferenceTo(index);var attacker=source.getRef();
+            if(attacker==null||!attacker.isValid()||attacker.equals(recipient)||!HytaleAreaQueries.hostile(store,attacker,recipient))return;
+            var meta=HytaleDamageAdapter.metadata(damage);
+            if(meta!=null&&meta.origin()!=HytaleDamageMetadata.Origin.DIRECT&&meta.origin()!=HytaleDamageMetadata.Origin.TRIGGERED)return;
+            if(meta==null&&nativeStatusDamage(damage))return;
+            var cause=damage.getCause();
+            if(cause==null||Set.of("Environment","Environmental","Drowning","Fall","OutOfWorld","Suffocation").contains(cause.getId()))return;
+            var hp=chunk.getComponent(index,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());if(hp==null||hp.getMax()<=0)return;
+            var id=chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid();double now=System.nanoTime()/1e9;
+            for(var effect:support.runtime().finite().forTarget(SupportNativeEffects.world(store),id,now)){
+                var cap=effect.damageCap();if(cap.isEmpty())continue;
+                var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
+                if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,recipient)){support.runtime().finite().remove(effect.key());continue;}
+                double before=damage.getAmount();double after=cap.get().apply(before,hp.getMax(),com.inigmasgames.hytalerpg.combat.damage.MaxHealthDamageCap.Origin.DIRECT_HOSTILE);
+                damage.setAmount((float)after);
+                support.traceFinite(effect,RpgTraceEventType.FINITE_SUPPORT_RESOLVED,Map.of("component","MaxHealthDamageCap","postMitigationBefore",before,"afterCap",after,"currentMaxHealth",hp.getMax(),"perHit",true));
+                break; // Identical caps never compound, irrespective of caster count.
+            }
+        }
+    }
     public static final class Shield extends DamageEventSystem {
         private final HytaleSupportSystem support;
         public Shield(HytaleSupportSystem support){this.support=support;}

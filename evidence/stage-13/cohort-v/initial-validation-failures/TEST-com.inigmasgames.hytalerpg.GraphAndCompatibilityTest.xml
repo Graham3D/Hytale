@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" tests="5" skipped="0" failures="1" errors="0" timestamp="2026-09-11T20:02:07.973Z" hostname="GRAHAM" time="0.079">
+  <properties/>
+  <testcase name="illegalRelationshipsCyclesAndJointCapacityAreRejected()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.007"/>
+  <testcase name="sixPassiveGlobalBudgetCanSpecializeOneSkill()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.006"/>
+  <testcase name="representativeCompatibilityGatesAreExplicit()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.006"/>
+  <testcase name="directJointAndChainedJointRoutesValidate()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.006"/>
+  <testcase name="everyCanonicalSkillPassiveAssessmentReturnsATypedVerdict()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.052">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;5742&gt; but was: &lt;5963&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;5742&gt; but was: &lt;5963&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:166)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:161)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:632)
+	at app//com.inigmasgames.hytalerpg.GraphAndCompatibilityTest.everyCanonicalSkillPassiveAssessmentReturnsATypedVerdict(GraphAndCompatibilityTest.java:126)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

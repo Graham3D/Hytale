@@ -1,5 +1,7 @@
 # Owner / ChatGPT review packet
 
+**Latest packaged candidate:** [Stage 13 V — Healing Beam, Blessing of Protection and Tether continuations](../stage-13/stage-13-support-tether-report.md). Catalog 89/67; 2,193 retained tests; detailed implementation, native asset audit and connected checklist. **Not deployed.** Connected behavior and the unchanged formal performance gate are not certified by local tests. Prior U remains the deployed baseline.
+
 **Latest correction:** [Stage 13 U Snipe native visuals and straight flight](../stage-13/stage-13-snipe-native-visuals-report.md) records the native model/animation/particle source audit, explicit zero-gravity correction, exact-JAR validation and rollback receipts, and the focused connected checklist. No input, payment or persistence redesign. T remains historical; connected U appearance and trajectory still require owner testing.
 
 **Latest correction:** [Stage 13 T Snipe hold/release](../stage-13/stage-13-snipe-release-report.md) records the explicit owner contract change, native charged-bow asset/operation audit, hold/release implementation, stale-slot protection, 2,164 passing tests and connected checklist. Snipe's old range gate was superseded with an authored 48 m cap; native maximum range and connected release/rendering are not falsely claimed verified. Other skill mechanics and persistence remain unchanged.

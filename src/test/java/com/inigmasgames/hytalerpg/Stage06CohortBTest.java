@@ -29,7 +29,7 @@ class Stage06CohortBTest {
         try(var input=getClass().getResourceAsStream("/rpg/catalog/skills.json")) {
             var catalog=com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(input,java.nio.charset.StandardCharsets.UTF_8));
             var records=catalog.isJsonArray()?catalog.getAsJsonArray():catalog.getAsJsonObject().getAsJsonArray("skills");
-            assertEquals(87,records.size());
+            assertEquals(89,records.size());
             for(var record:records) {
                 var skill=record.getAsJsonObject();String id=skill.get("id").getAsString();
                 if(id.equals("wall_of_fire")||id.equals("poison_cloud")||id.equals("vortex")) assertFalse(skill.get("canCrit").getAsBoolean());

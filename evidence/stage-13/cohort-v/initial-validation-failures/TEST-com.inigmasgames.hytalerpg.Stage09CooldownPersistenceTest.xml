@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" tests="10" skipped="0" failures="1" errors="0" timestamp="2026-09-11T20:02:11.948Z" hostname="GRAHAM" time="0.046">
+  <properties/>
+  <testcase name="auraRateExpiresAtDisconnectAndIsNeverSerialized()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.005"/>
+  <testcase name="failedStartSaveDoesNotPublishAnUnrecordedCooldown()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.002"/>
+  <testcase name="failedDisconnectSaveKeepsLiveWorkRatherThanClearingIt()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.002"/>
+  <testcase name="failedCheckpointRetriesAreBoundedToOnePerSecond()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.002"/>
+  <testcase name="cooldownSaveCannotClobberSupportRevisionOrRecompileTheLoadout()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.006"/>
+  <testcase name="explicitClearPersistsAndDoesNotClearAnotherSkill()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.002"/>
+  <testcase name="savedCooldownMapRejectsUnboundedOrMalformedState()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.009">
+    <failure message="org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown." type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at app//org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at app//org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at app//org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at app//com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest.savedCooldownMapRejectsUnboundedOrMalformedState(Stage09CooldownPersistenceTest.java:40)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="checkpointCadenceIsBoundedAndCrashCanOnlyRetainConservativeOlderWork()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.003"/>
+  <testcase name="playerRepositoryPersistsWorkWithDeficitAndLoadoutUnchanged()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.008"/>
+  <testcase name="startPersistsBeforeReturningAndDisconnectIsNotReset()" classname="com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

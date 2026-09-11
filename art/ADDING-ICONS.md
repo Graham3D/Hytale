@@ -2,6 +2,11 @@
 
 You do not need Codex, Java, Gradle, or a JAR editor.
 
+R032-V's optional new filenames are `SkillHealingbeam.png`,
+`SkillBlessingofprotection.png` and `PassiveArc.png`. Use these only with a V-or-newer
+build containing those catalog entries. The updater also supports the older
+87-skill/66-passive builds, but intentionally rejects icons unknown to that build.
+
 1. Save skill PNGs in **art/Skills**; save passive PNGs in **art/Passives**.
 2. Use the exact filename in **[ICON-FILENAMES.csv](ICON-FILENAMES.csv)**.
    Open it in Excel or a text editor: every row names the actual skill/passive.

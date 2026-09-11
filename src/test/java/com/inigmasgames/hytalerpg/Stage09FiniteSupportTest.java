@@ -17,7 +17,7 @@ class Stage09FiniteSupportTest {
         var h=new Harness("taunt");var cohort=Set.of("taunt","weakening_hex","hunter_s_mark","intimidate","battle_cry");
         var profiles=h.profiles.all().values().stream().filter(p->cohort.contains(p.skillId())).toList();
         assertEquals(5,profiles.size());assertTrue(profiles.stream().allMatch(p->p.damageCoefficient()==0));
-        assertEquals(87,h.bundle.catalog().skills().size());assertEquals(66,h.bundle.catalog().passives().size());
+        assertEquals(89,h.bundle.catalog().skills().size());assertEquals(67,h.bundle.catalog().passives().size());
     }
     @Test void tauntCommitsOneStaminaCostAndCooldown(){
         var h=new Harness("taunt");assertTrue(h.cast().committed());assertEquals(95,h.mana);assertEquals(1,h.runtime.finite().size());

@@ -1,0 +1,1627 @@
+{
+  "assets": [
+    {
+      "path": "Server/Entity/Effects/Deployables/Healing_Totem_Heal.json",
+      "sha256": "EFD6FA36FE456F3F5D71BF1763A026FB07793F8C923B4103C5BED7EDB51DB037",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "ApplicationEffects": {
+          "EntityTopTint": "#02de45",
+          "ScreenEffect": "ScreenEffects/Immune.png",
+          "LocalSoundEventId": "SFX_Deployable_Totem_Heal_Effect_Local"
+        },
+        "Duration": 1,
+        "OverlapBehavior": "Overwrite",
+        "StatModifiers": {
+          "Health": 5
+        },
+        "DamageCalculatorCooldown": 1,
+        "Debuff": false,
+        "StatusEffectIcon": "UI/StatusEffects/AddHealth/Tiny.png"
+      }
+    },
+    {
+      "path": "Server/Item/Animations/Spellbook.json",
+      "sha256": "FAF740552F84FB699F18E2162A2C4F7CA8C29014F63FA9E50204351A7B51FE8B",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Parent": "Item",
+        "Animations": {
+          "CastHurlCharging": {
+            "ThirdPerson": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Hurl_Charged/Cast_Hurl_Charging.blockyanim",
+            "ThirdPersonMoving": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Hurl_Charged/Cast_Hurl_Charging_Moving.blockyanim",
+            "FirstPerson": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Hurl_Charged/Cast_Hurl_Charging_FPS.blockyanim",
+            "ThirdPersonFace": "Characters/Animations/Expressions/Frown.blockyanim",
+            "Speed": 1
+          },
+          "CastHurlCharged": {
+            "ThirdPerson": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Hurl_Charged/Cast_Hurl_Charged.blockyanim",
+            "ThirdPersonMoving": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Hurl_Charged/Cast_Hurl_Charged_Moving.blockyanim",
+            "FirstPerson": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Hurl_Charged/Cast_Hurl_Charged_FPS.blockyanim",
+            "ThirdPersonFace": "Characters/Animations/Expressions/Rage.blockyanim",
+            "Speed": 1,
+            "BlendingDuration": 0
+          },
+          "CastPushCharging": {
+            "ThirdPerson": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Push_Charged/Cast_Push_Charging.blockyanim",
+            "ThirdPersonMoving": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Push_Charged/Cast_Push_Charging_Moving.blockyanim",
+            "FirstPerson": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Push_Charged/Cast_Push_Charging_FPS.blockyanim",
+            "ThirdPersonFace": "Characters/Animations/Expressions/Frown.blockyanim",
+            "Speed": 1
+          },
+          "CastPushCharged": {
+            "ThirdPerson": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Push_Charged/Cast_Push_Charged.blockyanim",
+            "ThirdPersonMoving": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Push_Charged/Cast_Push_Charged_Moving.blockyanim",
+            "FirstPerson": "Characters/Animations/Items/Dual_Handed/Spellbook/Attacks/Cast_Push_Charged/Cast_Push_Charged_FPS.blockyanim",
+            "ThirdPersonFace": "Characters/Animations/Expressions/Rage.blockyanim",
+            "Speed": 1,
+            "BlendingDuration": 0
+          }
+        },
+        "WiggleWeights": {
+          "Pitch": 3,
+          "PitchDeceleration": 0.1,
+          "Roll": 0.1,
+          "RollDeceleration": 0.1,
+          "X": 3,
+          "XDeceleration": 0.1,
+          "Y": 0.1,
+          "YDeceleration": 0.1,
+          "Z": 0.1,
+          "ZDeceleration": 0.1
+        }
+      }
+    },
+    {
+      "path": "Server/Particles/Deployables/Healing_Totem/Totem_Heal_AoE.particlesystem",
+      "sha256": "DA1EF17AC94518DD0CA9CFD1C4E79063DB9728CF9C9C492C9DD3D8513ED45B0A",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Totem_Heal_StartLine",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false
+          },
+          {
+            "SpawnerId": "Totem_Heal_SmokeFlat",
+            "PositionOffset": {
+              "Y": 0.1,
+              "X": 0
+            }
+          },
+          {
+            "SpawnerId": "Totem_Heal_GlowStart",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0,
+              "Y": 0.1
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.5
+          },
+          {
+            "SpawnerId": "Totem_Heal_SparksStart",
+            "PositionOffset": {
+              "Y": 0.5
+            }
+          },
+          {
+            "SpawnerId": "Totem_Heal_BeamStart2",
+            "PositionOffset": {
+              "Y": 4
+            },
+            "RotationOffset": {
+              "Roll": 90,
+              "Yaw": 90
+            }
+          },
+          {
+            "SpawnerId": "Totem_Heal_BeamStart",
+            "StartDelay": 0.3,
+            "PositionOffset": {
+              "Y": 2
+            },
+            "RotationOffset": {
+              "Roll": 90,
+              "Pitch": 0,
+              "Yaw": 90
+            }
+          },
+          {
+            "SpawnerId": "Totem_Heal_GroundSpawn",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.5
+          },
+          {
+            "SpawnerId": "Totem_Heal_AGroundSpawn2",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.7
+          },
+          {
+            "SpawnerId": "Totem_Heal_Ground_Line",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.7
+          },
+          {
+            "SpawnerId": "Totem_Heal_Uhr",
+            "PositionOffset": {
+              "Y": 0.1
+            },
+            "StartDelay": 0.3
+          },
+          {
+            "SpawnerId": "Totem_Heal_Ground_Constant",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0
+          },
+          {
+            "SpawnerId": "Totem_Heal_Lines_Constant",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.7
+          },
+          {
+            "SpawnerId": "Totem_Heal_Ground_Constant2",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0
+            },
+            "StartDelay": 0
+          },
+          {
+            "SpawnerId": "Totem_Heal_Sparks_Constant",
+            "PositionOffset": {
+              "Y": 0.5
+            },
+            "StartDelay": 0
+          },
+          {
+            "SpawnerId": "Totem_Heal_Extra_Smoke",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0,
+              "Y": 0.3
+            },
+            "StartDelay": 0.2
+          },
+          {
+            "SpawnerId": "Totem_Heal_Extra_Smoke_Dense",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0,
+              "Y": 0.5
+            },
+            "StartDelay": 0.2
+          },
+          {
+            "SpawnerId": "Totem_Heal_Extra_Sparks",
+            "StartDelay": 0.2,
+            "PositionOffset": {
+              "Y": 0.2
+            }
+          }
+        ],
+        "CullDistance": 100,
+        "$Comment": "spawn of the effect"
+      }
+    },
+    {
+      "path": "Server/Particles/Deployables/Healing_Totem/Totem_Heal_Extra.particlesystem",
+      "sha256": "28BDDD6E4173B3C77108ABA8D150A406ECA9EA510C256FFAF8A79BEBD9EA0F80",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Totem_Heal_Extra_Smoke",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0,
+              "Y": 0.3
+            },
+            "StartDelay": 0
+          },
+          {
+            "SpawnerId": "Totem_Heal_Extra_Smoke_Dense",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0,
+              "Y": 0.5
+            },
+            "StartDelay": 0
+          },
+          {
+            "SpawnerId": "Totem_Heal_Extra_Sparks",
+            "StartDelay": 0,
+            "PositionOffset": {
+              "Y": 0.2
+            }
+          }
+        ],
+        "CullDistance": 100,
+        "LifeSpan": 9,
+        "$Comment": "spawn of the effect"
+      }
+    },
+    {
+      "path": "Server/Particles/Status_Effect/Crown_Gold/Crown_Gold_Glow_Center.particlespawner",
+      "sha256": "C02A49B98B2521827717B74C17D0B77CBAD4048F6C44064AD97E94C514F21471",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "RenderMode": "Erosion",
+        "EmitOffset": {
+          "X": {
+            "Min": 0,
+            "Max": 0
+          },
+          "Y": {
+            "Min": 0
+          },
+          "Z": {
+            "Min": 0,
+            "Max": 0
+          }
+        },
+        "ParticleRotationInfluence": "Billboard",
+        "LinearFiltering": true,
+        "LightInfluence": 0,
+        "ParticleRotateWithSpawner": true,
+        "MaxConcurrentParticles": 2,
+        "ParticleLifeSpan": {
+          "Min": 3,
+          "Max": 3
+        },
+        "TotalParticles": {
+          "Min": -2,
+          "Max": -2
+        },
+        "InitialVelocity": {},
+        "Particle": {
+          "Texture": "Particles/Textures/Basic/Ball5.png",
+          "ScaleRatioConstraint": "OneToOne",
+          "UVOption": "RandomFlipU",
+          "Animation": {
+            "0": {
+              "FrameIndex": {
+                "Min": 0,
+                "Max": 0
+              },
+              "Opacity": 0.2,
+              "Scale": {
+                "X": {
+                  "Min": 1,
+                  "Max": 1
+                },
+                "Y": {
+                  "Min": 1,
+                  "Max": 1
+                }
+              },
+              "Rotation": {
+                "X": {
+                  "Min": 0,
+                  "Max": 0
+                },
+                "Y": {
+                  "Min": 0,
+                  "Max": 0
+                },
+                "Z": {
+                  "Min": 0,
+                  "Max": 0
+                }
+              },
+              "Color": "#ffffff"
+            },
+            "50": {
+              "Scale": {
+                "X": {
+                  "Min": 1.2,
+                  "Max": 1.3
+                },
+                "Y": {
+                  "Min": 1.2,
+                  "Max": 1.3
+                }
+              },
+              "Opacity": 0.7,
+              "Color": "#ffe88c"
+            },
+            "100": {
+              "Opacity": 0,
+              "Scale": {
+                "X": {
+                  "Min": 1,
+                  "Max": 1
+                },
+                "Y": {
+                  "Min": 1,
+                  "Max": 1
+                }
+              },
+              "Rotation": {
+                "Z": {
+                  "Min": 180,
+                  "Max": 360
+                }
+              }
+            }
+          },
+          "InitialAnimationFrame": {
+            "Rotation": {
+              "X": {
+                "Min": 0,
+                "Max": 0
+              },
+              "Y": {
+                "Min": 0,
+                "Max": 0
+              },
+              "Z": {
+                "Min": 0,
+                "Max": 90
+              }
+            },
+            "Opacity": 0.8,
+            "FrameIndex": {
+              "Min": 0,
+              "Max": 0
+            },
+            "Scale": {
+              "X": {
+                "Min": 0.25,
+                "Max": 0.25
+              }
+            }
+          },
+          "SoftParticles": "Enable"
+        },
+        "SpawnRate": {
+          "Min": 1.25,
+          "Max": 1.25
+        },
+        "TrailSpawnerPositionMultiplier": 0,
+        "TrailSpawnerRotationMultiplier": 0,
+        "UVMotion": {
+          "Texture": "Particles/Textures/UVMotion/FlowMap.png",
+          "Strength": 1,
+          "Scale": 1
+        },
+        "CameraOffset": 0.4
+      }
+    },
+    {
+      "path": "Server/Particles/Status_Effect/Crown_Gold/Effect_Crown_Gold.particlesystem",
+      "sha256": "569CD0B14976D7CE87FAACCE6D1A30D0E6E4AA80F8BA56BFBA11C973D16F7091",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Crown_Gold_Rays",
+            "PositionOffset": {
+              "Y": 3,
+              "Z": -0.15
+            },
+            "FixedRotation": true,
+            "StartDelay": 0.15
+          },
+          {
+            "SpawnerId": "Crown_Gold_Ray_Gradient",
+            "PositionOffset": {
+              "Y": 2.5,
+              "Z": -0.15
+            },
+            "FixedRotation": true,
+            "StartDelay": 0.15
+          },
+          {
+            "SpawnerId": "Crown_Gold_Rays_Sparks",
+            "StartDelay": 0.18,
+            "PositionOffset": {
+              "Y": 2
+            }
+          },
+          {
+            "SpawnerId": "Crown_Gold_Glow",
+            "PositionOffset": {
+              "Y": 0.5,
+              "Z": -0.25
+            }
+          },
+          {
+            "SpawnerId": "Crown_Gold_Glow_Center",
+            "PositionOffset": {
+              "Y": 0.5,
+              "Z": -0.25
+            },
+            "StartDelay": 0.05
+          },
+          {
+            "SpawnerId": "Crown_Gold_Glow_Center",
+            "StartDelay": 1.5,
+            "PositionOffset": {
+              "Y": 0.5,
+              "Z": -0.25
+            }
+          },
+          {
+            "SpawnerId": "Crown_Gold_Sparks",
+            "PositionOffset": {
+              "Y": 0.4,
+              "Z": -0.25
+            },
+            "StartDelay": 0.4
+          },
+          {
+            "SpawnerId": "Crown_Gold_Sparks_Stars",
+            "StartDelay": 0.4,
+            "PositionOffset": {
+              "Y": 0.4,
+              "Z": -0.25
+            }
+          },
+          {
+            "SpawnerId": "Crown_Gold_Flash",
+            "StartDelay": 0.4,
+            "PositionOffset": {
+              "Y": 0.5,
+              "Z": -0.25
+            }
+          },
+          {
+            "SpawnerId": "Crown_Gold_Flash_Sparks",
+            "PositionOffset": {
+              "Y": 0.4,
+              "Z": -0.25
+            },
+            "StartDelay": 0.56
+          }
+        ]
+      }
+    },
+    {
+      "path": "Server/Particles/Status_Effect/Heal/Aura_Heal.particlesystem",
+      "sha256": "784507C4D4B9CF5D4FD6EC8EAF75DEF151F5309844D5C14EE5417FA728C61CBF",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Aura_Heal",
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "path": "Server/Particles/Status_Effect/Heal/Effect_Heal.particlesystem",
+      "sha256": "62E97A70EA333201CF41A54FBCD17150B3D3EB9E8F81A176FEA91F8E72ABDD15",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Heal2",
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          },
+          {
+            "SpawnerId": "Heal_Rays",
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "path": "Server/Particles/Status_Effect/Heal/Spawners/Aura_Heal.particlespawner",
+      "sha256": "9396EFAC0BE50E3CD1FD3E6F64A820AFBCD65CA384A8FA6EBB4519B30D65B76B",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "RenderMode": "BlendLinear",
+        "EmitOffset": {
+          "X": {
+            "Min": 0,
+            "Max": 1
+          },
+          "Y": {
+            "Min": 0,
+            "Max": 0
+          },
+          "Z": {
+            "Min": 0,
+            "Max": 1
+          }
+        },
+        "ParticleRotationInfluence": "Billboard",
+        "LinearFiltering": true,
+        "LightInfluence": 0,
+        "MaxConcurrentParticles": 150,
+        "ParticleLifeSpan": {
+          "Min": 1.6666666666666667,
+          "Max": 3.3333333333333335
+        },
+        "ParticleRotateWithSpawner": false,
+        "TrailSpawnerPositionMultiplier": 1,
+        "TrailSpawnerRotationMultiplier": 1,
+        "SpawnRate": {
+          "Min": 6,
+          "Max": 6
+        },
+        "TotalParticles": {
+          "Min": -1,
+          "Max": -1
+        },
+        "InitialVelocity": {
+          "Speed": {
+            "Min": 1.7999999999999998,
+            "Max": 1.7999999999999998
+          },
+          "Pitch": {
+            "Min": 120,
+            "Max": 120
+          },
+          "Yaw": {
+            "Min": 70,
+            "Max": 110
+          }
+        },
+        "Attractors": [
+          {
+            "Position": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            },
+            "RadialAxis": {
+              "X": 0,
+              "Y": 1,
+              "Z": 0
+            },
+            "Radius": 0,
+            "RadialAcceleration": -13.68,
+            "RadialTangentAcceleration": 0.324
+          },
+          {
+            "Position": {
+              "X": 0,
+              "Y": 0.8,
+              "Z": 0
+            },
+            "RadialAxis": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            },
+            "Radius": 0,
+            "RadialAcceleration": -2.88,
+            "RadialTangentAcceleration": 0.28800000000000003
+          }
+        ],
+        "Particle": {
+          "Texture": "Particles/Textures/Basic/Ball3.png",
+          "FrameSize": {
+            "Width": 32,
+            "Height": 32
+          },
+          "ScaleRatioConstraint": "OneToOne",
+          "Animation": {
+            "0": {
+              "Scale": {
+                "X": {
+                  "Min": 1,
+                  "Max": 1
+                },
+                "Y": {
+                  "Min": 1,
+                  "Max": 1
+                }
+              },
+              "Rotation": {
+                "X": {
+                  "Min": 0,
+                  "Max": 0
+                },
+                "Y": {
+                  "Min": 0,
+                  "Max": 0
+                },
+                "Z": {
+                  "Min": 0,
+                  "Max": 0
+                }
+              },
+              "Opacity": 0
+            },
+            "10": {
+              "Opacity": 1
+            },
+            "90": {
+              "Opacity": 1
+            },
+            "100": {
+              "Opacity": 0
+            }
+          },
+          "InitialAnimationFrame": {
+            "Rotation": {
+              "X": {
+                "Min": 0,
+                "Max": 360
+              },
+              "Y": {
+                "Min": 0,
+                "Max": 0
+              },
+              "Z": {
+                "Min": 0,
+                "Max": 360
+              }
+            },
+            "Scale": {
+              "X": {
+                "Min": 0.1,
+                "Max": 0.5
+              },
+              "Y": {
+                "Min": 0.1,
+                "Max": 0.5
+              }
+            },
+            "Opacity": 1,
+            "Color": "#96f9ff"
+          }
+        }
+      }
+    },
+    {
+      "path": "Server/Particles/_Example/Example_Shield.particlesystem",
+      "sha256": "2512E36F7EDE15A85055686A503820A3F43140388383FDBC0050812DD458DA77",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Example_Shield"
+          }
+        ],
+        "IsImportant": false
+      }
+    },
+    {
+      "path": "Server/Particles/_Example/Spawners/Example_Shield.particlespawner",
+      "sha256": "7E5A91F3EF6EA40937B196B7176EF310DBA948E1C58FD2D958C27BB9E3093D9D",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "RenderMode": "Erosion",
+        "EmitOffset": {
+          "X": {
+            "Min": 1,
+            "Max": 1
+          },
+          "Y": {
+            "Min": 1,
+            "Max": 1
+          },
+          "Z": {
+            "Min": 1,
+            "Max": 1
+          }
+        },
+        "ParticleRotationInfluence": "Billboard",
+        "LinearFiltering": true,
+        "LightInfluence": 0,
+        "MaxConcurrentParticles": 200,
+        "ParticleLifeSpan": {
+          "Min": 1,
+          "Max": 2
+        },
+        "ParticleRotateWithSpawner": false,
+        "TrailSpawnerPositionMultiplier": 1,
+        "TrailSpawnerRotationMultiplier": 1,
+        "SpawnRate": {
+          "Min": 200,
+          "Max": 300
+        },
+        "Attractors": [
+          {
+            "DampingMultiplier": {
+              "X": 0.3,
+              "Y": 0.3,
+              "Z": 0.3
+            }
+          }
+        ],
+        "Particle": {
+          "Texture": "Particles/Textures/Basic/Glow_Direction.png",
+          "ScaleRatioConstraint": "OneToOne",
+          "UVOption": "RandomFlipU",
+          "Animation": {
+            "0": {
+              "FrameIndex": {
+                "Min": 0,
+                "Max": 0
+              },
+              "Opacity": 0,
+              "Scale": {
+                "X": {
+                  "Min": 1,
+                  "Max": 1
+                },
+                "Y": {
+                  "Min": 1,
+                  "Max": 1
+                }
+              },
+              "Color": "#dbfeff"
+            },
+            "10": {
+              "Opacity": 1,
+              "Color": "#69ffe7"
+            },
+            "100": {
+              "Opacity": 0,
+              "Scale": {
+                "X": {
+                  "Min": 1,
+                  "Max": 3
+                },
+                "Y": {
+                  "Min": 1,
+                  "Max": 3
+                }
+              },
+              "Color": "#5142ff"
+            }
+          },
+          "InitialAnimationFrame": {
+            "Scale": {
+              "X": {
+                "Min": 0.1,
+                "Max": 0.15
+              },
+              "Y": {
+                "Min": 0.1,
+                "Max": 0.1
+              }
+            },
+            "Opacity": 1,
+            "FrameIndex": {
+              "Min": 0,
+              "Max": 0
+            },
+            "Rotation": {
+              "Z": {
+                "Min": 0,
+                "Max": 180
+              }
+            }
+          }
+        },
+        "InitialVelocity": {
+          "Speed": {
+            "Min": 1,
+            "Max": 2
+          }
+        }
+      }
+    },
+    {
+      "path": "Server/Particles/_Test/HealBeams/BeamEmiter_Heal_Green.particlesystem",
+      "sha256": "5EEF44D9AD0805DDB2E02C90F00A35914528F3FD18D1363E5567EE21CB1D4BF5",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "BeamEmiter_Heal_Green_Center",
+            "PositionOffset": {
+              "Y": 0.1
+            },
+            "LifeSpan": {
+              "Min": 0.1,
+              "Max": 0.2
+            }
+          },
+          {
+            "SpawnerId": "BeamEmiter_Heal_Green_Glow",
+            "FixedRotation": false,
+            "PositionOffset": {
+              "Y": 0.1
+            },
+            "LifeSpan": {
+              "Min": 0.1,
+              "Max": 0.2
+            }
+          },
+          {
+            "SpawnerId": "BeamEmiter_Heal_Green_GlowOutside",
+            "PositionOffset": {
+              "Y": 0.1
+            },
+            "LifeSpan": {
+              "Min": 0.1,
+              "Max": 0.2
+            }
+          },
+          {
+            "SpawnerId": "BeamEmiter_Heal_Green_Rings",
+            "RotationOffset": {
+              "Pitch": 90
+            },
+            "PositionOffset": {
+              "Y": 0.1
+            },
+            "LifeSpan": {
+              "Min": 0.1,
+              "Max": 0.2
+            }
+          },
+          {
+            "SpawnerId": "BeamEmiter_Heal_Green_RingsCenter",
+            "PositionOffset": {
+              "Y": 0.1
+            },
+            "RotationOffset": {
+              "Pitch": 90
+            },
+            "LifeSpan": {
+              "Min": 0.1,
+              "Max": 0.2
+            }
+          },
+          {
+            "SpawnerId": "BeamEmiter_Heal_Green_Spiral",
+            "PositionOffset": {
+              "Y": -1
+            },
+            "RotationOffset": {
+              "Pitch": 90
+            },
+            "LifeSpan": {
+              "Min": 0.1,
+              "Max": 0.2
+            }
+          },
+          {
+            "SpawnerId": "BeamEmiter_Heal_Green_Sparks",
+            "RotationOffset": {
+              "Pitch": 90
+            },
+            "PositionOffset": {
+              "Y": -1
+            },
+            "LifeSpan": {
+              "Min": 0.1,
+              "Max": 0.2
+            }
+          },
+          {
+            "SpawnerId": "BeamEmiter_Heal_Green_Plus",
+            "RotationOffset": {
+              "Pitch": 90
+            },
+            "PositionOffset": {
+              "Y": -1
+            },
+            "LifeSpan": {
+              "Min": 0.1,
+              "Max": 0.2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "path": "Server/Particles/_Test/HealBeams/Beam_Heal_Green.particlesystem",
+      "sha256": "437CBB2A5DDD9B2E2624012D55676E81E593E5F6CA3D8C3F6D35B50FB6777D6A",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Beam_Heal_Green3_Sparks",
+            "FixedRotation": false
+          },
+          {
+            "SpawnerId": "Beam_Heal_Green3_Plus"
+          }
+        ],
+        "CullDistance": 30,
+        "IsImportant": true,
+        "LifeSpan": 0.1
+      }
+    },
+    {
+      "path": "Server/Particles/_Test/HealBeams/Beam_Heal_Green2.particlesystem",
+      "sha256": "F9DB4149F5EC5468A55F8CF6F4666FF3EA7199DBDFADF2BA901A06E4D1954CD0",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Beam_Heal_Green2_Sparks",
+            "FixedRotation": false
+          },
+          {
+            "SpawnerId": "Beam_Heal_Green2_Glow",
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 6,
+                "Max": 6
+              }
+            },
+            "MaxConcurrent": 5,
+            "TotalSpawners": -1,
+            "SpawnRate": {
+              "Min": 3,
+              "Max": 3
+            }
+          },
+          {
+            "SpawnerId": "Beam_Heal_Green2_Plus",
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 6,
+                "Max": 6
+              }
+            },
+            "MaxConcurrent": 5,
+            "TotalSpawners": -1,
+            "SpawnRate": {
+              "Min": 3,
+              "Max": 3
+            }
+          }
+        ],
+        "CullDistance": 30,
+        "IsImportant": true
+      }
+    },
+    {
+      "path": "Server/Particles/_Test/HealBeams/Spawners/Beam_Heal_Green.particlespawner",
+      "sha256": "1B0575C9922668405E8DEF5372C280864DC278936061516ECD368B4DDEE0A5CD",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "RenderMode": "Erosion",
+        "EmitOffset": {
+          "X": {
+            "Max": 0.5
+          },
+          "Z": {
+            "Max": 0.5
+          }
+        },
+        "ParticleRotationInfluence": "Billboard",
+        "MaxConcurrentParticles": 500,
+        "ParticleLifeSpan": {
+          "Min": 0.15,
+          "Max": 0.1
+        },
+        "ParticleRotateWithSpawner": true,
+        "SpawnRate": {
+          "Min": 100,
+          "Max": 200
+        },
+        "Attractors": [
+          {
+            "Position": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            },
+            "Radius": 0,
+            "RadialAcceleration": -5,
+            "DampingMultiplier": {
+              "X": 0.85,
+              "Y": 0.85,
+              "Z": 0.85
+            },
+            "RadialTangentAcceleration": 2
+          }
+        ],
+        "Particle": {
+          "Texture": "Particles/Textures/Basic/Ball3.png",
+          "FrameSize": {
+            "Width": 32,
+            "Height": 32
+          },
+          "ScaleRatioConstraint": "OneToOne",
+          "UVOption": "RandomFlipU",
+          "Animation": {
+            "0": {
+              "Opacity": 0,
+              "Color": "#ffdf52",
+              "Scale": {
+                "X": {
+                  "Min": 1,
+                  "Max": 1
+                },
+                "Y": {
+                  "Min": 1,
+                  "Max": 1
+                }
+              }
+            },
+            "20": {
+              "Opacity": 0.965,
+              "Color": "#79ff00"
+            },
+            "80": {
+              "Color": "#fff041",
+              "Opacity": 1
+            },
+            "100": {
+              "Color": "#298e1a",
+              "Opacity": 0
+            }
+          },
+          "InitialAnimationFrame": {
+            "Scale": {
+              "X": {
+                "Min": 0.1,
+                "Max": 0.15
+              }
+            },
+            "Opacity": 0.5,
+            "Color": "#ffffff",
+            "Rotation": {
+              "X": {
+                "Max": 180
+              },
+              "Y": {
+                "Max": 180
+              },
+              "Z": {
+                "Max": 180
+              }
+            }
+          }
+        },
+        "LinearFiltering": true,
+        "UseEmitDirection": false,
+        "SpawnBurst": false,
+        "Shape": "Cube",
+        "TrailSpawnerPositionMultiplier": 1
+      }
+    },
+    {
+      "path": "Server/Particles/_Test/HealBeams/Spawners/Beam_Heal_Green2.particlespawner",
+      "sha256": "EDA96164CC1AB265A84378F84BC5473DD37E5976F92DFEFD3A9106F0AAF6745D",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "RenderMode": "BlendAdd",
+        "ParticleRotationInfluence": "Billboard",
+        "MaxConcurrentParticles": 1,
+        "ParticleLifeSpan": {
+          "Min": 0.3,
+          "Max": 0.3
+        },
+        "SpawnRate": {
+          "Min": 1,
+          "Max": 1
+        },
+        "LinearFiltering": true,
+        "Particle": {
+          "ScaleRatioConstraint": "OneToOne",
+          "Animation": {
+            "0": {
+              "Opacity": 1,
+              "Color": "#72ff1f",
+              "Rotation": {
+                "X": {
+                  "Min": 0,
+                  "Max": 0
+                },
+                "Y": {
+                  "Min": 0,
+                  "Max": 0
+                },
+                "Z": {
+                  "Min": 0,
+                  "Max": 0
+                }
+              },
+              "Scale": {
+                "X": {
+                  "Min": 0.3,
+                  "Max": 0.3
+                }
+              }
+            },
+            "40": {
+              "Opacity": 1
+            },
+            "75": {
+              "Opacity": 0.8
+            },
+            "100": {
+              "Opacity": 0,
+              "Color": "#0f7000",
+              "Scale": {
+                "X": {
+                  "Min": 1,
+                  "Max": 1
+                }
+              }
+            }
+          },
+          "InitialAnimationFrame": {
+            "Scale": {
+              "X": {
+                "Min": 0.3,
+                "Max": 0.3
+              }
+            },
+            "Opacity": 1
+          },
+          "Texture": "Particles/Textures/Circles/Circle_Glow.png",
+          "FrameSize": {
+            "Height": 0
+          }
+        },
+        "SpawnBurst": true,
+        "ParticleRotateWithSpawner": true,
+        "WaveDelay": {
+          "Min": 0.3,
+          "Max": 0.5
+        }
+      }
+    },
+    {
+      "path": "Server/Particles/_Test/HealTotem/Totem_Heal_AoE.particlesystem",
+      "sha256": "DA1EF17AC94518DD0CA9CFD1C4E79063DB9728CF9C9C492C9DD3D8513ED45B0A",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Totem_Heal_StartLine",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false
+          },
+          {
+            "SpawnerId": "Totem_Heal_SmokeFlat",
+            "PositionOffset": {
+              "Y": 0.1,
+              "X": 0
+            }
+          },
+          {
+            "SpawnerId": "Totem_Heal_GlowStart",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0,
+              "Y": 0.1
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.5
+          },
+          {
+            "SpawnerId": "Totem_Heal_SparksStart",
+            "PositionOffset": {
+              "Y": 0.5
+            }
+          },
+          {
+            "SpawnerId": "Totem_Heal_BeamStart2",
+            "PositionOffset": {
+              "Y": 4
+            },
+            "RotationOffset": {
+              "Roll": 90,
+              "Yaw": 90
+            }
+          },
+          {
+            "SpawnerId": "Totem_Heal_BeamStart",
+            "StartDelay": 0.3,
+            "PositionOffset": {
+              "Y": 2
+            },
+            "RotationOffset": {
+              "Roll": 90,
+              "Pitch": 0,
+              "Yaw": 90
+            }
+          },
+          {
+            "SpawnerId": "Totem_Heal_GroundSpawn",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.5
+          },
+          {
+            "SpawnerId": "Totem_Heal_AGroundSpawn2",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.7
+          },
+          {
+            "SpawnerId": "Totem_Heal_Ground_Line",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.7
+          },
+          {
+            "SpawnerId": "Totem_Heal_Uhr",
+            "PositionOffset": {
+              "Y": 0.1
+            },
+            "StartDelay": 0.3
+          },
+          {
+            "SpawnerId": "Totem_Heal_Ground_Constant",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0
+          },
+          {
+            "SpawnerId": "Totem_Heal_Lines_Constant",
+            "PositionOffset": {
+              "Z": 0
+            },
+            "FixedRotation": false,
+            "StartDelay": 0.7
+          },
+          {
+            "SpawnerId": "Totem_Heal_Ground_Constant2",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0
+            },
+            "StartDelay": 0
+          },
+          {
+            "SpawnerId": "Totem_Heal_Sparks_Constant",
+            "PositionOffset": {
+              "Y": 0.5
+            },
+            "StartDelay": 0
+          },
+          {
+            "SpawnerId": "Totem_Heal_Extra_Smoke",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0,
+              "Y": 0.3
+            },
+            "StartDelay": 0.2
+          },
+          {
+            "SpawnerId": "Totem_Heal_Extra_Smoke_Dense",
+            "PositionOffset": {
+              "X": 0,
+              "Z": 0,
+              "Y": 0.5
+            },
+            "StartDelay": 0.2
+          },
+          {
+            "SpawnerId": "Totem_Heal_Extra_Sparks",
+            "StartDelay": 0.2,
+            "PositionOffset": {
+              "Y": 0.2
+            }
+          }
+        ],
+        "CullDistance": 100,
+        "$Comment": "spawn of the effect"
+      }
+    },
+    {
+      "path": "Server/Particles/_Test/NatureRnD/NatureBeam.particlesystem",
+      "sha256": "02284D3A0AF15FE53EF8F849EA0DB5A56F9B6C76D281AB245A40A7B5084A7128",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "NatureBeam_Core"
+          },
+          {
+            "SpawnerId": "NatureBeam_End",
+            "PositionOffset": {
+              "Z": -2
+            }
+          },
+          {
+            "SpawnerId": "NatureBeam_Beam"
+          },
+          {
+            "SpawnerId": "NatureBeam_Sparks",
+            "FixedRotation": false
+          },
+          {
+            "SpawnerId": "NatureBeam_Beam_Overlay"
+          },
+          {
+            "SpawnerId": "NatureBeam_Start2",
+            "PositionOffset": {
+              "Z": 2.2
+            }
+          },
+          {
+            "SpawnerId": "NatureBeam_Start",
+            "PositionOffset": {
+              "Z": 2
+            }
+          },
+          {
+            "SpawnerId": "NatureBeam_Glow_Start",
+            "PositionOffset": {
+              "Z": 2
+            }
+          }
+        ],
+        "CullDistance": 100,
+        "IsImportant": false
+      }
+    },
+    {
+      "path": "Server/Particles/_Test/Sticks/Nature_Buff.particlesystem",
+      "sha256": "BF8F7864E4337568F2D86EC995D26728551A6CC05F0A1B7F96828F02B9C2F569",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Nature_Buff_Source2",
+            "Attractors": [
+              {
+                "LinearAcceleration": {
+                  "Y": -2
+                }
+              }
+            ],
+            "InitialVelocity": {
+              "Pitch": {
+                "Min": 90,
+                "Max": 90
+              },
+              "Speed": {
+                "Min": 0.55,
+                "Max": 0.55
+              }
+            },
+            "LifeSpan": {
+              "Min": 1,
+              "Max": 1
+            },
+            "PositionOffset": {
+              "Y": 1
+            }
+          },
+          {
+            "SpawnerId": "Nature_Buff_SourceGlow",
+            "Attractors": [
+              {
+                "LinearAcceleration": {
+                  "Y": -2
+                }
+              }
+            ],
+            "InitialVelocity": {
+              "Pitch": {
+                "Min": 90,
+                "Max": 90
+              },
+              "Speed": {
+                "Min": 0.55,
+                "Max": 0.55
+              }
+            },
+            "PositionOffset": {
+              "Y": 1
+            },
+            "LifeSpan": {
+              "Min": 0.9,
+              "Max": 0.9
+            }
+          },
+          {
+            "SpawnerId": "Nature_Buff_Source3",
+            "Attractors": [
+              {
+                "LinearAcceleration": {
+                  "Y": -2
+                }
+              }
+            ],
+            "InitialVelocity": {
+              "Pitch": {
+                "Min": 90,
+                "Max": 90
+              },
+              "Speed": {
+                "Min": 0.55,
+                "Max": 0.55
+              }
+            },
+            "PositionOffset": {
+              "Y": 1
+            },
+            "LifeSpan": {
+              "Min": 1,
+              "Max": 1
+            }
+          },
+          {
+            "SpawnerId": "Nature_Buff_SparksSource",
+            "Attractors": [
+              {
+                "LinearAcceleration": {
+                  "Y": -2
+                }
+              }
+            ],
+            "InitialVelocity": {
+              "Pitch": {
+                "Min": 90,
+                "Max": 90
+              },
+              "Speed": {
+                "Min": 0.55,
+                "Max": 0.55
+              }
+            },
+            "LifeSpan": {
+              "Min": 1,
+              "Max": 1
+            },
+            "PositionOffset": {
+              "Y": 1
+            }
+          },
+          {
+            "SpawnerId": "Nature_Buff_Shockwave",
+            "PositionOffset": {
+              "Y": -0.3
+            },
+            "StartDelay": 1.2
+          },
+          {
+            "SpawnerId": "Nature_Buff_Mist",
+            "StartDelay": 1.2,
+            "PositionOffset": {
+              "Y": -0.5
+            },
+            "LifeSpan": {
+              "Min": 4,
+              "Max": 4
+            }
+          },
+          {
+            "SpawnerId": "Nature_Buff_LeavesUp",
+            "PositionOffset": {
+              "Y": -2
+            },
+            "StartDelay": 1.2,
+            "LifeSpan": {
+              "Min": 3,
+              "Max": 3
+            }
+          },
+          {
+            "SpawnerId": "Nature_Buff_SparksUp",
+            "PositionOffset": {
+              "Y": -2
+            },
+            "StartDelay": 1.2,
+            "LifeSpan": {
+              "Min": 3,
+              "Max": 3
+            }
+          }
+        ],
+        "CullDistance": 30,
+        "IsImportant": false
+      }
+    },
+    {
+      "path": "Server/Particles/_Test/Sticks/Nature_Buff_Spawn.particlesystem",
+      "sha256": "D5E0E7750E3DBF76AA647CA80CCC1D66FB90BB055E883348767D4B80F56C6CBF",
+      "state": "VERIFIED_ASSET",
+      "content": {
+        "Spawners": [
+          {
+            "SpawnerId": "Nature_Buff_Source2",
+            "PositionOffset": {
+              "Y": 1
+            },
+            "LifeSpan": {
+              "Min": 1.2,
+              "Max": 1.2
+            },
+            "StartDelay": 0.5
+          },
+          {
+            "SpawnerId": "Nature_Buff_SparksSource",
+            "PositionOffset": {
+              "Y": 1
+            },
+            "LifeSpan": {
+              "Min": 1.2,
+              "Max": 1.2
+            },
+            "StartDelay": 0.5
+          },
+          {
+            "SpawnerId": "Nature_Buff_Spawn1",
+            "PositionOffset": {
+              "Y": 1
+            },
+            "StartDelay": 1.5
+          },
+          {
+            "SpawnerId": "Nature_Buff_Spawn2",
+            "PositionOffset": {
+              "Y": 1
+            },
+            "StartDelay": 1.5
+          }
+        ],
+        "CullDistance": 30,
+        "IsImportant": false
+      }
+    }
+  ],
+  "assetsZipSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "damagePaths": [
+    "Server/Camera/CameraEffect/Damage/Damage.json",
+    "Server/Camera/CameraEffect/Damage/Damage_Fall.json",
+    "Server/Camera/CameraShake/Damage/Damage.json",
+    "Server/Camera/CameraShake/Damage/Damage_Fall.json",
+    "Server/Entity/Damage/Bludgeoning.json",
+    "Server/Entity/Damage/Command.json",
+    "Server/Entity/Damage/Crush.json",
+    "Server/Entity/Damage/Drowning.json",
+    "Server/Entity/Damage/Earth.json",
+    "Server/Entity/Damage/Elemental.json",
+    "Server/Entity/Damage/Environment.json",
+    "Server/Entity/Damage/Environmental.json",
+    "Server/Entity/Damage/Fall.json",
+    "Server/Entity/Damage/Fire.json",
+    "Server/Entity/Damage/Ice.json",
+    "Server/Entity/Damage/Lightning.json",
+    "Server/Entity/Damage/OutOfWorld.json",
+    "Server/Entity/Damage/Physical.json",
+    "Server/Entity/Damage/Poison.json",
+    "Server/Entity/Damage/Projectile.json",
+    "Server/Entity/Damage/Slashing.json",
+    "Server/Entity/Damage/Suffocation.json",
+    "Server/Entity/Damage/Water.json",
+    "Server/Entity/Damage/Wind.json",
+    "Server/Entity/Effects/Damage/Red_Flash.json",
+    "Server/Entity/Effects/Tests/Damage.json",
+    "Server/Entity/Effects/Tests/Damage_High.json"
+  ],
+  "note": "VERIFIED_ASSET proves installed asset presence/contents only, not connected rendering. SHA256 per asset is UTF-8 source text. Healing_Totem_Heal contains no particle references; its Health mutation is not reused. No live deployment."
+}

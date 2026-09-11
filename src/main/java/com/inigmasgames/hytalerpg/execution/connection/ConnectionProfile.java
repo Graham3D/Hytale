@@ -7,7 +7,7 @@ public record ConnectionProfile(Kind kind,double range,double width,double heigh
     // Swept contact samples are not damage pulses. Keep both work classes explicitly finite.
     public static final int MAX_ORBIT_SAMPLES=512;
     public static final int MAX_DAMAGE_PULSES=256;
-    public enum Kind { WAVE,BEAM,ORB,LINE,TETHER,CHAIN,ORBIT,DRAIN }
+    public enum Kind { WAVE,BEAM,ORB,LINE,TETHER,CHAIN,ORBIT,DRAIN,HEAL_TETHER }
     public record Details(double jumpRadius,java.util.List<Double> jumpCoefficients,int bladeCount,double degreesPerSecond,
                           double contactCooldown,double healFraction,String status,double statusSeconds) {
         public static final Details NONE=new Details(0,java.util.List.of(),0,0,0,0,"",0);
@@ -24,16 +24,17 @@ public record ConnectionProfile(Kind kind,double range,double width,double heigh
         for(double value:new double[]{range,width,height,depth,speed,lifetimeSeconds,intervalSeconds,coefficient,upkeepPerSecond,radius,originHeight})
             if(!Double.isFinite(value)||value<0)throw new IllegalArgumentException("Invalid connection magnitude/time/geometry");
         details=details==null?Details.NONE:details;
-        boolean ticking=kind==Kind.BEAM||kind==Kind.ORB||kind==Kind.CHAIN||kind==Kind.ORBIT||kind==Kind.DRAIN;
-        if(range<=0||height<=0||lifetimeSeconds<=0||lifetimeSeconds>120||coefficient<=0
+        boolean ticking=kind==Kind.BEAM||kind==Kind.ORB||kind==Kind.CHAIN||kind==Kind.ORBIT||kind==Kind.DRAIN||kind==Kind.HEAL_TETHER;
+        if(range<=0||height<=0||(kind==Kind.HEAL_TETHER?lifetimeSeconds!=0:lifetimeSeconds<=0)||lifetimeSeconds>120||coefficient<=0
                 ||kind!=Kind.ORB&&kind!=Kind.ORBIT&&width<=0||(kind==Kind.ORB||kind==Kind.ORBIT)&&radius<=0
                 ||ticking&&(intervalSeconds<.05||lifetimeSeconds/intervalSeconds>(kind==Kind.ORBIT?MAX_ORBIT_SAMPLES:MAX_DAMAGE_PULSES))
                 ||kind==Kind.WAVE&&(depth<=0||speed<=0)||kind==Kind.ORB&&speed<=0
-                ||(kind==Kind.BEAM||kind==Kind.DRAIN)&&upkeepPerSecond<=0
+                ||(kind==Kind.BEAM||kind==Kind.DRAIN||kind==Kind.HEAL_TETHER)&&upkeepPerSecond<=0
                 ||kind==Kind.CHAIN&&(details.jumpRadius<=0||details.jumpCoefficients.isEmpty())
                 ||kind==Kind.ORBIT&&(details.bladeCount<1||details.degreesPerSecond<=0||details.contactCooldown<=0)
                 ||kind==Kind.DRAIN&&details.healFraction<=0)throw new IllegalArgumentException("Unsupported connection parameters");
     }
-    public boolean channel(){return kind==Kind.BEAM||kind==Kind.DRAIN;}
-    public boolean requiresTarget(){return kind==Kind.TETHER||kind==Kind.CHAIN||kind==Kind.DRAIN;}
+    public boolean channel(){return kind==Kind.BEAM||kind==Kind.DRAIN||friendlyTether();}
+    public boolean friendlyTether(){return kind==Kind.HEAL_TETHER;}
+    public boolean requiresTarget(){return kind==Kind.TETHER||kind==Kind.CHAIN||kind==Kind.DRAIN||friendlyTether();}
 }

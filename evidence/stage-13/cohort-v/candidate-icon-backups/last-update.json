@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "target": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\build\\libs\\HytaleRPG-0.0.25.jar",
+  "beforeSha256": "C9C1D103BE6303995DA931512A03863F5ED98A7F07C61281FA24A373B6EC0E4F",
+  "afterSha256": "1103268939C69FA6B3D9E58DB2AE10F66A2412776AC00A43A9C13C64D24889FF",
+  "backup": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-v\\candidate-icon-backups\\HytaleRPG-before-C9C1D103BE6303995DA931512A03863F5ED98A7F07C61281FA24A373B6EC0E4F.jar",
+  "icons": [
+    {
+      "name": "Fire Bolt",
+      "fileName": "SkillFirebolt.png",
+      "sha256": "8B4E285602E6A13A37A594F9E23B4C53E8A3AF0A0BC403D0083553910D6A7C7C"
+    },
+    {
+      "name": "Quick Slash",
+      "fileName": "SkillQuickslash.png",
+      "sha256": "D3DBBBF03497A5CE845A48FE6F816955934271C668A6461F0D44CD1AEC077EC1"
+    },
+    {
+      "name": "Snipe",
+      "fileName": "SkillSnipe.png",
+      "sha256": "D17952E698B1DA67E7D578D0F9B85459F352F23AF3BF2456BD40493FCC05B198"
+    },
+    {
+      "name": "Whirlwind",
+      "fileName": "SkillWhirlwind.png",
+      "sha256": "60797552980435AA0E959269A0184DD1E2926C3173C7F525C11CCAA30281561D"
+    }
+  ],
+  "changedEntries": [
+    "Common/UI/Custom/Icons/RPG/SkillSnipe.png",
+    "Common/Icons/Items/RPG/SkillSnipe.png",
+    "Server/Item/Items/RPG/Abilities/RPG_Ability_Snipe.json",
+    "Common/UI/Custom/Icons/RPG/SkillWhirlwind.png",
+    "Common/Icons/Items/RPG/SkillWhirlwind.png",
+    "Server/Item/Items/RPG/Abilities/RPG_Ability_Whirlwind.json"
+  ],
+  "utc": "2026-09-11T20:09:19.7959605Z",
+  "savesModified": false
+}

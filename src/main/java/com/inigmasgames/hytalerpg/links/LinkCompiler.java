@@ -131,7 +131,8 @@ public final class LinkCompiler {
             else if (priority < 300) targeting.add(operation);
             else if (priority < 400) geometry.add(operation);
             else if (priority < 500) multiplicity.add(operation);
-            else if (priority < 600) continuation.add(continuationOperation(passive));
+            else if (priority < 600) continuation.add(finalTags.contains("TETHER")&&Set.of("arc","fork","chain").contains(passive.id().value())
+                    ? "TETHER_"+passive.id().value().toUpperCase()+"(range=8,NoTetherFanout=true)" : continuationOperation(passive));
             else if (priority < 700) resource.add(operation);
             else power.add(operation);
             if (!passive.triggerHook().isBlank()) triggers.add(passive.triggerHook() + ':' + passive.id().value());
@@ -213,6 +214,9 @@ public final class LinkCompiler {
     }
 
     private static int continuationRank(String operation) {
+        if(operation.startsWith("TETHER_ARC"))return 1;
+        if(operation.startsWith("TETHER_FORK"))return 2;
+        if(operation.startsWith("TETHER_CHAIN"))return 3;
         if (operation.startsWith("SPLIT")) return 10;
         if (operation.startsWith("PIERC")) return 20;
         if (operation.startsWith("FORK")) return 30;

@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage08ConnectionTest {
     @Test void pilotProfilesRetainCatalogAndExactAuthoredGeometry() {
         var catalog=Stage01BTestSupport.bundle().catalog();var p=Stage04SkillProfiles.loadCanonical(catalog);
-        assertEquals(87,catalog.skills().size());assertEquals(66,catalog.passives().size());
-        assertEquals(Stage04SkillProfiles.EXPECTED_STAGE08_PROFILES,p.all().values().stream().filter(x->x.connection()!=null).count());
+        assertEquals(89,catalog.skills().size());assertEquals(67,catalog.passives().size());
+        assertEquals(Stage04SkillProfiles.EXPECTED_STAGE08_PROFILES+1,p.all().values().stream().filter(x->x.connection()!=null).count());
         var wave=p.require("wind_cutter");assertEquals(Stage04SkillProfile.Family.LINE,wave.family());
         assertEquals(16,wave.connection().range());assertEquals(1.2,wave.connection().width());assertEquals(2.5,wave.connection().height());
         assertEquals(.3,wave.connection().depth());assertEquals(20,wave.connection().speed());assertEquals(.8,wave.connection().lifetimeSeconds());assertEquals(.95,wave.damageCoefficient());
@@ -159,7 +159,7 @@ class Stage08ConnectionTest {
     static ConnectionWorldPort.Target target(String id,double x,double y,double z){return new ConnectionWorldPort.Target(id,bounds(x,y,z,.1));}
     static Harness beam(){var h=new Harness("void_beam");h.targets.add(target("victim",0,1.35,5));return h;}
     record Hit(String id,int tick,double coefficient,boolean periodic){ }
-    static final class Harness implements SkillExecutionPort,NativeResourcePort,ConnectionWorldPort {
+    static class Harness implements SkillExecutionPort,NativeResourcePort,ConnectionWorldPort {
         final UUID owner=UUID.randomUUID(),world=new UUID(0,1);final AtomicLong clock=new AtomicLong();
         final Stage01BTestSupport.Bundle bundle=Stage01BTestSupport.bundle();
         final Stage01BTestSupport.RecordingTracer tracer=(Stage01BTestSupport.RecordingTracer)bundle.tracer();

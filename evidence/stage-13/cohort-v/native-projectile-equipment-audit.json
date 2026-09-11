@@ -1,0 +1,128 @@
+{
+  "shippedCrossbowSpeed": 40.0,
+  "snipeActivationGate": "",
+  "typedElements": true,
+  "emptyNativeInteractions": true,
+  "nativeChargedBow": {
+    "gravity": 25,
+    "radius": 0.075,
+    "snipeModel": "Arrow_Crude",
+    "speed": 85,
+    "release": {
+      "nativeGameplayBranches": false,
+      "root": "Root_RPG_Snipe_Release",
+      "operations": [
+        "ChargingInteraction",
+        "JumpOperation",
+        "NativeSkillActivationInteraction",
+        "JumpOperation"
+      ],
+      "fullyDrawnImmediately": true,
+      "connectedProof": false,
+      "nativeChargeEmitters": [
+        "Bow_Charging_Sparks",
+        "Bow_Charging_Circles"
+      ],
+      "releaseThresholdSeconds": 0
+    },
+    "snipeGravity": 0,
+    "snipeModelEqualsNative": true,
+    "maximumRange": "RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM"
+  },
+  "shippedCrossbowRadius": 0.075,
+  "shippedCrossbowGravity": 10.0,
+  "equipment": {
+    "Weapon_Wand_Wood": {
+      "basicPower": 20.0,
+      "nativeSummaryIsNotBasePower": 7.0,
+      "kind": "WAND",
+      "selection": "RPG_AUTHORED_BASE"
+    },
+    "Weapon_Staff_Crystal_Ice": {
+      "basicPower": 20.0,
+      "nativeSummaryIsNotBasePower": 12.5,
+      "kind": "STAFF",
+      "selection": "RPG_AUTHORED_BASE"
+    },
+    "Weapon_Crossbow_Iron": {
+      "basicPower": 10.0,
+      "nativeSummaryIsNotBasePower": 44.0,
+      "kind": "CROSSBOW",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Daggers_Iron": {
+      "basicPower": 6.0,
+      "nativeSummaryIsNotBasePower": 87.0,
+      "kind": "DAGGER",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Staff_Crystal_Flame": {
+      "basicPower": 10.0,
+      "nativeSummaryIsNotBasePower": "UNAVAILABLE",
+      "kind": "STAFF",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Gun_Blunderbuss": {
+      "basicPower": 200.0,
+      "nativeSummaryIsNotBasePower": "UNAVAILABLE",
+      "kind": "GUN",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Battleaxe_Iron": {
+      "basicPower": 18.0,
+      "nativeSummaryIsNotBasePower": 56.0,
+      "kind": "BATTLEAXE",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Sword_Copper": {
+      "basicPower": 8.0,
+      "nativeSummaryIsNotBasePower": 32.0,
+      "kind": "SWORD",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Mace_Iron": {
+      "basicPower": 29.0,
+      "nativeSummaryIsNotBasePower": 70.0,
+      "kind": "MACE",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Shortbow_Iron": {
+      "basicPower": 1.0,
+      "nativeSummaryIsNotBasePower": 13.0,
+      "kind": "BOW",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Shield_Iron": {
+      "basicPower": 20.0,
+      "nativeSummaryIsNotBasePower": 1.0,
+      "kind": "SHIELD",
+      "selection": "RPG_AUTHORED_BASE"
+    },
+    "Weapon_Longsword_Iron": {
+      "basicPower": 16.0,
+      "nativeSummaryIsNotBasePower": 64.0,
+      "kind": "LONGSWORD",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Spear_Iron": {
+      "basicPower": 6.0,
+      "nativeSummaryIsNotBasePower": 6.0,
+      "kind": "SPEAR",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    },
+    "Weapon_Spellbook_Demon": {
+      "basicPower": 20.0,
+      "nativeSummaryIsNotBasePower": 1.0,
+      "kind": "SPELLBOOK",
+      "selection": "RPG_AUTHORED_BASE"
+    },
+    "Weapon_Sword_Iron": {
+      "basicPower": 10.0,
+      "nativeSummaryIsNotBasePower": 40.0,
+      "kind": "SWORD",
+      "selection": "NATIVE_UNCHARGED_BASE"
+    }
+  },
+  "connectedProof": false,
+  "resolvedConfigs": 19
+}

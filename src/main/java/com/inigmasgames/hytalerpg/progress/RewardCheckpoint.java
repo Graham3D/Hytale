@@ -11,7 +11,7 @@ public record RewardCheckpoint(long currentXp,int level,int pendingPoints,int un
     }
     public RewardCheckpoint {
         Objects.requireNonNull(ledger);
-        if(currentXp<0||level<1||level>99||pendingPoints<0||unspentPoints<0||mastery==null||mastery.size()>87)
+        if(currentXp<0||level<1||level>99||pendingPoints<0||unspentPoints<0||mastery==null||mastery.size()>89)
             throw new IllegalArgumentException("INVALID_REWARD_STATE");
         TreeMap<String,Long> sorted=new TreeMap<>();
         mastery.forEach((skill,value)->{

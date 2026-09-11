@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "healing_beam",
+      "family": "BEAM",
+      "secondaryFamilies": [
+        "TETHER"
+      ],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "NONE",
+      "resourceCost": 0,
+      "cooldownSeconds": 0.25,
+      "windupSeconds": 0,
+      "basePowerSource": "INNATE",
+      "innateBasePower": 20,
+      "scaling": "UTILITY",
+      "connection": {
+        "kind": "HEAL_TETHER",
+        "range": 18,
+        "width": 0.02,
+        "height": 0.02,
+        "depth": 0,
+        "speed": 0,
+        "lifetimeSeconds": 0,
+        "intervalSeconds": 0.25,
+        "coefficient": 0.45,
+        "upkeepPerSecond": 4,
+        "radius": 0,
+        "originHeight": 1.35,
+        "element": "HEAL"
+      }
+    },
+    {
+      "skillId": "blessing_of_protection",
+      "family": "DIRECT_TARGET",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 30,
+      "cooldownSeconds": 30,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "MAX_HEALTH_DAMAGE_CAP",
+        "range": 18,
+        "radius": 0,
+        "coefficient": 0.1,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 30,
+        "movementIncreased": 0
+      }
+    }
+  ]
+}

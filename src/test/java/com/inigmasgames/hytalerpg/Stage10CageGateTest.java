@@ -32,7 +32,7 @@ class Stage10CageGateTest {
         assertEquals(9,Stage04SkillProfiles.EXPECTED_STAGE10_PROFILES);assertEquals(9,stage10.size());
         for(var id:stage10)assertTrue(profiles.supports(id),id);
         // The original 60 profiles remain; Stage13 explicitly adds the previously absent catalog records.
-        assertEquals(60,profiles.all().size()-Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES);
-        assertEquals(87,Stage01BTestSupport.bundle().catalog().skills().size());
+        assertEquals(60,profiles.all().size()-Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES-2); // V adds two, not a Stage10 summon.
+        assertEquals(89,Stage01BTestSupport.bundle().catalog().skills().size());
     }
 }

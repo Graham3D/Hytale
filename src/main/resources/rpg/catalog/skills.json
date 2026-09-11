@@ -5733,5 +5733,128 @@
       "dominate",
       "rpg.skill.dominate"
     ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "healing_beam",
+    "skillId": "rpg.skill.healing_beam",
+    "name": "Healing Beam",
+    "description": "Create a beam of healing energy that tethers to a friendly ally, restoring Health equal to 45% of Healing Power per second while channeled and persisting for up to 1.5 seconds after line of sight is broken.",
+    "tier": "II",
+    "phase": 13,
+    "tags": [
+      "BEAM",
+      "TETHER",
+      "CHANNEL",
+      "HEAL",
+      "PERIODIC",
+      "FRIENDLY_TARGET"
+    ],
+    "weaponRequirement": "Staffs / Spellbooks",
+    "scalingClass": "Wisdom",
+    "basePowerSource": "INNATE",
+    "innateBasePower": 20,
+    "resourceType": "MANA",
+    "castCost": "Mana 4/sec",
+    "upkeep": "Mana 4/sec",
+    "castTime": "Instant",
+    "cooldown": "0.25 s re-entry lock after termination",
+    "targetMode": "Aim at a friendly ally; hold to channel; excludes caster",
+    "maxRange": "18 m",
+    "geometry": "single target-locked tether",
+    "travelSpeed": "N/A",
+    "lifetime": "While held; 1.5 s LOS grace",
+    "powerCoefficient": "0.45x Healing Power/sec",
+    "canCrit": false,
+    "statusApplications": null,
+    "vfxRecipeId": "rpg.vfx.skill.healing_beam",
+    "soundRecipeId": "rpg.sound.skill.healing_beam",
+    "linkCompatibilityTags": [
+      "BEAM",
+      "TETHER",
+      "CHANNEL",
+      "HEAL",
+      "PERIODIC",
+      "FRIENDLY_TARGET",
+      "SPELL_CAST",
+      "HAS_RANGE",
+      "SCALABLE_PAYLOAD",
+      "CONTINUOUS_MANA_UPKEEP",
+      "HAS_UPKEEP",
+      "MANA_RESOURCE"
+    ],
+    "sourceAcquisition": {
+      "signatureEnemyId": "UNASSIGNED - distinct signature enemy required",
+      "validationState": "UNASSIGNED",
+      "learnChance": null,
+      "acquisitionRarity": "NORMAL",
+      "difficultyVariant": "NORMAL"
+    },
+    "aliases": [
+      "Healing Beam",
+      "healing_beam",
+      "rpg.skill.healing_beam"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "blessing_of_protection",
+    "skillId": "rpg.skill.blessing_of_protection",
+    "name": "Blessing of Protection",
+    "description": "Bless yourself or a friendly ally for 30 seconds, preventing any single direct attack or spell hit from causing more than 10% of the target's maximum Health in damage.",
+    "tier": "III",
+    "phase": 13,
+    "tags": [
+      "DIRECT_TARGET",
+      "BUFF",
+      "PROTECTION",
+      "HOLY"
+    ],
+    "weaponRequirement": "Spellbooks",
+    "scalingClass": "Utility",
+    "basePowerSource": "NONE",
+    "innateBasePower": 0,
+    "resourceType": "MANA",
+    "castCost": "Mana 30",
+    "upkeep": "",
+    "castTime": "Instant",
+    "cooldown": "30 s",
+    "targetMode": "18 m friendly ally or self",
+    "maxRange": "18 m ally; self always legal",
+    "geometry": "single-target timed protection",
+    "travelSpeed": "N/A",
+    "lifetime": "30 s",
+    "powerCoefficient": "Fixed 10% of current maximum Health; per direct hostile hit",
+    "canCrit": false,
+    "statusApplications": [
+      "MaxHealthDamageCap=0.10; after mitigation, before absorption; excludes periodic, reflection, environment and Health costs"
+    ],
+    "vfxRecipeId": "rpg.vfx.skill.blessing_of_protection",
+    "soundRecipeId": "rpg.sound.skill.blessing_of_protection",
+    "linkCompatibilityTags": [
+      "DIRECT_TARGET",
+      "BUFF",
+      "PROTECTION",
+      "HOLY",
+      "SPELL_CAST",
+      "HAS_RANGE",
+      "HAS_FINITE_DURATION",
+      "DISCRETE_ACTIVATION",
+      "FINITE_RESOURCE_COST",
+      "HAS_COOLDOWN",
+      "MANA_RESOURCE"
+    ],
+    "sourceAcquisition": {
+      "signatureEnemyId": "UNASSIGNED - distinct signature enemy required",
+      "validationState": "UNASSIGNED",
+      "learnChance": null,
+      "acquisitionRarity": "NORMAL",
+      "difficultyVariant": "NORMAL"
+    },
+    "aliases": [
+      "Blessing of Protection",
+      "blessing_of_protection",
+      "rpg.skill.blessing_of_protection"
+    ]
   }
 ]

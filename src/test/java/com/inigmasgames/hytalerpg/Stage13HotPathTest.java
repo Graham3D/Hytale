@@ -60,7 +60,7 @@ class Stage13HotPathTest {
     @Test void immutableProfilesAreSharedButPlansRemainActorOwned(){
         var a=Stage01BTestSupport.bundle();var b=Stage01BTestSupport.bundle();
         assertSame(Stage04SkillProfiles.loadCanonical(a.catalog()),Stage04SkillProfiles.loadCanonical(b.catalog()));
-        assertEquals(87,Stage04SkillProfiles.loadCanonical(a.catalog()).all().size());
+        assertEquals(89,Stage04SkillProfiles.loadCanonical(a.catalog()).all().size());
         assertThrows(UnsupportedOperationException.class,()->Stage04SkillProfiles.loadCanonical(a.catalog()).all().clear());
     }
     @Test void frenzyCannotChargeOrPretendToApplyAnUnverifiedNativeSpeedModifier(){

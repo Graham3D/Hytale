@@ -10,6 +10,16 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class R024NativeInteractionAssetTest {
+    @Test void heldHealingUsesNativeChargingPacketRatherThanUnsupportedClientOperation() throws Exception {
+        var root=org.bson.BsonDocument.parse(java.nio.file.Files.readString(java.nio.file.Path.of("src/main/resources/Server/Item/RootInteractions/RPG/Root_RPG_Healing_Beam_Held.json")));
+        var json=root.getArray("Interactions").get(0).asDocument();assertEquals("RPG_HeldChannel",json.getString("Type").getValue());
+        assertEquals("Simple",json.getDocument("Next").getDocument("0").getString("Type").getValue());
+        json.remove("Next");json.remove("Effects");
+        var decoded=com.inigmasgames.hytalerpg.input.NativeHeldChannelInteraction.codec(new HytaleAbilitySkillInputAdapter()).decode(json,
+                new com.hypixel.hytale.assetstore.AssetExtraInfo<>(new com.hypixel.hytale.assetstore.AssetExtraInfo.Data(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.class,"RPG_Test_Healing_Held",null)));
+        assertEquals(WaitForDataFrom.Client,decoded.getWaitForDataFrom());assertTrue(decoded.needsRemoteSync());
+        var packet=assertInstanceOf(com.hypixel.hytale.protocol.ChargingInteraction.class,decoded.toPacket());assertTrue(packet.allowIndefiniteHold);assertFalse(packet.displayProgress);
+    }
     @Test void nativeChargingCodecSupportsImmediateThresholdAndIndefiniteHold() throws Exception {
         var root=org.bson.BsonDocument.parse(java.nio.file.Files.readString(java.nio.file.Path.of(
                 "src/main/resources/Server/Item/RootInteractions/RPG/Root_RPG_Snipe_Release.json")));

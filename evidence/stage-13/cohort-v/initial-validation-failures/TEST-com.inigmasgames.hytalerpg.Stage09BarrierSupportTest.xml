@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" tests="26" skipped="0" failures="1" errors="0" timestamp="2026-09-11T20:02:11.826Z" hostname="GRAHAM" time="0.122">
+  <properties/>
+  <testcase name="howlSamplesRecipientsOnceWithoutAuraReservation()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.006"/>
+  <testcase name="shieldUsesWisdomPotencyAndNoCrit()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.007"/>
+  <testcase name="shieldExpiryAndOwnerRemovalHaveNoRefund()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="secondaryExceptionBeforeApplyDoesNotAcceptOrRetryTransfer()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.0"/>
+  <testcase name="replacementDoesNotAddCapacityAndRespectsNewCap()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="burnHasOneSecondPerTargetIcdButNewContactsStillGetFire()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.006"/>
+  <testcase name="rejectedRedirectDoesNotEraseTwentyPercentDamage()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="reflectionAndRedirectFlagsBlockRecursionLeechAndCredit()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.001"/>
+  <testcase name="selfShieldDoesNotRedirectAndAbsorbsBeforeHealth()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="dotOutgoingSnapshotSurvivesBuffExpiryWithoutReapplication()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="allyShieldSplitsOnceBeforeAbsorb()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="nativeCancellationAndIntegerRoundedZeroHaveDifferentTransferOutcomes()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.001"/>
+  <testcase name="howlAndBattleCryAddButSameNamedCopiesDoNot()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.009"/>
+  <testcase name="unavailableHealthAfterFailedSecondaryIsNotInvented()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.001"/>
+  <testcase name="rootImbueSecondaryBudgetIsSixteen()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="nativeMovementAssetSelectionIsExactAndRejectsUnmappedMagnitude()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.001"/>
+  <testcase name="correctedCatalogDoesNotPretendReflectionAbsorbsOrShieldAttacks()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="fourProfilesHaveAuthoredCostsAndDuration()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;16&gt; but was: &lt;17&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;16&gt; but was: &lt;17&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:166)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:161)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:632)
+	at app//com.inigmasgames.hytalerpg.Stage09BarrierSupportTest.fourProfilesHaveAuthoredCostsAndDuration(Stage09BarrierSupportTest.java:38)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="reflectionHasNoShieldOrInitialDamage()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="severalCasterShieldsStillRedirectOnlyOnce()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.01"/>
+  <testcase name="swapAndExpiryTerminateImbue()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.01"/>
+  <testcase name="secondaryExceptionAfterHealthLossDoesNotDoubleChargeOriginal()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.0"/>
+  <testcase name="untrustedAndDerivedContactsDoNotCreateImbuePayload()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="authenticatedFixtureImbueConsumesContactOnce()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="flameWeaponNativeGateRejectsBeforeCostAndCooldown()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="lateOutgoingBuffDoesNotEnterAlreadyCapturedDotSnapshot()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

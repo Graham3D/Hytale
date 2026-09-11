@@ -11,7 +11,7 @@ public record SupportProfile(Kind kind,double range,double radius,double coeffic
         this(kind,range,radius,coefficient,reservationFraction,toggleLockSeconds,0,0);
     }
     public enum Kind { HEAL, MANAGUARD, MANA_REGEN, TAUNT, WEAKEN, MARK, FEAR, RALLY, HOWL, REFLECT, SHIELD, IMBUE,
-        THORNS, CHILL_AURA, COOLDOWN_AURA, DAMAGE_AURA, OVERFLOW, SHARED_SHIELD, CONSUME_MINION }
+        THORNS, CHILL_AURA, COOLDOWN_AURA, DAMAGE_AURA, OVERFLOW, SHARED_SHIELD, CONSUME_MINION, MAX_HEALTH_DAMAGE_CAP }
     public SupportProfile {
         if(kind==null)throw new IllegalArgumentException("Support kind missing");
         for(double value:new double[]{range,radius,coefficient,reservationFraction,toggleLockSeconds,durationSeconds,movementIncreased,upkeepPerSecond,damageInterval,chillInterval})
@@ -25,5 +25,5 @@ public record SupportProfile(Kind kind,double range,double radius,double coeffic
     public boolean finiteEffect(){return !aura()&&kind!=Kind.HEAL;}
     public boolean hostileTarget(){return kind==Kind.TAUNT||kind==Kind.WEAKEN||kind==Kind.MARK||kind==Kind.FEAR;}
     public boolean recipientBurst(){return kind==Kind.RALLY||kind==Kind.HOWL;}
-    public boolean allyTarget(){return kind==Kind.HEAL||kind==Kind.SHIELD;}
+    public boolean allyTarget(){return kind==Kind.HEAL||kind==Kind.SHIELD||kind==Kind.MAX_HEALTH_DAMAGE_CAP;}
 }

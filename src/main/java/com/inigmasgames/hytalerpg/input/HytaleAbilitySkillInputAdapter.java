@@ -26,6 +26,27 @@ public final class HytaleAbilitySkillInputAdapter {
     private BiConsumer<UUID, Packet> rawObserver = (player, packet) -> { };
     private boolean nativeExecutionOnly;
     private final ConcurrentHashMap<UUID, java.util.Map<Object, Boolean>> executedChains = new ConcurrentHashMap<>();
+    private record Hold(InteractionType action,int id,java.lang.ref.WeakReference<com.hypixel.hytale.server.core.entity.InteractionChain> chain){}
+    private final ConcurrentHashMap<UUID,Hold> heldChannels=new ConcurrentHashMap<>();
+    public void nativeHold(UUID actor,InteractionType action,int id,com.hypixel.hytale.server.core.entity.InteractionChain chain,String item,int nativeSlot,boolean held){
+        if(slot(action)==null||nativeSlot!=(action==InteractionType.Ability2?0:3))return;
+        if(!held){heldChannels.computeIfPresent(actor,(key,old)->old.chain.get()==chain?null:old);return;}
+        heldChannels.put(actor,new Hold(action,id,new java.lang.ref.WeakReference<>(chain)));
+        acceptNativeExecution(actor,action,id,chain,item,nativeSlot);
+    }
+    public boolean held(com.inigmasgames.hytalerpg.execution.SkillExecutionRequest request){
+        var hold=heldChannels.get(request.actorId());if(hold==null||hold.id!=request.chainId()||!hold.action.name().equals(request.action()))return false;
+        var chain=hold.chain.get();return chain!=null&&chain.getServerState()==com.hypixel.hytale.protocol.InteractionState.NotFinished
+                &&chain.getClientState()==com.hypixel.hytale.protocol.InteractionState.NotFinished;
+    }
+    /** World-thread cleanup of this exact held interaction, never unrelated native chains. */
+    public void stopHeld(com.inigmasgames.hytalerpg.execution.SkillExecutionRequest request){
+        var hold=heldChannels.get(request.actorId());
+        if(hold==null||hold.id!=request.chainId()||!hold.action.name().equals(request.action())||!heldChannels.remove(request.actorId(),hold))return;
+        var chain=hold.chain.get();
+        if(chain!=null&&chain.getServerState()==com.hypixel.hytale.protocol.InteractionState.NotFinished)
+            chain.getContext().getInteractionManager().cancelChains(chain);
+    }
 
     /** Production uses the native server interaction callback; packet observation is diagnostic only. */
     public void useNativeExecution() { nativeExecutionOnly = true; }
@@ -52,7 +73,7 @@ public final class HytaleAbilitySkillInputAdapter {
         observations.accept(new Observation(player, slot, action.name(), chainId, correlation, result));
         if (!suppressed && !full) requests.add(new Request(player, slot, action.name(), chainId, correlation,
                 desiredMovement.getOrDefault(player, new Vec3(0, 0, 0)),
-                "RPG_Ability_Snipe".equals(itemId) ? "snipe" : ""));
+                "RPG_Ability_Healing_Beam".equals(itemId)?"healing_beam":"RPG_Ability_Snipe".equals(itemId) ? "snipe" : ""));
     }
 
     /** Installed once during setup; the control observes the same inbound watcher before filtering. */
@@ -138,6 +159,7 @@ public final class HytaleAbilitySkillInputAdapter {
         seen.keySet().removeIf(key -> key.player().equals(player));
         desiredMovement.remove(player);
         executedChains.remove(player);
+        heldChannels.remove(player);
     }
 
     public static SkillSlot slot(InteractionType type) {

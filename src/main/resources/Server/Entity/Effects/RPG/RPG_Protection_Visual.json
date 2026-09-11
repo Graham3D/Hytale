@@ -1,0 +1,14 @@
+{
+  "Duration": 0.2,
+  "OverlapBehavior": "Overwrite",
+  "Debuff": false,
+  "ApplicationEffects": {
+    "Particles": [
+      {
+        "SystemId": "RPG_Protection_Glow",
+        "Scale": 0.5,
+        "ClearParticlesOnRemove": true
+      }
+    ]
+  }
+}

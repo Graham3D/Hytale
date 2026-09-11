@@ -1,0 +1,23 @@
+{
+  "Interactions": [
+    {
+      "Type": "RPG_HeldChannel",
+      "AllowIndefiniteHold": true,
+      "DisplayProgress": false,
+      "CancelOnOtherClick": true,
+      "FailOnDamage": true,
+      "Effects": {
+        "ItemPlayerAnimationsId": "Spellbook",
+        "ItemAnimationId": "CastPushCharging",
+        "ClearAnimationOnFinish": true,
+        "ClearSoundEventOnFinish": true
+      },
+      "Next": {
+        "0": {
+          "Type": "Simple"
+        }
+      }
+    }
+  ],
+  "RequireNewClick": true
+}

@@ -132,7 +132,7 @@ try {
         $manifest = Read-JsonEntry $zip 'manifest.json'
         if ($manifest.Group -ne 'InigmasGames' -or $manifest.Name -ne 'HytaleRPGPhase00Audit') { throw 'Target is not the RPG mod.' }
         $index = Read-JsonEntry $zip 'rpg/presentation/icon-index.json'
-        if ($index.schemaVersion -ne 1 -or @($index.entries).Count -ne 153) { throw 'Unsupported icon index; do not patch this build.' }
+        if ($index.schemaVersion -ne 1 -or @($index.entries).Count -notin @(153,156)) { throw 'Unsupported icon index; do not patch this build.' }
         $byFile = @{}
         $ids = @{}
         $catalogIds = @{}
@@ -155,8 +155,10 @@ try {
             }
             $byFile[$row.fileName] = $row
         }
-        if ($ids.Count -ne $catalogIds.Count -or @($index.entries | Where-Object kind -eq 'Skill').Count -ne 87 -or
-            @($index.entries | Where-Object kind -eq 'Passive').Count -ne 66) { throw 'Icon index does not cover the full catalog.' }
+        $skillCount=@($index.entries | Where-Object kind -eq 'Skill').Count
+        $passiveCount=@($index.entries | Where-Object kind -eq 'Passive').Count
+        if ($ids.Count -ne $catalogIds.Count -or -not (($skillCount -eq 87 -and $passiveCount -eq 66) -or
+            ($skillCount -eq 89 -and $passiveCount -eq 67))) { throw 'Icon index does not cover the full catalog.' }
         foreach ($kind in @('Skill','Passive')) {
             $folder = Join-Path $ArtRoot ($kind + 's')
             if (-not (Test-Path -LiteralPath $folder -PathType Container)) { continue }

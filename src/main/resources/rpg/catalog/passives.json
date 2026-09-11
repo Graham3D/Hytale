@@ -478,7 +478,7 @@
     "id": "fork",
     "passiveId": "rpg.passive.fork",
     "name": "Fork",
-    "description": "When forward Pierce is exhausted, fork the projectile into 2 child projectiles at the next valid enemy contact.",
+    "description": "Projectiles fork into 2 child projectiles after Pierce. Eligible Tethers retain their primary payload and branch to 2 additional targets at 45% each within 8 m and LOS.",
     "tier": "ADVANCED",
     "phase": 7,
     "compatibleTags": [
@@ -493,7 +493,7 @@
     ],
     "compatibleAnyPayloads": [],
     "incompatibleTags": [],
-    "compatibilityExpression": "Family: Projectile; capability: CanFork.",
+    "compatibilityExpression": "Projectile with CanFork; or explicit Tether with a scalable single-target Heal/Damage payload.",
     "modifierOps": [
       "When forward Pierce is exhausted, fork the projectile into 2 child projectiles at the next valid enemy contact."
     ],
@@ -520,7 +520,7 @@
     "id": "chain",
     "passiveId": "rpg.passive.chain",
     "name": "Chain",
-    "description": "After its current enemy-contact continuation resolves, redirect the projectile/effect to up to 2 additional nearby enemies.",
+    "description": "Projectiles redirect to up to 2 additional enemies. Eligible Tethers retain their primary payload and chain to 2 distinct targets at 70% then 49%, within 8 m and LOS per hop.",
     "tier": "ADVANCED",
     "phase": 7,
     "compatibleTags": [
@@ -535,7 +535,7 @@
     ],
     "compatibleAnyPayloads": [],
     "incompatibleTags": [],
-    "compatibilityExpression": "Family: Projectile; capability: CanChain.",
+    "compatibilityExpression": "Projectile with CanChain; or explicit Tether with a scalable single-target Heal/Damage payload.",
     "modifierOps": [
       "After its current enemy-contact continuation resolves, redirect the projectile/effect to up to 2 additional nearby enemies."
     ],
@@ -2795,6 +2795,51 @@
       "Kill Trigger",
       "kill_trigger",
       "rpg.passive.kill_trigger"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "arc",
+    "passiveId": "rpg.passive.arc",
+    "name": "Arc",
+    "description": "A scalable single-target Tether affects one additional valid target within 8 m of its primary recipient at 60% effect.",
+    "tier": "ADVANCED",
+    "phase": 13,
+    "compatibleTags": [
+      "TETHER",
+      "SCALABLE_PAYLOAD"
+    ],
+    "requiredFamilies": [
+      "TETHER"
+    ],
+    "requiredCapabilities": [
+      "SCALABLE_PAYLOAD"
+    ],
+    "compatibleAnyPayloads": [
+      "HEAL",
+      "DAMAGE"
+    ],
+    "incompatibleTags": [],
+    "compatibilityExpression": "Explicit Tether capability with scalable friendly heal or hostile damage payload.",
+    "modifierOps": [
+      "One terminal secondary at 60%; 8 m and LOS from primary; shared pulse visited ledger before Fork and Chain."
+    ],
+    "addedTags": [],
+    "removedTags": [],
+    "familyConversion": "",
+    "triggerHook": "",
+    "priority": 515,
+    "stackingGroup": "",
+    "maxCopies": 1,
+    "spawnBudgetCost": 0,
+    "childProjectileCount": 0,
+    "executionNotes": "Same target polarity; injured allies for healing. Exclude primary and caster when excluded by root. NoTetherFanout; no new channel or Mana cost.",
+    "safetyNotes": "At most one Arc recipient. Arc/Fork/Chain share a five-secondary budget and one visited set per pulse.",
+    "fixture": "accept Healing Beam and Life Drain; reject Void Beam without Tether capability.",
+    "aliases": [
+      "Arc",
+      "arc",
+      "rpg.passive.arc"
     ]
   }
 ]

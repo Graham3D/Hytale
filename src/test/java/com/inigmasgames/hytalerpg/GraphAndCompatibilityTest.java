@@ -123,7 +123,7 @@ class GraphAndCompatibilityTest {
                 assessments++;
             }
         }
-        assertEquals(87L * 66L, assessments);
+        assertEquals(89L * 67L, assessments);
     }
 
     private static RpgPlayerState baseFireBolt() {

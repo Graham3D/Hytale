@@ -23,6 +23,12 @@ public interface ConnectionWorldPort {
         return new Query(List.copyOf(targets.values()),false);
     }
     default Optional<Target> resolveTarget(String id){return Optional.empty();}
+    /** Friendly access must enforce alive/loaded/alliance/self policy, not the hostile query. */
+    default Query queryFriendly(ConnectionShape shape,int cap){return new Query(List.of(),false);}
+    default Optional<Target> resolveFriendly(String id){return Optional.empty();}
+    default boolean injured(Target target){return false;}
+    default boolean held(SkillExecutionContext context){return false;}
+    default double heal(SkillExecutionContext context,Target target,int tick,double coefficient){throw new IllegalStateException("HEAL_TETHER_ADAPTER_UNAVAILABLE");}
     boolean lineOfSight(Vec3 origin,Target target);
     /** Uses the real resource service; false prevents this tick's hit. */
     boolean payUpkeep(SkillExecutionContext context,int tick,double seconds);

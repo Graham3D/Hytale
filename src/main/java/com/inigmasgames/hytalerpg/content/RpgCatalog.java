@@ -22,8 +22,8 @@ import java.util.Set;
 
 /** Immutable canonical catalog loaded from checked-in, versioned content data. */
 public final class RpgCatalog {
-    public static final int EXPECTED_SKILLS = 87;
-    public static final int EXPECTED_PASSIVES = 66;
+    public static final int EXPECTED_SKILLS = 89;
+    public static final int EXPECTED_PASSIVES = 67;
 
     private final Map<SkillId, SkillDefinition> skills;
     private final Map<PassiveId, PassiveDefinition> passives;
@@ -71,8 +71,8 @@ public final class RpgCatalog {
     }
 
     public void validateCanonicalCounts() {
-        if (skills.size() != EXPECTED_SKILLS) throw new IllegalStateException("Expected 87 canonical skills, loaded " + skills.size());
-        if (passives.size() != EXPECTED_PASSIVES) throw new IllegalStateException("Expected 66 canonical passives, loaded " + passives.size());
+        if (skills.size() != EXPECTED_SKILLS) throw new IllegalStateException("Expected "+EXPECTED_SKILLS+" canonical skills, loaded " + skills.size());
+        if (passives.size() != EXPECTED_PASSIVES) throw new IllegalStateException("Expected "+EXPECTED_PASSIVES+" canonical passives, loaded " + passives.size());
     }
 
     public Collection<SkillDefinition> skills() { return skills.values(); }

@@ -6,7 +6,7 @@ import java.util.*;
 public record AcquisitionProgress(Set<String> meaningfulSkills,Map<String,Integer> pity,long spentInsight) {
     public static final AcquisitionProgress INITIAL=new AcquisitionProgress(Set.of(),Map.of(),0);
     public AcquisitionProgress {
-        if(meaningfulSkills==null||meaningfulSkills.size()>87||pity==null||pity.size()>66||spentInsight<0)
+        if(meaningfulSkills==null||meaningfulSkills.size()>89||pity==null||pity.size()>67||spentInsight<0)
             throw new IllegalArgumentException("INVALID_ACQUISITION_PROGRESS");
         var used=new TreeSet<String>();for(String id:meaningfulSkills){id(id);used.add(id);}
         var failures=new TreeMap<String,Integer>();pity.forEach((source,count)->{

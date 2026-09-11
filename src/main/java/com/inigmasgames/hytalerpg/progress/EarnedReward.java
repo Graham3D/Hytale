@@ -12,7 +12,7 @@ public record EarnedReward(String eventId,long characterXp,long insight,Map<Stri
     public EarnedReward {
         text(eventId,256);text(reason,128);text(correlationId,128);
         optionalId(rootCastId);optionalId(skillInstanceId);
-        if(characterXp<0||insight<0||mastery==null||mastery.size()>87)throw new IllegalArgumentException("INVALID_REWARD");
+        if(characterXp<0||insight<0||mastery==null||mastery.size()>89)throw new IllegalArgumentException("INVALID_REWARD");
         TreeMap<String,Long> sorted=new TreeMap<>();
         mastery.forEach((skill,value)->{
             if(skill==null||!skill.matches("[a-z][a-z0-9_]{0,95}")||value==null||value<=0)

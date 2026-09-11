@@ -79,6 +79,7 @@ public final class ConnectionRuntime {
         String valid=port.validate(field.context,field.world);if(!valid.equals("PASS")){finish(field,valid,port);return;}
         if(now-field.lastTick>1+1e-9){finish(field,"SIMULATION_GAP_EXCEEDS_ONE_SECOND",port);return;}
         field.lastTick=now;var profile=field.profile();double elapsed=Math.min(now-field.started,profile.lifetimeSeconds());
+        if(profile.friendlyTether()){healingTether(field,now,port);return;}
         if(profile.kind()==ConnectionProfile.Kind.WAVE){wave(field,elapsed,now,port);return;}
         if(profile.kind()==ConnectionProfile.Kind.LINE||profile.kind()==ConnectionProfile.Kind.TETHER){instant(field,port);return;}
         if(profile.kind()==ConnectionProfile.Kind.CHAIN){chain(field,elapsed,port);return;}
@@ -125,9 +126,63 @@ public final class ConnectionRuntime {
         }
     }
     private ConnectionWorldPort.Target boundTarget(Field field,Vec3 origin,ConnectionWorldPort port){
-        var target=port.resolveTarget(field.targetId).orElse(null);
+        var target=(field.profile().friendlyTether()?port.resolveFriendly(field.targetId):port.resolveTarget(field.targetId)).orElse(null);
         return target!=null&&ConnectionShape.pointDistanceSquared(origin,target.bounds())<=field.profile().range()*field.profile().range()+1e-9
                 &&port.lineOfSight(origin,target)?target:null;
+    }
+    /** Same channel owner/scheduler; a zero lifetime denotes the explicitly held friendly tether. */
+    private void healingTether(Field field,double now,ConnectionWorldPort port){
+        if(!port.held(field.context)){finish(field,"CHANNEL_INPUT_RELEASED",port);return;}
+        var p=field.profile();var origin=port.frame().feet().add(new Vec3(0,p.originHeight(),0));
+        var target=port.resolveFriendly(field.targetId).orElse(null);
+        if(target==null){finish(field,"TETHER_TARGET_INVALID",port);return;}
+        if(ConnectionShape.pointDistanceSquared(origin,target.bounds())>p.range()*p.range()+1e-9){finish(field,"TETHER_RANGE_BROKEN",port);return;}
+        if(port.lineOfSight(origin,target))field.losLost=Double.NaN;
+        else {
+            if(Double.isNaN(field.losLost))field.losLost=now;
+            if(now-field.losLost>=1.5-1e-9){finish(field,"TETHER_LOS_GRACE_EXPIRED",port);return;}
+        }
+        double elapsed=now-field.started;
+        if(field.tick==Integer.MAX_VALUE){finish(field,"CHANNEL_SEQUENCE_EXHAUSTED",port);return;}
+        while(!field.done&&(field.tick+1)*p.intervalSeconds()<=elapsed+1e-9){
+            // Capacity-check each pulse before its payment or healing, with fresh injured recipients.
+            var children=continuations(field,target,port);
+            if(field.tick==Integer.MAX_VALUE){finish(field,"CHANNEL_SEQUENCE_EXHAUSTED",port);return;}
+            int tick=field.tick+1;
+            double due=field.started+tick*p.intervalSeconds();
+            double unpaid=Math.max(0,due-field.paidThrough);
+            if(unpaid>1e-9&&!port.payUpkeep(field.context,tick,unpaid)){finish(field,"INSUFFICIENT_UPKEEP",port);return;}
+            field.paidThrough=Math.max(field.paidThrough,due);
+            field.tick=tick;
+            // BASE interval, not modified interval: Rapid Pulse changes rate and multiplies payload by .8.
+            double coefficient=p.coefficient()*.25;
+            double healed=port.heal(field.pulseContext,target,tick,coefficient);
+            for(var child:children){
+                healed+=port.heal(field.pulseContext,child.recipient(),tick,coefficient*child.coefficient());
+                port.present(field.context,ConnectionShape.line(child.source().bounds().centre(),child.recipient().bounds().centre(),p.width(),p.height()),"TETHER_SECONDARY",.1);
+            }
+            port.trace(field.context,"CONNECTION_TICK",Map.of("tick",tick,"coefficient",coefficient,"actualHealing",healed,
+                    "secondaryRecipients",children.size(),"NoTetherFanout",true,"periodic",true));
+            if(field.tick==Integer.MAX_VALUE){finish(field,"CHANNEL_SEQUENCE_EXHAUSTED",port);return;}
+        }
+        // Charge the fractional tail too: continuous upkeep is not rounded to pulse cadence.
+        double tail=now-field.paidThrough;
+        if(tail>1e-9&&!port.payUpkeep(field.context,field.tick+1,tail)){finish(field,"INSUFFICIENT_UPKEEP",port);return;}
+        field.paidThrough=now;
+        if(now>=field.nextVisual){field.nextVisual=now+.10;
+            port.present(field.context,ConnectionShape.line(origin,target.bounds().centre(),p.width(),p.height()),"ACTIVE",.1);}
+    }
+    private List<TetherContinuations.Payload> continuations(Field field,ConnectionWorldPort.Target primary,ConnectionWorldPort port){
+        var modifiers=TetherContinuations.Modifiers.from(field.context.compiledPlan().passiveOrder());
+        return TetherContinuations.select(primary,modifiers,new TetherContinuations.Targets(){
+            public ConnectionWorldPort.Query nearby(Vec3 point,double radius,int cap){
+                var shape=ConnectionShape.cylinder(point,radius,radius*2);
+                return field.profile().friendlyTether()?port.queryFriendly(shape,cap):port.query(shape,cap);
+            }
+            public boolean eligible(ConnectionWorldPort.Target t){return !t.id().equals(field.owner().toString())&&
+                    (!field.profile().friendlyTether()||port.injured(t));}
+            public boolean lineOfSight(Vec3 from,ConnectionWorldPort.Target t){return port.lineOfSight(from,t);}
+        });
     }
     private void instant(Field field,ConnectionWorldPort port){
         var p=field.profile();ConnectionShape shape;List<ConnectionWorldPort.Target> targets;
@@ -217,12 +272,26 @@ public final class ConnectionRuntime {
         return unique.values().stream().sorted(Comparator.comparingDouble((ConnectionWorldPort.Target t)->shape.entryDistance(t.bounds())).thenComparing(ConnectionWorldPort.Target::id)).toList();
     }
     private void hit(Field field,List<ConnectionWorldPort.Target> targets,int tick,double coefficient,boolean periodic,Vec3 center,ConnectionWorldPort port) {
+        var children=targets.size()==1&&field.context.compiledPlan().finalTags().contains("TETHER")
+                &&Set.of(ConnectionProfile.Kind.DRAIN,ConnectionProfile.Kind.TETHER).contains(field.profile().kind())
+                ?continuations(field,targets.getFirst(),port):List.<TetherContinuations.Payload>of();
+        var additions=new HashSet<String>();
+        for(var target:targets)if(!field.lastHit.containsKey(target.id()))additions.add(target.id());
+        for(var child:children)if(!field.lastHit.containsKey(child.recipient().id()))additions.add(child.recipient().id());
+        if(field.lastHit.size()+additions.size()>256){finish(field,"TARGET_LEDGER_BUDGET",port);return;}
         int attempts=0;double healthLost=0;
         for(var target:targets) {
             if(field.done)break;if(field.lastHit.getOrDefault(target.id(),-1)==tick)continue;
             field.lastHit.put(target.id(),tick);attempts++;
             double lost=port.damage(field.pulseContext,target,tick,coefficient,periodic,center);if(Double.isFinite(lost)&&lost>0)healthLost+=lost;
             if(!field.done&&field.profile().kind()==ConnectionProfile.Kind.DRAIN&&Double.isFinite(lost)&&lost>0)port.healFromDamage(field.pulseContext,tick,lost);
+        }
+        for(var child:children){
+            if(field.lastHit.getOrDefault(child.recipient().id(),-1)==tick)continue;
+            field.lastHit.put(child.recipient().id(),tick);attempts++;
+            double lost=port.damage(field.pulseContext,child.recipient(),tick,coefficient*child.coefficient(),periodic,child.recipient().bounds().centre());
+            if(Double.isFinite(lost)&&lost>0){healthLost+=lost;if(field.profile().kind()==ConnectionProfile.Kind.DRAIN)port.healFromDamage(field.pulseContext,tick,lost);}
+            port.present(field.context,ConnectionShape.line(child.source().bounds().centre(),child.recipient().bounds().centre(),field.profile().width(),field.profile().height()),"TETHER_SECONDARY",.1);
         }
         port.trace(field.context,"CONNECTION_TICK",Map.of("tick",tick,"coefficient",coefficient,"targetAttempts",attempts,"actualHealthLoss",healthLost,"periodic",periodic));
     }
@@ -240,9 +309,10 @@ public final class ConnectionRuntime {
     }
     private static final class Field {
         final SkillExecutionContext context,pulseContext;final UUID world;final Vec3 origin,direction;final double started;
-        final Map<String,Integer> lastHit=new HashMap<>();Vec3 position;double lastTick,nextVisual,travelled;int tick;boolean stopped,done;String targetId;
+        final Map<String,Integer> lastHit=new HashMap<>();Vec3 position;double lastTick,nextVisual,travelled,paidThrough;double losLost=Double.NaN;int tick;boolean stopped,done;String targetId;
         Field(SkillExecutionContext context,UUID world,Vec3 origin,Vec3 direction,double now){
             this.context=context;this.world=world;this.origin=origin;this.direction=direction;this.position=origin;this.started=now;this.lastTick=now;this.nextVisual=now;
+            this.paidThrough=now;
             if(context.compiledPlan().pulses().rapidPulse()&&!com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.periodicPulse(context.profile()))throw new IllegalStateException("PERIODIC_PULSE_COMPONENT_REQUIRED");
             pulseContext=context.compiledPlan().pulses().payload(context);
             if(context.profile().connection().kind()==ConnectionProfile.Kind.ORBIT)tick=-1;

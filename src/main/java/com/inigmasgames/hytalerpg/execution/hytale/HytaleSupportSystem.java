@@ -316,6 +316,11 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             }
         }
         public void present(SkillExecutionContext context,double radius,double duration){
+            if(context.profile().support().kind()==SupportProfile.Kind.MAX_HEALTH_DAMAGE_CAP){
+                try{com.hypixel.hytale.server.core.entity.AnimationUtils.playAnimation(actor,com.hypixel.hytale.protocol.AnimationSlot.Action,"Spellbook","CastPushCharged",true,store);}
+                catch(RuntimeException ignored){/* Presentation never changes committed protection. */}
+                return;
+            }
             // Tracking uses an entity-bound tint lease, never a world-broadcast debug outline.
             if(context.profile().support().kind()==SupportProfile.Kind.MARK)return;
             var origin=position(store,actor).add(new Vec3(0,1,0));

@@ -10,6 +10,9 @@ public final class FiniteSupportEffects {
     public record Key(UUID world,UUID owner,String skill,UUID target){}
     public record Effect(Key key,SupportProfile.Kind kind,double magnitude,double movement,double starts,double ends,
                          String rootCastId,String skillInstanceId,String correlationId,SkillExecutionContext context,double shieldRemaining){
+        public Optional<com.inigmasgames.hytalerpg.combat.damage.MaxHealthDamageCap> damageCap(){
+            return kind==SupportProfile.Kind.MAX_HEALTH_DAMAGE_CAP?Optional.of(new com.inigmasgames.hytalerpg.combat.damage.MaxHealthDamageCap(magnitude)):Optional.empty();
+        }
         Effect remaining(double value){return new Effect(key,kind,magnitude,movement,starts,ends,rootCastId,skillInstanceId,correlationId,context,value);}
     }
     private final Map<Key,Effect> effects=new LinkedHashMap<>();

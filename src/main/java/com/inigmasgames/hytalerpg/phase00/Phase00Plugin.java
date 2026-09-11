@@ -128,6 +128,10 @@ public final class Phase00Plugin extends JavaPlugin {
                 .register(com.inigmasgames.hytalerpg.input.NativeSkillActivationInteraction.TYPE,
                         com.inigmasgames.hytalerpg.input.NativeSkillActivationInteraction.class,
                         com.inigmasgames.hytalerpg.input.NativeSkillActivationInteraction.codec(abilityInputs));
+        getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
+                .register(com.inigmasgames.hytalerpg.input.NativeHeldChannelInteraction.TYPE,
+                        com.inigmasgames.hytalerpg.input.NativeHeldChannelInteraction.class,
+                        com.inigmasgames.hytalerpg.input.NativeHeldChannelInteraction.codec(abilityInputs));
         var runeControl = new com.inigmasgames.hytalerpg.input.NativeRuneControl(
                 getDataDirectory().resolve("diagnostics").resolve("native-rune-control"),
                 configuration.developmentEntitlements(), skillTrace);
@@ -206,6 +210,7 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.DirectDamageBreak(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.Removal(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Shield(supportSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.HealthCap(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.BeforeApply());
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Reflect(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleRetaliationSystem(skillExecutionSystem));
@@ -309,6 +314,7 @@ public final class Phase00Plugin extends JavaPlugin {
         com.inigmasgames.hytalerpg.input.NativeRuneControl.auditAssets();
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem.requireAssets();
         com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.requireAssets();
+        com.inigmasgames.hytalerpg.input.NativeSupportTetherAudit.requireAssets();
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeActionLock.requireAsset();
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeFeedback.requireAssets();
         var projectileAudit=com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileAssetAudit.requireAssets(

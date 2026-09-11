@@ -263,7 +263,7 @@ class Stage02CombatKernelTest {
 
     @Test void canonicalPotencyAndEfficiencyCompileIntoTypedKernelModifiersWithoutInventedContent() {
         var bundle = Stage01BTestSupport.bundle(); UUID player = UUID.randomUUID();
-        assertEquals(66, bundle.catalog().passives().size());
+        assertEquals(67, bundle.catalog().passives().size());
         assertTrue(bundle.catalog().passive(new PassiveId("swift_recovery")).isEmpty());
         bundle.service().equipSkill(player, SkillSlot.SKILL01, new SkillId("fire_bolt"));
         bundle.service().equipPassive(player, PassiveSlot.PASSIVE01, new PassiveId("potency"));

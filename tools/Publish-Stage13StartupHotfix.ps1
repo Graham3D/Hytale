@@ -1,6 +1,7 @@
 [CmdletBinding()]
-param([switch]$Deploy,[ValidateSet('l','m','n','o','p','q','r','s','t','u')][string]$Cohort='l')
+param([switch]$Deploy,[ValidateSet('l','m','n','o','p','q','r','s','t','u','v')][string]$Cohort='l')
 $ErrorActionPreference='Stop'
+if($Cohort -eq 'v' -and $Deploy){throw 'Cohort V is package-only: the owner explicitly prohibited automatic deployment.'}
 $root=(Resolve-Path "$PSScriptRoot\..").Path
 $out=Join-Path $root "evidence\stage-13\cohort-$Cohort"
 $mods=(Resolve-Path 'C:\Users\Zemio\AppData\Roaming\Hytale\data\pre-release\Saves\RPG\mods').Path
@@ -83,6 +84,14 @@ if($Cohort -eq 'u'){
     $archiveName='Hytale-RPG-Stage13-U-snipe-native-visuals.zip'
     $manifestName='snipe-native-visuals.json'
 }
+if($Cohort -eq 'v'){
+    $oldHash='BFF7421FA765834E32EEE819072AA9FF665C085FFCB0ECCFF9CBFF38BC3B965E'
+    $expectedTests=2193
+    $baselineCohort='u'
+    $baselineCommit='5bbc346'
+    $archiveName='Hytale-RPG-Stage13-V-support-tethers.zip'
+    $manifestName='support-tethers.json'
+}
 $suites=@(foreach($path in @('build/test-results/test','build/test-results/nativeControlTest','canvas-ui/build/test-results/test')){
     foreach($file in Get-ChildItem -LiteralPath (Join-Path $root $path) -Filter 'TEST-*.xml'){
         [xml]$xml=Get-Content -Raw -LiteralPath $file.FullName
@@ -108,11 +117,12 @@ $smoke=Get-Content -Raw (Join-Path $out 'server-smoke-summary.json')|ConvertFrom
 $jar=Join-Path $root 'build/libs/HytaleRPG-0.0.25.jar'
 $hash=(Get-FileHash -LiteralPath $jar).Hash
 if($smoke.jarSha256 -ne $hash -or $smoke.processExitCode -ne 0 -or -not $smoke.exactlyThreeMods -or -not $smoke.networkBooted -or -not $smoke.cleanShutdown -or $smoke.failure){throw 'Exact candidate smoke required'}
-if($Cohort -in @('o','p','q','r','s','t','u')){
+if($Cohort -in @('o','p','q','r','s','t','u','v')){
     $native=Get-Content -Raw (Join-Path $out 'native-spawn-integration.json')|ConvertFrom-Json
     if($native.result -ne 'PASS' -or $native.jarSha256 -ne $hash -or $native.spawned -ne 1 -or $native.requests -ne 2 -or $native.pendingRollback -ne 'PASS' -or -not $native.nativeRefValidAfterQueue){throw 'Exact candidate native spawn proof required before packaging/deploy'}
-    if($Cohort -in @('p','q','r','s','t','u') -and -not $native.sameTickAdvanceAndRestingExpiry){throw 'Retained P same-tick/expiry proof required'}
+    if($Cohort -in @('p','q','r','s','t','u','v') -and -not $native.sameTickAdvanceAndRestingExpiry){throw 'Retained P same-tick/expiry proof required'}
 }
+if($Cohort -eq 'v' -and -not $smoke.supportTetherAssetsResolved){throw 'V native held/effect/particle assets must resolve in exact candidate smoke'}
 $artifacts=Join-Path $out 'artifacts'
 New-Item -ItemType Directory -Force -Path $artifacts|Out-Null
 $expected=[ordered]@{

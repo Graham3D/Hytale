@@ -42,6 +42,8 @@ public final class CompatibilityService {
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
+        if(Set.of("arc","fork","chain").contains(passive.id().value())&&actual.contains("TETHER")&&actual.contains("SCALABLE_PAYLOAD")
+                &&(actual.contains("HEAL")||actual.contains("DAMAGE")))return CompatibilityResult.accepted(Set.of("TETHER","SCALABLE_PAYLOAD"));
         if(passive.id().value().equals("retaliation")&&com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.retaliation(skill.id().value()).filter(v->!v).isPresent())
             return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,"Retaliation requires a discrete activation without movement, reaction, channel, Aura, corpse or conversion consumption.",Set.of("RETALIATION_DISCRETE_COMPONENT"),actual);
         if(Set.of("critical_trigger","kill_trigger").contains(passive.id().value())&&

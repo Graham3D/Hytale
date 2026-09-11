@@ -36,7 +36,7 @@ class Stage09CooldownPersistenceTest {
     }
     @Test void savedCooldownMapRejectsUnboundedOrMalformedState(){
         assertThrows(IllegalArgumentException.class,()->new SavedCooldown(Double.NaN,0));assertThrows(IllegalArgumentException.class,()->new SavedCooldown(1,-1));
-        var values=new HashMap<String,SavedCooldown>();for(int i=0;i<88;i++)values.put("s"+i,new SavedCooldown(1,0));
+        var values=new HashMap<String,SavedCooldown>();for(int i=0;i<90;i++)values.put("s"+i,new SavedCooldown(1,0));
         assertThrows(IllegalArgumentException.class,()->SavedCooldown.validate(values));
     }
     @Test void failedCheckpointRetriesAreBoundedToOnePerSecond(){

@@ -131,7 +131,7 @@ class Stage13ConnectedCastingCorrectionTest {
         assertEquals("OMITTED",fields.get("itemId"));assertTrue(fields.toString().length()<1000);assertFalse(fields.toString().contains("secret"));
     }
     @Test void everyAuthoredStrikeGeometryAllowsZeroCandidatesWithoutWeakeningEntityConnections(){
-        var profiles=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(87,profiles.all().size());
+        var profiles=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(89,profiles.all().size());
         var geometry=new StrikeGeometryService();
         for(var p:profiles.all().values())if(p.strike()!=null)
             assertTrue(StrikeCastPrerequisites.check(()->geometry.query(Vec3.ZERO,Vec3.FORWARD,p.strike(),List.of())).accepted(),p.skillId());
@@ -140,7 +140,7 @@ class Stage13ConnectedCastingCorrectionTest {
             entityConnections++;var h=new Stage08ConnectionTest.Harness(p.skillId());
             assertEquals("NO_VALID_AIMED_TARGET",h.cast().code(),p.skillId());assertEquals(0,h.resourceWrites);assertTrue(h.contexts.isEmpty());
         }
-        assertEquals(3,entityConnections);
+        assertEquals(4,entityConnections); // Healing Beam also requires an explicitly acquired entity.
     }
     @Test void nativeAdapterWiresSharedAdmissionAndWorldAnchorWithoutRemovingIntrinsicTargetGuards() throws Exception {
         var root=Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale");

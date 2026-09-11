@@ -52,7 +52,7 @@ public final class ProfileComponentPolicy {
     public static boolean periodicPulse(String skill){var p=Canonical.PROFILES.all().get(skill);return p!=null&&periodicPulse(p);}
     public static boolean periodicPulse(Stage04SkillProfile p){
         return p.area()!=null&&!p.area().trap()&&(p.area().periodic()||p.family()==Stage04SkillProfile.Family.GROUND_ZONE&&p.area().impactCount()>1)
-                ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.BEAM,ConnectionProfile.Kind.DRAIN,ConnectionProfile.Kind.ORB).contains(p.connection().kind())
+                ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.BEAM,ConnectionProfile.Kind.DRAIN,ConnectionProfile.Kind.ORB,ConnectionProfile.Kind.HEAL_TETHER).contains(p.connection().kind())
                 ||p.support()!=null&&(p.support().damageInterval()>0||p.support().chillInterval()>0);
     }
     public static boolean mobileZone(String skill){

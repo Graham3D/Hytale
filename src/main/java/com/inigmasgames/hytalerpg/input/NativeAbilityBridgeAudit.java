@@ -11,8 +11,9 @@ import com.inigmasgames.hytalerpg.phase00.BuildIdentity;
 public final class NativeAbilityBridgeAudit {
     public static final String ROOT_ID = "Root_RPG_Ability_Bridge";
     public static final String SNIPE_ROOT_ID = "Root_RPG_Snipe_Release";
+    public static final String HEALING_ROOT_ID = "Root_RPG_Healing_Beam_Held";
     public static String rootForItem(String item) {
-        return "RPG_Ability_Snipe".equals(item) ? SNIPE_ROOT_ID : ROOT_ID;
+        return "RPG_Ability_Healing_Beam".equals(item)?HEALING_ROOT_ID:"RPG_Ability_Snipe".equals(item) ? SNIPE_ROOT_ID : ROOT_ID;
     }
     private static final class Log { static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass(); }
 

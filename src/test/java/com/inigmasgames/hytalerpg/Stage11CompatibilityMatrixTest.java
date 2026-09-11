@@ -68,7 +68,7 @@ class Stage11CompatibilityMatrixTest {
             if(r.gate.equals("PROFILE_GATE"))profileFailures.put(skill.id()+"/"+passive.id(),r.detail);
         }
         write("skill-passive-matrix.json",rows);write("single-profile-gates.json",profileFailures);write("passive-implemented-profile-eligibility.json",eligible);
-        assertEquals(5742,rows.size());assertEquals(66,eligible.size(),"Every primitive needs an implemented positive profile");
+        assertEquals(5963,rows.size());assertEquals(67,eligible.size(),"Every primitive needs an implemented positive profile");
         assertTrue(profileFailures.isEmpty(),profileFailures.toString());
     }
     @Test void all2145PairsClassifiedAgainstAll87Skills()throws Exception{
@@ -84,10 +84,10 @@ class Stage11CompatibilityMatrixTest {
             }
             rows.add(Map.of("first",selected.getFirst().id().value(),"second",selected.getLast().id().value(),"classification",accepted.isEmpty()?capabilities.isEmpty()?missing.isEmpty()?"NO_VALID_IMPLEMENTED_SKILL":"CATALOG_ONLY_PENDING_LEGACY_RUNTIME":"COMPILED_BUT_RUNTIME_CAPABILITY_GATED":"VALID_ON_LISTED_PROFILES",
                     "compiledProfileSkillsConnectedUnverified",accepted,"catalogOnlySkills",missing,"rejectedByCode",rejected,"profileGates",gated,"runtimeCapabilityGates",capabilities));
-            assertEquals(87,accepted.size()+missing.size()+gated.size()+capabilities.size()+rejected.values().stream().mapToInt(Integer::intValue).sum());
+            assertEquals(89,accepted.size()+missing.size()+gated.size()+capabilities.size()+rejected.values().stream().mapToInt(Integer::intValue).sum());
         }
         write("passive-pair-matrix.json",rows);write("pair-profile-gates.json",profileFailures);
-        assertEquals(2145,rows.size());assertTrue(profileFailures.isEmpty(),profileFailures.toString());
+        assertEquals(2211,rows.size());assertTrue(profileFailures.isEmpty(),profileFailures.toString());
     }
     @Test void deterministicValidSixLinkGraphsPreserveOrderingScopeAndBudgets()throws Exception{
         var random=new Random(110033);int valid=0,attempts=0,rejected=0;var covered=new TreeSet<String>();

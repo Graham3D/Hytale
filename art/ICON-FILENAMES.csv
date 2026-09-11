@@ -152,3 +152,6 @@ Kind,Name,Filename,Folder,CanonicalId
 "Passive","Retaliation","PassiveRetaliation.png","art/Passives","retaliation"
 "Passive","Critical Trigger","PassiveCriticaltrigger.png","art/Passives","critical_trigger"
 "Passive","Kill Trigger","PassiveKilltrigger.png","art/Passives","kill_trigger"
+"Skill","Healing Beam","SkillHealingbeam.png","art/Skills","healing_beam"
+"Skill","Blessing of Protection","SkillBlessingofprotection.png","art/Skills","blessing_of_protection"
+"Passive","Arc","PassiveArc.png","art/Passives","arc"

@@ -13,7 +13,7 @@ public record SavedCooldown(double remainingWork,double baseRecovery,java.util.L
         public Queued{if(!Double.isFinite(remainingWork)||remainingWork<=0||remainingWork>86400||!Double.isFinite(baseRecovery)||baseRecovery<0||baseRecovery>100)throw new IllegalArgumentException("Invalid queued charge work");}
     }
     public static java.util.Map<String,SavedCooldown> validate(java.util.Map<String,SavedCooldown> values){
-        if(values==null||values.size()>87)throw new IllegalArgumentException("Invalid saved cooldown count");
+        if(values==null||values.size()>89)throw new IllegalArgumentException("Invalid saved cooldown count");
         values.forEach((id,value)->{if(id==null||id.isBlank()||id.length()>128||value==null)throw new IllegalArgumentException("Invalid saved cooldown entry");});
         return java.util.Map.copyOf(values);
     }

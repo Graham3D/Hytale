@@ -1,0 +1,44 @@
+[
+  {
+    "exitCode": 73,
+    "boundary": "BEFORE_DEBIT",
+    "processHaltNotPowerLoss": true,
+    "restarts": 3
+  },
+  {
+    "exitCode": 73,
+    "boundary": "DEBIT_BEFORE_PUBLICATION",
+    "processHaltNotPowerLoss": true,
+    "restarts": 3
+  },
+  {
+    "exitCode": 73,
+    "boundary": "OWNER_HIT",
+    "processHaltNotPowerLoss": true,
+    "restarts": 3
+  },
+  {
+    "exitCode": 73,
+    "boundary": "SHARED_HIT",
+    "processHaltNotPowerLoss": true,
+    "restarts": 3
+  },
+  {
+    "exitCode": 73,
+    "boundary": "CLEAN_SETTLEMENT",
+    "processHaltNotPowerLoss": true,
+    "restarts": 3
+  },
+  {
+    "exitCode": 73,
+    "boundary": "ENCOUNTER_CONTRIBUTION_DURABLE",
+    "processHaltNotPowerLoss": true,
+    "restarts": 3
+  },
+  {
+    "exitCode": 73,
+    "boundary": "ENCOUNTER_PLAN_DURABLE",
+    "processHaltNotPowerLoss": true,
+    "restarts": 3
+  }
+]

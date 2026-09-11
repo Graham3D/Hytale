@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Backend and pinned native object tests, never connected Aura/input/animation evidence. */
 class Stage09AuraRuntimeTest {
     @Test void allSixteenSupportProfilesArePresent(){
-        var h=new Harness("thorns_aura");assertEquals(16,h.profiles.all().values().stream().filter(p->p.support()!=null).count());
+        var h=new Harness("thorns_aura");assertEquals(17,h.profiles.all().values().stream().filter(p->p.support()!=null).count());
         for(var id:List.of("thorns_aura","chilling_aura","pedanticism","reaping_storm"))assertTrue(h.profiles.require(id).support().aura());
     }
     @Test void thornsPaysFractionalFirstSliceBeforeGrantingReflection(){

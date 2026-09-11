@@ -52,7 +52,7 @@ class Stage13SkillTreeIconsSearchTest {
                 assertEquals(List.of(skill.getKey()), result.library().stream().map(StaticSkillTreeViewModel.LibraryItem::id).toList(), query);
             }
         }
-        assertEquals(87, projector.project(player, StaticSkillTreeViewModel.Tab.SKILLS, "", "", "", null, "").library().size());
+        assertEquals(89, projector.project(player, StaticSkillTreeViewModel.Tab.SKILLS, "", "", "", null, "").library().size());
         assertTrue(projector.project(player, StaticSkillTreeViewModel.Tab.SKILLS, "no-such-content-xyz", "", "", null, "").library().isEmpty());
         assertTrue(projector.project(player, StaticSkillTreeViewModel.Tab.SKILLS, "firebolt", "Swords", "SWORD", null, "").library().isEmpty());
     }
@@ -63,7 +63,7 @@ class Stage13SkillTreeIconsSearchTest {
         UUID player = UUID.randomUUID();
         assertEquals(List.of("potency"), projector.project(player, StaticSkillTreeViewModel.Tab.PASSIVES, "POTENCY", "", "", null, "")
                 .library().stream().map(StaticSkillTreeViewModel.LibraryItem::id).toList());
-        assertEquals(66, projector.project(player, StaticSkillTreeViewModel.Tab.PASSIVES, "", "", "", null, "").library().size());
+        assertEquals(67, projector.project(player, StaticSkillTreeViewModel.Tab.PASSIVES, "", "", "", null, "").library().size());
     }
 
     @Test void equippedAndLibraryIconsFollowAuthoritativeSkillIds() {

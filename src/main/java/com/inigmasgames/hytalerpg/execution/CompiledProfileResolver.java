@@ -150,7 +150,7 @@ public final class CompiledProfileResolver {
         }
         if(authored.connection()!=null){
             scale(root,"connection",.7,"intervalSeconds");
-            if(authored.connection().channel())scale(root,"connection",1/.7,"coefficient");
+            if(authored.connection().channel()&&!authored.connection().friendlyTether())scale(root,"connection",1/.7,"coefficient");
         }
         scale(root,"support",.7,"damageInterval","chillInterval");
     }
