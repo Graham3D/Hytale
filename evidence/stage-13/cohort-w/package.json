@@ -1,0 +1,20 @@
+{
+  "cohort": "R032-W",
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 2197
+  },
+  "changedEntries": [
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port$1.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem$Absorb.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem$Removal.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.class"
+  ],
+  "allOtherEntriesByteIdenticalToV": true,
+  "jarSha256": "585E0A32B9682B5BE06FF8202EF39D9D88302E8FF178457A894440402E560EA3",
+  "archiveSha256": "2C44FBA7B2BDE71AB0D49AB8806B7E70F04641B57C24F6489CFEA3A92053822E",
+  "rollback": "PASS",
+  "connectedClientVerified": false
+}

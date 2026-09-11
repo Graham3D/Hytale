@@ -850,7 +850,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 public java.util.Optional<Target> resolveFriendly(String id){
                     if(id==null||id.equals(playerRef.getUuid().toString()))return java.util.Optional.empty();
                     var ref=store.getExternalData().getRefFromUUID(UUID.fromString(id));
-                    if(!HytaleSupportSystem.eligibleAlly(store,actor,ref))return java.util.Optional.empty();
+                    if(!HytaleSupportSystem.eligibleHealingAlly(store,actor,ref))return java.util.Optional.empty();
                     var box=store.getComponent(ref,BoundingBox.getComponentType());var transform=store.getComponent(ref,TransformComponent.getComponentType());
                     if(box==null||transform==null)return java.util.Optional.empty();
                     var position=vec(transform.getPosition());var b=box.getBoundingBox();
@@ -869,7 +869,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     return new Query(targets,overflow);
                 }
                 public boolean injured(Target target){
-                    var ref=store.getExternalData().getRefFromUUID(UUID.fromString(target.id()));if(!HytaleSupportSystem.eligibleAlly(store,actor,ref))return false;
+                    var ref=store.getExternalData().getRefFromUUID(UUID.fromString(target.id()));if(!HytaleSupportSystem.eligibleHealingAlly(store,actor,ref))return false;
                     var hp=store.getComponent(ref,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());return hp!=null&&hp.get()<hp.getMax();
                 }
                 public double heal(SkillExecutionContext context,Target target,int tick,double coefficient){

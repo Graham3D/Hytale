@@ -1,5 +1,8 @@
 # Stage 13 cohort V — Healing Beam, Blessing of Protection, Tether continuations
 
+Follow-up: [correction W](stage-13-healing-npc-correction-report.md) fixes the
+owner's ImmersiveNPCs/Jonalith Healing Beam test while retaining V for rollback.
+
 ## Owner-authorized deployment update — 2026-09-11 20:19 UTC
 
 After packaging, the owner explicitly requested: “Deploy it so I can test.”

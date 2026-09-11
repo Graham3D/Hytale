@@ -368,13 +368,23 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 &&HytaleAreaQueries.clear(store,position(store,actor).add(new Vec3(0,1.35,0)),bounds(store,target).centre());
     }
     static boolean eligibleAlly(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target){
+        return eligibleAlly(store,actor,target,false);
+    }
+    /** Damage immunity is not healing immunity. Only the Heal Tether opts into this policy. */
+    static boolean eligibleHealingAlly(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target){
+        return eligibleAlly(store,actor,target,true);
+    }
+    private static boolean eligibleAlly(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target,boolean healing){
         if(target==null||!target.isValid()||!alive(store,target))return false;
         if(actor.equals(target))return true;
-        if(store.getComponent(target,Invulnerable.getComponentType())!=null)return false;
+        boolean invulnerable=store.getComponent(target,Invulnerable.getComponentType())!=null;
         var faction=store.getComponent(target,WorldSupport.getComponentType());
         // No native Party/Team membership API was found. NEUTRAL/no-PvP is not affirmative ally membership.
         if(faction==null)return false;var attitude=faction.getAttitude(target,actor,store);
-        return attitude==Attitude.FRIENDLY||attitude==Attitude.REVERED;
+        return permitsAllyAttitude(attitude,invulnerable,healing);
+    }
+    static boolean permitsAllyAttitude(Attitude attitude,boolean invulnerable,boolean healing){
+        return (healing||!invulnerable)&&(attitude==Attitude.FRIENDLY||attitude==Attitude.REVERED);
     }
     static boolean inRange(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> target,double range){
         if(actor.equals(target))return true;var origin=position(store,actor).add(new Vec3(0,1.35,0));

@@ -1,0 +1,16 @@
+{
+  "deployedAtUtc": "2026-09-11T21:35:26.5400712Z",
+  "cohort": "R032-W",
+  "jar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.25.jar",
+  "jarSha256": "585E0A32B9682B5BE06FF8202EF39D9D88302E8FF178457A894440402E560EA3",
+  "role": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\ImmersiveNPCs\\profiles\\jonalith\\native-role\\Jonalith.json",
+  "roleSha256": "060476A2AAFBE35E12B54B6E8B0B2D00829EF6012FEB7F2B297151FB08F852E9",
+  "roleChange": "DefaultPlayerAttitude=Friendly; Invulnerable=true retained",
+  "backup": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-w\\before\\save\\20260911T213521Z",
+  "backupFiles": 473,
+  "unchangedFiles": 471,
+  "modCount": 4,
+  "npcModJarReplaced": false,
+  "playerAndNpcStatsModified": false,
+  "connectedClientVerified": false
+}
