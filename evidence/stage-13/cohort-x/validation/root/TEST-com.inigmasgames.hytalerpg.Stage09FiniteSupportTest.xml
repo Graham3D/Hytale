@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-09-11T22:02:24.539Z" hostname="GRAHAM" time="0.087">
+  <properties/>
+  <testcase name="tauntEliteIsSeparateFromHardControlDR()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.004"/>
+  <testcase name="weakHexIsPointEightFiveAndRefreshesWithoutMultiplication()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="worldIsolationAndWorldCleanup()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.005"/>
+  <testcase name="duplicateRallyDoesNotStackCopies()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="finiteTargetBudgetRejectsWithoutDiscardingEarlierEffects()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.004"/>
+  <testcase name="markNeverBoostsOtherCastersOrNativeHits()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.004"/>
+  <testcase name="overfullBurstRejectsWholeBatch()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="fearGraceExcludesFirstQuarterSecond()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="tauntCommitsOneStaminaCostAndCooldown()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="intimidateCatalogDoesNotAdvertiseDamageOrAcceptPotency()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.004"/>
+  <testcase name="newMarkReplacesPreviousTargetForSameCaster()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="weakHexAndRallyUseSeparateOperators()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.007"/>
+  <testcase name="bossRootUsesNormativeThirtyPercentTwoSecondSubstitute()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="identicalForeignRallyUsesStrongestNotSum()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.004"/>
+  <testcase name="finiteEffectPreservesAllExecutionTraceIds()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="battleCrySamplesOnceAndDoesNotBecomeAura()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.004"/>
+  <testcase name="hunterMarkAddsToExistingIncreasedBucket()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="ownerLogoutAndTargetRemovalForgetFiniteEffects()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.008"/>
+  <testcase name="cohortHasExactlyFiveFiniteZeroDamageProfiles()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.004"/>
+  <testcase name="intimidateHasNoPlaceholderDamageAndTwoSecondsFear()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.003"/>
+  <testcase name="periodicOrCancelledDamageDoesNotBreakFear()" classname="com.inigmasgames.hytalerpg.Stage09FiniteSupportTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

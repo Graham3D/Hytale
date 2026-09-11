@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.CatalogAndSlotTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-09-11T22:02:19.562Z" hostname="GRAHAM" time="0.087">
+  <properties/>
+  <testcase name="allPermanentSlotParsersAreExactAndBounded()" classname="com.inigmasgames.hytalerpg.CatalogAndSlotTest" time="0.018"/>
+  <testcase name="canonicalCatalogLoadsAndResolvesFormattingWithoutGuessing()" classname="com.inigmasgames.hytalerpg.CatalogAndSlotTest" time="0.067"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

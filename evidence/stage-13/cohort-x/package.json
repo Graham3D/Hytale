@@ -1,0 +1,27 @@
+{
+  "cohort": "R032-X",
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 2203
+  },
+  "changedEntries": [
+    "com/inigmasgames/hytalerpg/execution/ExecutionFailureDiagnostics.class",
+    "com/inigmasgames/hytalerpg/execution/SkillExecutionService$1.class",
+    "com/inigmasgames/hytalerpg/execution/SkillExecutionService$ChannelCooldown.class",
+    "com/inigmasgames/hytalerpg/execution/SkillExecutionService$PendingCommit.class",
+    "com/inigmasgames/hytalerpg/execution/SkillExecutionService$Prepared.class",
+    "com/inigmasgames/hytalerpg/execution/SkillExecutionService$Rejection.class",
+    "com/inigmasgames/hytalerpg/execution/SkillExecutionService.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleConversionSystem.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/NativeNpcAttitudes.class"
+  ],
+  "allOtherEntriesByteIdenticalToW": true,
+  "jarSha256": "EA254981EF05FA2FB93F7E5095A935BF9114E0E46F65CD270B9EA58CD63EA4EF",
+  "archiveSha256": "0CB808903E6A9EFCFAE3E75F498E0E94CDB0CCF80D0DDF687B2F226464548488",
+  "rollback": "PASS",
+  "connectedClientVerified": false
+}

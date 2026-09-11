@@ -1,5 +1,9 @@
 # Stage 13 correction W — Healing Beam / ImmersiveNPCs interoperability
 
+Follow-up: [correction X](stage-13-native-attitude-cache-correction-report.md)
+addresses W's connected `VALIDATION_ERROR_NullPointerException`. W did not
+establish successful connected casting and remains available for rollback.
+
 Date: 2026-09-11. Baseline RPG `10bae69` / deployed R032-V. Candidate R032-W,
 version 0.0.25. Scope: owner-requested Healing Beam NPC failure and deployment.
 No icon investigation/redesign, native-input redesign, new content, or persistence changes.

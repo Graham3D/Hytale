@@ -1,0 +1,2006 @@
+{
+  "passives": [
+    {
+      "modifierOps": [
+        "Increase projectile speed by 40% and maximum projectile travel distance by 20%."
+      ],
+      "id": "accelerant",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Accelerant",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "When the linked persistent effect expires normally, leave a secondary effect with 60% geometry, 40% of the original duration, and 50% effect."
+      ],
+      "id": "aftermath",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Aftermath",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "One terminal secondary at 60%; 8 m and LOS from primary; shared pulse visited ledger before Fork and Chain."
+      ],
+      "id": "arc",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 13,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Arc",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Successful repeated uses within 4 seconds build up to 5 Attunement stacks. Each stack grants \\+3% effect magnitude and -3% resource cost to the linked skill."
+      ],
+      "id": "attunement",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Attunement",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Reduce projectile speed by 35% but increase projectile effect magnitude by 30%."
+      ],
+      "id": "ballistics",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Ballistics",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Fire the linked projectile 3 times sequentially at 60% effect per projectile."
+      ],
+      "id": "barrage",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Barrage",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Create two secondary zones/impact areas offset to either side of the primary location. Each secondary uses 60% radius and 45% effect."
+      ],
+      "id": "cascade",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Cascade",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "After its current enemy-contact continuation resolves, redirect the projectile/effect to up to 2 additional nearby enemies."
+      ],
+      "id": "chain",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Chain",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Preserve the primary strike at full effect and add an 80-degree, 3 m frontal cleave that hits additional valid enemies at 60% effect."
+      ],
+      "id": "cleaving_edge",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Cleaving Edge",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Reduce direct hit damage by 15%, but increase Burn magnitude by 50% and Burn duration by 25%."
+      ],
+      "id": "combustion",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Combustion",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Reduce the linked skill\u0027s maximum effective Poison stack count by 40% (minimum 1), but increase each Poison stack\u0027s magnitude by 75%."
+      ],
+      "id": "concentrated_venom",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Concentrated Venom",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase linked damage/healing/barrier effect by 30%, but reduce its affected geometry scale by 30%."
+      ],
+      "id": "concentration",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Concentration",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Reduce Mana reservation or continuous upkeep by 20%, but reduce Aura effect magnitude by 10%."
+      ],
+      "id": "conservation",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 9,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Conservation",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "When the linked skill scores a critical hit, repeat its primary execution once at 50% effect after 0.20 seconds. Internal cooldown: 1.5 seconds."
+      ],
+      "id": "critical_trigger",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Critical Trigger",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "When a linked summon dies or expires, it explodes in a 3 m radius for 60% of the linked summon skill\u0027s normal damage-effect power."
+      ],
+      "id": "death_pact",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 10,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Death Pact",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Apply \\+1 additional Chill stack per successful Chill application, but reduce direct hit damage by 10%."
+      ],
+      "id": "deep_freeze",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Deep Freeze",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "After the primary execution, automatically execute the linked spell a second time after 0.45 seconds at 70% effect. The echo pays no additional resource cost and does not start another cooldown."
+      ],
+      "id": "echo",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 6,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Echo",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Reduce the linked skill\u0027s declared spend cost or continuous upkeep by 15%."
+      ],
+      "id": "efficiency",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Efficiency",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Deal 35% increased damage to targets below 30% current Health at the instant the damage event is gathered."
+      ],
+      "id": "executioner",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Executioner",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase the linked skill\u0027s radius by 25%, but reduce its damage/healing/barrier magnitude by 10%."
+      ],
+      "id": "expanded_radius",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 6,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Expanded Radius",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Reduce beam/line width by 35% and increase effect magnitude by 30%."
+      ],
+      "id": "focused_channel",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Focused Channel",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "When forward Pierce is exhausted, fork the projectile into 2 child projectiles at the next valid enemy contact."
+      ],
+      "id": "fork",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Fork",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Direct hits gain a 25% chance to apply Bleed for 4 seconds, dealing 12% of the triggering pre-mitigation Physical hit per second."
+      ],
+      "id": "hemorrhage",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Hemorrhage",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Allow projectiles to steer toward the committed valid target or a server-selected nearby target, with 10% reduced effect."
+      ],
+      "id": "homing",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Homing",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase knockback distance/force and stagger contribution by 75%, but reduce damage magnitude by 10%."
+      ],
+      "id": "impact_force",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Impact Force",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "When the linked skill kills an enemy, repeat the primary execution at 50% effect toward the nearest valid enemy within 12 m. Internal cooldown: 1.0 second."
+      ],
+      "id": "kill_trigger",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Kill Trigger",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Restore the linked skill\u0027s declared resource equal to 3% of final damage dealt, capped at 8% of maximum resource per root cast."
+      ],
+      "id": "leeching",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Leeching",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Pay Health instead of the linked skill\u0027s normal Mana/Stamina cost. Health cost is 150% of the original numeric resource cost, and linked effect magnitude is increased by 10%."
+      ],
+      "id": "lifeblood",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Lifeblood",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase finite effect duration by 40%, but increase spend cost or upkeep attributable to that finite effect by 15%."
+      ],
+      "id": "lingering",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Lingering",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase target range, projectile maximum travel distance, beam/line/tether reach, or movement destination range by 25%."
+      ],
+      "id": "long_reach",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Long Reach",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase linked summons\u0027 maximum Health and damage/effect by 30%, but reduce their duration by 25%."
+      ],
+      "id": "minion_empowerment",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 10,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Minion Empowerment",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Convert the linked terrain-anchored Ground Zone into a caster-attached Mobile Zone while preserving its finite duration, payload, and pulse rules, at 80% effect."
+      ],
+      "id": "mobile_domain",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Mobile Domain",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase linked damage by 5% per meter of actual displacement before impact, capped at \\+50%."
+      ],
+      "id": "momentum",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Momentum",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Repeat the linked strike twice after the primary attack, each repeat dealing 65% effect."
+      ],
+      "id": "multistrike",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Multistrike",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Deal 25% increased damage to targets currently Rooted, Frozen, Stunned, or Feared."
+      ],
+      "id": "opportunist",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Opportunist",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Convert the linked projectile/orb payload into an orbiting effect around the caster for 4 seconds at 70% effect."
+      ],
+      "id": "orbit",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Orbit",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase linked effect magnitude by 25%, but increase its spend cost or continuous upkeep by 20%."
+      ],
+      "id": "overcharge",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Overcharge",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Healing in excess of the target\u0027s missing Health becomes a temporary barrier, capped at 20% of that target\u0027s maximum Health and lasting 6 seconds."
+      ],
+      "id": "overflow",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 9,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Overflow",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Also strike one additional valid enemy within 3 m of the primary target at 60% effect."
+      ],
+      "id": "phantom_reach",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Phantom Reach",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Allow each projectile to pierce 2 additional enemy contacts."
+      ],
+      "id": "piercing",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Piercing",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase the linked skill\u0027s damage, healing, or barrier magnitude by 15%."
+      ],
+      "id": "potency",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 6,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Potency",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "When an enemy dies carrying an eligible status applied by the linked skill, spread the strongest eligible status to valid enemies within 4 m at 70% of its remaining magnitude/duration."
+      ],
+      "id": "proliferation",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Proliferation",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Reduce pre-execution cast/activation time by 20%."
+      ],
+      "id": "rapid_invocation",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Rapid Invocation",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Reduce pulse interval by 30%; each pulse resolves at 80% of normal effect for the same total duration."
+      ],
+      "id": "rapid_pulse",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Rapid Pulse",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Reduce barrier capacity by 20%, but reflect 20% of damage actually absorbed back to the attacker."
+      ],
+      "id": "reflective_ward",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 9,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Reflective Ward",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Push susceptible enemies up to 2.5 m away from the effect center when the linked area resolves or pulses; reduce linked damage by 10%."
+      ],
+      "id": "repulsion",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Repulsion",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase Aura radius by 40%, but increase reservation/upkeep by 15%."
+      ],
+      "id": "resonance",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 9,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Resonance",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Disable manual activation. After the player accumulates incoming damage equal to 15% of maximum Health, automatically execute the linked skill at 70% effect, then reset the damage accumulator."
+      ],
+      "id": "retaliation",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Retaliation",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "After the projectile exhausts its normal forward path, send it back toward the caster."
+      ],
+      "id": "return",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Return",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase the linked reaction/counter window by 30% and retaliation effect by 25%."
+      ],
+      "id": "reversal",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Reversal",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Allow up to 2 terrain ricochets before the projectile terminates."
+      ],
+      "id": "ricochet",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Ricochet",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Every third committed use of the linked skill deals 60% increased damage and 50% increased stagger contribution."
+      ],
+      "id": "ruthless",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Ruthless",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Grant the linked skill one additional stored charge, but increase recharge/cooldown time by 30%."
+      ],
+      "id": "second_wind",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Second Wind",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "The Aura no longer affects the caster, but its beneficial effect on allies is increased by 35%."
+      ],
+      "id": "selflessness",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 9,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Selflessness",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "When the linked self-barrier is created, grant the nearest valid ally within 8 m a barrier equal to 50% of the caster\u0027s created barrier."
+      ],
+      "id": "shared_aegis",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 9,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Shared Aegis",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "When the linked skill kills a Frozen enemy, create a 3 m Cold explosion at 50% of the killing hit\u0027s pre-mitigation effect."
+      ],
+      "id": "shatter",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Shatter",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "A successful damaging strike releases a 3 m radial Physical shockwave at 40% of the strike\u0027s effect."
+      ],
+      "id": "shockwave",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Shockwave",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "On the first damaging enemy impact of each projectile, create a 2.5 m radial secondary hit at 50% of the projectile\u0027s effect."
+      ],
+      "id": "shrapnel",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Shrapnel",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "The linked skill activates after a short 2.0 second delay, but deals/heals/shields at 135% of normal effect."
+      ],
+      "id": "skill_delay",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 6,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Skill Delay",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "When a projectile reaches terminal termination, release 3 secondary projectiles at 35% effect each."
+      ],
+      "id": "splinterburst",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Splinterburst",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Create \\+1 additional summon; every summon created by the linked skill has 25% reduced Health and damage/effect."
+      ],
+      "id": "swarm",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 10,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Swarm",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Direct hits gain a 15% chance to Fear susceptible non-boss enemies for 1.5 seconds."
+      ],
+      "id": "terror",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Terror",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase healing by 35% when the recipient is below 35% current Health at heal resolution."
+      ],
+      "id": "triage",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 9,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Triage",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Pull susceptible enemies up to 2 m toward the effect center when the linked area resolves or pulses; reduce linked damage by 10%."
+      ],
+      "id": "vacuum",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Vacuum",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase Poison duration by 30% and apply \\+1 Poison stack on each successful Poison application."
+      ],
+      "id": "virulence",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Virulence",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Fire 2 additional projectiles in a symmetric spread; all projectiles deal 75% of the linked skill\u0027s normal effect."
+      ],
+      "id": "volley",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 7,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Volley",
+      "connectedProof": false
+    },
+    {
+      "modifierOps": [
+        "Increase beam/line width by 50%, but reduce effect magnitude by 15%."
+      ],
+      "id": "widening",
+      "limitations": [
+        "Only compiler-approved targets; see exact matrix and runtime tests",
+        "Recipient skill native/role/API limitations also apply",
+        "No positive connected all-passive execution evidence"
+      ],
+      "phase": 11,
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Widening",
+      "connectedProof": false
+    }
+  ],
+  "releaseReady": false,
+  "explanation": "Three native integration gaps are not established universal engine impossibilities; do not promote them to implemented/proven-capability-blocked.",
+  "classificationCompleteForRelease": false,
+  "skills": [
+    {
+      "id": "arcane_bolt",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Arcane Bolt",
+      "connectedProof": false
+    },
+    {
+      "id": "arcane_missiles",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Arcane Missiles",
+      "connectedProof": false
+    },
+    {
+      "id": "avalanche",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BOMBARDMENT",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Avalanche",
+      "connectedProof": false
+    },
+    {
+      "id": "axe_toss",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Axe Toss",
+      "connectedProof": false
+    },
+    {
+      "id": "backstab",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Backstab",
+      "connectedProof": false
+    },
+    {
+      "id": "ball_lightning",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "ORB",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Ball Lightning",
+      "connectedProof": false
+    },
+    {
+      "id": "battle_cry",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BURST",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Battle Cry",
+      "connectedProof": false
+    },
+    {
+      "id": "blessing_of_protection",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "DIRECT_TARGET",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Blessing of Protection",
+      "connectedProof": false
+    },
+    {
+      "id": "blizzard",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "GROUND_ZONE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Blizzard",
+      "connectedProof": false
+    },
+    {
+      "id": "blunderbuss_shot",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Blunderbuss Shot",
+      "connectedProof": false
+    },
+    {
+      "id": "bomb_toss",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Bomb Toss",
+      "connectedProof": false
+    },
+    {
+      "id": "bone_cage",
+      "activationGate": "BONE_CAGE_NATIVE_ENEMY_ONLY_COLLISION_UNVERIFIED",
+      "limitations": [
+        "BONE_CAGE_NATIVE_ENEMY_ONLY_COLLISION_UNVERIFIED",
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "WALL",
+      "status": "INTENTIONALLY_DISABLED_BY_MASTER_COLLISION_GATE",
+      "name": "Bone Cage",
+      "connectedProof": false
+    },
+    {
+      "id": "bone_shard",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Bone Shard",
+      "connectedProof": false
+    },
+    {
+      "id": "brood_call",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "SUMMON",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Brood Call",
+      "connectedProof": false
+    },
+    {
+      "id": "chain_lightning",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "DIRECT_TARGET",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Chain Lightning",
+      "connectedProof": false
+    },
+    {
+      "id": "charge",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "MOVEMENT",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Charge",
+      "connectedProof": false
+    },
+    {
+      "id": "chilling_aura",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "AURA",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Chilling Aura",
+      "connectedProof": false
+    },
+    {
+      "id": "cold_blast",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Cold Blast",
+      "connectedProof": false
+    },
+    {
+      "id": "cold_wave",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "CONE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Cold Wave",
+      "connectedProof": false
+    },
+    {
+      "id": "comet",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "OVERHEAD",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Comet",
+      "connectedProof": false
+    },
+    {
+      "id": "consume_minion",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "SUMMON",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Consume Minion",
+      "connectedProof": false
+    },
+    {
+      "id": "corpse_burst",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "CORPSE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Corpse Burst",
+      "connectedProof": false
+    },
+    {
+      "id": "crossbow_bolt",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Crossbow Bolt",
+      "connectedProof": false
+    },
+    {
+      "id": "dagger_flurry",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Dagger Flurry",
+      "connectedProof": false
+    },
+    {
+      "id": "dive_strike",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "MOVEMENT",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Dive Strike",
+      "connectedProof": false
+    },
+    {
+      "id": "dominate",
+      "activationGate": "",
+      "limitations": [
+        "Native source-role coverage restricted to audited Wolf_Black",
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "DIRECT_TARGET",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Dominate",
+      "connectedProof": false
+    },
+    {
+      "id": "earthquake",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "GROUND_ZONE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Earthquake",
+      "connectedProof": false
+    },
+    {
+      "id": "emanatism",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "AURA",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Emanatism",
+      "connectedProof": false
+    },
+    {
+      "id": "execution_strike",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Execution Strike",
+      "connectedProof": false
+    },
+    {
+      "id": "explosive_flask",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Explosive Flask",
+      "connectedProof": false
+    },
+    {
+      "id": "finishing_strike",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Finishing Strike",
+      "connectedProof": false
+    },
+    {
+      "id": "fire_bolt",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Fire Bolt",
+      "connectedProof": false
+    },
+    {
+      "id": "fireball",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Fireball",
+      "connectedProof": false
+    },
+    {
+      "id": "flame_weapon",
+      "activationGate": "",
+      "limitations": [
+        "Native basic-hit application is not integrated; supported RPG hit path only",
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BUFF",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Flame Weapon",
+      "connectedProof": false
+    },
+    {
+      "id": "frenzy",
+      "activationGate": "NATIVE_PER_ACTOR_BASIC_ATTACK_CADENCE_UNVERIFIED",
+      "limitations": [
+        "NATIVE_PER_ACTOR_BASIC_ATTACK_CADENCE_UNVERIFIED",
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BUFF",
+      "status": "IMPLEMENTATION_BLOCKED_NATIVE_INTEGRATION_UNVERIFIED",
+      "name": "Frenzy",
+      "connectedProof": false
+    },
+    {
+      "id": "frost_bolt",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Frost Bolt",
+      "connectedProof": false
+    },
+    {
+      "id": "frost_nova",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BURST",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Frost Nova",
+      "connectedProof": false
+    },
+    {
+      "id": "ground_slam",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BURST",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Ground Slam",
+      "connectedProof": false
+    },
+    {
+      "id": "guard",
+      "activationGate": "NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED",
+      "limitations": [
+        "NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED",
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "REACTION",
+      "status": "IMPLEMENTATION_BLOCKED_NATIVE_INTEGRATION_UNVERIFIED",
+      "name": "Guard",
+      "connectedProof": false
+    },
+    {
+      "id": "healing_beam",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BEAM",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Healing Beam",
+      "connectedProof": false
+    },
+    {
+      "id": "heavy_swing",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Heavy Swing",
+      "connectedProof": false
+    },
+    {
+      "id": "hunter_s_mark",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "DIRECT_TARGET",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Hunter\u0027s Mark",
+      "connectedProof": false
+    },
+    {
+      "id": "intimidate",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "DIRECT_TARGET",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Intimidate",
+      "connectedProof": false
+    },
+    {
+      "id": "jump_strike",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "MOVEMENT",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Jump Strike",
+      "connectedProof": false
+    },
+    {
+      "id": "life_drain",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BEAM",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Life Drain",
+      "connectedProof": false
+    },
+    {
+      "id": "lightning_bolt",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "LINE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Lightning Bolt",
+      "connectedProof": false
+    },
+    {
+      "id": "managuard",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "AURA",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Managuard",
+      "connectedProof": false
+    },
+    {
+      "id": "maul_swing",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Maul Swing",
+      "connectedProof": false
+    },
+    {
+      "id": "meteor",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "OVERHEAD",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Meteor",
+      "connectedProof": false
+    },
+    {
+      "id": "minor_heal",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "DIRECT_TARGET",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Minor Heal",
+      "connectedProof": false
+    },
+    {
+      "id": "orbiting_shadow_blades",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "ORB",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Orbiting Shadow Blades",
+      "connectedProof": false
+    },
+    {
+      "id": "pack_howl",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BURST",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Pack Howl",
+      "connectedProof": false
+    },
+    {
+      "id": "pedanticism",
+      "activationGate": "",
+      "limitations": [
+        "Native enemy cooldown-progress adapter unavailable; RPG authority only",
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "AURA",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Pedanticism",
+      "connectedProof": false
+    },
+    {
+      "id": "poison_cloud",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "GROUND_ZONE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Poison Cloud",
+      "connectedProof": false
+    },
+    {
+      "id": "pounce",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "MOVEMENT",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Pounce",
+      "connectedProof": false
+    },
+    {
+      "id": "powder_mine",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "TRAP",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Powder Mine",
+      "connectedProof": false
+    },
+    {
+      "id": "quick_shot",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Quick Shot",
+      "connectedProof": false
+    },
+    {
+      "id": "quick_slash",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Quick Slash",
+      "connectedProof": false
+    },
+    {
+      "id": "quickstep",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "MOVEMENT",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Quickstep",
+      "connectedProof": false
+    },
+    {
+      "id": "reaping_storm",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "AURA",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Reaping Storm",
+      "connectedProof": false
+    },
+    {
+      "id": "reflective_hide",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "REACTION",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Reflective Hide",
+      "connectedProof": false
+    },
+    {
+      "id": "revive_fallen",
+      "activationGate": "",
+      "limitations": [
+        "Native source-role coverage restricted to audited Wolf_Black",
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "SUMMON",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Revive Fallen",
+      "connectedProof": false
+    },
+    {
+      "id": "riposte",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "REACTION",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Riposte",
+      "connectedProof": false
+    },
+    {
+      "id": "root_lash",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "LINE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Root Lash",
+      "connectedProof": false
+    },
+    {
+      "id": "root_snare",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "TRAP",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Root Snare",
+      "connectedProof": false
+    },
+    {
+      "id": "scythe_sweep",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Scythe Sweep",
+      "connectedProof": false
+    },
+    {
+      "id": "shield_bash",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Shield Bash",
+      "connectedProof": false
+    },
+    {
+      "id": "simulacrum",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "SUMMON",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Simulacrum",
+      "connectedProof": false
+    },
+    {
+      "id": "snipe",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Snipe",
+      "connectedProof": false
+    },
+    {
+      "id": "spark",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Spark",
+      "connectedProof": false
+    },
+    {
+      "id": "spear_thrust",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Spear Thrust",
+      "connectedProof": false
+    },
+    {
+      "id": "spear_toss",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Spear Toss",
+      "connectedProof": false
+    },
+    {
+      "id": "spirit_shield",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BARRIER",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Spirit Shield",
+      "connectedProof": false
+    },
+    {
+      "id": "stone_bolt",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Stone Bolt",
+      "connectedProof": false
+    },
+    {
+      "id": "summon_void_crawlers",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "SUMMON",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Summon Void Crawlers",
+      "connectedProof": false
+    },
+    {
+      "id": "taunt",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "DIRECT_TARGET",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Taunt",
+      "connectedProof": false
+    },
+    {
+      "id": "thorns_aura",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "AURA",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Thorns Aura",
+      "connectedProof": false
+    },
+    {
+      "id": "venom_spray",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "CONE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Venom Spray",
+      "connectedProof": false
+    },
+    {
+      "id": "void_beam",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BEAM",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Void Beam",
+      "connectedProof": false
+    },
+    {
+      "id": "void_bolt",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Void Bolt",
+      "connectedProof": false
+    },
+    {
+      "id": "void_cataclysm",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "BOMBARDMENT",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Void Cataclysm",
+      "connectedProof": false
+    },
+    {
+      "id": "void_dash",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "MOVEMENT",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Void Dash",
+      "connectedProof": false
+    },
+    {
+      "id": "vortex",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "GROUND_ZONE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Vortex",
+      "connectedProof": false
+    },
+    {
+      "id": "wall_of_fire",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "WALL",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Wall of Fire",
+      "connectedProof": false
+    },
+    {
+      "id": "weakening_hex",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "DIRECT_TARGET",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Weakening Hex",
+      "connectedProof": false
+    },
+    {
+      "id": "web_shot",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "PROJECTILE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Web Shot",
+      "connectedProof": false
+    },
+    {
+      "id": "whirlwind",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "STRIKE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Whirlwind",
+      "connectedProof": false
+    },
+    {
+      "id": "wind_cutter",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "LINE",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Wind Cutter",
+      "connectedProof": false
+    },
+    {
+      "id": "wolf_summon",
+      "activationGate": "",
+      "limitations": [
+        "Connected input, execution, visual/animation and multiplayer QA UNVERIFIED"
+      ],
+      "family": "SUMMON",
+      "status": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+      "name": "Wolf Summon",
+      "connectedProof": false
+    }
+  ],
+  "runtimeGates": {
+    "bone_cage": "BONE_CAGE_NATIVE_ENEMY_ONLY_COLLISION_UNVERIFIED",
+    "frenzy": "NATIVE_PER_ACTOR_BASIC_ATTACK_CADENCE_UNVERIFIED",
+    "guard": "NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED"
+  },
+  "connectedProof": false
+}

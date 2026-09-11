@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage10ConversionTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2026-09-11T22:02:26.206Z" hostname="GRAHAM" time="0.095">
+  <properties/>
+  <testcase name="protectedTargetRejectsBeforePayment()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.005"/>
+  <testcase name="ownerCapRejectsBeforeSecondCharge()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.003"/>
+  <testcase name="independentActorLeaseCannotBeEndedByUnknownToken()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.004"/>
+  <testcase name="endingReturnsExactOriginalIdentityOnlyOnce()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.004"/>
+  <testcase name="expiryPrunesPendingLeaseEvenIfNativeEntityNeverAppeared()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.003"/>
+  <testcase name="cannotConvertSelfOrNullIdentity()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.0"/>
+  <testcase name="exclusiveTargetAcrossOwners()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.003"/>
+  <testcase name="sameUuidDifferentWorldIsNotTheSameTarget()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.003"/>
+  <testcase name="genericRepeatsAndSummonOnlyModifiersRejectAndRollback()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.023"/>
+  <testcase name="playersAndAlliesAlwaysReject()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.0"/>
+  <testcase name="bossAlwaysRejectedEvenWithEliteOptIn()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.0"/>
+  <testcase name="cancelledDelayCannotStealAnNpc()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.004"/>
+  <testcase name="uncertainNativeDispatchDoesNotRefundAnAlreadyStartedConversion()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.004"/>
+  <testcase name="nativePersistentThreatCannotBeOverwritten()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.0"/>
+  <testcase name="realOrchestratorChargesOnceAndUsesConversionNotDamageOrSummon()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.003"/>
+  <testcase name="duplicateNativeInputCannotDispatchOrChargeTwice()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.003"/>
+  <testcase name="derivedReleaseCannotConvertAnotherActor()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.003"/>
+  <testcase name="globalAdmissionIsBoundedAndExpiryReclaimsIt()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.008"/>
+  <testcase name="oneOwnerCannotConvertAcrossTwoWorlds()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.004"/>
+  <testcase name="delayedReleaseKeepsOriginalTargetAndPaysOnce()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.004"/>
+  <testcase name="actualNativeProviderHonorsPriorityAndNullFallthroughWithoutRewritingBaseProvider()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.002"/>
+  <testcase name="sourceOwnershipIsNeverTransferredToAnotherRoot()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.004"/>
+  <testcase name="registryCannotReplayOrMintStateAfterRecreation()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.003"/>
+  <testcase name="commonAndSpecialistAreDeterministic()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.0"/>
+  <testcase name="eliteRequiresIndependentAuthoredOptIn()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.0"/>
+  <testcase name="rejectsUnknownUnlessExplicitlyDominatable()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.0"/>
+  <testcase name="finiteClockIsMandatory()" classname="com.inigmasgames.hytalerpg.Stage10ConversionTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

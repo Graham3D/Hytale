@@ -380,7 +380,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         boolean invulnerable=store.getComponent(target,Invulnerable.getComponentType())!=null;
         var faction=store.getComponent(target,WorldSupport.getComponentType());
         // No native Party/Team membership API was found. NEUTRAL/no-PvP is not affirmative ally membership.
-        if(faction==null)return false;var attitude=faction.getAttitude(target,actor,store);
+        if(faction==null)return false;var attitude=NativeNpcAttitudes.prepared(faction).getAttitude(target,actor,store);
         return permitsAllyAttitude(attitude,invulnerable,healing);
     }
     static boolean permitsAllyAttitude(Attitude attitude,boolean invulnerable,boolean healing){

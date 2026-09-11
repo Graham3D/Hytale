@@ -127,7 +127,7 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
                 var converted=a!=null?a:b;var other=a!=null?target:source;
                 var player=accessor.getExternalData().getRefFromUUID(converted.owner());
                 var nativeSupport=accessor.getComponent(other,WorldSupport.getComponentType());
-                return nativeSupport==null?Attitude.IGNORE:nativeSupport.getAttitude(other,player,accessor);
+                return nativeSupport==null?Attitude.IGNORE:NativeNpcAttitudes.prepared(nativeSupport).getAttitude(other,player,accessor);
             });installed.put(view,true);
         }
     }

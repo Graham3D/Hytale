@@ -91,7 +91,8 @@ public final class SkillExecutionService {
         catch (Rejection rejection) {
             return reject(request, root, rejection.skillInstanceId, rejection.code);
         } catch (RuntimeException error) {
-            return reject(request, root, pendingInstance, "VALIDATION_ERROR_" + error.getClass().getSimpleName());
+            return reject(request, root, pendingInstance, "VALIDATION_ERROR_" + error.getClass().getSimpleName(),
+                    ExecutionFailureDiagnostics.describe("VALIDATION",error));
         }
         emit(request, RpgTraceEventType.SKILL_VALIDATION_PASS, root, prepared.instanceId,
                 Map.of("skillId", prepared.profile.skillId(), "family", prepared.profile.family().name(),
@@ -678,8 +679,12 @@ public final class SkillExecutionService {
     }
 
     private SkillExecutionResult reject(SkillExecutionRequest request, String root, String instance, String code) {
+        return reject(request,root,instance,code,Map.of());
+    }
+    private SkillExecutionResult reject(SkillExecutionRequest request, String root, String instance, String code,Map<String,?> diagnostic) {
         String id = instance == null ? "pending-" + request.slot().externalId() : instance;
-        emit(request, RpgTraceEventType.SKILL_VALIDATION_REJECTED, root, id, Map.of("failureCode", code));
+        var details=new LinkedHashMap<String,Object>();details.putAll(diagnostic);details.put("failureCode",code);
+        emit(request, RpgTraceEventType.SKILL_VALIDATION_REJECTED, root, id, details);
         emit(request, RpgTraceEventType.SKILL_ACTIVATION_REJECTED, root, id, Map.of("failureCode", code));
         return SkillExecutionResult.rejected(code);
     }

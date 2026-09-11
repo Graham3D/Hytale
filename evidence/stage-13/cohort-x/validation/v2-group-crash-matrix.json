@@ -1,0 +1,66 @@
+[
+  {
+    "boundary": "AFTER_FIRST_FRAME",
+    "exitCode": 73,
+    "restartPasses": 3,
+    "replayedFrames": 1,
+    "powerLossProof": false,
+    "shutdownHooksUsed": false
+  },
+  {
+    "boundary": "AFTER_GROUP_APPEND",
+    "exitCode": 73,
+    "restartPasses": 3,
+    "replayedFrames": 64,
+    "powerLossProof": false,
+    "shutdownHooksUsed": false
+  },
+  {
+    "boundary": "BEFORE_FORCE",
+    "exitCode": 73,
+    "restartPasses": 3,
+    "replayedFrames": 64,
+    "powerLossProof": false,
+    "shutdownHooksUsed": false
+  },
+  {
+    "boundary": "AFTER_GROUP_FORCE",
+    "exitCode": 73,
+    "restartPasses": 3,
+    "replayedFrames": 64,
+    "powerLossProof": false,
+    "shutdownHooksUsed": false
+  },
+  {
+    "boundary": "BEFORE_ACKNOWLEDGEMENTS",
+    "exitCode": 73,
+    "restartPasses": 3,
+    "replayedFrames": 64,
+    "powerLossProof": false,
+    "shutdownHooksUsed": false
+  },
+  {
+    "boundary": "MID_ACKNOWLEDGEMENTS",
+    "exitCode": 73,
+    "restartPasses": 3,
+    "replayedFrames": 64,
+    "powerLossProof": false,
+    "shutdownHooksUsed": false
+  },
+  {
+    "boundary": "ANOTHER_GROUP_QUEUED",
+    "exitCode": 73,
+    "restartPasses": 3,
+    "replayedFrames": 64,
+    "powerLossProof": false,
+    "shutdownHooksUsed": false
+  },
+  {
+    "boundary": "CHECKPOINT_WORKER_STARTED",
+    "exitCode": 73,
+    "restartPasses": 3,
+    "replayedFrames": 65,
+    "powerLossProof": false,
+    "shutdownHooksUsed": false
+  }
+]

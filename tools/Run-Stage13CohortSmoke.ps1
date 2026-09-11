@@ -100,7 +100,7 @@ if($NativeProjectileSpawnAudit){
     if(-not $passed -or $plain -match 'RPG_NATIVE_SPAWN_INTEGRATION result=FAIL' -or $requests.Count -ne 2 -or $spawned.Count -ne 1 -or
         @($records|Where-Object eventType -eq 'PROJECTILE_SPAWN_REJECTED').Count){throw 'Native Fire Bolt construction/queued rollback integration failed: no deployment allowed'}
     $ack=$spawned[0];$request=@($requests|Where-Object correlationId -eq $ack.correlationId)
-    if($Cohort -in @('p','q','r','s','t','u','v','w')){
+    if($Cohort -in @('p','q','r','s','t','u','v','w','x')){
         $ended=@($records|Where-Object {$_.eventType -eq 'PROJECTILE_TERMINATED' -and $_.correlationId -eq $ack.correlationId -and $_.details.reason -eq 'MAX_LIFETIME'})
         if($plain -notmatch 'sameTickAdvance=true restingExpiry=true' -or $ended.Count -ne 1 -or
             @($records|Where-Object {$_.details.reason -eq 'NATIVE_PROJECTILE_REMOVED_WITHOUT_IMPACT'}).Count){throw 'P same-tick insertion / stationary native expiry gate failed'}
@@ -112,11 +112,11 @@ if($NativeProjectileSpawnAudit){
         hytaleServerSha256=(Get-FileHash -LiteralPath $serverJar).Hash;assetsSha256=(Get-FileHash -LiteralPath $assets).Hash;
         originalFailure='IllegalArgumentException: Specified map is empty';loadedMapClass='java.util.Collections$EmptyMap';
         requests=2;spawned=1;pendingRollback='PASS';physicsVelocity=24;nativeInteractionRoots=0;nativeRefValidAfterQueue=$true;
-        sameTickAdvanceAndRestingExpiry=($Cohort -in @('p','q','r','s','t','u','v','w'));
+        sameTickAdvanceAndRestingExpiry=($Cohort -in @('p','q','r','s','t','u','v','w','x'));
         connectedClientVerified=$false}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $evidence 'native-spawn-integration.json') -Encoding utf8
 }
 [pscustomobject]$summary | Format-List
-if($Cohort -in @('v','w') -and -not $summary.supportTetherAssetsResolved){throw 'V held/effect/particle native asset resolution failed'}
+if($Cohort -in @('v','w','x') -and -not $summary.supportTetherAssetsResolved){throw 'V held/effect/particle native asset resolution failed'}
 if($expectedPlayerSchema -eq 9 -and -not $summary.acquisitionConfigured){throw 'Stage12 acquisition/respec registration gate failed'}
 if($expectedMastery -eq 'true' -and -not ($summary.masteryHooksRegistered -and $summary.supportCreditHooksRegistered -and $summary.nativeRewardHooksRegistered -and $summary.encounterStoreConfigured -and $summary.encounterRegistryResolved)){throw 'Stage12 mastery/support native registration gate failed'}
 if (($Cohort -eq 'c' -and -not $summary.encounterRegistryResolved) -or ($Cohort -ne 'a' -and -not $summary.rewardStoreConfigured) -or -not ($summary.progressionProfilesResolved -and $summary.hitProcAssetsResolved -and $summary.strikeLockResolved -and $summary.exactlyThreeMods -and $summary.rpgDiscovered -and $summary.rpgSetup -and $summary.ready -and
@@ -130,22 +130,22 @@ if($Cohort -ne 'a'){
     if($audit.connectedProof -ne $false -or -not $audit.emptyNativeInteractions -or -not $audit.typedElements){throw 'Projectile audit authority mismatch'}
     if($Cohort -eq 'b' -and ($audit.resolvedConfigs -ne 13 -or $audit.shippedCrossbowSpeed -ne 40 -or $audit.shippedCrossbowRadius -ne .075 -or $audit.shippedCrossbowGravity -ne 10 -or
         $audit.equipment.Weapon_Crossbow_Iron.basicPower -ne 10 -or $audit.equipment.Weapon_Spear_Iron.basicPower -ne 6)){throw 'Cohort B native numeric contract mismatch'}
-    if($Cohort -in @('c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w') -and ($audit.resolvedConfigs -ne 19 -or $audit.equipment.Weapon_Gun_Blunderbuss.basicPower -ne 200 -or
+    if($Cohort -in @('c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x') -and ($audit.resolvedConfigs -ne 19 -or $audit.equipment.Weapon_Gun_Blunderbuss.basicPower -ne 200 -or
         $audit.nativeChargedBow.speed -ne 85 -or $audit.nativeChargedBow.gravity -ne 25 -or $audit.nativeChargedBow.radius -ne .075 -or
-        $audit.snipeActivationGate -ne $(if($Cohort -in @('t','u','v','w')){''}else{'NATIVE_BOW_MAX_RANGE_UNVERIFIED'}))){throw 'Cohort C native source/capability audit mismatch'}
-    if($Cohort -in @('t','u','v','w') -and ($audit.nativeChargedBow.maximumRange -ne 'RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM' -or
+        $audit.snipeActivationGate -ne $(if($Cohort -in @('t','u','v','w','x')){''}else{'NATIVE_BOW_MAX_RANGE_UNVERIFIED'}))){throw 'Cohort C native source/capability audit mismatch'}
+    if($Cohort -in @('t','u','v','w','x') -and ($audit.nativeChargedBow.maximumRange -ne 'RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM' -or
         $audit.nativeChargedBow.release.root -ne 'Root_RPG_Snipe_Release' -or
         $audit.nativeChargedBow.release.releaseThresholdSeconds -ne 0 -or $audit.nativeChargedBow.release.connectedProof)){
         throw 'Snipe native hold/release contract audit failed'
     }
-    if($Cohort -in @('u','v','w') -and ($audit.nativeChargedBow.snipeGravity -ne 0 -or
+    if($Cohort -in @('u','v','w','x') -and ($audit.nativeChargedBow.snipeGravity -ne 0 -or
         $audit.nativeChargedBow.snipeModel -ne 'Arrow_Crude' -or -not $audit.nativeChargedBow.snipeModelEqualsNative -or
         @($audit.nativeChargedBow.release.nativeChargeEmitters).Count -ne 2)){
         throw 'Snipe native arrow/zero-gravity/charge-particle audit failed'
     }
     $audit|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $evidence 'native-projectile-equipment-audit.json') -Encoding utf8
 }
-if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w')){
+if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x')){
     $movementLine=[regex]::Match($plain,'RPG_STAGE13_MOVEMENT_ASSETS result=PASS (\{[^\r\n]*\})')
     if(-not $movementLine.Success){throw 'Native movement/Guard control asset audit missing'}
     $movement=$movementLine.Groups[1].Value|ConvertFrom-Json
@@ -153,7 +153,7 @@ if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s'
         $movement.activationGate -ne 'NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED' -or $movement.connectedProof){throw 'Guard native ownership/capability gate mismatch'}
     $movement|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $evidence 'native-movement-guard-audit.json') -Encoding utf8
 }
-if($Cohort -in @('e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w')){
+if($Cohort -in @('e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x')){
     $basicLine=[regex]::Match($plain,'RPG_STAGE13_NATIVE_BASIC_PATHS result=PASS (\{[^\r\n]*\})')
     if(-not $basicLine.Success){throw 'Installed native basic-attack path audit missing'}
     $basic=$basicLine.Groups[1].Value|ConvertFrom-Json

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage07ContinuationTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-11T22:02:22.115Z" hostname="GRAHAM" time="0.102">
+  <properties/>
+  <testcase name="echoPromiseKeepsRootBudgetEvenWhenPrimaryTerminatesBeforeEchoLaunch()" classname="com.inigmasgames.hytalerpg.Stage07ContinuationTest" time="0.016"/>
+  <testcase name="returnHasSeparateHitLedgerAndOwnBoundedDistanceButDoesNotRearmContinuations()" classname="com.inigmasgames.hytalerpg.Stage07ContinuationTest" time="0.015"/>
+  <testcase name="chainUsesNearestVisibleUnvisitedWithinEightMetersWithStableTieBreak()" classname="com.inigmasgames.hytalerpg.Stage07ContinuationTest" time="0.015"/>
+  <testcase name="malformedFlightTimeIsRejectedAndYawPreservesSpeedAndElevation()" classname="com.inigmasgames.hytalerpg.Stage07ContinuationTest" time="0.0"/>
+  <testcase name="forkBatchOverflowIsAtomicAndCannotEvictAnotherRoot()" classname="com.inigmasgames.hytalerpg.Stage07ContinuationTest" time="0.013"/>
+  <testcase name="abandonedEchoCapacityIsIdempotentlyReleasedAndOwnerCancelDropsPromises()" classname="com.inigmasgames.hytalerpg.Stage07ContinuationTest" time="0.023"/>
+  <testcase name="firstFourCompatibilityHasPositiveAndNegativeTypedGatesWithoutLineLeaks()" classname="com.inigmasgames.hytalerpg.Stage07ContinuationTest" time="0.004"/>
+  <testcase name="hitThenPierceThenForkThenChainThenReturnGoldenOrderAndFiniteBudgets()" classname="com.inigmasgames.hytalerpg.Stage07ContinuationTest" time="0.015"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09LoadTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-11T22:02:24.659Z" hostname="GRAHAM" time="0.888">
+  <properties/>
+  <testcase name="maximumFiniteEffectLoadIsBoundedAndExpiryReleasesEverything()" classname="com.inigmasgames.hytalerpg.Stage09LoadTest" time="0.845"/>
+  <testcase name="auraPulseAndUpkeepDoNotDependOnOwnerTickCadence()" classname="com.inigmasgames.hytalerpg.Stage09LoadTest" time="0.022"/>
+  <testcase name="paidThornsCanRunFiveMinutesWithoutLifetimeCapOrAccumulatedSecondaryBudget()" classname="com.inigmasgames.hytalerpg.Stage09LoadTest" time="0.021"/>
+  <system-out><![CDATA[STAGE09_LOAD overflowEffects=4096 owners=16 rejectedOverflow=16 elapsedMs=777.3263 finalEffects=0 finalSecondaryRoots=0 nativeExecution=false
+STAGE09_LOAD thornsSeconds=300 ownerTicks=3000 attemptedSecondary=30000 grantedSecondary=2400 paidSeconds=300.25 elapsedMs=17.1122 finalAuras=0 finalFields=0 nativeExecution=false
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

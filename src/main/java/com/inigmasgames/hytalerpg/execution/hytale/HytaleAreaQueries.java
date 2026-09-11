@@ -57,7 +57,7 @@ final class HytaleAreaQueries {
         if (!target.isValid() || !owner.isValid() || target.equals(owner)) return false;
         WorldSupport support = store.getComponent(target, WorldSupport.getComponentType());
         // NPC is the first argument/attitude owner, verified in WorldSupport.getAttitude bytecode.
-        return support != null && support.getAttitude(target, owner, store) == Attitude.HOSTILE;
+        return support != null && NativeNpcAttitudes.prepared(support).getAttitude(target, owner, store) == Attitude.HOSTILE;
     }
     static Optional<Vec3> ground(Store<EntityStore> store, Vec3 origin, Vec3 direction, double range) {
         Vec3 displacement = direction.normalized().multiply(range);
