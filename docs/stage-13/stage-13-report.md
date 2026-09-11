@@ -1,5 +1,7 @@
 # Stage 13 — runtime completion and release hardening
 
+**Owner-authorized deployment, 2026-09-11:** R032-V has now been installed for testing, with a complete hash-verified pre-V save/mod backup and no non-target file changes. See the [deployment update](stage-13-support-tether-report.md). This supersedes the earlier package-only status below; connected acceptance and the unchanged performance gate are not promoted to PASS.
+
 **Latest packaged cohort V:** [Healing Beam, Blessing of Protection and Tether report](stage-13-support-tether-report.md). The explicitly authorized catalog is now 89 skills / 67 passives, with 5,963 compatibility cells and 2,211 passive pairs. All 2,193 retained tests, exact three-mod smoke, package checks and isolated rollback pass. **Not deployed; connected behavior remains unverified.** The retained storage benchmark still exceeds the unchanged 4/8 ms p95/p99 targets; Stage 13 is not PASS. U remains installed and retained for rollback.
 
 **Latest correction U:** [Snipe native presentation / straight-flight report](stage-13-snipe-native-visuals-report.md) supersedes T's gravity-25 interpretation with the owner's explicit zero-drop requirement. It uses the exact shipped Arrow_Crude model and native fully-drawn bow pose, adds native yellow charge emitters without timed-draw delay, and preserves release/input/payment/persistence mechanics. Connected visual/flight QA remains required; Stage 13 is not PASS. Final validation and artifact receipts are in the correction report.

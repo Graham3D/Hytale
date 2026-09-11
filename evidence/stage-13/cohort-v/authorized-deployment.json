@@ -1,0 +1,17 @@
+{
+  "deployedAtUtc": "2026-09-11T20:19:47.5092114Z",
+  "ownerAuthorization": "Deploy it so I can test.",
+  "cohort": "R032-V",
+  "target": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.25.jar",
+  "jarSha256": "1103268939C69FA6B3D9E58DB2AE10F66A2412776AC00A43A9C13C64D24889FF",
+  "priorJarSha256": "BFF7421FA765834E32EEE819072AA9FF665C085FFCB0ECCFF9CBFF38BC3B965E",
+  "backupRoot": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-v\\before\\save\\20260911T201943Z",
+  "completeSaveBackupFiles": 296,
+  "nonTargetFilesVerifiedUnchanged": 295,
+  "exactlyThreeMods": true,
+  "supportingModsReplaced": false,
+  "saveDataModified": false,
+  "connectedClientVerified": false,
+  "performanceGate": "UNMET; unchanged 4ms p95 / 8ms p99 targets",
+  "hudBadge": "Unchanged R032-U; identify V by JAR hash and startup audit"
+}

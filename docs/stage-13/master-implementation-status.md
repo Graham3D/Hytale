@@ -2,6 +2,8 @@
 
 ## Read this first
 
+**2026-09-11 deployment follow-up:** The owner subsequently authorized deploying R032-V for testing. The exact candidate is installed; full pre-V save/mod backup verified, save data unchanged. See the [deployment receipt and QA report](stage-13-support-tether-report.md). Earlier no-deployment statements are historical. Connected acceptance and formal performance remain outstanding.
+
 **2026-09-11 candidate update:** [R032-V support/Tether report](stage-13-support-tether-report.md) adds the explicitly authorized SK-088/089 and LP-067, expanding the catalog to 89 skills / 67 passives. Package-only; no deployment or connected proof. Its report/receipts supersede the older implementation inventory below, not historical connected results or unresolved release gates.
 
 **2026-09-09 supersession:** this page's H/F checkpoint narrative below is historical. The current implementation is Stage 13 L (`cd7cdbd`), deployed with 2,093 local tests passing; the owner subsequently reports that the mod loads. Current all-mechanics/production connected acceptance remains unverified. Use the [complete current review packet](../review/README.md), [stage history](../review/implementation-history-00-13.md) and [QA/QC checklist](../review/qa-qc-checklist.md). No older result below is retroactively upgraded.

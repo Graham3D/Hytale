@@ -1,5 +1,7 @@
 # Owner / ChatGPT review packet
 
+**Deployment update, 2026-09-11:** The owner authorized testing and the exact R032-V candidate below is now installed in `pre-release/Saves/RPG/mods`. Full pre-V save/mod backup verified; 295 non-target files unchanged. [Deployment and QA report](../stage-13/stage-13-support-tether-report.md). Connected acceptance and the performance gate remain unverified/unmet respectively. The package-only paragraph below records the earlier packaging checkpoint.
+
 **Latest packaged candidate:** [Stage 13 V — Healing Beam, Blessing of Protection and Tether continuations](../stage-13/stage-13-support-tether-report.md). Catalog 89/67; 2,193 retained tests; detailed implementation, native asset audit and connected checklist. **Not deployed.** Connected behavior and the unchanged formal performance gate are not certified by local tests. Prior U remains the deployed baseline.
 
 **Latest correction:** [Stage 13 U Snipe native visuals and straight flight](../stage-13/stage-13-snipe-native-visuals-report.md) records the native model/animation/particle source audit, explicit zero-gravity correction, exact-JAR validation and rollback receipts, and the focused connected checklist. No input, payment or persistence redesign. T remains historical; connected U appearance and trajectory still require owner testing.

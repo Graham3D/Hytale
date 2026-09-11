@@ -1,5 +1,28 @@
 # Stage 13 cohort V — Healing Beam, Blessing of Protection, Tether continuations
 
+## Owner-authorized deployment update — 2026-09-11 20:19 UTC
+
+After packaging, the owner explicitly requested: “Deploy it so I can test.”
+The exact tested V JAR (`1103268939C69FA6B3D9E58DB2AE10F66A2412776AC00A43A9C13C64D24889FF`)
+was atomically installed in `Hytale/data/pre-release/Saves/RPG/mods`.
+Hytale and its server were stopped. All 296 existing save files, including the
+three mods, were backed up and hash-verified first; all 295 non-target files
+were verified unchanged afterward. CanvasUI and HytaleDevLib were already the
+correct versions and were not replaced. Exactly three mod JARs remain.
+
+Receipt: [`authorized-deployment.json`](../../evidence/stage-13/cohort-v/authorized-deployment.json).
+The full matching pre-V save backup is local-only under
+`evidence/stage-13/cohort-v/before/save/20260911T201943Z` (not published to GitHub).
+Use that complete backup with U if a content-aware rollback is required.
+No build/source change or fresh test result is implied by deployment. Connected
+testing is still required and the performance gate is still unmet. The unchanged
+HUD badge reads R032-U despite the installed V binary; use the hash/startup audit.
+
+The original package-only record below is historical; this explicit authorization
+supersedes its no-deployment status, not its validation results or limitations.
+
+## Original implementation and packaging record
+
 Baseline: `RPG` commit `5bbc346` (R032-U). Candidate: **R032-V / 0.0.25**.
 Authority: owner cohort request and Master Implementation Specification v1.3.
 The explicit new-content request supersedes the earlier 87-skill/66-passive limits
