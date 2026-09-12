@@ -1,0 +1,38 @@
+{
+  "capturedAtUtc": "2026-09-12T12:33:08.1825456-04:00",
+  "implemented": true,
+  "packaged": true,
+  "deployed": true,
+  "connectedVerified": false,
+  "jarSha256": "3D01383C2100824F7D5AC8162CFFDF46CD05F31A2BA0E4825072303C2DE90FDF",
+  "archiveSha256": "474FE301E2AFC87F534590F46BC15F621614CBD241A98253965AA80E6C4A27E2",
+  "archiveExactlyThreeMods": true,
+  "archiveBytesMatch": true,
+  "rollbackBinaryRoundTrip": "PASS",
+  "isolatedSmoke": "PASS",
+  "suites": [
+    {
+      "failures": 1,
+      "suite": "test",
+      "skipped": 0,
+      "tests": 2158,
+      "errors": 0
+    },
+    {
+      "failures": 0,
+      "suite": "nativeControlTest",
+      "skipped": 0,
+      "tests": 54,
+      "errors": 0
+    },
+    {
+      "failures": 0,
+      "suite": "canvas-ui",
+      "skipped": 0,
+      "tests": 21,
+      "errors": 0
+    }
+  ],
+  "knownIssue": "TraceArchiveFixtureRoundTripTest unchanged compression ratio assertion only",
+  "deployedJarSha256": "3D01383C2100824F7D5AC8162CFFDF46CD05F31A2BA0E4825072303C2DE90FDF"
+}

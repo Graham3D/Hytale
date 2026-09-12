@@ -21,21 +21,25 @@ import org.joml.Vector3d;
 
 /** Persistent native-beam owner. Every spawned entity is non-serialized and removed with its root. */
 public final class NativeHealingBeamVisuals {
-    public static final String ASSET_ID="RPG_Healing";
+    /** The custom Void_Green trial resolved but was invisible in connected AC testing.
+     * Basic is Hytale's shipped, client-proven Beam asset and keeps this renderer on
+     * the native continuous-beam path rather than falling back to sampled particles. */
+    public static final String ASSET_ID="Basic";
     public static final int MAX_LOGICAL_SEGMENTS=6;
     private static final int MAX_ROOTS=512;
-    private static final float SCALE=.16f;
+    private static final float SCALE=.25f;
     private final Map<String,RootVisual> roots=new HashMap<>();
 
-    public synchronized void present(Store<EntityStore> store,SkillExecutionContext context,
+    /** @return true when this call allocated a new persistent native visual root. */
+    public synchronized boolean present(Store<EntityStore> store,SkillExecutionContext context,
                                      List<ConnectionWorldPort.TetherVisualSegment> frame,double now){
         if(store==null||context==null||frame==null||frame.isEmpty()||frame.size()>MAX_LOGICAL_SEGMENTS||!Double.isFinite(now))
             throw new IllegalArgumentException("Invalid native healing beam frame");
-        String key=context.skillInstanceId();var root=roots.get(key);
+        String key=context.skillInstanceId();var root=roots.get(key);boolean created=false;
         if(root==null){
             if(roots.size()>=MAX_ROOTS)throw new IllegalStateException("HEALING_BEAM_VISUAL_ROOT_CAPACITY");
-            root=new RootVisual(context.request().actorId(),store);roots.put(key,root);
-        }else if(root.store!=store){remove(key);root=new RootVisual(context.request().actorId(),store);roots.put(key,root);}
+            root=new RootVisual(context.request().actorId(),store);roots.put(key,root);created=true;
+        }else if(root.store!=store){remove(key);root=new RootVisual(context.request().actorId(),store);roots.put(key,root);created=true;}
         var live=new HashSet<String>();
         try{
             for(var requested:frame){
@@ -47,6 +51,7 @@ public final class NativeHealingBeamVisuals {
             for(var id:root.segments.keySet())if(!live.contains(id))stale.add(id);
             for(var id:stale)root.remove(id);
         }catch(RuntimeException failure){remove(key);throw failure;}
+        return created;
     }
 
     public synchronized void remove(SkillExecutionContext context){if(context!=null)remove(context.skillInstanceId());}

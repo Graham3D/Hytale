@@ -1,5 +1,9 @@
 # Stage 13 — runtime completion and release hardening
 
+**Latest cumulative connected-test correction:** [R032-AD presentation report](stage-13-presentation-ad-report.md).
+It is implemented, packaged, and deployed; its client-rendered Beam, Blizzard,
+and radial-cooldown behavior remains connected-unverified.
+
 **Owner-authorized deployment, 2026-09-11:** R032-V has now been installed for testing, with a complete hash-verified pre-V save/mod backup and no non-target file changes. See the [deployment update](stage-13-support-tether-report.md). This supersedes the earlier package-only status below; connected acceptance and the unchanged performance gate are not promoted to PASS.
 
 **Latest packaged cohort V:** [Healing Beam, Blessing of Protection and Tether report](stage-13-support-tether-report.md). The explicitly authorized catalog is now 89 skills / 67 passives, with 5,963 compatibility cells and 2,211 passive pairs. All 2,193 retained tests, exact three-mod smoke, package checks and isolated rollback pass. **Not deployed; connected behavior remains unverified.** The retained storage benchmark still exceeds the unchanged 4/8 ms p95/p99 targets; Stage 13 is not PASS. U remains installed and retained for rollback.

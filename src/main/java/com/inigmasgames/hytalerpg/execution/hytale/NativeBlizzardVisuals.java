@@ -21,6 +21,8 @@ public final class NativeBlizzardVisuals {
     private record Carrier(Ref<EntityStore> ref,Store<EntityStore> store){}
     private final Map<Key,Carrier> carriers=new java.util.concurrent.ConcurrentHashMap<>();
     private final Map<Key,Double> storms=new java.util.concurrent.ConcurrentHashMap<>();
+    /** Exact maximum particle life authored by installed Snow_Heavy. */
+    public static final double SNOW_HEAVY_MAX_PARTICLE_SECONDS=4d/3d;
     void shard(SkillExecutionContext c,int index,Vec3 p,boolean terminal,CommandBuffer<EntityStore> buffer){
         var key=new Key(c.request().actorId(),c.skillInstanceId(),index);
         if(terminal){remove(key,buffer);return;}
@@ -92,25 +94,31 @@ public final class NativeBlizzardVisuals {
             for(var carrier:visuals.carriers.values())if(carrier.ref.isValid())store.removeEntity(carrier.ref,RemoveReason.REMOVE);
         }
     }
-    void storm(SkillExecutionContext c,AreaGeometry shape,double remaining,Store<EntityStore> store){
+    boolean storm(SkillExecutionContext c,AreaGeometry shape,double remaining,Store<EntityStore> store){
         var key=new Key(c.request().actorId(),c.skillInstanceId(),-1);double now=System.nanoTime()/1e9;
-        if(now<storms.getOrDefault(key,0d)||remaining<=.2)return;
-        storms.put(key,now+.1);
-        var packet=stormPacket(shape,remaining);
-        for(var player:store.getExternalData().getWorld().getPlayerRefs()){
-            var ref=player.getReference();if(ref==null||!ref.isValid())continue;
-            var transform=store.getComponent(ref,TransformComponent.getComponentType());
-            if(transform!=null&&transform.getPosition().distanceSquared(new Vector3d(packet.position.x,packet.position.y,packet.position.z))<=75*75)
-                player.getPacketHandler().writeNoCache(packet);
-        }
+        // One root-owned native weather system. Its emission ends early enough that
+        // Snow_Heavy's longest already-emitted particle expires with the area root.
+        if(remaining<=SNOW_HEAVY_MAX_PARTICLE_SECONDS||storms.putIfAbsent(key,now+remaining)!=null)return false;
+        try{
+            var packet=stormPacket(shape,remaining);
+            for(var player:store.getExternalData().getWorld().getPlayerRefs()){
+                var ref=player.getReference();if(ref==null||!ref.isValid())continue;
+                var transform=store.getComponent(ref,TransformComponent.getComponentType());
+                if(transform!=null&&transform.getPosition().distanceSquared(new Vector3d(packet.position.x,packet.position.y,packet.position.z))<=75*75)
+                    player.getPacketHandler().writeNoCache(packet);
+            }
+        }catch(RuntimeException failure){storms.remove(key);throw failure;}
+        return true;
     }
-    /** Short root-owned leases allow cancellation without an invented particle stop API.
-     * Stop emissions early enough for the derivative's <=.2s particles to expire at root end. */
+    /** Uses the exact installed Snow_Heavy system. Its authored 15x15 horizontal
+     * footprint is scaled and translated to the compiled circular area's diameter. */
     public static com.hypixel.hytale.protocol.packets.world.SpawnParticleSystem stormPacket(AreaGeometry shape,double remaining){
         var p=shape.origin();
-        return new com.hypixel.hytale.protocol.packets.world.SpawnParticleSystem("RPG_Blizzard_Snow",
-                new com.hypixel.hytale.protocol.Position(p.x(),p.y()+2,p.z()),new com.hypixel.hytale.protocol.Direction(0,0,0),
-                (float)shape.radius(),null,(float)Math.clamp(remaining-.2,0,.1));
+        float scale=(float)Math.clamp(shape.radius()*2/15,.1,4);
+        return new com.hypixel.hytale.protocol.packets.world.SpawnParticleSystem("Snow_Heavy",
+                new com.hypixel.hytale.protocol.Position(p.x()-shape.radius(),p.y(),p.z()-shape.radius()),
+                new com.hypixel.hytale.protocol.Direction(0,0,0),scale,null,
+                (float)Math.max(0,remaining-SNOW_HEAVY_MAX_PARTICLE_SECONDS));
     }
     void end(SkillExecutionContext c,CommandBuffer<EntityStore> buffer){
         carriers.keySet().stream().filter(k->k.owner.equals(c.request().actorId())&&k.instance.equals(c.skillInstanceId())).toList().forEach(k->remove(k,buffer));

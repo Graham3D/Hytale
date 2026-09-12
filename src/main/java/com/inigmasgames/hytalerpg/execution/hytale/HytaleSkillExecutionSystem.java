@@ -969,8 +969,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     catch(RuntimeException ignored){ }
                 }
                 @Override public void presentTether(SkillExecutionContext context,List<ConnectionWorldPort.TetherVisualSegment> segments){
-                    try{healingBeamVisuals.present(store,context,segments,System.nanoTime()/1e9);}
-                    catch(RuntimeException ignored){healingBeamVisuals.remove(context);/* Presentation cannot refund a paid pulse. */}
+                    try{
+                        if(healingBeamVisuals.present(store,context,segments,System.nanoTime()/1e9))
+                            emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result","NATIVE_BEAM_STARTED","asset",NativeHealingBeamVisuals.ASSET_ID,"segments",segments.size()));
+                    } catch(RuntimeException failure){
+                        healingBeamVisuals.remove(context); // Presentation cannot refund a paid pulse.
+                        emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result","NATIVE_BEAM_FAILED","stage","ALLOCATE_OR_UPDATE",
+                                "error",failure.getClass().getSimpleName(),"message",boundedMessage(failure)));
+                    }
                 }
                 public void ended(SkillExecutionContext context,String reason){
                     for(var value:healingText.flush(playerRef.getUuid(),context.rootCastId(),0,true))presentHealingText(store,actor,value);
@@ -1052,7 +1058,16 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 }
                 @Override public java.util.Optional<Vec3> sweepShard(Vec3 from,Vec3 to,double radius){return HytaleAreaQueries.shardContact(store,from,to,radius);}
                 @Override public void shardVisual(SkillExecutionContext c,int index,Vec3 position,boolean terminal){blizzardVisuals.shard(c,index,position,terminal,buffer);}
-                @Override public void stormVisual(SkillExecutionContext c,AreaGeometry shape,double remaining){blizzardVisuals.storm(c,shape,remaining,store);}
+                @Override public void stormVisual(SkillExecutionContext c,AreaGeometry shape,double remaining){
+                    try{
+                        if(blizzardVisuals.storm(c,shape,remaining,store))
+                            emit(c,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","STORM_STARTED","template","Snow_Heavy",
+                                    "remaining",remaining,"maxParticleTail",NativeBlizzardVisuals.SNOW_HEAVY_MAX_PARTICLE_SECONDS));
+                    }catch(RuntimeException failure){
+                        emit(c,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","STORM_FAILED","template","Snow_Heavy",
+                                "error",failure.getClass().getSimpleName(),"message",boundedMessage(failure)));
+                    }
+                }
                 @Override public void endVisuals(SkillExecutionContext c){blizzardVisuals.end(c,buffer);}
                 @Override public void descendingVisual(SkillExecutionContext context, Vec3 position, double seconds) {
                     vfx.presentDescending(store.getExternalData().getWorld(), position, context.profile().area().element(), seconds);
@@ -2655,6 +2670,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
     private static Vector3d vector(Vec3 value) { return new Vector3d(value.x(), value.y(), value.z()); }
     private static Vec3 vec(org.joml.Vector3dc value) { return new Vec3(value.x(), value.y(), value.z()); }
+    private static String boundedMessage(Throwable failure) {
+        String value=String.valueOf(failure==null?null:failure.getMessage());
+        return value.length()<=160?value:value.substring(0,160);
+    }
     private static double health(EntityStatMap stats) {
         if (stats == null) return Double.NaN;
         var health = stats.get(DefaultEntityStatTypes.getHealth());

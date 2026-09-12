@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" tests="30" skipped="0" failures="0" errors="0" timestamp="2026-09-12T16:31:05.627Z" hostname="GRAHAM" time="0.133">
+  <properties/>
+  <testcase name="[1] dagger_flurry, 4, .2, .8, 1" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[2] whirlwind, 3, .4, 1.2, .7" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.0"/>
+  <testcase name="equalDistanceUsesStableIdentityNotInputOrder()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.0"/>
+  <testcase name="compiledRangePreservesElementAndFullActionWindow()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.004"/>
+  <testcase name="[1] spear_thrust, SPEAR, STAMINA, 6, 1.1, 1.1" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.003"/>
+  <testcase name="[2] dagger_flurry, DAGGER, STAMINA, 10, 4, .35" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.003"/>
+  <testcase name="[3] maul_swing, MACE, STAMINA, 9, 2, .9" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.003"/>
+  <testcase name="[4] scythe_sweep, SWORD, MANA, 8, 4, 1" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.003"/>
+  <testcase name="[5] spark, SWORD, MANA, 7, 2, .9" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.004"/>
+  <testcase name="[6] whirlwind, SWORD, STAMINA, 16, 8, .55" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.003"/>
+  <testcase name="protectedCollisionTargetCannotBeAccepted()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[1] resourceCost" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.004"/>
+  <testcase name="[2] cooldownSeconds" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[3] windupSeconds" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[4] innateBasePower" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="noInventedBurnStunOrMultistrikeEligibility()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.003"/>
+  <testcase name="[1] range" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[2] angleDegrees" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[3] lineHalfWidth" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[4] repeatIntervalSeconds" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[5] coefficient" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[6] statusSeconds" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.0"/>
+  <testcase name="sixtyFourAcceptedTargetsAreNeverSilentlyCutToLegacySixteen()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.001"/>
+  <testcase name="[1] spark" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.004"/>
+  <testcase name="[2] scythe_sweep" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.003"/>
+  <testcase name="scalingUsesTheActuallyEquippedMixedWeaponClass()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.011"/>
+  <testcase name="spearUsesFullPointEightWidthAndOnlyTwoPointFiveHeight()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.0"/>
+  <testcase name="collisionBoundsIntersectEvenWhenEntityOriginIsBeyondReach()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.0"/>
+  <testcase name="assistedSingleTargetIsAnAuthoredSelectionNotAnOverflow()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.002"/>
+  <testcase name="declaredLowerTargetCapFailsExplicitlyInsteadOfDroppingAcceptedHits()" classname="com.inigmasgames.hytalerpg.Stage13StrikeClosureTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

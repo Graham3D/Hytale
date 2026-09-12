@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage13NativeHealingBeamTest {
     @Test void installedNativeBeamAcceptsPersistentPositionAttachmentContract(){
         var target=new Vector3d(4,5,6);
-        var attached=AttachedBeam.toPosition(3,.16f,.16f,null,target);
-        assertEquals(3,attached.beamIndex());assertEquals(.16f,attached.sourceScale());assertEquals(.16f,attached.targetScale());
+        var attached=AttachedBeam.toPosition(0,.25f,.25f,null,target);
+        assertEquals(0,attached.beamIndex());assertEquals(.25f,attached.sourceScale());assertEquals(.25f,attached.targetScale());
         assertNull(attached.targetEntity());assertEquals(target,attached.targetPosition());assertTrue(attached.isValid());
         var component=new BeamComponent(attached);assertEquals(1,component.getBeams().size());assertFalse(component.isEmpty());
         assertEquals(6,ElasticBeamTether.PIECES);assertTrue(BeamComponent.MAX_BEAMS>=ElasticBeamTether.PIECES);

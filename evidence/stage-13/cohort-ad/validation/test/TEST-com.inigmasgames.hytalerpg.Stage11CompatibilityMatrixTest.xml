@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11CompatibilityMatrixTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-12T16:30:23.757Z" hostname="GRAHAM" time="4.471">
+  <properties/>
+  <testcase name="deterministicValidSixLinkGraphsPreserveOrderingScopeAndBudgets()" classname="com.inigmasgames.hytalerpg.Stage11CompatibilityMatrixTest" time="1.668"/>
+  <testcase name="all2145PairsClassifiedAgainstAll87Skills()" classname="com.inigmasgames.hytalerpg.Stage11CompatibilityMatrixTest" time="2.689"/>
+  <testcase name="lingeringNativeOrbitUsesFiniteSamplingNotDamagePulseBudget()" classname="com.inigmasgames.hytalerpg.Stage11CompatibilityMatrixTest" time="0.009"/>
+  <testcase name="all5742SkillPassiveCellsHaveExplicitVerdicts()" classname="com.inigmasgames.hytalerpg.Stage11CompatibilityMatrixTest" time="0.092"/>
+  <testcase name="orbitSamplingAndDamagePulseCapsRemainDistinctAndFinite()" classname="com.inigmasgames.hytalerpg.Stage11CompatibilityMatrixTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

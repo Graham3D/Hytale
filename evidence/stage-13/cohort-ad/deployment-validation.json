@@ -1,0 +1,11 @@
+{
+  "deployedAtUtc": "2026-09-12T16:33:52.2985467+00:00",
+  "candidate": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-ad\\artifacts\\HytaleRPG-0.0.25.jar",
+  "destination": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.25.jar",
+  "candidateSha256": "3D01383C2100824F7D5AC8162CFFDF46CD05F31A2BA0E4825072303C2DE90FDF",
+  "deployedSha256": "3D01383C2100824F7D5AC8162CFFDF46CD05F31A2BA0E4825072303C2DE90FDF",
+  "exactMatch": true,
+  "otherModsChanged": false,
+  "saveDataChangedByDeployment": false,
+  "connectedVerified": false
+}

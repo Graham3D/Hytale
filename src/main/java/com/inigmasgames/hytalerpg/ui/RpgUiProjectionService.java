@@ -64,10 +64,14 @@ public final class RpgUiProjectionService {
             double duration=0;
             if(plan!=null&&stage04.supports(id.get().value())){
                 var profile=new com.inigmasgames.hytalerpg.execution.CompiledProfileResolver().resolve(stage04.require(id.get().value()),plan);
-                duration=cooldowns.calculate(player,profile.cooldownSeconds(),plan.foundationModifiers().rechargeFactor(),derive(view).cooldownRecovery(),plan.kernelModifiers()).finalSeconds();
+                var cooldownTerms=com.inigmasgames.hytalerpg.execution.BlizzardCooldownPolicy.terms(profile,plan,derive(view));
+                duration=cooldowns.calculate(player,cooldownTerms.baseSeconds(),cooldownTerms.durationFactor(),cooldownTerms.recovery(),cooldownTerms.modifiers()).finalSeconds();
                 if(id.get().value().equals("blizzard")){
                     remaining=Math.max(remaining,activeRemaining.applyAsDouble(player,"blizzard"));
-                    duration=Math.max(duration,profile.area().lifetimeSeconds());
+                    // Blizzard's read-only HUD sweep is synchronized to its actual
+                    // active area lifetime; the active-root admission gate is the
+                    // authoritative no-overlap rule even when recovery is present.
+                    duration=profile.area().lifetimeSeconds();
                 }
             }
             boolean ready = stage04.supports(id.get().value()) && plan != null && !plan.degraded()

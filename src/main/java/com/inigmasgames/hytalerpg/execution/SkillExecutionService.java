@@ -334,8 +334,9 @@ public final class SkillExecutionService {
             preparationStage="POWER_RESOLUTION";
             BasePowerResolver.Resolution power = resolvePower(prepared.profile, prepared.equipment);
             preparationStage="COOLDOWN_PREPARATION";
-            var cooldown = kernel.cooldowns().calculate(prepared.request.actorId(),prepared.profile.cooldownSeconds(), prepared.plan.foundationModifiers().rechargeFactor(),
-                    attributes.cooldownRecovery(), prepared.plan.kernelModifiers());
+            var cooldownTerms=BlizzardCooldownPolicy.terms(prepared.profile,prepared.plan,attributes);
+            var cooldown = kernel.cooldowns().calculate(prepared.request.actorId(),cooldownTerms.baseSeconds(),cooldownTerms.durationFactor(),
+                    cooldownTerms.recovery(),cooldownTerms.modifiers());
             preparationStage="MODIFIER_CONSTRUCTION";
             Map<String, Double> status = prepared.profile.authoredStatuses();
             // CombatSnapshotFactory alone installs compiled Increased modifiers (including Potency).
@@ -422,9 +423,12 @@ public final class SkillExecutionService {
                     channelCooldowns.put(prepared.request.actorId(),new ChannelCooldown(context));
                 }
                 cooldown.complete(null);
-            }else kernel.cooldowns().submitSpend(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity(),
-                    prepared.profile.cooldownSeconds(),prepared.plan.foundationModifiers().rechargeFactor(),attributes.cooldownRecovery(),prepared.plan.kernelModifiers())
+            }else {
+                var terms=BlizzardCooldownPolicy.terms(prepared.profile,prepared.plan,attributes);
+                kernel.cooldowns().submitSpend(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity(),
+                    terms.baseSeconds(),terms.durationFactor(),terms.recovery(),terms.modifiers())
                     .whenComplete((value,error)->{if(error==null)cooldown.complete(value);else cooldown.completeExceptionally(error);});
+            }
         }catch(RuntimeException error){cooldown.completeExceptionally(error);}
         if(cooldown.isDone()&&authority.isDone())return completePersistence(prepared.request.actorId(),port);
         return SkillExecutionResult.pending("DURABLE_COMMIT_PENDING");

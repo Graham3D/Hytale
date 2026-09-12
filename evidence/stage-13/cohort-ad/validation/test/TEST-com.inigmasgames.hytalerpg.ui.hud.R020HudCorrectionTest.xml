@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.ui.hud.R020HudCorrectionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-12T16:31:39.875Z" hostname="GRAHAM" time="0.051">
+  <properties/>
+  <testcase name="requiredPortableAssetsExistAndEveryRpgResourceAssetIsRetired()" classname="com.inigmasgames.hytalerpg.ui.hud.R020HudCorrectionTest" time="0.001"/>
+  <testcase name="experienceUsesOwnerAssetsAtAuthoritativeDimensionsAndExactCenteredLayerGeometry()" classname="com.inigmasgames.hytalerpg.ui.hud.R020HudCorrectionTest" time="0.028"/>
+  <testcase name="customHudContainsNoRpgOwnedAbilityCellsOrArtwork()" classname="com.inigmasgames.hytalerpg.ui.hud.R020HudCorrectionTest" time="0.0"/>
+  <testcase name="vanillaHytaleExclusivelyOwnsAllResourceBarPresentation()" classname="com.inigmasgames.hytalerpg.ui.hud.R020HudCorrectionTest" time="0.021"/>
+  <testcase name="experienceFillUsesNewBackgroundUsableWidthAtEveryBoundaryFixture()" classname="com.inigmasgames.hytalerpg.ui.hud.R020HudCorrectionTest" time="0.001"/>
+  <testcase name="traceDescribesVanillaResourceOwnershipWithoutPollingResourcePresentation()" classname="com.inigmasgames.hytalerpg.ui.hud.R020HudCorrectionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

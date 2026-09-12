@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" tests="28" skipped="0" failures="0" errors="0" timestamp="2026-09-12T16:30:40.109Z" hostname="GRAHAM" time="0.007">
+  <properties/>
+  <testcase name="invalidLearningWisdomRejects()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="all99PublishedMasterRowsMatchExactly()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.001"/>
+  <testcase name="learningBonusCappedAtPointFour()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="advanceWithinLevelAwardsNoPoints()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="capPreservesEarnedTotalWithoutMoreAttributeAwards()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="rankMultipliersAndInsightAreExplicit()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.001"/>
+  <testcase name="positivePartyPotIsSharedWithoutBonus()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="onlyNormalDifficultyIsInitiallyEnabled()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.001"/>
+  <testcase name="higherLevelCommonEnemyNeverRewardsLess()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="biomeBandsRequireAuditedQualifiedIds()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.001"/>
+  <testcase name="difficultyCannotEnableWithoutAuthoredEncounterData()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="exactLevelDifferenceBoundaries()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="reachingCapInOneGrantAwardsExactly490Points()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="pityUsesUnmodifiedSourceBaseNotEquipmentChance()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="rewardRoundingIsHalfUp()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="invalidCombatLevelsFail()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.001"/>
+  <testcase name="masteryRejectsInvalidInput()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="insightPricesAndRankTierCeilings()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="lateGamePressureOnlyInRequirementNotReward()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="partyCountAndPotBounds()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.001"/>
+  <testcase name="masteryUsesCanonicalHalfUpThresholds()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="multiLevelGrantDerivesFromCumulativeXp()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="masteryCapsAt20AndMagnitudeAt38Percent()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="learningWisdomIsAdditiveNotMultiplicative()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="exactThresholdAwardsFiveUnspentAndFivePending()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="negativeOrOverflowXpNeverWraps()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="bossDoesNotStackUniqueRarity()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.0"/>
+  <testcase name="interpolatedKAnchorsAndMidpoints()" classname="com.inigmasgames.hytalerpg.Stage12ProgressionMathTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

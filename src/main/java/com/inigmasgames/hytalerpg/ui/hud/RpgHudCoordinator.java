@@ -72,6 +72,7 @@ public final class RpgHudCoordinator {
             boolean noticeChanged = next.showLevelUpNotice() != previous.showLevelUpNotice();
             session.hud.refresh(next);
             session.model = next;
+            traceCooldownTransitions(playerRef.getUuid(),previous,next);
             if (xpChanged) traceXp(playerRef.getUuid(), next, false);
             if (noticeChanged) trace.trace(playerRef.getUuid(), next.showLevelUpNotice()
                             ? "LEVEL_UP_INDICATOR_SHOWN" : "LEVEL_UP_INDICATOR_HIDDEN", ref(),
@@ -114,6 +115,18 @@ public final class RpgHudCoordinator {
                 "level", model.xp().level(), "progress", model.xp().progress(),
                 "fillWidth", RpgHud.xpFillWidth(model.xp().progress()),
                 "fullWidth", RpgHud.XP_FILL_WIDTH, "leftAnchored", true, "initial", initial));
+    }
+
+    /** Event-driven only: proves start/ready transitions without tracing every HUD poll. */
+    private void traceCooldownTransitions(UUID player,RpgHudViewModel previous,RpgHudViewModel next) {
+        for(int i=0;i<Math.min(2,next.skills().size());i++){
+            var before=previous.skills().get(i);var after=next.skills().get(i);
+            if(before.state()==after.state()&&before.skillId().equals(after.skillId()))continue;
+            trace.trace(player,"COOLDOWN_HUD_STATE",ref(),Map.of("slot",i+1,"skillId",after.skillId(),
+                    "state",after.state().name(),"remaining",after.cooldownRemainingSeconds(),
+                    "duration",after.cooldownDurationSeconds(),"radialValue",CooldownSweep.progress(
+                            after.cooldownRemainingSeconds(),after.cooldownDurationSeconds())));
+        }
     }
 
     private static String ref() { return UUID.randomUUID().toString().substring(0, 12); }

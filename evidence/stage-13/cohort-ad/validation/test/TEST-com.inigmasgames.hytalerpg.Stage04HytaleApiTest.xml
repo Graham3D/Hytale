@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage04HytaleApiTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-12T16:30:18.283Z" hostname="GRAHAM" time="0.032">
+  <properties/>
+  <testcase name="pinnedBuildExposesDurationOverriddenNativeEntityEffect()" classname="com.inigmasgames.hytalerpg.Stage04HytaleApiTest" time="0.008"/>
+  <testcase name="pinnedBuildExposesSweptCollisionAndAuthoritativeMove()" classname="com.inigmasgames.hytalerpg.Stage04HytaleApiTest" time="0.018"/>
+  <testcase name="pinnedBuildExposesMovementIntentAndOffhandUtility()" classname="com.inigmasgames.hytalerpg.Stage04HytaleApiTest" time="0.003"/>
+  <testcase name="pinnedBuildExposesNativeDamageBlockMetadata()" classname="com.inigmasgames.hytalerpg.Stage04HytaleApiTest" time="0.0"/>
+  <testcase name="pinnedBuildExposesAuthoritativeWorldScopedBossIdentity()" classname="com.inigmasgames.hytalerpg.Stage04HytaleApiTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

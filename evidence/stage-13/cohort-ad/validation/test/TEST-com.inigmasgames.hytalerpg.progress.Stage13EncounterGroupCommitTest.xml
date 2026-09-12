@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" tests="35" skipped="0" failures="0" errors="0" timestamp="2026-09-12T16:31:13.285Z" hostname="GRAHAM" time="6.151">
+  <properties/>
+  <testcase name="sixtyFourIndividuallySequencedFramesUseOneForceAndReplayExactlyOnce()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.032"/>
+  <testcase name="[1] torn" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.025"/>
+  <testcase name="[2] crc" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.021"/>
+  <testcase name="[3] predecessor" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.022"/>
+  <testcase name="immutableCheckpointSLeavesNewerRecordsReplayableAndOldSegmentsRetained()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.049"/>
+  <testcase name="acknowledgementDeadlineFailsClosedInsteadOfLeavingAnUnboundedWait()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="5.03"/>
+  <testcase name="[1] death" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.025"/>
+  <testcase name="[2] exclusion" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.027"/>
+  <testcase name="[3] detach" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.02"/>
+  <testcase name="[4] shutdown" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.021"/>
+  <testcase name="healingUsesOneExplicitMultiEncounterGroup()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.129"/>
+  <testcase name="[1] AFTER_FIRST_FRAME" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.019"/>
+  <testcase name="[2] AFTER_GROUP_APPEND" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.02"/>
+  <testcase name="[3] BEFORE_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.02"/>
+  <testcase name="[4] AFTER_GROUP_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.021"/>
+  <testcase name="[5] BEFORE_ACKNOWLEDGEMENTS" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.02"/>
+  <testcase name="deferredEffectsAreOrderedAfterForceAndBeforeDeathFence()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.002"/>
+  <testcase name="independentContextsHaveGlobalAndLocalPredecessors()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.026"/>
+  <testcase name="asynchronousCheckpointBacklogStopsBeforeThirdSealedSegment()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.077"/>
+  <testcase name="sparseSingleSubmissionHasNoCollectionWait()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.145"/>
+  <testcase name="concurrentProducersCannotDuplicateSequenceOrLoseCredits()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.025"/>
+  <testcase name="deferredEffectsCapacityRejectsBeforeContributionAndCanBeReleased()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.002"/>
+  <testcase name="totalPendingAndOperationBoundsRejectBeforeAnyStateChange()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.016"/>
+  <testcase name="oversizedOperationAndPerContextPendingRejectBeforeMutation()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.028"/>
+  <testcase name="maximumFrameDeltasRollOverAtBoundedGroupBytes()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.053"/>
+  <testcase name="failedDurabilityNeverRunsDependentEffect()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.003"/>
+  <testcase name="serialProductionSubmissionsContinueDuringForceAndAllWaitForDurability()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.028"/>
+  <testcase name="checkpointWorkerFailureBeforePublicationCannotDiscardTheWal()" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.03"/>
+  <testcase name="[1] append" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.018"/>
+  <testcase name="[2] force" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.018"/>
+  <testcase name="[1] AFTER_CHECKPOINT_FILE" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.034"/>
+  <testcase name="[2] AFTER_CHECKPOINT_POINTER" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.036"/>
+  <testcase name="[3] AFTER_CHECKPOINTS" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.039"/>
+  <testcase name="[4] AFTER_ROTATION" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.025"/>
+  <testcase name="[5] AFTER_FLOOR" classname="com.inigmasgames.hytalerpg.progress.Stage13EncounterGroupCommitTest" time="0.038"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -5,14 +5,14 @@ Group {
   CircularProgressBar #RpgCooldownSkill01 {
     Anchor: (Right: 176, Bottom: 72, Width: 58, Height: 58);
     MaskTexturePath: "Assets/RpgHud/CooldownMask.png";
-    Color: #111827(0.72);
+    Color: #ff0000(0.50);
     Value: 0;
     Visible: false;
   }
   CircularProgressBar #RpgCooldownSkill02 {
     Anchor: (Right: 82, Bottom: 72, Width: 58, Height: 58);
     MaskTexturePath: "Assets/RpgHud/CooldownMask.png";
-    Color: #111827(0.72);
+    Color: #ff0000(0.50);
     Value: 0;
     Visible: false;
   }

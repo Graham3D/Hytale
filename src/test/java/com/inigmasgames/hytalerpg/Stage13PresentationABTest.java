@@ -1,6 +1,7 @@
 package com.inigmasgames.hytalerpg;
 
 import com.inigmasgames.hytalerpg.execution.hytale.*;
+import com.inigmasgames.hytalerpg.execution.BlizzardCooldownPolicy;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import com.inigmasgames.hytalerpg.ui.hud.CooldownSweep;
 import java.util.List;
@@ -36,18 +37,15 @@ class Stage13PresentationABTest {
         assertNotEquals(first.get(3),reversed.get(3));
         for(int i=1;i<ElasticBeamTether.PIECES;i++)assertTrue(reversed.get(i).subtract(ElasticBeamTether.linear(new Vec3(-2,0,0),new Vec3(4,0,0),i/(double)ElasticBeamTether.PIECES)).length()<=1.35+1e-9);
     }
-    @Test void packagedNativeBeamUsesAuditedShippedNatureTexture() throws Exception {
-        try(var input=getClass().getResourceAsStream("/Server/Entity/Beams/RPG_Healing.json")){
-            assertNotNull(input);var text=new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);
-            assertTrue(text.contains("Trails/Void_Green.png"));
-        }
+    @Test void healingTetherUsesTheShippedBasicBeamAfterConnectedCustomTextureFailure() throws Exception {
+        assertEquals("Basic",NativeHealingBeamVisuals.ASSET_ID);
         var source=java.nio.file.Files.readString(java.nio.file.Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
         assertFalse(source.contains("spawnParticleEffect(\"Beam_Heal_Green\""));assertTrue(source.contains("healingBeamVisuals.present"));
     }
     @Test void sweepUsesAuthoritativeRemainingRatherThanAnotherTimer(){
-        assertEquals(0,CooldownSweep.progress(3,3));assertEquals(.5,CooldownSweep.progress(1.5,3));
-        assertEquals(.9,CooldownSweep.progress(.3,3),1e-6);assertEquals(0,CooldownSweep.progress(0,3));
-        assertEquals(0,CooldownSweep.progress(6,3));assertEquals(0,CooldownSweep.progress(Double.NaN,3));
+        assertEquals(1,CooldownSweep.progress(3,3));assertEquals(.5,CooldownSweep.progress(1.5,3));
+        assertEquals(.1,CooldownSweep.progress(.3,3),1e-6);assertEquals(0,CooldownSweep.progress(0,3));
+        assertEquals(1,CooldownSweep.progress(6,3));assertEquals(0,CooldownSweep.progress(Double.NaN,3));
     }
     @Test void blizzardThreeSecondProfileCannotBeRecastDuringItsActiveLifetime(){
         var h=new Stage13HealingBlizzardTest.Falling();assertEquals(3,h.c.profile().cooldownSeconds());assertEquals(3,h.c.profile().area().lifetimeSeconds());
@@ -58,12 +56,19 @@ class Stage13PresentationABTest {
         h.step(3);assertEquals(0,h.runtime.activeRemaining(h.c.request().actorId(),"blizzard",3));
         assertEquals("PASS",h.runtime.admission(h.c.request().actorId(),"blizzard",false));
     }
+    @Test void blizzardCooldownUsesTheCompiledAreaLifetimeWithoutRecoveryShortening(){
+        var h=new Stage13HealingBlizzardTest.Falling();
+        var attributes=h.c.snapshot().derivedStats();
+        var terms=BlizzardCooldownPolicy.terms(h.c.profile(),h.c.compiledPlan(),attributes);
+        assertEquals(3,terms.baseSeconds());assertEquals(1,terms.durationFactor());assertEquals(0,terms.recovery());
+        assertEquals(com.inigmasgames.hytalerpg.domain.CompiledSkillPlan.KernelModifiers.NONE,terms.modifiers());
+    }
     @Test void snowPacketBeginsAtRootAndBoundsEmissionPlusParticleTailByRemainingLifetime(){
         var h=new Stage13HealingBlizzardTest.Falling();var geometry=h.c.profile().area().footprint(Vec3.ZERO,Vec3.FORWARD,1);
-        var first=NativeBlizzardVisuals.stormPacket(geometry,3);assertEquals("RPG_Blizzard_Snow",first.particleSystemId);
-        assertEquals(.1,first.maxDuration,1e-6);assertEquals(6,first.scale);assertEquals(2,first.position.y);
-        var last=NativeBlizzardVisuals.stormPacket(geometry,.24);assertEquals(.04,last.maxDuration,1e-6);
-        assertTrue(last.maxDuration+.2<=.24+1e-6);
+        var first=NativeBlizzardVisuals.stormPacket(geometry,3);assertEquals("Snow_Heavy",first.particleSystemId);
+        assertEquals(3-NativeBlizzardVisuals.SNOW_HEAVY_MAX_PARTICLE_SECONDS,first.maxDuration,1e-6);
+        assertEquals(.8,first.scale,1e-6);assertEquals(-6,first.position.x);assertEquals(-6,first.position.z);
+        assertTrue(first.maxDuration+NativeBlizzardVisuals.SNOW_HEAVY_MAX_PARTICLE_SECONDS<=3+1e-6);
     }
     @Test void nativeRadialDocumentHasOnlyTwoReadOnlyOverlaysAndNoResourceControls() throws Exception {
         try(var input=getClass().getResourceAsStream("/Common/UI/Custom/RpgCooldownSweep.ui")){
@@ -71,6 +76,7 @@ class Stage13PresentationABTest {
             assertEquals(2,text.split("CircularProgressBar #",-1).length-1);
             assertFalse(text.contains("Button"));assertFalse(text.contains("#Mana"));assertFalse(text.contains("#Health"));assertFalse(text.contains("#Stamina"));
             assertTrue(text.contains("Right: 176"));assertTrue(text.contains("Right: 82"));
+            assertEquals(2,text.split("Color: #ff0000\\(0.50\\)",-1).length-1);
         }
     }
 }
