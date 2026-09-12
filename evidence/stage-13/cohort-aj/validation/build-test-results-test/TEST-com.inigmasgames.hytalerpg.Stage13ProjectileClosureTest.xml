@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" tests="43" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:09:42.300Z" hostname="GRAHAM" time="0.208">
+  <properties/>
+  <testcase name="impactForceUsesSweptDistanceAndCannotPushThroughWallsOrOffLedges()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="priorPilotsNowCarryTheirActualElementsWithoutRebalancing()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.001"/>
+  <testcase name="spearIsVisualCopyButCrossbowHasExactlyOneArrowCommit()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[1] PHYSICAL, Physical" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.001"/>
+  <testcase name="[2] FIRE, Fire" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[3] COLD, Ice" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[4] ARCANE, RPG_Arcane" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[5] VOID, RPG_Void" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[6] NECROTIC, RPG_Necrotic" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.001"/>
+  <testcase name="authoredColdBlastHasTwoStacksAndOneAtomicFrozenThreshold()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="noImplicitBossSlowAndNoProtectedTargetMutation()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.005"/>
+  <testcase name="deepFreezeComposesOnceAndPreservesAuthoredTwoStacks()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.007"/>
+  <testcase name="explicitOptInUsesAuthoredThirtyPercentAndTwoPointFiveSecondsNotFrozenDuration()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.006"/>
+  <testcase name="noExtraVoidOrNecroticStatusAndNoImplicitColdPenetration()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[1] spear_toss" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.001"/>
+  <testcase name="[2] crossbow_bolt" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[3] web_shot" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.001"/>
+  <testcase name="[4] void_bolt" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.001"/>
+  <testcase name="[5] bone_shard" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[6] cold_blast" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.001"/>
+  <testcase name="profileRejectsInconsistentControlAndNonfiniteValues()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.005"/>
+  <testcase name="[1] spear_toss" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="[2] crossbow_bolt" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="[3] void_bolt" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="[4] bone_shard" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="[5] cold_blast" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="absentAmbiguousOrUnknownFamilyCannotBeAuthorizedByAnItemName()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[1] spear_toss, SPEAR, STAMINA, 7, 5, 1.15, 22, 24, .25, PHYSICAL" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.006"/>
+  <testcase name="[2] crossbow_bolt, CROSSBOW, STAMINA, 5, 2, 1.25, 40, 32, .075, PHYSICAL" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="[3] web_shot, SWORD, STAMINA, 7, 7, .25, 16, 18, .35, PHYSICAL" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="[4] void_bolt, WAND, MANA, 8, 1.6, 1, 21, 24, .32, VOID" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="[5] bone_shard, SPELLBOOK, MANA, 8, 1.8, 1, 25, 25, .25, NECROTIC" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="[6] cold_blast, STAFF, MANA, 14, 5, 1.1, 19, 22, .45, COLD" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.005"/>
+  <testcase name="[1] Spear, SPEAR, RPG_WEAPON_HEAVY" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.001"/>
+  <testcase name="[2] Gun, GUN, RPG_WEAPON_LIGHT" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[3] Axe, BATTLEAXE, RPG_WEAPON_HEAVY" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[4] Crossbow, CROSSBOW, RPG_WEAPON_LIGHT" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[5] Spellbook, SPELLBOOK, RPG_WEAPON_MAGIC" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="[6] Bomb, BOMB, RPG_WEAPON_LIGHT" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.0"/>
+  <testcase name="eliteDurationAndRollingResistanceRemainSharedPolicy()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.003"/>
+  <testcase name="handCastWebUsesInnateDexterityAndNoEquipmentOrAmmunition()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.004"/>
+  <testcase name="normalWebRootIsExactlyTwoPointFiveSeconds()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.003"/>
+  <testcase name="sixtyFiveSecondaryCandidatesRejectExplicitlyWithoutDroppingOneAcceptedTarget()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileClosureTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

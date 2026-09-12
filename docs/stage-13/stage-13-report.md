@@ -1,5 +1,14 @@
 # Stage 13 — runtime completion and release hardening
 
+**2026-09-12, latest packaged diagnostic checkpoint: R032-AJ — NOT DEPLOYED TO LIVE.**
+The [AJ harness correction and separate encounter investigation](stage-13-healing-probe-aj-report.md)
+supersedes the failed AI command setup. Six controls no longer require a spawned recipient;
+recipient controls use a native-validated fresh flat fixture. All 2,255 retained tests,
+three-mod native smoke, package and binary rollback checks pass. Production Healing Beam
+and encounter code remain unchanged; connected AJ visibility is UNVERIFIED.
+Use the [AJ checklist](healing-probe-aj-checklist.md); the launcher keeps its AI filename
+but now prepares AJ. AH remains installed in the live RPG save.
+
 **2026-09-12, latest packaged diagnostic checkpoint: R032-AI — NOT DEPLOYED.**
 The [Healing Beam visibility report](stage-13-healing-probe-ai-report.md) and
 [isolated checklist](healing-probe-ai-checklist.md) separate native mutation/queue

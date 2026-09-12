@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13SkillTreeIconsSearchTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:10:24.628Z" hostname="GRAHAM" time="0.173">
+  <properties/>
+  <testcase name="realRendererWritesAllIconSurfacesAndDoesNotRebindSearchOrRewriteTypedValue()" classname="com.inigmasgames.hytalerpg.Stage13SkillTreeIconsSearchTest" time="0.073"/>
+  <testcase name="equippedAndLibraryIconsFollowAuthoritativeSkillIds()" classname="com.inigmasgames.hytalerpg.Stage13SkillTreeIconsSearchTest" time="0.017"/>
+  <testcase name="originalTransparentIconBytesArePackagedForNativeItemsAndCustomUi()" classname="com.inigmasgames.hytalerpg.Stage13SkillTreeIconsSearchTest" time="0.053"/>
+  <testcase name="passiveSearchAndClearRetainAll66CanonicalEntries()" classname="com.inigmasgames.hytalerpg.Stage13SkillTreeIconsSearchTest" time="0.01"/>
+  <testcase name="nativeItemIconsChangeWithoutAddingNativeGameplayCostsOrCastBranches()" classname="com.inigmasgames.hytalerpg.Stage13SkillTreeIconsSearchTest" time="0.001"/>
+  <testcase name="boundDynamicSearchValueDecodesThroughActualPageCodecIncludingClear()" classname="com.inigmasgames.hytalerpg.Stage13SkillTreeIconsSearchTest" time="0.002"/>
+  <testcase name="skillSearchSupportsSpacedCompactCanonicalAndCaseInsensitiveNames()" classname="com.inigmasgames.hytalerpg.Stage13SkillTreeIconsSearchTest" time="0.012"/>
+  <testcase name="customUiLayersBackgroundThenTransparentOverlayThenNativeFrameAndLabelsSearch()" classname="com.inigmasgames.hytalerpg.Stage13SkillTreeIconsSearchTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

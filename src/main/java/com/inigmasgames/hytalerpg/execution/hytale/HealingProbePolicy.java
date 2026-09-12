@@ -8,6 +8,13 @@ public final class HealingProbePolicy {
     public static final double RUN_SECONDS=10, EFFECT_SECONDS=12, SAMPLE_SECONDS=1;
     public static final int MAX_WORLDS=4, MAX_TRANSITIONS=128;
     public enum Mode { WORLD, EMPTY, VISIBLE, RECIPIENT_ONCE, RECIPIENT_OVERWRITE, STAFF_ONCE, STAFF_OVERWRITE, BEAM }
+    public static boolean needsRecipient(Mode mode){return mode==Mode.RECIPIENT_ONCE||mode==Mode.RECIPIENT_OVERWRITE;}
+    public static void validateTarget(Mode mode,String target){
+        if(target.equals("native"))return; // Legacy syntax remains valid; no NPC for standalone modes.
+        if(target.equals("none")&&!needsRecipient(mode))return;
+        if(!needsRecipient(mode))throw new IllegalArgumentException("STANDALONE_USE_NONE");
+        java.util.UUID.fromString(target);
+    }
     public static Mode mode(String value){return Mode.valueOf(value.toUpperCase(Locale.ROOT).replace('-','_'));}
     public static boolean allows(Path allowedRoot,Path worldPath,Path liveSave){
         if(allowedRoot==null||worldPath==null||liveSave==null)return false;

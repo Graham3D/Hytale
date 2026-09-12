@@ -1,5 +1,9 @@
 # R032-AI isolated visual checklist
 
+**Historical checklist.** The connected AI run failed before visual setup. Use the
+[AJ corrected fixture/checklist](healing-probe-aj-checklist.md) instead. The helper
+retains its AI filename but now packages AJ into a fresh flat disposable world.
+
 **NOT DEPLOYED.** AH remains installed. These controls diagnose the missing visuals; they are not a repaired production beam. The repair brief requires an isolated world and forbids an automatic live deployment.
 
 ## Prepare and start only when ready to record

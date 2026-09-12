@@ -45,7 +45,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
         final Set<String> receipts=ConcurrentHashMap.newKeySet();
         final Map<Integer,String> watched=new ConcurrentHashMap<>();
         final AtomicLong packets=new AtomicLong(),componentUpdates=new AtomicLong();
-        Ref<EntityStore> target,carrier;String effect;boolean ownedTarget,created,queued,stopping;
+        Ref<EntityStore> target,carrier;String effect;Vec3 endpoint;boolean ownedTarget,created,queued,stopping;
         double nextSample,nextFrame;long stopped;
         Run(UUID owner,UUID world,Store<EntityStore> store,Ref<EntityStore> actor,HealingProbePolicy.Mode mode,String target){
             this.owner=owner;this.world=world;this.store=store;this.actor=actor;this.mode=mode;requestedTarget=target;
@@ -62,7 +62,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
         if(closed||!HealingProbePolicy.allows(allowedRoot.toRealPath(),world.getSavePath().toRealPath(),live))
             throw new IllegalStateException("HEAL_PROBE_DISPOSABLE_WORLD_REQUIRED");
         var selected=HealingProbePolicy.mode(mode);
-        if(!target.equals("native"))UUID.fromString(target);
+        HealingProbePolicy.validateTarget(selected,target);
         if(runs.size()>=HealingProbePolicy.MAX_WORLDS)throw new IllegalStateException("HEAL_PROBE_CAPACITY");
         var run=new Run(player.getUuid(),world.getWorldConfig().getUuid(),store,actor,selected,target);
         if(runs.putIfAbsent(run.world,run)!=null)throw new IllegalStateException("HEAL_PROBE_ALREADY_ACTIVE_WAIT_OR_STOP");
@@ -87,9 +87,9 @@ public final class HealingPresentationProbe implements AutoCloseable {
             if(closed||runs.get(r.world)!=r||r.stopping)return;
             try{
                 if(!r.actor.isValid()||r.store.getComponent(r.actor,PlayerRef.getComponentType())==null){cleanup(r,"OWNER_GONE");return;}
-                if(!r.created){create(r);r.created=true;}
-                if(!r.target.isValid()){cleanup(r,"TARGET_GONE");return;}
-                for(var ref:List.of(r.actor,r.target)){
+                if(!r.created){create(r);r.created=true;notifyOwner(r,"STARTED "+r.mode+" for 10s; observe now.");}
+                if(r.target!=null&&!r.target.isValid()){cleanup(r,"TARGET_GONE");return;}
+                for(var ref:r.target==null?List.of(r.actor):List.of(r.actor,r.target)){
                     var stats=r.store.getComponent(ref,EntityStatMap.getComponentType());
                     if(stats!=null&&stats.get(DefaultEntityStatTypes.getHealth())!=null&&stats.get(DefaultEntityStatTypes.getHealth()).get()<=0){cleanup(r,"ENDPOINT_DEAD");return;}
                 }
@@ -97,20 +97,20 @@ public final class HealingPresentationProbe implements AutoCloseable {
                 if(seconds(r)>=r.nextFrame){r.nextFrame=seconds(r)+.05;update(r);}
             }catch(RuntimeException failure){
                 receipt(r,"FAILED","root",Map.of("error",failure.getClass().getSimpleName(),"reason",safe(failure.getMessage())));
+                notifyOwner(r,"FAILED "+r.mode+": "+safe(failure.getMessage())+". This is not a rendering result.");
                 cleanup(r,"FAILURE");
             }
         });
     }
     private void create(Run r){
-        var position=r.store.getComponent(r.actor,TransformComponent.getComponentType());
+        var a=anchor(r,r.actor);
+        var head=r.store.getComponent(r.actor,HeadRotation.getComponentType());
+        var direction=head==null?new Vector3d(0,0,-1):head.getDirection();
+        r.endpoint=a.add(new Vec3(direction.x,direction.y,direction.z).multiply(6));
+        if(HealingProbePolicy.needsRecipient(r.mode)){
         if(r.requestedTarget.equals("native")){
-            var p=new Vector3d(position.getPosition()).add(0,0,-6);
-            var result=com.hypixel.hytale.server.npc.NPCPlugin.get().spawnNPCWithSpaceValidation(
-                r.store,"RPG_Summon_Decoy",null,p,new Rotation3f(),(npc,ref,store)->{
-                    r.target=ref;r.ownedTarget=true;store.addComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType(),NonSerialized.get());
-                    npc.getRole().setDeathItemsDropped();
-                });
-            if(r.target==null)throw new IllegalStateException("NATIVE_NPC_SPAWN_"+result);
+            if(a.subtract(new Vec3(8.5,65.35,2.5)).length()>16)throw new IllegalArgumentException("RETURN_TO_FIXTURE_NEAR_8_64_8");
+            r.target=spawnRecipient(r.store);r.ownedTarget=true;
         }else r.target=r.store.getExternalData().getRefFromUUID(UUID.fromString(r.requestedTarget));
         if(r.target==null||!r.target.isValid())throw new IllegalStateException("TARGET_REF_UNRESOLVED");
         if(r.target.equals(r.actor))throw new IllegalArgumentException("PROBE_TARGET_MUST_NOT_BE_CASTER");
@@ -118,7 +118,8 @@ public final class HealingPresentationProbe implements AutoCloseable {
         if(stats==null||stats.get(DefaultEntityStatTypes.getHealth())==null||stats.get(DefaultEntityStatTypes.getHealth()).get()<=0)
             throw new IllegalArgumentException("PROBE_TARGET_MUST_BE_LIVING");
         receipt(r,"TARGET_RESOLVED","recipient",entity(r,r.target));
-        var a=anchor(r,r.actor);var b=anchor(r,r.target);
+        }else receipt(r,"TARGET_NOT_REQUIRED","root",Map.of("npcSpawnAttempted",false,"endpoint","FIXED_WORLD_POINT_ALONG_INITIAL_AIM"));
+        var b=endpoint(r);
         switch(r.mode){
             case WORLD -> {
                 var rot=HealingParticleVisuals.rotation(a,b);
@@ -163,7 +164,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
     }
     private static boolean overwrite(Run r){return r.mode==HealingProbePolicy.Mode.RECIPIENT_OVERWRITE||r.mode==HealingProbePolicy.Mode.STAFF_OVERWRITE;}
     private void update(Run r){
-        var a=anchor(r,r.actor);var b=anchor(r,r.target);
+        var a=anchor(r,r.actor);var b=endpoint(r);
         if(r.carrier!=null){
             if(r.mode==HealingProbePolicy.Mode.BEAM){
                 r.store.getComponent(r.carrier,TransformComponent.getComponentType()).setPosition(vector(a));
@@ -188,6 +189,42 @@ public final class HealingPresentationProbe implements AutoCloseable {
         release(r,"core",()->{if(r.carrier!=null&&r.carrier.isValid())r.store.removeEntity(r.carrier,RemoveReason.REMOVE);});
         release(r,"ownedNpc",()->{if(r.ownedTarget&&r.target!=null&&r.target.isValid())r.store.removeEntity(r.target,RemoveReason.REMOVE);});
         receipt(r,"CLEANUP","root",Map.of("reason",reason,"worldParticleTail",r.mode==HealingProbePolicy.Mode.WORLD?"NATIVE_FINITE_DURATION_NO_INSTANCE_CANCEL_HANDLE":"NONE"));
+        notifyOwner(r,"ENDED "+r.mode+" ("+reason+"). Wait 2s for trace summary.");
+    }
+    private static Vec3 endpoint(Run r){return r.target==null?r.endpoint:anchor(r,r.target);}
+    private static void notifyOwner(Run r,String text){
+        try{
+        if(!r.actor.isValid())return;
+        var player=r.store.getComponent(r.actor,PlayerRef.getComponentType());
+        if(player!=null)player.sendMessage(com.hypixel.hytale.server.core.Message.raw("Healing probe: "+text));
+        }catch(RuntimeException ignored){/* Diagnostic chat must not prevent cleanup when transport closes. */}
+    }
+    /** Fresh launcher-owned flat fixture only. Never edits terrain or searches random terrain at player Y. */
+    static Ref<EntityStore> spawnRecipient(Store<EntityStore> store){
+        var world=store.getExternalData().getWorld();
+        if(!(world.getWorldConfig().getWorldGenProvider() instanceof com.hypixel.hytale.server.core.universe.world.worldgen.provider.FlatWorldGenProvider))
+            throw new IllegalStateException("FRESH_FLAT_PROBE_WORLD_REQUIRED");
+        var chunk=world.getChunkIfLoaded(0L);
+        if(chunk==null)throw new IllegalStateException("FIXTURE_CHUNK_NOT_LOADED_RETURN_TO_SPAWN");
+        int ground=com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.getAssetMap().getIndex("Soil_Grass");
+        for(int x=6;x<=10;x++)for(int z=0;z<=4;z++){
+            if(chunk.getBlock(x,63,z)!=ground)throw new IllegalStateException("FIXTURE_FLOOR_CHANGED");
+            for(int y=64;y<70;y++)if(chunk.getBlock(x,y,z)!=0)throw new IllegalStateException("FIXTURE_CLEARANCE_CHANGED");
+        }
+        var target=new java.util.concurrent.atomic.AtomicReference<Ref<EntityStore>>();
+        try{
+            var result=com.hypixel.hytale.server.npc.NPCPlugin.get().spawnNPCWithColumnProbe(
+                store,"RPG_Summon_Decoy",null,world,8,2,64,new Rotation3f(),(npc,ref,s)->{
+                    target.set(ref);s.addComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType(),NonSerialized.get());
+                    npc.getRole().setDeathItemsDropped();
+                });
+            if(result!=com.hypixel.hytale.server.spawning.SpawnTestResult.TEST_OK||target.get()==null||!target.get().isValid())
+                throw new IllegalStateException("FIXTURE_NATIVE_COLUMN_SPAWN_"+result);
+            return target.get();
+        }catch(RuntimeException error){
+            if(target.get()!=null&&target.get().isValid())store.removeEntity(target.get(),RemoveReason.REMOVE);
+            throw error;
+        }
     }
     private void release(Run r,String layer,Runnable action){
         try{action.run();receipt(r,"RELEASE_COMPLETED",layer,Map.of());}
@@ -212,7 +249,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
         synchronized(r.receipts){
             if((r.receipts.size()>=HealingProbePolicy.MAX_TRANSITIONS&&!stage.equals("SUMMARY"))||!r.receipts.add(key))return;
         }
-        var d=new LinkedHashMap<String,Object>(fields);d.put("probe",true);d.put("cohort","AI");d.put("root",r.generation);d.put("generation",r.generation);
+        var d=new LinkedHashMap<String,Object>(fields);d.put("probe",true);d.put("cohort","AJ");d.put("root",r.generation);d.put("generation",r.generation);
         d.put("world",r.world);d.put("mode",r.mode);d.put("stage",stage);d.put("layer",layer);d.put("segment",r.generation+"/primary");d.put("connectedRendered",false);
         trace.trace(RpgTraceRecord.create(r.owner,RpgTraceEventType.HEAL_PRESENTATION,r.generation.toString(),d));
     }
@@ -299,6 +336,39 @@ public final class HealingPresentationProbe implements AutoCloseable {
             throw new IllegalStateException("PROBE_AUDIT_NOT_ENABLED");
         var refs=new ArrayList<Ref<EntityStore>>();
         try{
+            var recipient=spawnRecipient(store);refs.add(recipient);
+            var health=store.getComponent(recipient,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());
+            if(health==null||health.get()<=0)throw new IllegalStateException("FIXTURE_NATIVE_HEALTH_MISSING");
+            var effects=store.getComponent(recipient,EffectControllerComponent.getComponentType());
+            for(float duration:new float[]{12,.3f}){
+                if(!effects.addEffect(recipient,EntityEffect.getAssetMap().getAsset("RPG_Probe_Healing_Recipient"),duration,OverlapBehavior.OVERWRITE,store))
+                    throw new IllegalStateException("FIXTURE_RECIPIENT_EFFECT_FAILED");
+                effects.removeEffect(recipient,EntityEffect.getAssetMap().getIndex("RPG_Probe_Healing_Recipient"),store);
+            }
+            store.removeEntity(recipient,RemoveReason.REMOVE);
+            if(recipient.isValid())throw new IllegalStateException("FIXTURE_RECIPIENT_CLEANUP_FAILED");
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_PROBE_FIXTURE result=PASS nativeColumnSpawn=true health=true recipientOnce=true recipientOverwrite=true cleanup=true connectedProof=false");
+            var actorHolder=EntityStore.REGISTRY.newHolder();
+            var owner=UUID.randomUUID();
+            actorHolder.addComponent(UUIDComponent.getComponentType(),new UUIDComponent(owner));
+            actorHolder.addComponent(TransformComponent.getComponentType(),new TransformComponent(new Vector3d(8.5,64,8.5),new Rotation3f()));
+            actorHolder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
+            var actor=store.addEntity(actorHolder,AddReason.SPAWN);refs.add(actor);
+            try(var probe=new HealingPresentationProbe(ignored->{})){
+                for(var mode:List.of(HealingProbePolicy.Mode.WORLD,HealingProbePolicy.Mode.EMPTY,HealingProbePolicy.Mode.VISIBLE,HealingProbePolicy.Mode.BEAM,
+                        HealingProbePolicy.Mode.RECIPIENT_ONCE,HealingProbePolicy.Mode.RECIPIENT_OVERWRITE)){
+                    var run=new Run(owner,store.getExternalData().getWorld().getWorldConfig().getUuid(),store,actor,mode,
+                            HealingProbePolicy.needsRecipient(mode)?"native":"none");
+                    try{
+                        // Execute the same create/update/cleanup methods as the connected command, not just its model factory.
+                        probe.create(run);probe.update(run);
+                        if(!HealingProbePolicy.needsRecipient(mode)&&(run.target!=null||run.ownedTarget))throw new IllegalStateException("STANDALONE_CREATED_NPC");
+                    }finally{probe.cleanup(run,"ISOLATED_AUDIT");}
+                    if(run.carrier!=null&&run.carrier.isValid()||run.ownedTarget&&run.target.isValid())throw new IllegalStateException("PROBE_MODE_ORPHAN");
+                    if(run.receipts.stream().anyMatch(s->s.startsWith("RELEASE_FAILED")))throw new IllegalStateException("PROBE_MODE_CLEANUP_FAILURE");
+                }
+            }
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_PROBE_MODE_PATHS result=PASS standalone=4 recipient=2 sameCreateUpdateCleanup=true noStandaloneNpc=true connectedProof=false");
             for(String id:List.of(HealingParticleVisuals.MODEL_ID,"RPG_Probe_Healing_Visible")){
                 var ref=HealingParticleVisuals.spawnCarrier(store,new Vec3(0,203,0),new Vec3(6,203,0),id);refs.add(ref);
                 var model=store.getComponent(ref,ModelComponent.getComponentType());

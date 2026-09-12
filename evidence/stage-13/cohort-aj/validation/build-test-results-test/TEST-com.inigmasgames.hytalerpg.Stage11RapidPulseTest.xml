@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:09:05.538Z" hostname="GRAHAM" time="0.148">
+  <properties/>
+  <testcase name="finiteAuraHasElevenReducedPulsesButExactlyEightSecondsUpkeep()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.004"/>
+  <testcase name="orbChangesPulseTimingNotMovementSpeedOrLife()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.0"/>
+  <testcase name="poisonHasFortyFiveFullPulsesNoTailAndOnePayment()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.005"/>
+  <testcase name="rejectsFlightContactsAndOneOffSequencesRatherThanChangingTheirSamplingClock()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.0"/>
+  <testcase name="fiveIntegerChillPulsesGrantFourAndDuplicatesGrantNothing()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="auraHasIndependentDamageAndChillClocksWithoutUpkeepDiscount()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="chillingAuraUsesFractionalPerVictimCreditAndIndependentDamage()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.01"/>
+  <testcase name="beamPaysTailTimeWithoutAnExtraDamagePulseOrSecondCooldown()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.004"/>
+  <testcase name="blizzardWarningAndVictimHitIntervalRemainAuthoritative()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="fractionalLedgerIsBoundedPerEffectAndRefusesMalformedPayload()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="lifeDrainRetainsActualDamageBasedHealingAndRate()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.004"/>
+  <testcase name="lingeringIsResolvedBeforePulseCountWithBoundedSpawnBudget()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="multiStackPulseHasExactFourFifthsTotalWithoutFractionalNativeStatuses()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="unaffordableChannelTailDoesNotInventAFreeFinalPulse()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.006"/>
+  <testcase name="acceptsAuthoredPulsesAcrossAreasChannelsOrbsAndAuras()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="profileCacheDoesNotLeakPulseIntervalIntoPlainOrGeometryOnlyPlans()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="pulseAndMobileComposeWithoutAnAuraOrExtraCost()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.004"/>
+  <testcase name="earthquakeUsesSixExistingSpatialImpactsNotSixActivations()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.006"/>
+  <testcase name="vortexScalesPerPulsePullRatherThanRenormalizingItsRate()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.004"/>
+  <testcase name="allPulseContextsPreserveOriginalRootInstanceAndCorrelation()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.005"/>
+  <testcase name="discreteGroundPulsesRetainImmediateFirstPulseAndShortenOnlyIntervals()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="integratedAreaCoefficientPreservesOldPulseBeforeApplyingEightyPercent()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.001"/>
+  <testcase name="blizzardUsesWeightedChillAfterExistingVictimIntervalGate()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.005"/>
+  <testcase name="insufficientAuraUpkeepAndOwnerLagStillCleanWithoutBackfilling()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.006"/>
+  <testcase name="newcomerCannotInheritAnotherVictimsFractionalCredit()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.0"/>
+  <testcase name="duplicateAuraTickCannotGrantExtraChillOrCharge()" classname="com.inigmasgames.hytalerpg.Stage11RapidPulseTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

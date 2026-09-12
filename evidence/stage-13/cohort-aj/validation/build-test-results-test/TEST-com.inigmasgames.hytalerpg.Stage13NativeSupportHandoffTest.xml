@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13NativeSupportHandoffTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:09:42.091Z" hostname="GRAHAM" time="0.02">
+  <properties/>
+  <testcase name="activeNativeHitSpendsPreauthorizedCapacityWhileNextSaveIsHeld()" classname="com.inigmasgames.hytalerpg.Stage13NativeSupportHandoffTest" time="0.005"/>
+  <testcase name="failedInitialAuthorizationCannotApplyNativeAuraOrAbsorb()" classname="com.inigmasgames.hytalerpg.Stage13NativeSupportHandoffTest" time="0.005"/>
+  <testcase name="sharedAegisSpendsOnlyPreviouslyDurableSeparateEscrowWhileSaveIsHeld()" classname="com.inigmasgames.hytalerpg.Stage13NativeSupportHandoffTest" time="0.006"/>
+  <testcase name="productionExecutionStaysPendingUntilShieldDebitIsDurable()" classname="com.inigmasgames.hytalerpg.Stage13NativeSupportHandoffTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

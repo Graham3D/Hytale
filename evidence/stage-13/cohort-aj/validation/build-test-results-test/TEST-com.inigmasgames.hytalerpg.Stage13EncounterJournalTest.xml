@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:09:19.039Z" hostname="GRAHAM" time="8.29">
+  <properties/>
+  <testcase name="lockIsHeldBetweenOperationsAndReleasedOnlyOnClose()" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.018"/>
+  <testcase name="fullDeathQueueRejectsBeforeLedgerFreezeAndCanRetryAfterDrain()" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="3.1"/>
+  <testcase name="periodicCheckpointRetiresOnlyFullyCoveredJournalAndUsesOriginalSnapshotEnvelope()" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="2.129"/>
+  <testcase name="acceptedDeltaIsForcedCompactAndDoesNotRewriteTheSnapshot()" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.025"/>
+  <testcase name="actualClosedChannelWriteFailureFreezesUntilRestart()" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.023"/>
+  <testcase name="nestedAdmissionRejectsBeforeAnyRuntimeCreditOrWatermarkMutation()" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.022"/>
+  <testcase name="[1] AFTER_APPEND" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.289"/>
+  <testcase name="[2] AFTER_FORCE" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.279"/>
+  <testcase name="[3] AFTER_CHECKPOINT_FILE" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.279"/>
+  <testcase name="[4] AFTER_CHECKPOINT_POINTER" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.274"/>
+  <testcase name="[5] AFTER_CHECKPOINTS" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.276"/>
+  <testcase name="[6] AFTER_ROTATION" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.268"/>
+  <testcase name="[7] AFTER_FLOOR" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.277"/>
+  <testcase name="[1] torn" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.02"/>
+  <testcase name="[2] checksum" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.02"/>
+  <testcase name="[3] sequence" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.021"/>
+  <testcase name="[4] duplicate" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.02"/>
+  <testcase name="[5] missing" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.019"/>
+  <testcase name="[1] AFTER_APPEND" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.043"/>
+  <testcase name="[2] AFTER_FORCE" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.047"/>
+  <testcase name="[3] AFTER_CHECKPOINT_FILE" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.046"/>
+  <testcase name="[4] AFTER_CHECKPOINT_POINTER" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.045"/>
+  <testcase name="[5] AFTER_CHECKPOINTS" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.585"/>
+  <testcase name="[6] AFTER_ROTATION" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.049"/>
+  <testcase name="[7] AFTER_FLOOR" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.051"/>
+  <testcase name="replayPreservesCreditReplacementsExclusionsAndExpiredFarmWatermarks()" classname="com.inigmasgames.hytalerpg.Stage13EncounterJournalTest" time="0.056"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

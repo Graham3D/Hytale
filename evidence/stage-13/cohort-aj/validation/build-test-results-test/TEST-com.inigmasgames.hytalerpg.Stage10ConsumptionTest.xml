@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" tests="28" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:08:57.322Z" hostname="GRAHAM" time="0.325">
+  <properties/>
+  <testcase name="sacrificeIsNotAStaticSummonPassiveTarget()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.004"/>
+  <testcase name="familyCommitFailureCannotArmDelayedDamageOrRefundPaidCost()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.012"/>
+  <testcase name="abandonedDelayedBurstDoesNotRestoreCorpse()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.023"/>
+  <testcase name="genericRepeatAndTriggerConsumersAreRejected()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.004"/>
+  <testcase name="logoutAndWorldCleanupRemoveConsumeBenefits()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.009"/>
+  <testcase name="consumeCannotUseSameOwnedActorTwice()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.009"/>
+  <testcase name="corpseBurstUsesRealCastCostAndCapturedCoefficient()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.022"/>
+  <testcase name="wrongWorldCannotConsumeOrPublishBenefit()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.01"/>
+  <testcase name="depletedShieldDoesNotEraseRemainingDamageBonus()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.009"/>
+  <testcase name="expiredOwnedActorCannotBeConsumed()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.011"/>
+  <testcase name="unlinkedSummonDoesNotExplode()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.007"/>
+  <testcase name="consumeBonusDoesNotModifyNativeBasicAttackFactor()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.01"/>
+  <testcase name="voluntaryConsumeCannotTriggerDeathPact()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.009"/>
+  <testcase name="bothBenefitsExpireAtEightNotEighteen()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.009"/>
+  <testcase name="deathPactOnlyNaturalExpiryOrEnemyKill()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.029"/>
+  <testcase name="burstConsumptionAlsoRejectsFutureReviveClaim()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.017"/>
+  <testcase name="allSwarmMembersHaveIndependentSingleTerminalClaim()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.005"/>
+  <testcase name="summonOutgoingBonusCapturedOnce()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.006"/>
+  <testcase name="ownerCleanupCannotLeaveDeathPactTrigger()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.005"/>
+  <testcase name="noCorpseRejectsBeforeCostAndCooldown()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.011"/>
+  <testcase name="wrongOwnerCannotConsumeOrPublishBenefit()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.009"/>
+  <testcase name="duplicateCorpseDoesNotChargeOrDispatchAgain()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.019"/>
+  <testcase name="consumePaysOnceAndPublishesEightSecondBenefit()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.01"/>
+  <testcase name="delayedBurstConsumesAtPaidCommitNotAtRelease()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.02"/>
+  <testcase name="benefitFailureLeavesOwnedActorButRetainsPaidActivation()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.009"/>
+  <testcase name="pendingActorNeverExplodes()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.006"/>
+  <testcase name="expandedRadiusTargetsOnlyBurstRadius()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.019"/>
+  <testcase name="delayedConsumeLostActorNeverPublishesBenefit()" classname="com.inigmasgames.hytalerpg.Stage10ConsumptionTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

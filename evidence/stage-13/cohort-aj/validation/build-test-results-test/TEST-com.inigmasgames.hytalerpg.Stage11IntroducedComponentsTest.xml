@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:09:04.611Z" hostname="GRAHAM" time="0.074">
+  <properties/>
+  <testcase name="convertedOrbitRetainsIntroducedPushImpact()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.001"/>
+  <testcase name="concentrationIsAdditiveOnSecondaryNotAnotherMultiplier()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.001"/>
+  <testcase name="allSixLinksRemainScopedToIntroducedShatter()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.003"/>
+  <testcase name="simultaneousIntroducersDoNotMultiplySecondaryPenaltyTwice()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.0"/>
+  <testcase name="secondaryCleaveGetsImpactPenaltyWithoutChangingPrimary()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.001"/>
+  <testcase name="removingIntroducerRollsBackRatherThanSilentlyDisabling()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.001"/>
+  <testcase name="shrapnelAlsoIntroducesConcentration()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.002"/>
+  <testcase name="bleedAddsOnlyItsOwnFiniteDuration()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.0"/>
+  <testcase name="primaryAreaMagnitudeAlreadyContainsItsModifiers()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.001"/>
+  <testcase name="shatterIntroducesRadiusNotCarrierCollision()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.001"/>
+  <testcase name="repulsionIntroducesImpactButVacuumDoesNot()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.0"/>
+  <testcase name="bleedDurationFivePointSixWithoutChangingInstantStrike()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.006"/>
+  <testcase name="missingResolvedAdditiveUnitFailsClosed()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.001"/>
+  <testcase name="nativeFiniteDurationAndIntroducedBleedEachScaleOnce()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.001"/>
+  <testcase name="sourceProfileNeverMutatesAcrossCachedVariants()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.002"/>
+  <testcase name="invalidIntroducerCannotGrantCapability()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.0"/>
+  <testcase name="conversionStillRemovesShrapnelInsteadOfReaddingCarrierTags()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.0"/>
+  <testcase name="primaryRepulsionGetsImpactPenaltyOnce()" classname="com.inigmasgames.hytalerpg.Stage11IntroducedComponentsTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

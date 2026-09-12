@@ -2,11 +2,11 @@
 param([switch]$NativeSmoke,[ValidateRange(1024,65535)][int]$Port=5592)
 $ErrorActionPreference='Stop'
 $repo=(Resolve-Path "$PSScriptRoot\..").Path
-$out=Join-Path $repo 'evidence/stage-13/cohort-ai/launcher-auth'
+$out=Join-Path $repo 'evidence/stage-13/cohort-aj/launcher-auth'
 New-Item -ItemType Directory -Force -Path $out|Out-Null
 $live=Join-Path $env:APPDATA 'Hytale/data/pre-release/Saves/RPG/mods/HyARPG.jar'
 $liveHash=(Get-FileHash $live).Hash
-$candidate=Join-Path $repo 'evidence/stage-13/cohort-ai/artifacts/HyARPG.jar'
+$candidate=Join-Path $repo 'evidence/stage-13/cohort-aj/artifacts/HyARPG.jar'
 $candidateHash=(Get-FileHash $candidate).Hash
 $capture=@{}
 # Exercise the actual -Start branch, capturing its native arguments without starting a server.
@@ -21,10 +21,12 @@ if(@($arguments|Where-Object {$_ -in @('offline','insecure','--singleplayer','--
 $bindIndex=[Array]::IndexOf($arguments,'--bind')
 if($bindIndex -lt 0 -or $arguments[$bindIndex+1] -ne "127.0.0.1:$Port"){throw 'Loopback bind regression'}
 $root=(Resolve-Path -LiteralPath $capture.Directory).Path
-$expectedPrefix=Join-Path $repo 'run/healing-probe-ai-'
+$expectedPrefix=Join-Path $repo 'run/healing-probe-aj-'
 if(-not $root.StartsWith($expectedPrefix,[StringComparison]::OrdinalIgnoreCase)){throw 'Disposable path regression'}
 if($arguments -notcontains "-Drpg.healingPresentationProbeRoot=$root" -or $arguments -notcontains '-Drpg.healingPresentationProbe=true'){throw 'Probe scope flags missing'}
-$receipt=Get-Content (Join-Path $repo 'evidence/stage-13/cohort-ai/package-validation.json') -Raw|ConvertFrom-Json
+$fixture=Join-Path $root 'universe/worlds/default/config.json'
+if((Get-FileHash $fixture).Hash -ne (Get-FileHash (Join-Path $repo 'tools/fixtures/healing-probe-world.json')).Hash){throw 'Fresh flat fixture differs from audited source'}
+$receipt=Get-Content (Join-Path $repo 'evidence/stage-13/cohort-aj/package-validation.json') -Raw|ConvertFrom-Json
 $mods=Join-Path $root 'mods'
 if(@(Get-ChildItem $mods -File -Filter '*.jar').Count -ne 3){throw 'Three-mod baseline changed'}
 foreach($entry in $receipt.jarHashes.psobject.Properties){if((Get-FileHash (Join-Path $mods $entry.Name)).Hash -ne $entry.Value){throw 'Prepared mod checksum mismatch'}}
@@ -60,7 +62,7 @@ if($NativeSmoke){
 }
 if((Get-FileHash $live).Hash -ne $liveHash -or (Get-FileHash $candidate).Hash -ne $candidateHash){throw 'RPG JAR changed during launcher-only validation'}
 [ordered]@{result='PASS';launcherSha256=(Get-FileHash (Join-Path $repo 'tools/New-HealingProbeAI.ps1')).Hash;
-    argumentCapture='PASS';disposableRoot=[IO.Path]::GetFileName($root);exactThreeMods=$true;native=$native;
+    argumentCapture='PASS';disposableRoot=[IO.Path]::GetFileName($root);exactThreeMods=$true;freshFlatFixture=$true;native=$native;
     liveJarUnchanged=$true;packagedJarUnchanged=$true;liveJarSha256=$liveHash;packagedJarSha256=$candidateHash;
     authFlowInvoked=$false;liveDeploymentPerformed=$false;connectedVerified=$false}|
     ConvertTo-Json -Depth 6|Set-Content (Join-Path $out 'validation.json') -Encoding utf8

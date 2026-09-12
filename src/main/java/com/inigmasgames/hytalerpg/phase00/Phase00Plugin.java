@@ -184,7 +184,7 @@ public final class Phase00Plugin extends JavaPlugin {
             getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.HealingProbeCommand(healingProbe));
             getEntityStoreRegistry().registerSystem(healingProbe.new Tick());
             getEntityStoreRegistry().registerSystem(healingProbe.new Observe());
-            LOGGER.atInfo().log("RPG_HEAL_PROBE revision=R032-AI enabled=true permission=inigmasgames.rpg.healingprobe disposableWorldRequired=true connectedProof=false");
+            LOGGER.atInfo().log("RPG_HEAL_PROBE revision=R032-AJ enabled=true permission=inigmasgames.rpg.healingprobe disposableWorldRequired=true connectedProof=false");
         }
         getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.RpgTraceCommand(skillTrace));
         if(Boolean.getBoolean("rpg.projectileSpawnAudit"))getCommandRegistry().registerCommand(

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage10CorpseTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:08:57.757Z" hostname="GRAHAM" time="0.242">
+  <properties/>
+  <testcase name="corpseCannotBeInjectedIntoNonCorpseSummon()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.005"/>
+  <testcase name="twoRepositoryInstancesShareAtomicDecision()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.019"/>
+  <testcase name="forgedClaimCannotConsumeOrRelease()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.007"/>
+  <testcase name="rankRulesAllowEliteButNeverMiniBossOrBoss()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.001"/>
+  <testcase name="sameRootClaimIsIdempotentButConsumptionIsOnce()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.014"/>
+  <testcase name="nativeSourceAllowlistRejectsUnknownRoles()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.004"/>
+  <testcase name="reviveUsesRealCastChargeCooldownAndSnapshot()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.022"/>
+  <testcase name="runtimeCapacityIsBounded()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.03"/>
+  <testcase name="weakCorpseRetainsSixtyPercentSourceStats()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.002"/>
+  <testcase name="postClaimFailureDoesNotRefundCommittedSummonCost()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.019"/>
+  <testcase name="committedPermitRejectsWrongOwnerRootWorldAndInstance()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.007"/>
+  <testcase name="durableConsumptionSurvivesRuntimeRemovalAndRepositoryRecreation()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.014"/>
+  <testcase name="tornReceiptFailsClosed()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.002"/>
+  <testcase name="empowermentAppliesAfterReviveCapsWithoutDuplicatingCorpse()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.021"/>
+  <testcase name="invalidWorldCannotClaim()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.002"/>
+  <testcase name="playerOwnedProtectedAndStorySourcesRejected()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.001"/>
+  <testcase name="committedAnchorSurvivesNativeBodyRemovalUntilOneRelease()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.013"/>
+  <testcase name="nativeBodyRemovalInvalidatesUncommittedClaim()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.002"/>
+  <testcase name="ownerCancellationDropsPermitNotDurableConsumption()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.007"/>
+  <testcase name="concurrentOwnersCannotClaimSameBody()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.004"/>
+  <testcase name="reviveClampsHealthAndPowerBeforeLaterModifiers()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.001"/>
+  <testcase name="delayedReviveUsesConsumedSourceEvenAfterNativeBodyRemoval()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.016"/>
+  <testcase name="restartNeverRearmsAnAlreadyConsumedDelayedCorpse()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.01"/>
+  <testcase name="diskFailureCannotTurnAmbiguousCommitBackIntoReusableCorpse()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.004"/>
+  <testcase name="missingCorpseRejectsBeforePayment()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.005"/>
+  <testcase name="existingInstanceCannotConsumeASecondBody()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.006"/>
+  <testcase name="ownerCleanupReleasesOnlyUncommittedClaims()" classname="com.inigmasgames.hytalerpg.Stage10CorpseTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

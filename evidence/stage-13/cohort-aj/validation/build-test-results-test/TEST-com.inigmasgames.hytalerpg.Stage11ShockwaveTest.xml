@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:09:06.525Z" hostname="GRAHAM" time="0.243">
+  <properties/>
+  <testcase name="missingResolvedAdditiveUnitFailsClosedOnlyWhenNeeded()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.001"/>
+  <testcase name="introducedCleaveConcentrationLeavesSingleTargetParentAlone()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="shockwaveConsumesSharedSecondaryBudgetBeforeNativeDispatch()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="conditionalPrimaryIncreasedRemainsInResolvedAmountWithoutAnotherVictimCheck()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.001"/>
+  <testcase name="shockwavePositiveAndNonStrikeNegativeGates()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.001"/>
+  <testcase name="shockwaveHasOneResourceCooldownAndSharedRootLeechBudget()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.005"/>
+  <testcase name="shockwaveTargetCountAndSpatialOverflowBounded()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.015"/>
+  <testcase name="introducedAreaConcentrationDoesNotBuffPhantomNonAreaPacket()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="concentrationAndRadiusUseMatchingActualBurstGeometry()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="cylinderIncludesLargeBoundsOutsideRadiusButNotTargetsAboveHeight()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="secondaryOnlyRadiusLeavesParentDamageAndReachUntouched()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="missedInitialHitCanTriggerOnLaterAuthoredRootHitExactlyOnce()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="burstTagsAreComponentLocalNotAConversionOrParentCapabilityLeak()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.001"/>
+  <testcase name="cleaveAndPhantomNowUseActualTargetBoundsInsteadOfPointCentres()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.007"/>
+  <testcase name="firstSuccessfulContactChosenAfterCancelledOrZeroLossContact()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.005"/>
+  <testcase name="originalAreaConcentrationAlreadyAppliedIsNotAddedTwice()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.005"/>
+  <testcase name="radiusRequiresIntroducedShockwaveAndDoesNotAcceptPlainCleave()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.006"/>
+  <testcase name="increasedUnitRetainsExistingCritMoreLessButNotIncreasedBucket()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.001"/>
+  <testcase name="fortyPercentUsesResolvedPremitigationNotHealthLoss()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="shockwaveMayHitPrimaryButCannotDuplicateSameTargetWithinBurst()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="additiveConcentrationDoesNotBecomeThirtyPercentMoreOnPotency()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.001"/>
+  <testcase name="secondaryOnlyConcentrationLeavesParentGeometryAndIncreasedDamageUntouched()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="introducedRadiusLinkRemovalRollsBackUntilDependentModifierUnlinked()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="shockwaveNotTriggeredByMultistrikeOrOtherSecondary()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.004"/>
+  <testcase name="uncertainBurstDamageCannotRepeatItsOnceOnlyController()" classname="com.inigmasgames.hytalerpg.Stage11ShockwaveTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

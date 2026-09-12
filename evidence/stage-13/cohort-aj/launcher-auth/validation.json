@@ -1,0 +1,25 @@
+{
+  "result": "PASS",
+  "launcherSha256": "810764191C1232E9BA187F4D560BB4E7CF345D5F222F4BA4C208DE0760263015",
+  "argumentCapture": "PASS",
+  "disposableRoot": "healing-probe-aj-7fda892972494ce2bb4edca8b0e88171",
+  "exactThreeMods": true,
+  "freshFlatFixture": true,
+  "native": {
+    "booted": true,
+    "exitCode": 0,
+    "cleanShutdown": true,
+    "connectedVerified": false,
+    "loginStillRequired": true,
+    "loopbackListening": true,
+    "performed": true,
+    "authenticatedMode": true
+  },
+  "liveJarUnchanged": true,
+  "packagedJarUnchanged": true,
+  "liveJarSha256": "272E9F8365FE877152B5890D9100E123AE1127D8DC881A88D93993D3C51FE692",
+  "packagedJarSha256": "76008E37FFC5B38601BD8558728DCA314812707B32E1972A488B3367B4D87E3B",
+  "authFlowInvoked": false,
+  "liveDeploymentPerformed": false,
+  "connectedVerified": false
+}

@@ -1,0 +1,3 @@
+ENCOUNTER_ATTACHMENT_DIAGNOSTIC accepted=false observing=true attaching=false spawnPresent=false
+ENCOUNTER_LOOKUP_DIAGNOSTIC missingDescriptorThrow=true message=No value present
+ENCOUNTER_ATTACHMENT_DIAGNOSTIC persistenceUnavailable=false connectedProof=false gameplayChanged=false

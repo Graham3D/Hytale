@@ -1,0 +1,8 @@
+{
+  "Version": 4,
+  "WorldGen": {"Type": "Flat", "Layers": [{"From": 0, "To": 64, "BlockType": "Soil_Grass"}]},
+  "SpawnProvider": {"Id": "Global", "SpawnPoint": {"X": 8.5, "Y": 64, "Z": 8.5, "Pitch": 0, "Yaw": 0, "Roll": 0}},
+  "IsSpawningNPC": false,
+  "IsBlockSpawnersEnabled": false,
+  "IsSpawnMarkersEnabled": false
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage07LoadTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:08:52.631Z" hostname="GRAHAM" time="0.263">
+  <properties/>
+  <testcase name="full512CarrierLoadHasBoundedBurstLedgersAndCompleteRootCleanup()" classname="com.inigmasgames.hytalerpg.Stage07LoadTest" time="0.263"/>
+  <system-out><![CDATA[STAGE07_LOAD {"bursts":512,"remainingCarriers":0,"carriers":512,"nativePhysicsMeasured":false,"remainingRoots":0,"owners":22,"traceDiskOrNetworkMeasured":false,"milliseconds":24.8092,"secondaryVictimLedgerEntries":32768}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage05ProjectileTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:08:51.725Z" hostname="GRAHAM" time="0.159">
+  <properties/>
+  <testcase name="lifecycleValidatesTargetDeduplicatesAndTerminatesTerrain()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.013"/>
+  <testcase name="quickShotAndAxeTossUsePhysicalSnapshotsAndExactCommit()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.017"/>
+  <testcase name="flightUsesTotalObservedPathAndExactDistanceDerivedLifetime()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.0"/>
+  <testcase name="arcaneBoltIsPlainSingleHitMagicAndStoneRequestsKnockback()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.016"/>
+  <testcase name="quickShotSelectsAuditedNativeBowAndCrossbowCarrierSpeeds()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.003"/>
+  <testcase name="ownerCancellationRemovesEveryRegisteredCarrierWithoutOrphans()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.008"/>
+  <testcase name="canonicalGenerationAndSpawnBudgetsRejectInvalidDerivedPlan()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.008"/>
+  <testcase name="fireBoltCommitsManaAndCapturesMagicDamageAndBurnRequest()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.008"/>
+  <testcase name="compiledForkRemainsMetadataAndDoesNotSpawnChildrenBeforeStage07()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.01"/>
+  <testcase name="projectileFamilyDispatchAndCorrelationStaySingular()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.01"/>
+  <testcase name="elementalAndPhysicalPayloadContractsAreExact()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.003"/>
+  <testcase name="frostBoltRequestsExactlyOneChillStack()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.009"/>
+  <testcase name="planNormalizesVelocityAndFreezesOwnerSnapshotAndEquipment()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.01"/>
+  <testcase name="executorSpawnExceptionCannotProveNoEffectsAndRetainsCommittedPayment()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.008"/>
+  <testcase name="stage02CritPolicyIsReusedWithoutProjectileFormula()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.007"/>
+  <testcase name="invalidWeaponInsufficientResourceAndMissingAmmoRejectBeforeSpawn()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.022"/>
+  <testcase name="sixProjectilePilotsRemainCanonicalAndSnipeRemainsNativeGated()" classname="com.inigmasgames.hytalerpg.Stage05ProjectileTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
