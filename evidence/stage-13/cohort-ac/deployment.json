@@ -1,0 +1,22 @@
+{
+  "deployedAtUtc": "2026-09-12T15:40:53.5754930Z",
+  "cohort": "R032-AC",
+  "implemented": true,
+  "packaged": true,
+  "deployed": true,
+  "connectedVerified": false,
+  "liveStartupVerified": false,
+  "jar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.25.jar",
+  "jarSha256": "C3AC781F8BB5948490DE45E9C7176AACA8178F0B29A7729E9A9A71B02A42E891",
+  "artifactSha256": "C3AC781F8BB5948490DE45E9C7176AACA8178F0B29A7729E9A9A71B02A42E891",
+  "backup": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-ac\\before\\save\\20260912T154050Z",
+  "backupFiles": 493,
+  "backupHashVerification": "PASS",
+  "previousJarSha256": "1CA247EF81C0066C8D4D6CC1C40D0EF0FE2F9E56E0D574E27DFB3D349B430217",
+  "otherModsChanged": false,
+  "savesAndModDataChanged": false,
+  "traceFilesChanged": false,
+  "saveMigration": "NOT REQUIRED / NOT PERFORMED",
+  "fullRetainedPass": false,
+  "knownIssue": "One unchanged trace fixture compression-ratio assertion fails; connected visual verification pending"
+}

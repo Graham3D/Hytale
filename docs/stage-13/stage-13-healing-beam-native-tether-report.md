@@ -1,8 +1,8 @@
 # R032-AC — Healing Beam native elastic tether
 
-**IMPLEMENTED / PACKAGED / NOT DEPLOYED. CONNECTED-VERIFIED = false.**
+**IMPLEMENTED / PACKAGED / DEPLOYED. CONNECTED-VERIFIED = false.**
 
-2026-09-12, branch `RPG`, source baseline `1df592d3dc93c43201bc38716a91863e352a1157` (R032-AB). This is a presentation-only Healing Beam correction. The connected QA installation and save were not modified because the owner explicitly requested connected-test packaging without deployment.
+2026-09-12, branch `RPG`, source baseline `1df592d3dc93c43201bc38716a91863e352a1157` (R032-AB). This is a presentation-only Healing Beam correction. It was initially packaged without deployment under the task-specific instruction, then deployed at the owner's immediate follow-up direction.
 
 ## Scope and invariants
 
@@ -97,11 +97,13 @@ Evidence is retained in [cohort-ac](../../evidence/stage-13/cohort-ac/), includi
 
 The archive contains exactly those three JARs and their bytes match the individually hashed artifacts.
 
-**NOT DEPLOYED.** The live R032-AB RPG JAR remains unchanged with SHA-256 `1CA247EF81C0066C8D4D6CC1C40D0EF0FE2F9E56E0D574E27DFB3D349B430217`. No live mod, save, trace or NPC data was written.
+**DEPLOYED** at 2026-09-12 15:40:53 UTC to `C:\Users\Zemio\AppData\Roaming\Hytale\data\pre-release\Saves\RPG\mods\HytaleRPG-0.0.25.jar`. The installed SHA-256 is `C3AC781F8BB5948490DE45E9C7176AACA8178F0B29A7729E9A9A71B02A42E891`, exactly matching the packaged and smoke-tested RPG artifact.
+
+Before replacement, all 493 files in the stopped RPG save were copied and individually hash-verified at `evidence/stage-13/cohort-ac/before/save/20260912T154050Z` (local rollback copy). The previous AB JAR hash was `1CA247EF81C0066C8D4D6CC1C40D0EF0FE2F9E56E0D574E27DFB3D349B430217`. Only the target RPG JAR was replaced; CanvasUI, HytaleDevLib, ImmersiveNPCs, mod data, world/player data and traces were not mutated. No save migration occurred. Live startup and client rendering remain pending owner launch, so connected verification remains false.
 
 ## Connected acceptance checklist
 
-After a later explicit deployment authorization:
+Using the deployed AC build:
 
 1. Start/rejoin the RPG world and confirm the AC startup marker: `RPG_SUPPORT_TETHER_ASSETS cohort=AC beam=RPG_Healing texture=Void_Green persistent=true connectedProof=false`.
 2. Equip Healing Beam, use an accepted staff/spellbook, injure a friendly player or NPC and hold the assigned native ability key. Confirm a continuous green textured stream remains visible for the entire channel without a periodic disappearance or refresh flash.
