@@ -22,8 +22,9 @@ final class RpgHud extends CustomUIHud {
 
     @Override protected void build(@Nonnull UICommandBuilder commands) {
         commands.append("RpgHud.ui");
+        commands.append("RpgCooldownSweep.ui");
         commands.append("Phase00RevisionHud.ui");
-        commands.set("#BuildRevision.TextSpans", Message.raw(com.inigmasgames.hytalerpg.phase00.BuildIdentity.REVISION + "-U"));
+        commands.set("#BuildRevision.TextSpans", Message.raw(com.inigmasgames.hytalerpg.phase00.BuildIdentity.REVISION + "-AB"));
         writeAll(commands, model);
     }
 
@@ -33,12 +34,21 @@ final class RpgHud extends CustomUIHud {
         UICommandBuilder update = new UICommandBuilder();
         if (!previous.xp().equals(next.xp())) writeXp(update, next);
         if (previous.pendingLevelUpPoints() != next.pendingLevelUpPoints()) writeNotice(update, next);
+        if(!previous.skills().equals(next.skills()))writeCooldowns(update,next);
         if (update.getCommands().length > 0) update(false, update);
     }
 
     private static void writeAll(UICommandBuilder commands, RpgHudViewModel model) {
         writeXp(commands, model);
         writeNotice(commands, model);
+        writeCooldowns(commands,model);
+    }
+    private static void writeCooldowns(UICommandBuilder commands,RpgHudViewModel model){
+        for(int i=0;i<2;i++){
+            var slot=model.skills().get(i);String selector="#RpgCooldownSkill0"+(i+1);
+            commands.set(selector+".Visible",slot.cooldownRemainingSeconds()>0&&!slot.skillId().isEmpty());
+            commands.set(selector+".Value",CooldownSweep.progress(slot.cooldownRemainingSeconds(),slot.cooldownDurationSeconds()));
+        }
     }
 
     private static void writeXp(UICommandBuilder commands, RpgHudViewModel model) {

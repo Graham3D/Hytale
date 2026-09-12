@@ -140,6 +140,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final AreaRuntime areas = new AreaRuntime(fieldCapacity);
     private final HealingTextAccumulator healingText=new HealingTextAccumulator();
     private final NativeBlizzardVisuals blizzardVisuals=new NativeBlizzardVisuals();
+    public double activeSkillRemaining(UUID owner,String skill){return areas.activeRemaining(owner,skill,System.nanoTime()/1e9);}
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
     private HytaleSupportSystem support;
     private HytaleSummonSystem summons;
@@ -960,9 +961,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     if(context.profile().connection().friendlyTether()){
                         try{
                             // Bounded native particles along the authoritative segment; no persistent VFX entity.
-                            var rotation=NativeBeamTransform.rotation(shape.start(),shape.end());
-                            for(var p:NativeBeamTransform.samples(shape.start(),shape.end())){
-                                com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("Beam_Heal_Green",new org.joml.Vector3d(p.x(),p.y(),p.z()),rotation.yaw(),rotation.pitch(),rotation.roll(),1,75,store);
+                            for(var sample:NativeBeamTransform.stream(shape.start(),shape.end())){
+                                var p=sample.position();var rotation=sample.rotation();
+                                // Last float is native maxDuration, NOT the spatial query distance (fixed 75m).
+                                com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("Beam_Heal_Green",new org.joml.Vector3d(p.x(),p.y(),p.z()),rotation.yaw(),rotation.pitch(),rotation.roll(),1,.1f,store);
                             }
                         }catch(RuntimeException ignored){/* Bounded presentation cannot refund a paid pulse. */}
                         return;
@@ -1098,12 +1100,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     return true;
                 }
                 @Override public void present(SkillExecutionContext context, AreaGeometry shape, String phase, double seconds) {
+                    // Blizzard has native storm/shard/impact presentation, not debug circles.
+                    if(context.profile().skillId().equals("blizzard")&&!phase.equals("IMPACT"))return;
                     if(context.profile().skillId().equals("blizzard")&&phase.equals("IMPACT")){
                         var p=shape.origin();
-                        com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("RPG_Blizzard_Impact",vector(p),store);
+                        com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("Impact_Ice",vector(p),store);
                         int sound=com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent.getAssetMap().getIndex("SFX_Ice_Ball_Death");
                         if(sound>=0)com.hypixel.hytale.server.core.universe.world.SoundUtil.playSoundEvent3d(sound,com.hypixel.hytale.protocol.SoundCategory.SFX,p.x(),p.y(),p.z(),store);
-                        emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase",phase,"position",p.toString(),"template","RPG_Blizzard_Impact","sound","SFX_Ice_Ball_Death"));
+                        emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase",phase,"position",p.toString(),"template","Impact_Ice","sound","SFX_Ice_Ball_Death"));
                         return;
                     }
                     vfx.presentArea(store.getExternalData().getWorld(), shape, phase, context.profile().area().element(),

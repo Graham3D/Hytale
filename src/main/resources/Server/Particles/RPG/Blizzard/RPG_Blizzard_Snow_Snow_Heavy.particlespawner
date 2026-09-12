@@ -26,8 +26,8 @@
   "TrailSpawnerPositionMultiplier": 1,
   "TrailSpawnerRotationMultiplier": 1,
   "SpawnRate": {
-    "Min": 140,
-    "Max": 140
+    "Min": 600,
+    "Max": 600
   },
   "InitialVelocity": {
     "Speed": {
@@ -63,12 +63,12 @@
         },
         "Scale": {
           "X": {
-            "Min": 1,
-            "Max": 1
+            "Min": 0.05,
+            "Max": 0.08
           },
           "Y": {
-            "Min": 1,
-            "Max": 1
+            "Min": 0.05,
+            "Max": 0.08
           }
         },
         "Rotation": {

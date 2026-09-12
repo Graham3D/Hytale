@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13EncounterNativeHandoffTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-09-12T14:28:24.039Z" hostname="GRAHAM" time="0.127">
+  <properties/>
+  <testcase name="heldRealForceDoesNotBlockProductionDamageDeathDeliveryDetachOrPlayerRead()" classname="com.inigmasgames.hytalerpg.Stage13EncounterNativeHandoffTest" time="0.085"/>
+  <testcase name="heldContextAuthorityLoadRetainsDamageAndDeathAcrossRemoval()" classname="com.inigmasgames.hytalerpg.Stage13EncounterNativeHandoffTest" time="0.042"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

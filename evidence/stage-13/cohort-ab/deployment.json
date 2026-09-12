@@ -1,0 +1,21 @@
+{
+  "deployedAtUtc": "2026-09-12T14:31:18.9413132Z",
+  "cohort": "R032-AB",
+  "implemented": true,
+  "packaged": true,
+  "deployed": true,
+  "connectedVerified": false,
+  "liveStartupVerified": false,
+  "jar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.25.jar",
+  "jarSha256": "1CA247EF81C0066C8D4D6CC1C40D0EF0FE2F9E56E0D574E27DFB3D349B430217",
+  "artifactSha256": "1CA247EF81C0066C8D4D6CC1C40D0EF0FE2F9E56E0D574E27DFB3D349B430217",
+  "backup": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-ab\\before\\save\\20260912T143113Z",
+  "backupFiles": 489,
+  "unchangedFiles": 488,
+  "previousJarSha256": "C39517031B70B77241EC0FDF676C6679F74DF09F8EE1945CB8FA784DC97E3588",
+  "otherModsChanged": false,
+  "savesAndModDataChanged": false,
+  "traceFilesChanged": false,
+  "fullRetainedPass": false,
+  "knownIssue": "One unchanged tiny UI trace compression-ratio test fails; explicit owner-authorized test deployment"
+}

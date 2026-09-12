@@ -105,7 +105,7 @@
       "skillId": "blizzard",
       "family": "GROUND_ZONE",
       "resourceCost": 28,
-      "cooldownSeconds": 18,
+      "cooldownSeconds": 3,
       "area": {
         "geometry": "DISC",
         "radius": 6,

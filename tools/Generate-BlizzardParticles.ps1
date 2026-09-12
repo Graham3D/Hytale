@@ -38,16 +38,18 @@ try{
       if($id -eq 'RPG_Blizzard_Snow'){
         # Unit footprint inscribed in a circle, scaled by compiled radius at emission.
         $value.EmitOffset=@{X=@{Min=-0.707;Max=0.707};Y=@{Min=0;Max=0.35};Z=@{Min=-0.707;Max=0.707}}
-        $value.SpawnRate=@{Min=140;Max=140}
+        $value.SpawnRate=@{Min=600;Max=600}
         $value.InitialVelocity=@{Speed=@{Min=0;Max=0}}
         $value.Attractors=@(@{LinearAcceleration=@{X=0;Y=-1;Z=0}})
         $value.Particle.InitialAnimationFrame.Scale=@{X=@{Min=0.05;Max=0.08};Y=@{Min=0.05;Max=0.08}}
+        $value.Particle.Animation.'0'.Scale=$value.Particle.InitialAnimationFrame.Scale
         $spawner.PositionOffset=@{X=0;Y=0;Z=0}
       }
       $spawner.SpawnerId="${id}_$nativeId"
       Save-Asset "$($spawner.SpawnerId).particlespawner" $value
     }
     if($id -ne 'RPG_Blizzard_Trail'){$system.LifeSpan=0.05}
+    if($id -eq 'RPG_Blizzard_Snow'){$system.LifeSpan=0.1;$system.IsImportant=$true;$system.CullDistance=75}
     Save-Asset "$id.particlesystem" $system
   }
 }finally{$zip.Dispose()}

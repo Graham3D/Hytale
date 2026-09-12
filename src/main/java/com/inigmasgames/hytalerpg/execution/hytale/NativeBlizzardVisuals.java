@@ -16,7 +16,7 @@ import org.joml.Vector3d;
 
 /** Unsaved native model carriers follow AreaRuntime's swept, server-owned transforms.
  * There is deliberately no native damage interaction, physics integrator or second hit authority. */
-final class NativeBlizzardVisuals {
+public final class NativeBlizzardVisuals {
     private record Key(UUID owner,String instance,int index){}
     private record Carrier(Ref<EntityStore> ref,Store<EntityStore> store){}
     private final Map<Key,Carrier> carriers=new java.util.concurrent.ConcurrentHashMap<>();
@@ -94,10 +94,23 @@ final class NativeBlizzardVisuals {
     }
     void storm(SkillExecutionContext c,AreaGeometry shape,double remaining,Store<EntityStore> store){
         var key=new Key(c.request().actorId(),c.skillInstanceId(),-1);double now=System.nanoTime()/1e9;
-        if(now<storms.getOrDefault(key,0d)||remaining<=0)return;
+        if(now<storms.getOrDefault(key,0d)||remaining<=.2)return;
         storms.put(key,now+.1);
+        var packet=stormPacket(shape,remaining);
+        for(var player:store.getExternalData().getWorld().getPlayerRefs()){
+            var ref=player.getReference();if(ref==null||!ref.isValid())continue;
+            var transform=store.getComponent(ref,TransformComponent.getComponentType());
+            if(transform!=null&&transform.getPosition().distanceSquared(new Vector3d(packet.position.x,packet.position.y,packet.position.z))<=75*75)
+                player.getPacketHandler().writeNoCache(packet);
+        }
+    }
+    /** Short root-owned leases allow cancellation without an invented particle stop API.
+     * Stop emissions early enough for the derivative's <=.2s particles to expire at root end. */
+    public static com.hypixel.hytale.protocol.packets.world.SpawnParticleSystem stormPacket(AreaGeometry shape,double remaining){
         var p=shape.origin();
-        ParticleUtil.spawnParticleEffect("RPG_Blizzard_Snow",new Vector3d(p.x(),p.y()+2,p.z()),0,0,0,(float)shape.radius(),75,store);
+        return new com.hypixel.hytale.protocol.packets.world.SpawnParticleSystem("RPG_Blizzard_Snow",
+                new com.hypixel.hytale.protocol.Position(p.x(),p.y()+2,p.z()),new com.hypixel.hytale.protocol.Direction(0,0,0),
+                (float)shape.radius(),null,(float)Math.clamp(remaining-.2,0,.1));
     }
     void end(SkillExecutionContext c,CommandBuffer<EntityStore> buffer){
         carriers.keySet().stream().filter(k->k.owner.equals(c.request().actorId())&&k.instance.equals(c.skillInstanceId())).toList().forEach(k->remove(k,buffer));

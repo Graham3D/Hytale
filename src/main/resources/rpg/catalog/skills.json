@@ -3038,7 +3038,7 @@
     "castCost": "Mana 28",
     "upkeep": "",
     "castTime": "Instant",
-    "cooldown": "18 s",
+    "cooldown": "3 s",
     "targetMode": "24 m placement  /  6.0 m radius ground zone",
     "maxRange": "24 m placement",
     "geometry": "6.0 m radius ground zone",

@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /** Owns the presentation-only HUD lifecycle and traces meaningful state transitions. */
 public final class RpgHudCoordinator {
-    private static final long POLL_NANOS = 250_000_000L;
+    private static final long POLL_NANOS = 100_000_000L;
     private final RpgUiProjectionService projection;
     private final HytaleResourceViewAdapter resources = new HytaleResourceViewAdapter();
     private final RpgUiTraceService trace;
@@ -50,7 +50,7 @@ public final class RpgHudCoordinator {
                 "xpLayerOrder", "ExperienceBackground|ExperienceBar|ExperienceFrame",
                 "xpAnchor", "Centered Bottom:138 Width:702", "xpUsableWidth", RpgHud.XP_FILL_WIDTH,
                 "nativeAbilitiesVisible", true, "nativeSignature", "PRESERVED",
-                "rpgAbilityControls", 0, "abilityPresentation", "NATIVE_HYTALE_ONLY"));
+                "rpgAbilityControls", 2, "abilityPresentation", "NATIVE_WITH_READ_ONLY_COOLDOWN_SWEEPS"));
         traceXp(id, model, true);
         if (model.showLevelUpNotice()) trace.trace(id, "LEVEL_UP_INDICATOR_SHOWN", ref(),
                 Map.of("pendingLevelUpPoints", model.pendingLevelUpPoints(), "initial", true));

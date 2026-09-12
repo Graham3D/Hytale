@@ -27,6 +27,8 @@ public final class RpgUiProjectionService {
     private final RpgCooldownService cooldowns;
     private final CharacterXpProjectionService xp = new CharacterXpProjectionService();
     private final Stage04SkillProfiles stage04;
+    private java.util.function.ToDoubleBiFunction<UUID,String> activeRemaining=(owner,skill)->0;
+    public void configureActiveRemaining(java.util.function.ToDoubleBiFunction<UUID,String> reader){activeRemaining=java.util.Objects.requireNonNull(reader);}
 
     public RpgUiProjectionService(RpgCatalog catalog, RpgLoadoutOperations loadouts,
                                   DerivedStatService derivedStats, RpgCooldownService cooldowns) {
@@ -59,6 +61,15 @@ public final class RpgUiProjectionService {
             String family = definition.map(value -> value.family().toLowerCase(java.util.Locale.ROOT)).orElse("unknown");
             double remaining = cooldowns.remaining(player, id.get().value());
             var plan = view.plans().get(slot);
+            double duration=0;
+            if(plan!=null&&stage04.supports(id.get().value())){
+                var profile=new com.inigmasgames.hytalerpg.execution.CompiledProfileResolver().resolve(stage04.require(id.get().value()),plan);
+                duration=cooldowns.calculate(player,profile.cooldownSeconds(),plan.foundationModifiers().rechargeFactor(),derive(view).cooldownRecovery(),plan.kernelModifiers()).finalSeconds();
+                if(id.get().value().equals("blizzard")){
+                    remaining=Math.max(remaining,activeRemaining.applyAsDouble(player,"blizzard"));
+                    duration=Math.max(duration,profile.area().lifetimeSeconds());
+                }
+            }
             boolean ready = stage04.supports(id.get().value()) && plan != null && !plan.degraded()
                     && (stage04.require(id.get().value()).family().name().equals(plan.finalFamily())
                     || plan.finalTags().contains(stage04.require(id.get().value()).family().name()));
@@ -68,7 +79,7 @@ public final class RpgUiProjectionService {
                     "rpg.icon.skill.family." + family, remaining, state,
                     state == SkillSlotView.State.UNAVAILABLE
                             ? stage04.supports(id.get().value()) ? "COMPILED_PLAN_UNSUPPORTED" : "EXECUTOR_NOT_IMPLEMENTED"
-                            : ""));
+                            : "",duration));
         }
         return new RpgHudViewModel(view.state().revision, resources.mana(), resources.health(), resources.stamina(),
                 projectedXp, view.state().pendingLevelUpPoints, slots);

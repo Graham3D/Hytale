@@ -50,10 +50,11 @@ class Stage06HardeningTest {
         var runtime=new AreaRuntime();var seed=Stage06AreaRuntimeTest.context("blizzard");var port=new CountingPort(List.of());
         runtime.start(seed,Vec3.ZERO,Vec3.FORWARD,0,1,port); // Field plus 11 child impacts = 12.
         assertThrows(IllegalStateException.class,()->runtime.start(seed,Vec3.ZERO,Vec3.FORWARD,0,1,port));
-        runtime.start(copy(seed,seed.request().actorId(),"second",seed.rootCastId()),Vec3.ZERO,Vec3.FORWARD,0,1,port);
-        runtime.start(copy(seed,seed.request().actorId(),"third",seed.rootCastId()),Vec3.ZERO,Vec3.FORWARD,0,1,port);
-        runtime.start(copy(seed,seed.request().actorId(),"fourth",seed.rootCastId()),Vec3.ZERO,Vec3.FORWARD,0,1,port);
-        var error=assertThrows(IllegalStateException.class,()->runtime.start(copy(seed,seed.request().actorId(),"fifth",seed.rootCastId()),Vec3.ZERO,Vec3.FORWARD,0,1,port));
+        // AB prohibits a second manual Blizzard while active; derived releases still share this exact budget.
+        runtime.start(copy(seed,seed.request().actorId(),"second",seed.rootCastId()).echoCopy(),Vec3.ZERO,Vec3.FORWARD,0,1,port);
+        runtime.start(copy(seed,seed.request().actorId(),"third",seed.rootCastId()).echoCopy(),Vec3.ZERO,Vec3.FORWARD,0,1,port);
+        runtime.start(copy(seed,seed.request().actorId(),"fourth",seed.rootCastId()).echoCopy(),Vec3.ZERO,Vec3.FORWARD,0,1,port);
+        var error=assertThrows(IllegalStateException.class,()->runtime.start(copy(seed,seed.request().actorId(),"fifth",seed.rootCastId()).echoCopy(),Vec3.ZERO,Vec3.FORWARD,0,1,port));
         assertEquals("ROOT_SPAWN_EFFECT_BUDGET",error.getMessage());assertEquals(4,runtime.size());
         runtime.cancel(seed.request().actorId());assertEquals(0,runtime.retainedRootCount());
     }

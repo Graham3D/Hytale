@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11CascadeTest" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-09-12T14:27:58.203Z" hostname="GRAHAM" time="0.127">
+  <properties/>
+  <testcase name="mobileChildrenRetainOffsetsWhenOwnerMoves()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="sharedSecondaryBudgetCanRejectChildrenWithoutFreePrimary()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="availableFieldCapacityLimitsChildrenWithoutExceedingEight()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.003"/>
+  <testcase name="childFootprintCanHitItsOwnTargetsWithoutHittingOutside()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.003"/>
+  <testcase name="cascadeChildrenDoNotRecursivelyCascade()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.003"/>
+  <testcase name="positiveGroundRadialAndExplicitNegativeGates()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.0"/>
+  <testcase name="echoAddsOneFieldNotTwoMoreCascades()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="childSnapshotRetainsDelayAndResourceAuthority()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="finiteBudgetCapsBlizzardImpactsWithoutDroppingEitherChildField()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.006"/>
+  <testcase name="sharedStatusIcdPreventsOverlapMultiplyingPoisonApplications()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.005"/>
+  <testcase name="scaledRadiusDoesNotAlsoScaleAuthoredOffset()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.005"/>
+  <testcase name="forcedOwnerCancelReleasesAllChildrenAndLedgers()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="derivedControllersDoNotStartAgainWhenOwnerKeepsTicking()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.003"/>
+  <testcase name="terrainAdapterFailureDoesNotRefundOrCancelPrimary()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.003"/>
+  <testcase name="areaChildrenCannotRepeatControllers()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="noLegalTerrainKeepsPrimaryAndDoesNotCreateChildren()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="childrenUseBaseRadiusAimRightOffsetsAndSixtyPercentRadius()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="primaryAndTwoChildrenShareOneResourcePayment()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.003"/>
+  <testcase name="allChildrenRetainDurationAndPulseCadenceUnderLingering()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="primaryProfileRemainsImmutable()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <testcase name="inheritedChildMagnitudeFortyFivePercentAndSameLifetime()" classname="com.inigmasgames.hytalerpg.Stage11CascadeTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

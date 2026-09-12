@@ -1,0 +1,19 @@
+Group {
+  // Installed 0.7.0-pre.1 AbilitiesHud: Right 50, Bottom 40;
+  // right-flow 66px slots with 28px spacing. Inset 4px preserves the native frames.
+  // Read-only overlays: no buttons, icons, key bindings, native stat controls or input capture.
+  CircularProgressBar #RpgCooldownSkill01 {
+    Anchor: (Right: 176, Bottom: 72, Width: 58, Height: 58);
+    MaskTexturePath: "Assets/RpgHud/CooldownMask.png";
+    Color: #111827(0.72);
+    Value: 0;
+    Visible: false;
+  }
+  CircularProgressBar #RpgCooldownSkill02 {
+    Anchor: (Right: 82, Bottom: 72, Width: 58, Height: 58);
+    MaskTexturePath: "Assets/RpgHud/CooldownMask.png";
+    Color: #111827(0.72);
+    Value: 0;
+    Visible: false;
+  }
+}

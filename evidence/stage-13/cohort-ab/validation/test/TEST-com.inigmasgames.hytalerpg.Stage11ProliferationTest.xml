@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11ProliferationTest" tests="34" skipped="0" failures="0" errors="0" timestamp="2026-09-12T14:28:03.713Z" hostname="GRAHAM" time="0.239">
+  <properties/>
+  <testcase name="positiveAndNegativeSourceStatusGates()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.0"/>
+  <testcase name="deadFriendlyProtectedAndBlockedTargetsAreRejected()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.005"/>
+  <testcase name="noFrozenPayloadTypeExists()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.0"/>
+  <testcase name="auraDeathDedupeWindowIsBoundedAndExpires()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.01"/>
+  <testcase name="allThreeStatusKindsUseSameNearestThreeRecipients()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.005"/>
+  <testcase name="chillThresholdConsumesAllSourceProvenance()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.007"/>
+  <testcase name="sameSkillTransfersAtMostOnePackageOfEachKind()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="stableIdsBreakDistanceTiesAndDeduplicate()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="auraEpochRejectionIsTypedAndCannotBypassSharedLimit()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="boundsCanTouchRangeWhileEntityCentreIsOutside()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.005"/>
+  <testcase name="periodicDeathClaimsStrongestRemainingSnapshotOnce()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.001"/>
+  <testcase name="expiredPeriodicPackagesDoNotProliferate()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.0"/>
+  <testcase name="threeNearestEnemiesChosenDeterministically()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="spreadChildCannotProliferateOnLaterDeath()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.005"/>
+  <testcase name="sourceBudgetStopsUnboundedDeathWork()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="chillRecordsOwnContributionNotAnotherCasterStacks()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.007"/>
+  <testcase name="finiteRootSharesExistingSecondaryLimit()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="concentratedPoisonDoesNotReapplyVirulenceOrRestoreCap()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.005"/>
+  <testcase name="chillSpreadCannotRegisterRecursiveSource()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.003"/>
+  <testcase name="chillSourceBudgetDoesNotRemoveAppliedNativeChill()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.007"/>
+  <testcase name="deadSourceCannotBeItsOwnRecipient()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.005"/>
+  <testcase name="childRetainsRootCorrelationAndSharedBudget()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="fullThreeDimensionalDistanceNotHorizontalOnly()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="burnScalesMagnitudeAndRemainingDurationExactlyOnce()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="chillExpiryCannotLeaveTransferableStacks()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="auraUsesEpochAdmissionWithoutLifetimeBudget()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.005"/>
+  <testcase name="nativeQueryAndApplyFailuresRemainTyped()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.01"/>
+  <testcase name="unlinkedOrDerivedStatusIsNotASource()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.008"/>
+  <testcase name="transferMayReachNormalThresholdButDoesNotCopyFrozen()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.001"/>
+  <testcase name="transferredChillUsesReducedDurationAndNoDeepFreezeBonus()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.001"/>
+  <testcase name="duplicateDeathCannotSpreadAgain()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="candidateOverflowNeverPartiallySelects()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.003"/>
+  <testcase name="poisonRetainsPackageStackCountAndCap()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.004"/>
+  <testcase name="chillFloorsScaledStacksToMinimumOne()" classname="com.inigmasgames.hytalerpg.Stage11ProliferationTest" time="0.015"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

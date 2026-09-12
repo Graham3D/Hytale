@@ -21,6 +21,8 @@ public final class AreaRuntime {
     private final Map<String,Integer> rootSpawned=new HashMap<>();
 
     public synchronized String admission(UUID owner, String skill, boolean trap) {
+        if(skill.equals("blizzard")&&fields.values().stream().anyMatch(f->!f.done&&f.context.request().actorId().equals(owner)&&f.context.profile().skillId().equals(skill)&&f.context.secondaryKind().isEmpty()))
+            return "BLIZZARD_ALREADY_ACTIVE";
         String capacityVerdict=capacity.admission(owner);if(!capacityVerdict.equals("PASS"))return capacityVerdict;
         if (trap && fields.values().stream().anyMatch(f -> f.context.request().actorId().equals(owner)
                 && f.context.profile().skillId().equals(skill))) return "TRAP_ALREADY_DEPLOYED";
@@ -43,7 +45,8 @@ public final class AreaRuntime {
             throw new IllegalStateException("MOBILE_FINITE_ZONE_COMPONENT_REQUIRED");
         Vec3 anchor=mobile?mobileOrigin(context,port).orElseThrow(()->new IllegalStateException("MOBILE_OWNER_ANCHOR_UNAVAILABLE")):point;
         Vec3 origin=mobile&&context.secondaryKind().isEmpty()?anchor:point;
-        String admission = admission(context.request().actorId(), context.profile().skillId(), profile.trap());
+        String admission = context.derivedRelease()&&context.profile().skillId().equals("blizzard")
+                ?capacity.admission(context.request().actorId()):admission(context.request().actorId(), context.profile().skillId(), profile.trap());
         if (!admission.equals("PASS")) throw new IllegalStateException(admission);
         if (fields.containsKey(context.skillInstanceId())) throw new IllegalStateException("DUPLICATE_FIELD_INSTANCE");
         int spawnCost=1+(profile.stratified()&&!controlled?profile.impactCount():0);
@@ -105,6 +108,10 @@ public final class AreaRuntime {
         return List.copyOf(removed);
     }
     public synchronized int size() { return fields.size(); }
+    public synchronized double activeRemaining(UUID owner,String skill,double now){
+        return fields.values().stream().filter(f->!f.done&&f.context.request().actorId().equals(owner)&&f.context.profile().skillId().equals(skill)&&f.context.secondaryKind().isEmpty())
+                .mapToDouble(f->Math.max(0,f.started+f.context.profile().area().lifetimeSeconds()-now)).max().orElse(0);
+    }
 
     private void tickField(Field field, double now, AreaWorldPort port) {
         if (field.done || now < field.lastTick) return;

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-09-12T14:28:02.704Z" hostname="GRAHAM" time="0.087">
+  <properties/>
+  <testcase name="wideningRetainsReachHeightSpeedLifetimeCostAndCooldown()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="focusedWorksOnNonChannelledInstantLine()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.0"/>
+  <testcase name="impactScalesSlamPushNotItsArea()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="concentrationAndFocusedPreserveCommonWidthFloorAndAdditiveDamage()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="realSlamRuntimeReceivesResolvedImpactAndKeepsOneRootPayment()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.004"/>
+  <testcase name="realWaveRuntimeUsesWiderBoundsAndOnlyOnePayment()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.007"/>
+  <testcase name="focusedMagnitudeIsIncreasedNotMore()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="impactOnlyScalesAuthoredKnockbackAndDirectMagnitude()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="longReachAndWideningTouchIndependentFields()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="focusedChannelPositiveAndTwoNegativeFixtures()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.0"/>
+  <testcase name="conflictingLinkRollsBackGraphInEitherOrder()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.007"/>
+  <testcase name="impactScalesAuthoredStaggerBeforeResistance()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="minimumWidthIsAppliedAfterCombinedGeometry()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="typedRecordAlsoRefusesConflictingWidthFlags()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="cachedPlansDoNotMixFocusedAndWidenedProfiles()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="wideningPositiveAndTwoNegativeFixtures()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.0"/>
+  <testcase name="impactDoesNotIntroduceGlobalKnockbackTag()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.0"/>
+  <testcase name="focusedBeamRetainsTwentyPaidSlicesAndOneEndCooldown()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.004"/>
+  <testcase name="impactCannotBypassBossOrProtectedControl()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="impactSharesExistingRollingControlResistance()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.001"/>
+  <testcase name="impactAcceptsDeclaredKnockbackAndStaggerDespiteMissingImportedTags()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.0"/>
+  <testcase name="impactCannotInventImpactOnOrdinaryDamageOrRoot()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.0"/>
+  <testcase name="targetLockWidthDoesNotBecomeAResolvingPrism()" classname="com.inigmasgames.hytalerpg.Stage11GeometryImpactTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

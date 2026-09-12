@@ -16,7 +16,7 @@ class Stage13HealingBlizzardTest {
                 new Vec3(1,0,1),new Vec3(-1,0,1),new Vec3(1,0,-1),new Vec3(-1,0,-1),
                 new Vec3(2,7,-3),new Vec3(2,-7,-3),new Vec3(0,2,0),new Vec3(0,-2,0))){
             var end=start.add(delta);var r=NativeBeamTransform.rotation(start,end);
-            var rotated=r.transform(new org.joml.Vector3d(0,0,1));var expected=delta.normalized();
+            var rotated=r.transform(new org.joml.Vector3d(0,0,-1));var expected=delta.normalized();
             assertEquals(expected.x(),rotated.x,1e-6);assertEquals(expected.y(),rotated.y,1e-6);assertEquals(expected.z(),rotated.z,1e-6);
             var samples=NativeBeamTransform.samples(start,end);assertFalse(samples.isEmpty());assertTrue(samples.size()<=9);
             for(var point:samples)assertEquals(0,point.subtract(start).length()+end.subtract(point).length()-delta.length(),1e-8);
@@ -33,7 +33,7 @@ class Stage13HealingBlizzardTest {
             h.targets.add(Stage08ConnectionCohortBTest.enemy(3,-3,2.35,6));
             h.cast();h.stepTo(.5);assertFalse(segmentShapes.isEmpty(),passive);
             for(var shape:segmentShapes){
-                var actual=NativeBeamTransform.rotation(shape.start(),shape.end()).transform(new org.joml.Vector3d(0,0,1));
+                var actual=NativeBeamTransform.rotation(shape.start(),shape.end()).transform(new org.joml.Vector3d(0,0,-1));
                 var expected=shape.end().subtract(shape.start()).normalized();
                 assertEquals(expected.x(),actual.x,1e-6);assertEquals(expected.y(),actual.y,1e-6);assertEquals(expected.z(),actual.z,1e-6);
             }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13NativeProjectileConstructionTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-12T14:27:42.213Z" hostname="GRAHAM" time="0.021">
+  <properties/>
+  <testcase name="snipeReadyParticlesReuseNativeEmittersWithoutNormalDrawDelay()" classname="com.inigmasgames.hytalerpg.Stage13NativeProjectileConstructionTest" time="0.001"/>
+  <testcase name="compatibleViewKeepsZeroNativeRootsAndDoesNotMutateConfig()" classname="com.inigmasgames.hytalerpg.Stage13NativeProjectileConstructionTest" time="0.009"/>
+  <testcase name="spawnViewCapturesOnlyTheNativePhysicsPreparedHolder()" classname="com.inigmasgames.hytalerpg.Stage13NativeProjectileConstructionTest" time="0.003"/>
+  <testcase name="typedEmptyAndNonemptyNativeConfigsDoNotNeedAdaptation()" classname="com.inigmasgames.hytalerpg.Stage13NativeProjectileConstructionTest" time="0.001"/>
+  <testcase name="nativePhysicsFailureKeepsOriginalExceptionAndPreciseBoundary()" classname="com.inigmasgames.hytalerpg.Stage13NativeProjectileConstructionTest" time="0.002"/>
+  <testcase name="compatibilityViewExplicitlyDelegatesEntireInstalledPublicConfigContract()" classname="com.inigmasgames.hytalerpg.Stage13NativeProjectileConstructionTest" time="0.001"/>
+  <testcase name="installedCodecAndConstructorReproduceExactEmptyMapException()" classname="com.inigmasgames.hytalerpg.Stage13NativeProjectileConstructionTest" time="0.002"/>
+  <testcase name="snipeUsesNativeArrowAndInstalledPhysicsCodecHasNoGravity()" classname="com.inigmasgames.hytalerpg.Stage13NativeProjectileConstructionTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
