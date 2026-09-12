@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13LifecycleEdgeHandoffTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:44:14.584Z" hostname="GRAHAM" time="0.402">
+  <properties/>
+  <testcase name="exclusionIsImmediateIdempotentAndItsDurableReceiptOutlivesRemoval()" classname="com.inigmasgames.hytalerpg.Stage13LifecycleEdgeHandoffTest" time="0.054"/>
+  <testcase name="capacityRejectsBeforeWatermarkMutationAndShutdownCanDrainOnlyOffOwner()" classname="com.inigmasgames.hytalerpg.Stage13LifecycleEdgeHandoffTest" time="0.047"/>
+  <testcase name="twoWorldsShareOneEightAttemptOneSecondDeliveryBudget()" classname="com.inigmasgames.hytalerpg.Stage13LifecycleEdgeHandoffTest" time="0.301"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

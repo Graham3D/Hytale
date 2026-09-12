@@ -47,6 +47,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                 var context=context(owner);var source=ProjectileConfig.getAssetMap().getAsset("Projectile_Config_RPG_Fire_Bolt");
                 NativeBlizzardVisuals.audit(store,auditChunk,context);
                 NativeHealingBeamVisuals.audit(store,context);
+                HealingTetherPresentation.audit(store,context);
                 HealingParticleVisuals.audit(store,context);
                 HealingPresentationProbe.auditChannel(store,context);
                 NativeManaReplicationAudit.audit(store);

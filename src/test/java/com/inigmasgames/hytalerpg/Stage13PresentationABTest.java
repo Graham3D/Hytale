@@ -41,7 +41,7 @@ class Stage13PresentationABTest {
         assertEquals("RPG_Healing",NativeHealingBeamVisuals.ASSET_ID);
         assertEquals(.025f,NativeHealingBeamVisuals.WIDTH_SCALE);
         var asset=com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(java.nio.file.Path.of("src/main/resources/Server/Entity/Beams/RPG_Healing.json"))).getAsJsonObject();
-        assertEquals("Trails/Void_Green.png",asset.get("TexturePath").getAsString());
+        assertEquals("Trails/RPG_Healing_Core.png",asset.get("TexturePath").getAsString());
         var source=java.nio.file.Files.readString(java.nio.file.Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
         assertFalse(source.contains("spawnParticleEffect(\"Beam_Heal_Green\""));assertTrue(source.contains("healingBeamVisuals.present"));
     }

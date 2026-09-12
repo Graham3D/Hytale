@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:43:27.802Z" hostname="GRAHAM" time="0.088">
+  <properties/>
+  <testcase name="howlSamplesRecipientsOnceWithoutAuraReservation()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="shieldUsesWisdomPotencyAndNoCrit()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="shieldExpiryAndOwnerRemovalHaveNoRefund()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="secondaryExceptionBeforeApplyDoesNotAcceptOrRetryTransfer()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.0"/>
+  <testcase name="replacementDoesNotAddCapacityAndRespectsNewCap()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="burnHasOneSecondPerTargetIcdButNewContactsStillGetFire()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.005"/>
+  <testcase name="rejectedRedirectDoesNotEraseTwentyPercentDamage()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.003"/>
+  <testcase name="reflectionAndRedirectFlagsBlockRecursionLeechAndCredit()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.001"/>
+  <testcase name="selfShieldDoesNotRedirectAndAbsorbsBeforeHealth()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="dotOutgoingSnapshotSurvivesBuffExpiryWithoutReapplication()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.003"/>
+  <testcase name="allyShieldSplitsOnceBeforeAbsorb()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.003"/>
+  <testcase name="nativeCancellationAndIntegerRoundedZeroHaveDifferentTransferOutcomes()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.001"/>
+  <testcase name="howlAndBattleCryAddButSameNamedCopiesDoNot()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.007"/>
+  <testcase name="unavailableHealthAfterFailedSecondaryIsNotInvented()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.0"/>
+  <testcase name="rootImbueSecondaryBudgetIsSixteen()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="nativeMovementAssetSelectionIsExactAndRejectsUnmappedMagnitude()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.001"/>
+  <testcase name="correctedCatalogDoesNotPretendReflectionAbsorbsOrShieldAttacks()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.003"/>
+  <testcase name="fourProfilesHaveAuthoredCostsAndDuration()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="reflectionHasNoShieldOrInitialDamage()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="severalCasterShieldsStillRedirectOnlyOnce()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.006"/>
+  <testcase name="swapAndExpiryTerminateImbue()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.006"/>
+  <testcase name="secondaryExceptionAfterHealthLossDoesNotDoubleChargeOriginal()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.0"/>
+  <testcase name="untrustedAndDerivedContactsDoNotCreateImbuePayload()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.003"/>
+  <testcase name="authenticatedFixtureImbueConsumesContactOnce()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.004"/>
+  <testcase name="flameWeaponNativeGateRejectsBeforeCostAndCooldown()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.003"/>
+  <testcase name="lateOutgoingBuffDoesNotEnterAlreadyCapturedDotSnapshot()" classname="com.inigmasgames.hytalerpg.Stage09BarrierSupportTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

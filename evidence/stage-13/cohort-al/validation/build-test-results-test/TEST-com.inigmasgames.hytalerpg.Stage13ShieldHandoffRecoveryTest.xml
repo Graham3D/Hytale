@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13ShieldHandoffRecoveryTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:44:15.585Z" hostname="GRAHAM" time="1.849">
+  <properties/>
+  <testcase name="[1] BEFORE_DEBIT" classname="com.inigmasgames.hytalerpg.Stage13ShieldHandoffRecoveryTest" time="0.17"/>
+  <testcase name="[2] DEBIT_BEFORE_PUBLICATION" classname="com.inigmasgames.hytalerpg.Stage13ShieldHandoffRecoveryTest" time="0.169"/>
+  <testcase name="[3] OWNER_HIT" classname="com.inigmasgames.hytalerpg.Stage13ShieldHandoffRecoveryTest" time="0.184"/>
+  <testcase name="[4] SHARED_HIT" classname="com.inigmasgames.hytalerpg.Stage13ShieldHandoffRecoveryTest" time="0.168"/>
+  <testcase name="[5] CLEAN_SETTLEMENT" classname="com.inigmasgames.hytalerpg.Stage13ShieldHandoffRecoveryTest" time="0.179"/>
+  <testcase name="[6] ENCOUNTER_CONTRIBUTION_DURABLE" classname="com.inigmasgames.hytalerpg.Stage13ShieldHandoffRecoveryTest" time="0.483"/>
+  <testcase name="[7] ENCOUNTER_PLAN_DURABLE" classname="com.inigmasgames.hytalerpg.Stage13ShieldHandoffRecoveryTest" time="0.494"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

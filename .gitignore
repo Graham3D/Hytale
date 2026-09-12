@@ -5,6 +5,7 @@ config.json
 telemetry/
 icon-backups/
 evidence/stage-13/cohort-*/before/save/
+evidence/stage-13/cohort-*/full-run-results/**/binary/
 *.log
 evidence/stage-01b/*/rollback/*.jar
 evidence/stage-02/*/rollback/*.jar

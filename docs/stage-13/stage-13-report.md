@@ -1,5 +1,15 @@
 # Stage 13 — runtime completion and release hardening
 
+**2026-09-12: R032-AL is IMPLEMENTED, PACKAGED and DEPLOYED — production Healing Beam tether repair.**
+Normal casts now use endpoint-controlled persistent native Beams, not the old empty-model
+particle carrier. Gameplay is unchanged. [Technical report](stage-13-healing-tether-al-report.md)
+and [actual-skill connected checklist](healing-tether-al-checklist.md). All 2,269 retained tests
+pass after one stale badge assertion's targeted rerun; native production-owner smoke, packaging
+and rollback checks passed. 485 stopped-save files were backed up; only HyARPG.jar was replaced.
+**AL live startup and connected visual acceptance remain unverified.** The badge now identifies AL.
+
+The entries below are historical checkpoints, not the currently installed revision.
+
 **2026-09-12: R032-AK is DEPLOYED — real Healing Beam channel observation checkpoint.**
 AJ-LIVE's eight controls are owner-confirmed visible; the complete connected trace review
 found no probe failures. Those client-only recipient/staff controls do not prove native

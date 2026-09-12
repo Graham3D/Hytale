@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="16" viewBox="0 0 128 16">
+  <defs><linearGradient id="flow" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#72ff1f" stop-opacity="0"/>
+    <stop offset="0.3" stop-color="#72ff1f" stop-opacity="0.1"/>
+    <stop offset="0.45" stop-color="#d5ffad" stop-opacity="0.85"/>
+    <stop offset="0.5" stop-color="#f3ffe9" stop-opacity="1"/>
+    <stop offset="0.55" stop-color="#d5ffad" stop-opacity="0.85"/>
+    <stop offset="0.7" stop-color="#72ff1f" stop-opacity="0.1"/>
+    <stop offset="1" stop-color="#72ff1f" stop-opacity="0"/>
+  </linearGradient></defs>
+  <rect width="128" height="16" fill="url(#flow)"/>
+</svg>

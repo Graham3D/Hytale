@@ -77,7 +77,8 @@ class Stage13PlayerFeedbackCorrectionTest {
         String badge=Files.readString(Path.of("src/main/resources/Common/UI/Custom/Phase00RevisionHud.ui"));
         assertTrue(badge.contains("Right: 18, Top: 18"));assertTrue(badge.contains("R032-U"));
         String hud=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/ui/hud/RpgHud.java"));
-        assertTrue(hud.contains("commands.append(\"Phase00RevisionHud.ui\")"));assertTrue(hud.contains("BuildIdentity.REVISION"));
+        assertTrue(hud.contains("commands.append(\"Phase00RevisionHud.ui\")"));assertTrue(hud.contains("HealingTetherPresentation.REVISION"));
+        assertEquals("R032-AL",com.inigmasgames.hytalerpg.execution.hytale.HealingTetherPresentation.REVISION);
         for(String forbidden:List.of("#Health","#Stamina","#Mana"))assertFalse(hud.contains(forbidden));
     }
 }

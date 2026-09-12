@@ -25,7 +25,7 @@ public final class HealingProbeCommand extends AbstractPlayerCommand {
         try{
             if(context.get(mode).equalsIgnoreCase("stop")){probe.stop(store,player.getUuid());context.sendMessage(Message.raw("Healing probe cleanup requested."));return;}
             probe.start(store,ref,player,context.get(mode),context.get(target));
-            context.sendMessage(Message.raw("R032-AK requested. Wait for STARTED/ARMED or FAILED. channel none observes real Healing Beam casts for 30s without changing them. Old visual controls still run for 10s; wait 12s between them."));
+            context.sendMessage(Message.raw("R032-AL requested. Wait for STARTED/ARMED or FAILED. channel none observes real Healing Beam casts for 30s without changing them. Old visual controls still run for 10s; wait 12s between them."));
         }catch(java.io.IOException|RuntimeException error){
             context.sendMessage(Message.raw("Probe rejected: "+error.getClass().getSimpleName()+" "+String.valueOf(error.getMessage()).replaceAll("[\\r\\n]"," ").substring(0,Math.min(160,String.valueOf(error.getMessage()).length()))+". No skill was cast."));
         }

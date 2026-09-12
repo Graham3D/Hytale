@@ -173,9 +173,15 @@ public final class ConnectionRuntime {
             var segments=new ArrayList<ConnectionWorldPort.TetherVisualSegment>(6);
             segments.add(new ConnectionWorldPort.TetherVisualSegment("PRIMARY:"+target.id(),
                     ConnectionShape.line(origin,target.bounds().centre(),p.width(),p.height()),target.id()));
-            for(var child:field.visualChildren)segments.add(new ConnectionWorldPort.TetherVisualSegment(
-                    child.continuation()+":"+child.source().id()+">"+child.recipient().id(),
-                    ConnectionShape.line(child.source().bounds().centre(),child.recipient().bounds().centre(),p.width(),p.height()),child.recipient().id()));
+            for(var child:field.visualChildren){
+                // Refresh only presentation anchors. Keep the pulse's selected membership and coefficients untouched.
+                var source=port.resolveFriendly(child.source().id()).orElse(null);
+                var recipient=port.resolveFriendly(child.recipient().id()).orElse(null);
+                if(source==null||recipient==null)continue; // No stale visual attachment to an unloaded/despawned entity.
+                segments.add(new ConnectionWorldPort.TetherVisualSegment(
+                    child.continuation()+":"+source.id()+">"+recipient.id(),
+                    ConnectionShape.line(source.bounds().centre(),recipient.bounds().centre(),p.width(),p.height()),recipient.id()));
+            }
             port.presentTether(field.context,List.copyOf(segments));
         }
     }

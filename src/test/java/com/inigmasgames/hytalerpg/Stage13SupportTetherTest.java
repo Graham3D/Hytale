@@ -12,6 +12,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import static com.inigmasgames.hytalerpg.Stage08ConnectionCohortBTest.*;
 
 class Stage13SupportTetherTest {
+    @Test void secondaryVisualAnchorsRefreshBetweenPulsesWithoutExtraHealing(){
+        class Moving extends Healing {
+            java.util.List<ConnectionWorldPort.TetherVisualSegment> last=java.util.List.of();
+            Moving(){super("arc");}
+            public void presentTether(SkillExecutionContext c,java.util.List<ConnectionWorldPort.TetherVisualSegment> frame){last=frame;}
+        }
+        var h=new Moving();h.targets.add(enemy(2,1,1.35,5));assertTrue(h.cast().committed());h.advance(.25);
+        assertEquals(2,h.last.size());int healed=h.coefficients.size();double mana=h.mana;
+        h.targets.set(1,enemy(2,2,2.35,5));h.advance(.31);
+        assertEquals(healed,h.coefficients.size());assertEquals(2,h.last.size());
+        assertEquals(h.targets.get(1).bounds().centre(),h.last.get(1).shape().end());
+        // Continuous upkeep still pays normally; visual refresh must not add a pulse or waive payment.
+        assertEquals(mana-.24,h.mana,1e-8);
+    }
     static class Healing extends Stage08ConnectionTest.Harness {
         boolean held=true,los=true;final Set<String> hostile=new HashSet<>();
         final Map<String,Double> hp=new HashMap<>();final List<Double> coefficients=new ArrayList<>();

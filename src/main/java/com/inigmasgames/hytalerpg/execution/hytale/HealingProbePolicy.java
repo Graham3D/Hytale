@@ -10,7 +10,7 @@ public final class HealingProbePolicy {
     public static final int MAX_WORLDS=4, MAX_TRANSITIONS=128;
     public static boolean liveTestBuild(){
         try(var stream=HealingProbePolicy.class.getResourceAsStream("/healing-probe-live-test.txt")){
-            return stream!=null&&new String(stream.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim().equals("R032-AK");
+            return stream!=null&&new String(stream.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim().equals("R032-AL");
         }catch(java.io.IOException error){throw new IllegalStateException("LIVE_PROBE_MARKER_UNREADABLE",error);}
     }
     public static void validateLiveTarget(Mode mode,String target){

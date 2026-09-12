@@ -22,8 +22,9 @@ import org.joml.Vector3d;
 
 /** Persistent native-beam owner. Every spawned entity is non-serialized and removed with its root. */
 public final class NativeHealingBeamVisuals {
-    /** AE connected evidence proved ECS creation/update/removal. Use the dedicated magical trail now. */
+    /** AL endpoint-controlled soft-green material; no stock particle carrier or rejected ribbon art. */
     public static final String ASSET_ID="RPG_Healing";
+    public static final String FLOW_ASSET_ID="RPG_Healing_Flow";
     /** Native endpoint width multiplier, not a claimed world-space metre measurement. */
     public static final float WIDTH_SCALE=.025f;
     public static final int MAX_LOGICAL_SEGMENTS=6;
@@ -52,6 +53,9 @@ public final class NativeHealingBeamVisuals {
             boolean created=present(job.store,job.context,job.frame,job.now);
             var root=roots.get(key);
             root.receipt=result;
+            var carriers=new HashMap<String,Ref<EntityStore>>();
+            root.segments.forEach((id,segment)->{if(!segment.pieces.isEmpty())carriers.put(id,segment.pieces.getFirst());});
+            HealingPresentationProbe.production("CORE_FRAME_READY",root.store,root.owner,key,carriers,java.util.Set.of(),null);
             if(created)result.accept("NATIVE_BEAM_STARTED",null);
             else if(!root.updateReported){root.updateReported=true;result.accept("NATIVE_BEAM_UPDATED",null);}
         }catch(RuntimeException failure){result.accept("NATIVE_BEAM_FAILED",failure);}
@@ -83,7 +87,9 @@ public final class NativeHealingBeamVisuals {
         try{
             for(var requested:frame){
                 if(!live.add(requested.id()))throw new IllegalArgumentException("Duplicate healing beam visual id");
-                var shape=requested.shape();var segment=root.segments.computeIfAbsent(requested.id(),ignored->new Segment());
+                var shape=requested.shape();var segment=root.segments.get(requested.id());
+                if(segment!=null&&!java.util.Objects.equals(segment.recipient,requested.recipient())){root.remove(requested.id());segment=null;}
+                if(segment==null){segment=new Segment(requested.recipient());root.segments.put(requested.id(),segment);}
                 segment.update(store,shape.start(),shape.end(),now);
             }
             var stale=new ArrayList<String>();
@@ -121,26 +127,41 @@ public final class NativeHealingBeamVisuals {
     }
 
     private static final class Segment {
-        final ElasticBeamTether motion=new ElasticBeamTether();final List<Ref<EntityStore>> pieces=new ArrayList<>(ElasticBeamTether.PIECES);
+        final String recipient;
+        final ElasticBeamTether motion=new ElasticBeamTether();final List<Ref<EntityStore>> pieces=new ArrayList<>(1);
+        double started=Double.NaN;
+        Segment(String recipient){this.recipient=recipient;}
         void update(Store<EntityStore> store,Vec3 start,Vec3 end,double now){
             int beamIndex=Beam.getAssetMap().getIndex(ASSET_ID);
-            if(beamIndex<0)throw new IllegalStateException("HEALING_BEAM_ASSET_UNRESOLVED");
+            int flowIndex=Beam.getAssetMap().getIndex(FLOW_ASSET_ID);
+            if(beamIndex<0||flowIndex<0)throw new IllegalStateException("HEALING_BEAM_ASSET_UNRESOLVED");
+            if(Double.isNaN(started)||now<started)started=now;
             var points=motion.update(start,end,now);
-            if(pieces.isEmpty())for(int i=0;i<ElasticBeamTether.PIECES;i++)pieces.add(spawn(store,beamIndex,points.get(i),points.get(i+1)));
-            else for(int i=0;i<ElasticBeamTether.PIECES;i++)update(store,pieces.get(i),beamIndex,points.get(i),points.get(i+1));
+            var attachments=attachments(points,now-started,beamIndex,flowIndex);
+            if(pieces.isEmpty())pieces.add(BeamComponent.spawn(store,vector(start),attachments.toArray(AttachedBeam[]::new)));
+            else {
+                var ref=pieces.getFirst();
+                if(!ref.isValid())throw new IllegalStateException("HEALING_BEAM_VISUAL_ENTITY_INVALID");
+                var transform=store.getComponent(ref,TransformComponent.getComponentType());
+                var beams=store.getComponent(ref,BeamComponent.getComponentType());
+                if(transform==null||beams==null)throw new IllegalStateException("HEALING_BEAM_VISUAL_COMPONENT_MISSING");
+                transform.setPosition(vector(start));beams.set(attachments);
+            }
         }
         void remove(Store<EntityStore> store){for(var ref:pieces)if(ref!=null&&ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);pieces.clear();}
-        private static Ref<EntityStore> spawn(Store<EntityStore> store,int beamIndex,Vec3 from,Vec3 to){
-            return BeamComponent.spawn(store,vector(from),attachment(beamIndex,to));
+    }
+    /** Offsets are relative to an unrotated, model-free native Beam origin, not an item node. */
+    public static List<AttachedBeam> attachments(List<Vec3> points,double elapsed,int coreIndex,int flowIndex){
+        var start=points.getFirst();var result=new ArrayList<AttachedBeam>();
+        for(var span:HealingTetherGeometry.frame(points,elapsed)){
+            var offset=span.from().subtract(start);float scale=span.highlight()?WIDTH_SCALE*1.4f:WIDTH_SCALE;
+            result.add(AttachedBeam.toPosition(span.highlight()?flowIndex:coreIndex,scale,scale,null,
+                new org.joml.Vector3f((float)offset.x(),(float)offset.y(),(float)offset.z()),vector(span.to())));
         }
-        private static void update(Store<EntityStore> store,Ref<EntityStore> ref,int beamIndex,Vec3 from,Vec3 to){
-            if(ref==null||!ref.isValid())throw new IllegalStateException("HEALING_BEAM_VISUAL_ENTITY_INVALID");
-            var transform=store.getComponent(ref,TransformComponent.getComponentType());
-            var beams=store.getComponent(ref,BeamComponent.getComponentType());
-            if(transform==null||beams==null)throw new IllegalStateException("HEALING_BEAM_VISUAL_COMPONENT_MISSING");
-            transform.setPosition(vector(from));
-            beams.set(List.of(attachment(beamIndex,to)));
-        }
+        // Native Beam removes empty components. Keep a zero-width point for coincident endpoints, never a stale visible span.
+        if(result.isEmpty())result.add(AttachedBeam.toPosition(coreIndex,0,0,null,vector(start)));
+        if(result.size()>BeamComponent.MAX_BEAMS)throw new IllegalStateException("NATIVE_BEAM_SPAN_CAPACITY");
+        return List.copyOf(result);
     }
     public static AttachedBeam attachment(int beamIndex,Vec3 target){
         return AttachedBeam.toPosition(beamIndex,WIDTH_SCALE,WIDTH_SCALE,null,vector(target));
@@ -171,6 +192,7 @@ public final class NativeHealingBeamVisuals {
             });
             if(!failures.isEmpty()||!events.equals(List.of("NATIVE_BEAM_STARTED")))throw new IllegalStateException("BEAM_CREATE_FAILED:"+failures);
             var root=visuals.roots.get(context.skillInstanceId());var refs=List.copyOf(root.segments.get("primary").pieces);
+            if(refs.size()!=1)throw new IllegalStateException("BEAM_NOT_ONE_ENTITY_PER_SEGMENT");
             for(var ref:refs)if(!ref.isValid()||store.getComponent(ref,BeamComponent.getComponentType())==null
                     ||store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())==null)throw new IllegalStateException("BEAM_NOT_INSERTED");
             for(var ref:refs){
@@ -183,12 +205,25 @@ public final class NativeHealingBeamVisuals {
             if(!failures.isEmpty()||!events.contains("NATIVE_BEAM_UPDATED")||!refs.equals(root.segments.get("primary").pieces)
                     ||store.getComponent(refs.getFirst(),TransformComponent.getComponentType())!=transform
                     ||transform.getPosition().distance(new Vector3d(1,203,0))>1e-9)throw new IllegalStateException("BEAM_UPDATE_FAILED");
+            for(double length:new double[]{2,6,12,18,25.2}){
+                var start=new Vec3(0,202,0);var end=new Vec3(length,202,0);
+                processing.accept(buffer->visuals.present(store,buffer,context,frame.apply(start,end),10+length,receipt));
+                if(!failures.isEmpty()||!refs.equals(root.segments.get("primary").pieces))throw new IllegalStateException("BEAM_LENGTH_RECONSTRUCTED");
+                var beams=store.getComponent(refs.getFirst(),BeamComponent.getComponentType()).getBeams();
+                if(beams.size()>BeamComponent.MAX_BEAMS)throw new IllegalStateException("BEAM_NATIVE_CAPACITY");
+                for(int i=0;i<ElasticBeamTether.PIECES;i++){
+                    var beam=beams.get(i);
+                    if(Math.abs(beam.sourceOffset().x()-length*i/6)>1e-5||Math.abs(beam.targetPosition().x()-length*(i+1)/6)>1e-9)
+                        throw new IllegalStateException("BEAM_NATIVE_ENDPOINT_CONTRACT");
+                }
+            }
             processing.accept(buffer->visuals.remove(context,buffer));
             if(visuals.rootCount()!=0||refs.stream().anyMatch(Ref::isValid)||!events.contains("NATIVE_BEAM_REMOVED"))throw new IllegalStateException("BEAM_REMOVE_FAILED");
             int receipts=events.size();
             processing.accept(buffer->{visuals.present(store,buffer,context,frame.apply(new Vec3(0,202,0),new Vec3(4,202,0)),.2,receipt);visuals.remove(context,buffer);});
             if(visuals.rootCount()!=0||!visuals.pending.isEmpty()||events.size()!=receipts)throw new IllegalStateException("BEAM_CANCELLED_FRAME_RECREATED");
             com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_BEAM_NATIVE_INTEGRATION result=PASS asset=%s widthScale=%s oldProcessingGuard=true create=true update=true remove=true sameBufferCancel=true persistentRefs=true connectedProof=false",ASSET_ID,WIDTH_SCALE);
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_TETHER_EXTENTS result=PASS distances=2,6,12,18,25.2 entitiesPerSegment=1 boundedSpans=true sourceOffsets=true persistentRefs=true nonSerialized=true connectedProof=false");
         }finally{visuals.cancel(context.request().actorId(),null);}
     }
 }

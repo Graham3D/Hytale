@@ -21,6 +21,9 @@ import org.joml.Vector3d;
  * The installed particle protocol cannot bind an animated item node AND a destination.
  * Stream transforms therefore use authoritative spatial anchors, not a fabricated staff-tip pose. */
 public final class HealingParticleVisuals {
+    private final boolean effectsOnly;
+    public HealingParticleVisuals(){this(false);}
+    HealingParticleVisuals(boolean effectsOnly){this.effectsOnly=effectsOnly;}
     public static final String ASSET_ID="Beam_Heal_Green2";
     public static final String MODEL_ID="RPG_Healing_Stream";
     public static final String RECIPIENT_EFFECT="RPG_Healing_Recipient";
@@ -78,9 +81,11 @@ public final class HealingParticleVisuals {
         var ids=new HashSet<String>();var recipients=new HashSet<UUID>();
         for(var segment:job.frame){
             if(!ids.add(segment.id()))throw new IllegalArgumentException("HEAL_PARTICLE_DUPLICATE_SEGMENT");
-            var ref=root.carriers.get(segment.id());
-            if(ref==null){ref=spawn(job.store,segment.shape().start(),segment.shape().end());root.carriers.put(segment.id(),ref);}
-            else update(job.store,ref,segment.shape().start(),segment.shape().end());
+            if(!effectsOnly){
+                var ref=root.carriers.get(segment.id());
+                if(ref==null){ref=spawn(job.store,segment.shape().start(),segment.shape().end());root.carriers.put(segment.id(),ref);}
+                else update(job.store,ref,segment.shape().start(),segment.shape().end());
+            }
             if(segment.recipient()!=null)recipients.add(UUID.fromString(segment.recipient()));
         }
         for(var id:new HashSet<>(root.carriers.keySet()))if(!ids.contains(id))destroy(root.store,root.carriers.remove(id));
@@ -161,7 +166,8 @@ public final class HealingParticleVisuals {
         pending.entrySet().removeIf(e->e.getValue().context.request().actorId().equals(owner));
         for(var key:roots.entrySet().stream().filter(e->e.getValue().owner.equals(owner)).map(Map.Entry::getKey).toList())remove(key,buffer);
     }
-    /** Runs the production scheduler/model construction path only in the isolated native audit. */
+    synchronized int carrierCount(){return roots.values().stream().mapToInt(root->root.carriers.size()).sum();}
+    /** Runs the retained legacy scheduler/model construction path only in the isolated native audit. */
     static void audit(Store<EntityStore> store,SkillExecutionContext c){
         if(!Boolean.getBoolean("rpg.projectileSpawnAudit"))throw new IllegalStateException("ISOLATED_AUDIT_DISABLED");
         var v=new HealingParticleVisuals();var failures=new ArrayList<Throwable>();var events=new ArrayList<String>();

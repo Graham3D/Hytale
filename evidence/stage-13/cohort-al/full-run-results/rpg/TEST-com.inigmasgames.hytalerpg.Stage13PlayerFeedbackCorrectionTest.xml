@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" tests="7" skipped="0" failures="1" errors="0" timestamp="2026-09-12T22:44:15.173Z" hostname="GRAHAM" time="0.026">
+  <properties/>
+  <testcase name="eachWeaponSchedulesBothDirectionsWithoutDuplicateHits()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.0"/>
+  <testcase name="packagedFiveIconsAreByteIdenticalToOwnerArtwork()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.002"/>
+  <testcase name="animationAssetsReuseInstalledLightSwingsAtExactlyOneAndHalfSpeed()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.006"/>
+  <testcase name="revisionBadgeIsTopRightWithoutNativeResourceControls()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.005">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:183)
+	at app//com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest.revisionBadgeIsTopRightWithoutNativeResourceControls(Stage13PlayerFeedbackCorrectionTest.java:80)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="quickSlashHasTwoFullDamageHitsWithOneUnchangedCostAndCooldown()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.003"/>
+  <testcase name="chillIconsAreNativeDebuffsWithoutAdditionalGameplayEffects()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.002"/>
+  <testcase name="multistrikeRepeatsTheCompleteQuickSlashPairWithOnePayment()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -141,7 +141,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final AreaRuntime areas = new AreaRuntime(fieldCapacity);
     private final HealingTextAccumulator healingText=new HealingTextAccumulator();
     private final NativeBlizzardVisuals blizzardVisuals=new NativeBlizzardVisuals();
-    private final HealingParticleVisuals healingBeamVisuals=new HealingParticleVisuals();
+    private final HealingTetherPresentation healingBeamVisuals=new HealingTetherPresentation();
     public double activeSkillRemaining(UUID owner,String skill){return areas.activeRemaining(owner,skill,System.nanoTime()/1e9);}
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
     private HytaleSupportSystem support;
@@ -972,7 +972,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 @Override public void presentTether(SkillExecutionContext context,List<ConnectionWorldPort.TetherVisualSegment> segments){
                     try{
                         healingBeamVisuals.present(store,buffer,context,segments,System.nanoTime()/1e9,(result,failure)->{
-                            if(failure==null)emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result",result,"asset",HealingParticleVisuals.ASSET_ID,"segments",segments.size(),"stage","COMMAND_BUFFER_CONSUMED","sourceAttachment","AUTHORITATIVE_ANCHOR_NOT_ANIMATED_STAFF"));
+                            if(failure==null)emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result",result,"asset",NativeHealingBeamVisuals.ASSET_ID,"renderer",HealingTetherPresentation.REVISION,"segments",segments.size(),"stage","COMMAND_BUFFER_CONSUMED","sourceAttachment","AUTHORITATIVE_ANCHOR_NOT_ANIMATED_STAFF"));
                             else emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result",result,"stage","COMMAND_BUFFER_CONSUMED","error",failure.getClass().getSimpleName(),"message",boundedMessage(failure)));
                         });
                     } catch(RuntimeException failure){

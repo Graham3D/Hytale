@@ -39,7 +39,9 @@ public final class NativeSupportTetherAudit {
         com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_BLIZZARD_ASSETS cohort=AH model=RPG_Blizzard_Shard snow=Snow_Heavy impact=Impact_Ice sound=SFX_Ice_Ball_Death result=PASS connectedProof=false");
         var healingBeam=Beam.getAssetMap().getAsset(NativeHealingBeamVisuals.ASSET_ID);
         if(healingBeam==null)throw new IllegalStateException("SUPPORT_NATIVE_BEAM_MISSING:"+NativeHealingBeamVisuals.ASSET_ID);
-        if(!"Trails/Void_Green.png".equals(healingBeam.getTexture()))throw new IllegalStateException("SUPPORT_NATIVE_BEAM_TEXTURE_MISMATCH");
+        if(!"Trails/RPG_Healing_Core.png".equals(healingBeam.getTexture()))throw new IllegalStateException("SUPPORT_NATIVE_BEAM_TEXTURE_MISMATCH");
+        var healingFlow=com.hypixel.hytale.builtin.beam.asset.Beam.getAssetMap().getAsset(com.inigmasgames.hytalerpg.execution.hytale.NativeHealingBeamVisuals.FLOW_ASSET_ID);
+        if(healingFlow==null||!"Trails/RPG_Healing_Flow.png".equals(healingFlow.getTexture()))throw new IllegalStateException("SUPPORT_NATIVE_BEAM_FLOW_TEXTURE_MISMATCH");
         if(ParticleSystem.getAssetMap().getAsset("RPG_Protection_Glow")==null)throw new IllegalStateException("SUPPORT_TETHER_PARTICLE_MISSING:RPG_Protection_Glow");
         if(EntityEffect.getAssetMap().getAsset("RPG_Protection_Visual")==null)throw new IllegalStateException("PROTECTION_VISUAL_MISSING");
         var animations=com.hypixel.hytale.server.core.asset.type.itemanimation.config.ItemPlayerAnimations.getAssetMap().getAsset("Spellbook");

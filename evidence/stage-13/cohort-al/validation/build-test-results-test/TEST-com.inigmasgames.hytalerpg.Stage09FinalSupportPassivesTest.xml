@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:43:27.932Z" hostname="GRAHAM" time="0.172">
+  <properties/>
+  <testcase name="echoRechecksTriageAtItsOwnResolution()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.008"/>
+  <testcase name="savedSharedDeficitSurvivesRestartWithoutAnActiveRecipient()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.005"/>
+  <testcase name="triageRejectsInvalidHealthObservations()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.002"/>
+  <testcase name="finalPassiveCompatibilityUsesActualPayloads()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.043"/>
+  <testcase name="sharedSpiritShieldHasHalfCreatedCapacityAndSameExpiry()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.006"/>
+  <testcase name="auraWardSecondaryBudgetRenewsWithoutAccumulatingUnusedTokens()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.006"/>
+  <testcase name="endingManaguardRemovesSharedRecipientsAndReservationsWithoutRefund()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.005"/>
+  <testcase name="wardAndConservationComposeOnActualManaguardReservation()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.005"/>
+  <testcase name="wardReducesSpiritShieldCapacityOnce()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.005"/>
+  <testcase name="schemaFourMigrationDerivesSharedDeficitWithoutTouchingOldLoadout()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.002"/>
+  <testcase name="noEligibleAllyMeansNoDerivedShield()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.005"/>
+  <testcase name="sharedChildNeverRedirectsOrSharesRecursively()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.005"/>
+  <testcase name="toggleCannotCreateFreshSharedCapacity()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.005"/>
+  <testcase name="wardUsesActuallyConsumedCapacityNotIncomingDamageOrCurrentHealthLoss()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.006"/>
+  <testcase name="ownerDamageReducesSharedCeilingWithoutRestoringAlreadyConsumedAllyShield()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.004"/>
+  <testcase name="staleSharedMembershipCannotAbsorbAfterLeaseExpiry()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.004"/>
+  <testcase name="triageAddsToPotencyRatherThanMultiplyingIt()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.005"/>
+  <testcase name="triageNeverAmplifiesTheDrainFraction()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.001"/>
+  <testcase name="triageIsStrictlyBelowThirtyFivePercent()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.008"/>
+  <testcase name="lowerAndReRaiseCapacityCannotEraseSharedDeficit()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.001"/>
+  <testcase name="managuardShareChoosesOneRecipientAndPreservesDeficitWhenItChanges()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.004"/>
+  <testcase name="finiteSecondaryBudgetIsSharedWithTheDerivedAllyAndReportsOnlyFirstRejection()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.005"/>
+  <testcase name="allyTargetedSpiritShieldDoesNotCreateASecondAllyShield()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.006"/>
+  <testcase name="malformedSharedDeficitIsRejected()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.002"/>
+  <testcase name="failedDurableSharedAbsorptionGrantsNoShield()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.007"/>
+  <testcase name="sharedDamageDoesNotConsumeTheOwnersSeparateSelfShield()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.007"/>
+  <testcase name="sharedDeficitRechargeUsesTheSameObservedDelayAndHalfCapacityRate()" classname="com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

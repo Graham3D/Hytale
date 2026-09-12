@@ -102,7 +102,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
             try{
                 if(!r.actor.isValid()||r.store.getComponent(r.actor,PlayerRef.getComponentType())==null){cleanup(r,"OWNER_GONE");return;}
                 if(!r.created){create(r);r.created=true;notifyOwner(r,r.mode==HealingProbePolicy.Mode.CHANNEL
-                    ?"R032-AK ARMED for 30s. Cast Healing Beam normally now; this observer casts nothing and does not waive Mana costs."
+                    ?"R032-AL ARMED for 30s. Cast Healing Beam normally now; this observer casts nothing and does not waive Mana costs."
                     :"STARTED "+r.mode+" for 10s; observe now.");}
                 if(r.target!=null&&!r.target.isValid()){cleanup(r,"TARGET_GONE");return;}
                 for(var ref:r.target==null?List.of(r.actor):List.of(r.actor,r.target)){
@@ -345,7 +345,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
                 r.channels.add(channel);
                 probe.receipt(r,"PRODUCTION_"+stage,channel,Map.of("productionSkillInstanceId",channel,
                     "carriers",carriers.size(),"recipients",recipients.size(),"processing",store.isProcessing()));
-                if(!stage.equals("FRAME_READY"))continue;
+                if(!stage.endsWith("FRAME_READY"))continue;
                 for(var entry:carriers.entrySet())probe.productionLayer(r,channel+"/core/"+entry.getKey(),entry.getValue(),null);
                 for(var id:recipients)probe.productionLayer(r,channel+"/recipient/"+id,store.getExternalData().getRefFromUUID(id),HealingParticleVisuals.RECIPIENT_EFFECT);
                 if(staffEffect!=null)probe.productionLayer(r,channel+"/staff",store.getExternalData().getRefFromUUID(owner),staffEffect);
@@ -387,6 +387,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
         if(component instanceof ModelUpdate m&&m.model!=null){fields.put("model",String.valueOf(m.model.path));fields.put("texture",String.valueOf(m.model.texture));
             fields.put("particles",m.model.particles==null?List.of():Arrays.stream(m.model.particles).map(p->Map.of("system",p.systemId,"part",p.targetEntityPart,"node",String.valueOf(p.targetNodeName),"clearOnRemove",p.clearParticlesOnRemove)).toList());}
         if(component instanceof EntityEffectsUpdate effects)fields.put("effects",effects.entityEffectUpdates==null?List.of():Arrays.stream(effects.entityEffectUpdates).map(e->Map.of("index",e.id,"op",e.type,"infinite",e.infinite,"remaining",e.remainingTime)).toList());
+        if(component instanceof BeamsUpdate beams)fields.put("beams",beams.beams==null?List.of():Arrays.stream(beams.beams).map(b->Map.of("index",b.beamIndex,"sourceScale",b.sourceScale,"targetScale",b.targetScale,"sourceOffset",String.valueOf(b.sourceOffset),"target",String.valueOf(b.targetPosition))).toList());
         return fields;
     }
     private void observe(Store<EntityStore> store){

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage13PresentationAGTest {
     private static JsonObject json(String path)throws Exception{return JsonParser.parseString(Files.readString(Path.of(path))).getAsJsonObject();}
-    @Test void streamUsesExactRequestedAssetNoRibbonNoRepeatedWorldBursts()throws Exception{
+    @Test void legacyReferenceRetainedButProductionUsesEndpointControlledTether()throws Exception{
         var model=json("src/main/resources/Server/Models/RPG/RPG_Healing_Stream.json");
         assertEquals("NPC/MISC/Empty.blockymodel",model.get("Model").getAsString());
         var particles=model.getAsJsonArray("Particles");assertEquals(1,particles.size());
@@ -23,7 +23,9 @@ class Stage13PresentationAGTest {
         assertFalse(source.contains("BeamComponent"));assertFalse(source.contains("SpawnParticleSystem"));
         assertTrue(source.contains("getNonSerializedComponentType"));
         var wiring=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
-        assertTrue(wiring.contains("new HealingParticleVisuals()"));assertFalse(wiring.contains("new NativeHealingBeamVisuals()"));
+        assertTrue(wiring.contains("new HealingTetherPresentation()"));assertFalse(wiring.contains("new HealingParticleVisuals()"));
+        var owner=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HealingTetherPresentation.java"));
+        assertTrue(owner.contains("new NativeHealingBeamVisuals()"));assertTrue(owner.contains("new HealingParticleVisuals(true)"));
     }
     @Test void recipientEffectIsCosmeticFiniteAttachedAndHasNoHealthCondition()throws Exception{
         var effect=json("src/main/resources/Server/Entity/Effects/RPG/RPG_Healing_Recipient.json");
