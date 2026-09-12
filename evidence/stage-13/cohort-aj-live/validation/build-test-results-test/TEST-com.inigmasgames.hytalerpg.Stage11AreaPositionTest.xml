@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:43:13.682Z" hostname="GRAHAM" time="0.007">
+  <properties/>
+  <testcase name="airborneOrUnsupportedOriginIsRejectedBeforeSweep()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.001"/>
+  <testcase name="repulsionMovesAwayExactlyTwoPointFiveMetres()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.0"/>
+  <testcase name="vacuumCannotCrossCenter()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.0"/>
+  <testcase name="malformedCollisionFractionFailsClosed()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.001"/>
+  <testcase name="distinctTargetsAndRootLedgersAreIndependent()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.0"/>
+  <testcase name="eliteHalvesDisplacementAndImmuneDoesNotMove()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.0"/>
+  <testcase name="maximumWorkIsBoundedAndExtraImpactPushFitsWithoutGuessingVelocity()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.0"/>
+  <testcase name="centeredTargetDoesNotInventRandomPushDirection()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.001"/>
+  <testcase name="unsupportedPathDoesNotTeleportAcrossGap()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.0"/>
+  <testcase name="vacuumMovesTowardCenterExactlyTwoMetres()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.0"/>
+  <testcase name="collisionClampsToSweptFractionAndStops()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.001"/>
+  <testcase name="malformedDistanceAndControlScaleReject()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.0"/>
+  <testcase name="badIdentityAndTimeCannotResetAllowance()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.001"/>
+  <testcase name="oneAttemptPerTargetPerRootPerExactSecond()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.0"/>
+  <testcase name="targetLedgerIsBoundedAndExpiredEntriesArePruned()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.001"/>
+  <testcase name="movementRemainsHorizontal()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

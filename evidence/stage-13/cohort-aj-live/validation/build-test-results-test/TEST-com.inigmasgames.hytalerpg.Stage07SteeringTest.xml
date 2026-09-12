@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage07SteeringTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:43:09.615Z" hostname="GRAHAM" time="0.07">
+  <properties/>
+  <testcase name="homingReacquiresAtTenHertzWithinRangeConeAndLosUsingStableTieBreak()" classname="com.inigmasgames.hytalerpg.Stage07SteeringTest" time="0.001"/>
+  <testcase name="antiparallelAndVerticalTurnsStayFiniteNormalizedAndAngleBounded()" classname="com.inigmasgames.hytalerpg.Stage07SteeringTest" time="0.001"/>
+  <testcase name="homingTurnIsCappedAt120DegreesPerSecondAndNeverTurnsThroughOcclusion()" classname="com.inigmasgames.hytalerpg.Stage07SteeringTest" time="0.0"/>
+  <testcase name="homingRejectsOverflowRatherThanPickingFromTruncatedTargets()" classname="com.inigmasgames.hytalerpg.Stage07SteeringTest" time="0.001"/>
+  <testcase name="tooRapidBounceOrInvalidNormalFailsClosedWithoutEarlyReturnOrPhasing()" classname="com.inigmasgames.hytalerpg.Stage07SteeringTest" time="0.027"/>
+  <testcase name="fourCohortBCompatibilityGatesRejectNonProjectileFamilies()" classname="com.inigmasgames.hytalerpg.Stage07SteeringTest" time="0.003"/>
+  <testcase name="reflectionUsesObliqueNormalAndDoesNotConsumeEnemyChainCredits()" classname="com.inigmasgames.hytalerpg.Stage07SteeringTest" time="0.014"/>
+  <testcase name="forkInheritsLastBounceTimeAndRemainingRicochetCredits()" classname="com.inigmasgames.hytalerpg.Stage07SteeringTest" time="0.011"/>
+  <testcase name="twoRealNormalReflectionsPreserveSpeedThenReturnBeginsWithoutResettingCredits()" classname="com.inigmasgames.hytalerpg.Stage07SteeringTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

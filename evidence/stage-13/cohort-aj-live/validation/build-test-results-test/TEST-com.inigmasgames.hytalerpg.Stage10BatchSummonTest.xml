@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:43:12.519Z" hostname="GRAHAM" time="0.079">
+  <properties/>
+  <testcase name="rejectedLinkRollsBackWithoutChangingExistingPlan()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.007"/>
+  <testcase name="duplicatePassiveIdsDoNotStackTypedOperator()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.0"/>
+  <testcase name="incompatibleDecoyAndConversionSwarmAreRejected()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.003"/>
+  <testcase name="wholeBatchRejectsBeforePaymentAtOwnerCap()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.005"/>
+  <testcase name="eachActorClaimsItsOwnIntervalOnlyOnce()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.005"/>
+  <testcase name="delayedBatchStartsReducedLifetimeAtRelease()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.005"/>
+  <testcase name="existingPotencyIsNotAppliedTwiceBySummonModifier()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.005"/>
+  <testcase name="formationHasAtLeastOneMetreBetweenAllActors()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.0"/>
+  <testcase name="swarmAddsOneWolfAndReducesEveryMember()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.005"/>
+  <testcase name="broodUsesInnateTwentyAndNoWeaponRequirement()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.005"/>
+  <testcase name="swarmBroodBatchContainsFive()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.005"/>
+  <testcase name="empowermentDoesNotApplyToConversion()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.003"/>
+  <testcase name="formationRejectsUnboundedCount()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.001"/>
+  <testcase name="crawlersUseOneCostAndCooldownForThreeActors()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.004"/>
+  <testcase name="swarmCrawlerBatchContainsFour()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.004"/>
+  <testcase name="twoUnmodifiedBroodBatchesReachExactlyEight()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.004"/>
+  <testcase name="swarmAndEmpowermentMultiplyInEitherPassiveOrder()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.008"/>
+  <testcase name="swarmCannotDuplicateReviveClaim()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.004"/>
+  <testcase name="formationIsCentredDeterministicAndCompact()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.0"/>
+  <testcase name="empowermentMultipliesSummonNotCaster()" classname="com.inigmasgames.hytalerpg.Stage10BatchSummonTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -36,6 +36,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
     private final RpgSkillTracer trace;
     private final ConcurrentMap<UUID,Run> runs=new ConcurrentHashMap<>();
     private final Path allowedRoot;
+    private final boolean liveTest;
     private final PacketFilter watcher;
     private volatile boolean closed;
     private static final class Run {
@@ -46,23 +47,30 @@ public final class HealingPresentationProbe implements AutoCloseable {
         final Map<Integer,String> watched=new ConcurrentHashMap<>();
         final AtomicLong packets=new AtomicLong(),componentUpdates=new AtomicLong();
         Ref<EntityStore> target,carrier;String effect;Vec3 endpoint;boolean ownedTarget,created,queued,stopping;
-        double nextSample,nextFrame;long stopped;
+        double nextSample,nextFrame;long stopped;int effectNetworkId=-1;
         Run(UUID owner,UUID world,Store<EntityStore> store,Ref<EntityStore> actor,HealingProbePolicy.Mode mode,String target){
             this.owner=owner;this.world=world;this.store=store;this.actor=actor;this.mode=mode;requestedTarget=target;
         }
     }
     public HealingPresentationProbe(RpgSkillTracer trace){
-        if(!Boolean.getBoolean("rpg.healingPresentationProbe"))throw new IllegalStateException("HEAL_PROBE_DISABLED");
+        this(trace,HealingProbePolicy.liveTestBuild());
+    }
+    HealingPresentationProbe(RpgSkillTracer trace,boolean liveTest){
+        if(!liveTest&&!Boolean.getBoolean("rpg.healingPresentationProbe"))throw new IllegalStateException("HEAL_PROBE_DISABLED");
+        this.liveTest=liveTest;
         this.trace=trace;allowedRoot=Path.of(System.getProperty("rpg.healingPresentationProbeRoot","UNCONFIGURED"));
         watcher=PacketAdapters.registerOutbound((PlayerPacketWatcher)this::outbound);
     }
     public synchronized void start(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,String mode,String target)throws java.io.IOException{
         var world=store.getExternalData().getWorld();
+        if(closed)throw new IllegalStateException("HEAL_PROBE_CLOSED");
+        if(!liveTest){
         var live=Path.of(System.getenv("APPDATA"),"Hytale/data/pre-release/Saves/RPG").toRealPath();
-        if(closed||!HealingProbePolicy.allows(allowedRoot.toRealPath(),world.getSavePath().toRealPath(),live))
+        if(!HealingProbePolicy.allows(allowedRoot.toRealPath(),world.getSavePath().toRealPath(),live))
             throw new IllegalStateException("HEAL_PROBE_DISPOSABLE_WORLD_REQUIRED");
+        }
         var selected=HealingProbePolicy.mode(mode);
-        HealingProbePolicy.validateTarget(selected,target);
+        if(liveTest)HealingProbePolicy.validateLiveTarget(selected,target);else HealingProbePolicy.validateTarget(selected,target);
         if(runs.size()>=HealingProbePolicy.MAX_WORLDS)throw new IllegalStateException("HEAL_PROBE_CAPACITY");
         var run=new Run(player.getUuid(),world.getWorldConfig().getUuid(),store,actor,selected,target);
         if(runs.putIfAbsent(run.world,run)!=null)throw new IllegalStateException("HEAL_PROBE_ALREADY_ACTIVE_WAIT_OR_STOP");
@@ -108,12 +116,14 @@ public final class HealingPresentationProbe implements AutoCloseable {
         var direction=head==null?new Vector3d(0,0,-1):head.getDirection();
         r.endpoint=a.add(new Vec3(direction.x,direction.y,direction.z).multiply(6));
         if(HealingProbePolicy.needsRecipient(r.mode)){
-        if(r.requestedTarget.equals("native")){
+        if(liveTest&&r.requestedTarget.equals("native"))throw new IllegalArgumentException("LIVE_PROBE_NPC_SPAWN_FORBIDDEN");
+        if(liveTest&&r.requestedTarget.equals("self"))r.target=r.actor;
+        else if(r.requestedTarget.equals("native")){
             if(a.subtract(new Vec3(8.5,65.35,2.5)).length()>16)throw new IllegalArgumentException("RETURN_TO_FIXTURE_NEAR_8_64_8");
             r.target=spawnRecipient(r.store);r.ownedTarget=true;
         }else r.target=r.store.getExternalData().getRefFromUUID(UUID.fromString(r.requestedTarget));
         if(r.target==null||!r.target.isValid())throw new IllegalStateException("TARGET_REF_UNRESOLVED");
-        if(r.target.equals(r.actor))throw new IllegalArgumentException("PROBE_TARGET_MUST_NOT_BE_CASTER");
+        if(r.target.equals(r.actor)&&!liveTest)throw new IllegalArgumentException("PROBE_TARGET_MUST_NOT_BE_CASTER");
         var stats=r.store.getComponent(r.target,EntityStatMap.getComponentType());
         if(stats==null||stats.get(DefaultEntityStatTypes.getHealth())==null||stats.get(DefaultEntityStatTypes.getHealth()).get()<=0)
             throw new IllegalArgumentException("PROBE_TARGET_MUST_BE_LIVING");
@@ -154,6 +164,13 @@ public final class HealingPresentationProbe implements AutoCloseable {
         receipt(r,"SYSTEM_ORDER","root",systemOrder());
     }
     private void attach(Run r,Ref<EntityStore> ref){
+        if(liveTest){
+            r.effectNetworkId=Objects.requireNonNull(r.store.getComponent(ref,NetworkId.getComponentType()),"PROBE_NETWORK_ID_REQUIRED").getId();
+            sendTransientEffect(r,false);
+            receipt(r,"CLIENT_EFFECT_SUBMITTED",r.mode.name().startsWith("STAFF")?"staff":"recipient",
+                    Map.of("effect",r.effect,"backend","CLIENT_ONLY_NO_NATIVE_CONTROLLER_WRITE","duration",overwrite(r)?.3:HealingProbePolicy.EFFECT_SECONDS));
+            return;
+        }
         var controller=r.store.getComponent(ref,EffectControllerComponent.getComponentType());
         if(controller==null)throw new IllegalStateException("EFFECT_CONTROLLER_MISSING");
         float duration=overwrite(r)?.3f:(float)HealingProbePolicy.EFFECT_SECONDS;
@@ -180,6 +197,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
     private void cleanup(Run r,String reason){
         if(r.stopping)return;r.stopping=true;r.stopped=System.nanoTime();
         release(r,"effect",()->{if(r.effect!=null){
+            if(liveTest){sendTransientEffect(r,true);return;}
             var ref=r.mode.name().startsWith("STAFF")?r.actor:r.target;
             if(ref!=null&&ref.isValid()){
                 var c=r.store.getComponent(ref,EffectControllerComponent.getComponentType());
@@ -190,6 +208,21 @@ public final class HealingPresentationProbe implements AutoCloseable {
         release(r,"ownedNpc",()->{if(r.ownedTarget&&r.target!=null&&r.target.isValid())r.store.removeEntity(r.target,RemoveReason.REMOVE);});
         receipt(r,"CLEANUP","root",Map.of("reason",reason,"worldParticleTail",r.mode==HealingProbePolicy.Mode.WORLD?"NATIVE_FINITE_DURATION_NO_INSTANCE_CANCEL_HANDLE":"NONE"));
         notifyOwner(r,"ENDED "+r.mode+" ("+reason+"). Wait 2s for trace summary.");
+    }
+    /** Explicit live diagnostic packets, not native controller execution evidence. No saved entity component is modified. */
+    static EntityUpdates transientEffectPacket(int networkId,int effectId,float duration,boolean remove){
+        if(networkId<0||effectId<0||!Float.isFinite(duration)||duration<0||duration>HealingProbePolicy.EFFECT_SECONDS)
+            throw new IllegalArgumentException("PROBE_PACKET_BOUNDS");
+        var effects=new EntityEffectsUpdate();
+        effects.entityEffectUpdates=new EntityEffectUpdate[]{new EntityEffectUpdate(remove?EffectOp.Remove:EffectOp.Add,effectId,duration,false,false,null)};
+        return new EntityUpdates(null,new EntityUpdate[]{new EntityUpdate(networkId,null,new ComponentUpdate[]{effects})});
+    }
+    private void sendTransientEffect(Run r,boolean remove){
+        if(r.effectNetworkId<0||!r.actor.isValid())return;
+        var viewer=r.store.getComponent(r.actor,PlayerRef.getComponentType());if(viewer==null)return;
+        int index=EntityEffect.getAssetMap().getIndex(r.effect);
+        if(!r.effect.startsWith("RPG_Probe_Healing_"))throw new IllegalStateException("NON_PROBE_EFFECT_FORBIDDEN");
+        viewer.getPacketHandler().write(transientEffectPacket(r.effectNetworkId,index,remove?0:overwrite(r)?.3f:(float)HealingProbePolicy.EFFECT_SECONDS,remove));
     }
     private static Vec3 endpoint(Run r){return r.target==null?r.endpoint:anchor(r,r.target);}
     private static void notifyOwner(Run r,String text){
@@ -250,6 +283,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
             if((r.receipts.size()>=HealingProbePolicy.MAX_TRANSITIONS&&!stage.equals("SUMMARY"))||!r.receipts.add(key))return;
         }
         var d=new LinkedHashMap<String,Object>(fields);d.put("probe",true);d.put("cohort","AJ");d.put("root",r.generation);d.put("generation",r.generation);
+        d.put("liveTest",liveTest);d.put("effectBackend",liveTest?"CLIENT_ONLY_NO_NATIVE_CONTROLLER_WRITE":"NATIVE_EFFECT_CONTROLLER");
         d.put("world",r.world);d.put("mode",r.mode);d.put("stage",stage);d.put("layer",layer);d.put("segment",r.generation+"/primary");d.put("connectedRendered",false);
         trace.trace(RpgTraceRecord.create(r.owner,RpgTraceEventType.HEAL_PRESENTATION,r.generation.toString(),d));
     }
@@ -354,7 +388,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
             actorHolder.addComponent(TransformComponent.getComponentType(),new TransformComponent(new Vector3d(8.5,64,8.5),new Rotation3f()));
             actorHolder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
             var actor=store.addEntity(actorHolder,AddReason.SPAWN);refs.add(actor);
-            try(var probe=new HealingPresentationProbe(ignored->{})){
+            try(var probe=new HealingPresentationProbe(ignored->{},false)){
                 for(var mode:List.of(HealingProbePolicy.Mode.WORLD,HealingProbePolicy.Mode.EMPTY,HealingProbePolicy.Mode.VISIBLE,HealingProbePolicy.Mode.BEAM,
                         HealingProbePolicy.Mode.RECIPIENT_ONCE,HealingProbePolicy.Mode.RECIPIENT_OVERWRITE)){
                     var run=new Run(owner,store.getExternalData().getWorld().getWorldConfig().getUuid(),store,actor,mode,

@@ -1,5 +1,14 @@
 # Stage 13 — runtime completion and release hardening
 
+**2026-09-12: R032-AJ-LIVE is DEPLOYED to the normal RPG single-player mods folder.**
+This owner-authorized live diagnostic variant supersedes AJ's no-live-deployment restriction.
+See the [live-test report](stage-13-healing-probe-aj-live-report.md) and
+[in-game commands](healing-probe-aj-live-checklist.md). Production Healing Beam is unchanged.
+All 2,258 retained tests, native startup smoke, package and rollback checks passed;
+all 477 live save files were backed up and only HyARPG.jar was replaced. Client-only
+cosmetic effect controls avoid saved NPC/player effect state. Connected visibility
+and the next live-world startup remain unverified.
+
 **2026-09-12, latest packaged diagnostic checkpoint: R032-AJ — NOT DEPLOYED TO LIVE.**
 The [AJ harness correction and separate encounter investigation](stage-13-healing-probe-aj-report.md)
 supersedes the failed AI command setup. Six controls no longer require a spawned recipient;

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:43:29.460Z" hostname="GRAHAM" time="0.009">
+  <properties/>
+  <testcase name="nativeRegenerationConsumesInjuryBeforeLaterHealthCost()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.002"/>
+  <testcase name="realHostileHealthRecoveredOnlyOnce()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.0"/>
+  <testcase name="unobservedDownwardChangeClearsUnknownProvenance()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.001"/>
+  <testcase name="noOverhealOrUnknownEnemyCredit()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.0"/>
+  <testcase name="expiryReversedTimeAndWrongWorldCannotCredit()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.0"/>
+  <testcase name="invalidAndCancelledShapedHealthCannotCreateInjury()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.0"/>
+  <testcase name="exactEnemyIntervalsAreKeptSeparate()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.0"/>
+  <testcase name="nativeRegenerationIsNotCountedAgainAsHealing()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.0"/>
+  <testcase name="friendlySparringDoesNotAddEligibleHealth()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.0"/>
+  <testcase name="resourceHealthSpendInvalidatesOldInjuries()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.0"/>
+  <testcase name="recipientMemoryHasAHardBound()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.006"/>
+  <testcase name="logoutAndRestartDiscardUnprovenOutstandingInjury()" classname="com.inigmasgames.hytalerpg.Stage12HostileInjuryTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

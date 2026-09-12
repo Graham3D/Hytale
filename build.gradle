@@ -87,6 +87,13 @@ tasks.register('nativeControlTest', Test) {
 tasks.check { dependsOn tasks.named('nativeControlTest') }
 
 tasks.processResources {
+    def liveProbe = providers.gradleProperty('healingProbeLiveTest').map { it == 'true' }.getOrElse(false)
+    inputs.property('healingProbeLiveTest', liveProbe)
+    doLast {
+        def marker = new File(destinationDir, 'healing-probe-live-test.txt')
+        if (liveProbe) marker.text = 'R032-AJ-LIVE'
+        else if (marker.exists()) marker.delete()
+    }
     inputs.property('version', project.version)
     inputs.property('rpgRevision', rpg_revision)
     inputs.property('hytaleVersion', hytale_version)

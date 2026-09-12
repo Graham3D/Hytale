@@ -1,0 +1,98 @@
+{
+  "cohort": "AJ-LIVE",
+  "startingHead": "9cb3b677bd1938b83d451c08cbfb92c16f196188",
+  "builtAtUtc": "2026-09-12T21:45:07.8909634Z",
+  "suites": [
+    {
+      "tests": 2182,
+      "suite": "build/test-results/test",
+      "skipped": 0,
+      "errors": 0,
+      "failures": 0
+    },
+    {
+      "tests": 55,
+      "suite": "build/test-results/nativeControlTest",
+      "skipped": 0,
+      "errors": 0,
+      "failures": 0
+    },
+    {
+      "tests": 21,
+      "suite": "canvas-ui/build/test-results/test",
+      "skipped": 0,
+      "errors": 0,
+      "failures": 0
+    }
+  ],
+  "fullValidationRuns": 1,
+  "fullValidationExitCode": 0,
+  "initialFullRunFailures": 0,
+  "isolatedNativeParticleLifecycle": "PASS",
+  "visibilityGate": "A_CONNECTED_UNVERIFIED",
+  "laterGates": "B_C_D_E_DEFERRED",
+  "connectedVerified": false,
+  "jarHashes": {
+    "CanvasUI-0.1.0.jar": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6",
+    "HyARPG.jar": "774BD5844BEE9D00C0941A827A4D4F3FF1E87E39C8F1F25D2BCA3AB75200C79E",
+    "HYTALEDEVLIB-0.5.0.jar": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+  },
+  "archiveSha256": "300DBDC6513E7C832360424B62367875D807C58018C45D8157A7AA3BFEC2BA43",
+  "archiveEntriesVerified": true,
+  "binaryRollback": "AJ -> AJ-LIVE -> AJ PASS",
+  "unchangedEntriesPreserved": true,
+  "entryDifferences": [
+    {
+      "after": "1B9160FC391531A9CD37BE7602E4C7C3FB2D8DF01E29952B26D2B3447FA3EC48",
+      "before": "ED203F7798651E49421CA0BC2CE39380892EBB3062C6D2F8E293BF52D5296CF3",
+      "entry": "com/inigmasgames/hytalerpg/commands/HealingProbeCommand.class"
+    },
+    {
+      "after": "19ECA62439A0C1C695C95ECF06575407B1444974C4F5DE150E986FC232880B8D",
+      "before": "A90632E660051F38215BE56A96B0D43B011CBC009ACE29E62FA35D0D5C9299BC",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$1.class"
+    },
+    {
+      "after": "7A435CDAD10800938D6CA61C3802DA689E816EC6D4AEE24E864A8BA81A5DF920",
+      "before": "854196A0F285F7D3E8F7FD033A433FDF283CA1D49A9E08EF11789E5111101920",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$Observe.class"
+    },
+    {
+      "after": "AEBD8585C6D53AD38542D2F5CE5CE74FD61A55B734C1EEB2ECAF95558ACF7B17",
+      "before": "82ABDFCE20BA430291404913AE4889E5334156E3CD9106A9A03AA9E7A0CE4F7D",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$Run.class"
+    },
+    {
+      "after": "FC4CB6D80535C92F0A8D01D1E3C95C8BBA34C97323204A6036793E2CAA1E43BF",
+      "before": "8A0485E907FB8A5BC07648782EB7587DB73638D9E50113AE34B226F51CEEC2AE",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$Tick.class"
+    },
+    {
+      "after": "0353F7C071DDF73C1A43D291E1E1CFDDE320FC71FCAF63D60FB890A30702C92A",
+      "before": "CC91FBF29CF9F65F739E3267A7D35530439C73ACDA932B837AA44CA4F6D2CD60",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe.class"
+    },
+    {
+      "after": "9A45564BF49BB158F3180C444C6656195E442766DE5C8977631C680055BCFF9E",
+      "before": "5E4DE3ABDAAC0CDAAFB36C2A451DB0CB332716BAB40CEF3E5B80A4831B8C7200",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingProbePolicy$Mode.class"
+    },
+    {
+      "after": "2EDCAD31D4CCE3BE29A6E85D8B9F397E5041FC8AF0106A60FD68C85D964A1E7E",
+      "before": "99ACB8386B1150543F5ACB06BD3101A54B455E1C8506E5D34344C8335C4E8413",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingProbePolicy.class"
+    },
+    {
+      "after": "E3ABD374901D64565030CDD0D9369987531F7D750369F533BDA2AFF257846B7A",
+      "before": "524191DD1298237C0AB5A88243162C0346F91D848E7C77F56C6E65F359C6BECD",
+      "entry": "com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class"
+    },
+    {
+      "after": "26ADEECA72D27646D68A8D67282F9D40E4A9C388412E6E679222B8E0B488A669",
+      "before": null,
+      "entry": "healing-probe-live-test.txt"
+    }
+  ],
+  "internalIdentityPreserved": true,
+  "liveDeploymentPerformed": false
+}

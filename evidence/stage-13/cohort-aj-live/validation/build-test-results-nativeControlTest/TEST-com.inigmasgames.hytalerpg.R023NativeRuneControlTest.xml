@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.R023NativeRuneControlTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:44:42.581Z" hostname="GRAHAM" time="0.1">
+  <properties/>
+  <testcase name="foreignMutationBlocksRecoveryWithoutOverwritingAndCanBeRetried()" classname="com.inigmasgames.hytalerpg.R023NativeRuneControlTest" time="0.066"/>
+  <testcase name="disabledControlDoesNotMutateSlots()" classname="com.inigmasgames.hytalerpg.R023NativeRuneControlTest" time="0.004"/>
+  <testcase name="interruptedControlRestoresExactSnapshotsAndRetainsQuietPeriod()" classname="com.inigmasgames.hytalerpg.R023NativeRuneControlTest" time="0.005"/>
+  <testcase name="rawObservationPrecedesInitialFilterAndRetainsNonAbilityTraffic()" classname="com.inigmasgames.hytalerpg.R023NativeRuneControlTest" time="0.011"/>
+  <testcase name="nativeControlStillObservesBothSlotsButCannotExecuteRpg()" classname="com.inigmasgames.hytalerpg.R023NativeRuneControlTest" time="0.003"/>
+  <testcase name="preControlQueuedRequestsAreBlockedAtDrainAndOtherPlayersAreUnaffected()" classname="com.inigmasgames.hytalerpg.R023NativeRuneControlTest" time="0.003"/>
+  <testcase name="normalDeduplicationAndAbility4PolicyAreUnchanged()" classname="com.inigmasgames.hytalerpg.R023NativeRuneControlTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

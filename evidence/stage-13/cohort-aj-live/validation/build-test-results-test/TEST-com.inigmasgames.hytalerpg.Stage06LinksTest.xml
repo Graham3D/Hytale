@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage06LinksTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-09-12T21:43:08.402Z" hostname="GRAHAM" time="0.095">
+  <properties/>
+  <testcase name="plainStrikePotencyIsFifteenPercentNotDuplicatedByExecutionAndSnapshotFactory()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.006"/>
+  <testcase name="compatibilityAndExclusiveRepeatControllerRemainExplicit()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.008"/>
+  <testcase name="schedulerReservesBoundedCapacityAndRejectsDuplicatePrimarySlots()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.003"/>
+  <testcase name="expandedRadiusChangesAuthoredGeometryAndMagnitudeExactlyOnce()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.012"/>
+  <testcase name="invalidCommittedTargetOrNativeFailureCannotReplayOrRetargetPaidCast()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.011"/>
+  <testcase name="ownerCancellationNeverRefundsPaidDelayOrLeavesFutureRelease()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.018"/>
+  <testcase name="unsupportedTargetCaptureFailsBeforePaymentAndReleasesReservation()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.005"/>
+  <testcase name="delayEchoAndPotencyPayOnceAndKeepCommittedSnapshotTargetAndIdentities()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.007"/>
+  <testcase name="echoCannotBypassAvalancheRootHitCap()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.006"/>
+  <testcase name="onePendingPrimaryPerSlotSurvivesLoadoutChangeWithoutChargingAnotherSkill()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.006"/>
+  <testcase name="echoCannotBypassBlizzardPerRootHitInterval()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.006"/>
+  <testcase name="nativeProjectilePlanDoesNotScaleCollisionRadiusForEchoOrDelay()" classname="com.inigmasgames.hytalerpg.Stage06LinksTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
