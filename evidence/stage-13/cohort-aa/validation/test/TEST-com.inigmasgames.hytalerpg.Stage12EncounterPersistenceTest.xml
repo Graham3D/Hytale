@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" tests="43" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:36:53.625Z" hostname="GRAHAM" time="4.983">
+  <properties/>
+  <testcase name="reloadCannotRefreshExpiredCredit()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.037"/>
+  <testcase name="corruptSnapshotIsRetainedNotReset()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.019"/>
+  <testcase name="failedPlayerAwardDoesNotAdvanceCursor()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.082"/>
+  <testcase name="tornPendingIsNotDroppedOrDelivered()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.028"/>
+  <testcase name="unknownLoadDoesNotClassifyOrWriteContext()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.012"/>
+  <testcase name="changedChecksumCannotForgeCredit()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.022"/>
+  <testcase name="initialContextSurvivesRestartWithOriginalBiomeAndIdentity()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.019"/>
+  <testcase name="disqualifiedPlanCannotGrantExistingContributors()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.027"/>
+  <testcase name="malformedAndDuplicateSnapshotCreditsRejected()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.003"/>
+  <testcase name="repeatedCreationDoesNotResetContributions()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.022"/>
+  <testcase name="duplicateDeathShareRejected()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.002"/>
+  <testcase name="savingStaleWatermarkIsRejected()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.02"/>
+  <testcase name="restoredIndicesCleanUpOnUnload()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.023"/>
+  <testcase name="conversionTombstoneSurvivesRestoreAndCannotBeCleared()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.027"/>
+  <testcase name="deathAndPlayerLedgersSurviveMultipleRestartsAndReplay()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.076"/>
+  <testcase name="foreignPendingFilenameIsNotDelivered()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.428"/>
+  <testcase name="deathNeedsPersistedContributionNotOnlyInMemoryHit()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.018"/>
+  <testcase name="interruptedContextCreationRemainsOriginalOnRestart()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.018"/>
+  <testcase name="conversionBeforeCapturePermanentlyPreventsClassification()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.019"/>
+  <testcase name="oversizedSnapshotRejectedBeforeParsing()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.018"/>
+  <testcase name="[1] AFTER_FREEZE" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.083"/>
+  <testcase name="[2] AFTER_AWARD" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.084"/>
+  <testcase name="[3] AFTER_CURSOR" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.082"/>
+  <testcase name="[4] AFTER_COMPLETION" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.087"/>
+  <testcase name="[5] AFTER_CLEANUP" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.088"/>
+  <testcase name="invalidDeathShareCannotForgeXpOrInsight()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.003"/>
+  <testcase name="emptyDeathIsRecordedAndNeverSpawnsRewards()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.028"/>
+  <testcase name="frozenPlanSurvivesRestartAndRejectsRecalculation()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.029"/>
+  <testcase name="mismatchedFileIdentityFailsClosed()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.02"/>
+  <testcase name="snapshotRestoreAdmissionDoesNotPartiallyInstallCredits()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.003"/>
+  <testcase name="interruptedExclusionRemainsPermanent()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.02"/>
+  <testcase name="orphanTemporaryFilesCannotBecomeRewards()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.013"/>
+  <testcase name="pendingQueueCapacityRejectsBeforeNewAward()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="3.271"/>
+  <testcase name="changedBiomeOrSpawnClockIsRejected()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.018"/>
+  <testcase name="realCreditsRestoreWithoutLastHitAndRetainSupportIndex()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.021"/>
+  <testcase name="concurrentWriterCannotEnterStore()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.011"/>
+  <testcase name="awardBudgetIsExplicit()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.002"/>
+  <testcase name="restartDoesNotResetCaptiveFarmClock()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.026"/>
+  <testcase name="restoreNeverOverwritesLiveEncounter()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.016"/>
+  <testcase name="invalidSnapshotShapeRejectedEvenWithUpdatedChecksum()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.018"/>
+  <testcase name="boundedPartialPartyDeliveryResumesWithoutDuplicating()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.073"/>
+  <testcase name="disqualifiedEmptyDeathPersistsWithoutAward()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.033"/>
+  <testcase name="cannotWriteCreditsOrRecreateAfterDeath()" classname="com.inigmasgames.hytalerpg.Stage12EncounterPersistenceTest" time="0.026"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

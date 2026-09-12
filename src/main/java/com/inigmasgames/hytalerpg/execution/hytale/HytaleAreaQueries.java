@@ -84,6 +84,21 @@ final class HytaleAreaQueries {
         double fraction=hit==null?1:Math.clamp(hit.collisionStart-.03/Math.max(.03,range),0,1);
         return origin.add(delta.multiply(fraction));
     }
+    static Optional<Vec3> shardContact(Store<EntityStore> store,Vec3 from,Vec3 to,double radius){
+        if(!loaded(store,from)||!loaded(store,to))throw new IllegalStateException("SHARD_TERRAIN_UNLOADED");
+        var result=new CollisionResult();result.setDefaultPlayerSettings();
+        result.disableCharacterCollisions();result.disableTriggerBlocks();result.disableDamageBlocks();
+        var delta=to.subtract(from);
+        CollisionModule.findCollisions(new Box(-radius,-radius,-radius,radius,radius,radius),vector(from),vector(delta),result,store);
+        BlockCollisionData first=null;
+        for(int i=0;i<result.getBlockCollisionCount();i++){
+            var hit=result.getBlockCollision(i);
+            if(hit.collisionStart<=1&&(first==null||hit.collisionStart<first.collisionStart))first=hit;
+        }
+        if(first==null)return Optional.empty();
+        return Optional.of(from.add(delta.multiply(Math.clamp(first.collisionStart,0,1)))
+                .subtract(vec(first.collisionNormal).multiply(radius)));
+    }
     private static BlockCollisionData first(Store<EntityStore> store, Vec3 origin, Vec3 displacement) {
         CollisionResult result = new CollisionResult(); result.setDefaultPlayerSettings();
         result.disableCharacterCollisions(); result.disableTriggerBlocks(); result.disableDamageBlocks();

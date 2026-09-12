@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13PlayerReadIsolationTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:37:20.866Z" hostname="GRAHAM" time="0.038">
+  <properties/>
+  <testcase name="actualHotGettersContinueWhilePlayerWriterHoldsRepositoryAndHolder()" classname="com.inigmasgames.hytalerpg.Stage13PlayerReadIsolationTest" time="0.006"/>
+  <testcase name="nativeChildBindingAndMasteryCaptureDoNotWaitForRealEarnedAwardRepositorySave()" classname="com.inigmasgames.hytalerpg.Stage13PlayerReadIsolationTest" time="0.022"/>
+  <testcase name="failedWriteCannotUseCachedProgressionAsAuthority()" classname="com.inigmasgames.hytalerpg.Stage13PlayerReadIsolationTest" time="0.005"/>
+  <testcase name="publishedViewCannotBeMutatedByItsConsumer()" classname="com.inigmasgames.hytalerpg.Stage13PlayerReadIsolationTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

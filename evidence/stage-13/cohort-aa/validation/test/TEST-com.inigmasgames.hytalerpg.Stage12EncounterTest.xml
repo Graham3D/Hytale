@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12EncounterTest" tests="37" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:36:58.609Z" hostname="GRAHAM" time="0.134">
+  <properties/>
+  <testcase name="mixedLevelPartyUsesHighestEligibleLevelForSingleConservativePot()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="unloadedAndDifferentWorldParticipantsCannotEarn()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="auditedPilotsHaveAuthoredBandsNotVanillaLevels()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="contributorLimitAndPerActorEncounterIndexAreBounded()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.003"/>
+  <testcase name="spawnClassificationCannotBeChangedByDraggingAcrossBiomes()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="overhealUnknownRecipientAndDisallowedAllyDoNotCredit()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="ineffectiveControlAndUnconsumedShieldNeverQualify()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="duplicateParticipantListCannotDoubleShare()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="removingAndUnloadingEncounterCleansSupportIndex()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="[1] SUMMONED" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="[2] REVIVED" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="[3] CONVERTED" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="[4] TRAINING" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="[5] PLAYER_OWNED" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="[6] UNKNOWN" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="exhaustedCaptiveEncounterCannotReopenAtANewHealthLow()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="unregisteredTargetCannotGenerateCreditOrDeath()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="cannotSelfCreditAnEnemy()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="frozenDeathPlanIsIndependentOfRetryPositionMembershipAndLevel()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="actualHealingContributorCreatesSupportCredit()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="invalidCancelledNonHostileAndNonLossInputsDoNotCredit()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="sixtyFourMeterBoundaryIsThreeDimensionalAndInclusive()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="conversionInvalidationSurvivesRepeatedBegin()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="successfulTauntCanQualify()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="absorbAndEffectiveControlQualifyWithoutDamage()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="clockReversalCannotRefreshCreditOrFreezeAReward()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="partyUsesOneEqualPotWithoutBonusAndInsightEach()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="healerCannotRefreshAnExpiredContribution()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="encounterBudgetFailsClosedWithoutEvictingEarlierEligibleActor()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.019"/>
+  <testcase name="unknownRoleVariantOrBiomeCannotEarn()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="actualHealthLossGivesCreditWithoutLastHit()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="ineligibleHighLevelPartyMemberDoesNotReduceEligiblePot()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="expiredContributionCannotEarn()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="masteryRequiresRecentContributionAndNotElevenLevelsBelow()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <testcase name="frozenBackendDeathDrivesExistingDurablePlayerXpAndProjectionExactlyOnce()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.021"/>
+  <testcase name="twentySecondBoundaryIsInclusive()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.001"/>
+  <testcase name="supportOnlyUnchangedEncounterHasSixtySecondMasteryLimit()" classname="com.inigmasgames.hytalerpg.Stage12EncounterTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -131,6 +131,7 @@ class Stage11MobileDomainTest {
         List<Target> targets=List.of();final List<String> hitIds=new ArrayList<>(),reasons=new ArrayList<>();
         final List<Payload> payloads=new ArrayList<>();final List<SkillExecutionContext> hitContexts=new ArrayList<>();final List<AreaGeometry> presented=new ArrayList<>();
         Harness(String id){super(id);}
+        public Optional<Vec3> sweepShard(Vec3 from,Vec3 to,double radius){return from.y()>0&&to.y()<=radius?Optional.of(new Vec3(to.x(),0,to.z())):Optional.empty();}
         @Override public CommittedTarget captureTarget(Stage04SkillProfile p,CompiledSkillPlan plan,SkillExecutionRequest request){return captureAvailable?super.captureTarget(p,plan,request):null;}
         @Override public Validation familyPrerequisites(Stage04SkillProfile p,CompiledSkillPlan plan){return Validation.pass();}
         @Override public SkillExecutionResult executeArea(SkillExecutionContext c){context=c;areaRuntime.start(c,c.target()==null?Vec3.ZERO:c.target().point(),c.target()==null?Vec3.FORWARD:c.target().direction(),now,c.compiledPlan().executionModifiers().radiusFactor(),this);return SkillExecutionResult.committed("FIXTURE_AREA",0,0);}

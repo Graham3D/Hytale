@@ -3043,7 +3043,7 @@
     "maxRange": "24 m placement",
     "geometry": "6.0 m radius ground zone",
     "travelSpeed": "N/A",
-    "lifetime": "8 s",
+    "lifetime": "3 s",
     "powerCoefficient": "0.38x Magic Power per impact; target hit cap once per 0.75 s",
     "canCrit": true,
     "statusApplications": [

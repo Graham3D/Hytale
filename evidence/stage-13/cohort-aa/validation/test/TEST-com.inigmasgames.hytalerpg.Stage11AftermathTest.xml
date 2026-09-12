@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11AftermathTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:36:41.441Z" hostname="GRAHAM" time="0.193">
+  <properties/>
+  <testcase name="childCannotInvokeCascadeEchoOrAnotherAftermath()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.008"/>
+  <testcase name="cascadeChildrenDoNotCreateTheirOwnAftermath()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.006"/>
+  <testcase name="forcedCancelCreatesNoChild()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.005"/>
+  <testcase name="orbAftermathStaysAtFinalPointWithoutNewFlight()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.006"/>
+  <testcase name="trapTriggersDoNotCreateExpiryChild()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.005"/>
+  <testcase name="invalidWorldOrOwnerStopsConnectionWithoutAftermath()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.004"/>
+  <testcase name="untriggeredTrapExpiryLeavesOneSmallerFiniteTrap()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.004"/>
+  <testcase name="connectionOwnerCancelIsNotNaturalExpiry()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.006"/>
+  <testcase name="consumedTriggeredBudgetRejectsAftermathButNotPaidParent()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.005"/>
+  <testcase name="terrainRevalidationCanRejectChildAfterParentExpiry()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.004"/>
+  <testcase name="orbitChildRetainsBladeCountAngularSpeedAndContactIcd()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.005"/>
+  <testcase name="noChildUntilNormalExpiry()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.005"/>
+  <testcase name="childGeometryDurationAndMagnitudeResolveOnce()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.006"/>
+  <testcase name="repeatChildrenShareStatusAllowanceAndCannotResetTheRootClock()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.005"/>
+  <testcase name="derivedBlizzardRetainsIntervalAndTruncatesImpactSchedule()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.001"/>
+  <testcase name="eligiblePersistentProfilesAndExcludedDeliveries()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.001"/>
+  <testcase name="everyEligibleCanonicalProfileProducesValidatedFiniteChild()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.001"/>
+  <testcase name="lingeredParentUsesFortyPercentOfItsResolvedLifetime()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.01"/>
+  <testcase name="SimulationGapIsNotNaturalExpiry()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.004"/>
+  <testcase name="expiredParentReleasesItsLeaseBeforeReplacementAtFullCapacity()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.005"/>
+  <testcase name="nonCollidingWallRetainsHeightAndShrinksHorizontalDimensions()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.0"/>
+  <testcase name="secondaryExpiryCannotProduceAnotherAftermath()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.005"/>
+  <testcase name="mobileAftermathRemainsFiniteAndTracksCurrentOwner()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.006"/>
+  <testcase name="orbChildTicksRetainIntervalAndHalfDamageSnapshot()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.006"/>
+  <testcase name="noPartialFinalPulseOrAdditionalResourcePayment()" classname="com.inigmasgames.hytalerpg.Stage11AftermathTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

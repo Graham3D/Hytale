@@ -101,6 +101,9 @@ class Stage06AreaRuntimeTest {
         final List<SkillExecutionContext> contexts = new ArrayList<>();
         final List<AreaGeometry> presented = new ArrayList<>(); final List<String> events = new ArrayList<>();
         boolean ground = true, roof;
+        public java.util.Optional<Vec3> sweepShard(Vec3 from,Vec3 to,double radius){
+            return ground&&from.y()>0&&to.y()<=radius?java.util.Optional.of(new Vec3(to.x(),0,to.z())):java.util.Optional.empty();
+        }
         final List<Vec3> descending = new ArrayList<>();
         public boolean overheadClear(AreaGeometry shape,double height) { return !roof; }
         public void descendingVisual(SkillExecutionContext context,Vec3 position,double seconds) { descending.add(position); }

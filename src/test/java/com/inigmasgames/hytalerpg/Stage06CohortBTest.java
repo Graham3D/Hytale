@@ -95,8 +95,9 @@ class Stage06CohortBTest {
         runtime.start(context,Vec3.ZERO,Vec3.FORWARD,0,1,port);
         runtime.tick(context.request().actorId(),.24,port);assertTrue(port.payloads.isEmpty());
         port.ground=false;runtime.tick(context.request().actorId(),.25,port);assertTrue(port.payloads.isEmpty());
+        runtime.tick(context.request().actorId(),.5,port);assertTrue(port.payloads.isEmpty()); // Missing surface at actual descent completion.
         port.ground=true;
-        for(int i=2;i<=33;i++)runtime.tick(context.request().actorId(),i*.25,port);
+        for(int i=3;i<=33;i++)runtime.tick(context.request().actorId(),i*.25,port);
         assertEquals(0,runtime.size());assertFalse(port.payloads.isEmpty());
         assertTrue(port.payloads.stream().noneMatch(p->p.impactIndex()==0));
         assertTrue(port.payloads.size()<=8); // Per-root .75 s ICD, not every half-second sub-impact.

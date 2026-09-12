@@ -29,11 +29,11 @@ class Stage11RapidPulseTest {
         assertEquals(6,p.impactCount());assertEquals(6,p.perTargetHitCap());assertEquals(.7875,p.intervalSeconds(),1e-9);assertEquals(a.coefficient(),p.coefficient());assertEquals(.32,p.statusSeconds(),1e-9);assertEquals(a.firstImpactSeconds(),p.firstImpactSeconds());
     }
     @Test void blizzardWarningAndVictimHitIntervalRemainAuthoritative(){
-        var p=f.effective("blizzard","rapid_pulse").area();assertEquals(23,p.impactCount());assertEquals(.35,p.intervalSeconds(),1e-9);assertEquals(.25,p.warningSeconds());assertEquals(.75,p.targetIntervalSeconds());assertEquals(2,p.impactRadius());assertEquals(8,p.lifetimeSeconds());
+        var p=f.effective("blizzard","rapid_pulse").area();assertEquals(15,p.impactCount());assertEquals(.175,p.intervalSeconds(),1e-9);assertEquals(.45,p.warningSeconds());assertEquals(.75,p.targetIntervalSeconds());assertEquals(2,p.impactRadius());assertEquals(3,p.lifetimeSeconds());
     }
     @Test void lingeringIsResolvedBeforePulseCountWithBoundedSpawnBudget(){
         var plan=f.plan("blizzard","rapid_pulse","lingering");var p=f.resolver.resolve(f.profiles.require("blizzard"),plan).area();
-        assertEquals(32,p.impactCount());assertEquals(32,p.perTargetHitCap());assertTrue(p.impactCount()+1<=plan.safetyBudgets().maxSpawnedEffects());assertEquals(11.2,p.lifetimeSeconds(),1e-9);
+        assertEquals(22,p.impactCount());assertEquals(16,p.perTargetHitCap());assertTrue(p.impactCount()+1<=plan.safetyBudgets().maxSpawnedEffects());assertEquals(4.2,p.lifetimeSeconds(),1e-9);
     }
     @Test void profileCacheDoesNotLeakPulseIntervalIntoPlainOrGeometryOnlyPlans(){
         var a=f.profiles.require("poison_cloud");var p=f.resolver.resolve(a,f.plan("poison_cloud","rapid_pulse"));assertEquals(.175,p.area().intervalSeconds(),1e-9);

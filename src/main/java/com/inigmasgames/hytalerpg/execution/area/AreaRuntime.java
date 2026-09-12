@@ -139,6 +139,7 @@ public final class AreaRuntime {
             // Current entity positions cannot reconstruct an arbitrarily long missed simulation interval.
             finish(field, "SIMULATION_GAP_EXCEEDS_ONE_SECOND", port); return;
         }
+        if(profile.stratified()&&profile.overheadHeight()>0){tickFallingShards(field,now,port);return;}
         if (profile.periodic()) { tickPeriodic(field, now, port); return; }
         if (profile.impactCount() > 1||field.context.secondaryKind().equals("aftermath")&&profile.impactCount()==1) { tickImpacts(field, now, port); return; }
         if (profile.overheadHeight() > 0) {
@@ -251,6 +252,50 @@ public final class AreaRuntime {
         }
     }
 
+    /** One root ledger; moving transforms are execution children, not extra SkillInstances. */
+    private void tickFallingShards(Field f,double now,AreaWorldPort port){
+        var p=f.context.profile().area();double elapsed=now-f.started;
+        if(elapsed>=p.lifetimeSeconds()-1e-9){finish(f,"AREA_COMPLETE",port);return;}
+        try{port.stormVisual(f.context,f.geometry,p.lifetimeSeconds()-elapsed);}catch(RuntimeException ignored){}
+        for(int i=0;i<p.impactCount();i++){
+            if(f.impacted[i])continue;
+            double spawnAt=f.started+Math.max(0,p.firstImpactSeconds()-p.descentSeconds())+i*p.intervalSeconds();
+            if(now<spawnAt-1e-9)continue;
+            if(!f.prepared[i]){
+                f.prepared[i]=true;
+                if(now+p.descentSeconds()>f.started+p.lifetimeSeconds()+1e-9){f.impacted[i]=true;continue;}
+                if(f.context.compiledPlan().zones().cascade()||f.context.compiledPlan().zones().aftermath()){
+                    var budget=f.context.effects().claim(f.context.skillInstanceId()+"/area-impact-"+i,f.context.derivedRelease()?2:1,false);
+                    if(!budget.equals("PASS")){f.impacted[i]=true;port.trace(f.context,"AREA_QUERY_REJECTED",Map.of("reason",budget,"impactIndex",i));continue;}
+                }
+                var wanted=f.geometry.at(f.geometry.origin().add(f.offsets.get(i)),p.impactRadius()*f.radiusFactor);
+                f.impactGeometry[i]=port.prepareImpact(f.geometry.origin(),wanted).orElse(null);
+                if(f.impactGeometry[i]==null){f.impacted[i]=true;continue;}
+                f.warnedAt[i]=now;
+                f.shardPositions[i]=f.impactGeometry[i].origin().add(new Vec3(0,p.overheadHeight(),0));
+                try{port.present(f.context,f.impactGeometry[i],"WARNING",p.warningSeconds());}catch(RuntimeException ignored){}
+            }
+            var start=f.impactGeometry[i].origin().add(new Vec3(0,p.overheadHeight(),0));
+            var next=start.add(new Vec3(0,-p.overheadHeight()*Math.min(1,(now-f.warnedAt[i])/p.descentSeconds()),0));
+            var contact=port.sweepShard(f.shardPositions[i],next,.1);
+            if(contact.isPresent()){
+                f.impacted[i]=true;
+                var actual=f.impactGeometry[i].at(contact.get(),f.impactGeometry[i].radius());
+                try{port.shardVisual(f.context,i,contact.get(),true);}catch(RuntimeException ignored){}
+                var selected=targets(f,actual,port);
+                if(selected==null){finish(f,"CANDIDATE_BUDGET_REJECTED",port);return;}
+                hit(f,actual,selected,i,now,port);
+                try{port.present(f.context,actual,"IMPACT",.3);}catch(RuntimeException ignored){}
+            }else if(now-f.warnedAt[i]>=p.descentSeconds()-1e-9){
+                f.impacted[i]=true;
+                try{port.shardVisual(f.context,i,next,true);}catch(RuntimeException ignored){}
+            }else{
+                f.shardPositions[i]=next;
+                try{port.shardVisual(f.context,i,next,false);}catch(RuntimeException ignored){}
+            }
+        }
+    }
+
     private boolean sameSurface(AreaGeometry footprint, Vec3 parent, AreaWorldPort port) {
         var fresh = port.prepareImpact(parent, footprint);
         return fresh.isPresent() && fresh.get().origin().distanceSquared(footprint.origin()) <= .0001;
@@ -337,6 +382,7 @@ public final class AreaRuntime {
     private void finish(Field field, String reason, AreaWorldPort port) {
         if(field.done)return;
         field.done = true;
+        try{port.endVisuals(field.context);}catch(RuntimeException ignored){}
         // A failed diagnostic sink must not prevent cleanup or the next owner's field tick.
         try { port.trace(field.context, "AREA_TERMINATED", Map.of("reason", reason, "hitTargets", field.ledger.size())); }
         catch (RuntimeException ignored) { }
@@ -377,6 +423,7 @@ public final class AreaRuntime {
         final Map<String, Double> statusLastHit = new HashMap<>();
         final List<Vec3> offsets; final double[] warnedAt;
         final boolean[] prepared, impacted; final AreaGeometry[] impactGeometry;
+        final Vec3[] shardPositions;
         double nextScan, lastTick, integrated, nextDescent; int nextImpact; boolean done, finalHit;
         Field(SkillExecutionContext context, AreaGeometry geometry, double started, double radiusFactor) {
             this.context = context; this.geometry = geometry; this.started = started; this.radiusFactor = radiusFactor;
@@ -388,6 +435,7 @@ public final class AreaRuntime {
             warnedAt = new double[profile.impactCount()]; java.util.Arrays.fill(warnedAt, Double.NaN);
             prepared = new boolean[profile.impactCount()]; impacted = new boolean[profile.impactCount()];
             impactGeometry = new AreaGeometry[profile.impactCount()];
+            shardPositions = new Vec3[profile.impactCount()];
         }
     }
 }

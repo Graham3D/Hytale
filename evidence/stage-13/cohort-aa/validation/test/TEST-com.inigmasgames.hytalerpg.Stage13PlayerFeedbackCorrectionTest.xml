@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:37:20.843Z" hostname="GRAHAM" time="0.023">
+  <properties/>
+  <testcase name="eachWeaponSchedulesBothDirectionsWithoutDuplicateHits()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.001"/>
+  <testcase name="packagedFiveIconsAreByteIdenticalToOwnerArtwork()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.006"/>
+  <testcase name="animationAssetsReuseInstalledLightSwingsAtExactlyOneAndHalfSpeed()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.007"/>
+  <testcase name="revisionBadgeIsTopRightWithoutNativeResourceControls()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.0"/>
+  <testcase name="quickSlashHasTwoFullDamageHitsWithOneUnchangedCostAndCooldown()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.003"/>
+  <testcase name="chillIconsAreNativeDebuffsWithoutAdditionalGameplayEffects()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.001"/>
+  <testcase name="multistrikeRepeatsTheCompleteQuickSlashPairWithOnePayment()" classname="com.inigmasgames.hytalerpg.Stage13PlayerFeedbackCorrectionTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

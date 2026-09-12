@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11LeechingTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:36:48.530Z" hostname="GRAHAM" time="0.059">
+  <properties/>
+  <testcase name="threePercentUsesObservedLossNotAuthoredOrNativeDamageAmount()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="separateRootsHaveSeparateButNotResettableCaps()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="unarmedAndInvalidBudgetsCannotBecomeHealthLeech()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="passiveCannotPairWithLifebloodInEitherLinkOrder()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.01"/>
+  <testcase name="missingNativeResourceCannotThrowThroughAlreadyAppliedDamage()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.002"/>
+  <testcase name="overkillCannotIncreaseActualLossBeyondStartingHealth()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="partialMissingResourceConsumesOnlyActualCredit()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="fullPoolDoesNotConsumePotentialReturnOrStoreDamageForLater()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="deadTargetsHealingAndMissingHealthNeverCredit()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="staminaDeclarationNeverCreditsMana()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="barrageDescendantsCannotMultiplyRootCap()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.005"/>
+  <testcase name="rootCapUsesSpendableManaNotReservedCapacity()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.002"/>
+  <testcase name="echoAndSnapshotCopiesShareRootLedgerRatherThanResettingCap()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.005"/>
+  <testcase name="nativeFloatCapNeverOverfillsOrRemovesExistingResource()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="foreignRootLedgerCannotBeAttachedToContext()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.005"/>
+  <testcase name="loweringCapacityConstrainsRemainingReturnWithoutRemovingResource()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="nativeFailureDisablesRootWithoutRetryEvenIfWriteMayHaveHappened()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.002"/>
+  <testcase name="shieldsCancelledAndImmuneHitsGiveNothing()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.0"/>
+  <testcase name="duplicateReceiptCannotRestoreTwice()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="periodicReceiptIsNotSuppressedByGenericNoProcRule()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="reflectionAndFriendlyDamageGiveNothing()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="nativeFloatTargetAlwaysRoundsDownInsideAllowance()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.0"/>
+  <testcase name="raisingCapacityDoesNotExpandAlreadyCommittedRootBudget()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.001"/>
+  <testcase name="allHitsAcrossOneRootShareEightPercentCap()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.002"/>
+  <testcase name="leechRequiresDamageAndDeclaredManaOrStamina()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.003"/>
+  <testcase name="sharedCastCapturesResourceAndCapBeforeEffectDispatch()" classname="com.inigmasgames.hytalerpg.Stage11LeechingTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

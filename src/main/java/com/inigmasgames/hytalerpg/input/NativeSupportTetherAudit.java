@@ -25,6 +25,16 @@ public final class NativeSupportTetherAudit {
             }else if(!(op instanceof JumpOperation)&&op.getClass()!=SimpleInteraction.class)throw new IllegalStateException("HEALING_ROOT_GAMEPLAY_OPERATION:"+op.getClass().getName());
         }
         if(held!=1)throw new IllegalStateException("HEALING_ROOT_HOLD_COUNT");
+        for(String id:java.util.List.of("RPG_Blizzard_Trail","RPG_Blizzard_Impact","RPG_Blizzard_Snow"))
+            if(ParticleSystem.getAssetMap().getAsset(id)==null)throw new IllegalStateException("BLIZZARD_PARTICLE_MISSING:"+id);
+        var shard=com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset.getAssetMap().getAsset("RPG_Blizzard_Shard");
+        if(shard==null||!"VFX/RPG/Blizzard/Portal_Shard.blockymodel".equals(shard.getModel()))throw new IllegalStateException("BLIZZARD_MODEL_MISSING");
+        var model=com.hypixel.hytale.server.core.asset.type.model.config.Model.createStaticScaledModel(shard,1);
+        if(model.toPacket()==null||model.getParticles()==null||model.getParticles().length!=1)throw new IllegalStateException("BLIZZARD_MODEL_PARTICLE_CONTRACT");
+        for(String id:java.util.List.of("CombatText","Healthbar"))if(com.hypixel.hytale.server.core.modules.entityui.asset.EntityUIComponent.getAssetMap().getAsset(id)==null)
+            throw new IllegalStateException("NATIVE_ACTOR_UI_MISSING:"+id);
+        if(com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent.getAssetMap().getAsset("SFX_Ice_Ball_Death")==null)throw new IllegalStateException("BLIZZARD_SOUND_MISSING");
+        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_BLIZZARD_ASSETS cohort=AA model=RPG_Blizzard_Shard particles=3 nativeActorUI=Healthbar+CombatText sound=SFX_Ice_Ball_Death result=PASS connectedProof=false");
         for(String id:java.util.List.of("Beam_Heal_Green","RPG_Protection_Glow"))if(ParticleSystem.getAssetMap().getAsset(id)==null)throw new IllegalStateException("SUPPORT_TETHER_PARTICLE_MISSING:"+id);
         if(EntityEffect.getAssetMap().getAsset("RPG_Protection_Visual")==null)throw new IllegalStateException("PROTECTION_VISUAL_MISSING");
         var animations=com.hypixel.hytale.server.core.asset.type.itemanimation.config.ItemPlayerAnimations.getAssetMap().getAsset("Spellbook");

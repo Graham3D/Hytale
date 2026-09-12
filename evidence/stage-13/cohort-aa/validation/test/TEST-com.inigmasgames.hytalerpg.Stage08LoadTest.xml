@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage08LoadTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:36:37.682Z" hostname="GRAHAM" time="0.723">
+  <properties/>
+  <testcase name="maximumGlobalBeamLoadDrainsSlicesAndReleasesEveryHandle()" classname="com.inigmasgames.hytalerpg.Stage08LoadTest" time="0.115"/>
+  <testcase name="maximumOwnerAndGlobalOrbitLoadUsesSharedIcdAndReleasesAll()" classname="com.inigmasgames.hytalerpg.Stage08LoadTest" time="0.608"/>
+  <system-out><![CDATA[STAGE08_BEAM_LOAD {"fields":128,"owners":128,"victimsPerSlice":64,"damageCalls":163840,"upkeepCalls":2560,"remainingFields":0,"remainingCapacity":0,"milliseconds":108.6602,"nativeOrConnectedProof":false}
+STAGE08_ORBIT_LOAD {"fields":128,"owners":16,"blades":512,"victimsPerSlice":64,"damageCalls":114688,"remainingFields":0,"remainingCapacity":0,"milliseconds":600.8668,"nativeOrConnectedProof":false}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

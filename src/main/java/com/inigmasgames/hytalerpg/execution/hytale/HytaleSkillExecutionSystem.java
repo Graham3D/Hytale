@@ -138,6 +138,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final ProliferationRuntime proliferation=new ProliferationRuntime();
     private final OwnedFieldBudget fieldCapacity=new OwnedFieldBudget();
     private final AreaRuntime areas = new AreaRuntime(fieldCapacity);
+    private final HealingTextAccumulator healingText=new HealingTextAccumulator();
+    private final NativeBlizzardVisuals blizzardVisuals=new NativeBlizzardVisuals();
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
     private HytaleSupportSystem support;
     private HytaleSummonSystem summons;
@@ -256,6 +258,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             periodicStatuses.tick(actor, System.nanoTime() / 1e9, periodicPort());
             areas.tick(actor, System.nanoTime() / 1_000_000_000.0, port.areaWorld());
             connections.tick(actor,System.nanoTime()/1e9,port.connectionWorld());
+            for(var value:healingText.flush(actor,null,System.nanoTime()/1e9,false))presentHealingText(store,ref,value);
         }
         executions.tickScheduled(actor,port);
         Motion motion = motions.get(actor);
@@ -322,6 +325,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         if (repeating != null) hits.clear(repeating.context.skillInstanceId());
         removeOwnedProjectiles(actor, buffer);
         removeOwnedBurns(actor);
+        // Teardown has no guaranteed live viewer/world; discard remaining presentation, never gameplay.
+        healingText.flush(actor,null,0,true);
+        blizzardVisuals.cancel(actor,buffer);
         for (SkillExecutionContext area : areas.cancel(actor))
             emit(area, RpgTraceEventType.AREA_TERMINATED, Map.of("reason", reason));
         for(var connection:connections.cancel(actor,false)) {
@@ -491,7 +497,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             profile.area().placementRange()).orElse(null)
                         : HytaleAreaQueries.ground(store, feet.add(new Vec3(0, .15, 0)), new Vec3(0, -1, 0), .65).orElse(null);
                 if (areaPlacement == null) return Validation.reject("NO_LEGAL_GROUND_SURFACE");
-                if (profile.area().overheadHeight() > 0 && !areaWorld().overheadClear(
+                if (profile.area().overheadHeight() > 0 && !profile.area().stratified() && !areaWorld().overheadClear(
                         profile.area().footprint(areaPlacement, areaDirection, 1), profile.area().overheadHeight()))
                     return Validation.reject("OVERHEAD_ROOF_BLOCKED");
                 if (profile.family() == Stage04SkillProfile.Family.WALL)
@@ -687,7 +693,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     if(grounded.isEmpty()||grounded.get().origin().distanceSquared(areaPlacement)>.0001)
                         return Validation.reject("COMMITTED_GROUND_CHANGED");
                 }
-                if(profile.area().overheadHeight()>0 && !areaWorld().overheadClear(shape,profile.area().overheadHeight()))
+                if(profile.area().overheadHeight()>0 && !profile.area().stratified() && !areaWorld().overheadClear(shape,profile.area().overheadHeight()))
                     return Validation.reject("OVERHEAD_ROOF_BLOCKED");
                 return areaWorld().query(shape,profile.area().candidateBudget()).overflow()?Validation.reject("AREA_CANDIDATE_BUDGET"):Validation.pass();
             }
@@ -880,6 +886,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     stats.setStatValue(DefaultEntityStatTypes.getHealth(),(float)Math.min(maximum,before+requested));double after=hp.get();
                     if(support!=null)support.healingResolved(store,buffer,ref,context,requested,before,after,maximum);
                     emit(context,RpgTraceEventType.HEAL_APPLIED,Map.of("target",target.id(),"tick",tick,"requested",requested,"healthBefore",before,"healthAfter",after,"actualHealing",Math.max(0,after-before)));
+                    try{
+                        var key=new HealingTextAccumulator.Key(playerRef.getUuid(),playerRef.getWorldUuid(),context.rootCastId(),target.id(),context.skillInstanceId(),context.request().correlationId());
+                        for(var value:healingText.add(key,System.nanoTime()/1e9,before,after))presentHealingText(store,actor,value);
+                    }catch(RuntimeException ignored){ }
                     return Math.max(0,after-before);
                 }
                 public boolean payUpkeep(SkillExecutionContext context,int tick,double seconds) {
@@ -950,10 +960,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     if(context.profile().connection().friendlyTether()){
                         try{
                             // Bounded native particles along the authoritative segment; no persistent VFX entity.
-                            var delta=shape.end().subtract(shape.start());int samples=Math.clamp((int)Math.ceil(delta.length()/2),1,9);
-                            for(int i=0;i<=samples;i++){
-                                var p=shape.start().add(delta.multiply((double)i/samples));
-                                com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("Beam_Heal_Green",new org.joml.Vector3d(p.x(),p.y(),p.z()),store);
+                            var rotation=NativeBeamTransform.rotation(shape.start(),shape.end());
+                            for(var p:NativeBeamTransform.samples(shape.start(),shape.end())){
+                                com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("Beam_Heal_Green",new org.joml.Vector3d(p.x(),p.y(),p.z()),rotation.yaw(),rotation.pitch(),rotation.roll(),1,75,store);
                             }
                         }catch(RuntimeException ignored){/* Bounded presentation cannot refund a paid pulse. */}
                         return;
@@ -961,7 +970,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     try{vfx.presentConnection(store.getExternalData().getWorld(),shape,context.profile().connection().element(),phase,seconds);}
                     catch(RuntimeException ignored){ }
                 }
-                public void ended(SkillExecutionContext context,String reason){try{inputs.stopHeld(context.request());}finally{executions.terminate(context,reason);}}
+                public void ended(SkillExecutionContext context,String reason){
+                    for(var value:healingText.flush(playerRef.getUuid(),context.rootCastId(),0,true))presentHealingText(store,actor,value);
+                    try{inputs.stopHeld(context.request());}finally{executions.terminate(context,reason);}
+                }
                 public void trace(SkillExecutionContext context,String event,Map<String,?> details){emit(context,RpgTraceEventType.valueOf(event),details);}
             };
         }
@@ -1036,6 +1048,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     return HytaleAreaQueries.clear(store, footprint.origin().add(new Vec3(0, .1, 0)),
                             footprint.origin().add(new Vec3(0, height, 0)));
                 }
+                @Override public java.util.Optional<Vec3> sweepShard(Vec3 from,Vec3 to,double radius){return HytaleAreaQueries.shardContact(store,from,to,radius);}
+                @Override public void shardVisual(SkillExecutionContext c,int index,Vec3 position,boolean terminal){blizzardVisuals.shard(c,index,position,terminal,buffer);}
+                @Override public void stormVisual(SkillExecutionContext c,AreaGeometry shape,double remaining){blizzardVisuals.storm(c,shape,remaining,store);}
+                @Override public void endVisuals(SkillExecutionContext c){blizzardVisuals.end(c,buffer);}
                 @Override public void descendingVisual(SkillExecutionContext context, Vec3 position, double seconds) {
                     vfx.presentDescending(store.getExternalData().getWorld(), position, context.profile().area().element(), seconds);
                 }
@@ -1082,6 +1098,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     return true;
                 }
                 @Override public void present(SkillExecutionContext context, AreaGeometry shape, String phase, double seconds) {
+                    if(context.profile().skillId().equals("blizzard")&&phase.equals("IMPACT")){
+                        var p=shape.origin();
+                        com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("RPG_Blizzard_Impact",vector(p),store);
+                        int sound=com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent.getAssetMap().getIndex("SFX_Ice_Ball_Death");
+                        if(sound>=0)com.hypixel.hytale.server.core.universe.world.SoundUtil.playSoundEvent3d(sound,com.hypixel.hytale.protocol.SoundCategory.SFX,p.x(),p.y(),p.z(),store);
+                        emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase",phase,"position",p.toString(),"template","RPG_Blizzard_Impact","sound","SFX_Ice_Ball_Death"));
+                        return;
+                    }
                     vfx.presentArea(store.getExternalData().getWorld(), shape, phase, context.profile().area().element(),
                             context.profile().area().trap(), seconds);
                     emit(context, RpgTraceEventType.AREA_PRESENTATION, Map.of("phase", phase, "radius", shape.radius(),
@@ -2634,6 +2658,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
     private void emit(SkillExecutionContext context, RpgTraceEventType event, Map<String, ?> details) {
         trace.emit(context.request().actorId(), event, ids(context), details);
+    }
+    private void presentHealingText(Store<EntityStore> store,Ref<EntityStore> actor,HealingTextAccumulator.Value value){
+        var key=value.key();String outcome=NativeHealingText.display(store,actor,value);
+        trace.emit(key.owner(),RpgTraceEventType.HEAL_PRESENTATION,new CombatTrace.Context(key.root(),key.instance(),key.correlation()),
+                Map.of("target",key.target(),"actualHealing",value.actualHealing(),"pulses",value.pulses(),"outcome",outcome,"connectedProof",false));
     }
     private void emitProjectile(ProjectileCarrier carrier, RpgTraceEventType event, Map<String, ?> details) {
         Map<String, Object> values = new HashMap<>();

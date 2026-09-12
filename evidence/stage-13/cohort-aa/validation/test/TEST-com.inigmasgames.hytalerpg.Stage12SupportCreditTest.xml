@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" tests="24" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:36:59.604Z" hostname="GRAHAM" time="1.048">
+  <properties/>
+  <testcase name="healCanSupportMultipleRecentEncountersButNotAnUnrelatedOne()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.048"/>
+  <testcase name="negativeAndNonfiniteHealingCannotCredit()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.477"/>
+  <testcase name="providerFailureDoesNotSilentlyRepriceAsSolo()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.002"/>
+  <testcase name="coherentTrustedMembershipProducesOneCommonPot()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.041"/>
+  <testcase name="shieldProviderGetsActualConsumedHostileCredit()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.043"/>
+  <testcase name="candidateBudgetIsExplicitBeforeCallingProvider()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.002"/>
+  <testcase name="persistedPartyDeathNeverRerollsAfterPartyChange()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.044"/>
+  <testcase name="nonOverhealSupportPersistsBeforeDeathAndNeedsNoLastHit()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.048"/>
+  <testcase name="providerCannotReturnNullSnapshotOrNullParty()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.002"/>
+  <testcase name="missingMembershipMeansSoloNotInferredAlliance()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.001"/>
+  <testcase name="providerCannotSmuggleUnqueriedPlayer()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.001"/>
+  <testcase name="candidateWorldLoadedAndUniquenessAreValidated()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.001"/>
+  <testcase name="overhealDoesNotAddContributor()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.037"/>
+  <testcase name="unavailablePartyProviderExplicitlyKeepsSolo()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.002"/>
+  <testcase name="disallowedAllyDoesNotAddContributor()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.029"/>
+  <testcase name="supportOnlyCannotKeepFarmMasteryActiveForever()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.045"/>
+  <testcase name="emptyOrFriendlyShieldDoesNotGetSupportCredit()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.042"/>
+  <testcase name="frozenDeathCannotGainLaterHealer()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.046"/>
+  <testcase name="unknownOrStaleBeneficiaryCannotCreateEncounterCredit()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.042"/>
+  <testcase name="deadOrConvertedEncounterCannotBeRefreshedByHeal()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.047"/>
+  <testcase name="partySnapshotCannotChangeAfterReturn()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.002"/>
+  <testcase name="providerReceivesImmutableCandidateSet()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.002"/>
+  <testcase name="providerCannotUseBlankControlOrOversizedPartyIds()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.001"/>
+  <testcase name="wrongWorldCannotCreditHealing()" classname="com.inigmasgames.hytalerpg.Stage12SupportCreditTest" time="0.04"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

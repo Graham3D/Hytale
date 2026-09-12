@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11FoundationTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:36:47.804Z" hostname="GRAHAM" time="0.093">
+  <properties/>
+  <testcase name="efficiencyZeroAndOneFloorRetained()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="efficiencyNeverCeilsContinuousSlices()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.002"/>
+  <testcase name="travelingWaveMaintainsSpeedAndReachesNewEndpoint()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.001"/>
+  <testcase name="rapidInvocationKeepsMinimumAndDoesNotMakeZeroNonzero()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="reachRejectsRadiusOnlyEvenWhenImportedTagSaysRange()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="rapidInvocationCannotAccelerateSkillDelay()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.001"/>
+  <testcase name="mismatchedPlanCannotRewriteAnotherSkill()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.001"/>
+  <testcase name="efficiencyRejectsManaguardReservation()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="rapidInvocationRejectsReactionWindow()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="efficiencyRejectsEmanatismReservationDespiteImportedFiniteCostTag()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.001"/>
+  <testcase name="compiledPlanIsSlotScopedAndHasNoRangeLeak()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="reachRejectsSelfShield()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="leapRangeDoesNotIncreaseLandingOrStrikeRadius()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="reachAllowsSummonPlacementButNotLeash()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="reachDoesNotScaleBeamDurationTicksOrUpkeep()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="efficiencyCommitsSeventeenManaInsteadOfTwentyExactlyOnce()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.004"/>
+  <testcase name="rapidInvocationRejectsInstantSkill()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="placementRangeLeavesTrapRadiusArmingAndStatusAlone()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="coneReachNotAngleOrInnerStatusRadiusGetsReach()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="projectileRangeChangesOnlyTravelAndDerivedTime()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.001"/>
+  <testcase name="rapidInvocationScalesWindupNotCooldownOrStrikeCadence()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.001"/>
+  <testcase name="reachNotAppliedTwiceWhenResolvingRepeatedly()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.001"/>
+  <testcase name="wallPlacementNotWallFootprintGetsReach()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.0"/>
+  <testcase name="realExecutionReceivesEffectiveWindupAndReachBeforeCommit()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.006"/>
+  <testcase name="efficiencyAcceptsUpkeepWithoutUpfrontSpend()" classname="com.inigmasgames.hytalerpg.Stage11FoundationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

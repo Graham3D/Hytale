@@ -1,0 +1,24 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "RPG_Blizzard_Impact_Impact_Ice_Fragments"
+    },
+    {
+      "SpawnerId": "RPG_Blizzard_Impact_Impact_Ice_Cloud",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 1,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "RPG_Blizzard_Impact_Impact_Ice_Shockwave",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0.3,
+        "Z": 0
+      }
+    }
+  ],
+  "LifeSpan": 0.05
+}

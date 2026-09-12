@@ -33,6 +33,13 @@ public interface AreaWorldPort {
     default boolean overheadClear(AreaGeometry footprint, double height) { return true; }
     /** A finite visual position only; the native damage query stays on the ground footprint. */
     default void descendingVisual(SkillExecutionContext context, Vec3 position, double seconds) { }
+    /** Empty contact means clear. Unavailable terrain must fail closed. */
+    default java.util.Optional<Vec3> sweepShard(Vec3 from, Vec3 to, double radius) {
+        throw new IllegalStateException("NATIVE_SHARD_SWEEP_UNAVAILABLE");
+    }
+    default void shardVisual(SkillExecutionContext context,int index,Vec3 position,boolean terminal) { }
+    default void stormVisual(SkillExecutionContext context,AreaGeometry geometry,double remainingSeconds) { }
+    default void endVisuals(SkillExecutionContext context) { }
     /** Final native revalidation and the existing RPG calculation -> Hytale damage path. */
     boolean apply(SkillExecutionContext context, Target target, Payload payload);
     /** Uses this exact footprint, not a particle/model as collision authority. */

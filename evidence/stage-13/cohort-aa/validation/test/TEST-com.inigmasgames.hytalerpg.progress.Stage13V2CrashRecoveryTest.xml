@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:37:42.237Z" hostname="GRAHAM" time="13.548">
+  <properties/>
+  <testcase name="[1] PREPARE_CREATED" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.354"/>
+  <testcase name="[2] PREPARE_HEADER_WRITTEN" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.37"/>
+  <testcase name="[3] PREPARE_FORCED" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.375"/>
+  <testcase name="[4] MANIFEST_PARTIAL_WRITE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.401"/>
+  <testcase name="[5] MANIFEST_BEFORE_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.398"/>
+  <testcase name="[6] MANIFEST_AFTER_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.421"/>
+  <testcase name="[7] MANIFEST_PUBLISHED" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.388"/>
+  <testcase name="[1] PREPARE_CREATED" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.63"/>
+  <testcase name="[2] PREPARE_HEADER_WRITTEN" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.634"/>
+  <testcase name="[3] PREPARE_FORCED" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.638"/>
+  <testcase name="[4] ACTIVATION_WRITTEN" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.599"/>
+  <testcase name="[5] ACTIVATION_FORCED" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.535"/>
+  <testcase name="[6] BEFORE_ACTIVE_SWITCH" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.532"/>
+  <testcase name="[7] AFTER_ACTIVE_SWITCH" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.528"/>
+  <testcase name="[8] BUNDLE_SERIALIZATION" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.53"/>
+  <testcase name="[9] BUNDLE_PARTIAL_WRITE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.577"/>
+  <testcase name="[10] BUNDLE_BEFORE_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.569"/>
+  <testcase name="[11] BUNDLE_AFTER_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.583"/>
+  <testcase name="[12] BUNDLES_DURABLE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.571"/>
+  <testcase name="[13] MANIFEST_PARTIAL_WRITE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.567"/>
+  <testcase name="[14] MANIFEST_BEFORE_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.575"/>
+  <testcase name="[15] MANIFEST_AFTER_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.968"/>
+  <testcase name="[16] MANIFEST_PUBLISHED" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.598"/>
+  <testcase name="[17] BEFORE_WAL_RETIRE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.595"/>
+  <testcase name="[18] DURING_WAL_RETIRE" classname="com.inigmasgames.hytalerpg.progress.Stage13V2CrashRecoveryTest" time="0.604"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

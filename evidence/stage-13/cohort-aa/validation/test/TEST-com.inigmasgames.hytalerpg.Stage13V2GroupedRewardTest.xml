@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13V2GroupedRewardTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-12T13:37:24.593Z" hostname="GRAHAM" time="1.717">
+  <properties/>
+  <testcase name="[1] AFTER_FREEZE" classname="com.inigmasgames.hytalerpg.Stage13V2GroupedRewardTest" time="0.373"/>
+  <testcase name="[2] AFTER_AWARD" classname="com.inigmasgames.hytalerpg.Stage13V2GroupedRewardTest" time="0.336"/>
+  <testcase name="[3] AFTER_CURSOR" classname="com.inigmasgames.hytalerpg.Stage13V2GroupedRewardTest" time="0.32"/>
+  <testcase name="[4] AFTER_COMPLETION" classname="com.inigmasgames.hytalerpg.Stage13V2GroupedRewardTest" time="0.334"/>
+  <testcase name="[5] AFTER_CLEANUP" classname="com.inigmasgames.hytalerpg.Stage13V2GroupedRewardTest" time="0.354"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

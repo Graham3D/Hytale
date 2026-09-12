@@ -45,6 +45,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                 holder.addComponent(TransformComponent.getComponentType(),new TransformComponent(new Vector3d(0,200,0),new com.hypixel.hytale.math.vector.Rotation3f()));
                 holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());actor=store.addEntity(holder,AddReason.SPAWN);
                 var context=context(owner);var source=ProjectileConfig.getAssetMap().getAsset("Projectile_Config_RPG_Fire_Bolt");
+                NativeBlizzardVisuals.audit(store,auditChunk,context);
                 var nativeActor=actor;var ran=new AtomicBoolean();
                 store.forEachChunk((java.util.function.BiConsumer<ArchetypeChunk<EntityStore>,CommandBuffer<EntityStore>>)(chunk,buffer)->{
                     if(!ran.compareAndSet(false,true))return;
