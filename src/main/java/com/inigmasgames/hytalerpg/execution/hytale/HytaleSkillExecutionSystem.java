@@ -104,7 +104,8 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 /** World-thread bridge for shared skill-family execution and bounded native authority calls. */
-public final class HytaleSkillExecutionSystem extends EntityTickingSystem<EntityStore> {
+public final class HytaleSkillExecutionSystem extends EntityTickingSystem<EntityStore>
+        implements com.hypixel.hytale.server.core.modules.entitystats.EntityStatsSystems.StatModifyingSystem {
     private static final String NATIVE_STAGGER_EFFECT = "Stun";
     private static final String NATIVE_BURN_VISUAL_EFFECT = "RPG_Burn_Visual";
     private final HytaleAbilitySkillInputAdapter inputs;

@@ -57,11 +57,5 @@
   },
   "Weapon": {},
   "ItemSoundSetId": "ISS_Weapons_Wood",
-  "Particles": [
-    {
-      "SystemId": "Staff_Bronze",
-      "TargetNodeName": "Knob",
-      "ClearParticlesOnRemove": true
-    }
-  ]
+  "Particles": []
 }

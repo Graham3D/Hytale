@@ -1,10 +1,12 @@
 # HyARPG: changing spell colors
 
-Updated for R032-AG / installed Hytale 0.7.0-pre.2, 2026-09-12.
+Updated for R032-AH / installed Hytale 0.7.0-pre.2, 2026-09-12.
 
 Yes: Hytale has an in-game **Asset Editor**, not just an asset viewer. It can create a writable asset pack containing overrides. Looking at an installed asset in a viewer does not change the RPG JAR or the repository. Hytale's [official asset-pack guide](https://pre-release.docs.hytale.com/creating-content/asset-packs/) describes creating a pack in the editor and overriding existing assets. Use a separate test world for visual experiments.
 
 AG replaces the rejected native ribbon appearance with the explicitly requested `Beam_Heal_Green2` particle system. It also uses `Effect_Health_Pack` on recipients and `Staff_Bronze` on staff model nodes. Connected appearance remains unverified. `Basic` and `RPG_Healing` no longer control the active Healing Beam presentation.
+
+AH fixes the carrier's missing texture reference and moves staff-head sparkles into active Healing Beam channel effects. Do not put `Staff_Bronze` back into the item `Particles` arrays: that makes it play while merely holding the staff. The explicit carrier texture is a native invisible-model loading dependency, not the stream's color texture.
 
 ## Where things actually live
 
@@ -23,7 +25,7 @@ The public documentation's example `UserData` paths are generic/older. Your actu
 | --- | --- | --- |
 | Healing Beam stream | `src/main/resources/Server/Models/RPG/RPG_Healing_Stream.json` -> shipped `Beam_Heal_Green2` | Its `_Sparks`, `_Glow`, and `_Plus` spawners under `Server/Particles/_Test/HealBeams/Spawners`. Edit their particle color keys. |
 | Healing recipient | `src/main/resources/Server/Entity/Effects/RPG/RPG_Healing_Recipient.json` -> `Effect_Health_Pack` | `Health_Pack_Crosses` and `Health_Pack_Rays` under `Server/Particles/Status_Effect/Heal/Spawners`. |
-| Staff heads | `src/main/resources/Server/Item/Items/Weapon/Staff/*.json` -> `Staff_Bronze` | `Staff_Bronze_Air` and `Staff_Bronze_Sparks` under `Server/Particles/Weapon/Staff/Spawners`. |
+| Staff heads, only during Healing Beam | `src/main/resources/Server/Entity/Effects/RPG/RPG_Healing_Staff_*.json` -> `Staff_Bronze` | `Staff_Bronze_Air` and `Staff_Bronze_Sparks` under `Server/Particles/Weapon/Staff/Spawners`. Preserve PrimaryItem/node attachment and finite channel ownership. |
 | Blizzard falling-shard trail | `src/main/resources/Server/Particles/RPG/Blizzard/RPG_Blizzard_Trail.particlesystem` | Follow its three `SpawnerId` references to the sibling `.particlespawner` files. |
 | Blizzard snow | Shipped `Server/Particles/Weather/Snow/Snow_Heavy.particlesystem` -> `Server/Particles/Weather/Snow/Spawners/Snow_Heavy.particlespawner` | `Particle.InitialAnimationFrame.Color` and any color animation keys in a writable override. |
 | Blizzard ground impact | Shipped `Server/Particles/Combat/Impact/Misc/Ice/Impact_Ice.particlesystem` | Follow its spawners and edit their particle colors. |

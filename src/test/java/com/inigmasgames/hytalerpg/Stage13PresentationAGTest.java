@@ -62,8 +62,14 @@ class Stage13PresentationAGTest {
                 var patched=json(path.toString());var before=original.remove("Particles");var after=patched.remove("Particles").getAsJsonArray();
                 assertEquals(original,patched,entry+" gameplay changed");
                 var nativeOther=new JsonArray();if(before!=null&&!before.isJsonNull())for(var p:before.getAsJsonArray())if(!"Staff_Bronze".equals(p.getAsJsonObject().get("SystemId").getAsString()))nativeOther.add(p);
-                var added=after.remove(after.size()-1).getAsJsonObject();assertEquals(nativeOther,after,entry);
+                // AH moves the same exact node attachment from permanent item particles to an active-channel effect.
+                assertEquals(nativeOther,after,entry);
+                var effectId=HealingParticleVisuals.staffEffect(path.getFileName().toString().replace(".json",""));
+                var effect=json("src/main/resources/Server/Entity/Effects/RPG/"+effectId+".json");
+                var added=effect.getAsJsonObject("ApplicationEffects").getAsJsonArray("Particles").get(0).getAsJsonObject();
                 assertEquals("Staff_Bronze",added.get("SystemId").getAsString());assertTrue(added.get("ClearParticlesOnRemove").getAsBoolean());
+                assertEquals("PrimaryItem",added.get("TargetEntityPart").getAsString());
+                assertEquals(.3,effect.get("Duration").getAsDouble());
                 var modelEntry=zip.getEntry("Common/"+original.get("Model").getAsString());
                 var model=JsonParser.parseString(new String(zip.getInputStream(modelEntry).readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
                 var names=new ArrayList<String>();nodes(model.getAsJsonArray("nodes"),names);

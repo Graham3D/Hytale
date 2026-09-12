@@ -55,11 +55,6 @@
         "Yaw": 180,
         "Roll": 0
       }
-    },
-    {
-      "SystemId": "Staff_Bronze",
-      "TargetNodeName": "Block5",
-      "ClearParticlesOnRemove": true
     }
   ],
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",

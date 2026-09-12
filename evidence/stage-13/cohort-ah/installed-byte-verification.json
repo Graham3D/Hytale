@@ -1,0 +1,12 @@
+{
+  "verifiedAtUtc": "2026-09-12T19:08:47.0949578Z",
+  "source": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/HyARPG.jar",
+  "sha256": "272E9F8365FE877152B5890D9100E123AE1127D8DC881A88D93993D3C51FE692",
+  "runtime": "isolated three-mod server using installed bytes",
+  "nativeParticleLifecycle": "PASS",
+  "nativeStaffChannelOwnership": "PASS",
+  "nativeManaViewerQueue": "PASS",
+  "nativeSystemOrder": {"execution":561,"changes":562,"tracker":563,"clear":568},
+  "liveSaveBooted": false,
+  "connectedVerified": false
+}

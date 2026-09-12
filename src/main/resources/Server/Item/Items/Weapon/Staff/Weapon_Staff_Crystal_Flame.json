@@ -330,11 +330,5 @@
   "ItemSoundSetId": "ISS_Weapons_Wood",
   "MaxDurability": 300,
   "DurabilityLossOnHit": 0.5,
-  "Particles": [
-    {
-      "SystemId": "Staff_Bronze",
-      "TargetNodeName": "Origin_Projectile",
-      "ClearParticlesOnRemove": true
-    }
-  ]
+  "Particles": []
 }

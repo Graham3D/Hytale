@@ -53,13 +53,7 @@
       0
     ]
   },
-  "Particles": [
-    {
-      "SystemId": "Staff_Bronze",
-      "TargetNodeName": "Block5",
-      "ClearParticlesOnRemove": true
-    }
-  ],
+  "Particles": [],
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
   "Tags": {
     "Family": [

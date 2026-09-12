@@ -46,13 +46,7 @@
       315
     ]
   },
-  "Particles": [
-    {
-      "SystemId": "Staff_Bronze",
-      "TargetNodeName": "Origin_Projectile",
-      "ClearParticlesOnRemove": true
-    }
-  ],
+  "Particles": [],
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
   "Tags": {
     "Type": [

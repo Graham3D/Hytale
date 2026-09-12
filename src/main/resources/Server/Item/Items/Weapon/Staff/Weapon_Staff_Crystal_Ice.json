@@ -63,11 +63,6 @@
         "Yaw": 180,
         "Roll": 0
       }
-    },
-    {
-      "SystemId": "Staff_Bronze",
-      "TargetNodeName": "TopPommel",
-      "ClearParticlesOnRemove": true
     }
   ],
   "Interactions": {

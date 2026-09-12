@@ -56,11 +56,5 @@
     ]
   },
   "Weapon": {},
-  "Particles": [
-    {
-      "SystemId": "Staff_Bronze",
-      "TargetNodeName": "Origin_Projectile",
-      "ClearParticlesOnRemove": true
-    }
-  ]
+  "Particles": []
 }

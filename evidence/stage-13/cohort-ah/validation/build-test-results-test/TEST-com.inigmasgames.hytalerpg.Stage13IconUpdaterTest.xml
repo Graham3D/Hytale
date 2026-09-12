@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-12T19:06:13.407Z" hostname="GRAHAM" time="10.634">
+  <properties/>
+  <testcase name="doubleClickWorkspaceDefaultsResolveInWindowsPowerShellWithoutCallerWorkingDirectory()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.504"/>
+  <testcase name="typoAbortsEntireBatchBeforeValidImageIsInstalled()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.826"/>
+  <testcase name="corruptBackupIsNeverUsedForUndo()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="1.735"/>
+  <testcase name="oversizedHeaderIsRejectedBeforeImageDecodeAndNoJarMutation()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.808"/>
+  <testcase name="undoRefusesChangedBuildAndPreservesIt()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="1.71"/>
+  <testcase name="malformedPngAbortsWithoutChangingJar()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.749"/>
+  <testcase name="repeatIsByteIdenticalAndUndoRestoresExactPriorJar()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="2.742"/>
+  <testcase name="installsSkillAndPassivePngsOnlyAndChangesOnlyNativeIconField()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="1.108"/>
+  <testcase name="dryRunWritesNeitherJarBackupNorLockAndMissingImagesKeepFallbacks()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.452"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

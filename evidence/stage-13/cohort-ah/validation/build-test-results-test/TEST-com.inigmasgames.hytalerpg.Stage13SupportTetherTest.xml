@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-09-12T19:06:27.430Z" hostname="GRAHAM" time="0.117">
+  <properties/>
+  <testcase name="restoredLosResetsGrace()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.005"/>
+  <testcase name="secondaryEligibilityRequiresInjuredFriendlyAndNoPrimaryRepeat()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="secondariesHaveDeterministicTieBreakLosAndHopRange()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.001"/>
+  <testcase name="baselineFourPulsesAndFourManaPerSecond()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="duplicateTimesCannotDoubleHealOrKeepPresentingAfterEnd()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="pulseCompositionHasFiveDistinctTerminalRecipients()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.005"/>
+  <testcase name="capIsPerHitAndNeverRaisesSmallHits()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.001"/>
+  <testcase name="eachModifierHasItsOwnExactCoefficients()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.011"/>
+  <testcase name="identicalBlessingsDoNotCompoundAndCapPrecedesShield()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.006"/>
+  <testcase name="enemyAndSelfAcquisitionRejected()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.006"/>
+  <testcase name="blessingUsesFiniteRuntimeAndExpiresAtThirtySeconds()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="resourceExhaustionBeforeUnpaidHeal()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="rapidPulseChangesOnlyPulseCadenceAndEffectNotManaPerSecond()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.004"/>
+  <testcase name="continuationOverflowRejectsBeforePulsePaymentOrHeal()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="grace149ContinuesAnd150Ends()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="releaseImmediatelyRemovesChannelAndLocksReentry()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="periodicCostsReflectionEnvironmentAreNotCapped()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.0"/>
+  <testcase name="rangeHasNoGrace()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="catchupPulsesReevaluateInjuredSecondaryRecipients()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="compatibilityKeepsChannelAndWidthExclusions()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="noInitialLosRejects()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="triageOverflowAndPayloadModifiersArePerRecipient()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.004"/>
+  <testcase name="channelIsNotArtificiallyFinite()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.006"/>
+  <testcase name="invalidActorWorldAllianceAndDespawnEndBeforeMutation()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.022"/>
+  <testcase name="blessingProfileIsUtilitySpellbookOnlyAndNonScalable()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.003"/>
+  <testcase name="lockedTargetDoesNotRequireContinuousCrosshair()" classname="com.inigmasgames.hytalerpg.Stage13SupportTetherTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

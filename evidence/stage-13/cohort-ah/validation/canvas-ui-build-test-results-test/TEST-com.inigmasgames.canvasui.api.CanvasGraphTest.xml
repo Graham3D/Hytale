@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.canvasui.api.CanvasGraphTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-12T19:07:10.800Z" hostname="GRAHAM" time="0.039">
+  <properties/>
+  <testcase name="viewportPersistsAndNodeCoordinatesRemainIndependent()" classname="com.inigmasgames.canvasui.api.CanvasGraphTest" time="0.021"/>
+  <testcase name="deletingNodeCleansAttachedEdgesAndDeletingEdgeIsExact()" classname="com.inigmasgames.canvasui.api.CanvasGraphTest" time="0.003"/>
+  <testcase name="optionalAcyclicModeRejectsCycleWhileGenericDefaultAllowsIt()" classname="com.inigmasgames.canvasui.api.CanvasGraphTest" time="0.001"/>
+  <testcase name="consumerPolicyRejectsWithoutCreatingEdge()" classname="com.inigmasgames.canvasui.api.CanvasGraphTest" time="0.001"/>
+  <testcase name="eventsExposeSelectionMovementAndConnectionChanges()" classname="com.inigmasgames.canvasui.api.CanvasGraphTest" time="0.001"/>
+  <testcase name="connectionLimitsAndDuplicateEdgesAreRejected()" classname="com.inigmasgames.canvasui.api.CanvasGraphTest" time="0.001"/>
+  <testcase name="snapshotRoundTripPreservesGraphViewportSelectionAndConsumerMetadata()" classname="com.inigmasgames.canvasui.api.CanvasGraphTest" time="0.009"/>
+  <testcase name="danglingAndMissingPortSnapshotEdgesAreRejected()" classname="com.inigmasgames.canvasui.api.CanvasGraphTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

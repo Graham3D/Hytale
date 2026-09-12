@@ -67,11 +67,5 @@
   "Model": "NPC/Intelligent/Goblin/Models/Weapons/Staff/Scrap_Lightbulb.blockymodel",
   "Texture": "NPC/Intelligent/Goblin/Models/Weapons/Staff/Scrap_Lightbulb_Texture.png",
   "Icon": "Icons/ItemsGenerated/Weapon_Staff_Scrap_Lightbulb.png",
-  "Particles": [
-    {
-      "SystemId": "Staff_Bronze",
-      "TargetNodeName": "Origin_Projectile",
-      "ClearParticlesOnRemove": true
-    }
-  ]
+  "Particles": []
 }

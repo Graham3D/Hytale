@@ -1,11 +1,12 @@
 # Hytale RPG
 
-The `RPG` branch is at **Stage 13 / R032-AG**, deployed for connected testing.
-The distributable is **HyARPG.jar**. The requested Healing Beam particle system,
-recipient effect, and staff-head effects are installed. Exact animated staff-tip
-attachment of the directed stream remains unsupported; connected appearance is unverified.
+The `RPG` branch is at **Stage 13 / R032-AH**, deployed for connected testing.
+The distributable is **HyARPG.jar**. AH fixes Healing Beam's missing carrier texture,
+makes staff-head sparkles channel-only, and orders skill resource writes before native
+stat replication. All 2,246 retained tests and installed-byte isolated checks pass.
+Connected beam rendering and immediate Mana-bar synchronization remain unverified.
 
-- Current report and test checklist: [R032-AG Healing particles and staff attachments](docs/stage-13/stage-13-presentation-ag-report.md)
+- Current report and test checklist: [R032-AH Healing presentation and Mana synchronization](docs/stage-13/stage-13-presentation-ah-report.md)
 - Spell-color editing: [owner guide](docs/owner-spell-color-guide.md)
 
 The repository also contains the standalone, RPG-agnostic **CanvasUI** library and its development

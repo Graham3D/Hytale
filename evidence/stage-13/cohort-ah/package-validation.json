@@ -1,0 +1,333 @@
+{
+  "cohort": "AH",
+  "startingHead": "b6b461c10a7095c99c762bffe55b4e1112fa9c08",
+  "builtAtUtc": "2026-09-12T19:07:39.5414809Z",
+  "suites": [
+    {
+      "tests": 2170,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "suite": "build/test-results/test"
+    },
+    {
+      "tests": 55,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "suite": "build/test-results/nativeControlTest"
+    },
+    {
+      "tests": 21,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "suite": "canvas-ui/build/test-results/test"
+    }
+  ],
+  "fullValidationRuns": 1,
+  "fullValidationExitCode": 0,
+  "initialFullRunFailures": 0,
+  "initialFailureReason": "None",
+  "targetedRerun": "Not required",
+  "isolatedNativeParticleLifecycle": "PASS",
+  "connectedVerified": false,
+  "jarHashes": {
+    "CanvasUI-0.1.0.jar": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6",
+    "HyARPG.jar": "272E9F8365FE877152B5890D9100E123AE1127D8DC881A88D93993D3C51FE692",
+    "HYTALEDEVLIB-0.5.0.jar": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+  },
+  "archiveSha256": "2054939A77F0A569C1DC01D85BBFA656341F8F9F22C95A50C1115715E97FCAEB",
+  "archiveEntriesVerified": true,
+  "binaryRollback": "AG -> AH -> AG PASS",
+  "unchangedEntriesPreserved": true,
+  "entryDifferences": [
+    {
+      "before": "71DD83524C3D62C827F572B6D3B564923630B8C699FC97A47293E24C959BFFB7",
+      "after": "BAF35ED9564271C4DBD5F6DBAEBA46896F874312A7BFCFEC94D5A81C107A7870",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingParticleVisuals$Job.class"
+    },
+    {
+      "before": "F3EB9DC3D555EEAF6A39BBE6EB6BFAECCF0CCB4F4A7E7CE264381FA22A64EA9A",
+      "after": "7F1714C70322328371A698B0A6817E62690F3447557D2104002A36C57DEF75FB",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingParticleVisuals$Root.class"
+    },
+    {
+      "before": "A548FB1044A7D8B45AF58760F44F06D13E9AA60F148213A93B1CA26E4DBF7BF5",
+      "after": "091B4FE1160ED3D710F22A487A6F2F6629AD85B5D15893E2A5454B0E92E512BC",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingParticleVisuals.class"
+    },
+    {
+      "before": "63E1BCA427FE62C44C3D3D3CA2D65A926F8E1928B256F6C71DCDC757A9215B15",
+      "after": "B76175E02A1F7B44624864D9A276307979D2DB9F058ACE01649EC10C7AB462CE",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$1.class"
+    },
+    {
+      "before": "6BEE26048E30C19E8A03C9A6FB15C4641B66B66C5841891F5F305C6C3AF89631",
+      "after": "D658B9B1E005426CC8181A537E06DCADAD9448557C27B2D8AF5D4F8F46485546",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$1Contact.class"
+    },
+    {
+      "before": "ACDEF0E299906A2520474C57742AA46D0EDACD4B4A256E2C83B773E0404AEE7D",
+      "after": "A2CC813CE5C30A2B2BE5C94D0D81C17CA504DC68F94A0CE224B77E3970ABD389",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$2.class"
+    },
+    {
+      "before": "787621EB72FFEF3B8AC203122679F03D78338F48E1D382CACCB3E78142830E09",
+      "after": "656861AA0FD1448FC1365CF022CD45EB0618D41DB22D0F23294CEA5F35ED10B0",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$3.class"
+    },
+    {
+      "before": "29BA077C4CB694062A4BE51388D92C5A726C16C70C84F82EF1554F2D7B0C5071",
+      "after": "DF15A72A9E5C79FD10A557479C7C377F9E24AF6C3D6DA9D31B3AF51C0899DE57",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Counter.class"
+    },
+    {
+      "before": "1F4B35D77A63339853C6D326EDA6343A073888615F467E58A741E4A1CCD41E87",
+      "after": "9D8C37F11530A437505A01EA95A2D12BA720EDB020A3751181FACFAE11927DDA",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$DamageOutcome.class"
+    },
+    {
+      "before": "4161332D1586EB8C6C292718D3C31778D0A89C8B8CF43E3165C687C15DA7A42E",
+      "after": "DC0D0773551541CE990B3D13E6BB82D04E49E87AAB75E47EACBE6481B121517C",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$GroundedProjectile.class"
+    },
+    {
+      "before": "20D260659EC9646A1A83CE542C87F1268259BA023C777D321130A19C46886D4C",
+      "after": "D47F27EF12799EF75A5E508C9781EB5EA67960D408FEBA7B56960EADC9D1EF2F",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Motion.class"
+    },
+    {
+      "before": "F3431ACB6AA7D58D322576829054446BB89A8B141FE2D42751CE2842ED3F4263",
+      "after": "6EC4A40F0ADCFEB1EA6B434000F0DFFF86AC73F15A064559778FC622AD95E415",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$NativeInsertion.class"
+    },
+    {
+      "before": "AD3889A250F3D7613CC4D3B42EA8FCB1431C059837C1861EFDBDC1D67FADFF68",
+      "after": "320B505A110EB227F1CEE1585074C73EBF1457064140DF7EEA997859B1FA4821",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$PeriodicTarget.class"
+    },
+    {
+      "before": "69D8DAAADF0B6DFD799575FC59F0DB634AFA2F1663513A3ADB03CA2D6D743208",
+      "after": "8983AFBB394E72B98A869C39C8943695EA69BD0808231EED0DF0A74C3F7F66F0",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port$1.class"
+    },
+    {
+      "before": "9D0F0CC0A5E0F71FD94395385E6BA1DAEAB4935F0D638CDFF3CF9B19A00E5888",
+      "after": "57E816C96DA9097385DE546AAD6D6EB8AD3C3F38CD86A6AC723FB0C5D83C06AC",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port$2.class"
+    },
+    {
+      "before": "22794ADEBA6833C42031C4C8CE9135098A13DE9E09ED579875C4ACE9BB1A9B62",
+      "after": "A90916C13B098BC9D7552F5A0490FDD5D9C618CA0381EC0F54659AF8F39E6648",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port$3.class"
+    },
+    {
+      "before": "9FC21B2BFDC5ED3920DC23824E260F5C7484504A52F07B39E37C28A25CE4D248",
+      "after": "7772BC276F1B2ED591880FEC56D856248921AE5B4A799015D9004AC86ED13D63",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port$4.class"
+    },
+    {
+      "before": "6BA989B0982473CBBEBF0EEF9EF22B9B2BD385BFD362A142F962D3C4B13D7848",
+      "after": "F3834EB586586638A43EB3CD9798FF658A5BEE897AE02CC9EF96A55F15EC83E8",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.class"
+    },
+    {
+      "before": "53B4E2CAA85572AF23FD39649852EF7C85A56847D3B72EB96A5C7C9EE7541223",
+      "after": "CD0496B03F6182DDC78F14469B6A6472FFE02E66E01E2397396323C34DD0376F",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$ProjectileCarrier.class"
+    },
+    {
+      "before": "5463D52E415016E971C1B84105377C1AC8BB363AF9405E3D832E096FA569F75B",
+      "after": "FC35227F37194F29E5CD465777FE51A9F5673EB9B8F8A7D5D39E05B33D20FFFE",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$QueuedProjectile.class"
+    },
+    {
+      "before": "0E61C71D0A3714903B34DB992EA8E94B44644782FD37762512ABE948310BD723",
+      "after": "EB14A823CD5CD98A7193BA135E8CA9EA5D80FDC56C3B511E86BA15022FDA0D2E",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$RepeatingStrike.class"
+    },
+    {
+      "before": "7675CE867C5CBD01ADAD8D15B088C77EA5AE4A98E0F77191DFC1282688D12F7D",
+      "after": "FDA679D84E0A73D9B9A2E7BCA66F62EB5E495F18BDF309F8691A619A43ECB96B",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.class"
+    },
+    {
+      "before": null,
+      "after": "F3292E00F2DCEA8AA4610258F379B45480A7CCBBDE5043A8D449BA052B5BB5F4",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/NativeManaReplicationAudit.class"
+    },
+    {
+      "before": "56B99D2C3007B6BC61387E74000966C9C216953B349D5235F3FB91C96FACFCCE",
+      "after": "6A3A10277E5F73F03E4E9F4DEC2C2632F784F5271F4E00DD110D644CD45E8FD7",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/NativeProjectileSpawnAuditCommand.class"
+    },
+    {
+      "before": "90E72420C2FEC0D2DD43CE1C0A296E010AC6639DD99A71BA8A3BEAD87394CE9D",
+      "after": "2793D1CEBD70129AB5B77DA431E7566F4324249FC95EA2D261E84C4FF85C0F29",
+      "entry": "com/inigmasgames/hytalerpg/input/NativeSupportTetherAudit.class"
+    },
+    {
+      "before": "573C163765265FBF6D348629B44D450A795E974386C314DD49EEAA082266A10C",
+      "after": "23BE9676271D482B9C6107CB2559560C4F1F128C9757E8E92ED19411EBEBCB87",
+      "entry": "com/inigmasgames/hytalerpg/ui/hud/RpgHud.class"
+    },
+    {
+      "before": null,
+      "after": "392B4FD920EBB1CBCED7E42DC05E293F4184CD2AD0C5C570748A8D4482E21BDA",
+      "entry": "Server/Entity/Effects/RPG/RPG_Healing_Staff_Block5.json"
+    },
+    {
+      "before": null,
+      "after": "706E26705136F861D9D239789F446ED66683D5740FFE5C5E7D3845700B3D2406",
+      "entry": "Server/Entity/Effects/RPG/RPG_Healing_Staff_Knob.json"
+    },
+    {
+      "before": null,
+      "after": "45969C6BFF348F2711D5A61E098A5EAF511C56FBED285A5BE574A238BB8B1801",
+      "entry": "Server/Entity/Effects/RPG/RPG_Healing_Staff_Origin_Projectile.json"
+    },
+    {
+      "before": null,
+      "after": "22C538543D7774B0FEC7DD22D0890799972129ABFFB88FD6F3B7CCD988A26CB6",
+      "entry": "Server/Entity/Effects/RPG/RPG_Healing_Staff_TopPommel.json"
+    },
+    {
+      "before": "8CCB1F098A8F4D1657553F900E383EFD4A5EBA6A2FF6AC91734302A642713E6F",
+      "after": "782D2114CFA73A48D301F4E5C31825BCA848D552B9F664A8F387DCB992E32B2D",
+      "entry": "Server/Item/Items/Weapon/Staff/Halloween_Broomstick.json"
+    },
+    {
+      "before": "741AE51D6542D6069B64D1C420C7B4A06BDBD3F4A04CEBF7D842FBFA8AB15259",
+      "after": "EBCB783D665BA73E61A86E238C2D4467F973112A3361D5693A87F2C35D4B6C97",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Adamantite.json"
+    },
+    {
+      "before": "DBA449B90F8D2C4FBB3B76E54F35071EFFEE66DCBA6B6CF227E0D7EE0B750A67",
+      "after": "907FF7897B47CB79054A6159F6E1B0E0DF5AC0125A5127296BAF2158ACF26641",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bo_Bamboo.json"
+    },
+    {
+      "before": "52311ED8C4CC4ADE0F1F3CC2360E5E3F6DE54A2D605AE869AD4B142A5F1485C2",
+      "after": "F26C3BEEE3AA61058B36920A38C2A2548F527BD7882FDB94C9D9AB7B687C519D",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bo_Wood.json"
+    },
+    {
+      "before": "3851B41E2627B0AB42247E0C8063DF371B80A3D9D137377F8DE0CD4964F2B363",
+      "after": "2BF296CF9A32FEB88CD52432A3EFFF5A1F905AA495C30AD672C416186A7A2EC4",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bone.json"
+    },
+    {
+      "before": "8745C3BDB79705604632C9B5F0788D33B906836C5FE1B69D7F1C6021320CF7AC",
+      "after": "7D487CF774A1CD936846054E198D6BAD3E1E315B17C830498582A941E05DEC32",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bronze.json"
+    },
+    {
+      "before": "8E421825A22D1CFDBA8544EB4A36107143B2D24598C31569361145B1317DA230",
+      "after": "7F6C5F78CBCC2F1180749CA074A46BDCE252C37AE47BC37BE700F5F47EB2FC26",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Cane.json"
+    },
+    {
+      "before": "79AB4BA8239AF13FA235C34A0E26CDBCAF89E898203D5EE15FD6DBE7EA5334EE",
+      "after": "C4625C8BC4433627759CB76D923E4F251251B252374AD1013C0BAC9FE4C6F5FA",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Cobalt.json"
+    },
+    {
+      "before": "8E9E4F389E37EB69A5A6BB5FF15626AA7B0E774ED084B04AE9A302AEBE4439C1",
+      "after": "FB8EA8593A09E55356E8A1B87D57AC97853EC3DF865A86A5C1C93D9E361B83B9",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Copper.json"
+    },
+    {
+      "before": "656A7903E52C8CBDFCF244F75FE97A4E241914DFDD4BDBF44EE89541C55C4E51",
+      "after": "D8865AB6C7E801399D5079E7255B1ED0A2C71270467B8BCD8CB10C572434136F",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Fire_Trork.json"
+    },
+    {
+      "before": "417BA431968939B33213EBD820FCD98203F1827D61A0A79C81E7DA62A05F234C",
+      "after": "755C087E4C5CAC9537AA6AF928FC0AF953EFCEB7595738BE2F023F5EA6FC7958",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Flame.json"
+    },
+    {
+      "before": "1F2E997C81ED7DA3BAC6AB055600B54484CE26B85B0C72FED2AE2FBB596137F0",
+      "after": "0865171FA2A4400786278CFD92F40D1B5F12A4C9F224E8E1125D40499F7C491D",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Ice.json"
+    },
+    {
+      "before": "25DB5E0FEF63F902ADC5C2B8C2D337ECA296FD9AF0CBD574053D48B5F53444E9",
+      "after": "7D6895BF0F12B3E9CCED766ABA9E52109C2A60C1972B88A9C34C3ABD64C53C59",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Purple.json"
+    },
+    {
+      "before": "20C5D4C6D9EED2EBBC768DA93A3B34A86074A4CA206FD496810324F834C1C3AA",
+      "after": "45D32C9D4106230FF2113CECC71080CB960B41D0B68CE3A49AFA1F0445A893E1",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Red.json"
+    },
+    {
+      "before": "3BEA6316504CE681B62F1C634651CB33C664E4DF1D3D6644CE900C2B505BC326",
+      "after": "766D3DAE49F9E6769B48384E7549B6A36D0C57A8531D3DB0E6426B91EBC9BC94",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Doomed.json"
+    },
+    {
+      "before": "947B63C9BF6CE00C99289CB6422D3E255030D56A5352D25C4AB739EC82B6B34C",
+      "after": "CBBED39794E1F7B2F935E56BDA9AA813E8BCD66A44901F3B5593A9C2D4C7210E",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Frost.json"
+    },
+    {
+      "before": "A4BB99AC282F62FE069BE7C8F2DC504D39CB0F29B6BCEA2C4B7E284CE2E8ECC9",
+      "after": "A0B6582B6D3FD411E944610DE281323A1892B34294B5F46AD23944363DCE50C1",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Iron.json"
+    },
+    {
+      "before": "0D301319FA870D4A104534199CF07333351E2AE50400C6EF491D12D97B052A6E",
+      "after": "D9D6E6069E106EDCB1D1F2F2FBB44BF461C71B66B1C66CAD88F433AC2D5283FE",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Mithril.json"
+    },
+    {
+      "before": "ABD14A0C96DF8594D55A20BB5F5C2D2816ECD00EE178DE77CECE4BC786364842",
+      "after": "1B876FA2FDB31672F87DF879743FE9497861263713673A03B3D8EA0EE0319274",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onion.json"
+    },
+    {
+      "before": "B959423B35B439C47926192607859FBCFFF65799D948F74D19140A71552A3443",
+      "after": "31A140222859AC1355D69A0CC14759AA93B9BAB8D32C12FD12F68D88CF482A7D",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onyxium.json"
+    },
+    {
+      "before": "3B69D8675A012F80B5357146AD142DC5CA5E0B916FBB30AD37F62DAE727DF685",
+      "after": "DED12FA5D9DF0E7938FC7BC6EB34C8879896B43F4E1CB935D29FC6FC3F1784E0",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Scrap_Lightbulb.json"
+    },
+    {
+      "before": "ACF2169EE9F07F4A05AE8720D4A53E81F63C657F8DE6AE506B91382CBBFE8AAA",
+      "after": "190CA86CFAE6FDFA823F33242E5D0E150E9177F200519EBD0F24609F8B5864CA",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Thorium.json"
+    },
+    {
+      "before": "6965DEC1D3EA304C37A271F2721C1DD84822FF9423A47FE0196684ACE1F78AA8",
+      "after": "8B99D4038D7B5005391800312EED670DE73B3F104A1EB5F920DC899940CCA3F8",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wizard.json"
+    },
+    {
+      "before": "FAE78E423368BE3EB03E67541600F2D79E625C930CBB35C0CC71501285CC4D1D",
+      "after": "C8AE36ED9317610443385DE1D41A1B8A3E980719EE43F3E4CB47F0EBB5163920",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wood.json"
+    },
+    {
+      "before": "8EA03FF0EDD6AEC15E4F152A84EC962418C29F870996123528E163BED5F1215D",
+      "after": "7E2ABE76176B834AA49909DF0355A25A99E834BF51E246358A0AC44DE2F6C563",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wood_Kweebec.json"
+    },
+    {
+      "before": "B3123A5247DC6FA3AA5FF19114B5F1DD319D97365D81AA571FED655471691B2D",
+      "after": "E0347015435D2F9BA8252ECBE1C8D0480BCB03C68C3C971342F765B2A48F85E1",
+      "entry": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wood_Rotten.json"
+    },
+    {
+      "before": "55AEDCFCA75BE8CA88C8DB9875D36E2650B408A2CF77E8E5E19C227854D582E9",
+      "after": "E9CA366075F50E7DFD72E83BE1E672FD68592B6C01915118FEDD5B26000097E1",
+      "entry": "Server/Models/RPG/RPG_Healing_Stream.json"
+    }
+  ],
+  "internalIdentityPreserved": true,
+  "liveDeploymentPerformed": false
+}

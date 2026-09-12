@@ -24,6 +24,17 @@ public final class HealingParticleVisuals {
     public static final String ASSET_ID="Beam_Heal_Green2";
     public static final String MODEL_ID="RPG_Healing_Stream";
     public static final String RECIPIENT_EFFECT="RPG_Healing_Recipient";
+    private static final Map<String,String> STAFF_EFFECTS=loadStaffEffects();
+    public static String staffEffect(String itemId){return STAFF_EFFECTS.get(itemId);}
+    private static Map<String,String> loadStaffEffects(){
+        try(var input=HealingParticleVisuals.class.getResourceAsStream("/rpg/presentation/staff-heads-ag.json")){
+            if(input==null)throw new IllegalStateException("HEAL_STAFF_MANIFEST_MISSING");
+            var json=com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(input,java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+            var result=new HashMap<String,String>();
+            json.entrySet().forEach(e->result.put(e.getKey(),"RPG_Healing_Staff_"+e.getValue().getAsJsonObject().get("node").getAsString()));
+            return Map.copyOf(result);
+        }catch(java.io.IOException failure){throw new IllegalStateException("HEAL_STAFF_MANIFEST_READ",failure);}
+    }
     public static final int MAX_ROOTS=512,MAX_SEGMENTS=6;
     private final Map<String,Root> roots=new HashMap<>();
     private final Map<String,Job> pending=new HashMap<>();
@@ -31,7 +42,7 @@ public final class HealingParticleVisuals {
         final UUID owner; final Store<EntityStore> store;
         final Map<String,Ref<EntityStore>> carriers=new HashMap<>();
         final Set<UUID> recipients=new HashSet<>();
-        BiConsumer<String,Throwable> receipt; boolean updated;
+        BiConsumer<String,Throwable> receipt; boolean updated; String staffEffect;
         Root(UUID owner,Store<EntityStore> store){this.owner=owner;this.store=store;}
     }
     private record Job(Store<EntityStore> store,SkillExecutionContext context,List<TetherVisualSegment> frame,BiConsumer<String,Throwable> receipt){}
@@ -81,6 +92,13 @@ public final class HealingParticleVisuals {
             if(!effects.addEffect(ref,EntityEffect.getAssetMap().getAsset(RECIPIENT_EFFECT),.3f,OverlapBehavior.OVERWRITE,job.store))
                 throw new IllegalStateException("HEAL_RECIPIENT_PARTICLE_REJECTED");
         }
+        // Only an active Healing Beam frame owns this short cosmetic lease.
+        // Item assets no longer attach Staff_Bronze while merely holding a staff.
+        var hand=job.context.equipment()==null?null:job.context.equipment().mainHand();
+        String next=hand==null?null:staffEffect(hand.itemId());
+        var previous=root.staffEffect;root.staffEffect=next;
+        if(previous!=null&&!previous.equals(next))releaseStaff(root.store,root.owner,previous);
+        if(next!=null)renewStaff(root.store,root.owner,next);
         if(created)job.receipt.accept("HEAL_PARTICLE_STARTED",null);
         else if(!root.updated){root.updated=true;job.receipt.accept("HEAL_PARTICLE_UPDATED",null);}
     }
@@ -109,12 +127,25 @@ public final class HealingParticleVisuals {
         var effects=store.getComponent(ref,EffectControllerComponent.getComponentType());
         if(effects!=null)effects.removeEffect(ref,EntityEffect.getAssetMap().getIndex(RECIPIENT_EFFECT),store);
     }
+    private static void renewStaff(Store<EntityStore> store,UUID owner,String effect){
+        var ref=store.getExternalData().getRefFromUUID(owner);if(ref==null||!ref.isValid())return;
+        var effects=store.getComponent(ref,EffectControllerComponent.getComponentType());
+        if(effects!=null&&!effects.addEffect(ref,EntityEffect.getAssetMap().getAsset(effect),.3f,OverlapBehavior.OVERWRITE,store))
+            throw new IllegalStateException("HEAL_STAFF_PARTICLE_REJECTED");
+    }
+    private void releaseStaff(Store<EntityStore> store,UUID owner,String effect){
+        if(roots.values().stream().anyMatch(r->r.store==store&&r.owner.equals(owner)&&effect.equals(r.staffEffect)))return;
+        var ref=store.getExternalData().getRefFromUUID(owner);if(ref==null||!ref.isValid())return;
+        var effects=store.getComponent(ref,EffectControllerComponent.getComponentType());
+        if(effects!=null)effects.removeEffect(ref,EntityEffect.getAssetMap().getIndex(effect),store);
+    }
     public synchronized void remove(SkillExecutionContext c,CommandBuffer<EntityStore> buffer){if(c!=null)remove(c.skillInstanceId(),buffer);}
     private void remove(String key,CommandBuffer<EntityStore> buffer){
         pending.remove(key);var root=roots.remove(key);if(root==null)return;
         mutate(root.store,buffer,()->{synchronized(this){
             for(var ref:root.carriers.values())destroy(root.store,ref);
             for(var id:root.recipients)releaseRecipient(root.store,id);
+            if(root.staffEffect!=null)releaseStaff(root.store,root.owner,root.staffEffect);
             if(root.receipt!=null)root.receipt.accept("HEAL_PARTICLE_REMOVED",null);
         }});
     }
@@ -138,7 +169,8 @@ public final class HealingParticleVisuals {
             processing.accept(b->{v.present(store,b,c,frame,0,receipt);if(!v.roots.isEmpty())throw new IllegalStateException("PARTICLE_EARLY_MUTATION");});
             if(!failures.isEmpty()||!events.contains("HEAL_PARTICLE_STARTED"))throw new IllegalStateException("PARTICLE_CREATE:"+failures);
             var ref=v.roots.get(c.skillInstanceId()).carriers.get("audit");var model=store.getComponent(ref,ModelComponent.getComponentType());
-            if(model==null||!ASSET_ID.equals(model.getModel().getParticles()[0].getSystemId())||store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())==null)
+            if(model==null||!"Items/Projectiles/Projectile_default.png".equals(model.getModel().toPacket().texture)
+                    ||!ASSET_ID.equals(model.getModel().getParticles()[0].getSystemId())||store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())==null)
                 throw new IllegalStateException("PARTICLE_MODEL_CONTRACT");
             processing.accept(b->v.present(store,b,c,frame,.1,receipt));
             if(!failures.isEmpty()||v.roots.get(c.skillInstanceId()).carriers.get("audit")!=ref||store.getComponent(ref,ModelComponent.getComponentType())!=model)
@@ -162,6 +194,19 @@ public final class HealingParticleVisuals {
             if(!effectController.hasEffect(index))throw new IllegalStateException("PARTICLE_OTHER_ROOT_CLEARED");
             processing.accept(b->v.remove(second,b));
             if(effectController.hasEffect(index)||!v.roots.isEmpty())throw new IllegalStateException("PARTICLE_RECIPIENT_ORPHAN");
+            var caster=store.getExternalData().getRefFromUUID(c.request().actorId());
+            var casterEffects=new EffectControllerComponent();
+            store.addComponent(caster,EffectControllerComponent.getComponentType(),casterEffects);
+            var equipment=new com.inigmasgames.hytalerpg.execution.SkillExecutionPort.Equipment(
+                    new com.inigmasgames.hytalerpg.execution.SkillExecutionPort.Item("Weapon_Staff_Bronze","STAFF",null),null);
+            var staffContext=new SkillExecutionContext(c.request(),c.rootCastId(),c.skillInstanceId(),c.profile(),c.compiledPlan(),c.snapshot(),equipment);
+            int staffIndex=EntityEffect.getAssetMap().getIndex(staffEffect("Weapon_Staff_Bronze"));
+            if(casterEffects.hasEffect(staffIndex))throw new IllegalStateException("STAFF_EFFECT_BEFORE_CHANNEL");
+            processing.accept(b->v.present(store,b,staffContext,targetFrame,.4,receipt));
+            if(!failures.isEmpty()||!casterEffects.hasEffect(staffIndex))throw new IllegalStateException("STAFF_EFFECT_NOT_ATTACHED:"+failures);
+            processing.accept(b->v.remove(staffContext,b));
+            if(casterEffects.hasEffect(staffIndex))throw new IllegalStateException("STAFF_EFFECT_ORPHAN");
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_STAFF_NATIVE result=PASS channelOnly=true removed=true connectedProof=false");
             com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_PARTICLE_NATIVE_INTEGRATION result=PASS asset=Beam_Heal_Green2 create=true persistentModel=true update=true remove=true sameBufferCancel=true recipientAttached=true sharedRecipientCleanup=true connectedProof=false");
         }finally{v.cancel(c.request().actorId(),null);destroy(store,recipientRef);}
     }
