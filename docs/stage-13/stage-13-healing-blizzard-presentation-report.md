@@ -1,6 +1,12 @@
 # R032-AA — Healing Beam presentation and falling Blizzard
 
-**NOT DEPLOYED.** Implemented and packaged as a test candidate; **not connected-verified** and **not a fully passing release gate**.
+**DEPLOYED — owner-authorized test build, 2026-09-12 13:47:29 UTC.** The owner's subsequent instruction, “Always deploy a new build!”, supersedes this task's initial package-only restriction. The exact packaged AA JAR was installed in `Hytale/data/pre-release/Saves/RPG/mods/HytaleRPG-0.0.25.jar`; deployed and artifact SHA-256 both equal `C39517031B70B77241EC0FDF676C6679F74DF09F8EE1945CB8FA784DC97E3588`.
+
+The complete stopped save (487 files, including previous RPG JAR and mod data) was backed up and hash-verified under `evidence/stage-13/cohort-aa/before/save/20260912T134723Z` (local, Git-ignored). All 486 non-target files remained unchanged. Other mods, saves and traces were not modified. See [deployment receipt](../../evidence/stage-13/cohort-aa/deployment.json).
+
+Current status: **IMPLEMENTED / PACKAGED / DEPLOYED; CONNECTED-VERIFIED = false; live startup confirmation pending owner launch.** The one known compression-ratio test failure and native presentation capability gaps remain unresolved. Installation is not connected evidence.
+
+The sections below retain the original package-time findings and package-only status as historical evidence; the deployment update above supersedes their deployment restrictions and references to Z as the currently installed JAR.
 
 Date: 2026-09-12. Branch: `RPG`. Cumulative baseline: `eea0fa128053300187815bff8ae70bfbd30e3f33` (R032-Z), retaining R032-Y trace-storage hardening. Implementation commit is the commit introducing this report; its exact SHA is recorded in the companion `stage-13-healing-blizzard-checkpoint.md` after commit creation.
 

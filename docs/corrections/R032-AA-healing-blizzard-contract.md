@@ -17,5 +17,7 @@ The owner's clarification supersedes BL-004's loop requirement: use only
 Healing Beam gameplay and all existing persistence contracts remain unchanged.
 Native feedback capability gaps must be reported, not approximated as proven.
 
-This cohort is package-only: **NOT DEPLOYED**. Connected rendering, audio,
+Initial authorization was package-only. The subsequent owner instruction
+“Always deploy a new build!” supersedes that restriction; AA was deployed
+on 2026-09-12 after a verified stopped-save backup. Connected rendering, audio,
 collision appearance and cleanup remain owner QA requirements.
