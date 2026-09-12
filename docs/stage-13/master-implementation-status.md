@@ -2,6 +2,8 @@
 
 ## Read this first
 
+**2026-09-12 latest:** [R032-AF Healing Beam appearance report](stage-13-presentation-af-report.md) supersedes AE's Beam appearance choice. AE connected logs prove four native create/update/remove cycles, but the screenshot rejects the broad `Basic` ribbons. AF selects the existing green `RPG_Healing` trail with native width multiplier 0.025; gameplay and AE's lifecycle/HUD are unchanged. **Deployed**, 2,238 retained tests pass; corrected connected appearance remains unverified.
+
 **2026-09-12 current correction:** [R032-AE report and connected checklist](stage-13-presentation-ae-report.md). `HyARPG.jar` is deployed to the actual pre-release RPG world, with save/rollback and owner icons preserved. Healing Beam's processing-phase ECS mutation is corrected without changing `Basic`; cooldown HUD adds a full-face radial, countdown and separate low-Mana feedback without changing Blizzard timing. 2,237 retained tests pass, including the current trace fixtures, plus installed-byte isolated native smoke. **Connected rendering is unverified.** Earlier no-deployment statements and filenames below are historical; unrelated stage/performance gates remain at their existing evidence status.
 
 **2026-09-11 deployment follow-up:** The owner subsequently authorized deploying R032-V for testing. The exact candidate is installed; full pre-V save/mod backup verified, save data unchanged. See the [deployment receipt and QA report](stage-13-support-tether-report.md). Earlier no-deployment statements are historical. Connected acceptance and formal performance remain outstanding.

@@ -37,8 +37,11 @@ class Stage13PresentationABTest {
         assertNotEquals(first.get(3),reversed.get(3));
         for(int i=1;i<ElasticBeamTether.PIECES;i++)assertTrue(reversed.get(i).subtract(ElasticBeamTether.linear(new Vec3(-2,0,0),new Vec3(4,0,0),i/(double)ElasticBeamTether.PIECES)).length()<=1.35+1e-9);
     }
-    @Test void healingTetherUsesTheShippedBasicBeamAfterConnectedCustomTextureFailure() throws Exception {
-        assertEquals("Basic",NativeHealingBeamVisuals.ASSET_ID);
+    @Test void healingTetherUsesNarrowDedicatedTrailAfterConnectedBasicRenderingFailure() throws Exception {
+        assertEquals("RPG_Healing",NativeHealingBeamVisuals.ASSET_ID);
+        assertEquals(.025f,NativeHealingBeamVisuals.WIDTH_SCALE);
+        var asset=com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(java.nio.file.Path.of("src/main/resources/Server/Entity/Beams/RPG_Healing.json"))).getAsJsonObject();
+        assertEquals("Trails/Void_Green.png",asset.get("TexturePath").getAsString());
         var source=java.nio.file.Files.readString(java.nio.file.Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
         assertFalse(source.contains("spawnParticleEffect(\"Beam_Heal_Green\""));assertTrue(source.contains("healingBeamVisuals.present"));
     }

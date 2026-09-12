@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:55:53.876Z" hostname="GRAHAM" time="0.093">
+  <properties/>
+  <testcase name="deathLogoutAndWorldDrainClearScheduledBatchesAndPendingOnlyRoots()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.021"/>
+  <testcase name="invalidLaterOriginOrEquipmentCancelsRemainingBatchesWithoutRefundOrReplay()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.006"/>
+  <testcase name="skillDelayMovesBarrageEpochButDoesNotAlterItsSpacingOrPayAgain()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.007"/>
+  <testcase name="volleyForkCombinationReservesWholeBatchesAndNeverReplenishesPierce()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.008"/>
+  <testcase name="echoVolleyHasSixCarriersAndExclusiveBarrageIsRejectedByCompiler()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.007"/>
+  <testcase name="volleySpreadPreservesElevationAndSharesSnapshotWithoutExtraPerProjectilePayment()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.006"/>
+  <testcase name="barrageVolleyHomingAndPotencyCreateNinePaidOnceShotsAtAuthoredOffsets()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.007"/>
+  <testcase name="fullNineShotCapacityIsRejectedBeforeAnyResourceOrCooldownCommit()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.018"/>
+  <testcase name="lateWorldTickDrainsOnlyTheTwoDueBatchesAndCannotRecursivelyRepeat()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.007"/>
+  <testcase name="batchPromisesSurviveEarlyPrimaryTerminationAndAreFullyDrained()" classname="com.inigmasgames.hytalerpg.Stage07MultiplicityTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

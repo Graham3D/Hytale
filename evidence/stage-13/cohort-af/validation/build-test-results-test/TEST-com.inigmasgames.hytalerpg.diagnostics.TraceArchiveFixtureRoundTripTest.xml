@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveFixtureRoundTripTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:56:48.800Z" hostname="GRAHAM" time="0.232">
+  <properties/>
+  <testcase name="suppliedSkillAndUiFixturesRoundTripByteForByteWithSubstantialCompression()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveFixtureRoundTripTest" time="0.232"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

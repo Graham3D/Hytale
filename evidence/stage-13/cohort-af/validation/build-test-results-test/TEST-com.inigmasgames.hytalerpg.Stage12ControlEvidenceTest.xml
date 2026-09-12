@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:56:10.424Z" hostname="GRAHAM" time="0.003">
+  <properties/>
+  <testcase name="[1] -1.0" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.001"/>
+  <testcase name="[2] 0.0" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="[3] 0.251" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="[4] NaN" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="[5] Infinity" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="slowRequiresStrongerUnmaskedNativeEffect()" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="[1] -1.0" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="[2] 1.01" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="[3] NaN" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="[4] Infinity" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="nativeImmobilizationQualifiesOnlyWhenNew()" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="fearRejectsTowardSidewaysVerticalAndTeleport()" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <testcase name="fearRequiresActualPositionChangeNotMerelyARequest()" classname="com.inigmasgames.hytalerpg.Stage12ControlEvidenceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

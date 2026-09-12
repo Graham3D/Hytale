@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:56:43.765Z" hostname="GRAHAM" time="0.026">
+  <properties/>
+  <testcase name="depletedFixtureAndNativeFloatCreditUseObservedDeltas()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="missingHealthCannotBeReplacedByReportedDamageAmount()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="sameRootCannotRecoverAgainForAnotherVictimOrDamageComponent()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="rollingWindowIsNotALifetimeHitCount()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.001"/>
+  <testcase name="finisherConsumesAtRealServiceReleaseEvenOnMiss()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.004"/>
+  <testcase name="repeatedReleaseSharesResolvedScalarWithoutConsumingAnotherToken()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.001"/>
+  <testcase name="irreversibleDispatchFailureConsumesTokenAndRetainsPayment()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.004"/>
+  <testcase name="partialRecoveryFailureCannotRetryTheFirstWrite()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.002"/>
+  <testcase name="rejectedPaymentDoesNotConsumeFinisher()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.004"/>
+  <testcase name="backwardsOrNonfiniteNativeClockIsRejected()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="newRootHasIndependentRecoveryIdentity()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="[1] false, 4" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.002"/>
+  <testcase name="[2] true, 12" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.001"/>
+  <testcase name="[1] 100, 100, false, true" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.001"/>
+  <testcase name="[2] 100, 90, true, true" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="[3] 100, 90, false, false" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="[4] 0, 0, false, true" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="[5] 100, -1, false, true" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="delayedReleaseConsumesOnReleaseRatherThanCommit()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.004"/>
+  <testcase name="threeRootsWithinInclusiveFourSecondsGrantOnePersistentToken()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="ownerAndTerminalCleanupSeparateComboState()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="tokenDoesNotBankExtraTokensFromHitsWhileReady()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

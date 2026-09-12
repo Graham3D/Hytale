@@ -1,0 +1,170 @@
+{
+  "baseline": "R032-AE",
+  "skillTraceSha256": "6985E4EAD644BBCEF1355AEE4349C7D28F33265B567453F632BA7C82D1E16791",
+  "events": [
+    {
+      "timestamp": "2026-09-12T17:48:10.701467400Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "f0e4a3c3-c2d4-4d4a-8b2b-9a42dfd1c0b7",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-af7209e1-976a-48d8-b94b-26fec1b3e077",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-1-f0e4a3c3",
+        "result": "NATIVE_BEAM_STARTED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:10.755720200Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "f0e4a3c3-c2d4-4d4a-8b2b-9a42dfd1c0b7",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-af7209e1-976a-48d8-b94b-26fec1b3e077",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-1-f0e4a3c3",
+        "result": "NATIVE_BEAM_UPDATED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:13.088059300Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "f0e4a3c3-c2d4-4d4a-8b2b-9a42dfd1c0b7",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-af7209e1-976a-48d8-b94b-26fec1b3e077",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-1-f0e4a3c3",
+        "result": "NATIVE_BEAM_REMOVED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:13.656055300Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "8be0809e-7067-47fc-a2d5-7d3bf866c14d",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-7b221167-fb68-483d-8bfd-2f5484923da6",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-2-8be0809e",
+        "result": "NATIVE_BEAM_STARTED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:13.719605200Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "8be0809e-7067-47fc-a2d5-7d3bf866c14d",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-7b221167-fb68-483d-8bfd-2f5484923da6",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-2-8be0809e",
+        "result": "NATIVE_BEAM_UPDATED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:14.186993300Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "8be0809e-7067-47fc-a2d5-7d3bf866c14d",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-7b221167-fb68-483d-8bfd-2f5484923da6",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-2-8be0809e",
+        "result": "NATIVE_BEAM_REMOVED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:14.921458600Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "513a821e-122b-45c3-8c9b-e917aabaddf9",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-9e40c4e9-7939-4847-b210-13864d376b1a",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-3-513a821e",
+        "result": "NATIVE_BEAM_STARTED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:14.987001200Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "513a821e-122b-45c3-8c9b-e917aabaddf9",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-9e40c4e9-7939-4847-b210-13864d376b1a",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-3-513a821e",
+        "result": "NATIVE_BEAM_UPDATED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:17.287638700Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "513a821e-122b-45c3-8c9b-e917aabaddf9",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-9e40c4e9-7939-4847-b210-13864d376b1a",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-3-513a821e",
+        "result": "NATIVE_BEAM_REMOVED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:25.157739400Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "480e8b01-81a1-4828-9c77-45553e9bd15e",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-cc73bd25-e2f1-4cc6-89ae-9c0045a3ae82",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-5-480e8b01",
+        "result": "NATIVE_BEAM_STARTED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:25.222699800Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "480e8b01-81a1-4828-9c77-45553e9bd15e",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-cc73bd25-e2f1-4cc6-89ae-9c0045a3ae82",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-5-480e8b01",
+        "result": "NATIVE_BEAM_UPDATED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:48:26.123872300Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "480e8b01-81a1-4828-9c77-45553e9bd15e",
+      "details": {
+        "asset": "Basic",
+        "segments": 1,
+        "skillInstanceId": "activation-cc73bd25-e2f1-4cc6-89ae-9c0045a3ae82",
+        "stage": "COMMAND_BUFFER_CONSUMED",
+        "rootCastId": "input-5-480e8b01",
+        "result": "NATIVE_BEAM_REMOVED"
+      }
+    }
+  ],
+  "started": 4,
+  "updated": 4,
+  "removed": 4,
+  "failed": 0,
+  "ownerScreenshot": "codex-clipboard-d21db88a-5477-48a5-a31f-5eba09b59772.png",
+  "connectedEcsEvidence": true,
+  "appearance": "FAIL: oversized crossed ribbons",
+  "correctedClientAppearanceVerified": false
+}

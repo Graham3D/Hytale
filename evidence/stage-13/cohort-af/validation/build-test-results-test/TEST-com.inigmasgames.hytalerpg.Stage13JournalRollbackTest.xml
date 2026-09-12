@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13JournalRollbackTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:56:43.095Z" hostname="GRAHAM" time="0.085">
+  <properties/>
+  <testcase name="actualArchivedFRestoresItsPreWalCheckpointAfterCurrentJournalMutatesCopy()" classname="com.inigmasgames.hytalerpg.Stage13JournalRollbackTest" time="0.085"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

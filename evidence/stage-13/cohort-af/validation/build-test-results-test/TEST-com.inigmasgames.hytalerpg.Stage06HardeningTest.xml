@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage06HardeningTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:55:52.935Z" hostname="GRAHAM" time="0.194">
+  <properties/>
+  <testcase name="finiteFieldBudgetsRejectWithoutEvictionAndMalformedStartCannotLeakRoot()" classname="com.inigmasgames.hytalerpg.Stage06HardeningTest" time="0.014"/>
+  <testcase name="sharedRootSpawnBudgetAndDuplicateInstanceCannotBeBypassed()" classname="com.inigmasgames.hytalerpg.Stage06HardeningTest" time="0.01"/>
+  <testcase name="diagnosticSinkFailureCannotLeakFieldsOrPreventOtherOwnersCleanup()" classname="com.inigmasgames.hytalerpg.Stage06HardeningTest" time="0.01"/>
+  <testcase name="claimedReleaseIsInvalidatedByOwnerTeardownAndRejectsInvalidClock()" classname="com.inigmasgames.hytalerpg.Stage06HardeningTest" time="0.011"/>
+  <testcase name="ninetySixApexRootsAtMaximumOwnerDensityAndQueryBudgetExpireWithoutOrphans()" classname="com.inigmasgames.hytalerpg.Stage06HardeningTest" time="0.141"/>
+  <testcase name="templateDimensionsAreAuthoritativeAndWarningIsNotOnlyAColorChange()" classname="com.inigmasgames.hytalerpg.Stage06HardeningTest" time="0.005"/>
+  <system-out><![CDATA[STAGE06_LOAD {"roots":96,"owners":12,"targetsPerQuery":256,"simulationSeconds":8.5,"nativeClient":false,"hits":147456,"queries":864,"presentationCalls":7872,"traceCalls":147648,"elapsedMillis":129.135,"retainedFields":0,"retainedRoots":0}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

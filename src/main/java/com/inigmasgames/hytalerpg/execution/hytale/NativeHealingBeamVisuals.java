@@ -22,11 +22,12 @@ import org.joml.Vector3d;
 
 /** Persistent native-beam owner. Every spawned entity is non-serialized and removed with its root. */
 public final class NativeHealingBeamVisuals {
-    /** Keep AD's asset fixed while correcting the connected ECS mutation failure. */
-    public static final String ASSET_ID="Basic";
+    /** AE connected evidence proved ECS creation/update/removal. Use the dedicated magical trail now. */
+    public static final String ASSET_ID="RPG_Healing";
+    /** Native endpoint width multiplier, not a claimed world-space metre measurement. */
+    public static final float WIDTH_SCALE=.025f;
     public static final int MAX_LOGICAL_SEGMENTS=6;
     private static final int MAX_ROOTS=512;
-    private static final float SCALE=.25f;
     private final Map<String,RootVisual> roots=new HashMap<>();
     private final Map<String,FrameJob> pending=new HashMap<>();
 
@@ -130,7 +131,7 @@ public final class NativeHealingBeamVisuals {
         }
         void remove(Store<EntityStore> store){for(var ref:pieces)if(ref!=null&&ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);pieces.clear();}
         private static Ref<EntityStore> spawn(Store<EntityStore> store,int beamIndex,Vec3 from,Vec3 to){
-            return BeamComponent.spawn(store,vector(from),AttachedBeam.toPosition(beamIndex,SCALE,SCALE,null,vector(to)));
+            return BeamComponent.spawn(store,vector(from),attachment(beamIndex,to));
         }
         private static void update(Store<EntityStore> store,Ref<EntityStore> ref,int beamIndex,Vec3 from,Vec3 to){
             if(ref==null||!ref.isValid())throw new IllegalStateException("HEALING_BEAM_VISUAL_ENTITY_INVALID");
@@ -138,8 +139,11 @@ public final class NativeHealingBeamVisuals {
             var beams=store.getComponent(ref,BeamComponent.getComponentType());
             if(transform==null||beams==null)throw new IllegalStateException("HEALING_BEAM_VISUAL_COMPONENT_MISSING");
             transform.setPosition(vector(from));
-            beams.set(List.of(AttachedBeam.toPosition(beamIndex,SCALE,SCALE,null,vector(to))));
+            beams.set(List.of(attachment(beamIndex,to)));
         }
+    }
+    public static AttachedBeam attachment(int beamIndex,Vec3 target){
+        return AttachedBeam.toPosition(beamIndex,WIDTH_SCALE,WIDTH_SCALE,null,vector(target));
     }
     private static Vector3d vector(Vec3 value){return new Vector3d(value.x(),value.y(),value.z());}
 
@@ -169,6 +173,11 @@ public final class NativeHealingBeamVisuals {
             var root=visuals.roots.get(context.skillInstanceId());var refs=List.copyOf(root.segments.get("primary").pieces);
             for(var ref:refs)if(!ref.isValid()||store.getComponent(ref,BeamComponent.getComponentType())==null
                     ||store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())==null)throw new IllegalStateException("BEAM_NOT_INSERTED");
+            for(var ref:refs){
+                var beam=store.getComponent(ref,BeamComponent.getComponentType()).getBeams().getFirst();
+                if(beam.beamIndex()!=Beam.getAssetMap().getIndex(ASSET_ID)||beam.sourceScale()!=WIDTH_SCALE||beam.targetScale()!=WIDTH_SCALE)
+                    throw new IllegalStateException("BEAM_APPEARANCE_CONTRACT");
+            }
             var transform=store.getComponent(refs.getFirst(),TransformComponent.getComponentType());
             processing.accept(buffer->visuals.present(store,buffer,context,frame.apply(new Vec3(1,203,0),new Vec3(5,203,0)),.1,receipt));
             if(!failures.isEmpty()||!events.contains("NATIVE_BEAM_UPDATED")||!refs.equals(root.segments.get("primary").pieces)
@@ -179,7 +188,7 @@ public final class NativeHealingBeamVisuals {
             int receipts=events.size();
             processing.accept(buffer->{visuals.present(store,buffer,context,frame.apply(new Vec3(0,202,0),new Vec3(4,202,0)),.2,receipt);visuals.remove(context,buffer);});
             if(visuals.rootCount()!=0||!visuals.pending.isEmpty()||events.size()!=receipts)throw new IllegalStateException("BEAM_CANCELLED_FRAME_RECREATED");
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_BEAM_NATIVE_INTEGRATION result=PASS asset=Basic oldProcessingGuard=true create=true update=true remove=true sameBufferCancel=true persistentRefs=true connectedProof=false");
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_BEAM_NATIVE_INTEGRATION result=PASS asset=%s widthScale=%s oldProcessingGuard=true create=true update=true remove=true sameBufferCancel=true persistentRefs=true connectedProof=false",ASSET_ID,WIDTH_SCALE);
         }finally{visuals.cancel(context.request().actorId(),null);}
     }
 }

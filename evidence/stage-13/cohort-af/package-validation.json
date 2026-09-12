@@ -1,0 +1,80 @@
+{
+  "cohort": "AF",
+  "startingHead": "bc1bd0feac70780101bc2a1dbb042f775b9f8b47",
+  "builtAtUtc": "2026-09-12T17:59:50.1053504Z",
+  "suites": [
+    {
+      "failures": 0,
+      "errors": 0,
+      "suite": "build/test-results/test",
+      "tests": 2162,
+      "skipped": 0
+    },
+    {
+      "failures": 0,
+      "errors": 0,
+      "suite": "build/test-results/nativeControlTest",
+      "tests": 55,
+      "skipped": 0
+    },
+    {
+      "failures": 0,
+      "errors": 0,
+      "suite": "canvas-ui/build/test-results/test",
+      "tests": 21,
+      "skipped": 0
+    }
+  ],
+  "fullValidationRuns": 1,
+  "fullValidationExitCode": 0,
+  "isolatedNativeBeamLifecycle": "PASS",
+  "connectedVerified": false,
+  "jarHashes": {
+    "CanvasUI-0.1.0.jar": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6",
+    "HyARPG.jar": "1C485513F33E760EA3DE1AC8C52CD597D9CC54EBD2EF7B3C0C35C6922DA34134",
+    "HYTALEDEVLIB-0.5.0.jar": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+  },
+  "archiveSha256": "EEDD591FF54763F6B0259AF33A2D440C875A58ED0EEB2B667D925BD115EF2183",
+  "archiveEntriesVerified": true,
+  "binaryRollback": "AE -> AF -> AE PASS",
+  "unchangedEntriesPreserved": true,
+  "entryDifferences": [
+    {
+      "before": "FF2A5F061B3F6317539F243B6FD8A006BC4488467A856ADF6E372150F61C96DB",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port$1.class",
+      "after": "8AC11C23197287EFDA65B6953610A0B934D74EE8B74A84C989BDC8E11A19810B"
+    },
+    {
+      "before": "88D94C967F04E31F6DEA53014675047F26E5D79FEB620A595BB295F2BC5D7C5C",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/NativeHealingBeamVisuals$FrameJob.class",
+      "after": "5FE91DA08CE41BE0273E5E3C9C1F7D27835F8A6B453C13AC3D94A18FF3E232D0"
+    },
+    {
+      "before": "538999C91475F60442CD7374D86E4C5078E6BDA16F58C0A5AF4E607FE3C09C3E",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/NativeHealingBeamVisuals$RootVisual.class",
+      "after": "324D0214D1A4EF63413355892AB7D9CA9092B5F6BA4126D3767505949B02759E"
+    },
+    {
+      "before": "742C0E8D840FD375B4287907E285BD302D6122A69A9F09FA214997F8287132EB",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/NativeHealingBeamVisuals$Segment.class",
+      "after": "6DBD56102A0902616FDC144EEA5E56EBD5B6BA592DBCBDE68DC3600D45A92029"
+    },
+    {
+      "before": "87D0336BE4260D22506AEACE507E097A2C64ED71AD5D90E505A0EB31CE4C69B7",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/NativeHealingBeamVisuals.class",
+      "after": "D9AE4C0D63A815BC6C907505261E078FF8ED94162DD1089C8AA561E66C42DCAF"
+    },
+    {
+      "before": "DD0E57ABC400524516D7CA020477F52AD4AB8D0E3B51078367A19D63753180AF",
+      "entry": "com/inigmasgames/hytalerpg/input/NativeSupportTetherAudit.class",
+      "after": "CD83E72D670438498FAF2E77C5B00A30FAB7181C551FAF172D127D02D9E97457"
+    },
+    {
+      "before": "71E1C7A4F7246957B65B03E18938E238A5291BE8DCF32DDA6479F2F12C11ACDB",
+      "entry": "com/inigmasgames/hytalerpg/ui/hud/RpgHud.class",
+      "after": "87D92EA7DC2B525708EFDEACAAB9DF28191237143D57F7A239FCB4AADBAD1B4C"
+    }
+  ],
+  "internalIdentityPreserved": true,
+  "liveDeploymentPerformed": false
+}

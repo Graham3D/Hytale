@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage03PresentationTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:55:52.201Z" hostname="GRAHAM" time="0.084">
+  <properties/>
+  <testcase name="uiTraceFailureIsIsolatedFromCaller()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.006"/>
+  <testcase name="allocationSaveFailureRollsBackAttributeAndBothPointCounters()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.011"/>
+  <testcase name="noPointAndNegativeRequestsAreRejectedWithoutMutation()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.009"/>
+  <testcase name="uiOpenAdapterHonestlyReportsCommandOnlyOnInstalledBuild()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.003"/>
+  <testcase name="allNinetyEightXpTransitionsUseCanonicalRoundHalfUpToTenFormula()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.002"/>
+  <testcase name="characterProjectionContainsAllAttributesDerivedStatsAndNativePools()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.011"/>
+  <testcase name="projectionHasThreeLogicalSlotsAndReadsLiveResourcesInCanonicalOrder()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.01"/>
+  <testcase name="persistentIndicatorFollowsPendingPointsUntilFinalAllocation()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.013"/>
+  <testcase name="allocationConsumesPendingFirstAndIsRevisionChecked()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.005"/>
+  <testcase name="abilityActivationStopsTypedBeforeResourceOrCooldownMutation()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.009"/>
+  <testcase name="tenPipProjectionMatchesRequiredBoundaryFixtures()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.002"/>
+  <testcase name="installedAbilityActionsLeaveSignatureNativeAndMapOnlyTheTwoNativeRunePrimaries()" classname="com.inigmasgames.hytalerpg.Stage03PresentationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Sep 12, 2026 1:55:52 PM com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService trace
+INFO: RPG_UI_TRACE revision=R032 event=TEST player=83ea3038-9271-4483-a909-78e1d5b87725 correlation=correlation result=null jsonl=C:\Users\Zemio\AppData\Local\Temp\junit-1417562901171595582\not-a-directory\ui-trace.jsonl consoleRateLimited=true
+Sep 12, 2026 1:55:52 PM com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService logFailureOnce
+WARNING: RPG UI trace incomplete; inspect TRACE_GAP/metrics; gameplay active path=C:\Users\Zemio\AppData\Local\Temp\junit-1417562901171595582\not-a-directory\ui-trace.jsonl
+java.nio.file.FileAlreadyExistsException: C:\Users\Zemio\AppData\Local\Temp\junit-1417562901171595582\not-a-directory
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:87)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.createDirectory(WindowsFileSystemProvider.java:503)
+	at java.base/java.nio.file.Files.createDirectory(Files.java:647)
+	at java.base/java.nio.file.Files.createAndCheckIsDirectory(Files.java:734)
+	at java.base/java.nio.file.Files.createDirectories(Files.java:689)
+	at com.inigmasgames.hytalerpg.diagnostics.TraceSegmentWriter.<init>(TraceSegmentWriter.java:37)
+	at com.inigmasgames.hytalerpg.diagnostics.TraceSegmentWriter.<init>(TraceSegmentWriter.java:27)
+	at com.inigmasgames.hytalerpg.diagnostics.BoundedTraceWriter.writeFile(BoundedTraceWriter.java:75)
+	at com.inigmasgames.hytalerpg.diagnostics.BoundedTraceWriter.lambda$submit$0(BoundedTraceWriter.java:58)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+]]></system-err>
+</testsuite>

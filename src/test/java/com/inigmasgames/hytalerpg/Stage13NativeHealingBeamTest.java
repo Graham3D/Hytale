@@ -9,6 +9,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Installed-API construction check; connected rendering remains a separate evidence gate. */
 class Stage13NativeHealingBeamTest {
+    @Test void productionAppearanceUsesNarrowUniformNativeEndpointsAndDedicatedAsset(){
+        var target=new com.inigmasgames.hytalerpg.execution.math.Vec3(12,83,-54);
+        var beam=com.inigmasgames.hytalerpg.execution.hytale.NativeHealingBeamVisuals.attachment(7,target);
+        assertEquals("RPG_Healing",com.inigmasgames.hytalerpg.execution.hytale.NativeHealingBeamVisuals.ASSET_ID);
+        assertEquals(.025f,beam.sourceScale());assertEquals(beam.sourceScale(),beam.targetScale());
+        assertEquals(7,beam.beamIndex());assertNull(beam.targetEntity());assertNull(beam.sourceNode());
+        assertEquals(new Vector3d(12,83,-54),beam.targetPosition());
+        assertEquals(0,beam.sourceOffset().lengthSquared());assertEquals(0,beam.targetOffset().lengthSquared());
+    }
     @Test void installedNativeBeamAcceptsPersistentPositionAttachmentContract(){
         var target=new Vector3d(4,5,6);
         var attached=AttachedBeam.toPosition(0,.25f,.25f,null,target);
