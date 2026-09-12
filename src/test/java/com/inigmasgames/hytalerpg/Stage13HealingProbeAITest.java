@@ -23,7 +23,7 @@ class Stage13HealingProbeAITest {
         assertFalse(HealingProbePolicy.allows(null,root,live));
     }
     @Test void boundedModesAndFiniteWatchdog(){
-        assertEquals(8,HealingProbePolicy.Mode.values().length);
+        assertEquals(9,HealingProbePolicy.Mode.values().length); // Eight retained controls plus read-only CHANNEL observer.
         for(var mode:HealingProbePolicy.Mode.values())assertEquals(mode,HealingProbePolicy.mode(mode.name().toLowerCase(Locale.ROOT).replace('_','-')));
         assertThrows(IllegalArgumentException.class,()->HealingProbePolicy.mode("live"));
         assertEquals(10,HealingProbePolicy.RUN_SECONDS);assertEquals(12,HealingProbePolicy.EFFECT_SECONDS);

@@ -6,10 +6,11 @@ import java.util.Locale;
 /** Pure bounds/scope policy for the explicitly opt-in disposable-world diagnostic. */
 public final class HealingProbePolicy {
     public static final double RUN_SECONDS=10, EFFECT_SECONDS=12, SAMPLE_SECONDS=1;
+    public static double duration(Mode mode){return mode==Mode.CHANNEL?30:RUN_SECONDS;}
     public static final int MAX_WORLDS=4, MAX_TRANSITIONS=128;
     public static boolean liveTestBuild(){
         try(var stream=HealingProbePolicy.class.getResourceAsStream("/healing-probe-live-test.txt")){
-            return stream!=null&&new String(stream.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim().equals("R032-AJ-LIVE");
+            return stream!=null&&new String(stream.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim().equals("R032-AK");
         }catch(java.io.IOException error){throw new IllegalStateException("LIVE_PROBE_MARKER_UNREADABLE",error);}
     }
     public static void validateLiveTarget(Mode mode,String target){
@@ -19,7 +20,7 @@ public final class HealingProbePolicy {
         }
         validateTarget(mode,target);
     }
-    public enum Mode { WORLD, EMPTY, VISIBLE, RECIPIENT_ONCE, RECIPIENT_OVERWRITE, STAFF_ONCE, STAFF_OVERWRITE, BEAM }
+    public enum Mode { WORLD, EMPTY, VISIBLE, RECIPIENT_ONCE, RECIPIENT_OVERWRITE, STAFF_ONCE, STAFF_OVERWRITE, BEAM, CHANNEL }
     public static boolean needsRecipient(Mode mode){return mode==Mode.RECIPIENT_ONCE||mode==Mode.RECIPIENT_OVERWRITE;}
     public static void validateTarget(Mode mode,String target){
         if(target.equals("native"))return; // Legacy syntax remains valid; no NPC for standalone modes.

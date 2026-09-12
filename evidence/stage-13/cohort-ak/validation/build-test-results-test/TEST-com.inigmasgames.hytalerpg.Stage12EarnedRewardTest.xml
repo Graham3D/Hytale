@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" tests="42" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:05:45.672Z" hostname="GRAHAM" time="0.836">
+  <properties/>
+  <testcase name="uncertainExceptionAfterPlayerReplacementDoesNotPayAgainOnRestart()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.026"/>
+  <testcase name="duplicateDoesNotWriteThePlayerAgain()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.017"/>
+  <testcase name="oversizedRewardFileFailsBeforeParsing()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.005"/>
+  <testcase name="schemaSevenMigrationPreservesEveryExistingProgressFieldAndImmutableCheckpoint()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.029"/>
+  <testcase name="eventTextCannotEscapeTheHashedReceiptDirectory()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.02"/>
+  <testcase name="inconsistentLegacyXpLevelRequiresReviewWithoutAutomaticReset()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.009"/>
+  <testcase name="sameSessionRecoversBeforeOtherMutationsCanAlterPendingPointSnapshot()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.031"/>
+  <testcase name="checkedMasteryOverflowLeavesNoIntent()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.009"/>
+  <testcase name="awardPreservesOwnershipTopologyCooldownDebtSupportAndAttributesWithoutLoadoutNotifications()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.038"/>
+  <testcase name="rewardStoreMustBeExplicitAndConfiguredOnlyOnceBeforeLoad()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.005"/>
+  <testcase name="currentSchemaMissingAnyRewardFieldIsRejectedNotInitialized()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.004"/>
+  <testcase name="multiLevelAwardIsOneAtomicTransaction()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.02"/>
+  <testcase name="concurrentDuplicateCallsSerializeAtExistingAuthority()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.045"/>
+  <testcase name="failedPlayerWriteFreezesHolderUntilRestartThenReplaysDurableIntent()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.019"/>
+  <testcase name="checkedInsightOverflowLeavesNoIntent()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.008"/>
+  <testcase name="insightOnlyAwardUsesSameCheckpoint()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.02"/>
+  <testcase name="corruptedHeadFailsClosed()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.02"/>
+  <testcase name="stableEventCanRewardDifferentEligiblePlayersExactlyOnceEach()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.036"/>
+  <testcase name="masteryOnlyAwardDoesNotInventCharacterXp()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.023"/>
+  <testcase name="independentStaleAuthorityCannotOverwriteNewerCommittedPlayer()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.021"/>
+  <testcase name="alteredPlayerWhilePendingFailsInsteadOfRecomputingReward()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.013"/>
+  <testcase name="capPreservesOverflowAndDoesNotGrantFurtherPoints()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.024"/>
+  <testcase name="corruptReceiptCannotBeTreatedAsUnseenEvent()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.022"/>
+  <testcase name="checkedPointOverflowLeavesNoIntent()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.008"/>
+  <testcase name="[1] AFTER_INTENT" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.025"/>
+  <testcase name="[2] AFTER_PLAYER" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.023"/>
+  <testcase name="[3] AFTER_RECEIPT" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.024"/>
+  <testcase name="[4] AFTER_HEAD" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.028"/>
+  <testcase name="[5] AFTER_CLEANUP" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.027"/>
+  <testcase name="orphanTemporaryFileIsNeverARewardIntent()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.021"/>
+  <testcase name="restoringOnlyOldPlayerFileCannotReplayOldOrNewReward()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.029"/>
+  <testcase name="checkedXpOverflowLeavesNoIntent()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.01"/>
+  <testcase name="auditPreservesRootSkillAndCorrelationWithNoFabricatedCombatEvents()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.023"/>
+  <testcase name="reusedEventWithChangedPayloadFailsInsteadOfAwardingDifference()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.021"/>
+  <testcase name="invalidPayloadsAndUnknownMasteryNeverCreatePending()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.003"/>
+  <testcase name="missingHeadWithAdvancedPlayerFailsClosed()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.021"/>
+  <testcase name="corruptedPendingIsNotDiscardedOrReplaced()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.008"/>
+  <testcase name="earnedThresholdAwardsFiveOfBothPointCountersAndSameAuthorityXp()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.02"/>
+  <testcase name="foreignPlayerPendingCannotBeApplied()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.011"/>
+  <testcase name="authorityWhichFailsToApplyCannotAdvanceTheReceiptHead()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.007"/>
+  <testcase name="duplicateReceiptSurvivesLaterAwardsAndRestart()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.054"/>
+  <testcase name="genericProgressMutationCannotForgeRewardCheckpoint()" classname="com.inigmasgames.hytalerpg.Stage12EarnedRewardTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

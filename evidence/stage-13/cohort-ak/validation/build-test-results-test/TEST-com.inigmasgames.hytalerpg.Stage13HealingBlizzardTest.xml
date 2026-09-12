@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13HealingBlizzardTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:06:07.415Z" hostname="GRAHAM" time="0.051">
+  <properties/>
+  <testcase name="roofFirstContactDeterminesImpactAndCannotReachFloor()" classname="com.inigmasgames.hytalerpg.Stage13HealingBlizzardTest" time="0.007"/>
+  <testcase name="elevenFallingCarriersImpactWithinThreeSecondsAndKeepRootHitGate()" classname="com.inigmasgames.hytalerpg.Stage13HealingBlizzardTest" time="0.007"/>
+  <testcase name="actualHealingAggregationIncludesPartialOverhealAndZeroWithoutChangingPulses()" classname="com.inigmasgames.hytalerpg.Stage13HealingBlizzardTest" time="0.002"/>
+  <testcase name="eachContinuationUsesItsActualSegmentEndpoints()" classname="com.inigmasgames.hytalerpg.Stage13HealingBlizzardTest" time="0.015"/>
+  <testcase name="nativeRotationMapsAuthoredForwardForCardinalsDiagonalsAndVerticalOffsets()" classname="com.inigmasgames.hytalerpg.Stage13HealingBlizzardTest" time="0.0"/>
+  <testcase name="visualWindowsIsolateRootsOwnersAndWorldsAndCanFlushOnTeardown()" classname="com.inigmasgames.hytalerpg.Stage13HealingBlizzardTest" time="0.0"/>
+  <testcase name="missingSurfaceAndExpiryNeverManufactureImpact()" classname="com.inigmasgames.hytalerpg.Stage13HealingBlizzardTest" time="0.013"/>
+  <testcase name="cancellationPreventsAllFutureImpacts()" classname="com.inigmasgames.hytalerpg.Stage13HealingBlizzardTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

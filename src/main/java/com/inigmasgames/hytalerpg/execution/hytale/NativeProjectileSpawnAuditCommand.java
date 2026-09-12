@@ -48,6 +48,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                 NativeBlizzardVisuals.audit(store,auditChunk,context);
                 NativeHealingBeamVisuals.audit(store,context);
                 HealingParticleVisuals.audit(store,context);
+                HealingPresentationProbe.auditChannel(store,context);
                 NativeManaReplicationAudit.audit(store);
                 if(Boolean.getBoolean("rpg.healingPresentationProbe"))HealingPresentationProbe.audit(store);
                 var nativeActor=actor;var ran=new AtomicBoolean();

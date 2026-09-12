@@ -1,5 +1,16 @@
 # Stage 13 — runtime completion and release hardening
 
+**2026-09-12: R032-AK is DEPLOYED — real Healing Beam channel observation checkpoint.**
+AJ-LIVE's eight controls are owner-confirmed visible; the complete connected trace review
+found no probe failures. Those client-only recipient/staff controls do not prove native
+production effect delivery. AK adds `/rpg-heal-probe channel none` to observe that actual
+path without changing the renderer or gameplay. See the [AK report](stage-13-healing-observer-ak-report.md)
+and [short connected checklist](healing-observer-ak-checklist.md). All 2,261 retained tests,
+final native smoke, packaging and rollback checks passed; 481 stopped-save files were
+backed up and only HyARPG.jar was replaced. AK live startup/rendering remains unverified.
+
+The entries below are historical checkpoints, not the currently installed revision.
+
 **2026-09-12: R032-AJ-LIVE is DEPLOYED to the normal RPG single-player mods folder.**
 This owner-authorized live diagnostic variant supersedes AJ's no-live-deployment restriction.
 See the [live-test report](stage-13-healing-probe-aj-live-report.md) and

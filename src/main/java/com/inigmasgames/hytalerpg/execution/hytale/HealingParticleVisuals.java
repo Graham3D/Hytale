@@ -62,7 +62,9 @@ public final class HealingParticleVisuals {
     }
     private synchronized void drain(String key,Store<EntityStore> store){
         var job=pending.get(key);if(job==null||job.store!=store)return;pending.remove(key);
+        HealingPresentationProbe.production("FRAME_REQUESTED",store,job.context.request().actorId(),key,Map.of(),Set.of(),null);
         try{apply(key,job);}catch(RuntimeException failure){
+            HealingPresentationProbe.production("FRAME_FAILED",store,job.context.request().actorId(),key,Map.of(),Set.of(),null);
             try{remove(key,null);}catch(RuntimeException cleanup){failure.addSuppressed(cleanup);}
             job.receipt.accept("HEAL_PARTICLE_FAILED",failure);
         }
@@ -99,6 +101,7 @@ public final class HealingParticleVisuals {
         var previous=root.staffEffect;root.staffEffect=next;
         if(previous!=null&&!previous.equals(next))releaseStaff(root.store,root.owner,previous);
         if(next!=null)renewStaff(root.store,root.owner,next);
+        HealingPresentationProbe.production("FRAME_READY",root.store,root.owner,key,root.carriers,root.recipients,root.staffEffect);
         if(created)job.receipt.accept("HEAL_PARTICLE_STARTED",null);
         else if(!root.updated){root.updated=true;job.receipt.accept("HEAL_PARTICLE_UPDATED",null);}
     }
@@ -150,6 +153,7 @@ public final class HealingParticleVisuals {
             for(var ref:root.carriers.values())destroy(root.store,ref);
             for(var id:root.recipients)releaseRecipient(root.store,id);
             if(root.staffEffect!=null)releaseStaff(root.store,root.owner,root.staffEffect);
+            HealingPresentationProbe.production("REMOVED",root.store,root.owner,key,root.carriers,root.recipients,root.staffEffect);
             if(root.receipt!=null)root.receipt.accept("HEAL_PARTICLE_REMOVED",null);
         }});
     }

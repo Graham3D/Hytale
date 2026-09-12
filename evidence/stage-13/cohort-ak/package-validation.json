@@ -1,0 +1,108 @@
+{
+  "cohort": "AK",
+  "startingHead": "8743f73dc2915f11b6770f5c9791b755dc67c4ff",
+  "builtAtUtc": "2026-09-12T22:09:25.2906479Z",
+  "suites": [
+    {
+      "skipped": 0,
+      "failures": 0,
+      "suite": "build/test-results/test",
+      "errors": 0,
+      "tests": 2185
+    },
+    {
+      "skipped": 0,
+      "failures": 0,
+      "suite": "build/test-results/nativeControlTest",
+      "errors": 0,
+      "tests": 55
+    },
+    {
+      "skipped": 0,
+      "failures": 0,
+      "suite": "canvas-ui/build/test-results/test",
+      "errors": 0,
+      "tests": 21
+    }
+  ],
+  "fullValidationRuns": 1,
+  "fullValidationExitCode": 0,
+  "initialFullRunFailures": 0,
+  "isolatedNativeParticleLifecycle": "PASS",
+  "visibilityGate": "A_CONNECTED_UNVERIFIED",
+  "laterGates": "B_C_D_E_DEFERRED",
+  "connectedVerified": false,
+  "jarHashes": {
+    "CanvasUI-0.1.0.jar": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6",
+    "HyARPG.jar": "3F0A570703F4BEE8C86773E09D1F5FC985A7FAFB6DD42AD0584DBC4AAF0A64AA",
+    "HYTALEDEVLIB-0.5.0.jar": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+  },
+  "archiveSha256": "5C377C74B18A47EFF888B9EC90C34BA6D2A5E2AF260F0992BD667C5E9EEE547B",
+  "archiveEntriesVerified": true,
+  "binaryRollback": "AJ-LIVE -> AK -> AJ-LIVE PASS",
+  "unchangedEntriesPreserved": true,
+  "entryDifferences": [
+    {
+      "before": "1B9160FC391531A9CD37BE7602E4C7C3FB2D8DF01E29952B26D2B3447FA3EC48",
+      "entry": "com/inigmasgames/hytalerpg/commands/HealingProbeCommand.class",
+      "after": "942CC1CA60387D8E61763C16521735C1071798AC7C28AD323C7A5D1722741186"
+    },
+    {
+      "before": "2B6F110BAC8F714ED0559B67DAD85D10A15E25D6B31CAA6026F4EC5D072180C5",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingParticleVisuals.class",
+      "after": "E28D6598DBCABE1EE11A9561B994815FBDB94508608097B1DD3071F173E17C5C"
+    },
+    {
+      "before": "19ECA62439A0C1C695C95ECF06575407B1444974C4F5DE150E986FC232880B8D",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$1.class",
+      "after": "6427C125AB446965C0FBFF3B9B05473B5BF9C33F1161194D9EBB341E345F1429"
+    },
+    {
+      "before": "7A435CDAD10800938D6CA61C3802DA689E816EC6D4AEE24E864A8BA81A5DF920",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$Observe.class",
+      "after": "DB90659A139AB75000EC23037AB1673567218BF4D1D583478AE63485EA5C459B"
+    },
+    {
+      "before": "AEBD8585C6D53AD38542D2F5CE5CE74FD61A55B734C1EEB2ECAF95558ACF7B17",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$Run.class",
+      "after": "BD4DA6550A8021F03E6CF1A609FC7EBBFD7AFFCCC40DF4C3CAF5851EA76AF608"
+    },
+    {
+      "before": "FC4CB6D80535C92F0A8D01D1E3C95C8BBA34C97323204A6036793E2CAA1E43BF",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$Tick.class",
+      "after": "2181BD743CDA37CBC85C5D2AF672DC0BBCB89AAB41008150DDBF2900327F5660"
+    },
+    {
+      "before": "0353F7C071DDF73C1A43D291E1E1CFDDE320FC71FCAF63D60FB890A30702C92A",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe.class",
+      "after": "C674DFF663E0CC448C6F094644C93B68A4B0D0EC9D8A7A5A2F3B8D0D12A2C944"
+    },
+    {
+      "before": "9A45564BF49BB158F3180C444C6656195E442766DE5C8977631C680055BCFF9E",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingProbePolicy$Mode.class",
+      "after": "4A263DE94D5E082F4A22157F6CAB5C6D27ABA093517BB9E685894CFA12CAF88D"
+    },
+    {
+      "before": "2EDCAD31D4CCE3BE29A6E85D8B9F397E5041FC8AF0106A60FD68C85D964A1E7E",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingProbePolicy.class",
+      "after": "566EEA5DC0666F742E24E9B95D9F43F49AD13DA93D8E52240721C67430774C3C"
+    },
+    {
+      "before": "33B4B2374C98E5DC3931AF29F307FCFBF3B910440363EF4D2F48C1818E2B8B0D",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/NativeProjectileSpawnAuditCommand.class",
+      "after": "2857A2CC6952974180A4615F72C01BAD5ACCD6D8A7D85F03EB3883C5AEB782D7"
+    },
+    {
+      "before": "E3ABD374901D64565030CDD0D9369987531F7D750369F533BDA2AFF257846B7A",
+      "entry": "com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class",
+      "after": "B0CA1677E3859BE60C0A41228845ECC3C86374B522DD64221C41C02DC06AE7CA"
+    },
+    {
+      "before": "26ADEECA72D27646D68A8D67282F9D40E4A9C388412E6E679222B8E0B488A669",
+      "entry": "healing-probe-live-test.txt",
+      "after": "0C54ED5E99CB0D55DACFBF0F0E2E0B33174802CEE551B4E4F8AE2C18DE7891B1"
+    }
+  ],
+  "internalIdentityPreserved": true,
+  "liveDeploymentPerformed": false
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:05:31.350Z" hostname="GRAHAM" time="0.004">
+  <properties/>
+  <testcase name="oneSecondTicksAndFinalRemainderIgnoreFrameRateAndNeverUseDirectCoefficient()" classname="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" time="0.001"/>
+  <testcase name="expiredPoisonCannotRejectAnotherCastersLivePackage()" classname="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" time="0.0"/>
+  <testcase name="nativeFailureCannotReplayPartialTickAndLongGapDropsCatchup()" classname="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" time="0.001"/>
+  <testcase name="poisonVictimCapKeepsStrongestPackagesDeterministically()" classname="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" time="0.0"/>
+  <testcase name="lateCapturedApplicationClockCannotMoveRefreshBackwards()" classname="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" time="0.0"/>
+  <testcase name="competingApplicationSettlesOneSecondTickBeforeFractionalEviction()" classname="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" time="0.001"/>
+  <testcase name="weakerRefreshCannotReduceBurnAndStrongerSnapshotDoesNotRewriteAccruedTime()" classname="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" time="0.0"/>
+  <testcase name="differentSkillsDoNotOverwriteBurnAndOwnerTeardownKeepsOtherSources()" classname="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" time="0.0"/>
+  <testcase name="poisonAddsWithoutRetroactiveStackDamageAndCapsSourceAtThree()" classname="com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

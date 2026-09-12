@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" tests="31" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:06:21.500Z" hostname="GRAHAM" time="0.129">
+  <properties/>
+  <testcase name="ungroundedOrOverRangeLeapCannotPassPreflight()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.001"/>
+  <testcase name="concentrationScalesTheRealMovementFootprintNotTravelDistance()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.003"/>
+  <testcase name="lowCeilingCanClampLegacyPounceWithoutInventingALandingHit()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.001"/>
+  <testcase name="voidDashRemainsNineMetersPointTwoFiveSecondsAndNoImmunity()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.0"/>
+  <testcase name="fullWidthBoundaryAndEndpointNeverGainAnExtraForwardRadius()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.001"/>
+  <testcase name="[1] dive_strike" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.004"/>
+  <testcase name="[2] jump_strike" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.004"/>
+  <testcase name="[3] charge" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.004"/>
+  <testcase name="[4] void_dash" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.004"/>
+  <testcase name="chargeImpactForceChangesKnockbackAndHitOnly()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.003"/>
+  <testcase name="guardCapabilityDoesNotGetConfusedWithAResolvedOrdinaryReaction()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.003"/>
+  <testcase name="installedGuardDataDistinguishesWeaponOverrideFromGenericWielding()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.007"/>
+  <testcase name="[1] dive_strike, 1.8, 2" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.001"/>
+  <testcase name="[2] jump_strike, 1.5, 2.2" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.0"/>
+  <testcase name="observedTravelCannotCreditTeleportOrUnconfirmedNativeWrite()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.0"/>
+  <testcase name="boundedSegmentsPreserveTheSameArcAcrossFrameSizes()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.001"/>
+  <testcase name="firstContactIsGeometricNotRegistryOrder()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.001"/>
+  <testcase name="[1] dive_strike, LONGSWORD, STAMINA, 8, 6, 1.15" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.005"/>
+  <testcase name="[2] jump_strike, SWORD, STAMINA, 12, 7, 1.4" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.003"/>
+  <testcase name="[3] charge, SPEAR, STAMINA, 14, 8, 1.5" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.003"/>
+  <testcase name="[4] void_dash, LONGSWORD, MANA, 12, 6, .65" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.004"/>
+  <testcase name="guardCannotBecomeATimedRpgReductionOrDrain()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.003"/>
+  <testcase name="chargeUsesDistanceOverTwentyNotFixedPointEight()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.001"/>
+  <testcase name="diagonalPathRetainsFullWidthRatherThanAnExpandedAxisAlignedSquare()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.0"/>
+  <testcase name="elevatedArcIsSweptRatherThanSkippingAnOverheadObstacle()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.0"/>
+  <testcase name="queryOverflowAndLifetimeLedgerOverflowAreExplicit()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.001"/>
+  <testcase name="crossingTheSameVictimAgainNeverChargesASecondHit()" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.0"/>
+  <testcase name="[1] NaN" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.0"/>
+  <testcase name="[2] Infinity" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.001"/>
+  <testcase name="[3] -0.1" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.0"/>
+  <testcase name="[4] 1.1" classname="com.inigmasgames.hytalerpg.Stage13MovementClosureTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

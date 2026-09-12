@@ -29,10 +29,12 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import org.joml.Vector3d;
 
-/** Gate A only. No combat, resource writes, packet spoofing, or production renderer switch.
+/** Gate A only. No combat/resource writes or production renderer switch.
+ * AJ live effects are explicitly client-only controls; AK CHANNEL observes native production, never sends effects.
  * Snapshot native viewer queues non-destructively and observe outbound packets before transport.
  * OUTBOUND_OBSERVED is deliberately not PACKET_SENT or CLIENT_RENDERED. */
 public final class HealingPresentationProbe implements AutoCloseable {
+    private static final Set<HealingPresentationProbe> observers=ConcurrentHashMap.newKeySet();
     private final RpgSkillTracer trace;
     private final ConcurrentMap<UUID,Run> runs=new ConcurrentHashMap<>();
     private final Path allowedRoot;
@@ -45,7 +47,10 @@ public final class HealingPresentationProbe implements AutoCloseable {
         final long started=System.nanoTime();final String requestedTarget;
         final Set<String> receipts=ConcurrentHashMap.newKeySet();
         final Map<Integer,String> watched=new ConcurrentHashMap<>();
+        final Map<Integer,Set<Integer>> expectedEffects=new ConcurrentHashMap<>();
         final AtomicLong packets=new AtomicLong(),componentUpdates=new AtomicLong();
+        final AtomicLong suppressedTransitions=new AtomicLong();
+        final Set<String> channels=new HashSet<>();
         Ref<EntityStore> target,carrier;String effect;Vec3 endpoint;boolean ownedTarget,created,queued,stopping;
         double nextSample,nextFrame;long stopped;int effectNetworkId=-1;
         Run(UUID owner,UUID world,Store<EntityStore> store,Ref<EntityStore> actor,HealingProbePolicy.Mode mode,String target){
@@ -60,6 +65,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
         this.liveTest=liveTest;
         this.trace=trace;allowedRoot=Path.of(System.getProperty("rpg.healingPresentationProbeRoot","UNCONFIGURED"));
         watcher=PacketAdapters.registerOutbound((PlayerPacketWatcher)this::outbound);
+        observers.add(this);
     }
     public synchronized void start(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,String mode,String target)throws java.io.IOException{
         var world=store.getExternalData().getWorld();
@@ -74,7 +80,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
         if(runs.size()>=HealingProbePolicy.MAX_WORLDS)throw new IllegalStateException("HEAL_PROBE_CAPACITY");
         var run=new Run(player.getUuid(),world.getWorldConfig().getUuid(),store,actor,selected,target);
         if(runs.putIfAbsent(run.world,run)!=null)throw new IllegalStateException("HEAL_PROBE_ALREADY_ACTIVE_WAIT_OR_STOP");
-        receipt(run,"REQUESTED","root",Map.of("durationSeconds",HealingProbePolicy.RUN_SECONDS,"targetSelection",target));
+        receipt(run,"REQUESTED","root",Map.of("durationSeconds",HealingProbePolicy.duration(selected),"targetSelection",target));
         schedule(run);
     }
     public void stop(Store<EntityStore> store,UUID owner){
@@ -95,13 +101,15 @@ public final class HealingPresentationProbe implements AutoCloseable {
             if(closed||runs.get(r.world)!=r||r.stopping)return;
             try{
                 if(!r.actor.isValid()||r.store.getComponent(r.actor,PlayerRef.getComponentType())==null){cleanup(r,"OWNER_GONE");return;}
-                if(!r.created){create(r);r.created=true;notifyOwner(r,"STARTED "+r.mode+" for 10s; observe now.");}
+                if(!r.created){create(r);r.created=true;notifyOwner(r,r.mode==HealingProbePolicy.Mode.CHANNEL
+                    ?"R032-AK ARMED for 30s. Cast Healing Beam normally now; this observer casts nothing and does not waive Mana costs."
+                    :"STARTED "+r.mode+" for 10s; observe now.");}
                 if(r.target!=null&&!r.target.isValid()){cleanup(r,"TARGET_GONE");return;}
                 for(var ref:r.target==null?List.of(r.actor):List.of(r.actor,r.target)){
                     var stats=r.store.getComponent(ref,EntityStatMap.getComponentType());
                     if(stats!=null&&stats.get(DefaultEntityStatTypes.getHealth())!=null&&stats.get(DefaultEntityStatTypes.getHealth()).get()<=0){cleanup(r,"ENDPOINT_DEAD");return;}
                 }
-                if(seconds(r)>=HealingProbePolicy.RUN_SECONDS){cleanup(r,"FINITE_DEADLINE");return;}
+                if(seconds(r)>=HealingProbePolicy.duration(r.mode)){cleanup(r,"FINITE_DEADLINE");return;}
                 if(seconds(r)>=r.nextFrame){r.nextFrame=seconds(r)+.05;update(r);}
             }catch(RuntimeException failure){
                 receipt(r,"FAILED","root",Map.of("error",failure.getClass().getSimpleName(),"reason",safe(failure.getMessage())));
@@ -111,6 +119,10 @@ public final class HealingPresentationProbe implements AutoCloseable {
         });
     }
     private void create(Run r){
+        if(r.mode==HealingProbePolicy.Mode.CHANNEL){
+            receipt(r,"CHANNEL_OBSERVER_ARMED","root",Map.of("readOnly",true,"productionRendererUnchanged",true));
+            receipt(r,"SYSTEM_ORDER","root",systemOrder());return;
+        }
         var a=anchor(r,r.actor);
         var head=r.store.getComponent(r.actor,HeadRotation.getComponentType());
         var direction=head==null?new Vector3d(0,0,-1):head.getDirection();
@@ -160,6 +172,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
                 r.effect=nativeEffect.replace("RPG_Healing_Staff_","RPG_Probe_Healing_Staff_");
                 watch(r,r.actor,"staff");attach(r,r.actor);
             }
+            case CHANNEL -> throw new IllegalStateException("CHANNEL_MUST_NOT_CREATE_VISUALS");
         }
         receipt(r,"SYSTEM_ORDER","root",systemOrder());
     }
@@ -181,6 +194,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
     }
     private static boolean overwrite(Run r){return r.mode==HealingProbePolicy.Mode.RECIPIENT_OVERWRITE||r.mode==HealingProbePolicy.Mode.STAFF_OVERWRITE;}
     private void update(Run r){
+        if(r.mode==HealingProbePolicy.Mode.CHANNEL)return;
         var a=anchor(r,r.actor);var b=endpoint(r);
         if(r.carrier!=null){
             if(r.mode==HealingProbePolicy.Mode.BEAM){
@@ -266,6 +280,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
     private void watch(Run r,Ref<EntityStore> ref,String layer){
         var id=r.store.getComponent(ref,NetworkId.getComponentType());
         if(id==null)throw new IllegalStateException("NETWORK_ID_MISSING_"+layer);
+        if(!r.watched.containsKey(id.getId())&&r.watched.size()>=64)throw new IllegalStateException("PROBE_WATCH_CAPACITY");
         r.watched.put(id.getId(),layer);
     }
     private Map<String,Object> entity(Run r,Ref<EntityStore> ref){
@@ -280,10 +295,12 @@ public final class HealingPresentationProbe implements AutoCloseable {
     private void receipt(Run r,String stage,String layer,Map<String,?> fields){
         String key=stage+"/"+layer;
         synchronized(r.receipts){
-            if((r.receipts.size()>=HealingProbePolicy.MAX_TRANSITIONS&&!stage.equals("SUMMARY"))||!r.receipts.add(key))return;
+            if(r.receipts.contains(key))return;
+            if(r.receipts.size()>=HealingProbePolicy.MAX_TRANSITIONS&&!stage.equals("SUMMARY")){r.suppressedTransitions.incrementAndGet();return;}
+            r.receipts.add(key);
         }
-        var d=new LinkedHashMap<String,Object>(fields);d.put("probe",true);d.put("cohort","AJ");d.put("root",r.generation);d.put("generation",r.generation);
-        d.put("liveTest",liveTest);d.put("effectBackend",liveTest?"CLIENT_ONLY_NO_NATIVE_CONTROLLER_WRITE":"NATIVE_EFFECT_CONTROLLER");
+        var d=new LinkedHashMap<String,Object>(fields);d.put("probe",true);d.put("cohort","AK");d.put("root",r.generation);d.put("generation",r.generation);
+        d.put("liveTest",liveTest);d.put("effectBackend",r.mode==HealingProbePolicy.Mode.CHANNEL?"OBSERVE_NATIVE_PRODUCTION_NO_WRITES":liveTest?"CLIENT_ONLY_NO_NATIVE_CONTROLLER_WRITE":"NATIVE_EFFECT_CONTROLLER");
         d.put("world",r.world);d.put("mode",r.mode);d.put("stage",stage);d.put("layer",layer);d.put("segment",r.generation+"/primary");d.put("connectedRendered",false);
         trace.trace(RpgTraceRecord.create(r.owner,RpgTraceEventType.HEAL_PRESENTATION,r.generation.toString(),d));
     }
@@ -308,10 +325,62 @@ public final class HealingPresentationProbe implements AutoCloseable {
             if(entity.updates!=null)for(var component:entity.updates){
                 r.componentUpdates.incrementAndGet();
                 receipt(r,"OUTBOUND_OBSERVED",layer+"/"+player.getUuid()+"/"+component.getClass().getSimpleName(),packetFields(component,entity.networkId));
+                effectTransitions(r,"OUTBOUND",layer+"/"+player.getUuid(),entity.networkId,component);
             }
         }
         if(update.removed!=null)for(int id:update.removed)if(r.watched.containsKey(id))
             receipt(r,"OUTBOUND_REMOVAL_OBSERVED",r.watched.get(id)+"/"+player.getUuid(),Map.of("networkId",id));
+    }
+    /** Non-consuming diagnostic hook. Executes synchronously in the presenter's safe world phase.
+     * No queued ECS work, no captured Ref beyond the read, no effect writes or gameplay callbacks.
+     * A failed observer is contained and cannot change the presenter's control flow. */
+    static void production(String stage,Store<EntityStore> store,UUID owner,String channel,
+            Map<String,Ref<EntityStore>> carriers,Set<UUID> recipients,String staffEffect){
+        for(var probe:observers){
+            Run r=null;
+            try{
+                r=probe.runs.get(store.getExternalData().getWorld().getWorldConfig().getUuid());
+                if(r==null||r.store!=store||!acceptsChannel(r.mode,r.owner,owner,r.stopping,probe.closed))continue;
+                if(!r.channels.contains(channel)&&r.channels.size()>=8){probe.receipt(r,"CHANNEL_LIMIT","root",Map.of("maxChannels",8));continue;}
+                r.channels.add(channel);
+                probe.receipt(r,"PRODUCTION_"+stage,channel,Map.of("productionSkillInstanceId",channel,
+                    "carriers",carriers.size(),"recipients",recipients.size(),"processing",store.isProcessing()));
+                if(!stage.equals("FRAME_READY"))continue;
+                for(var entry:carriers.entrySet())probe.productionLayer(r,channel+"/core/"+entry.getKey(),entry.getValue(),null);
+                for(var id:recipients)probe.productionLayer(r,channel+"/recipient/"+id,store.getExternalData().getRefFromUUID(id),HealingParticleVisuals.RECIPIENT_EFFECT);
+                if(staffEffect!=null)probe.productionLayer(r,channel+"/staff",store.getExternalData().getRefFromUUID(owner),staffEffect);
+            }catch(RuntimeException failure){if(r!=null)probe.observerFailure(r,"production",failure);}
+        }
+    }
+    static boolean acceptsChannel(HealingProbePolicy.Mode mode,UUID observer,UUID caster,boolean stopping,boolean closed){
+        return mode==HealingProbePolicy.Mode.CHANNEL&&observer.equals(caster)&&!stopping&&!closed;
+    }
+    private void productionLayer(Run r,String layer,Ref<EntityStore> ref,String effect){
+        if(ref==null||!ref.isValid()){receipt(r,"PRODUCTION_REF_UNRESOLVED",layer,Map.of());return;}
+        watch(r,ref,layer);
+        // Read once after create and once on a later frame; do not reserialize models every tick.
+        String stage=!r.receipts.contains("PRODUCTION_LAYER_STATE/"+layer)?"PRODUCTION_LAYER_STATE":"PRODUCTION_LAYER_RECHECK";
+        if(r.receipts.contains(stage+"/"+layer))return;
+        var fields=new LinkedHashMap<String,Object>(entity(r,ref));
+        var transform=r.store.getComponent(ref,TransformComponent.getComponentType());
+        fields.put("position",String.valueOf(transform==null?null:transform.getPosition()));
+        fields.put("nonSerialized",r.store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())!=null);
+        if(effect!=null){
+            var controller=r.store.getComponent(ref,EffectControllerComponent.getComponentType());
+            int index=EntityEffect.getAssetMap().getIndex(effect);
+            int networkId=r.store.getComponent(ref,NetworkId.getComponentType()).getId();
+            r.expectedEffects.computeIfAbsent(networkId,ignored->ConcurrentHashMap.newKeySet()).add(index);
+            fields.put("effect",effect);fields.put("effectIndex",index);fields.put("controllerPresent",controller!=null);
+            fields.put("nativeHasEffect",controller!=null&&controller.hasEffect(index));
+        }
+        receipt(r,stage,layer,fields);
+    }
+    private void effectTransitions(Run r,String boundary,String layer,int networkId,ComponentUpdate component){
+        var expected=r.expectedEffects.get(networkId);
+        if(expected==null||!(component instanceof EntityEffectsUpdate effects)||effects.entityEffectUpdates==null)return;
+        for(var effect:effects.entityEffectUpdates)if(expected.contains(effect.id))
+            receipt(r,"NATIVE_EFFECT_"+effect.type+"_"+boundary,layer+"/"+effect.id,
+                Map.of("networkId",networkId,"effectIndex",effect.id,"operation",effect.type,"remaining",effect.remainingTime,"infinite",effect.infinite));
     }
     static Map<String,Object> packetFields(ComponentUpdate component,int networkId){
         var fields=new LinkedHashMap<String,Object>();fields.put("networkId",networkId);fields.put("component",component.getClass().getSimpleName());
@@ -335,7 +404,10 @@ public final class HealingPresentationProbe implements AutoCloseable {
             for(var entry:viewer.updates.entrySet()){
                 var entity=entry.getKey();if(!entity.isValid())continue;var net=store.getComponent(entity,NetworkId.getComponentType());
                 String layer=net==null?null:r.watched.get(net.getId());if(layer==null)continue;
-                for(var packet:entry.getValue().toUpdatesArray())receipt(r,"UPDATE_QUEUED",layer+"/"+player.getUuid()+"/"+packet.getClass().getSimpleName(),packetFields(packet,net.getId()));
+                for(var packet:entry.getValue().toUpdatesArray()){
+                    receipt(r,"UPDATE_QUEUED",layer+"/"+player.getUuid()+"/"+packet.getClass().getSimpleName(),packetFields(packet,net.getId()));
+                    effectTransitions(r,"QUEUED",layer+"/"+player.getUuid(),net.getId(),packet);
+                }
             }
         }
     }
@@ -345,7 +417,8 @@ public final class HealingPresentationProbe implements AutoCloseable {
             try(var span=NativeRpgTickMetrics.enter(store,NativeRpgTickMetrics.Phase.HUD)){
             var r=runs.get(store.getExternalData().getWorld().getWorldConfig().getUuid());if(r==null)return;
             if(r.stopping){if(System.nanoTime()-r.stopped>2_000_000_000L){
-                receipt(r,"SUMMARY","root",Map.of("outboundEntityUpdates",r.packets.get(),"outboundComponents",r.componentUpdates.get(),"packetSent","UNVERIFIED","clientRendered","UNVERIFIED"));
+                receipt(r,"SUMMARY","root",Map.of("outboundEntityUpdates",r.packets.get(),"outboundComponents",r.componentUpdates.get(),
+                    "suppressedDiagnosticTransitions",r.suppressedTransitions.get(),"productionChannels",r.channels.size(),"packetSent","UNVERIFIED","clientRendered","UNVERIFIED"));
                 runs.remove(r.world,r);
             }}else schedule(r);
             }
@@ -365,6 +438,47 @@ public final class HealingPresentationProbe implements AutoCloseable {
         return map;
     }
     /** Isolated server construction/queue-reader audit, never a connected rendering assertion. */
+    static void auditChannel(Store<EntityStore> store,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context){
+        if(!Boolean.getBoolean("rpg.projectileSpawnAudit"))throw new IllegalStateException("ISOLATED_AUDIT_DISABLED");
+        var owner=context.request().actorId();var actor=store.getExternalData().getRefFromUUID(owner);
+        var target=HealingParticleVisuals.spawnCarrier(store,new Vec3(4,202,0),new Vec3(8,202,0),"RPG_Probe_Healing_Visible");
+        var controller=new EffectControllerComponent();store.addComponent(target,EffectControllerComponent.getComponentType(),controller);
+        var targetId=store.getComponent(target,UUIDComponent.getComponentType()).getUuid();
+        var records=new ArrayList<RpgTraceRecord>();var visual=new HealingParticleVisuals();
+        var failures=new ArrayList<Throwable>();
+        try(var probe=new HealingPresentationProbe(records::add,true)){
+            var run=new Run(owner,store.getExternalData().getWorld().getWorldConfig().getUuid(),store,actor,HealingProbePolicy.Mode.CHANNEL,"none");
+            probe.runs.put(run.world,run);probe.create(run);
+            if(run.target!=null||run.carrier!=null||run.effect!=null||run.ownedTarget)throw new IllegalStateException("CHANNEL_OBSERVER_CREATED_PRESENTATION");
+            var frame=List.of(new com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort.TetherVisualSegment("observed",
+                com.inigmasgames.hytalerpg.execution.connection.ConnectionShape.line(new Vec3(0,202,0),new Vec3(4,202,0),.2,1),targetId.toString()));
+            // Preserve the audit actor equipment as authored; this test independently exercises recipient/core.
+            var c=new com.inigmasgames.hytalerpg.execution.SkillExecutionContext(context.request(),context.rootCastId()+"-observer",context.skillInstanceId()+"-observer",
+                context.profile(),context.compiledPlan(),context.snapshot(),null);
+            java.util.function.BiConsumer<String,Throwable> receipt=(event,error)->{if(error!=null)failures.add(error);};
+            try{
+                visual.present(store,null,c,frame,0,receipt);visual.present(store,null,c,frame,.05,receipt);
+                if(!failures.isEmpty())throw new IllegalStateException("CHANNEL_AUDIT_PRODUCTION_FAILED:"+failures);
+                for(String expected:List.of("PRODUCTION_FRAME_REQUESTED/"+c.skillInstanceId(),"PRODUCTION_FRAME_READY/"+c.skillInstanceId(),
+                    "PRODUCTION_LAYER_STATE/"+c.skillInstanceId()+"/core/observed","PRODUCTION_LAYER_RECHECK/"+c.skillInstanceId()+"/core/observed",
+                    "PRODUCTION_LAYER_STATE/"+c.skillInstanceId()+"/recipient/"+targetId))
+                    if(!run.receipts.contains(expected))throw new IllegalStateException("CHANNEL_AUDIT_MISSING:"+expected);
+                var effectsBefore=controller.getAllActiveEntityEffects().length;
+                production("FRAME_READY",store,owner,c.skillInstanceId(),Map.of(),Set.of(targetId),null);
+                if(controller.getAllActiveEntityEffects().length!=effectsBefore||!controller.hasEffect(EntityEffect.getAssetMap().getIndex(HealingParticleVisuals.RECIPIENT_EFFECT)))
+                    throw new IllegalStateException("CHANNEL_OBSERVER_CHANGED_NATIVE_EFFECT");
+                visual.remove(c,null);
+                if(!run.receipts.contains("PRODUCTION_REMOVED/"+c.skillInstanceId())||controller.hasEffect(EntityEffect.getAssetMap().getIndex(HealingParticleVisuals.RECIPIENT_EFFECT)))
+                    throw new IllegalStateException("CHANNEL_PRODUCTION_CLEANUP_FAILED");
+                // Stop the diagnostic while the production presenter is active: it must not clear the real effect.
+                visual.present(store,null,c,frame,.1,receipt);probe.cleanup(run,"AUDIT_STOP");
+                if(!controller.hasEffect(EntityEffect.getAssetMap().getIndex(HealingParticleVisuals.RECIPIENT_EFFECT)))throw new IllegalStateException("OBSERVER_STOP_CHANGED_PRODUCTION");
+                if(run.receipts.stream().anyMatch(s->s.startsWith("OBSERVER_FAILED")||s.startsWith("RELEASE_FAILED")))throw new IllegalStateException("CHANNEL_OBSERVER_FAILURE");
+                if(records.stream().noneMatch(r->Boolean.TRUE.equals(r.details().get("nativeHasEffect"))))throw new IllegalStateException("NATIVE_EFFECT_OBSERVATION_MISSING");
+            }finally{visual.remove(c,null);}
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_CHANNEL_OBSERVER result=PASS productionHooks=true nativeEffectsUnchanged=true observerStopDoesNotStopChannel=true nativeCleanup=true connectedProof=false");
+        }finally{if(target.isValid())store.removeEntity(target,RemoveReason.REMOVE);}
+    }
     static void audit(Store<EntityStore> store){
         if(!Boolean.getBoolean("rpg.projectileSpawnAudit")||!Boolean.getBoolean("rpg.healingPresentationProbe"))
             throw new IllegalStateException("PROBE_AUDIT_NOT_ENABLED");
@@ -447,5 +561,5 @@ public final class HealingPresentationProbe implements AutoCloseable {
     private static Vector3d vector(Vec3 p){return new Vector3d(p.x(),p.y(),p.z());}
     private static double seconds(Run r){return (System.nanoTime()-r.started)/1e9;}
     private static String safe(String value){return value==null?"UNSPECIFIED":value.replaceAll("[\\r\\n\\t]"," ").substring(0,Math.min(160,value.length()));}
-    @Override public void close(){closed=true;PacketAdapters.deregisterOutbound(watcher);for(var r:runs.values())mutate(r,()->cleanup(r,"SHUTDOWN"));}
+    @Override public void close(){closed=true;observers.remove(this);PacketAdapters.deregisterOutbound(watcher);for(var r:runs.values())mutate(r,()->cleanup(r,"SHUTDOWN"));}
 }

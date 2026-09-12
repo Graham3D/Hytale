@@ -1,5 +1,10 @@
 # R032-AJ-LIVE — normal single-player diagnostic deployment
 
+Follow-up 2026-09-12: the owner subsequently reported seeing all eight controls. The
+[AK report](stage-13-healing-observer-ak-report.md) records the matching logs, archive
+integrity and the distinction between client-only controls and native production delivery.
+The status below records the original AJ-LIVE deployment handoff, before that observation.
+
 **IMPLEMENTED / PACKAGED / DEPLOYED. CONNECTED-VERIFIED: NO.**
 
 Deployed 2026-09-12 at 21:45:12 UTC, following the owner's explicit instruction to stop the disposable Direct Connect workflow and install a live-test variant. This supersedes AJ's previous no-live-deployment restriction for this diagnostic build only. Production Healing Beam and the separate encounter/persistence defect were not changed.

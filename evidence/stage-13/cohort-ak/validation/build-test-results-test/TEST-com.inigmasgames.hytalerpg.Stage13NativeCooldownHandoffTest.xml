@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13NativeCooldownHandoffTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:06:21.651Z" hostname="GRAHAM" time="0.021">
+  <properties/>
+  <testcase name="rejectedSecondSubmissionRetainsFirstAuraAuthorityAndNeverDispatches()" classname="com.inigmasgames.hytalerpg.Stage13NativeCooldownHandoffTest" time="0.005"/>
+  <testcase name="productionCastWaitsForDurableDebtWithoutWaitingOnOwner()" classname="com.inigmasgames.hytalerpg.Stage13NativeCooldownHandoffTest" time="0.005"/>
+  <testcase name="cancellationAndDisconnectRetainDebtUntilRefundAndEvictionAreDurable()" classname="com.inigmasgames.hytalerpg.Stage13NativeCooldownHandoffTest" time="0.006"/>
+  <testcase name="staleOwnerValidationCannotExecuteAfterHeldDebtCompletes()" classname="com.inigmasgames.hytalerpg.Stage13NativeCooldownHandoffTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

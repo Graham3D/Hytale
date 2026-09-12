@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11SecondWindTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:05:43.920Z" hostname="GRAHAM" time="0.077">
+  <properties/>
+  <testcase name="twoChargesNotThreeAndBothPersist()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="realRepositoryRoundTripsSerialQueue()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.014"/>
+  <testcase name="unsupportedCapacityCannotGrantExtraCharges()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="failedSecondSpendSavePreservesFirstDebtAndAvailableCharge()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="malformedQueuesRejectBeforePublication()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="migrationThroughRepositoryRetainsRecoverableOriginalSchemaFiveFile()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.008"/>
+  <testcase name="failedRefundSaveDoesNotPublishFreeCharge()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="realFailedSecondDispatchCannotClearFirstChargeDebt()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.007"/>
+  <testcase name="auraRateAndItsExpiryApplyAcrossSerialBoundary()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.003"/>
+  <testcase name="schemaSixMissingQueueIsCorruptionNotARefill()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.003"/>
+  <testcase name="compatibilityAcceptsQuickstepAndRejectsAuraAndChannel()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.004"/>
+  <testcase name="playerSchemaFiveMigratesDebtWithoutRefillingOrLosingLoadout()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="realSkillServicePaysEachMovementChargeAndThirdCastRejects()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.007"/>
+  <testcase name="independentSkillsDoNotShareDebt()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="failedSecondExecutionRefundsOnlyItsOwnCharge()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="enablingSecondWindDoesNotRewriteAlreadyRunningNormalCooldown()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="reconnectRestoresBothDebtsWithoutOfflineCredit()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.001"/>
+  <testcase name="swappingCapacityDoesNotRefillSpentCharges()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="rechargeIsSerialNotParallel()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="olderRefundCannotEraseNewerSpend()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.001"/>
+  <testcase name="elapsedTimeCarriesToSecondQueueEntryWithoutAFrameDelay()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <testcase name="newServiceRestoresQueueAfterProcessRestart()" classname="com.inigmasgames.hytalerpg.Stage11SecondWindTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

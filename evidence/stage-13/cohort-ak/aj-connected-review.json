@@ -1,0 +1,321 @@
+{
+  "windowUtc": "2026-09-12T21:48:00Z..21:52:00Z",
+  "sources": [
+    {
+      "sha256": "47C2D6D4D2F1B2D32D875858B2F077424D121E6FD549C45AC26EC7A34ADD227A",
+      "file": "2026-09-12_17-48-00_server.log"
+    },
+    {
+      "sha256": "DFA3A94CB6D82A9C4E516A5881E4C41C47038000CF55CA86D70FCA85A38B8CDC",
+      "file": "2026-09-12_17-47-50_client.log"
+    },
+    {
+      "sha256": "3F20BF33DE3DE6798F20D3F4DFD7A275D1FAE8ECE570D0FEA8FA42DCEF14D780",
+      "file": "skill-trace-20260912T214832Z-000002.jsonl.gz"
+    },
+    {
+      "sha256": "0D98119031B3570D6EB5A35ACA7DAA7CBADFAD42305620773EFEE195823FE6FE",
+      "file": "skill-trace.jsonl"
+    },
+    {
+      "sha256": "1B199B3496F3234ED40C7AF6B1BDEC6502ED72E9293AF618F1FB8D697AC4763E",
+      "file": "ui-trace.jsonl"
+    }
+  ],
+  "startupMarker": "[2026/09/12 21:48:06   INFO]          [Phase00Plugin] RPG_HEAL_PROBE revision=R032-AJ enabled=true permission=inigmasgames.rpg.healingprobe liveTest=true disposableWorldRequired=false connectedProof=false",
+  "records": 512,
+  "probeRecords": 255,
+  "modes": [
+    {
+      "mode": "BEAM",
+      "roots": 2,
+      "requested": 2,
+      "stages": [
+        "CLEANUP",
+        "ENTITY_CREATED",
+        "FRAME_0",
+        "FRAME_1",
+        "FRAME_2",
+        "FRAME_3",
+        "FRAME_4",
+        "FRAME_5",
+        "FRAME_6",
+        "FRAME_7",
+        "FRAME_8",
+        "FRAME_9",
+        "OUTBOUND_OBSERVED",
+        "OUTBOUND_REMOVAL_OBSERVED",
+        "RELEASE_COMPLETED",
+        "REQUESTED",
+        "SUMMARY",
+        "SYSTEM_ORDER",
+        "TARGET_NOT_REQUIRED",
+        "UPDATE_QUEUED",
+        "VIEWER_TRACKED"
+      ],
+      "targetSelections": [
+        "none"
+      ],
+      "failures": 0
+    },
+    {
+      "mode": "EMPTY",
+      "roots": 1,
+      "requested": 1,
+      "stages": [
+        "CLEANUP",
+        "ENTITY_CREATED",
+        "FRAME_0",
+        "FRAME_1",
+        "FRAME_2",
+        "FRAME_3",
+        "FRAME_4",
+        "FRAME_5",
+        "FRAME_6",
+        "FRAME_7",
+        "FRAME_8",
+        "FRAME_9",
+        "OUTBOUND_OBSERVED",
+        "OUTBOUND_REMOVAL_OBSERVED",
+        "RELEASE_COMPLETED",
+        "REQUESTED",
+        "SUMMARY",
+        "SYSTEM_ORDER",
+        "TARGET_NOT_REQUIRED",
+        "UPDATE_QUEUED",
+        "VIEWER_TRACKED"
+      ],
+      "targetSelections": [
+        "none"
+      ],
+      "failures": 0
+    },
+    {
+      "mode": "RECIPIENT_ONCE",
+      "roots": 2,
+      "requested": 2,
+      "stages": [
+        "CLEANUP",
+        "CLIENT_EFFECT_SUBMITTED",
+        "FRAME_0",
+        "FRAME_1",
+        "FRAME_2",
+        "FRAME_3",
+        "FRAME_4",
+        "FRAME_5",
+        "FRAME_6",
+        "FRAME_7",
+        "FRAME_8",
+        "FRAME_9",
+        "OUTBOUND_OBSERVED",
+        "RELEASE_COMPLETED",
+        "REQUESTED",
+        "SUMMARY",
+        "SYSTEM_ORDER",
+        "TARGET_RESOLVED",
+        "VIEWER_TRACKED"
+      ],
+      "targetSelections": [
+        "self"
+      ],
+      "failures": 0
+    },
+    {
+      "mode": "RECIPIENT_OVERWRITE",
+      "roots": 1,
+      "requested": 1,
+      "stages": [
+        "CLEANUP",
+        "CLIENT_EFFECT_SUBMITTED",
+        "FRAME_0",
+        "FRAME_1",
+        "FRAME_2",
+        "FRAME_3",
+        "FRAME_4",
+        "FRAME_5",
+        "FRAME_6",
+        "FRAME_7",
+        "FRAME_8",
+        "FRAME_9",
+        "OUTBOUND_OBSERVED",
+        "RELEASE_COMPLETED",
+        "REQUESTED",
+        "SUMMARY",
+        "SYSTEM_ORDER",
+        "TARGET_RESOLVED",
+        "VIEWER_TRACKED"
+      ],
+      "targetSelections": [
+        "self"
+      ],
+      "failures": 0
+    },
+    {
+      "mode": "STAFF_ONCE",
+      "roots": 3,
+      "requested": 3,
+      "stages": [
+        "CLEANUP",
+        "CLIENT_EFFECT_SUBMITTED",
+        "FRAME_0",
+        "FRAME_1",
+        "FRAME_2",
+        "FRAME_3",
+        "FRAME_4",
+        "FRAME_5",
+        "FRAME_6",
+        "FRAME_7",
+        "FRAME_8",
+        "FRAME_9",
+        "OUTBOUND_OBSERVED",
+        "RELEASE_COMPLETED",
+        "REQUESTED",
+        "SUMMARY",
+        "SYSTEM_ORDER",
+        "TARGET_NOT_REQUIRED",
+        "VIEWER_TRACKED"
+      ],
+      "targetSelections": [
+        "none"
+      ],
+      "failures": 0
+    },
+    {
+      "mode": "STAFF_OVERWRITE",
+      "roots": 1,
+      "requested": 1,
+      "stages": [
+        "CLEANUP",
+        "CLIENT_EFFECT_SUBMITTED",
+        "FRAME_0",
+        "FRAME_1",
+        "FRAME_2",
+        "FRAME_3",
+        "FRAME_4",
+        "FRAME_5",
+        "FRAME_6",
+        "FRAME_7",
+        "FRAME_8",
+        "FRAME_9",
+        "OUTBOUND_OBSERVED",
+        "RELEASE_COMPLETED",
+        "REQUESTED",
+        "SUMMARY",
+        "SYSTEM_ORDER",
+        "TARGET_NOT_REQUIRED",
+        "VIEWER_TRACKED"
+      ],
+      "targetSelections": [
+        "none"
+      ],
+      "failures": 0
+    },
+    {
+      "mode": "VISIBLE",
+      "roots": 1,
+      "requested": 1,
+      "stages": [
+        "CLEANUP",
+        "ENTITY_CREATED",
+        "FRAME_0",
+        "FRAME_1",
+        "FRAME_2",
+        "FRAME_3",
+        "FRAME_4",
+        "FRAME_5",
+        "FRAME_6",
+        "FRAME_7",
+        "FRAME_8",
+        "FRAME_9",
+        "OUTBOUND_OBSERVED",
+        "OUTBOUND_REMOVAL_OBSERVED",
+        "RELEASE_COMPLETED",
+        "REQUESTED",
+        "SUMMARY",
+        "SYSTEM_ORDER",
+        "TARGET_NOT_REQUIRED",
+        "UPDATE_QUEUED",
+        "VIEWER_TRACKED"
+      ],
+      "targetSelections": [
+        "none"
+      ],
+      "failures": 0
+    },
+    {
+      "mode": "WORLD",
+      "roots": 1,
+      "requested": 1,
+      "stages": [
+        "CLEANUP",
+        "FRAME_0",
+        "FRAME_1",
+        "FRAME_2",
+        "FRAME_3",
+        "FRAME_4",
+        "FRAME_5",
+        "FRAME_6",
+        "FRAME_7",
+        "FRAME_8",
+        "FRAME_9",
+        "OUTBOUND_OBSERVED",
+        "RELEASE_COMPLETED",
+        "REQUESTED",
+        "SUMMARY",
+        "SYSTEM_ORDER",
+        "TARGET_NOT_REQUIRED",
+        "WORLD_PACKET_SUBMITTED"
+      ],
+      "targetSelections": [
+        "none"
+      ],
+      "failures": 0
+    }
+  ],
+  "ownerObservation": "All eight controls visibly noticed, per owner message; not a material/motion or complete Gate A acceptance.",
+  "recipientStaffBackend": "CLIENT_ONLY_NO_NATIVE_CONTROLLER_WRITE",
+  "nativeProductionChannelConnected": "NOT_TESTED_IN_THIS_SESSION",
+  "eventCounts": [
+    {
+      "event": "HEAL_PRESENTATION",
+      "count": 255
+    },
+    {
+      "event": "LOAD",
+      "count": 1
+    },
+    {
+      "event": "NATIVE_ABILITY_SLOT_CLEARED",
+      "count": 1
+    },
+    {
+      "event": "NATIVE_ABILITY_SLOT_CONFLICT",
+      "count": 2
+    },
+    {
+      "event": "NATIVE_ABILITY_SLOT_PROJECTED",
+      "count": 2
+    },
+    {
+      "event": "NATIVE_RPG_TICK_SUMMARY",
+      "count": 42
+    },
+    {
+      "event": "PERSISTENCE_HANDOFF_METRICS",
+      "count": 208
+    },
+    {
+      "event": "TRACE_LEVEL_CHANGED",
+      "count": 1
+    }
+  ],
+  "archive": {
+    "records": 5680,
+    "uncompressedBytes": 4193749,
+    "activeBytes": 437838,
+    "compressedBytes": 204782,
+    "hashesIndependentlyVerified": true,
+    "state": "VERIFIED"
+  },
+  "encounterErrorInServer": false
+}

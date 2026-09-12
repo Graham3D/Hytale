@@ -16,7 +16,7 @@ public final class HealingProbeCommand extends AbstractPlayerCommand {
     private final HealingPresentationProbe probe;
     private final RequiredArg<String> mode,target;
     public HealingProbeCommand(HealingPresentationProbe probe){
-        super("rpg-heal-probe","Ten-second visual-only control. Modes: world, empty, visible, recipient-once, recipient-overwrite, staff-once, staff-overwrite, beam, stop.");
+        super("rpg-heal-probe","Visual controls: world, empty, visible, recipient-once, recipient-overwrite, staff-once, staff-overwrite, beam; channel observes a real cast for 30s; stop.");
         this.probe=probe;requirePermission("inigmasgames.rpg.healingprobe");
         mode=withRequiredArg("mode","Control layer or stop",ArgTypes.STRING);
         target=withRequiredArg("target","none for standalone; self or runtime UUID for live recipient; native only in isolated fixture; ignored by stop",ArgTypes.STRING);
@@ -25,7 +25,7 @@ public final class HealingProbeCommand extends AbstractPlayerCommand {
         try{
             if(context.get(mode).equalsIgnoreCase("stop")){probe.stop(store,player.getUuid());context.sendMessage(Message.raw("Healing probe cleanup requested."));return;}
             probe.start(store,ref,player,context.get(mode),context.get(target));
-            context.sendMessage(Message.raw("R032-AJ probe requested. Wait for STARTED or FAILED. Live-test: recipient uses self or existing UUID; cosmetic effect packets are client-only. No healing/cost. Observe for 10s, wait 12s between controls."));
+            context.sendMessage(Message.raw("R032-AK requested. Wait for STARTED/ARMED or FAILED. channel none observes real Healing Beam casts for 30s without changing them. Old visual controls still run for 10s; wait 12s between them."));
         }catch(java.io.IOException|RuntimeException error){
             context.sendMessage(Message.raw("Probe rejected: "+error.getClass().getSimpleName()+" "+String.valueOf(error.getMessage()).replaceAll("[\\r\\n]"," ").substring(0,Math.min(160,String.valueOf(error.getMessage()).length()))+". No skill was cast."));
         }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-09-12T22:05:33.954Z" hostname="GRAHAM" time="0.022">
+  <properties/>
+  <testcase name="allocationHasExactlyOneToFiftyIntegerPercent()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.002"/>
+  <testcase name="absorptionConsumesDeficitNotManaAndCapsDamage()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.002"/>
+  <testcase name="minorHealUsesTwentyWisMasteryAndHealingBucket()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.001"/>
+  <testcase name="savedLedgerDoesNotResumeAuraOrCreditOfflineTime()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.006"/>
+  <testcase name="lowerAndReRaiseCapacityRetainsAllDeficit()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.002"/>
+  <testcase name="rechargeUsesTenPercentOfLastValidatedCapacityEvenUnequipped()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.002"/>
+  <testcase name="barrierModifiersUseActualReservedCapacity()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.001"/>
+  <testcase name="invalidEvidenceCannotCreditRecharge()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.002"/>
+  <testcase name="noEligibleTimeMeansNoRecharge()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.001"/>
+  <testcase name="toggleLocksNeedObservedTimeAndActivationEpochsIncrease()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.001"/>
+  <testcase name="baseShieldEqualsActualReservation()" classname="com.inigmasgames.hytalerpg.Stage09GuardLedgerTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
