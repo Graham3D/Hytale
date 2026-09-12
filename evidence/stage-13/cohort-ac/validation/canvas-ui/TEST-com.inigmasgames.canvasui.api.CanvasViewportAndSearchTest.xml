@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.canvasui.api.CanvasViewportAndSearchTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-12T15:27:54.365Z" hostname="GRAHAM" time="0.004">
+  <properties/>
+  <testcase name="cursorCenteredZoomPreservesPointUnderCursorAndClampsBounds()" classname="com.inigmasgames.canvasui.api.CanvasViewportAndSearchTest" time="0.0"/>
+  <testcase name="searchCoversNameDescriptionTagsCasePartialEmptyAndMultipleMatches()" classname="com.inigmasgames.canvasui.api.CanvasViewportAndSearchTest" time="0.001"/>
+  <testcase name="transformRoundTripsAtEverySupportedReferenceZoom()" classname="com.inigmasgames.canvasui.api.CanvasViewportAndSearchTest" time="0.0"/>
+  <testcase name="snapshotPersistsZoomAndLegacyFormatDefaultsToOne()" classname="com.inigmasgames.canvasui.api.CanvasViewportAndSearchTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

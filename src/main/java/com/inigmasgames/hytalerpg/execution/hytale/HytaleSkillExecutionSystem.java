@@ -140,6 +140,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final AreaRuntime areas = new AreaRuntime(fieldCapacity);
     private final HealingTextAccumulator healingText=new HealingTextAccumulator();
     private final NativeBlizzardVisuals blizzardVisuals=new NativeBlizzardVisuals();
+    private final NativeHealingBeamVisuals healingBeamVisuals=new NativeHealingBeamVisuals();
     public double activeSkillRemaining(UUID owner,String skill){return areas.activeRemaining(owner,skill,System.nanoTime()/1e9);}
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
     private HytaleSupportSystem support;
@@ -303,6 +304,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
 
     public void onIncomingDamage(UUID actor) {
         if (windupEnds.remove(actor) != null) executions.cancel(actor, "NATIVE_DAMAGE_INTERRUPT");
+        healingBeamVisuals.cancel(actor);
         for(var channel:connections.cancel(actor,true)) {
             inputs.stopHeld(channel.request());
             emit(channel,RpgTraceEventType.CONNECTION_TERMINATED,Map.of("reason","NATIVE_DAMAGE_INTERRUPT"));
@@ -329,6 +331,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         // Teardown has no guaranteed live viewer/world; discard remaining presentation, never gameplay.
         healingText.flush(actor,null,0,true);
         blizzardVisuals.cancel(actor,buffer);
+        healingBeamVisuals.cancel(actor);
         for (SkillExecutionContext area : areas.cancel(actor))
             emit(area, RpgTraceEventType.AREA_TERMINATED, Map.of("reason", reason));
         for(var connection:connections.cancel(actor,false)) {
@@ -959,22 +962,19 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 }
                 public void present(SkillExecutionContext context,ConnectionShape shape,String phase,double seconds) {
                     if(context.profile().connection().friendlyTether()){
-                        try{
-                            // Bounded native particles along the authoritative segment; no persistent VFX entity.
-                            for(var sample:NativeBeamTransform.stream(shape.start(),shape.end())){
-                                var p=sample.position();var rotation=sample.rotation();
-                                // Last float is native maxDuration, NOT the spatial query distance (fixed 75m).
-                                com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("Beam_Heal_Green",new org.joml.Vector3d(p.x(),p.y(),p.z()),rotation.yaw(),rotation.pitch(),rotation.roll(),1,.1f,store);
-                            }
-                        }catch(RuntimeException ignored){/* Bounded presentation cannot refund a paid pulse. */}
+                        // Friendly tethers are presented coherently through presentTether; never respawn particles here.
                         return;
                     }
                     try{vfx.presentConnection(store.getExternalData().getWorld(),shape,context.profile().connection().element(),phase,seconds);}
                     catch(RuntimeException ignored){ }
                 }
+                @Override public void presentTether(SkillExecutionContext context,List<ConnectionWorldPort.TetherVisualSegment> segments){
+                    try{healingBeamVisuals.present(store,context,segments,System.nanoTime()/1e9);}
+                    catch(RuntimeException ignored){healingBeamVisuals.remove(context);/* Presentation cannot refund a paid pulse. */}
+                }
                 public void ended(SkillExecutionContext context,String reason){
                     for(var value:healingText.flush(playerRef.getUuid(),context.rootCastId(),0,true))presentHealingText(store,actor,value);
-                    try{inputs.stopHeld(context.request());}finally{executions.terminate(context,reason);}
+                    try{healingBeamVisuals.remove(context);inputs.stopHeld(context.request());}finally{executions.terminate(context,reason);}
                 }
                 public void trace(SkillExecutionContext context,String event,Map<String,?> details){emit(context,RpgTraceEventType.valueOf(event),details);}
             };

@@ -3,6 +3,7 @@ package com.inigmasgames.hytalerpg;
 import com.inigmasgames.hytalerpg.execution.*;
 import com.inigmasgames.hytalerpg.execution.area.*;
 import com.inigmasgames.hytalerpg.execution.connection.ConnectionShape;
+import com.inigmasgames.hytalerpg.execution.connection.ConnectionWorldPort;
 import com.inigmasgames.hytalerpg.execution.hytale.*;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,9 @@ class Stage13HealingBlizzardTest {
         for(String passive:List.of("arc","fork","chain")){
             var segmentShapes=new ArrayList<ConnectionShape>();
             var h=new Stage13SupportTetherTest.Healing(passive){
-                @Override public void present(SkillExecutionContext c,ConnectionShape s,String phase,double seconds){if(phase.equals("TETHER_SECONDARY"))segmentShapes.add(s);}
+                @Override public void presentTether(SkillExecutionContext c,List<ConnectionWorldPort.TetherVisualSegment> segments){
+                    segments.stream().filter(s->!s.id().startsWith("PRIMARY:")).map(ConnectionWorldPort.TetherVisualSegment::shape).forEach(segmentShapes::add);
+                }
             };
             h.targets.add(Stage08ConnectionCohortBTest.enemy(2,3,1.35,5));
             h.targets.add(Stage08ConnectionCohortBTest.enemy(3,-3,2.35,6));

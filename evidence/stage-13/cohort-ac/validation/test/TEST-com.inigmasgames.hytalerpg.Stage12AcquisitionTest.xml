@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-09-12T15:26:42.921Z" hostname="GRAHAM" time="0.659">
+  <properties/>
+  <testcase name="familyUnlockDoesNotEnableWrongFamilyAndPreservesCompilerGates()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.075"/>
+  <testcase name="generatedLearningRollRunsOnceAcrossReplayAndRestart()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.032"/>
+  <testcase name="shippedCatalogHas66ProposedAnd21UnassignedNoPublicRoll()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.002"/>
+  <testcase name="insufficientInsightNeverGrantsPartialCopy()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.023"/>
+  <testcase name="genericMutationCannotForgePityOrRefundSpending()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.004"/>
+  <testcase name="staleNewPurchaseDoesNotLeaveIntentOrCharge()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.037"/>
+  <testcase name="acquisitionBoundsAndInvalidRollAreRejected()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.003"/>
+  <testcase name="wisdomChangesChanceNotAccumulatedSourcePity()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.001"/>
+  <testcase name="purchaseReplayWorksWithStaleRevisionButDifferentPayloadConflicts()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.058"/>
+  <testcase name="[1] COMMON" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.003"/>
+  <testcase name="[2] RARE" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.006"/>
+  <testcase name="[3] UNIQUE" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.006"/>
+  <testcase name="meaningfulUseUnlocksPurchaseNotFreeOwnershipAndPricesEveryCopy()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.067"/>
+  <testcase name="concurrentSameRevisionPurchasesCannotOverspend()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.056"/>
+  <testcase name="knownSkillDoesNotRollOrModifyPityOrPassives()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.001"/>
+  <testcase name="conflictingAliasRarityAndUnknownSourcesRejected()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.002"/>
+  <testcase name="verifiedExplicitAliasesShareOneSourceAndUnknownIdentitiesCannotRoll()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.003"/>
+  <testcase name="[1] AFTER_INTENT" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.057"/>
+  <testcase name="[2] AFTER_PLAYER" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.053"/>
+  <testcase name="[3] AFTER_RECEIPT" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.054"/>
+  <testcase name="[4] AFTER_HEAD" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.057"/>
+  <testcase name="[5] AFTER_CLEANUP" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.052"/>
+  <testcase name="proposedSourceCannotWriteEvenAnIntent()" classname="com.inigmasgames.hytalerpg.Stage12AcquisitionTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-09-12T15:26:48.763Z" hostname="GRAHAM" time="0.378">
+  <properties/>
+  <testcase name="repeatedAttachDoesNotDuplicateIndexOrRewards()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.021"/>
+  <testcase name="effectiveAbsorbAndControlPersistAttribution()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.024"/>
+  <testcase name="completedEnemyCannotAttachAsNewSpawn()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.033"/>
+  <testcase name="frozenDeathReplayDoesNotDeliverAgain()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.031"/>
+  <testcase name="conversionRestorationCannotRestoreRewardEligibility()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.026"/>
+  <testcase name="nativeInputsThroughDurableRuntimeYieldOneCalculatedAward()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.03"/>
+  <testcase name="failedAwardFreezesUntilRestartButRetainsFrozenDeath()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.03"/>
+  <testcase name="ineffectiveControlAndUnusedShieldDoNotPersistCredit()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.014"/>
+  <testcase name="loadCannotReplaceOriginalBiomeWithNewCandidate()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.02"/>
+  <testcase name="unclassifiedNewEnemyAndUnknownLoadCannotEarn()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.009"/>
+  <testcase name="farmWatermarkSurvivesRuntimeRecreation()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.023"/>
+  <testcase name="friendlySelfOrInvalidHealthNeverQualifies()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.014"/>
+  <testcase name="worldUnloadPreservesContextButClearsMemory()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.019"/>
+  <testcase name="wrongRoleOnReloadPermanentlyExcludes()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.021"/>
+  <testcase name="partialStoreFailureFreezesProgressionAndRetainsNativeCombatInputs()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.016"/>
+  <testcase name="zeroHealthLossCannotQualify()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.018"/>
+  <testcase name="characterLevelReadDoesNotCompileOrMutateLoadout()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.004"/>
+  <testcase name="disconnectDoesNotEraseEnemyCreditButExpiryStillApplies()" classname="com.inigmasgames.hytalerpg.Stage12PersistentEncounterRuntimeTest" time="0.024"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,23 @@
+{
+  "baseline": "1CA247EF81C0066C8D4D6CC1C40D0EF0FE2F9E56E0D574E27DFB3D349B430217",
+  "jarSha256": "C3AC781F8BB5948490DE45E9C7176AACA8178F0B29A7729E9A9A71B02A42E891",
+  "changedEntries": [
+    "com/inigmasgames/hytalerpg/execution/connection/ConnectionRuntime$1.class",
+    "com/inigmasgames/hytalerpg/execution/connection/ConnectionRuntime$Field.class",
+    "com/inigmasgames/hytalerpg/execution/connection/ConnectionRuntime.class",
+    "com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort$TetherVisualSegment.class",
+    "com/inigmasgames/hytalerpg/execution/connection/ConnectionWorldPort.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/ElasticBeamTether.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port$1.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/NativeBeamTransform.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/NativeHealingBeamVisuals$RootVisual.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/NativeHealingBeamVisuals$Segment.class",
+    "com/inigmasgames/hytalerpg/execution/hytale/NativeHealingBeamVisuals.class",
+    "com/inigmasgames/hytalerpg/input/NativeSupportTetherAudit.class",
+    "Server/Entity/Beams/RPG_Healing.json"
+  ],
+  "otherABEntriesByteIdentical": true,
+  "deployed": false
+}

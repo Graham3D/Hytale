@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13TraceLevelsTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-12T15:27:15.050Z" hostname="GRAHAM" time="0.006">
+  <properties/>
+  <testcase name="aggregationStateIsBoundedAndMalformedOrOverflowSamplesRemainVisible()" classname="com.inigmasgames.hytalerpg.Stage13TraceLevelsTest" time="0.002"/>
+  <testcase name="performanceRetainsEveryRawNativeSampleUnmodified()" classname="com.inigmasgames.hytalerpg.Stage13TraceLevelsTest" time="0.001"/>
+  <testcase name="levelChangeFlushesPartialWindowBeforeSwitchAndCloseFlushIsIdempotent()" classname="com.inigmasgames.hytalerpg.Stage13TraceLevelsTest" time="0.001"/>
+  <testcase name="compileSuccessIsDetailedOnlyAndCompileFailureAlwaysVisible()" classname="com.inigmasgames.hytalerpg.Stage13TraceLevelsTest" time="0.0"/>
+  <testcase name="normalAggregatesAllTicksWithoutClaimingPercentileQualification()" classname="com.inigmasgames.hytalerpg.Stage13TraceLevelsTest" time="0.001"/>
+  <testcase name="traceLevelsValidateConfigurationAndSupportExplicitDebugAlias()" classname="com.inigmasgames.hytalerpg.Stage13TraceLevelsTest" time="0.0"/>
+  <testcase name="everyEventDrivenEventIsRetainedInEveryLevelExceptSuccessfulCompileStages()" classname="com.inigmasgames.hytalerpg.Stage13TraceLevelsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

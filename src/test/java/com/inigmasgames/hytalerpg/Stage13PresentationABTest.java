@@ -3,23 +3,46 @@ package com.inigmasgames.hytalerpg;
 import com.inigmasgames.hytalerpg.execution.hytale.*;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import com.inigmasgames.hytalerpg.ui.hud.CooldownSweep;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Stage13PresentationABTest {
-    @Test void curvePinsEndpointsSagsAndEveryNegativeZVelocityFollowsItsOwnTangent(){
-        var a=new Vec3(1,5,3);var b=new Vec3(13,8,-9);
-        assertEquals(a,NativeBeamTransform.curve(a,b,0));assertEquals(b,NativeBeamTransform.curve(a,b,1));
-        assertTrue(NativeBeamTransform.curve(a,b,.5).y()<(a.y()+b.y())*.5);
-        var samples=NativeBeamTransform.stream(a,b);assertEquals(23,samples.size());
-        for(int i=0;i<samples.size();i++){
-            double t=(double)i/samples.size();var sample=samples.get(i);
-            var tangent=NativeBeamTransform.curve(a,b,t+.001).subtract(sample.position()).normalized();
-            var actual=sample.rotation().transform(new org.joml.Vector3d(0,0,-1));
-            assertEquals(tangent.x(),actual.x,1e-6);assertEquals(tangent.y(),actual.y,1e-6);assertEquals(tangent.z(),actual.z,1e-6);
+    @Test void stationaryTetherIsPerfectlyStraightAndPinsBothEndpoints(){
+        var tether=new ElasticBeamTether();var a=new Vec3(1,5,3);var b=new Vec3(13,8,-9);var points=tether.update(a,b,0);
+        assertEquals(ElasticBeamTether.PIECES+1,points.size());assertEquals(a,points.getFirst());assertEquals(b,points.getLast());
+        for(int i=0;i<points.size();i++)assertEquals(ElasticBeamTether.linear(a,b,i/(double)ElasticBeamTether.PIECES),points.get(i));
+        assertEquals(points,tether.update(a,b,.05));
+    }
+    @Test void endpointMotionCreatesBoundedOpposingLagThenCriticallyDampsToStraight(){
+        var tether=new ElasticBeamTether();var start=Vec3.ZERO;var end=new Vec3(6,0,0);tether.update(start,end,0);
+        var movedStart=new Vec3(0,2,1);var movedEnd=new Vec3(8,3,1);var moving=tether.update(movedStart,movedEnd,.05);
+        assertEquals(movedStart,moving.getFirst());assertEquals(movedEnd,moving.getLast());
+        boolean lag=false;
+        for(int i=1;i<ElasticBeamTether.PIECES;i++){
+            var desired=ElasticBeamTether.linear(movedStart,movedEnd,i/(double)ElasticBeamTether.PIECES);
+            assertTrue(moving.get(i).subtract(desired).length()<=1.35+1e-9);lag|=moving.get(i).distanceSquared(desired)>1e-4;
         }
-        assertEquals(24,NativeBeamTransform.stream(Vec3.ZERO,new Vec3(1000,0,0)).size());
-        assertTrue(NativeBeamTransform.stream(a,a).isEmpty());
+        assertTrue(lag);
+        List<Vec3> settled=moving;
+        for(int i=2;i<=240;i++)settled=tether.update(movedStart,movedEnd,i*.05);
+        for(int i=0;i<settled.size();i++)assertEquals(ElasticBeamTether.linear(movedStart,movedEnd,i/(double)ElasticBeamTether.PIECES),settled.get(i));
+    }
+    @Test void branchesOwnIndependentMotionHistoryAndAbruptReversalStaysBounded(){
+        var primary=new ElasticBeamTether();var branch=new ElasticBeamTether();var a=Vec3.ZERO;var b=new Vec3(6,0,0);
+        primary.update(a,b,0);branch.update(a,b,0);var first=primary.update(new Vec3(2,0,0),new Vec3(8,0,0),.05);
+        var untouched=branch.update(a,b,.05);for(int i=0;i<untouched.size();i++)assertEquals(ElasticBeamTether.linear(a,b,i/(double)ElasticBeamTether.PIECES),untouched.get(i));
+        var reversed=primary.update(new Vec3(-2,0,0),new Vec3(4,0,0),.10);
+        assertNotEquals(first.get(3),reversed.get(3));
+        for(int i=1;i<ElasticBeamTether.PIECES;i++)assertTrue(reversed.get(i).subtract(ElasticBeamTether.linear(new Vec3(-2,0,0),new Vec3(4,0,0),i/(double)ElasticBeamTether.PIECES)).length()<=1.35+1e-9);
+    }
+    @Test void packagedNativeBeamUsesAuditedShippedNatureTexture() throws Exception {
+        try(var input=getClass().getResourceAsStream("/Server/Entity/Beams/RPG_Healing.json")){
+            assertNotNull(input);var text=new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);
+            assertTrue(text.contains("Trails/Void_Green.png"));
+        }
+        var source=java.nio.file.Files.readString(java.nio.file.Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
+        assertFalse(source.contains("spawnParticleEffect(\"Beam_Heal_Green\""));assertTrue(source.contains("healingBeamVisuals.present"));
     }
     @Test void sweepUsesAuthoritativeRemainingRatherThanAnotherTimer(){
         assertEquals(0,CooldownSweep.progress(3,3));assertEquals(.5,CooldownSweep.progress(1.5,3));

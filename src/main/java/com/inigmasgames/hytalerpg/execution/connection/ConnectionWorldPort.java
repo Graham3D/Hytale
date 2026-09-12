@@ -10,6 +10,12 @@ public interface ConnectionWorldPort {
     record Frame(UUID world,Vec3 feet,Vec3 aim) { }
     record Target(String id,AreaGeometry.Bounds bounds) { }
     record Query(List<Target> targets,boolean overflow){public Query{targets=List.copyOf(targets);}}
+    record TetherVisualSegment(String id,ConnectionShape shape) {
+        public TetherVisualSegment {
+            if(id==null||id.isBlank())throw new IllegalArgumentException("Tether visual id required");
+            Objects.requireNonNull(shape);
+        }
+    }
     Frame frame();
     String validate(SkillExecutionContext context,UUID world);
     Vec3 unobstructedEndpoint(Vec3 origin,Vec3 destination);
@@ -36,6 +42,10 @@ public interface ConnectionWorldPort {
     default double damage(SkillExecutionContext context,Target target,int tick,double coefficient,boolean periodic,Vec3 effectCenter){return damage(context,target,tick,coefficient,periodic);}
     default void healFromDamage(SkillExecutionContext context,int tick,double actualHealthLost){throw new IllegalStateException("DRAIN_HEAL_ADAPTER_UNAVAILABLE");}
     void present(SkillExecutionContext context,ConnectionShape shape,String phase,double seconds);
+    /** One coherent visual frame lets a persistent renderer update live segments and remove stale branches. */
+    default void presentTether(SkillExecutionContext context,List<TetherVisualSegment> segments){
+        for(var segment:segments)present(context,segment.shape(),segment.id().startsWith("PRIMARY:")?"ACTIVE":"TETHER_SECONDARY",.1);
+    }
     void ended(SkillExecutionContext context,String reason);
     void trace(SkillExecutionContext context,String event,Map<String,?> details);
 }

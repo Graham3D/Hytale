@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-12T15:26:35.933Z" hostname="GRAHAM" time="0.128">
+  <properties/>
+  <testcase name="originalSingleTargetAndPhantomAreNotAffectedByIntroducedAreaPosition()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.013"/>
+  <testcase name="canonicalAreaAcceptsAndNonAreaHealRejects()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.0"/>
+  <testcase name="originalAreaPenaltyIsNotAppliedTwiceToShockwave()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.004"/>
+  <testcase name="targetLockedConnectionsDoNotGainAreaPosition()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.001"/>
+  <testcase name="rootLedgerIsSharedAcrossRepeatAndSecondaryWithoutChargingAgain()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.005"/>
+  <testcase name="introducedCleaveDamagePenaltyIsLocal()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.004"/>
+  <testcase name="impactAmplifiesOnlyPushNotPull()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.0"/>
+  <testcase name="secondaryPortsReceiveActualCleaveAndShockwaveCenters()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.004"/>
+  <testcase name="exactlyOneDamagePenaltyPreservesCostAndCooldown()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.007"/>
+  <testcase name="damagingAndChillingAurasQualifyButSupportOnlyAurasDoNot()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.0"/>
+  <testcase name="modesConflictAndFailedLinkRollsBack()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.004"/>
+  <testcase name="projectileCarrierOnlyAcceptsPositionThroughShrapnelComponent()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.0"/>
+  <testcase name="sourceComponentRemovalCannotLeaveSilentlyInertPositionPassive()" classname="com.inigmasgames.hytalerpg.Stage11AreaPositionIntegrationTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.progress.Stage13GroupCrashRecoveryTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-12T15:27:27.820Z" hostname="GRAHAM" time="2.762">
+  <properties/>
+  <testcase name="[1] AFTER_FIRST_FRAME" classname="com.inigmasgames.hytalerpg.progress.Stage13GroupCrashRecoveryTest" time="0.276"/>
+  <testcase name="[2] AFTER_GROUP_APPEND" classname="com.inigmasgames.hytalerpg.progress.Stage13GroupCrashRecoveryTest" time="0.283"/>
+  <testcase name="[3] BEFORE_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13GroupCrashRecoveryTest" time="0.787"/>
+  <testcase name="[4] AFTER_GROUP_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13GroupCrashRecoveryTest" time="0.279"/>
+  <testcase name="[5] BEFORE_ACKNOWLEDGEMENTS" classname="com.inigmasgames.hytalerpg.progress.Stage13GroupCrashRecoveryTest" time="0.282"/>
+  <testcase name="[6] MID_ACKNOWLEDGEMENTS" classname="com.inigmasgames.hytalerpg.progress.Stage13GroupCrashRecoveryTest" time="0.28"/>
+  <testcase name="[7] ANOTHER_GROUP_QUEUED" classname="com.inigmasgames.hytalerpg.progress.Stage13GroupCrashRecoveryTest" time="0.282"/>
+  <testcase name="[8] CHECKPOINT_WORKER_STARTED" classname="com.inigmasgames.hytalerpg.progress.Stage13GroupCrashRecoveryTest" time="0.293"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

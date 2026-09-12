@@ -154,12 +154,12 @@ public final class ConnectionRuntime {
             if(unpaid>1e-9&&!port.payUpkeep(field.context,tick,unpaid)){finish(field,"INSUFFICIENT_UPKEEP",port);return;}
             field.paidThrough=Math.max(field.paidThrough,due);
             field.tick=tick;
+            field.visualChildren=children;
             // BASE interval, not modified interval: Rapid Pulse changes rate and multiplies payload by .8.
             double coefficient=p.coefficient()*.25;
             double healed=port.heal(field.pulseContext,target,tick,coefficient);
             for(var child:children){
                 healed+=port.heal(field.pulseContext,child.recipient(),tick,coefficient*child.coefficient());
-                port.present(field.context,ConnectionShape.line(child.source().bounds().centre(),child.recipient().bounds().centre(),p.width(),p.height()),"TETHER_SECONDARY",.1);
             }
             port.trace(field.context,"CONNECTION_TICK",Map.of("tick",tick,"coefficient",coefficient,"actualHealing",healed,
                     "secondaryRecipients",children.size(),"NoTetherFanout",true,"periodic",true));
@@ -169,8 +169,15 @@ public final class ConnectionRuntime {
         double tail=now-field.paidThrough;
         if(tail>1e-9&&!port.payUpkeep(field.context,field.tick+1,tail)){finish(field,"INSUFFICIENT_UPKEEP",port);return;}
         field.paidThrough=now;
-        if(now>=field.nextVisual){field.nextVisual=now+.10;
-            port.present(field.context,ConnectionShape.line(origin,target.bounds().centre(),p.width(),p.height()),"ACTIVE",.1);}
+        if(now>=field.nextVisual){field.nextVisual=now+.05;
+            var segments=new ArrayList<ConnectionWorldPort.TetherVisualSegment>(6);
+            segments.add(new ConnectionWorldPort.TetherVisualSegment("PRIMARY:"+target.id(),
+                    ConnectionShape.line(origin,target.bounds().centre(),p.width(),p.height())));
+            for(var child:field.visualChildren)segments.add(new ConnectionWorldPort.TetherVisualSegment(
+                    child.continuation()+":"+child.source().id()+">"+child.recipient().id(),
+                    ConnectionShape.line(child.source().bounds().centre(),child.recipient().bounds().centre(),p.width(),p.height())));
+            port.presentTether(field.context,List.copyOf(segments));
+        }
     }
     private List<TetherContinuations.Payload> continuations(Field field,ConnectionWorldPort.Target primary,ConnectionWorldPort port){
         var modifiers=TetherContinuations.Modifiers.from(field.context.compiledPlan().passiveOrder());
@@ -309,7 +316,7 @@ public final class ConnectionRuntime {
     }
     private static final class Field {
         final SkillExecutionContext context,pulseContext;final UUID world;final Vec3 origin,direction;final double started;
-        final Map<String,Integer> lastHit=new HashMap<>();Vec3 position;double lastTick,nextVisual,travelled,paidThrough;double losLost=Double.NaN;int tick;boolean stopped,done;String targetId;
+        final Map<String,Integer> lastHit=new HashMap<>();List<TetherContinuations.Payload> visualChildren=List.of();Vec3 position;double lastTick,nextVisual,travelled,paidThrough;double losLost=Double.NaN;int tick;boolean stopped,done;String targetId;
         Field(SkillExecutionContext context,UUID world,Vec3 origin,Vec3 direction,double now){
             this.context=context;this.world=world;this.origin=origin;this.direction=direction;this.position=origin;this.started=now;this.lastTick=now;this.nextVisual=now;
             this.paidThrough=now;
