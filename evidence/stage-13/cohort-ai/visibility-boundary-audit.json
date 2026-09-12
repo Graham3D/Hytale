@@ -1,0 +1,1140 @@
+{
+  "baseline": "f5aeb31cf9dea6ede1db1f63f6b19080c381320c",
+  "cohort": "AI",
+  "gate": "A_UNVERIFIED_CONNECTED",
+  "serverSha256": "9CDC1E77DADFDAD0B1D849977CDAD5C2752207F538272FB3D76D4E915546B25E",
+  "assetsSha256": "0E35DF2D4E4A803F7752CB300FA7C9FE7ACDF62B4311978DA95C7AFF7ABBC126",
+  "liveJarSha256": "272E9F8365FE877152B5890D9100E123AE1127D8DC881A88D93993D3C51FE692",
+  "liveModified": false,
+  "clientLog": {
+    "lines": 2300,
+    "matchedTextureOrBeamLines": [],
+    "sha256": "E6B3B1CFAC43620C9DF0E5DA39846CE79A0B0EEC0C3930772404F30E3A744FE1",
+    "file": "2026-09-12_15-12-06_client.log"
+  },
+  "systems": [
+    {
+      "definition": {
+        "Spawners": [
+          {
+            "SpawnerId": "Beam_Heal_Green2_Sparks",
+            "FixedRotation": false
+          },
+          {
+            "SpawnerId": "Beam_Heal_Green2_Glow",
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 6.0,
+                "Max": 6.0
+              }
+            },
+            "MaxConcurrent": 5,
+            "TotalSpawners": -1,
+            "SpawnRate": {
+              "Min": 3.0,
+              "Max": 3.0
+            }
+          },
+          {
+            "SpawnerId": "Beam_Heal_Green2_Plus",
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 6.0,
+                "Max": 6.0
+              }
+            },
+            "MaxConcurrent": 5,
+            "TotalSpawners": -1,
+            "SpawnRate": {
+              "Min": 3.0,
+              "Max": 3.0
+            }
+          }
+        ],
+        "CullDistance": 30.0,
+        "IsImportant": true
+      },
+      "spawners": [
+        {
+          "reference": {
+            "SpawnerId": "Beam_Heal_Green2_Sparks",
+            "FixedRotation": false
+          },
+          "definition": {
+            "RenderMode": "Erosion",
+            "ParticleRotationInfluence": "Billboard",
+            "MaxConcurrentParticles": 500,
+            "ParticleLifeSpan": {
+              "Min": 3.0,
+              "Max": 3.0
+            },
+            "ParticleRotateWithSpawner": true,
+            "SpawnRate": {
+              "Min": 20.0,
+              "Max": 20.0
+            },
+            "Particle": {
+              "Texture": "Particles/Textures/Basic/Ball3.png",
+              "FrameSize": {
+                "Width": 32,
+                "Height": 32
+              },
+              "ScaleRatioConstraint": "OneToOne",
+              "UVOption": "RandomFlipU",
+              "Animation": {
+                "0": {
+                  "Opacity": 0.0,
+                  "Color": "#ffdf52",
+                  "Scale": {
+                    "X": {
+                      "Min": 1,
+                      "Max": 1
+                    },
+                    "Y": {
+                      "Min": 1.0,
+                      "Max": 1.0
+                    }
+                  }
+                },
+                "20": {
+                  "Opacity": 0.965,
+                  "Color": "#79ff00"
+                },
+                "80": {
+                  "Color": "#fff041",
+                  "Opacity": 1.0
+                },
+                "100": {
+                  "Color": "#298e1a",
+                  "Opacity": 0.0
+                }
+              },
+              "InitialAnimationFrame": {
+                "Scale": {
+                  "X": {
+                    "Min": 0.1,
+                    "Max": 0.15
+                  }
+                },
+                "Opacity": 0.5,
+                "Color": "#ffffff",
+                "Rotation": {
+                  "X": {
+                    "Max": 180.0
+                  },
+                  "Y": {
+                    "Max": 180.0
+                  },
+                  "Z": {
+                    "Max": 180.0
+                  }
+                }
+              }
+            },
+            "LinearFiltering": true,
+            "UseEmitDirection": false,
+            "SpawnBurst": false,
+            "Shape": "Cube",
+            "TrailSpawnerPositionMultiplier": 1.0,
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 4.0,
+                "Max": 4.0
+              }
+            },
+            "EmitOffset": {
+              "X": {
+                "Max": 0.0
+              },
+              "Z": {
+                "Max": 0.1
+              },
+              "Y": {
+                "Max": 0.1
+              }
+            }
+          },
+          "id": "Beam_Heal_Green2_Sparks"
+        },
+        {
+          "reference": {
+            "SpawnerId": "Beam_Heal_Green2_Glow",
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 6.0,
+                "Max": 6.0
+              }
+            },
+            "MaxConcurrent": 5,
+            "TotalSpawners": -1,
+            "SpawnRate": {
+              "Min": 3.0,
+              "Max": 3.0
+            }
+          },
+          "definition": {
+            "RenderMode": "BlendAdd",
+            "ParticleRotationInfluence": "Billboard",
+            "MaxConcurrentParticles": 20,
+            "ParticleLifeSpan": {
+              "Min": 0.3,
+              "Max": 0.3
+            },
+            "SpawnRate": {
+              "Min": 1.0,
+              "Max": 1.0
+            },
+            "LinearFiltering": true,
+            "Particle": {
+              "ScaleRatioConstraint": "OneToOne",
+              "Animation": {
+                "0": {
+                  "Opacity": 1.0,
+                  "Color": "#72ff1f",
+                  "Rotation": {
+                    "X": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Y": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Z": {
+                      "Min": 0,
+                      "Max": 0
+                    }
+                  },
+                  "Scale": {
+                    "X": {
+                      "Min": 0.3,
+                      "Max": 0.3
+                    }
+                  }
+                },
+                "40": {
+                  "Opacity": 1.0
+                },
+                "75": {
+                  "Opacity": 0.8
+                },
+                "100": {
+                  "Opacity": 0.0,
+                  "Color": "#0f7000",
+                  "Scale": {
+                    "X": {
+                      "Min": 1.0,
+                      "Max": 1.0
+                    }
+                  }
+                }
+              },
+              "InitialAnimationFrame": {
+                "Scale": {
+                  "X": {
+                    "Min": 0.3,
+                    "Max": 0.3
+                  }
+                },
+                "Opacity": 1.0
+              },
+              "Texture": "Particles/Textures/Circles/Circle_Glow.png",
+              "FrameSize": {
+                "Height": 0
+              }
+            },
+            "SpawnBurst": true,
+            "ParticleRotateWithSpawner": true,
+            "WaveDelay": {
+              "Min": 0.3,
+              "Max": 0.3
+            },
+            "InitialVelocity": {
+              "Speed": {
+                "Min": -4.0,
+                "Max": -4.0
+              }
+            }
+          },
+          "id": "Beam_Heal_Green2_Glow"
+        },
+        {
+          "reference": {
+            "SpawnerId": "Beam_Heal_Green2_Plus",
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 6.0,
+                "Max": 6.0
+              }
+            },
+            "MaxConcurrent": 5,
+            "TotalSpawners": -1,
+            "SpawnRate": {
+              "Min": 3.0,
+              "Max": 3.0
+            }
+          },
+          "definition": {
+            "RenderMode": "Erosion",
+            "ParticleRotationInfluence": "Billboard",
+            "MaxConcurrentParticles": 20,
+            "ParticleLifeSpan": {
+              "Min": 0.3,
+              "Max": 0.3
+            },
+            "SpawnRate": {
+              "Min": 1.0,
+              "Max": 1.0
+            },
+            "LinearFiltering": true,
+            "Particle": {
+              "ScaleRatioConstraint": "OneToOne",
+              "Animation": {
+                "0": {
+                  "Opacity": 0.5,
+                  "Color": "#f8ffe4",
+                  "Rotation": {
+                    "X": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Y": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Z": {
+                      "Min": 0,
+                      "Max": 0
+                    }
+                  },
+                  "Scale": {
+                    "X": {
+                      "Min": 0.6,
+                      "Max": 0.7
+                    }
+                  }
+                },
+                "40": {
+                  "Opacity": 1.0
+                },
+                "75": {
+                  "Opacity": 1.0,
+                  "Scale": {
+                    "X": {
+                      "Min": 1.0,
+                      "Max": 1.0
+                    }
+                  }
+                },
+                "100": {
+                  "Opacity": 0.5,
+                  "Color": "#79ff00",
+                  "Scale": {
+                    "X": {
+                      "Min": 0.9,
+                      "Max": 0.9
+                    }
+                  }
+                }
+              },
+              "InitialAnimationFrame": {
+                "Scale": {
+                  "X": {
+                    "Min": 0.5,
+                    "Max": 0.5
+                  }
+                },
+                "Opacity": 0.448
+              },
+              "Texture": "Particles/Textures/Shapes/Health_Regen_Plus.png"
+            },
+            "SpawnBurst": true,
+            "ParticleRotateWithSpawner": true,
+            "WaveDelay": {
+              "Min": 0.3,
+              "Max": 0.3
+            },
+            "InitialVelocity": {
+              "Speed": {
+                "Min": -4.0,
+                "Max": -4.0
+              }
+            }
+          },
+          "id": "Beam_Heal_Green2_Plus"
+        }
+      ],
+      "system": "Beam_Heal_Green2"
+    },
+    {
+      "definition": {
+        "Spawners": [
+          {
+            "SpawnerId": "Health_Pack_Crosses",
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          },
+          {
+            "SpawnerId": "Health_Pack_Rays",
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          }
+        ]
+      },
+      "spawners": [
+        {
+          "reference": {
+            "SpawnerId": "Health_Pack_Crosses",
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          },
+          "definition": {
+            "RenderMode": "Erosion",
+            "EmitOffset": {
+              "X": {
+                "Min": 0.5,
+                "Max": 0.8
+              },
+              "Y": {
+                "Min": 0,
+                "Max": 0.3
+              },
+              "Z": {
+                "Min": 0.5,
+                "Max": 0.8
+              }
+            },
+            "ParticleRotationInfluence": "Billboard",
+            "LightInfluence": 0,
+            "MaxConcurrentParticles": 150,
+            "ParticleLifeSpan": {
+              "Min": 0.6666666666666666,
+              "Max": 1.2
+            },
+            "ParticleRotateWithSpawner": false,
+            "TrailSpawnerPositionMultiplier": 0,
+            "TrailSpawnerRotationMultiplier": 0,
+            "SpawnRate": {
+              "Min": 6,
+              "Max": 9
+            },
+            "TotalParticles": {
+              "Min": -1,
+              "Max": -1
+            },
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 0.48,
+                "Max": 0.96
+              },
+              "Pitch": {
+                "Min": 80,
+                "Max": 100
+              },
+              "Yaw": {
+                "Min": 0,
+                "Max": 0
+              }
+            },
+            "Attractors": [
+              {
+                "Position": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "RadialAxis": {
+                  "X": 0,
+                  "Y": 1,
+                  "Z": 0
+                },
+                "Radius": 0,
+                "RadialAcceleration": -0.72,
+                "RadialTangentAcceleration": 0.504
+              },
+              {
+                "Position": {
+                  "X": 0,
+                  "Y": 1.1,
+                  "Z": 0
+                },
+                "RadialAxis": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "Radius": 0,
+                "RadialAcceleration": -2.88,
+                "RadialTangentAcceleration": 0.28800000000000003
+              }
+            ],
+            "Particle": {
+              "Texture": "Particles/Textures/Shapes/Health_Regen_Plus.png",
+              "FrameSize": {
+                "Width": 32,
+                "Height": 32
+              },
+              "ScaleRatioConstraint": "OneToOne",
+              "Animation": {
+                "0": {
+                  "FrameIndex": {
+                    "Min": 0,
+                    "Max": 0
+                  },
+                  "Scale": {
+                    "X": {
+                      "Min": 1,
+                      "Max": 1
+                    }
+                  },
+                  "Rotation": {
+                    "X": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Y": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Z": {
+                      "Min": 0,
+                      "Max": 0
+                    }
+                  },
+                  "Opacity": 0,
+                  "Color": "#64cd58"
+                },
+                "10": {
+                  "Opacity": 1
+                },
+                "50": {
+                  "Opacity": 0.7
+                },
+                "90": {
+                  "Opacity": 0.1,
+                  "Scale": {
+                    "X": {
+                      "Min": 3,
+                      "Max": 1.67
+                    }
+                  }
+                },
+                "100": {
+                  "Opacity": 0,
+                  "Color": "#86ff66"
+                }
+              },
+              "InitialAnimationFrame": {
+                "Rotation": {
+                  "X": {
+                    "Min": 0,
+                    "Max": 360
+                  },
+                  "Y": {
+                    "Min": 0,
+                    "Max": 0
+                  },
+                  "Z": {
+                    "Min": 0,
+                    "Max": 360
+                  }
+                },
+                "Scale": {
+                  "X": {
+                    "Min": 0.1,
+                    "Max": 0.3
+                  }
+                },
+                "Opacity": 1,
+                "FrameIndex": {
+                  "Min": 0,
+                  "Max": 0
+                }
+              }
+            }
+          },
+          "id": "Health_Pack_Crosses"
+        },
+        {
+          "reference": {
+            "SpawnerId": "Health_Pack_Rays",
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          },
+          "definition": {
+            "RenderMode": "BlendLinear",
+            "EmitOffset": {
+              "X": {
+                "Min": 0.2,
+                "Max": 0.65
+              },
+              "Y": {
+                "Min": 0,
+                "Max": 0.35
+              },
+              "Z": {
+                "Min": 0.2,
+                "Max": 0.65
+              }
+            },
+            "ParticleRotationInfluence": "BillboardY",
+            "LinearFiltering": true,
+            "LightInfluence": 0,
+            "MaxConcurrentParticles": 150,
+            "ParticleLifeSpan": {
+              "Min": 1.5,
+              "Max": 1.8
+            },
+            "ParticleRotateWithSpawner": false,
+            "TrailSpawnerPositionMultiplier": 0,
+            "TrailSpawnerRotationMultiplier": 0,
+            "SpawnRate": {
+              "Min": 6,
+              "Max": 9
+            },
+            "TotalParticles": {
+              "Min": -1,
+              "Max": -1
+            },
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 0.5399999999999999,
+                "Max": 0.96
+              },
+              "Pitch": {
+                "Min": 90,
+                "Max": 90
+              },
+              "Yaw": {
+                "Min": 0,
+                "Max": 0
+              }
+            },
+            "Particle": {
+              "Texture": "Particles/Textures/Basic/Ray.png",
+              "ScaleRatioConstraint": "OneToOne",
+              "Animation": {
+                "0": {
+                  "FrameIndex": {
+                    "Min": 0,
+                    "Max": 0
+                  },
+                  "Scale": {
+                    "X": {
+                      "Min": 1,
+                      "Max": 1
+                    },
+                    "Y": {
+                      "Min": 1,
+                      "Max": 1
+                    }
+                  },
+                  "Rotation": {
+                    "X": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Y": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Z": {
+                      "Min": 0,
+                      "Max": 0
+                    }
+                  },
+                  "Opacity": 0,
+                  "Color": "#89e061"
+                },
+                "50": {
+                  "Opacity": 0.9
+                },
+                "100": {
+                  "Opacity": 0,
+                  "Color": "#a3f088"
+                }
+              },
+              "InitialAnimationFrame": {
+                "Rotation": {
+                  "X": {
+                    "Min": 0,
+                    "Max": 0
+                  },
+                  "Y": {
+                    "Min": 0,
+                    "Max": 0
+                  },
+                  "Z": {
+                    "Min": 0,
+                    "Max": 0
+                  }
+                },
+                "Scale": {
+                  "X": {
+                    "Min": 0.3,
+                    "Max": 0.5
+                  },
+                  "Y": {
+                    "Min": 0.1,
+                    "Max": 0.5
+                  }
+                },
+                "Opacity": 1,
+                "FrameIndex": {
+                  "Min": 0,
+                  "Max": 0
+                }
+              }
+            }
+          },
+          "id": "Health_Pack_Rays"
+        }
+      ],
+      "system": "Effect_Health_Pack"
+    },
+    {
+      "definition": {
+        "Spawners": [
+          {
+            "SpawnerId": "Staff_Bronze_Sparks",
+            "RotationOffset": {
+              "Yaw": 0,
+              "Pitch": 180,
+              "Roll": 0
+            },
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0.15,
+              "Z": 0
+            }
+          },
+          {
+            "SpawnerId": "Staff_Bronze_Air",
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          }
+        ]
+      },
+      "spawners": [
+        {
+          "reference": {
+            "SpawnerId": "Staff_Bronze_Sparks",
+            "RotationOffset": {
+              "Yaw": 0,
+              "Pitch": 180,
+              "Roll": 0
+            },
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0.15,
+              "Z": 0
+            }
+          },
+          "definition": {
+            "RenderMode": "BlendLinear",
+            "EmitOffset": {
+              "X": {
+                "Min": 0,
+                "Max": 0.2
+              },
+              "Y": {
+                "Min": 0,
+                "Max": 0.2
+              },
+              "Z": {
+                "Min": 0,
+                "Max": 0.2
+              }
+            },
+            "ParticleRotationInfluence": "Billboard",
+            "LinearFiltering": true,
+            "LightInfluence": 0,
+            "ParticleRotateWithSpawner": true,
+            "TrailSpawnerPositionMultiplier": 1,
+            "TrailSpawnerRotationMultiplier": 1,
+            "MaxConcurrentParticles": 5,
+            "ParticleLifeSpan": {
+              "Min": 0.6666666666666666,
+              "Max": 0.8333333333333334
+            },
+            "SpawnRate": {
+              "Min": 12,
+              "Max": 36
+            },
+            "TotalParticles": {
+              "Min": -1,
+              "Max": -1
+            },
+            "InitialVelocity": {
+              "Speed": {
+                "Min": -0.12,
+                "Max": -0.24
+              },
+              "Yaw": {
+                "Min": 0,
+                "Max": 0
+              },
+              "Pitch": {
+                "Min": 75,
+                "Max": 105
+              }
+            },
+            "Particle": {
+              "Texture": "Particles/Textures/Basic/Ball3.png",
+              "FrameSize": {
+                "Width": 32,
+                "Height": 32
+              },
+              "ScaleRatioConstraint": "OneToOne",
+              "Animation": {
+                "0": {
+                  "Scale": {
+                    "X": {
+                      "Min": 1,
+                      "Max": 1
+                    },
+                    "Y": {
+                      "Min": 1,
+                      "Max": 1
+                    }
+                  },
+                  "Opacity": 0
+                },
+                "30": {
+                  "Scale": {
+                    "X": {
+                      "Min": 2,
+                      "Max": 1.5
+                    },
+                    "Y": {
+                      "Min": 2,
+                      "Max": 1.5
+                    }
+                  },
+                  "Opacity": 1
+                },
+                "100": {
+                  "Scale": {
+                    "X": {
+                      "Min": 1,
+                      "Max": 0.5
+                    },
+                    "Y": {
+                      "Min": 1,
+                      "Max": 0.5
+                    }
+                  },
+                  "Opacity": 0
+                }
+              },
+              "InitialAnimationFrame": {
+                "Scale": {
+                  "X": {
+                    "Min": 0.1,
+                    "Max": 0.2
+                  },
+                  "Y": {
+                    "Min": 0.1,
+                    "Max": 0.2
+                  }
+                },
+                "Opacity": 1,
+                "Color": "#96f9ff"
+              }
+            }
+          },
+          "id": "Staff_Bronze_Sparks"
+        },
+        {
+          "reference": {
+            "SpawnerId": "Staff_Bronze_Air",
+            "PositionOffset": {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          },
+          "definition": {
+            "RenderMode": "BlendAdd",
+            "EmitOffset": {
+              "X": {
+                "Min": 0,
+                "Max": 0.2
+              },
+              "Y": {
+                "Min": 0,
+                "Max": 0.2
+              },
+              "Z": {
+                "Min": 0,
+                "Max": 0.2
+              }
+            },
+            "ParticleRotationInfluence": "Billboard",
+            "LinearFiltering": true,
+            "LightInfluence": 0,
+            "ParticleRotateWithSpawner": true,
+            "TrailSpawnerPositionMultiplier": 1,
+            "TrailSpawnerRotationMultiplier": 1,
+            "MaxConcurrentParticles": 5,
+            "ParticleLifeSpan": {
+              "Min": 1,
+              "Max": 1.1666666666666667
+            },
+            "SpawnRate": {
+              "Min": 6,
+              "Max": 18
+            },
+            "InitialVelocity": {
+              "Speed": {
+                "Min": 0.30600000000000005,
+                "Max": 0.32999999999999996
+              },
+              "Yaw": {
+                "Min": -25,
+                "Max": 25
+              },
+              "Pitch": {
+                "Min": 80,
+                "Max": 100
+              }
+            },
+            "Attractors": [
+              {
+                "Position": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "RadialAxis": {
+                  "X": 0,
+                  "Y": 1,
+                  "Z": 0
+                },
+                "Radius": 0,
+                "RadialAcceleration": 0,
+                "RadialTangentAcceleration": 0.36,
+                "RadialImpulse": -0.003,
+                "LinearAcceleration": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                }
+              }
+            ],
+            "Particle": {
+              "Texture": "Particles/Textures/Smoke/Smoke.png",
+              "FrameSize": {
+                "Width": 64,
+                "Height": 64
+              },
+              "SoftParticles": "Enable",
+              "ScaleRatioConstraint": "OneToOne",
+              "UVOption": "RandomFlipU",
+              "Animation": {
+                "0": {
+                  "FrameIndex": {
+                    "Min": 0,
+                    "Max": 0
+                  },
+                  "Opacity": 0,
+                  "Color": "#3ad4d0",
+                  "Scale": {
+                    "X": {
+                      "Min": 1,
+                      "Max": 1
+                    }
+                  },
+                  "Rotation": {
+                    "X": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Y": {
+                      "Min": 0,
+                      "Max": 0
+                    },
+                    "Z": {
+                      "Min": 0,
+                      "Max": 0
+                    }
+                  }
+                },
+                "50": {
+                  "Opacity": 0.3
+                },
+                "100": {
+                  "Opacity": 0,
+                  "Scale": {
+                    "X": {
+                      "Min": 1.33,
+                      "Max": 1.33
+                    }
+                  }
+                }
+              },
+              "InitialAnimationFrame": {
+                "Rotation": {
+                  "X": {
+                    "Min": 0,
+                    "Max": 0
+                  },
+                  "Y": {
+                    "Min": 0,
+                    "Max": 0
+                  },
+                  "Z": {
+                    "Min": 0,
+                    "Max": 90
+                  }
+                },
+                "Scale": {
+                  "X": {
+                    "Min": 0.3,
+                    "Max": 0.3
+                  }
+                },
+                "Opacity": 1,
+                "Color": "#3ad4d0",
+                "FrameIndex": {
+                  "Min": 0,
+                  "Max": 0
+                }
+              }
+            }
+          },
+          "id": "Staff_Bronze_Air"
+        }
+      ],
+      "system": "Staff_Bronze"
+    }
+  ],
+  "nativeDependencies": [
+    {
+      "sha256": "F9DB4149F5EC5468A55F8CF6F4666FF3EA7199DBDFADF2BA901A06E4D1954CD0",
+      "bytes": 730,
+      "path": "Server/Particles/_Test/HealBeams/Beam_Heal_Green2.particlesystem"
+    },
+    {
+      "sha256": "47A900FC8367EC0586831B51E1805D01904FA7DF6EF509AA54EBD09DB5C91426",
+      "bytes": 1674,
+      "path": "Server/Particles/_Test/HealBeams/Spawners/Beam_Heal_Green2_Sparks.particlespawner"
+    },
+    {
+      "sha256": "A26611E8687CF727B332E4549BC21EFC860EFFA89654419094ADC315550BA296",
+      "bytes": 770,
+      "path": "Common/Particles/Textures/Basic/Ball3.png"
+    },
+    {
+      "sha256": "AD8224FC99424D5E7755C6878203DE70039375AFD12307F31C5E07774414235C",
+      "bytes": 1491,
+      "path": "Server/Particles/_Test/HealBeams/Spawners/Beam_Heal_Green2_Glow.particlespawner"
+    },
+    {
+      "sha256": "5D96DA0002F962764BDEF53DD08FCA59BEBB8F1323C925F7D6456FCE476BF097",
+      "bytes": 2527,
+      "path": "Common/Particles/Textures/Circles/Circle_Glow.png"
+    },
+    {
+      "sha256": "C3A73DD7D624354AEC7C7B52DB3E6E5F02FDE65A313856C6D79FF1F6563B0E9A",
+      "bytes": 1559,
+      "path": "Server/Particles/_Test/HealBeams/Spawners/Beam_Heal_Green2_Plus.particlespawner"
+    },
+    {
+      "sha256": "2FC0BF0920B2C63A4B3B9DBFF98A110DE8ADF58A5FEFA31176D371BF6D003398",
+      "bytes": 583,
+      "path": "Common/Particles/Textures/Shapes/Health_Regen_Plus.png"
+    },
+    {
+      "sha256": "767F06827DF0304CA259B04237A5BDE4AE97726A91943B229C22544293F15430",
+      "bytes": 292,
+      "path": "Server/Particles/Status_Effect/Heal/Effect_Health_Pack.particlesystem"
+    },
+    {
+      "sha256": "A4FA9DA8E7B8A71378C507886935CFEDC5FE52B2F62B0B9A818A08DAD734F757",
+      "bytes": 2831,
+      "path": "Server/Particles/Status_Effect/Heal/Spawners/Health_Pack_Crosses.particlespawner"
+    },
+    {
+      "sha256": "2FC0BF0920B2C63A4B3B9DBFF98A110DE8ADF58A5FEFA31176D371BF6D003398",
+      "bytes": 583,
+      "path": "Common/Particles/Textures/Shapes/Health_Regen_Plus.png"
+    },
+    {
+      "sha256": "CCC6E3D516BC5C896173BB0DCBCB07C0C01F3886A0556647C1E28908EF56E8DD",
+      "bytes": 2166,
+      "path": "Server/Particles/Status_Effect/Heal/Spawners/Health_Pack_Rays.particlespawner"
+    },
+    {
+      "sha256": "EE9C26ABD4B3795834200E64AF2B85406918206E7585BA0A462B293D73193972",
+      "bytes": 750,
+      "path": "Common/Particles/Textures/Basic/Ray.png"
+    },
+    {
+      "sha256": "EC95128F273DB95B503147A8548DE3CC087A5397C11609C7012FD2AEAD72C50B",
+      "bytes": 387,
+      "path": "Server/Particles/Weapon/Staff/Staff_Bronze.particlesystem"
+    },
+    {
+      "sha256": "B4E29887E533A5F66B720CF2166EC10CBC94129C069FF03FDC2564E2C2F52AB0",
+      "bytes": 1953,
+      "path": "Server/Particles/Weapon/Staff/Spawners/Staff_Bronze_Sparks.particlespawner"
+    },
+    {
+      "sha256": "A26611E8687CF727B332E4549BC21EFC860EFFA89654419094ADC315550BA296",
+      "bytes": 770,
+      "path": "Common/Particles/Textures/Basic/Ball3.png"
+    },
+    {
+      "sha256": "EDC8EF767FD717102823F5A6F8D4E9464CACCE6171448D64935811CA9AD842F8",
+      "bytes": 2618,
+      "path": "Server/Particles/Weapon/Staff/Spawners/Staff_Bronze_Air.particlespawner"
+    },
+    {
+      "sha256": "8873FE47C4CA713786978BE3DE6AF45D0D454E9EA060BC46161573A85BF5F907",
+      "bytes": 6456,
+      "path": "Common/Particles/Textures/Smoke/Smoke.png"
+    },
+    {
+      "sha256": "947439821124E22A2FBFB10CFF87E86177C99BE2D94A8697257E7370410DF0B5",
+      "bytes": 33,
+      "path": "Common/NPC/MISC/Empty.blockymodel"
+    },
+    {
+      "sha256": "36E10C1F70CBC992F98A0E75950E29F3DE9B7FD21BECD41A3FCBA3751C9423B9",
+      "bytes": 83,
+      "path": "Common/Items/Projectiles/Projectile_default.png"
+    },
+    {
+      "sha256": "9D92CCDFB1A61B8471DD1AA8B48043C5A19ED98AA356B5D71D4C19F44E8D07EE",
+      "bytes": 82676,
+      "path": "Common/NPC/MISC/Mannequin/Models/Model.blockymodel"
+    },
+    {
+      "sha256": "C2B821B39779B5399182FF1C2FBA950A6F2289299329A680A2A4629CC1299D24",
+      "bytes": 16005,
+      "path": "Common/NPC/MISC/Mannequin/Models/Model_Default.png"
+    },
+    {
+      "sha256": "43437BDEC1D20DDCF251AA9DDBFD27BA337C9B14974D1E270BE50A307B58F6F7",
+      "bytes": 4142,
+      "path": "Common/Trails/Void_Green.png"
+    }
+  ],
+  "limitation": "No attached connected viewer or packet delivery acknowledgement in the isolated audit. No renderer success inferred."
+}

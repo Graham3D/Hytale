@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" tests="41" skipped="0" failures="0" errors="0" timestamp="2026-09-12T20:15:15.117Z" hostname="GRAHAM" time="4.388">
+  <properties/>
+  <testcase name="sealed64FramesUseOneForceAndReplayThreeTimes()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.186"/>
+  <testcase name="[1] missing-bundle" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.037"/>
+  <testcase name="[2] corrupt-bundle" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.578"/>
+  <testcase name="[3] corrupt-index" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.036"/>
+  <testcase name="[4] corrupt-manifest" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.035"/>
+  <testcase name="[1] nonzero-tail" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.095"/>
+  <testcase name="[2] torn" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.047"/>
+  <testcase name="[3] crc" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.061"/>
+  <testcase name="[4] missing" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.047"/>
+  <testcase name="[5] duplicate" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.064"/>
+  <testcase name="openReservationPreventsDeathPlanBeforeMutation()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.027"/>
+  <testcase name="[1] AFTER_FIRST_FRAME" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.077"/>
+  <testcase name="[2] AFTER_GROUP_APPEND" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.077"/>
+  <testcase name="[3] BEFORE_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.081"/>
+  <testcase name="[4] AFTER_GROUP_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.079"/>
+  <testcase name="[5] BEFORE_ACKNOWLEDGEMENTS" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.084"/>
+  <testcase name="[1] append" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.076"/>
+  <testcase name="[2] force" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.077"/>
+  <testcase name="checkpointPublishesTwoForcesNotTwoPerContextAndRetainsOldIndexBranches()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.417"/>
+  <testcase name="legitimateHealingOperationSeals64ContextsIntoOneSharedReceipt()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.437"/>
+  <testcase name="[1] death" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.133"/>
+  <testcase name="[2] exclusion" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.142"/>
+  <testcase name="[3] detach" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.136"/>
+  <testcase name="[4] unload" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.146"/>
+  <testcase name="[5] shutdown" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.135"/>
+  <testcase name="explicitV1MigrationPreservesContextWatermarksAndExclusions()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.057"/>
+  <testcase name="[1] BUNDLE_SERIALIZATION" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.079"/>
+  <testcase name="[2] BUNDLE_PARTIAL_WRITE" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.079"/>
+  <testcase name="[3] BUNDLE_BEFORE_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.084"/>
+  <testcase name="[4] BUNDLE_AFTER_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.083"/>
+  <testcase name="[5] BUNDLES_DURABLE" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.083"/>
+  <testcase name="[6] MANIFEST_PARTIAL_WRITE" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.089"/>
+  <testcase name="[7] MANIFEST_BEFORE_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.082"/>
+  <testcase name="[8] MANIFEST_AFTER_FORCE" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.086"/>
+  <testcase name="admissionLimitsRejectBeforeRuntimeLedgerMutation()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.031"/>
+  <testcase name="[1] false" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.039"/>
+  <testcase name="[2] true" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.083"/>
+  <testcase name="portableStatisticsRetainAllSamplesAndSerializeDeterministically()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.006"/>
+  <testcase name="rotationUsesPreparedHandleAndNoAdditionalForegroundBarrier()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.123"/>
+  <testcase name="noDurableReceiptOrDependentMasteryBeforeForce()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.028"/>
+  <testcase name="sealRejectsLateAppendAndNewLeaseCreatesNextOrderedOperation()" classname="com.inigmasgames.hytalerpg.progress.Stage13DurabilityV2Test" time="0.031"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

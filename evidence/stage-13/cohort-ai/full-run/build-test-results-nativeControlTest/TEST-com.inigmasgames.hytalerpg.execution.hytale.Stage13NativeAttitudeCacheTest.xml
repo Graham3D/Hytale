@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.execution.hytale.Stage13NativeAttitudeCacheTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-12T20:15:51.664Z" hostname="GRAHAM" time="0.065">
+  <properties/>
+  <testcase name="coldNativeGetterReproducesExactCacheNullDereference()" classname="com.inigmasgames.hytalerpg.execution.hytale.Stage13NativeAttitudeCacheTest" time="0.018"/>
+  <testcase name="nativePreparationIsIdempotentAndDoesNotInventFriendship()" classname="com.inigmasgames.hytalerpg.execution.hytale.Stage13NativeAttitudeCacheTest" time="0.001"/>
+  <testcase name="everyRpgNativeAttitudeReadRequestsCacheFirst()" classname="com.inigmasgames.hytalerpg.execution.hytale.Stage13NativeAttitudeCacheTest" time="0.044"/>
+  <testcase name="nativeTickStillExpiresCacheWithoutResettingItOnEveryRead()" classname="com.inigmasgames.hytalerpg.execution.hytale.Stage13NativeAttitudeCacheTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

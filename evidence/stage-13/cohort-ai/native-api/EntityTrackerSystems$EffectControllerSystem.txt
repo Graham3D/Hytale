@@ -1,0 +1,205 @@
+Compiled from "EntityTrackerSystems.java"
+public class com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems$EffectControllerSystem extends com.hypixel.hytale.component.system.tick.EntityTickingSystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems$Visible> visibleComponentType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent> effectControllerComponentType;
+
+  private final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> query;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems$EffectControllerSystem(com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems$Visible>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent>);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field visibleComponentType:Lcom/hypixel/hytale/component/ComponentType;
+         9: aload_0
+        10: aload_2
+        11: putfield      #13                 // Field effectControllerComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        14: aload_0
+        15: iconst_2
+        16: anewarray     #16                 // class com/hypixel/hytale/component/query/Query
+        19: dup
+        20: iconst_0
+        21: aload_1
+        22: aastore
+        23: dup
+        24: iconst_1
+        25: aload_2
+        26: aastore
+        27: invokestatic  #18                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        30: putfield      #22                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+        33: return
+
+  public com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getGroup();
+    Code:
+         0: getstatic     #26                 // Field com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems.QUEUE_UPDATE_GROUP:Lcom/hypixel/hytale/component/SystemGroup;
+         3: areturn
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+         4: areturn
+
+  public boolean isParallel(int, int);
+    Code:
+         0: iload_1
+         1: iload_2
+         2: invokestatic  #32                 // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem.maybeUseParallel:(II)Z
+         5: ireturn
+
+  public void tick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: iload_2
+         2: aload_0
+         3: getfield      #7                  // Field visibleComponentType:Lcom/hypixel/hytale/component/ComponentType;
+         6: invokevirtual #36                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         9: checkcast     #42                 // class com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$Visible
+        12: astore        6
+        14: getstatic     #44                 // Field $assertionsDisabled:Z
+        17: ifne          33
+        20: aload         6
+        22: ifnonnull     33
+        25: new           #48                 // class java/lang/AssertionError
+        28: dup
+        29: invokespecial #50                 // Method java/lang/AssertionError."<init>":()V
+        32: athrow
+        33: aload_3
+        34: iload_2
+        35: aload_0
+        36: getfield      #13                 // Field effectControllerComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        39: invokevirtual #36                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        42: checkcast     #51                 // class com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent
+        45: astore        7
+        47: getstatic     #44                 // Field $assertionsDisabled:Z
+        50: ifne          66
+        53: aload         7
+        55: ifnonnull     66
+        58: new           #48                 // class java/lang/AssertionError
+        61: dup
+        62: invokespecial #50                 // Method java/lang/AssertionError."<init>":()V
+        65: athrow
+        66: aload_3
+        67: iload_2
+        68: invokevirtual #53                 // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+        71: astore        8
+        73: aload         6
+        75: getfield      #57                 // Field com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$Visible.newlyVisibleTo:Ljava/util/Map;
+        78: invokeinterface #61,  1           // InterfaceMethod java/util/Map.isEmpty:()Z
+        83: ifne          98
+        86: aload         8
+        88: aload         7
+        90: aload         6
+        92: getfield      #57                 // Field com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$Visible.newlyVisibleTo:Ljava/util/Map;
+        95: invokestatic  #67                 // Method queueFullUpdate:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/entity/effect/EffectControllerComponent;Ljava/util/Map;)V
+        98: aload         7
+       100: invokevirtual #71                 // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.consumeNetworkOutdated:()Z
+       103: ifeq          123
+       106: aload         8
+       108: aload         7
+       110: aload         6
+       112: getfield      #74                 // Field com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$Visible.visibleTo:Ljava/util/Map;
+       115: aload         6
+       117: getfield      #57                 // Field com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$Visible.newlyVisibleTo:Ljava/util/Map;
+       120: invokestatic  #77                 // Method queueUpdatesFor:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/entity/effect/EffectControllerComponent;Ljava/util/Map;Ljava/util/Map;)V
+       123: return
+
+  private static void queueFullUpdate(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent, java.util.Map<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems$EntityViewer>);
+    Code:
+         0: new           #81                 // class com/hypixel/hytale/protocol/EntityEffectsUpdate
+         3: dup
+         4: invokespecial #83                 // Method com/hypixel/hytale/protocol/EntityEffectsUpdate."<init>":()V
+         7: astore_3
+         8: aload_3
+         9: aload_1
+        10: invokevirtual #84                 // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.createInitUpdates:()[Lcom/hypixel/hytale/protocol/EntityEffectUpdate;
+        13: putfield      #88                 // Field com/hypixel/hytale/protocol/EntityEffectsUpdate.entityEffectUpdates:[Lcom/hypixel/hytale/protocol/EntityEffectUpdate;
+        16: aload_2
+        17: invokeinterface #92,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        22: invokeinterface #96,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+        27: astore        4
+        29: aload         4
+        31: invokeinterface #102,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        36: ifeq          61
+        39: aload         4
+        41: invokeinterface #107,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        46: checkcast     #111                // class com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$EntityViewer
+        49: astore        5
+        51: aload         5
+        53: aload_0
+        54: aload_3
+        55: invokevirtual #113                // Method com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$EntityViewer.queueUpdate:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/protocol/ComponentUpdate;)V
+        58: goto          29
+        61: return
+
+  private static void queueUpdatesFor(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent, java.util.Map<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems$EntityViewer>, java.util.Map<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems$EntityViewer>);
+    Code:
+         0: new           #81                 // class com/hypixel/hytale/protocol/EntityEffectsUpdate
+         3: dup
+         4: invokespecial #83                 // Method com/hypixel/hytale/protocol/EntityEffectsUpdate."<init>":()V
+         7: astore        4
+         9: aload         4
+        11: aload_1
+        12: invokevirtual #117                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.consumeChanges:()[Lcom/hypixel/hytale/protocol/EntityEffectUpdate;
+        15: putfield      #88                 // Field com/hypixel/hytale/protocol/EntityEffectsUpdate.entityEffectUpdates:[Lcom/hypixel/hytale/protocol/EntityEffectUpdate;
+        18: aload_3
+        19: invokeinterface #61,  1           // InterfaceMethod java/util/Map.isEmpty:()Z
+        24: ifeq          74
+        27: aload_2
+        28: invokeinterface #92,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        33: invokeinterface #96,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+        38: astore        5
+        40: aload         5
+        42: invokeinterface #102,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        47: ifeq          73
+        50: aload         5
+        52: invokeinterface #107,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        57: checkcast     #111                // class com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$EntityViewer
+        60: astore        6
+        62: aload         6
+        64: aload_0
+        65: aload         4
+        67: invokevirtual #113                // Method com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$EntityViewer.queueUpdate:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/protocol/ComponentUpdate;)V
+        70: goto          40
+        73: return
+        74: aload_2
+        75: invokeinterface #120,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        80: invokeinterface #124,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        85: astore        5
+        87: aload         5
+        89: invokeinterface #102,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        94: ifeq          147
+        97: aload         5
+        99: invokeinterface #107,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       104: checkcast     #127                // class java/util/Map$Entry
+       107: astore        6
+       109: aload_3
+       110: aload         6
+       112: invokeinterface #129,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+       117: invokeinterface #132,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       122: ifeq          128
+       125: goto          87
+       128: aload         6
+       130: invokeinterface #136,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+       135: checkcast     #111                // class com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$EntityViewer
+       138: aload_0
+       139: aload         4
+       141: invokevirtual #113                // Method com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems$EntityViewer.queueUpdate:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/protocol/ComponentUpdate;)V
+       144: goto          87
+       147: return
+
+  static {};
+    Code:
+         0: ldc           #27                 // class com/hypixel/hytale/server/core/modules/entity/tracker/EntityTrackerSystems
+         2: invokevirtual #139                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #44                 // Field $assertionsDisabled:Z
+        16: return
+}

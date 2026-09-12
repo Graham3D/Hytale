@@ -1,6 +1,14 @@
 # Stage 13 — runtime completion and release hardening
 
-**Latest cumulative connected-test correction:** [R032-AD presentation report](stage-13-presentation-ad-report.md).
+**2026-09-12, latest packaged diagnostic checkpoint: R032-AI — NOT DEPLOYED.**
+The [Healing Beam visibility report](stage-13-healing-probe-ai-report.md) and
+[isolated checklist](healing-probe-ai-checklist.md) separate native mutation/queue
+proof from connected rendering. AH remains installed. Gate A is still
+CONNECTED-UNVERIFIED; no complete presentation repair or Stage 13 PASS is claimed.
+The one full regression run's missing probe tick-instrumentation failure and
+successful targeted correction are preserved explicitly in the report.
+
+**Historical cumulative connected-test correction:** [R032-AD presentation report](stage-13-presentation-ad-report.md).
 It is implemented, packaged, and deployed; its client-rendered Beam, Blizzard,
 and radial-cooldown behavior remains connected-unverified.
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-12T20:24:28.372Z" hostname="GRAHAM" time="0.062">
+  <properties/>
+  <testcase name="boundedModesAndFiniteWatchdog()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.011"/>
+  <testcase name="visibleControlChangesOnlyModelAndTextureAndDependenciesExist()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.019"/>
+  <testcase name="lockInAhDirectionalEmitterExtentLimitation()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.026"/>
+  <testcase name="noProbeInspectorConsumesNativeChangesOrClaimsClientSuccess()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.001"/>
+  <testcase name="explicitDisposablePathOnly()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.001"/>
+  <testcase name="probeEffectsAreExactCosmeticWrappersWithOnlyDurationDifferent()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

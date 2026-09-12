@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-09-12T20:14:34.573Z" hostname="GRAHAM" time="0.268">
+  <properties/>
+  <testcase name="areaPenaltyDoesNotAddStacksInTheProfileWhereChildrenCouldMultiplyIt()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="ownerBudgetRejectsOnlyBonusNotAuthoredChill()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.004"/>
+  <testcase name="eliteFrozenDurationIsStillReducedByControlPolicy()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.0"/>
+  <testcase name="globalBudgetIsBoundedAndExpiredEntriesAreReclaimed()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.192"/>
+  <testcase name="forkChildrenShareTheRootTargetBonusCooldown()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="malformedSourceOrStackCountRejected()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="bonusBecomesAvailableExactlyAtOneSecond()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.0"/>
+  <testcase name="noBonusWhenRapidPulseHasNotEarnedAWholeBaseStack()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="frozenImmunityStillHoldsAtFourAndRequiresLaterLegalApplication()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="oneSuccessfulApplicationAddsOneBonusStack()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="bossThresholdRemainsSlowNotFrozen()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.0"/>
+  <testcase name="chillingAuraPeriodicDamageAndItsClocksAreNotDirectHits()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="ownerTeardownDoesNotRemoveOtherOwnersVictimStatus()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.0"/>
+  <testcase name="differentCasterIsNotBlockedByAnotherCastersRootLabel()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.0"/>
+  <testcase name="protectedTargetCannotConsumeOrReceiveBonus()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.0"/>
+  <testcase name="directPenaltyLeavesControlTimingFlightCostAndOffensiveSnapshotAlone()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="activeFrozenCannotBeRefreshedByExtraChill()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="unlinkedApplicationIsUnchangedAndHasNoBonusMemory()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="thresholdConsumesWholeApplicationWithoutPostFreezeChill()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="cacheAndPlanHashesSeparateDeepFreezeFromPlain()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="acceptsNativeChillComponentsAndRejectsNoChill()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.0"/>
+  <testcase name="differentVictimDoesNotConsumeAnotherVictimsOpportunity()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.001"/>
+  <testcase name="differentRootHasItsOwnPaidActivationOpportunity()" classname="com.inigmasgames.hytalerpg.Stage11DeepFreezeTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

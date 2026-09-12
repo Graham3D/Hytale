@@ -103,7 +103,11 @@ public final class HealingParticleVisuals {
         else if(!root.updated){root.updated=true;job.receipt.accept("HEAL_PARTICLE_UPDATED",null);}
     }
     private static Ref<EntityStore> spawn(Store<EntityStore> store,Vec3 from,Vec3 to){
-        var asset=ModelAsset.getAssetMap().getAsset(MODEL_ID);if(asset==null)throw new IllegalStateException("HEAL_PARTICLE_MODEL_MISSING");
+        return spawnCarrier(store,from,to,MODEL_ID);
+    }
+    /** Shared construction boundary; probe selects only its declared comparison model. */
+    static Ref<EntityStore> spawnCarrier(Store<EntityStore> store,Vec3 from,Vec3 to,String modelId){
+        var asset=ModelAsset.getAssetMap().getAsset(modelId);if(asset==null)throw new IllegalStateException("HEAL_PARTICLE_MODEL_MISSING");
         var model=Model.createStaticScaledModel(asset,1);var holder=EntityStore.REGISTRY.newHolder();
         holder.addComponent(UUIDComponent.getComponentType(),new UUIDComponent(UUID.randomUUID()));
         holder.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
@@ -113,7 +117,7 @@ public final class HealingParticleVisuals {
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         return store.addEntity(holder,AddReason.SPAWN);
     }
-    private static void update(Store<EntityStore> store,Ref<EntityStore> ref,Vec3 from,Vec3 to){
+    static void update(Store<EntityStore> store,Ref<EntityStore> ref,Vec3 from,Vec3 to){
         if(!ref.isValid())throw new IllegalStateException("HEAL_PARTICLE_CARRIER_INVALID");
         var transform=store.getComponent(ref,TransformComponent.getComponentType());
         transform.setPosition(vector(from));transform.setRotation(rotation(from,to));

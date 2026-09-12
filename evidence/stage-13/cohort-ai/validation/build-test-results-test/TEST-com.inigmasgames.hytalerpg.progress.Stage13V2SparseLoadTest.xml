@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.progress.Stage13V2SparseLoadTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-12T20:15:45.721Z" hostname="GRAHAM" time="0.154">
+  <properties/>
+  <testcase name="sparseProductionReceiptsIncludeCollectionAndForceWithNoDiscardedSamples()" classname="com.inigmasgames.hytalerpg.progress.Stage13V2SparseLoadTest" time="0.154"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

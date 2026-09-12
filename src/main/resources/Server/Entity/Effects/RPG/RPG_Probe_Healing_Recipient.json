@@ -1,0 +1,14 @@
+{
+  "Duration": 12,
+  "OverlapBehavior": "Overwrite",
+  "Debuff": false,
+  "ApplicationEffects": {
+    "Particles": [
+      {
+        "SystemId": "Effect_Health_Pack",
+        "TargetEntityPart": "Entity",
+        "ClearParticlesOnRemove": true
+      }
+    ]
+  }
+}

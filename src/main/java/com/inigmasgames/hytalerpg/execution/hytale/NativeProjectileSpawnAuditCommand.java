@@ -49,6 +49,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                 NativeHealingBeamVisuals.audit(store,context);
                 HealingParticleVisuals.audit(store,context);
                 NativeManaReplicationAudit.audit(store);
+                if(Boolean.getBoolean("rpg.healingPresentationProbe"))HealingPresentationProbe.audit(store);
                 var nativeActor=actor;var ran=new AtomicBoolean();
                 store.forEachChunk((java.util.function.BiConsumer<ArchetypeChunk<EntityStore>,CommandBuffer<EntityStore>>)(chunk,buffer)->{
                     if(!ran.compareAndSet(false,true))return;

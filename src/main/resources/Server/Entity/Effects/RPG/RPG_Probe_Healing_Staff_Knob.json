@@ -1,0 +1,16 @@
+{
+  "Duration": 12,
+  "OverlapBehavior": "Overwrite",
+  "Debuff": false,
+  "ApplicationEffects": {
+    "Particles": [
+      {
+        "SystemId": "Staff_Bronze",
+        "TargetEntityPart": "PrimaryItem",
+        "TargetNodeName": "Knob",
+        "Scale": 1,
+        "ClearParticlesOnRemove": true
+      }
+    ]
+  }
+}

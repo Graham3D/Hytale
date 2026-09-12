@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13EncounterLoadOrderingTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-12T20:14:55.125Z" hostname="GRAHAM" time="0.143">
+  <properties/>
+  <testcase name="queuedRoleMismatchExcludesWithoutAcquiringLaterUnrelatedReceipt()" classname="com.inigmasgames.hytalerpg.Stage13EncounterLoadOrderingTest" time="0.054"/>
+  <testcase name="loadStillWaitsForEarlierAcceptedContributionAndRestoresItsWatermark()" classname="com.inigmasgames.hytalerpg.Stage13EncounterLoadOrderingTest" time="0.043"/>
+  <testcase name="queuedLoadDoesNotAcquireLaterUnrelatedReceiptAsPredecessor()" classname="com.inigmasgames.hytalerpg.Stage13EncounterLoadOrderingTest" time="0.045"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -63,6 +63,7 @@ public final class Phase00Plugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private PacketFilter inboundWatcher;
     private PacketFilter outboundWatcher;
+    private com.inigmasgames.hytalerpg.execution.hytale.HealingPresentationProbe healingProbe;
     private RpgSkillTraceService skillTrace;
     private RpgLoadoutService loadouts;
     private RpgCombatKernel combatKernel;
@@ -178,6 +179,13 @@ public final class Phase00Plugin extends JavaPlugin {
                 uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities);
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
         getCommandRegistry().registerCommand(rpgCommand);
+        if(Boolean.getBoolean("rpg.healingPresentationProbe")){
+            healingProbe=new com.inigmasgames.hytalerpg.execution.hytale.HealingPresentationProbe(skillTrace);
+            getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.HealingProbeCommand(healingProbe));
+            getEntityStoreRegistry().registerSystem(healingProbe.new Tick());
+            getEntityStoreRegistry().registerSystem(healingProbe.new Observe());
+            LOGGER.atInfo().log("RPG_HEAL_PROBE revision=R032-AI enabled=true permission=inigmasgames.rpg.healingprobe disposableWorldRequired=true connectedProof=false");
+        }
         getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.RpgTraceCommand(skillTrace));
         if(Boolean.getBoolean("rpg.projectileSpawnAudit"))getCommandRegistry().registerCommand(
                 new com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileSpawnAuditCommand(skillExecutionSystem));
@@ -280,6 +288,7 @@ public final class Phase00Plugin extends JavaPlugin {
         });
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, event -> {
             UUID player = event.getPlayerRef().getUuid();
+            if(healingProbe!=null)healingProbe.detach(player);
             persistenceReady.detach(player);
             try { rpgHud.teardown(player, "PLAYER_DISCONNECT"); }
             catch (RuntimeException error) {
@@ -297,6 +306,7 @@ public final class Phase00Plugin extends JavaPlugin {
                     com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
             if (playerRef != null) {
                 nativeAbilities.detach(playerRef.getUuid(), "WORLD_DRAIN");
+                if(healingProbe!=null)healingProbe.detach(playerRef.getUuid());
                 abilityInputs.clear(playerRef.getUuid());
                 bosses.clear(playerRef.getUuid());
                 skillExecutionSystem.cancel(playerRef.getUuid(), "WORLD_DRAIN");
@@ -356,6 +366,7 @@ public final class Phase00Plugin extends JavaPlugin {
 
     @Override
     protected void shutdown() {
+        if(healingProbe!=null){healingProbe.close();healingProbe=null;}
         if (inboundWatcher != null) {
             PacketAdapters.deregisterInbound(inboundWatcher);
             inboundWatcher = null;

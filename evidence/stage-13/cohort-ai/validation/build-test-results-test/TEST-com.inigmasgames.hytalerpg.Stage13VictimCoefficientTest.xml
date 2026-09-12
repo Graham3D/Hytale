@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-09-12T20:15:13.887Z" hostname="GRAHAM" time="0.075">
+  <properties/>
+  <testcase name="executionGeometryAndConditionSurviveCompilation()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.001"/>
+  <testcase name="frontAndSideAreOrdinaryHitsNotRejectedBackstabs()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="cancelledVictimConditionCannotRequestTheStrongerContactAccent()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="backstabRearBoundaryIsInclusive()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="[1] execution_strike, LONGSWORD, 18, 10, 1.4, HEAVY" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.005"/>
+  <testcase name="[2] backstab, DAGGER, 10, 6, .9, LIGHT" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.004"/>
+  <testcase name="facingIsRecheckedForEachActualNativeDamageObject()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.001"/>
+  <testcase name="[1] 24.999, 2.4" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.001"/>
+  <testcase name="[2] 25, 1.4" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="[3] 25.001, 1.4" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="[4] 100, 1.4" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="actualNativeGatherCombinesExecutionerPotencyAndAlreadyRolledCritOnce()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="missingFacingAndCoincidentPositionsFailClosed()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.001"/>
+  <testcase name="backstabUsesOneTargetAndItsOwnAuthoredRange()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="resolvedFactorIsVictimLocalAndCannotSurviveOnAnotherDamage()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="missingFacingCancelsInsteadOfInventingAHitDirection()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="existingEarlierGatherWriterStillCannotBeOverwritten()" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="[1] 0.0" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="[2] -1.0" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.001"/>
+  <testcase name="[3] NaN" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <testcase name="[4] Infinity" classname="com.inigmasgames.hytalerpg.Stage13VictimCoefficientTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

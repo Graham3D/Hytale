@@ -1,0 +1,140 @@
+{
+  "cohort": "AI",
+  "startingHead": "f5aeb31cf9dea6ede1db1f63f6b19080c381320c",
+  "builtAtUtc": "2026-09-12T20:19:23.1747391Z",
+  "suites": [
+    {
+      "errors": 0,
+      "tests": 2176,
+      "failures": 0,
+      "skipped": 0,
+      "suite": "build/test-results/test"
+    },
+    {
+      "errors": 0,
+      "tests": 55,
+      "failures": 0,
+      "skipped": 0,
+      "suite": "build/test-results/nativeControlTest"
+    },
+    {
+      "errors": 0,
+      "tests": 21,
+      "failures": 0,
+      "skipped": 0,
+      "suite": "canvas-ui/build/test-results/test"
+    }
+  ],
+  "fullValidationRuns": 1,
+  "fullValidationExitCode": 1,
+  "initialFullRunFailures": 1,
+  "initialFailureReason": "New opt-in probe ticks lacked required NativeRpgTickMetrics spans; production callback instrumentation corrected; assertion unchanged",
+  "targetedRerun": "17 tests PASS: NativeTickMetrics plus AI probe and AH/AG retained presentation tests",
+  "isolatedNativeParticleLifecycle": "PASS",
+  "visibilityGate": "A_CONNECTED_UNVERIFIED",
+  "laterGates": "B_C_D_E_DEFERRED",
+  "connectedVerified": false,
+  "jarHashes": {
+    "CanvasUI-0.1.0.jar": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6",
+    "HyARPG.jar": "1F5D55FD4104060CBC6EAD6A38DF058962334C85ECEB52779BA0152013828F58",
+    "HYTALEDEVLIB-0.5.0.jar": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+  },
+  "archiveSha256": "BD95C061867B7A3516E0581A227F51F852C20E75AFB7B6299FB028C5C012BAC3",
+  "archiveEntriesVerified": true,
+  "binaryRollback": "AH -> AI -> AH PASS",
+  "unchangedEntriesPreserved": true,
+  "entryDifferences": [
+    {
+      "before": null,
+      "after": "E4FE31F46B5446B5C82ADAF629E04E497C1E6A73F778A5F9373F1B31460AB745",
+      "entry": "com/inigmasgames/hytalerpg/commands/HealingProbeCommand.class"
+    },
+    {
+      "before": "091B4FE1160ED3D710F22A487A6F2F6629AD85B5D15893E2A5454B0E92E512BC",
+      "after": "2B6F110BAC8F714ED0559B67DAD85D10A15E25D6B31CAA6026F4EC5D072180C5",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingParticleVisuals.class"
+    },
+    {
+      "before": null,
+      "after": "4ED4BE98614DA53BB148244404635E21B037B4794AB9CD49AB5E9590154DCF8E",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$1.class"
+    },
+    {
+      "before": null,
+      "after": "985E16F9020BF6EE62057C08F0CF45955B5F27B3D801785289D90B68298CD992",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$Observe.class"
+    },
+    {
+      "before": null,
+      "after": "9ECC1264B2C21A563993BEDD45A3152FE7BBDFC359C3A545A635AB69B1FB4216",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$Run.class"
+    },
+    {
+      "before": null,
+      "after": "DBE0DFF00606B7A384C9DB6512B542F168B5EFDC03B6AF65501A929E2AB6881E",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe$Tick.class"
+    },
+    {
+      "before": null,
+      "after": "F8E9315E6369AD8C837B8247F59A111D3D16297311669E840AEE1613814EAC80",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe.class"
+    },
+    {
+      "before": null,
+      "after": "5E4DE3ABDAAC0CDAAFB36C2A451DB0CB332716BAB40CEF3E5B80A4831B8C7200",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingProbePolicy$Mode.class"
+    },
+    {
+      "before": null,
+      "after": "ABCBCFC0E8E401C7046E55769C5B14081AB7C5ED1F444D74139ED4E612A7AA87",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingProbePolicy.class"
+    },
+    {
+      "before": "6A3A10277E5F73F03E4E9F4DEC2C2632F784F5271F4E00DD110D644CD45E8FD7",
+      "after": "33B4B2374C98E5DC3931AF29F307FCFBF3B910440363EF4D2F48C1818E2B8B0D",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/NativeProjectileSpawnAuditCommand.class"
+    },
+    {
+      "before": "0AD0F6A4A338993A1AB4177B998665476B2A4D9359234F01572466BD0E3EFCE6",
+      "after": "9F3276E4A4487FAC2B9A9B1B2CF68384A51AC8786EDA66A81A1A666A397D8193",
+      "entry": "com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class"
+    },
+    {
+      "before": "23BE9676271D482B9C6107CB2559560C4F1F128C9757E8E92ED19411EBEBCB87",
+      "after": "B8C3E088527E9CC1E47D1A426CA062F68FF6083B8DF52CA50D8642D4302371DA",
+      "entry": "com/inigmasgames/hytalerpg/ui/hud/RpgHud.class"
+    },
+    {
+      "before": null,
+      "after": "26F6FF902BA8A0693C41431A1BA8D86AED5152F65EF2657E2D943F48FE650B9C",
+      "entry": "Server/Entity/Effects/RPG/RPG_Probe_Healing_Recipient.json"
+    },
+    {
+      "before": null,
+      "after": "B0EC2FEBDA42B4BECE542F2B7EBD714FD0A96169864A58DD878C01F09FD1FC9E",
+      "entry": "Server/Entity/Effects/RPG/RPG_Probe_Healing_Staff_Block5.json"
+    },
+    {
+      "before": null,
+      "after": "205BD89750BA3B05C5E7FE205DDE00896157CA84079A720E35A2B3DF1DFE5900",
+      "entry": "Server/Entity/Effects/RPG/RPG_Probe_Healing_Staff_Knob.json"
+    },
+    {
+      "before": null,
+      "after": "0AD4A81D6BD9FE50027C1D94C001845F7F214DACE771075AE8555DFF8CA05E23",
+      "entry": "Server/Entity/Effects/RPG/RPG_Probe_Healing_Staff_Origin_Projectile.json"
+    },
+    {
+      "before": null,
+      "after": "BFB56906D1EC796B29C709323D58C9967AC8D9978D8404E2192CFC968B9E17B9",
+      "entry": "Server/Entity/Effects/RPG/RPG_Probe_Healing_Staff_TopPommel.json"
+    },
+    {
+      "before": null,
+      "after": "929C6C2E4894EF40863EA02296E5B5576DC7B7B8E612D8BFBC85CC5BF518059F",
+      "entry": "Server/Models/RPG/RPG_Probe_Healing_Visible.json"
+    }
+  ],
+  "internalIdentityPreserved": true,
+  "liveDeploymentPerformed": false
+}

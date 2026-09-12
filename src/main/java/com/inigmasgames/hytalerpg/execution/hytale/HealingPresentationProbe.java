@@ -1,0 +1,347 @@
+package com.inigmasgames.hytalerpg.execution.hytale;
+
+import com.hypixel.hytale.component.*;
+import com.hypixel.hytale.component.dependency.*;
+import com.hypixel.hytale.component.system.tick.TickingSystem;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
+import com.hypixel.hytale.server.core.modules.entity.component.*;
+import com.hypixel.hytale.server.core.modules.entity.tracker.*;
+import com.hypixel.hytale.server.core.modules.entitystats.*;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.io.adapter.*;
+import com.hypixel.hytale.protocol.*;
+import com.hypixel.hytale.protocol.packets.entities.EntityUpdates;
+import com.hypixel.hytale.protocol.packets.world.SpawnParticleSystem;
+import com.hypixel.hytale.builtin.beam.*;
+import com.hypixel.hytale.builtin.beam.asset.Beam;
+import com.inigmasgames.hytalerpg.diagnostics.*;
+import com.inigmasgames.hytalerpg.execution.math.Vec3;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
+import org.joml.Vector3d;
+
+/** Gate A only. No combat, resource writes, packet spoofing, or production renderer switch.
+ * Snapshot native viewer queues non-destructively and observe outbound packets before transport.
+ * OUTBOUND_OBSERVED is deliberately not PACKET_SENT or CLIENT_RENDERED. */
+public final class HealingPresentationProbe implements AutoCloseable {
+    private final RpgSkillTracer trace;
+    private final ConcurrentMap<UUID,Run> runs=new ConcurrentHashMap<>();
+    private final Path allowedRoot;
+    private final PacketFilter watcher;
+    private volatile boolean closed;
+    private static final class Run {
+        final UUID owner,world,generation=UUID.randomUUID();
+        final Store<EntityStore> store;final Ref<EntityStore> actor;final HealingProbePolicy.Mode mode;
+        final long started=System.nanoTime();final String requestedTarget;
+        final Set<String> receipts=ConcurrentHashMap.newKeySet();
+        final Map<Integer,String> watched=new ConcurrentHashMap<>();
+        final AtomicLong packets=new AtomicLong(),componentUpdates=new AtomicLong();
+        Ref<EntityStore> target,carrier;String effect;boolean ownedTarget,created,queued,stopping;
+        double nextSample,nextFrame;long stopped;
+        Run(UUID owner,UUID world,Store<EntityStore> store,Ref<EntityStore> actor,HealingProbePolicy.Mode mode,String target){
+            this.owner=owner;this.world=world;this.store=store;this.actor=actor;this.mode=mode;requestedTarget=target;
+        }
+    }
+    public HealingPresentationProbe(RpgSkillTracer trace){
+        if(!Boolean.getBoolean("rpg.healingPresentationProbe"))throw new IllegalStateException("HEAL_PROBE_DISABLED");
+        this.trace=trace;allowedRoot=Path.of(System.getProperty("rpg.healingPresentationProbeRoot","UNCONFIGURED"));
+        watcher=PacketAdapters.registerOutbound((PlayerPacketWatcher)this::outbound);
+    }
+    public synchronized void start(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,String mode,String target)throws java.io.IOException{
+        var world=store.getExternalData().getWorld();
+        var live=Path.of(System.getenv("APPDATA"),"Hytale/data/pre-release/Saves/RPG").toRealPath();
+        if(closed||!HealingProbePolicy.allows(allowedRoot.toRealPath(),world.getSavePath().toRealPath(),live))
+            throw new IllegalStateException("HEAL_PROBE_DISPOSABLE_WORLD_REQUIRED");
+        var selected=HealingProbePolicy.mode(mode);
+        if(!target.equals("native"))UUID.fromString(target);
+        if(runs.size()>=HealingProbePolicy.MAX_WORLDS)throw new IllegalStateException("HEAL_PROBE_CAPACITY");
+        var run=new Run(player.getUuid(),world.getWorldConfig().getUuid(),store,actor,selected,target);
+        if(runs.putIfAbsent(run.world,run)!=null)throw new IllegalStateException("HEAL_PROBE_ALREADY_ACTIVE_WAIT_OR_STOP");
+        receipt(run,"REQUESTED","root",Map.of("durationSeconds",HealingProbePolicy.RUN_SECONDS,"targetSelection",target));
+        schedule(run);
+    }
+    public void stop(Store<EntityStore> store,UUID owner){
+        var run=runs.get(store.getExternalData().getWorld().getWorldConfig().getUuid());
+        if(run!=null&&run.owner.equals(owner))mutate(run,()->cleanup(run,"OWNER_STOP"));
+    }
+    public void detach(UUID owner){
+        for(var r:runs.values())if(r.owner.equals(owner))mutate(r,()->{cleanup(r,"OWNER_DETACH");runs.remove(r.world,r);});
+    }
+    private void mutate(Run r,Runnable work){
+        Runnable measured=()->{try(var span=NativeRpgTickMetrics.enter(r.store,NativeRpgTickMetrics.Phase.HUD)){work.run();}};
+        if(r.store.isInThread()&&!r.store.isProcessing())measured.run();
+        else r.store.getExternalData().getWorld().execute(measured);
+    }
+    private void schedule(Run r){
+        if(r.queued||r.stopping)return;r.queued=true;
+        mutate(r,()->{r.queued=false;
+            if(closed||runs.get(r.world)!=r||r.stopping)return;
+            try{
+                if(!r.actor.isValid()||r.store.getComponent(r.actor,PlayerRef.getComponentType())==null){cleanup(r,"OWNER_GONE");return;}
+                if(!r.created){create(r);r.created=true;}
+                if(!r.target.isValid()){cleanup(r,"TARGET_GONE");return;}
+                for(var ref:List.of(r.actor,r.target)){
+                    var stats=r.store.getComponent(ref,EntityStatMap.getComponentType());
+                    if(stats!=null&&stats.get(DefaultEntityStatTypes.getHealth())!=null&&stats.get(DefaultEntityStatTypes.getHealth()).get()<=0){cleanup(r,"ENDPOINT_DEAD");return;}
+                }
+                if(seconds(r)>=HealingProbePolicy.RUN_SECONDS){cleanup(r,"FINITE_DEADLINE");return;}
+                if(seconds(r)>=r.nextFrame){r.nextFrame=seconds(r)+.05;update(r);}
+            }catch(RuntimeException failure){
+                receipt(r,"FAILED","root",Map.of("error",failure.getClass().getSimpleName(),"reason",safe(failure.getMessage())));
+                cleanup(r,"FAILURE");
+            }
+        });
+    }
+    private void create(Run r){
+        var position=r.store.getComponent(r.actor,TransformComponent.getComponentType());
+        if(r.requestedTarget.equals("native")){
+            var p=new Vector3d(position.getPosition()).add(0,0,-6);
+            var result=com.hypixel.hytale.server.npc.NPCPlugin.get().spawnNPCWithSpaceValidation(
+                r.store,"RPG_Summon_Decoy",null,p,new Rotation3f(),(npc,ref,store)->{
+                    r.target=ref;r.ownedTarget=true;store.addComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType(),NonSerialized.get());
+                    npc.getRole().setDeathItemsDropped();
+                });
+            if(r.target==null)throw new IllegalStateException("NATIVE_NPC_SPAWN_"+result);
+        }else r.target=r.store.getExternalData().getRefFromUUID(UUID.fromString(r.requestedTarget));
+        if(r.target==null||!r.target.isValid())throw new IllegalStateException("TARGET_REF_UNRESOLVED");
+        if(r.target.equals(r.actor))throw new IllegalArgumentException("PROBE_TARGET_MUST_NOT_BE_CASTER");
+        var stats=r.store.getComponent(r.target,EntityStatMap.getComponentType());
+        if(stats==null||stats.get(DefaultEntityStatTypes.getHealth())==null||stats.get(DefaultEntityStatTypes.getHealth()).get()<=0)
+            throw new IllegalArgumentException("PROBE_TARGET_MUST_BE_LIVING");
+        receipt(r,"TARGET_RESOLVED","recipient",entity(r,r.target));
+        var a=anchor(r,r.actor);var b=anchor(r,r.target);
+        switch(r.mode){
+            case WORLD -> {
+                var rot=HealingParticleVisuals.rotation(a,b);
+                var packet=new SpawnParticleSystem("Beam_Heal_Green2",new Position(a.x(),a.y(),a.z()),
+                        new Direction(rot.yaw(),rot.pitch(),rot.roll()),1,null,(float)HealingProbePolicy.RUN_SECONDS);
+                // Exact stock system, finite maxDuration. No broad CancelParticleSystems that might erase somebody else's emitter.
+                for(var viewer:r.store.getExternalData().getWorld().getPlayerRefs())viewer.getPacketHandler().write(packet);
+                receipt(r,"WORLD_PACKET_SUBMITTED","core",Map.of("asset","Beam_Heal_Green2","maxDuration",packet.maxDuration));
+            }
+            case EMPTY, VISIBLE -> {
+                String model=r.mode==HealingProbePolicy.Mode.EMPTY?HealingParticleVisuals.MODEL_ID:"RPG_Probe_Healing_Visible";
+                r.carrier=HealingParticleVisuals.spawnCarrier(r.store,a,b,model);
+                watch(r,r.carrier,"core");receipt(r,"ENTITY_CREATED","core",entity(r,r.carrier));
+            }
+            case BEAM -> {
+                // Explicit geometry-only control: existing AF material, never selected by production.
+                r.carrier=BeamComponent.spawn(r.store,vector(a),NativeHealingBeamVisuals.attachment(Beam.getAssetMap().getIndex(NativeHealingBeamVisuals.ASSET_ID),b));
+                watch(r,r.carrier,"core");receipt(r,"ENTITY_CREATED","core",entity(r,r.carrier));
+            }
+            case RECIPIENT_ONCE,RECIPIENT_OVERWRITE -> {
+                r.effect="RPG_Probe_Healing_Recipient";watch(r,r.target,"recipient");attach(r,r.target);
+            }
+            case STAFF_ONCE,STAFF_OVERWRITE -> {
+                var player=r.store.getComponent(r.actor,Player.getComponentType());
+                var hand=player.getInventory().getItemInHand();
+                String nativeEffect=hand==null?null:HealingParticleVisuals.staffEffect(hand.getItemId());
+                if(nativeEffect==null)throw new IllegalArgumentException("AUDITED_STAFF_REQUIRED");
+                r.effect=nativeEffect.replace("RPG_Healing_Staff_","RPG_Probe_Healing_Staff_");
+                watch(r,r.actor,"staff");attach(r,r.actor);
+            }
+        }
+        receipt(r,"SYSTEM_ORDER","root",systemOrder());
+    }
+    private void attach(Run r,Ref<EntityStore> ref){
+        var controller=r.store.getComponent(ref,EffectControllerComponent.getComponentType());
+        if(controller==null)throw new IllegalStateException("EFFECT_CONTROLLER_MISSING");
+        float duration=overwrite(r)?.3f:(float)HealingProbePolicy.EFFECT_SECONDS;
+        if(!controller.addEffect(ref,EntityEffect.getAssetMap().getAsset(r.effect),duration,OverlapBehavior.OVERWRITE,r.store))
+            throw new IllegalStateException("EFFECT_ATTACH_REJECTED");
+        receipt(r,"EFFECT_ATTACHED",r.mode.name().startsWith("STAFF")?"staff":"recipient",
+                Map.of("effect",r.effect,"duration",duration,"strategy",overwrite(r)?"AH_OVERWRITE_EACH_FRAME":"ONE_FINITE_APPLICATION"));
+    }
+    private static boolean overwrite(Run r){return r.mode==HealingProbePolicy.Mode.RECIPIENT_OVERWRITE||r.mode==HealingProbePolicy.Mode.STAFF_OVERWRITE;}
+    private void update(Run r){
+        var a=anchor(r,r.actor);var b=anchor(r,r.target);
+        if(r.carrier!=null){
+            if(r.mode==HealingProbePolicy.Mode.BEAM){
+                r.store.getComponent(r.carrier,TransformComponent.getComponentType()).setPosition(vector(a));
+                r.store.getComponent(r.carrier,BeamComponent.getComponentType()).set(List.of(NativeHealingBeamVisuals.attachment(Beam.getAssetMap().getIndex(NativeHealingBeamVisuals.ASSET_ID),b)));
+            }else HealingParticleVisuals.update(r.store,r.carrier,a,b);
+        }
+        if(overwrite(r))attach(r,r.mode==HealingProbePolicy.Mode.STAFF_OVERWRITE?r.actor:r.target);
+        if(seconds(r)>=r.nextSample){
+            int sample=(int)r.nextSample;r.nextSample=seconds(r)+HealingProbePolicy.SAMPLE_SECONDS;
+            receipt(r,"FRAME_"+sample,"root",Map.of("source",a,"target",b,"distance",b.subtract(a).length(),"carrierCount",r.carrier==null?0:1));
+        }
+    }
+    private void cleanup(Run r,String reason){
+        if(r.stopping)return;r.stopping=true;r.stopped=System.nanoTime();
+        release(r,"effect",()->{if(r.effect!=null){
+            var ref=r.mode.name().startsWith("STAFF")?r.actor:r.target;
+            if(ref!=null&&ref.isValid()){
+                var c=r.store.getComponent(ref,EffectControllerComponent.getComponentType());
+                if(c!=null)c.removeEffect(ref,EntityEffect.getAssetMap().getIndex(r.effect),r.store);
+            }
+        }});
+        release(r,"core",()->{if(r.carrier!=null&&r.carrier.isValid())r.store.removeEntity(r.carrier,RemoveReason.REMOVE);});
+        release(r,"ownedNpc",()->{if(r.ownedTarget&&r.target!=null&&r.target.isValid())r.store.removeEntity(r.target,RemoveReason.REMOVE);});
+        receipt(r,"CLEANUP","root",Map.of("reason",reason,"worldParticleTail",r.mode==HealingProbePolicy.Mode.WORLD?"NATIVE_FINITE_DURATION_NO_INSTANCE_CANCEL_HANDLE":"NONE"));
+    }
+    private void release(Run r,String layer,Runnable action){
+        try{action.run();receipt(r,"RELEASE_COMPLETED",layer,Map.of());}
+        catch(RuntimeException error){receipt(r,"RELEASE_FAILED",layer,Map.of("error",error.getClass().getSimpleName(),"reason",safe(error.getMessage()),"fallback","UNSAVED_CARRIER_OR_FINITE_EFFECT"));}
+    }
+    private void watch(Run r,Ref<EntityStore> ref,String layer){
+        var id=r.store.getComponent(ref,NetworkId.getComponentType());
+        if(id==null)throw new IllegalStateException("NETWORK_ID_MISSING_"+layer);
+        r.watched.put(id.getId(),layer);
+    }
+    private Map<String,Object> entity(Run r,Ref<EntityStore> ref){
+        var fields=new LinkedHashMap<String,Object>();var uuid=r.store.getComponent(ref,UUIDComponent.getComponentType());var net=r.store.getComponent(ref,NetworkId.getComponentType());
+        fields.put("entityUuid",uuid==null?"UNAVAILABLE":uuid.getUuid());fields.put("networkId",net==null?-1:net.getId());
+        var m=r.store.getComponent(ref,ModelComponent.getComponentType());
+        if(m!=null){var packet=m.getModel().toPacket();fields.put("model",packet.path);fields.put("texture",String.valueOf(packet.texture));
+            fields.put("modelParticles",packet.particles==null?0:packet.particles.length);}
+        var box=r.store.getComponent(ref,BoundingBox.getComponentType());fields.put("bounds",String.valueOf(box==null?null:box.getBoundingBox()));
+        return fields;
+    }
+    private void receipt(Run r,String stage,String layer,Map<String,?> fields){
+        String key=stage+"/"+layer;
+        synchronized(r.receipts){
+            if((r.receipts.size()>=HealingProbePolicy.MAX_TRANSITIONS&&!stage.equals("SUMMARY"))||!r.receipts.add(key))return;
+        }
+        var d=new LinkedHashMap<String,Object>(fields);d.put("probe",true);d.put("cohort","AI");d.put("root",r.generation);d.put("generation",r.generation);
+        d.put("world",r.world);d.put("mode",r.mode);d.put("stage",stage);d.put("layer",layer);d.put("segment",r.generation+"/primary");d.put("connectedRendered",false);
+        trace.trace(RpgTraceRecord.create(r.owner,RpgTraceEventType.HEAL_PRESENTATION,r.generation.toString(),d));
+    }
+    private void outbound(PlayerRef player,Packet packet){
+        var worldId=player.getWorldUuid();if(worldId==null)return; // login/drain can have no world yet
+        var r=runs.get(worldId);if(r==null)return;
+        try{observeOutbound(r,player,packet);}
+        catch(RuntimeException error){observerFailure(r,"outbound",error);}
+    }
+    private void observerFailure(Run r,String layer,RuntimeException error){
+        // A diagnostic serialization/read failure must not abort Hytale's actual packet write or world tick.
+        try{receipt(r,"OBSERVER_FAILED",layer,Map.of("error",error.getClass().getSimpleName(),"reason",safe(error.getMessage())));}
+        catch(RuntimeException ignored){/* native transport continues even if the trace sink is unavailable */}
+    }
+    private void observeOutbound(Run r,PlayerRef player,Packet packet){
+        if(packet instanceof SpawnParticleSystem p&&r.mode==HealingProbePolicy.Mode.WORLD&&"Beam_Heal_Green2".equals(p.particleSystemId))
+            receipt(r,"OUTBOUND_OBSERVED","world/"+player.getUuid(),Map.of("system",p.particleSystemId,"maxDuration",p.maxDuration,"attribution","SYSTEM_AND_ACTIVE_WINDOW_NOT_INSTANCE_ACK"));
+        if(!(packet instanceof EntityUpdates update))return;
+        if(update.updates!=null)for(var entity:update.updates){
+            String layer=r.watched.get(entity.networkId);if(layer==null)continue;
+            r.packets.incrementAndGet();
+            if(entity.updates!=null)for(var component:entity.updates){
+                r.componentUpdates.incrementAndGet();
+                receipt(r,"OUTBOUND_OBSERVED",layer+"/"+player.getUuid()+"/"+component.getClass().getSimpleName(),packetFields(component,entity.networkId));
+            }
+        }
+        if(update.removed!=null)for(int id:update.removed)if(r.watched.containsKey(id))
+            receipt(r,"OUTBOUND_REMOVAL_OBSERVED",r.watched.get(id)+"/"+player.getUuid(),Map.of("networkId",id));
+    }
+    static Map<String,Object> packetFields(ComponentUpdate component,int networkId){
+        var fields=new LinkedHashMap<String,Object>();fields.put("networkId",networkId);fields.put("component",component.getClass().getSimpleName());
+        if(component instanceof ModelUpdate m&&m.model!=null){fields.put("model",String.valueOf(m.model.path));fields.put("texture",String.valueOf(m.model.texture));
+            fields.put("particles",m.model.particles==null?List.of():Arrays.stream(m.model.particles).map(p->Map.of("system",p.systemId,"part",p.targetEntityPart,"node",String.valueOf(p.targetNodeName),"clearOnRemove",p.clearParticlesOnRemove)).toList());}
+        if(component instanceof EntityEffectsUpdate effects)fields.put("effects",effects.entityEffectUpdates==null?List.of():Arrays.stream(effects.entityEffectUpdates).map(e->Map.of("index",e.id,"op",e.type,"infinite",e.infinite,"remaining",e.remainingTime)).toList());
+        return fields;
+    }
+    private void observe(Store<EntityStore> store){
+        var r=runs.get(store.getExternalData().getWorld().getWorldConfig().getUuid());if(r==null)return;
+        try{observeViewers(r,store);}catch(RuntimeException error){observerFailure(r,"viewer",error);}
+    }
+    private void observeViewers(Run r,Store<EntityStore> store){
+        for(var player:store.getExternalData().getWorld().getPlayerRefs()){
+            var ref=player.getReference();if(ref==null||!ref.isValid())continue;
+            var viewer=store.getComponent(ref,EntityTrackerSystems.EntityViewer.getComponentType());if(viewer==null)continue;
+            for(var entity:viewer.visible){if(!entity.isValid())continue;
+                var net=store.getComponent(entity,NetworkId.getComponentType());String layer=net==null?null:r.watched.get(net.getId());
+                if(layer!=null)receipt(r,"VIEWER_TRACKED",layer+"/"+player.getUuid(),Map.of("networkId",net.getId()));
+            }
+            for(var entry:viewer.updates.entrySet()){
+                var entity=entry.getKey();if(!entity.isValid())continue;var net=store.getComponent(entity,NetworkId.getComponentType());
+                String layer=net==null?null:r.watched.get(net.getId());if(layer==null)continue;
+                for(var packet:entry.getValue().toUpdatesArray())receipt(r,"UPDATE_QUEUED",layer+"/"+player.getUuid()+"/"+packet.getClass().getSimpleName(),packetFields(packet,net.getId()));
+            }
+        }
+    }
+    public final class Tick extends TickingSystem<EntityStore>{
+        @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemGroupDependency<>(Order.BEFORE,EntityTrackerSystems.QUEUE_UPDATE_GROUP));}
+        @Override public void tick(float dt,int index,Store<EntityStore> store){
+            try(var span=NativeRpgTickMetrics.enter(store,NativeRpgTickMetrics.Phase.HUD)){
+            var r=runs.get(store.getExternalData().getWorld().getWorldConfig().getUuid());if(r==null)return;
+            if(r.stopping){if(System.nanoTime()-r.stopped>2_000_000_000L){
+                receipt(r,"SUMMARY","root",Map.of("outboundEntityUpdates",r.packets.get(),"outboundComponents",r.componentUpdates.get(),"packetSent","UNVERIFIED","clientRendered","UNVERIFIED"));
+                runs.remove(r.world,r);
+            }}else schedule(r);
+            }
+        }
+    }
+    public final class Observe extends TickingSystem<EntityStore>{
+        @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(
+            new SystemGroupDependency<>(Order.AFTER,EntityTrackerSystems.QUEUE_UPDATE_GROUP),new SystemDependency<>(Order.BEFORE,EntityTrackerSystems.SendPackets.class));}
+        @Override public void tick(float dt,int index,Store<EntityStore> store){
+            try(var span=NativeRpgTickMetrics.enter(store,NativeRpgTickMetrics.Phase.HUD)){observe(store);}
+        }
+    }
+    private static Map<String,Object> systemOrder(){
+        var map=new LinkedHashMap<String,Object>();var data=EntityStore.REGISTRY.getData();
+        for(int i=0;i<data.getSystemSize();i++){var system=data.getSystem(i);var name=system.getClass().getName();
+            if(name.contains("EntityTrackerSystems")&&(name.contains("Model")||name.contains("Effect")||name.contains("SendPackets"))||system instanceof HytaleSkillExecutionSystem||name.contains("HealingPresentationProbe"))map.put(system.getClass().getSimpleName(),i);}
+        return map;
+    }
+    /** Isolated server construction/queue-reader audit, never a connected rendering assertion. */
+    static void audit(Store<EntityStore> store){
+        if(!Boolean.getBoolean("rpg.projectileSpawnAudit")||!Boolean.getBoolean("rpg.healingPresentationProbe"))
+            throw new IllegalStateException("PROBE_AUDIT_NOT_ENABLED");
+        var refs=new ArrayList<Ref<EntityStore>>();
+        try{
+            for(String id:List.of(HealingParticleVisuals.MODEL_ID,"RPG_Probe_Healing_Visible")){
+                var ref=HealingParticleVisuals.spawnCarrier(store,new Vec3(0,203,0),new Vec3(6,203,0),id);refs.add(ref);
+                var model=store.getComponent(ref,ModelComponent.getComponentType());
+                var packet=model.getModel().toPacket();
+                if(packet.particles.length!=1||!"Beam_Heal_Green2".equals(packet.particles[0].systemId)||packet.texture==null)
+                    throw new IllegalStateException("PROBE_MODEL_PARTICLE_CONTRACT");
+                var update=new ModelUpdate();update.model=packet;
+                var queue=new EntityTrackerSystems.EntityUpdate();queue.queueUpdate(update);
+                var before=queue.toUpdatesArray();packetFields(before[0],1);
+                if(!Arrays.equals(before,queue.toUpdatesArray()))throw new IllegalStateException("PROBE_CONSUMED_QUEUE");
+                var controller=new EffectControllerComponent();store.addComponent(ref,EffectControllerComponent.getComponentType(),controller);
+                var visible=new EntityTrackerSystems.Visible();store.addComponent(ref,EntityTrackerSystems.Visible.getComponentType(),visible);
+                var viewer=new EntityTrackerSystems.EntityViewer(128,null);viewer.visible.add(ref);visible.visibleTo.put(ref,viewer);
+                var sender=new EntityTrackerSystems.EffectControllerSystem(EntityTrackerSystems.Visible.getComponentType(),EffectControllerComponent.getComponentType());
+                for(String effectId:List.of("RPG_Probe_Healing_Recipient","RPG_Probe_Healing_Staff_Block5","RPG_Probe_Healing_Staff_Knob","RPG_Probe_Healing_Staff_Origin_Projectile","RPG_Probe_Healing_Staff_TopPommel")){
+                    var asset=Objects.requireNonNull(EntityEffect.getAssetMap().getAsset(effectId));
+                    int index=EntityEffect.getAssetMap().getIndex(effectId);
+                    for(float duration:new float[]{12,.3f,.3f}){
+                        if(!controller.addEffect(ref,asset,duration,OverlapBehavior.OVERWRITE,store)||!controller.hasEffect(index))
+                            throw new IllegalStateException("PROBE_EFFECT_ATTACH_FAILED");
+                        // Native owner, not diagnostic code, consumes its pending changes and produces the viewer queue.
+                        store.forEachChunk((java.util.function.BiConsumer<ArchetypeChunk<EntityStore>,CommandBuffer<EntityStore>>)(chunk,buffer)->{
+                            for(int i=0;i<chunk.size();i++)if(chunk.getReferenceTo(i).equals(ref))sender.tick(.05f,i,chunk,store,buffer);
+                        });
+                        var queued=Objects.requireNonNull(viewer.updates.get(ref),"PROBE_NATIVE_EFFECT_QUEUE_MISSING");
+                        var copy=queued.toUpdatesArray();
+                        if(Arrays.stream(copy).noneMatch(p->p instanceof EntityEffectsUpdate))throw new IllegalStateException("PROBE_EFFECT_PACKET_MISSING");
+                        for(var p:copy)packetFields(p,1);
+                        if(!Arrays.equals(copy,queued.toUpdatesArray()))throw new IllegalStateException("PROBE_OBSERVER_CONSUMED_NATIVE_QUEUE");
+                    }
+                    controller.removeEffect(ref,index,store);if(controller.hasEffect(index))throw new IllegalStateException("PROBE_EFFECT_CLEANUP_FAILED");
+                }
+            }
+            var order=systemOrder();
+            int observer=((Number)Objects.requireNonNull(order.get("Observe"))).intValue();
+            if(observer<=((Number)order.get("EntityModel")).intValue()||observer<=((Number)order.get("EffectControllerSystem")).intValue()||observer>=((Number)order.get("SendPackets")).intValue())
+                throw new IllegalStateException("PROBE_OBSERVER_ORDER:"+order);
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_PROBE_NATIVE result=PASS models=2 effects=5 onceAndOverwrite=true nativeEffectQueue=true nonConsumingRead=true order=%s connectedProof=false",order);
+        }finally{for(var ref:refs)if(ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);}
+    }
+    private static Vec3 anchor(Run r,Ref<EntityStore> ref){var p=r.store.getComponent(ref,TransformComponent.getComponentType()).getPosition();return new Vec3(p.x,p.y+1.35,p.z);}
+    private static Vector3d vector(Vec3 p){return new Vector3d(p.x(),p.y(),p.z());}
+    private static double seconds(Run r){return (System.nanoTime()-r.started)/1e9;}
+    private static String safe(String value){return value==null?"UNSPECIFIED":value.replaceAll("[\\r\\n\\t]"," ").substring(0,Math.min(160,value.length()));}
+    @Override public void close(){closed=true;PacketAdapters.deregisterOutbound(watcher);for(var r:runs.values())mutate(r,()->cleanup(r,"SHUTDOWN"));}
+}
