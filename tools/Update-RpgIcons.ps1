@@ -89,8 +89,8 @@ try {
     if ([string]::IsNullOrWhiteSpace($BackupRoot)) { $BackupRoot = Join-Path $repository 'icon-backups' }
     if ([string]::IsNullOrWhiteSpace($JarPath)) {
         $mods = Join-Path $env:APPDATA 'Hytale\data\pre-release\Saves\RPG\mods'
-        $installed = @(Get-ChildItem -LiteralPath $mods -File -Filter 'HytaleRPG-*.jar')
-        if ($installed.Count -ne 1) { throw 'Expected exactly one HytaleRPG-*.jar in the RPG world mods folder. Remove version ambiguity first.' }
+        $installed = @(Get-ChildItem -LiteralPath $mods -File | Where-Object { $_.Name -eq 'HyARPG.jar' -or $_.Name -like 'HytaleRPG-*.jar' })
+        if ($installed.Count -ne 1) { throw 'Expected exactly one HyARPG.jar (or legacy HytaleRPG-*.jar) in the RPG world mods folder. Remove version ambiguity first.' }
         $JarPath = $installed[0].FullName
     }
     $JarPath = (Resolve-Path -LiteralPath $JarPath).Path

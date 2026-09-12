@@ -1,0 +1,366 @@
+{
+  "capturedAtUtc": "2026-09-12T17:42:24.1743319Z",
+  "baselineInstalledSha256": "CE44364A24A42B3460523342AF32614CB0312057EE4B98CD2E0BBE71C442F38C",
+  "beamFailures": 85,
+  "beamSamples": [
+    {
+      "timestamp": "2026-09-12T16:42:47.605533400Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "59be6c2d-5734-4a41-b32b-5edb658ee846",
+      "details": {
+        "message": "Store is currently processing! Ensure you aren't calling a store method from a system.",
+        "error": "IllegalStateException",
+        "skillInstanceId": "activation-08656cd1-f3c1-4926-9ce5-9209e65c1dc3",
+        "stage": "ALLOCATE_OR_UPDATE",
+        "rootCastId": "input-9-59be6c2d",
+        "result": "NATIVE_BEAM_FAILED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:47.667133Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "59be6c2d-5734-4a41-b32b-5edb658ee846",
+      "details": {
+        "message": "Store is currently processing! Ensure you aren't calling a store method from a system.",
+        "error": "IllegalStateException",
+        "skillInstanceId": "activation-08656cd1-f3c1-4926-9ce5-9209e65c1dc3",
+        "stage": "ALLOCATE_OR_UPDATE",
+        "rootCastId": "input-9-59be6c2d",
+        "result": "NATIVE_BEAM_FAILED"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:47.733554200Z",
+      "eventType": "HEAL_PRESENTATION",
+      "correlationId": "59be6c2d-5734-4a41-b32b-5edb658ee846",
+      "details": {
+        "message": "Store is currently processing! Ensure you aren't calling a store method from a system.",
+        "error": "IllegalStateException",
+        "skillInstanceId": "activation-08656cd1-f3c1-4926-9ce5-9209e65c1dc3",
+        "stage": "ALLOCATE_OR_UPDATE",
+        "rootCastId": "input-9-59be6c2d",
+        "result": "NATIVE_BEAM_FAILED"
+      }
+    }
+  ],
+  "cooldownStates": [
+    {
+      "timestamp": "2026-09-12T16:42:28.831703200Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 2.903930299973581,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "COOLDOWN",
+        "radialValue": 0.96797675
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:31.864844200Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 0.0,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "READY",
+        "radialValue": 0.0
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:35.098129900Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 2.9668065999867395,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "COOLDOWN",
+        "radialValue": 0.98893553
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:38.098103100Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 0.0,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "READY",
+        "radialValue": 0.0
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:48.233864700Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 0.25,
+        "remaining": 0.1172405,
+        "skillId": "healing_beam",
+        "component": "cooldown_hud_state",
+        "slot": 1,
+        "page": "command",
+        "state": "COOLDOWN",
+        "radialValue": 0.468962
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:48.467707800Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 0.25,
+        "remaining": 0.0,
+        "skillId": "healing_beam",
+        "component": "cooldown_hud_state",
+        "slot": 1,
+        "page": "command",
+        "state": "READY",
+        "radialValue": 0.0
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:52.239344500Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 0.25,
+        "remaining": 0.2034131,
+        "skillId": "healing_beam",
+        "component": "cooldown_hud_state",
+        "slot": 1,
+        "page": "command",
+        "state": "COOLDOWN",
+        "radialValue": 0.8136524
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:52.472375200Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 0.25,
+        "remaining": 0.0,
+        "skillId": "healing_beam",
+        "component": "cooldown_hud_state",
+        "slot": 1,
+        "page": "command",
+        "state": "READY",
+        "radialValue": 0.0
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:56.971918800Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 2.9337831000448205,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "COOLDOWN",
+        "radialValue": 0.9779277
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:43:00.006362Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 0.0,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "READY",
+        "radialValue": 0.0
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:43:34.997700300Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 2.966715899994597,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "COOLDOWN",
+        "radialValue": 0.9889053
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:43:37.997483700Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 0.0,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "READY",
+        "radialValue": 0.0
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:43:41.130041200Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 2.9003318000468425,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "COOLDOWN",
+        "radialValue": 0.96677727
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:43:44.130896400Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "duration": 3.0,
+        "remaining": 0.0,
+        "skillId": "blizzard",
+        "component": "cooldown_hud_state",
+        "slot": 2,
+        "page": "command",
+        "state": "READY",
+        "radialValue": 0.0
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:02:18.757873400Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "component": "cooldown_hud_state",
+        "skillId": "healing_beam",
+        "remaining": 0.17076059999999998,
+        "duration": 0.25,
+        "radialValue": 0.6830424,
+        "state": "COOLDOWN",
+        "page": "command",
+        "slot": 1
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:02:18.957101800Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "component": "cooldown_hud_state",
+        "skillId": "healing_beam",
+        "remaining": 0.0,
+        "duration": 0.25,
+        "radialValue": 0.0,
+        "state": "READY",
+        "page": "command",
+        "slot": 1
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:03:29.700345300Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "component": "cooldown_hud_state",
+        "skillId": "blizzard",
+        "remaining": 2.901001499965787,
+        "duration": 3.0,
+        "radialValue": 0.9670005,
+        "state": "COOLDOWN",
+        "page": "command",
+        "slot": 2
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:03:32.734022300Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "component": "cooldown_hud_state",
+        "skillId": "blizzard",
+        "remaining": 0.0,
+        "duration": 3.0,
+        "radialValue": 0.0,
+        "state": "READY",
+        "page": "command",
+        "slot": 2
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:06:03.692240200Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "component": "cooldown_hud_state",
+        "skillId": "blizzard",
+        "remaining": 2.900708200002555,
+        "duration": 3.0,
+        "radialValue": 0.96690273,
+        "state": "COOLDOWN",
+        "page": "command",
+        "slot": 2
+      }
+    },
+    {
+      "timestamp": "2026-09-12T17:06:06.725398200Z",
+      "eventType": "COOLDOWN_HUD_STATE",
+      "details": {
+        "component": "cooldown_hud_state",
+        "skillId": "blizzard",
+        "remaining": 0.0,
+        "duration": 3.0,
+        "radialValue": 0.0,
+        "state": "READY",
+        "page": "command",
+        "slot": 2
+      }
+    }
+  ],
+  "skillTraceSha256": "1BCA77506CB99EB20FFC8007AA3D0EC176E5C28900CDBCD122956ED40E3389F4",
+  "uiTraceSha256": "0D1E3EECF416877735C70BEBD26FFDE7C3380C927A96A45E687569B6F01ADCAD",
+  "sourceTracesUnmodified": true,
+  "installedHytale": "0.7.0-pre.2",
+  "legacyTraceHeader": "0.7.0-pre.1 (AD compile-time metadata, not runtime binary proof)",
+  "insufficientResourceValidations": 34,
+  "resourceSamples": [
+    {
+      "timestamp": "2026-09-12T16:42:41.733997900Z",
+      "eventType": "SKILL_VALIDATION_REJECTED",
+      "correlationId": "8e97a41d-37b2-4edd-9780-87f2036dd6aa",
+      "details": {
+        "skillInstanceId": "activation-32fd3a61-b545-467f-8c1a-e8c3e24b913f",
+        "failureCode": "INSUFFICIENT_RESOURCE",
+        "rootCastId": "input-3-8e97a41d"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:42.867072100Z",
+      "eventType": "SKILL_VALIDATION_REJECTED",
+      "correlationId": "1b86662c-b3aa-41d1-81b1-b49065a72538",
+      "details": {
+        "skillInstanceId": "activation-1e41fa7f-da9d-4115-8c30-6ab5ac475f66",
+        "failureCode": "INSUFFICIENT_RESOURCE",
+        "rootCastId": "input-4-1b86662c"
+      }
+    },
+    {
+      "timestamp": "2026-09-12T16:42:43.60067Z",
+      "eventType": "SKILL_VALIDATION_REJECTED",
+      "correlationId": "1256d3e1-dd86-46fd-ac1f-787064c7071a",
+      "details": {
+        "skillInstanceId": "activation-1ae03935-a556-4a34-8bd3-21a8676bb1c9",
+        "failureCode": "INSUFFICIENT_RESOURCE",
+        "rootCastId": "input-5-1256d3e1"
+      }
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "Name": "server.items.RPG_Ability_Whirlwind.name",
     "Description": "server.items.RPG_Ability_Whirlwind.description"
   },
-  "Icon": "Icons/ItemsGenerated/Rune_WindStrike.png",
+  "Icon": "Icons/Items/RPG/SkillWhirlwind.png",
   "Quality": "Rare",
   "Categories": [
     "Items.Ingredients"

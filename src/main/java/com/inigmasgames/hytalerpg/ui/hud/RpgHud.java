@@ -24,7 +24,7 @@ final class RpgHud extends CustomUIHud {
         commands.append("RpgHud.ui");
         commands.append("RpgCooldownSweep.ui");
         commands.append("Phase00RevisionHud.ui");
-        commands.set("#BuildRevision.TextSpans", Message.raw(com.inigmasgames.hytalerpg.phase00.BuildIdentity.REVISION + "-AD"));
+        commands.set("#BuildRevision.TextSpans", Message.raw(com.inigmasgames.hytalerpg.phase00.BuildIdentity.REVISION + "-AE"));
         writeAll(commands, model);
     }
 
@@ -48,6 +48,15 @@ final class RpgHud extends CustomUIHud {
             var slot=model.skills().get(i);String selector="#RpgCooldownSkill0"+(i+1);
             commands.set(selector+".Visible",slot.cooldownRemainingSeconds()>0&&!slot.skillId().isEmpty());
             commands.set(selector+".Value",CooldownSweep.progress(slot.cooldownRemainingSeconds(),slot.cooldownDurationSeconds()));
+            String suffix="0"+(i+1);
+            String countdown=CooldownSweep.countdown(slot.cooldownRemainingSeconds());
+            commands.set("#RpgCountdown"+suffix+".Text",countdown);
+            commands.set("#RpgCountdownShadow"+suffix+".Text",countdown);
+            commands.set("#RpgCountdown"+suffix+".Visible",!countdown.isEmpty()&&!slot.skillId().isEmpty());
+            commands.set("#RpgCountdownShadow"+suffix+".Visible",!countdown.isEmpty()&&!slot.skillId().isEmpty());
+            String warning=slot.unavailableReason().startsWith("LOW_")?slot.unavailableReason().replace('_',' '):"";
+            commands.set("#RpgResourceNotice"+suffix+".Text",warning);
+            commands.set("#RpgResourceNotice"+suffix+".Visible",!warning.isEmpty());
         }
     }
 

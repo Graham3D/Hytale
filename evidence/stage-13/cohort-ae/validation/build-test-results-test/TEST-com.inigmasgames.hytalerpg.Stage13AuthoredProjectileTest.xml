@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" tests="40" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:31:39.937Z" hostname="GRAHAM" time="0.206">
+  <properties/>
+  <testcase name="snipeCannotPromoteDevelopmentFallbackIntoAProductionCast()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="ownerCleanupCancelsQueuedInstancesAndAllReservedCapacity()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="bombAirborneDeadlineDetonatesButCancellationDoesNot()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.001"/>
+  <testcase name="queueRemovesDueEntriesBeforeAnyNativeCallbackAndCannotRepeatThem()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="ballisticReachIsPlacementDistanceNotAPathLengthThatCutsOffTheArc()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.003"/>
+  <testcase name="nativeFlightClockStartsAtAllocationNotItsEarlierScheduledDeadline()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.005"/>
+  <testcase name="combustionChangesBothAuthoredHitComponentsNotTheBurnBase()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.003"/>
+  <testcase name="authoredHomingOverflowRejectsAndNeverSilentlyTruncates()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.001"/>
+  <testcase name="explicitRuntimeBlockersAreNotAdvertisedAsOnlyAwaitingConnectedQA()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.003"/>
+  <testcase name="nativeClockCannotBeRebasedAfterObservationOrBeforeDeadline()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.003"/>
+  <testcase name="futureBarragePromisesIncludeEveryAuthoredMissile()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="fiveMissilesUseFiveDeadlinesAndOneFifthProcs()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.005"/>
+  <testcase name="deterministicEightPelletsAreSymmetricAndIndependentlyHitTheSameVictim()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="lateContactsCannotExtendRangeOrBypassNativeSafetyLifetime()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="selectedHomingEntityWinsOverAnEnemyCloserToAim()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.001"/>
+  <testcase name="liveAuthoredTargetCannotMoveBeyondCommittedTwentySixMetreLock()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="firstGroundContactStartsOneFuseAndDuplicateContactsCannotExtendIt()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="eligibleEnemyImpactWinsThePendingBombFuseOnce()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="duplicateQueueEntryRejectsWithoutReplacingOwner()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="invalidPartialExplosionAndPatternsReject()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="wallAlongBallisticArcRejectsEvenWhenTheEndpointsAreClear()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.001"/>
+  <testcase name="[1] blunderbuss_shot, GUN, STAMINA, 6, 3, 8, .22" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.009"/>
+  <testcase name="[2] explosive_flask, BOMB, STAMINA, 8, 8, 1, 0" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="[3] bomb_toss, BOMB, STAMINA, 8, 9, 1, 0" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="[4] arcane_missiles, WAND, MANA, 16, 7, 5, .42" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="[5] fireball, STAFF, MANA, 18, 7, 1, 1.55" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="volleyMultipliesAuthoredPelletsButNotRootPayments()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.005"/>
+  <testcase name="concentrationChangesSplashAndBurnFootprintsNotTheCarrier()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <testcase name="fireballHasSeparateDirectSplashBurnAndCollisionDimensions()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="[1] 14, 18" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.001"/>
+  <testcase name="[2] 15, 20" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="nativeGunBaseIsTheAuditedBulletNotTheMeleeSwingOrCost()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="fallbackHomingUsesAimRadiusLosAndStableTieOrder()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.001"/>
+  <testcase name="flaskImpactsImmediatelyAndExpiryRemainsHarmless()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="[1] NaN" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="[2] Infinity" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="[3] 0.0" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="[4] -1.0" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="unreachableHighTargetAndOverRangeRejectBeforeAThrowExists()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.0"/>
+  <testcase name="invalidFortyFiveMissileLaunchIsRejectedAtomicallyByOwnerCapacity()" classname="com.inigmasgames.hytalerpg.Stage13AuthoredProjectileTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

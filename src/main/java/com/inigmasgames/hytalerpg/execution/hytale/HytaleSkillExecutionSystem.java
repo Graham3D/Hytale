@@ -304,7 +304,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
 
     public void onIncomingDamage(UUID actor) {
         if (windupEnds.remove(actor) != null) executions.cancel(actor, "NATIVE_DAMAGE_INTERRUPT");
-        healingBeamVisuals.cancel(actor);
+        healingBeamVisuals.cancel(actor,null);
         for(var channel:connections.cancel(actor,true)) {
             inputs.stopHeld(channel.request());
             emit(channel,RpgTraceEventType.CONNECTION_TERMINATED,Map.of("reason","NATIVE_DAMAGE_INTERRUPT"));
@@ -331,7 +331,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         // Teardown has no guaranteed live viewer/world; discard remaining presentation, never gameplay.
         healingText.flush(actor,null,0,true);
         blizzardVisuals.cancel(actor,buffer);
-        healingBeamVisuals.cancel(actor);
+        healingBeamVisuals.cancel(actor,buffer);
         for (SkillExecutionContext area : areas.cancel(actor))
             emit(area, RpgTraceEventType.AREA_TERMINATED, Map.of("reason", reason));
         for(var connection:connections.cancel(actor,false)) {
@@ -970,17 +970,19 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 }
                 @Override public void presentTether(SkillExecutionContext context,List<ConnectionWorldPort.TetherVisualSegment> segments){
                     try{
-                        if(healingBeamVisuals.present(store,context,segments,System.nanoTime()/1e9))
-                            emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result","NATIVE_BEAM_STARTED","asset",NativeHealingBeamVisuals.ASSET_ID,"segments",segments.size()));
+                        healingBeamVisuals.present(store,buffer,context,segments,System.nanoTime()/1e9,(result,failure)->{
+                            if(failure==null)emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result",result,"asset",NativeHealingBeamVisuals.ASSET_ID,"segments",segments.size(),"stage","COMMAND_BUFFER_CONSUMED"));
+                            else emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result",result,"stage","COMMAND_BUFFER_CONSUMED","error",failure.getClass().getSimpleName(),"message",boundedMessage(failure)));
+                        });
                     } catch(RuntimeException failure){
-                        healingBeamVisuals.remove(context); // Presentation cannot refund a paid pulse.
+                        healingBeamVisuals.remove(context,buffer); // Presentation cannot refund a paid pulse.
                         emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result","NATIVE_BEAM_FAILED","stage","ALLOCATE_OR_UPDATE",
                                 "error",failure.getClass().getSimpleName(),"message",boundedMessage(failure)));
                     }
                 }
                 public void ended(SkillExecutionContext context,String reason){
                     for(var value:healingText.flush(playerRef.getUuid(),context.rootCastId(),0,true))presentHealingText(store,actor,value);
-                    try{healingBeamVisuals.remove(context);inputs.stopHeld(context.request());}finally{executions.terminate(context,reason);}
+                    try{healingBeamVisuals.remove(context,buffer);inputs.stopHeld(context.request());}finally{executions.terminate(context,reason);}
                 }
                 public void trace(SkillExecutionContext context,String event,Map<String,?> details){emit(context,RpgTraceEventType.valueOf(event),details);}
             };

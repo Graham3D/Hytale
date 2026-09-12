@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12NativeBiomeAssetTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:32:44.963Z" hostname="GRAHAM" time="0.412">
+  <properties/>
+  <testcase name="nonLegacyGeneratorCannotInheritBiomeIdentity()" classname="com.inigmasgames.hytalerpg.Stage12NativeBiomeAssetTest" time="0.003"/>
+  <testcase name="installedDamageSupportsTransientRootContextWithIdentityValidation()" classname="com.inigmasgames.hytalerpg.Stage12NativeBiomeAssetTest" time="0.269"/>
+  <testcase name="exactInstalledAssetsMatchRegistryPins()" classname="com.inigmasgames.hytalerpg.Stage12NativeBiomeAssetTest" time="0.087"/>
+  <testcase name="actualNamedWorldgenCodecDoesNotPretendToBeDefault()" classname="com.inigmasgames.hytalerpg.Stage12NativeBiomeAssetTest" time="0.002"/>
+  <testcase name="installedFileContextLoaderResolvesAllFourQualifiedPilotBiomes()" classname="com.inigmasgames.hytalerpg.Stage12NativeBiomeAssetTest" time="0.047"/>
+  <testcase name="actualDefaultWorldgenCodecIdentifiesDefaultWithoutFolderGuess()" classname="com.inigmasgames.hytalerpg.Stage12NativeBiomeAssetTest" time="0.001"/>
+  <testcase name="customNativeWorldgenPathRequiresOwnAssetAudit()" classname="com.inigmasgames.hytalerpg.Stage12NativeBiomeAssetTest" time="0.0"/>
+  <testcase name="nativeWorldSpawnRequiresFreshSpawnAndBothInitializedProvenanceFields()" classname="com.inigmasgames.hytalerpg.Stage12NativeBiomeAssetTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

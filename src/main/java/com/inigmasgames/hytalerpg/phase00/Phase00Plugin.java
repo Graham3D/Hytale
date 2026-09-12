@@ -170,6 +170,7 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleStatusDeathSystem(skillExecutionSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleStatusDeathSystem.Removal(skillExecutionSystem));
         uiProjection.configureActiveRemaining(skillExecutionSystem::activeSkillRemaining);
+        uiProjection.configureResourceReadiness(combatKernel.resources(),executions::attunementStacks);
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         rpgHud.configureFinisherPips(executions::finisherPips);
         rpgHud.configureOwnerPublication(encounterRewards::ownerPublished);

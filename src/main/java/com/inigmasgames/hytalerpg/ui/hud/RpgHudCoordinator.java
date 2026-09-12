@@ -121,11 +121,11 @@ public final class RpgHudCoordinator {
     private void traceCooldownTransitions(UUID player,RpgHudViewModel previous,RpgHudViewModel next) {
         for(int i=0;i<Math.min(2,next.skills().size());i++){
             var before=previous.skills().get(i);var after=next.skills().get(i);
-            if(before.state()==after.state()&&before.skillId().equals(after.skillId()))continue;
+            if(before.state()==after.state()&&before.skillId().equals(after.skillId())&&before.unavailableReason().equals(after.unavailableReason()))continue;
             trace.trace(player,"COOLDOWN_HUD_STATE",ref(),Map.of("slot",i+1,"skillId",after.skillId(),
                     "state",after.state().name(),"remaining",after.cooldownRemainingSeconds(),
                     "duration",after.cooldownDurationSeconds(),"radialValue",CooldownSweep.progress(
-                            after.cooldownRemainingSeconds(),after.cooldownDurationSeconds())));
+                            after.cooldownRemainingSeconds(),after.cooldownDurationSeconds()),"countdown",CooldownSweep.countdown(after.cooldownRemainingSeconds()),"resourceFeedback",after.unavailableReason()));
         }
     }
 

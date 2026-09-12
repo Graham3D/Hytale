@@ -4,6 +4,8 @@ plugins {
 
 group = maven_group
 version = project.version
+// Public distribution filename; retain the established manifest identity/data directory.
+tasks.named('jar') { archiveFileName = 'HyARPG.jar' }
 
 def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
 def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")

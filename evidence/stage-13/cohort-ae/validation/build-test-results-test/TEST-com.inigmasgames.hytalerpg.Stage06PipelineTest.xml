@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage06PipelineTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:31:18.609Z" hostname="GRAHAM" time="0.134">
+  <properties/>
+  <testcase name="pilotsReuseOneCommitOneCooldownAndSnapshotAuthority()" classname="com.inigmasgames.hytalerpg.Stage06PipelineTest" time="0.112"/>
+  <testcase name="authoredSlowRejectsMalformedValuesAndCapsAtSixtyPercent()" classname="com.inigmasgames.hytalerpg.Stage06PipelineTest" time="0.002"/>
+  <testcase name="chillRemainsAtFourDuringFrozenImmunityAndCanFreezeOnLaterLegalHit()" classname="com.inigmasgames.hytalerpg.Stage06PipelineTest" time="0.001"/>
+  <testcase name="partialAreaAdapterFailureCannotRefundDamageAndEnableFreeRepeatedCasts()" classname="com.inigmasgames.hytalerpg.Stage06PipelineTest" time="0.009"/>
+  <testcase name="lateInspectionDoesNotExtendImmunityAndRemovalDropsAllStatusMemory()" classname="com.inigmasgames.hytalerpg.Stage06PipelineTest" time="0.002"/>
+  <testcase name="strongestSlowDoesNotMultiplyAndWeakerChillResumesAfterExpiry()" classname="com.inigmasgames.hytalerpg.Stage06PipelineTest" time="0.001"/>
+  <testcase name="controlResistanceIsSharedRollingAndEliteDurationHalves()" classname="com.inigmasgames.hytalerpg.Stage06PipelineTest" time="0.0"/>
+  <testcase name="rejectedNativePlacementDoesNotCommitAnyResourceOrCooldown()" classname="com.inigmasgames.hytalerpg.Stage06PipelineTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

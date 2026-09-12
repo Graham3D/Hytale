@@ -36,14 +36,14 @@ public final class NativeSupportTetherAudit {
         for(String id:java.util.List.of("CombatText","Healthbar"))if(com.hypixel.hytale.server.core.modules.entityui.asset.EntityUIComponent.getAssetMap().getAsset(id)==null)
             throw new IllegalStateException("NATIVE_ACTOR_UI_MISSING:"+id);
         if(com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent.getAssetMap().getAsset("SFX_Ice_Ball_Death")==null)throw new IllegalStateException("BLIZZARD_SOUND_MISSING");
-        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_BLIZZARD_ASSETS cohort=AD model=RPG_Blizzard_Shard snow=Snow_Heavy impact=Impact_Ice sound=SFX_Ice_Ball_Death result=PASS connectedProof=false");
+        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_BLIZZARD_ASSETS cohort=AE model=RPG_Blizzard_Shard snow=Snow_Heavy impact=Impact_Ice sound=SFX_Ice_Ball_Death result=PASS connectedProof=false");
         var healingBeam=Beam.getAssetMap().getAsset(NativeHealingBeamVisuals.ASSET_ID);
         if(healingBeam==null)throw new IllegalStateException("SUPPORT_NATIVE_BEAM_MISSING:"+NativeHealingBeamVisuals.ASSET_ID);
         if(ParticleSystem.getAssetMap().getAsset("RPG_Protection_Glow")==null)throw new IllegalStateException("SUPPORT_TETHER_PARTICLE_MISSING:RPG_Protection_Glow");
         if(EntityEffect.getAssetMap().getAsset("RPG_Protection_Visual")==null)throw new IllegalStateException("PROTECTION_VISUAL_MISSING");
         var animations=com.hypixel.hytale.server.core.asset.type.itemanimation.config.ItemPlayerAnimations.getAssetMap().getAsset("Spellbook");
         for(String id:java.util.List.of("CastPushCharging","CastPushCharged"))if(animations==null||!animations.getAnimations().containsKey(id))throw new IllegalStateException("SUPPORT_NATIVE_ANIMATION_MISSING:"+id);
-        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_SUPPORT_TETHER_ASSETS cohort=AD skills=89 passives=67 heldRoot=RESOLVED nativeGameplay=false beam=%s texture=%s persistent=true connectedProof=false",
+        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_SUPPORT_TETHER_ASSETS cohort=AE skills=89 passives=67 heldRoot=RESOLVED nativeGameplay=false beam=%s texture=%s persistent=true connectedProof=false",
                 NativeHealingBeamVisuals.ASSET_ID,healingBeam.getTexture());
     }
 }

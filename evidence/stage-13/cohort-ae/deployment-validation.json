@@ -1,0 +1,25 @@
+{
+  "deployedAtUtc": "2026-09-12T17:41:30.5044224Z",
+  "target": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HyARPG.jar",
+  "jarSha256": "5629BDEA510ED1543DC43812A8E10EDE84744D5037ECEBDD7335369E380E0C77",
+  "backup": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-ae\\before\\save\\20260912T174127Z\\RPG",
+  "backupFiles": 469,
+  "backupBytes": 281553477,
+  "allBackupFileHashesVerified": true,
+  "allNonTargetLiveFilesUnchanged": true,
+  "oldJarMovedToRollback": true,
+  "internalIdentityPreserved": true,
+  "liveModJars": [
+    "CanvasUI-0.1.0.jar",
+    "HyARPG.jar",
+    "HYTALEDEVLIB-0.5.0.jar",
+    "ImmersiveNPCs-0.6.3-R170-CREATIVE-FULL-PROFILE-GENERATION.jar"
+  ],
+  "implemented": true,
+  "packaged": true,
+  "deployed": true,
+  "connectedVerified": false,
+  "liveStartupVerified": false,
+  "installedBytesIsolatedSmoke": "PASS: exact installed HyARPG.jar, no connected client, no live world startup",
+  "installedBytesSmokeSha256": "5629BDEA510ED1543DC43812A8E10EDE84744D5037ECEBDD7335369E380E0C77"
+}

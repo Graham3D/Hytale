@@ -3,7 +3,7 @@
     "Name": "server.items.RPG_Ability_Healing_Beam.name",
     "Description": "server.items.RPG_Ability_Healing_Beam.description"
   },
-  "Icon": "Icons/ItemsGenerated/Rune_Aoe_Up.png",
+  "Icon": "Icons/Items/RPG/SkillHealingbeam.png",
   "Quality": "Rare",
   "Categories": [
     "Items.Ingredients"

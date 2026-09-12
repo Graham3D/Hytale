@@ -5,7 +5,7 @@
   "Description": "Server-authoritative Hytale RPG character, HUD, loadout, Link graph, and shared combat kernel.",
   "Authors": [{ "Name": "Inigmas Games" }],
   "Website": "https://github.com/inigmas-games",
-  "ServerVersion": "=0.7.0-pre.1",
+  "ServerVersion": "=${hytaleVersion}",
   "Dependencies": {},
   "OptionalDependencies": {
     "HytaleDevLib:HytaleDevLib": "*"

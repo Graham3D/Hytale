@@ -3,7 +3,7 @@
     "Name": "server.items.RPG_Ability_Snipe.name",
     "Description": "server.items.RPG_Ability_Snipe.description"
   },
-  "Icon": "Icons/ItemsGenerated/Rune_WindStrike.png",
+  "Icon": "Icons/Items/RPG/SkillSnipe.png",
   "Quality": "Rare",
   "Categories": [
     "Items.Ingredients"

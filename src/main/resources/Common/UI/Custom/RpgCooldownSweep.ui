@@ -1,5 +1,6 @@
-Group {
-  // Installed 0.7.0-pre.1 AbilitiesHud: Right 50, Bottom 40;
+Group #RpgCooldownOverlayRoot {
+  Anchor: (Left: 0, Right: 0, Top: 0, Bottom: 0);
+  // Re-audited installed 0.7.0-pre.2 AbilitiesHud: Right 50, Bottom 40;
   // right-flow 66px slots with 28px spacing. Inset 4px preserves the native frames.
   // Read-only overlays: no buttons, icons, key bindings, native stat controls or input capture.
   CircularProgressBar #RpgCooldownSkill01 {
@@ -15,5 +16,31 @@ Group {
     Color: #ff0000(0.50);
     Value: 0;
     Visible: false;
+  }
+  Label #RpgCountdownShadow01 {
+    Anchor: (Right: 176, Bottom: 70, Width: 58, Height: 58);
+    Style: (FontSize: 24, RenderBold: true, Alignment: Center, TextColor: #000000(0.85)); Text: ""; Visible: false;
+  }
+  Label #RpgCountdown01 {
+    Anchor: (Right: 176, Bottom: 72, Width: 58, Height: 58);
+    Style: (FontSize: 24, RenderBold: true, Alignment: Center, TextColor: #ffffe6); Text: ""; Visible: false;
+  }
+  Label #RpgCountdownShadow02 {
+    Anchor: (Right: 82, Bottom: 70, Width: 58, Height: 58);
+    Style: (FontSize: 24, RenderBold: true, Alignment: Center, TextColor: #000000(0.85)); Text: ""; Visible: false;
+  }
+  Label #RpgCountdown02 {
+    Anchor: (Right: 82, Bottom: 72, Width: 58, Height: 58);
+    Style: (FontSize: 24, RenderBold: true, Alignment: Center, TextColor: #ffffe6); Text: ""; Visible: false;
+  }
+  Label #RpgResourceNotice01 {
+    Anchor: (Right: 164, Bottom: 136, Width: 82, Height: 18);
+    Background: (Color: #071629(0.85));
+    Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #76d8ff); Text: ""; Visible: false;
+  }
+  Label #RpgResourceNotice02 {
+    Anchor: (Right: 70, Bottom: 136, Width: 82, Height: 18);
+    Background: (Color: #071629(0.85));
+    Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #76d8ff); Text: ""; Visible: false;
   }
 }

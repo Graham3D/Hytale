@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" tests="30" skipped="0" failures="0" errors="0" timestamp="2026-09-12T17:31:31.542Z" hostname="GRAHAM" time="0.173">
+  <properties/>
+  <testcase name="fortyEightTotalEffectsAndGenerationThreeBounds()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.001"/>
+  <testcase name="phantomPositiveAndTwoNegativeGates()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.0"/>
+  <testcase name="noAdditionalResourceCostOrCooldownOrCommit()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.003"/>
+  <testcase name="secondaryPreservesRootCorrelationAndCannotProcOrRepeat()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="uncertainNativeWriteDoesNotRefundBudgetOrReplayController()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.003"/>
+  <testcase name="cleaveControllerOnlyRunsOnceAndDoesNotRepeatOnAuthoredHits()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.003"/>
+  <testcase name="phantomCopiesResolvedPremitigationNotPostMitigationOrOffenseAgain()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="controllersBoundedAndDifferentRootBudgetsIndependent()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.0"/>
+  <testcase name="bothPassivesUseDistinctEffectsAndOneSharedRootBudget()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="repeatedChildDoesNotProcEitherPassive()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.005"/>
+  <testcase name="cleaveKeepsPrimarySnapshotAndExcludesPrimaryFromSixtyPercentChildren()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="protectedUndamageableBlockedAndDuplicateCandidatesExcluded()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="phantomAtExactlyThreeMetresAllowedAndVerticalDistanceCounts()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="phantomOnlyInitialPrimaryNotLaterAuthoredHit()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.003"/>
+  <testcase name="phantomDoesNotFireForCancelledZeroLossOrInvalidHit()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.01"/>
+  <testcase name="childCreationCannotFabricateUnknownUnlinkedOrUnboundedEffect()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.005"/>
+  <testcase name="cleavingPositiveAndRadialWrongFamilyNegativeGates()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.0"/>
+  <testcase name="presentationAdapterFailureCannotEraseOrRepeatGameplay()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="allOriginalArcTargetsExcludedNotOnlyFirst()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="duplicateEffectDoesNotConsumeAdditionalBudget()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.0"/>
+  <testcase name="rootTriggeredBudgetSharedAcrossBothPassives()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.003"/>
+  <testcase name="cleaveCapsFourSortedStableSecondaryTargets()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="phantomUsesImpactCentredDistanceRatherThanCasterDistance()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="queryOverflowFailsClosedBeforeAnyDamage()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="cleaveReachAndConcentrationChangeMatchingPresentationGeometry()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.005"/>
+  <testcase name="phantomExcludesPrimaryAndAllOriginalMultiTargetHits()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.003"/>
+  <testcase name="compiledModifiersStayTypedWithoutProjectileConversion()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.001"/>
+  <testcase name="cleaveIsExactlyEightyDegreeThreeMetreFrontalGeometry()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.004"/>
+  <testcase name="phantomNearestTieUsesStableIdentityAndLos()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.003"/>
+  <testcase name="cleaveCanStillResolveItsOwnArcWhenPrimaryMissesAtRelease()" classname="com.inigmasgames.hytalerpg.Stage11StrikeSecondaryTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

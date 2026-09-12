@@ -46,6 +46,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                 holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());actor=store.addEntity(holder,AddReason.SPAWN);
                 var context=context(owner);var source=ProjectileConfig.getAssetMap().getAsset("Projectile_Config_RPG_Fire_Bolt");
                 NativeBlizzardVisuals.audit(store,auditChunk,context);
+                NativeHealingBeamVisuals.audit(store,context);
                 var nativeActor=actor;var ran=new AtomicBoolean();
                 store.forEachChunk((java.util.function.BiConsumer<ArchetypeChunk<EntityStore>,CommandBuffer<EntityStore>>)(chunk,buffer)->{
                     if(!ran.compareAndSet(false,true))return;

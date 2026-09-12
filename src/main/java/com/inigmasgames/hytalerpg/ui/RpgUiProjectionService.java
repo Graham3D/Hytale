@@ -29,6 +29,10 @@ public final class RpgUiProjectionService {
     private final Stage04SkillProfiles stage04;
     private java.util.function.ToDoubleBiFunction<UUID,String> activeRemaining=(owner,skill)->0;
     public void configureActiveRemaining(java.util.function.ToDoubleBiFunction<UUID,String> reader){activeRemaining=java.util.Objects.requireNonNull(reader);}
+    private com.inigmasgames.hytalerpg.combat.resource.RpgResourceService resourceService;
+    private java.util.function.ToIntBiFunction<UUID,SkillSlot> attunement=(actor,slot)->0;
+    public void configureResourceReadiness(com.inigmasgames.hytalerpg.combat.resource.RpgResourceService service,
+            java.util.function.ToIntBiFunction<UUID,SkillSlot> stacks){resourceService=java.util.Objects.requireNonNull(service);attunement=java.util.Objects.requireNonNull(stacks);}
 
     public RpgUiProjectionService(RpgCatalog catalog, RpgLoadoutOperations loadouts,
                                   DerivedStatService derivedStats, RpgCooldownService cooldowns) {
@@ -62,8 +66,14 @@ public final class RpgUiProjectionService {
             double remaining = cooldowns.remaining(player, id.get().value());
             var plan = view.plans().get(slot);
             double duration=0;
+            String resourceFailure="";
             if(plan!=null&&stage04.supports(id.get().value())){
                 var profile=new com.inigmasgames.hytalerpg.execution.CompiledProfileResolver().resolve(stage04.require(id.get().value()),plan);
+                if(resourceService!=null){
+                    var cost=resourceService.evaluateActivation(new com.inigmasgames.hytalerpg.combat.resource.ResourceCost(
+                            com.inigmasgames.hytalerpg.combat.resource.ResourceType.valueOf(profile.resourceType()),profile.resourceCost()),plan,attunement.applyAsInt(player,slot));
+                    if(!resourceService.canAfford(player,cost,readOnlyResources(resources)))resourceFailure="LOW_"+cost.type().name();
+                }
                 var cooldownTerms=com.inigmasgames.hytalerpg.execution.BlizzardCooldownPolicy.terms(profile,plan,derive(view));
                 duration=cooldowns.calculate(player,cooldownTerms.baseSeconds(),cooldownTerms.durationFactor(),cooldownTerms.recovery(),cooldownTerms.modifiers()).finalSeconds();
                 if(id.get().value().equals("blizzard")){
@@ -78,18 +88,29 @@ public final class RpgUiProjectionService {
                     && (stage04.require(id.get().value()).family().name().equals(plan.finalFamily())
                     || plan.finalTags().contains(stage04.require(id.get().value()).family().name()));
             SkillSlotView.State state = remaining > 0.0 ? SkillSlotView.State.COOLDOWN
-                    : ready ? SkillSlotView.State.READY : SkillSlotView.State.UNAVAILABLE;
+                    : !ready ? SkillSlotView.State.UNAVAILABLE : !resourceFailure.isEmpty() ? SkillSlotView.State.INSUFFICIENT_RESOURCE : SkillSlotView.State.READY;
             slots.add(new SkillSlotView(slot, abilityAction(slot), id.get().value(), name,
                     "rpg.icon.skill.family." + family, remaining, state,
                     state == SkillSlotView.State.UNAVAILABLE
                             ? stage04.supports(id.get().value()) ? "COMPILED_PLAN_UNSUPPORTED" : "EXECUTOR_NOT_IMPLEMENTED"
-                            : "",duration));
+                            : resourceFailure,duration));
         }
         return new RpgHudViewModel(view.state().revision, resources.mana(), resources.health(), resources.stamina(),
                 projectedXp, view.state().pendingLevelUpPoints, slots);
     }
 
     public CharacterXpProjectionService xp() { return xp; }
+
+    private static com.inigmasgames.hytalerpg.combat.resource.NativeResourcePort readOnlyResources(HytaleResourceViewAdapter.Snapshot snapshot){
+        return new com.inigmasgames.hytalerpg.combat.resource.NativeResourcePort(){
+            private com.inigmasgames.hytalerpg.ui.model.NativeResourceView value(com.inigmasgames.hytalerpg.combat.resource.ResourceType type){
+                return switch(type){case MANA->snapshot.mana();case STAMINA->snapshot.stamina();case HEALTH->snapshot.health();case NONE->new com.inigmasgames.hytalerpg.ui.model.NativeResourceView(0,0);};
+            }
+            public double current(com.inigmasgames.hytalerpg.combat.resource.ResourceType type){return value(type).current();}
+            public double maximum(com.inigmasgames.hytalerpg.combat.resource.ResourceType type){return value(type).maximum();}
+            public void setCurrent(com.inigmasgames.hytalerpg.combat.resource.ResourceType type,double amount){throw new UnsupportedOperationException("HUD resource projection is read-only");}
+        };
+    }
 
     private DerivedStats derive(RpgLoadoutView view) {
         EnumMap<RpgAttribute, Integer> raw = new EnumMap<>(RpgAttribute.class);

@@ -3,7 +3,7 @@
     "Name": "server.items.RPG_Ability_Blizzard.name",
     "Description": "server.items.RPG_Ability_Blizzard.description"
   },
-  "Icon": "Icons/ItemsGenerated/Rune_Aoe_Up.png",
+  "Icon": "Icons/Items/RPG/SkillBlizzard.png",
   "Quality": "Rare",
   "Categories": [
     "Items.Ingredients"
