@@ -1,10 +1,10 @@
 # HyARPG: changing spell colors
 
-Updated for R032-AF / installed Hytale 0.7.0-pre.2, 2026-09-12.
+Updated for R032-AG / installed Hytale 0.7.0-pre.2, 2026-09-12.
 
 Yes: Hytale has an in-game **Asset Editor**, not just an asset viewer. It can create a writable asset pack containing overrides. Looking at an installed asset in a viewer does not change the RPG JAR or the repository. Hytale's [official asset-pack guide](https://pre-release.docs.hytale.com/creating-content/asset-packs/) describes creating a pack in the editor and overriding existing assets. Use a separate test world for visual experiments.
 
-AE connected testing has now proved Beam creation/update/removal. AF uses the dedicated `RPG_Healing` Beam asset, referencing shipped `Trails/Void_Green.png`, with native width scale 0.025. **Do not edit shared `Basic`**: it is no longer the Healing Beam asset. The AF appearance still requires connected visual acceptance.
+AG replaces the rejected native ribbon appearance with the explicitly requested `Beam_Heal_Green2` particle system. It also uses `Effect_Health_Pack` on recipients and `Staff_Bronze` on staff model nodes. Connected appearance remains unverified. `Basic` and `RPG_Healing` no longer control the active Healing Beam presentation.
 
 ## Where things actually live
 
@@ -21,13 +21,15 @@ The public documentation's example `UserData` paths are generic/older. Your actu
 
 | Visible part | Active asset / source | Color editing boundary |
 | --- | --- | --- |
-| Healing Beam strand | `src/main/resources/Server/Entity/Beams/RPG_Healing.json` -> shipped `Common/Trails/Void_Green.png` | Texture pixels. The installed native Beam asset has a texture field, **no particle `Color` field**. |
+| Healing Beam stream | `src/main/resources/Server/Models/RPG/RPG_Healing_Stream.json` -> shipped `Beam_Heal_Green2` | Its `_Sparks`, `_Glow`, and `_Plus` spawners under `Server/Particles/_Test/HealBeams/Spawners`. Edit their particle color keys. |
+| Healing recipient | `src/main/resources/Server/Entity/Effects/RPG/RPG_Healing_Recipient.json` -> `Effect_Health_Pack` | `Health_Pack_Crosses` and `Health_Pack_Rays` under `Server/Particles/Status_Effect/Heal/Spawners`. |
+| Staff heads | `src/main/resources/Server/Item/Items/Weapon/Staff/*.json` -> `Staff_Bronze` | `Staff_Bronze_Air` and `Staff_Bronze_Sparks` under `Server/Particles/Weapon/Staff/Spawners`. |
 | Blizzard falling-shard trail | `src/main/resources/Server/Particles/RPG/Blizzard/RPG_Blizzard_Trail.particlesystem` | Follow its three `SpawnerId` references to the sibling `.particlespawner` files. |
 | Blizzard snow | Shipped `Server/Particles/Weather/Snow/Snow_Heavy.particlesystem` -> `Server/Particles/Weather/Snow/Spawners/Snow_Heavy.particlespawner` | `Particle.InitialAnimationFrame.Color` and any color animation keys in a writable override. |
 | Blizzard ground impact | Shipped `Server/Particles/Combat/Impact/Misc/Ice/Impact_Ice.particlesystem` | Follow its spawners and edit their particle colors. |
 | Falling solid shard | `src/main/resources/Server/Models/RPG/RPG_Blizzard_Shard.json` | Model texture, separate from trail/impact particle color. |
 
-`Beam_Heal_Green` and the old sampled healing particles do **not** control the beam. `RPG_Healing.json` now does. Likewise, the retained `RPG_Blizzard_Impact` derivative is not the current ground-impact request: runtime requests shipped `Impact_Ice`.
+Use `Beam_Heal_Green2` (including the final **2**), not `Beam_Heal_Green` or the similarly named unused `Beam_Heal_Green2.particlespawner`. The particle SYSTEM references three other spawners. The retained `RPG_Blizzard_Impact` derivative is not the current ground-impact request: runtime requests shipped `Impact_Ice`.
 
 ## Easy particle-color experiment in the Asset Editor
 
@@ -51,11 +53,9 @@ All are beside `RPG_Blizzard_Trail.particlesystem` in `src/main/resources/Server
 
 ## Healing Beam recoloring
 
-AF uses a continuous native Beam, not a particle emitter. The exact installed `Beam` codec exposes `TexturePath`; there is no generic Beam tint field to turn green in the particle editor.
+AG uses the stock system unchanged. Follow the particle-color workflow above for `Beam_Heal_Green2_Sparks`, `Beam_Heal_Green2_Glow`, and `Beam_Heal_Green2_Plus`. Their textures are `Ball3.png`, `Circle_Glow.png`, and `Health_Regen_Plus.png`. Editing the unused similarly named spawner will not change the active system.
 
-For spell-only recoloring, add a recolored RGBA texture under `src/main/resources/Common/Trails`, for example `Healing_Custom.png`, then change `RPG_Healing.json` to `"TexturePath": "Trails/Healing_Custom.png"`. Preserve alpha and the texture's seamless long-axis pattern. Use an image editor for the texture pixels; the Asset Editor can manage the texture reference/asset, but a particle color control cannot recolor this Beam. Do not replace shared `Void_Green.png` or `Charged_Blue.png` globally unless you intentionally want every native consumer to change. Rebuild/reinstall as described below. A custom path must also replace the exact texture check in `NativeSupportTetherAudit` (currently `Trails/Void_Green.png`) before a source build will accept it; this guard prevents accidental wrong-asset deployment. An editor-only override must satisfy the same runtime guard, so the current build is not an unrestricted texture hot-loader.
-
-Test AF's default first and preserve a backup. The 0.025 endpoint width is configured in `NativeHealingBeamVisuals.WIDTH_SCALE`, not the particle editor. A width change requires a Java rebuild and matching appearance tests. It is a native scale multiplier, not a documented metres measurement.
+For spell-only changes, use uniquely named copies of the system and its three referenced spawners, then update `RPG_Healing_Stream.json`, the exact asset audit, and appearance tests together. A global override of any shipped spawner also affects other native consumers. Do not change particle velocity/lifespan to make a color edit. The old `NativeHealingBeamVisuals.WIDTH_SCALE` and `RPG_Healing.json` are retained regression fixtures, not controls for AG's live stream.
 
 ## If you edit repository assets instead of a personal pack
 

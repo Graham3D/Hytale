@@ -10,7 +10,8 @@ public interface ConnectionWorldPort {
     record Frame(UUID world,Vec3 feet,Vec3 aim) { }
     record Target(String id,AreaGeometry.Bounds bounds) { }
     record Query(List<Target> targets,boolean overflow){public Query{targets=List.copyOf(targets);}}
-    record TetherVisualSegment(String id,ConnectionShape shape) {
+    record TetherVisualSegment(String id,ConnectionShape shape,String recipient) {
+        public TetherVisualSegment(String id,ConnectionShape shape){this(id,shape,null);}
         public TetherVisualSegment {
             if(id==null||id.isBlank())throw new IllegalArgumentException("Tether visual id required");
             Objects.requireNonNull(shape);

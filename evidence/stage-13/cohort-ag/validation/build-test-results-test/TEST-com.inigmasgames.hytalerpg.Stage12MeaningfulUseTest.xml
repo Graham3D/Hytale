@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-12T18:33:47.144Z" hostname="GRAHAM" time="0.053">
+  <properties/>
+  <testcase name="idleIntervalsDoNotCatchUpUnperformedWork()" classname="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" time="0.001"/>
+  <testcase name="masteryEntersSnapshotOnceWithoutChangingGeometryCostOrCooldown()" classname="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" time="0.01"/>
+  <testcase name="rootIdentityAndSustainedPolicyCannotBeReboundByChildren()" classname="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" time="0.002"/>
+  <testcase name="simultaneousChildrenUseOneWriter()" classname="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" time="0.002"/>
+  <testcase name="uncertainWriteFreezesRootInsteadOfChoosingANewEvent()" classname="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" time="0.002"/>
+  <testcase name="pressingOrInvalidResultsNeverCallWriter()" classname="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" time="0.002"/>
+  <testcase name="ordinaryRootNeverPaysPerTargetChildOrLaterTick()" classname="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" time="0.002"/>
+  <testcase name="sustainedRootsUseElapsedFiveSecondsNotAdjacentWallClockBuckets()" classname="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" time="0.001"/>
+  <testcase name="actualPlayerStoreReplayKeepsOneMasteryAndNoOtherRewards()" classname="com.inigmasgames.hytalerpg.Stage12MeaningfulUseTest" time="0.03"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

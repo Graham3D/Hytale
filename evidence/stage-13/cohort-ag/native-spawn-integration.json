@@ -1,0 +1,18 @@
+{
+  "result": "PASS",
+  "jarSha256": "724276A3F49817E497EFF99483B5C8447A592827FD9198464D8678C91E711D5D",
+  "startedUtc": "2026-09-12T18:38:15.1016188+00:00",
+  "nativeApi": "ProjectileModule.spawnProjectile",
+  "hytaleServerSha256": "9CDC1E77DADFDAD0B1D849977CDAD5C2752207F538272FB3D76D4E915546B25E",
+  "assetsSha256": "0E35DF2D4E4A803F7752CB300FA7C9FE7ACDF62B4311978DA95C7AFF7ABBC126",
+  "originalFailure": "IllegalArgumentException: Specified map is empty",
+  "loadedMapClass": "java.util.Collections$EmptyMap",
+  "requests": 2,
+  "spawned": 1,
+  "pendingRollback": "PASS",
+  "physicsVelocity": 24,
+  "nativeInteractionRoots": 0,
+  "nativeRefValidAfterQueue": true,
+  "sameTickAdvanceAndRestingExpiry": true,
+  "connectedClientVerified": false
+}

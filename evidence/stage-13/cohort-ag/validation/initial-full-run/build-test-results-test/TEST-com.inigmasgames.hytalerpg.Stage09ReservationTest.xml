@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09ReservationTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-09-12T18:33:29.343Z" hostname="GRAHAM" time="0.003">
+  <properties/>
+  <testcase name="removeAndRemoveAllNeverRefundMana()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="oversubscriptionDoesNotChargeOrPublish()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="maximumIncreaseNeverRefills()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.001"/>
+  <testcase name="resizeKeepsOriginalActivationOrder()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="failedReplacementPreservesOldAllocationAndMana()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="fractionalDebitsDoNotUseUpfrontIntegerRounding()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="invalidInputsNeverPublish()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.001"/>
+  <testcase name="percentagesUseTotalNotSuccessiveSpendable()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="ignoredNativeWriteRejectsWithoutPublishing()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="insufficientCurrentRejectsWithoutPublishing()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="replacementChargesOnlyPositiveDelta()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="exceptionAfterNativeWriteRollsBackWithoutPublishing()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.001"/>
+  <testcase name="activationDebitsEvenWhenBelowNewCap()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <testcase name="maximumReductionCancelsNewestFirst()" classname="com.inigmasgames.hytalerpg.Stage09ReservationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

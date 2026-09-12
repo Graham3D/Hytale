@@ -140,7 +140,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final AreaRuntime areas = new AreaRuntime(fieldCapacity);
     private final HealingTextAccumulator healingText=new HealingTextAccumulator();
     private final NativeBlizzardVisuals blizzardVisuals=new NativeBlizzardVisuals();
-    private final NativeHealingBeamVisuals healingBeamVisuals=new NativeHealingBeamVisuals();
+    private final HealingParticleVisuals healingBeamVisuals=new HealingParticleVisuals();
     public double activeSkillRemaining(UUID owner,String skill){return areas.activeRemaining(owner,skill,System.nanoTime()/1e9);}
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
     private HytaleSupportSystem support;
@@ -971,12 +971,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 @Override public void presentTether(SkillExecutionContext context,List<ConnectionWorldPort.TetherVisualSegment> segments){
                     try{
                         healingBeamVisuals.present(store,buffer,context,segments,System.nanoTime()/1e9,(result,failure)->{
-                            if(failure==null)emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result",result,"asset",NativeHealingBeamVisuals.ASSET_ID,"segments",segments.size(),"stage","COMMAND_BUFFER_CONSUMED"));
+                            if(failure==null)emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result",result,"asset",HealingParticleVisuals.ASSET_ID,"segments",segments.size(),"stage","COMMAND_BUFFER_CONSUMED","sourceAttachment","AUTHORITATIVE_ANCHOR_NOT_ANIMATED_STAFF"));
                             else emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result",result,"stage","COMMAND_BUFFER_CONSUMED","error",failure.getClass().getSimpleName(),"message",boundedMessage(failure)));
                         });
                     } catch(RuntimeException failure){
                         healingBeamVisuals.remove(context,buffer); // Presentation cannot refund a paid pulse.
-                        emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result","NATIVE_BEAM_FAILED","stage","ALLOCATE_OR_UPDATE",
+                        emit(context,RpgTraceEventType.HEAL_PRESENTATION,Map.of("result","HEAL_PARTICLE_FAILED","stage","ALLOCATE_OR_UPDATE",
                                 "error",failure.getClass().getSimpleName(),"message",boundedMessage(failure)));
                     }
                 }

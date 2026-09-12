@@ -27,7 +27,7 @@ public final class NativeSupportTetherAudit {
             }else if(!(op instanceof JumpOperation)&&op.getClass()!=SimpleInteraction.class)throw new IllegalStateException("HEALING_ROOT_GAMEPLAY_OPERATION:"+op.getClass().getName());
         }
         if(held!=1)throw new IllegalStateException("HEALING_ROOT_HOLD_COUNT");
-        for(String id:java.util.List.of("RPG_Blizzard_Trail","Impact_Ice","Snow_Heavy"))
+        for(String id:java.util.List.of("RPG_Blizzard_Trail","Impact_Ice","Snow_Heavy","Beam_Heal_Green2","Effect_Health_Pack","Staff_Bronze"))
             if(ParticleSystem.getAssetMap().getAsset(id)==null)throw new IllegalStateException("BLIZZARD_PARTICLE_MISSING:"+id);
         var shard=com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset.getAssetMap().getAsset("RPG_Blizzard_Shard");
         if(shard==null||!"VFX/RPG/Blizzard/Portal_Shard.blockymodel".equals(shard.getModel()))throw new IllegalStateException("BLIZZARD_MODEL_MISSING");
@@ -36,7 +36,7 @@ public final class NativeSupportTetherAudit {
         for(String id:java.util.List.of("CombatText","Healthbar"))if(com.hypixel.hytale.server.core.modules.entityui.asset.EntityUIComponent.getAssetMap().getAsset(id)==null)
             throw new IllegalStateException("NATIVE_ACTOR_UI_MISSING:"+id);
         if(com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent.getAssetMap().getAsset("SFX_Ice_Ball_Death")==null)throw new IllegalStateException("BLIZZARD_SOUND_MISSING");
-        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_BLIZZARD_ASSETS cohort=AF model=RPG_Blizzard_Shard snow=Snow_Heavy impact=Impact_Ice sound=SFX_Ice_Ball_Death result=PASS connectedProof=false");
+        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_BLIZZARD_ASSETS cohort=AG model=RPG_Blizzard_Shard snow=Snow_Heavy impact=Impact_Ice sound=SFX_Ice_Ball_Death result=PASS connectedProof=false");
         var healingBeam=Beam.getAssetMap().getAsset(NativeHealingBeamVisuals.ASSET_ID);
         if(healingBeam==null)throw new IllegalStateException("SUPPORT_NATIVE_BEAM_MISSING:"+NativeHealingBeamVisuals.ASSET_ID);
         if(!"Trails/Void_Green.png".equals(healingBeam.getTexture()))throw new IllegalStateException("SUPPORT_NATIVE_BEAM_TEXTURE_MISMATCH");
@@ -44,7 +44,33 @@ public final class NativeSupportTetherAudit {
         if(EntityEffect.getAssetMap().getAsset("RPG_Protection_Visual")==null)throw new IllegalStateException("PROTECTION_VISUAL_MISSING");
         var animations=com.hypixel.hytale.server.core.asset.type.itemanimation.config.ItemPlayerAnimations.getAssetMap().getAsset("Spellbook");
         for(String id:java.util.List.of("CastPushCharging","CastPushCharged"))if(animations==null||!animations.getAnimations().containsKey(id))throw new IllegalStateException("SUPPORT_NATIVE_ANIMATION_MISSING:"+id);
-        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_SUPPORT_TETHER_ASSETS cohort=AF skills=89 passives=67 heldRoot=RESOLVED nativeGameplay=false beam=%s texture=%s persistent=true connectedProof=false",
-                NativeHealingBeamVisuals.ASSET_ID,healingBeam.getTexture());
+        var stream=com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset.getAssetMap().getAsset("RPG_Healing_Stream");
+        if(stream==null)throw new IllegalStateException("HEAL_STREAM_MODEL_MISSING");
+        var streamModel=com.hypixel.hytale.server.core.asset.type.model.config.Model.createStaticScaledModel(stream,1);
+        var particles=streamModel.getParticles();
+        if(particles==null||particles.length!=1||!"Beam_Heal_Green2".equals(particles[0].getSystemId())||!particles[0].isClearParticlesOnRemove())
+            throw new IllegalStateException("HEAL_STREAM_MODEL_PARTICLE_CONTRACT");
+        var recipient=EntityEffect.getAssetMap().getAsset("RPG_Healing_Recipient");
+        if(recipient==null||recipient.getDamageCalculator()!=null||recipient.getStatModifiers()!=null&&!recipient.getStatModifiers().isEmpty()
+                ||recipient.getEntityStats()!=null&&!recipient.getEntityStats().isEmpty()||recipient.isInfinite()||recipient.isInvulnerable())
+            throw new IllegalStateException("HEAL_RECIPIENT_COSMETIC_CONTRACT");
+        var recipientParticles=recipient.getApplicationEffects().toPacket().particles;
+        if(recipientParticles==null||recipientParticles.length!=1||!"Effect_Health_Pack".equals(recipientParticles[0].systemId)||!recipientParticles[0].clearParticlesOnRemove)
+            throw new IllegalStateException("HEAL_RECIPIENT_PARTICLE_CONTRACT");
+        try(var input=NativeSupportTetherAudit.class.getResourceAsStream("/rpg/presentation/staff-heads-ag.json")){
+            if(input==null)throw new IllegalStateException("STAFF_PRESENTATION_MANIFEST_MISSING");
+            var entries=com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(input,java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+            if(entries.size()!=26)throw new IllegalStateException("STAFF_PRESENTATION_COVERAGE");
+            for(var entry:entries.entrySet()){
+                var item=com.hypixel.hytale.server.core.asset.type.item.config.Item.getAssetMap().getAsset(entry.getKey());
+                var expected=entry.getValue().getAsJsonObject();
+                if(item==null||!expected.get("model").getAsString().equals(item.getModel()))throw new IllegalStateException("STAFF_PRESENTATION_MODEL:"+entry.getKey());
+                var staffParticles=item.toPacket().particles;
+                if(staffParticles==null||java.util.Arrays.stream(staffParticles).filter(p->"Staff_Bronze".equals(p.systemId)&&expected.get("node").getAsString().equals(p.targetNodeName)&&p.clearParticlesOnRemove).count()!=1)
+                    throw new IllegalStateException("STAFF_PRESENTATION_ATTACHMENT:"+entry.getKey());
+            }
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_STAFF_HEAD_ASSETS cohort=AG staffs=26 system=Staff_Bronze attachment=MODEL_NODE result=PASS connectedProof=false");
+        }catch(java.io.IOException error){throw new IllegalStateException("STAFF_PRESENTATION_MANIFEST_READ",error);}
+        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_SUPPORT_TETHER_ASSETS cohort=AG skills=89 passives=67 heldRoot=RESOLVED nativeGameplay=false particles=VERIFIED_ASSET connectedProof=false");
     }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09NativeManaTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-12T18:34:52.568Z" hostname="GRAHAM" time="0.01">
+  <properties/>
+  <testcase name="nativeMultiplierIsSumOfFactorsNotIncreasedPercentage()" classname="com.inigmasgames.hytalerpg.Stage09NativeManaTest" time="0.004"/>
+  <testcase name="noAuraRestoresUnmodifiedOnePointFiveTotalManaRegen()" classname="com.inigmasgames.hytalerpg.Stage09NativeManaTest" time="0.002"/>
+  <testcase name="changingAuraMultiplierDoesNotResetNativeTimer()" classname="com.inigmasgames.hytalerpg.Stage09NativeManaTest" time="0.001"/>
+  <testcase name="auraUsesNativeTimerOnceAndTotalManaDespiteReservation()" classname="com.inigmasgames.hytalerpg.Stage09NativeManaTest" time="0.001"/>
+  <testcase name="reservationUsesClientSupportedStaticPacket()" classname="com.inigmasgames.hytalerpg.Stage09NativeManaTest" time="0.001"/>
+  <testcase name="nativePositiveDeltaIsUnclampedUntilStatApplication()" classname="com.inigmasgames.hytalerpg.Stage09NativeManaTest" time="0.0"/>
+  <testcase name="nativeStaticReservationClampsAndUnreserveDoesNotMint()" classname="com.inigmasgames.hytalerpg.Stage09NativeManaTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,106 @@
+{
+  "Halloween_Broomstick": {
+    "model": "Items/Halloween_Props/Broomstick.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Adamantite": {
+    "model": "Items/Weapons/Staff/Adamantite.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Bo_Bamboo": {
+    "model": "Items/Weapons/Staff/Bo_Wood.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Bo_Wood": {
+    "model": "Items/Weapons/Staff/Bo_Wood.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Bone": {
+    "model": "NPC/Intelligent/Feran/Models/Weapons/Staff/Bone.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Bronze": {
+    "model": "Items/Weapons/Staff/Bronze.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Cane": {
+    "model": "NPC/Intelligent/Klops/Models/Weapons/Staff/Cane.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Cobalt": {
+    "model": "Items/Weapons/Staff/Cobalt.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Copper": {
+    "model": "Items/Weapons/Staff/Copper.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Crystal_Fire_Trork": {
+    "model": "NPC/Intelligent/Trork/Models/Weapons/Staff/Crystal.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Crystal_Flame": {
+    "model": "Items/Weapons/Staff/Crystal_Flame.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Crystal_Ice": {
+    "model": "Items/Weapons/Staff/Crystal_Ice.blockymodel",
+    "node": "TopPommel"
+  },
+  "Weapon_Staff_Crystal_Purple": {
+    "model": "Items/Weapons/Staff/Crystal_Purple.blockymodel",
+    "node": "Block5"
+  },
+  "Weapon_Staff_Crystal_Red": {
+    "model": "Items/Weapons/Staff/Crystal_Red.blockymodel",
+    "node": "Block5"
+  },
+  "Weapon_Staff_Doomed": {
+    "model": "NPC/Intelligent/Outlander/Models/Weapons/Staff/Doomed.blockymodel",
+    "node": "Knob"
+  },
+  "Weapon_Staff_Frost": {
+    "model": "Items/Weapons/Staff/Frost.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Iron": {
+    "model": "Items/Weapons/Staff/Iron.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Mithril": {
+    "model": "Items/Weapons/Staff/Mithril.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Onion": {
+    "model": "NPC/Intelligent/Klops/Models/Weapons/Staff/Onion.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Onyxium": {
+    "model": "Items/Weapons/Staff/Onyxium.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Scrap_Lightbulb": {
+    "model": "NPC/Intelligent/Goblin/Models/Weapons/Staff/Scrap_Lightbulb.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Thorium": {
+    "model": "Items/Weapons/Staff/Thorium.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Wizard": {
+    "model": "Items/Weapons/Staff/Wizard.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Wood": {
+    "model": "Items/Weapons/Staff/Wood.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Wood_Kweebec": {
+    "model": "NPC/Intelligent/Kweebec_Sapling/Models/Weapons/Staff/Wood.blockymodel",
+    "node": "Origin_Projectile"
+  },
+  "Weapon_Staff_Wood_Rotten": {
+    "model": "Items/Weapons/Staff/Wood.blockymodel",
+    "node": "Origin_Projectile"
+  }
+}

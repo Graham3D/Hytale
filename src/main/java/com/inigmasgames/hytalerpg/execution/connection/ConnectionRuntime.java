@@ -172,10 +172,10 @@ public final class ConnectionRuntime {
         if(now>=field.nextVisual){field.nextVisual=now+.05;
             var segments=new ArrayList<ConnectionWorldPort.TetherVisualSegment>(6);
             segments.add(new ConnectionWorldPort.TetherVisualSegment("PRIMARY:"+target.id(),
-                    ConnectionShape.line(origin,target.bounds().centre(),p.width(),p.height())));
+                    ConnectionShape.line(origin,target.bounds().centre(),p.width(),p.height()),target.id()));
             for(var child:field.visualChildren)segments.add(new ConnectionWorldPort.TetherVisualSegment(
                     child.continuation()+":"+child.source().id()+">"+child.recipient().id(),
-                    ConnectionShape.line(child.source().bounds().centre(),child.recipient().bounds().centre(),p.width(),p.height())));
+                    ConnectionShape.line(child.source().bounds().centre(),child.recipient().bounds().centre(),p.width(),p.height()),child.recipient().id()));
             port.presentTether(field.context,List.copyOf(segments));
         }
     }

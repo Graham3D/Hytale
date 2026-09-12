@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.PersistenceAndMigrationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-12T18:33:24.401Z" hostname="GRAHAM" time="0.094">
+  <properties/>
+  <testcase name="v2FourSkillMigrationPreservesOwnershipAndMasteryWhileRecordingSkill04Cleanup()" classname="com.inigmasgames.hytalerpg.PersistenceAndMigrationTest" time="0.038"/>
+  <testcase name="restartReloadPreservesRequiredCommandSequence()" classname="com.inigmasgames.hytalerpg.PersistenceAndMigrationTest" time="0.02"/>
+  <testcase name="v1MigrationIsDeterministicAndPersistsCurrentSchema()" classname="com.inigmasgames.hytalerpg.PersistenceAndMigrationTest" time="0.016"/>
+  <testcase name="corruptedGraphIsBackedUpAndRecoveredWithoutResettingProgress()" classname="com.inigmasgames.hytalerpg.PersistenceAndMigrationTest" time="0.011"/>
+  <testcase name="fileRoundtripPreservesSlotsJointsEdgesAndRevision()" classname="com.inigmasgames.hytalerpg.PersistenceAndMigrationTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

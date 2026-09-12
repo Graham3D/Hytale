@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" tests="9" skipped="0" failures="7" errors="0" timestamp="2026-09-12T18:34:00.708Z" hostname="GRAHAM" time="6.981">
+  <properties/>
+  <testcase name="doubleClickWorkspaceDefaultsResolveInWindowsPowerShellWithoutCallerWorkingDirectory()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.553"/>
+  <testcase name="typoAbortsEntireBatchBeforeValidImageIsInstalled()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.987">
+    <failure message="org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, &#13;&#10;then run Update RPG Icons again.&#13;&#10;At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5&#13;&#10;+     Write-Error $_&#13;&#10;+     ~~~~~~~~~~~~~~&#13;&#10;    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException&#13;&#10;    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1&#13;&#10; &#13;&#10; ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, 
+then run Update RPG Icons again.
+At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5
++     Write-Error $_
++     ~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1
+ 
+ ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+	at app//com.inigmasgames.hytalerpg.Stage13IconUpdaterTest.typoAbortsEntireBatchBeforeValidImageIsInstalled(Stage13IconUpdaterTest.java:96)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="corruptBackupIsNeverUsedForUndo()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.705">
+    <failure message="org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, &#13;&#10;then run Update RPG Icons again.&#13;&#10;At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5&#13;&#10;+     Write-Error $_&#13;&#10;+     ~~~~~~~~~~~~~~&#13;&#10;    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException&#13;&#10;    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1&#13;&#10; &#13;&#10; ==&gt; expected: &lt;0&gt; but was: &lt;1&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, 
+then run Update RPG Icons again.
+At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5
++     Write-Error $_
++     ~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1
+ 
+ ==&gt; expected: &lt;0&gt; but was: &lt;1&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:563)
+	at app//com.inigmasgames.hytalerpg.Stage13IconUpdaterTest.corruptBackupIsNeverUsedForUndo(Stage13IconUpdaterTest.java:127)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="oversizedHeaderIsRejectedBeforeImageDecodeAndNoJarMutation()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.793">
+    <failure message="org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, &#13;&#10;then run Update RPG Icons again.&#13;&#10;At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5&#13;&#10;+     Write-Error $_&#13;&#10;+     ~~~~~~~~~~~~~~&#13;&#10;    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException&#13;&#10;    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1&#13;&#10; &#13;&#10; ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, 
+then run Update RPG Icons again.
+At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5
++     Write-Error $_
++     ~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1
+ 
+ ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+	at app//com.inigmasgames.hytalerpg.Stage13IconUpdaterTest.oversizedHeaderIsRejectedBeforeImageDecodeAndNoJarMutation(Stage13IconUpdaterTest.java:109)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="undoRefusesChangedBuildAndPreservesIt()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.928">
+    <failure message="org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, &#13;&#10;then run Update RPG Icons again.&#13;&#10;At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5&#13;&#10;+     Write-Error $_&#13;&#10;+     ~~~~~~~~~~~~~~&#13;&#10;    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException&#13;&#10;    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1&#13;&#10; &#13;&#10; ==&gt; expected: &lt;0&gt; but was: &lt;1&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, 
+then run Update RPG Icons again.
+At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5
++     Write-Error $_
++     ~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1
+ 
+ ==&gt; expected: &lt;0&gt; but was: &lt;1&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:563)
+	at app//com.inigmasgames.hytalerpg.Stage13IconUpdaterTest.undoRefusesChangedBuildAndPreservesIt(Stage13IconUpdaterTest.java:120)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="malformedPngAbortsWithoutChangingJar()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.904">
+    <failure message="org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, &#13;&#10;then run Update RPG Icons again.&#13;&#10;At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5&#13;&#10;+     Write-Error $_&#13;&#10;+     ~~~~~~~~~~~~~~&#13;&#10;    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException&#13;&#10;    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1&#13;&#10; &#13;&#10; ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, 
+then run Update RPG Icons again.
+At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5
++     Write-Error $_
++     ~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1
+ 
+ ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+	at app//com.inigmasgames.hytalerpg.Stage13IconUpdaterTest.malformedPngAbortsWithoutChangingJar(Stage13IconUpdaterTest.java:102)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="repeatIsByteIdenticalAndUndoRestoresExactPriorJar()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.832">
+    <failure message="org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, &#13;&#10;then run Update RPG Icons again.&#13;&#10;At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5&#13;&#10;+     Write-Error $_&#13;&#10;+     ~~~~~~~~~~~~~~&#13;&#10;    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException&#13;&#10;    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1&#13;&#10; &#13;&#10; ==&gt; expected: &lt;0&gt; but was: &lt;1&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, 
+then run Update RPG Icons again.
+At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5
++     Write-Error $_
++     ~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1
+ 
+ ==&gt; expected: &lt;0&gt; but was: &lt;1&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:563)
+	at app//com.inigmasgames.hytalerpg.Stage13IconUpdaterTest.repeatIsByteIdenticalAndUndoRestoresExactPriorJar(Stage13IconUpdaterTest.java:87)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="installsSkillAndPassivePngsOnlyAndChangesOnlyNativeIconField()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.797">
+    <failure message="org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, &#13;&#10;then run Update RPG Icons again.&#13;&#10;At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5&#13;&#10;+     Write-Error $_&#13;&#10;+     ~~~~~~~~~~~~~~&#13;&#10;    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException&#13;&#10;    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1&#13;&#10; &#13;&#10; ==&gt; expected: &lt;0&gt; but was: &lt;1&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1 : Close Hytale and its server completely, 
+then run Update RPG Icons again.
+At C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale\tools\Update-RpgIcons.ps1:254 char:5
++     Write-Error $_
++     ~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Update-RpgIcons.ps1
+ 
+ ==&gt; expected: &lt;0&gt; but was: &lt;1&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:563)
+	at app//com.inigmasgames.hytalerpg.Stage13IconUpdaterTest.installsSkillAndPassivePngsOnlyAndChangesOnlyNativeIconField(Stage13IconUpdaterTest.java:62)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="dryRunWritesNeitherJarBackupNorLockAndMissingImagesKeepFallbacks()" classname="com.inigmasgames.hytalerpg.Stage13IconUpdaterTest" time="0.481"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

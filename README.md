@@ -1,10 +1,11 @@
 # Hytale RPG
 
-The `RPG` branch is at **Stage 13 / R032-AF**, deployed for connected testing.
-The distributable is **HyARPG.jar**. Native Beam mutation and the retained local
-suite pass; connected Beam/HUD rendering and remaining release gates are not inferred from those tests.
+The `RPG` branch is at **Stage 13 / R032-AG**, deployed for connected testing.
+The distributable is **HyARPG.jar**. The requested Healing Beam particle system,
+recipient effect, and staff-head effects are installed. Exact animated staff-tip
+attachment of the directed stream remains unsupported; connected appearance is unverified.
 
-- Current report and test checklist: [R032-AF Healing Beam appearance correction](docs/stage-13/stage-13-presentation-af-report.md)
+- Current report and test checklist: [R032-AG Healing particles and staff attachments](docs/stage-13/stage-13-presentation-ag-report.md)
 - Spell-color editing: [owner guide](docs/owner-spell-color-guide.md)
 
 The repository also contains the standalone, RPG-agnostic **CanvasUI** library and its development

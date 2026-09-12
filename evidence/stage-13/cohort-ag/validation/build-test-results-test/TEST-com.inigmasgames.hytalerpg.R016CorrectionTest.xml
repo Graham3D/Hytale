@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.R016CorrectionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-12T18:33:24.496Z" hostname="GRAHAM" time="0.076">
+  <properties/>
+  <testcase name="catalogProjectionSupportsTabsSearchWeaponFiltersDetailsAndPlaceholderIcon()" classname="com.inigmasgames.hytalerpg.R016CorrectionTest" time="0.032"/>
+  <testcase name="normalUiLoggerContainsActualValuesAndSuppressesRoutineHudInfo()" classname="com.inigmasgames.hytalerpg.R016CorrectionTest" time="0.022"/>
+  <testcase name="staticAssignmentsProduceAuthoritativeEdgesAndCompatibilityFailureRollsBackAtomically()" classname="com.inigmasgames.hytalerpg.R016CorrectionTest" time="0.013"/>
+  <testcase name="r021KeepsContinuousXpWithNoRpgResourceOrAbilityControls()" classname="com.inigmasgames.hytalerpg.R016CorrectionTest" time="0.002"/>
+  <testcase name="staticTopologyIsExactlyTheOwnerSuppliedThreeBranchAdjacency()" classname="com.inigmasgames.hytalerpg.R016CorrectionTest" time="0.002"/>
+  <testcase name="installedNativeHudExposesAbilitiesComponentAndAbilitySlotsProjectionApi()" classname="com.inigmasgames.hytalerpg.R016CorrectionTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Sep 12, 2026 2:33:24 PM com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService trace
+INFO: RPG_UI_TRACE revision=R032 event=SKILLTREE_TEST player=a0649e14-2f47-4696-b8f9-5b2538a134a5 correlation=corr-16 result=PASS jsonl=C:\Users\Zemio\AppData\Local\Temp\junit-14964916242834083698\ui-trace.jsonl consoleRateLimited=true
+]]></system-err>
+</testsuite>

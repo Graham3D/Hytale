@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13NativeEquipmentSourceTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-12T18:34:09.065Z" hostname="GRAHAM" time="0.013">
+  <properties/>
+  <testcase name="missingOrAmbiguousNativeTagsCannotAuthorizeEvenARegisteredId()" classname="com.inigmasgames.hytalerpg.Stage13NativeEquipmentSourceTest" time="0.001"/>
+  <testcase name="crossbowUsesTenNotTheFortyFourDamageSummaryOrSeventyEightSignature()" classname="com.inigmasgames.hytalerpg.Stage13NativeEquipmentSourceTest" time="0.0"/>
+  <testcase name="knownMagicFamilyExceptionIsExplicitlyBoundToItsItemNotAnyMagicObject()" classname="com.inigmasgames.hytalerpg.Stage13NativeEquipmentSourceTest" time="0.001"/>
+  <testcase name="registryRejectsDuplicateOrNonfiniteSelections()" classname="com.inigmasgames.hytalerpg.Stage13NativeEquipmentSourceTest" time="0.001"/>
+  <testcase name="everySelectedProductionBaseHasAnExactSourceOrExplicitAuthoredPolicy()" classname="com.inigmasgames.hytalerpg.Stage13NativeEquipmentSourceTest" time="0.009"/>
+  <testcase name="visualsAreTenHertzWithNoCatchUpBurstOrRepeatedFailureSpam()" classname="com.inigmasgames.hytalerpg.Stage13NativeEquipmentSourceTest" time="0.001"/>
+  <testcase name="auditedBattleaxeWithoutNativeFamilyIsNotANameBasedWildcard()" classname="com.inigmasgames.hytalerpg.Stage13NativeEquipmentSourceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

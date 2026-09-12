@@ -24,7 +24,7 @@ final class RpgHud extends CustomUIHud {
         commands.append("RpgHud.ui");
         commands.append("RpgCooldownSweep.ui");
         commands.append("Phase00RevisionHud.ui");
-        commands.set("#BuildRevision.TextSpans", Message.raw(com.inigmasgames.hytalerpg.phase00.BuildIdentity.REVISION + "-AF"));
+        commands.set("#BuildRevision.TextSpans", Message.raw(com.inigmasgames.hytalerpg.phase00.BuildIdentity.REVISION + "-AG"));
         writeAll(commands, model);
     }
 

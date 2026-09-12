@@ -1,0 +1,9 @@
+{
+  "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/HyARPG.jar",
+  "sha256": "724276A3F49817E497EFF99483B5C8447A592827FD9198464D8678C91E711D5D",
+  "verification": "Copied exact installed bytes into isolated three-mod world; executed native particle/recipient/staff and retained integration gates",
+  "result": "PASS",
+  "capturedAtUtc": "2026-09-12T18:38:50.5674271Z",
+  "liveSaveBooted": false,
+  "connectedClientVerified": false
+}
