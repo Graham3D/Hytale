@@ -1,0 +1,7 @@
+[2026/09/12 20:37:54   INFO]           [HytaleServer] Authentication mode: AUTHENTICATED
+[2026/09/12 20:37:54   INFO]      [ServerAuthManager] No server tokens configured. Use /auth login to authenticate, or provide tokens via CLI/environment.
+[2026/09/12 20:37:56   INFO]          [Phase00Plugin] RPG_HEAL_PROBE revision=R032-AI enabled=true permission=inigmasgames.rpg.healingprobe disposableWorldRequired=true connectedProof=false
+[2026/09/12 20:38:01   INFO]               [ServerManager|P] Listening on /127.0.0.1:5592 and took 1ms 857us 800ns
+[2026/09/12 20:38:02   INFO]                  [HytaleServer]          Hytale Server Booted! [Multiplayer, Fresh Universe] took 8sec 110ms 161us 400ns
+[2026/09/12 20:38:02   WARN]                  [HytaleServer] No server tokens configured. Use /auth login to authenticate.
+[2026/09/12 20:38:13   INFO]                  [HytaleServer] Shutting down... 0  'null'

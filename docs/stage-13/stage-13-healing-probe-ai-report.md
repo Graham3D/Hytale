@@ -4,6 +4,18 @@
 
 Date: 2026-09-12. Branch: `RPG`. Baseline: `f5aeb31cf9dea6ede1db1f63f6b19080c381320c` / R032-AH. The latest supplied `Healing_Beam_Codex_Repair_Plan.md` explicitly prohibits deployment or live-save modification without a separate instruction. That task-specific restriction takes precedence over the earlier standing deployment preference.
 
+## Launcher-only authentication correction — 2026-09-12
+
+The owner's first isolated AI server booted/listened, but its `2026-09-12_16-31-27_server.log` recorded OFFLINE mode at line 3 and rejected Direct Connect at line 1009: `offline mode is only valid in singleplayer`. This exposed an error in the original helper, not a Healing Beam runtime failure. The prior headless/offline smoke did not exercise a client connection and therefore could not validate Direct Connect readiness.
+
+`tools/New-HealingProbeAI.ps1` now explicitly passes `--auth-mode authenticated`. Installed pre.2 `Options.AuthMode` supports AUTHENTICATED; its shipped `AuthLoginDeviceCommand` and `AuthStatusCommand` provide the dedicated-server session workflow. The helper and checklist instruct the owner to run `auth login device` in the running **server console**, complete browser sign-in/profile selection, and check `auth status` before joining. No auth bypass, singleplayer flag, credentials copied from the live server, automated account login, or auth-persistence change was added. Fresh disposable directories may need sign-in again.
+
+The disposable-root naming, unique directory creation, native-build pin, exact three-mod hash checks, loopback binding, permission gate and optional explicit ImmersiveNPC comparison are unchanged. Default owner port remains 5591. The old offline server must be stopped normally before restarting on that port. Previously printed offline launch commands must be regenerated.
+
+Targeted validation used `tools/Test-HealingProbeLauncher.ps1 -NativeSmoke`. It exercised the real helper's `-Start` argument construction, checked isolation/auth/loopback/three-mod invariants, then booted those exact arguments on separate loopback port 5592 in a fresh disposable directory. The native server reported `Authentication mode: AUTHENTICATED`, `Hytale Server Booted! [Multiplayer, Fresh Universe]`, listened on 127.0.0.1:5592 and exited cleanly with code 0. It explicitly still lacked server tokens: **interactive authentication and connected join remain unverified**. The test did not initiate a login flow or interfere with the owner's port-5591 process.
+
+Evidence: [launcher validation](../../evidence/stage-13/cohort-ai/launcher-auth/validation.json) and [native startup markers](../../evidence/stage-13/cohort-ai/launcher-auth/native-startup-markers.txt). Only selected startup markers are archived, not login codes/tokens. No Java, Healing Beam implementation, assets, profiles, packaged JAR or live JAR changed. The artifact hashes below remain valid. No new JAR build, full gameplay regression rerun or live deployment was warranted for this launcher-only correction. Gate A rendering remains unverified.
+
 ## Delivery status
 
 | Assertion | Status |

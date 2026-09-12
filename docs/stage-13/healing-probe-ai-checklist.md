@@ -13,6 +13,26 @@ Set-Location -LiteralPath 'C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale'
 
 This creates a fresh `run\healing-probe-ai-<unique-id>` directory and starts a local test server at **127.0.0.1:5591**, pinned to the audited native build. Join that address using Direct Connect. It does not replace anything in `Saves\RPG\mods`. It copies the local permissions file only, not live character/mod state. Omit `-Start` to prepare only. If needed, `/op self` is enabled in this isolated server; the diagnostic permission is `inigmasgames.rpg.healingprobe`. Confirm the **R032-AI** badge.
 
+### Authenticate the test server before Direct Connect
+
+The launcher now explicitly uses `--auth-mode authenticated`. Its original `offline` setting was wrong for Direct Connect: installed pre.2 rejects it as singleplayer-only. Listening on a port alone does not prove join readiness.
+
+Stop the old offline probe with `stop` in **its server console**, then rerun the updated launcher above. After boot, type these commands into the **running server console**, not a separate PowerShell prompt or the client's chat:
+
+```text
+auth login device
+```
+
+Open the URL displayed by Hytale, complete the device sign-in with your Hytale account, and follow any profile-selection instructions. Then:
+
+```text
+auth status
+```
+
+Wait for the server to confirm successful authentication before connecting to **127.0.0.1:5591**. If it still says no server tokens are configured, sign-in has not completed. Client/launcher sign-in is not a substitute for this dedicated server's own session. Do not use `insecure`, a singleplayer flag or token copying from the live save as a workaround. Keep login codes/tokens private.
+
+Each helper invocation creates a fresh disposable directory; it does not copy auth credentials or change auth persistence settings. Consequently a newly created probe may require device sign-in again. A prepared-only command printed by the **old** helper still contains `offline`; discard that command and generate a new one with the corrected helper.
+
 Stop the server normally with `stop` in its PowerShell server console. Do not force-kill it as a visual cleanup test. A stopped disposable directory can be retained as evidence; no automatic recursive deletion is performed.
 
 ## One control at a time

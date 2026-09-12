@@ -31,7 +31,10 @@ Write-Host "Disposable world: $root"
 Write-Host "Local direct-connect address: 127.0.0.1:$Port"
 Write-Host 'Probe permission: inigmasgames.rpg.healingprobe. Existing local admin grants copied; /op self is available with --allow-op.'
 Write-Host 'Nothing has been installed in Saves/RPG/mods. Do the three-mod native control before adding ImmersiveNPCs.'
-$arguments=@('-Drpg.healingPresentationProbe=true',"-Drpg.healingPresentationProbeRoot=$root",'-jar',$server,'--bind',"127.0.0.1:$Port",'--auth-mode','offline','--allow-op','--disable-sentry',"--assets=$assets")
+Write-Host 'Direct Connect requires authenticated mode and an authenticated server session, not offline/singleplayer mode.'
+Write-Host 'After boot, enter auth login device in the SERVER console, complete the displayed sign-in in your browser, then run auth status before joining.'
+Write-Host 'If prompted to choose a profile, follow the server auth select instructions. No live server credentials are copied; a fresh probe directory may require sign-in again.'
+$arguments=@('-Drpg.healingPresentationProbe=true',"-Drpg.healingPresentationProbeRoot=$root",'-jar',$server,'--bind',"127.0.0.1:$Port",'--auth-mode','authenticated','--allow-op','--disable-sentry',"--assets=$assets")
 if($Start){
     Push-Location $root
     try{& java @arguments}finally{Pop-Location}
