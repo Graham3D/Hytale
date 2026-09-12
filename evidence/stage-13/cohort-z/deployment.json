@@ -1,0 +1,32 @@
+{
+  "deployedAtUtc": "2026-09-12T00:14:49.5721713+00:00",
+  "head": "63b6f1471d73bc6bc284e6031df2bf4333558acd",
+  "includesTraceCommit": "9bcee9d9def437ceaa955357b72d18fb2dbf2cc9",
+  "target": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.25.jar",
+  "beforeSha256": "CB8DCB4B56629A3CD9A4BF237D9B1A345E0620FD0935DE74219CE66DCBAE27CB",
+  "candidateSha256": "0737EC5DA371A8BC9E0E910EE48A362158D20E3F3D463F0F0E946E0A818C7B84",
+  "deployedSha256": "0737EC5DA371A8BC9E0E910EE48A362158D20E3F3D463F0F0E946E0A818C7B84",
+  "hashMatch": true,
+  "backup": "evidence/stage-13/cohort-z/before",
+  "traceBoundary": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\InigmasGames_HytaleRPGPhase00Audit\\logs\\rpg\\pre-r032-z-20260912T001306Z",
+  "movedTraces": [
+    {
+      "name": "skill-trace.jsonl",
+      "sha256": "1A4C4D826FA31424C2283B4B47D4316B17D4DE88CDED2BCBD9A14F26D47C18E7",
+      "bytes": 7040974
+    },
+    {
+      "name": "skill-trace.jsonl.1",
+      "sha256": "A9F689F1B16BAD113C893B8944FCF7CBA7CF6C6123A24CAF455BE9D149DDBD78",
+      "bytes": 8388599
+    },
+    {
+      "name": "ui-trace.jsonl",
+      "sha256": "907840EF8D04A43C55D1FD08D083E616746E3669FDD995CF37AD8ED7D5059DD0",
+      "bytes": 361513
+    }
+  ],
+  "activeSkillTraceExists": false,
+  "activeUiTraceExists": false,
+  "hytaleRunningDuringDeploy": false
+}

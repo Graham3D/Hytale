@@ -1,0 +1,13 @@
+{
+  "capturedAtUtc": "2026-09-12T00:13:06.4097204+00:00",
+  "head": "63b6f1471d73bc6bc284e6031df2bf4333558acd",
+  "liveJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.25.jar",
+  "liveJarSha256": "CB8DCB4B56629A3CD9A4BF237D9B1A345E0620FD0935DE74219CE66DCBAE27CB",
+  "backupJar": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-z\\before\\artifacts\\HytaleRPG-0.0.25.jar",
+  "modDataSource": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\InigmasGames_HytaleRPGPhase00Audit",
+  "modDataBackup": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\evidence\\stage-13\\cohort-z\\before\\save\\InigmasGames_HytaleRPGPhase00Audit",
+  "modDataFiles": 13,
+  "modDataBytes": 49358002.0,
+  "hytaleRunning": false,
+  "replacementPerformed": false
+}
