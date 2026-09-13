@@ -1,5 +1,18 @@
 # Stage 13 — runtime completion and release hardening
 
+**2026-09-12 local / 2026-09-13 UTC: R032-AN is IMPLEMENTED, PACKAGED and DEPLOYED.**
+One existing primary Healing Beam blip anchor now uses a deliberately visible shipped
+mannequin model with the unchanged AM particle attachment. The full pools, particle
+assets, spline and gameplay are unchanged. This tests the model-attached rendering
+boundary after the owner's direct world-particle controls passed.
+All 2,276 tests and exact-JAR native smoke/archive/rollback checks passed. A verified
+526-file stopped-save backup preceded replacement of HyARPG.jar only.
+**Live startup and connected model-plus-particle visibility remain UNVERIFIED.**
+See the [AN report and normal-cast checklist](stage-13-healing-visible-anchor-an-report.md).
+Do not hide the model or convert the full pools before the owner's connected proof.
+
+The entries below are historical checkpoints, not the currently installed revision.
+
 **2026-09-12 local / 2026-09-13 UTC: R032-AM is IMPLEMENTED, PACKAGED and DEPLOYED.**
 Production Healing Beam now uses the exact shipped Sparks/Glow/Plus sprite appearance on
 externally positioned particle anchors, not AL's solid Beam geometry. Gameplay is unchanged.

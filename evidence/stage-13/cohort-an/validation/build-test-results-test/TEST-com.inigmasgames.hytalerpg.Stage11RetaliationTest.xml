@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11RetaliationTest" tests="50" skipped="0" failures="0" errors="0" timestamp="2026-09-13T02:07:54.077Z" hostname="GRAHAM" time="0.259">
+  <properties/>
+  <testcase name="unrelatedCompletionCannotReleaseThePermit()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="changedLoadoutDuringWindupCannotReusePermit()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="authorizationBindsActorSlotPlanAndCorrelation()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="historySampleCapacityFailsClosed()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.002"/>
+  <testcase name="failedAttemptsCannotRefreshDamageEvidenceForever()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.001"/>
+  <testcase name="reducedMaximumUsesCurrentAuthoritativeThreshold()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="cooldownPersistenceFailureRefundsPreDispatchAndKeepsThreshold()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.005"/>
+  <testcase name="ownerCleanupDropsOldLossAndPendingPermit()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.005"/>
+  <testcase name="ordinaryUnlinkedSkillIsStillManual()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="lateNativeDispatchFailureDoesNotRefundPossibleHit()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="manualActivationIsDisabledBeforeAnyPayment()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="blockedSlotCannotStarveAnotherReadyRetaliation()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="inactiveOwnersExpireAndCapacityIsBounded()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="skillWithNoRetaliationHistoryDoesNotPollNativeResources()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="oneAttemptPerSecondAppliesAcrossSlots()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.001"/>
+  <testcase name="equipmentValidationRemainsAuthoritative()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="interruptedWindupRetainsOneThresholdWithoutPaying()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="normalStaminaCostCooldownAndSeventyPercentMagnitude()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="SkillDelayHasOneNormalPaymentAndNoSecondRetaliationPayment()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="hostileHealthLossIsRequiredNotEnvironmentalOrHealing()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="malformedNativeNumbersFailClosed()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.001"/>
+  <testcase name="fifteenPercentQueuesButDoesNotExecuteInsideObservation()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="windupHoldsPermitAndConsumesOnlyAtCommit()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="compatibilityUsesDiscreteNonConsumerBoundary()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="paidSkillDelayPreventsAnotherQueuedRetaliation()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="newestActualLossSurvivesOldSampleExpiry()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.001"/>
+  <testcase name="reflectedOrRecursiveLossCannotAdvanceAccumulator()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="duplicateReceiptCannotCreateThreshold()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="windupCommitRechecksTargetAndRetainsCreditOnFailure()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="fourteenPercentDoesNotCast()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="normalCooldownPreventsAnotherRoot()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="targetFailureDoesNotConsumeResourcesOrAccumulator()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="magicalRetaliationPaysManaNormally()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="healingUsesSeventyPercentOnce()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="TriggeredOriginWithoutNativeReceiptCannotSpoofRetaliation()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="lossObservationNeverWritesNativeResources()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.003"/>
+  <testcase name="receiptHistoryCapacityIsBounded()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.001"/>
+  <testcase name="weakeningUsesSeventyPercentOfReductionNotRemainingMultiplier()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="finiteSupportPercentagesAreReducedWithoutRescalingDuration()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="actorsHaveIndependentLossWindows()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="AttunementDoesNotBuildFromAutomaticRoot()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.006"/>
+  <testcase name="nativeProvenanceExcludesReflectedRedirectedTriggeredButNotOrdinary()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="increasedMaxHealthRaisesThresholdAtAttempt()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="excessIncomingDamageDoesNotBankMultipleCasts()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="loadoutChangeDoesNotResetAttemptThrottle()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="rollingWindowExpiresExactTenSeconds()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="planIdentityChangeDiscardsOldCredit()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="failedResourceCheckKeepsOneThresholdAndRetriesAfterOneSecond()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.004"/>
+  <testcase name="onePendingCastAcrossAllLinkedSlots()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.0"/>
+  <testcase name="loadoutChangeCannotReplaySameDamageReceipt()" classname="com.inigmasgames.hytalerpg.Stage11RetaliationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

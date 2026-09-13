@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" tests="30" skipped="0" failures="0" errors="0" timestamp="2026-09-13T02:07:54.740Z" hostname="GRAHAM" time="0.161">
+  <properties/>
+  <testcase name="paidHealthDispatchFailureStillConsumesEmpoweredCommittedUse()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.006"/>
+  <testcase name="multistrikePositiveAndAuthoredSequenceReactionNegativeGates()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.0"/>
+  <testcase name="cadenceIsAtQuarterAndHalfSecondWithNoDuplicateClaim()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.001"/>
+  <testcase name="profileUsesThreeHitsAndQuarterSecondCadenceWithoutChangingCanonical()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.001"/>
+  <testcase name="ledgerBoundIsExplicitAndOwnerCleanupReleasesCapacity()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="singleRepeatControllerAndCopyLimitsStillApply()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.003"/>
+  <testcase name="staleRollbackCannotEraseNewCommitOrRestoreClearedOwner()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.0"/>
+  <testcase name="repeatedHitLedgersAreIndependentAndCannotDoubleClaim()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.0"/>
+  <testcase name="ledgerSeparatesActorsSlotsAndDeduplicatesLatestRoot()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.0"/>
+  <testcase name="derivedChildrenNeverChargeResourcesOrStartAnotherCooldown()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="failedLoadoutSaveAndOrdinaryInterruptDoNotClearPriorCommits()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="rootActionLockRejectsOtherCastUntilExplicitFinalTermination()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="repeatsCannotRecursivelyRepeatEchoOrBarrage()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="everyThirdManualRootCommitIncludingMissIsEmpowered()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.005"/>
+  <testcase name="finiteSequenceLateWorldTickGuardAndMonotonicOrigin()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.001"/>
+  <testcase name="thirdMultistrikeChildrenInheritEmpowermentWithoutAdvancingCadence()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="snapshotCopyPreservesRepeatIdentityAndSharedLeechCap()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="cooldownAndResourceFailuresDoNotAdvanceRuthless()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="paidNormalDispatchFailureConsumesEmpoweredCommittedUse()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="impactAndRuthlessScaleAuthoredStaggerOnceEach()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.0"/>
+  <testcase name="increasedDamageAddsToPotencyNotAnotherSixtyPercentMore()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.003"/>
+  <testcase name="committedPrimaryFullAndExactlyTwoDerivedChildrenAtSixtyFivePercent()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="resolverCacheDoesNotCrossContaminateOtherPlans()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.0"/>
+  <testcase name="ruthlessPositiveAndTwoNegativeGates()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.0"/>
+  <testcase name="unlinkedContextCannotCreateMultistrikeChildren()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="empoweredStaggerScalesExistingPayloadBeforeCapsWithoutInventingOne()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.0"/>
+  <testcase name="noExpiryButLoadoutChangeResetsCadence()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="failedCooldownPersistenceDoesNotConsumeThirdUse()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.003"/>
+  <testcase name="triggeredRootNeitherConsumesNorReceivesThirdManualUse()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.004"/>
+  <testcase name="windupInterruptedBeforeCommitDoesNotAdvanceCounter()" classname="com.inigmasgames.hytalerpg.Stage11StrikeCadenceTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

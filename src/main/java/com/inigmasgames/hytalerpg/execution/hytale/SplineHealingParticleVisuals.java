@@ -14,6 +14,7 @@ import java.util.function.BiConsumer;
  * A persistent sample pool forms the body; finite travelling pulse anchors retire at the endpoint. */
 public final class SplineHealingParticleVisuals {
     public static final String BLIPS="RPG_Heal_Path_Blips",PULSE="RPG_Heal_Path_Pulse";
+    public static final String VISIBLE_PROOF="RPG_Heal_Path_Visible_AN";
     public static final int MAX_SEGMENTS=6,MAX_ROOTS=512,MAX_ANCHORS=2048;
     private final Map<String,Root> roots=new HashMap<>();
     private final Map<String,Job> pending=new HashMap<>();
@@ -30,6 +31,7 @@ public final class SplineHealingParticleVisuals {
         final Ref<EntityStore>[] pulses=new Ref[HealingParticlePath.PULSES];
         final double[] arcs=new double[HealingParticlePath.PULSES];
         double last=Double.NaN;
+        int visibleIndex=-1;
         Segment(String recipient){this.recipient=recipient;}
     }
     public synchronized int rootCount(){return roots.size();}
@@ -60,22 +62,33 @@ public final class SplineHealingParticleVisuals {
             var segment=root.segments.get(requested.id());
             if(segment!=null&&!Objects.equals(segment.recipient,requested.recipient())){destroy(root.store,segment);root.segments.remove(requested.id());segment=null;}
             if(segment==null){segment=new Segment(requested.recipient());root.segments.put(requested.id(),segment);}
-            update(root.store,segment,requested.shape().start(),requested.shape().end(),job.now);
+            update(root.store,segment,requested.shape().start(),requested.shape().end(),job.now,requested==job.frame.getFirst());
         }
         for(var id:new HashSet<>(root.segments.keySet()))if(!ids.contains(id))destroy(root.store,root.segments.remove(id));
         // Existing optional observer only: normal tracing remains event-driven, not one event per sample/tick.
         var refs=new HashMap<String,Ref<EntityStore>>();
         root.segments.forEach((id,s)->{if(!s.blips.isEmpty())refs.put(id+"/blip",s.blips.getFirst());if(s.pulses[0]!=null)refs.put(id+"/pulse",s.pulses[0]);});
+        root.segments.forEach((id,s)->{if(s.visibleIndex>=0)refs.put(id+"/visible-proof",s.blips.get(s.visibleIndex));});
         HealingPresentationProbe.production("PARTICLE_PATH_FRAME_READY",root.store,root.owner,key,refs,Set.of(),null);
         if(created)job.receipt.accept("PARTICLE_PATH_STARTED",null);else if(!root.updated){root.updated=true;job.receipt.accept("PARTICLE_PATH_UPDATED",null);}
     }
-    private void update(Store<EntityStore> store,Segment s,Vec3 start,Vec3 end,double now){
+    private void update(Store<EntityStore> store,Segment s,Vec3 start,Vec3 end,double now,boolean primary){
         var path=new HealingParticlePath(s.motion.update(start,end,now));int count=path.blips();
+        // One existing body sample only. Keep its index stable while possible, without changing
+        // spacing, placement, pulse progression, or the other empty-model pools. Visible proof
+        // is intentionally a full shipped mannequin until the owner confirms attached rendering.
+        int visible=primary&&count>0?Math.min(s.visibleIndex<0?count/2:s.visibleIndex,count-1):-1;
         while(s.blips.size()>count)destroy(store,s.blips.removeLast());
         for(int i=0;i<count;i++){
             Vec3 position=path.at(path.length()*i/(count-1));
-            if(i==s.blips.size())s.blips.add(spawn(store,position,BLIPS));else place(store,s.blips.get(i),position);
+            String model=i==visible?VISIBLE_PROOF:BLIPS;
+            if(i==s.blips.size())s.blips.add(spawn(store,position,model));
+            else if((i==visible)!=(i==s.visibleIndex)){
+                destroy(store,s.blips.get(i));s.blips.set(i,null);
+                s.blips.set(i,spawn(store,position,model));
+            }else place(store,s.blips.get(i),position);
         }
+        s.visibleIndex=visible;
         boolean reset=Double.isNaN(s.last)||now<s.last||now-s.last>.25;
         double dt=reset?0:now-s.last;s.last=now;
         for(int i=0;i<HealingParticlePath.PULSES;i++){
@@ -111,6 +124,22 @@ public final class SplineHealingParticleVisuals {
         for(var key:roots.entrySet().stream().filter(e->e.getValue().owner.equals(owner)).map(Map.Entry::getKey).toList())remove(key,buffer);
     }
     /** Isolated real native model/particle construction and ECS ordering, not client rendering proof. */
+    private static void auditVisible(Store<EntityStore> store,Root root){
+        int visible=0;
+        for(var segment:root.segments.values())for(int i=0;i<segment.blips.size();i++){
+            var model=store.getComponent(segment.blips.get(i),ModelComponent.getComponentType()).getModel().toPacket();
+            boolean proof=i==segment.visibleIndex;
+            if(proof){
+                visible++;
+                if(!VISIBLE_PROOF.equals(model.assetId)||!"NPC/MISC/Mannequin/Models/Model.blockymodel".equals(model.path)
+                        ||!"NPC/MISC/Mannequin/Models/Model_Default.png".equals(model.texture)||model.scale!=1)
+                    throw new IllegalStateException("HEAL_VISIBLE_MODEL");
+            }else if(!"NPC/MISC/Empty.blockymodel".equals(model.path))throw new IllegalStateException("HEAL_OTHER_ANCHOR_CHANGED");
+            if(model.particles.length!=1||!BLIPS.equals(model.particles[0].systemId)||model.particles[0].detachedFromModel
+                    ||!model.particles[0].clearParticlesOnRemove||model.particles[0].scale!=1)throw new IllegalStateException("HEAL_VISIBLE_ATTACHMENT");
+        }
+        if(visible!=1)throw new IllegalStateException("HEAL_VISIBLE_COUNT:"+visible);
+    }
     static void audit(Store<EntityStore> store,SkillExecutionContext context){
         if(!Boolean.getBoolean("rpg.projectileSpawnAudit"))throw new IllegalStateException("ISOLATED_AUDIT_DISABLED");
         var v=new SplineHealingParticleVisuals();var errors=new ArrayList<Throwable>();var events=new ArrayList<String>();
@@ -123,6 +152,8 @@ public final class SplineHealingParticleVisuals {
             processing.accept(buffer->{v.present(store,buffer,context,frame.apply(18d),0,receipt);if(v.anchors!=0)throw new IllegalStateException("PARTICLE_PATH_EARLY_MUTATION");});
             if(!errors.isEmpty()||v.anchors!=94)throw new IllegalStateException("PARTICLE_PATH_CREATE:"+errors+" anchors="+v.anchors);
             var s=v.roots.get(context.skillInstanceId()).segments.get("primary");var refs=List.copyOf(s.blips);
+            auditVisible(store,v.roots.get(context.skillInstanceId()));
+            var visibleRef=s.blips.get(s.visibleIndex);
             var firstModel=store.getComponent(refs.getFirst(),ModelComponent.getComponentType());
             for(var ref:refs){
                 if(store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())==null||store.getComponent(ref,com.hypixel.hytale.builtin.beam.BeamComponent.getComponentType())!=null)throw new IllegalStateException("PARTICLE_PATH_NATIVE_CONTRACT");
@@ -131,10 +162,16 @@ public final class SplineHealingParticleVisuals {
             }
             processing.accept(buffer->v.present(store,buffer,context,frame.apply(18d),.1,receipt));
             if(!errors.isEmpty()||!s.blips.equals(refs)||store.getComponent(refs.getFirst(),ModelComponent.getComponentType())!=firstModel||Math.abs(s.arcs[0]-.6)>1e-9)throw new IllegalStateException("PARTICLE_PATH_UPDATE");
+            var moving=List.of(new TetherVisualSegment("primary",com.inigmasgames.hytalerpg.execution.connection.ConnectionShape.line(new Vec3(0,203,0),new Vec3(18,203,0),.2,1)));
+            processing.accept(buffer->v.present(store,buffer,context,moving,.2,receipt));
+            if(!visibleRef.isValid()||s.blips.get(s.visibleIndex)!=visibleRef||store.getComponent(visibleRef,TransformComponent.getComponentType()).getPosition().y<=202)
+                throw new IllegalStateException("HEAL_VISIBLE_NOT_MOVED");
+            auditVisible(store,v.roots.get(context.skillInstanceId()));
             for(double length:new double[]{2,6,12,18,25.2}){
                 processing.accept(buffer->v.present(store,buffer,context,frame.apply(length),10+length,receipt));
                 var last=store.getComponent(s.blips.getLast(),TransformComponent.getComponentType()).getPosition();
                 if(Math.abs(last.x-length)>1e-8||v.anchors>HealingParticlePath.MAX_BLIPS+3)throw new IllegalStateException("PARTICLE_PATH_ENDPOINT");
+                auditVisible(store,v.roots.get(context.skillInstanceId()));
             }
             processing.accept(buffer->v.remove(context,buffer));if(v.anchors!=0||v.rootCount()!=0||refs.stream().anyMatch(Ref::isValid))throw new IllegalStateException("PARTICLE_PATH_ORPHAN");
             processing.accept(buffer->v.present(store,buffer,context,frame.apply(2d),60,receipt));
@@ -144,15 +181,18 @@ public final class SplineHealingParticleVisuals {
             var branches=new ArrayList<TetherVisualSegment>();for(int i=0;i<6;i++)branches.add(new TetherVisualSegment("branch-"+i,frame.apply(2d).getFirst().shape(),"recipient-"+i));
             processing.accept(buffer->v.present(store,buffer,context,branches,61,receipt));
             if(!errors.isEmpty()||v.anchors!=84)throw new IllegalStateException("PARTICLE_PATH_BRANCH_BUDGET");
+            auditVisible(store,v.roots.get(context.skillInstanceId()));
             var root=v.roots.get(context.skillInstanceId());var firstBranch=root.segments.get("branch-0");var untouched=root.segments.get("branch-1");
             var oldBranchRefs=List.copyOf(firstBranch.blips);
             branches.set(0,new TetherVisualSegment("branch-0",branches.getFirst().shape(),"different-recipient"));
             processing.accept(buffer->v.present(store,buffer,context,branches,61.05,receipt));
             if(root.segments.get("branch-0")==firstBranch||root.segments.get("branch-1")!=untouched||oldBranchRefs.stream().anyMatch(Ref::isValid))throw new IllegalStateException("PARTICLE_PATH_BRANCH_IDENTITY");
+            auditVisible(store,root);
             processing.accept(buffer->v.remove(context,buffer));if(v.anchors!=0||v.rootCount()!=0)throw new IllegalStateException("PARTICLE_PATH_BRANCH_ORPHAN");
             processing.accept(buffer->{v.present(store,buffer,context,frame.apply(2d),50,receipt);v.remove(context,buffer);});
             if(v.anchors!=0||!v.pending.isEmpty())throw new IllegalStateException("PARTICLE_PATH_CANCEL_RESURRECTION");
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_PARTICLE_PATH_NATIVE revision=R032-AM result=PASS stockChildren=true noNativeBeam=true persistentBlips=true forwardPulses=true endpointDistances=2,6,12,18,25.2 nonSerialized=true sameBufferCancel=true cleanup=true pulseRetirement=true branchIdentity=true connectedProof=false");
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_VISIBLE_ANCHOR_NATIVE revision=R032-AN result=PASS exactlyOne=true persistent=true moved=true cleanup=true connectedProof=false");
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_PARTICLE_PATH_NATIVE revision=R032-AN result=PASS stockChildren=true noNativeBeam=true persistentBlips=true forwardPulses=true endpointDistances=2,6,12,18,25.2 nonSerialized=true sameBufferCancel=true cleanup=true pulseRetirement=true branchIdentity=true connectedProof=false");
         }finally{v.cancel(context.request().actorId(),null);}
     }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-09-13T02:07:52.811Z" hostname="GRAHAM" time="0.167">
+  <properties/>
+  <testcase name="staticZoneStaysAtCommittedPositionAndNeverReadsAnchor()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.003"/>
+  <testcase name="invalidStartDoesNotReserveAFieldOrRootBudget()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="immediateMobileRequiresWorldCaptureBeforePayment()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="conversionAddsMobileTagsButNotAuraOrReservation()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.001"/>
+  <testcase name="lingeringComposesWithMobileWithoutIntroducingDrain()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.005"/>
+  <testcase name="missingAnchorStopsAndReleasesCapacityWithoutStaleDamage()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.005"/>
+  <testcase name="attachedVerticalGeometryAlsoFollowsWithoutExpandingHeight()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="vortexRetainsPullRulesWithCurrentMobileOrigin()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="rejectsAuraTrapAndPlacementOwnedBlizzard()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.0"/>
+  <testcase name="runtimeRejectsUnsafeProfileEvenWithForgedMobileContext()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="earthquakeRetainsFourDiscreteImpactsAndStaggerRules()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="nativePortFailureAlsoCleansTheField()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="echoKeepsOwnFiniteInstanceAndInheritedMobileMagnitudeWithoutRepayment()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="potencyAndRadiusMultiplyOnceWithoutChangingFiniteResourceModel()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="wrongWorldAnchorStopsTheOldField()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.003"/>
+  <testcase name="lifetimeAndPerTargetLedgerDoNotRestartWhileMoving()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="foreignActorCannotMoveOrRetainTheField()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="mobileDoesNotRewriteAuthoredPulseLifetimeRadiusOrCost()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.001"/>
+  <testcase name="longSimulationGapCannotDamageAnUnobservedPath()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="teardownIsIdempotentAndRetainsNoAnchorReference()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="movingGeometryStillUsesLosAndWholeQueryOverflowGate()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="followsOwnerWithoutLeavingDamageTrailOrRetainingOldOrigin()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="onePaymentOneCooldownAndSharedSnapshotAtEightyPercent()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="acceptsOnlyTheThreeMovableGroundZoneProfiles()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.0"/>
+  <testcase name="skillDelayAttachesOnlyOnReleaseAndPreservesIdentifiers()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <testcase name="attachmentUsesReleasePositionNotOldCommittedPoint()" classname="com.inigmasgames.hytalerpg.Stage11MobileDomainTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

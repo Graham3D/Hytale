@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13PresentationABTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-13T02:08:33.747Z" hostname="GRAHAM" time="0.033">
+  <properties/>
+  <testcase name="blizzardCooldownUsesTheCompiledAreaLifetimeWithoutRecoveryShortening()" classname="com.inigmasgames.hytalerpg.Stage13PresentationABTest" time="0.01"/>
+  <testcase name="endpointMotionCreatesBoundedOpposingLagThenCriticallyDampsToStraight()" classname="com.inigmasgames.hytalerpg.Stage13PresentationABTest" time="0.0"/>
+  <testcase name="branchesOwnIndependentMotionHistoryAndAbruptReversalStaysBounded()" classname="com.inigmasgames.hytalerpg.Stage13PresentationABTest" time="0.0"/>
+  <testcase name="blizzardThreeSecondProfileCannotBeRecastDuringItsActiveLifetime()" classname="com.inigmasgames.hytalerpg.Stage13PresentationABTest" time="0.009"/>
+  <testcase name="healingTetherUsesNarrowDedicatedTrailAfterConnectedBasicRenderingFailure()" classname="com.inigmasgames.hytalerpg.Stage13PresentationABTest" time="0.001"/>
+  <testcase name="sweepUsesAuthoritativeRemainingRatherThanAnotherTimer()" classname="com.inigmasgames.hytalerpg.Stage13PresentationABTest" time="0.001"/>
+  <testcase name="stationaryTetherIsPerfectlyStraightAndPinsBothEndpoints()" classname="com.inigmasgames.hytalerpg.Stage13PresentationABTest" time="0.0"/>
+  <testcase name="nativeRadialDocumentHasOnlyTwoReadOnlyOverlaysAndNoResourceControls()" classname="com.inigmasgames.hytalerpg.Stage13PresentationABTest" time="0.001"/>
+  <testcase name="snowPacketBeginsAtRootAndBoundsEmissionPlusParticleTailByRemainingLifetime()" classname="com.inigmasgames.hytalerpg.Stage13PresentationABTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

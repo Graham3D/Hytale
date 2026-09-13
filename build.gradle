@@ -91,7 +91,7 @@ tasks.processResources {
     inputs.property('healingProbeLiveTest', liveProbe)
     doLast {
         def marker = new File(destinationDir, 'healing-probe-live-test.txt')
-        if (liveProbe) marker.text = 'R032-AM'
+        if (liveProbe) marker.text = 'R032-AN'
         else if (marker.exists()) marker.delete()
     }
     inputs.property('version', project.version)
