@@ -25,7 +25,7 @@ class Stage13PresentationAGTest {
         var wiring=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
         assertTrue(wiring.contains("new HealingTetherPresentation()"));assertFalse(wiring.contains("new HealingParticleVisuals()"));
         var owner=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HealingTetherPresentation.java"));
-        assertTrue(owner.contains("new NativeHealingBeamVisuals()"));assertTrue(owner.contains("new HealingParticleVisuals(true)"));
+        assertTrue(owner.contains("new SplineHealingParticleVisuals()"));assertFalse(owner.contains("new NativeHealingBeamVisuals()"));assertTrue(owner.contains("new HealingParticleVisuals(true)"));
     }
     @Test void recipientEffectIsCosmeticFiniteAttachedAndHasNoHealthCondition()throws Exception{
         var effect=json("src/main/resources/Server/Entity/Effects/RPG/RPG_Healing_Recipient.json");

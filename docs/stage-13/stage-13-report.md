@@ -1,5 +1,14 @@
 # Stage 13 — runtime completion and release hardening
 
+**2026-09-12 local / 2026-09-13 UTC: R032-AM is IMPLEMENTED, PACKAGED and DEPLOYED.**
+Production Healing Beam now uses the exact shipped Sparks/Glow/Plus sprite appearance on
+externally positioned particle anchors, not AL's solid Beam geometry. Gameplay is unchanged.
+See the [AM technical report and connected checklist](stage-13-healing-particles-am-report.md).
+All 2,274 retained tests and final native smoke/package/rollback checks passed; 522 stopped-save
+files were backed up and only HyARPG.jar was replaced. **AM live startup/rendering remains unverified.**
+
+The entries below are historical checkpoints, not the currently installed revision.
+
 **2026-09-12: R032-AL is IMPLEMENTED, PACKAGED and DEPLOYED — production Healing Beam tether repair.**
 Normal casts now use endpoint-controlled persistent native Beams, not the old empty-model
 particle carrier. Gameplay is unchanged. [Technical report](stage-13-healing-tether-al-report.md)

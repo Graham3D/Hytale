@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13NativeHealingBeamTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:10:20.076Z" hostname="GRAHAM" time="0.008">
+  <properties/>
+  <testcase name="nativeAttachmentsEncodeEveryOffsetAndMovingSpanWithinOnePersistentComponent()" classname="com.inigmasgames.hytalerpg.Stage13NativeHealingBeamTest" time="0.006"/>
+  <testcase name="installedNativeBeamAcceptsPersistentPositionAttachmentContract()" classname="com.inigmasgames.hytalerpg.Stage13NativeHealingBeamTest" time="0.0"/>
+  <testcase name="productionAppearanceUsesNarrowUniformNativeEndpointsAndDedicatedAsset()" classname="com.inigmasgames.hytalerpg.Stage13NativeHealingBeamTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11HitProcTest" tests="38" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:13:55.375Z" hostname="GRAHAM" time="0.23">
+  <properties/>
+  <testcase name="fearReusesFiniteSupportDamageBreakGrace()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.007"/>
+  <testcase name="shatterExplosionCannotShatterAgain()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="weakerBleedRefreshKeepsStrongestWithoutStacking()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.0"/>
+  <testcase name="terrorChanceIsFifteenPercent()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="shatterDeduplicatesVictimEvenWithDifferentContact()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="invalidRollIsTypedAndDoesNotCreateEffect()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="cancelledDamageCannotProc()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="chanceIsWeightedAndUsesStrictBoundary()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.003"/>
+  <testcase name="noProcMetadataSuppressesDirectHitRoll()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.003"/>
+  <testcase name="convertedOrbHasADirectContactComponent()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.003"/>
+  <testcase name="hostileProtectedAndPlayerPolicies()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.011"/>
+  <testcase name="failedNativeFearKeepsIcdForUncertainResult()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.005"/>
+  <testcase name="zeroHealthLossCannotProcFromShieldOnlyHit()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="duplicateNativeReceiptCannotReroll()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="terrorRequiresRealDirectComponent()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.0"/>
+  <testcase name="shatterRequiresColdKillCapability()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.0"/>
+  <testcase name="malformedReceiptCannotRoll()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.003"/>
+  <testcase name="bleedUsesExistingFourSecondTimerWithResolvedDps()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.001"/>
+  <testcase name="terrorVictimIcdIsPerCaster()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.007"/>
+  <testcase name="rootContactMemoryCannotGrowBeyond256()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.0"/>
+  <testcase name="killingFrozenColdHitShattersHalfPremitigation()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="nativeFailureDoesNotRefundOrReopenProc()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.005"/>
+  <testcase name="volleyAndNativeOrbitWeightSimultaneousProcChance()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.009"/>
+  <testcase name="bleedVisualProjectionIsNotAnotherDamageTimer()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.001"/>
+  <testcase name="procCannotRecursivelyProcessItsChild()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="terrorTeardownClearsItsBoundedOwnerState()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.003"/>
+  <testcase name="bleedTwelvePercentOfResolvedHitNotBasePower()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.003"/>
+  <testcase name="terrorOnePointFiveSecondsAndEightSecondVictimIcd()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="noExtraResourceOrCooldownForProc()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="hemorrhageHasPhysicalDirectGate()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.0"/>
+  <testcase name="primaryColdPulseKillMayShatterWithoutHitProcs()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="slowSubstituteIsNotFrozen()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.003"/>
+  <testcase name="periodicCannotRollBleedOrFear()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.003"/>
+  <testcase name="terrorUsesExistingEliteAndBossStatusPolicy()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.0"/>
+  <testcase name="childPreservesRootActorCorrelationAndLedgers()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="triggerBudgetCapsEffectsAt16()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="survivingFrozenTargetDoesNotShatter()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <testcase name="bossMayBleedButCannotReceiveTerror()" classname="com.inigmasgames.hytalerpg.Stage11HitProcTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

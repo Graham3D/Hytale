@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage10DecoyTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:13:49.472Z" hostname="GRAHAM" time="0.066">
+  <properties/>
+  <testcase name="malformedDecoyCannotIntroduceCountOrDamage()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.0"/>
+  <testcase name="canonicalCostCooldownHealthAndLifetime()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.004"/>
+  <testcase name="deathPactAndSwarmCannotTurnDecoyIntoCombatSummon()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.007"/>
+  <testcase name="cancellationBlocksQueuedNativeSpawn()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.004"/>
+  <testcase name="onlyExplicitEncounterAlreadyAttackingCasterCanBeAttracted()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.0"/>
+  <testcase name="secondDecoyRejectsBeforeAnotherChargeEvenWhenCooldownCleared()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.004"/>
+  <testcase name="distinctOwnersCanEachHaveOneDecoy()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.003"/>
+  <testcase name="capIncludesPendingUnspawnedDecoy()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.003"/>
+  <testcase name="empowermentChangesOnlyHpAndLifetimeNotDamageOrCount()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.004"/>
+  <testcase name="combatSummonDoesNotConsumeDecoySingletonSlot()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.003"/>
+  <testcase name="neverClaimsDamageIncludingAfterLongTickStall()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.004"/>
+  <testcase name="terminationNeverCreatesDeathPact()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.026"/>
+  <testcase name="cannotSacrificeNoncombatDecoy()" classname="com.inigmasgames.hytalerpg.Stage10DecoyTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

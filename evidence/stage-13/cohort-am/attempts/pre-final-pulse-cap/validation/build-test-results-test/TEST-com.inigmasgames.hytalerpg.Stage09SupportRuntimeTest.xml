@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:08:49.789Z" hostname="GRAHAM" time="0.101">
+  <properties/>
+  <testcase name="damageBeyondShieldReachesNativeRemainder()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.005"/>
+  <testcase name="failedDownsizeAtZeroManaRestoresReservationWithoutTryingToPayAgain()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.005"/>
+  <testcase name="allocationChangesPreserveDeficitAndNeverRefundMana()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.005"/>
+  <testcase name="worldOrLoadoutChangeClearsAuraAndMembership()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <testcase name="unobservedLongGapDoesNotCreditRecharge()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.006"/>
+  <testcase name="expandedAuraRadiusDoesNotReduceUtilityRegenOrAlterReservation()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <testcase name="healPotencyAndEchoReuseSnapshotMagnitudeWithoutSecondCost()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.006"/>
+  <testcase name="auraConsumesReservationOnceAndIsIndefinite()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.008"/>
+  <testcase name="healRunsRealCommitAndWisdomHealingNotDamage()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.005"/>
+  <testcase name="fullyAbsorbedHostileHitRestartsRechargeDelay()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.005"/>
+  <testcase name="sixSecondDamageDelayThenTenPercentRecharge()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <testcase name="disconnectReleasesCapacityWithoutRefundAndPersistsDeficit()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.005"/>
+  <testcase name="noArbitraryMaxLifetimeAndTeardownHasNoFieldLeak()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <testcase name="staleMembershipCannotLeakARegenBonus()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <testcase name="toggleCannotMintManaOrShield()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <testcase name="failedAuraSaveRollsBackReservationBeforeAnyLiveEffect()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <testcase name="healingCapsToMissingAndNoOverhealWithoutOverflow()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.003"/>
+  <testcase name="allocationWhileInactiveIsSavedWithoutCreatingAuraOrChargingMana()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.003"/>
+  <testcase name="failedDurableAbsorptionCannotGiveFreeShield()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <testcase name="membershipChangesRemoveAndRestoreOnlyEligibleRecipient()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.003"/>
+  <testcase name="targetOverflowRejectsWholeAuraBeforeReservation()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <testcase name="insufficientCurrentManaRejectedBeforeActivation()" classname="com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

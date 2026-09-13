@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:13:54.485Z" hostname="GRAHAM" time="0.107">
+  <properties/>
+  <testcase name="actualNativeDamageMetadataIsSingleUseAndPreservesAllIds()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.024"/>
+  <testcase name="conditionsAreNotBakedIntoKernelCommitModifiers()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.002"/>
+  <testcase name="zeroOriginalBucketCanBecomePositiveWithoutDivision()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="opportunistCanonicalPositiveAndTwoNegativeFixtures()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="executionerThresholdStrictlyBelowThirtyPercent()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="noConditionalPlanDoesNotAttachAnInput()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.001"/>
+  <testcase name="moreLessAndReducedStayInTheirOwnBuckets()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="reflectedOwnPayloadCanScaleWithoutEnablingReflectionRecursion()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.001"/>
+  <testcase name="bossFrozenSubstituteDoesNotQualify()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.002"/>
+  <testcase name="noSecondCriticalRollAtGather()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="healthIsReadPerHitNotWhenInputWasCreated()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.001"/>
+  <testcase name="redirectedDamageIsNeverOffensivelyScaled()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="executionerCanonicalPositiveAndTwoNegativeFixtures()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="cancelledDamageNeverResurrects()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="slowChillTauntAndStaggerLabelAreNotActualNamedControl()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.001"/>
+  <testcase name="invalidOrDeadHealthCannotQualifyExecutioner()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="allFourActualControlsQualifyButNeverStack()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="unexpectedNativeGatherWriterFailsClosedInsteadOfBeingOverwritten()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.001"/>
+  <testcase name="malformedInputsCannotEnterGather()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.001"/>
+  <testcase name="pureGatherAddsToExistingIncreasedNotAsMore()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="nativeFloatNarrowingDoesNotProduceFalseMismatch()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <testcase name="reflectionSeedRetainsThornsCoefficientAndBeneficialMultipliers()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.006"/>
+  <testcase name="statusIsReadPerHitAndMayExpireBetweenTicks()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalDamageTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

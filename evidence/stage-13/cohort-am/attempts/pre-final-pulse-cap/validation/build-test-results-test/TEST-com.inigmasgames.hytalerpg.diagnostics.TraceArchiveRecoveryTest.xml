@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:09:41.178Z" hostname="GRAHAM" time="0.553">
+  <properties/>
+  <testcase name="archiveDirectoryFailureDoesNotFailAcceptedActiveTraceWrites()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.009"/>
+  <testcase name="identicalTimestampsAndConcurrentSubmissionsRemainValidAndExactlyOnce()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.068"/>
+  <testcase name="verifiedManifestContainsIntegrityCountsOrderingMetadataAndBuildIdentity()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.016"/>
+  <testcase name="legacyPlainRotationsVerifiedGzipAndCurrentAreReadInLogicalOrder()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.017"/>
+  <testcase name="archiveQueueIsBoundedAndFilesystemBacklogSurvivesASlowCompressor()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.195"/>
+  <testcase name="slowCompressionNeverBlocksRotationOrTheNextActiveSegment()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.029"/>
+  <testcase name="mismatchedCompressedDuplicateIsQuarantinedAndRawRemainsAuthority()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.028"/>
+  <testcase name="eachCrashBoundaryRecoversWithoutLossOrDuplication()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.133"/>
+  <testcase name="compressionNoneStillRotatesVerifiesAndExportsWithoutDeletingHistory()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.015"/>
+  <testcase name="startupRebuildsAMissingManifestAndRemovesOnlyMatchingRawDuplicate()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.026"/>
+  <testcase name="partialFinalLineIsQuarantinedAndEveryCompleteLineSurvives()" classname="com.inigmasgames.hytalerpg.diagnostics.TraceArchiveRecoveryTest" time="0.015"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

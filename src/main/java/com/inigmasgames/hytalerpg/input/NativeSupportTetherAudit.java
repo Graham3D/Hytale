@@ -14,6 +14,7 @@ import com.inigmasgames.hytalerpg.execution.hytale.NativeHealingBeamVisuals;
 public final class NativeSupportTetherAudit {
     private NativeSupportTetherAudit(){}
     public static void requireAssets(){
+        NativeHealingParticlePathAudit.requireAssets();
         var root=RootInteraction.getAssetMap().getAsset(NativeAbilityBridgeAudit.HEALING_ROOT_ID);
         if(root==null||!root.needsRemoteSync())throw new IllegalStateException("HEALING_HELD_ROOT_UNRESOLVED");
         int held=0;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13HotPathTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:14:16.686Z" hostname="GRAHAM" time="0.04">
+  <properties/>
+  <testcase name="immutableProfilesAreSharedButPlansRemainActorOwned()" classname="com.inigmasgames.hytalerpg.Stage13HotPathTest" time="0.008"/>
+  <testcase name="everyXpTransitionMatchesIndependentOriginalFormula()" classname="com.inigmasgames.hytalerpg.Stage13HotPathTest" time="0.0"/>
+  <testcase name="publishedProgressAndAttributesRemainFreshWithoutRecompilingLinks()" classname="com.inigmasgames.hytalerpg.Stage13HotPathTest" time="0.003"/>
+  <testcase name="repeatedFourPlayerHudAndCombatReadsCompileOnlyOneTimePerLoadout()" classname="com.inigmasgames.hytalerpg.Stage13HotPathTest" time="0.012"/>
+  <testcase name="uncertainPersistenceStillHidesAllCachedExecutablePlans()" classname="com.inigmasgames.hytalerpg.Stage13HotPathTest" time="0.004"/>
+  <testcase name="changedTopologyInvalidatesAndInvalidForkCannotPublishNewCache()" classname="com.inigmasgames.hytalerpg.Stage13HotPathTest" time="0.005"/>
+  <testcase name="callerOwnedViewCannotPoisonStateOrCompiledCache()" classname="com.inigmasgames.hytalerpg.Stage13HotPathTest" time="0.003"/>
+  <testcase name="frenzyCannotChargeOrPretendToApplyAnUnverifiedNativeSpeedModifier()" classname="com.inigmasgames.hytalerpg.Stage13HotPathTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

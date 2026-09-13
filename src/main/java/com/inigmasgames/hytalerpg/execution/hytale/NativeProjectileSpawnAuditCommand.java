@@ -48,6 +48,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                 NativeBlizzardVisuals.audit(store,auditChunk,context);
                 NativeHealingBeamVisuals.audit(store,context);
                 HealingTetherPresentation.audit(store,context);
+                SplineHealingParticleVisuals.audit(store,context);
                 HealingParticleVisuals.audit(store,context);
                 HealingPresentationProbe.auditChannel(store,context);
                 NativeManaReplicationAudit.audit(store);

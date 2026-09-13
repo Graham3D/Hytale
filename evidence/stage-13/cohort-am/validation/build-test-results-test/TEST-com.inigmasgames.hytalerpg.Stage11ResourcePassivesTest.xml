@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" tests="31" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:13:56.881Z" hostname="GRAHAM" time="0.404">
+  <properties/>
+  <testcase name="paidNormalDispatchFailureKeepsAttunementCommit()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.005"/>
+  <testcase name="failedLoadoutSaveDoesNotClearStacks()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.003"/>
+  <testcase name="changeBetweenReservationAndCommitRechecksHealth()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.003"/>
+  <testcase name="exactFourSecondsWithoutCommitExpiresStacks()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <testcase name="failedCooldownAndResourceAttemptsDoNotBuildOrExtendStacks()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <testcase name="exactOneHealthRemainingAllowed()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <testcase name="sixManualCommitsCapAtFiveAndSixthUsesFifteenPercent()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.005"/>
+  <testcase name="attunementStacksAreAdditiveAndComposeWithOtherCostFactors()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.001"/>
+  <testcase name="pendingHealthCostsCannotTogetherBecomeLethal()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.003"/>
+  <testcase name="windupInterruptRetainsPreviousStackButTerminalCleanupClearsIt()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.005"/>
+  <testcase name="lifebloodPositiveAndTwoNegativeGates()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.0"/>
+  <testcase name="nativeFloatPaymentGuardRejectsInvisibleAndLethalSubtractions()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.001"/>
+  <testcase name="attunementPositiveAndTwoNegativeGates()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.0"/>
+  <testcase name="ledgerSeparatesActorsSlotsAndDuplicateCommit()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.0"/>
+  <testcase name="noZeroOrMixedHealthUpkeepAndNoHealthRegeneration()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.005"/>
+  <testcase name="echoInheritsSnapshotAndNeverBuildsAnExtraStackOrSpendsHealth()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.005"/>
+  <testcase name="windupUsesCommitTimeStacksAfterExpiry()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <testcase name="anotherSkillDoesNotClearExistingStacks()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <testcase name="ledgerCapacityExpiryAndOwnerRemovalAreBounded()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.193"/>
+  <testcase name="healthCostCeilsOnlyAtFinalBoundary()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.001"/>
+  <testcase name="actualLoadoutMutationClearsAllSlotsButAttributeMutationDoesNot()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <testcase name="triggeredCommitDoesNotBuildStacks()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.003"/>
+  <testcase name="actualSharedQuickSlashCommitSpendsOnlyHealthOnce()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.003"/>
+  <testcase name="incompatibleLeechingLinkRollsBackGraphAndRetainsOwnedCopy()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <testcase name="lethalAndFractionalBelowOneCasesRejectWithoutMutation()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.029"/>
+  <testcase name="transactionRollbackCannotResurrectClearedStateOrEraseNewCommit()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.0"/>
+  <testcase name="failedCooldownSaveRollsBackHealthBeforeAnyExecutor()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <testcase name="lateHealthDispatchErrorKeepsCostAndCooldownBecauseHitCannotBeRuledOut()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <testcase name="malformedStacksAndLedgerTimeFailClosed()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.001"/>
+  <testcase name="lifebloodTriggeredRootIsRejectedBeforeResourceCheck()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.005"/>
+  <testcase name="firstCommitUsesZeroThenSecondUsesOneStack()" classname="com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13NativeAbilityReadinessTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:10:19.991Z" hostname="GRAHAM" time="0.053">
+  <properties/>
+  <testcase name="readinessLossPausesExistingSessionAndContainerReplacementRepairsAfterReady()" classname="com.inigmasgames.hytalerpg.Stage13NativeAbilityReadinessTest" time="0.033"/>
+  <testcase name="tickCannotInstallEvenWhenPersistenceIsAlreadyReady()" classname="com.inigmasgames.hytalerpg.Stage13NativeAbilityReadinessTest" time="0.01"/>
+  <testcase name="coldJoinAndHeldLoadDoNotReadOrBlockWorldTick()" classname="com.inigmasgames.hytalerpg.Stage13NativeAbilityReadinessTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

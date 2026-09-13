@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13SharedRootBudgetTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:09:37.015Z" hostname="GRAHAM" time="0.049">
+  <properties/>
+  <testcase name="mixedNativeCarriersAndOtherEffectsHaveOneFortyEightLimit()" classname="com.inigmasgames.hytalerpg.Stage13SharedRootBudgetTest" time="0.005"/>
+  <testcase name="nativeCarrierRemovalDoesNotRefundTheLifetimeEffectCount()" classname="com.inigmasgames.hytalerpg.Stage13SharedRootBudgetTest" time="0.005"/>
+  <testcase name="preexistingOtherEffectsCanAtomicallyRejectANativeBatch()" classname="com.inigmasgames.hytalerpg.Stage13SharedRootBudgetTest" time="0.005"/>
+  <testcase name="cosmeticPelletGroupingDoesNotChangeDamageLedgers()" classname="com.inigmasgames.hytalerpg.Stage13SharedRootBudgetTest" time="0.004"/>
+  <testcase name="nativeShrapnelAndHitProcsShareSixteenTriggeredSlots()" classname="com.inigmasgames.hytalerpg.Stage13SharedRootBudgetTest" time="0.006"/>
+  <testcase name="explosionOnlyOrbitPreservesItsPayloadWithoutInventingDirectDamage()" classname="com.inigmasgames.hytalerpg.Stage13SharedRootBudgetTest" time="0.005"/>
+  <testcase name="repeatedAuthoredComponentContactsAreNotAdditionalSpawnedControllers()" classname="com.inigmasgames.hytalerpg.Stage13SharedRootBudgetTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

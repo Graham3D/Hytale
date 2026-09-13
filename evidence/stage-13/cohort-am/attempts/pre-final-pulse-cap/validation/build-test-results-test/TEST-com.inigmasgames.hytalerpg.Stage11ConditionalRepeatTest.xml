@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" tests="53" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:08:55.838Z" hostname="GRAHAM" time="0.359">
+  <properties/>
+  <testcase name="foreignProjectileLifetimeRejected()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.009"/>
+  <testcase name="criticalWaitsExactlyPointTwoThenRunsOnce()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.006"/>
+  <testcase name="skillDelayIsNotAppliedAgainToCriticalRepeat()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="criticalCannotUseANewSolution()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="noValidKillTargetSpawnsNothing()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="fortyEightProjectileEffectsRemainSpentAfterCleanup()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="nonCriticalDoesNotSchedule()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="noAdditionalManaStaminaHealthOrCooldownSave()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="duplicateRootCannotRepeatAfterIcdExpires()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="noCriticalRetargetQuery()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="explicitCancellationInvalidatesClaimedRelease()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="killUsesFullThreeDimensionalBounds()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.001"/>
+  <testcase name="originalProjectileLaunchCannotRestartAfterCleanup()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="conditionalDuplicateCannotReplayAfterAllCarriersEnd()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="periodicCannotCriticalTrigger()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="friendlyAndProtectedHitsCannotRepeat()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.008"/>
+  <testcase name="delayedProjectileRepeatRetainsRegistryAfterLastCarrierGone()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="killIcdIsOneSecondAcrossRoots()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.006"/>
+  <testcase name="queueCapsAndDuplicateChildAreTyped()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="originalTargetInvalidCancelsWithoutRefund()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="shieldOnlyCriticalDoesNotSchedule()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="criticalChildHasHalfMagnitudeAndSameIdentityChain()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="childCarrierCannotScheduleRootRepeat()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="killRejectsDeadVictimAndInvalidRelations()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.0"/>
+  <testcase name="criticalRequiresDirectRepeatableComponent()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.0"/>
+  <testcase name="rootSecondaryLimitAlsoAppliesToRepeat()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="derivedStatusCopyKeepsExistingChildIdentity()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="alreadyDeadTargetCannotSchedule()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.003"/>
+  <testcase name="criticalIcdIsOnePointFiveSecondsAcrossRoots()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="nativeReleaseFailureCannotReplayOrRefund()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="missingNativeProjectileRootCannotBeInvented()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="rootPeriodicKillMayScheduleButNeverCritical()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="killTargetTiesAreDeterministic()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.001"/>
+  <testcase name="killTargetQueryFailureIsContained()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="removingConditionalQueueDoesNotRemoveAnEchoReservation()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="derivedCriticalCannotRepeat()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="killQueryOverflowFailsClosed()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.0"/>
+  <testcase name="killSelectsNearestWithinTwelveAndCasterReach()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.0"/>
+  <testcase name="volleyClaimsAllThreeDerivedLaunches()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="continuationStatusKillCannotBecomeARootKill()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="killExcludesConsumersAndSupport()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.0"/>
+  <testcase name="exclusiveRepeatControllersRollback()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.017"/>
+  <testcase name="malformedHealthReceiptRejected()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.001"/>
+  <testcase name="killSchedulesOneAtNewTargetWithoutCritical()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="noProcCannotCriticalTrigger()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="shrapnelCannotScheduleKillRepeat()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="ownerUnusableCancelsQueuedChild()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="conditionalProjectileCannotResetSixteenSecondaryLimit()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="volleyConditionalRestoresExactlyThreePromises()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="loadoutChangeCancelsAndOldProjectileCannotRearm()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.005"/>
+  <testcase name="killRequiresAuthoritativeLethalLoss()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="cancelledHitDoesNotSchedule()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <testcase name="invalidKilledTargetSolutionWorldRejected()" classname="com.inigmasgames.hytalerpg.Stage11ConditionalRepeatTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

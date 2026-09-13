@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage05NativeApiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:08:45.190Z" hostname="GRAHAM" time="0.024">
+  <properties/>
+  <testcase name="pinnedServerExposesRequiredNativeProjectileAndAmmoBoundaries()" classname="com.inigmasgames.hytalerpg.Stage05NativeApiTest" time="0.02"/>
+  <testcase name="ownedProjectileAssetsContainNoNativeDamageInteraction()" classname="com.inigmasgames.hytalerpg.Stage05NativeApiTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

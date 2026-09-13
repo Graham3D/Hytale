@@ -1,0 +1,12 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "RPG_Heal_Path_Sparks",
+      "FixedRotation": false,
+      "TotalSpawners": 1,
+      "MaxConcurrent": 1
+    }
+  ],
+  "CullDistance": 30,
+  "IsImportant": true
+}

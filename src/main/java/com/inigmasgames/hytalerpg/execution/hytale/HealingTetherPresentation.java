@@ -10,12 +10,12 @@ import java.util.function.BiConsumer;
 /** Production presentation owner. Core and existing native cosmetic leases fail/clean up independently.
  * No gameplay callbacks, effects selection, target discovery, payment or healing decisions. */
 public final class HealingTetherPresentation {
-    public static final String REVISION="R032-AL";
-    private final NativeHealingBeamVisuals core=new NativeHealingBeamVisuals();
+    public static final String REVISION="R032-AM";
+    private final SplineHealingParticleVisuals core=new SplineHealingParticleVisuals();
     private final HealingParticleVisuals effects=new HealingParticleVisuals(true);
     public void present(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,SkillExecutionContext context,
             List<TetherVisualSegment> frame,double now,BiConsumer<String,Throwable> result){
-        layer(()->core.present(store,buffer,context,frame,now,result),"NATIVE_BEAM_FAILED",result);
+        layer(()->core.present(store,buffer,context,frame,now,result),"PARTICLE_PATH_FAILED",result);
         layer(()->effects.present(store,buffer,context,frame,now,(event,error)->result.accept(event.replace("HEAL_PARTICLE_","HEAL_ATTACHMENTS_"),error)),
             "HEAL_ATTACHMENTS_FAILED",result);
     }
@@ -44,17 +44,17 @@ public final class HealingTetherPresentation {
         try{
             processing.accept(buffer->owner.present(store,buffer,context,frame,0,receipt));
             if(!failures.isEmpty()||owner.core.rootCount()!=1||owner.effects.carrierCount()!=0
-                    ||!events.contains("NATIVE_BEAM_STARTED")||!events.contains("HEAL_ATTACHMENTS_STARTED"))
+                    ||!events.contains("PARTICLE_PATH_STARTED")||!events.contains("HEAL_ATTACHMENTS_STARTED"))
                 throw new IllegalStateException("PRODUCTION_TETHER_CREATE:"+failures);
             processing.accept(buffer->owner.present(store,buffer,context,frame,.1,receipt));
-            if(!failures.isEmpty()||!events.contains("NATIVE_BEAM_UPDATED"))throw new IllegalStateException("PRODUCTION_TETHER_UPDATE");
+            if(!failures.isEmpty()||!events.contains("PARTICLE_PATH_UPDATED"))throw new IllegalStateException("PRODUCTION_TETHER_UPDATE");
             processing.accept(buffer->owner.remove(context,buffer));
-            if(owner.core.rootCount()!=0||owner.effects.carrierCount()!=0||!events.contains("NATIVE_BEAM_REMOVED"))throw new IllegalStateException("PRODUCTION_TETHER_REMOVE");
+            if(owner.core.rootCount()!=0||owner.effects.carrierCount()!=0||!events.contains("PARTICLE_PATH_REMOVED"))throw new IllegalStateException("PRODUCTION_TETHER_REMOVE");
             var isolated=new ArrayList<String>();
-            layer(()->{throw new IllegalStateException("AUDIT_CORE_FAILURE");},"NATIVE_BEAM_FAILED",(event,error)->isolated.add(event));
+            layer(()->{throw new IllegalStateException("AUDIT_CORE_FAILURE");},"PARTICLE_PATH_FAILED",(event,error)->isolated.add(event));
             layer(()->isolated.add("EFFECT_LAYER_RAN"),"HEAL_ATTACHMENTS_FAILED",(event,error)->isolated.add(event));
-            if(!isolated.equals(List.of("NATIVE_BEAM_FAILED","EFFECT_LAYER_RAN")))throw new IllegalStateException("PRODUCTION_LAYER_ISOLATION");
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_TETHER_NATIVE revision=R032-AL result=PASS productionOwner=true emptyModelCarriers=0 createUpdateRemove=true independentLayers=true connectedProof=false");
+            if(!isolated.equals(List.of("PARTICLE_PATH_FAILED","EFFECT_LAYER_RAN")))throw new IllegalStateException("PRODUCTION_LAYER_ISOLATION");
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_TETHER_NATIVE revision=R032-AM result=PASS productionOwner=true autonomousBeamCarriers=0 createUpdateRemove=true independentLayers=true connectedProof=false");
         }finally{owner.cancel(context.request().actorId(),null);}
     }
 }

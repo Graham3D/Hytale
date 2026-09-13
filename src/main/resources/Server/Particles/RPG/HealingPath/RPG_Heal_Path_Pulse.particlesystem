@@ -1,0 +1,18 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "RPG_Heal_Path_Glow",
+      "FixedRotation": false,
+      "TotalSpawners": 1,
+      "MaxConcurrent": 1
+    },
+    {
+      "SpawnerId": "RPG_Heal_Path_Plus",
+      "FixedRotation": false,
+      "TotalSpawners": 1,
+      "MaxConcurrent": 1
+    }
+  ],
+  "CullDistance": 30,
+  "IsImportant": true
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.progress.Stage13BarrierPriorityTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:09:41.747Z" hostname="GRAHAM" time="0.063">
+  <properties/>
+  <testcase name="queuedForegroundBlocksMaintenanceEvenBeforeItBeginsEncoding()" classname="com.inigmasgames.hytalerpg.progress.Stage13BarrierPriorityTest" time="0.057"/>
+  <testcase name="boundedWriterBackpressureAllowsItsMaintenancePrerequisiteToProgress()" classname="com.inigmasgames.hytalerpg.progress.Stage13BarrierPriorityTest" time="0.004"/>
+  <testcase name="resetIsDiagnosticOnlyAndDoesNotDropQueueOwnership()" classname="com.inigmasgames.hytalerpg.progress.Stage13BarrierPriorityTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

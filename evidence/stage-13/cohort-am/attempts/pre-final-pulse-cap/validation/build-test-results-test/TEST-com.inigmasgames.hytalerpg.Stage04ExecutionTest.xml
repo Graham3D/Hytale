@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage04ExecutionTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:08:44.991Z" hostname="GRAHAM" time="0.166">
+  <properties/>
+  <testcase name="familyPrerequisiteRejectsBeforeResourceAndCooldownMutation()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.014"/>
+  <testcase name="bossClassificationUsesWorldScopedNativeBossBarIdentity()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.001"/>
+  <testcase name="[1] quick_slash" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.022"/>
+  <testcase name="[2] fire_bolt" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.01"/>
+  <testcase name="[3] quickstep" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.008"/>
+  <testcase name="[4] riposte" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.008"/>
+  <testcase name="pounceTrajectoryUsesBoundedTravelAndArrivalPayload()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.005"/>
+  <testcase name="executorRejectionAfterCommitDoesNotRetainPhantomMovementLifecycle()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.009"/>
+  <testcase name="shieldBashCarriesPointSixStaggerAndControlPolicyRejectsProtectedTargets()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.01"/>
+  <testcase name="authoredRepeatTimingDoesNotCollapseHitsIntoInitialDispatch()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.001"/>
+  <testcase name="quickstepIsFourMetersOverPointTwoTwoSecondsAndCollisionClamps()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.004"/>
+  <testcase name="lineGeometryRejectsLateralAndRearCandidates()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.002"/>
+  <testcase name="sixPilotProfilesAreCanonicalAndPounceUsesInnatePower()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.003"/>
+  <testcase name="hitLedgerDeduplicatesWithinRepeatButAllowsNextRepeat()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.002"/>
+  <testcase name="executorRegistryDispatchesExactlyOneSharedExecutorPerFamily()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.0"/>
+  <testcase name="strikeArcHonorsAngleRangeAndTargetCap()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.004"/>
+  <testcase name="heavySwingWindupCanCancelWithoutCostCooldownOrReplacementTraceIds()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.005"/>
+  <testcase name="commitConsumesResourceStartsCooldownBeforeFamilyDispatchAndKeepsTraceIds()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.005"/>
+  <testcase name="windupRevalidationAdapterFailureClearsLifecycleBeforeAnyPayment()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.005"/>
+  <testcase name="reactionExpiresTriggersOnceAndRejectsDuplicateIncomingEvent()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.006"/>
+  <testcase name="invalidWeaponAndInsufficientResourceRejectBeforeCommit()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.013"/>
+  <testcase name="cooldownSecondActivationRejectsWithoutAdditionalConsumption()" classname="com.inigmasgames.hytalerpg.Stage04ExecutionTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

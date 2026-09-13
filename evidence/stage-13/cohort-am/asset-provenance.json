@@ -1,0 +1,87 @@
+{
+  "capturedAtUtc": "2026-09-13T01:18:22.6171269Z",
+  "assetsSha256": "0E35DF2D4E4A803F7752CB300FA7C9FE7ACDF62B4311978DA95C7AFF7ABBC126",
+  "video": "C:/Users/Zemio/OneDrive/Desktop/beam.mp4",
+  "videoSha256": "F3B77CCF6E8D4001BA6C8F961B794020C262BA48D3653861C7E1B5240FA48823",
+  "inspectedVideo": {
+    "width": 1242,
+    "height": 314,
+    "fps": 60,
+    "durationSeconds": 2.02
+  },
+  "children": [
+    {
+      "child": "Sparks",
+      "installedPath": "Server/Particles/_Test/HealBeams/Spawners/Beam_Heal_Green2_Sparks.particlespawner",
+      "installedSha256": "47A900FC8367EC0586831B51E1805D01904FA7DF6EF509AA54EBD09DB5C91426",
+      "texture": "Particles/Textures/Basic/Ball3.png",
+      "renderMode": "Erosion",
+      "particleLifeSpan": {
+        "Min": 3.0,
+        "Max": 3.0
+      },
+      "derivedPath": "src/main/resources/Server/Particles/RPG/HealingPath/RPG_Heal_Path_Sparks.particlespawner",
+      "derivedSha256": "17528F1B6CA2E1CBAD4D98AD5DBCC40865C526CE01ACBD36DE1BD96453C7B9C8",
+      "appearanceUnchanged": true,
+      "initialSpeed": {
+        "Min": 0,
+        "Max": 0
+      },
+      "anchorFollowMultiplier": 0,
+      "maximumConcurrent": 2,
+      "spawnRate": {
+        "Min": 1,
+        "Max": 1
+      }
+    },
+    {
+      "child": "Glow",
+      "installedPath": "Server/Particles/_Test/HealBeams/Spawners/Beam_Heal_Green2_Glow.particlespawner",
+      "installedSha256": "AD8224FC99424D5E7755C6878203DE70039375AFD12307F31C5E07774414235C",
+      "texture": "Particles/Textures/Circles/Circle_Glow.png",
+      "renderMode": "BlendAdd",
+      "particleLifeSpan": {
+        "Min": 0.3,
+        "Max": 0.3
+      },
+      "derivedPath": "src/main/resources/Server/Particles/RPG/HealingPath/RPG_Heal_Path_Glow.particlespawner",
+      "derivedSha256": "9A124F7C190B549FF91EC00A26ADCE5F14F9059753E02C05E4CE00D9C85B0DDD",
+      "appearanceUnchanged": true,
+      "initialSpeed": {
+        "Min": 0,
+        "Max": 0
+      },
+      "anchorFollowMultiplier": 0,
+      "maximumConcurrent": 20,
+      "spawnRate": {
+        "Min": 1,
+        "Max": 1
+      }
+    },
+    {
+      "child": "Plus",
+      "installedPath": "Server/Particles/_Test/HealBeams/Spawners/Beam_Heal_Green2_Plus.particlespawner",
+      "installedSha256": "C3A73DD7D624354AEC7C7B52DB3E6E5F02FDE65A313856C6D79FF1F6563B0E9A",
+      "texture": "Particles/Textures/Shapes/Health_Regen_Plus.png",
+      "renderMode": "Erosion",
+      "particleLifeSpan": {
+        "Min": 0.3,
+        "Max": 0.3
+      },
+      "derivedPath": "src/main/resources/Server/Particles/RPG/HealingPath/RPG_Heal_Path_Plus.particlespawner",
+      "derivedSha256": "030AA170A552E2714F26289116BF5F40B5FAFA734AB12C127FB924D3CF9E43F1",
+      "appearanceUnchanged": true,
+      "initialSpeed": {
+        "Min": 0,
+        "Max": 0
+      },
+      "anchorFollowMultiplier": 0,
+      "maximumConcurrent": 20,
+      "spawnRate": {
+        "Min": 1,
+        "Max": 1
+      }
+    }
+  ],
+  "connectedRendererProof": false
+}

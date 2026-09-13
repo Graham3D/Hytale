@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13ProjectileSpawnDiagnosticsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:09:37.009Z" hostname="GRAHAM" time="0.002">
+  <properties/>
+  <testcase name="exactNativeEnumMapFailureHasStableSafeCodeAndFirstBoundaryWins()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileSpawnDiagnosticsTest" time="0.002"/>
+  <testcase name="preCarrierBatchErrorsRemainDistinguishable()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileSpawnDiagnosticsTest" time="0.0"/>
+  <testcase name="everySpawnStageSurvivesRollbackWithoutChangingOriginalException()" classname="com.inigmasgames.hytalerpg.Stage13ProjectileSpawnDiagnosticsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

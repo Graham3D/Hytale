@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.execution.hytale.HealingProbeLiveTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-13T01:14:39.435Z" hostname="GRAHAM" time="0.009">
+  <properties/>
+  <testcase name="packetBoundsRejectUnboundedOrInvalidState()" classname="com.inigmasgames.hytalerpg.execution.hytale.HealingProbeLiveTest" time="0.001"/>
+  <testcase name="liveRecipientNeverUsesNativeSpawn()" classname="com.inigmasgames.hytalerpg.execution.hytale.HealingProbeLiveTest" time="0.0"/>
+  <testcase name="transientPacketsOnlyCarryFiniteCosmeticsAndExactCleanup()" classname="com.inigmasgames.hytalerpg.execution.hytale.HealingProbeLiveTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
