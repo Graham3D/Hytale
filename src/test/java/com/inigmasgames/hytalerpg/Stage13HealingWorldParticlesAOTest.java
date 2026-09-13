@@ -72,9 +72,9 @@ class Stage13HealingWorldParticlesAOTest {
         a.update(Vec3.ZERO,new Vec3(18,0,0),0);b.update(Vec3.ZERO,new Vec3(18,0,0),0);
         a.update(new Vec3(0,1,0),new Vec3(18,1,0),.101);b.update(Vec3.ZERO,new Vec3(18,0,0),.101);
         assertEquals(1,a.sample(0).y());assertEquals(1,a.sample(a.bodyCount()-1).y());
-        assertTrue(a.sample(a.bodyCount()/2).y()<1);assertEquals(0,b.sample(b.bodyCount()/2).y());
+        assertTrue(a.sample(a.bodyCount()+1).y()<1);assertEquals(0,b.sample(b.bodyCount()+1).y());
         for(int i=2;i<80;i++)a.update(new Vec3(0,1,0),new Vec3(18,1,0),i*.101);
-        assertEquals(1,a.sample(a.bodyCount()/2).y(),1e-6);
+        assertEquals(1,a.sample(a.bodyCount()+1).y(),1e-6);
     }
     @Test void viewFilteringUsesThreeDimensionalParticleAndNativeViewDistance(){
         assertTrue(SplineHealingParticleVisuals.withinView(Vec3.ZERO,new Vec3(30,0,0),64));

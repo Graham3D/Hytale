@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage06CohortCTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:16.543Z" hostname="GRAHAM" time="0.077">
+  <properties/>
+  <testcase name="meteorUsesOneDisjointDamageTierAndSeparateBurnRadiusAfterFullWarning()" classname="com.inigmasgames.hytalerpg.Stage06CohortCTest" time="0.009"/>
+  <testcase name="voidHasFiveSubImpactCapAndOneIndependentFinalBlastWithPullBeforeDamage()" classname="com.inigmasgames.hytalerpg.Stage06CohortCTest" time="0.008"/>
+  <testcase name="pullUsesNativeCollisionSupportControlAndNeverMovesVerticallyOrPastCore()" classname="com.inigmasgames.hytalerpg.Stage06CohortCTest" time="0.002"/>
+  <testcase name="cometKeepsFiveAndThreeChillTiersDisjoint()" classname="com.inigmasgames.hytalerpg.Stage06CohortCTest" time="0.008"/>
+  <testcase name="earthquakeHasFourDiscretePulsesNotFrameRateDependentDamage()" classname="com.inigmasgames.hytalerpg.Stage06CohortCTest" time="0.008"/>
+  <testcase name="overheadRejectsRoofAndChangedGroundInsteadOfMovingWarning()" classname="com.inigmasgames.hytalerpg.Stage06CohortCTest" time="0.015"/>
+  <testcase name="avalanchePreservesAuthoredFirstHalfSecondAndAlternatesIceStoneWithRootCap()" classname="com.inigmasgames.hytalerpg.Stage06CohortCTest" time="0.009"/>
+  <testcase name="voidFinalBlastCanHitAnEnemyMissedByEverySubImpactAndCoreAddsNoPacket()" classname="com.inigmasgames.hytalerpg.Stage06CohortCTest" time="0.008"/>
+  <testcase name="vortexIntegratesDamageAndBoundedPullRequestsAtQuarterSecond()" classname="com.inigmasgames.hytalerpg.Stage06CohortCTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

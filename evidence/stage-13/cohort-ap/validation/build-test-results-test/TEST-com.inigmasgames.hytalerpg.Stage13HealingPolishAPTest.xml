@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13HealingPolishAPTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:52.564Z" hostname="GRAHAM" time="0.012">
+  <properties/>
+  <testcase name="everyProductionParticleUsesRedPaletteWithoutChangingSprites()" classname="com.inigmasgames.hytalerpg.Stage13HealingPolishAPTest" time="0.001"/>
+  <testcase name="recipientUsesShippedHealChildrenAndRemainsIndependentOfHealth()" classname="com.inigmasgames.hytalerpg.Stage13HealingPolishAPTest" time="0.0"/>
+  <testcase name="bodyActuallyFlowsForwardAndRotatesWhilePulsesKeepSixMetresPerSecond()" classname="com.inigmasgames.hytalerpg.Stage13HealingPolishAPTest" time="0.001"/>
+  <testcase name="bodyAndPulsesChangeOnlyColorFromWorkingAo()" classname="com.inigmasgames.hytalerpg.Stage13HealingPolishAPTest" time="0.001"/>
+  <testcase name="recipientAndStaffRetainExactShippedNonColorBehavior()" classname="com.inigmasgames.hytalerpg.Stage13HealingPolishAPTest" time="0.007"/>
+  <testcase name="helixIsOneBoundedStrandWithPinnedEndsAndCenterlinePulses()" classname="com.inigmasgames.hytalerpg.Stage13HealingPolishAPTest" time="0.0"/>
+  <testcase name="audioAssetsAreLoopOnlyCosmeticsAndNeverPersistedByTheOwner()" classname="com.inigmasgames.hytalerpg.Stage13HealingPolishAPTest" time="0.001"/>
+  <testcase name="parallelTransportDoesNotFlipAtWorldUpOrExactReversal()" classname="com.inigmasgames.hytalerpg.Stage13HealingPolishAPTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

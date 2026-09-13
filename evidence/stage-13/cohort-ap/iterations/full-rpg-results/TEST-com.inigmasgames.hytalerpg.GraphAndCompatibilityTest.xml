@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:15.393Z" hostname="GRAHAM" time="0.078">
+  <properties/>
+  <testcase name="illegalRelationshipsCyclesAndJointCapacityAreRejected()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.009"/>
+  <testcase name="sixPassiveGlobalBudgetCanSpecializeOneSkill()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.007"/>
+  <testcase name="representativeCompatibilityGatesAreExplicit()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.007"/>
+  <testcase name="directJointAndChainedJointRoutesValidate()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.006"/>
+  <testcase name="everyCanonicalSkillPassiveAssessmentReturnsATypedVerdict()" classname="com.inigmasgames.hytalerpg.GraphAndCompatibilityTest" time="0.047"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

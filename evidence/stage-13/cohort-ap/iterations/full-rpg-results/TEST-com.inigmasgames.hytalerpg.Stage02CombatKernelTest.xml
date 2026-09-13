@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:15.718Z" hostname="GRAHAM" time="0.099">
+  <properties/>
+  <testcase name="levelOneMaximaAreExactlyOneHundredNotBaselinePlusE10()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.003"/>
+  <testcase name="cooldownUsesGenericRecoveryModifierCapabilityAndRuntimeState()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.006"/>
+  <testcase name="diagnosticsFailureCannotChangeCombatResult()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.005"/>
+  <testcase name="declaredCostEnforcesManaStaminaOrNoneAndEfficiencyUsesMasterIntegerRule()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.002"/>
+  <testcase name="chillStacksRefreshAndFifthStackConsumesIntoFrozen()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.006"/>
+  <testcase name="damageMathKeepsDoublePrecisionUntilOneHytaleFloatBoundary()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="balanceProfileIsVersionedAndCurveBreakpointsAreExact()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="modifierBucketsUseAdditiveIncreasedReducedAndMultiplicativeMoreLess()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="canonicalPotencyAndEfficiencyCompileIntoTypedKernelModifiersWithoutInventedContent()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.008"/>
+  <testcase name="primaryDerivedStatsUseEffectiveStrDexIntAndWis()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.002"/>
+  <testcase name="wisdomAndLuckSecondaryEquationsAndCapsAreApplied()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="bedAndHomeRestorationHonorReservationAndTiming()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.003"/>
+  <testcase name="bossFrozenAndRootUseThirtyPercentSlowWhileOtherHardControlsReject()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.002"/>
+  <testcase name="combatSnapshotDefensivelyCopiesEveryMutableInput()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.002"/>
+  <testcase name="allFiveAttributesUseSameCurveAndRejectNegativeRawValues()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="basePowerUsesExplicitClassificationAndNeverResourceTypeOrDisplayName()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.002"/>
+  <testcase name="resourceReserveCommitRefundAndInsufficientFailureAreTransactional()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="hytaleDamageAdapterIsConcreteAndAcceptsNativePipelineTypes()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.037"/>
+  <testcase name="effectiveCurveIsContinuousAtEveryBreakpoint()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="innateAndNoneBasePowerContractsAreExplicit()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.002"/>
+  <testcase name="burnPoisonAndNonstackingControlsRefreshTheirOwnTimers()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="seededCritIsRepeatableDirectHitsCritAndPeriodicDoesNotByDefault()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="potencyTypedModifierFeedsDamageIncreasedBucket()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="passiveRegenAndNormalChargedHitRecoveryAreCappedAndDeduplicatedPerRoot()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.002"/>
+  <testcase name="frozenExpiresIntoThreeSecondImmunity()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <testcase name="cooldownRecoveryIsCappedAndDurationHasQuarterSecondFloor()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.0"/>
+  <testcase name="reservationsSumClampRegenerationRejectOversubscriptionAndReleaseWithoutMinting()" classname="com.inigmasgames.hytalerpg.Stage02CombatKernelTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

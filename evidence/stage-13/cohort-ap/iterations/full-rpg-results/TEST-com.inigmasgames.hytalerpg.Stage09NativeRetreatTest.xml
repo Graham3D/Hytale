@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09NativeRetreatTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:20.643Z" hostname="GRAHAM" time="0.004">
+  <properties/>
+  <testcase name="unsafeTerrainPredicateSuppressesTranslation()" classname="com.inigmasgames.hytalerpg.Stage09NativeRetreatTest" time="0.003"/>
+  <testcase name="nativeEvadeRequestsDirectionAwayFromSource()" classname="com.inigmasgames.hytalerpg.Stage09NativeRetreatTest" time="0.0"/>
+  <testcase name="unboundedOrInvalidProbeStepsAreRejected()" classname="com.inigmasgames.hytalerpg.Stage09NativeRetreatTest" time="0.001"/>
+  <testcase name="groundSelectorDoesNotRequestVerticalTeleport()" classname="com.inigmasgames.hytalerpg.Stage09NativeRetreatTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

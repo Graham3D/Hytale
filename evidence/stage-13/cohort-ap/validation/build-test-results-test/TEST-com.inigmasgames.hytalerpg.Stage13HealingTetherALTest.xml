@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13HealingTetherALTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:52.593Z" hostname="GRAHAM" time="0.028">
+  <properties/>
+  <testcase name="materialsAreTransparentSeamlessGreenNotRejectedNativeRibbons()" classname="com.inigmasgames.hytalerpg.Stage13HealingTetherALTest" time="0.024"/>
+  <testcase name="movementEnvelopePinsEndpointsAndSettlesWithoutPermanentSag()" classname="com.inigmasgames.hytalerpg.Stage13HealingTetherALTest" time="0.001"/>
+  <testcase name="productionAndBadgeUseRepairWhileLegacyControlsRemainAvailable()" classname="com.inigmasgames.hytalerpg.Stage13HealingTetherALTest" time="0.001"/>
+  <testcase name="highlightsMoveTowardRecipientWhileContinuousCoreNeverChanges()" classname="com.inigmasgames.hytalerpg.Stage13HealingTetherALTest" time="0.001"/>
+  <testcase name="degenerateAndInvalidFramesRemainBounded()" classname="com.inigmasgames.hytalerpg.Stage13HealingTetherALTest" time="0.001"/>
+  <testcase name="allSupportedExtentsUseActualEndpointsNotFixedParticleScale()" classname="com.inigmasgames.hytalerpg.Stage13HealingTetherALTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

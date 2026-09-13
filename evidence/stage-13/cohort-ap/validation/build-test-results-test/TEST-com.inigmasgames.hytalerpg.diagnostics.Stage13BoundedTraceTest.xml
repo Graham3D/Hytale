@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.diagnostics.Stage13BoundedTraceTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:15:16.476Z" hostname="GRAHAM" time="0.165">
+  <properties/>
+  <testcase name="stalledDiskCannotCreateAnUnboundedQueueOrRunIoOnTheProducer()" classname="com.inigmasgames.hytalerpg.diagnostics.Stage13BoundedTraceTest" time="0.013"/>
+  <testcase name="serializationSafetyLimitIsExplicitAndTheNextRecordCarriesAGap()" classname="com.inigmasgames.hytalerpg.diagnostics.Stage13BoundedTraceTest" time="0.021"/>
+  <testcase name="fileFailureIsCountedAndCannotThrowIntoGameplay()" classname="com.inigmasgames.hytalerpg.diagnostics.Stage13BoundedTraceTest" time="0.004"/>
+  <testcase name="closedWriterRejectsInsteadOfSilentlyAcceptingUndrainableTasks()" classname="com.inigmasgames.hytalerpg.diagnostics.Stage13BoundedTraceTest" time="0.001"/>
+  <testcase name="orderedAcceptedRecordsRetainAllCorrelationFields()" classname="com.inigmasgames.hytalerpg.diagnostics.Stage13BoundedTraceTest" time="0.007"/>
+  <testcase name="invalidConfigurationCannotCreateUnboundedBudgets()" classname="com.inigmasgames.hytalerpg.diagnostics.Stage13BoundedTraceTest" time="0.002"/>
+  <testcase name="rotationPreservesEveryWholeLineInOrderAndRetainsAllArchives()" classname="com.inigmasgames.hytalerpg.diagnostics.Stage13BoundedTraceTest" time="0.085"/>
+  <testcase name="oneLegalEventMayExceedSegmentThresholdWithoutBeingSplit()" classname="com.inigmasgames.hytalerpg.diagnostics.Stage13BoundedTraceTest" time="0.031"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

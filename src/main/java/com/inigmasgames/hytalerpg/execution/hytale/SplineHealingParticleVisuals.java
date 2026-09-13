@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
 /** Production world-particle tether. No visual entity or model attachments.
  * Deferred frames are coalesced and invalidated by the existing channel cleanup boundary. */
 public final class SplineHealingParticleVisuals {
-    public static final String BLIPS="RPG_Heal_World_Blips",PULSE="RPG_Heal_World_Pulse";
+    public static final String BLIPS="RPG_Heal_Red_Blips",PULSE="RPG_Heal_Red_Pulse";
     // Former anchor ceiling now bounds the total active sample slots, not ECS objects.
     public static final int MAX_SEGMENTS=6,MAX_ROOTS=512,MAX_ANCHORS=2048;
     public static final double VIEW_DISTANCE=30;
@@ -158,7 +158,7 @@ public final class SplineHealingParticleVisuals {
             if(!packets.isEmpty()||v.rootCount()!=0)throw new IllegalStateException("PACKET_CANCEL_RESURRECTION");
             if(!errors.isEmpty())throw new IllegalStateException("PACKET_FAILURE:"+errors);
             if(store.getEntityCount()!=entityCount)throw new IllegalStateException("PACKET_VISUAL_ENTITY_LEAK");
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_WORLD_PARTICLE_NATIVE revision=R032-AO result=PASS packetConstruction=true cadence=true endpoints=true branches=true noEntities=true sameBufferCancel=true cleanup=true connectedProof=false");
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_WORLD_PARTICLE_NATIVE revision=R032-AP result=PASS packetConstruction=true cadence=true endpoints=true branches=true noEntities=true sameBufferCancel=true cleanup=true connectedProof=false");
         }finally{v.cancel(context.request().actorId(),null);}
     }
 }

@@ -60,7 +60,7 @@ public final class NativeSupportTetherAudit {
                 ||recipient.getEntityStats()!=null&&!recipient.getEntityStats().isEmpty()||recipient.isInfinite()||recipient.isInvulnerable())
             throw new IllegalStateException("HEAL_RECIPIENT_COSMETIC_CONTRACT");
         var recipientParticles=recipient.getApplicationEffects().toPacket().particles;
-        if(recipientParticles==null||recipientParticles.length!=1||!"Effect_Health_Pack".equals(recipientParticles[0].systemId)||!recipientParticles[0].clearParticlesOnRemove)
+        if(recipientParticles==null||recipientParticles.length!=1||!"RPG_Heal_Red_Recipient".equals(recipientParticles[0].systemId)||!recipientParticles[0].clearParticlesOnRemove)
             throw new IllegalStateException("HEAL_RECIPIENT_PARTICLE_CONTRACT");
         try(var input=NativeSupportTetherAudit.class.getResourceAsStream("/rpg/presentation/staff-heads-ag.json")){
             if(input==null)throw new IllegalStateException("STAFF_PRESENTATION_MANIFEST_MISSING");
@@ -79,12 +79,12 @@ public final class NativeSupportTetherAudit {
                         ||effect.getEntityStats()!=null&&!effect.getEntityStats().isEmpty())
                     throw new IllegalStateException("STAFF_CHANNEL_EFFECT_INVALID:"+entry.getKey());
                 var p=effect.getApplicationEffects().toPacket().particles;
-                if(p==null||p.length!=1||!"Staff_Bronze".equals(p[0].systemId)
+                if(p==null||p.length!=1||!"RPG_Heal_Red_Staff".equals(p[0].systemId)
                         ||p[0].targetEntityPart!=com.hypixel.hytale.protocol.EntityPart.PrimaryItem
                         ||!expected.get("node").getAsString().equals(p[0].targetNodeName)||!p[0].clearParticlesOnRemove)
                     throw new IllegalStateException("STAFF_CHANNEL_ATTACHMENT:"+entry.getKey());
             }
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_STAFF_HEAD_ASSETS cohort=AH staffs=26 system=Staff_Bronze attachment=CHANNEL_PRIMARY_ITEM_NODE result=PASS connectedProof=false");
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_STAFF_HEAD_ASSETS cohort=AH staffs=26 system=RPG_Heal_Red_Staff attachment=CHANNEL_PRIMARY_ITEM_NODE result=PASS connectedProof=false");
         }catch(java.io.IOException error){throw new IllegalStateException("STAFF_PRESENTATION_MANIFEST_READ",error);}
         com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_SUPPORT_TETHER_ASSETS cohort=AH skills=89 passives=67 heldRoot=RESOLVED nativeGameplay=false particles=VERIFIED_ASSET connectedProof=false");
     }

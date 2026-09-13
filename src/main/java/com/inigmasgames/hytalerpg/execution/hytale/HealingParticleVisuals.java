@@ -22,6 +22,7 @@ import org.joml.Vector3d;
  * Stream transforms therefore use authoritative spatial anchors, not a fabricated staff-tip pose. */
 public final class HealingParticleVisuals {
     private final boolean effectsOnly;
+    private final HealingChannelAudio audio=new HealingChannelAudio();
     public HealingParticleVisuals(){this(false);}
     HealingParticleVisuals(boolean effectsOnly){this.effectsOnly=effectsOnly;}
     public static final String ASSET_ID="Beam_Heal_Green2";
@@ -106,6 +107,7 @@ public final class HealingParticleVisuals {
         var previous=root.staffEffect;root.staffEffect=next;
         if(previous!=null&&!previous.equals(next))releaseStaff(root.store,root.owner,previous);
         if(next!=null)renewStaff(root.store,root.owner,next);
+        if(effectsOnly)try{audio.start(root.store,root.owner,key);}catch(RuntimeException failure){job.receipt.accept("HEAL_AUDIO_FAILED",failure);}
         HealingPresentationProbe.production("FRAME_READY",root.store,root.owner,key,root.carriers,root.recipients,root.staffEffect);
         if(created)job.receipt.accept("HEAL_PARTICLE_STARTED",null);
         else if(!root.updated){root.updated=true;job.receipt.accept("HEAL_PARTICLE_UPDATED",null);}
@@ -155,6 +157,7 @@ public final class HealingParticleVisuals {
     private void remove(String key,CommandBuffer<EntityStore> buffer){
         pending.remove(key);var root=roots.remove(key);if(root==null)return;
         mutate(root.store,buffer,()->{synchronized(this){
+            if(effectsOnly)try{audio.stop(key);}catch(RuntimeException failure){if(root.receipt!=null)root.receipt.accept("HEAL_AUDIO_FAILED",failure);}
             for(var ref:root.carriers.values())destroy(root.store,ref);
             for(var id:root.recipients)releaseRecipient(root.store,id);
             if(root.staffEffect!=null)releaseStaff(root.store,root.owner,root.staffEffect);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage10SummonTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:21.775Z" hostname="GRAHAM" time="0.086">
+  <properties/>
+  <testcase name="cancelledDelayedSummonRetainsPaidCooldownAndCreatesNothing()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="echoRejectedAndGraphRolledBack()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="repeatCastDuringCooldownCannotMintAnotherSummon()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="removalOfOneOwnerDoesNotFreeOthers()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.004"/>
+  <testcase name="globalCapIncludesPendingActorsAcrossWorlds()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.008"/>
+  <testcase name="expireBeforeQueuedSpawnPreventsActivation()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="clockMustBeFinite()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="insufficientManaCannotReserveNativeActor()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="noTwoReservationsCanOwnSameNativeActor()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="cancellationBeforeQueuedSpawnPreventsActivation()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="pendingReservationCountsAgainstOwnerCap()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.006"/>
+  <testcase name="attackClaimedOnceBeforeDispatchAndNoCatchUpBurst()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="delayedSummonPaysOnceAndStartsLifetimeAtRelease()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="pilotUsesRealValidationCostCooldownAndSummonDispatch()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="duplicateRootCannotReserveEvenBeforeEntityAppears()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.006"/>
+  <testcase name="activationAndRemovalAreIdempotent()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.005"/>
+  <testcase name="malformedProfileRejected()" classname="com.inigmasgames.hytalerpg.Stage10SummonTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

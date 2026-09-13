@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13HealingWorldParticlesAOTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:52.635Z" hostname="GRAHAM" time="0.01">
+  <properties/>
+  <testcase name="systemsUseOneSparkAndPairedGlowPlusFiniteAtNativeCullDistance()" classname="com.inigmasgames.hytalerpg.Stage13HealingWorldParticlesAOTest" time="0.001"/>
+  <testcase name="packetBurstsKeepExactApprovedAppearanceAndExpireWithinPointTwoSeconds()" classname="com.inigmasgames.hytalerpg.Stage13HealingWorldParticlesAOTest" time="0.0"/>
+  <testcase name="viewFilteringUsesThreeDimensionalParticleAndNativeViewDistance()" classname="com.inigmasgames.hytalerpg.Stage13HealingWorldParticlesAOTest" time="0.001"/>
+  <testcase name="cappedSamplingStillPinsBothEndpointsAcrossAllExtents()" classname="com.inigmasgames.hytalerpg.Stage13HealingWorldParticlesAOTest" time="0.001"/>
+  <testcase name="threePulsesAdvanceAtSixMetresPerSecondAndWrapWithoutReverseTravel()" classname="com.inigmasgames.hytalerpg.Stage13HealingWorldParticlesAOTest" time="0.002"/>
+  <testcase name="cadenceNeverCatchesUpOrEmitsMoreThanTenPassesPerSecond()" classname="com.inigmasgames.hytalerpg.Stage13HealingWorldParticlesAOTest" time="0.001"/>
+  <testcase name="productionHasNoCarrierConstructionOrGlobalBroadcast()" classname="com.inigmasgames.hytalerpg.Stage13HealingWorldParticlesAOTest" time="0.0"/>
+  <testcase name="branchesHaveIndependentElasticStateAndResetByNewObject()" classname="com.inigmasgames.hytalerpg.Stage13HealingWorldParticlesAOTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

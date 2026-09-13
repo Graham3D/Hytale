@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage08ConnectionTest" tests="24" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:18.297Z" hostname="GRAHAM" time="0.18">
+  <properties/>
+  <testcase name="beamIntegrationDoesNotDependOnWorldTickJitter()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.006"/>
+  <testcase name="finiteOrbInheritsExpandedRadiusPotencyAndEchoWithoutExtraCost()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.006"/>
+  <testcase name="pilotProfilesRetainCatalogAndExactAuthoredGeometry()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.004"/>
+  <testcase name="diagonalAndVerticalPrismsDoNotBecomeAxisAlignedBoxes()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.0"/>
+  <testcase name="lineUsesFullWidthAndActualBoundsInsteadOfPointCenters()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.0"/>
+  <testcase name="windFrontTravelsAtTwentyAndHitsEachVictimOnce()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="delayedWaveUsesCommittedAimAndPaysOnlyOnce()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="orbWallStopKeepsPulsingUntilTotalFiveSeconds()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="waveStopsAtWallAndRejectsTargetsBehindIt()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.006"/>
+  <testcase name="duplicateTargetsAndRepeatedSameTimeCannotDoubleDamage()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="invalidWorldEquipmentDeathAndControlEndBeforeFurtherUpkeep()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.024"/>
+  <testcase name="fractionalUpkeepIsIndependentOfIntegerUpfrontCost()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="insufficientUpkeepStopsBeforeTheUnpaidHitAndStartsOneCooldown()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="beamPaysEveryQuarterSecondBeforeDamageAndEndsAtFiveSeconds()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.007"/>
+  <testcase name="largeSimulationGapDoesNotRetroactivelyDamageCurrentTargets()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="candidateOverflowRejectsWholeSliceBeforePayment()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.004"/>
+  <testcase name="boundedVictimLedgerDoesNotEvictAndPermitRepeatedHits()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.006"/>
+  <testcase name="beamRejectsRepeatControllersAndLineRejectsProjectileContinuations()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.058"/>
+  <testcase name="sharedFieldCapacityIsNotDuplicatedAcrossAreasAndConnections()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.001"/>
+  <testcase name="orbHasSixAuthoredPulsesNoSpawnHitAndStopsAtRange()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="nativeWriteFailureCannotProduceFreeChannelDamage()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.004"/>
+  <testcase name="disconnectCancellationReleasesChannelAndIsIdempotent()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="beamSamplesCurrentAimClipsAtSolidAndCannotDamageThroughWalls()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.005"/>
+  <testcase name="cylinderHeightAndRadialCornerSemanticsAreIndependent()" classname="com.inigmasgames.hytalerpg.Stage08ConnectionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

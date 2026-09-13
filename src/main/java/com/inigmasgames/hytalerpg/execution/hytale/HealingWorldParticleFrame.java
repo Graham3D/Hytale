@@ -8,6 +8,7 @@ public final class HealingWorldParticleFrame {
     public static final double SPACING=.325,PERIOD=.1,PULSE_SPEED=6;
     public static final float LIFETIME=.18f;
     private final ElasticBeamTether motion=new ElasticBeamTether();
+    private final HealingHelix helix=new HealingHelix();
     private final Vec3[] samples=new Vec3[MAX_BODY+PULSES];
     private final double[] arcs=new double[PULSES];
     private double next=Double.NEGATIVE_INFINITY,last=Double.NaN;
@@ -26,7 +27,7 @@ public final class HealingWorldParticleFrame {
         int previous=count;
         body=path.length()<1e-6?0:Math.min(MAX_BODY,Math.max(2,(int)Math.ceil(path.length()/SPACING)+1));
         count=body==0?0:body+PULSES;
-        for(int i=0;i<body;i++)samples[i]=path.at(path.length()*i/(body-1));
+        if(body>0)helix.sample(path,body,Double.isNaN(last)?0:now-last,samples);
         for(int i=0;i<PULSES;i++){
             if(body==0){arcs[i]=0;continue;}
             arcs[i]=Double.isNaN(last)?path.length()*i/PULSES:(arcs[i]+PULSE_SPEED*(now-last))%path.length();

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage10CageGateTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:20.991Z" hostname="GRAHAM" time="0.051">
+  <properties/>
+  <testcase name="noNativeColliderOrAreaComponentIsPackagedAsAWorkingFallback()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.0"/>
+  <testcase name="gateRejectsBeforeAnyNativePreflightCostCooldownTargetOrDispatch()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.005"/>
+  <testcase name="malformedGeometryRejected()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.0"/>
+  <testcase name="canonicalGeometryAndCostsAreRetainedWithoutClaimingCollider()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.0"/>
+  <testcase name="repeatsCannotBypassGateOrAccumulateWork()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.004"/>
+  <testcase name="finalStage10InventoryIsExactlyNineNotAnExtraCanonicalSkill()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.006"/>
+  <testcase name="segmentsCloseWithEqualThirtyDegreeSpacing()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.0"/>
+  <testcase name="potencyDoesNotBypassSafetyGate()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.004"/>
+  <testcase name="allTwelveSegmentsUseAuthoritativeRadiusHeightAndThickness()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.0"/>
+  <testcase name="skillDelayCannotArmAnUnsafeCage()" classname="com.inigmasgames.hytalerpg.Stage10CageGateTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

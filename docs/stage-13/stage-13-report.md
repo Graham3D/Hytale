@@ -1,5 +1,18 @@
 # Stage 13 — runtime completion and release hardening
 
+**2026-09-12 local / 2026-09-13 UTC: R032-AP is IMPLEMENTED, PACKAGED and DEPLOYED.**
+The owner confirmed AO's direct world-particle renderer works. AP preserves that
+path and adds one red flowing helix, centerline pulses, red recipient Effect_Heal,
+and one start/stop-owned native audio loop per root. Gameplay and spline authority
+are unchanged. Final retained results cover 2,292 tests: one full run plus a
+corrected six-test historical probe expectation rerun; the original failure is
+preserved, not reported as a clean initial run. Final native smoke/archive/rollback
+checks passed. A verified 539-file stopped-save backup preceded JAR replacement.
+**Live startup and AP connected visual/audio acceptance remain UNVERIFIED.**
+See the [AP report, validation provenance and normal-cast checklist](stage-13-healing-polish-ap-report.md).
+
+The entries below are historical checkpoints, not the currently installed revision.
+
 **2026-09-12 local / 2026-09-13 UTC: R032-AO is IMPLEMENTED, PACKAGED and DEPLOYED.**
 Production Healing Beam now uses the connected-proven direct world-particle packet
 path with appearance-exact finite derivatives, 10 Hz cadence, 64 body samples plus

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.progress.Stage13V2RecoveryEdgesTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:15:48.596Z" hostname="GRAHAM" time="1.436">
+  <properties/>
+  <testcase name="actualArchivedHRejectsV2AndCoordinatedLegacyCopyRemainsReadable()" classname="com.inigmasgames.hytalerpg.progress.Stage13V2RecoveryEdgesTest" time="0.107"/>
+  <testcase name="maximumDeltaFramesStayInsideDerivedExtentAndByteRolloversRemainBounded()" classname="com.inigmasgames.hytalerpg.progress.Stage13V2RecoveryEdgesTest" time="0.417"/>
+  <testcase name="failedAuthorityWriteRequiresRestartAndDoesNotPermitLaterContributions()" classname="com.inigmasgames.hytalerpg.progress.Stage13V2RecoveryEdgesTest" time="0.034"/>
+  <testcase name="checkpointWorkerBacklogBackpressuresBeforeThirdEpochAndEventuallyProgresses()" classname="com.inigmasgames.hytalerpg.progress.Stage13V2RecoveryEdgesTest" time="0.253"/>
+  <testcase name="[1] 1" classname="com.inigmasgames.hytalerpg.progress.Stage13V2RecoveryEdgesTest" time="0.2"/>
+  <testcase name="[2] 3" classname="com.inigmasgames.hytalerpg.progress.Stage13V2RecoveryEdgesTest" time="0.39"/>
+  <testcase name="malformedNonzeroPreparedTailIsNeverSilentlyDiscarded()" classname="com.inigmasgames.hytalerpg.progress.Stage13V2RecoveryEdgesTest" time="0.033"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

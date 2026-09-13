@@ -1,0 +1,7 @@
+{
+  "Infinite": true,
+  "Debuff": false,
+  "ApplicationEffects": {
+    "LocalSoundEventId": "SFX_Deployable_Totem_Heal_Effect_Local"
+  }
+}

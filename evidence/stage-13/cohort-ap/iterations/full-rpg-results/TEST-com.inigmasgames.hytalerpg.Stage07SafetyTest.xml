@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage07SafetyTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:17.531Z" hostname="GRAHAM" time="0.352">
+  <properties/>
+  <testcase name="sweepUsesThreeDimensionalBoundsAndBothDirections()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.001"/>
+  <testcase name="global512CapIncludesOtherOwnersAndNeverEvictsTheirProjectiles()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.271"/>
+  <testcase name="spentRootBudgetDoesNotResetWhenDerivedChildrenEnd()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.012"/>
+  <testcase name="returnCatchClipsAtFirstHalfMeterIntersectionNotAtNearestPointAfterCaster()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.0"/>
+  <testcase name="hitLedgersRemainBoundedAndDisposedInstancesCannotAcceptContacts()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.013"/>
+  <testcase name="returnGetsOnlyItsOwnExplicitLifetimeAndClockContinuesWithoutResettingAncestorAge()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.015"/>
+  <testcase name="callbacksAndTicksShareOneMonotonicClockAcrossRedirects()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.01"/>
+  <testcase name="rangeClipsBeforeSweepSoPackedTargetsBeyondRemainingPathCannotHit()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.001"/>
+  <testcase name="promisedEchoSlotsCountAgainstOwnerCapacityBeforeAnySecondLaunch()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.013"/>
+  <testcase name="sweepFindsEveryCloselyPackedBodyInDistanceOrder()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.0"/>
+  <testcase name="terminatedChildCannotReuseItsIdentityWhileRootLivesAndGenerationFourIsRejected()" classname="com.inigmasgames.hytalerpg.Stage07SafetyTest" time="0.014"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

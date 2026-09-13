@@ -5,7 +5,7 @@
   "ApplicationEffects": {
     "Particles": [
       {
-        "SystemId": "Staff_Bronze",
+        "SystemId": "RPG_Heal_Red_Staff",
         "TargetEntityPart": "PrimaryItem",
         "TargetNodeName": "Block5",
         "Scale": 1,

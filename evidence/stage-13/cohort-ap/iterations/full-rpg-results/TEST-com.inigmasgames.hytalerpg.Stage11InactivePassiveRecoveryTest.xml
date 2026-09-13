@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:28.382Z" hostname="GRAHAM" time="0.155">
+  <properties/>
+  <testcase name="explicitValidRelinkReactivatesNode()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.006"/>
+  <testcase name="jointRoutingPreservedWithOneInactiveInput()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.006"/>
+  <testcase name="missingPassiveDefinitionBecomesInactiveWithoutDeletion()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.005"/>
+  <testcase name="explicitReplacementReactivatesAndValidates()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.006"/>
+  <testcase name="invalidForkPreservesGraphOwnedCopiesAndProgress()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.005"/>
+  <testcase name="recoveryFailureDoesNotPublishHalfRecoveredMemory()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.005"/>
+  <testcase name="readModelCannotMutateAuthoritativeFlags()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.004"/>
+  <testcase name="changingDestinationSkillRevalidatesInactiveRoute()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.005"/>
+  <testcase name="repeatConflictKeepsFirstSlotAndMarksSecond()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.006"/>
+  <testcase name="duplicateCopiesRemainOwnedButOnlyOneContributes()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.006"/>
+  <testcase name="missingUnlinkedDefinitionIsStillVisibleAndOwned()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.006"/>
+  <testcase name="migrationCheckpointSurvivesLaterContentSave()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.027"/>
+  <testcase name="validForkAndUnrelatedSlotRemainActive()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.005"/>
+  <testcase name="schemaSixMigrationPreservesCooldownAndAllGraphData()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.003"/>
+  <testcase name="unlinkDoesNotDeleteOwnedOrEquippedPassive()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.005"/>
+  <testcase name="missingSkillGetsDegradedPlanNotInventedExecution()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.004"/>
+  <testcase name="structuralCycleStillUsesExistingBackupRecovery()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.005"/>
+  <testcase name="sixNodeRecoveryPreservesMostValidRatherThanGreedyFirst()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.006"/>
+  <testcase name="maximalSubsetRetainsIntroducedDependencyTogether()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.006"/>
+  <testcase name="explicitRelinkMustValidateAndCannotKeepInactiveBypass()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.004"/>
+  <testcase name="staleInactiveFlagsReconcileAgainstCurrentCatalog()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.006"/>
+  <testcase name="recoveryIsIdempotentAcrossRestart()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.008"/>
+  <testcase name="malformedInactiveStateFailsClosed()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.002"/>
+  <testcase name="unchangedInactiveNodeDoesNotBlockUnrelatedEdit()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.004"/>
+  <testcase name="newInvalidLinkAlwaysRollsBackNotAutoInactivated()" classname="com.inigmasgames.hytalerpg.Stage11InactivePassiveRecoveryTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

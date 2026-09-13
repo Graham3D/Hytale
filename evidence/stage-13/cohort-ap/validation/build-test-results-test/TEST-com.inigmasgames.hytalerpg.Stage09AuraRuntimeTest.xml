@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:19.131Z" hostname="GRAHAM" time="0.099">
+  <properties/>
+  <testcase name="thornsRecipientLeavingIsRemovedAtMembershipTick()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.011"/>
+  <testcase name="cooldownRateChangePreservesElapsedWork()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.002"/>
+  <testcase name="hasteCapAndExistingBaseFormulaRemainAuthoritative()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.001"/>
+  <testcase name="allSixteenSupportProfilesArePresent()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.003"/>
+  <testcase name="thornsHasNoInitialAttackAndReflectionEpochBudgetRenews()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <testcase name="thornsPaysFractionalFirstSliceBeforeGrantingReflection()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.005"/>
+  <testcase name="ownerDeathWorldChangeAndCancelClearPaidAuras()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.014"/>
+  <testcase name="finiteAuraManualStopDoesNotResetThirtyFiveSecondCooldown()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.003"/>
+  <testcase name="insufficientFirstUpkeepRejectsBeforeUpfrontCost()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <testcase name="toggleOffAtZeroManaIsNotASecondActivationPayment()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <testcase name="pedanticismReservesTwentyPercentWithoutCreatingUpkeepTimer()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <testcase name="duplicateOwnerTicksDoNotChargeOrPulseTwice()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <testcase name="upkeepNativeExceptionCleansEmitterAndDoesNotRefundUpfront()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <testcase name="earlyToggleRejectsWithoutNewPayment()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.005"/>
+  <testcase name="chillingDamageAndChillUseIndependentAuthoredClocks()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.005"/>
+  <testcase name="genericExplicitEnemyCooldownPenaltyMultipliesDurationNotAttackTiming()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.001"/>
+  <testcase name="expiredCooldownAuraLeaseDoesNotKeepAcceleratingOffline()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.0"/>
+  <testcase name="nativeCooldownGetterReturnsMaximumNotRemainingProgress()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.001"/>
+  <testcase name="thornsDoesNotReflectBeyondPaidSliceWithoutOwnerTick()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <testcase name="hostileMembershipOverflowEndsWholeAuraWithoutPartialPulse()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <testcase name="reapingPaysExactlyEightSecondsAndProducesEightPulses()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.006"/>
+  <testcase name="lastPaidPulseOccursBeforeRejectingNextSlice()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <testcase name="longUnobservedUpkeepGapTerminatesWithoutBackfilledHits()" classname="com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

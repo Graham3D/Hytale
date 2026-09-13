@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" tests="6" skipped="0" failures="1" errors="0" timestamp="2026-09-13T03:14:52.576Z" hostname="GRAHAM" time="0.015">
+  <properties/>
+  <testcase name="boundedModesAndFiniteWatchdog()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.001"/>
+  <testcase name="visibleControlChangesOnlyModelAndTextureAndDependenciesExist()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.007"/>
+  <testcase name="lockInAhDirectionalEmitterExtentLimitation()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.001"/>
+  <testcase name="noProbeInspectorConsumesNativeChangesOrClaimsClientSuccess()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.001"/>
+  <testcase name="explicitDisposablePathOnly()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.0"/>
+  <testcase name="probeEffectsAreExactCosmeticWrappersWithOnlyDurationDifferent()" classname="com.inigmasgames.hytalerpg.Stage13HealingProbeAITest" time="0.005">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;{&quot;OverlapBehavior&quot;:&quot;Overwrite&quot;,&quot;Debuff&quot;:false,&quot;ApplicationEffects&quot;:{&quot;Particles&quot;:[{&quot;SystemId&quot;:&quot;RPG_Heal_Red_Recipient&quot;,&quot;TargetEntityPart&quot;:&quot;Entity&quot;,&quot;ClearParticlesOnRemove&quot;:true}]}}&gt; but was: &lt;{&quot;OverlapBehavior&quot;:&quot;Overwrite&quot;,&quot;Debuff&quot;:false,&quot;ApplicationEffects&quot;:{&quot;Particles&quot;:[{&quot;SystemId&quot;:&quot;Effect_Health_Pack&quot;,&quot;TargetEntityPart&quot;:&quot;Entity&quot;,&quot;ClearParticlesOnRemove&quot;:true}]}}&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;{&quot;OverlapBehavior&quot;:&quot;Overwrite&quot;,&quot;Debuff&quot;:false,&quot;ApplicationEffects&quot;:{&quot;Particles&quot;:[{&quot;SystemId&quot;:&quot;RPG_Heal_Red_Recipient&quot;,&quot;TargetEntityPart&quot;:&quot;Entity&quot;,&quot;ClearParticlesOnRemove&quot;:true}]}}&gt; but was: &lt;{&quot;OverlapBehavior&quot;:&quot;Overwrite&quot;,&quot;Debuff&quot;:false,&quot;ApplicationEffects&quot;:{&quot;Particles&quot;:[{&quot;SystemId&quot;:&quot;Effect_Health_Pack&quot;,&quot;TargetEntityPart&quot;:&quot;Entity&quot;,&quot;ClearParticlesOnRemove&quot;:true}]}}&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
+	at app//com.inigmasgames.hytalerpg.Stage13HealingProbeAITest.probeEffectsAreExactCosmeticWrappersWithOnlyDurationDifferent(Stage13HealingProbeAITest.java:43)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

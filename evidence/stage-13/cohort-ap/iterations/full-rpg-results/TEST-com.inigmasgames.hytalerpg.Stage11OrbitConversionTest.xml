@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:29.005Z" hostname="GRAHAM" time="0.209">
+  <properties/>
+  <testcase name="invalidAndDuplicateRootContactCannotBypassInterval()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.001"/>
+  <testcase name="rootContactVictimMemoryIsBounded()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.0"/>
+  <testcase name="contactRadiusIsPayloadGeometryNotAnInventedArtCollider()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.005"/>
+  <testcase name="echoSharesContactIntervalAndCannotAddAnImmediateExtraHit()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.005"/>
+  <testcase name="projectileAndOrbConvertWhileStrikeAuraAndChannelReject()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.0"/>
+  <testcase name="aftermathCanUseTheConvertedPersistentComponent()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.005"/>
+  <testcase name="volleyCannotCombineWithEchoOrBarrageToExceedThree()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.008"/>
+  <testcase name="introducedPositionAffectsConvertedPrimaryNotAnUnusedSecondary()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.003"/>
+  <testcase name="volleyMakesThreeOrbsWithOneSharedVictimInterval()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.005"/>
+  <testcase name="convertedOrbitDoesNotTurnContactSamplingIntoRapidPulse()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.004"/>
+  <testcase name="inheritedDirectDamagePenaltiesReachConvertedContactCoefficient()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.008"/>
+  <testcase name="barrageUsesDistinctFiniteInstancesAndOneRootInterval()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.005"/>
+  <testcase name="alreadyMultiOrbPayloadCannotDoubleItsThreeOrbCap()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.004"/>
+  <testcase name="projectileContinuationsAreRejectedAfterConversionInEitherOrder()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.041"/>
+  <testcase name="cancelAndLargeSimulationGapCleanConvertedFields()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.009"/>
+  <testcase name="fourSecondOneOrbSeventyPercentNoExtraPayment()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.004"/>
+  <testcase name="cacheKeysDistinguishNormalConvertedAndVolleyProfiles()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.002"/>
+  <testcase name="lingeringModifiesFiniteOrbitAndExistingDotSeparatelyOnce()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.004"/>
+  <testcase name="convertedProfileDispatchesConnectionNotNativeProjectile()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.004"/>
+  <testcase name="nativeUnconvertedOrbitingShadowBladesStillHaveFourBlades()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.003"/>
+  <testcase name="finalPlanRemovesCarrierCapabilitiesAndIntroducesActualOrbitArea()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.0"/>
+  <testcase name="convertedGeometryAcceptsRadiusAndConcentrationLocally()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.004"/>
+  <testcase name="threeLiveConvertedOrbsRejectFourthBeforeRuntimeAllocation()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.004"/>
+  <testcase name="exactApprovedConfigIsDataDrivenAndBounded()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.0"/>
+  <testcase name="ownerMovementKeepsOrbitAttachmentAndNoStaleWorldTrail()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.003"/>
+  <testcase name="sameNativeAmmunitionRequirementSurvivesConversion()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.003"/>
+  <testcase name="originalPayloadAndEquipmentMetadataRemainImmutable()" classname="com.inigmasgames.hytalerpg.Stage11OrbitConversionTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

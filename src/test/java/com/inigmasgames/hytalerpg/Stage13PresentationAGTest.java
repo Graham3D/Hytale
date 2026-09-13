@@ -33,7 +33,7 @@ class Stage13PresentationAGTest {
         assertEquals(.3,effect.get("Duration").getAsDouble());assertFalse(effect.get("Debuff").getAsBoolean());
         var effects=effect.getAsJsonObject("ApplicationEffects");assertEquals(Set.of("Particles"),effects.keySet());
         var p=effects.getAsJsonArray("Particles").get(0).getAsJsonObject();
-        assertEquals("Effect_Health_Pack",p.get("SystemId").getAsString());assertEquals("Entity",p.get("TargetEntityPart").getAsString());
+        assertEquals("RPG_Heal_Red_Recipient",p.get("SystemId").getAsString());assertEquals("Entity",p.get("TargetEntityPart").getAsString());
         assertTrue(p.get("ClearParticlesOnRemove").getAsBoolean());
     }
     @Test void healthyTargetAndEveryContinuationCarryExplicitRecipientIdentity(){
@@ -69,7 +69,7 @@ class Stage13PresentationAGTest {
                 var effectId=HealingParticleVisuals.staffEffect(path.getFileName().toString().replace(".json",""));
                 var effect=json("src/main/resources/Server/Entity/Effects/RPG/"+effectId+".json");
                 var added=effect.getAsJsonObject("ApplicationEffects").getAsJsonArray("Particles").get(0).getAsJsonObject();
-                assertEquals("Staff_Bronze",added.get("SystemId").getAsString());assertTrue(added.get("ClearParticlesOnRemove").getAsBoolean());
+                assertEquals("RPG_Heal_Red_Staff",added.get("SystemId").getAsString());assertTrue(added.get("ClearParticlesOnRemove").getAsBoolean());
                 assertEquals("PrimaryItem",added.get("TargetEntityPart").getAsString());
                 assertEquals(.3,effect.get("Duration").getAsDouble());
                 var modelEntry=zip.getEntry("Common/"+original.get("Model").getAsString());

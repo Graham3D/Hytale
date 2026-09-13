@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:20.650Z" hostname="GRAHAM" time="0.164">
+  <properties/>
+  <testcase name="conservationResizePreservesDeficitAndDebitsOnlyAdditionalActualReservation()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.005"/>
+  <testcase name="noOverhealCreatesNoBarrier()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="overflowSharesTheExistingFiniteOwnerBudgetAndFailureIsAtomic()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.008"/>
+  <testcase name="upkeepModifiersDoNotDiscountTheOneTimeActivationCost()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="selflessnessRemovesCasterAndStrengthensOnlyAllies()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="canonicalSupportCompatibilityHasExplicitPositiveAndNegativeCases()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.04"/>
+  <testcase name="strongerRemainingBarrierRefreshesRatherThanAdds()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="typedOperatorsAreDeterministicAndCompiledSchemaIsBumped()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.001"/>
+  <testcase name="crossSourceOverhealStillHasOneRecipientCapAndKeepsStrongestAttribution()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.007"/>
+  <testcase name="resonanceFirstSliceIsIncludedInPreflight()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.003"/>
+  <testcase name="capIsReevaluatedAgainstCurrentMaximumOnRefresh()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="combinedAuraPassivesComposeOnceAndKeepResourceCostKernelUnchanged()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.006"/>
+  <testcase name="finalOverhealBecomesOnlyTheExcess()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="pedanticismSelflessnessAndConservationAffectBeneficialFieldOnly()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="ownerRecipientAndWorldTeardownClearOverflow()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.012"/>
+  <testcase name="failedOrMalformedHealthWriteIsNotOverheal()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.005"/>
+  <testcase name="conservationUsesActualReservedManaForManaguardCapacity()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="fullHealthOverhealIsCappedAndCannotEarnActualHealing()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="overflowCannotRedirectTwentyPercentLikeSpiritShield()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.005"/>
+  <testcase name="resonanceChangesRadiusAndReservationBeforeAffordability()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.009"/>
+  <testcase name="selflessnessThornsDoesNotKeepOwnerReflection()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="potencyIsAppliedToHealingOnceNotAgainToOverflow()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.004"/>
+  <testcase name="conservationReducesPassiveRegenAndReservationNotNativeBaseline()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.005"/>
+  <testcase name="overflowRegistryAcceptsHealingComponentsOutsideSupportFamily()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.005"/>
+  <testcase name="staleBarrierExpiresAndNeverAbsorbsAfterSixSeconds()" classname="com.inigmasgames.hytalerpg.Stage09SupportPassivesTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

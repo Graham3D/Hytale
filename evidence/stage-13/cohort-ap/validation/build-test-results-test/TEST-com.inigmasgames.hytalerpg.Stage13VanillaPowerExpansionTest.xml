@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13VanillaPowerExpansionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:15:16.242Z" hostname="GRAHAM" time="0.155">
+  <properties/>
+  <testcase name="expandedItemsRetainWrongEquipmentAndResourceGuards()" classname="com.inigmasgames.hytalerpg.Stage13VanillaPowerExpansionTest" time="0.013"/>
+  <testcase name="allProductionIdsResolveTheirActualInstalledInheritedTags()" classname="com.inigmasgames.hytalerpg.Stage13VanillaPowerExpansionTest" time="0.087"/>
+  <testcase name="connectedMithrilStaffCommitsOneTargetlessFireBoltAndExpiryIsPaid()" classname="com.inigmasgames.hytalerpg.Stage13VanillaPowerExpansionTest" time="0.02"/>
+  <testcase name="connectedFlameLongswordDescriptionCommitsOneEmptyQuickSlash()" classname="com.inigmasgames.hytalerpg.Stage13VanillaPowerExpansionTest" time="0.023"/>
+  <testcase name="historicalAuditedValuesRemainUnchangedAndUnknownItemsCannotInferTierPower()" classname="com.inigmasgames.hytalerpg.Stage13VanillaPowerExpansionTest" time="0.001"/>
+  <testcase name="everyExpandedEntryResolvesExactTagsAndMatchesInstalledLeafOrExplicitReferencePolicy()" classname="com.inigmasgames.hytalerpg.Stage13VanillaPowerExpansionTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

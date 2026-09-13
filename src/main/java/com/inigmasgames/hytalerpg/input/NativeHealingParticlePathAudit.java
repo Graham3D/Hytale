@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.*;
 /** Exact installed child appearance and derivative placement contract; not a rendering certificate. */
 public final class NativeHealingParticlePathAudit {
     public static void requireAssets(){
+        NativeHealingPolishAudit.requireAssets();
         requireWorldAssets();
         for(String child:java.util.List.of("Sparks","Glow","Plus")){
             var stock=ParticleSpawner.getAssetMap().getAsset("Beam_Heal_Green2_"+child);

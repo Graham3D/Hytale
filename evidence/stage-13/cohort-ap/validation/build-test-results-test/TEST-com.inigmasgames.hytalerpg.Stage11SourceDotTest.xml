@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage11SourceDotTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-09-13T03:14:30.797Z" hostname="GRAHAM" time="0.106">
+  <properties/>
+  <testcase name="expiredStrongPackageCannotLendMagnitudeOrCapToNewCast()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.0"/>
+  <testcase name="sameSkillOfOtherCasterIsNotReduced()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="combinedPoisonCannotExceedOneStackAcrossRepeatedApplications()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="combustionPositiveAndTwoNegativeFixtures()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.0"/>
+  <testcase name="realCommitKeepsPaymentAndOffensiveSnapshotSeparateFromHitPenalty()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.005"/>
+  <testcase name="genuinelyStrongerReplacementCarriesItsOwnCapAndDoesNotRewritePastTime()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="victimTotalCapStillTwelveWithConcentratedSources()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="strongerConcentratedReplacementShrinksOnlyFutureStackAccrual()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.0"/>
+  <testcase name="wallBurnRetainsProportionalFinalQuarterTick()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.0"/>
+  <testcase name="malformedDotApplicationRejectedBeforeRuntime()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="cachedProfilesDistinguishStatusOperatorsAndLeaveAuthoredDataImmutable()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="combustionBurnHasFiveTicksAndIndependentMagnitude()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="virulenceCanonicalFixturesRemainContentCompatibilityNotProfileCoverage()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.0"/>
+  <testcase name="pureStatusRuntimeDoesNotScaleDurationOrCoefficientAgain()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="modifiersCannotLeakFromBurnToPoisonOrViceVersa()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.0"/>
+  <testcase name="concentratedVenomRequiresActualStackablePoison()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="combustionAndLingeringComposeDurationOnce()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.002"/>
+  <testcase name="nativeRejectionOrFailureCleansWithoutReplayingEarnedDamage()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.0"/>
+  <testcase name="unrelatedSkillsOfSameCasterKeepTheirOwnCaps()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="virulenceAddsStacksWithoutRetroactiveAccrual()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="virulenceExtendsStatusNotZoneLifeAndAddsTwoAtTheSameCap()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="removingConcentratedVenomCannotGrowTheRetainedStrongerPackage()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="concentratedVenomChangesOnlyItsPoisonDpsAndSourceCap()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="combustionDoesNotDiscountContinuousWallDamageAsADirectHit()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.0"/>
+  <testcase name="fireBoltPenaltyDoesNotEnterBurnCoefficientOrCrit()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.001"/>
+  <testcase name="poisonCombinedOperatorsAreOrderIndependentAndVirulenceCannotRaiseCap()" classname="com.inigmasgames.hytalerpg.Stage11SourceDotTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

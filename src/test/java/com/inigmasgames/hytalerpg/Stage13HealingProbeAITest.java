@@ -36,10 +36,16 @@ class Stage13HealingProbeAITest {
         }
         empty.remove("Model");empty.remove("Texture");visible.remove("Model");visible.remove("Texture");assertEquals(empty,visible);
     }
-    @Test void probeEffectsAreExactCosmeticWrappersWithOnlyDurationDifferent()throws Exception{
+    @Test void probeEffectsRetainOriginalAppearanceAndOtherwiseMatchCosmeticWrappers()throws Exception{
         for(String suffix:List.of("Recipient","Staff_Block5","Staff_Knob","Staff_Origin_Projectile","Staff_TopPommel")){
             var base=json("Server/Entity/Effects/RPG/RPG_Healing_"+suffix+".json");
             var probe=json("Server/Entity/Effects/RPG/RPG_Probe_Healing_"+suffix+".json");
+            // AP recolors production only. Diagnostic controls intentionally retain their stock visuals.
+            var current=base.getAsJsonObject("ApplicationEffects").getAsJsonArray("Particles").get(0).getAsJsonObject();
+            var control=probe.getAsJsonObject("ApplicationEffects").getAsJsonArray("Particles").get(0).getAsJsonObject();
+            assertEquals(suffix.equals("Recipient")?"RPG_Heal_Red_Recipient":"RPG_Heal_Red_Staff",current.get("SystemId").getAsString());
+            assertEquals(suffix.equals("Recipient")?"Effect_Health_Pack":"Staff_Bronze",control.get("SystemId").getAsString());
+            current.add("SystemId",control.get("SystemId"));
             assertEquals(12,probe.get("Duration").getAsDouble());probe.remove("Duration");base.remove("Duration");assertEquals(base,probe);
         }
     }

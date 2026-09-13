@@ -37,7 +37,7 @@ class Stage13PresentationAHTest {
             assertEquals(Set.of("Particles"),application.keySet());
             var particles=application.getAsJsonArray("Particles");assertEquals(1,particles.size());
             var p=particles.get(0).getAsJsonObject();
-            assertEquals("Staff_Bronze",p.get("SystemId").getAsString());
+            assertEquals("RPG_Heal_Red_Staff",p.get("SystemId").getAsString());
             assertEquals("PrimaryItem",p.get("TargetEntityPart").getAsString());
             assertEquals(entry.getValue().getAsJsonObject().get("node"),p.get("TargetNodeName"));
             assertTrue(p.get("ClearParticlesOnRemove").getAsBoolean());

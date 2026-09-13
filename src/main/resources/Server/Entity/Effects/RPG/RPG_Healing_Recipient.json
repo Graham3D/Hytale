@@ -2,5 +2,5 @@
   "Duration": 0.3,
   "OverlapBehavior": "Overwrite",
   "Debuff": false,
-  "ApplicationEffects": {"Particles": [{"SystemId":"Effect_Health_Pack","TargetEntityPart":"Entity","ClearParticlesOnRemove":true}]}
+  "ApplicationEffects": {"Particles": [{"SystemId":"RPG_Heal_Red_Recipient","TargetEntityPart":"Entity","ClearParticlesOnRemove":true}]}
 }
