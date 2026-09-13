@@ -1,0 +1,145 @@
+{
+  "cohort": "AO",
+  "startingHead": "ffe57cea644b1083dd39dc52635a868574c72e3c",
+  "builtAtUtc": "2026-09-13T02:31:45.4410386Z",
+  "suites": [
+    {
+      "failures": 0,
+      "suite": "build/test-results/test",
+      "tests": 2207,
+      "skipped": 0,
+      "errors": 0
+    },
+    {
+      "failures": 0,
+      "suite": "build/test-results/nativeControlTest",
+      "tests": 56,
+      "skipped": 0,
+      "errors": 0
+    },
+    {
+      "failures": 0,
+      "suite": "canvas-ui/build/test-results/test",
+      "tests": 21,
+      "skipped": 0,
+      "errors": 0
+    }
+  ],
+  "fullValidationRuns": 1,
+  "fullValidationExitCode": 0,
+  "initialFullRunFailures": 0,
+  "finalReviewCorrection": "Production world-space particle renderer; finite appearance-exact bursts, scoped viewers, no tether entities",
+  "isolatedNativePacketLifecycle": "PASS",
+  "visibilityGate": "A_CONNECTED_UNVERIFIED",
+  "laterGates": "CONNECTED_APPEARANCE_FLOW_CONTINUITY_CLEANUP_UNVERIFIED",
+  "connectedVerified": false,
+  "jarHashes": {
+    "CanvasUI-0.1.0.jar": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6",
+    "HyARPG.jar": "0586FB98DA3349584632FAF062C07644371C51C29E51B00EFA9E7E7E14457B36",
+    "HYTALEDEVLIB-0.5.0.jar": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+  },
+  "archiveSha256": "AB2F84EB38D0A0E5E86A0AF1B9D1A0C4A221C81833B661741EDDC5884AF7A0BD",
+  "archiveEntriesVerified": true,
+  "binaryRollback": "AN -> AO -> AN PASS",
+  "removedEntry": "Server/Models/RPG/RPG_Heal_Path_Visible_AN.json",
+  "unchangedEntriesPreserved": true,
+  "entryDifferences": [
+    {
+      "after": "4344604AD853CE753B29D73889AA7C91FDED9472C13F8CFA8A4EE43AF7F01D86",
+      "before": "C5C8FA8C94CE4D6CADF82E18D0FEF93F9644C3FF78F0735E0E47E7157A805FF6",
+      "entry": "com/inigmasgames/hytalerpg/commands/HealingProbeCommand.class"
+    },
+    {
+      "after": "9EC56F3A92BF6310A084B578B37392E927A607B85C66710C75B611AE1CC28C9C",
+      "before": "4468561032411F900A474E099E998F25FC9759A37C201B638B26B085A724C300",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe.class"
+    },
+    {
+      "after": "5C797553118757A9794B87FCD1A8B3E7FDE3A7682EBD48DCDCF49EADCBE4FA91",
+      "before": "5EFE37EC9BFF0658641ADBAECEF0251BAE28076CDB918874671FB6C0D03BD723",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingProbePolicy.class"
+    },
+    {
+      "after": "1A76B11CEE244DC24E055FEFF402EB43F784308AA87DA9332DBCB01A3EEC58DD",
+      "before": "5955CAF4C451AE941E90482282155F56CD1FC093D03AE857491D52B6F193EB81",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingTetherPresentation.class"
+    },
+    {
+      "after": "630822B8F3528D4AB5C066CA80AC0EA8DC929785BDE376713645D5C473F46072",
+      "before": null,
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HealingWorldParticleFrame.class"
+    },
+    {
+      "after": "C6BDE78DB18F1581E143197182A1407D10A075D5A7E69A1826FB2691E23CD385",
+      "before": "BC23F0E4D897232F2DE8617C82DA32857A98BA621397A0A46C8628E689DB9FBC",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem$Port$1.class"
+    },
+    {
+      "after": "772F9C15C1C958198B65417502945A2E924318EBBEB36D369A66CB6BDBEDA428",
+      "before": "75B2D29889749AE956935AB4B9C9C2A50B01DEAB3A6C57F870339C881939A5FB",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/SplineHealingParticleVisuals$Job.class"
+    },
+    {
+      "after": "D32CBC7B3241E7C3F94B88EEFE7E03B258E77DE52022FE022185B6FA7E556E29",
+      "before": "BAC81F00A18F55CD204D598D909C2FB9E6FE1DD859FEABFDBC9F4D03217A1DFF",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/SplineHealingParticleVisuals$Root.class"
+    },
+    {
+      "after": "0CAB0842AB27D41D68120DBFDB5EB9CC27F0E13C19D5055409C37B7E75423FF2",
+      "before": "638DE82CEDA113452080D161B87BF3CAD27AB383F747EA9F6CA035892FC1EB53",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/SplineHealingParticleVisuals$Segment.class"
+    },
+    {
+      "after": "4C486A986335FF5581963535750FF22128CB8D16406A81C8E26AD344C4D53ECC",
+      "before": "7169423FD3A1A9EF1F45C67118C4DE95A657B3BDE9981047E82958154B9E8C77",
+      "entry": "com/inigmasgames/hytalerpg/execution/hytale/SplineHealingParticleVisuals.class"
+    },
+    {
+      "after": "213E2083C17BA55F66E8905C8956E6AF97C1FB49B07E051C3E566A3E2B0569AD",
+      "before": "66CF675453FCE311FEBF791CE935028553927CC612FA14DEF97112F574C09CBC",
+      "entry": "com/inigmasgames/hytalerpg/input/NativeHealingParticlePathAudit.class"
+    },
+    {
+      "after": "D1BB90DBC0DCC94B47AC9A1A38BCF90ACCEDE98172220B87D1CAD96CE4B82755",
+      "before": "26B0266541AA9A9AD5FE73479F3AA75049742FF90D2271F76F09683CC1846D7C",
+      "entry": "com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class"
+    },
+    {
+      "after": "F865D7B710306BBAC5E3C4B86F178F35C3DAAC037C749B90A17E60D91580E264",
+      "before": "5AB99BF293D5A6B5828FB3B6B8428899A155D3528C4CED2B35419FA8F776AC87",
+      "entry": "com/inigmasgames/hytalerpg/ui/hud/RpgHud.class"
+    },
+    {
+      "after": "88B27F0F5B6B685E5859A4B00814E7334E08185CDFC0C045DB2663FC388C57AF",
+      "before": "BB80277B912E6EB36F5A42627B8AD398F3AA2EF98A2A311FF49D2AA6249ABF19",
+      "entry": "healing-probe-live-test.txt"
+    },
+    {
+      "after": "EAF86B91AD658B0C0F484B4C366CCC5AD281C7DA98A0D9ACB820FAA74728768C",
+      "before": null,
+      "entry": "Server/Particles/RPG/HealingWorld/RPG_Heal_World_Blips.particlesystem"
+    },
+    {
+      "after": "39BB4A7092D58C1CCC4D742C847A12D9F18B27789A08EB321223F931B0B00DEF",
+      "before": null,
+      "entry": "Server/Particles/RPG/HealingWorld/RPG_Heal_World_Glow.particlespawner"
+    },
+    {
+      "after": "4B576B796529CEA1627785537587882F92086255283469627FE2E6F7F94D984E",
+      "before": null,
+      "entry": "Server/Particles/RPG/HealingWorld/RPG_Heal_World_Plus.particlespawner"
+    },
+    {
+      "after": "B323277597852B12C09DF921578404076CEAA748000FEBC8EF427FB0BB535562",
+      "before": null,
+      "entry": "Server/Particles/RPG/HealingWorld/RPG_Heal_World_Pulse.particlesystem"
+    },
+    {
+      "after": "E0E3B9B67FACBF0D98A29166C8BB35976F7F36F4C9F801C04C91EB23B469C1E0",
+      "before": null,
+      "entry": "Server/Particles/RPG/HealingWorld/RPG_Heal_World_Sparks.particlespawner"
+    }
+  ],
+  "internalIdentityPreserved": true,
+  "liveDeploymentPerformed": false
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13CoverageLedgerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-13T02:28:51.093Z" hostname="GRAHAM" time="0.005">
+  <properties/>
+  <testcase name="everyCanonicalRecordHasAnExplicitRuntimeAndEvidenceDisposition()" classname="com.inigmasgames.hytalerpg.Stage13CoverageLedgerTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

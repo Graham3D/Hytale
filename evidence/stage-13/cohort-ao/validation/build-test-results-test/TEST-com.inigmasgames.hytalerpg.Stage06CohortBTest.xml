@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage06CohortBTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-09-13T02:28:29.549Z" hostname="GRAHAM" time="0.125">
+  <properties/>
+  <testcase name="lateWorldTickCancelsAreaRatherThanFabricatingHistoricalContacts()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.008"/>
+  <testcase name="blizzardWarnsBeforeFirstImpactAndDoesNotHaveHiddenFullZoneDamage()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.01"/>
+  <testcase name="powderMineUsesSeparateTriggerAndExplosionAndNeverExpiresWithDamage()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.009"/>
+  <testcase name="blizzardCannotDamageBeforeWarningOrRetargetAfterWarnedTerrainDisappears()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.008"/>
+  <testcase name="coneHasFullAuthoredAngleAndDisjointInnerChillTier()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.008"/>
+  <testcase name="periodicZonesIntegrateEightSecondsAtAnySupportedTickRateAndThrottleStatus()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.063"/>
+  <testcase name="stratificationIsDeterministicBoundedAndRootSeeded()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.001"/>
+  <testcase name="everyAreaNativeItemIsTriggerOnlyAndPeriodicCatalogDoesNotAdvertiseCrit()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.008"/>
+  <testcase name="nativeBombFamilyAndAuditedPowerDoNotRequireAWeaponNameGuess()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.004"/>
+  <testcase name="proceduralConeAndWallUseExactGeometryAndBoundedOutlineSegments()" classname="com.inigmasgames.hytalerpg.Stage06CohortBTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

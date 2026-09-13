@@ -8,7 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage13HealingVisibleAnchorANTest {
     @Test void proofUsesShippedRenderableModelAndExactExistingBlipAttachment()throws Exception{
-        var model=JsonParser.parseString(Files.readString(Path.of("src/main/resources/Server/Models/RPG/RPG_Heal_Path_Visible_AN.json"))).getAsJsonObject();
+        // Retain the AN control's contract as historical evidence; AO must not package it.
+        assertFalse(Files.exists(Path.of("src/main/resources/Server/Models/RPG/RPG_Heal_Path_Visible_AN.json")));
+        com.google.gson.JsonObject model;
+        try(var baseline=new ZipFile("evidence/stage-13/cohort-an/artifacts/HyARPG.jar");
+            var stream=baseline.getInputStream(baseline.getEntry("Server/Models/RPG/RPG_Heal_Path_Visible_AN.json"))){
+            model=JsonParser.parseString(new String(stream.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+        }
         assertEquals("NPC/MISC/Mannequin/Models/Model.blockymodel",model.get("Model").getAsString());
         assertEquals("NPC/MISC/Mannequin/Models/Model_Default.png",model.get("Texture").getAsString());
         assertEquals(1,model.get("MinScale").getAsInt());assertEquals(1,model.get("MaxScale").getAsInt());

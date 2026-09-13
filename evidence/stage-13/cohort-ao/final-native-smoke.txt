@@ -1,0 +1,36 @@
+
+capturedAtUtc                   : 2026-09-13T02:31:14.7790913Z
+processExitCode                 : 0
+jarSha256                       : 0586FB98DA3349584632FAF062C07644371C51C29E51B00EFA9E7E7E14457B36
+exactlyThreeMods                : True
+rpgDiscovered                   : True
+rpgSetup                        : True
+ready                           : True
+packagedRootResolved            : True
+shippedRuneResolved             : True
+nativeAbilityAssetsRejected     : False
+pluginEnabled                   : True
+managerStarted                  : True
+networkBooted                   : True
+cleanShutdown                   : True
+areaAssetsResolved              : True
+connectionAssetsResolved        : True
+supportConfigured               : True
+summonAssetsResolved            : True
+batchRolesResolved              : True
+decoyRoleResolved               : True
+strikeLockResolved              : True
+hitProcAssetsResolved           : True
+progressionProfilesResolved     : True
+rewardStoreConfigured           : True
+encounterRegistryResolved       : True
+encounterStoreConfigured        : True
+nativeRewardHooksRegistered     : True
+supportCreditHooksRegistered    : True
+masteryHooksRegistered          : True
+acquisitionConfigured           : True
+strikeClosureAssetsResolved     : True
+projectileClosureAssetsResolved : True
+supportTetherAssetsResolved     : True
+failure                         : False
+

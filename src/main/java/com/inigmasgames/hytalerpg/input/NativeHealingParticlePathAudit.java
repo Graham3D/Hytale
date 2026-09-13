@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.*;
 /** Exact installed child appearance and derivative placement contract; not a rendering certificate. */
 public final class NativeHealingParticlePathAudit {
     public static void requireAssets(){
+        requireWorldAssets();
         for(String child:java.util.List.of("Sparks","Glow","Plus")){
             var stock=ParticleSpawner.getAssetMap().getAsset("Beam_Heal_Green2_"+child);
             var derived=ParticleSpawner.getAssetMap().getAsset("RPG_Heal_Path_"+child);
@@ -27,4 +28,24 @@ public final class NativeHealingParticlePathAudit {
         com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_PARTICLE_PATH_ASSETS revision=R032-AM result=PASS stockParticleAppearanceExact=true stockLifespans=true zeroVelocity=true anchorFollow=true layerSystems=2 noNewTextures=true connectedProof=false");
     }
     private NativeHealingParticlePathAudit(){}
+    private static void requireWorldAssets(){
+        for(String child:java.util.List.of("Sparks","Glow","Plus")){
+            var original=ParticleSpawner.getAssetMap().getAsset("RPG_Heal_Path_"+child);
+            var asset=ParticleSpawner.getAssetMap().getAsset("RPG_Heal_World_"+child);
+            if(original==null||asset==null||!original.getParticle().toPacket().equals(asset.getParticle().toPacket())
+                    ||original.getRenderMode()!=asset.getRenderMode()||original.getParticleRotationInfluence()!=asset.getParticleRotationInfluence()
+                    ||original.isLinearFiltering()!=asset.isLinearFiltering())throw new IllegalStateException("HEAL_WORLD_APPEARANCE:"+child);
+            var p=asset.toPacket();
+            if(!p.spawnBurst||p.totalParticles.min!=1||p.totalParticles.max!=1||p.maxConcurrentParticles!=1
+                    ||p.particleLifeSpan.min!=.18f||p.particleLifeSpan.max!=.18f||p.lifeSpan!=.18f
+                    ||p.initialVelocity.speed.min!=0||p.initialVelocity.speed.max!=0||p.waveDelay.min!=0||p.waveDelay.max!=0)
+                throw new IllegalStateException("HEAL_WORLD_BURST:"+child);
+        }
+        for(String kind:java.util.List.of("Blips","Pulse")){
+            var asset=ParticleSystem.getAssetMap().getAsset("RPG_Heal_World_"+kind);
+            if(asset==null||asset.getLifeSpan()!=.18f||asset.getCullDistance()!=30||asset.getSpawners().length!=(kind.equals("Blips")?1:2))
+                throw new IllegalStateException("HEAL_WORLD_SYSTEM:"+kind);
+        }
+        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_WORLD_PARTICLE_ASSETS revision=R032-AO result=PASS appearanceExact=true immediateBurst=true finiteSeconds=0.18 zeroVelocity=true connectedProof=false");
+    }
 }

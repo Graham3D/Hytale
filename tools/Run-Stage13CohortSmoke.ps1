@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an')][string]$Cohort = 'a',[switch]$NativeProjectileSpawnAudit,[string]$CandidateJar='')
+param([ValidateSet('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao')][string]$Cohort = 'a',[switch]$NativeProjectileSpawnAudit,[string]$CandidateJar='')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
@@ -13,7 +13,7 @@ $runDirectory = Join-Path $projectRoot "run\stage13-cohort-$Cohort-smoke"
 if($Cohort -eq 'aj'){$runDirectory=Join-Path $projectRoot ('run/healing-probe-aj-smoke-'+[Guid]::NewGuid().ToString('N'))}
 $mods = Join-Path $runDirectory 'mods'
 $evidence = Join-Path $projectRoot "evidence\stage-13\cohort-$Cohort"
-$distributionName = if($Cohort -in @('ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an')){'HyARPG.jar'}else{'HytaleRPG-0.0.25.jar'}
+$distributionName = if($Cohort -in @('ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao')){'HyARPG.jar'}else{'HytaleRPG-0.0.25.jar'}
 $stage13Archived = Join-Path $evidence "artifacts\$distributionName"
 if ((Test-Path -LiteralPath $stage13Archived) -and
     (Get-FileHash -LiteralPath $stage13Archived).Hash -ne (Get-FileHash -LiteralPath $candidate).Hash) {
@@ -109,7 +109,7 @@ if($NativeProjectileSpawnAudit){
     if(-not $passed -or $plain -match 'RPG_NATIVE_SPAWN_INTEGRATION result=FAIL' -or $requests.Count -ne 2 -or $spawned.Count -ne 1 -or
         @($records|Where-Object eventType -eq 'PROJECTILE_SPAWN_REJECTED').Count){throw 'Native Fire Bolt construction/queued rollback integration failed: no deployment allowed'}
     $ack=$spawned[0];$request=@($requests|Where-Object correlationId -eq $ack.correlationId)
-    if($Cohort -in @('p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an')){
+    if($Cohort -in @('p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao')){
         $ended=@($records|Where-Object {$_.eventType -eq 'PROJECTILE_TERMINATED' -and $_.correlationId -eq $ack.correlationId -and $_.details.reason -eq 'MAX_LIFETIME'})
         if($plain -notmatch 'sameTickAdvance=true restingExpiry=true' -or $ended.Count -ne 1 -or
             @($records|Where-Object {$_.details.reason -eq 'NATIVE_PROJECTILE_REMOVED_WITHOUT_IMPACT'}).Count){throw 'P same-tick insertion / stationary native expiry gate failed'}
@@ -121,12 +121,12 @@ if($NativeProjectileSpawnAudit){
         hytaleServerSha256=(Get-FileHash -LiteralPath $serverJar).Hash;assetsSha256=(Get-FileHash -LiteralPath $assets).Hash;
         originalFailure='IllegalArgumentException: Specified map is empty';loadedMapClass='java.util.Collections$EmptyMap';
         requests=2;spawned=1;pendingRollback='PASS';physicsVelocity=24;nativeInteractionRoots=0;nativeRefValidAfterQueue=$true;
-        sameTickAdvanceAndRestingExpiry=($Cohort -in @('p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an'));
+        sameTickAdvanceAndRestingExpiry=($Cohort -in @('p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao'));
         connectedClientVerified=$false}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $evidence 'native-spawn-integration.json') -Encoding utf8
 }
 [pscustomobject]$summary | Format-List
-if($Cohort -in @('v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an') -and -not $summary.supportTetherAssetsResolved){throw 'Support held/effect/beam native asset resolution failed'}
-if($Cohort -in @('aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an')){
+if($Cohort -in @('v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao') -and -not $summary.supportTetherAssetsResolved){throw 'Support held/effect/beam native asset resolution failed'}
+if($Cohort -in @('aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao')){
     if($plain -notmatch 'RPG_HEAL_BLIZZARD_ASSETS cohort=(AA|AB|AC|AD|AE|AF|AG|AH) .* result=PASS connectedProof=false' -or $plain -match 'Invalid entity reference!'){
         throw 'AA native asset / entity lifecycle gate failed'
     }
@@ -147,22 +147,22 @@ if($Cohort -ne 'a'){
     if($audit.connectedProof -ne $false -or -not $audit.emptyNativeInteractions -or -not $audit.typedElements){throw 'Projectile audit authority mismatch'}
     if($Cohort -eq 'b' -and ($audit.resolvedConfigs -ne 13 -or $audit.shippedCrossbowSpeed -ne 40 -or $audit.shippedCrossbowRadius -ne .075 -or $audit.shippedCrossbowGravity -ne 10 -or
         $audit.equipment.Weapon_Crossbow_Iron.basicPower -ne 10 -or $audit.equipment.Weapon_Spear_Iron.basicPower -ne 6)){throw 'Cohort B native numeric contract mismatch'}
-    if($Cohort -in @('c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an') -and ($audit.resolvedConfigs -ne 19 -or $audit.equipment.Weapon_Gun_Blunderbuss.basicPower -ne 200 -or
+    if($Cohort -in @('c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao') -and ($audit.resolvedConfigs -ne 19 -or $audit.equipment.Weapon_Gun_Blunderbuss.basicPower -ne 200 -or
         $audit.nativeChargedBow.speed -ne 85 -or $audit.nativeChargedBow.gravity -ne 25 -or $audit.nativeChargedBow.radius -ne .075 -or
-        $audit.snipeActivationGate -ne $(if($Cohort -in @('t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an')){''}else{'NATIVE_BOW_MAX_RANGE_UNVERIFIED'}))){throw 'Cohort C native source/capability audit mismatch'}
-    if($Cohort -in @('t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an') -and ($audit.nativeChargedBow.maximumRange -ne 'RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM' -or
+        $audit.snipeActivationGate -ne $(if($Cohort -in @('t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao')){''}else{'NATIVE_BOW_MAX_RANGE_UNVERIFIED'}))){throw 'Cohort C native source/capability audit mismatch'}
+    if($Cohort -in @('t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao') -and ($audit.nativeChargedBow.maximumRange -ne 'RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM' -or
         $audit.nativeChargedBow.release.root -ne 'Root_RPG_Snipe_Release' -or
         $audit.nativeChargedBow.release.releaseThresholdSeconds -ne 0 -or $audit.nativeChargedBow.release.connectedProof)){
         throw 'Snipe native hold/release contract audit failed'
     }
-    if($Cohort -in @('u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an') -and ($audit.nativeChargedBow.snipeGravity -ne 0 -or
+    if($Cohort -in @('u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao') -and ($audit.nativeChargedBow.snipeGravity -ne 0 -or
         $audit.nativeChargedBow.snipeModel -ne 'Arrow_Crude' -or -not $audit.nativeChargedBow.snipeModelEqualsNative -or
         @($audit.nativeChargedBow.release.nativeChargeEmitters).Count -ne 2)){
         throw 'Snipe native arrow/zero-gravity/charge-particle audit failed'
     }
     $audit|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $evidence 'native-projectile-equipment-audit.json') -Encoding utf8
 }
-if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an')){
+if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao')){
     $movementLine=[regex]::Match($plain,'RPG_STAGE13_MOVEMENT_ASSETS result=PASS (\{[^\r\n]*\})')
     if(-not $movementLine.Success){throw 'Native movement/Guard control asset audit missing'}
     $movement=$movementLine.Groups[1].Value|ConvertFrom-Json
@@ -170,7 +170,7 @@ if($Cohort -in @('d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s'
         $movement.activationGate -ne 'NATIVE_GUARD_HELD_ITEM_RELEASE_ROUTE_UNVERIFIED' -or $movement.connectedProof){throw 'Guard native ownership/capability gate mismatch'}
     $movement|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $evidence 'native-movement-guard-audit.json') -Encoding utf8
 }
-if($Cohort -in @('e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an')){
+if($Cohort -in @('e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','aj-live','ak','al','am','an','ao')){
     $basicLine=[regex]::Match($plain,'RPG_STAGE13_NATIVE_BASIC_PATHS result=PASS (\{[^\r\n]*\})')
     if(-not $basicLine.Success){throw 'Installed native basic-attack path audit missing'}
     $basic=$basicLine.Groups[1].Value|ConvertFrom-Json
@@ -195,7 +195,7 @@ if($Cohort -eq 'i'){
 if($Cohort -eq 'ae' -and $NativeProjectileSpawnAudit -and $plain -notmatch 'RPG_BEAM_NATIVE_INTEGRATION result=PASS asset=Basic oldProcessingGuard=true create=true update=true remove=true sameBufferCancel=true persistentRefs=true connectedProof=false'){throw 'AE real processing-phase Beam lifecycle gate failed'}
 if($Cohort -eq 'af' -and $NativeProjectileSpawnAudit -and $plain -notmatch 'RPG_BEAM_NATIVE_INTEGRATION result=PASS asset=RPG_Healing widthScale=0.025 oldProcessingGuard=true create=true update=true remove=true sameBufferCancel=true persistentRefs=true connectedProof=false'){throw 'AF native Beam appearance/lifecycle gate failed'}
 if($Cohort -eq 'ag' -and $NativeProjectileSpawnAudit -and $plain -notmatch 'RPG_HEAL_PARTICLE_NATIVE_INTEGRATION result=PASS asset=Beam_Heal_Green2 create=true persistentModel=true update=true remove=true sameBufferCancel=true recipientAttached=true sharedRecipientCleanup=true connectedProof=false'){throw 'AG native persistent particle / recipient ownership lifecycle gate failed'}
-if($Cohort -in @('ah','ai','aj','aj-live','ak','al','am','an') -and $NativeProjectileSpawnAudit){
+if($Cohort -in @('ah','ai','aj','aj-live','ak','al','am','an','ao') -and $NativeProjectileSpawnAudit){
     if($plain -notmatch 'RPG_HEAL_PARTICLE_NATIVE_INTEGRATION result=PASS asset=Beam_Heal_Green2'){throw 'AH native particle lifecycle gate failed'}
     if($plain -notmatch 'RPG_MANA_REPLICATION_NATIVE result=PASS .* oneCharge=true nativeViewerQueued=true connectedProof=false'){throw 'AH native Mana replication gate failed'}
     if($plain -notmatch 'RPG_HEAL_STAFF_NATIVE result=PASS channelOnly=true removed=true'){throw 'AH channel-only staff lifecycle gate failed'}
@@ -210,3 +210,4 @@ if($Cohort -eq 'ak' -and ($plain -notmatch 'RPG_HEAL_PROBE revision=R032-AK enab
 if($Cohort -eq 'al' -and ($plain -notmatch 'RPG_HEAL_PROBE revision=R032-AL enabled=true' -or $plain -notmatch 'RPG_HEAL_TETHER_NATIVE revision=R032-AL result=PASS productionOwner=true emptyModelCarriers=0 createUpdateRemove=true independentLayers=true connectedProof=false')){throw 'AL production tether audit/registration failed'}
 if($Cohort -eq 'am' -and ($plain -notmatch 'RPG_HEAL_PROBE revision=R032-AM enabled=true' -or $plain -notmatch 'RPG_HEAL_PARTICLE_PATH_NATIVE revision=R032-AM result=PASS' -or $plain -notmatch 'RPG_HEAL_PARTICLE_PATH_ASSETS revision=R032-AM result=PASS')){throw 'AM production particle path audit/registration failed'}
 if($Cohort -eq 'an' -and ($plain -notmatch 'RPG_HEAL_PROBE revision=R032-AN enabled=true' -or $plain -notmatch 'RPG_HEAL_VISIBLE_ANCHOR_NATIVE revision=R032-AN result=PASS exactlyOne=true persistent=true moved=true cleanup=true connectedProof=false' -or $plain -notmatch 'RPG_HEAL_PARTICLE_PATH_NATIVE revision=R032-AN result=PASS' -or $plain -notmatch 'RPG_HEAL_PARTICLE_PATH_ASSETS revision=R032-AM result=PASS')){throw 'AN visible carrier and retained AM gates failed'}
+if($Cohort -eq 'ao' -and ($plain -notmatch 'RPG_HEAL_PROBE revision=R032-AO enabled=true' -or $plain -notmatch 'RPG_HEAL_WORLD_PARTICLE_NATIVE revision=R032-AO result=PASS packetConstruction=true cadence=true endpoints=true branches=true noEntities=true sameBufferCancel=true cleanup=true connectedProof=false' -or $plain -notmatch 'RPG_HEAL_WORLD_PARTICLE_ASSETS revision=R032-AO result=PASS appearanceExact=true immediateBurst=true finiteSeconds=0.18 zeroVelocity=true connectedProof=false')){throw 'AO production world particle gates failed'}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage06AreaRuntimeTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-13T02:28:29.498Z" hostname="GRAHAM" time="0.05">
+  <properties/>
+  <testcase name="groundSlamUsesOneAuthoritativeBurstAndLinearAuthoredFalloff()" classname="com.inigmasgames.hytalerpg.Stage06AreaRuntimeTest" time="0.012"/>
+  <testcase name="trapExpiryCannotDetonateAndCleanupDropsLedgers()" classname="com.inigmasgames.hytalerpg.Stage06AreaRuntimeTest" time="0.009"/>
+  <testcase name="trapArmsThenHitsOnlyFirstSusceptibleTargetAndTerminates()" classname="com.inigmasgames.hytalerpg.Stage06AreaRuntimeTest" time="0.009"/>
+  <testcase name="overflowAndLosRejectWithoutPartialDamage()" classname="com.inigmasgames.hytalerpg.Stage06AreaRuntimeTest" time="0.009"/>
+  <testcase name="frostNovaQueriesBoundsAndRequestsExactlyTwoChillWithoutExpandingArrivalHits()" classname="com.inigmasgames.hytalerpg.Stage06AreaRuntimeTest" time="0.008"/>
+  <testcase name="expandedRadiusChangesDeclaredFootprintNotHeightOrConeAngle()" classname="com.inigmasgames.hytalerpg.Stage06AreaRuntimeTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -61,7 +61,7 @@ class Stage13HealingTetherALTest {
         }
     }
     @Test void productionAndBadgeUseRepairWhileLegacyControlsRemainAvailable() throws Exception {
-        assertEquals("R032-AN",HealingTetherPresentation.REVISION);
+        assertEquals("R032-AO",HealingTetherPresentation.REVISION);
         var source=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
         assertTrue(source.contains("new HealingTetherPresentation()"));assertFalse(source.contains("new HealingParticleVisuals()"));
         var hud=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/ui/hud/RpgHud.java"));

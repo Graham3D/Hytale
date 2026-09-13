@@ -1,5 +1,17 @@
 # Stage 13 — runtime completion and release hardening
 
+**2026-09-12 local / 2026-09-13 UTC: R032-AO is IMPLEMENTED, PACKAGED and DEPLOYED.**
+Production Healing Beam now uses the connected-proven direct world-particle packet
+path with appearance-exact finite derivatives, 10 Hz cadence, 64 body samples plus
+three pulses per segment, and same-world/view-distance culling. No tether entities
+or AN mannequin substitution remain. Gameplay, spline, staff/recipient effects and
+Blizzard are unchanged. All 2,284 tests and final native smoke/archive/rollback
+checks passed. A verified 527-file stopped-save backup preceded JAR replacement.
+**Live startup and connected AO visual acceptance remain UNVERIFIED.**
+See the [AO implementation/deployment report and short test](stage-13-healing-world-particles-ao-report.md).
+
+The entries below are historical checkpoints, not the currently installed revision.
+
 **2026-09-12 local / 2026-09-13 UTC: R032-AN is IMPLEMENTED, PACKAGED and DEPLOYED.**
 One existing primary Healing Beam blip anchor now uses a deliberately visible shipped
 mannequin model with the unchanged AM particle attachment. The full pools, particle

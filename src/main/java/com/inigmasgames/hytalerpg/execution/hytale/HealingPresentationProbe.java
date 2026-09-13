@@ -102,7 +102,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
             try{
                 if(!r.actor.isValid()||r.store.getComponent(r.actor,PlayerRef.getComponentType())==null){cleanup(r,"OWNER_GONE");return;}
                 if(!r.created){create(r);r.created=true;notifyOwner(r,r.mode==HealingProbePolicy.Mode.CHANNEL
-                    ?"R032-AN ARMED for 30s. Cast Healing Beam normally now; this observer casts nothing and does not waive Mana costs."
+                    ?"R032-AO ARMED for 30s. Cast Healing Beam normally now; this observer casts nothing and does not waive Mana costs."
                     :"STARTED "+r.mode+" for 10s; observe now.");}
                 if(r.target!=null&&!r.target.isValid()){cleanup(r,"TARGET_GONE");return;}
                 for(var ref:r.target==null?List.of(r.actor):List.of(r.actor,r.target)){

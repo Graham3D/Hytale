@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 /** Production presentation owner. Core and existing native cosmetic leases fail/clean up independently.
  * No gameplay callbacks, effects selection, target discovery, payment or healing decisions. */
 public final class HealingTetherPresentation {
-    public static final String REVISION="R032-AN";
+    public static final String REVISION="R032-AO";
     private final SplineHealingParticleVisuals core=new SplineHealingParticleVisuals();
     private final HealingParticleVisuals effects=new HealingParticleVisuals(true);
     public void present(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,SkillExecutionContext context,
@@ -54,7 +54,7 @@ public final class HealingTetherPresentation {
             layer(()->{throw new IllegalStateException("AUDIT_CORE_FAILURE");},"PARTICLE_PATH_FAILED",(event,error)->isolated.add(event));
             layer(()->isolated.add("EFFECT_LAYER_RAN"),"HEAL_ATTACHMENTS_FAILED",(event,error)->isolated.add(event));
             if(!isolated.equals(List.of("PARTICLE_PATH_FAILED","EFFECT_LAYER_RAN")))throw new IllegalStateException("PRODUCTION_LAYER_ISOLATION");
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_TETHER_NATIVE revision=R032-AN result=PASS productionOwner=true autonomousBeamCarriers=0 createUpdateRemove=true independentLayers=true connectedProof=false");
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log("RPG_HEAL_TETHER_NATIVE revision=R032-AO result=PASS productionOwner=true autonomousBeamCarriers=0 createUpdateRemove=true independentLayers=true connectedProof=false");
         }finally{owner.cancel(context.request().actorId(),null);}
     }
 }

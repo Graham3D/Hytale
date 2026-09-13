@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13PresentationAGTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-13T02:29:20.184Z" hostname="GRAHAM" time="0.047">
+  <properties/>
+  <testcase name="everyStaffOverridePreservesAllNativeGameplayFieldsAndOtherParticles()" classname="com.inigmasgames.hytalerpg.Stage13PresentationAGTest" time="0.025"/>
+  <testcase name="streamRotationUsesNativeForwardFromCasterTowardRecipient()" classname="com.inigmasgames.hytalerpg.Stage13PresentationAGTest" time="0.0"/>
+  <testcase name="healthyTargetAndEveryContinuationCarryExplicitRecipientIdentity()" classname="com.inigmasgames.hytalerpg.Stage13PresentationAGTest" time="0.021"/>
+  <testcase name="recipientEffectIsCosmeticFiniteAttachedAndHasNoHealthCondition()" classname="com.inigmasgames.hytalerpg.Stage13PresentationAGTest" time="0.001"/>
+  <testcase name="legacyReferenceRetainedButProductionUsesEndpointControlledTether()" classname="com.inigmasgames.hytalerpg.Stage13PresentationAGTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
