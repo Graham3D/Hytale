@@ -45,16 +45,16 @@ if (-not [string]::IsNullOrWhiteSpace($ExpectedSha256) -and $installedHash -ne $
 }
 $legacyJars = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | Where-Object {
     $_.Name -eq 'HyARPG.jar' -or $_.Name -like 'HytaleRPG-*.jar' -or
-    $_.Name -like 'CanvasUI-*.jar' -or $_.Name -like 'ImmersiveNPCs-*.jar'
+    $_.Name -like 'CanvasUI-*.jar' -or $_.Name -like 'ImmersiveNPCs-*.jar' -or
+    $_.Name -like 'Taverns-*.jar' -or $_.Name -eq 'Taverns.jar'
 })
 if ($legacyJars.Count) { throw "Superseded JARs remain active: $($legacyJars.Name -join ', ')" }
 
-$dataRoots = @('ImmersiveNPCs','InigmasGames_CanvasUI','InigmasGames_HytaleRPGPhase00Audit')
+$dataRoots = @('ImmersiveNPCs','InigmasGames_CanvasUI','InigmasGames_HytaleRPGPhase00Audit','InigmasGames_Taverns')
 $before = [ordered]@{}
 foreach ($name in $dataRoots) {
     $path = Join-Path $mods $name
-    if (-not (Test-Path -LiteralPath $path -PathType Container)) { throw "Legacy data root missing: $path" }
-    $before[$name] = Get-TreeMeasure $path
+    $before[$name] = if (Test-Path -LiteralPath $path -PathType Container) { Get-TreeMeasure $path } else { [ordered]@{files=0;bytes=0;absentBeforeStartup=$true} }
 }
 
 $package = Join-Path $env:APPDATA 'Hytale\install\pre-release\package\game\latest'
@@ -89,14 +89,15 @@ foreach ($iteration in 1..2) {
         iteration = $iteration
         exitCode = $process.ExitCode
         hywindDiscovered = [bool]($plain -match 'InigmasGames:Hywind from path Hywind\.jar')
-        hywindStarted = [bool]($plain -match 'HYWIND_STARTED version=0\.1\.0-merge\.1 revision=R046')
-        hywindShutdown = [bool]($plain -match 'HYWIND_SHUTDOWN version=0\.1\.0-merge\.1 revision=R046')
-        legacyPluginDiscovered = [bool]($plain -match 'InigmasGames:(HytaleRPGPhase00Audit|CanvasUI|ImmersiveNPCs) from path')
+        hywindStarted = [bool]($plain -match 'HYWIND_STARTED version=0\.1\.0-merge\.2 revision=R047')
+        tavernsStarted = [bool]($plain -match 'Taverns revision R056 started with persistence schema 3 and generic Core support')
+        hywindShutdown = [bool]($plain -match 'HYWIND_SHUTDOWN version=0\.1\.0-merge\.2 revision=R047')
+        legacyPluginDiscovered = [bool]($plain -match 'InigmasGames:(HytaleRPGPhase00Audit|CanvasUI|ImmersiveNPCs|Taverns) from path')
         scopedFailure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:Hywind|shutdownReason\.pluginError|reason: mod_error|HYWIND_PARTIAL_CLEANUP_FAILED|Failed to create HytaleServer)')
         log = $log
     }
     if ($run.exitCode -ne 0 -or -not $run.hywindDiscovered -or -not $run.hywindStarted -or
-        -not $run.hywindShutdown -or $run.legacyPluginDiscovered -or $run.scopedFailure) {
+        -not $run.tavernsStarted -or -not $run.hywindShutdown -or $run.legacyPluginDiscovered -or $run.scopedFailure) {
         throw "Deployed Hywind runtime $iteration failed; inspect $log"
     }
     $runs += $run

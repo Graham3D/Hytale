@@ -1,0 +1,76 @@
+{
+  "EmitOffset": {
+    "X": {
+      "Min": 0,
+      "Max": 0
+    },
+    "Y": {
+      "Min": 0,
+      "Max": 0
+    }
+  },
+  "ParticleRotationInfluence": "Billboard",
+  "LightInfluence": 0.8,
+  "MaxConcurrentParticles": 1,
+  "ParticleLifeSpan": {
+    "Min": 0.55,
+    "Max": 0.55
+  },
+  "SpawnRate": {
+    "Min": 1,
+    "Max": 1
+  },
+  "ParticleRotateWithSpawner": false,
+  "Particle": {
+    "Texture": "Particles/Taverns/PatronOrders/Textures/Taverns_Order_Plant_Crop_Rice_Item_Icon.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "None",
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 1,
+        "Color": "#ffffff"
+      },
+      "100": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 1,
+        "Color": "#ffffff"
+      }
+    },
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.38,
+          "Max": 0.38
+        }
+      },
+      "Opacity": 1,
+      "Color": "#ffffff"
+    },
+    "SoftParticles": "Disable"
+  },
+  "RenderMode": "BlendLinear",
+  "SpawnBurst": true,
+  "TrailSpawnerPositionMultiplier": 0,
+  "TrailSpawnerRotationMultiplier": 1,
+  "LinearFiltering": false,
+  "CameraOffset": -0.53
+}

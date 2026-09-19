@@ -1,0 +1,16 @@
+{
+  "Parent": "Food_Bread",
+  "MaxStack": 1,
+  "Recipe": {
+    "Input": [
+      { "ItemId": "Ingredient_Dough", "Quantity": 1 },
+      { "ResourceTypeId": "Fuel", "Quantity": 3 },
+      { "ItemId": "Tavern_Clean_Plate", "Quantity": 1 }
+    ],
+    "Output": [ { "ItemId": "Tavern_Prepared_Food_Bread", "Quantity": 1 } ],
+    "BenchRequirement": [
+      { "Type": "Crafting", "Id": "Cookingbench", "Categories": [ "Baked" ] }
+    ],
+    "TimeSeconds": 5
+  }
+}

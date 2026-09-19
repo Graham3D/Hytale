@@ -26,11 +26,13 @@ repositories { mavenCentral() }
 dependencies {
     implementation project(':canvas-ui')
     implementation project(':persistent-npcs')
+    implementation project(':hytale-taverns')
     compileOnly files(serverJar)
     compileOnly files(htDevLibJar)
     testImplementation files(serverJar)
     testImplementation project(':canvas-ui')
     testImplementation project(':persistent-npcs')
+    testImplementation project(':hytale-taverns')
     testImplementation platform('org.junit:junit-bom:5.12.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -100,6 +102,7 @@ tasks.check {
     dependsOn tasks.named('nativeControlTest')
     dependsOn ':canvas-ui:check'
     dependsOn ':persistent-npcs:check'
+    dependsOn ':hytale-taverns:check'
 }
 
 tasks.register('verifyHywindJar', Exec) {
@@ -129,16 +132,26 @@ tasks.processResources {
     filesMatching(['manifest.json', 'rpg-build.properties', 'hywind-build.properties']) {
         expand(version: project.version, rpgRevision: rpg_revision, hytaleVersion: hytale_version)
     }
+    def tavernLanguage = project(':hytale-taverns').file('src/main/tavernLanguage/server.lang')
+    inputs.file(tavernLanguage)
+    doLast {
+        def mergedLanguage = new File(destinationDir, 'Server/Languages/en-US/server.lang')
+        mergedLanguage.append(System.lineSeparator() + tavernLanguage.getText('UTF-8'), 'UTF-8')
+    }
 }
 
 tasks.named('jar') {
-    dependsOn ':canvas-ui:classes', ':persistent-npcs:classes'
+    dependsOn ':canvas-ui:classes', ':persistent-npcs:classes', ':hytale-taverns:classes'
     duplicatesStrategy = DuplicatesStrategy.FAIL
     from(project(':canvas-ui').sourceSets.main.output) {
         exclude 'manifest.json'
         exclude 'com/inigmasgames/canvasui/CanvasUIPlugin.class'
     }
     from(project(':persistent-npcs').sourceSets.main.output) {
+        exclude 'manifest.json'
+        exclude 'Server/Languages/en-US/server.lang'
+    }
+    from(project(':hytale-taverns').sourceSets.main.output) {
         exclude 'manifest.json'
         exclude 'Server/Languages/en-US/server.lang'
     }

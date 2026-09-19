@@ -51,14 +51,16 @@ try {
     try { $manifest = $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
 } finally { $zip.Dispose() }
 if ($manifest.Group -ne 'InigmasGames' -or $manifest.Name -ne 'Hywind' -or
-    $manifest.Version -ne '0.1.0-merge.1' -or $manifest.Main -ne 'com.inigmasgames.hywind.HywindPlugin') {
-    throw 'Candidate is not the approved Hywind 0.1.0-merge.1 package.'
+    $manifest.Version -ne '0.1.0-merge.2' -or $manifest.Metadata.RpgRevision -ne 'R047' -or
+    $manifest.Metadata.TavernSourceRevision -ne 'R056' -or $manifest.Main -ne 'com.inigmasgames.hywind.HywindPlugin') {
+    throw 'Candidate is not the approved Hywind 0.1.0-merge.2 / R047 package with Taverns R056.'
 }
 
 $candidateHash = Get-Sha256 $CandidateJar
 $superseded = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | Where-Object {
     $_.Name -eq 'HyARPG.jar' -or $_.Name -like 'HytaleRPG-*.jar' -or
     $_.Name -like 'CanvasUI-*.jar' -or $_.Name -like 'ImmersiveNPCs-*.jar' -or
+    $_.Name -like 'Taverns-*.jar' -or $_.Name -eq 'Taverns.jar' -or
     $_.Name -eq 'Hywind.jar'
 } | Sort-Object Name)
 $unrelated = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | Where-Object {
@@ -71,7 +73,7 @@ $plan = [ordered]@{
     candidateSha256 = $candidateHash
     supersededArtifacts = @($superseded | ForEach-Object { [ordered]@{name=$_.Name;sha256=(Get-Sha256 $_.FullName)} })
     preservedArtifacts = @($unrelated | ForEach-Object { [ordered]@{name=$_.Name;sha256=(Get-Sha256 $_.FullName)} })
-    preservedDataRoots = @('ImmersiveNPCs','InigmasGames_CanvasUI','InigmasGames_HytaleRPGPhase00Audit')
+    preservedDataRoots = @('ImmersiveNPCs','InigmasGames_CanvasUI','InigmasGames_HytaleRPGPhase00Audit','InigmasGames_Taverns')
 }
 if ($DryRun) { $plan | ConvertTo-Json -Depth 8; exit 0 }
 
@@ -115,7 +117,8 @@ try {
 
     $remainingLegacy = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | Where-Object {
         $_.Name -eq 'HyARPG.jar' -or $_.Name -like 'HytaleRPG-*.jar' -or
-        $_.Name -like 'CanvasUI-*.jar' -or $_.Name -like 'ImmersiveNPCs-*.jar'
+        $_.Name -like 'CanvasUI-*.jar' -or $_.Name -like 'ImmersiveNPCs-*.jar' -or
+        $_.Name -like 'Taverns-*.jar' -or $_.Name -eq 'Taverns.jar'
     })
     if ($remainingLegacy.Count) { throw "Legacy artifacts remain active: $($remainingLegacy.Name -join ', ')" }
 
@@ -126,7 +129,7 @@ try {
         fullBackupMeasure=$backupMeasure
         retiredArtifacts=@($moved | ForEach-Object { [ordered]@{name=[IO.Path]::GetFileName($_.destination);path=$_.destination;sha256=(Get-Sha256 $_.destination)} })
         preservedArtifacts=@($unrelated | ForEach-Object { [ordered]@{name=$_.Name;sha256=(Get-Sha256 $_.FullName)} })
-        preservedDataRoots=@('ImmersiveNPCs','InigmasGames_CanvasUI','InigmasGames_HytaleRPGPhase00Audit')
+        preservedDataRoots=@('ImmersiveNPCs','InigmasGames_CanvasUI','InigmasGames_HytaleRPGPhase00Audit','InigmasGames_Taverns')
         connectedVerified=$false
     }
     $resultPath = Join-Path $backupDirectory 'deployment-result.json'

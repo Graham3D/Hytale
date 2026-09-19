@@ -2,7 +2,7 @@
 
 Hywind is the single first-party Hytale plugin for this project. It combines the
 ARPG/RPG runtime, CanvasUI presentation/input framework, persistent Immersive NPCs,
-and Orbis intelligence integrations under one lifecycle owner:
+Orbis intelligence integrations, and Tavern Management under one lifecycle owner:
 
 - plugin identity: `InigmasGames:Hywind`
 - bootstrap: `com.inigmasgames.hywind.HywindPlugin`
@@ -15,9 +15,11 @@ duplicating player/world data:
 - `mods/InigmasGames_HytaleRPGPhase00Audit`
 - `mods/InigmasGames_CanvasUI`
 - `mods/ImmersiveNPCs`
+- `mods/InigmasGames_Taverns`
 
-`HytaleDevLib` remains an optional external dependency. The Tavern project is not
-part of this merger and was not activated or modified.
+`HytaleDevLib` remains an optional external dependency. Tavern, Kitchen and Bedroom
+Core data remain in their established schema-3 root; no cross-world coordinate data
+is imported or rewritten by the merger.
 
 ## Build and verify
 
@@ -29,8 +31,8 @@ Set-Location "C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale"
 ```
 
 The root check includes the RPG retained and native-control suites, CanvasUI tests,
-the retained deterministic NPC suite, installed-asset validation, CustomUI validation,
-and the merged JAR audit.
+the retained deterministic NPC suite, Tavern persistence/Core/accounting tests,
+installed-asset validation, CustomUI validation, and the merged JAR audit.
 
 For an isolated server smoke:
 

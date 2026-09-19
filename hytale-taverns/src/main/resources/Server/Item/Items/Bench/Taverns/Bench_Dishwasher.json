@@ -1,0 +1,56 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Bench_Dishwasher.name",
+    "Description": "server.items.Bench_Dishwasher.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Deco_Cauldron.png",
+  "Categories": [ "Furniture.Benches" ],
+  "Recipe": {
+    "Input": [
+      { "ItemId": "Ingredient_Bar_Copper", "Quantity": 6 },
+      { "ItemId": "Soil_Clay_Smooth_White", "Quantity": 4 },
+      { "ItemId": "Ingredient_Tree_Sap", "Quantity": 2 }
+    ],
+    "BenchRequirement": [
+      { "Type": "Crafting", "Id": "Furniture_Bench", "Categories": [ "Furniture_Misc" ] }
+    ]
+  },
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "BlockSoundSetId": "Metal",
+    "PhysicalMaterialId": "Metal",
+    "Opacity": "Transparent",
+    "CustomModel": "Blocks/Miscellaneous/Cauldron.blockymodel",
+    "CustomModelTexture": [
+      { "Texture": "Blocks/Miscellaneous/Cauldron_Texture.png", "Weight": 1 }
+    ],
+    "CustomModelScale": 1,
+    "HitboxType": "Block_Seven_Eighth",
+    "VariantRotation": "Wall",
+    "AmbientSoundEventId": "SFX_Cauldron_Bubbling_Small",
+    "Looping": true,
+    "Bench": {
+      "Type": "Crafting",
+      "Categories": [
+        {
+          "Id": "Dishwashing",
+          "Icon": "Icons/CraftingCategories/Cooking/Prepared.png",
+          "Name": "server.benchCategories.tavernDishwashing"
+        }
+      ],
+      "LocalOpenSoundEventId": "SFX_Bench_Placeholder",
+      "LocalCloseSoundEventId": "SFX_Bench_Placeholder",
+      "CompletedSoundEventId": "SFX_Bench_Placeholder",
+      "Id": "TavernDishwasher"
+    },
+    "BlockEntity": { "Components": { "BenchBlock": {} } },
+    "Flags": {},
+    "Gathering": { "Breaking": { "GatherType": "Benches" } },
+    "BlockParticleSetId": "Metal",
+    "Support": { "Down": [ { "FaceType": "Full" } ] },
+    "TextureComputedColor": "#41362D"
+  },
+  "PlayerAnimationsId": "Block",
+  "MaxStack": 1
+}

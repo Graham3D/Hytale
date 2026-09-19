@@ -1,0 +1,15 @@
+{
+  "Parent": "Food_Vegetable_Cooked",
+  "MaxStack": 1,
+  "Recipe": {
+    "Input": [
+      { "ResourceTypeId": "Vegetables", "Quantity": 1 },
+      { "ItemId": "Tavern_Clean_Plate", "Quantity": 1 }
+    ],
+    "Output": [ { "ItemId": "Tavern_Prepared_Food_Vegetable_Cooked", "Quantity": 1 } ],
+    "BenchRequirement": [
+      { "Type": "Crafting", "Id": "Cookingbench", "Categories": [ "Prepared" ] }
+    ],
+    "TimeSeconds": 2
+  }
+}

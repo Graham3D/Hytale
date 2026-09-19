@@ -2,15 +2,18 @@
   "Group": "InigmasGames",
   "Name": "Hywind",
   "Version": "${version}",
-  "Description": "Unified Hywind RPG, CanvasUI presentation, persistent NPC, and Orbis runtime.",
+  "Description": "Unified Hywind RPG, CanvasUI, persistent NPC, Orbis, and Tavern Management runtime.",
   "Authors": [{ "Name": "Inigmas Games" }],
   "Website": "https://github.com/inigmas-games",
   "ServerVersion": "=${hytaleVersion}",
   "Dependencies": {
-    "Hytale:NPC": "*"
+    "Hytale:Mounts": "*",
+    "Hytale:NPC": "*",
+    "Hytale:CosmeticsModule": "*"
   },
   "OptionalDependencies": {
-    "HytaleDevLib:HytaleDevLib": "*"
+    "HytaleDevLib:HytaleDevLib": "*",
+    "Hytale:BuilderTools": "*"
   },
   "DisabledByDefault": false,
   "Main": "com.inigmasgames.hywind.HywindPlugin",
@@ -20,6 +23,9 @@
     "Stage": "13",
     "Product": "Hywind",
     "RpgSource": "25b85cb2819351a0d727e33132b2f57013cda024+working-tree",
-    "NpcSource": "9033cbf2c421c45a521467761010d32bb2a967f6"
+    "NpcSource": "9033cbf2c421c45a521467761010d32bb2a967f6",
+    "TavernSourceCommit": "981f9aafefb6e974626a473020b4152251da9f1a",
+    "TavernSourceRevision": "R056",
+    "TavernReferenceJarSha256": "B2F19818D33B8095F462CDF77825CDEC8D949E9B7EEEFB1F9979691B0E137947"
   }
 }

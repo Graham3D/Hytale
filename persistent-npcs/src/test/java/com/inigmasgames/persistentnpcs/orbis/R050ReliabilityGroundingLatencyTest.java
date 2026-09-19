@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -63,8 +64,7 @@ public final class R050ReliabilityGroundingLatencyTest {
             throws Exception {
         AtomicReference<RuntimeResourceMonitor.Snapshot> host = new AtomicReference<>(
                 snapshot(98, 11_000));
-        List<OrbisResourceEvent> events = java.util.Collections.synchronizedList(
-                new ArrayList<>());
+        List<OrbisResourceEvent> events = new CopyOnWriteArrayList<>();
         FakeLlm provider = new FakeLlm();
         try (OrbisResourceScheduler scheduler = new OrbisResourceScheduler(
                 config(500), host::get, ignored -> { })) {

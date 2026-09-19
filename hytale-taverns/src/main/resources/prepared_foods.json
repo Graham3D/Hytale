@@ -1,0 +1,20 @@
+{
+  "foods": [
+    { "baseFoodId": "Food_Bread", "preparedFoodId": "Tavern_Prepared_Food_Bread" },
+    { "baseFoodId": "Food_Cheese", "preparedFoodId": "Tavern_Prepared_Food_Cheese" },
+    { "baseFoodId": "Food_Fish_Grilled", "preparedFoodId": "Tavern_Prepared_Food_Fish_Grilled" },
+    { "baseFoodId": "Food_Kebab_Fruit", "preparedFoodId": "Tavern_Prepared_Food_Kebab_Fruit" },
+    { "baseFoodId": "Food_Kebab_Meat", "preparedFoodId": "Tavern_Prepared_Food_Kebab_Meat" },
+    { "baseFoodId": "Food_Kebab_Mushroom", "preparedFoodId": "Tavern_Prepared_Food_Kebab_Mushroom" },
+    { "baseFoodId": "Food_Pie_Apple", "preparedFoodId": "Tavern_Prepared_Food_Pie_Apple" },
+    { "baseFoodId": "Food_Pie_Meat", "preparedFoodId": "Tavern_Prepared_Food_Pie_Meat" },
+    { "baseFoodId": "Food_Pie_Pumpkin", "preparedFoodId": "Tavern_Prepared_Food_Pie_Pumpkin" },
+    { "baseFoodId": "Food_Popcorn", "preparedFoodId": "Tavern_Prepared_Food_Popcorn" },
+    { "baseFoodId": "Food_Salad_Berry", "preparedFoodId": "Tavern_Prepared_Food_Salad_Berry" },
+    { "baseFoodId": "Food_Salad_Caesar", "preparedFoodId": "Tavern_Prepared_Food_Salad_Caesar" },
+    { "baseFoodId": "Food_Salad_Mushroom", "preparedFoodId": "Tavern_Prepared_Food_Salad_Mushroom" },
+    { "baseFoodId": "Food_Vegetable_Cooked", "preparedFoodId": "Tavern_Prepared_Food_Vegetable_Cooked" },
+    { "baseFoodId": "Food_Wildmeat_Cooked", "preparedFoodId": "Tavern_Prepared_Food_Wildmeat_Cooked" },
+    { "baseFoodId": "Plant_Fruit_Apple", "preparedFoodId": "Tavern_Prepared_Plant_Fruit_Apple" }
+  ]
+}

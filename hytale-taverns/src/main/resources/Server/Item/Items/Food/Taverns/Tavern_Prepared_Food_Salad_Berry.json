@@ -1,0 +1,16 @@
+{
+  "Parent": "Food_Salad_Berry",
+  "MaxStack": 1,
+  "Recipe": {
+    "Input": [
+      { "ItemId": "Plant_Crop_Lettuce_Item", "Quantity": 1 },
+      { "ItemId": "Plant_Fruit_Berries_Red", "Quantity": 5 },
+      { "ItemId": "Tavern_Clean_Plate", "Quantity": 1 }
+    ],
+    "Output": [ { "ItemId": "Tavern_Prepared_Food_Salad_Berry", "Quantity": 1 } ],
+    "BenchRequirement": [
+      { "Type": "Crafting", "Id": "Cookingbench", "Categories": [ "Prepared" ] }
+    ],
+    "TimeSeconds": 1
+  }
+}

@@ -1,0 +1,83 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'com.inigmasgames.taverns'
+version = '0.1.0-R056-hywind'
+
+def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
+def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")
+def serverJar = file("${gamePackage}/Server/HytaleServer.jar")
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+    api project(':persistent-npcs')
+    compileOnly files(serverJar)
+    testImplementation files(serverJar)
+    testImplementation platform('org.junit:junit-bom:5.12.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+def retainedTestClasses = [
+        'ComfortTooltipMetadataTest',
+        'CoreFeatureTest',
+        'PreparedFoodFeatureTest',
+        'RelaxedFeatureTest',
+        'TableServingFeatureTest',
+        'TavernPatronFeatureTest',
+        'TavernRepositoryMigrationTest',
+        'TavernServiceFeatureTest'
+]
+
+def retainedTasks = retainedTestClasses.collect { simpleName ->
+    tasks.register("retained${simpleName}", JavaExec) {
+        group = 'verification'
+        description = "Runs the retained Tavern assertion harness ${simpleName}."
+        dependsOn tasks.testClasses
+        classpath = sourceSets.test.runtimeClasspath
+        mainClass = "com.inigmasgames.taverns.${simpleName}"
+        jvmArgs '-ea'
+        workingDir projectDir
+    }
+}
+
+tasks.register('retainedTests') {
+    group = 'verification'
+    description = 'Runs all authoritative origin/main Tavern assertion harnesses.'
+    dependsOn retainedTasks
+}
+
+tasks.check {
+    dependsOn tasks.retainedTests
+}
+
+tasks.processResources {
+    // Hywind owns the sole root manifest and generates the merged en-US language file.
+    exclude 'manifest.json'
+    exclude 'Server/Languages/en-US/server.lang'
+}
+
+tasks.processTestResources {
+    from('src/main/tavernLanguage') {
+        into 'Server/Languages/en-US'
+    }
+    from('src/main/resources/manifest.json')
+}
+
+tasks.jar {
+    archiveClassifier = 'internal'
+}

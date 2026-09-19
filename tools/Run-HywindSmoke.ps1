@@ -3,6 +3,7 @@ param(
     [string]$CandidateJar = '',
     [string]$RunDirectory = '',
     [string]$LegacyDataSource = '',
+    [string]$TavernDataSource = '',
     [string]$EvidenceDirectory = ''
 )
 
@@ -48,11 +49,23 @@ if (-not [string]::IsNullOrWhiteSpace($LegacyDataSource)) {
     if ($source.TrimEnd('\') -eq $liveResolved.TrimEnd('\')) {
         throw 'Copied-save smoke requires a backup/copy source, not the live save.'
     }
-    foreach ($name in @('ImmersiveNPCs','InigmasGames_CanvasUI','InigmasGames_HytaleRPGPhase00Audit')) {
+    foreach ($name in @('ImmersiveNPCs','InigmasGames_CanvasUI','InigmasGames_HytaleRPGPhase00Audit','InigmasGames_Taverns')) {
         $from = Join-Path $source "mods\$name"
         $to = Join-Path $mods $name
         if (Test-Path -LiteralPath $from) { Copy-Item -LiteralPath $from -Destination $to -Recurse -Force }
     }
+}
+
+if (-not [string]::IsNullOrWhiteSpace($TavernDataSource)) {
+    $tavernSource = (Resolve-Path -LiteralPath $TavernDataSource).Path
+    if ($tavernSource.TrimEnd('\') -eq (Join-Path $liveResolved 'mods\InigmasGames_Taverns').TrimEnd('\')) {
+        throw 'Copied-save smoke requires a backup/copy Tavern source, not the live save.'
+    }
+    $tavernTarget = Join-Path $mods 'InigmasGames_Taverns'
+    if (Test-Path -LiteralPath $tavernTarget) {
+        throw 'Tavern smoke target already exists; use a fresh isolated run directory.'
+    }
+    Copy-Item -LiteralPath $tavernSource -Destination $tavernTarget -Recurse -Force
 }
 
 $start = [Diagnostics.ProcessStartInfo]::new('java',
@@ -83,16 +96,17 @@ $summary = [ordered]@{
     installedSmokeSha256 = Get-Sha256 (Join-Path $mods 'Hywind.jar')
     firstPartyJarCount = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | Where-Object Name -ne 'HYTALEDEVLIB-0.5.0.jar').Count
     hywindDiscovered = [bool]($plain -match 'InigmasGames:Hywind from path Hywind\.jar')
-    hywindSetup = [bool]($plain -match 'HYWIND_SETUP version=0\.1\.0-merge\.1 revision=R046')
-    legacyRootsSelected = [bool]($plain -match 'HYWIND_DATA_ROOTS .*gameplay=.*InigmasGames_HytaleRPGPhase00Audit .*presentation=.*InigmasGames_CanvasUI .*characters=.*ImmersiveNPCs')
-    canvasOwned = [bool]($plain -match 'CANVASUI_SETUP revision=R046 .*owner=HYWIND')
-    rpgOwned = [bool]($plain -match 'HYTALE_RPG_SETUP revision=R046 version=0\.1\.0-merge\.1 hytale=0\.7\.0-pre\.3\.1 stage=13')
+    hywindSetup = [bool]($plain -match 'HYWIND_SETUP version=0\.1\.0-merge\.2 revision=R047 .*TAVERNS')
+    legacyRootsSelected = [bool]($plain -match 'HYWIND_DATA_ROOTS .*gameplay=.*InigmasGames_HytaleRPGPhase00Audit .*presentation=.*InigmasGames_CanvasUI .*characters=.*ImmersiveNPCs .*taverns=.*InigmasGames_Taverns')
+    canvasOwned = [bool]($plain -match 'CANVASUI_SETUP revision=R047 .*owner=HYWIND')
+    rpgOwned = [bool]($plain -match 'HYTALE_RPG_SETUP revision=R047 version=0\.1\.0-merge\.2 hytale=0\.7\.0-pre\.3\.1 stage=13')
     npcStarted = [bool]($plain -match 'Immersive AI .* started')
-    hywindStarted = [bool]($plain -match 'HYWIND_STARTED version=0\.1\.0-merge\.1 revision=R046')
-    hywindShutdown = [bool]($plain -match 'HYWIND_SHUTDOWN version=0\.1\.0-merge\.1 revision=R046')
+    tavernsStarted = [bool]($plain -match 'Taverns revision R056 started with persistence schema 3 and generic Core support')
+    hywindStarted = [bool]($plain -match 'HYWIND_STARTED version=0\.1\.0-merge\.2 revision=R047')
+    hywindShutdown = [bool]($plain -match 'HYWIND_SHUTDOWN version=0\.1\.0-merge\.2 revision=R047')
     pluginManagerStarted = [bool]($plain -match 'Plugin manager started!')
     serverBooted = [bool]($plain -match 'Hytale Server Booted')
-    legacyPluginDiscovered = [bool]($plain -match 'InigmasGames:(HytaleRPGPhase00Audit|CanvasUI|ImmersiveNPCs) from path')
+    legacyPluginDiscovered = [bool]($plain -match 'InigmasGames:(HytaleRPGPhase00Audit|CanvasUI|ImmersiveNPCs|Taverns) from path')
     scopedFailure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:Hywind|shutdownReason\.pluginError|reason: mod_error|HYWIND_PARTIAL_CLEANUP_FAILED|Failed to create HytaleServer)')
     connectedClientVerified = $false
 }
@@ -100,7 +114,7 @@ $summary.result = if ($summary.processExitCode -eq 0 -and
     $summary.candidateSha256 -eq $summary.installedSmokeSha256 -and
     $summary.firstPartyJarCount -eq 1 -and $summary.hywindDiscovered -and
     $summary.hywindSetup -and $summary.legacyRootsSelected -and $summary.canvasOwned -and
-    $summary.rpgOwned -and $summary.npcStarted -and $summary.hywindStarted -and
+    $summary.rpgOwned -and $summary.npcStarted -and $summary.tavernsStarted -and $summary.hywindStarted -and
     $summary.hywindShutdown -and $summary.pluginManagerStarted -and $summary.serverBooted -and
     -not $summary.legacyPluginDiscovered -and -not $summary.scopedFailure) { 'PASS' } else { 'FAIL' }
 $summaryPath = Join-Path $EvidenceDirectory 'server-smoke-summary.json'

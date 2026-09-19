@@ -1,0 +1,14 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Taverns_Order_Frame",
+      "FixedRotation": false
+    },
+    {
+      "SpawnerId": "Taverns_Order_Template_Food_Icon",
+      "FixedRotation": false
+    }
+  ],
+  "LifeSpan": 0.55,
+  "IsImportant": true
+}

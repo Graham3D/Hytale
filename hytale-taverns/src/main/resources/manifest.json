@@ -1,0 +1,23 @@
+{
+  "Group": "InigmasGames",
+  "Name": "Taverns",
+  "Version": "0.1.0",
+  "Description": "Persistent, player-owned Taverns with Tavern, Kitchen, and Bedroom zoning Cores.",
+  "Authors": [
+    {
+      "Name": "Zemio"
+    }
+  ],
+  "Main": "com.inigmasgames.taverns.TavernsPlugin",
+  "ServerVersion": ">=0.5.9 <0.6.0",
+  "Dependencies": {
+    "Hytale:Mounts": "*",
+    "Hytale:NPC": "*",
+    "Hytale:CosmeticsModule": "*"
+  },
+  "OptionalDependencies": {
+    "Hytale:BuilderTools": "*"
+  },
+  "IncludesAssetPack": true,
+  "DisabledByDefault": false
+}

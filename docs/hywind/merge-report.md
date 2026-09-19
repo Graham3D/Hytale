@@ -1,57 +1,48 @@
 # Hywind merger and deployment report
 
-Status: **DEPLOYED / VALIDATION PENDING**  
-Candidate/deployed SHA-256: `B07071798C994FE3CF1062C138BA38AB20B3108B529ABE8A74384D0566A751C1`  
-Version/revision: `0.1.0-merge.1` / `R046`  
-Deployment time: `2026-09-19T15:33:03.4885752Z`
+Status: **DEPLOYED / CONNECTED VALIDATION PENDING**
+Candidate/deployed SHA-256: `B16870EC46996B35E009922FA48BBB9D49EDAB070A16E13CFB945DDC993371A1`
+Version/revision: `0.1.0-merge.2` / `R047`
+Deployment time: `2026-09-19T17:11:46.4529513Z`
 
-Hywind is built and installed as the only active first-party project JAR in the RPG save. The previous RPG, CanvasUI and ImmersiveNPCs JARs are outside the active load path in a verified rollback set. Automated tests, package checks, isolated runtime checks, copied-data startup, rollback rehearsal, and two post-deployment server start/stop cycles passed. A connected Hytale client was not available to this implementation run, so rendering, input, live casting, voice, and rejoin behavior remain explicitly unverified; this is not reported as `COMPLETE`.
+Hywind now contains the required RPG, CanvasUI, Immersive NPC/Orbis, and Tavern Management subsystems behind one manifest and one Hytale plugin lifecycle. `Hywind.jar` is installed as the only active first-party project JAR in the RPG save. Automated tests, package validation, fresh and copied-data server smokes, rollback rehearsal, live deployment, and two post-deployment restart cycles passed. Connected-client rendering/input/gameplay QA remains explicitly unverified.
 
-## 1. Scope and baseline
+## 1. Correction to the earlier report
 
-The merge preserved the current enabled behavior of:
+The merge.1 report incorrectly said Tavern Management was intentionally excluded. Taverns was required by the final merger handoff and is included in merge.2.
 
-- ARPG/HyARPG/HytaleRPG gameplay, Stage 13 persistence, skills, combat, HUD and progression;
-- CanvasUI infrastructure, current cursor-HUD/editor work and diagnostics;
-- ImmersiveNPCs profiles, inventory, appearance, autonomous behavior and Orbis coordination.
+The authoritative Tavern source is `origin/main:hytale-taverns`, last changed by commit `981f9aafefb6e974626a473020b4152251da9f1a`. That tree contains all 36 production Java files, eight retained executable test programs, authored resources, and the original Tavern build pipeline. The preserved R056 artifact:
 
-Tavern Management was intentionally excluded. It was present in the broader workspace but was neither part of the authoritative merger scope nor an active dependency of the target RPG save. No new skills, balance changes, quests, factions, AI features, provider changes, or model/training payloads were added.
+`C:\Users\Zemio\AppData\Roaming\Hytale\UserData\Saves\Tavern\mods\Taverns-0.1.0.jar`
 
-Source provenance:
+was used only as a parity/reference artifact. Its SHA-256 is `B2F19818D33B8095F462CDF77825CDEC8D949E9B7EEEFB1F9979691B0E137947`.
 
-| Input | Provenance |
-| --- | --- |
-| RPG and CanvasUI | `25b85cb2819351a0d727e33132b2f57013cda024` plus the preserved cumulative RPG working tree |
-| ImmersiveNPCs | `9033cbf2c421c45a521467761010d32bb2a967f6` (`origin/main`) |
-| Consolidation branch | `hywind-merge` |
+Reconciliation results:
 
-Installed runtime pinned for every compile, native test and asset check:
+- all 36 production Java files and all eight retained Tavern tests came from Git, not decompilation;
+- 59 authored source resources match `origin/main` byte-for-byte;
+- the language file was relocated unchanged into a dedicated merge input and is appended to Hywind's single `en-US/server.lang`;
+- the source-only `Comfort.png` and `Relaxed.png` HUD icons are intentionally absent because the authoritative R056 build script removes them as obsolete, matching the reference JAR;
+- the reference JAR's additional patron-order particle systems/textures are deterministic outputs of the authoritative Tavern build script and are retained in Hywind;
+- no newer intentional Tavern gameplay change was found only in the JAR.
 
-| Runtime input | Exact value |
-| --- | --- |
-| Hytale | `0.7.0-pre.3.1`, `pre-release` patchline |
-| `HytaleServer.jar` | `7928797E148E4B15F787E1449BF020FCA41A9BB2F605E464F6A0699484CE71BC` |
-| `Assets.zip` | `1A48A64DA959F1A1EBCCB461B6C518BF2AF94F1116DEBCE84F7CC1E0E95A89D9` |
-| Target save | `C:\Users\Zemio\AppData\Roaming\Hytale\data\pre-release\Saves\RPG` |
-| Target load path | `...\Saves\RPG\mods` |
+## 2. Preserved subsystem behavior
 
-The global pre-release, EditorUserData and legacy UserData `Mods` directories were checked and contain no competing project JARs. Other saves have their own isolated `mods` directories and were not modified.
+The merger retains the existing Tavern implementation without adding content:
 
-### Recoverable baseline
+- Tavern, Kitchen, and Bedroom Cores and their authored starting volumes;
+- placement validation, primary/specialized-room containment, and non-overlap rules;
+- Zoning Editor input, virtual Selection Tool presentation, and scoped permission provider;
+- expansion shard charging, paid-unit accounting, shrink refunds, and Creative-mode behavior;
+- schema-1/schema-2 migration into current schema 3 with migration backups;
+- Tavern/open-service state, persistent Tavern/Core records, prepared crafting, Comfort scoring, Relaxed regeneration, table serving, patron orders, native NPC behavior, HUD, sounds, and generated order particles;
+- legacy writable data root `mods/InigmasGames_Taverns`.
 
-Before source restructuring or deployment, the stopped target and source tree were copied to:
+The separate historical Tavern save was not modified or cross-imported into the RPG world because its world UUIDs and coordinates belong to that save. Compatibility was instead proven by copying its ten-file schema-3 data root into an isolated smoke environment. Hywind loaded one Tavern and one Core, and all ten files/171,181 bytes remained hash-identical. The live RPG save had no Tavern root before this deployment; startup created a new empty schema-3 root for that world.
 
-`C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-merge-20260919T143610Z`
+## 3. Unified architecture
 
-The initial save snapshot was verified at 599 files and 484,697,159 bytes. The final deployment took a second full stopped-save backup at:
-
-`C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260919T153302Z`
-
-Its copy was independently verified at the same 599 files and 484,697,159 bytes before cutover.
-
-## 2. Consolidated architecture
-
-The final package has one manifest and one Hytale plugin bootstrap:
+Hywind has one discoverable plugin:
 
 ```text
 InigmasGames:Hywind
@@ -59,146 +50,122 @@ com.inigmasgames.hywind.HywindPlugin
 build/libs/Hywind.jar
 ```
 
-`HywindPlugin` owns setup, start, shutdown and partial-start rollback. Internally it uses these retained boundaries:
+The production lifecycle is one inheritance chain:
 
-| Boundary | Implementation ownership |
+```text
+HywindPlugin
+  -> TavernsPlugin
+    -> PersistentNpcsPlugin
+      -> JavaPlugin
+```
+
+Hywind calls the existing CanvasUI and RPG owners inside that lifecycle. Setup/start are ordered character/NPC foundation, Taverns, CanvasUI, then RPG completion as required by the inherited boundaries; shutdown reverses owned resources and invokes parent cleanup. Partial-start cleanup includes Taverns.
+
+The existing writable roots remain authoritative:
+
+| Domain | Data root |
 | --- | --- |
-| Bootstrap | Hywind identity, ordered lifecycle, data-root selection and cleanup |
-| Gameplay | Existing RPG packages and authoritative services |
-| Presentation | Existing CanvasUI packages and one Hywind-owned registration path |
-| Characters | Existing Persistent NPC packages, native container/entity identity and commands |
-| Intelligence | Existing Orbis Java coordination; providers/workers remain external |
+| RPG/gameplay | `mods/InigmasGames_HytaleRPGPhase00Audit` |
+| CanvasUI/presentation | `mods/InigmasGames_CanvasUI` |
+| NPC/Orbis | `mods/ImmersiveNPCs` |
+| Tavern Management | `mods/InigmasGames_Taverns` |
 
-Initialization is characters, CanvasUI, then RPG; shutdown is the reverse. The previous `Phase00Plugin`, `CanvasUIPlugin`, and Persistent NPC plugin entry lifecycles are not separately discoverable from the package. Commands and old compatibility surfaces remain wired through the internal owners.
+No gameplay formula, RPG skill, reward, HUD ownership, NPC profile schema, Orbis provider policy, or Tavern content was redesigned.
 
-The old data roots remain the writable authorities, deliberately avoiding a risky schema migration:
+## 4. Hytale pre.3 compatibility seam
 
-| Domain | Effective root |
+The authoritative R056 source required bounded API adaptation for installed Hytale `0.7.0-pre.3.1`:
+
+- `UpdatePlayerInventory` snapshots now preserve AbilitySlots and RuneBag;
+- the Zoning Editor permission provider uses `PermissionQuery.getId()` and implements `getUsersWithPermission`;
+- `ModelParticle` supplies the new constructor flag;
+- obsolete explicit `TransformComponent.markChunkDirty` calls were removed because current transform setters notify mutation;
+- native NPC greeting targets use the current ref/accessor `Role.setMarkedTarget` signature and `MarkedEntitySupport` component;
+- `TavernsPlugin` became an abstract internal lifecycle owner with a data-root hook so Hywind remains the sole plugin bootstrap.
+
+These changes alter integration signatures, not Tavern behavior or persistence semantics.
+
+## 5. Build, package, and validation
+
+The root Gradle project now includes `:hytale-taverns`. Root `check` depends on Tavern JUnit and retained executable gates, and root `jar` embeds Tavern classes/resources while excluding its standalone manifest and separate language file.
+
+Complete retained command:
+
+`gradlew.bat clean check build --no-daemon --console=plain`
+
+Result: **PASS**, 42 tasks executed in 3m27s.
+
+| Gate | Result |
 | --- | --- |
-| RPG/gameplay | `mods\InigmasGames_HytaleRPGPhase00Audit` |
-| CanvasUI/presentation | `mods\InigmasGames_CanvasUI` |
-| NPC/Orbis | `mods\ImmersiveNPCs` |
+| RPG/native JUnit | 2,428 tests, 0 failures/errors/skips |
+| CanvasUI JUnit | 28 tests, 0 failures/errors/skips |
+| Tavern JUnit | 5 tests, 0 failures/errors/skips |
+| Tavern authoritative retained harnesses | 8/8 PASS |
+| Persistent NPC retained harness | 149 named executable gates PASS |
+| NPC exact release-resource validator | PASS |
+| CustomUI validator | 58 source documents PASS |
+| Unified package audit | PASS |
+| Fresh isolated Hywind-only server smoke | PASS |
+| Copied RPG + historical Tavern data smoke | PASS |
+| Deployment dry run | PASS |
+| Full deployment/rollback rehearsal | PASS; 599/599 files and all hashes restored |
+| Live deployment | PASS; candidate/installed hashes identical |
+| Live post-deployment restart cycles | 2/2 PASS |
+| Connected Hytale client QA | UNVERIFIED |
 
-Player/NPC IDs, RPG persistence and journals, profiles, relationships, memories, native inventory state, provider settings, traces and external-worker layouts therefore retain their existing locations and formats.
+One retained NPC harness race was exposed during the first full run: an asynchronous producer modified a synchronized `ArrayList` while the main thread streamed it. The harness now uses `CopyOnWriteArrayList`; all original assertions and timing expectations are unchanged, and the complete suite then passed.
 
-## 3. Build and package changes
-
-The existing Gradle wrapper is now the unified entry point. `persistent-npcs` is an internal Gradle project while retaining its authoritative PowerShell build, resource validator and executable regression harness. The root `check` task runs RPG tests, `nativeControlTest`, CanvasUI tests, NPC resource validation and all retained NPC gates; root `build` emits the deployable `Hywind.jar`.
-
-Notable implementation files and groups:
-
-- `src/main/java/com/inigmasgames/hywind/HywindPlugin.java`: unified production lifecycle;
-- `src/main/java/com/inigmasgames/hytalerpg/phase00/RpgDiagnosticsModule.java`: narrow diagnostics bridge without reviving the old plugin;
-- `persistent-npcs/`: imported R170 source, resources, tests and build integration;
-- `build.gradle`, `settings.gradle`, `gradle.properties`: unified package/test wiring and pinned runtime;
-- `tools/Test-HywindPackage.ps1`: exact manifest, class, resource, generated-UI and compatibility audit;
-- `tools/Run-HywindSmoke.ps1`: one-plugin isolated and copied-data runtime smoke;
-- `tools/Deploy-Hywind.ps1`: stopped-runtime backup, journaled cutover and automatic artifact recovery;
-- `tools/Restore-Hywind.ps1`: artifact or full-save recovery;
-- `tools/Test-HywindDeployment.ps1`: installed-hash and two-cycle post-deployment validation;
-- `README.md`: Hywind build, test, smoke, deploy, rollback and icon operations.
-
-The imported standalone `persistent-npcs/install.ps1` now fails immediately with a Hywind migration message; its former implementation remains below the guard only as provenance. Current operational documentation points exclusively to `Deploy-Hywind.ps1`, so a normal build or documented deploy cannot reinstall a split NPC plugin.
-
-### Collision decisions
-
-The source/package collision audit found no Java class collision. Resource collisions were resolved explicitly:
-
-- the three prior `manifest.json` files became one root Hywind manifest;
-- RPG and NPC `Server/Languages/en-US/server.lang` content was merged, with no duplicate language keys;
-- NPC generated `NpcSection9.ui` through `NpcSection1024.ui` are produced for both inventory page directories (2,032 generated files; 2,048 total section files including checked-in 1–8);
-- NPC `config.json`, absent from the imported source snapshot but present in the authoritative installed R170 JAR, was recovered byte-semantically as a packaged default;
-- pre.3 ItemGrid compatibility uses `EphemeralIconPatch`/`EphemeralIconAnchor` in source rather than a post-package mutation;
-- nested legacy manifests and NPC's separate language file are excluded from internal subproject output.
-
-Package audit result:
+Package properties:
 
 | Property | Value |
 | --- | ---: |
-| JAR bytes | 12,027,569 |
-| ZIP entries | 5,397 |
-| classes | 2,075 |
-| CustomUI documents | 2,088 |
+| JAR bytes | 12,606,843 |
+| ZIP entries | 5,736 |
+| classes | 2,163 |
+| CustomUI documents | 2,089 |
 | generated NPC sections | 2,032 |
+| total NPC sections | 2,048 |
 | root manifests | 1 |
 
-The package excludes Hytale server/assets, test fixtures, saves, credentials, private profile data, model weights and separate legacy plugin entry classes.
+Pinned runtime:
 
-### Persistence race found during merger validation
-
-Repeated R090 H6 campaigns exposed a real pre-existing Windows persistence race: independent stores shared a fixed `relationships.json.tmp`; after making temp names unique, OneDrive/Windows could still transiently deny replacement of the destination. The common JSON writer now:
-
-1. serializes replacement per normalized target path using bounded lock striping;
-2. writes an immutable UUID-named temp file;
-3. retries only the final replacement for a bounded interval when Windows transiently denies it;
-4. propagates failure after the retry budget and never acknowledges a write before replacement succeeds;
-5. removes only its own temporary file.
-
-Twenty consecutive H6 stress repetitions then passed (2,200 deterministic campaign decisions), followed by the complete retained suite. No persistence assertion or expected behavior was weakened.
-
-## 4. Verification record
-
-All commands below exited `0`.
-
-| Command/gate | Result |
+| Runtime input | Exact value |
 | --- | --- |
-| `.\gradlew.bat clean check build --no-daemon --console=plain` | PASS in 3m04s; 27 tasks executed |
-| RPG JUnit task | 2,361 tests, 0 failures/errors/skips |
-| RPG `nativeControlTest` | 67 tests, 0 failures/errors/skips |
-| CanvasUI JUnit task | 28 tests, 0 failures/errors/skips |
-| NPC retained harness | 149 named executable test invocations; all deterministic gates PASS |
-| NPC exact release-resource validator | PASS; 590 immutable canonical cards and installed-registry coverage |
-| CustomUI validator | PASS; 57 source documents |
-| Unified package audit | PASS |
-| H6 persistence stress | PASS, 20/20 repetitions |
-| Isolated Hywind-only server smoke | PASS |
-| Copied legacy-data Hywind-only smoke | PASS |
-| Deployment dry run | PASS; no state change |
-| Full deployment/rollback rehearsal | PASS; all 599 files, bytes and original JAR hashes restored |
-| Live deployment | PASS; installed/candidate hashes equal |
-| Live post-deployment start/stop | PASS twice; clean startup and shutdown both times |
+| Hytale | `0.7.0-pre.3.1` |
+| `HytaleServer.jar` | `7928797E148E4B15F787E1449BF020FCA41A9BB2F605E464F6A0699484CE71BC` |
+| `Assets.zip` | `1A48A64DA959F1A1EBCCB461B6C518BF2AF94F1116DEBCE84F7CC1E0E95A89D9` |
 
-The NPC Gradle `test` task is deliberately disabled because those retained tests are executable assertion-enabled Java main classes, not JUnit classes. Coverage is provided by the mandatory `retainedTests` harness above; this is not an omitted suite. The retained harness skipped only live local-model tests. Connected-client rendering/input/voice checks are separately pending.
-
-Isolated and copied-data smoke each proved:
-
-- one first-party JAR and one discovered `InigmasGames:Hywind` identity;
-- selected old gameplay, presentation and character data roots;
-- Canvas, RPG and NPC/Orbis internal startup markers;
-- no discovery of `InigmasGames:HytaleRPGPhase00Audit`, `InigmasGames:CanvasUI`, or `InigmasGames:ImmersiveNPCs` as plugins;
-- clean `HYWIND_SHUTDOWN` and process exit.
-
-The two deployed-save cycles reproduced the same discovery/start/shutdown behavior. Data-root file counts were unchanged across both cycles (168 NPC, 13 Canvas, 34 RPG); expected logs/runtime state increased byte counts.
-
-## 5. Deployment and rollback
+## 6. Deployment and rollback
 
 Installed artifact:
 
 `C:\Users\Zemio\AppData\Roaming\Hytale\data\pre-release\Saves\RPG\mods\Hywind.jar`
 
-SHA-256:
+Installed SHA-256:
 
-`B07071798C994FE3CF1062C138BA38AB20B3108B529ABE8A74384D0566A751C1`
+`B16870EC46996B35E009922FA48BBB9D49EDAB070A16E13CFB945DDC993371A1`
 
-Retired from the active load path into `...\hywind-deploy-20260919T153302Z\retired-artifacts`:
+Full stopped-save backup and deployment journal:
 
-| Artifact | Baseline SHA-256 |
-| --- | --- |
-| `CanvasUI-0.1.0.jar` | `DCB0C105F73AA421A3B2ECE8638BD7334BC0F1839AF71830597186086B5CBD71` |
-| `HyARPG.jar` | `A06C7DC040665A0A3D7D8236B9E6B2EF8978654748276656F2C11E5E6E39D6F7` |
-| `ImmersiveNPCs-0.6.3-R170-CREATIVE-FULL-PROFILE-GENERATION.jar` | `ED8BFDD6006B685F52FE1A466BBE6FAE98DA08E1E1BBFD826626EB9C8C2ED1BE` |
+`C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260919T171145Z`
 
-`HYTALEDEVLIB-0.5.0.jar` remains active as an optional external dependency; its hash is `DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230`. Unrelated built-in mod directories were not changed. Inert historical `.icons.lock` files remain but are not JARs and cannot register plugins.
+The backup contains 599 files and 486,658,752 bytes. The previous merge.1 `Hywind.jar` was retired there with SHA-256 `B07071798C994FE3CF1062C138BA38AB20B3108B529ABE8A74384D0566A751C1`.
 
-The rollback rehearsal used the actual baseline save copy, deployed Hywind, then performed a full-save restore. It recovered 599 files, 484,697,159 bytes, and all four original JAR hashes exactly. For the live deployment, the operation journal, complete backup, retired JARs and deployment result are retained under the final backup directory. The recovery command is documented in `README.md`; a live full restore requires the explicit `-ConfirmLiveRestore` guard.
+Active JARs in the RPG load path:
 
-## 6. Remaining checks and known limitations
+- `Hywind.jar` — the sole first-party project mod;
+- `HYTALEDEVLIB-0.5.0.jar` — preserved optional external dependency, SHA-256 `DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230`.
 
-Post-merger connected validation is **UNVERIFIED** and is the only reason status is `DEPLOYED / VALIDATION PENDING` instead of `COMPLETE`. A connected session must still exercise:
+No standalone RPG, CanvasUI, ImmersiveNPCs, or Taverns JAR remains active. Both post-deployment server cycles discovered only `InigmasGames:Hywind`, emitted Tavern/RPG/Canvas/NPC startup markers, reached server boot, and shut down cleanly.
 
-1. `/rpg` commands, loadout/progression persistence, native ability slots, representative melee/projectile/channel/summon skills, resource/cooldown HUD, damage and restart/rejoin;
-2. CanvasUI open/close, cursor capture, scaling, node/library drag-and-drop, links/joints, death/disconnect/world-exit cleanup and restored gameplay input;
-3. `/npc` UI, existing profiles/IDs, appearance and gear previews, native inventory transfers, save/restart/rejoin and no duplicate NPCs;
-4. configured Orbis providers, stale-result cancellation, interruption, voice/spatial playback, and expected degraded/offline isolation.
+## 7. Remaining connected checks
 
-No automated gate is failing. Compilation emits installed-API deprecation warnings for methods already used by the baseline; no version was widened and no warning was suppressed. The external provider/local-model tests remain environment-dependent and were not represented as passing. Until the connected list above passes, this build should be treated as a controlled validation build rather than unrestricted release completion.
+Automated/startup validation cannot prove client rendering or input. A connected session should still verify:
+
+1. place/use each Tavern, Kitchen, and Bedroom Core; enter/exit Zoning Editor; resize, charge, refund, restart, and confirm persistence;
+2. prepared cooking, Comfort tooltip/scoring, Relaxed effect, service opening, table serving, patrons, orders, payment, HUD, particles, and sounds;
+3. existing RPG casting/combat/HUD/progression and restart/rejoin;
+4. CanvasUI cursor, node/library drag-and-drop, links/joints, close/cleanup, and restored gameplay input;
+5. NPC profiles, appearance, inventory transfer, Orbis providers/voice, persistence, and no duplicate plugin behavior.
+
+Until those connected checks pass, the release status remains **DEPLOYED / CONNECTED VALIDATION PENDING**.

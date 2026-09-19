@@ -21,7 +21,7 @@ import com.inigmasgames.canvasui.demo.CanvasInputProbeCommand;
 import com.inigmasgames.canvasui.runtime.CanvasService;
 import com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard;
 import com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService;
-import com.inigmasgames.persistentnpcs.PersistentNpcsPlugin;
+import com.inigmasgames.taverns.TavernsPlugin;
 import com.inigmasgames.hytalerpg.commands.RpgCommand;
 import com.inigmasgames.hytalerpg.content.RpgCatalog;
 import com.inigmasgames.hytalerpg.diagnostics.RpgSkillTraceService;
@@ -72,7 +72,7 @@ import javax.annotation.Nonnull;
 import java.nio.file.Path;
 
 /** Single production bootstrap for Hywind gameplay, presentation and characters. */
-public final class HywindPlugin extends PersistentNpcsPlugin {
+public final class HywindPlugin extends TavernsPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private PacketFilter inboundWatcher;
     private PacketFilter outboundWatcher;
@@ -109,6 +109,11 @@ public final class HywindPlugin extends PersistentNpcsPlugin {
         return legacyDataDirectory("ImmersiveNPCs");
     }
 
+    @Override
+    protected Path tavernsDataDirectory() {
+        return legacyDataDirectory("InigmasGames_Taverns");
+    }
+
     private Path rpgDataDirectory() {
         return legacyDataDirectory("InigmasGames_HytaleRPGPhase00Audit");
     }
@@ -132,9 +137,10 @@ public final class HywindPlugin extends PersistentNpcsPlugin {
             setupCanvas();
             rpgSetup = true;
             setupRpg();
-            LOGGER.atInfo().log("HYWIND_DATA_ROOTS bootstrap=%s gameplay=%s presentation=%s characters=%s",
-                    getDataDirectory(), rpgDataDirectory(), canvasDataDirectory(), charactersDataDirectory());
-            LOGGER.atInfo().log("HYWIND_SETUP version=%s revision=%s modules=GAMEPLAY,PRESENTATION,CHARACTERS,INTELLIGENCE",
+            LOGGER.atInfo().log("HYWIND_DATA_ROOTS bootstrap=%s gameplay=%s presentation=%s characters=%s taverns=%s",
+                    getDataDirectory(), rpgDataDirectory(), canvasDataDirectory(), charactersDataDirectory(),
+                    tavernsDataDirectory());
+            LOGGER.atInfo().log("HYWIND_SETUP version=%s revision=%s modules=GAMEPLAY,PRESENTATION,CHARACTERS,INTELLIGENCE,TAVERNS",
                     getManifest().getVersion(), BuildIdentity.REVISION);
         } catch (RuntimeException | Error failure) {
             rollbackPartialSetup();
@@ -578,7 +584,7 @@ public final class HywindPlugin extends PersistentNpcsPlugin {
         try {
             if (charactersSetup) super.shutdown();
         } catch (RuntimeException cleanupFailure) {
-            LOGGER.atSevere().withCause(cleanupFailure).log("HYWIND_PARTIAL_CLEANUP_FAILED module=CHARACTERS");
+            LOGGER.atSevere().withCause(cleanupFailure).log("HYWIND_PARTIAL_CLEANUP_FAILED module=CHARACTERS,TAVERNS");
         } finally {
             charactersSetup = false;
         }

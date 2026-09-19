@@ -1,0 +1,89 @@
+{
+  "Type": "Generic",
+  "Appearance": "Player",
+  "Invulnerable": true,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": 3.5,
+      "RunThreshold": 0.85,
+      "RunThresholdRange": 0.05,
+      "Gravity": 10,
+      "MaxFallSpeed": 20,
+      "Acceleration": 10,
+      "MaxClimbHeight": 1,
+      "JumpHeight": 1.5,
+      "MinJumpHeight": 1,
+      "JumpForce": 1.5,
+      "JumpDescentSteepness": 1,
+      "DescentAnimationType": "Fall",
+      "DescentSteepness": 2.5,
+      "DescentBlending": 1
+    }
+  ],
+  "MaxHealth": 100,
+  "Instructions": [
+    {
+      "Continue": true,
+      "Sensor": {
+        "Type": "Target",
+        "TargetSlot": "GreetingTarget",
+        "Range": 6
+      },
+      "HeadMotion": {
+        "Type": "Watch"
+      }
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Leash",
+            "Range": 0.45
+          },
+          "BodyMotion": {
+            "Type": "Seek",
+            "StopDistance": 0.2,
+            "SlowDownDistance": 1.5,
+            "AbortDistance": 192,
+            "RelativeSpeed": 0.65,
+            "UsePathfinder": true
+          }
+        },
+        {
+          "Sensor": {
+            "Type": "Nav",
+            "NavStates": [ "Defer" ],
+            "ThrottleDuration": 1
+          },
+          "Actions": [
+            {
+              "Type": "RecomputePath"
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "Nav",
+            "NavStates": [ "Blocked", "Aborted" ],
+            "ThrottleDuration": 1
+          },
+          "Actions": [
+            {
+              "Type": "RecomputePath"
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "Any"
+          },
+          "BodyMotion": {
+            "Type": "Nothing"
+          }
+        }
+      ]
+    }
+  ],
+  "NameTranslationKey": "server.npcRoles.Tavern_Patron.name"
+}

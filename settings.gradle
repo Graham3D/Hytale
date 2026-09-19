@@ -1,3 +1,4 @@
 rootProject.name = 'HytaleRPG'
 include 'canvas-ui'
 include 'persistent-npcs'
+include 'hytale-taverns'

@@ -34,12 +34,26 @@ try {
     }
     if ($manifest.ServerVersion -ne '=0.7.0-pre.3.1') { throw "Unexpected server pin: $($manifest.ServerVersion)" }
     if ($manifest.Dependencies.'Hytale:NPC' -ne '*') { throw 'Required Hytale:NPC dependency is absent.' }
+    if ($manifest.Dependencies.'Hytale:Mounts' -ne '*' -or $manifest.Dependencies.'Hytale:CosmeticsModule' -ne '*') {
+        throw 'Required Tavern native dependencies are absent.'
+    }
+    if ($manifest.Metadata.TavernSourceRevision -ne 'R056') { throw 'Tavern source revision is absent or unexpected.' }
 
     $required = @(
         'com/inigmasgames/hywind/HywindPlugin.class',
         'com/inigmasgames/persistentnpcs/PersistentNpcsPlugin.class',
         'com/inigmasgames/canvasui/CanvasUI.class',
+        'com/inigmasgames/taverns/TavernsPlugin.class',
+        'com/inigmasgames/taverns/TavernRepository.class',
+        'com/inigmasgames/taverns/CoreModeManager.class',
         'Server/Languages/en-US/server.lang',
+        'Server/Item/Items/Core/Core_Tavern.json',
+        'Server/Item/Items/Core/Core_Kitchen.json',
+        'Server/Item/Items/Core/Core_Bedroom.json',
+        'Server/NPC/Roles/Taverns/Tavern_Patron.json',
+        'Common/UI/Custom/Hud/TavernsRevision.ui',
+        'prepared_foods.json',
+        'comfort_registry.json',
         'rpg/catalog/skills.json',
         'rpg/catalog/passives.json',
         'rpg/presentation/icon-index.json',
@@ -82,7 +96,7 @@ try {
     $languageEntry = $zip.GetEntry('Server/Languages/en-US/server.lang')
     $languageReader = [IO.StreamReader]::new($languageEntry.Open(), [Text.UTF8Encoding]::new($false), $true)
     try { $language = $languageReader.ReadToEnd() } finally { $languageReader.Dispose() }
-    foreach ($needle in @('items.RPG_Ability_', 'server.npcRoles.')) {
+    foreach ($needle in @('items.RPG_Ability_', 'server.npcRoles.', 'items.Core_Tavern.name', 'items.Core_Kitchen.name', 'items.Core_Bedroom.name')) {
         if ($language -notmatch [regex]::Escape($needle)) { throw "Merged language file lacks $needle keys." }
     }
 
