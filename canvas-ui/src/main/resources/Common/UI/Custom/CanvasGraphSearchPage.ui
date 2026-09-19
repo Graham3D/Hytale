@@ -1,0 +1,14 @@
+$Common = "Common.ui";
+
+Group {
+  Anchor: (Full: 0);
+  Group { Anchor: (Left: 60, Top: 158, Width: 300, Height: 104); Background: (Color: #0d2031ff); Padding: (Full: 10); LayoutMode: Top;
+    $Common.@TextField #GraphSearchInput { Anchor: (Width: 280, Height: 38); PlaceholderText: "Search Skills or Passives..."; }
+    Group { Anchor: (Height: 8); }
+    Group { Anchor: (Height: 36); LayoutMode: Left;
+      TextButton #GraphSearchClear { Text: "CLEAR"; Anchor: (Width: 130, Height: 34); Style: $Common.@DefaultTextButtonStyle; }
+      Group { Anchor: (Width: 10); }
+      TextButton #GraphSearchDone { Text: "DONE"; Anchor: (Width: 130, Height: 34); Style: $Common.@DefaultTextButtonStyle; }
+    }
+  }
+}

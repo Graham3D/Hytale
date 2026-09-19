@@ -1,6 +1,7 @@
 package com.inigmasgames.hytalerpg.ui.skilltree;
 
 import com.inigmasgames.hytalerpg.domain.LinkNodeId;
+import com.inigmasgames.hytalerpg.domain.EdgeId;
 import com.inigmasgames.hytalerpg.progress.MutationResult;
 import com.inigmasgames.hytalerpg.progress.RpgLoadoutService;
 import com.inigmasgames.hytalerpg.progress.RpgLoadoutView;
@@ -37,6 +38,10 @@ public final class RpgSkillTreeMutationService {
 
     public MutationResult unlinkSource(UUID player, LinkNodeId source) {
         return loadouts.unlinkSource(player, source);
+    }
+
+    public MutationResult unlinkEdge(UUID player, String edgeId) {
+        return loadouts.unlink(player, new EdgeId(edgeId));
     }
 
     public RpgLoadoutView view(UUID player) { return loadouts.getPresentationView(player); }

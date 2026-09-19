@@ -52,7 +52,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         StaticSkillTreeViewModel.Tab tab = kind == LibraryKind.SKILL
                 ? StaticSkillTreeViewModel.Tab.SKILLS : StaticSkillTreeViewModel.Tab.PASSIVES;
         return projection.project(player, tab, "", "", "", null, "").library().stream()
-                .map(item -> new LibraryEntry(item.id(), item.name(), item.category(), kind)).toList();
+                .map(item -> new LibraryEntry(item.id(), item.name(), item.category(), item.iconPath(), kind)).toList();
     }
 
     @Override public Result assign(String entryId, String nodeId, CanvasSnapshot presentationSnapshot) {
@@ -65,6 +65,10 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             return reject("Joint nodes route links and cannot hold content", presentationSnapshot);
         if ((entry.kind() == LibraryKind.SKILL) != (node.kind() == LinkNodeId.NodeKind.SKILL))
             return reject("Drop skills on Skill nodes and passives on Passive nodes", presentationSnapshot);
+        StaticSkillTreeViewModel.TreeNode current = projection.project(player, StaticSkillTreeViewModel.Tab.SKILLS,
+                "", "", "", null, "").nodes().get(node);
+        if (current != null && current.occupied())
+            return reject(node.externalId() + " is occupied; automatic replacement is disabled", presentationSnapshot);
         long revision = mutations.view(player).state().revision;
         MutationResult mutation = mutations.assignCanvas(player, revision, node, entry.id());
         if (!mutation.success()) return reject(mutation.code() + ": " + mutation.message(), presentationSnapshot);
@@ -91,6 +95,17 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         if (!result.success()) return reject(result.code() + ": " + result.message(), candidateSnapshot);
         return new Result(true, "Parented " + addition.source.externalId() + " → " + addition.target.externalId(),
                 authoritativeSnapshot(candidateSnapshot));
+    }
+
+    @Override public Result breakLink(String linkId, CanvasSnapshot presentationSnapshot) {
+        boolean exists = mutations.view(player).state().linkEdges().stream()
+                .anyMatch(edge -> edge.edgeId().value().equals(linkId));
+        if (!exists) return reject("Link is no longer present", presentationSnapshot);
+        MutationResult result;
+        try { result = mutations.unlinkEdge(player, linkId); }
+        catch (IllegalArgumentException error) { return reject("Invalid link identity", presentationSnapshot); }
+        if (!result.success()) return reject(result.code() + ": " + result.message(), presentationSnapshot);
+        return new Result(true, "Link broken", authoritativeSnapshot(presentationSnapshot));
     }
 
     private Result reject(String message, CanvasSnapshot presentation) {
@@ -151,8 +166,11 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             CanvasSnapshot.NodeState prior = old.get(id.externalId());
             CanvasPoint fallback = canvas.node(id.externalId()).position();
             StaticSkillTreeViewModel.TreeNode content = projected.nodes().get(id);
-            Map<String, String> metadata = Map.of("label", content == null ? id.externalId() : content.title(),
-                    "subtitle", content == null ? id.kind().name() : content.subtitle());
+            Map<String, String> metadata = Map.of(
+                    "label", content == null ? id.externalId() : content.title(),
+                    "subtitle", content == null ? id.kind().name() : content.subtitle(),
+                    "icon", content == null ? "" : content.iconPath(),
+                    "occupied", Boolean.toString(content != null && content.occupied()));
             nodes.add(new CanvasSnapshot.NodeState(id.externalId(), id.kind().name().toLowerCase(),
                     prior == null ? fallback.x() : prior.x(), prior == null ? fallback.y() : prior.y(), metadata, true));
         }

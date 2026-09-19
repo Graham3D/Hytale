@@ -16,31 +16,40 @@ Group {
       Label { Text: "SKILLS"; Anchor: (Left: 22, Top: 17, Width: 64, Height: 18); Style: (FontSize: 12, TextColor: #ffffff); }
       Group #GraphEditorPassivesTab { Anchor: (Left: 100, Top: 8, Width: 94, Height: 34); Background: (Color: #10283bea); }
       Label { Text: "PASSIVES"; Anchor: (Left: 109, Top: 17, Width: 80, Height: 18); Style: (FontSize: 12, TextColor: #ffffff); }
-      Group #GraphLibraryRow0 { Anchor: (Left: 8, Top: 52, Width: 186, Height: 46); Background: (Color: #183a56f2);
-        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
-        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      Group { Anchor: (Left: 8, Top: 50, Width: 186, Height: 34); Background: (Color: #07111bff); }
+      Label #GraphEditorSearch { Text: "Search..."; Anchor: (Left: 18, Top: 58, Width: 166, Height: 20); Style: (FontSize: 11, TextColor: #b9cce0); }
+      Label #GraphEditorNoMatches { Visible: false; Text: "No matches"; Anchor: (Left: 18, Top: 102, Width: 166, Height: 22); Style: (FontSize: 11, TextColor: #8fa2b4); }
+      Group #GraphLibraryRow0 { Anchor: (Left: 8, Top: 92, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
+        Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow1 { Anchor: (Left: 8, Top: 104, Width: 186, Height: 46); Background: (Color: #183a56f2);
-        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
-        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      Group #GraphLibraryRow1 { Anchor: (Left: 8, Top: 144, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
+        Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow2 { Anchor: (Left: 8, Top: 156, Width: 186, Height: 46); Background: (Color: #183a56f2);
-        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
-        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      Group #GraphLibraryRow2 { Anchor: (Left: 8, Top: 196, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
+        Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow3 { Anchor: (Left: 8, Top: 208, Width: 186, Height: 46); Background: (Color: #183a56f2);
-        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
-        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      Group #GraphLibraryRow3 { Anchor: (Left: 8, Top: 248, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
+        Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow4 { Anchor: (Left: 8, Top: 260, Width: 186, Height: 46); Background: (Color: #183a56f2);
-        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
-        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      Group #GraphLibraryRow4 { Anchor: (Left: 8, Top: 300, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
+        Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow5 { Anchor: (Left: 8, Top: 312, Width: 186, Height: 46); Background: (Color: #183a56f2);
-        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
-        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      Group #GraphLibraryRow5 { Anchor: (Left: 8, Top: 352, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
+        Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow6 { Anchor: (Left: 8, Top: 364, Width: 186, Height: 46); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow6 { Visible: false; Anchor: (Left: 8, Top: 404, Width: 186, Height: 16); Background: (Color: #183a56f2);
         Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
@@ -148,7 +157,8 @@ Group {
       Group #GraphEdgeDot95 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
       Group #GraphNode0 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -156,7 +166,8 @@ Group {
       }
       Group #GraphNode1 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -164,7 +175,8 @@ Group {
       }
       Group #GraphNode2 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -172,7 +184,8 @@ Group {
       }
       Group #GraphNode3 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -180,7 +193,8 @@ Group {
       }
       Group #GraphNode4 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -188,7 +202,8 @@ Group {
       }
       Group #GraphNode5 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -196,7 +211,8 @@ Group {
       }
       Group #GraphNode6 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -204,7 +220,8 @@ Group {
       }
       Group #GraphNode7 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -212,7 +229,8 @@ Group {
       }
       Group #GraphNode8 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -220,7 +238,8 @@ Group {
       }
       Group #GraphNode9 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
@@ -228,11 +247,22 @@ Group {
       }
       Group #GraphNode10 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
         Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
-        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Icon { Visible: false; Anchor: (Left: 8, Top: 7, Width: 40, Height: 40); Background: (Color: #172536ff); }
+        Label #Title { Text: "Node"; Anchor: (Left: 48, Top: 7, Width: 76, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
         Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
         Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
         Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphDeleteLink { Visible: false; Anchor: (Left: 700, Top: 10, Width: 116, Height: 30); Background: (Color: #74313aee); }
+      Label { Text: "BREAK SELECTED"; Anchor: (Left: 706, Top: 17, Width: 106, Height: 18); Style: (FontSize: 9, TextColor: #ffffff, HorizontalAlignment: Center); }
+      Group #GraphDragGhost { Visible: false; Anchor: (Left: 220, Top: 20, Width: 48, Height: 48); Background: (Color: #ffffff); }
+      Group #GraphLinkContext { Visible: false; Anchor: (Left: 350, Top: 180, Width: 126, Height: 88); Background: (Color: #172536ff);
+        Label { Text: "Break Link?"; Anchor: (Left: 8, Top: 8, Width: 110, Height: 20); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #Yes { Anchor: (Left: 8, Top: 42, Width: 50, Height: 34); Background: (Color: #8d2936ff); }
+        Label { Text: "Yes"; Anchor: (Left: 8, Top: 50, Width: 50, Height: 18); Style: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Group #No { Anchor: (Left: 68, Top: 42, Width: 50, Height: 34); Background: (Color: #29455cff); }
+        Label { Text: "No"; Anchor: (Left: 68, Top: 50, Width: 50, Height: 18); Style: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center); }
       }
     }
     Label #GraphEditorDrag { Text: "Drag a library entry onto a matching node."; Anchor: (Left: 24, Top: 562, Width: 850, Height: 22); Style: (FontSize: 11, TextColor: #f2d488); }
@@ -240,4 +270,3 @@ Group {
     Label { Text: "Ports create spline links. Each triangular Joint permits three linked nodes total."; Anchor: (Left: 24, Top: 622, Width: 850, Height: 20); Style: (FontSize: 10, TextColor: #8fb0c8); }
   }
 }
-

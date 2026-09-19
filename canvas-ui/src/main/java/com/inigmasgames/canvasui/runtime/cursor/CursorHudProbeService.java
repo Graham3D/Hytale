@@ -57,11 +57,17 @@ import com.inigmasgames.canvasui.rendering.CanvasCursorProbePage;
 import com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend;
 import com.inigmasgames.canvasui.rendering.HytaleCursorHudInputBackend;
 import com.inigmasgames.canvasui.rendering.CanvasGraphEditorHud;
+import com.inigmasgames.canvasui.rendering.CanvasGraphSearchPage;
 import com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend;
 import com.inigmasgames.canvasui.runtime.CanvasInputController;
 import com.inigmasgames.canvasui.runtime.CanvasHitTester;
 import com.inigmasgames.canvasui.api.editor.CursorCanvasEditor;
 import com.inigmasgames.canvasui.api.editor.CursorEditorOpenResult;
+import com.inigmasgames.canvasui.api.editor.LibraryBrowser;
+import com.inigmasgames.canvasui.api.editor.TreeDragController;
+import com.inigmasgames.canvasui.api.editor.TreeDropResolver;
+import com.inigmasgames.canvasui.api.editor.TreeLinkGeometry;
+import com.inigmasgames.canvasui.api.editor.TreeLinkInteraction;
 import org.joml.Vector2fc;
 import org.joml.Vector3f;
 
@@ -555,7 +561,12 @@ public final class CursorHudProbeService implements AutoCloseable {
         private CanvasCursorProbePage page;
         private CursorCanvasEditor.LibraryKind libraryTab = CursorCanvasEditor.LibraryKind.SKILL;
         private int libraryPage;
-        private CursorCanvasEditor.LibraryEntry libraryDrag;
+        private final TreeDragController libraryDrag = new TreeDragController();
+        private final TreeDropResolver dropResolver = new TreeDropResolver();
+        private final TreeLinkGeometry linkGeometry = new TreeLinkGeometry();
+        private final TreeLinkInteraction linkInteraction = new TreeLinkInteraction();
+        private String libraryQuery = "";
+        private CanvasGraphSearchPage searchPage;
         private String editorStatus = "Ready";
         private long packetSamples;
         private long eventSamples;
@@ -761,18 +772,46 @@ public final class CursorHudProbeService implements AutoCloseable {
         }
 
         private boolean routeEditor(CursorProbeSample sample, CanvasPoint local) {
-            if (sample.kind() == CursorProbeSample.Kind.MOTION && libraryDrag != null) {
-                editorStatus = "Drop " + libraryDrag.name() + " onto a "
-                        + libraryDrag.kind().name().toLowerCase(Locale.ROOT) + " node";
-                renderEditor();
+            if (libraryDrag.animating()) return true;
+            if (sample.kind() == CursorProbeSample.Kind.MOTION && libraryDrag.active()) {
+                boolean wasDragging=libraryDrag.dragging();
+                if(libraryDrag.move(local)){
+                    if(!wasDragging)traceLifecycle("SKILLTREE_DRAG_STARTED","entry="+libraryDrag.entry().id()
+                            +" kind="+libraryDrag.entry().kind());
+                    editorStatus = "Drop " + libraryDrag.entry().name() + " onto a "
+                            + libraryDrag.entry().kind().name().toLowerCase(Locale.ROOT) + " node";
+                    if(graphRenderDue())renderEditor();
+                }
                 return true;
             }
             if (sample.kind() != CursorProbeSample.Kind.BUTTON) return false;
             MouseButtonType button = enumValue(MouseButtonType.class, sample.button());
             MouseButtonState state = enumValue(MouseButtonState.class, sample.state());
+            if(state==MouseButtonState.Pressed&&linkInteraction.contextOpen()){
+                CanvasPoint anchor=linkInteraction.popupAnchor();
+                if(button==MouseButtonType.Left&&inside(local,anchor.x()+8,anchor.y()+42,50,34)){
+                    breakLink(linkInteraction.contextTargetLinkId(),"CONTEXT_CONFIRM");return true;
+                }
+                if(button==MouseButtonType.Left&&inside(local,anchor.x()+68,anchor.y()+42,50,34)){
+                    linkInteraction.dismissContext();editorStatus="Link break cancelled";renderEditor();return true;
+                }
+                linkInteraction.dismissContext();renderEditor();
+            }
+            if(button==MouseButtonType.Right&&state==MouseButtonState.Pressed){
+                CanvasHitTester.Hit foreground=new CanvasHitTester().hit(graph,local);
+                if(!foreground.background())return false;
+                String edge=linkGeometry.hit(graph,local);
+                if(edge!=null){linkInteraction.openContext(edge,local);editorStatus="Break Link?";
+                    traceLifecycle("SKILLTREE_LINK_CONTEXT_OPENED","link="+edge);renderEditor();return true;}
+                return false;
+            }
             if (button != MouseButtonType.Left) return false;
             if (state == MouseButtonState.Pressed) {
+                if(inside(local,700,10,116,30)&&linkInteraction.selectedLinkId()!=null){
+                    breakLink(linkInteraction.selectedLinkId(),"VISIBLE_DELETE");return true;
+                }
                 if (local.x() >= 0 && local.x() <= 202 && local.y() >= 0 && local.y() <= 42) {
+                    libraryDrag.cancel();
                     libraryTab = local.x() < 98 ? CursorCanvasEditor.LibraryKind.SKILL
                             : CursorCanvasEditor.LibraryKind.PASSIVE;
                     libraryPage = 0;
@@ -780,12 +819,14 @@ public final class CursorHudProbeService implements AutoCloseable {
                     renderEditor();
                     return true;
                 }
-                if (local.x() >= 8 && local.x() <= 194 && local.y() >= 52 && local.y() < 416) {
-                    int row = (int)((local.y() - 52) / 52);
+                if(inside(local,8,50,186,34)){openSearch();return true;}
+                if (local.x() >= 8 && local.x() <= 194 && local.y() >= 92 && local.y() < 404) {
+                    int row = (int)((local.y() - 92) / 52);
                     List<CursorCanvasEditor.LibraryEntry> page = editorPage();
                     if (row >= 0 && row < page.size()) {
-                        libraryDrag = page.get(row);
-                        editorStatus = "Dragging " + libraryDrag.name();
+                        CanvasPoint origin=CanvasPoint.of(32,92+row*52+23);
+                        libraryDrag.arm(page.get(row),local,origin);
+                        editorStatus = "Hold and drag " + page.get(row).name();
                         renderEditor();
                     }
                     return true;
@@ -796,23 +837,32 @@ public final class CursorHudProbeService implements AutoCloseable {
                 if (local.y() >= 424 && local.y() <= 462 && local.x() >= 140 && local.x() <= 202) {
                     libraryPage = Math.min(editorPageCount() - 1, libraryPage + 1); renderEditor(); return true;
                 }
-            } else if (state == MouseButtonState.Released && libraryDrag != null) {
-                CanvasHitTester.Hit hit = new CanvasHitTester().hit(graph, local);
-                if (hit.background() || hit.port()) {
-                    editorStatus = "Drop rejected: release over a matching node body";
-                } else {
-                    CursorCanvasEditor.Result result = editor.assign(libraryDrag.id(), hit.nodeId(), graph.snapshot());
+                CanvasHitTester.Hit foreground=new CanvasHitTester().hit(graph,local);
+                if(!foreground.background()){linkInteraction.clear();return false;}
+                String edge=linkGeometry.hit(graph,local);
+                if(edge!=null){linkInteraction.select(edge);editorStatus="Link selected";
+                    traceLifecycle("SKILLTREE_LINK_SELECTED","link="+edge);renderEditor();return true;}
+                linkInteraction.clear();renderEditor();
+            } else if (state == MouseButtonState.Released && libraryDrag.active()) {
+                if(!libraryDrag.dragging()){libraryDrag.cancel();renderEditor();return true;}
+                CursorCanvasEditor.LibraryEntry entry=libraryDrag.entry();
+                TreeDropResolver.Result target=dropResolver.resolve(graph,entry.kind(),local);
+                boolean accepted=false;CanvasPoint destination=libraryDrag.origin();String message=target.reason();
+                if(target.accepted()){
+                    CursorCanvasEditor.Result result = editor.assign(entry.id(), target.nodeId(), graph.snapshot());
                     graph.restore(result.authoritativeSnapshot());
-                    editorStatus = result.message();
-                    if (result.accepted()) persistEditorLayout();
-                    traceLifecycle(result.accepted() ? "LIBRARY_DROP_ACCEPTED" : "LIBRARY_DROP_REJECTED",
-                            "entry=" + libraryDrag.id() + " node=" + hit.nodeId() + " message=" + result.message());
+                    accepted=result.accepted();message=result.message();
+                    if (accepted){destination=target.center();persistEditorLayout();}
                 }
-                libraryDrag = null;
+                editorStatus=message;
+                libraryDrag.animateTo(destination,accepted,System.currentTimeMillis());
+                traceLifecycle(accepted?"SKILLTREE_DROP_ACCEPTED":"SKILLTREE_DROP_REJECTED",
+                        "entry="+entry.id()+" node="+target.nodeId()+" reason="+message);
                 renderEditor();
+                scheduleDragAnimation(libraryDrag.generation(),accepted);
                 return true;
             }
-            return libraryDrag != null;
+            return libraryDrag.active();
         }
 
         private void record(CursorProbeSample sample) {
@@ -923,22 +973,71 @@ public final class CursorHudProbeService implements AutoCloseable {
         }
 
         private int editorPageCount() {
-            int size = editor.library(libraryTab).size();
-            return Math.max(1, (size + CanvasGraphEditorHud.LIBRARY_ROWS - 1) / CanvasGraphEditorHud.LIBRARY_ROWS);
+            return editorProjection().pageCount();
         }
 
         private List<CursorCanvasEditor.LibraryEntry> editorPage() {
-            List<CursorCanvasEditor.LibraryEntry> entries = editor.library(libraryTab);
-            libraryPage = Math.max(0, Math.min(libraryPage, editorPageCount() - 1));
-            int start = libraryPage * CanvasGraphEditorHud.LIBRARY_ROWS;
-            return entries.subList(Math.min(start, entries.size()),
-                    Math.min(entries.size(), start + CanvasGraphEditorHud.LIBRARY_ROWS));
+            LibraryBrowser.Page result=editorProjection();
+            libraryPage=result.pageIndex();
+            return result.entries();
+        }
+
+        private LibraryBrowser.Page editorProjection(){
+            return LibraryBrowser.project(editor.library(libraryTab),libraryQuery,libraryPage,
+                    CanvasGraphEditorHud.LIBRARY_ROWS);
         }
 
         private void renderEditor() {
             if (editorHud == null) return;
-            editorHud.render(graph, libraryTab, editorPage(), libraryPage, editorPageCount(), editorStatus,
-                    libraryDrag == null ? "" : libraryDrag.name());
+            CanvasGraphEditorHud.DragVisual drag=libraryDrag.active()?new CanvasGraphEditorHud.DragVisual(
+                    libraryDrag.entry(),libraryDrag.visualPoint(System.currentTimeMillis()),libraryDrag.state().name()):null;
+            editorHud.render(graph, libraryTab, editorPage(), libraryPage, editorPageCount(), libraryQuery,
+                    editorStatus,drag,linkInteraction);
+        }
+
+        private void openSearch(){
+            if(searchPage!=null)return;
+            if(player.getPageManager().getCustomPage()!=null){editorStatus="Close the current page before searching";renderEditor();return;}
+            libraryDrag.cancel();
+            searchPage=new CanvasGraphSearchPage(playerRef,libraryQuery,value->world.execute(()->{
+                if(closing.get()||sessions.get(playerId)!=this)return;
+                libraryQuery=value==null?"":value;libraryPage=0;
+                editorStatus=libraryQuery.isBlank()?"Full "+libraryTab.name().toLowerCase(Locale.ROOT)+" library"
+                        :"Search: "+libraryQuery;
+                traceLifecycle("SKILLTREE_SEARCH_CHANGED","tab="+libraryTab+" query="+libraryQuery
+                        +" matches="+editorProjection().totalMatches());renderEditor();
+            }),()->world.execute(()->{if(sessions.get(playerId)==this){searchPage=null;renderEditor();}}));
+            Ref<EntityStore> ref=playerRef.getReference();
+            if(ref==null||!ref.isValid()){searchPage=null;editorStatus="Search unavailable: player reference lost";renderEditor();return;}
+            player.getPageManager().openCustomPage(ref,ref.getStore(),searchPage);
+        }
+
+        private void scheduleDragAnimation(long generation,boolean accepted){
+            java.util.concurrent.CompletableFuture.delayedExecutor(32,java.util.concurrent.TimeUnit.MILLISECONDS).execute(()->
+                    world.execute(()->{
+                        if(closing.get()||sessions.get(playerId)!=this||libraryDrag.generation()!=generation)return;
+                        if(libraryDrag.completeIfDue(System.currentTimeMillis())){
+                            traceLifecycle(accepted?"SKILLTREE_DRAG_SNAPPED":"SKILLTREE_DRAG_RETURNED",
+                                    "result="+(accepted?"ACCEPTED":"REJECTED"));renderEditor();return;
+                        }
+                        renderEditor();scheduleDragAnimation(generation,accepted);
+                    }));
+        }
+
+        private void breakLink(String linkId,String reason){
+            traceLifecycle("SKILLTREE_LINK_BREAK_REQUESTED","link="+linkId+" reason="+reason);
+            if(linkId==null||graph.edge(linkId)==null){linkInteraction.clear();editorStatus="Link is no longer present";
+                traceLifecycle("SKILLTREE_LINK_BREAK_REJECTED","reason=STALE_LINK");renderEditor();return;}
+            CursorCanvasEditor.Result result=editor.breakLink(linkId,graph.snapshot());
+            graph.restore(result.authoritativeSnapshot());editorStatus=result.message();
+            if(result.accepted()){linkInteraction.broken();persistEditorLayout();}
+            else if(graph.edge(linkId)==null)linkInteraction.clear();
+            traceLifecycle(result.accepted()?"SKILLTREE_LINK_BROKEN":"SKILLTREE_LINK_BREAK_REJECTED",
+                    "link="+linkId+" reason="+reason+" message="+result.message());renderEditor();
+        }
+
+        private boolean inside(CanvasPoint point,double left,double top,double width,double height){
+            return point.x()>=left&&point.x()<=left+width&&point.y()>=top&&point.y()<=top+height;
         }
 
         private void traceCanvasEvent(CanvasEvent event) {
@@ -1003,6 +1102,8 @@ public final class CursorHudProbeService implements AutoCloseable {
         private void finish(String reason) {
             if (!closing.compareAndSet(false, true)) return;
             List<String> cleanupFailures = new ArrayList<>();
+            libraryDrag.cancel();
+            linkInteraction.clear();
             if (guardInstalled && !inputGuard.release(playerId, token)) cleanupFailures.add("GUARD:OWNER_MISMATCH");
             guardInstalled = false;
             traceLifecycle("INPUT_GUARD_RELEASED", "activeAfterRelease=" + inputGuard.active(playerId));
@@ -1024,6 +1125,8 @@ public final class CursorHudProbeService implements AutoCloseable {
                     page.closeFromService();
                 }
             } catch (RuntimeException error) { cleanupFailures.add("PAGE:" + error.getClass().getSimpleName()); }
+            try { if(searchPage!=null)searchPage.closeFromService(); }
+            catch(RuntimeException error){cleanupFailures.add("SEARCH_PAGE:"+error.getClass().getSimpleName());}
             try { restoreCamera(this); }
             catch (RuntimeException error) { cleanupFailures.add("CAMERA:" + error.getClass().getSimpleName()); }
 

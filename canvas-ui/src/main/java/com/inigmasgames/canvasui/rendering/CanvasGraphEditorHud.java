@@ -15,18 +15,19 @@ import com.inigmasgames.canvasui.api.CanvasPoint;
 import com.inigmasgames.canvasui.api.CanvasPort;
 import com.inigmasgames.canvasui.api.NodeDefinition;
 import com.inigmasgames.canvasui.api.editor.CursorCanvasEditor;
+import com.inigmasgames.canvasui.api.editor.TreeLinkGeometry;
+import com.inigmasgames.canvasui.api.editor.TreeLinkInteraction;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 
 /** Fixed-pool passive HUD renderer for the production cursor graph editor. */
 public final class CanvasGraphEditorHud extends CustomUIHud {
     public static final String KEY = "inigmas:canvasui:graph-editor";
-    public static final int LIBRARY_ROWS = 7;
+    public static final int LIBRARY_ROWS = 6;
     private static final int NODE_POOL = 11;
-    private static final int EDGE_DOT_POOL = 96;
-    private static final int DOTS_PER_EDGE = 12;
+    private static final int EDGE_SEGMENT_POOL = 96;
+    private static final TreeLinkGeometry LINK_GEOMETRY = new TreeLinkGeometry();
     private final String title;
 
     public CanvasGraphEditorHud(PlayerRef playerRef, String title) {
@@ -42,17 +43,19 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
 
     public void render(Canvas canvas, CursorCanvasEditor.LibraryKind tab,
                        List<CursorCanvasEditor.LibraryEntry> page, int pageIndex, int pageCount,
-                       String status, String draggingEntry) {
+                       String query, String status, DragVisual drag, TreeLinkInteraction links) {
         UICommandBuilder commands = new UICommandBuilder();
         commands.setObject("#GraphEditorSkillsTab.Background", color(tab == CursorCanvasEditor.LibraryKind.SKILL
                 ? "#1f6c89ff" : "#10283bea"));
         commands.setObject("#GraphEditorPassivesTab.Background", color(tab == CursorCanvasEditor.LibraryKind.PASSIVE
                 ? "#1f6c89ff" : "#10283bea"));
         commands.set("#GraphEditorPage.TextSpans", Message.raw("PAGE " + (pageIndex + 1) + " / " + Math.max(1, pageCount)));
+        commands.set("#GraphEditorSearch.TextSpans", Message.raw(query == null || query.isBlank() ? "Search..." : query));
+        commands.set("#GraphEditorNoMatches.Visible", page.isEmpty());
         commands.set("#GraphEditorStatus.TextSpans", Message.raw(status == null ? "" : status));
-        commands.set("#GraphEditorDrag.TextSpans", Message.raw(draggingEntry == null || draggingEntry.isBlank()
+        commands.set("#GraphEditorDrag.TextSpans", Message.raw(drag == null
                 ? "Drag a library entry onto a matching node. Drag ports to create links."
-                : "DRAGGING: " + draggingEntry));
+                : drag.state() + ": " + drag.entry().name()));
         for (int i = 0; i < LIBRARY_ROWS; i++) {
             boolean visible = i < page.size();
             commands.set("#GraphLibraryRow" + i + ".Visible", visible);
@@ -60,12 +63,15 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 CursorCanvasEditor.LibraryEntry entry = page.get(i);
                 commands.set("#GraphLibraryRow" + i + " #Name.TextSpans", Message.raw(entry.name()));
                 commands.set("#GraphLibraryRow" + i + " #Category.TextSpans", Message.raw(entry.category()));
+                commands.setObject("#GraphLibraryRow" + i + " #Icon.Background", texture(entry.iconPath()));
                 commands.setObject("#GraphLibraryRow" + i + ".Background", color(entry.kind() == CursorCanvasEditor.LibraryKind.SKILL
                         ? "#183a56f2" : "#3a2856f2"));
             }
         }
         renderNodes(commands, canvas);
-        renderSplineDots(commands, canvas);
+        renderContinuousEdges(commands, canvas, links == null ? null : links.selectedLinkId());
+        renderDrag(commands, drag);
+        renderContext(commands, links);
         update(false, commands);
     }
 
@@ -88,6 +94,9 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
             commands.set(selector + " #Title.TextSpans", Message.raw(node.metadata().getOrDefault("label", node.nodeId())));
             commands.set(selector + " #Subtitle.TextSpans", Message.raw(node.metadata().getOrDefault("subtitle", node.type())));
             commands.set(selector + " #Triangle.Visible", "joint".equals(node.type()));
+            boolean icon = !"joint".equals(node.type()) && Boolean.parseBoolean(node.metadata().getOrDefault("occupied", "false"));
+            commands.set(selector + " #Icon.Visible", icon);
+            if (icon) commands.setObject(selector + " #Icon.Background", texture(node.metadata().getOrDefault("icon", "")));
             commands.set(selector + " #Port0.Visible", false);
             commands.set(selector + " #Port1.Visible", false);
             commands.set(selector + " #Port2.Visible", false);
@@ -105,41 +114,50 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         while (index < NODE_POOL) commands.set("#GraphNode" + index++ + ".Visible", false);
     }
 
-    private static void renderSplineDots(UICommandBuilder commands, Canvas canvas) {
-        List<CanvasPoint> dots = new ArrayList<>();
+    private static void renderContinuousEdges(UICommandBuilder commands, Canvas canvas, String selectedLinkId) {
+        int index=0;
         for (CanvasEdge edge : canvas.edges()) {
-            CanvasPoint a = port(canvas, edge.sourceNodeId(), edge.sourcePortId());
-            CanvasPoint b = port(canvas, edge.targetNodeId(), edge.targetPortId());
-            double bend = Math.max(46.0, Math.abs(b.x() - a.x()) * 0.42);
-            CanvasPoint c1 = CanvasPoint.of(a.x() + bend, a.y());
-            CanvasPoint c2 = CanvasPoint.of(b.x() - bend, b.y());
-            for (int i = 0; i < DOTS_PER_EDGE && dots.size() < EDGE_DOT_POOL; i++) {
-                double t = i / (double)(DOTS_PER_EDGE - 1);
-                double u = 1.0 - t;
-                dots.add(CanvasPoint.of(
-                        u*u*u*a.x() + 3*u*u*t*c1.x() + 3*u*t*t*c2.x() + t*t*t*b.x(),
-                        u*u*u*a.y() + 3*u*u*t*c1.y() + 3*u*t*t*c2.y() + t*t*t*b.y()));
+            boolean selected=edge.edgeId().equals(selectedLinkId);
+            for(TreeLinkGeometry.Segment segment:LINK_GEOMETRY.route(canvas,edge)){
+                if(index>=EDGE_SEGMENT_POOL)break;
+                int thickness=selected?5:3;
+                int left=(int)Math.round(segment.left()-(segment.width()==0?thickness/2.0:0));
+                int top=(int)Math.round(segment.top()-(segment.height()==0?thickness/2.0:0));
+                int width=Math.max(thickness,(int)Math.round(segment.width()));
+                int height=Math.max(thickness,(int)Math.round(segment.height()));
+                commands.set("#GraphEdgeDot"+index+".Visible",true);
+                commands.setObject("#GraphEdgeDot"+index+".Anchor",anchor(left,top,width,height));
+                commands.setObject("#GraphEdgeDot"+index+".Background",color(selected?"#fff0a0ff":"#74d9eaff"));
+                index++;
             }
         }
-        for (int i = 0; i < EDGE_DOT_POOL; i++) {
-            boolean visible = i < dots.size();
-            commands.set("#GraphEdgeDot" + i + ".Visible", visible);
-            if (visible) commands.setObject("#GraphEdgeDot" + i + ".Anchor",
-                    anchor((int)Math.round(dots.get(i).x()) - 2, (int)Math.round(dots.get(i).y()) - 2, 5, 5));
-        }
+        while(index<EDGE_SEGMENT_POOL)commands.set("#GraphEdgeDot"+index++ + ".Visible",false);
     }
 
-    private static CanvasPoint port(Canvas canvas, String nodeId, String portId) {
-        CanvasNode node = canvas.node(nodeId);
-        CanvasPort port = canvas.definition().nodeType(node.type()).port(portId);
-        return canvas.viewport().toScreen(node.position().add(port.anchorPosition().x(), port.anchorPosition().y()));
+    private static void renderDrag(UICommandBuilder commands,DragVisual drag){
+        commands.set("#GraphDragGhost.Visible",drag!=null);
+        if(drag==null)return;
+        commands.setObject("#GraphDragGhost.Anchor",anchor((int)Math.round(drag.point().x())-24,(int)Math.round(drag.point().y())-24,48,48));
+        commands.setObject("#GraphDragGhost.Background",texture(drag.entry().iconPath()));
+    }
+
+    private static void renderContext(UICommandBuilder commands,TreeLinkInteraction links){
+        boolean visible=links!=null&&links.contextOpen()&&links.popupAnchor()!=null;
+        commands.set("#GraphLinkContext.Visible",visible);
+        if(visible)commands.setObject("#GraphLinkContext.Anchor",anchor(
+                (int)Math.round(Math.min(690,Math.max(208,links.popupAnchor().x()))),
+                (int)Math.round(Math.min(372,Math.max(4,links.popupAnchor().y()))),126,88));
+        commands.set("#GraphDeleteLink.Visible",links!=null&&links.selectedLinkId()!=null);
     }
 
     private static PatchStyle color(String value) { return new PatchStyle().setColor(Value.of(value)); }
+    private static PatchStyle texture(String value) { return new PatchStyle().setTexturePath(Value.of(value)); }
     private static Anchor anchor(int left, int top, int width, int height) {
         Anchor anchor = new Anchor();
         anchor.setLeft(Value.of(left)); anchor.setTop(Value.of(top));
         anchor.setWidth(Value.of(width)); anchor.setHeight(Value.of(height));
         return anchor;
     }
+
+    public record DragVisual(CursorCanvasEditor.LibraryEntry entry, CanvasPoint point, String state) { }
 }

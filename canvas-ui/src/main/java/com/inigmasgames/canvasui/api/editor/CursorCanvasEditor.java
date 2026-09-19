@@ -12,11 +12,12 @@ import java.util.List;
 public interface CursorCanvasEditor {
     enum LibraryKind { SKILL, PASSIVE }
 
-    record LibraryEntry(String id, String name, String category, LibraryKind kind) {
+    record LibraryEntry(String id, String name, String category, String iconPath, LibraryKind kind) {
         public LibraryEntry {
             if (id == null || id.isBlank()) throw new IllegalArgumentException("library id is blank");
             name = name == null ? id : name;
             category = category == null ? "" : category;
+            iconPath = iconPath == null ? "" : iconPath;
             if (kind == null) throw new IllegalArgumentException("library kind is required");
         }
     }
@@ -36,6 +37,9 @@ public interface CursorCanvasEditor {
 
     /** Assigns one catalog entry to a compatible content node. */
     Result assign(String entryId, String nodeId, CanvasSnapshot presentationSnapshot);
+
+    /** Breaks exactly one persistent graph edge by its stable authority-owned identity. */
+    Result breakLink(String linkId, CanvasSnapshot presentationSnapshot);
 
     /** Commits a candidate topology or accepts a presentation-only node move. */
     Result commit(CanvasSnapshot candidateSnapshot);

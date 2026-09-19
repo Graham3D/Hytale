@@ -75,6 +75,25 @@ class R045CanvasSkillTreeEditorTest {
                 .filter(node -> node.nodeId().equals("skill01")).findFirst().orElseThrow().x());
     }
 
+    @Test void occupiedAssignmentsRejectAndExactEdgeBreakPreservesNodesAndOtherEdges() {
+        var bundle=Stage01BTestSupport.bundle();var layout=new StaticSkillTreeLayout();UUID player=UUID.randomUUID();
+        var editor=new RpgCanvasSkillTreeEditor(player,new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true),
+                new RpgSkillTreeMutationService(bundle.service(),layout));
+        assign(editor,"fire_bolt","skill01");
+        assertFalse(editor.assign("quick_slash","skill01",editor.canvas().snapshot()).accepted());
+        assign(editor,"potency","passive01");assign(editor,"efficiency","passive02");
+        connect(editor,"passive01","out","skill01","in",true);
+        String first=editor.canvas().edges().iterator().next().edgeId();
+        connect(editor,"passive02","out","skill01","in",true);
+        String other=editor.canvas().edges().stream().map(com.inigmasgames.canvasui.api.CanvasEdge::edgeId)
+                .filter(id->!id.equals(first)).findFirst().orElseThrow();
+        var broken=editor.breakLink(first,editor.canvas().snapshot());assertTrue(broken.accepted(),broken.message());
+        editor.canvas().restore(broken.authoritativeSnapshot());
+        assertNull(editor.canvas().edge(first));assertNotNull(editor.canvas().edge(other));
+        assertEquals("Fire Bolt",editor.canvas().node("skill01").metadata().get("label"));
+        assertEquals("Potency",editor.canvas().node("passive01").metadata().get("label"));
+    }
+
     private static void assign(RpgCanvasSkillTreeEditor editor, String content, String node) {
         var result = editor.assign(content, node, editor.canvas().snapshot());
         assertTrue(result.accepted(), result.message());
