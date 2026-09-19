@@ -26,7 +26,8 @@ import java.util.*;
 /** Pinned execution-side witness, never a packet/button/timestamp heuristic. Native damage remains untouched. */
 public final class NativeBasicAttackObserver {
     @FunctionalInterface public interface ObservedHit {
-        void accept(UUID actor,UUID victim,double actualHealthLoss,double now);
+        void accept(UUID actor,UUID victim,double actualHealthLoss,Store<EntityStore> store,
+                    CommandBuffer<EntityStore> buffer,Ref<EntityStore> source,double now);
     }
     private record Root(InteractionChain chain,NativeBasicAttackPaths paths,RootWeaponHit receipt,String item){}
     private record Witness(Root root,boolean charged,double healthBefore,Ref<EntityStore> source,String victim){}
@@ -148,7 +149,8 @@ public final class NativeBasicAttackObserver {
                 var recovery=owner.kernel.resources().recoverHostileWeaponHit(receipt,new EntityStatResourcePort(stats));
                 details.put("recoveryApplied",recovery.applied());details.put("manaRecovered",recovery.manaRecovered());details.put("staminaRecovered",recovery.staminaRecovered());
             }catch(RuntimeException boundary){details.put("recoveryFailure",boundary.getMessage());}
-            try{owner.onHit.accept(receipt.actor(),UUID.fromString(witness.victim()),Math.max(0,witness.healthBefore()-hp.get()),System.nanoTime()/1e9);}
+            try{owner.onHit.accept(receipt.actor(),UUID.fromString(witness.victim()),Math.max(0,witness.healthBefore()-hp.get()),
+                    store,buffer,witness.source(),System.nanoTime()/1e9);}
             catch(RuntimeException boundary){details.put("comboFailure",String.valueOf(boundary.getMessage()));}
             owner.trace.emit(receipt.actor(),RpgTraceEventType.NATIVE_BASIC_HIT_OBSERVED,new CombatTrace.Context(receipt.id(),receipt.id(),receipt.id()),details);
 

@@ -149,6 +149,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final ChillSourceRegistry chillSources=new ChillSourceRegistry();
     private final com.inigmasgames.hytalerpg.execution.lightning.LightningRuntime lightning=
             new com.inigmasgames.hytalerpg.execution.lightning.LightningRuntime();
+    private record ActiveCoil(String instance,UUID owner,UUID world,Vec3 point,double radius,SkillExecutionContext context){}
+    private final Map<String,ActiveCoil> activeCoils=new LinkedHashMap<>();
+    private final Map<String,ActiveCoil> pendingCoilDischarges=new LinkedHashMap<>();
     private final ProliferationRuntime proliferation=new ProliferationRuntime();
     private final OwnedFieldBudget fieldCapacity=new OwnedFieldBudget();
     private final AreaRuntime areas = new AreaRuntime(fieldCapacity);
@@ -357,9 +360,58 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         this.nativeBasics=new NativeBasicAttackObserver(kernel,trace,this::onNativeBasicHit);
     }
 
-    private void onNativeBasicHit(UUID actor,UUID victim,double actualHealthLoss,double now){
+    private void onNativeBasicHit(UUID actor,UUID victim,double actualHealthLoss,Store<EntityStore> store,
+                                  CommandBuffer<EntityStore> buffer,Ref<EntityStore> source,double now){
         executions.observeNativeBasicRootHit(actor,now);
         chargeMantles(actor,victim,actualHealthLoss,now);
+        if(actualHealthLoss<=0||source==null||!source.isValid())return;
+        var sourceTransform=buffer.getComponent(source,TransformComponent.getComponentType());
+        var sourcePlayer=buffer.getComponent(source,PlayerRef.getComponentType());
+        if(sourceTransform==null||sourcePlayer==null)return;
+        Vec3 sourcePoint=vec(sourceTransform.getPosition());
+        for(var coil:new ArrayList<>(activeCoils.values())){
+            if(!coil.world().equals(sourcePlayer.getWorldUuid())||sourcePoint.distanceSquared(coil.point())>coil.radius()*coil.radius()+1e-9)continue;
+            var ownerRef=store.getExternalData().getRefFromUUID(coil.owner());
+            if(ownerRef==null||!ownerRef.isValid()||!HytaleSupportSystem.eligibleAlly(store,ownerRef,source))continue;
+            var result=lightning.chargeCoil(coil.instance(),actor,actualHealthLoss,true,now);
+            emit(coil.context(),RpgTraceEventType.STATUS_REQUEST,Map.of("status","LIGHTNING_COIL_CHARGE","contributor",actor,
+                    "victim",victim,"result",result.code(),"charge",result.charge(),"capacity",result.capacity()));
+            if(result.discharge()){
+                activeCoils.remove(coil.instance());
+                pendingCoilDischarges.putIfAbsent(coil.instance(),coil);
+            }
+        }
+    }
+
+    private void dischargeCoils(UUID owner,Port port){
+        var ready=pendingCoilDischarges.values().stream().filter(value->value.owner().equals(owner)).toList();
+        for(var coil:ready){
+            pendingCoilDischarges.remove(coil.instance());
+            var shape=new AreaGeometry(AreaGeometry.Kind.DISC,coil.point(),Vec3.FORWARD,coil.radius(),0,0,0,3);
+            var found=HytaleAreaQueries.query(port.store,port.actor,shape::intersects,64);
+            if(found.overflow()){
+                emit(coil.context(),RpgTraceEventType.AREA_QUERY_REJECTED,Map.of("reason","LIGHTNING_COIL_CANDIDATE_BUDGET"));
+                continue;
+            }
+            int damaged=0;
+            for(var value:found.candidates()){
+                var target=port.candidate(value.ref());
+                if(target==null||target.protectedTarget()||!HytaleAreaQueries.hostile(port.store,target.handle(),port.actor)
+                        ||!HytaleAreaQueries.clear(port.store,coil.point().add(new Vec3(0,.1,0)),target.bounds().centre()))continue;
+                var outcome=port.damage(coil.context(),target,0,1.60,coil.context().snapshot().criticalChance(),
+                        DamageCause.getAssetMap().getAsset("Lightning"),false,coil.instance()+"/discharge",false,true,false);
+                if(outcome.cancelled()||outcome.actualHealthLoss()<=0)continue;
+                UUID targetId=UUID.fromString(target.stableId());
+                kernel.statuses().applyElectrified(targetId,6);kernel.statuses().applyElectrified(targetId,6);
+                port.buffer.ensureComponent(target.handle(),AreaStatusProjection.getComponentType());
+                HytaleAreaStatuses.synchronize(kernel.statuses(),targetId,target.handle(),port.store,port.actor);
+                presentAuthoredParticle(coil.context(),port.store,target.position(),"Laser_Impact","LIGHTNING_COIL_DISCHARGE");
+                damaged++;
+            }
+            presentAuthoredParticle(coil.context(),port.store,coil.point(),"Hywind_Lightning_Strike","LIGHTNING_COIL_DISCHARGE");
+            emit(coil.context(),RpgTraceEventType.AREA_HIT,Map.of("phase","LIGHTNING_COIL_DISCHARGE","targets",damaged,
+                    "coefficient",1.60,"electrifiedStacks",2));
+        }
     }
 
     private void chargeMantles(UUID contributor,UUID victim,double actualHealthLoss,double now){
@@ -400,6 +452,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             NativeStrikeActionLock.clear(store,ref);
             cancel(actor, "ACTOR_UNUSABLE", buffer); return;
         }
+        dischargeCoils(actor,port);
         Counter counter = counters.remove(actor);
         if (counter != null) {
             emit(counter.context, RpgTraceEventType.REACTION_TRIGGERED,
@@ -487,6 +540,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                         "movementModifierRemoved",true,"presentationCleanup",true));
         clearFireballCharge(null,null,actor);
         nativeBasics.forget(actor);
+        activeCoils.values().removeIf(coil->coil.owner().equals(actor));
+        pendingCoilDischarges.values().removeIf(coil->coil.owner().equals(actor));
+        lightning.forget(actor);
         if(support!=null)support.forgetProgressionPlayer(actor);
         executions.forgetPassiveState(actor);
         kernel.statuses().forgetSource(actor);
@@ -1322,10 +1378,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public SkillExecutionResult executeArea(SkillExecutionContext context) {
             if(context.target()!=null) {areaPlacement=context.target().point();areaDirection=context.target().direction();}
             if (areaPlacement == null || areaDirection == null) throw new IllegalStateException("AREA_PLACEMENT_NOT_VALIDATED");
-            if(context.profile().skillId().equals("lightning_coil"))
-                lightning.placeCoil(context.skillInstanceId(),playerRef.getUuid(),context.snapshot().basePower(),System.nanoTime()/1e9);
             areas.start(context, areaPlacement, areaDirection, System.nanoTime() / 1_000_000_000.0,
                     context.compiledPlan().executionModifiers().radiusFactor(), areaWorld());
+            if(context.profile().skillId().equals("lightning_coil")){
+                double now=System.nanoTime()/1e9;
+                lightning.placeCoil(context.skillInstanceId(),playerRef.getUuid(),context.snapshot().basePower(),now);
+                activeCoils.put(context.skillInstanceId(),new ActiveCoil(context.skillInstanceId(),playerRef.getUuid(),
+                        playerRef.getWorldUuid(),areaPlacement,context.profile().area().radius(),context));
+            }
             return SkillExecutionResult.committed("AREA_DISPATCHED", 0, 0);
         }
 
@@ -1377,7 +1437,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 @Override public void endVisuals(SkillExecutionContext c){
                     blizzardVisuals.end(c,buffer);
                     if(c.profile().skillId().equals("static_field"))lightning.forgetField(c.skillInstanceId());
-                    if(c.profile().skillId().equals("lightning_coil"))lightning.expireCoil(c.skillInstanceId(),System.nanoTime()/1e9+8);
+                    if(c.profile().skillId().equals("lightning_coil")){
+                        activeCoils.remove(c.skillInstanceId());pendingCoilDischarges.remove(c.skillInstanceId());
+                        lightning.expireCoil(c.skillInstanceId(),System.nanoTime()/1e9+8);
+                    }
                 }
                 @Override public void descendingVisual(SkillExecutionContext context, Vec3 position, double seconds) {
                     vfx.presentDescending(store.getExternalData().getWorld(), position, context.profile().area().element(), seconds);

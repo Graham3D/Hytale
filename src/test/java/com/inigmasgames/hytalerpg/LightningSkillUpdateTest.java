@@ -109,4 +109,14 @@ class LightningSkillUpdateTest {
             }
         }
     }
+
+    @Test void productionAdapterChargesOnlyObservedNativeWeaponRootsAndQueuesOneOwnedDischarge() throws Exception {
+        String source=java.nio.file.Files.readString(java.nio.file.Path.of(
+                "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
+        assertTrue(source.contains("lightning.chargeCoil(coil.instance(),actor,actualHealthLoss,true,now)"));
+        assertTrue(source.contains("HytaleSupportSystem.eligibleAlly(store,ownerRef,source)"));
+        assertTrue(source.contains("pendingCoilDischarges.putIfAbsent(coil.instance(),coil)"));
+        assertTrue(source.contains("coil.instance()+\"/discharge\",false,true,false"));
+        assertTrue(source.contains("kernel.statuses().applyElectrified(targetId,6);kernel.statuses().applyElectrified(targetId,6)"));
+    }
 }
