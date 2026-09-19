@@ -75,6 +75,15 @@ class R045CanvasSkillTreeEditorTest {
                 .filter(node -> node.nodeId().equals("skill01")).findFirst().orElseThrow().x());
     }
 
+    @Test void skillToSkillTopologyIsNeverPresentedAsCompatible() {
+        var bundle=Stage01BTestSupport.bundle();var layout=new StaticSkillTreeLayout();
+        var editor=new RpgCanvasSkillTreeEditor(UUID.randomUUID(),
+                new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true),
+                new RpgSkillTreeMutationService(bundle.service(),layout));
+        var result=editor.canvas().validateConnection("skill01","in","skill02","in");
+        assertFalse(result.allowed());
+    }
+
     @Test void occupiedAssignmentsRejectAndExactEdgeBreakPreservesNodesAndOtherEdges() {
         var bundle=Stage01BTestSupport.bundle();var layout=new StaticSkillTreeLayout();UUID player=UUID.randomUUID();
         var editor=new RpgCanvasSkillTreeEditor(player,new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true),

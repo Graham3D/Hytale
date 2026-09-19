@@ -3,7 +3,7 @@
     "Name": "server.items.RPG_Ability_Lightning_Bolt.name",
     "Description": "server.items.RPG_Ability_Lightning_Bolt.description"
   },
-  "Icon": "Icons/ItemsGenerated/Rune_Aoe_Up.png",
+  "Icon": "Icons/Items/RPG/SkillLightningbolt.png",
   "Quality": "Rare",
   "Categories": [
     "Items.Ingredients"

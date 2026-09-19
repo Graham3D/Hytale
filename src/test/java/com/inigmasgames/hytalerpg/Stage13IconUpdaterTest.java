@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage13IconUpdaterTest {
     @TempDir Path temp;
     private final Path resources = Path.of("src/main/resources");
-    private Path jar, art, backups;
+    private Path jar, art, source, backups;
     private void setup() throws Exception {
-        jar = temp.resolve("RPG.jar"); art = temp.resolve("art"); backups = temp.resolve("backups");
+        jar = temp.resolve("RPG.jar"); art = temp.resolve("art"); source = temp.resolve("source"); backups = temp.resolve("backups");
         Files.createDirectories(art.resolve("Skills")); Files.createDirectories(art.resolve("Passives"));
         var files = new ArrayList<Path>(List.of(resources.resolve("rpg/presentation/icon-index.json"),
                 resources.resolve("rpg/catalog/skills.json"), resources.resolve("rpg/catalog/passives.json")));
@@ -27,7 +27,9 @@ class Stage13IconUpdaterTest {
             zip.putNextEntry(new ZipEntry("sentinel/")); zip.closeEntry();
             zip.putNextEntry(new ZipEntry("sentinel/gameplay.class")); zip.write(new byte[]{1,2,3,4,5}); zip.closeEntry();
             for (Path file : files) {
-                zip.putNextEntry(new ZipEntry(resources.relativize(file).toString().replace('\\','/')));
+                Path relative=resources.relativize(file);Path sourceFile=source.resolve(relative);
+                Files.createDirectories(sourceFile.getParent());Files.copy(file,sourceFile,StandardCopyOption.REPLACE_EXISTING);
+                zip.putNextEntry(new ZipEntry(relative.toString().replace('\\','/')));
                 zip.write(Files.readAllBytes(file)); zip.closeEntry();
             }
         }
@@ -36,10 +38,12 @@ class Stage13IconUpdaterTest {
     private Result run(String... extra) throws Exception {
         var args = new ArrayList<>(List.of("powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
                 Path.of("tools/Update-RpgIcons.ps1").toAbsolutePath().toString(), "-JarPath", jar.toAbsolutePath().toString(),
-                "-ArtRoot", art.toAbsolutePath().toString(), "-BackupRoot", backups.toAbsolutePath().toString()));
+                "-ArtRoot", art.toAbsolutePath().toString(), "-SourceRoot", source.toAbsolutePath().toString(),
+                "-BackupRoot", backups.toAbsolutePath().toString()));
         args.addAll(List.of(extra));
         if (args.remove("-TestWorkspaceDefaults")) {
             int position = args.indexOf("-ArtRoot"); args.remove(position); args.remove(position);
+            position = args.indexOf("-SourceRoot"); args.remove(position); args.remove(position);
             position = args.indexOf("-BackupRoot"); args.remove(position); args.remove(position);
         }
         Path output = temp.resolve("output-" + UUID.randomUUID() + ".txt");

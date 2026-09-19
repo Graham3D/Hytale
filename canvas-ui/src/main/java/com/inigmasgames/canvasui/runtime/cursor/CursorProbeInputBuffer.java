@@ -6,11 +6,13 @@ import java.util.List;
 
 /** Bounded handoff from the packet callback to the owning world executor. */
 final class CursorProbeInputBuffer {
-    enum OfferResult { ACCEPTED, DROPPED_MOTION, REJECTED_TRANSITION }
+    enum OfferResult { ACCEPTED, COALESCED_MOTION, DROPPED_MOTION, REJECTED_TRANSITION }
 
     private final int capacity;
     private final ArrayDeque<CursorProbeSample> samples = new ArrayDeque<>();
     private long droppedMotion;
+    private long coalescedMotion;
+    private int maximumDepth;
 
     CursorProbeInputBuffer(int capacity) {
         if (capacity < 2) throw new IllegalArgumentException("capacity must be at least two");
@@ -18,6 +20,12 @@ final class CursorProbeInputBuffer {
     }
 
     synchronized OfferResult offer(CursorProbeSample sample) {
+        if (!sample.transition() && !samples.isEmpty() && !samples.peekLast().transition()) {
+            samples.removeLast();
+            samples.addLast(sample);
+            coalescedMotion++;
+            return OfferResult.COALESCED_MOTION;
+        }
         if (samples.size() >= capacity) {
             if (!sample.transition()) {
                 droppedMotion++;
@@ -32,6 +40,7 @@ final class CursorProbeInputBuffer {
             droppedMotion++;
         }
         samples.addLast(sample);
+        maximumDepth = Math.max(maximumDepth, samples.size());
         return OfferResult.ACCEPTED;
     }
 
@@ -44,4 +53,7 @@ final class CursorProbeInputBuffer {
 
     synchronized boolean isEmpty() { return samples.isEmpty(); }
     synchronized long droppedMotion() { return droppedMotion; }
+    synchronized long coalescedMotion() { return coalescedMotion; }
+    synchronized int maximumDepth() { return maximumDepth; }
+    synchronized int size() { return samples.size(); }
 }

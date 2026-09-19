@@ -24,6 +24,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.LongConsumer;
 
 public final class CanvasInputController {
+    public enum LinkDragState { IDLE, PORT_ARMED, LINK_DRAGGING, COMMITTING, CANCELLED }
+    private static final double LINK_DRAG_THRESHOLD = 4.0;
     private final Canvas canvas;
     private final CanvasRenderBackend backend;
     private final Runnable persist;
@@ -35,6 +37,8 @@ public final class CanvasInputController {
     private CanvasPoint pointer = CanvasPoint.of(0, 0);
     private String connectionNode;
     private String connectionPort;
+    private CanvasPoint connectionPress;
+    private LinkDragState linkState = LinkDragState.IDLE;
     private CanvasHitTester.Hit candidate = CanvasHitTester.Hit.BACKGROUND;
     private ConnectionResult candidateResult = ConnectionResult.reject(ConnectionCode.REJECT_CUSTOM, "no target");
 
@@ -80,10 +84,7 @@ public final class CanvasInputController {
                 canvas.setViewport(pan.update(canvas.viewport(), delta.x, delta.y));
                 if (renderDue.getAsBoolean()) backend.updateViewport();
             } else if (connectionNode != null) {
-                candidate = hitTester.hit(canvas, pointer);
-                candidateResult = validateCandidate(candidate);
-                backend.pointerTarget(candidate.nodeId(), !candidateResult.allowed());
-                if (renderDue.getAsBoolean()) backend.updatePreview(sourceScreenPoint(), pointer, candidateResult.allowed());
+                updateConnectionPreview();
             } else {
                 CanvasHitTester.Hit hover = hitTester.hit(canvas, pointer);
                 backend.pointerTarget(hover.nodeId(), false);
@@ -118,10 +119,7 @@ public final class CanvasInputController {
                 canvas.setViewport(pan.update(canvas.viewport(), deltaX, deltaY));
                 if (renderDue.getAsBoolean()) backend.updateViewport();
             } else if (connectionNode != null) {
-                candidate = hitTester.hit(canvas, pointer);
-                candidateResult = validateCandidate(candidate);
-                backend.pointerTarget(candidate.nodeId(), !candidateResult.allowed());
-                if (renderDue.getAsBoolean()) backend.updatePreview(sourceScreenPoint(), pointer, candidateResult.allowed());
+                updateConnectionPreview();
             } else {
                 CanvasHitTester.Hit hover = hitTester.hit(canvas, pointer);
                 backend.pointerTarget(hover.nodeId(), false);
@@ -136,6 +134,8 @@ public final class CanvasInputController {
             CanvasPort port = canvas.definition().nodeType(node.type()).port(hit.portId());
             if (port.direction() != PortDirection.INPUT) {
                 connectionNode = hit.nodeId(); connectionPort = hit.portId();
+                connectionPress = pointer;
+                linkState = LinkDragState.PORT_ARMED;
                 canvas.publish(CanvasEventType.CONNECTION_PREVIEW_STARTED, connectionNode, null, null, connectionPort, null);
                 backend.updatePreview(sourceScreenPoint(), pointer, false);
                 return;
@@ -168,6 +168,7 @@ public final class CanvasInputController {
             pan.end(); backend.updateViewport(); persist.run();
         }
         if (connectionNode != null && button == MouseButtonType.Left) {
+            linkState = LinkDragState.COMMITTING;
             candidate = hitTester.hit(canvas, pointer);
             candidateResult = validateCandidate(candidate);
             if (candidateResult.allowed()) {
@@ -182,7 +183,8 @@ public final class CanvasInputController {
                         connectionNode + ":" + connectionPort, candidate, candidateResult);
                 backend.clearPreview("REJECTED: " + candidateResult.reason());
             }
-            connectionNode = null; connectionPort = null; candidate = CanvasHitTester.Hit.BACKGROUND;
+            connectionNode = null; connectionPort = null; connectionPress = null;
+            candidate = CanvasHitTester.Hit.BACKGROUND; linkState = LinkDragState.IDLE;
             backend.clearPointerTarget();
         }
     }
@@ -198,10 +200,36 @@ public final class CanvasInputController {
         return canvas.viewport().toScreen(node.position().add(port.anchorPosition().x(), port.anchorPosition().y()));
     }
 
+    private void updateConnectionPreview() {
+        if (linkState == LinkDragState.PORT_ARMED && distance(connectionPress, pointer) >= LINK_DRAG_THRESHOLD)
+            linkState = LinkDragState.LINK_DRAGGING;
+        candidate = hitTester.hit(canvas, pointer);
+        candidateResult = validateCandidate(candidate);
+        backend.pointerTarget(candidate.nodeId(), !candidateResult.allowed());
+        CanvasPoint endpoint = candidateResult.allowed()
+                ? portScreenPoint(candidate.nodeId(), candidate.portId()) : pointer;
+        if (renderDue.getAsBoolean()) backend.updatePreview(sourceScreenPoint(), endpoint, candidateResult.allowed());
+    }
+
+    private CanvasPoint portScreenPoint(String nodeId, String portId) {
+        CanvasNode node = canvas.node(nodeId);
+        CanvasPort port = canvas.definition().nodeType(node.type()).port(portId);
+        return canvas.viewport().toScreen(node.position().add(port.anchorPosition().x(), port.anchorPosition().y()));
+    }
+
+    private static double distance(CanvasPoint a, CanvasPoint b) {
+        return a == null || b == null ? 0.0 : Math.hypot(a.x() - b.x(), a.y() - b.y());
+    }
+
     private void updatePointer(org.joml.Vector2fc value) {
         if (value != null) pointer = CanvasPoint.of(value.x(), value.y());
     }
 
     public boolean dragging() { return drag.active(); }
-    public void clear() { drag.end(); pan.end(); connectionNode = null; connectionPort = null; candidate = CanvasHitTester.Hit.BACKGROUND; backend.clearPointerTarget(); }
+    public LinkDragState linkState() { return linkState; }
+    public void clear() {
+        drag.end(); pan.end(); connectionNode = null; connectionPort = null; connectionPress = null;
+        candidate = CanvasHitTester.Hit.BACKGROUND; linkState = LinkDragState.IDLE;
+        backend.clearPreview("Connection cancelled"); backend.clearPointerTarget();
+    }
 }

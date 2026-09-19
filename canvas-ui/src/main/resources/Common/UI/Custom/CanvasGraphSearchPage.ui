@@ -2,13 +2,15 @@ $Common = "Common.ui";
 
 Group {
   Anchor: (Full: 0);
-  Group { Anchor: (Left: 60, Top: 158, Width: 300, Height: 104); Background: (Color: #0d2031ff); Padding: (Full: 10); LayoutMode: Top;
-    $Common.@TextField #GraphSearchInput { Anchor: (Width: 280, Height: 38); PlaceholderText: "Search Skills or Passives..."; }
-    Group { Anchor: (Height: 8); }
-    Group { Anchor: (Height: 36); LayoutMode: Left;
-      TextButton #GraphSearchClear { Text: "CLEAR"; Anchor: (Width: 130, Height: 34); Style: $Common.@DefaultTextButtonStyle; }
-      Group { Anchor: (Width: 10); }
-      TextButton #GraphSearchDone { Text: "DONE"; Anchor: (Width: 130, Height: 34); Style: $Common.@DefaultTextButtonStyle; }
-    }
+  // Search Mode deliberately mirrors the large editor. The passive HUD may be suppressed by
+  // Hytale while a page owns keyboard focus, so this page supplies the same composition itself.
+  Group #GraphSearchReadOnlyShade { Anchor: (Left: 328, Right: 114, Top: 140, Bottom: 120); Background: (Color: #02091366); }
+  Group { Anchor: (Left: 122, Top: 224, Width: 220, Height: 40); Background: (Color: #07111bff);
+    $Common.@TextField #GraphSearchInput { Anchor: (Width: 220, Height: 40); PlaceholderText: "Search skills..."; }
   }
+  TextButton #GraphSearchSkills { Text: "SKILLS"; Anchor: (Left: 122, Top: 180, Width: 104, Height: 34); Style: $Common.@DefaultTextButtonStyle; }
+  TextButton #GraphSearchPassives { Text: "PASSIVES"; Anchor: (Left: 230, Top: 180, Width: 112, Height: 34); Style: $Common.@DefaultTextButtonStyle; }
+  TextButton #GraphSearchClear { Text: "CLEAR"; Anchor: (Left: 122, Bottom: 126, Width: 104, Height: 34); Style: $Common.@DefaultTextButtonStyle; }
+  TextButton #GraphSearchDone { Text: "DONE"; Anchor: (Left: 230, Bottom: 126, Width: 112, Height: 34); Style: $Common.@DefaultTextButtonStyle; }
+  Label { Text: "SEARCH MODE — graph editing paused"; Anchor: (Left: 350, Right: 114, Top: 150, Height: 24); Style: (FontSize: 11, TextColor: #f2d488, HorizontalAlignment: Center); }
 }

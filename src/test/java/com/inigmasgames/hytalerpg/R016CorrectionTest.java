@@ -62,7 +62,7 @@ class R016CorrectionTest {
         assertEquals(before.linkEdges(), after.linkEdges());
     }
 
-    @Test void catalogProjectionSupportsTabsSearchWeaponFiltersDetailsAndPlaceholderIcon() {
+    @Test void catalogProjectionSupportsTabsSearchWeaponFiltersDetailsAndAuthoredIcons() {
         var bundle = Stage01BTestSupport.bundle();
         var projection = new RpgSkillTreeProjectionService(bundle.catalog(), bundle.service(),
                 new StaticSkillTreeLayout(), true);
@@ -75,8 +75,8 @@ class R016CorrectionTest {
         assertTrue(skills.weaponFilters().contains(RpgSkillTreeProjectionService.CURRENT_WEAPON_FILTER));
         assertTrue(skills.library().stream().allMatch(item -> item.iconPath().equals(
                 com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillIcons.forSkill(item.id()))));
-        assertTrue(skills.library().stream().filter(item -> !item.id().equals("fire_bolt"))
-                .allMatch(item -> item.iconPath().equals(RpgSkillTreeProjectionService.PLACEHOLDER_ICON)));
+        assertTrue(skills.library().stream().filter(item -> item.id().equals("fireball"))
+                .allMatch(item -> item.iconPath().endsWith("SkillFireball.png")));
         assertEquals("SKILL", skills.details().kind());
         assertTrue(skills.details().facts().stream().anyMatch(value -> value.startsWith("Power:")));
 

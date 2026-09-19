@@ -16,6 +16,11 @@ public final class TreeLinkGeometry {
     public List<Segment> route(Canvas canvas, CanvasEdge edge) {
         CanvasPoint a=port(canvas,edge.sourceNodeId(),edge.sourcePortId());
         CanvasPoint b=port(canvas,edge.targetNodeId(),edge.targetPortId());
+        return route(a,b);
+    }
+
+    /** Shared geometry for both committed links and the live connection preview. */
+    public List<Segment> route(CanvasPoint a, CanvasPoint b) {
         double mid=(a.x()+b.x())/2.0;
         List<Segment> result=new ArrayList<>(3);
         add(result,a,CanvasPoint.of(mid,a.y()));

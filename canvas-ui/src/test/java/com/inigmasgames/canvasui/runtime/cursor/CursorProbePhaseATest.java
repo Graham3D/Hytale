@@ -87,12 +87,13 @@ class CursorProbePhaseATest {
     @Test void boundedQueueDropsMotionBeforeItLosesAButtonTransition() {
         CursorProbeInputBuffer buffer = new CursorProbeInputBuffer(3);
         assertEquals(CursorProbeInputBuffer.OfferResult.ACCEPTED, buffer.offer(motion(1)));
-        assertEquals(CursorProbeInputBuffer.OfferResult.ACCEPTED, buffer.offer(motion(2)));
+        assertEquals(CursorProbeInputBuffer.OfferResult.COALESCED_MOTION, buffer.offer(motion(2)));
         assertEquals(CursorProbeInputBuffer.OfferResult.ACCEPTED, buffer.offer(button(3, "Pressed")));
         assertEquals(CursorProbeInputBuffer.OfferResult.ACCEPTED, buffer.offer(button(4, "Released")));
         List<CursorProbeSample> drained = buffer.drain(10);
         assertEquals(List.of(2L, 3L, 4L), drained.stream().map(CursorProbeSample::sequence).toList());
-        assertEquals(1, buffer.droppedMotion());
+        assertEquals(0, buffer.droppedMotion());
+        assertEquals(1, buffer.coalescedMotion());
     }
 
     @Test void fullTransitionQueueFailsClosedInsteadOfGuessingGestureOrder() {
@@ -108,20 +109,21 @@ class CursorProbePhaseATest {
         CursorProbeInputBuffer buffer = new CursorProbeInputBuffer(2);
         buffer.offer(motion(1));
         buffer.offer(motion(2));
-        assertEquals(CursorProbeInputBuffer.OfferResult.DROPPED_MOTION, buffer.offer(motion(3)));
+        assertEquals(CursorProbeInputBuffer.OfferResult.COALESCED_MOTION, buffer.offer(motion(3)));
         assertEquals(CursorProbeInputBuffer.OfferResult.ACCEPTED, buffer.offer(button(4, "Released")));
-        assertEquals(List.of(2L, 4L), buffer.drain(10).stream().map(CursorProbeSample::sequence).toList());
-        assertEquals(2, buffer.droppedMotion());
+        assertEquals(List.of(3L, 4L), buffer.drain(10).stream().map(CursorProbeSample::sequence).toList());
+        assertEquals(0, buffer.droppedMotion());
+        assertEquals(2, buffer.coalescedMotion());
     }
 
     private static CursorProbeSample motion(long sequence) {
-        return new CursorProbeSample(sequence, CursorProbeSample.Source.PACKET, CursorProbeSample.Kind.MOTION,
+        return new CursorProbeSample(sequence, System.nanoTime(), CursorProbeSample.Source.PACKET, CursorProbeSample.Kind.MOTION,
                 true, sequence, sequence, 1, 1, "UNKNOWN", "UNKNOWN", 0, "NONE",
                 false, false, false);
     }
 
     private static CursorProbeSample button(long sequence, String state) {
-        return new CursorProbeSample(sequence, CursorProbeSample.Source.PACKET, CursorProbeSample.Kind.BUTTON,
+        return new CursorProbeSample(sequence, System.nanoTime(), CursorProbeSample.Source.PACKET, CursorProbeSample.Kind.BUTTON,
                 true, sequence, sequence, null, null, "Left", state, 1, "UNKNOWN",
                 false, false, false);
     }

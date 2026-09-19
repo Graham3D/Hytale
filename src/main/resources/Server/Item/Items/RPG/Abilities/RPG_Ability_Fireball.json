@@ -3,7 +3,7 @@
     "Name": "server.items.RPG_Ability_Fireball.name",
     "Description": "server.items.RPG_Ability_Fireball.description"
   },
-  "Icon": "Icons/ItemsGenerated/Rune_WindStrike.png",
+  "Icon": "Icons/Items/RPG/SkillFireball.png",
   "Quality": "Rare",
   "Categories": [
     "Items.Ingredients"

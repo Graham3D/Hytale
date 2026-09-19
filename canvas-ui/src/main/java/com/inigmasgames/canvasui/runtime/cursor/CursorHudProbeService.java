@@ -64,6 +64,7 @@ import com.inigmasgames.canvasui.runtime.CanvasHitTester;
 import com.inigmasgames.canvasui.api.editor.CursorCanvasEditor;
 import com.inigmasgames.canvasui.api.editor.CursorEditorOpenResult;
 import com.inigmasgames.canvasui.api.editor.LibraryBrowser;
+import com.inigmasgames.canvasui.api.editor.SkillTreeViewModel;
 import com.inigmasgames.canvasui.api.editor.TreeDragController;
 import com.inigmasgames.canvasui.api.editor.TreeDropResolver;
 import com.inigmasgames.canvasui.api.editor.TreeLinkGeometry;
@@ -374,7 +375,7 @@ public final class CursorHudProbeService implements AutoCloseable {
         String heldText = held == null ? "UNKNOWN" : Arrays.stream(held)
                 .filter(java.util.Objects::nonNull).map(Enum::name).sorted()
                 .reduce((a, b) -> a + "+" + b).orElse("NONE");
-        return new CursorProbeSample(sequence.incrementAndGet(), source, kind, valid, x, y,
+        return new CursorProbeSample(sequence.incrementAndGet(), System.nanoTime(), source, kind, valid, x, y,
                 delta == null ? null : delta.x, delta == null ? null : delta.y,
                 button == null ? "UNKNOWN" : button.name(), state == null ? "UNKNOWN" : state.name(),
                 clicks, heldText, targetBlock, targetEntity, itemInHand);
@@ -552,6 +553,8 @@ public final class CursorHudProbeService implements AutoCloseable {
         private final AtomicLong gameplayGuarded = new AtomicLong();
         private final AtomicLong gameplayAllowed = new AtomicLong();
         private final AtomicLong traceDrops = new AtomicLong();
+        private final AtomicLong motionEventsReceived = new AtomicLong();
+        private final long createdNanos = System.nanoTime();
         private final CanvasPointerTransform transform;
         private final Canvas graph;
         private final CursorCanvasEditor editor;
@@ -560,7 +563,9 @@ public final class CursorHudProbeService implements AutoCloseable {
         private CanvasGraphEditorHud editorHud;
         private CanvasCursorProbePage page;
         private CursorCanvasEditor.LibraryKind libraryTab = CursorCanvasEditor.LibraryKind.SKILL;
-        private int libraryPage;
+        private int libraryScrollOffset;
+        private boolean scrollbarDragging;
+        private double scrollbarGrabOffset;
         private final TreeDragController libraryDrag = new TreeDragController();
         private final TreeDropResolver dropResolver = new TreeDropResolver();
         private final TreeLinkGeometry linkGeometry = new TreeLinkGeometry();
@@ -579,6 +584,12 @@ public final class CursorHudProbeService implements AutoCloseable {
         private long persistenceWrites;
         private long dragBegins;
         private long dragEnds;
+        private long motionUpdatesEmitted;
+        private long patchElements;
+        private long patchEstimatedBytes;
+        private final long[] patchLatencies = new long[1024];
+        private int patchLatencyCount;
+        private long currentSampleReceivedNanos;
         private double lastRawX = Double.NaN;
         private double lastRawY = Double.NaN;
         private CanvasPointerTransform.Coordinates lastCoordinates;
@@ -659,7 +670,8 @@ public final class CursorHudProbeService implements AutoCloseable {
                 editorHud = new CanvasGraphEditorHud(playerRef, editor.title());
                 manager.addCustomHud(playerRef, editorHud);
                 CursorHudGraphEditorBackend backend = new CursorHudGraphEditorBackend(graph,
-                        this::renderEditor, value -> editorStatus = value == null ? "" : value);
+                        this::renderEditor, value -> editorStatus = value == null ? "" : value,
+                        preview -> recordPatch(editorHud.renderPreview(preview), currentSampleReceivedNanos));
                 graphInput = new CanvasInputController(graph, backend, this::persistGraph,
                         this::graphRenderDue, this::recordGraphPointer);
                 renderEditor();
@@ -679,6 +691,7 @@ public final class CursorHudProbeService implements AutoCloseable {
         private void accept(CursorProbeSample sample) {
             if (closing.get()) return;
             CursorProbeInputBuffer.OfferResult result = input.offer(sample);
+            if (sample.kind() == CursorProbeSample.Kind.MOTION) motionEventsReceived.incrementAndGet();
             if (result == CursorProbeInputBuffer.OfferResult.REJECTED_TRANSITION) {
                 world.execute(() -> CursorHudProbeService.this.close(playerId, "INPUT_QUEUE_TRANSITION_OVERFLOW"));
                 return;
@@ -712,7 +725,7 @@ public final class CursorHudProbeService implements AutoCloseable {
                 if (handleCalibration(sample)) continue;
                 if (sample.source() == CursorProbeSample.Source.EVENT && sample.validPosition()
                         && transform.ready() && leftPressed(sample)
-                        && transform.closeHit(sample.x(), sample.y())) {
+                        && closeHit(sample.x(), sample.y())) {
                     CursorHudProbeService.this.close(playerId, "VISIBLE_CLOSE_REGION");
                     return;
                 }
@@ -760,7 +773,11 @@ public final class CursorHudProbeService implements AutoCloseable {
         private void routeGraph(CursorProbeSample sample) {
             if (sample.source() != CursorProbeSample.Source.EVENT || graphInput == null
                     || !sample.validPosition() || !transform.ready()) return;
-            CanvasPointerTransform.Coordinates coordinates = transform.convert(sample.x(), sample.y(), graph.viewport());
+            currentSampleReceivedNanos = sample.receivedNanos();
+            CanvasPointerTransform.Coordinates coordinates = context == Context.GRAPH_EDITOR
+                    ? transform.convert(sample.x(), sample.y(), graph.viewport(),
+                    CanvasPoint.of(CanvasGraphEditorHud.WORKSPACE_LEFT, CanvasGraphEditorHud.WORKSPACE_TOP))
+                    : transform.convert(sample.x(), sample.y(), graph.viewport());
             if (context == Context.GRAPH_EDITOR && routeEditor(sample, coordinates.local())) return;
             if (sample.kind() == CursorProbeSample.Kind.BUTTON) {
                 MouseButtonType button = enumValue(MouseButtonType.class, sample.button());
@@ -771,8 +788,19 @@ public final class CursorHudProbeService implements AutoCloseable {
             }
         }
 
+        private boolean closeHit(double rawX,double rawY){
+            if(context!=Context.GRAPH_EDITOR)return transform.closeHit(rawX,rawY);
+            CanvasPoint point=transform.toViewport(rawX,rawY);
+            double right=transform.viewportWidth()-90;
+            return point.x()>=right-98&&point.x()<=right&&point.y()>=64&&point.y()<=106;
+        }
+
         private boolean routeEditor(CursorProbeSample sample, CanvasPoint local) {
+            if(searchPage!=null)return true;
             if (libraryDrag.animating()) return true;
+            if(sample.kind()==CursorProbeSample.Kind.MOTION&&scrollbarDragging){
+                updateScrollbar(local.y());renderEditor();return true;
+            }
             if (sample.kind() == CursorProbeSample.Kind.MOTION && libraryDrag.active()) {
                 boolean wasDragging=libraryDrag.dragging();
                 if(libraryDrag.move(local)){
@@ -780,7 +808,11 @@ public final class CursorHudProbeService implements AutoCloseable {
                             +" kind="+libraryDrag.entry().kind());
                     editorStatus = "Drop " + libraryDrag.entry().name() + " onto a "
                             + libraryDrag.entry().kind().name().toLowerCase(Locale.ROOT) + " node";
-                    if(graphRenderDue())renderEditor();
+                    if(graphRenderDue()){
+                        TreeDropResolver.Result candidate=dropResolver.resolve(graph,libraryDrag.entry().kind(),local);
+                        CanvasPoint center=candidate.accepted()?candidate.center():null;
+                        recordPatch(editorHud.renderDragOnly(dragVisual(),center),sample.receivedNanos());
+                    }
                 }
                 return true;
             }
@@ -812,32 +844,35 @@ public final class CursorHudProbeService implements AutoCloseable {
                 if(inside(local,700,10,116,30)&&linkInteraction.selectedLinkId()!=null){
                     breakLink(linkInteraction.selectedLinkId(),"VISIBLE_DELETE");return true;
                 }
-                if (local.x() >= 0 && local.x() <= 202 && local.y() >= 0 && local.y() <= 42) {
+                if (local.x() >= 8 && local.x() <= 228 && local.y() >= 40 && local.y() <= 74) {
                     libraryDrag.cancel();
-                    libraryTab = local.x() < 98 ? CursorCanvasEditor.LibraryKind.SKILL
+                    libraryTab = local.x() < 114 ? CursorCanvasEditor.LibraryKind.SKILL
                             : CursorCanvasEditor.LibraryKind.PASSIVE;
-                    libraryPage = 0;
+                    libraryScrollOffset = 0;
                     editorStatus = libraryTab == CursorCanvasEditor.LibraryKind.SKILL ? "Skill library" : "Passive library";
                     renderEditor();
                     return true;
                 }
-                if(inside(local,8,50,186,34)){openSearch();return true;}
-                if (local.x() >= 8 && local.x() <= 194 && local.y() >= 92 && local.y() < 404) {
-                    int row = (int)((local.y() - 92) / 52);
+                if(inside(local,8,84,220,38)){openSearch();return true;}
+                if(inside(local,210,132,20,456)){
+                    LibraryBrowser.Window window=editorProjection();
+                    int thumbHeight=scrollbarThumbHeight(window);
+                    int thumbTop=scrollbarThumbTop(window,thumbHeight);
+                    if(local.y()>=thumbTop&&local.y()<=thumbTop+thumbHeight){
+                        scrollbarDragging=true;scrollbarGrabOffset=local.y()-thumbTop;
+                    }else{updateScrollbar(local.y()-thumbHeight/2.0);}
+                    renderEditor();return true;
+                }
+                if (local.x() >= 8 && local.x() <= 208 && local.y() >= 132 && local.y() < 592) {
+                    int row = (int)((local.y() - 132) / 46);
                     List<CursorCanvasEditor.LibraryEntry> page = editorPage();
                     if (row >= 0 && row < page.size()) {
-                        CanvasPoint origin=CanvasPoint.of(32,92+row*52+23);
+                        CanvasPoint origin=CanvasPoint.of(32,132+row*46+21);
                         libraryDrag.arm(page.get(row),local,origin);
                         editorStatus = "Hold and drag " + page.get(row).name();
                         renderEditor();
                     }
                     return true;
-                }
-                if (local.y() >= 424 && local.y() <= 462 && local.x() <= 64) {
-                    libraryPage = Math.max(0, libraryPage - 1); renderEditor(); return true;
-                }
-                if (local.y() >= 424 && local.y() <= 462 && local.x() >= 140 && local.x() <= 202) {
-                    libraryPage = Math.min(editorPageCount() - 1, libraryPage + 1); renderEditor(); return true;
                 }
                 CanvasHitTester.Hit foreground=new CanvasHitTester().hit(graph,local);
                 if(!foreground.background()){linkInteraction.clear();return false;}
@@ -845,6 +880,8 @@ public final class CursorHudProbeService implements AutoCloseable {
                 if(edge!=null){linkInteraction.select(edge);editorStatus="Link selected";
                     traceLifecycle("SKILLTREE_LINK_SELECTED","link="+edge);renderEditor();return true;}
                 linkInteraction.clear();renderEditor();
+            } else if(state==MouseButtonState.Released&&scrollbarDragging){
+                scrollbarDragging=false;renderEditor();return true;
             } else if (state == MouseButtonState.Released && libraryDrag.active()) {
                 if(!libraryDrag.dragging()){libraryDrag.cancel();renderEditor();return true;}
                 CursorCanvasEditor.LibraryEntry entry=libraryDrag.entry();
@@ -872,7 +909,10 @@ public final class CursorHudProbeService implements AutoCloseable {
             if (sample.validPosition()) {
                 lastRawX = sample.x();
                 lastRawY = sample.y();
-                if (transform.ready()) lastCoordinates = transform.convert(sample.x(), sample.y(),
+                if (transform.ready()) lastCoordinates = context==Context.GRAPH_EDITOR
+                        ? transform.convert(sample.x(),sample.y(),graph.viewport(),
+                        CanvasPoint.of(CanvasGraphEditorHud.WORKSPACE_LEFT,CanvasGraphEditorHud.WORKSPACE_TOP))
+                        : transform.convert(sample.x(), sample.y(),
                         graph == null ? com.inigmasgames.canvasui.api.CanvasViewport.ORIGIN : graph.viewport());
             }
             last = describe(sample);
@@ -974,41 +1014,74 @@ public final class CursorHudProbeService implements AutoCloseable {
             }
         }
 
-        private int editorPageCount() {
-            return editorProjection().pageCount();
-        }
-
         private List<CursorCanvasEditor.LibraryEntry> editorPage() {
-            LibraryBrowser.Page result=editorProjection();
-            libraryPage=result.pageIndex();
+            LibraryBrowser.Window result=editorProjection();
+            libraryScrollOffset=result.offset();
             return result.entries();
         }
 
-        private LibraryBrowser.Page editorProjection(){
-            return LibraryBrowser.project(editor.library(libraryTab),libraryQuery,libraryPage,
+        private LibraryBrowser.Window editorProjection(){
+            return LibraryBrowser.window(editor.library(libraryTab),libraryQuery,libraryScrollOffset,
                     CanvasGraphEditorHud.LIBRARY_ROWS);
+        }
+
+        private SkillTreeViewModel editorView(boolean searchMode){
+            LibraryBrowser.Window window=editorProjection();libraryScrollOffset=window.offset();
+            return SkillTreeViewModel.project("SKILL TREE",graph,libraryTab,libraryQuery,window,
+                    linkInteraction.selectedLinkId(),editorStatus,searchMode);
+        }
+
+        private int scrollbarThumbHeight(LibraryBrowser.Window window){
+            return window.maximumOffset()==0?CanvasGraphEditorHud.LIBRARY_TRACK_HEIGHT-4:
+                    Math.max(34,(int)Math.round((CanvasGraphEditorHud.LIBRARY_TRACK_HEIGHT-4)*window.thumbFraction()));
+        }
+
+        private int scrollbarThumbTop(LibraryBrowser.Window window,int thumbHeight){
+            int travel=Math.max(0,CanvasGraphEditorHud.LIBRARY_TRACK_HEIGHT-4-thumbHeight);
+            return CanvasGraphEditorHud.LIBRARY_TRACK_TOP+2+(int)Math.round(travel*window.progress());
+        }
+
+        private void updateScrollbar(double pointerY){
+            LibraryBrowser.Window window=editorProjection();int thumbHeight=scrollbarThumbHeight(window);
+            int travel=Math.max(1,CanvasGraphEditorHud.LIBRARY_TRACK_HEIGHT-4-thumbHeight);
+            double top=pointerY-scrollbarGrabOffset-(CanvasGraphEditorHud.LIBRARY_TRACK_TOP+2);
+            double progress=Math.max(0,Math.min(1,top/travel));
+            libraryScrollOffset=(int)Math.round(progress*window.maximumOffset());
+        }
+
+        private void recordPatch(CanvasGraphEditorHud.PatchMetrics metrics,long receivedNanos){
+            motionUpdatesEmitted++;patchElements+=metrics.elementsUpdated();patchEstimatedBytes+=metrics.estimatedBytes();
+            long latency=Math.max(0,System.nanoTime()-receivedNanos);
+            patchLatencies[patchLatencyCount++%patchLatencies.length]=latency;
+        }
+
+        private CanvasGraphEditorHud.DragVisual dragVisual(){
+            return libraryDrag.active()?new CanvasGraphEditorHud.DragVisual(libraryDrag.entry(),
+                    libraryDrag.visualPoint(System.currentTimeMillis()),libraryDrag.state().name()):null;
         }
 
         private void renderEditor() {
             if (editorHud == null) return;
-            CanvasGraphEditorHud.DragVisual drag=libraryDrag.active()?new CanvasGraphEditorHud.DragVisual(
-                    libraryDrag.entry(),libraryDrag.visualPoint(System.currentTimeMillis()),libraryDrag.state().name()):null;
-            editorHud.render(graph, libraryTab, editorPage(), libraryPage, editorPageCount(), libraryQuery,
-                    editorStatus,drag,linkInteraction);
+            editorHud.render(editorView(false),dragVisual(),linkInteraction);
         }
 
         private void openSearch(){
             if(searchPage!=null)return;
             if(player.getPageManager().getCustomPage()!=null){editorStatus="Close the current page before searching";renderEditor();return;}
             libraryDrag.cancel();
-            searchPage=new CanvasGraphSearchPage(playerRef,libraryQuery,value->world.execute(()->{
-                if(closing.get()||sessions.get(playerId)!=this)return;
-                libraryQuery=value==null?"":value;libraryPage=0;
+            searchPage=new CanvasGraphSearchPage(playerRef,()->editorView(true),(action,value)->{
+                if("skills".equals(action)||"passives".equals(action)){
+                    libraryTab="skills".equals(action)?CursorCanvasEditor.LibraryKind.SKILL:
+                            CursorCanvasEditor.LibraryKind.PASSIVE;libraryScrollOffset=0;
+                }else{
+                    libraryQuery="clear".equals(action)?"":value==null?"":value;libraryScrollOffset=0;
+                }
                 editorStatus=libraryQuery.isBlank()?"Full "+libraryTab.name().toLowerCase(Locale.ROOT)+" library"
                         :"Search: "+libraryQuery;
                 traceLifecycle("SKILLTREE_SEARCH_CHANGED","tab="+libraryTab+" query="+libraryQuery
-                        +" matches="+editorProjection().totalMatches());renderEditor();
-            }),()->world.execute(()->{if(sessions.get(playerId)==this){searchPage=null;renderEditor();}}));
+                        +" matches="+editorProjection().totalMatches());
+                return editorView(true);
+            },()->world.execute(()->{if(sessions.get(playerId)==this){searchPage=null;renderEditor();}}));
             Ref<EntityStore> ref=playerRef.getReference();
             if(ref==null||!ref.isValid()){searchPage=null;editorStatus="Search unavailable: player reference lost";renderEditor();return;}
             player.getPageManager().openCustomPage(ref,ref.getStore(),searchPage);
@@ -1138,6 +1211,13 @@ public final class CursorHudProbeService implements AutoCloseable {
             String cleanup = cleanupFailures.isEmpty() ? "PASS" : String.join(",", cleanupFailures);
             double graphAverageMs = graphPointerEvents == 0 ? 0.0
                     : graphProcessingNanos / 1_000_000.0 / graphPointerEvents;
+            int latencySize=Math.min(patchLatencyCount,patchLatencies.length);
+            long[] latencyCopy=java.util.Arrays.copyOf(patchLatencies,latencySize);
+            java.util.Arrays.sort(latencyCopy);
+            double patchP50=latencySize==0?0:latencyCopy[(latencySize-1)/2]/1_000_000.0;
+            double patchP95=latencySize==0?0:latencyCopy[(int)Math.floor((latencySize-1)*0.95)]/1_000_000.0;
+            double averagePatchBytes=motionUpdatesEmitted==0?0:patchEstimatedBytes/(double)motionUpdatesEmitted;
+            double durationSeconds=Math.max(0.001,(System.nanoTime()-createdNanos)/1_000_000_000.0);
             writeLine("{\"type\":\"SUMMARY\",\"revision\":\"" + json(CanvasUI.REVISION)
                     + "\",\"session\":\"" + token + "\",\"context\":\"" + context.label()
                     + "\",\"reason\":\"" + json(reason) + "\",\"packetPointerSamples\":" + packetSamples
@@ -1149,6 +1229,16 @@ public final class CursorHudProbeService implements AutoCloseable {
                     + ",\"persistenceWrites\":" + persistenceWrites + ",\"graphPointerEvents\":" + graphPointerEvents
                     + ",\"graphAverageProcessingMs\":" + number(graphAverageMs)
                     + ",\"graphPeakProcessingMs\":" + number(graphPeakNanos / 1_000_000.0)
+                    + ",\"motionEventsReceived\":"+motionEventsReceived.get()
+                    + ",\"motionUpdatesEmitted\":"+motionUpdatesEmitted
+                    + ",\"motionEventsPerSecond\":"+number(motionEventsReceived.get()/durationSeconds)
+                    + ",\"motionUpdatesPerSecond\":"+number(motionUpdatesEmitted/durationSeconds)
+                    + ",\"motionEventsCoalesced\":"+input.coalescedMotion()
+                    + ",\"maximumQueuedMotionEvents\":"+input.maximumDepth()
+                    + ",\"patchElementsUpdated\":"+patchElements
+                    + ",\"averagePatchBytes\":"+number(averagePatchBytes)
+                    + ",\"patchLatencyP50Ms\":"+number(patchP50)
+                    + ",\"patchLatencyP95Ms\":"+number(patchP95)
                     + ",\"cameraSuperseded\":" + cameraSuperseded + ",\"guardActiveAfterCleanup\":"
                     + inputGuard.active(playerId) + ",\"cleanup\":\"" + json(cleanup) + "\"}");
             try { trace.flush(); trace.close(); }

@@ -3,7 +3,7 @@
     "Name": "server.items.RPG_Ability_Ball_Lightning.name",
     "Description": "server.items.RPG_Ability_Ball_Lightning.description"
   },
-  "Icon": "Icons/ItemsGenerated/Rune_Aoe_Up.png",
+  "Icon": "Icons/Items/RPG/SkillBalllightning.png",
   "Quality": "Rare",
   "Categories": [
     "Items.Ingredients"

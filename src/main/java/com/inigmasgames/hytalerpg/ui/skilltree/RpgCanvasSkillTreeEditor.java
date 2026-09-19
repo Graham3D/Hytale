@@ -45,7 +45,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
     }
 
     @Override public String editorId() { return "rpg-skill-tree-v2"; }
-    @Override public String title() { return "HYTALE RPG — SKILL TREE"; }
+    @Override public String title() { return "SKILL TREE"; }
     @Override public Canvas canvas() { return canvas; }
 
     @Override public List<LibraryEntry> library(LibraryKind kind) {

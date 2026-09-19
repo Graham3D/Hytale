@@ -111,12 +111,12 @@ class Stage13SkillTreeIconsSearchTest {
         }
     }
 
-    @Test void originalTransparentIconBytesArePackagedForNativeItemsAndCustomUi() throws Exception {
-        for (var entry : Map.of("SkillFirebolt.png", "8B4E285602E6A13A37A594F9E23B4C53E8A3AF0A0BC403D0083553910D6A7C7C",
-                "SkillQuickslash.png", "D3DBBBF03497A5CE845A48FE6F816955934271C668A6461F0D44CD1AEC077EC1").entrySet()) {
-            byte[] nativeBytes = Files.readAllBytes(RES.resolve("Common/Icons/Items/RPG/" + entry.getKey()));
-            assertEquals(entry.getValue(), HexFormat.of().withUpperCase().formatHex(MessageDigest.getInstance("SHA-256").digest(nativeBytes)));
-            assertArrayEquals(nativeBytes, Files.readAllBytes(RES.resolve("Common/UI/Custom/Icons/RPG/" + entry.getKey())));
+    @Test void currentAuthoredTransparentIconBytesAreCanonicalForNativeItemsAndCustomUi() throws Exception {
+        for (String fileName : List.of("SkillFirebolt.png", "SkillQuickslash.png")) {
+            byte[] authoredBytes = Files.readAllBytes(Path.of("art/Skills").resolve(fileName));
+            byte[] nativeBytes = Files.readAllBytes(RES.resolve("Common/Icons/Items/RPG/" + fileName));
+            assertArrayEquals(authoredBytes, nativeBytes);
+            assertArrayEquals(authoredBytes, Files.readAllBytes(RES.resolve("Common/UI/Custom/Icons/RPG/" + fileName)));
             var image = ImageIO.read(new java.io.ByteArrayInputStream(nativeBytes));
             assertEquals(128, image.getWidth()); assertEquals(128, image.getHeight());
             assertTrue(image.getColorModel().hasAlpha());

@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +31,19 @@ class TreeEditorInteractionTest {
         assertEquals("Ball Lightning",filtered.entries().getFirst().name());
         var none=LibraryBrowser.project(source,"frost",0,2);
         assertTrue(none.entries().isEmpty());assertEquals(1,none.pageCount());
+    }
+
+    @Test void continuousWindowClampsOffsetAfterSearchAndExposesProportionalScrollbar(){
+        var source=List.of(entry("a","Arc",CursorCanvasEditor.LibraryKind.SKILL),
+                entry("b","Ball Lightning",CursorCanvasEditor.LibraryKind.SKILL),
+                entry("c","Charged Bolt",CursorCanvasEditor.LibraryKind.SKILL),
+                entry("d","Fire Bolt",CursorCanvasEditor.LibraryKind.SKILL));
+        var bottom=LibraryBrowser.window(source,"",99,2);
+        assertEquals(2,bottom.offset());assertEquals(List.of("c","d"),bottom.entries().stream().map(CursorCanvasEditor.LibraryEntry::id).toList());
+        assertEquals(0.5,bottom.thumbFraction());assertEquals(1.0,bottom.progress());
+        var filtered=LibraryBrowser.window(source,"ball",bottom.offset(),2);
+        assertEquals(0,filtered.offset());assertEquals(0,filtered.maximumOffset());
+        assertEquals(List.of("b"),filtered.entries().stream().map(CursorCanvasEditor.LibraryEntry::id).toList());
     }
 
     @Test void dragRequiresThresholdCarriesIconAndUsesBoundedSnapAndReturnStates(){
@@ -62,6 +77,31 @@ class TreeEditorInteractionTest {
         state.openContext("edge-a",CanvasPoint.of(260,127));assertEquals("edge-a",state.contextTargetLinkId());
         state.select("other");assertNull(state.contextTargetLinkId());assertEquals(1,canvas.edges().size());
         state.clear();assertNull(state.selectedLinkId());assertEquals(1,canvas.edges().size());
+    }
+
+    @Test void previewAndCommittedLinksUseIdenticalContinuousGeometry(){
+        Canvas canvas=canvas();canvas.connect("edge-a","passive","out","skill-a","in",EdgeStyle.standard("test"));
+        var geometry=new TreeLinkGeometry();var edge=canvas.edge("edge-a");
+        assertEquals(geometry.route(canvas,edge),geometry.route(
+                TreeLinkGeometry.port(canvas,"passive","out"),TreeLinkGeometry.port(canvas,"skill-a","in")));
+    }
+
+    @Test void commonImmutableViewModelSupportsHudAndReadOnlySearchMode() throws Exception {
+        Canvas canvas=canvas();var window=LibraryBrowser.window(List.of(
+                entry("bolt","Lightning Bolt",CursorCanvasEditor.LibraryKind.SKILL)),"light",0,10);
+        var hud=SkillTreeViewModel.project("SKILL TREE",canvas,CursorCanvasEditor.LibraryKind.SKILL,
+                "light",window,null,"Ready",false);
+        var search=SkillTreeViewModel.project("SKILL TREE",canvas,CursorCanvasEditor.LibraryKind.SKILL,
+                "light",window,null,"Search",true);
+        assertEquals(hud.nodes(),search.nodes());assertEquals(hud.entries(),search.entries());
+        assertFalse(hud.searchMode());assertTrue(search.searchMode());
+        assertThrows(UnsupportedOperationException.class,()->search.entries().clear());
+        String editor=Files.readString(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphEditorHud.ui"));
+        String searchUi=Files.readString(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphSearchPage.ui"));
+        assertTrue(editor.contains("SKILL LIBRARY"));assertTrue(editor.contains("SHAPE YOUR JOURNEY"));
+        assertFalse(editor.contains("PREV"));assertFalse(editor.contains("NEXT"));
+        assertFalse(editor.toLowerCase().contains("skill points"));
+        assertTrue(searchUi.contains("SEARCH MODE"));assertTrue(searchUi.contains("GraphSearchInput"));
     }
 
     private static Canvas canvas(){

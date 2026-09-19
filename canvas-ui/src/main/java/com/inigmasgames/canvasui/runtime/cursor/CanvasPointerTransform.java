@@ -125,12 +125,26 @@ public final class CanvasPointerTransform {
     }
 
     public Coordinates convert(double rawX, double rawY, CanvasViewport viewport) {
+        return convert(rawX, rawY, viewport, CanvasPoint.of(CANVAS_LEFT, CANVAS_TOP));
+    }
+
+    public Coordinates convert(double rawX, double rawY, CanvasViewport viewport, CanvasPoint localOrigin) {
         if (!ready()) throw new IllegalStateException("pointer transform is not calibrated");
         CanvasPoint raw = CanvasPoint.of(rawX, rawY);
         CanvasPoint normalized = toNormalized(raw);
         CanvasPoint view = toViewport(raw);
-        CanvasPoint local = view.subtract(CanvasPoint.of(CANVAS_LEFT, CANVAS_TOP));
+        CanvasPoint local = view.subtract(localOrigin);
         return new Coordinates(raw, normalized, view, local, viewport.toCanvas(local));
+    }
+
+    public double viewportWidth() {
+        Calibration value=requireFit();
+        return 2.0 * CANVAS_WIDTH / Math.abs(value.rawRight()-value.rawLeft());
+    }
+
+    public double viewportHeight() {
+        Calibration value=requireFit();
+        return 2.0 * CANVAS_HEIGHT / Math.abs(value.rawBottom()-value.rawTop());
     }
 
     public CanvasPoint toViewport(double rawX, double rawY) {

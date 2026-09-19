@@ -15,6 +15,12 @@ $sha256 = {
     try { ([BitConverter]::ToString($hash.ComputeHash($stream))).Replace('-', '') }
     finally { $hash.Dispose(); $stream.Dispose() }
 }
+$bytesHash = {
+    param([byte[]]$Bytes)
+    $hash = [Security.Cryptography.SHA256]::Create()
+    try { ([BitConverter]::ToString($hash.ComputeHash($Bytes))).Replace('-', '') }
+    finally { $hash.Dispose() }
+}
 $resolvedJar = (Resolve-Path -LiteralPath $JarPath).Path
 $zip = [IO.Compression.ZipFile]::OpenRead($resolvedJar)
 try {
@@ -61,6 +67,38 @@ try {
     )
     foreach ($requiredEntry in $required) {
         if ($null -eq $zip.GetEntry($requiredEntry)) { throw "Missing required merged entry: $requiredEntry" }
+    }
+
+    # Owner-authored icon bytes must survive clean/build/package unchanged. art is the drop workflow;
+    # src/main/resources is the canonical Gradle source and the JAR must match it exactly.
+    $repository = Split-Path $PSScriptRoot -Parent
+    $indexEntry = $zip.GetEntry('rpg/presentation/icon-index.json')
+    $indexReader = [IO.StreamReader]::new($indexEntry.Open(), [Text.UTF8Encoding]::new($false), $true)
+    try { $iconIndex = $indexReader.ReadToEnd() | ConvertFrom-Json } finally { $indexReader.Dispose() }
+    $iconRows = @{}; foreach($row in $iconIndex.entries){$iconRows[$row.fileName]=$row}
+    $authoredIcons=0
+    foreach($kind in @('Skill','Passive')){
+        $artFolder=Join-Path $repository ('art\'+$kind+'s')
+        if(-not(Test-Path -LiteralPath $artFolder -PathType Container)){continue}
+        foreach($art in Get-ChildItem -LiteralPath $artFolder -File -Filter '*.png'){
+            $row=$iconRows[$art.Name];if($null -eq $row -or $row.kind -ne $kind){throw "Unknown authored icon: $($art.Name)"}
+            $uiRelative='Common/UI/Custom/Icons/RPG/'+$row.fileName
+            $uiSource=Join-Path $repository ('src\main\resources\'+($uiRelative -replace '/','\'))
+            if(-not(Test-Path -LiteralPath $uiSource -PathType Leaf)){throw "Missing canonical icon source: $uiRelative"}
+            $sourceHash=&$sha256 $uiSource;$entry=$zip.GetEntry($uiRelative)
+            if($null -eq $entry){throw "Missing packaged authored icon: $uiRelative"}
+            $memory=[IO.MemoryStream]::new();$entryStream=$entry.Open();try{$entryStream.CopyTo($memory)}finally{$entryStream.Dispose()}
+            if((&$bytesHash $memory.ToArray()) -ne $sourceHash){throw "Packaged icon hash mismatch: $uiRelative"};$memory.Dispose()
+            if($kind -eq 'Skill'){
+                $nativeRelative='Common/Icons/Items/RPG/'+$row.fileName
+                $nativeSource=Join-Path $repository ('src\main\resources\'+($nativeRelative -replace '/','\'))
+                if((-not (Test-Path -LiteralPath $nativeSource -PathType Leaf)) -or ((&$sha256 $nativeSource) -ne $sourceHash)){throw "Native canonical icon mismatch: $nativeRelative"}
+                $nativeEntry=$zip.GetEntry($nativeRelative);if($null -eq $nativeEntry){throw "Missing packaged native icon: $nativeRelative"}
+                $nativeMemory=[IO.MemoryStream]::new();$nativeStream=$nativeEntry.Open();try{$nativeStream.CopyTo($nativeMemory)}finally{$nativeStream.Dispose()}
+                if((&$bytesHash $nativeMemory.ToArray()) -ne $sourceHash){throw "Packaged native icon hash mismatch: $nativeRelative"};$nativeMemory.Dispose()
+            }
+            $authoredIcons++
+        }
     }
     $forbidden = @(
         'com/inigmasgames/hytalerpg/phase00/Phase00Plugin.class',
@@ -112,6 +150,7 @@ try {
         totalNpcSections = 2048
         manifest = "$($manifest.Group):$($manifest.Name)@$($manifest.Version)"
         revision = $manifest.Metadata.RpgRevision
+        authoredIconHashesVerified = $authoredIcons
     }
     $result | ConvertTo-Json -Depth 4
 } finally {

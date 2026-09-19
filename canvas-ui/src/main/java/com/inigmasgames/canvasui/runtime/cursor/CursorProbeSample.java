@@ -1,7 +1,7 @@
 package com.inigmasgames.canvasui.runtime.cursor;
 
 /** Immutable, bounded copy of one client-supplied pointer observation. */
-record CursorProbeSample(long sequence, Source source, Kind kind, boolean validPosition,
+record CursorProbeSample(long sequence, long receivedNanos, Source source, Kind kind, boolean validPosition,
                          double x, double y, Integer deltaX, Integer deltaY,
                          String button, String state, int clicks, String heldButtons,
                          boolean targetBlock, boolean targetEntity, boolean itemInHand) {

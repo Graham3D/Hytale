@@ -2,6 +2,7 @@
 param(
     [string]$JarPath = '',
     [string]$ArtRoot = '',
+    [string]$SourceRoot = '',
     [string]$BackupRoot = '',
     [switch]$CheckOnly,
     [switch]$RestoreLast
@@ -124,7 +125,11 @@ try {
     }
 
     $ArtRoot = (Resolve-Path -LiteralPath $ArtRoot).Path
+    if ([string]::IsNullOrWhiteSpace($SourceRoot)) { $SourceRoot = Join-Path $repository 'src\main\resources' }
+    if (-not (Test-Path -LiteralPath $SourceRoot -PathType Container)) { New-Item -ItemType Directory -Path $SourceRoot -Force | Out-Null }
+    $sourceRoot = (Resolve-Path -LiteralPath $SourceRoot).Path
     $replacements = [Collections.Generic.Dictionary[string,byte[]]]::new([StringComparer]::Ordinal)
+    $sourceUpdates = [Collections.Generic.Dictionary[string,byte[]]]::new([StringComparer]::OrdinalIgnoreCase)
     $selected = [Collections.Generic.List[object]]::new()
     $beforeEntries = Jar-Hashes $JarPath
     $zip = [IO.Compression.ZipFile]::OpenRead($JarPath)
@@ -174,14 +179,22 @@ try {
                 $uiEntry = 'Common/UI/Custom/Icons/RPG/' + $row.fileName
                 if ($replacements.ContainsKey($uiEntry)) { throw "Duplicate icon: $($row.fileName)" }
                 $replacements.Add($uiEntry, $bytes)
+                $sourceUpdates.Add((Join-Path $sourceRoot ($uiEntry -replace '/', '\')), $bytes)
                 if ($kind -eq 'Skill') {
                     $nativeIcon = 'Icons/Items/RPG/' + $row.fileName
                     $replacements.Add('Common/' + $nativeIcon, $bytes)
+                    $sourceUpdates.Add((Join-Path $sourceRoot (('Common/' + $nativeIcon) -replace '/', '\')), $bytes)
                     $item = Read-JsonEntry $zip $row.itemAsset
                     # Repeated updates must be exact no-ops, including Item JSON formatting.
                     if ($item.Icon -cne $nativeIcon) {
                         $item.Icon = $nativeIcon
                         $replacements.Add($row.itemAsset, $utf8.GetBytes(($item | ConvertTo-Json -Depth 64)))
+                    }
+                    $sourceItemPath = Join-Path $sourceRoot ($row.itemAsset -replace '/', '\')
+                    $sourceItem = Get-Content -Raw -LiteralPath $sourceItemPath | ConvertFrom-Json
+                    if ($sourceItem.Icon -cne $nativeIcon) {
+                        $sourceItem.Icon = $nativeIcon
+                        $sourceUpdates[$sourceItemPath] = $utf8.GetBytes(($sourceItem | ConvertTo-Json -Depth 64))
                     }
                 }
                 $selected.Add([pscustomobject]@{name=$row.name;fileName=$row.fileName;sha256=(Bytes-Hash $bytes)})
@@ -191,9 +204,13 @@ try {
     $changed = @($replacements.Keys | Where-Object {
         -not $beforeEntries.ContainsKey($_) -or $beforeEntries[$_] -ne (Bytes-Hash $replacements[$_])
     })
+    $sourceChanged = @($sourceUpdates.Keys | Where-Object {
+        -not (Test-Path -LiteralPath $_ -PathType Leaf) -or
+        (Bytes-Hash ([IO.File]::ReadAllBytes($_))) -ne (Bytes-Hash $sourceUpdates[$_])
+    })
     foreach ($row in $selected) { Write-Output ("{0} <- {1}" -f $row.name, $row.fileName) }
-    if ($CheckOnly) { Write-Output "CHECK PASSED: $($selected.Count) supplied icons, $($changed.Count) JAR entries would change. Nothing written."; exit 0 }
-    if (-not $changed.Count) { Write-Output 'Already up to date. No JAR or saves changed.'; exit 0 }
+    if ($CheckOnly) { Write-Output "CHECK PASSED: $($selected.Count) supplied icons, $($sourceChanged.Count) canonical source files and $($changed.Count) JAR entries would change. Nothing written."; exit 0 }
+    if (-not $changed.Count -and -not $sourceChanged.Count) { Write-Output 'Already up to date. No source, JAR, or saves changed.'; exit 0 }
 
     $pending = $JarPath + '.icons-' + [Guid]::NewGuid().ToString('N') + '.pending'
     # Recreate rather than Update: .NET Framework's ZIP updater can corrupt Java's
@@ -234,8 +251,24 @@ try {
     foreach ($name in $changed) {
         if ($afterEntries[$name] -ne (Bytes-Hash $replacements[$name])) { throw "Staged icon hash mismatch: $name" }
     }
-    $afterHash = (Get-RpgFileHash -LiteralPath $pending).Hash
     New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null
+    $sourceBackup = Join-Path $BackupRoot ('source-before-' + [DateTime]::UtcNow.ToString('yyyyMMddTHHmmssZ'))
+    foreach ($path in $sourceChanged) {
+        $relative = $path.Substring($sourceRoot.Length).TrimStart('\')
+        if (Test-Path -LiteralPath $path -PathType Leaf) {
+            $backupPath = Join-Path $sourceBackup $relative
+            New-Item -ItemType Directory -Path (Split-Path $backupPath -Parent) -Force | Out-Null
+            Copy-Item -LiteralPath $path -Destination $backupPath
+        }
+        New-Item -ItemType Directory -Path (Split-Path $path -Parent) -Force | Out-Null
+        $sourcePending = $path + '.pending'
+        [IO.File]::WriteAllBytes($sourcePending, $sourceUpdates[$path])
+        Move-Item -LiteralPath $sourcePending -Destination $path -Force
+        if ((Bytes-Hash ([IO.File]::ReadAllBytes($path))) -ne (Bytes-Hash $sourceUpdates[$path])) {
+            throw "Canonical source icon verification failed: $relative"
+        }
+    }
+    $afterHash = (Get-RpgFileHash -LiteralPath $pending).Hash
     $backup = Join-Path $BackupRoot ("Hywind-before-" + $beforeHash + '.jar')
     if (-not (Test-Path -LiteralPath $backup)) { Copy-Item -LiteralPath $JarPath -Destination $backup }
     if ((Get-RpgFileHash -LiteralPath $backup).Hash -ne $beforeHash) { throw 'Backup integrity check failed.' }
@@ -245,11 +278,12 @@ try {
     $pending = $null
     if ((Get-RpgFileHash -LiteralPath $JarPath).Hash -ne $afterHash) { throw 'Deployment hash mismatch; inspect backup before launching.' }
     $receipt = [ordered]@{schemaVersion=1;target=$JarPath;beforeSha256=$beforeHash;afterSha256=$afterHash;
-        backup=$backup;icons=@($selected);changedEntries=$changed;utc=[DateTime]::UtcNow.ToString('o');savesModified=$false}
+        backup=$backup;sourceBackup=$sourceBackup;icons=@($selected);sourceChanged=$sourceChanged;
+        changedEntries=$changed;utc=[DateTime]::UtcNow.ToString('o');savesModified=$false}
     $json = $receipt | ConvertTo-Json -Depth 8
     [IO.File]::WriteAllText((Join-Path $BackupRoot ("update-" + [Guid]::NewGuid().ToString('N') + '.json')), $json, $utf8)
     [IO.File]::WriteAllText($lastPath, $json, $utf8)
-    Write-Output "SUCCESS: installed $($selected.Count) icons. No gameplay code or saves changed."
+    Write-Output "SUCCESS: synchronized $($selected.Count) icons into canonical source and the installed JAR. No saves changed."
     Write-Output "Backup: $backup"
     Write-Output "Installed SHA256: $afterHash"
     Write-Output 'Restart Hytale and rejoin RPG. Then check /rpg skilltree and native skill slots.'
