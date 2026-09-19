@@ -1,14 +1,14 @@
 # Hywind merger and deployment report
 
 Status: **DEPLOYED / CONNECTED VALIDATION PENDING**
-Candidate/deployed SHA-256: `90BD356B8D4DB2C2E6B4E473BD185614EFE648FDAF57C71F90EDE4AC4C1443E7`
-Version/revision: `0.1.0-merge.3` / `R048`
-Deployment time: `2026-09-19T18:57:43.2024614Z`
-Implementation commit: `b4340fbd99aa416353709c2a72b7e027e9e37295`
+Candidate/deployed SHA-256: `828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A`
+Version/revision: `0.1.0-merge.4` / `R049`
+Deployment time: `2026-09-19T20:08:38.2893501Z`
+Implementation commit: `2b2cf1af4d749704a765ef74f7261ae2923987f9`
 
 Hywind now contains the required RPG, CanvasUI, Immersive NPC/Orbis, and Tavern Management subsystems behind one manifest and one Hytale plugin lifecycle. `Hywind.jar` is installed as the only active first-party project JAR in the RPG save. Automated tests, package validation, fresh and copied-data server smokes, rollback rehearsal, live deployment, and two post-deployment restart cycles passed. Connected-client rendering/input/gameplay QA remains explicitly unverified.
 
-R048 adds the final nine-skill Lightning roster and its runtime/status/presentation contracts. The detailed implementation and evidence record is in `docs/hywind/r048-lightning-update-report.md`; it supersedes only the artifact/version/deployment fields in this original merger report and does not alter the Tavern source reconciliation below.
+R049 adds the modular Link Tree interaction refinement. Its detailed implementation, validation, deployment record, and one explicit pre.3 keyboard API limitation are in `docs/hywind/r049-link-tree-interaction-report.md`. R048's Lightning implementation remains cumulative and documented in `docs/hywind/r048-lightning-update-report.md`.
 
 ## 1. Correction to the earlier report
 
@@ -146,13 +146,13 @@ Installed artifact:
 
 Installed SHA-256:
 
-`B16870EC46996B35E009922FA48BBB9D49EDAB070A16E13CFB945DDC993371A1`
+`828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A`
 
 Full stopped-save backup and deployment journal:
 
-`C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260919T171145Z`
+`C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260919T200837Z`
 
-The backup contains 599 files and 486,658,752 bytes. The previous merge.1 `Hywind.jar` was retired there with SHA-256 `B07071798C994FE3CF1062C138BA38AB20B3108B529ABE8A74384D0566A751C1`.
+The backup contains 614 files and 514,799,982 bytes. The previous R048 `Hywind.jar` was retired there with SHA-256 `EB90BD93B26EBB9A894A9A07E6B6FB6FC53904C376A20A64641B19FD766141B3`.
 
 Active JARs in the RPG load path:
 

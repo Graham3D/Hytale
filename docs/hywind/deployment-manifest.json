@@ -4,14 +4,15 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.3",
-    "revision": "R048",
+    "version": "0.1.0-merge.4",
+    "revision": "R049",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "b4340fbd99aa416353709c2a72b7e027e9e37295",
+    "implementationCommit": "2b2cf1af4d749704a765ef74f7261ae2923987f9",
+    "linkTreeInteractionCommit": "2b2cf1af4d749704a765ef74f7261ae2923987f9",
     "lightningRosterCommit": "9584ffcdedaf058ef77277e3028aac5516b05eb1",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "rpgBaseCommit": "25b85cb2819351a0d727e33132b2f57013cda024",
@@ -29,22 +30,22 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "90BD356B8D4DB2C2E6B4E473BD185614EFE648FDAF57C71F90EDE4AC4C1443E7",
-    "bytes": 12674495,
-    "entries": 5771,
-    "classes": 2176,
-    "uiDocuments": 2089,
+    "sha256": "828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A",
+    "bytes": 12700825,
+    "entries": 5786,
+    "classes": 2190,
+    "uiDocuments": 2090,
     "generatedNpcSections": 2032,
     "totalNpcSections": 2048
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-19T18:57:43.2024614Z",
+    "deployedAtUtc": "2026-09-19T20:08:38.2893501Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "90BD356B8D4DB2C2E6B4E473BD185614EFE648FDAF57C71F90EDE4AC4C1443E7",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T185742Z",
-    "fullBackupFiles": 606,
-    "fullBackupBytes": 507948061,
+    "installedSha256": "828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T200837Z",
+    "fullBackupFiles": 614,
+    "fullBackupBytes": 514799982,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -56,8 +57,8 @@
       {
         "name": "Hywind.jar",
         "version": "0.1.0-merge.3",
-        "revision": "R048-interim",
-        "sha256": "3A4CB230AD75AC0E6181B2F439BD44C4AA4C95734C07D7991DD934A8336E2FB9"
+        "revision": "R048",
+        "sha256": "EB90BD93B26EBB9A894A9A07E6B6FB6FC53904C376A20A64641B19FD766141B3"
       }
     ]
   },
@@ -71,14 +72,14 @@
   },
   "validation": {
     "gradleBuild": "PASS",
-    "gradleTasksExecuted": 35,
-    "rpgAndNativeJUnitTests": 2362,
-    "canvasJUnitTests": 28,
+    "gradleTasksExecuted": 39,
+    "rpgAndNativeJUnitTests": 2363,
+    "canvasJUnitTests": 32,
     "tavernJUnitTests": 5,
     "tavernRetainedExecutableGates": 8,
     "npcRetainedExecutableGates": 149,
     "npcLiveLocalModelTests": "SKIPPED_BY_RETAINED_HARNESS",
-    "customUiDocuments": 58,
+    "customUiDocuments": 59,
     "packageAudit": "PASS",
     "isolatedSmoke": "PASS",
     "copiedLegacyAndTavernDataSmoke": "PASS",
@@ -91,11 +92,15 @@
     "rollbackHashDeltaCount": 0,
     "lightningFocusedTests": "PASS",
     "lightningFinalIsolatedSmoke": "PASS",
+    "linkTreeFocusedTests": "PASS",
+    "linkTreeKeyboardDelete": "API_LIMITED_CUSTOM_UI_HUD_HAS_NO_KEY_EVENTS_VISIBLE_BREAK_AND_CONTEXT_BREAK_PROVIDED",
+    "linkTreeFinalIsolatedSmoke": "PASS",
     "postDeploymentStartStopCycles": 2,
     "postDeploymentResult": "PASS",
     "connectedClient": "UNVERIFIED"
   },
   "connectedPending": [
+    "R049 Link Tree live search, icon drag/snap/return, continuous connector rendering, selection, context break, visible selected-link break, persistence and cleanup",
     "R048 nine-skill Lightning roster, visuals, status timing, native combat integration, Lightning Coil charging/discharge, and migration behavior",
     "Tavern/Kitchen/Bedroom Core placement, zoning, expansion/refund and restart persistence",
     "Prepared cooking, Comfort, Relaxed, service, table serving, patron, order, payment, HUD and presentation parity",
