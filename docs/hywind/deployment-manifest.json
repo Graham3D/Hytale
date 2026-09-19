@@ -4,14 +4,15 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.2",
-    "revision": "R047",
+    "version": "0.1.0-merge.3",
+    "revision": "R048",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "1fa213690baed9298428f59837f470ae66495d70",
+    "implementationCommit": "b4340fbd99aa416353709c2a72b7e027e9e37295",
+    "lightningRosterCommit": "9584ffcdedaf058ef77277e3028aac5516b05eb1",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "rpgBaseCommit": "25b85cb2819351a0d727e33132b2f57013cda024",
     "npcSourceCommit": "9033cbf2c421c45a521467761010d32bb2a967f6",
@@ -28,22 +29,22 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "B16870EC46996B35E009922FA48BBB9D49EDAB070A16E13CFB945DDC993371A1",
-    "bytes": 12606843,
-    "entries": 5736,
-    "classes": 2163,
+    "sha256": "90BD356B8D4DB2C2E6B4E473BD185614EFE648FDAF57C71F90EDE4AC4C1443E7",
+    "bytes": 12674495,
+    "entries": 5771,
+    "classes": 2176,
     "uiDocuments": 2089,
     "generatedNpcSections": 2032,
     "totalNpcSections": 2048
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-19T17:11:46.4529513Z",
+    "deployedAtUtc": "2026-09-19T18:57:43.2024614Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "B16870EC46996B35E009922FA48BBB9D49EDAB070A16E13CFB945DDC993371A1",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T171145Z",
-    "fullBackupFiles": 599,
-    "fullBackupBytes": 486658752,
+    "installedSha256": "90BD356B8D4DB2C2E6B4E473BD185614EFE648FDAF57C71F90EDE4AC4C1443E7",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T185742Z",
+    "fullBackupFiles": 606,
+    "fullBackupBytes": 507948061,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -54,9 +55,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.1",
-        "revision": "R046",
-        "sha256": "B07071798C994FE3CF1062C138BA38AB20B3108B529ABE8A74384D0566A751C1"
+        "version": "0.1.0-merge.3",
+        "revision": "R048-interim",
+        "sha256": "3A4CB230AD75AC0E6181B2F439BD44C4AA4C95734C07D7991DD934A8336E2FB9"
       }
     ]
   },
@@ -70,8 +71,8 @@
   },
   "validation": {
     "gradleBuild": "PASS",
-    "gradleTasksExecuted": 42,
-    "rpgAndNativeJUnitTests": 2428,
+    "gradleTasksExecuted": 35,
+    "rpgAndNativeJUnitTests": 2362,
     "canvasJUnitTests": 28,
     "tavernJUnitTests": 5,
     "tavernRetainedExecutableGates": 8,
@@ -85,14 +86,17 @@
     "copiedTavernCoreCount": 1,
     "copiedTavernFilesUnchanged": true,
     "deploymentDryRun": "PASS",
-    "rollbackRehearsal": "PASS",
+    "rollbackRehearsal": "PASS_RETAINED_FROM_MERGER_GATE",
     "rollbackRestoredFiles": 599,
     "rollbackHashDeltaCount": 0,
+    "lightningFocusedTests": "PASS",
+    "lightningFinalIsolatedSmoke": "PASS",
     "postDeploymentStartStopCycles": 2,
     "postDeploymentResult": "PASS",
     "connectedClient": "UNVERIFIED"
   },
   "connectedPending": [
+    "R048 nine-skill Lightning roster, visuals, status timing, native combat integration, Lightning Coil charging/discharge, and migration behavior",
     "Tavern/Kitchen/Bedroom Core placement, zoning, expansion/refund and restart persistence",
     "Prepared cooking, Comfort, Relaxed, service, table serving, patron, order, payment, HUD and presentation parity",
     "RPG casting, combat, HUD, progression, persistence and restart/rejoin parity",
