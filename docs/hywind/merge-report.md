@@ -4,6 +4,7 @@ Status: **DEPLOYED / CONNECTED VALIDATION PENDING**
 Candidate/deployed SHA-256: `B16870EC46996B35E009922FA48BBB9D49EDAB070A16E13CFB945DDC993371A1`
 Version/revision: `0.1.0-merge.2` / `R047`
 Deployment time: `2026-09-19T17:11:46.4529513Z`
+Implementation commit: `1fa213690baed9298428f59837f470ae66495d70`
 
 Hywind now contains the required RPG, CanvasUI, Immersive NPC/Orbis, and Tavern Management subsystems behind one manifest and one Hytale plugin lifecycle. `Hywind.jar` is installed as the only active first-party project JAR in the RPG save. Automated tests, package validation, fresh and copied-data server smokes, rollback rehearsal, live deployment, and two post-deployment restart cycles passed. Connected-client rendering/input/gameplay QA remains explicitly unverified.
 
