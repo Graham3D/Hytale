@@ -101,6 +101,8 @@ class TreeEditorInteractionTest {
         assertTrue(editor.contains("SKILL LIBRARY"));assertTrue(editor.contains("SHAPE YOUR JOURNEY"));
         assertFalse(editor.contains("PREV"));assertFalse(editor.contains("NEXT"));
         assertFalse(editor.toLowerCase().contains("skill points"));
+        assertFalse(editor.contains("HorizontalAlignment: Right"));
+        assertTrue(editor.contains("HorizontalAlignment: End"));
         assertTrue(searchUi.contains("SEARCH MODE"));assertTrue(searchUi.contains("GraphSearchInput"));
     }
 

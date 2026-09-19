@@ -157,9 +157,18 @@ foreach ($document in $documents) {
             $errors.Add("$($document.Name) ($matchLine): imported-control macro arguments must precede concrete properties; use Text: or move the macro argument before the property.")
         }
     }
+
+    # LabelAlignment is a client enum. The installed 0.7.0-pre.3.1 documents use
+    # Start/Center/End; CSS-like Left/Right values make the client reject the
+    # complete CustomUI document during connection.
+    foreach ($match in [regex]::Matches($text, '(?m)\b(?:Horizontal|Vertical)Alignment\s*:\s*(?<value>Left|Right)\b')) {
+        $matchLine = 1 + ([regex]::Matches($text.Substring(0, $match.Index), "`n")).Count
+        $replacement = if ($match.Groups['value'].Value -eq 'Left') { 'Start' } else { 'End' }
+        $errors.Add("$($document.Name) ($matchLine): unsupported LabelAlignment '$($match.Groups['value'].Value)'; use '$replacement'.")
+    }
 }
 
 if ($documents.Count -eq 0) { throw 'No CustomUI .ui documents were found in the validation targets.' }
 if ($errors.Count -gt 0) { throw "CustomUI validation failed:`n$($errors -join "`n")" }
 
-"Validated $($documents.Count) CustomUI document(s): no invalid escapes, unterminated strings, unbalanced delimiters, labeled Button misuse, or late imported-control macro arguments."
+"Validated $($documents.Count) CustomUI document(s): no invalid escapes, unterminated strings, unbalanced delimiters, labeled Button misuse, invalid LabelAlignment values, or late imported-control macro arguments."

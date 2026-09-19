@@ -8,7 +8,7 @@ Group {
     Label #GraphEditorBrand { Text: "HYTALE RPG"; Anchor: (Left: 20, Top: 14, Width: 250, Height: 28); Style: (FontSize: 19, TextColor: #78c6d0); }
     Label #GraphEditorTitle { Text: "SKILL TREE"; Anchor: (Horizontal: 300, Top: 8, Height: 30); Style: (FontSize: 22, TextColor: #f2d488, HorizontalAlignment: Center); }
     Label #GraphEditorSubtitle { Text: "SHAPE YOUR JOURNEY"; Anchor: (Horizontal: 300, Top: 38, Height: 20); Style: (FontSize: 10, TextColor: #b9cce0, HorizontalAlignment: Center); }
-    Label #GraphEditorRevision { Text: "REV"; Anchor: (Right: 112, Top: 21, Width: 80, Height: 26); Style: (FontSize: 13, TextColor: #f2d488, HorizontalAlignment: Right); }
+    Label #GraphEditorRevision { Text: "REV"; Anchor: (Right: 112, Top: 21, Width: 80, Height: 26); Style: (FontSize: 13, TextColor: #f2d488, HorizontalAlignment: End); }
     Group #GraphEditorClose { Anchor: (Right: 14, Top: 14, Width: 84, Height: 42); Background: (Color: #8d2936e8); }
     Label { Text: "CLOSE"; Anchor: (Right: 26, Top: 24, Width: 60, Height: 22); Style: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center); }
 
@@ -299,6 +299,6 @@ Group {
     }
     Label #GraphEditorDrag { Text: "Drag a library entry onto a matching node."; Anchor: (Left: 24, Right: 24, Bottom: 46, Height: 22); Style: (FontSize: 11, TextColor: #f2d488); }
     Label #GraphEditorStatus { Text: "Ready"; Anchor: (Left: 24, Right: 24, Bottom: 20, Height: 24); Style: (FontSize: 12, TextColor: #9be4ae); }
-    Label { Text: "Drag yellow ports to parent nodes. Each triangular Joint accepts three linked nodes."; Anchor: (Left: 350, Right: 24, Bottom: 46, Height: 20); Style: (FontSize: 10, TextColor: #8fb0c8, HorizontalAlignment: Right); }
+    Label { Text: "Drag yellow ports to parent nodes. Each triangular Joint accepts three linked nodes."; Anchor: (Left: 350, Right: 24, Bottom: 46, Height: 20); Style: (FontSize: 10, TextColor: #8fb0c8, HorizontalAlignment: End); }
   }
 }
