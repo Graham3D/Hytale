@@ -2,8 +2,8 @@
 
 Status: **IMPLEMENTED / PACKAGED / DEPLOYED / CONNECTED QA PENDING**  
 Version/revision: `0.1.0-merge.4` / `R049`  
-Implementation commit: `2b2cf1af4d749704a765ef74f7261ae2923987f9`  
-Candidate/deployed SHA-256: `828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A`
+Implementation commits: `2b2cf1af4d749704a765ef74f7261ae2923987f9`, `da18f0f8594dd745798cc117588eccd37047127b`<br>
+Candidate/deployed SHA-256: `25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4`
 
 ## Implementation
 
@@ -75,12 +75,12 @@ Installed JAR:
 
 SHA-256:
 
-`828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A`
+`25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4`
 
 Full stopped-save backup, prior JAR, deployment receipt, and journal:
 
-`C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260919T200837Z`
+`C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260919T201509Z`
 
-The backup contains 614 files / 514,799,982 bytes. The retired prior `Hywind.jar` hash is `EB90BD93B26EBB9A894A9A07E6B6FB6FC53904C376A20A64641B19FD766141B3`. The active load path contains only `Hywind.jar` as a first-party project mod; external `HYTALEDEVLIB-0.5.0.jar` remains unchanged.
+The final backup contains 618 files / 515,982,955 bytes. Its retired immediately-prior R049 candidate hash is `828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A`. The preceding backup at `hywind-deploy-20260919T200837Z` retains the original R048 deployment (`EB90BD93B26EBB9A894A9A07E6B6FB6FC53904C376A20A64641B19FD766141B3`). The active load path contains only `Hywind.jar` as a first-party project mod; external `HYTALEDEVLIB-0.5.0.jar` remains unchanged.
 
 Connected QA should now open `/rpg skilltree` and exercise search, icon drag/snap/return, port linking, link selection, right-click Yes/No/outside dismissal, the selected-link break control, reopen persistence, and page-close cleanup. No connected success is inferred from automated or server-only evidence.

@@ -1,10 +1,10 @@
 # Hywind merger and deployment report
 
 Status: **DEPLOYED / CONNECTED VALIDATION PENDING**
-Candidate/deployed SHA-256: `828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A`
+Candidate/deployed SHA-256: `25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4`
 Version/revision: `0.1.0-merge.4` / `R049`
-Deployment time: `2026-09-19T20:08:38.2893501Z`
-Implementation commit: `2b2cf1af4d749704a765ef74f7261ae2923987f9`
+Deployment time: `2026-09-19T20:15:10.0413574Z`
+Implementation commit: `da18f0f8594dd745798cc117588eccd37047127b`
 
 Hywind now contains the required RPG, CanvasUI, Immersive NPC/Orbis, and Tavern Management subsystems behind one manifest and one Hytale plugin lifecycle. `Hywind.jar` is installed as the only active first-party project JAR in the RPG save. Automated tests, package validation, fresh and copied-data server smokes, rollback rehearsal, live deployment, and two post-deployment restart cycles passed. Connected-client rendering/input/gameplay QA remains explicitly unverified.
 
@@ -146,13 +146,13 @@ Installed artifact:
 
 Installed SHA-256:
 
-`828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A`
+`25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4`
 
 Full stopped-save backup and deployment journal:
 
-`C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260919T200837Z`
+`C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260919T201509Z`
 
-The backup contains 614 files and 514,799,982 bytes. The previous R048 `Hywind.jar` was retired there with SHA-256 `EB90BD93B26EBB9A894A9A07E6B6FB6FC53904C376A20A64641B19FD766141B3`.
+The final backup contains 618 files and 515,982,955 bytes. The immediately-prior R049 candidate was retired there with SHA-256 `828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A`; the preceding backup retains the original R048 artifact.
 
 Active JARs in the RPG load path:
 

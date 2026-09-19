@@ -11,8 +11,9 @@
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "2b2cf1af4d749704a765ef74f7261ae2923987f9",
-    "linkTreeInteractionCommit": "2b2cf1af4d749704a765ef74f7261ae2923987f9",
+    "implementationCommit": "da18f0f8594dd745798cc117588eccd37047127b",
+    "linkTreeInteractionCommit": "da18f0f8594dd745798cc117588eccd37047127b",
+    "linkTreeInteractionBaseCommit": "2b2cf1af4d749704a765ef74f7261ae2923987f9",
     "lightningRosterCommit": "9584ffcdedaf058ef77277e3028aac5516b05eb1",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "rpgBaseCommit": "25b85cb2819351a0d727e33132b2f57013cda024",
@@ -30,8 +31,8 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A",
-    "bytes": 12700825,
+    "sha256": "25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4",
+    "bytes": 12700923,
     "entries": 5786,
     "classes": 2190,
     "uiDocuments": 2090,
@@ -39,13 +40,13 @@
     "totalNpcSections": 2048
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-19T20:08:38.2893501Z",
+    "deployedAtUtc": "2026-09-19T20:15:10.0413574Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T200837Z",
-    "fullBackupFiles": 614,
-    "fullBackupBytes": 514799982,
+    "installedSha256": "25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T201509Z",
+    "fullBackupFiles": 618,
+    "fullBackupBytes": 515982955,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -57,8 +58,15 @@
       {
         "name": "Hywind.jar",
         "version": "0.1.0-merge.3",
+        "revision": "R049-pre-final",
+        "sha256": "828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A"
+      },
+      {
+        "name": "Hywind.jar",
+        "version": "0.1.0-merge.3",
         "revision": "R048",
-        "sha256": "EB90BD93B26EBB9A894A9A07E6B6FB6FC53904C376A20A64641B19FD766141B3"
+        "sha256": "EB90BD93B26EBB9A894A9A07E6B6FB6FC53904C376A20A64641B19FD766141B3",
+        "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T200837Z"
       }
     ]
   },
