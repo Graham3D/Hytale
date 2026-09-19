@@ -255,7 +255,7 @@ Group {
         Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
       }
       Group #GraphDeleteLink { Visible: false; Anchor: (Left: 700, Top: 10, Width: 116, Height: 30); Background: (Color: #74313aee); }
-      Label { Text: "BREAK SELECTED"; Anchor: (Left: 706, Top: 17, Width: 106, Height: 18); Style: (FontSize: 9, TextColor: #ffffff, HorizontalAlignment: Center); }
+      Label #GraphDeleteLinkLabel { Visible: false; Text: "BREAK SELECTED"; Anchor: (Left: 706, Top: 17, Width: 106, Height: 18); Style: (FontSize: 9, TextColor: #ffffff, HorizontalAlignment: Center); }
       Group #GraphDragGhost { Visible: false; Anchor: (Left: 220, Top: 20, Width: 48, Height: 48); Background: (Color: #ffffff); }
       Group #GraphLinkContext { Visible: false; Anchor: (Left: 350, Top: 180, Width: 126, Height: 88); Background: (Color: #172536ff);
         Label { Text: "Break Link?"; Anchor: (Left: 8, Top: 8, Width: 110, Height: 20); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }

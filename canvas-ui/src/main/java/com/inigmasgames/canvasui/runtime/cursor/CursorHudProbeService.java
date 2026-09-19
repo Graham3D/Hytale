@@ -801,7 +801,9 @@ public final class CursorHudProbeService implements AutoCloseable {
                 CanvasHitTester.Hit foreground=new CanvasHitTester().hit(graph,local);
                 if(!foreground.background())return false;
                 String edge=linkGeometry.hit(graph,local);
-                if(edge!=null){linkInteraction.openContext(edge,local);editorStatus="Break Link?";
+                if(edge!=null){CanvasPoint popup=CanvasPoint.of(Math.min(690,Math.max(208,local.x())),
+                            Math.min(372,Math.max(4,local.y())));
+                    linkInteraction.openContext(edge,popup);editorStatus="Break Link?";
                     traceLifecycle("SKILLTREE_LINK_CONTEXT_OPENED","link="+edge);renderEditor();return true;}
                 return false;
             }

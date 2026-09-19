@@ -148,6 +148,7 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 (int)Math.round(Math.min(690,Math.max(208,links.popupAnchor().x()))),
                 (int)Math.round(Math.min(372,Math.max(4,links.popupAnchor().y()))),126,88));
         commands.set("#GraphDeleteLink.Visible",links!=null&&links.selectedLinkId()!=null);
+        commands.set("#GraphDeleteLinkLabel.Visible",links!=null&&links.selectedLinkId()!=null);
     }
 
     private static PatchStyle color(String value) { return new PatchStyle().setColor(Value.of(value)); }
