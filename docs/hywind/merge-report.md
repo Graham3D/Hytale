@@ -172,3 +172,9 @@ Automated/startup validation cannot prove client rendering or input. A connected
 5. NPC profiles, appearance, inventory transfer, Orbis providers/voice, persistence, and no duplicate plugin behavior.
 
 Until those connected checks pass, the release status remains **DEPLOYED / CONNECTED VALIDATION PENDING**.
+
+## R050 modular Skill Tree stabilization
+
+R050 is implemented, packaged, and deployed from implementation commit `c0fafac51a4d32b1287d4a5f768baf1d099961ce`. It enlarges and centers the editor, introduces integrated read-only Search Mode over the shared immutable projection, replaces PREV/NEXT with a draggable proportional scrollbar, coalesces obsolete cursor motion, uses bounded partial drag/link patches, restores explicit port-link state and white preview geometry, and makes owner-authored icon bytes canonical build inputs.
+
+The deployed `Hywind.jar` SHA-256 is `BCED6B2B7386AE047890C70A48C31767BD1B497A25BFF3959D3585BF3EC49466`. A full rollback copy is at `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260919T213704Z`. Retained validation, package audit, isolated smoke, deployment dry run, and two post-deployment restart cycles pass. Connected-client R050 validation remains pending; see `r050-link-tree-connected-stabilization-report.md`.

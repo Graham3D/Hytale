@@ -4,24 +4,17 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.4",
-    "revision": "R049",
+    "version": "0.1.0-merge.5",
+    "revision": "R050",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "da18f0f8594dd745798cc117588eccd37047127b",
-    "linkTreeInteractionCommit": "da18f0f8594dd745798cc117588eccd37047127b",
-    "linkTreeInteractionBaseCommit": "2b2cf1af4d749704a765ef74f7261ae2923987f9",
-    "lightningRosterCommit": "9584ffcdedaf058ef77277e3028aac5516b05eb1",
+    "implementationCommit": "c0fafac51a4d32b1287d4a5f768baf1d099961ce",
+    "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
-    "rpgBaseCommit": "25b85cb2819351a0d727e33132b2f57013cda024",
-    "npcSourceCommit": "9033cbf2c421c45a521467761010d32bb2a967f6",
-    "tavernSourceCommit": "981f9aafefb6e974626a473020b4152251da9f1a",
-    "tavernSourceRevision": "R056",
-    "tavernReferenceJarSha256": "B2F19818D33B8095F462CDF77825CDEC8D949E9B7EEEFB1F9979691B0E137947",
-    "canvasSource": "RPG cumulative working tree"
+    "tavernSourceRevision": "R056"
   },
   "runtime": {
     "patchline": "pre-release",
@@ -31,22 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4",
-    "bytes": 12700923,
-    "entries": 5786,
-    "classes": 2190,
+    "sha256": "BCED6B2B7386AE047890C70A48C31767BD1B497A25BFF3959D3585BF3EC49466",
+    "bytes": 13300177,
+    "entries": 5817,
+    "classes": 2198,
     "uiDocuments": 2090,
-    "generatedNpcSections": 2032,
-    "totalNpcSections": 2048
+    "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-19T20:15:10.0413574Z",
+    "deployedAtUtc": "2026-09-19T21:37:05.5759392Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T201509Z",
-    "fullBackupFiles": 618,
-    "fullBackupBytes": 515982955,
+    "installedSha256": "BCED6B2B7386AE047890C70A48C31767BD1B497A25BFF3959D3585BF3EC49466",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T213704Z",
+    "fullBackupFiles": 626,
+    "fullBackupBytes": 529891572,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -57,16 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.3",
-        "revision": "R049-pre-final",
-        "sha256": "828C2F95E24F95A9F20006B2FB79D8C753704D70F0484E14F784A2F1A9B6AC1A"
-      },
-      {
-        "name": "Hywind.jar",
-        "version": "0.1.0-merge.3",
-        "revision": "R048",
-        "sha256": "EB90BD93B26EBB9A894A9A07E6B6FB6FC53904C376A20A64641B19FD766141B3",
-        "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T200837Z"
+        "version": "0.1.0-merge.4",
+        "revision": "R049",
+        "sha256": "25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4"
       }
     ]
   },
@@ -74,46 +59,36 @@
     "gameplay": "mods/InigmasGames_HytaleRPGPhase00Audit",
     "presentation": "mods/InigmasGames_CanvasUI",
     "charactersAndIntelligence": "mods/ImmersiveNPCs",
-    "taverns": "mods/InigmasGames_Taverns",
-    "historicalTavernSaveModified": false,
-    "crossWorldTavernDataImported": false
+    "taverns": "mods/InigmasGames_Taverns"
   },
   "validation": {
-    "gradleBuild": "PASS",
-    "gradleTasksExecuted": 39,
-    "rpgAndNativeJUnitTests": 2363,
-    "canvasJUnitTests": 32,
+    "rpgJUnitTests": 2365,
+    "nativeControlJUnitTests": 67,
+    "canvasJUnitTests": 37,
     "tavernJUnitTests": 5,
     "tavernRetainedExecutableGates": 8,
     "npcRetainedExecutableGates": 149,
     "npcLiveLocalModelTests": "SKIPPED_BY_RETAINED_HARNESS",
     "customUiDocuments": 59,
+    "authoredIconHashesVerified": 17,
     "packageAudit": "PASS",
     "isolatedSmoke": "PASS",
-    "copiedLegacyAndTavernDataSmoke": "PASS",
-    "copiedTavernRecordCount": 1,
-    "copiedTavernCoreCount": 1,
-    "copiedTavernFilesUnchanged": true,
     "deploymentDryRun": "PASS",
-    "rollbackRehearsal": "PASS_RETAINED_FROM_MERGER_GATE",
-    "rollbackRestoredFiles": 599,
-    "rollbackHashDeltaCount": 0,
-    "lightningFocusedTests": "PASS",
-    "lightningFinalIsolatedSmoke": "PASS",
-    "linkTreeFocusedTests": "PASS",
-    "linkTreeKeyboardDelete": "API_LIMITED_CUSTOM_UI_HUD_HAS_NO_KEY_EVENTS_VISIBLE_BREAK_AND_CONTEXT_BREAK_PROVIDED",
-    "linkTreeFinalIsolatedSmoke": "PASS",
     "postDeploymentStartStopCycles": 2,
     "postDeploymentResult": "PASS",
     "connectedClient": "UNVERIFIED"
   },
+  "apiLimitations": {
+    "mouseWheel": "NO_SAFE_WHEEL_DELTA_OR_CUSTOMUI_SCROLL_EVENT_IN_0.7.0_PRE_3_1;_VISIBLE_SCROLLBAR_IMPLEMENTED",
+    "backdropBlur": "PATCHSTYLE_HAS_NO_SUPPORTED_BLUR_PROPERTY;TRANSLUCENT_SCRIM_USED",
+    "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
+  },
   "connectedPending": [
-    "R049 Link Tree live search, icon drag/snap/return, continuous connector rendering, selection, context break, visible selected-link break, persistence and cleanup",
-    "R048 nine-skill Lightning roster, visuals, status timing, native combat integration, Lightning Coil charging/discharge, and migration behavior",
-    "Tavern/Kitchen/Bedroom Core placement, zoning, expansion/refund and restart persistence",
-    "Prepared cooking, Comfort, Relaxed, service, table serving, patron, order, payment, HUD and presentation parity",
-    "RPG casting, combat, HUD, progression, persistence and restart/rejoin parity",
-    "CanvasUI cursor, scaling, drag/drop, links/joints and input restoration",
-    "NPC profiles, inventory, appearance, Orbis provider/voice and save/rejoin parity"
+    "R050 centered layout and integrated Search Mode",
+    "R050 scrollbar, accepted/rejected icon drag, and measured cursor patch telemetry",
+    "R050 repeated port-link preview/snap/commit, invalid and Skill-to-Skill rejection",
+    "R049 selection and exact-edge break regressions",
+    "authored Lightning, Fire, Arcane, and Support icon rendering plus rebuild/restart persistence",
+    "all earlier Hywind RPG, Tavern, CanvasUI, and Immersive NPC connected gates"
   ]
 }
