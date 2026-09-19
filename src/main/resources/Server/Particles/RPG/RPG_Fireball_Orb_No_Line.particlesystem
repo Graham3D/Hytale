@@ -1,0 +1,9 @@
+{
+  "$Comment":"RPG Fireball orb reuses the shipped fire sprites with short-lived carrier-local particles so motion does not paint a linear ribbon.",
+  "Spawners":[
+    {"SpawnerId":"RPG_Fireball_Orb_Core","FixedRotation":false},
+    {"SpawnerId":"RPG_Fireball_Orb_Glow","FixedRotation":false},
+    {"SpawnerId":"RPG_Fireball_Orb_Sparks","FixedRotation":false}
+  ],
+  "CullDistance":100.0,"BoundingRadius":10.0,"IsImportant":true
+}

@@ -1,0 +1,2 @@
+$Probe = "GridCommon.ui";
+$Probe.@ProbeGrid #NpcInventoryGrid { InventorySectionId: 7; }

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {"id":"lycander-hidden-sword","source":"Lycander_2026-08-31_15-32-18.jsonl","boundary":"CONTEXT_RENDER"},
+    {"id":"mara-bridge-testimony","source":"connected-gate-b","boundary":"RETRIEVAL"},
+    {"id":"direct-address-owner","source":"connected-gate-b","boundary":"DIALOGUE_STATE"},
+    {"id":"held-item-routing","source":"r058-trace","boundary":"QUERY_PLAN"},
+    {"id":"canonical-multiphase","source":"r058-trace","boundary":"CANONICAL_RESPONSE"}
+  ]
+}

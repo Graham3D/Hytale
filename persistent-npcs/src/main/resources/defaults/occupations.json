@@ -1,0 +1,90 @@
+[
+  {
+    "id": "BLACKSMITH",
+    "knowledgeDomains": ["metalworking", "tools", "weapons", "Hytale crafting recipes"],
+    "capabilities": ["CRAFT_ITEM", "PROCESS_ITEM", "REPAIR_ITEM", "USE_STATION"],
+    "defaultWorkplace": "workshop",
+    "defaultSchedule": [{"startHour": 8, "endHour": 17, "taskType": "WORK_SHIFT", "location": "workplace", "days": []}],
+    "behavioralPreferences": ["checks ingredients before accepting work"]
+  },
+  {
+    "id": "MERCHANT",
+    "knowledgeDomains": ["inventory", "local trade"],
+    "capabilities": ["BUY_ITEM", "SELL_ITEM", "CREATE_DEBT", "COLLECT_PAYMENT"],
+    "defaultWorkplace": "shop",
+    "defaultSchedule": [{"startHour": 8, "endHour": 18, "taskType": "WORK_SHIFT", "location": "workplace", "days": []}],
+    "behavioralPreferences": ["validates stock and payment"]
+  },
+  {
+    "id": "GUARD",
+    "knowledgeDomains": ["local safety", "patrol routes"],
+    "capabilities": ["PATROL", "WARN", "DEFEND", "ESCORT", "FLEE"],
+    "defaultWorkplace": "guard post",
+    "defaultSchedule": [{"startHour": 6, "endHour": 14, "taskType": "PATROL", "location": "workplace", "days": []}],
+    "behavioralPreferences": ["responds to witnessed threats"]
+  },
+  {
+    "id": "FARMER",
+    "knowledgeDomains": ["crops", "weather", "food processing"],
+    "capabilities": ["GO_TO_WORK", "PROCESS_ITEM", "BRING_ITEM"],
+    "defaultWorkplace": "farm",
+    "defaultSchedule": [{"startHour": 6, "endHour": 16, "taskType": "WORK_SHIFT", "location": "workplace", "days": []}],
+    "behavioralPreferences": []
+  },
+  {
+    "id": "BARTENDER",
+    "knowledgeDomains": ["drinks", "local public gossip"],
+    "capabilities": ["GIVE_ITEM", "TAKE_ITEM", "SELL_ITEM", "CREATE_DEBT"],
+    "defaultWorkplace": "tavern bar",
+    "defaultSchedule": [{"startHour": 16, "endHour": 23, "taskType": "WORK_SHIFT", "location": "workplace", "days": []}],
+    "behavioralPreferences": []
+  },
+  {
+    "id": "SERVER",
+    "knowledgeDomains": ["food service"],
+    "capabilities": ["BRING_ITEM", "GIVE_ITEM", "TAKE_ITEM"],
+    "defaultWorkplace": "tavern",
+    "defaultSchedule": [{"startHour": 16, "endHour": 23, "taskType": "WORK_SHIFT", "location": "workplace", "days": []}],
+    "behavioralPreferences": []
+  },
+  {
+    "id": "COOK",
+    "knowledgeDomains": ["food", "Hytale cooking recipes"],
+    "capabilities": ["COOK_ITEM", "PROCESS_ITEM", "USE_STATION"],
+    "defaultWorkplace": "kitchen",
+    "defaultSchedule": [{"startHour": 10, "endHour": 20, "taskType": "WORK_SHIFT", "location": "workplace", "days": []}],
+    "behavioralPreferences": []
+  },
+  {
+    "id": "TRAVELER",
+    "knowledgeDomains": ["personally visited locations"],
+    "capabilities": ["GO_TO", "WANDER", "FOLLOW_PLAYER", "ESCORT", "FLEE"],
+    "defaultWorkplace": "",
+    "defaultSchedule": [],
+    "behavioralPreferences": []
+  },
+  {
+    "id": "LABORER",
+    "knowledgeDomains": ["manual work", "local materials"],
+    "capabilities": ["GO_TO_WORK", "BRING_ITEM", "PICK_UP_ITEM", "PROCESS_ITEM"],
+    "defaultWorkplace": "work site",
+    "defaultSchedule": [{"startHour": 7, "endHour": 17, "taskType": "WORK_SHIFT", "location": "workplace", "days": []}],
+    "behavioralPreferences": []
+  },
+  {
+    "id": "SHADY_CHARACTER",
+    "knowledgeDomains": ["personally observed illicit activity"],
+    "capabilities": ["WANDER", "FLEE", "SEARCH"],
+    "defaultWorkplace": "",
+    "defaultSchedule": [],
+    "behavioralPreferences": ["guards private information"]
+  },
+  {
+    "id": "CIVILIAN",
+    "knowledgeDomains": ["home and local neighborhood"],
+    "capabilities": ["GO_HOME", "WAIT", "WANDER", "FLEE"],
+    "defaultWorkplace": "",
+    "defaultSchedule": [{"startHour": 22, "endHour": 6, "taskType": "RETURN_HOME", "location": "home", "days": []}],
+    "behavioralPreferences": []
+  }
+]

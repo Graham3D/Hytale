@@ -1,0 +1,243 @@
+Group {
+  Anchor: (Full: 0);
+  Group #GraphEditorSurface {
+    Anchor: (Left: 36, Top: 34, Width: 900, Height: 660);
+    Background: (Color: #07111bea);
+    Group { Anchor: (Left: 0, Top: 0, Width: 900, Height: 56); Background: (Color: #102234f8); }
+    Label #GraphEditorTitle { Text: "RPG SKILL TREE"; Anchor: (Left: 18, Top: 8, Width: 300, Height: 28); Style: (FontSize: 19, TextColor: #78c6d0); }
+    Label { Text: "DRAG + PARENT CANVAS"; Anchor: (Left: 18, Top: 34, Width: 260, Height: 18); Style: (FontSize: 10, TextColor: #f2d488); }
+    Label #GraphEditorRevision { Text: "REV"; Anchor: (Left: 320, Top: 14, Width: 80, Height: 28); Style: (FontSize: 16, TextColor: #f2d488); }
+    Group { Anchor: (Left: 814, Top: 14, Width: 84, Height: 42); Background: (Color: #8d2936e8); }
+    Label { Text: "CLOSE"; Anchor: (Left: 827, Top: 24, Width: 60, Height: 22); Style: (FontSize: 13, TextColor: #ffffff); }
+
+    Group #GraphWorkspace { Anchor: (Left: 24, Top: 82, Width: 830, Height: 470); Background: (Color: #0b1724ee);
+      Group { Anchor: (Left: 0, Top: 0, Width: 202, Height: 470); Background: (Color: #0d2031fa); }
+      Group #GraphEditorSkillsTab { Anchor: (Left: 8, Top: 8, Width: 88, Height: 34); Background: (Color: #1f6c89ff); }
+      Label { Text: "SKILLS"; Anchor: (Left: 22, Top: 17, Width: 64, Height: 18); Style: (FontSize: 12, TextColor: #ffffff); }
+      Group #GraphEditorPassivesTab { Anchor: (Left: 100, Top: 8, Width: 94, Height: 34); Background: (Color: #10283bea); }
+      Label { Text: "PASSIVES"; Anchor: (Left: 109, Top: 17, Width: 80, Height: 18); Style: (FontSize: 12, TextColor: #ffffff); }
+      Group #GraphLibraryRow0 { Anchor: (Left: 8, Top: 52, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group #GraphLibraryRow1 { Anchor: (Left: 8, Top: 104, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group #GraphLibraryRow2 { Anchor: (Left: 8, Top: 156, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group #GraphLibraryRow3 { Anchor: (Left: 8, Top: 208, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group #GraphLibraryRow4 { Anchor: (Left: 8, Top: 260, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group #GraphLibraryRow5 { Anchor: (Left: 8, Top: 312, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group #GraphLibraryRow6 { Anchor: (Left: 8, Top: 364, Width: 186, Height: 46); Background: (Color: #183a56f2);
+        Label #Name { Text: "Item"; Anchor: (Left: 8, Top: 5, Width: 170, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 8, Top: 25, Width: 170, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group { Anchor: (Left: 8, Top: 424, Width: 54, Height: 34); Background: (Color: #20384bea); }
+      Label { Text: "PREV"; Anchor: (Left: 15, Top: 433, Width: 45, Height: 18); Style: (FontSize: 10, TextColor: #d4e0ec); }
+      Label #GraphEditorPage { Text: "PAGE 1 / 1"; Anchor: (Left: 65, Top: 433, Width: 77, Height: 18); Style: (FontSize: 9, TextColor: #f2d488, HorizontalAlignment: Center); }
+      Group { Anchor: (Left: 142, Top: 424, Width: 52, Height: 34); Background: (Color: #20384bea); }
+      Label { Text: "NEXT"; Anchor: (Left: 149, Top: 433, Width: 44, Height: 18); Style: (FontSize: 10, TextColor: #d4e0ec); }
+      Group { Anchor: (Left: 202, Top: 0, Width: 2, Height: 470); Background: (Color: #28506cee); }
+      Group #GraphEdgeDot0 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot1 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot2 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot3 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot4 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot5 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot6 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot7 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot8 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot9 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot10 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot11 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot12 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot13 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot14 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot15 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot16 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot17 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot18 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot19 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot20 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot21 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot22 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot23 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot24 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot25 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot26 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot27 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot28 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot29 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot30 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot31 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot32 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot33 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot34 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot35 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot36 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot37 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot38 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot39 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot40 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot41 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot42 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot43 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot44 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot45 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot46 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot47 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot48 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot49 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot50 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot51 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot52 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot53 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot54 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot55 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot56 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot57 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot58 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot59 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot60 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot61 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot62 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot63 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot64 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot65 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot66 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot67 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot68 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot69 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot70 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot71 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot72 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot73 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot74 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot75 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot76 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot77 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot78 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot79 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot80 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot81 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot82 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot83 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot84 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot85 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot86 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot87 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot88 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot89 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot90 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot91 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot92 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot93 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot94 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphEdgeDot95 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
+      Group #GraphNode0 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode1 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode2 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode3 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode4 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode5 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode6 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode7 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode8 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode9 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+      Group #GraphNode10 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 120, Height: 54); Background: (Color: #173f60f2);
+        Label #Triangle { Visible: false; Text: "△"; Anchor: (Left: 0, Top: -12, Width: 72, Height: 80); Style: (FontSize: 64, TextColor: #e3a943, HorizontalAlignment: Center); }
+        Label #Title { Text: "Node"; Anchor: (Left: 8, Top: 7, Width: 112, Height: 22); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+        Label #Subtitle { Text: "Type"; Anchor: (Left: 8, Top: 31, Width: 112, Height: 16); Style: (FontSize: 9, TextColor: #b9cce0, HorizontalAlignment: Center); }
+        Group #Port0 { Visible: false; Anchor: (Left: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port1 { Visible: false; Anchor: (Right: -6, Top: 21, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+        Group #Port2 { Visible: false; Anchor: (Left: 30, Bottom: -6, Width: 12, Height: 12); Background: (Color: #f2b84bff); }
+      }
+    }
+    Label #GraphEditorDrag { Text: "Drag a library entry onto a matching node."; Anchor: (Left: 24, Top: 562, Width: 850, Height: 22); Style: (FontSize: 11, TextColor: #f2d488); }
+    Label #GraphEditorStatus { Text: "Ready"; Anchor: (Left: 24, Top: 588, Width: 850, Height: 28); Style: (FontSize: 12, TextColor: #9be4ae); }
+    Label { Text: "Ports create spline links. Each triangular Joint permits three linked nodes total."; Anchor: (Left: 24, Top: 622, Width: 850, Height: 20); Style: (FontSize: 10, TextColor: #8fb0c8); }
+  }
+}
+

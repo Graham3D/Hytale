@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TrainingRunManifest",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "state", "baseRevision", "datasetId", "environmentSha256", "configSha256"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "runId": {"type": "string", "minLength": 1},
+    "state": {"enum": ["PLANNED", "PREFLIGHT", "RUNNING", "COMPLETED", "FAILED", "INVALIDATED"]},
+    "baseRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "datasetId": {"type": "string", "pattern": "^ds_[0-9a-f]{64}$"},
+    "environmentSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "configSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}

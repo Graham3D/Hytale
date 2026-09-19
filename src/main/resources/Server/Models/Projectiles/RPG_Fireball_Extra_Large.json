@@ -1,0 +1,7 @@
+{
+  "Model":"Items/Projectiles/Fireball.blockymodel","Texture":"Items/Projectiles/Fireball_Textures/Fireball.png",
+  "HitBox":{"Min":{"X":-0.45,"Y":-0.45,"Z":-0.45},"Max":{"X":0.45,"Y":0.45,"Z":0.45}},
+  "MinScale":1,"MaxScale":1,
+  "Particles":[{"PositionOffset":{"X":0,"Y":0,"Z":0},"SystemId":"RPG_Fireball_Orb_No_Line","TargetNodeName":"","Scale":2.8,"ClearParticlesOnRemove":true}],
+  "Light":{"Color":"#ff7a24"}
+}

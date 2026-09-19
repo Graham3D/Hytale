@@ -89,8 +89,8 @@ try {
     if ([string]::IsNullOrWhiteSpace($BackupRoot)) { $BackupRoot = Join-Path $repository 'icon-backups' }
     if ([string]::IsNullOrWhiteSpace($JarPath)) {
         $mods = Join-Path $env:APPDATA 'Hytale\data\pre-release\Saves\RPG\mods'
-        $installed = @(Get-ChildItem -LiteralPath $mods -File | Where-Object { $_.Name -eq 'HyARPG.jar' -or $_.Name -like 'HytaleRPG-*.jar' })
-        if ($installed.Count -ne 1) { throw 'Expected exactly one HyARPG.jar (or legacy HytaleRPG-*.jar) in the RPG world mods folder. Remove version ambiguity first.' }
+        $installed = @(Get-ChildItem -LiteralPath $mods -File | Where-Object { $_.Name -eq 'Hywind.jar' })
+        if ($installed.Count -ne 1) { throw 'Expected exactly one Hywind.jar in the RPG world mods folder. Build/deploy Hywind first.' }
         $JarPath = $installed[0].FullName
     }
     $JarPath = (Resolve-Path -LiteralPath $JarPath).Path
@@ -109,7 +109,7 @@ try {
             $last.beforeSha256 -notmatch '^[A-F0-9]{64}$') {
             throw 'Undo refused: the installed JAR changed after the last icon update (possibly a newer RPG build).'
         }
-        $backup = Join-Path $BackupRoot ("HytaleRPG-before-" + $last.beforeSha256 + '.jar')
+        $backup = Join-Path $BackupRoot ("Hywind-before-" + $last.beforeSha256 + '.jar')
         if ((Get-RpgFileHash -LiteralPath $backup).Hash -ne $last.beforeSha256) { throw 'Undo backup hash mismatch.' }
         $pending = $JarPath + '.icons-' + [Guid]::NewGuid().ToString('N') + '.pending'
         Copy-Item -LiteralPath $backup -Destination $pending
@@ -130,9 +130,9 @@ try {
     $zip = [IO.Compression.ZipFile]::OpenRead($JarPath)
     try {
         $manifest = Read-JsonEntry $zip 'manifest.json'
-        if ($manifest.Group -ne 'InigmasGames' -or $manifest.Name -ne 'HytaleRPGPhase00Audit') { throw 'Target is not the RPG mod.' }
+        if ($manifest.Group -ne 'InigmasGames' -or $manifest.Name -ne 'Hywind') { throw 'Target is not the unified Hywind mod.' }
         $index = Read-JsonEntry $zip 'rpg/presentation/icon-index.json'
-        if ($index.schemaVersion -ne 1 -or @($index.entries).Count -notin @(153,156)) { throw 'Unsupported icon index; do not patch this build.' }
+        if ($index.schemaVersion -ne 1 -or @($index.entries).Count -notin @(153,156,157,158)) { throw 'Unsupported icon index; do not patch this build.' }
         $byFile = @{}
         $ids = @{}
         $catalogIds = @{}
@@ -158,7 +158,9 @@ try {
         $skillCount=@($index.entries | Where-Object kind -eq 'Skill').Count
         $passiveCount=@($index.entries | Where-Object kind -eq 'Passive').Count
         if ($ids.Count -ne $catalogIds.Count -or -not (($skillCount -eq 87 -and $passiveCount -eq 66) -or
-            ($skillCount -eq 89 -and $passiveCount -eq 67))) { throw 'Icon index does not cover the full catalog.' }
+            ($skillCount -eq 89 -and $passiveCount -eq 67) -or
+            ($skillCount -eq 90 -and $passiveCount -eq 67) -or
+            ($skillCount -eq 91 -and $passiveCount -eq 67))) { throw 'Icon index does not cover the full catalog.' }
         foreach ($kind in @('Skill','Passive')) {
             $folder = Join-Path $ArtRoot ($kind + 's')
             if (-not (Test-Path -LiteralPath $folder -PathType Container)) { continue }
@@ -233,7 +235,7 @@ try {
     }
     $afterHash = (Get-RpgFileHash -LiteralPath $pending).Hash
     New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null
-    $backup = Join-Path $BackupRoot ("HytaleRPG-before-" + $beforeHash + '.jar')
+    $backup = Join-Path $BackupRoot ("Hywind-before-" + $beforeHash + '.jar')
     if (-not (Test-Path -LiteralPath $backup)) { Copy-Item -LiteralPath $JarPath -Destination $backup }
     if ((Get-RpgFileHash -LiteralPath $backup).Hash -ne $beforeHash) { throw 'Backup integrity check failed.' }
     Assert-Stopped

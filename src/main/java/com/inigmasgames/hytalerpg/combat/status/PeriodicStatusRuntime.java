@@ -36,6 +36,24 @@ public final class PeriodicStatusRuntime<C, T> {
         return value==null||value.endsAt<=now?java.util.Optional.empty():java.util.Optional.of(
                 new PackageView(value.stacks,value.sourceCap,value.coefficient,value.endsAt-now));
     }
+    /** Stable snapshot of live source-owned packages; callers may consume exactly this set after accepted damage. */
+    public synchronized List<Source> ownedSources(UUID owner,UUID victim,Kind kind,double now){
+        if(owner==null||victim==null||kind==null||!Double.isFinite(now))throw new IllegalArgumentException("Invalid periodic ownership query");
+        return packages.entrySet().stream().filter(e->e.getKey().owner.equals(owner)&&e.getKey().victim.equals(victim)
+                        &&e.getKey().kind==kind&&e.getValue().endsAt>now)
+                .map(Map.Entry::getKey).sorted(Comparator.comparing(Source::stableKey)).toList();
+    }
+    /** Consumes only permits captured before the accepted payoff hit; other casters' packages are untouched. */
+    public synchronized int consume(List<Source> sources,double now,Port<C,T> port){
+        if(sources==null||!Double.isFinite(now)||port==null)throw new IllegalArgumentException("Invalid periodic consumption");
+        int consumed=0;
+        for(Source source:List.copyOf(sources)){
+            Package<C,T> value=packages.get(source);
+            if(value==null||value.endsAt<=now)continue;
+            finish(source,value,now,"CONSUMED_BY_FIREBALL",port);consumed++;
+        }
+        return consumed;
+    }
     public interface Port<C, T> {
         /** Returning false terminates this source (dead/friendly/protected/native rejection). */
         boolean tick(Source source, C context, T target, int tickIndex, double coefficient, double seconds);

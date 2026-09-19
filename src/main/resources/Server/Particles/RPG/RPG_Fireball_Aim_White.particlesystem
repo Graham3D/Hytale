@@ -1,0 +1,7 @@
+{
+  "$Comment":"R039 bounded white ballistic-guide fallback. The installed pre.2 server exposes only straight BeamComponent/AttachedBeam and no curved spline/polyline renderer.",
+  "Spawners":[{"SpawnerId":"RPG_Fireball_Aim_White_Marker","FixedRotation":false}],
+  "CullDistance":40.0,
+  "BoundingRadius":1.0,
+  "IsImportant":false
+}

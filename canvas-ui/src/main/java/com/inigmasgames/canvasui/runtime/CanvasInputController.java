@@ -17,12 +17,18 @@ import com.inigmasgames.canvasui.api.ConnectionResult;
 import com.inigmasgames.canvasui.api.GraphValidationException;
 import com.inigmasgames.canvasui.api.PanGesture;
 import com.inigmasgames.canvasui.api.PortDirection;
-import com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend;
+import com.inigmasgames.canvasui.api.CanvasRenderBackend;
 
-final class CanvasInputController {
-    private final CanvasSession session;
+import java.util.Objects;
+import java.util.function.BooleanSupplier;
+import java.util.function.LongConsumer;
+
+public final class CanvasInputController {
     private final Canvas canvas;
-    private final HytaleCustomUiBackend backend;
+    private final CanvasRenderBackend backend;
+    private final Runnable persist;
+    private final BooleanSupplier renderDue;
+    private final LongConsumer recordPointer;
     private final CanvasHitTester hitTester = new CanvasHitTester();
     private final CanvasDragController drag = new CanvasDragController();
     private final CanvasPanController pan = new CanvasPanController();
@@ -32,8 +38,18 @@ final class CanvasInputController {
     private CanvasHitTester.Hit candidate = CanvasHitTester.Hit.BACKGROUND;
     private ConnectionResult candidateResult = ConnectionResult.reject(ConnectionCode.REJECT_CUSTOM, "no target");
 
-    CanvasInputController(CanvasSession session, HytaleCustomUiBackend backend) {
-        this.session = session; this.canvas = session.canvas(); this.backend = backend;
+    CanvasInputController(CanvasSession session, CanvasRenderBackend backend) {
+        this(session.canvas(), backend, session::persist, () -> session.renderDue(false), session::recordPointer);
+    }
+
+    /** Production input core shared by the CustomUI page and passive cursor-HUD renderers. */
+    public CanvasInputController(Canvas canvas, CanvasRenderBackend backend, Runnable persist,
+                                 BooleanSupplier renderDue, LongConsumer recordPointer) {
+        this.canvas = Objects.requireNonNull(canvas);
+        this.backend = Objects.requireNonNull(backend);
+        this.persist = Objects.requireNonNull(persist);
+        this.renderDue = Objects.requireNonNull(renderDue);
+        this.recordPointer = Objects.requireNonNull(recordPointer);
     }
 
     void button(PlayerMouseButtonEvent event) {
@@ -44,7 +60,7 @@ final class CanvasInputController {
             if (button == null) return;
             if (button.state == MouseButtonState.Pressed) press(button.mouseButtonType);
             else release(button.mouseButtonType);
-        } finally { session.recordPointer(System.nanoTime() - started); }
+        } finally { recordPointer.accept(System.nanoTime() - started); }
     }
 
     void motion(PlayerMouseMotionEvent event) {
@@ -58,21 +74,59 @@ final class CanvasInputController {
                 CanvasPoint next = drag.update(pointer, canvas.viewport());
                 if (drag.thresholdPassed()) {
                     canvas.moveNode(drag.nodeId(), next);
-                    if (session.renderDue(false)) backend.updateNodeAndEdges(drag.nodeId());
+                    if (renderDue.getAsBoolean()) backend.updateNodeAndEdges(drag.nodeId());
                 }
             } else if (pan.active() && delta != null) {
                 canvas.setViewport(pan.update(canvas.viewport(), delta.x, delta.y));
-                if (session.renderDue(false)) backend.updateViewport();
+                if (renderDue.getAsBoolean()) backend.updateViewport();
             } else if (connectionNode != null) {
                 candidate = hitTester.hit(canvas, pointer);
                 candidateResult = validateCandidate(candidate);
                 backend.pointerTarget(candidate.nodeId(), !candidateResult.allowed());
-                if (session.renderDue(false)) backend.updatePreview(sourceScreenPoint(), pointer, candidateResult.allowed());
+                if (renderDue.getAsBoolean()) backend.updatePreview(sourceScreenPoint(), pointer, candidateResult.allowed());
             } else {
                 CanvasHitTester.Hit hover = hitTester.hit(canvas, pointer);
                 backend.pointerTarget(hover.nodeId(), false);
             }
-        } finally { session.recordPointer(System.nanoTime() - started); }
+        } finally { recordPointer.accept(System.nanoTime() - started); }
+    }
+
+    /** Feeds an already transformed canvas-screen position into the shared graph controller. */
+    public void button(CanvasPoint screenPoint, MouseButtonType button, MouseButtonState state) {
+        long started = System.nanoTime();
+        try {
+            if (screenPoint != null) pointer = screenPoint;
+            if (button == null || state == null) return;
+            if (state == MouseButtonState.Pressed) press(button);
+            else release(button);
+        } finally { recordPointer.accept(System.nanoTime() - started); }
+    }
+
+    /** Feeds transformed/coalesced pointer motion into the shared graph controller. */
+    public void motion(CanvasPoint screenPoint, Integer deltaX, Integer deltaY) {
+        long started = System.nanoTime();
+        try {
+            if (screenPoint != null) pointer = screenPoint;
+            else if (deltaX != null && deltaY != null) pointer = pointer.add(deltaX, deltaY);
+            if (drag.active()) {
+                CanvasPoint next = drag.update(pointer, canvas.viewport());
+                if (drag.thresholdPassed()) {
+                    canvas.moveNode(drag.nodeId(), next);
+                    if (renderDue.getAsBoolean()) backend.updateNodeAndEdges(drag.nodeId());
+                }
+            } else if (pan.active() && deltaX != null && deltaY != null) {
+                canvas.setViewport(pan.update(canvas.viewport(), deltaX, deltaY));
+                if (renderDue.getAsBoolean()) backend.updateViewport();
+            } else if (connectionNode != null) {
+                candidate = hitTester.hit(canvas, pointer);
+                candidateResult = validateCandidate(candidate);
+                backend.pointerTarget(candidate.nodeId(), !candidateResult.allowed());
+                if (renderDue.getAsBoolean()) backend.updatePreview(sourceScreenPoint(), pointer, candidateResult.allowed());
+            } else {
+                CanvasHitTester.Hit hover = hitTester.hit(canvas, pointer);
+                backend.pointerTarget(hover.nodeId(), false);
+            }
+        } finally { recordPointer.accept(System.nanoTime() - started); }
     }
 
     private void press(MouseButtonType button) {
@@ -107,11 +161,11 @@ final class CanvasInputController {
     private void release(MouseButtonType button) {
         if (drag.active() && button == MouseButtonType.Left) {
             String nodeId = drag.nodeId(); boolean moved = drag.thresholdPassed();
-            drag.end(); backend.updateNodeAndEdges(nodeId); session.persist();
+            drag.end(); backend.updateNodeAndEdges(nodeId); persist.run();
             canvas.publish(CanvasEventType.DRAG_ENDED, nodeId, null, moved, canvas.node(nodeId).position(), null);
         }
         if (pan.active() && (button == MouseButtonType.Middle || button == MouseButtonType.Left)) {
-            pan.end(); backend.updateViewport(); session.persist();
+            pan.end(); backend.updateViewport(); persist.run();
         }
         if (connectionNode != null && button == MouseButtonType.Left) {
             candidate = hitTester.hit(canvas, pointer);
@@ -119,7 +173,7 @@ final class CanvasInputController {
             if (candidateResult.allowed()) {
                 try {
                     canvas.connect(connectionNode, connectionPort, candidate.nodeId(), candidate.portId());
-                    backend.topologyChanged(); session.persist(); backend.clearPreview("Connection created");
+                    backend.topologyChanged(); persist.run(); backend.clearPreview("Connection created");
                 } catch (GraphValidationException rejected) {
                     backend.clearPreview("REJECTED: " + rejected.result().reason());
                 }
@@ -148,5 +202,6 @@ final class CanvasInputController {
         if (value != null) pointer = CanvasPoint.of(value.x(), value.y());
     }
 
-    void clear() { drag.end(); pan.end(); connectionNode = null; connectionPort = null; candidate = CanvasHitTester.Hit.BACKGROUND; backend.clearPointerTarget(); }
+    public boolean dragging() { return drag.active(); }
+    public void clear() { drag.end(); pan.end(); connectionNode = null; connectionPort = null; candidate = CanvasHitTester.Hit.BACKGROUND; backend.clearPointerTarget(); }
 }

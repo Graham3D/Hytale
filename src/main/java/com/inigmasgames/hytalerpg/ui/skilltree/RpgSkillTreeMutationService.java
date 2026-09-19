@@ -3,6 +3,7 @@ package com.inigmasgames.hytalerpg.ui.skilltree;
 import com.inigmasgames.hytalerpg.domain.LinkNodeId;
 import com.inigmasgames.hytalerpg.progress.MutationResult;
 import com.inigmasgames.hytalerpg.progress.RpgLoadoutService;
+import com.inigmasgames.hytalerpg.progress.RpgLoadoutView;
 
 import java.util.UUID;
 
@@ -24,4 +25,19 @@ public final class RpgSkillTreeMutationService {
     public MutationResult clear(UUID player, long expectedRevision, LinkNodeId node) {
         return assign(player, expectedRevision, node, "");
     }
+
+    /** Canvas assignment preserves the player's authored topology; linking is a separate gesture. */
+    public MutationResult assignCanvas(UUID player, long expectedRevision, LinkNodeId node, String contentId) {
+        return loadouts.mutateStaticTree(player, expectedRevision, node, contentId, candidate -> { });
+    }
+
+    public MutationResult link(UUID player, LinkNodeId source, LinkNodeId target) {
+        return loadouts.link(player, source, target);
+    }
+
+    public MutationResult unlinkSource(UUID player, LinkNodeId source) {
+        return loadouts.unlinkSource(player, source);
+    }
+
+    public RpgLoadoutView view(UUID player) { return loadouts.getPresentationView(player); }
 }

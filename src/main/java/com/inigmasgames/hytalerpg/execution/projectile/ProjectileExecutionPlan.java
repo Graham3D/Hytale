@@ -26,7 +26,18 @@ public record ProjectileExecutionPlan(
         Vec3 velocity,
         double radius,
         double maxDistance,
-        double maxLifetimeSeconds) {
+        double maxLifetimeSeconds,
+        ProjectileMotion motion) {
+
+    /** Compatibility constructor for existing linear-projectile fixtures and secondary producers. */
+    public ProjectileExecutionPlan(String rootCastId,String skillInstanceId,String projectileInstanceId,UUID ownerId,
+            String skillId,String compiledPlanHash,CombatSnapshot snapshot,int generation,Map<String,Integer> remainingContinuationBudgets,
+            int remainingSpawnedEffects,int remainingTriggeredSecondaries,long spawnTimestampNanos,String configId,Vec3 origin,Vec3 velocity,
+            double radius,double maxDistance,double maxLifetimeSeconds) {
+        this(rootCastId,skillInstanceId,projectileInstanceId,ownerId,skillId,compiledPlanHash,snapshot,generation,remainingContinuationBudgets,
+                remainingSpawnedEffects,remainingTriggeredSecondaries,spawnTimestampNanos,configId,origin,velocity,radius,maxDistance,maxLifetimeSeconds,
+                ProjectileMotion.LINEAR);
+    }
 
     public ProjectileExecutionPlan {
         if (rootCastId == null || rootCastId.isBlank() || skillInstanceId == null || skillInstanceId.isBlank()
@@ -40,7 +51,7 @@ public record ProjectileExecutionPlan(
                 || velocity.lengthSquared() < 1.0e-12 || !Double.isFinite(velocity.lengthSquared())
                 || !Double.isFinite(radius) || !Double.isFinite(maxDistance) || !Double.isFinite(maxLifetimeSeconds)
                 || radius <= 0.0 || maxDistance <= 0.0
-                || maxLifetimeSeconds <= 0.0)
+                || maxLifetimeSeconds <= 0.0 || motion==null)
             throw new IllegalArgumentException("Incomplete projectile execution plan");
         remainingContinuationBudgets = Map.copyOf(remainingContinuationBudgets);
     }
@@ -56,7 +67,19 @@ public record ProjectileExecutionPlan(
         var modifiers=context.compiledPlan().projectileModifiers();
         if(modifiers.ballistics()&&projectile.gravity()!=0)throw new IllegalStateException("BALLISTICS_GRAVITY_UNSUPPORTED");
         speed*=modifiers.speedFactor();double distance=projectile.maxDistance()*modifiers.distanceFactor();
-        if(projectile.details().pattern().ballisticAim()) {
+        ProjectileMotion motion=projectile.details().motion();
+        Vec3 velocity=direction.normalized().multiply(speed);double lifetime=projectile.capLifetime(distance/speed);
+        if(motion.timedBallistic()) {
+            double factor=modifiers.speedFactor();
+            Vec3 target=context.target()==null?origin.add(direction.normalized().multiply(distance)):context.target().point();
+            if(target.subtract(origin).horizontalLength()<1e-6)target=origin.add(direction.normalized().multiply(distance));
+            var solution=ProjectileBallistics.timed(origin,target,motion.horizontalSpeed()*factor,motion.gravity(),distance,
+                    motion.minimumTravelSeconds()/factor,motion.maximumTravelSeconds()/factor).orElseThrow(
+                            ()->new IllegalStateException("TIMED_BALLISTIC_TARGET_UNREACHABLE"));
+            velocity=solution.velocity();distance=solution.pathLength();
+            lifetime=solution.flightSeconds()+motion.safetyLifetimeSeconds();
+            if(projectile.independentLifetimeSeconds()>0)lifetime=Math.min(lifetime,projectile.independentLifetimeSeconds());
+        } else if(projectile.details().pattern().ballisticAim()) {
             double seconds=projectile.independentLifetimeSeconds();
             distance=speed*seconds+.5*projectile.gravity()*seconds*seconds;
         }
@@ -70,8 +93,8 @@ public record ProjectileExecutionPlan(
                 // Echo is the second authorized release of this root, not another first release.
                 // The retained registry validates the declared ordinal against existing root carriers.
                 budgets.maxSpawnedEffects() - (context.echo() ? 2 : 1), budgets.maxTriggeredSecondaries(),
-                spawnTimestampNanos, configId, origin, direction.normalized().multiply(speed),
-                projectile.radius(),distance,projectile.capLifetime(distance/speed));
+                spawnTimestampNanos, configId, origin, velocity,
+                projectile.radius(),distance,lifetime,motion);
     }
     /** One original batch expands into the complete symmetric Volley before native allocation. */
     public static java.util.List<ProjectileExecutionPlan> launchBatch(SkillExecutionContext context,UUID owner,Vec3 origin,
@@ -86,7 +109,7 @@ public record ProjectileExecutionPlan(
                 center.snapshot(),center.generation(),center.remainingContinuationBudgets(),center.remainingSpawnedEffects(),center.remainingTriggeredSecondaries(),
                 now+Math.round(authored*pattern.intervalSeconds()*1e9),configId,origin,
                 ProjectileContinuation.yaw(pattern.direction(direction,authored),volley==3?(index-1)*12:0).multiply(center.velocity().length()),
-                center.radius(),center.maxDistance(),center.maxLifetimeSeconds()));
+                center.radius(),center.maxDistance(),center.maxLifetimeSeconds(),center.motion()));
         return java.util.List.copyOf(batch);
     }
 }

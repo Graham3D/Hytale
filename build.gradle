@@ -4,14 +4,14 @@ plugins {
 
 group = maven_group
 version = project.version
-// Public distribution filename; retain the established manifest identity/data directory.
-tasks.named('jar') { archiveFileName = 'HyARPG.jar' }
+// One deployable first-party artifact. Legacy data roots are retained explicitly by HywindPlugin.
+tasks.named('jar') { archiveFileName = 'Hywind.jar' }
 
 def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
 def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")
 def serverJar = file("${gamePackage}/Server/HytaleServer.jar")
 def assetsZip = file("${gamePackage}/Assets.zip")
-def htDevLibJar = file("${hytaleHome}/UserData/Saves/RPG/mods/HYTALEDEVLIB-0.5.0.jar")
+def htDevLibJar = file("${hytaleHome}/data/${patchline}/Saves/RPG/mods/HYTALEDEVLIB-0.5.0.jar")
 
 if (!serverJar.exists()) {
     throw new GradleException("Hytale server jar not found: ${serverJar}")
@@ -24,12 +24,22 @@ java {
 repositories { mavenCentral() }
 
 dependencies {
+    implementation project(':canvas-ui')
+    implementation project(':persistent-npcs')
     compileOnly files(serverJar)
     compileOnly files(htDevLibJar)
     testImplementation files(serverJar)
+    testImplementation project(':canvas-ui')
+    testImplementation project(':persistent-npcs')
     testImplementation platform('org.junit:junit-bom:5.12.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+sourceSets.main.java {
+    // The legacy bootstrap remains as source provenance for retained tests but is
+    // not compiled or packaged. HywindPlugin is the sole production entrypoint.
+    exclude 'com/inigmasgames/hytalerpg/phase00/Phase00Plugin.java'
 }
 
 tasks.register('validateCustomUi', Exec) {
@@ -62,6 +72,7 @@ tasks.test {
     exclude '**/Stage13SkillTreeIconsSearchTest*'
     exclude '**/Stage13NativeAttitudeCacheTest*'
     exclude '**/Stage13NativeHealingBeamTest*'
+    exclude '**/MantleNativeSourceContractTest*'
 }
 
 tasks.register('nativeControlTest', Test) {
@@ -80,11 +91,29 @@ tasks.register('nativeControlTest', Test) {
         includeTestsMatching '*Stage13SkillTreeIconsSearchTest'
         includeTestsMatching '*Stage13NativeAttitudeCacheTest'
         includeTestsMatching '*Stage13NativeHealingBeamTest'
+        includeTestsMatching '*MantleNativeSourceContractTest'
     }
     // Separate JVM: native codecs require Hytale's logger; retained UI tests exercise the JUL fallback.
     systemProperty 'java.util.logging.manager', 'com.hypixel.hytale.logger.backend.HytaleLogManager'
 }
-tasks.check { dependsOn tasks.named('nativeControlTest') }
+tasks.check {
+    dependsOn tasks.named('nativeControlTest')
+    dependsOn ':canvas-ui:check'
+    dependsOn ':persistent-npcs:check'
+}
+
+tasks.register('verifyHywindJar', Exec) {
+    group = 'verification'
+    description = 'Validates the single-plugin Hywind package and merged resource contract.'
+    dependsOn tasks.named('jar')
+    commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+        file('tools/Test-HywindPackage.ps1'), '-JarPath', tasks.named('jar').get().archiveFile.get().asFile,
+        '-ExpectedVersion', project.version, '-ExpectedRevision', rpg_revision
+}
+
+tasks.check {
+    dependsOn tasks.named('verifyHywindJar')
+}
 
 tasks.processResources {
     def liveProbe = providers.gradleProperty('healingProbeLiveTest').map { it == 'true' }.getOrElse(false)
@@ -97,8 +126,21 @@ tasks.processResources {
     inputs.property('version', project.version)
     inputs.property('rpgRevision', rpg_revision)
     inputs.property('hytaleVersion', hytale_version)
-    filesMatching(['manifest.json', 'rpg-build.properties']) {
+    filesMatching(['manifest.json', 'rpg-build.properties', 'hywind-build.properties']) {
         expand(version: project.version, rpgRevision: rpg_revision, hytaleVersion: hytale_version)
+    }
+}
+
+tasks.named('jar') {
+    dependsOn ':canvas-ui:classes', ':persistent-npcs:classes'
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+    from(project(':canvas-ui').sourceSets.main.output) {
+        exclude 'manifest.json'
+        exclude 'com/inigmasgames/canvasui/CanvasUIPlugin.class'
+    }
+    from(project(':persistent-npcs').sourceSets.main.output) {
+        exclude 'manifest.json'
+        exclude 'Server/Languages/en-US/server.lang'
     }
 }
 

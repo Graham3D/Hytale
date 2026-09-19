@@ -1,0 +1,8 @@
+{
+  "$Comment":"RPG instance derivative retaining core and sparks while omitting the stock line-producing child; shared native content is untouched.",
+  "Spawners":[
+    {"SpawnerId":"Fire_Projectile_Sparks","FixedRotation":false},
+    {"SpawnerId":"Fire_Projectile_Fire_Core","FixedRotation":false}
+  ],
+  "CullDistance":100.0,"IsImportant":false
+}

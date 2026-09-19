@@ -1,0 +1,47 @@
+[
+  {
+    "id": "remember_item_received",
+    "eventType": "ITEM_TAKEN",
+    "responseType": "MEMORY",
+    "cooldownSeconds": 1,
+    "importance": 0.55,
+    "requiredCapability": "TAKE_ITEM",
+    "template": "I received {{itemId}} x{{quantity}} from the player."
+  },
+  {
+    "id": "remember_item_given",
+    "eventType": "ITEM_GIVEN",
+    "responseType": "MEMORY",
+    "cooldownSeconds": 1,
+    "importance": 0.5,
+    "requiredCapability": "GIVE_ITEM",
+    "template": "I gave {{itemId}} x{{quantity}} to the player."
+  },
+  {
+    "id": "remember_task_failure",
+    "eventType": "TASK_FAILED",
+    "responseType": "MEMORY",
+    "cooldownSeconds": 1,
+    "importance": 0.65,
+    "requiredCapability": "",
+    "template": "Task {{taskType}} failed: {{result}}"
+  },
+  {
+    "id": "remember_task_completion",
+    "eventType": "TASK_COMPLETED",
+    "responseType": "MEMORY",
+    "cooldownSeconds": 1,
+    "importance": 0.75,
+    "requiredCapability": "",
+    "template": "Task {{taskType}} completed: {{result}}"
+  },
+  {
+    "id": "important_damage_private_thought",
+    "eventType": "ENTITY_DAMAGED",
+    "responseType": "PRIVATE_THOUGHT",
+    "cooldownSeconds": 30,
+    "importance": 0.7,
+    "requiredCapability": "",
+    "template": "Assess the witnessed damage without automatically speaking."
+  }
+]

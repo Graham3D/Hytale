@@ -6,4 +6,11 @@ public interface CanvasRenderBackend {
     void topologyChanged();
     void updateNodeAndEdges(String nodeId);
     void updateViewport();
+
+    /** Optional interaction-presentation hooks shared by page and cursor-HUD backends. */
+    default void pointerTarget(String nodeId, boolean invalid) { }
+    default void clearPointerTarget() { }
+    default void updatePreview(CanvasPoint source, CanvasPoint target, boolean valid) { }
+    default void clearPreview(String status) { }
+    default void status(String value) { }
 }

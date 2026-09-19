@@ -41,7 +41,7 @@ class Stage04ExecutionTest {
     @Test void sixPilotProfilesAreCanonicalAndPounceUsesInnatePower() {
         var catalog = com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical();
         var profiles = Stage04SkillProfiles.loadCanonical(catalog);
-        assertEquals(89, catalog.skills().size());
+        assertEquals(91, catalog.skills().size());
         assertEquals(67, catalog.passives().size());
         assertTrue(profiles.all().keySet().containsAll(Set.of(
                 "quick_slash", "heavy_swing", "shield_bash", "quickstep", "pounce", "riposte")));
@@ -140,7 +140,7 @@ class Stage04ExecutionTest {
         SkillExecutionResult result = harness.execute();
         assertTrue(result.committed());
         assertNotNull(harness.port.context);
-        assertEquals(.85, harness.port.context.profile().strike().coefficient(), 1e-12);
+        assertEquals(.375, harness.port.context.profile().strike().coefficient(), 1e-12);
         // P's second slash is asynchronous; the bounded port fixture explicitly completes the pair.
         harness.service.terminate(harness.port.context,"FIXTURE_PAIR_COMPLETE");
         var records = ((Stage01BTestSupport.RecordingTracer) harness.bundle.tracer()).records;

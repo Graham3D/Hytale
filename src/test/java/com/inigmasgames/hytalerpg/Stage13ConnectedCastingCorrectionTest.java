@@ -92,16 +92,16 @@ class Stage13ConnectedCastingCorrectionTest {
         var h=new H("fire_bolt");h.held=HytaleEquipmentAdapter.describe(id,installedTags(id));
         var result=h.cast();assertTrue(result.committed(),result.toString());assertNull(h.last().target().entityId());assertNotNull(h.projectile);
         assertEquals(NativeItemPowerRegistry.loadCanonical().find(id).orElseThrow().basePower(),h.last().snapshot().basePower());
-        assertEquals(92,h.current(ResourceType.MANA));assertEquals(1,h.resourceWrites);assertEquals(1,h.cooldownSaves);assertEquals(1,h.projectiles.registry().size());
+        assertEquals(95,h.current(ResourceType.MANA));assertEquals(1,h.resourceWrites);assertEquals(1,h.cooldownSaves);assertEquals(1,h.projectiles.registry().size());
         assertEquals("COOLDOWN_ACTIVE",h.cast().code());assertEquals(1,h.resourceWrites);assertEquals(1,h.cooldownSaves);
         assertTrue(h.projectile.observe(2,new Vec3(0,0,24)).expired());assertTrue(h.projectiles.onForwardTermination(h.projectile,"MAX_RANGE",new Vec3(0,0,24)));
         assertFalse(h.projectiles.onForwardTermination(h.projectile,"MAX_RANGE",new Vec3(0,0,24)));assertEquals(0,h.projectiles.registry().size());assertTrue(h.projectile.hitTargets().isEmpty());
-        assertEquals(92,h.current(ResourceType.MANA));assertEquals(1,h.resourceWrites);assertTrue(h.kernel.cooldowns().remaining(h.actor,"fire_bolt")>0);assertEquals(0,h.b.service().masteryXp(h.actor,"fire_bolt"));
+        assertEquals(95,h.current(ResourceType.MANA));assertEquals(1,h.resourceWrites);assertTrue(h.kernel.cooldowns().remaining(h.actor,"fire_bolt")>0);assertEquals(0,h.b.service().masteryXp(h.actor,"fire_bolt"));
         assertTrue(h.trace().stream().noneMatch(r->Set.of(RpgTraceEventType.DAMAGE_APPLIED,RpgTraceEventType.PROJECTILE_ENTITY_HIT).contains(r.eventType())));
     }
     @Test void fireBoltEquipmentResourceAndCooldownGuardsRemain(){
         var wrong=new H("fire_bolt");assertEquals("INVALID_MAIN_HAND",wrong.cast().code());assertEquals(0,wrong.resourceWrites);
-        var poor=new H("fire_bolt");poor.weapon="STAFF";poor.current.put(ResourceType.MANA,7d);assertEquals("INSUFFICIENT_RESOURCE",poor.cast().code());assertEquals(0,poor.resourceWrites);assertEquals(0,poor.cooldownSaves);
+        var poor=new H("fire_bolt");poor.weapon="STAFF";poor.current.put(ResourceType.MANA,4d);assertEquals("INSUFFICIENT_RESOURCE",poor.cast().code());assertEquals(0,poor.resourceWrites);assertEquals(0,poor.cooldownSaves);
     }
     @Test void spatialWorldAnchorSurvivesPendingPersistenceAndWorldChangeRejectsWithoutDispatch(){
         for(boolean change:new boolean[]{false,true}){var h=new H("quick_slash");h.durable=new java.util.concurrent.CompletableFuture<>();
@@ -131,7 +131,7 @@ class Stage13ConnectedCastingCorrectionTest {
         assertEquals("OMITTED",fields.get("itemId"));assertTrue(fields.toString().length()<1000);assertFalse(fields.toString().contains("secret"));
     }
     @Test void everyAuthoredStrikeGeometryAllowsZeroCandidatesWithoutWeakeningEntityConnections(){
-        var profiles=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(89,profiles.all().size());
+        var profiles=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(91,profiles.all().size());
         var geometry=new StrikeGeometryService();
         for(var p:profiles.all().values())if(p.strike()!=null)
             assertTrue(StrikeCastPrerequisites.check(()->geometry.query(Vec3.ZERO,Vec3.FORWARD,p.strike(),List.of())).accepted(),p.skillId());

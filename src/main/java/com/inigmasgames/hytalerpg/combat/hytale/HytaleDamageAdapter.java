@@ -21,6 +21,22 @@ public final class HytaleDamageAdapter {
     // Installed MetaRegistry allows null codec when persistence=false. This context never goes on the wire/save.
     private static final MetaKey<com.inigmasgames.hytalerpg.execution.SkillExecutionContext> EXECUTION_CONTEXT=Damage.META_REGISTRY.registerMetaObject(
             ignored->null,false,"InigmasGames:RpgMeaningfulRoot",null);
+    /** Nonpersistent source evidence supplied by an owning execution, never inferred from Damage.amount. */
+    public record WeaponComponent(com.inigmasgames.hytalerpg.combat.damage.WeaponFireDecision decision,String componentId) {
+        public WeaponComponent { java.util.Objects.requireNonNull(decision).execution().component(componentId); }
+    }
+    private static final MetaKey<WeaponComponent> WEAPON_COMPONENT=Damage.META_REGISTRY.registerMetaObject(
+            ignored->null,false,"InigmasGames:RpgWeaponSourceComponent",null);
+    public static WeaponComponent weaponComponent(Damage damage){return damage.getIfPresentMetaObject(WEAPON_COMPONENT);}
+    public static void attachWeaponComponent(Damage damage,HytaleDamageMetadata metadata,WeaponComponent witness){
+        var identity=witness.decision().execution().identity();
+        if(!identity.actorId().equals(metadata.actorId())||!identity.rootId().equals(metadata.rootCastId()))
+            throw new IllegalArgumentException("FOREIGN_WEAPON_EXECUTION_COMPONENT");
+        boolean sourceFire=witness.decision().execution().component(witness.componentId()).channel().equals("FIRE");
+        boolean nativeFire=damage.getDamageCauseIndex()==DamageCause.getAssetMap().getIndex("Fire");
+        if(sourceFire!=nativeFire)throw new IllegalArgumentException("WEAPON_COMPONENT_NATIVE_FIRE_CAUSE_MISMATCH");
+        damage.putMetaObject(WEAPON_COMPONENT,witness);
+    }
     public static com.inigmasgames.hytalerpg.execution.SkillExecutionContext executionContext(Damage damage){return damage.getIfPresentMetaObject(EXECUTION_CONTEXT);}
     public static void attachExecutionContext(Damage damage,HytaleDamageMetadata metadata,com.inigmasgames.hytalerpg.execution.SkillExecutionContext context){
         if(context==null)return;
@@ -65,7 +81,23 @@ public final class HytaleDamageAdapter {
                       Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,double amount,
                       com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
                       com.inigmasgames.hytalerpg.execution.SkillExecutionContext context){
+        return applyResolved(target,accessor,source,cause,metadata,amount,conditional,context,null);
+    }
+    /** Complete owner preflight must precede this call. Existing scalar callers are unchanged.
+     * Native source producers are not registered until their resolved-source witness is verified. */
+    public NativeResult applyWeaponComponent(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,
+            Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,double victimAmount,
+            com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
+            com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,WeaponComponent witness){
+        double amount=witness.decision().directAmount(witness.componentId(),victimAmount);
+        return applyResolved(target,accessor,source,cause,metadata,amount,conditional,context,witness);
+    }
+    private NativeResult applyResolved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,
+                      Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,double amount,
+                      com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
+                      com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,WeaponComponent witness){
         if(!Double.isFinite(amount)||amount<0||amount>Float.MAX_VALUE)throw new IllegalArgumentException("Invalid native damage amount");
+        if(cause==null)throw new IllegalArgumentException("NATIVE_DAMAGE_CAUSE_MISSING");
         EntityStatMap targetStats = accessor.getComponent(target, EntityStatMap.getComponentType());
         double before = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
                 ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();
@@ -76,6 +108,7 @@ public final class HytaleDamageAdapter {
                 cause, (float)amount);
         damage.putMetaObject(RPG_METADATA, GSON.toJson(complete));
         attachExecutionContext(damage,metadata,context);
+        if(witness!=null)attachWeaponComponent(damage,metadata,witness);
         HytaleConditionalDamage.attach(damage,conditional);
         DamageSystems.executeDamage(target, accessor, damage);
         double after = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null

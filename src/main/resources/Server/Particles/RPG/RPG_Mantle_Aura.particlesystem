@@ -1,0 +1,4 @@
+{
+  "Spawners": [{"SpawnerId":"Fire_AoE_CirclesFloor","PositionOffset":{"Y":0.05},"FixedRotation":true,"StartDelay":0}],
+  "BoundingRadius":10,"IsImportant":true
+}

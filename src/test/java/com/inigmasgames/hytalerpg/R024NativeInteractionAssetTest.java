@@ -10,6 +10,23 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class R024NativeInteractionAssetTest {
+    @Test void fireballUsesNativeIndefiniteHoldAndServerReleaseCallback() throws Exception {
+        var root=org.bson.BsonDocument.parse(java.nio.file.Files.readString(java.nio.file.Path.of(
+                "src/main/resources/Server/Item/RootInteractions/RPG/Root_RPG_Fireball_Charge.json")));
+        var json=root.getArray("Interactions").get(0).asDocument();
+        assertEquals("RPG_FireballCharge",json.getString("Type").getValue());
+        assertEquals("RPG_ActivateSkill",json.getDocument("Next").getDocument("0").getString("Type").getValue());
+        var particle=json.getDocument("Effects").getArray("Particles").get(0).asDocument();
+        assertEquals("Fireball_Charge_To_4",particle.getString("SystemId").getValue());
+        assertEquals("Origin_Projectile",particle.getString("TargetNodeName").getValue());
+        json.remove("Next");json.remove("Effects");
+        var decoded=com.inigmasgames.hytalerpg.input.NativeFireballChargeInteraction.codec(new HytaleAbilitySkillInputAdapter()).decode(json,
+                new com.hypixel.hytale.assetstore.AssetExtraInfo<>(new com.hypixel.hytale.assetstore.AssetExtraInfo.Data(
+                        com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.class,"RPG_Test_Fireball_Charge",null)));
+        assertEquals(WaitForDataFrom.Client,decoded.getWaitForDataFrom());assertTrue(decoded.needsRemoteSync());
+        var packet=assertInstanceOf(com.hypixel.hytale.protocol.ChargingInteraction.class,decoded.toPacket());
+        assertTrue(packet.allowIndefiniteHold);assertFalse(packet.displayProgress);
+    }
     @Test void heldHealingUsesNativeChargingPacketRatherThanUnsupportedClientOperation() throws Exception {
         var root=org.bson.BsonDocument.parse(java.nio.file.Files.readString(java.nio.file.Path.of("src/main/resources/Server/Item/RootInteractions/RPG/Root_RPG_Healing_Beam_Held.json")));
         var json=root.getArray("Interactions").get(0).asDocument();assertEquals("RPG_HeldChannel",json.getString("Type").getValue());

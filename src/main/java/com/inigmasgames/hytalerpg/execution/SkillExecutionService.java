@@ -137,6 +137,13 @@ public final class SkillExecutionService {
         }
     }
     public boolean pendingCast(UUID actor){return persistenceCommits.containsKey(actor)||lifecycle.active(actor).isPresent()||releases.pending(actor)||activeWindupSeconds(actor).isPresent();}
+    /** Delayed authored contacts must still belong to the live root, not just an old scheduler entry. */
+    public boolean ownsActiveRoot(SkillExecutionContext context){
+        return lifecycle.active(context.request().actorId()).map(a->a.instanceId().equals(context.skillInstanceId())).orElse(false);
+    }
+    /** Derived releases were separately admitted by the bounded release owner, not the manual-cast lifecycle.
+     * Explicit cancellation still removes/cancels their world-owned repeat schedule. */
+    public boolean allowsStrikeSequence(SkillExecutionContext context){return context.derivedRelease()||ownsActiveRoot(context);}
 
     public boolean cancel(UUID actor, String reason) {
         var persistence=persistenceCommits.get(actor);
@@ -258,7 +265,9 @@ public final class SkillExecutionService {
                 throw new Rejection("EQUIPMENT_POWER_UNAVAILABLE", instance);
             }
         }
-        SkillExecutionPort.Validation family = port.familyPrerequisites(profile, plan);
+        int effectiveSkillLevel=EffectiveSkillLevel.resolve(loadouts.masteryXp(request.actorId(),profile.skillId()),
+                port.itemGrantedSkillLevels(profile.skillId(),equipment));
+        SkillExecutionPort.Validation family = port.familyPrerequisites(profile, plan,effectiveSkillLevel);
         if (!family.accepted()) {
             emitProjectileRejection(request, root, instance, profile, family.code());
             throw new Rejection(family.code(), instance);
@@ -280,7 +289,7 @@ public final class SkillExecutionService {
             emitProjectileRejection(request, root, instance, profile, "COOLDOWN_ACTIVE");
             throw new Rejection("COOLDOWN_ACTIVE", instance);
         }
-        return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks,false);
+        return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks,false,effectiveSkillLevel);
     }
 
     private int attunementFor(SkillExecutionRequest request,CompiledSkillPlan plan){
@@ -303,7 +312,9 @@ public final class SkillExecutionService {
             boolean powered=ruthlessFor(prepared.request,prepared.plan);
             var cost=kernel.resources().evaluateActivation(new ResourceCost(ResourceType.valueOf(prepared.profile.resourceType()),prepared.profile.resourceCost()),prepared.plan,stacks);
             var profile=CompiledProfileResolver.ruthless(compiledProfiles.resolve(profiles.require(prepared.profile.skillId()),prepared.plan),powered);
-            prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,profile,prepared.plan,cost,prepared.equipment,stacks,powered);
+            int effectiveSkillLevel=EffectiveSkillLevel.resolve(loadouts.masteryXp(prepared.request.actorId(),profile.skillId()),
+                    port.itemGrantedSkillLevels(profile.skillId(),prepared.equipment));
+            prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,profile,prepared.plan,cost,prepared.equipment,stacks,powered,effectiveSkillLevel);
         }catch(RuntimeException failed){lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_RESOURCE_MODIFIER_REJECTED");}
         var releaseModifiers=prepared.plan.executionModifiers();
         String admission=releases.reserve(prepared.instanceId,prepared.request.actorId(),prepared.request.slot(),releaseModifiers);
@@ -349,6 +360,11 @@ public final class SkillExecutionService {
             ModifierBuckets modifiers = new ModifierBuckets(prepared.attunementStacks>0?java.util.List.of(.03*prepared.attunementStacks):java.util.List.of(), java.util.List.of(),
                     releaseModifiers.delaySeconds()>0?java.util.List.of(1.35):java.util.List.of(),
                     payloadLess);
+            if(prepared.profile.skillId().equals("fireball")){
+                var more=new java.util.ArrayList<>(modifiers.more());
+                more.add(com.inigmasgames.hytalerpg.execution.projectile.FireballCharge.damageMultiplier(prepared.request.fireballChargeStage()));
+                modifiers=new ModifierBuckets(modifiers.increased(),modifiers.reduced(),more,modifiers.less());
+            }
             preparationStage="MASTERY_PREPARATION";
             double mastery=com.inigmasgames.hytalerpg.progress.ProgressionMath.masteryMagnitude(loadouts.masteryXp(prepared.request.actorId(),prepared.profile.skillId()));
             if(mastery!=1){
@@ -365,7 +381,14 @@ public final class SkillExecutionService {
                     modifiers, prepared.cost, cooldown.finalSeconds(), status);
             preparationStage="CONTEXT_CONSTRUCTION";
             context = new SkillExecutionContext(prepared.request, prepared.rootCastId, prepared.instanceId,
-                    prepared.profile, prepared.plan, snapshot, prepared.equipment,target,false);
+                    prepared.profile, prepared.plan, snapshot, prepared.equipment,target,false,0,
+                    new com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget(prepared.request.actorId(),prepared.rootCastId),0,
+                    new RootEffectBudget(prepared.request.actorId(),prepared.rootCastId),"",prepared.effectiveSkillLevel);
+            if(prepared.profile.skillId().equals("quick_slash")){
+                preparationStage="WEAPON_LIGHT_PROFILE_CAPTURE";
+                var light=port.captureWeaponLightAttack(prepared.equipment);
+                if(light!=null)context.effects().captureLightAttack(light);
+            }
             preparationStage="LEECH_BUDGET";
             if(prepared.plan.resources().leeching()){
                 var resource=ResourceType.valueOf(prepared.profile.resourceType());
@@ -713,7 +736,7 @@ public final class SkillExecutionService {
     }
     private record Prepared(SkillExecutionRequest request, String rootCastId, String instanceId,
                             Stage04SkillProfile profile, CompiledSkillPlan plan, ResourceCost cost,
-                            SkillExecutionPort.Equipment equipment,int attunementStacks,boolean ruthlessEmpowered) { }
+                            SkillExecutionPort.Equipment equipment,int attunementStacks,boolean ruthlessEmpowered,int effectiveSkillLevel) { }
     private static final class Rejection extends RuntimeException {
         private final String code; private final String skillInstanceId;
         private Rejection(String code, String skillInstanceId) { super(code); this.code = code; this.skillInstanceId = skillInstanceId; }

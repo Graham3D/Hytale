@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage07SecondaryTest {
     @Test void accelerantCompilesSpeedDistanceLifetimeWithoutMagnitudeChange() {
         var h=new Stage07MultiplicityTest.Harness("accelerant");h.cast();var p=h.plans.getFirst();
-        assertEquals(33.6,p.velocity().length(),1e-12);assertEquals(28.8,p.maxDistance(),1e-12);
-        assertEquals(28.8/33.6,p.maxLifetimeSeconds(),1e-12);assertEquals(1,p.snapshot().modifiers().factor());
+        assertEquals(33.6,p.velocity().length(),1e-12);assertEquals(31.2,p.maxDistance(),1e-12);
+        assertEquals(31.2/33.6,p.maxLifetimeSeconds(),1e-12);assertEquals(1,p.snapshot().modifiers().factor());
     }
     @Test void ballisticsUsesAdditiveIncreasedBucketAndCombinesWithVolleySpeedAndDistance() {
         var h=new Stage07MultiplicityTest.Harness("accelerant","ballistics","potency","volley");h.cast();
-        for(var p:h.plans) {assertEquals(24*1.4*.65,p.velocity().length(),1e-12);assertEquals(28.8,p.maxDistance(),1e-12);
-            assertEquals(p.maxDistance()/p.velocity().length(),p.maxLifetimeSeconds(),1e-12);
+        for(var p:h.plans) {assertEquals(24*1.4*.65,p.velocity().length(),1e-12);assertEquals(31.2,p.maxDistance(),1e-12);
+            assertEquals(Math.min(1,p.maxDistance()/p.velocity().length()),p.maxLifetimeSeconds(),1e-12);
             assertEquals(1.45*.75,p.snapshot().modifiers().factor(),1e-12);}
         assertEquals(1,h.resourceWrites);
     }
@@ -90,8 +90,8 @@ class Stage07SecondaryTest {
         var f=new Fixture("splinterburst","piercing","chain","return","shrapnel");var p=f.spawn();p.spend("PIERCE");p.acceptTarget("parent-victim");
         var result=f.terminal(p,ProjectileSecondaryEffects.TerminalCause.TERRAIN);assertEquals(ProjectileContinuation.Action.SPLINTERBURST,result.action());
         assertEquals(3,result.children().size());assertEquals(4,f.registry.size());assertEquals(3,f.registry.triggered(f.owner(),p.plan().rootCastId()));
-        for(int i=0;i<3;i++) {var child=result.children().get(i);assertEquals(1,child.plan().generation());assertEquals(12,child.plan().maxDistance());
-            assertEquals(.5,child.plan().maxLifetimeSeconds());assertEquals(.35,child.plan().snapshot().modifiers().factor(),1e-12);
+        for(int i=0;i<3;i++) {var child=result.children().get(i);assertEquals(1,child.plan().generation());assertEquals(13,child.plan().maxDistance());
+            assertEquals(13d/24d,child.plan().maxLifetimeSeconds());assertEquals(.35,child.plan().snapshot().modifiers().factor(),1e-12);
             assertEquals(p.plan().snapshot().resourceCost(),child.plan().snapshot().resourceCost());
             assertEquals(1,child.remaining("PIERCE"));assertEquals(2,child.remaining("CHAIN"));assertEquals(1,child.remaining("RETURN"));
             assertEquals(0,child.remaining("SPLINTERBURST"));assertFalse(child.previouslyHit("parent-victim"));
@@ -105,15 +105,15 @@ class Stage07SecondaryTest {
         var next=new ProjectileContinuation(f.registry).forwardEnd(p,new Vec3(0,0,6),Vec3.ZERO,"MAX_RANGE");
         assertEquals(ProjectileContinuation.Action.RETURN,next.action());assertEquals(1,p.remaining("SPLINTERBURST"));
         var result=f.terminal(p,ProjectileSecondaryEffects.TerminalCause.RETURN_CAUGHT);
-        for(var child:result.children()){assertEquals(0,child.remaining("RETURN"));assertEquals(12,child.originalMaxDistance());}
+        for(var child:result.children()){assertEquals(0,child.remaining("RETURN"));assertEquals(13,child.originalMaxDistance());}
     }
     @Test void forkRetainsOriginalDistanceAndIndependentCapForTerminalHalfRangeChildren() {
         var f=new Fixture("fork","splinterburst","shrapnel");var p=f.spawn();p.observe(.9,new Vec3(0,0,21));
         f.hit(p,1);var fork=new ProjectileContinuation(f.registry).afterEnemy(p,new Vec3(0,0,21),Vec3.ZERO,List.of(),1);
-        var child=fork.children().getFirst();assertEquals(3,child.plan().maxDistance());assertEquals(24,child.originalMaxDistance());
+        var child=fork.children().getFirst();assertEquals(5,child.plan().maxDistance());assertEquals(26,child.originalMaxDistance());
         assertEquals(1,child.remaining("SHRAPNEL"));assertTrue(f.hit(child,1).burst().isPresent());
         var splinter=f.terminal(child,ProjectileSecondaryEffects.TerminalCause.RANGE);
-        assertEquals(3,splinter.children().size());for(var next:splinter.children()){assertEquals(12,next.plan().maxDistance());assertEquals(.5,next.plan().maxLifetimeSeconds());}
+        assertEquals(3,splinter.children().size());for(var next:splinter.children()){assertEquals(13,next.plan().maxDistance());assertEquals(13d/24d,next.plan().maxLifetimeSeconds());}
     }
     @Test void cancelledUnloadedAndBudgetRejectedCarriersCannotBurst() {
         for(var cause:List.of(ProjectileSecondaryEffects.TerminalCause.CANCELLED,ProjectileSecondaryEffects.TerminalCause.WORLD_UNLOAD,ProjectileSecondaryEffects.TerminalCause.BUDGET_REJECTED)) {
@@ -167,10 +167,12 @@ class Stage07SecondaryTest {
             assertEquals(2,fork.children().size());h.registry.remove(original);
             for(var child:fork.children()) {
                 var chained=continuations.afterEnemy(child,new Vec3(0,0,3),Vec3.ZERO,List.of(new ProjectileContinuation.Candidate("next",new Vec3(0,0,4),true)),2);
-                assertEquals(ProjectileContinuation.Action.CHAIN,chained.action());child.acceptTarget("next");
-                assertEquals(ProjectileContinuation.Action.RETURN,continuations.afterEnemy(child,new Vec3(0,0,4),Vec3.ZERO,List.of(),3).action());
-                assertTrue(child.acceptTarget("original-target"));assertEquals(first.rootCastId(),child.plan().rootCastId());
-                assertTrue(child.observe(2,Vec3.ZERO).expired());h.registry.remove(child);
+                assertEquals(ProjectileContinuation.Action.CHAIN,chained.action());assertEquals(1,chained.children().size());
+                var chainChild=chained.children().getFirst();h.registry.remove(child);chainChild.acceptTarget("next");
+                assertEquals(ProjectileContinuation.Action.RETURN,continuations.afterEnemy(chainChild,new Vec3(0,0,4),Vec3.ZERO,List.of(),3).action());
+                assertTrue(chainChild.acceptTarget("original-target"));assertEquals(first.rootCastId(),chainChild.plan().rootCastId());
+                assertEquals(child.plan().snapshot().modifiers().factor(),chainChild.plan().snapshot().modifiers().factor(),1e-12);
+                assertTrue(chainChild.observe(2,Vec3.ZERO).expired());h.registry.remove(chainChild);
             }
         }
         assertEquals(1,h.resourceWrites);assertEquals(paid,h.mana);assertEquals(0,h.registry.rootCount());assertEquals(0,h.service.pendingReleaseCount());

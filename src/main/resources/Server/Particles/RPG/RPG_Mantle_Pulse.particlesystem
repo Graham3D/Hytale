@@ -1,0 +1,4 @@
+{
+  "Spawners": [{"SpawnerId":"Fire_AoE2_FireFloor2","PositionOffset":{"Y":0.2},"FixedRotation":true,"StartDelay":0}],
+  "BoundingRadius":10,"IsImportant":true
+}

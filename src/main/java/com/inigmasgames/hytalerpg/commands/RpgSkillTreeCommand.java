@@ -11,9 +11,10 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeMutationService;
-import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreePage;
+import com.inigmasgames.hytalerpg.ui.skilltree.RpgCanvasSkillTreeEditor;
 import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeProjectionService;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
+import com.inigmasgames.canvasui.CanvasUI;
 
 public final class RpgSkillTreeCommand extends AbstractPlayerCommand {
     private final RpgSkillTreeProjectionService projection;
@@ -22,7 +23,7 @@ public final class RpgSkillTreeCommand extends AbstractPlayerCommand {
 
     public RpgSkillTreeCommand(RpgSkillTreeProjectionService projection,
                                RpgSkillTreeMutationService mutations, RpgUiTraceService trace) {
-        super("skilltree", "Open the static server-authoritative RPG Skill Tree.");
+        super("skilltree", "Open the server-authoritative RPG Canvas Skill Tree.");
         this.projection = projection; this.mutations = mutations; this.trace = trace;
         setPermissionGroup(GameMode.Adventure);
     }
@@ -31,7 +32,8 @@ public final class RpgSkillTreeCommand extends AbstractPlayerCommand {
                                      PlayerRef playerRef, World world) {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) { context.sendMessage(Message.raw("Player UI manager is unavailable.")); return; }
-        player.getPageManager().openCustomPage(ref, store,
-                new RpgSkillTreePage(playerRef, projection, mutations, trace));
+        var result = CanvasUI.openCursorEditor(new RpgCanvasSkillTreeEditor(playerRef.getUuid(), projection, mutations),
+                player, playerRef, world, store, ref);
+        context.sendMessage(Message.raw(result.message()));
     }
 }

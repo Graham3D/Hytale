@@ -2,13 +2,13 @@
   "Model": "Items/Projectiles/Fireball.blockymodel",
   "Texture": "Items/Projectiles/Fireball.png",
   "HitBox": {
-    "Max": { "X": 0.30, "Y": 0.30, "Z": 0.30 },
-    "Min": { "X": -0.30, "Y": -0.30, "Z": -0.30 }
+    "Max": { "X": 0.22, "Y": 0.22, "Z": 0.22 },
+    "Min": { "X": -0.22, "Y": -0.22, "Z": -0.22 }
   },
   "MinScale": 1,
   "MaxScale": 1,
   "Particles": [
-    { "PositionOffset": { "X": 0, "Y": 0, "Z": 0 }, "SystemId": "Fire_Charged1", "TargetNodeName": "" }
+    { "PositionOffset": { "X": 0, "Y": 0, "Z": 0 }, "SystemId": "RPG_Fire_Projectile_No_Line", "TargetNodeName": "", "Scale": 1 }
   ],
   "Light": { "Color": "#ffbb88" }
 }

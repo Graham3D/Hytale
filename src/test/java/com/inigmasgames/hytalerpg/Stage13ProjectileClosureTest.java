@@ -70,7 +70,7 @@ class Stage13ProjectileClosureTest {
         assertEquals("FIRE",profiles.require("fire_bolt").projectile().details().element());
         assertEquals("COLD",profiles.require("frost_bolt").projectile().details().element());
         assertEquals("ARCANE",profiles.require("arcane_bolt").projectile().details().element());
-        assertEquals(.95,profiles.require("fire_bolt").projectile().coefficient());
+        assertEquals(.70,profiles.require("fire_bolt").projectile().coefficient());
         assertEquals(.1,profiles.require("fire_bolt").projectile().periodicCoefficient());
         assertThrows(IllegalArgumentException.class,()->NativeProjectilePayloads.causeId("invented"));
     }

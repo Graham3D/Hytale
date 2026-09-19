@@ -1,0 +1,17 @@
+{
+  "endpoint": "http://127.0.0.1:11434/v1/chat/completions",
+  "model": "nemotron-3-nano:4b",
+  "apiKey": "",
+  "connectTimeoutMillis": 1500,
+  "requestTimeoutMillis": 12000,
+  "temperature": 0.7,
+  "maxTokens": 180,
+  "maxPlayerMessageCharacters": 600,
+  "recentMemoryCount": 6,
+  "maxMemoryRecords": 2000,
+  "sessionIdleSeconds": 300,
+  "streamResponses": true,
+  "responseStartTimeoutMillis": 60000,
+  "streamIdleTimeoutMillis": 15000,
+  "reasoningEffort": "none"
+}

@@ -27,6 +27,10 @@ public final class SupportRuntime {
         this.reservations=reservations;this.fields=fields;this.progress=progress;
     }
     public synchronized boolean active(UUID actor,String skill){return active.getOrDefault(actor,new LinkedHashMap<>()).containsKey(skill);}
+    /** Event-paid Auras query only when a producing weapon execution arrives, never per idle tick. */
+    public synchronized SkillExecutionContext activeContext(UUID actor,String skill){
+        var aura=active.getOrDefault(actor,new LinkedHashMap<>()).get(skill);return aura==null?null:aura.context;
+    }
     public synchronized SupportProgress state(UUID actor){return session(actor).state;}
     /** Persist immutable activation/toggle authority without any native object on the worker. */
     public synchronized java.util.concurrent.CompletionStage<Void> prepareDurable(SkillExecutionContext context,SupportWorldPort port){

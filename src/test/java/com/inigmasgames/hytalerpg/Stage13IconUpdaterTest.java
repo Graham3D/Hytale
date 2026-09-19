@@ -23,7 +23,7 @@ class Stage13IconUpdaterTest {
                 resources.resolve("rpg/catalog/skills.json"), resources.resolve("rpg/catalog/passives.json")));
         try (var stream = Files.list(resources.resolve("Server/Item/Items/RPG/Abilities"))) { files.addAll(stream.filter(p -> p.toString().endsWith(".json")).toList()); }
         try (var zip = new ZipOutputStream(Files.newOutputStream(jar))) {
-            zip.putNextEntry(new ZipEntry("manifest.json")); zip.write("{\"Group\":\"InigmasGames\",\"Name\":\"HytaleRPGPhase00Audit\"}".getBytes(StandardCharsets.UTF_8)); zip.closeEntry();
+            zip.putNextEntry(new ZipEntry("manifest.json")); zip.write("{\"Group\":\"InigmasGames\",\"Name\":\"Hywind\"}".getBytes(StandardCharsets.UTF_8)); zip.closeEntry();
             zip.putNextEntry(new ZipEntry("sentinel/")); zip.closeEntry();
             zip.putNextEntry(new ZipEntry("sentinel/gameplay.class")); zip.write(new byte[]{1,2,3,4,5}); zip.closeEntry();
             for (Path file : files) {

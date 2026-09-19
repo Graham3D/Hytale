@@ -24,7 +24,7 @@ class Stage13AuthoredProjectileTest {
         var p=h.last().profile().projectile();return ProjectileExecutionPlan.launchBatch(h.last(),h.actor,Vec3.ZERO,Vec3.FORWARD,p.configId(),p.speed(),now);
     }
     @ParameterizedTest @CsvSource({"blunderbuss_shot,GUN,STAMINA,6,3,8,.22", "explosive_flask,BOMB,STAMINA,8,8,1,0",
-            "bomb_toss,BOMB,STAMINA,8,9,1,0", "arcane_missiles,WAND,MANA,16,7,5,.42", "fireball,STAFF,MANA,18,7,1,1.55"})
+            "bomb_toss,BOMB,STAMINA,8,9,1,0", "arcane_missiles,WAND,MANA,16,7,5,.42", "fireball,STAFF,MANA,10,1,1,0"})
     void oneSharedServiceCommitForAuthoredPattern(String skill,String weapon,String resource,double cost,double cooldown,int count,double coefficient){
         var h=cast(skill,weapon);var p=h.last().profile().projectile();
         assertEquals(100-cost,h.current(ResourceType.valueOf(resource)));assertEquals(1,h.cooldownSaves);
@@ -160,19 +160,77 @@ class Stage13AuthoredProjectileTest {
         var targets=java.util.stream.IntStream.range(0,65).mapToObj(i->new ProjectileHoming.Target("t"+i,Vec3.FORWARD,true)).toList();
         assertThrows(IllegalStateException.class,()->new ProjectileHoming().authored(0,Vec3.ZERO,Vec3.FORWARD,null,Vec3.FORWARD,pattern,()->targets,id->Optional.empty()));
     }
-    @Test void fireballHasSeparateDirectSplashBurnAndCollisionDimensions(){
-        var p=profiles.require("fireball").projectile();assertEquals(1.55,p.coefficient());assertEquals(.9,p.details().explosion().coefficient());
-        assertEquals(4,p.details().explosion().radius());assertEquals(3,p.details().explosion().burnRadius());assertEquals(.5,p.radius());
-        assertEquals("BURN",p.statusId());assertEquals(5,p.statusSeconds());assertEquals(.1,p.periodicCoefficient());assertEquals(5,p.periodicTicks());
+    @Test void fireballHasOneExplosionNoDirectHitOrAuthoredBurnAndIndependentCollisionDimensions(){
+        var p=profiles.require("fireball").projectile();assertEquals(0,p.coefficient());assertEquals(.9,p.details().explosion().coefficient());
+        assertEquals(3.5,p.details().explosion().radius());assertEquals(0,p.details().explosion().burnRadius());assertEquals(.45,p.radius());
+        assertTrue(p.statusId().isBlank());assertFalse(p.hasPeriodicStatus());assertTrue(p.details().burnPayoff().active());
+        assertEquals(1.25,p.details().burnPayoff().multiplier());assertTrue(p.details().burnPayoff().consumeCasterOwnedBurn());
     }
     @Test void concentrationChangesSplashAndBurnFootprintsNotTheCarrier(){
         var p=new Stage11FoundationTest().effective("fireball","concentration").projectile();
-        assertEquals(2.8,p.details().explosion().radius(),1e-9);assertEquals(2.1,p.details().explosion().burnRadius(),1e-9);assertEquals(.5,p.radius());
+        assertEquals(2.45,p.details().explosion().radius(),1e-9);assertEquals(0,p.details().explosion().burnRadius(),1e-9);assertEquals(.45,p.radius());
     }
-    @Test void combustionChangesBothAuthoredHitComponentsNotTheBurnBase(){
-        var p=new Stage11FoundationTest().effective("fireball","combustion").projectile();
-        assertEquals(1.55*.85,p.coefficient(),1e-9);assertEquals(.9*.85,p.details().explosion().coefficient(),1e-9);
-        assertEquals(.1,p.periodicCoefficient());assertEquals(6.25,p.statusSeconds());
+    @Test void combustionCannotAttachToFireballBecauseFireballConsumesRatherThanAppliesBurn(){
+        assertFalse(new Stage11FoundationTest().accepts("fireball","combustion"));
+    }
+    @Test void r035FireBoltContractReplacesEveryLegacyBalanceAndUsesInstalledPresentation(){
+        var profile=profiles.require("fire_bolt");var p=profile.projectile();var v=p.details().presentation();
+        assertEquals("MANA",profile.resourceType());assertEquals(5,profile.resourceCost());assertEquals(.45,profile.cooldownSeconds());
+        assertEquals("MAGIC_WEAPON",profile.basePowerSource());assertEquals(.70,p.coefficient());assertNotEquals(.95,p.coefficient());
+        assertEquals(26,p.maxDistance());assertEquals(32,p.speed());assertEquals(.22,p.radius());assertEquals(0,p.gravity());
+        assertEquals("BURN",p.statusId());assertEquals(4,p.statusSeconds());assertEquals(4,p.periodicTicks());assertFalse(p.details().explosion().active());
+        assertEquals("Fire_Charge_Charging1",v.castParticle(),"Pinned pre.2 asset ID has the authored numeric suffix");
+        assertEquals("Fire_Projectile",v.projectileParticle());assertEquals("Impact_Explosion",v.impactParticle());
+        var h=cast("fire_bolt","WAND");assertEquals(95,h.current(ResourceType.MANA));assertEquals(20,h.last().snapshot().basePower());
+        var plan=plans(h,0).getFirst();assertFalse(plan.motion().timedBallistic());assertEquals(32,plan.velocity().length(),1e-9);
+    }
+    @Test void r035FireballTimedBallisticSolutionHitsEndpointAndRisesThenFalls(){
+        var p=profiles.require("fireball").projectile();var motion=p.details().motion();
+        assertTrue(motion.timedBallistic());assertEquals(16,motion.horizontalSpeed());assertEquals(12,motion.gravity());
+        assertEquals(.65,motion.minimumTravelSeconds());assertEquals(1.4,motion.maximumTravelSeconds());
+        var target=new Vec3(0,0,16);var solution=ProjectileBallistics.timed(Vec3.ZERO,target,16,12,22,.65,1.4).orElseThrow();
+        assertEquals(1,solution.flightSeconds(),1e-9);assertEquals(0,solution.at(solution.flightSeconds()).distanceSquared(target),1e-16);
+        assertTrue(solution.at(.4).y()>0);assertTrue(solution.at(.8).y()<solution.at(.5).y());
+        assertTrue(solution.pathLength()>target.length());
+    }
+    @Test void r035FireballSweptCollisionFindsInterveningWallAndTerminalStatesDetonateOnce(){
+        var local=new com.inigmasgames.hytalerpg.execution.area.AreaGeometry.Bounds(new Vec3(-.45,-.45,-.45),new Vec3(.45,.45,.45));
+        var wall=new com.inigmasgames.hytalerpg.execution.area.AreaGeometry.Bounds(new Vec3(-1,-1,7.9),new Vec3(1,2,8.1));
+        assertTrue(ProjectileSweep.contact(new Vec3(0,1,7),new Vec3(0,1,9),local,wall).isPresent());
+        var explosion=profiles.require("fireball").projectile().details().explosion();
+        var terrain=new ProjectileDetonation(explosion);assertEquals(new Vec3(0,0,8),terrain.contact(new Vec3(0,0,8),false,0).orElseThrow());
+        assertTrue(terrain.contact(Vec3.FORWARD,true,0).isEmpty());
+        var endpoint=new ProjectileDetonation(explosion);assertEquals(new Vec3(0,0,22),endpoint.tick(new Vec3(0,0,22),2,true).orElseThrow());
+        var cancelled=new ProjectileDetonation(explosion);cancelled.cancel();assertTrue(cancelled.tick(Vec3.FORWARD,2,true).isEmpty());
+    }
+    @Test void r035FireballPresentationScaleCannotChangeItsMechanicalCollider(){
+        var p=profiles.require("fireball").projectile();var v=p.details().presentation();
+        assertEquals("Fire_Staff_Activation",v.castParticle());assertEquals("Fire_Charge1",v.projectileParticle());
+        assertEquals("Explosion_Medium",v.impactParticle());assertEquals(1,v.projectileScale());assertEquals(1,v.impactScale());
+        assertEquals(.45,p.radius());assertEquals(3.5,p.details().explosion().radius());assertTrue(p.details().explosion().continuationBeforeDetonation());
+    }
+    @Test void r035FireballBurnOwnershipAndConsumptionPreserveOtherCasters(){
+        var runtime=new com.inigmasgames.hytalerpg.combat.status.PeriodicStatusRuntime<String,String>();
+        UUID first=UUID.randomUUID(),other=UUID.randomUUID(),victim=UUID.randomUUID();var port=new Stage11HitProcTest.D();
+        var owned=new com.inigmasgames.hytalerpg.combat.status.PeriodicStatusRuntime.Source(first,"fire_bolt",victim,com.inigmasgames.hytalerpg.combat.status.PeriodicStatusRuntime.Kind.BURN);
+        var foreign=new com.inigmasgames.hytalerpg.combat.status.PeriodicStatusRuntime.Source(other,"fire_bolt",victim,com.inigmasgames.hytalerpg.combat.status.PeriodicStatusRuntime.Kind.BURN);
+        runtime.apply(owned,"owned","target",.1,10,4,1,1,0,port);runtime.apply(foreign,"foreign","target",.1,10,4,1,1,0,port);
+        var captured=runtime.ownedSources(first,victim,com.inigmasgames.hytalerpg.combat.status.PeriodicStatusRuntime.Kind.BURN,0);
+        assertEquals(1,captured.size());assertEquals(1.125,.9*profiles.require("fireball").projectile().details().burnPayoff().multiplier(),1e-12);
+        assertEquals(1,runtime.consume(captured,0,port));assertTrue(runtime.sourceView(owned,0).isEmpty());assertTrue(runtime.sourceView(foreign,0).isPresent());
+    }
+    @Test void r035FireballRootLedgerPreventsShotgunButAllowsDifferentVictimsAndCancelledRetry(){
+        var budget=new RootEffectBudget(UUID.randomUUID(),"root");
+        assertEquals("PASS",budget.claimFireballVictim("spider"));assertEquals("DUPLICATE_FIREBALL_VICTIM",budget.claimFireballVictim("spider"));
+        assertEquals("PASS",budget.claimFireballVictim("goblin"));budget.releaseFireballVictim("spider");assertEquals("PASS",budget.claimFireballVictim("spider"));
+    }
+    @Test void r035GenericProjectilePassivesRemainCompatibleAndForkDescendantsPreserveBallistics(){
+        var f=new Stage11FoundationTest();
+        for(String skill:List.of("fire_bolt","fireball"))for(String passive:List.of("fork","chain","volley"))assertTrue(f.accepts(skill,passive),skill+"/"+passive);
+        var h=cast("fireball","STAFF","fork");var registry=new ProjectileLifecycleRegistry();var root=new ProjectileInstance(plans(h,0).getFirst());registry.register(root);
+        var decision=new ProjectileContinuation(registry).afterEnemy(root,new Vec3(0,0,4),Vec3.ZERO,List.of(),1);
+        assertEquals(ProjectileContinuation.Action.FORK,decision.action(),decision.reason());assertEquals(2,decision.children().size());
+        for(var child:decision.children()){assertEquals(root.plan().rootCastId(),child.plan().rootCastId());assertTrue(child.plan().motion().timedBallistic());assertEquals(root.plan().configId(),child.plan().configId());}
     }
     @Test void invalidPartialExplosionAndPatternsReject(){
         assertThrows(IllegalArgumentException.class,()->new ProjectileExplosion(0,1,0,0,false));
@@ -200,10 +258,11 @@ class Stage13AuthoredProjectileTest {
     }
     @Test void lateContactsCannotExtendRangeOrBypassNativeSafetyLifetime(){
         var h=cast("fireball","STAFF");var instance=new ProjectileInstance(plans(h,0).getFirst());instance.nativeSpawned(0);
-        assertTrue(instance.contactWithinRange(new Vec3(0,0,30)));
-        assertFalse(instance.contactWithinRange(new Vec3(0,0,30.001)));
-        instance.observe(0,new Vec3(0,0,12));assertEquals(18,instance.remainingDistance());
-        assertTrue(instance.contactWithinRange(new Vec3(0,0,30)));assertFalse(instance.contactWithinRange(new Vec3(0,0,30.001)));
+        double path=instance.plan().maxDistance();
+        assertTrue(instance.contactWithinRange(new Vec3(0,0,path)));
+        assertFalse(instance.contactWithinRange(new Vec3(0,0,path+.001)));
+        instance.observe(0,new Vec3(0,0,12));assertEquals(path-12,instance.remainingDistance(),1e-9);
+        assertTrue(instance.contactWithinRange(new Vec3(0,0,path)));assertFalse(instance.contactWithinRange(new Vec3(0,0,path+.001)));
         assertTrue(instance.sampleNativeClock(2_000_000_000L).expired());
     }
     @Test void liveAuthoredTargetCannotMoveBeyondCommittedTwentySixMetreLock(){

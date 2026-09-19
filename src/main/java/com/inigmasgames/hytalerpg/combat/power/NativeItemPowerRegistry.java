@@ -45,7 +45,7 @@ public final class NativeItemPowerRegistry {
     }
     public Optional<Entry> find(String id){return Optional.ofNullable(entries.get(id));}
     public Collection<Entry> all(){return entries.values();}
-    /** Empty expected Family is an audited absence (Battleaxe Iron), never a wildcard. Type must be Weapon. */
+    /** Exact item/type/family match; no item-name inference or absent-family wildcard. */
     public Optional<Entry> resolve(String id,Map<String,String[]> tags){
         var e=entries.get(id);var family=tags==null?null:tags.get("Family");
         var type=tags==null?null:tags.get("Type");

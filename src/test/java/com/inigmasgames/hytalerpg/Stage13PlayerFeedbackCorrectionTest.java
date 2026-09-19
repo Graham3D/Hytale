@@ -13,16 +13,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage13PlayerFeedbackCorrectionTest {
     static JsonObject json(String path)throws Exception{try(var in=Stage13PlayerFeedbackCorrectionTest.class.getResourceAsStream(path)){return JsonParser.parseReader(new java.io.InputStreamReader(Objects.requireNonNull(in))).getAsJsonObject();}}
-    @Test void quickSlashHasTwoFullDamageHitsWithOneUnchangedCostAndCooldown(){
+    @Test void quickSlashHasTwoReducedWeaponHitsWithOneUnchangedCostAndCooldown(){
         var p=Stage04SkillProfiles.loadCanonical(RpgCatalog.loadCanonical()).require("quick_slash");
-        assertEquals(2,p.strike().repeats());assertEquals(.85,p.strike().coefficient());assertEquals(5,p.resourceCost());assertEquals(.8,p.cooldownSeconds());
+        assertEquals(2,p.strike().repeats());assertEquals(.375,p.strike().coefficient());assertEquals(5,p.resourceCost());assertEquals(.8,p.cooldownSeconds());
         assertEquals(Set.of("SWORD","LONGSWORD","DAGGER"),p.allowedMainHandKinds());
     }
     @Test void multistrikeRepeatsTheCompleteQuickSlashPairWithOnePayment(){
         var h=new Stage11ResourcePassivesTest.H("quick_slash");
         h.link("multistrike",com.inigmasgames.hytalerpg.domain.PassiveSlot.PASSIVE01);
         assertEquals(SkillExecutionResult.Status.COMMITTED,h.cast().status());var c=h.last();
-        assertEquals(6,c.profile().strike().repeats());assertEquals(.85,c.profile().strike().coefficient());
+        assertEquals(6,c.profile().strike().repeats());assertEquals(.375,c.profile().strike().coefficient());
         assertEquals(95,h.current(com.inigmasgames.hytalerpg.combat.resource.ResourceType.STAMINA));assertEquals(1,h.cooldownSaves);
         for(int group=1;group<=2;group++){
             var child=c.multistrikeCopy(group);assertEquals(.65,child.snapshot().modifiers().factor(),1e-9);
@@ -35,7 +35,7 @@ class Stage13PlayerFeedbackCorrectionTest {
             var schedule=new StrikeRepeatSchedule(6,interval,0,interval*6);
             for(int hit=1;hit<6;hit++)assertEquals(hit,schedule.claimDue(Math.round(interval*1e9)*hit).orElseThrow());
             assertTrue(schedule.complete(Math.round(interval*6e9)+10));
-            assertTrue(c.profile().strike().details().actionLockSeconds()>=interval*6);
+            assertEquals(interval*6,schedule.actionSeconds(),1e-8); // Runtime sequence owns the dynamic weapon window.
         }
     }
     @Test void eachWeaponSchedulesBothDirectionsWithoutDuplicateHits(){
@@ -48,13 +48,13 @@ class Stage13PlayerFeedbackCorrectionTest {
             assertTrue(schedule.claimDue(second+1).isEmpty());assertFalse(schedule.complete(second));assertTrue(schedule.complete(Math.round(interval*2e9)));
         }
     }
-    @Test void animationAssetsReuseInstalledLightSwingsAtExactlyOneAndHalfSpeed()throws Exception{
+    @Test void animationAssetsReuseInstalledLightSwingsAtExactlyTwiceSpeed()throws Exception{
         try(var zip=new ZipFile(Path.of(System.getenv("APPDATA"),"Hytale/install/pre-release/package/game/latest/Assets.zip").toFile())){
             for(String profile:List.of("Sword","Longsword","Daggers")){
                 JsonObject source;try(var reader=new java.io.InputStreamReader(zip.getInputStream(zip.getEntry("Server/Item/Animations/"+profile+".json")))){source=JsonParser.parseReader(reader).getAsJsonObject().getAsJsonObject("Animations");}
                 var replacement=json("/Server/Item/Animations/RPG_QuickSlash_"+profile+".json");assertEquals(profile,replacement.get("Parent").getAsString());
                 for(String action:List.of("SwingLeft","SwingRight")){
-                    var expected=source.getAsJsonObject(action).deepCopy();expected.addProperty("Speed",expected.get("Speed").getAsDouble()*3.0);
+                    var expected=source.getAsJsonObject(action).deepCopy();expected.addProperty("Speed",expected.get("Speed").getAsDouble()*2.0);
                     assertEquals(expected,replacement.getAsJsonObject("Animations").getAsJsonObject(action));
                 }
             }
@@ -77,7 +77,7 @@ class Stage13PlayerFeedbackCorrectionTest {
         String badge=Files.readString(Path.of("src/main/resources/Common/UI/Custom/Phase00RevisionHud.ui"));
         assertTrue(badge.contains("Right: 18, Top: 18"));assertTrue(badge.contains("R032-U"));
         String hud=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/ui/hud/RpgHud.java"));
-        assertTrue(hud.contains("commands.append(\"Phase00RevisionHud.ui\")"));assertTrue(hud.contains("HealingTetherPresentation.REVISION"));
+        assertTrue(hud.contains("commands.append(\"Phase00RevisionHud.ui\")"));assertTrue(hud.contains("BuildIdentity.REVISION"));
         assertEquals("R032-AP",com.inigmasgames.hytalerpg.execution.hytale.HealingTetherPresentation.REVISION);
         for(String forbidden:List.of("#Health","#Stamina","#Mana"))assertFalse(hud.contains(forbidden));
     }

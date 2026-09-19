@@ -13,6 +13,10 @@ public final class NativeProjectileAssetAudit {
         for (var profile:profiles.all().values()) {
             var payload=profile.projectile(); if(payload==null)continue;
             if(NativeProjectilePayloads.cause(payload)==null)throw new IllegalStateException("PROJECTILE_ELEMENT_UNRESOLVED:"+profile.skillId());
+            var presentation=payload.details().presentation();
+            for(String particle:List.of(presentation.castParticle(),presentation.projectileParticle(),presentation.impactParticle()))
+                if(!particle.isBlank()&&com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.getAssetMap().getAsset(particle)==null)
+                    throw new IllegalStateException("PROJECTILE_PARTICLE_UNRESOLVED:"+profile.skillId()+":"+particle);
             var configs=new LinkedHashMap<String,Double>(); configs.put(payload.configId(),payload.speed());
             payload.configIdsByWeaponKind().forEach((kind,id)->configs.put(id,payload.speedFor(kind)));
             for(var expected:configs.entrySet()) {
@@ -71,13 +75,39 @@ public final class NativeProjectileAssetAudit {
                 ||!snipeModel.getAnimationSetMap().containsKey("FlyIdle")||snipeModel.getTrails().length!=2)
             throw new IllegalStateException("SNIPE_NOT_EXACT_NATIVE_ARROW_MODEL");
         requireEqual(snipeConfig.getPhysicsConfig().toPacket().gravity,0,"snipe/nativePhysicsPacketGravity");
+        var firePresentation=new LinkedHashMap<String,Object>();
+        var fireball=profiles.require("fireball").projectile();
+        for(var tier:com.inigmasgames.hytalerpg.execution.projectile.FireProjectilePresentation.Tier.values()){
+            var config=ProjectileConfig.getAssetMap().getAsset(tier.configId());
+            if(config==null||config.getModel()==null||config.getModel().getBoundingBox()==null)
+                throw new IllegalStateException("FIREBALL_PRESENTATION_CONFIG_UNRESOLVED:"+tier.configId());
+            if(config.getInteractions()!=null&&!config.getInteractions().isEmpty())
+                throw new IllegalStateException("FIREBALL_PRESENTATION_NATIVE_GAMEPLAY_ROOT_FORBIDDEN:"+tier.configId());
+            requireEqual(config.getLaunchForce(),fireball.speed(),tier.configId()+"/speed");
+            requireEqual(config.getGravity(),fireball.gravity(),tier.configId()+"/gravity");
+            var tierBox=config.getModel().getBoundingBox();
+            for(double actual:new double[]{tierBox.min.x(),tierBox.min.y(),tierBox.min.z()})requireEqual(actual,-fireball.radius(),tier.configId()+"/min");
+            for(double actual:new double[]{tierBox.max.x(),tierBox.max.y(),tierBox.max.z()})requireEqual(actual,fireball.radius(),tier.configId()+"/max");
+            firePresentation.put(tier.name(),Map.of("configId",tier.configId(),"visualScale",tier.visualScale(),
+                    "model",config.getModel().getModelAssetId(),"mechanicalRadius",fireball.radius()));
+        }
+        if(com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.getAssetMap().getAsset(
+                com.inigmasgames.hytalerpg.execution.projectile.FireProjectilePresentation.AIM_PARTICLE)==null)
+            throw new IllegalStateException("FIREBALL_WHITE_AIM_PRESENTATION_UNRESOLVED");
+        for(String sound:List.of(
+                com.inigmasgames.hytalerpg.execution.projectile.FireProjectilePresentation.FIRE_BOLT_LAUNCH_SOUND,
+                com.inigmasgames.hytalerpg.execution.projectile.FireProjectilePresentation.FIRE_BOLT_IMPACT_SOUND,
+                com.inigmasgames.hytalerpg.execution.projectile.FireProjectilePresentation.FIREBALL_LAUNCH_SOUND,
+                com.inigmasgames.hytalerpg.execution.projectile.FireProjectilePresentation.FIREBALL_IMPACT_SOUND))
+            if(com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent.getAssetMap().getAsset(sound)==null)
+                throw new IllegalStateException("FIRE_PROJECTILE_SOUND_UNRESOLVED:"+sound);
         var release=com.inigmasgames.hytalerpg.input.NativeSnipeReleaseAudit.requireAssets();
-        return Map.of("resolvedConfigs",checked,"emptyNativeInteractions",true,"typedElements",true,
-                "shippedCrossbowSpeed",nativeCrossbow.getLaunchForce(),"shippedCrossbowRadius",payload.radius(),
-                "shippedCrossbowGravity",nativeCrossbow.getGravity(),"equipment",equipment,"connectedProof",false,
-                "nativeChargedBow",Map.of("speed",85,"gravity",25,"radius",.075,"maximumRange","RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM","release",release,
-                        "snipeGravity",0,"snipeModel",snipeModel.getModelAssetId(),"snipeModelEqualsNative",true),
-                "snipeActivationGate",snipe.details().nativeCapabilityGate());
+        return Map.ofEntries(Map.entry("resolvedConfigs",checked),Map.entry("emptyNativeInteractions",true),Map.entry("typedElements",true),
+                Map.entry("shippedCrossbowSpeed",nativeCrossbow.getLaunchForce()),Map.entry("shippedCrossbowRadius",payload.radius()),
+                Map.entry("shippedCrossbowGravity",nativeCrossbow.getGravity()),Map.entry("equipment",equipment),Map.entry("connectedProof",false),
+                Map.entry("nativeChargedBow",Map.of("speed",85,"gravity",25,"radius",.075,"maximumRange","RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM","release",release,
+                        "snipeGravity",0,"snipeModel",snipeModel.getModelAssetId(),"snipeModelEqualsNative",true)),
+                Map.entry("snipeActivationGate",snipe.details().nativeCapabilityGate()),Map.entry("firePresentation",firePresentation));
     }
     private static void requireEqual(double actual,double expected,String boundary) {
         if(!Double.isFinite(actual)||Math.abs(actual-expected)>1e-6)

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inigmasgames.local/orbis/prompt-template-identity.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "renderer", "rendererRevision", "templateSha256", "parameters"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "renderer": {"type": "string", "minLength": 1},
+    "rendererRevision": {"type": "string", "minLength": 1},
+    "templateSha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "parameters": {"type": "object", "additionalProperties": {"type": "string"}}
+  }
+}

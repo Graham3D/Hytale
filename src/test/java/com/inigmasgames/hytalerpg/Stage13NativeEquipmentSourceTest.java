@@ -51,11 +51,12 @@ class Stage13NativeEquipmentSourceTest {
         assertTrue(registry.resolve("Weapon_Spear_Iron",Map.of("Family",new String[]{"Spear","Sword"})).isEmpty());
         assertTrue(registry.find("Weapon_Spear_Unknown").isEmpty());
     }
-    @Test void auditedBattleaxeWithoutNativeFamilyIsNotANameBasedWildcard(){
-        var registry=NativeItemPowerRegistry.loadCanonical();var tags=Map.of("Type",new String[]{"Weapon"});
+    @Test void pre3BattleaxeRequiresItsExactNativeFamilyAndIsNotANameBasedWildcard(){
+        var registry=NativeItemPowerRegistry.loadCanonical();
+        var tags=Map.of("Type",new String[]{"Weapon"},"Family",new String[]{"Battleaxe"});
         assertEquals("BATTLEAXE",registry.resolve("Weapon_Battleaxe_Iron",tags).orElseThrow().kind());
         assertTrue(registry.resolve("Weapon_Battleaxe_Unknown",tags).isEmpty());
-        assertTrue(registry.resolve("Weapon_Battleaxe_Iron",Map.of()).isEmpty());
+        assertTrue(registry.resolve("Weapon_Battleaxe_Iron",Map.of("Type",new String[]{"Weapon"})).isEmpty());
         assertTrue(registry.resolve("Weapon_Battleaxe_Iron",Map.of("Type",new String[]{"Weapon"},"Family",new String[]{"Sword"})).isEmpty());
     }
     @Test void registryRejectsDuplicateOrNonfiniteSelections(){

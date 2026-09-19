@@ -133,6 +133,10 @@ public final class Phase00Plugin extends JavaPlugin {
                 .register(com.inigmasgames.hytalerpg.input.NativeHeldChannelInteraction.TYPE,
                         com.inigmasgames.hytalerpg.input.NativeHeldChannelInteraction.class,
                         com.inigmasgames.hytalerpg.input.NativeHeldChannelInteraction.codec(abilityInputs));
+        getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
+                .register(com.inigmasgames.hytalerpg.input.NativeFireballChargeInteraction.TYPE,
+                        com.inigmasgames.hytalerpg.input.NativeFireballChargeInteraction.class,
+                        com.inigmasgames.hytalerpg.input.NativeFireballChargeInteraction.codec(abilityInputs));
         var runeControl = new com.inigmasgames.hytalerpg.input.NativeRuneControl(
                 getDataDirectory().resolve("diagnostics").resolve("native-rune-control"),
                 configuration.developmentEntitlements(), skillTrace);
@@ -147,6 +151,12 @@ public final class Phase00Plugin extends JavaPlugin {
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
                 combatTrace, reactions, vfx, bosses);
         var supportSystem=skillExecutionSystem.configureSupport(loadouts);
+        var nativeWeaponFire=new com.inigmasgames.hytalerpg.combat.hytale.NativeWeaponFireProducer(
+                supportSystem::routeManagedWeaponFire,supportSystem::nativeWeaponOffensiveFactor);
+        getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
+                .register(com.inigmasgames.hytalerpg.combat.hytale.ManagedWeaponFireInteraction.TYPE,
+                        com.inigmasgames.hytalerpg.combat.hytale.ManagedWeaponFireInteraction.class,
+                        com.inigmasgames.hytalerpg.combat.hytale.ManagedWeaponFireInteraction.codec(nativeWeaponFire));
         var summonSystem=skillExecutionSystem.configureSummons(getDataDirectory().resolve("corpse-consumption"));
         com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.class,
@@ -327,6 +337,7 @@ public final class Phase00Plugin extends JavaPlugin {
         com.inigmasgames.hytalerpg.input.NativeRuneControl.auditAssets();
         com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem.requireAssets();
         com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.requireAssets();
+        com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.requireMantleAssets();
         com.inigmasgames.hytalerpg.input.NativeSupportTetherAudit.requireAssets();
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeActionLock.requireAsset();
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeFeedback.requireAssets();
@@ -339,6 +350,8 @@ public final class Phase00Plugin extends JavaPlugin {
         LOGGER.atInfo().log("RPG_STAGE13_NATIVE_BASIC_PATHS result=PASS %s",new com.google.gson.Gson().toJson(
                 com.inigmasgames.hytalerpg.execution.hytale.NativeBasicAttackPaths.auditInstalledMelee()));
         LOGGER.atInfo().log("RPG_STAGE13_STRIKE_ASSETS ordinaryQueryLimit=64 fullHeight=2.5 finiteAnimationProfiles=7 actionLockAssets=2 result=PASS connectedProof=false");
+        LOGGER.atInfo().log("RPG_MANAGED_FIRE_BINDING result=PASS contract=NORMALIZED_FIRE_V1 connectedProof=false %s",
+                new com.google.gson.Gson().toJson(com.inigmasgames.hytalerpg.combat.hytale.NativeWeaponFireProducer.auditInstalledBinding()));
         com.inigmasgames.hytalerpg.execution.hytale.NativeHitProcAssets.requireAssets();
         LOGGER.atInfo().log("RPG_STAGE11_HIT_PROC_ASSETS bleedVisual=RPG_Bleed_Visual nativeDamage=false movementUnchanged=true result=PASS connectedProof=false");
         LOGGER.atInfo().log("RPG_STAGE11_STRIKE_ACTION_LOCK asset=RPG_Strike_Action_Lock disabledInteractions=6 movementUnchanged=true result=PASS connectedProof=false");
@@ -361,6 +374,10 @@ public final class Phase00Plugin extends JavaPlugin {
         LOGGER.atInfo().log("RPG_STAGE10_BATCH_ROLES count=3 result=PASS connectedProof=false");
         com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Decoy");
         LOGGER.atInfo().log("RPG_STAGE10_DECOY_ROLE appearance=Mannequin attacks=0 result=PASS connectedProof=false");
+        com.hypixel.hytale.server.npc.NPCPlugin.get().validateSpawnableRole("RPG_Summon_Skeleton_Archer");
+        if(com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig.getAssetMap().getAsset("Projectile_Config_RPG_Summon_Arrow")==null)
+            throw new IllegalStateException("Missing RPG summon arrow continuation carrier");
+        LOGGER.atInfo().log("RPG_STAGE10_SKELETON_SUMMON role=RPG_Summon_Skeleton_Archer fleeDistance=0 followLeash=20 projectile=Projectile_Config_RPG_Summon_Arrow result=PASS connectedProof=false");
         LOGGER.atInfo().log("RPG_STAGE10_ASSETS revision=%s summonProfiles=%d role=RPG_Summon_Wolf result=PASS connectedProof=false",
                 BuildIdentity.REVISION,Stage04SkillProfiles.EXPECTED_STAGE10_PROFILES);
     }

@@ -52,10 +52,10 @@ class Stage13VanillaPowerExpansionTest {
         h.held=HytaleEquipmentAdapter.describe("Weapon_Staff_Mithril",Stage13ConnectedCastingCorrectionTest.installedTags("Weapon_Staff_Mithril"));
         assertEquals("STAFF",h.held.weaponKind());assertEquals(20,h.held.power().magicPower());assertNull(h.held.power().weaponPower());
         var result=h.cast();assertTrue(result.committed(),result.toString());assertNotNull(h.projectile);assertNull(h.last().target().entityId());
-        assertEquals(20,h.last().snapshot().basePower());assertEquals(92,h.current(ResourceType.MANA));assertEquals(1,h.resourceWrites);assertEquals(1,h.cooldownSaves);
+        assertEquals(20,h.last().snapshot().basePower());assertEquals(95,h.current(ResourceType.MANA));assertEquals(1,h.resourceWrites);assertEquals(1,h.cooldownSaves);
         assertEquals("COOLDOWN_ACTIVE",h.cast().code());assertTrue(h.projectile.observe(2,new Vec3(0,0,24)).expired());
         assertTrue(h.projectiles.onForwardTermination(h.projectile,"MAX_RANGE",new Vec3(0,0,24)));assertFalse(h.projectiles.onForwardTermination(h.projectile,"MAX_RANGE",new Vec3(0,0,24)));
-        assertEquals(92,h.current(ResourceType.MANA));assertEquals(1,h.resourceWrites);assertEquals(1,h.cooldownSaves);assertTrue(h.projectile.hitTargets().isEmpty());
+        assertEquals(95,h.current(ResourceType.MANA));assertEquals(1,h.resourceWrites);assertEquals(1,h.cooldownSaves);assertTrue(h.projectile.hitTargets().isEmpty());
         assertEquals(0,h.b.service().masteryXp(h.actor,"fire_bolt"));assertTrue(h.trace().stream().noneMatch(r->r.eventType()==RpgTraceEventType.DAMAGE_APPLIED));
     }
     @Test void expandedItemsRetainWrongEquipmentAndResourceGuards(){

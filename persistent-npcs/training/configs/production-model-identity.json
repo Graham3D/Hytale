@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "repository": "ollama-local/nemotron-3-nano",
+  "revision": "manifest-6cc467f05439",
+  "artifactSha256": "527db2cf6c705d8fabb95693d038d9c06b4a2b0b8b0a4bbdbd01212d37242970",
+  "architecture": "nemotron_h",
+  "precision": "Q4_K_M",
+  "tokenizerSha256": "",
+  "chatTemplateSha256": "b507b9c2f6ca642bffcd06665ea7c91f235fd32daeefdf875a0f938db05fb315",
+  "provenance": {
+    "ollamaVersion": "0.33.2",
+    "modelTag": "nemotron-3-nano:4b",
+    "upstreamRepository": "nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16",
+    "upstreamExactRevision": "UNRESOLVED",
+    "upstreamLineageClassification": "COMPATIBLE_BUT_UNPROVEN",
+    "trainingBaseApproval": "TRAINING_BASE_APPROVED_SEPARATE_LINEAGE",
+    "approvedTrainingBaseRevision": "dfaf35de3e30f1867dd8dbc38a7fc9fb52d3914f"
+  }
+}

@@ -1,0 +1,6 @@
+package com.inigmasgames.persistentnpcs.epistemic;
+
+public enum ClaimMode {
+    OBJECTIVE_FACT, SUBJECTIVE_OPINION, EMOTION, DESIRE, INTENTION, COMMITMENT,
+    INFERENCE, HYPOTHETICAL, METAPHOR, QUESTION, DECEPTION
+}

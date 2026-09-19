@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-09-03T20:29:02Z",
+  "productionRuntime": {
+    "provider": "NEMOTRON",
+    "endpoint": "http://127.0.0.1:11434/v1/chat/completions",
+    "modelTag": "nemotron-3-nano:4b",
+    "ollamaVersion": "0.33.2",
+    "modelManifestId": "6cc467f05439",
+    "quantizedBlobSha256": "527db2cf6c705d8fabb95693d038d9c06b4a2b0b8b0a4bbdbd01212d37242970",
+    "quantization": "Q4_K_M",
+    "architecture": "nemotron_h",
+    "renderer": "nemotron-3-nano",
+    "parser": "nemotron-3-nano",
+    "contextLength": 262144,
+    "template": "{{ .Prompt }}",
+    "temperature": 0.7,
+    "maxTokens": 180,
+    "requestTimeoutMillis": 12000,
+    "maximumConcurrency": 2,
+    "stream": true,
+    "reasoning": "none"
+  },
+  "upstreamLineage": {
+    "repository": "nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16",
+    "repositoryConfidence": "HIGH",
+    "exactInstalledRevision": "UNRESOLVED",
+    "auditedRepositoryHead": "dfaf35de3e30f1867dd8dbc38a7fc9fb52d3914f",
+    "auditedRepositoryHeadLastModified": "2026-03-20T20:50:41Z",
+    "lineageGate": "BLOCKED_UNTIL_INSTALLED_GGUF_ORIGIN_IS_PINNED"
+  },
+  "license": {
+    "installedOllamaLicense": "NVIDIA Open Model License Agreement; locally embedded revision modified 2025-10-24",
+    "currentOfficialRepositoryLicense": "NVIDIA Nemotron Open Model License; current terms modified 2025-12-15",
+    "status": "NEEDS_REVIEW",
+    "redistributionRequirements": ["include license copy", "retain notices", "include NOTICE attribution when present"]
+  },
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4070 Ti",
+    "vramMiB": 12282,
+    "computeCapability": "8.9",
+    "driver": "610.74",
+    "reportedCudaUmd": "13.3",
+    "cpu": "AMD Ryzen 9 7900X 12-Core Processor",
+    "logicalProcessors": 24,
+    "systemRamGiB": 63.15,
+    "os": "Windows 11 Home build 26200 x64"
+  },
+  "softwareFeasibility": {
+    "python": "NOT_INSTALLED",
+    "pytorch": "NOT_INSTALLED",
+    "transformers": "NOT_INSTALLED",
+    "peft": "NOT_INSTALLED",
+    "trl": "NOT_INSTALLED",
+    "bitsandbytes": "NOT_INSTALLED",
+    "nvcc": "NOT_INSTALLED",
+    "modelRequiresTrustRemoteCode": true,
+    "modelRequiresMambaSsm": true,
+    "modelRequiresCausalConv1d": true,
+    "classification": "LOCAL_EXPERIMENTAL_REMOTE_RECOMMENDED",
+    "oneBatchProofRequired": true
+  },
+  "productionPromptBoundary": {
+    "renderer": "ConversationContextBuilder and ContractPromptBuilder",
+    "requestContract": "LlmRequest",
+    "wireMessages": "LlmRequest.canonicalMessages()",
+    "wireSerializer": "OpenAiCompatibleProvider.OpenAiRequest",
+    "downstreamTemplateOwner": "Ollama nemotron-3-nano renderer/parser"
+  },
+  "officialSources": {
+    "modelRepository": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16",
+    "nemotronLicense": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-nemotron-open-model-license/",
+    "bitsandbytesCompatibility": "https://huggingface.co/docs/transformers/main/quantization/bitsandbytes",
+    "openAiServicesAgreement": "https://openai.com/policies/services-agreement/"
+  }
+}

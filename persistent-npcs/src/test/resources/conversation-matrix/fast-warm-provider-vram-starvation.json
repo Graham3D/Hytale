@@ -1,0 +1,12 @@
+{
+  "fixtureId": "R063_FAST_WARM_PROVIDERS_VRAM_STARVATION",
+  "route": "FAST",
+  "foreground": true,
+  "providers": ["NEMOTRON", "CHATTERBOX"],
+  "freeVramMiB": 747,
+  "incrementalNemotronMiB": 256,
+  "temporaryWorkspaceMiB": 128,
+  "hytaleSafetyReserveMiB": 512,
+  "requiredHeadroomMiB": 896,
+  "expected": "BOUNDED_RECLAIM_ADMIT_OR_RESOURCE_STARVED_NEXT_TURN_USABLE"
+}

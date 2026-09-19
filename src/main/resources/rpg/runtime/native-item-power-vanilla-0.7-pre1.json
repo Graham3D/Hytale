@@ -238,7 +238,7 @@
     {
       "itemId": "Weapon_Battleaxe_Adamantite",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Adamantite.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -247,7 +247,7 @@
     {
       "itemId": "Weapon_Battleaxe_Cobalt",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Cobalt.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -256,7 +256,7 @@
     {
       "itemId": "Weapon_Battleaxe_Copper",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Copper.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -265,7 +265,7 @@
     {
       "itemId": "Weapon_Battleaxe_Crude",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Crude.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -274,7 +274,7 @@
     {
       "itemId": "Weapon_Battleaxe_Doomed",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Doomed.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -283,7 +283,7 @@
     {
       "itemId": "Weapon_Battleaxe_Iron",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Iron.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -292,7 +292,7 @@
     {
       "itemId": "Weapon_Battleaxe_Mithril",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Mithril.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -301,7 +301,7 @@
     {
       "itemId": "Weapon_Battleaxe_Onyxium",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Onyxium.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -310,7 +310,7 @@
     {
       "itemId": "Weapon_Battleaxe_Scythe_Void",
       "kind": "SPEAR",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Scythe_Void.json",
       "sourceProperty": "InteractionVars/Spear_Spin_Swing_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -319,7 +319,7 @@
     {
       "itemId": "Weapon_Battleaxe_Steel_Rusty",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Steel_Rusty.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -328,7 +328,7 @@
     {
       "itemId": "Weapon_Battleaxe_Stone_Trork",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Stone_Trork.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
@@ -337,7 +337,7 @@
     {
       "itemId": "Weapon_Battleaxe_Thorium",
       "kind": "BATTLEAXE",
-      "nativeFamily": "",
+      "nativeFamily": "Battleaxe",
       "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Thorium.json",
       "sourceProperty": "InteractionVars/Swing_Down_Left_Damage/Interactions/0/DamageCalculator/BaseDamage/Physical",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",

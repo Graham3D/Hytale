@@ -1,0 +1,18 @@
+$C = "../Common.ui";
+
+Button #Choice {
+  Style: $C.@SecondaryButtonStyle;
+  TextTooltipStyle: $C.@DefaultTextTooltipStyle;
+  Label #Id { Visible: false; Text: ""; }
+  Group #Icon { HitTestVisible: false; Anchor: (Left: 22, Top: 10, Width: 48, Height: 36); }
+  AssetImage #Thumbnail {
+    HitTestVisible: false;
+    Visible: false;
+    // The packaged cards are authored at Hytale's native MyAvatar 92x149 size.
+    // Filling a 92x149 host preserves that source aspect ratio exactly.
+    Anchor: (Left: 0, Right: 0, Top: 0, Bottom: 0);
+    FallbackTexturePath: "UI/Custom/Pages/ImmersiveNpcAppearance/EmptyPartIcon@2x.png";
+  }
+  Label #Name { HitTestVisible: false; Anchor: (Left: 5, Right: 5, Top: 49, Bottom: 6); Text: ""; Style: (...$C.@DefaultLabelStyle, FontSize: 11, Wrap: true, TextColor: #c7d5e1, HorizontalAlignment: Center, VerticalAlignment: Center); }
+  Group #Selected { HitTestVisible: false; Visible: false; Anchor: (Left: 2, Right: 2, Bottom: 0, Height: 3); Background: #e4bc60; }
+}

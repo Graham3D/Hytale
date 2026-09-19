@@ -41,9 +41,9 @@ class Stage10SummonTest {
     }
     @Test void pendingReservationCountsAgainstOwnerCap(){
         var h=new Harness();h.cast();
-        for(int i=1;i<8;i++)h.summons.reserve(copy(h.context,h.actor,"root"+i),0);
+        for(int i=1;i<SummonRegistry.OWNER_LIMIT;i++)h.summons.reserve(copy(h.context,h.actor,"root"+i),0);
         assertEquals("SUMMON_OWNER_CAP",h.summons.admission(h.actor,1));
-        assertEquals(8,h.summons.cancel(h.actor).size());assertEquals(0,h.summons.size());
+        assertEquals(SummonRegistry.OWNER_LIMIT,h.summons.cancel(h.actor).size());assertEquals(0,h.summons.size());
     }
     @Test void globalCapIncludesPendingActorsAcrossWorlds(){
         var h=new Harness();h.cast();
@@ -76,7 +76,7 @@ class Stage10SummonTest {
         for(double value:new double[]{0,-1,Double.NaN,Double.POSITIVE_INFINITY})
             assertThrows(IllegalArgumentException.class,()->new SummonProfile("RPG_Summon_Wolf","NATURE",6,1,.6,.55,value,1,24));
         assertThrows(IllegalArgumentException.class,()->new SummonProfile("Wolf_Black","NATURE",6,1,.6,.55,20,1,24));
-        assertThrows(IllegalArgumentException.class,()->new SummonProfile("RPG_Summon_Wolf","NATURE",6,9,.6,.55,20,1,24));
+        assertThrows(IllegalArgumentException.class,()->new SummonProfile("RPG_Summon_Wolf","NATURE",6,SummonRegistry.OWNER_LIMIT+1,.6,.55,20,1,24));
     }
     @Test void clockMustBeFinite(){var h=new Harness();h.cast();assertThrows(IllegalArgumentException.class,()->h.summons.claimAttack(h.leases.getFirst().token(),Double.NaN));}
     @Test void removalOfOneOwnerDoesNotFreeOthers(){

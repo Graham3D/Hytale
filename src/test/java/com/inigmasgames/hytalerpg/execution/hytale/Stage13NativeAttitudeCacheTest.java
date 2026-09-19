@@ -60,7 +60,7 @@ class Stage13NativeAttitudeCacheTest {
             var reads=new ArrayList<String>();
             for(var file:files.filter(p->p.toString().endsWith(".java")).toList())
                 for(var line:Files.readAllLines(file))if(line.contains(".getAttitude("))reads.add(line);
-            assertEquals(3,reads.size());
+            assertEquals(4,reads.size());
             assertTrue(reads.stream().allMatch(line->line.contains("NativeNpcAttitudes.prepared(")));
         }
     }

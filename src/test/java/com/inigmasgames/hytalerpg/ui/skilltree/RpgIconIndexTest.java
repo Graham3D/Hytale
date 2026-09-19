@@ -14,12 +14,12 @@ class RpgIconIndexTest {
     }
     @Test void indexAndOwnerCsvCoverEveryCanonicalSkillAndPassiveWithoutFilenameCollisions() throws Exception {
         var entries = List.of(index().entries()); var catalog = RpgCatalog.loadCanonical();
-        assertEquals(156, entries.size());
+        assertEquals(158, entries.size());
         assertEquals(catalog.skills().stream().map(s -> s.id().value()).collect(Collectors.toSet()),
                 entries.stream().filter(e -> e.kind().equals("Skill")).map(RpgSkillIcons.Entry::id).collect(Collectors.toSet()));
         assertEquals(catalog.passives().stream().map(p -> p.id().value()).collect(Collectors.toSet()),
                 entries.stream().filter(e -> e.kind().equals("Passive")).map(RpgSkillIcons.Entry::id).collect(Collectors.toSet()));
-        assertEquals(156, entries.stream().map(e -> e.fileName().toLowerCase(Locale.ROOT)).distinct().count());
+        assertEquals(158, entries.stream().map(e -> e.fileName().toLowerCase(Locale.ROOT)).distinct().count());
         var csv = Files.readString(Path.of("art/ICON-FILENAMES.csv"));
         for (var e : entries) {
             assertTrue(csv.contains("\"" + e.name() + "\",\"" + e.fileName() + "\""));
@@ -37,6 +37,10 @@ class RpgIconIndexTest {
         assertEquals("Icons/RPG/SkillFirebolt.png", present.get("Skill:fire_bolt"));
         assertEquals("Icons/RPG/SkillFireball.png", present.get("Skill:fireball"));
         assertEquals("Icons/RPG/SkillWhirlwind.png", present.get("Skill:whirlwind"));
+        assertEquals("Icons/RPG/SkillHealingbeam.png", present.get("Skill:healing_beam"));
+        assertEquals("Icons/RPG/SkillBlessingofprotection.png", present.get("Skill:blessing_of_protection"));
+        assertEquals("Icons/RPG/SkillMantleofflame.png", present.get("Skill:mantle_of_flame"));
+        assertEquals("Icons/RPG/SkillSummonskeletonarchers.png", present.get("Skill:summon_skeleton_archers"));
         assertEquals("Icons/RPG/PassivePotency.png", present.get("Passive:potency"));
         assertEquals(RpgSkillTreeProjectionService.PLACEHOLDER_ICON, RpgSkillIcons.forPassive("unknown"));
     }

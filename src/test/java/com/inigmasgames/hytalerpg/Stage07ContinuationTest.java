@@ -10,6 +10,35 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Stage07ContinuationTest {
+    @Test void continuationBalanceAppliesForkAndChainFactorsExactlyOnce(){
+        var h=new Harness("fork","chain");
+        assertEquals(.70,ProjectileContinuationBalance.hitFactor(h.context.compiledPlan()),1e-12);
+        var parent=h.spawn();var fork=h.continuation.afterEnemy(parent,Vec3.ZERO,Vec3.FORWARD,List.of(),1);
+        var forkChild=fork.children().getFirst();assertEquals(.65,forkChild.plan().snapshot().modifiers().factor(),1e-12);
+        var chain=h.continuation.afterEnemy(forkChild,Vec3.ZERO,Vec3.ZERO,
+                List.of(new ProjectileContinuation.Candidate("next",Vec3.FORWARD,true)),2);
+        assertEquals(.65,chain.children().getFirst().plan().snapshot().modifiers().factor(),1e-12,
+                "Chain descendants retain Fork's factor and do not compound Chain per hop");
+    }
+    @Test void forkAndChainCreateVisibleCarrierPlansAndDeferDamageAuthorityUntilChildContact(){
+        var h=new Harness("fork","chain");var parent=h.spawn();assertTrue(h.service.onEnemyContact(parent,"enemy-a"));
+        var fork=h.continuation.afterEnemy(parent,Vec3.ZERO,new Vec3(0,0,-2),List.of(),1);
+        assertEquals(ProjectileContinuation.Action.FORK,fork.action());assertEquals(2,fork.children().size());
+        for(var child:fork.children()){
+            assertEquals(parent.plan().configId(),child.plan().configId());assertEquals(.65,child.plan().snapshot().modifiers().factor(),1e-12);
+            assertEquals(0,child.remaining("FORK"));assertTrue(child.previouslyHit("enemy-a"));
+        }
+        h.service.onForwardTermination(parent,"FORK_PARENT_CONSUMED",Vec3.ZERO);
+        var forkChild=fork.children().getFirst();var destination=new ProjectileContinuation.Candidate("enemy-b",new Vec3(0,0,4),true);
+        var chain=h.continuation.afterEnemy(forkChild,Vec3.ZERO,Vec3.ZERO,List.of(destination),2);
+        assertEquals(ProjectileContinuation.Action.CHAIN,chain.action());assertEquals(1,chain.children().size());
+        var chainChild=chain.children().getFirst();
+        assertEquals(forkChild.plan().configId(),chainChild.plan().configId());assertFalse(chainChild.previouslyHit("enemy-b"),
+                "choosing a Chain destination must not apply/claim its contact payload");
+        assertTrue(h.service.onEnemyContact(chainChild,"enemy-b"));assertFalse(h.service.onEnemyContact(chainChild,"enemy-b"));
+        assertTrue(chainChild.previouslyHit("enemy-a"));assertEquals(.65,chainChild.plan().snapshot().modifiers().factor(),1e-12);
+        h.service.cancelOwner(h.context.request().actorId(),"TEST_COMPLETE");
+    }
     @Test void hitThenPierceThenForkThenChainThenReturnGoldenOrderAndFiniteBudgets() {
         var h=new Harness("piercing","fork","chain","return");var p=h.spawn();var order=new ArrayList<String>();
         for(int i=1;i<=3;i++) {
@@ -21,21 +50,24 @@ class Stage07ContinuationTest {
                 h.service.onForwardTermination(p,"FORK_PARENT_CONSUMED",hit);
                 for(var child:result.children()) {
                     assertTrue(child.previouslyHit("target-3"));assertEquals(0,child.remaining("FORK"));
-                    assertEquals(21,child.plan().maxDistance(),1e-12);assertEquals(3,child.totalDistance(),1e-12);
-                    assertEquals(p.plan().rootCastId(),child.plan().rootCastId());assertSame(p.plan().snapshot(),child.plan().snapshot());
+                    assertEquals(23,child.plan().maxDistance(),1e-12);assertEquals(3,child.totalDistance(),1e-12);
+                    assertEquals(p.plan().rootCastId(),child.plan().rootCastId());
+                    assertEquals(.65,child.plan().snapshot().modifiers().factor(),1e-12);
                 }
                 var child=result.children().getFirst();var at=new Vec3(0,0,4);child.observe(.04,at);h.service.onEnemyContact(child,"fourth");
                 var choices=List.of(new ProjectileContinuation.Candidate("near",new Vec3(1,0,4),true));
                 var chain=h.continuation.afterEnemy(child,at,Vec3.ZERO,choices,4);order.add("HIT");order.add(chain.action().name());
-                assertEquals(1,child.remaining("CHAIN"));child.observe(.04,new Vec3(1,0,4));h.service.onEnemyContact(child,"near");
-                var returning=h.continuation.afterEnemy(child,new Vec3(1,0,4),Vec3.ZERO,List.of(),5);order.add("HIT");order.add(returning.action().name());
-                assertTrue(child.returning());assertTrue(child.acceptTarget("target-3"));assertFalse(child.acceptTarget("target-3"));
-                assertEquals(ProjectileContinuation.Action.RETURN_CONTINUE,h.continuation.afterEnemy(child,new Vec3(0,0,3),Vec3.ZERO,choices,6).action());
-                assertTrue(child.observe(2,new Vec3(0,0,-24)).expired());
+                assertEquals(1,chain.children().size());var chained=chain.children().getFirst();
+                assertEquals(1,chained.remaining("CHAIN"));h.service.onForwardTermination(child,"CHAIN_PARENT_CONSUMED",at);
+                chained.observe(.04,new Vec3(1,0,4));h.service.onEnemyContact(chained,"near");
+                var returning=h.continuation.afterEnemy(chained,new Vec3(1,0,4),Vec3.ZERO,List.of(),5);order.add("HIT");order.add(returning.action().name());
+                assertTrue(chained.returning());assertTrue(chained.acceptTarget("target-3"));assertFalse(chained.acceptTarget("target-3"));
+                assertEquals(ProjectileContinuation.Action.RETURN_CONTINUE,h.continuation.afterEnemy(chained,new Vec3(0,0,3),Vec3.ZERO,choices,6).action());
+                assertTrue(chained.observe(2,new Vec3(0,0,-24)).expired());
             }
         }
         assertEquals(List.of("HIT","PIERCE","HIT","PIERCE","HIT","FORK","HIT","CHAIN","HIT","RETURN"),order);
-        assertEquals(3,h.registry.spent(h.context.request().actorId(),h.context.rootCastId()));
+        assertEquals(4,h.registry.spent(h.context.request().actorId(),h.context.rootCastId()));
         h.service.cancelOwner(h.context.request().actorId(),"LOGOUT");assertEquals(0,h.registry.size());assertEquals(0,h.registry.rootCount());
     }
     @Test void chainUsesNearestVisibleUnvisitedWithinEightMetersWithStableTieBreak() {
@@ -46,15 +78,17 @@ class Stage07ContinuationTest {
                 new ProjectileContinuation.Candidate("b",new Vec3(2,0,0),true),new ProjectileContinuation.Candidate("a",new Vec3(-2,0,0),true));
         var choice=h.continuation.afterEnemy(p,Vec3.ZERO,new Vec3(0,0,-4),choices,1);
         assertEquals("CHAIN_TARGET_a",choice.reason());assertEquals(new Vec3(-1,0,0),choice.direction());
-        p.observe(.1,new Vec3(-2,0,0));assertEquals(22,p.remainingDistance());
-        assertEquals(ProjectileContinuation.Action.TERMINATE,h.continuation.afterEnemy(p,new Vec3(-2,0,0),Vec3.ZERO,List.of(),2).action());
+        assertEquals(1,choice.children().size());var child=choice.children().getFirst();h.service.onForwardTermination(p,"CHAIN_PARENT_CONSUMED",Vec3.ZERO);
+        child.observe(.1,new Vec3(-2,0,0));assertEquals(24,child.remainingDistance());
+        assertTrue(child.previouslyHit("visited"));assertEquals(ProjectileContinuation.Action.TERMINATE,
+                h.continuation.afterEnemy(child,new Vec3(-2,0,0),Vec3.ZERO,List.of(),2).action());
     }
     @Test void returnHasSeparateHitLedgerAndOwnBoundedDistanceButDoesNotRearmContinuations() {
         var h=new Harness("return","chain");var p=h.spawn();p.acceptTarget("same");p.observe(.5,new Vec3(0,0,12));
         assertEquals(ProjectileContinuation.Action.RETURN,h.continuation.forwardEnd(p,new Vec3(0,0,12),Vec3.ZERO,"TERRAIN_HIT").action());
         assertTrue(p.acceptTarget("same"));assertFalse(p.acceptTarget("same"));assertEquals(0,p.remaining("RETURN"));
         assertEquals(ProjectileContinuation.Action.TERMINATE,h.continuation.forwardEnd(p,new Vec3(0,0,11),Vec3.ZERO,"TERRAIN_HIT").action());
-        var observation=p.observe(1.1,new Vec3(0,0,-12));assertTrue(observation.expired());assertEquals(36,p.totalDistance());
+        var observation=p.observe(1.2,new Vec3(0,0,-12));assertTrue(observation.expired());assertEquals(36,p.totalDistance());
     }
     @Test void echoPromiseKeepsRootBudgetEvenWhenPrimaryTerminatesBeforeEchoLaunch() {
         var h=new Harness("echo","fork");var primary=h.spawn();

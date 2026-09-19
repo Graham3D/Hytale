@@ -1,0 +1,3 @@
+param([Parameter(Mandatory=$true)][string]$RunDirectory)
+$ErrorActionPreference='Stop';$reportPath=Join-Path $RunDirectory 'peft-preflight-report.json';$manifestPath=Join-Path $RunDirectory 'run-manifest.json';$report=Get-Content -LiteralPath $reportPath -Raw|ConvertFrom-Json;$manifest=Get-Content -LiteralPath $manifestPath -Raw|ConvertFrom-Json;$actual=(Get-FileHash -Algorithm SHA256 -LiteralPath $reportPath).Hash.ToLowerInvariant();if($actual -ne $manifest.preflightReportSha256){throw 'Preflight report hash does not match the run manifest.'}
+[ordered]@{runId=$report.runId;state=$report.state;g0=$report.g0;g2=$report.g2;hardwareClassification=$report.hardwareClassification;failures=@($report.failures);manifestVerified=$true}|ConvertTo-Json -Depth 5

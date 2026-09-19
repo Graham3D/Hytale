@@ -29,7 +29,7 @@ class CatalogAndSlotTest {
 
     @Test void canonicalCatalogLoadsAndResolvesFormattingWithoutGuessing() {
         RpgCatalog catalog = RpgCatalog.loadCanonical();
-        assertEquals(89, catalog.skills().size());
+        assertEquals(91, catalog.skills().size());
         assertEquals(67, catalog.passives().size());
         assertEquals("fire_bolt", catalog.resolveSkill("firebolt").value().id().value());
         assertEquals("fire_bolt", catalog.resolveSkill("fire_bolt").value().id().value());

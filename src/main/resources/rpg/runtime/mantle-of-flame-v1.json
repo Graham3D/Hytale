@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "skills": [{
+    "skillId": "mantle_of_flame", "family": "AURA", "secondaryFamilies": [],
+    "allowedMainHandKinds": [], "requiredOffHandKinds": [],
+    "resourceType": "MANA", "resourceCost": 0, "cooldownSeconds": 0,
+    "windupSeconds": 0, "basePowerSource": "NONE", "innateBasePower": 0, "scaling": "UTILITY",
+    "support": {
+      "kind": "MANTLE_OF_FLAME", "range": 0, "radius": 9, "coefficient": 0.25,
+      "reservationFraction": 0, "toggleLockSeconds": 3, "durationSeconds": 0,
+      "movementIncreased": 0, "upkeepPerSecond": 0, "damageInterval": 0, "chillInterval": 0,
+      "element": "FIRE", "resourceMode": "TRIGGERED_VARIABLE_MANA_SPEND"
+    }
+  }]
+}

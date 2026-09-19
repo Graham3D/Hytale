@@ -10,6 +10,13 @@ public interface SkillExecutionPort {
     Equipment equipment();
     NativeResourcePort resources();
     Validation familyPrerequisites(Stage04SkillProfile profile, CompiledSkillPlan plan);
+    default Validation familyPrerequisites(Stage04SkillProfile profile,CompiledSkillPlan plan,int effectiveSkillLevel){
+        return familyPrerequisites(profile,plan);
+    }
+    /** Authoritative equipment integration boundary; zero until an audited item grants this skill. */
+    default int itemGrantedSkillLevels(String skillId,Equipment equipment){return 0;}
+    /** Native ports must capture an authored reference for Quick Slash; pure family fixtures may omit it. */
+    default com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile captureWeaponLightAttack(Equipment equipment){return null;}
     /** Native handoff needs an immutable world/aim anchor, not necessarily an entity target. */
     default boolean requiresSpatialCommitContext() { return false; }
     default CommittedTarget captureTarget(Stage04SkillProfile profile, CompiledSkillPlan plan, SkillExecutionRequest request) { return null; }

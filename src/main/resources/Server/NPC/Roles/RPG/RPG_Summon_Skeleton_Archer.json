@@ -1,0 +1,41 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Intelligent",
+  "Parameters": {
+    "WanderRadius": { "Value": 3 },
+    "FollowPatrolPath": { "Value": false },
+    "Patrol": { "Value": false },
+    "FlockArray": { "Value": ["Skeleton_Fighter", "Skeleton_Archer"], "TypeHint": "String" },
+    "ApplySeparation": { "Value": false },
+    "NameTranslationKey": { "Value": "server.npcRoles.Skeleton_Archer.name" }
+  },
+  "Modify": {
+    "DeathParticles": "Effect_Death_Bones",
+    "MaxHealth": 36,
+    "HearingRange": 8,
+    "ViewSector": 270,
+    "WakingPeriod": [0, 24],
+    "DropList": "Empty",
+    "Appearance": "Skeleton_Archer",
+    "Weapons": ["Weapon_Shortbow_Iron_Rusty"],
+    "FlockArray": { "Compute": "FlockArray" },
+    "FollowPatrolPath": { "Compute": "FollowPatrolPath" },
+    "Patrol": { "Compute": "Patrol" },
+    "WanderRadius": { "Compute": "WanderRadius" },
+    "Attack": "Skeleton_Archer_Bow_Shoot",
+    "CombatBackOffAfterAttack": false,
+    "AttackDistance": 15,
+    "DesiredAttackDistanceRange": [5, 14.5],
+    "CombatBehaviorDistance": 15,
+    "TargetRange": 15,
+    "LeashDistance": 20,
+    "HardLeashDistance": 64,
+    "LeashMinPlayerDistance": 1,
+    "ApplySeparation": { "Compute": "ApplySeparation" },
+    "IsMemory": false,
+    "MemoriesCategory": "Other",
+    "MemoriesNameOverride": "",
+    "BreathesInWater": true,
+    "NameTranslationKey": { "Compute": "NameTranslationKey" }
+  }
+}

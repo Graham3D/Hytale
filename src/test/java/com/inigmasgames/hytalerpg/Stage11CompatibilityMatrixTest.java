@@ -60,7 +60,7 @@ class Stage11CompatibilityMatrixTest {
         assertEquals(256,com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile.MAX_DAMAGE_PULSES);
         assertThrows(IllegalArgumentException.class,()->new com.inigmasgames.hytalerpg.execution.connection.ConnectionProfile(p.kind(),p.range(),p.width(),p.height(),p.depth(),p.speed(),25.65,p.intervalSeconds(),p.coefficient(),p.upkeepPerSecond(),p.radius(),p.originHeight(),p.element(),p.details()));
     }
-    @Test void all5742SkillPassiveCellsHaveExplicitVerdicts()throws Exception{
+    @Test void all6097SkillPassiveCellsHaveExplicitVerdicts()throws Exception{
         var rows=new ArrayList<Map<String,Object>>();var profileFailures=new TreeMap<String,String>();var eligible=new TreeMap<String,Integer>();
         for(var skill:skills)for(var passive:passives){var r=assess(skill,List.of(passive),false);
             rows.add(Map.of("skill",skill.id().value(),"passive",passive.id().value(),"gate",r.gate,"detail",r.detail));
@@ -68,10 +68,10 @@ class Stage11CompatibilityMatrixTest {
             if(r.gate.equals("PROFILE_GATE"))profileFailures.put(skill.id()+"/"+passive.id(),r.detail);
         }
         write("skill-passive-matrix.json",rows);write("single-profile-gates.json",profileFailures);write("passive-implemented-profile-eligibility.json",eligible);
-        assertEquals(5963,rows.size());assertEquals(67,eligible.size(),"Every primitive needs an implemented positive profile");
+        assertEquals(6097,rows.size());assertEquals(67,eligible.size(),"Every primitive needs an implemented positive profile");
         assertTrue(profileFailures.isEmpty(),profileFailures.toString());
     }
-    @Test void all2145PairsClassifiedAgainstAll87Skills()throws Exception{
+    @Test void all2211PairsClassifiedAgainstAll91Skills()throws Exception{
         var rows=new ArrayList<Map<String,Object>>();var profileFailures=new TreeMap<String,String>();
         for(int a=0;a<passives.size();a++)for(int b=a+1;b<passives.size();b++){
             var selected=List.of(passives.get(a),passives.get(b));var accepted=new ArrayList<String>();var missing=new ArrayList<String>();var rejected=new TreeMap<String,Integer>();var gated=new TreeMap<String,String>();var capabilities=new TreeMap<String,String>();
@@ -84,7 +84,7 @@ class Stage11CompatibilityMatrixTest {
             }
             rows.add(Map.of("first",selected.getFirst().id().value(),"second",selected.getLast().id().value(),"classification",accepted.isEmpty()?capabilities.isEmpty()?missing.isEmpty()?"NO_VALID_IMPLEMENTED_SKILL":"CATALOG_ONLY_PENDING_LEGACY_RUNTIME":"COMPILED_BUT_RUNTIME_CAPABILITY_GATED":"VALID_ON_LISTED_PROFILES",
                     "compiledProfileSkillsConnectedUnverified",accepted,"catalogOnlySkills",missing,"rejectedByCode",rejected,"profileGates",gated,"runtimeCapabilityGates",capabilities));
-            assertEquals(89,accepted.size()+missing.size()+gated.size()+capabilities.size()+rejected.values().stream().mapToInt(Integer::intValue).sum());
+            assertEquals(91,accepted.size()+missing.size()+gated.size()+capabilities.size()+rejected.values().stream().mapToInt(Integer::intValue).sum());
         }
         write("passive-pair-matrix.json",rows);write("pair-profile-gates.json",profileFailures);
         assertEquals(2211,rows.size());assertTrue(profileFailures.isEmpty(),profileFailures.toString());

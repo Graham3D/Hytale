@@ -21,16 +21,17 @@ class Stage13CoverageLedgerTest {
                 p.cage()!=null?"INTENTIONALLY_DISABLED_BY_MASTER_COLLISION_GATE":"IMPLEMENTATION_BLOCKED_NATIVE_INTEGRATION_UNVERIFIED";
             var limitations=new ArrayList<String>();if(!gate.isEmpty())limitations.add(gate);
             if(skill.id().value().equals("flame_weapon"))limitations.add("Native basic-hit application is not integrated; supported RPG hit path only");
+            if(skill.id().value().equals("mantle_of_flame"))limitations.add("COVERAGE_LIMITED_QA: native Flame Longsword Primary leaves only; native ranged/RPG weapon skills/affixes/Flame Weapon conversion not integrated; actual native execution requires connected evidence");
             if(skill.id().value().equals("pedanticism"))limitations.add("Native enemy cooldown-progress adapter unavailable; RPG authority only");
             if(skill.id().value().equals("revive_fallen")||skill.id().value().equals("dominate"))limitations.add("Native source-role coverage restricted to audited Wolf_Black");
             limitations.add("Connected input, execution, visual/animation and multiplayer QA UNVERIFIED");
             skills.add(Map.of("id",skill.id().value(),"name",skill.name(),"family",p.family(),"status",status,"activationGate",gate,"limitations",limitations,"connectedProof",false));
             rows.append("| ").append(skill.name()).append(" (`").append(skill.id().value()).append("`) | ").append(p.family()).append(" | ").append(status).append(" | ").append(String.join("; ",limitations)).append(" |\n");
         }
-        assertEquals(89,skills.size());assertEquals(89,profiles.all().size());assertEquals(3,gates.size());
+        assertEquals(91,skills.size());assertEquals(91,profiles.all().size());assertEquals(3,gates.size());
         assertTrue(gates.containsKey("frenzy"));assertTrue(gates.containsKey("guard"));assertTrue(gates.containsKey("bone_cage"));
         assertFalse(gates.containsKey("snipe")); // T owner-authored range; connected release still unverified.
-        rows.append("\n## Passives\n\nEvery row has retained compiler/runtime tests; exact eligible/rejected targets are in the 5,963-cell matrix. Native/client behavior is still unverified.\n\n| Passive | Modifier operations | Status |\n|---|---|---|\n");
+        rows.append("\n## Passives\n\nEvery row has retained compiler/runtime tests; exact eligible/rejected targets are in the 6,030-cell matrix. Native/client behavior is still unverified.\n\n| Passive | Modifier operations | Status |\n|---|---|---|\n");
         for(var p:catalog.passives().stream().sorted(Comparator.comparing(v->v.id().value())).toList()){
             passives.add(Map.of("id",p.id().value(),"name",p.name(),"modifierOps",p.modifierOps(),"phase",p.phase(),"status","IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION","connectedProof",false,
                 "limitations",List.of("Only compiler-approved targets; see exact matrix and runtime tests","Recipient skill native/role/API limitations also apply","No positive connected all-passive execution evidence")));

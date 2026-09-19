@@ -43,8 +43,8 @@ class Stage05ProjectileTest {
         // Retained identity; T owner contract replaces the unverified native maximum with an authored cap.
         assertEquals("",profiles.require("snipe").projectile().details().nativeCapabilityGate());
         assertEquals(85,profiles.require("snipe").projectile().speed());
-        assertProjectile(profiles.require("fire_bolt"), Set.of("STAFF", "WAND"), "MANA", 8, 1.4,
-                "MAGIC_WEAPON", "MAGIC", "Projectile_Config_RPG_Fire_Bolt", 24, 24, .30, .95);
+        assertProjectile(profiles.require("fire_bolt"), Set.of("STAFF", "WAND"), "MANA", 5, .45,
+                "MAGIC_WEAPON", "MAGIC", "Projectile_Config_RPG_Fire_Bolt", 32, 26, .22, .70);
         assertProjectile(profiles.require("frost_bolt"), Set.of("STAFF", "WAND"), "MANA", 8, 1.5,
                 "MAGIC_WEAPON", "MAGIC", "Projectile_Config_RPG_Frost_Bolt", 22, 24, .30, .85);
         assertProjectile(profiles.require("arcane_bolt"), Set.of("WAND", "SPELLBOOK"), "MANA", 7, 1.2,
@@ -140,9 +140,9 @@ class Stage05ProjectileTest {
     @Test void fireBoltCommitsManaAndCapturesMagicDamageAndBurnRequest() {
         Harness harness = harness("fire_bolt", item("STAFF", null, 30.0), 100, 100);
         assertTrue(harness.execute().committed());
-        assertEquals(92, harness.port.resources.current(ResourceType.MANA), 1e-12);
+        assertEquals(95, harness.port.resources.current(ResourceType.MANA), 1e-12);
         assertEquals(30, harness.port.context.snapshot().basePower(), 1e-12);
-        assertEquals(.95, harness.port.context.snapshot().skillCoefficient(), 1e-12);
+        assertEquals(.70, harness.port.context.snapshot().skillCoefficient(), 1e-12);
         assertEquals(4.0, harness.port.context.snapshot().statusModifiers().get("BURN"));
     }
 
@@ -182,8 +182,8 @@ class Stage05ProjectileTest {
     @Test void invalidWeaponInsufficientResourceAndMissingAmmoRejectBeforeSpawn() {
         Harness weapon = harness("fire_bolt", item("SWORD", 20.0, null), 100, 100);
         assertEquals("INVALID_MAIN_HAND", weapon.execute().code()); assertEquals(0, weapon.port.dispatches);
-        Harness mana = harness("fire_bolt", item("WAND", null, 20.0), 7, 100);
-        assertEquals("INSUFFICIENT_RESOURCE", mana.execute().code()); assertEquals(7, mana.port.resources.current(ResourceType.MANA));
+        Harness mana = harness("fire_bolt", item("WAND", null, 20.0), 4, 100);
+        assertEquals("INSUFFICIENT_RESOURCE", mana.execute().code()); assertEquals(4, mana.port.resources.current(ResourceType.MANA));
         Harness ammo = harness("quick_shot", item("BOW", 20.0, null), 100, 100);
         ammo.port.validation = SkillExecutionPort.Validation.reject("AMMUNITION_UNAVAILABLE");
         assertEquals("AMMUNITION_UNAVAILABLE", ammo.execute().code());

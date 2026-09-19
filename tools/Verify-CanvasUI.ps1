@@ -3,7 +3,9 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path "$PSScriptRoot\..").Path
-$evidence = Join-Path $root 'evidence\canvas-ui\R008'
+$revision = ((Get-Content -LiteralPath (Join-Path $root 'gradle.properties')) | Where-Object { $_ -like 'rpg_revision=*' }) -replace '^rpg_revision=', ''
+$hytaleVersion = ((Get-Content -LiteralPath (Join-Path $root 'gradle.properties')) | Where-Object { $_ -like 'hytale_version=*' }) -replace '^hytale_version=', ''
+$evidence = Join-Path $root ("evidence\canvas-ui\cursor-hud\" + $revision)
 New-Item -ItemType Directory -Force -Path $evidence | Out-Null
 Push-Location $root
 try {
@@ -16,11 +18,13 @@ try {
     )
     $libraryEntries = @(& jar tf $library)
     $requiredLibrary = @('manifest.json','canvasui-build.properties','Common/UI/Custom/CanvasUIPage.ui',
-        'Common/UI/Custom/CanvasEdge.ui','Common/UI/Custom/CanvasEdgeHit.ui','Common/UI/Custom/CanvasNode.ui','Common/UI/Custom/CanvasPort.ui','Common/UI/Custom/CanvasInputProbePage.ui',
+        'Common/UI/Custom/CanvasEdge.ui','Common/UI/Custom/CanvasEdgeHit.ui','Common/UI/Custom/CanvasNode.ui','Common/UI/Custom/CanvasPort.ui','Common/UI/Custom/CanvasInputProbePage.ui','Common/UI/Custom/CanvasCursorProbeHud.ui','Common/UI/Custom/CanvasGraphEditorHud.ui',
         'com/inigmasgames/canvasui/CanvasUI.class','com/inigmasgames/canvasui/runtime/CanvasService.class',
+        'com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.class','com/inigmasgames/canvasui/runtime/cursor/CanvasPointerTransform.class','com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.class',
+        'com/inigmasgames/canvasui/rendering/CanvasCursorProbeHud.class','com/inigmasgames/canvasui/rendering/CanvasCursorProbePage.class','com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.class','com/inigmasgames/canvasui/rendering/CanvasGraphEditorHud.class','com/inigmasgames/canvasui/rendering/CursorHudGraphEditorBackend.class','com/inigmasgames/canvasui/rendering/HytaleCursorHudInputBackend.class',
         'com/inigmasgames/canvasui/api/Canvas.class','com/inigmasgames/canvasui/api/CanvasSnapshotCodec.class',
-        'com/inigmasgames/canvasui/api/CanvasInputBackend.class','com/inigmasgames/canvasui/api/CanvasRenderBackend.class',
-        'com/inigmasgames/canvasui/demo/CanvasDemoCommand.class','com/inigmasgames/canvasui/demo/CanvasInputProbeCommand.class','com/inigmasgames/canvasui/demo/DemoDefinitions.class')
+        'com/inigmasgames/canvasui/api/CanvasInputBackend.class','com/inigmasgames/canvasui/api/CanvasRenderBackend.class','com/inigmasgames/canvasui/api/editor/CursorCanvasEditor.class','com/inigmasgames/canvasui/api/editor/CursorEditorOpenResult.class',
+        'com/inigmasgames/canvasui/demo/CanvasDemoCommand.class','com/inigmasgames/canvasui/demo/CanvasInputProbeCommand.class','com/inigmasgames/canvasui/demo/CanvasCursorProbeCommand.class','com/inigmasgames/canvasui/demo/CanvasCursorProbeCloseCommand.class','com/inigmasgames/canvasui/demo/DemoDefinitions.class')
     $missingLibrary = @($requiredLibrary | Where-Object { $_ -notin $libraryEntries })
     $testSuites = @(Get-ChildItem -LiteralPath (Join-Path $root 'canvas-ui\build\test-results\test') -Filter '*.xml')
     $tests = 0; $failures = 0; $errors = 0; $skipped = 0
@@ -38,7 +42,7 @@ try {
     $usesDynamicPrefixForStaticEventData = [bool]($librarySource -match '\.append\s*\(\s*"@(Event|Target|TargetKind|TargetId)"')
     $result = [ordered]@{
         verifiedAtUtc = [DateTime]::UtcNow.ToString('o')
-        revision = 'R008'; hytale = '0.7.0-pre.1'
+        revision = $revision; hytale = $hytaleVersion
         branch = (& git branch --show-current).Trim(); commit = (& git rev-parse HEAD).Trim()
         tests = [ordered]@{ total = $tests; failures = $failures; errors = $errors; skipped = $skipped; passed = ($tests -gt 0 -and $failures -eq 0 -and $errors -eq 0) }
         libraryJar = [ordered]@{ path = $library; bytes = (Get-Item $library).Length; sha256 = (Get-FileHash $library -Algorithm SHA256).Hash; missingEntries = $missingLibrary }

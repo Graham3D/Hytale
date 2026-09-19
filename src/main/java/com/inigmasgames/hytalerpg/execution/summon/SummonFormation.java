@@ -7,7 +7,7 @@ import java.util.*;
 public final class SummonFormation {
     private SummonFormation(){}
     public static List<Vec3> points(Vec3 centre,int count){
-        if(count<1||count>8)throw new IllegalArgumentException("INVALID_SUMMON_FORMATION");
+        if(count<1||count>SummonRegistry.OWNER_LIMIT)throw new IllegalArgumentException("INVALID_SUMMON_FORMATION");
         if(count==1)return List.of(centre);
         double radius=Math.max(1.2,1.05/(2*Math.sin(Math.PI/count)));
         var points=new ArrayList<Vec3>();

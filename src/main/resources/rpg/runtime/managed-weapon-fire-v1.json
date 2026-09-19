@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "contract": "NORMALIZED_FIRE_V1",
+  "coverage": [
+    {
+      "itemId": "Weapon_Longsword_Flame",
+      "binding": "Longsword_Swing_Left_Damage",
+      "parent": "Longsword_Swing_Left_Damage",
+      "sourceFire": 31,
+      "variance": 0.15,
+      "contract": "NORMALIZED_FIRE_V1",
+      "delivery": "NATIVE_MELEE",
+      "connectedVerified": false
+    },
+    {
+      "itemId": "Weapon_Longsword_Flame",
+      "binding": "Longsword_Swing_Right_Damage",
+      "parent": "Longsword_Swing_Right_Damage",
+      "sourceFire": 31,
+      "variance": 0.15,
+      "contract": "NORMALIZED_FIRE_V1",
+      "delivery": "NATIVE_MELEE",
+      "connectedVerified": false
+    },
+    {
+      "itemId": "Weapon_Longsword_Flame",
+      "binding": "Longsword_Swing_Up_Left_Damage",
+      "parent": "Longsword_Swing_Up_Left_Damage",
+      "sourceFire": 31,
+      "variance": 0.15,
+      "contract": "NORMALIZED_FIRE_V1",
+      "delivery": "NATIVE_MELEE",
+      "connectedVerified": false
+    },
+    {
+      "itemId": "Weapon_Longsword_Flame",
+      "binding": "Longsword_Stab_Charged_Damage",
+      "parent": "Longsword_Stab_Charged_Damage",
+      "sourceFire": 39,
+      "variance": 0.15,
+      "contract": "NORMALIZED_FIRE_V1",
+      "delivery": "NATIVE_MELEE",
+      "connectedVerified": false
+    }
+  ]
+}

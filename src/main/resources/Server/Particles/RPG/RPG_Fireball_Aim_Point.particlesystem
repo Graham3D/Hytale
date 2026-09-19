@@ -1,0 +1,1 @@
+{"$Comment":"Legacy-safe alias for the neutral R039 trajectory marker; contains no fire presentation.","Spawners":[{"SpawnerId":"RPG_Fireball_Aim_White_Marker","FixedRotation":false}],"CullDistance":40.0,"BoundingRadius":1.0,"IsImportant":false}

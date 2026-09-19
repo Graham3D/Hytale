@@ -1,0 +1,7 @@
+{
+  "Duration":0.75,"Infinite":false,"OverlapBehavior":"Overwrite","Debuff":false,
+  "ApplicationEffects":{
+    "Particles":[{"SystemId":"RPG_Mantle_Aura","TargetEntityPart":"Self","Scale":0.5,"ClearParticlesOnRemove":true}],
+    "FirstPersonParticles":[{"SystemId":"RPG_Mantle_Aura","TargetEntityPart":"Self","Scale":0.5,"ClearParticlesOnRemove":true}]
+  }
+}

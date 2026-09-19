@@ -12,7 +12,12 @@ foreach ($candidate in $Path) {
     $resolved = Resolve-Path -LiteralPath $candidate -ErrorAction Stop
     foreach ($item in $resolved) {
         if (Test-Path -LiteralPath $item.Path -PathType Container) {
-            Get-ChildItem -LiteralPath $item.Path -Recurse -File -Filter '*.ui' | ForEach-Object {
+            $scanRoot = [IO.Path]::GetFullPath($item.Path).TrimEnd([IO.Path]::DirectorySeparatorChar)
+            Get-ChildItem -LiteralPath $item.Path -Recurse -File -Filter '*.ui' | Where-Object {
+                $relative = $_.FullName.Substring($scanRoot.Length).TrimStart([char]'\',[char]'/')
+                $segments = $relative -split '[\\/]'
+                -not @($segments | Where-Object { $_ -in @('.git','build','gradle-build','dist','run','evidence') }).Count
+            } | ForEach-Object {
                 $documents.Add([pscustomobject]@{ Name = $_.FullName; Text = Get-Content -LiteralPath $_.FullName -Raw })
             }
             continue
@@ -108,12 +113,49 @@ foreach ($document in $documents) {
         }
     }
 
-    # Imported-control macro arguments must precede concrete properties. The R016
-    # client failure used `Anchor: (...); @Text = ...` on one line: delimiter checks
-    # cannot see that grammar error, but the client parser rejects it at `=`.
-    foreach ($match in [regex]::Matches($text, '(?m)\b\w+\s*:[^;\r\n]*;[^\r\n]*@\w+\s*=')) {
-        $matchLine = 1 + ([regex]::Matches($text.Substring(0, $match.Index), "`n")).Count
-        $errors.Add("$($document.Name) ($matchLine): imported-control macro arguments must precede concrete properties; use Text: or move the macro argument before the property.")
+    # Imported-control macro arguments must precede concrete properties. Scope the
+    # ordering check to the imported control's own leaf body. A parent Group may
+    # legally declare concrete properties before containing an imported control on
+    # the same line; the previous line-wide regex incorrectly rejected that shape.
+    foreach ($control in [regex]::Matches($text,
+            '(?ms)(?:\$\w+\.)?@\w+(?:\s+#\w+)?\s*\{(?<body>[^{}]*)\}')) {
+        $body = $control.Groups['body'].Value
+        $segments = [System.Collections.Generic.List[string]]::new()
+        $segmentStart = 0
+        $nestedDepth = 0
+        $bodyInString = $false
+        $bodyEscaped = $false
+        for ($bodyIndex = 0; $bodyIndex -lt $body.Length; $bodyIndex++) {
+            $bodyCharacter = $body[$bodyIndex]
+            if ($bodyInString) {
+                if ($bodyEscaped) { $bodyEscaped = $false; continue }
+                if ($bodyCharacter -eq '\') { $bodyEscaped = $true; continue }
+                if ($bodyCharacter -eq '"') { $bodyInString = $false }
+                continue
+            }
+            if ($bodyCharacter -eq '"') { $bodyInString = $true; continue }
+            if ($bodyCharacter -in @('(', '[')) { $nestedDepth++; continue }
+            if ($bodyCharacter -in @(')', ']')) { $nestedDepth--; continue }
+            if ($bodyCharacter -eq ';' -and $nestedDepth -eq 0) {
+                $segments.Add($body.Substring($segmentStart, $bodyIndex - $segmentStart))
+                $segmentStart = $bodyIndex + 1
+            }
+        }
+        if ($segmentStart -lt $body.Length) { $segments.Add($body.Substring($segmentStart)) }
+
+        $concretePropertySeen = $false
+        $lateMacroArgument = $false
+        foreach ($segment in $segments) {
+            $trimmed = $segment.Trim()
+            if ($trimmed -match '^@\w+\s*=') {
+                if ($concretePropertySeen) { $lateMacroArgument = $true; break }
+            }
+            elseif ($trimmed -match '^\w+\s*:') { $concretePropertySeen = $true }
+        }
+        if ($lateMacroArgument) {
+            $matchLine = 1 + ([regex]::Matches($text.Substring(0, $control.Index), "`n")).Count
+            $errors.Add("$($document.Name) ($matchLine): imported-control macro arguments must precede concrete properties; use Text: or move the macro argument before the property.")
+        }
     }
 }
 

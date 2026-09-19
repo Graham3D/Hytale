@@ -1,36 +1,62 @@
-# Hytale RPG
+# Hywind
 
-The `RPG` branch is at **Stage 13 / R032-AH**, deployed for connected testing.
-The distributable is **HyARPG.jar**. AH fixes Healing Beam's missing carrier texture,
-makes staff-head sparkles channel-only, and orders skill resource writes before native
-stat replication. All 2,246 retained tests and installed-byte isolated checks pass.
-Connected beam rendering and immediate Mana-bar synchronization remain unverified.
+Hywind is the single first-party Hytale plugin for this project. It combines the
+ARPG/RPG runtime, CanvasUI presentation/input framework, persistent Immersive NPCs,
+and Orbis intelligence integrations under one lifecycle owner:
 
-- Current report and test checklist: [R032-AH Healing presentation and Mana synchronization](docs/stage-13/stage-13-presentation-ah-report.md)
-- Spell-color editing: [owner guide](docs/owner-spell-color-guide.md)
+- plugin identity: `InigmasGames:Hywind`
+- bootstrap: `com.inigmasgames.hywind.HywindPlugin`
+- artifact: `build/libs/Hywind.jar`
+- pinned Hytale API: `0.7.0-pre.3.1`
 
-The repository also contains the standalone, RPG-agnostic **CanvasUI** library and its development
-demo. CanvasUI is a separate jar; the dependency direction is
-`consumer -> CanvasUI -> Hytale`.
+The merger deliberately preserves the existing save data roots instead of moving or
+duplicating player/world data:
 
-- Phase report: [`docs/phase-00/phase-00-report.md`](docs/phase-00/phase-00-report.md)
-- Client checklist: [`docs/phase-00/client-verification.md`](docs/phase-00/client-verification.md)
-- Machine-readable capability matrix: [`evidence/phase-00/build-capabilities.json`](evidence/phase-00/build-capabilities.json)
-- Installed-asset catalogs: [`evidence/phase-00/catalogs`](evidence/phase-00/catalogs)
-- CanvasUI library: [`canvas-ui/README.md`](canvas-ui/README.md)
-- CanvasUI development demo source: [`canvas-ui-demo`](canvas-ui-demo) (bundled into the CanvasUI development JAR)
+- `mods/InigmasGames_HytaleRPGPhase00Audit`
+- `mods/InigmasGames_CanvasUI`
+- `mods/ImmersiveNPCs`
 
-Build with `./gradlew.bat clean build`; the RPG artifact is `build/libs/HyARPG.jar`.
-Use the current correction report for its exact tested/deployed hashes and validation commands.
-R023 verification/install tools are historical and must not be used to deploy the current candidate.
-Install only into the dedicated `RPG` save. Use the current report's rollback
-instructions; the Phase 00 reports/tools above are historical.
+`HytaleDevLib` remains an optional external dependency. The Tavern project is not
+part of this merger and was not activated or modified.
 
-The single deployable CanvasUI artifact is
-`canvas-ui/build/libs/CanvasUI-0.1.0.jar`. Its R008 development build includes
-the `/canvasui-demo` and `/canvasui-topology-proof` commands; no second demo mod
-is installed.
+## Build and verify
 
-The canonical revision-by-revision engineering record is
-[`docs/canvas-ui/development-report.md`](docs/canvas-ui/development-report.md).
-It must be updated after every deployed CanvasUI revision.
+Close Hytale, then run:
+
+```powershell
+Set-Location "C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale"
+.\gradlew.bat clean check build
+```
+
+The root check includes the RPG retained and native-control suites, CanvasUI tests,
+the retained deterministic NPC suite, installed-asset validation, CustomUI validation,
+and the merged JAR audit.
+
+For an isolated server smoke:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\Run-HywindSmoke.ps1"
+```
+
+For a cutover plan with no writes:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\Deploy-Hywind.ps1" -DryRun
+```
+
+Historical cohort deployment scripts target superseded split artifacts and must not
+be used for Hywind deployment.
+
+## Owner-managed RPG icons
+
+Put canonical `Skill*.png` and `Passive*.png` files in `art/Skills` and
+`art/Passives`, close Hytale, and run `Update RPG Icons.cmd`. The updater now targets
+the installed `Hywind.jar`, validates the unified manifest, takes a content-addressed
+backup, and never touches save data.
+
+## Engineering records
+
+- Hywind merger/cutover: `docs/hywind/merge-report.md`
+- RPG Stage 13 history: `docs/stage-13/`
+- CanvasUI history: `docs/canvas-ui/development-report.md`
+- persistent NPC retained documentation: `persistent-npcs/docs/`

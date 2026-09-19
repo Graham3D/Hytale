@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "python": "3.11.13",
+  "packages": {
+    "torch": "2.6.0+cu124",
+    "transformers": "4.48.3",
+    "peft": "0.14.0",
+    "trl": "0.15.2",
+    "accelerate": "1.3.0",
+    "bitsandbytes": "0.45.3",
+    "safetensors": "0.5.2",
+    "tokenizers": "0.21.0",
+    "datasets": "3.2.0",
+    "mamba-ssm": "2.2.4",
+    "causal-conv1d": "1.5.0.post8"
+  },
+  "indexes": {
+    "default": "https://pypi.org/simple",
+    "torch": "https://download.pytorch.org/whl/cu124"
+  },
+  "requiredNativeKernels": [
+    {
+      "package": "mamba-ssm",
+      "version": "2.2.4",
+      "pypiJson": "https://pypi.org/pypi/mamba-ssm/2.2.4/json",
+      "officialWindowsWheelAvailable": false,
+      "filesAtAudit": 1,
+      "sourceDistributionsAtAudit": 1
+    },
+    {
+      "package": "causal-conv1d",
+      "version": "1.5.0.post8",
+      "pypiJson": "https://pypi.org/pypi/causal-conv1d/1.5.0.post8/json",
+      "officialWindowsWheelAvailable": false,
+      "filesAtAudit": 1,
+      "sourceDistributionsAtAudit": 1
+    }
+  ],
+  "supportedTrainingPlatforms": ["linux-x86_64-cuda"],
+  "auditDate": "2026-09-03",
+  "decision": "WINDOWS_NATIVE_BLOCKED_OFFICIAL_KERNELS_UNAVAILABLE"
+}

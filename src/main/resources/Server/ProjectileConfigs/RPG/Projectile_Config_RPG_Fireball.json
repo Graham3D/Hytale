@@ -3,13 +3,13 @@
   "UseModelScale": true,
   "Physics": {
     "Type": "Standard",
-    "Gravity": 0,
+    "Gravity": 12,
     "TerminalVelocityAir": 50,
     "TerminalVelocityWater": 15,
     "RotationMode": "Velocity",
     "Bounciness": 0
   },
-  "LaunchForce": 18,
+  "LaunchForce": 16,
   "SpawnOffset": {
     "X": 0,
     "Y": 0,

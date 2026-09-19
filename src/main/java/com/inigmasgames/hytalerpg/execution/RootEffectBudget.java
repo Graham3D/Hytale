@@ -5,6 +5,19 @@ import java.util.*;
 /** Shared finite root admission; bounded scalar/key state only, no native entity references. */
 public final class RootEffectBudget {
     private final UUID actor;private final String root;
+    private com.inigmasgames.hytalerpg.combat.damage.WeaponExecutionLedger weaponExecutions;
+    private com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile lightAttack;
+    public synchronized void captureLightAttack(com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile profile){
+        if(lightAttack!=null&&!lightAttack.equals(profile))throw new IllegalStateException("LIGHT_ATTACK_SNAPSHOT_ALREADY_BOUND");
+        lightAttack=Objects.requireNonNull(profile);
+    }
+    public synchronized com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile lightAttack(){return lightAttack;}
+    /** Shared source/decision ownership for an explicitly supplied weapon execution, not inferred hit damage. */
+    public synchronized com.inigmasgames.hytalerpg.combat.damage.WeaponFireDecision weaponExecution(
+            com.inigmasgames.hytalerpg.combat.damage.WeaponDamageExecution execution){
+        if(weaponExecutions==null)weaponExecutions=new com.inigmasgames.hytalerpg.combat.damage.WeaponExecutionLedger(actor,root);
+        return weaponExecutions.acquire(execution);
+    }
     private final Set<String> effects=new HashSet<>(Set.of("PRIMARY")),controllers=new HashSet<>();
     private int triggered;
     private Boolean finisher;
@@ -18,6 +31,7 @@ public final class RootEffectBudget {
     private final Map<String,Double> statusTimes=new HashMap<>();
     private final Map<String,Double> orbitContacts=new HashMap<>();
     private final Set<String> procContacts=new HashSet<>();
+    private final Set<String> fireballVictims=new HashSet<>();
     private final com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry.Lifetime projectileLifetime=new com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry.Lifetime();
     private final RootWorkBudget work=projectileLifetime.work();
     public com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry.Lifetime projectileLifetime(){return projectileLifetime;}
@@ -27,6 +41,15 @@ public final class RootEffectBudget {
         if(procContacts.size()>=256)return "ROOT_PROC_CONTACT_BUDGET";
         procContacts.add(id);return "PASS";
     }
+    /** Root-wide anti-shotgun ledger shared by Volley/Fork/Chain descendants. */
+    public synchronized String claimFireballVictim(String id){
+        if(id==null||id.isBlank()||id.length()>256)return "INVALID_FIREBALL_VICTIM";
+        if(fireballVictims.contains(id))return "DUPLICATE_FIREBALL_VICTIM";
+        if(fireballVictims.size()>=256)return "ROOT_FIREBALL_VICTIM_BUDGET";
+        fireballVictims.add(id);return "PASS";
+    }
+    /** A cancelled native damage packet is not an accepted hit and may release its reservation. */
+    public synchronized void releaseFireballVictim(String id){fireballVictims.remove(id);}
     public synchronized String claimOrbitContact(String target,double now){
         if(target==null||target.isBlank()||target.length()>256||!Double.isFinite(now))return "INVALID_ORBIT_CONTACT";
         if(now-orbitContacts.getOrDefault(target,Double.NEGATIVE_INFINITY)<.75-1e-9)return "ROOT_ORBIT_CONTACT_ICD";

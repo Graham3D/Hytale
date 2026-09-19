@@ -25,9 +25,9 @@ public final class ProjectileContinuation {
                 budgets.put("SHRAPNEL",parent.remainingContinuationBudgets().getOrDefault("SHRAPNEL",0));
                 Vec3 direction=yaw(instance.direction(),index==0?-20:20);double speed=parent.velocity().length();
                 var plan=new ProjectileExecutionPlan(parent.rootCastId(),parent.skillInstanceId(),parent.projectileInstanceId()+"/fork-"+index,
-                        parent.ownerId(),parent.skillId(),parent.compiledPlanHash(),parent.snapshot(),parent.generation()+1,budgets,
+                        parent.ownerId(),parent.skillId(),parent.compiledPlanHash(),parent.snapshot().withMagnitudeFactor(ProjectileContinuationBalance.FORK_CHILD_FACTOR),parent.generation()+1,budgets,
                         0,parent.remainingTriggeredSecondaries(),now,parent.configId(),point,direction.multiply(speed),parent.radius(),
-                        instance.remainingDistance(),instance.remainingSeconds());
+                        instance.remainingDistance(),instance.remainingSeconds(),parent.motion());
                 var child=new ProjectileInstance(plan);child.inheritVisited(instance);children.add(child);
             }
             try {registry.registerAll(children);}catch(IllegalStateException error){return decision(Action.TERMINATE,instance,error.getMessage());}
@@ -38,8 +38,24 @@ public final class ProjectileContinuation {
                     .filter(c->c.point.distanceSquared(point)>1e-8 && c.point.distanceSquared(point)<=64+1e-9)
                     .sorted(Comparator.comparingDouble((Candidate c)->c.point.distanceSquared(point)).thenComparing(Candidate::id)).findFirst();
             if(selected.isPresent()) {
-                instance.spend("CHAIN");instance.redirect(selected.get().point.subtract(point));
-                return decision(Action.CHAIN,instance,"CHAIN_TARGET_"+selected.get().id);
+                if(instance.plan().generation()>=3)return decision(Action.TERMINATE,instance,"MAX_GENERATION");
+                instance.spend("CHAIN");
+                var parent=instance.plan();var budgets=new HashMap<>(instance.budgets());
+                budgets.put("IS_LAUNCH",0);budgets.put("FORK",0);
+                Vec3 direction=selected.get().point.subtract(point).normalized();double speed=parent.velocity().length();
+                Vec3 velocity=direction.multiply(speed);double distance=instance.remainingDistance(),seconds=instance.remainingSeconds();
+                if(parent.motion().timedBallistic()){
+                    var motion=parent.motion();var solved=ProjectileBallistics.timed(point,selected.get().point,motion.horizontalSpeed(),
+                            motion.gravity(),8,motion.minimumTravelSeconds(),motion.maximumTravelSeconds()).orElse(null);
+                    if(solved!=null){velocity=solved.velocity();direction=velocity.normalized();distance=Math.min(distance,solved.pathLength());
+                        seconds=Math.min(seconds,solved.flightSeconds()+motion.safetyLifetimeSeconds());}
+                }
+                var plan=new ProjectileExecutionPlan(parent.rootCastId(),parent.skillInstanceId(),parent.projectileInstanceId()+"/chain",
+                        parent.ownerId(),parent.skillId(),parent.compiledPlanHash(),parent.snapshot(),parent.generation()+1,budgets,
+                        0,parent.remainingTriggeredSecondaries(),now,parent.configId(),point,velocity,parent.radius(),distance,seconds,parent.motion());
+                var child=new ProjectileInstance(plan);child.inheritVisited(instance);
+                try {registry.registerAll(List.of(child));}catch(IllegalStateException error){return decision(Action.TERMINATE,instance,error.getMessage());}
+                return new Decision(Action.CHAIN,direction,List.of(child),"CHAIN_TARGET_"+selected.get().id);
             }
         }
         return forwardEnd(instance,point,caster,"ENEMY_CONTINUATION_EXHAUSTED");

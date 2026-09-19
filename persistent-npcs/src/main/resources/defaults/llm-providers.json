@@ -1,0 +1,27 @@
+{
+  "activeProvider": "NEMOTRON",
+  "providers": {
+    "QWEN": {
+      "type": "OPENAI_COMPATIBLE",
+      "endpoint": "http://127.0.0.1:11434/v1/chat/completions",
+      "model": "hf.co/openresearchtools/Qwen3.5-4B-Instruct-GGUF:Q4_K_M",
+      "timeoutMillis": 12000,
+      "concurrency": 2,
+      "mode": "LOCAL",
+      "toolChoiceMode": "REQUIRED",
+      "fallbackEnabled": false
+    },
+    "NEMOTRON": {
+      "type": "OPENAI_COMPATIBLE",
+      "endpoint": "http://127.0.0.1:11434/v1/chat/completions",
+      "model": "nemotron-3-nano:4b",
+      "timeoutMillis": 12000,
+      "concurrency": 2,
+      "mode": "LOCAL",
+      "toolChoiceMode": "NAMED_SINGLE",
+      "ollamaGpuLayers": 4,
+      "ollamaKeepAlive": "10m",
+      "fallbackEnabled": false
+    }
+  }
+}

@@ -40,6 +40,19 @@ public final class CompatibilityService {
                 Set.of("COMPONENT_SHRAPNEL","AREA","BURST","DAMAGE","HAS_RADIUS"));
     }
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
+        if(skill.id().value().equals("summon_skeleton_archers")&&Set.of("arc","fork","chain").contains(passive.id().value())){
+            var component=new LinkedHashSet<>(skill.linkCompatibilityTags());component.addAll(skill.tags());
+            component.addAll(Set.of("PROJECTILE","PROJECTILE_PROXY","DAMAGE","SCALABLE_PAYLOAD","CAN_FORK","CAN_CHAIN"));
+            return CompatibilityResult.accepted(component);
+        }
+        if(skill.id().value().equals("mantle_of_flame")) {
+            // Versioned event-paid conversion component; never pretend it is reservation/upkeep.
+            return Set.of("potency","efficiency","overcharge","concentration","expanded_radius").contains(passive.id().value())
+                    ?CompatibilityResult.accepted(skill.linkCompatibilityTags())
+                    :CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
+                    "Mantle exposes only proportional magnitude, event Mana cost and Aura radius components.",
+                    Set.of("MANTLE_V1_COMPONENT"),skill.linkCompatibilityTags());
+        }
         Set<String> actual = new LinkedHashSet<>(skill.linkCompatibilityTags());
         actual.addAll(skill.tags());
         if(Set.of("arc","fork","chain").contains(passive.id().value())&&actual.contains("TETHER")&&actual.contains("SCALABLE_PAYLOAD")

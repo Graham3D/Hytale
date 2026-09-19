@@ -1,0 +1,8 @@
+{
+  "RenderMode":"Erosion","ParticleRotationInfluence":"Billboard","LinearFiltering":true,"LightInfluence":0.0,
+  "ParticleRotateWithSpawner":true,"MaxConcurrentParticles":4,"ParticleLifeSpan":{"Min":0.04,"Max":0.06},
+  "SpawnRate":{"Min":60.0,"Max":70.0},"SpawnBurst":false,"UseEmitDirection":false,
+  "Particle":{"Texture":"Particles/Textures/Fire/Fire_Small.png","FrameSize":{"Width":32,"Height":32},"ScaleRatioConstraint":"OneToOne","SoftParticles":"Require",
+    "InitialAnimationFrame":{"Opacity":0.95,"Color":"#fff0a0","FrameIndex":{"Min":0,"Max":3},"Scale":{"X":{"Min":0.25,"Max":0.35}}},
+    "Animation":{"0":{"Opacity":1.0,"Color":"#ffe92f"},"100":{"Opacity":0.35,"Color":"#ff6f3b"}}}
+}

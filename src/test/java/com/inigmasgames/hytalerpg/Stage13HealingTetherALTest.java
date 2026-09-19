@@ -65,6 +65,6 @@ class Stage13HealingTetherALTest {
         var source=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
         assertTrue(source.contains("new HealingTetherPresentation()"));assertFalse(source.contains("new HealingParticleVisuals()"));
         var hud=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/ui/hud/RpgHud.java"));
-        assertTrue(hud.contains("HealingTetherPresentation.REVISION"));
+        assertTrue(hud.contains("BuildIdentity.REVISION")); // AQ badge reports whole build; Healing renderer remains AP.
     }
 }

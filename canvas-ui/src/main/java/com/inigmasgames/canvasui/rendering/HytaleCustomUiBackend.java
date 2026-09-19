@@ -57,14 +57,14 @@ public final class HytaleCustomUiBackend implements CanvasRenderBackend {
         if (requestPageClose && closer != null) closer.run();
     }
 
-    public void pointerTarget(String nodeId, boolean invalid) {
+    @Override public void pointerTarget(String nodeId, boolean invalid) {
         String nextHover = invalid ? null : nodeId;
         String nextInvalid = invalid ? nodeId : null;
         if (java.util.Objects.equals(nextHover, hoveredNodeId) && java.util.Objects.equals(nextInvalid, invalidNodeId)) return;
         hoveredNodeId = nextHover; invalidNodeId = nextInvalid; topologyChanged();
     }
 
-    public void clearPointerTarget() { pointerTarget(null, false); }
+    @Override public void clearPointerTarget() { pointerTarget(null, false); }
 
     void build(UICommandBuilder commands, UIEventBuilder events) {
         commands.append("CanvasUIPage.ui");
@@ -126,7 +126,7 @@ public final class HytaleCustomUiBackend implements CanvasRenderBackend {
         session.recordUiUpdate(count(commands));
     }
 
-    public void updatePreview(CanvasPoint source, CanvasPoint target, boolean valid) {
+    @Override public void updatePreview(CanvasPoint source, CanvasPoint target, boolean valid) {
         previewSource = source; previewTarget = target; previewValid = valid;
         if (page == null) return;
         UICommandBuilder commands = new UICommandBuilder();
@@ -141,7 +141,7 @@ public final class HytaleCustomUiBackend implements CanvasRenderBackend {
         session.recordUiUpdate(count(commands));
     }
 
-    public void clearPreview(String status) {
+    @Override public void clearPreview(String status) {
         previewSource = null; previewTarget = null;
         if (page == null) return;
         UICommandBuilder commands = new UICommandBuilder();
@@ -151,7 +151,7 @@ public final class HytaleCustomUiBackend implements CanvasRenderBackend {
         session.recordUiUpdate(count(commands));
     }
 
-    public void status(String value) {
+    @Override public void status(String value) {
         if (page == null) return;
         UICommandBuilder commands = new UICommandBuilder();
         commands.set("#CanvasStatus.TextSpans", Message.raw(value));

@@ -28,6 +28,33 @@ public final class HytaleAbilitySkillInputAdapter {
     private final ConcurrentHashMap<UUID, java.util.Map<Object, Boolean>> executedChains = new ConcurrentHashMap<>();
     private record Hold(InteractionType action,int id,java.lang.ref.WeakReference<com.hypixel.hytale.server.core.entity.InteractionChain> chain){}
     private final ConcurrentHashMap<UUID,Hold> heldChannels=new ConcurrentHashMap<>();
+    private record FireballHold(InteractionType action,int id,long startedNanos,long lastSeenNanos,
+                                java.lang.ref.WeakReference<com.hypixel.hytale.server.core.entity.InteractionChain> chain,
+                                String correlation){}
+    public record FireballChargeView(int chainId,String action,String correlationId,double heldSeconds){}
+    private final ConcurrentHashMap<UUID,FireballHold> fireballCharges=new ConcurrentHashMap<>();
+    public void nativeFireballHold(UUID actor,InteractionType action,int id,
+            com.hypixel.hytale.server.core.entity.InteractionChain chain,String item,int nativeSlot,boolean held){
+        if(!"RPG_Ability_Fireball".equals(item)||slot(action)==null||nativeSlot!=(action==InteractionType.Ability2?0:3))return;
+        long now=System.nanoTime();
+        if(!held)return;
+        fireballCharges.compute(actor,(key,old)->old!=null&&old.id==id&&old.chain.get()==chain
+                ?new FireballHold(action,id,old.startedNanos,now,old.chain,old.correlation)
+                :new FireballHold(action,id,now,now,new java.lang.ref.WeakReference<>(chain),UUID.randomUUID().toString()));
+    }
+    public java.util.Optional<FireballChargeView> fireballCharge(UUID actor){
+        var value=fireballCharges.get(actor);if(value==null)return java.util.Optional.empty();
+        var chain=value.chain.get();
+        if(chain==null||chain.getServerState()!=com.hypixel.hytale.protocol.InteractionState.NotFinished)
+            return java.util.Optional.empty();
+        return java.util.Optional.of(new FireballChargeView(value.id,value.action.name(),value.correlation,
+                Math.max(0,(System.nanoTime()-value.startedNanos)/1e9)));
+    }
+    public java.util.Optional<FireballChargeView> cancelFireballCharge(UUID actor){
+        var value=fireballCharges.remove(actor);if(value==null)return java.util.Optional.empty();
+        return java.util.Optional.of(new FireballChargeView(value.id,value.action.name(),value.correlation,
+                Math.max(0,(System.nanoTime()-value.startedNanos)/1e9)));
+    }
     public void nativeHold(UUID actor,InteractionType action,int id,com.hypixel.hytale.server.core.entity.InteractionChain chain,String item,int nativeSlot,boolean held){
         if(slot(action)==null||nativeSlot!=(action==InteractionType.Ability2?0:3))return;
         if(!held){heldChannels.computeIfPresent(actor,(key,old)->old.chain.get()==chain?null:old);return;}
@@ -65,15 +92,18 @@ public final class HytaleAbilitySkillInputAdapter {
             if (ledger.containsKey(chainIdentity) || ledger.size() >= 256) return;
             ledger.put(chainIdentity, Boolean.TRUE);
         }
-        String correlation = UUID.randomUUID().toString();
+        var fireball="RPG_Ability_Fireball".equals(itemId)?fireballCharges.remove(player):null;
+        String correlation = fireball==null?UUID.randomUUID().toString():fireball.correlation;
         boolean suppressed = executionSuppressed.test(player);
         boolean full = requests.stream().filter(request -> request.player().equals(player)).limit(64).count() >= 64;
         String result = suppressed ? "NATIVE_CONTROL_RPG_SUPPRESSED"
                 : full ? "NATIVE_INPUT_QUEUE_FULL" : "NATIVE_EXECUTION_MAPPED";
         observations.accept(new Observation(player, slot, action.name(), chainId, correlation, result));
+        double heldSeconds=fireball==null?0:Math.max(0,(System.nanoTime()-fireball.startedNanos)/1e9);
         if (!suppressed && !full) requests.add(new Request(player, slot, action.name(), chainId, correlation,
                 desiredMovement.getOrDefault(player, new Vec3(0, 0, 0)),
-                "RPG_Ability_Healing_Beam".equals(itemId)?"healing_beam":"RPG_Ability_Snipe".equals(itemId) ? "snipe" : ""));
+                "RPG_Ability_Healing_Beam".equals(itemId)?"healing_beam":"RPG_Ability_Snipe".equals(itemId) ? "snipe" :
+                        "RPG_Ability_Fireball".equals(itemId)?"fireball":"",heldSeconds));
     }
 
     /** Installed once during setup; the control observes the same inbound watcher before filtering. */
@@ -160,6 +190,7 @@ public final class HytaleAbilitySkillInputAdapter {
         desiredMovement.remove(player);
         executedChains.remove(player);
         heldChannels.remove(player);
+        fireballCharges.remove(player);
     }
 
     public static SkillSlot slot(InteractionType type) {
@@ -177,9 +208,13 @@ public final class HytaleAbilitySkillInputAdapter {
     }
 
     public record Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId,
-                          Vec3 desiredMovement, String expectedSkill) {
+                          Vec3 desiredMovement, String expectedSkill,double heldSeconds) {
+        public Request { if(!Double.isFinite(heldSeconds)||heldSeconds<0)throw new IllegalArgumentException("INVALID_HELD_SECONDS"); }
+        public Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId,Vec3 movement,String expectedSkill){
+            this(player,slot,action,chainId,correlationId,movement,expectedSkill,0);
+        }
         public Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId, Vec3 movement) {
-            this(player, slot, action, chainId, correlationId, movement, "");
+            this(player, slot, action, chainId, correlationId, movement, "",0);
         }
         public Request(UUID player, SkillSlot slot, String action, int chainId, String correlationId) {
             this(player, slot, action, chainId, correlationId, new Vec3(0, 0, 0));

@@ -1,0 +1,11 @@
+$C = "../../Common.ui";
+Label { Anchor: (Height: 34, Bottom: 10); Text: "PERSONALITY"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+Label { Anchor: (Height: 22); Text: "Temperament"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+MultilineTextField #ProfilePersonalityInput { Anchor: (Height: 150, Bottom: 10); Background: $C.@InputBoxBackground; MaxVisibleLines: 7; AutoGrow: false; MaxLength: 900; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+Label { Anchor: (Height: 22); Text: "Personality Traits"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+$C.@TextField #ProfileTraitsInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 700; }
+Label { Anchor: (Height: 22); Text: "Likes"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+$C.@TextField #ProfileLikesInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 700; }
+Label { Anchor: (Height: 22); Text: "Dislikes"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+$C.@TextField #ProfileDislikesInput { @Anchor = (Height: 40); MaxLength: 700; }
+Group { FlexWeight: 1; }

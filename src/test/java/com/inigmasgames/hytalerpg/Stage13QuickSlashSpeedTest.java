@@ -7,10 +7,10 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Stage13QuickSlashSpeedTest {
-    @Test void twoHundredPercentIncreasedMeansThreeTimesBaseNotTwice(){
-        assertEquals(25.0/60/3,NativeStrikeFeedback.quickSlashInterval("SWORD"),1e-12);
-        assertEquals(25.0/60/(.8*3),NativeStrikeFeedback.quickSlashInterval("LONGSWORD"),1e-12);
-        assertEquals(20.0/60/(1.2*3),NativeStrikeFeedback.quickSlashInterval("DAGGER"),1e-12);
+    @Test void amendedTwoHundredPercentSpeedMeansTwiceBase(){
+        assertEquals(25.0/60/2,NativeStrikeFeedback.quickSlashInterval("SWORD"),1e-12);
+        assertEquals(25.0/60/(.8*2),NativeStrikeFeedback.quickSlashInterval("LONGSWORD"),1e-12);
+        assertEquals(20.0/60/(1.2*2),NativeStrikeFeedback.quickSlashInterval("DAGGER"),1e-12);
     }
     @Test void failureDiagnosticsBoundCodeLocationsAndOmitPrivateMessagesAndFiles(){
         var error=new IllegalStateException("secret=DO_NOT_LOG");

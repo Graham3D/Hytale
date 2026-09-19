@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage08ConnectionTest {
     @Test void pilotProfilesRetainCatalogAndExactAuthoredGeometry() {
         var catalog=Stage01BTestSupport.bundle().catalog();var p=Stage04SkillProfiles.loadCanonical(catalog);
-        assertEquals(89,catalog.skills().size());assertEquals(67,catalog.passives().size());
+        assertEquals(91,catalog.skills().size());assertEquals(67,catalog.passives().size());
         assertEquals(Stage04SkillProfiles.EXPECTED_STAGE08_PROFILES+1,p.all().values().stream().filter(x->x.connection()!=null).count());
         var wave=p.require("wind_cutter");assertEquals(Stage04SkillProfile.Family.LINE,wave.family());
         assertEquals(16,wave.connection().range());assertEquals(1.2,wave.connection().width());assertEquals(2.5,wave.connection().height());

@@ -52,6 +52,8 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                 HealingParticleVisuals.audit(store,context);
                 HealingPresentationProbe.auditChannel(store,context);
                 NativeManaReplicationAudit.audit(store);
+                MantlePresentation.audit(store);
+                NativeWeaponLightProfiles.audit();
                 if(Boolean.getBoolean("rpg.healingPresentationProbe"))HealingPresentationProbe.audit(store);
                 var nativeActor=actor;var ran=new AtomicBoolean();
                 store.forEachChunk((java.util.function.BiConsumer<ArchetypeChunk<EntityStore>,CommandBuffer<EntityStore>>)(chunk,buffer)->{
@@ -71,7 +73,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                 if(!ref.isValid())throw new IllegalStateException("NATIVE_CARRIER_NOT_COMMITTED");
                 var physics=Objects.requireNonNull(store.getComponent(ref,StandardPhysicsProvider.getComponentType()));
                 var velocity=Objects.requireNonNull(store.getComponent(ref,com.hypixel.hytale.server.core.modules.physics.component.Velocity.getComponentType()));
-                if(Math.abs(physics.getVelocity().length()-24)>1e-6||!store.getComponent(ref,Interactions.getComponentType()).isEmpty())throw new IllegalStateException("NATIVE_CARRIER_CONTRACT_CHANGED");
+                if(Math.abs(physics.getVelocity().length()-32)>1e-6||!store.getComponent(ref,Interactions.getComponentType()).isEmpty())throw new IllegalStateException("NATIVE_CARRIER_CONTRACT_CHANGED");
                 var rolledBack=new AtomicReference<Ref<EntityStore>>();var rollbackRan=new AtomicBoolean();
                 store.forEachChunk((java.util.function.BiConsumer<ArchetypeChunk<EntityStore>,CommandBuffer<EntityStore>>)(chunk,buffer)->{
                     if(!rollbackRan.compareAndSet(false,true))return;
@@ -90,7 +92,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                         });
                         if(!once.get())throw new IllegalStateException("EXPIRY_OWNER_ADVANCE_NOT_EXECUTED");
                         if(ref.isValid())throw new IllegalStateException("RESTING_PROJECTILE_DID_NOT_EXPIRE");
-                        command.sendMessage(Message.raw("RPG_NATIVE_SPAWN_INTEGRATION result=PASS config=Projectile_Config_RPG_Fire_Bolt nativeRefValid=true physicsVelocity=24 interactionRoots=0 pendingRollback=true productionCarrier=true connectedProof=false sameTickAdvance=true restingExpiry=true"));
+                        command.sendMessage(Message.raw("RPG_NATIVE_SPAWN_INTEGRATION result=PASS config=Projectile_Config_RPG_Fire_Bolt nativeRefValid=true physicsVelocity=32 interactionRoots=0 pendingRollback=true productionCarrier=true connectedProof=false sameTickAdvance=true restingExpiry=true"));
                         result.complete(null);
                     }catch(Throwable failure){com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass().atSevere().withCause(failure).log("RPG_NATIVE_SPAWN_INTEGRATION result=FAIL");result.completeExceptionally(failure);}
                     finally{system.cleanupAuditProjectile(ref);if(ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);if(nativeActor.isValid())store.removeEntity(nativeActor,RemoveReason.REMOVE);auditChunk.removeKeepLoaded();}
@@ -107,7 +109,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
         var profile=Stage04SkillProfiles.loadCanonical(catalog).require("fire_bolt");var kernel=RpgCombatKernel.createProduction();
         var item=HytaleEquipmentAdapter.describe("Weapon_Staff_Mithril",Map.of("Family",new String[]{"Staff"},"Type",new String[]{"Weapon"}));
         String root="isolated-native-spawn-"+UUID.randomUUID();var power=kernel.basePower().resolve(new BasePowerResolver.Request(BasePowerSource.MAGIC_WEAPON,item.power(),null));
-        var snapshot=kernel.snapshots().capture(root,root,owner,kernel.derivedStats().derive(Map.of()),power,plan,.95,ModifierBuckets.NONE,ResourceCost.NONE,0,Map.of());
+        var snapshot=kernel.snapshots().capture(root,root,owner,kernel.derivedStats().derive(Map.of()),power,plan,.70,ModifierBuckets.NONE,ResourceCost.NONE,0,Map.of("BURN",4d));
         return new SkillExecutionContext(new SkillExecutionRequest(owner,SkillSlot.SKILL01,"ISOLATED_CONSTRUCTION_ONLY",0,root,Vec3.ZERO),root,root,profile,plan,snapshot,new SkillExecutionPort.Equipment(item,null));
     }
 }

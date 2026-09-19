@@ -1,0 +1,22 @@
+{
+  "Interactions": [
+    {
+      "Type": "RPG_FireballCharge",
+      "AllowIndefiniteHold": true,
+      "DisplayProgress": false,
+      "CancelOnOtherClick": true,
+      "FailOnDamage": true,
+      "Effects": {
+        "ItemPlayerAnimationsId": "Fire_Stick",
+        "ItemAnimationId": "Soak_4",
+        "ClearAnimationOnFinish": true,
+        "ClearSoundEventOnFinish": true,
+        "Particles": [
+          {"TargetEntityPart":"PrimaryItem","TargetNodeName":"Origin_Projectile","SystemId":"Fireball_Charge_To_4","Scale":0.2,"PositionOffset":{"X":0,"Y":0.15,"Z":0},"ClearParticlesOnRemove":true}
+        ]
+      },
+      "Next": {"0":{"Type":"RPG_ActivateSkill"}}
+    }
+  ],
+  "RequireNewClick": true
+}

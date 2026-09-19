@@ -21,18 +21,20 @@ This report distinguishes three different kinds of claims:
 
 ## Current status
 
-- CanvasUI version: `0.1.0`, development revision `R008`.
-- Hytale target: `0.7.0-pre.1`, revision
-  `e8b4d191fc98a977bf5546a951a7b25473d323e3`.
+- CanvasUI version: `0.1.0`, development revision `R041`.
+- Hytale target: `0.7.0-pre.2`, revision
+  `b41721d651ef241809e402f6c3371781b2ea5f84`.
 - Branch: `RPG`.
-- R008 implementation commit: `82cf726c393e54541b193503f758038b9515345e`.
-- R008 CanvasUI JAR SHA-256:
-  `218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6`.
-- Deployed mod set: `CanvasUI-0.1.0.jar`, `HYTALEDEVLIB-0.5.0.jar`, and
-  `HytaleRPG-0.0.2.jar`; the demo remains bundled in CanvasUI.
+- R041 source baseline: `25b85cb2819351a0d727e33132b2f57013cda024`
+  plus the preserved cumulative working tree documented in the R041 evidence.
+- R041 CanvasUI JAR SHA-256:
+  `5A22684EA7055FC707FFDA20F9AD989637B1FCCE58D0F9EEC1231005F8AAC718`.
+- Deployment: **DEPLOYED** to the normal RPG save on 2026-09-15; connected
+  pointer verification remains pending.
 - Rendering gate: **PROVEN**.
 - Custom page lifecycle/open gate: **PROVEN**.
-- Node dragging and canvas panning: **BLOCKED by the audited public input surface**.
+- Existing page-host node dragging and canvas panning: **BLOCKED by the audited page input surface**.
+- Cursor-camera/passive-HUD pointer delivery and mapping: **IMPLEMENTED AS A PHASE-A PROBE; CONNECTED-UNVERIFIED**.
 - Zoom model/rendering/persistence: **IMPLEMENTED AND HEADLESS-PROVEN**.
 - Text search/highlighting: **IMPLEMENTED; R008 CLIENT CONFIRMATION PENDING**.
 - Right-click link removal: **IMPLEMENTED; R008 CLIENT CONFIRMATION PENDING**.
@@ -42,6 +44,110 @@ R006 remains the first rendering milestone because it proves that a generic grap
 multiple node types, ports, and attached orthogonal connections can be rendered
 by a standalone CanvasUI JAR in the real client. It is not yet a FigJam-like
 canvas: the displayed graph is presently passive.
+
+## R041 cursor-camera/passive-HUD Phase-A probe
+
+R041 implements only Phase A of the accepted
+[`cursor-HUD framework`](cursor-hud-framework.md). It does not replace
+`CanvasService`, alter graph persistence, or route experimental input into the
+existing graph. The original page demo and R008 discrete input probe remain
+available unchanged for comparison.
+
+### Implemented boundary
+
+- `/canvasui-cursor-probe` acquires a supported server-camera configuration and
+  one passive keyed `CustomUIHud`. It opens no CustomUI page.
+- `/canvasui-cursor-probe-nohud` applies the identical camera with neither HUD
+  nor page.
+- `/canvasui-cursor-probe-page` applies the same camera and opens an ordinary
+  passive CustomUI page as the negative input-context control.
+- `/canvasui-cursor-probe-close` is the administrative emergency-close path.
+  The HUD/page surface also renders a visible red close region using the same
+  explicitly unproven identity-coordinate candidate as the pointer marker.
+- The camera copies Hytale's installed top-down command pattern and explicitly
+  sets `displayCursor=true`, `sendMouseMotion=true`,
+  `mouseInputTargetType=None`, and `displayReticle=false`.
+- Packet observations are copied into immutable bounded samples before work is
+  enqueued to the owning `World` executor. Packet and high-level event counts
+  remain independent. The queue preserves button transitions preferentially;
+  irreconcilable transition overflow closes the probe instead of guessing.
+- The trace is capped at 20,000 detailed samples per session and records later
+  drops explicitly. It contains a random session token rather than a player
+  identifier and is written under the CanvasUI mod-data `logs/cursor-hud`
+  directory.
+- The gameplay guard filters `SyncInteractionChains`, active-slot changes,
+  block-set switching, and item drops while the lease is active. A two-second
+  bounded close barrier consumes delayed guarded packets so the close click
+  cannot become a world action.
+- Cleanup independently removes only the CanvasUI HUD key/page, resets the
+  camera through `CameraManager.resetCamera`, closes the trace, and invalidates
+  queued work. An outbound camera watcher detects a later camera owner; stale
+  cleanup then skips reset instead of overwriting that newer owner.
+
+### Installed pre.2 dispatch audit
+
+The exact installed server JAR has SHA-256
+`9CDC1E77DADFDAD0B1D849977CDAD5C2752207F538272FB3D76D4E915546B25E`.
+Its `MouseInteraction` packet ID is 111 and `SyncInteractionChains` is 290.
+`PacketAdapters.handle` returns immediately when a filter returns true, before
+the packet handler executes.
+
+`GamePacketHandler.handleMouseInteraction` delegates to
+`InteractionModule.doMouseInteraction`. The latter dispatches
+`PlayerMouseButtonEvent` or `PlayerMouseMotionEvent` and then updates
+`CameraManager`; it never reads the event's cancellable flag. Consequently R041
+sets that flag for diagnostics but does not represent it as the gameplay
+authority. `MouseInteraction` itself is allowed through so packet and event
+delivery can be compared and camera button state stays current. Gameplay
+interaction-chain and inventory mutations are guarded at the earlier packet
+filter boundary.
+
+The public `CameraManager` has no getter for an arbitrary prior server-camera
+configuration. The command itself is the owner's explicit coordination to run
+the probe. R041 watches outbound camera ownership from plugin startup, refuses
+an already observed external override, and only uses the supported reset path
+when no later owner has superseded its lease. It does not claim that an unknown
+camera predating observation can be reconstructed.
+
+### Automated evidence and open gates
+
+- CanvasUI verification: **26 tests passed**, including bounded queue ordering,
+  transition-preserving overflow, finite coordinate validation, and the visible
+  close-region candidate. Static CustomUI validation and packaged-entry gates
+  passed.
+- Complete retained workspace validation: **2,384 tests passed**, zero
+  failures/errors/skips across 174 suites.
+- Isolated CanvasUI bare-server smoke: discovery, setup, command registration,
+  enable, and shutdown markers passed on `0.7.0-pre.2`; no CanvasUI-scoped error
+  was present. The bare stop still emits known unrelated core shutdown noise.
+- The cumulative isolated three-mod smoke also passed with the native integration
+  audit enabled: exactly three candidate mods, CanvasUI/RPG R041 setup, all
+  retained Stage 13 native gates, and clean shutdown.
+- Packaged exactly `CanvasUI-0.1.0.jar`, `HyARPG.jar`, and
+  `HYTALEDEVLIB-0.5.0.jar`. Archive SHA-256:
+  `044CCDAFBE7518AE1F3D2912E8FC73A85E6609249A176599A4E034069F14BA9C`.
+- Deployed CanvasUI SHA-256:
+  `5A22684EA7055FC707FFDA20F9AD989637B1FCCE58D0F9EEC1231005F8AAC718`.
+  The cumulative RPG JAR was revision-aligned to R041 and deployed with SHA-256
+  `13A208B7921A2438C1845EAC7FF1F9A2DF58EC68F155A076881A63821861FA2F`.
+  Both installed files byte-match the validated candidates. HTDevLib and
+  ImmersiveNPCs remained unchanged.
+- Before replacement, all 598 files in the 447.31 MiB RPG save were copied and
+  hash-verified under the R041 evidence `before/save` directory. Binary
+  candidate/rollback round-trips passed. The first packaging invocation created
+  an immutable archive and backup copy but stopped before replacement because
+  Windows PowerShell 5.1 lacks `Path.GetRelativePath`; the compatible retry
+  completed deployment. No live binary changed during the failed invocation.
+- **G1/G2/G3 remain CONNECTED-UNVERIFIED.** No local test proves that pre.2 emits
+  the pointer stream in any of the three contexts, that `screenPoint` uses UI
+  logical coordinates, that the visual marker aligns, or that client gameplay
+  actions are fully suppressed. The identity mapping is visibly labeled
+  `IDENTITY_CANDIDATE_UNPROVEN` in the trace contract.
+- No one-node gesture or full graph-host refactor was started. Per the framework,
+  that work is forbidden until the connected G1 and mapping evidence pass.
+
+Exact implementation/build/smoke evidence is stored under
+[`evidence/canvas-ui/cursor-hud/R041`](../../evidence/canvas-ui/cursor-hud/R041/).
 
 ## R008 event-binding correction
 
@@ -355,6 +461,23 @@ none exists in R006.
 
 ## Revision ledger
 
+### R041 — cursor-camera/passive-HUD Phase-A feasibility probe
+
+- Implemented the three controlled cursor-camera contexts, a passive keyed HUD,
+  an ordinary-page negative control, independent packet/event observations,
+  bounded traces, visible mapping markers, guarded gameplay packets, and
+  reversible camera/HUD/page cleanup.
+- Preserved the existing page-host demo and input probe. No experimental sample
+  is routed into graph state before connected G1/G2 evidence passes.
+- Passed 26 CanvasUI tests, 2,384 complete retained tests, CanvasUI bare-server
+  smoke, and the cumulative three-mod native integration smoke.
+- Deployed the exact R041 CanvasUI and cumulative HyARPG artifacts after a full
+  verified save backup; package/deployment evidence and connected checklist are
+  stored under `evidence/canvas-ui/cursor-hud/R041`.
+- Outcome: implementation and deployment complete; pointer delivery, coordinate
+  mapping, gameplay suppression, and the one-node gesture remain
+  **CONNECTED-UNVERIFIED**.
+
 ### R002 — reusable library foundation
 
 - Added the standalone CanvasUI graph model, node/port definitions, validation,
@@ -463,6 +586,35 @@ none exists in R006.
 - Outcome: CanvasUI Stage 01 remains **BLOCKED** on public continuous-pointer
   input; RPG Stage 01B is separately **BLOCKED** only on the connected-client
   command and restart/rejoin evidence gate.
+
+### R042 — calibrated cursor-HUD input backend and graph entry proof
+
+- Added one five-landmark raw-pointer transform shared by the visible marker,
+  close hit, graph hit testing, and existing viewport conversion. The installed
+  server API does not expose remote physical viewport dimensions or UI scale,
+  so no 1920x1080 assumption is used.
+- Added a player/session-scoped guard at native interaction-chain start plus
+  cancellable hotbar/drop/player-interact boundaries. Primary, secondary, use,
+  pick, Ability1–4, dodge, client hotbar requests, and item drops are rejected
+  before native mutation while CanvasUI owns input.
+- Preserved the ordinary CustomUI page as a visibly labeled negative control.
+- Added a two-node passive-HUD drag proof backed by the existing Canvas graph,
+  `CanvasInputController`, hit testing, viewport, edge renderer, and terminal
+  persistence callback. Input is coalesced through a bounded queue and HUD
+  submission is capped at 25 Hz while active.
+- Strengthened restoration for close, page dismiss, death, disconnect, world
+  removal, shutdown, replacement, camera supersession, queue overflow, and
+  UI/graph exceptions. The guard is removed before HUD/camera cleanup.
+- Validation: 2,453 retained tests pass (2,358 RPG, 67 native-control, 28
+  CanvasUI); static UI validation and the exact three-mod pre.2 smoke pass.
+- Final deployed CanvasUI SHA-256:
+  `2FAEBFE07DD9A3855F676144463D2B0864DE82DCA5F517078F63CF270F5FC3B5`.
+  Coupled HyARPG SHA-256:
+  `4574E0408D26A7B0D2420555977D2E6FADC1A0FF10BBD42BBC4BE66729DD0FBB`.
+- Connected mapping, guard, page-control, drag, latency, and restoration
+  results remain pending. The cursor-HUD backend is not production-approved.
+- Full technical record:
+  [`R042 cursor-HUD report`](cursor-hud-r042-report.md).
 
 ## Evidence and reproducibility
 

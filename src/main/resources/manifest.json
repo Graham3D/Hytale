@@ -1,20 +1,25 @@
 {
   "Group": "InigmasGames",
-  "Name": "HytaleRPGPhase00Audit",
+  "Name": "Hywind",
   "Version": "${version}",
-  "Description": "Server-authoritative Hytale RPG character, HUD, loadout, Link graph, and shared combat kernel.",
+  "Description": "Unified Hywind RPG, CanvasUI presentation, persistent NPC, and Orbis runtime.",
   "Authors": [{ "Name": "Inigmas Games" }],
   "Website": "https://github.com/inigmas-games",
   "ServerVersion": "=${hytaleVersion}",
-  "Dependencies": {},
+  "Dependencies": {
+    "Hytale:NPC": "*"
+  },
   "OptionalDependencies": {
     "HytaleDevLib:HytaleDevLib": "*"
   },
   "DisabledByDefault": false,
-  "Main": "com.inigmasgames.hytalerpg.phase00.Phase00Plugin",
+  "Main": "com.inigmasgames.hywind.HywindPlugin",
   "IncludesAssetPack": true,
   "Metadata": {
     "RpgRevision": "${rpgRevision}",
-    "Stage": "13"
+    "Stage": "13",
+    "Product": "Hywind",
+    "RpgSource": "25b85cb2819351a0d727e33132b2f57013cda024+working-tree",
+    "NpcSource": "9033cbf2c421c45a521467761010d32bb2a967f6"
   }
 }

@@ -1,0 +1,4 @@
+{
+  "Duration":0.4,"Infinite":false,"OverlapBehavior":"Overwrite","Debuff":false,
+  "ApplicationEffects":{"Particles":[{"SystemId":"RPG_Mantle_Pulse","TargetEntityPart":"Entity","ClearParticlesOnRemove":true}]}
+}

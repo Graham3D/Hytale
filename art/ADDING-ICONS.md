@@ -2,10 +2,9 @@
 
 You do not need Codex, Java, Gradle, or a JAR editor.
 
-R032-V's optional new filenames are `SkillHealingbeam.png`,
-`SkillBlessingofprotection.png` and `PassiveArc.png`. Use these only with a V-or-newer
-build containing those catalog entries. The updater also supports the older
-87-skill/66-passive builds, but intentionally rejects icons unknown to that build.
+The current R036 catalog contains **91 skills and 67 passives**. The updater reads
+the index embedded in the installed build and intentionally rejects artwork for
+content that build does not know.
 
 1. Save skill PNGs in **art/Skills**; save passive PNGs in **art/Passives**.
 2. Use the exact filename in **[ICON-FILENAMES.csv](ICON-FILENAMES.csv)**.
@@ -14,14 +13,24 @@ build containing those catalog entries. The updater also supports the older
 4. Double-click **Update RPG Icons.cmd** in the Hytale GitHub folder.
 5. Wait for **SUCCESS** (or **Already up to date**), then launch Hytale and rejoin RPG.
 
-| Content | File | Folder |
+### Recently implemented or revised skills
+
+| Content | Exact filename | Folder |
 |---|---|---|
+| Quick Slash | SkillQuickslash.png | art/Skills |
 | Fire Bolt | SkillFirebolt.png | art/Skills |
 | Fireball (a different skill) | SkillFireball.png | art/Skills |
-| Quick Slash | SkillQuickslash.png | art/Skills |
+| Snipe | SkillSnipe.png | art/Skills |
 | Whirlwind | SkillWhirlwind.png | art/Skills |
-| Potency | PassivePotency.png | art/Passives |
-| Shared Aegis | PassiveSharedaegis.png | art/Passives |
+| Blizzard | SkillBlizzard.png | art/Skills |
+| Healing Beam | SkillHealingbeam.png | art/Skills |
+| Blessing of Protection | SkillBlessingofprotection.png | art/Skills |
+| Mantle of Flame | SkillMantleofflame.png | art/Skills |
+| Summon Skeleton Archers | SkillSummonskeletonarchers.png | art/Skills |
+
+The authoritative CSV contains the exact filename for **every** skill and passive,
+including skills that still use fallback artwork. Add a correctly named PNG to
+`art/Skills`, close Hytale, and run `Update RPG Icons.cmd`.
 
 Names use `Skill` or `Passive`, then the content name with spaces/punctuation
 removed: first letter capitalized, remaining letters lowercase. The CSV is
@@ -58,13 +67,13 @@ folder. The updater safely packages them inside the existing RPG JAR under
 `Common/Icons/Items/RPG/` (skills) and
 `Common/UI/Custom/Icons/RPG/` (skills and passives), then installs that JAR to:
 
-`C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/HytaleRPG-0.0.25.jar`
+`C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/HyARPG.jar`
 
 Keep the original PNGs here. After installing a newer RPG build, run the updater
 again to reapply your complete artwork collection. Do not put loose PNGs directly
 in the mods folder and do not add a fourth mod.
 
-The tool checks the embedded 87-skill/66-passive filename index, validates every
+The tool checks the embedded 91-skill/67-passive filename index, validates every
 image, creates a staged JAR, verifies unrelated entries are unchanged, and makes
 a hash-verified backup before replacing the installed JAR atomically.
 Backups and before/after hashes live in **icon-backups** in the GitHub folder.

@@ -1,0 +1,11 @@
+$C = "../../Common.ui";
+Label { Anchor: (Height: 34, Bottom: 10); Text: "BACKGROUND"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+Label { Anchor: (Height: 22); Text: "Biography"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+MultilineTextField #ProfileBiographyInput { Anchor: (Height: 180, Bottom: 10); Background: $C.@InputBoxBackground; MaxVisibleLines: 9; AutoGrow: false; MaxLength: 1800; ContentPadding: (Horizontal: 10, Vertical: 8); Style: $C.@DefaultInputFieldStyle; PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle; }
+Label { Anchor: (Height: 22); Text: "Self Identity"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+$C.@TextField #ProfileSelfIdentityInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 400; }
+Label { Anchor: (Height: 22); Text: "Workplace"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+$C.@TextField #ProfileWorkplaceInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 200; }
+Label { Anchor: (Height: 22); Text: "Knowledge Domains"; Style: (...$C.@DefaultLabelStyle, TextColor: #91a5b7); }
+$C.@TextField #ProfileKnowledgeInput { @Anchor = (Height: 40, Bottom: 10); MaxLength: 900; }
+Group { FlexWeight: 1; }

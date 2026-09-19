@@ -43,7 +43,7 @@ public final class ProjectileSecondaryEffects {
                     original.ownerId(),original.skillId(),original.compiledPlanHash(),original.snapshot().withMagnitudeFactor(.35),original.generation()+1,
                     budgets,0,original.remainingTriggeredSecondaries(),now,original.configId(),point,
                     ProjectileContinuation.yaw(parent.direction(),(index-1)*25).multiply(speed),original.radius(),distance,
-                    Math.min(distance/speed,parent.originalMaxLifetimeSeconds()));
+                    Math.min(distance/speed,parent.originalMaxLifetimeSeconds()),original.motion());
             children.add(new ProjectileInstance(plan));
         }
         try{registry.registerTriggeredAll(children);}catch(IllegalStateException error){return end(parent,error.getMessage());}

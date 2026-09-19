@@ -1,0 +1,8 @@
+{
+  "id": "mara",
+  "provider": "CHATTERBOX",
+  "referenceAudioPath": "reference.wav",
+  "defaultEmotion": "CALM",
+  "defaultIntensity": "LOW",
+  "defaultPace": "NORMAL"
+}

@@ -4,12 +4,12 @@
   "Physics": {
     "Type": "Standard",
     "Gravity": 0,
-    "TerminalVelocityAir": 24,
-    "TerminalVelocityWater": 24,
+    "TerminalVelocityAir": 32,
+    "TerminalVelocityWater": 32,
     "RotationMode": "Velocity",
     "Bounciness": 0.0
   },
-  "LaunchForce": 24,
+  "LaunchForce": 32,
   "SpawnOffset": { "X": 0, "Y": 0, "Z": 0 },
   "Interactions": {}
 }

@@ -2,6 +2,14 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "kind":"Skill", "id":"mantle_of_flame", "name":"Mantle of Flame",
+      "fileName":"SkillMantleofflame.png", "itemAsset":"Server/Item/Items/RPG/Abilities/RPG_Ability_Mantle_Of_Flame.json"
+    },
+    {
+      "kind":"Skill", "id":"summon_skeleton_archers", "name":"Summon Skeleton Archers",
+      "fileName":"SkillSummonskeletonarchers.png", "itemAsset":"Server/Item/Items/RPG/Abilities/RPG_Ability_Summon_Skeleton_Archers.json"
+    },
+    {
       "kind": "Skill",
       "id": "quick_slash",
       "name": "Quick Slash",

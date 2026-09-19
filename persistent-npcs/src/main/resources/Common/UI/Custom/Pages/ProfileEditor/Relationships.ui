@@ -1,0 +1,8 @@
+$C = "../../Common.ui";
+Label { Anchor: (Height: 34, Bottom: 10); Text: "RELATIONSHIPS"; Style: (...$C.@DefaultLabelStyle, FontSize: 19, RenderBold: true, TextColor: #d5a842); }
+Group { Anchor: (Height: 110); Background: #142535; Padding: (Full: 14); LayoutMode: Top;
+  Label #ProfileRelationshipsSummary { FlexWeight: 1; Text: ""; Style: (...$C.@DefaultLabelStyle, FontSize: 14, Wrap: true, TextColor: #dce8f3); }
+  Label { Anchor: (Height: 28); Text: "READ ONLY"; Style: (...$C.@DefaultLabelStyle, FontSize: 10, TextColor: #6f879a); }
+}
+Label { Anchor: (Height: 54, Top: 10); Text: "Relationships are managed by the authoritative relationship subsystem and cannot be edited here."; Style: (...$C.@DefaultLabelStyle, Wrap: true, TextColor: #768b9e); }
+Group { FlexWeight: 1; }

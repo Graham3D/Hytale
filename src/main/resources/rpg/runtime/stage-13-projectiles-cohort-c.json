@@ -312,32 +312,32 @@
       ],
       "requiredOffHandKinds": [],
       "resourceType": "MANA",
-      "resourceCost": 18,
-      "cooldownSeconds": 7,
+      "resourceCost": 10,
+      "cooldownSeconds": 1,
       "windupSeconds": 0,
       "basePowerSource": "MAGIC_WEAPON",
       "innateBasePower": 0,
       "scaling": "MAGIC",
       "projectile": {
         "configId": "Projectile_Config_RPG_Fireball",
-        "speed": 18,
-        "maxDistance": 30,
-        "radius": 0.5,
-        "gravity": 0,
+        "speed": 16,
+        "maxDistance": 22,
+        "radius": 0.45,
+        "gravity": 12,
         "targetCap": 1,
-        "coefficient": 1.55,
-        "statusId": "BURN",
-        "statusSeconds": 5,
-        "periodicCoefficient": 0.1,
-        "periodicTicks": 5,
-        "periodicIntervalSeconds": 1,
+        "coefficient": 0,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
         "ammoItemId": "",
         "ammoQuantity": 0,
         "fullyCharged": false,
         "knockbackDistance": 0,
         "configIdsByWeaponKind": {},
         "speedsByWeaponKind": {},
-        "independentLifetimeSeconds": 0,
+        "independentLifetimeSeconds": 1.5,
         "details": {
           "element": "FIRE",
           "chillStacks": 0,
@@ -350,16 +350,20 @@
             "intervalSeconds": 0,
             "homingTurnDegrees": 0,
             "acquisitionRadius": 0,
-            "ballisticAim": false
+            "ballisticAim": true
           },
           "explosion": {
-            "radius": 4,
+            "radius": 3.5,
             "coefficient": 0.9,
-            "burnRadius": 3,
+            "burnRadius": 0,
             "groundFuseSeconds": 0,
-            "detonateAtAirborneLimit": false
+            "detonateAtAirborneLimit": true,
+            "continuationBeforeDetonation": true
           },
-          "nativeCapabilityGate": ""
+          "nativeCapabilityGate": "",
+          "motion": { "mode": "TIMED_BALLISTIC", "horizontalSpeed": 16, "gravity": 12, "minimumTravelSeconds": 0.65, "maximumTravelSeconds": 1.4, "safetyLifetimeSeconds": 0.1 },
+          "presentation": { "castParticle": "Fire_Staff_Activation", "projectileParticle": "Fire_Charge1", "impactParticle": "Explosion_Medium", "projectileScale": 1, "impactScale": 1 },
+          "burnPayoff": { "multiplier": 1.25, "consumeCasterOwnedBurn": true }
         }
       }
     }

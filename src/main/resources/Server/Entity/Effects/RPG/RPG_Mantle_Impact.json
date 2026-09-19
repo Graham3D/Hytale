@@ -1,0 +1,4 @@
+{
+  "Duration":7.0,"Infinite":false,"OverlapBehavior":"Overwrite","Debuff":false,
+  "ApplicationEffects":{"Particles":[{"SystemId":"Impact_Fire","TargetEntityPart":"Entity","PositionOffset":{"Y":1.25},"ClearParticlesOnRemove":true}]}
+}

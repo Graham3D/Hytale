@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "skills": [{
+    "skillId": "summon_skeleton_archers", "family": "SUMMON",
+    "allowedMainHandKinds": ["SPELLBOOK"], "requiredOffHandKinds": [], "secondaryFamilies": [],
+    "resourceType": "MANA", "resourceCost": 0, "cooldownSeconds": 0, "windupSeconds": 0,
+    "basePowerSource": "MAGIC_WEAPON", "innateBasePower": 0, "scaling": "MAGIC",
+    "summon": {"roleId": "RPG_Summon_Skeleton_Archer", "element": "PHYSICAL", "range": 8,
+      "count": 1, "healthFactor": 0.6, "coefficient": 0.35, "lifetime": 20,
+      "attackInterval": 1, "leash": 24, "countPolicy": "EFFECTIVE_LEVEL_EVERY_TWO",
+      "developmentFixture": false}
+  }]
+}

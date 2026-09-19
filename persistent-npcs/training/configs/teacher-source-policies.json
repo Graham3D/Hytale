@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "policies": [
+    {
+      "schemaVersion": 1,
+      "policyId": "human-reviewed-import-v1",
+      "sourceId": "operator-reviewed-offline-import",
+      "status": "APPROVED",
+      "termsVersion": "internal-review-policy-2026-09-03",
+      "licenseId": "operator-owned-labels",
+      "allowedUses": ["TARGET_GENERATION", "CRITIQUE", "PREFERENCE_RANKING"],
+      "prohibitedUses": ["HIDDEN_REASONING_PERSISTENCE", "AUTOMATIC_GOLD_PROMOTION"],
+      "decisionBasis": "Human/operator-authored or explicitly reviewed conclusions; import-first and offline only.",
+      "reviewedAt": "2026-09-03T00:00:00Z"
+    },
+    {
+      "schemaVersion": 1,
+      "policyId": "openai-automated-teacher-v1",
+      "sourceId": "openai-hosted-output",
+      "status": "REJECTED",
+      "termsVersion": "services-agreement-reviewed-2026-09-03",
+      "licenseId": "not-approved-for-this-purpose",
+      "allowedUses": [],
+      "prohibitedUses": ["AUTOMATED_CROSS_VENDOR_MODEL_TRAINING"],
+      "decisionBasis": "Fail-closed: configured use is not approved under the reviewed terms; no permitted exception is recorded.",
+      "reviewedAt": "2026-09-03T00:00:00Z"
+    },
+    {
+      "schemaVersion": 1,
+      "policyId": "unreviewed-local-teacher-v1",
+      "sourceId": "unreviewed-local-open-weight-model",
+      "status": "UNKNOWN",
+      "termsVersion": "unreviewed",
+      "licenseId": "unresolved",
+      "allowedUses": [],
+      "prohibitedUses": ["TEACHER_GENERATION_UNTIL_REVIEWED"],
+      "decisionBasis": "Exact model, revision, artifact, and license have not been approved.",
+      "reviewedAt": "2026-09-03T00:00:00Z"
+    }
+  ]
+}

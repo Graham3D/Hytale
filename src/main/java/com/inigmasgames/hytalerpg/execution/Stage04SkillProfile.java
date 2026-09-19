@@ -287,6 +287,9 @@ public record Stage04SkillProfile(
                 throw new IllegalArgumentException("Projectile ammunition ID and quantity must be declared together");
             if ((periodicTicks == 0) != (periodicCoefficient == 0.0 || periodicIntervalSeconds == 0.0))
                 throw new IllegalArgumentException("Projectile periodic payload must be fully declared or absent");
+            if(details.motion().timedBallistic()&&(!details.pattern().ballisticAim()||gravity<=0||Math.abs(details.motion().gravity()-gravity)>1e-9)
+                    ||details.burnPayoff().active()&&(!details.explosion().active()||!statusId.isBlank()))
+                throw new IllegalArgumentException("Projectile motion/payoff does not match its authored payload");
         }
         public double maximumLifetimeSeconds() { return capLifetime(maxDistance/speed); }
         public String configIdFor(String weaponKind) {
@@ -309,14 +312,20 @@ public record Stage04SkillProfile(
     public record ProjectileDetails(String element, int chillStacks, double bossRootSlow, Set<String> bossSlowOptInRoles,
                                     com.inigmasgames.hytalerpg.execution.projectile.ProjectilePattern pattern,
                                     com.inigmasgames.hytalerpg.execution.projectile.ProjectileExplosion explosion,
-                                    String nativeCapabilityGate) {
+                                    String nativeCapabilityGate,
+                                    com.inigmasgames.hytalerpg.execution.projectile.ProjectileMotion motion,
+                                    com.inigmasgames.hytalerpg.execution.projectile.ProjectilePresentation presentation,
+                                    com.inigmasgames.hytalerpg.execution.projectile.ProjectileBurnPayoff burnPayoff) {
         public ProjectileDetails(String element,int chillStacks,double bossRootSlow,Set<String> roles) {
-            this(element,chillStacks,bossRootSlow,roles,null,null,"");
+            this(element,chillStacks,bossRootSlow,roles,null,null,"",null,null,null);
         }
         public ProjectileDetails {
             pattern = pattern == null ? com.inigmasgames.hytalerpg.execution.projectile.ProjectilePattern.SINGLE : pattern;
             explosion = explosion == null ? com.inigmasgames.hytalerpg.execution.projectile.ProjectileExplosion.NONE : explosion;
             nativeCapabilityGate = nativeCapabilityGate == null ? "" : nativeCapabilityGate;
+            motion=motion==null?com.inigmasgames.hytalerpg.execution.projectile.ProjectileMotion.LINEAR:motion;
+            presentation=presentation==null?com.inigmasgames.hytalerpg.execution.projectile.ProjectilePresentation.NONE:presentation;
+            burnPayoff=burnPayoff==null?com.inigmasgames.hytalerpg.execution.projectile.ProjectileBurnPayoff.NONE:burnPayoff;
             if (!Set.of("", "NATIVE_BOW_MAX_RANGE_UNVERIFIED").contains(nativeCapabilityGate))
                 throw new IllegalArgumentException("Unknown projectile capability gate");
             bossSlowOptInRoles = Set.copyOf(bossSlowOptInRoles == null ? Set.of() : bossSlowOptInRoles);

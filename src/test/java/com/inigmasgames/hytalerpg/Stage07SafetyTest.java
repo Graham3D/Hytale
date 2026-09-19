@@ -53,7 +53,8 @@ class Stage07SafetyTest {
         p.sampleNativeClock(start+500_000_000);p.observe(0,new Vec3(0,0,12));
         assertTrue(p.beginReturn(new Vec3(0,0,12),Vec3.ZERO));
         assertEquals(.5,p.totalSeconds(),1e-12);assertFalse(p.sampleNativeClock(start+1_500_000_000).expired());
-        assertTrue(p.sampleNativeClock(start+1_600_000_000).expired());assertEquals(1.6,p.totalSeconds(),1e-12);
+        assertFalse(p.sampleNativeClock(start+1_600_000_000).expired());
+        assertTrue(p.sampleNativeClock(start+1_700_000_000).expired());assertEquals(1.7,p.totalSeconds(),1e-12);
     }
     @Test void spentRootBudgetDoesNotResetWhenDerivedChildrenEnd() {
         var registry=new ProjectileLifecycleRegistry();var seed=plan(UUID.randomUUID(),"root","anchor");registry.register(new ProjectileInstance(seed));

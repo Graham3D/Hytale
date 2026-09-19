@@ -30,18 +30,22 @@ public final class HitProcRuntime {
     public HitProcRuntime(){this(()->java.util.concurrent.ThreadLocalRandom.current().nextDouble());}
     public HitProcRuntime(DoubleSupplier random){this.random=Objects.requireNonNull(random);}
     public synchronized void observed(SkillExecutionContext c,Hit hit,double now,Port port){
+        observedComposition(c,hit,hit.element==null?Set.of():Set.of(hit.element),hit.preMitigation,now,port);
+    }
+    /** One contact admission and generic proc roll for a multi-channel weapon hit. */
+    public synchronized void observedComposition(SkillExecutionContext c,Hit hit,Set<String> elements,double physicalMagnitude,double now,Port port){
         var mods=c.compiledPlan().hitProcs();if(!mods.active())return;
-        if(!hit.valid()||!Double.isFinite(now)){port.trace(c,"HIT_PROC","INVALID_NATIVE_RECEIPT",0);return;}
+        if(!hit.valid()||!Double.isFinite(now)||elements==null||!Double.isFinite(physicalMagnitude)||physicalMagnitude<0){port.trace(c,"HIT_PROC","INVALID_NATIVE_RECEIPT",0);return;}
         if(c.derivedRelease()||!hit.hostile||hit.protectedTarget||hit.player||hit.cancelled
                 ||hit.healthBefore<=hit.healthMinimum||hit.healthAfter>=hit.healthBefore)return;
         boolean direct=hit.direct&&hit.canProc;
-        if(!direct&&!(mods.shatter()&&hit.element.equals("COLD")&&hit.frozenBefore&&hit.healthAfter<=hit.healthMinimum))return;
+        if(!direct&&!(mods.shatter()&&elements.contains("COLD")&&hit.frozenBefore&&hit.healthAfter<=hit.healthMinimum))return;
         String contact=c.effects().claimProcContact(hit.contact+"/"+hit.victim);
         if(!contact.equals("PASS")){port.trace(c,"HIT_PROC",contact,0);return;}
         fearReady.values().removeIf(at->at<=now);
         boolean alive=hit.healthAfter>hit.healthMinimum;
-        if(mods.hemorrhage()&&direct&&alive&&hit.element.equals("PHYSICAL")&&roll(c,"hemorrhage",.25*hit.procCoefficient,port))
-            dispatch(c,"hemorrhage",hit.contact+"/"+hit.victim,port,child->port.bleed(child,hit,hit.preMitigation*.12,4*(c.compiledPlan().foundationModifiers().lingering()?1.4:1)));
+        if(mods.hemorrhage()&&direct&&alive&&elements.contains("PHYSICAL")&&roll(c,"hemorrhage",.25*hit.procCoefficient,port))
+            dispatch(c,"hemorrhage",hit.contact+"/"+hit.victim,port,child->port.bleed(child,hit,physicalMagnitude*.12,4*(c.compiledPlan().foundationModifiers().lingering()?1.4:1)));
         var fearKey=new FearKey(c.request().actorId(),hit.victim);
         if(mods.terror()&&direct&&alive&&!hit.boss){
             if(fearReady.containsKey(fearKey))port.trace(c,"terror","TERROR_TARGET_ICD",fearReady.get(fearKey)-now);
@@ -54,7 +58,7 @@ public final class HitProcRuntime {
                 }
             }
         }
-        if(mods.shatter()&&!alive&&hit.frozenBefore&&hit.element.equals("COLD"))
+        if(mods.shatter()&&!alive&&hit.frozenBefore&&elements.contains("COLD"))
             dispatch(c,"shatter",hit.victim.toString(),port,child->port.shatter(child,hit,shatterRadius(c.compiledPlan()),shatterAmount(c.compiledPlan(),hit)));
     }
     public static double shatterRadius(com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan){

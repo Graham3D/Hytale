@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"CurationPrivacyPolicy","type":"object","required":["schemaVersion","policyId","realPlayerCorpusApproved","permitStablePlayerIdentifiers","permitRawAudio","reviewedAt"],"properties":{"schemaVersion":{"const":1}},"additionalProperties":false}

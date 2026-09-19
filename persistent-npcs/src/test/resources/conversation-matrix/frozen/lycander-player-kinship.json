@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "lycander-player-kinship",
+  "sourceFailureId": "live-lycander-player-kinship",
+  "sourceRunId": "r090-h2-live",
+  "frozenAt": "2026-08-31T21:00:00Z",
+  "coverageTags": ["IDENTITY", "CLAIM_AUTHORITY"],
+  "input": {
+    "utterance": "Who are you?",
+    "providerOutput": "I am Lycander, your grandfather.",
+    "groundingEvidence": "RELATIONSHIP:player-id"
+  },
+  "expectedBoundaries": {
+    "CLAIM_FIREWALL": "reject unsupported player kinship"
+  },
+  "requiredPropositions": ["speaker identity is Lycander"],
+  "forbiddenClaims": ["grandfather"],
+  "requiredVariants": ["paraphrase", "referent", "cross-profile"],
+  "productionGraphHash": "shared-factory",
+  "reviewStatus": "PROMOTED_REVIEWED"
+}

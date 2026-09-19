@@ -1,0 +1,4 @@
+{
+  "Duration":0.12,"Infinite":false,"OverlapBehavior":"Overwrite","Debuff":false,
+  "ApplicationEffects":{"EntityBottomTint":"#FF3030","EntityTopTint":"#FF3030"}
+}

@@ -1,0 +1,66 @@
+Group {
+  Anchor: (Full: 0);
+
+  Group #CursorProbeSurface {
+    Anchor: (Left: 36, Top: 34, Width: 900, Height: 660);
+    Background: (Color: #08111adf);
+
+    Group { Anchor: (Left: 0, Top: 0, Width: 900, Height: 56); Background: (Color: #102234f5); }
+    Label { Text: "CANVASUI CURSOR-HUD"; Anchor: (Left: 18, Top: 8, Width: 260, Height: 26); Style: (FontSize: 18, TextColor: #78c6d0); }
+    Label #CursorProbeControlBanner { Text: "CURSOR-HUD INPUT BACKEND"; Anchor: (Left: 18, Top: 33, Width: 390, Height: 20); Style: (FontSize: 11, TextColor: #f2d488); }
+    Label #CursorProbeRevision { Text: "REV"; Anchor: (Left: 320, Top: 14, Width: 70, Height: 28); Style: (FontSize: 16, TextColor: #f2d488); }
+    Label #CursorProbeContext { Text: "CONTEXT"; Anchor: (Left: 390, Top: 15, Width: 270, Height: 26); Style: (FontSize: 13, TextColor: #d4e0ec); }
+
+    Group #CursorProbeCloseRegion { Anchor: (Left: 814, Top: 14, Width: 84, Height: 42); Background: (Color: #8d2936e8); }
+    Label { Text: "CLOSE"; Anchor: (Left: 827, Top: 24, Width: 60, Height: 22); Style: (FontSize: 13, TextColor: #ffffff); }
+
+    Group { Anchor: (Left: 24, Top: 82, Width: 830, Height: 470); Background: (Color: #0b1724aa); }
+
+    Group #CursorDragProof {
+      Visible: false;
+      Anchor: (Left: 24, Top: 82, Width: 830, Height: 470);
+      Group #CursorDragEdge0 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 2, Height: 2); Background: (Color: #72d6e8ff); }
+      Group #CursorDragEdge1 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 2, Height: 2); Background: (Color: #72d6e8ff); }
+      Group #CursorDragEdge2 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 2, Height: 2); Background: (Color: #72d6e8ff); }
+      Group #CursorDragEdge3 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 2, Height: 2); Background: (Color: #72d6e8ff); }
+      Group #CursorDragNodeA {
+        Anchor: (Left: 120, Top: 120, Width: 150, Height: 72); Background: (Color: #28476af2);
+        Label #Title { Text: "Proof Node A"; Anchor: (Left: 12, Top: 12, Width: 126, Height: 24); Style: (FontSize: 15, TextColor: #eef6ff); }
+        Label { Text: "drag me"; Anchor: (Left: 12, Top: 40, Width: 100, Height: 18); Style: (FontSize: 11, TextColor: #78c6d0); }
+        Group { Anchor: (Right: -7, Top: 29, Width: 14, Height: 14); Background: (Color: #f2b84bff); }
+      }
+      Group #CursorDragNodeB {
+        Anchor: (Left: 520, Top: 275, Width: 150, Height: 72); Background: (Color: #28476af2);
+        Label #Title { Text: "Proof Node B"; Anchor: (Left: 12, Top: 12, Width: 126, Height: 24); Style: (FontSize: 15, TextColor: #eef6ff); }
+        Label { Text: "drag me"; Anchor: (Left: 12, Top: 40, Width: 100, Height: 18); Style: (FontSize: 11, TextColor: #78c6d0); }
+        Group { Anchor: (Left: -7, Top: 29, Width: 14, Height: 14); Background: (Color: #5ca8f2ff); }
+      }
+      Label #CursorDragStatus { Text: "Drag either node; release persists once."; Anchor: (Left: 16, Bottom: 10, Width: 500, Height: 22); Style: (FontSize: 12, TextColor: #d4e0ec); }
+    }
+
+    Group #CursorProbeCalibration {
+      Anchor: (Left: 0, Top: 0, Width: 900, Height: 610);
+      Group { Anchor: (Left: 12, Top: 70, Width: 24, Height: 24); Background: (Color: #1b7287dd); }
+      Label { Text: "TL"; Anchor: (Left: 14, Top: 72, Width: 22, Height: 20); Style: (FontSize: 11, TextColor: #ffffff); }
+      Group { Anchor: (Left: 842, Top: 70, Width: 24, Height: 24); Background: (Color: #1b7287dd); }
+      Label { Text: "TR"; Anchor: (Left: 844, Top: 72, Width: 22, Height: 20); Style: (FontSize: 11, TextColor: #ffffff); }
+      Group { Anchor: (Left: 12, Top: 540, Width: 24, Height: 24); Background: (Color: #1b7287dd); }
+      Label { Text: "BL"; Anchor: (Left: 14, Top: 542, Width: 22, Height: 20); Style: (FontSize: 11, TextColor: #ffffff); }
+      Group { Anchor: (Left: 842, Top: 540, Width: 24, Height: 24); Background: (Color: #1b7287dd); }
+      Label { Text: "BR"; Anchor: (Left: 844, Top: 542, Width: 22, Height: 20); Style: (FontSize: 11, TextColor: #ffffff); }
+      Group { Anchor: (Left: 427, Top: 305, Width: 24, Height: 24); Background: (Color: #1b7287dd); }
+      Label { Text: "+"; Anchor: (Left: 434, Top: 306, Width: 18, Height: 20); Style: (FontSize: 15, TextColor: #ffffff); }
+      Label #CursorProbeCalibrationPrompt { Text: "Click TOP_LEFT"; Anchor: (Left: 250, Top: 225, Width: 400, Height: 34); Style: (FontSize: 18, TextColor: #f2d488, HorizontalAlignment: Center); }
+    }
+
+    Group #CursorProbePointer { Anchor: (Left: 440, Top: 305, Width: 14, Height: 14); Background: (Color: #ffca3aff); }
+    Label #CursorProbeCoordinates { Text: "RAW unavailable"; Anchor: (Left: 24, Top: 562, Width: 850, Height: 24); Style: (FontSize: 11, TextColor: #f2d488); }
+    Label #CursorProbePointerCount { Text: "POINTER EVENTS 0"; Anchor: (Left: 24, Top: 586, Width: 150, Height: 24); Style: (FontSize: 11, TextColor: #8de2a4); }
+    Label #CursorProbeGameplayObserved { Text: "GAMEPLAY OBSERVED 0"; Anchor: (Left: 176, Top: 586, Width: 180, Height: 24); Style: (FontSize: 11, TextColor: #8de2a4); }
+    Label #CursorProbeGameplayGuarded { Text: "GUARDED 0"; Anchor: (Left: 358, Top: 586, Width: 110, Height: 24); Style: (FontSize: 11, TextColor: #f4a261); }
+    Label #CursorProbeGameplayAllowed { Text: "ALLOWED 0"; Anchor: (Left: 470, Top: 586, Width: 110, Height: 24); Style: (FontSize: 11, TextColor: #f4a261); }
+    Label #CursorProbeDropCount { Text: "QUEUE/TRACE DROP 0/0"; Anchor: (Left: 582, Top: 586, Width: 200, Height: 24); Style: (FontSize: 11, TextColor: #f4a261); }
+    Label #CursorProbeMapping { Text: "LANDMARK_CAPTURE_TOP_LEFT"; Anchor: (Left: 24, Top: 610, Width: 850, Height: 20); Style: (FontSize: 10, TextColor: #8fb0c8); }
+    Label #CursorProbeLast { Text: "Calibrate, then test guarded gameplay input."; Anchor: (Left: 24, Top: 632, Width: 850, Height: 22); Style: (FontSize: 11, TextColor: #aabbd0); }
+  }
+}

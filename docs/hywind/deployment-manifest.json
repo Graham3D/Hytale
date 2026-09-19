@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "status": "DEPLOYED_VALIDATION_PENDING",
+  "product": {
+    "group": "InigmasGames",
+    "name": "Hywind",
+    "version": "0.1.0-merge.1",
+    "revision": "R046",
+    "main": "com.inigmasgames.hywind.HywindPlugin",
+    "artifact": "Hywind.jar"
+  },
+  "source": {
+    "branch": "hywind-merge",
+    "rpgBaseCommit": "25b85cb2819351a0d727e33132b2f57013cda024",
+    "npcSourceCommit": "9033cbf2c421c45a521467761010d32bb2a967f6",
+    "canvasSource": "RPG working tree"
+  },
+  "runtime": {
+    "patchline": "pre-release",
+    "serverVersion": "0.7.0-pre.3.1",
+    "serverJarSha256": "7928797E148E4B15F787E1449BF020FCA41A9BB2F605E464F6A0699484CE71BC",
+    "assetsZipSha256": "1A48A64DA959F1A1EBCCB461B6C518BF2AF94F1116DEBCE84F7CC1E0E95A89D9"
+  },
+  "candidate": {
+    "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
+    "sha256": "B07071798C994FE3CF1062C138BA38AB20B3108B529ABE8A74384D0566A751C1",
+    "bytes": 12027569,
+    "entries": 5397,
+    "classes": 2075,
+    "uiDocuments": 2088,
+    "generatedNpcSections": 2032,
+    "totalNpcSections": 2048
+  },
+  "deployment": {
+    "deployedAtUtc": "2026-09-19T15:33:03.4885752Z",
+    "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
+    "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
+    "installedSha256": "B07071798C994FE3CF1062C138BA38AB20B3108B529ABE8A74384D0566A751C1",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T153302Z",
+    "fullBackupFiles": 599,
+    "fullBackupBytes": 484697159,
+    "activeFirstPartyArtifacts": ["Hywind.jar"],
+    "preservedExternalArtifacts": [
+      {
+        "name": "HYTALEDEVLIB-0.5.0.jar",
+        "sha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+      }
+    ],
+    "retiredArtifacts": [
+      {
+        "name": "CanvasUI-0.1.0.jar",
+        "sha256": "DCB0C105F73AA421A3B2ECE8638BD7334BC0F1839AF71830597186086B5CBD71"
+      },
+      {
+        "name": "HyARPG.jar",
+        "sha256": "A06C7DC040665A0A3D7D8236B9E6B2EF8978654748276656F2C11E5E6E39D6F7"
+      },
+      {
+        "name": "ImmersiveNPCs-0.6.3-R170-CREATIVE-FULL-PROFILE-GENERATION.jar",
+        "sha256": "ED8BFDD6006B685F52FE1A466BBE6FAE98DA08E1E1BBFD826626EB9C8C2ED1BE"
+      }
+    ]
+  },
+  "dataRoots": {
+    "gameplay": "mods/InigmasGames_HytaleRPGPhase00Audit",
+    "presentation": "mods/InigmasGames_CanvasUI",
+    "charactersAndIntelligence": "mods/ImmersiveNPCs"
+  },
+  "validation": {
+    "gradleBuild": "PASS",
+    "rpgJUnitTests": 2361,
+    "nativeControlTests": 67,
+    "canvasJUnitTests": 28,
+    "npcRetainedExecutableGates": 149,
+    "npcLiveLocalModelTests": "SKIPPED_BY_RETAINED_HARNESS",
+    "packageAudit": "PASS",
+    "isolatedSmoke": "PASS",
+    "copiedLegacyDataSmoke": "PASS",
+    "rollbackRehearsal": "PASS",
+    "postDeploymentStartStopCycles": 2,
+    "postDeploymentResult": "PASS",
+    "connectedClient": "UNVERIFIED"
+  },
+  "connectedPending": [
+    "RPG casting, combat, HUD, progression, persistence and restart/rejoin parity",
+    "CanvasUI screens, cursor capture, scaling, drag/drop and input restoration",
+    "NPC profiles, native inventory transfer, appearance UI and save/rejoin parity",
+    "Orbis configured-provider, interruption, voice and degraded-mode behavior"
+  ]
+}

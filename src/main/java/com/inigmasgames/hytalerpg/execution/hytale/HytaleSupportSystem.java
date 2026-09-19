@@ -37,6 +37,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     private final SupportRuntime runtime;
     private final HytaleBossBarTracker bosses;
     private final Set<UUID> cooldownSaveWarnings=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Set<String> mantlePresentationRoots=java.util.concurrent.ConcurrentHashMap.newKeySet();
     private final Set<UUID> initialized=java.util.concurrent.ConcurrentHashMap.newKeySet(),initializing=java.util.concurrent.ConcurrentHashMap.newKeySet();
     public void beginReady(UUID actor){initialized.remove(actor);initializing.remove(actor);}
     public boolean sessionReady(UUID actor){return initialized.contains(actor)&&loadouts.ready(actor);}
@@ -69,6 +70,98 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         });
     }
     public SupportRuntime runtime(){return runtime;}
+    public double nativeWeaponOffensiveFactor(com.hypixel.hytale.server.core.entity.InteractionContext nativeContext){
+        var player=nativeContext.getCommandBuffer().getComponent(nativeContext.getOwningEntity(),PlayerRef.getComponentType());
+        return runtime.finite().nativeOutgoingFactor(player.getWorldUuid(),player.getUuid(),System.nanoTime()/1e9);
+    }
+    /** Echo runs after the native leaf and its queued damage, never inside its calculator. */
+    public void routeManagedWeaponFire(com.hypixel.hytale.server.core.entity.InteractionContext nativeContext,
+            com.inigmasgames.hytalerpg.combat.damage.WeaponFireDecision decision){
+        var buffer=nativeContext.getCommandBuffer();var store=buffer.getStore();var actor=nativeContext.getOwningEntity();
+        buffer.run(safeStore->{if(actor.isValid())routeWeaponFire(safeStore,null,actor,decision);});
+    }
+    public void routeWeaponFire(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> actor,
+            com.inigmasgames.hytalerpg.combat.damage.WeaponFireDecision decision){
+        try{routeWeaponFireEcho(store,buffer,actor,decision);}
+        catch(RuntimeException failure){
+            var id=decision.execution().identity();
+            trace.emit(id.actorId(),RpgTraceEventType.WEAPON_FIRE_SOURCE_ROUTED,new CombatTrace.Context(id.rootId(),id.executionId(),id.authoredTickId()),
+                    Map.of("route","ECHO_FAILED_DIRECT_PRESERVED","reason",safeMantleReason(failure),"error",failure.getClass().getSimpleName()));
+        }
+    }
+    private void routeWeaponFireEcho(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> actor,
+            com.inigmasgames.hytalerpg.combat.damage.WeaponFireDecision decision){
+        if(decision.resolved())return;
+        var id=decision.execution().identity();var context=runtime.activeContext(id.actorId(),"mantle_of_flame");
+        var port=port(store,actor,buffer);
+        boolean enabled=context!=null&&port.valid(context).equals("PASS");
+        double radius=enabled?SupportRuntime.radius(context):0;
+        var result=decision.decideProportional(enabled,()->{
+            var recipients=new ArrayList<com.inigmasgames.hytalerpg.combat.damage.WeaponFireDecision.Recipient>();
+            for(var target:hostileRefs(store,actor,radius)){
+                var targetId=store.getComponent(target,UUIDComponent.getComponentType()).getUuid();
+                double k=runtime.finite().victimModifiers(id.worldId(),id.actorId(),targetId,context.snapshot().modifiers(),System.nanoTime()/1e9).factor();
+                double amount=decision.execution().sourceFire()*.25*k;
+                if(amount>0)recipients.add(new com.inigmasgames.hytalerpg.combat.damage.WeaponFireDecision.Recipient(targetId,amount));
+            }
+            return List.copyOf(recipients);
+        },enabled?context.compiledPlan().kernelModifiers().resourceCostMultiplier():1,kernel.resources(),port.resources(),
+                ()->runtime.terminateAura(id.actorId(),"mantle_of_flame","INSUFFICIENT_TRIGGER_MANA",port));
+        String routing=switch(result.status()){
+            case PASS_THROUGH->"DIRECT";
+            case INSUFFICIENT_MANA->"DIRECT_AFTER_MANA_FAILURE";
+            case ECHO_COMMITTED->result.recipients().isEmpty()?"ECHO_EMPTY_DIRECT_PRESERVED":"ECHO_COMMITTED";
+        };
+        trace.emit(id.actorId(),RpgTraceEventType.WEAPON_FIRE_SOURCE_ROUTED,new CombatTrace.Context(id.rootId(),id.executionId(),id.authoredTickId()),
+                Map.of("contract","NORMALIZED_FIRE_V1","item",decision.execution().itemId(),"route",routing,"sourceFire",result.sourceFire(),
+                        "recipients",result.recipients().size(),"manaCost",result.manaCost(),"sourceEvaluations",1,"directDamagePreserved",true));
+        var pulse=decision.claimPulse();
+        if(pulse.isEmpty())return;
+        // Immutable recipients/context only. The callback-scoped native CommandBuffer is NOT retained.
+        java.util.function.Consumer<Store<EntityStore>> dispatch=safeStore->{
+            if(!actor.isValid()||!alive(safeStore,actor)||!port(safeStore,actor).valid(context).equals("PASS")
+                    ||runtime.activeContext(id.actorId(),"mantle_of_flame")!=context)return;
+            int affected=0;double actual=0;
+            for(var recipient:pulse){
+                var target=safeStore.getExternalData().getRefFromUUID(recipient.targetId());
+                if(target==null||!target.isValid()||!alive(safeStore,target)||!HytaleAreaQueries.hostile(safeStore,target,actor)
+                        ||SupportNativeEffects.control(safeStore,target,bosses).protectedEntity()||!auraInRange(safeStore,actor,target,radius))continue;
+                var metadata=new HytaleDamageMetadata(id.actorId(),context.rootCastId(),context.skillInstanceId(),context.request().correlationId(),
+                        recipient.generatedFire(),0,"mantle:"+id.rootId()+":"+id.authoredTickId(),false,HytaleDamageMetadata.Origin.TRIGGERED);
+                var hit=new HytaleDamageAdapter().applyResolved(target,safeStore,actor,DamageCause.getAssetMap().getAsset("Fire"),metadata,recipient.generatedFire(),null,context);
+                double loss=Math.max(0,hit.healthBefore()-hit.healthAfter());
+                if(!hit.cancelled()&&loss>0){affected++;actual+=loss;
+                    try{MantlePresentation.impact(safeStore,target);MantlePresentation.apply(safeStore,target,"RPG_Mantle_Flash",.12f);
+                        trace.emit(id.actorId(),RpgTraceEventType.MANTLE_IMPACT_APPLIED,
+                                new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),
+                                Map.of("weaponRoot",id.rootId(),"execution",id.authoredTickId(),"target",recipient.targetId(),
+                                        "actualHealthLost",loss,"system","Impact_Fire","owner","RPG_Mantle_Impact","instances",1));}
+                    catch(RuntimeException failure){mantleVisualFailure(context,failure);}
+                }
+            }
+            if(affected>0)try{MantlePresentation.apply(safeStore,actor,"RPG_Mantle_Pulse",.4f);}catch(RuntimeException failure){mantleVisualFailure(context,failure);}
+            trace.emit(id.actorId(),RpgTraceEventType.MANTLE_PULSE_RESOLVED,new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),
+                    Map.of("weaponRoot",id.rootId(),"execution",id.authoredTickId(),"committedRecipients",pulse.size(),"affected",affected,"actualDamage",actual,"lateInvalidationRefund",false));
+        };
+        if(buffer!=null)buffer.run(dispatch);else store.getExternalData().getWorld().execute(()->dispatch.accept(store));
+    }
+    private void mantleVisualFailure(SkillExecutionContext context,RuntimeException failure){
+        trace.emit(context.request().actorId(),RpgTraceEventType.MANTLE_PRESENTATION_FAILURE,
+                new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),
+                Map.of("boundary",failure.getClass().getSimpleName(),"reason",safeMantleReason(failure)));
+    }
+    private void mantleOwner(SkillExecutionContext context,boolean active){
+        trace.emit(context.request().actorId(),RpgTraceEventType.MANTLE_PRESENTATION_OWNER,
+                new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),
+                Map.of("mode","NATIVE_CAMERA_VARIANTS","effectOwner","RPG_Mantle_Aura","activeOwners",active?1:0,
+                        "worldVariants",active?1:0,"firstPersonVariants",active?1:0,"visualScale",.5,
+                        "cameraTransitionOwner","CLIENT_NATIVE_NOT_SERVER_OBSERVED","cleanup",!active));
+    }
+    private static String safeMantleReason(RuntimeException failure){
+        String reason=String.valueOf(failure.getMessage()).replaceAll("[\\p{Cntrl}]"," ");
+        return reason.substring(0,Math.min(160,reason.length()));
+    }
+    public static void requireMantleAssets(){MantlePresentation.requireAssets();}
     private HytaleEncounterRewards encounterRewards;
     public void configureEncounterRewards(HytaleEncounterRewards rewards){encounterRewards=java.util.Objects.requireNonNull(rewards);}
     void invalidateHealthCredit(UUID world,UUID actor){if(encounterRewards!=null)encounterRewards.invalidateHealthCredit(world,actor);}
@@ -242,6 +335,12 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                     "allyRpgRecoveryImplemented",true,"enemyCount",enemies.size(),"animationModified",false));
         }
         public void auraEnded(SkillExecutionContext context){
+            if(context.profile().support().kind()==SupportProfile.Kind.MANTLE_OF_FLAME){
+                java.util.function.Consumer<Store<EntityStore>> remove=s->{boolean tracked=mantlePresentationRoots.remove(context.skillInstanceId());
+                    try{MantlePresentation.remove(s,actor);if(tracked)mantleOwner(context,false);
+                    }catch(RuntimeException failure){mantleVisualFailure(context,failure);}};
+                if(buffer!=null)buffer.run(remove);else store.getExternalData().getWorld().execute(()->remove.accept(store));
+            }
             warnedCooldownRoots.remove(context.skillInstanceId());var previous=cooldownRecipients.remove(context.skillInstanceId());
             if(previous!=null)for(var id:previous)kernel.cooldowns().setAuraRate(id,runtime.cooldownRecoveryIncreased(id,System.nanoTime()/1e9),1,.25);
         }
@@ -316,6 +415,16 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             }
         }
         public void present(SkillExecutionContext context,double radius,double duration){
+            if(context.profile().support().kind()==SupportProfile.Kind.MANTLE_OF_FLAME){
+                java.util.function.Consumer<Store<EntityStore>> renew=s->{
+                    if(runtime.activeContext(context.request().actorId(),"mantle_of_flame")!=context||!actor.isValid())return;
+                    try{MantlePresentation.apply(s,actor,"RPG_Mantle_Aura",.75f);
+                        if(mantlePresentationRoots.add(context.skillInstanceId()))mantleOwner(context,true);
+                    }catch(RuntimeException failure){mantleVisualFailure(context,failure);}
+                };
+                if(buffer!=null)buffer.run(renew);else store.getExternalData().getWorld().execute(()->renew.accept(store));
+                return;
+            }
             if(context.profile().support().kind()==SupportProfile.Kind.MAX_HEALTH_DAMAGE_CAP){
                 try{com.hypixel.hytale.server.core.entity.AnimationUtils.playAnimation(actor,com.hypixel.hytale.protocol.AnimationSlot.Action,"Spellbook","CastPushCharged",true,store);}
                 catch(RuntimeException ignored){/* Presentation never changes committed protection. */}

@@ -1,0 +1,9 @@
+{
+  "fixtureId": "unsupported-player-kinship",
+  "source": "R090 H2 live discovery",
+  "input": "Who are you?",
+  "providerOutput": "I am Lycander, your grandfather.",
+  "expectedBoundary": "CLAIM_FIREWALL",
+  "expected": "unsupported player kinship rejected",
+  "nextTurnUsable": true
+}

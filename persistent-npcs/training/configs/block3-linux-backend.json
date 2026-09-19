@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "gate": "BLOCK3_LINUX_BACKEND",
+  "decision": "HOST_SETUP_REQUIRED",
+  "windowsOfflineRoot": "C:\\HytaleTraining\\Orbis",
+  "linuxTrainingRoot": null,
+  "preferredBackend": "WSL2",
+  "requiredDistribution": "Ubuntu-24.04",
+  "requiredArchitecture": "x86_64",
+  "requiredGpu": "NVIDIA GeForce RTX 4070 Ti",
+  "requiredGpuAccess": "CUDA_PASSTHROUGH",
+  "hostObservation": {
+    "wslStatusExitCode": 50,
+    "wslInstalled": false,
+    "virtualizationFirmwareEnabled": true,
+    "hypervisorPresent": true,
+    "windowsBuild": "26200",
+    "gpuDriver": "610.74"
+  },
+  "operatorActionsRequired": [
+    "Run an elevated PowerShell and install WSL2 with Ubuntu 24.04.",
+    "Restart Windows if requested.",
+    "Launch Ubuntu 24.04 once and create the Linux user.",
+    "Update WSL, confirm the distribution is WSL version 2, and confirm nvidia-smi works inside Ubuntu."
+  ],
+  "forbiddenBeforeRevalidation": [
+    "MODEL_WEIGHT_DOWNLOAD",
+    "PYTHON_TRAINING_STACK_INSTALL",
+    "D6_MODEL_LOAD",
+    "D6_GRADIENT_STEP",
+    "D7_SFT0",
+    "REMOTE_OR_PAID_COMPUTE"
+  ]
+}

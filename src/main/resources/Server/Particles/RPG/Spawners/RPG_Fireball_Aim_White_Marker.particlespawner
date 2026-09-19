@@ -1,0 +1,24 @@
+{
+  "$Comment":"Neutral derivative using the shipped Glow_Direction sprite. One stationary short-lived marker per authoritative sample; no fire, smoke or sparks.",
+  "RenderMode":"BlendAdd",
+  "ParticleRotationInfluence":"Billboard",
+  "LinearFiltering":true,
+  "LightInfluence":0.0,
+  "ParticleRotateWithSpawner":false,
+  "TrailSpawnerPositionMultiplier":0.0,
+  "TrailSpawnerRotationMultiplier":0.0,
+  "MaxConcurrentParticles":1,
+  "ParticleLifeSpan":{"Min":0.12,"Max":0.12},
+  "TotalParticles":{"Min":1,"Max":1},
+  "SpawnRate":{"Min":1.0,"Max":1.0},
+  "SpawnBurst":true,
+  "UseEmitDirection":false,
+  "InitialVelocity":{"Speed":{"Min":0.0,"Max":0.0}},
+  "Particle":{
+    "Texture":"Particles/Textures/Basic/Glow_Direction.png",
+    "ScaleRatioConstraint":"OneToOne",
+    "SoftParticles":"Enable",
+    "InitialAnimationFrame":{"Opacity":0.42,"Color":"#ffffff","Scale":{"X":{"Min":1.0,"Max":1.0}}},
+    "Animation":{"0":{"Opacity":0.42,"Color":"#ffffff"},"70":{"Opacity":0.34,"Color":"#ffffff"},"100":{"Opacity":0.0,"Color":"#ffffff"}}
+  }
+}

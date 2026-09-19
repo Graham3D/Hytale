@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "pythonExecutable": "",
+  "ttsDevice": "auto",
+  "whisperModel": "base.en",
+  "whisperDevice": "cpu",
+  "whisperComputeType": "int8",
+  "sttProvider": "AUTO",
+  "moonshineModel": "TINY_STREAMING",
+  "utteranceGapMillis": 250,
+  "opusBitrate": 24000,
+  "debugLogging": true,
+  "exportDebugWav": false,
+  "forceEnableSingleplayerVoice": true,
+  "conversationListenRadius": 5.0,
+  "remoteHailRadius": 15.0,
+  "npcSpeechMaxRadius": 15.0
+}

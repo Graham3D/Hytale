@@ -1,0 +1,76 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'com.inigmasgames.persistentnpcs'
+version = '0.6.3-R170-creative-full-profile-generation'
+// The retained upstream PowerShell harness intentionally owns build/classes.
+// Keep Gradle outputs separate so a full multi-project build cannot race it.
+layout.buildDirectory = file('gradle-build')
+
+def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
+def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")
+def serverJar = file("${gamePackage}/Server/HytaleServer.jar")
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+}
+
+dependencies {
+    compileOnly files(serverJar)
+    testImplementation files(serverJar)
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// Upstream retained tests are executable main classes with Java assertions, not
+// JUnit tests. retainedTests below compiles and executes that complete named list.
+tasks.named('test') {
+    enabled = false
+}
+
+tasks.processResources {
+    // Hywind owns the only root manifest and deliberately merges server.lang.
+    exclude 'manifest.json'
+    exclude 'Server/Languages/en-US/server.lang'
+    doLast {
+        ['NativeInventoryProbe', 'ProfileInventory'].each { page ->
+            def target = new File(destinationDir, "Common/UI/Custom/Pages/${page}")
+            target.mkdirs()
+            (9..1024).each { sectionId ->
+                new File(target, "NpcSection${sectionId}.ui").setText(
+                    '\$Probe = "GridCommon.ui";\n' +
+                    "\$Probe.@ProbeGrid #NpcInventoryGrid { InventorySectionId: ${sectionId}; }\n",
+                    'UTF-8')
+            }
+        }
+    }
+}
+
+tasks.register('validateReleaseResources', Exec) {
+    group = 'verification'
+    description = 'Runs the retained ImmersiveNPC resource and installed-asset validator.'
+    commandLine 'pwsh.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+        file('validate-release-resources.ps1'), '-ServerJar', serverJar,
+        '-ArtifactName', 'ImmersiveNPCs-0.6.3-R170-CREATIVE-FULL-PROFILE-GENERATION.jar'
+}
+
+tasks.register('retainedTests', Exec) {
+    group = 'verification'
+    description = 'Runs the retained deterministic ImmersiveNPC regression suite against the pinned pre-release server.'
+    def absentReleaseJar = file("${buildDir}/no-secondary-release/HytaleServer.jar")
+    commandLine 'pwsh.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+        file('test.ps1'), '-ServerJar', serverJar,
+        '-ReleaseServerJar', absentReleaseJar, '-SkipLive'
+}
+
+tasks.check {
+    dependsOn tasks.named('validateReleaseResources')
+    dependsOn tasks.named('retainedTests')
+}
+
+tasks.jar {
+    archiveClassifier = 'internal'
+}

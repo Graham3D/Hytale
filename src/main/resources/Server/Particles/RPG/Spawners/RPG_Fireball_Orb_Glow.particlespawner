@@ -1,0 +1,7 @@
+{
+  "RenderMode":"Erosion","ParticleRotationInfluence":"Billboard","LinearFiltering":true,"ParticleRotateWithSpawner":true,
+  "MaxConcurrentParticles":2,"ParticleLifeSpan":{"Min":0.04,"Max":0.06},"SpawnRate":{"Min":25.0,"Max":25.0},"SpawnBurst":false,
+  "Particle":{"Texture":"Particles/Textures/Basic/Glow_Direction.png","ScaleRatioConstraint":"OneToOne",
+    "InitialAnimationFrame":{"Opacity":0.6,"Color":"#ffdb3b","Scale":{"X":{"Min":0.8,"Max":1.0}}},
+    "Animation":{"0":{"Opacity":0.7,"Color":"#fffbea"},"100":{"Opacity":0.25,"Color":"#ffb82f"}}}
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PeftPreflightReport",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "state", "g0", "g2", "hardwareClassification", "failures"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "runId": {"type": "string", "minLength": 1},
+    "state": {"enum": ["PLANNED", "PREFLIGHT", "RUNNING", "COMPLETED", "FAILED", "INVALIDATED"]},
+    "g0": {"enum": ["PASS", "FAIL"]},
+    "g2": {"enum": ["PASS", "FAIL", "NOT_REACHED"]},
+    "hardwareClassification": {"enum": ["LOCAL_SUPPORTED", "LOCAL_SUPPORTED_LIMITED", "LOCAL_EXPERIMENTAL", "REMOTE_RECOMMENDED", "REMOTE_REQUIRED", "UNSUPPORTED"]},
+    "failures": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}
