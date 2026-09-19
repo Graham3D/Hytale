@@ -52,7 +52,7 @@ class Stage13SkillTreeIconsSearchTest {
                 assertEquals(List.of(skill.getKey()), result.library().stream().map(StaticSkillTreeViewModel.LibraryItem::id).toList(), query);
             }
         }
-        assertEquals(91, projector.project(player, StaticSkillTreeViewModel.Tab.SKILLS, "", "", "", null, "").library().size());
+        assertEquals(96, projector.project(player, StaticSkillTreeViewModel.Tab.SKILLS, "", "", "", null, "").library().size());
         assertTrue(projector.project(player, StaticSkillTreeViewModel.Tab.SKILLS, "no-such-content-xyz", "", "", null, "").library().isEmpty());
         assertTrue(projector.project(player, StaticSkillTreeViewModel.Tab.SKILLS, "firebolt", "Swords", "SWORD", null, "").library().isEmpty());
     }

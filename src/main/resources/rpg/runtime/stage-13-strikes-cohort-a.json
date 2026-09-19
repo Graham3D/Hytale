@@ -137,38 +137,6 @@
       }
     },
     {
-      "skillId": "spark",
-      "family": "STRIKE",
-      "secondaryFamilies": [],
-      "allowedMainHandKinds": [],
-      "requiredOffHandKinds": [],
-      "resourceType": "MANA",
-      "resourceCost": 7,
-      "cooldownSeconds": 2,
-      "windupSeconds": 0,
-      "basePowerSource": "INNATE",
-      "innateBasePower": 20,
-      "scaling": "MAGIC",
-      "strike": {
-        "geometry": "ARC",
-        "range": 2.8,
-        "angleDegrees": 120,
-        "lineHalfWidth": 0,
-        "repeats": 1,
-        "repeatIntervalSeconds": 0,
-        "targetCap": 64,
-        "coefficient": 0.9,
-        "statusId": "",
-        "statusSeconds": 0,
-        "details": {
-          "element": "FIRE",
-          "height": 2.5,
-          "actionLockSeconds": 0,
-          "movementFactor": 1
-        }
-      }
-    },
-    {
       "skillId": "whirlwind",
       "family": "STRIKE",
       "secondaryFamilies": [],

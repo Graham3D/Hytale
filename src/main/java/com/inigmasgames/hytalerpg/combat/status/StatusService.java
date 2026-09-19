@@ -61,6 +61,8 @@ public final class StatusService {
         expire(target);
         if (control.protectedEntity()) return new Result(Outcome.REJECTED, type, 0, 0, "protected target rejects hostile status");
         if (type == RpgStatusType.CHILL) return applyChill(target, control,Double.isFinite(authoredDurationSeconds)&&authoredDurationSeconds>0?authoredDurationSeconds:profile.chillDurationSeconds);
+        if (type == RpgStatusType.ELECTRIFIED)
+            return applyElectrified(target, Double.isFinite(authoredDurationSeconds) && authoredDurationSeconds > 0 ? authoredDurationSeconds : 6.0);
         if (isHardControl(type) && control.blocksHardControl()) {
             if (type == RpgStatusType.FROZEN || type == RpgStatusType.ROOT && control.boss())
                 return applySimple(target, RpgStatusType.FROZEN_SUBSTITUTE_SLOW,
@@ -75,6 +77,9 @@ public final class StatusService {
             case POISON -> profile.poisonDurationSeconds;
             case BLEED -> 4;
             case ROOT, FEAR, TAUNT, STAGGER -> profile.frozenDurationSeconds;
+            case ELECTRIFIED -> 6.0;
+            case LIGHTNING_VULNERABILITY -> 5.0;
+            case ALACRITY -> 6.0;
             case CHILL -> profile.chillDurationSeconds;
         };
         if (Double.isFinite(authoredDurationSeconds) && authoredDurationSeconds > 0.0)
@@ -88,6 +93,27 @@ public final class StatusService {
             history.addLast(now);
         }
         return applySimple(target, type, duration, 1, true, "applied");
+    }
+    /** Shared Lightning debuff: one refreshed six-second timer and a hard five-stack cap. */
+    public synchronized Result applyElectrified(UUID target, double seconds) {
+        if (target == null || !Double.isFinite(seconds) || seconds <= 0) throw new IllegalArgumentException("Invalid Electrified");
+        expire(target);
+        EnumMap<RpgStatusType, State> actor = states.computeIfAbsent(target, ignored -> new EnumMap<>(RpgStatusType.class));
+        int before = actor.getOrDefault(RpgStatusType.ELECTRIFIED, new State(0, 0L)).stacks;
+        int stacks = Math.min(5, before + 1);
+        actor.put(RpgStatusType.ELECTRIFIED, new State(stacks, nanoTime.getAsLong() + Math.round(seconds * 1e9)));
+        return new Result(before > 0 ? Outcome.REFRESHED : Outcome.APPLIED, RpgStatusType.ELECTRIFIED, stacks, seconds,
+                "Physical miss chance=" + stacks * .05);
+    }
+    public synchronized double physicalMissChance(UUID target) {
+        var status = inspect(target).active().get(RpgStatusType.ELECTRIFIED);
+        return status == null ? 0 : Math.min(.25, status.stacks() * .05);
+    }
+    public synchronized double lightningDamageFactor(UUID target) {
+        return inspect(target).active().containsKey(RpgStatusType.LIGHTNING_VULNERABILITY) ? 1.5 : 1.0;
+    }
+    public synchronized double cooldownRecoveryRate(UUID target) {
+        return inspect(target).active().containsKey(RpgStatusType.ALACRITY) ? .30 : 0.0;
     }
     private Result applyChill(UUID target, ControlProfile control,double seconds) {
         EnumMap<RpgStatusType, State> actor = states.computeIfAbsent(target, ignored -> new EnumMap<>(RpgStatusType.class));

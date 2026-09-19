@@ -40,6 +40,11 @@ public final class CompatibilityService {
                 Set.of("COMPONENT_SHRAPNEL","AREA","BURST","DAMAGE","HAS_RADIUS"));
     }
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
+        if(skill.id().value().equals("lightning_bolt")&&passive.id().value().equals("chain")){
+            var component=new LinkedHashSet<>(skill.linkCompatibilityTags());component.addAll(skill.tags());
+            component.addAll(Set.of("LINE","CAN_CHAIN","DAMAGE","SCALABLE_PAYLOAD"));
+            return CompatibilityResult.accepted(component);
+        }
         if(skill.id().value().equals("summon_skeleton_archers")&&Set.of("arc","fork","chain").contains(passive.id().value())){
             var component=new LinkedHashSet<>(skill.linkCompatibilityTags());component.addAll(skill.tags());
             component.addAll(Set.of("PROJECTILE","PROJECTILE_PROXY","DAMAGE","SCALABLE_PAYLOAD","CAN_FORK","CAN_CHAIN"));

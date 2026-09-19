@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "charged_bolt", "family": "PROJECTILE", "secondaryFamilies": [],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 7, "cooldownSeconds": 1.25, "windupSeconds": 0,
+      "basePowerSource": "INNATE", "innateBasePower": 20, "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_Hywind_Charged_Bolt", "speed": 24,
+        "maxDistance": 6, "radius": 0.22, "gravity": 0, "targetCap": 3,
+        "coefficient": 0.32, "statusId": "ELECTRIFIED", "statusSeconds": 6,
+        "periodicCoefficient": 0, "periodicTicks": 0, "periodicIntervalSeconds": 0,
+        "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false, "knockbackDistance": 0,
+        "configIdsByWeaponKind": {}, "speedsByWeaponKind": {}, "independentLifetimeSeconds": 0.5,
+        "details": {
+          "element": "LIGHTNING", "chillStacks": 0, "bossRootSlow": 0, "bossSlowOptInRoles": [],
+          "pattern": {"count": 5, "minimumCount": 3, "horizontalDegrees": 60, "verticalDegrees": 16, "intervalSeconds": 0, "homingTurnDegrees": 0, "acquisitionRadius": 0, "ballisticAim": false},
+          "presentation": {"castParticle": "Hywind_Charged_Bolt", "projectileParticle": "Hywind_Charged_Bolt", "impactParticle": "Laser_Impact", "projectileScale": 1, "impactScale": 1}
+        }
+      }
+    },
+    {
+      "skillId": "lightning_coil", "family": "GROUND_ZONE", "secondaryFamilies": [],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 22, "cooldownSeconds": 18, "windupSeconds": 0,
+      "basePowerSource": "INNATE", "innateBasePower": 20, "scaling": "MAGIC",
+      "area": {"geometry": "DISC", "radius": 5, "height": 3, "placementRange": 12,
+        "lifetimeSeconds": 8, "periodic": true, "intervalSeconds": 0.25, "impactCount": 0, "perTargetHitCap": 32, "coefficient": 0,
+        "status": "", "element": "LIGHTNING", "candidateBudget": 64}
+    },
+    {
+      "skillId": "teleport", "family": "MOVEMENT", "secondaryFamilies": [],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 16, "cooldownSeconds": 8, "windupSeconds": 0,
+      "basePowerSource": "NONE", "innateBasePower": 0, "scaling": "NONE",
+      "movement": {"kind": "DASH", "maxDistance": 14, "minimumDurationSeconds": 0.05, "maximumDurationSeconds": 0.05,
+        "apexHeight": 0, "landingRadius": 0, "details": {"groundTarget": true, "travelSpeed": 100}}
+    },
+    {
+      "skillId": "static_field", "family": "GROUND_ZONE", "secondaryFamilies": [],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 24, "cooldownSeconds": 18, "windupSeconds": 0,
+      "basePowerSource": "NONE", "innateBasePower": 0, "scaling": "NONE",
+      "area": {"geometry": "DISC", "radius": 6, "height": 3, "placementRange": 20,
+        "lifetimeSeconds": 8, "periodic": true, "intervalSeconds": 1, "impactCount": 0,
+        "perTargetHitCap": 8, "targetIntervalSeconds": 1, "coefficient": 0,
+        "status": "LIGHTNING_VULNERABILITY", "statusSeconds": 5, "statusIntervalSeconds": 1,
+        "element": "LIGHTNING", "candidateBudget": 64}
+    },
+    {
+      "skillId": "storm_strike", "family": "REACTION", "secondaryFamilies": [],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": [],
+      "resourceType": "NONE", "resourceCost": 0, "cooldownSeconds": 0, "windupSeconds": 0,
+      "basePowerSource": "INNATE", "innateBasePower": 20, "scaling": "MAGIC",
+      "reaction": {"windowSeconds": 0, "qualifyingSignals": ["ELECTRIFIED_ZERO_TO_ONE"], "nativeHeld": true},
+      "strike": {"geometry": "RADIUS", "range": 0.5, "angleDegrees": 360, "lineHalfWidth": 0,
+        "repeats": 1, "repeatIntervalSeconds": 0, "targetCap": 1, "coefficient": 1.75,
+        "statusId": "", "statusSeconds": 0, "details": {"element": "LIGHTNING", "height": 3, "actionLockSeconds": 0, "movementFactor": 1}}
+    },
+    {
+      "skillId": "lightning_arrow", "family": "PROJECTILE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["BOW"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 8, "cooldownSeconds": 3, "windupSeconds": 0,
+      "basePowerSource": "WEAPON", "innateBasePower": 0, "scaling": "LIGHT",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Quick_Shot_Bow", "speed": 30,
+        "maxDistance": 28, "radius": 0.075, "gravity": 0, "targetCap": 1,
+        "coefficient": 1.05, "statusId": "ELECTRIFIED", "statusSeconds": 6,
+        "periodicCoefficient": 0, "periodicTicks": 0, "periodicIntervalSeconds": 0,
+        "ammoItemId": "Weapon_Arrow_Crude", "ammoQuantity": 1, "fullyCharged": false,
+        "knockbackDistance": 0, "configIdsByWeaponKind": {}, "speedsByWeaponKind": {},
+        "details": {"element": "LIGHTNING", "chillStacks": 0, "bossRootSlow": 0, "bossSlowOptInRoles": [],
+          "presentation": {"castParticle": "Lightning", "projectileParticle": "Bow_Signature_Projectile_Sparks", "impactParticle": "Laser_Impact", "projectileScale": 1, "impactScale": 1}}
+      }
+    },
+    {
+      "skillId": "mantle_of_thunder", "family": "AURA", "secondaryFamilies": [],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": [],
+      "resourceType": "NONE", "resourceCost": 0, "cooldownSeconds": 3, "windupSeconds": 0,
+      "basePowerSource": "INNATE", "innateBasePower": 20, "scaling": "MAGIC",
+      "support": {"kind": "MANTLE_OF_THUNDER", "range": 0, "radius": 8, "coefficient": 0,
+        "reservationFraction": 0.15, "toggleLockSeconds": 3, "durationSeconds": 0,
+        "movementIncreased": 0, "upkeepPerSecond": 0, "damageInterval": 0, "chillInterval": 0, "element": "LIGHTNING"}
+    }
+  ]
+}

@@ -101,14 +101,17 @@ public record ProjectileExecutionPlan(
             Vec3 direction,String configId,double speed,long now) {
         var center=generationZero(context,owner,origin,direction,configId,speed,now);
         var pattern=context.profile().projectile().details().pattern();
+        int authoredCount=pattern.selectedCount(context.rootCastId());
         int volley=context.compiledPlan().projectileModifiers().batchSize();
-        if(volley==1&&pattern.count()==1)return java.util.List.of(center);
+        if(volley==1&&authoredCount==1)return java.util.List.of(center);
         var batch=new java.util.ArrayList<ProjectileExecutionPlan>();
-        for(int authored=0;authored<pattern.count();authored++)for(int index=0;index<volley;index++)batch.add(new ProjectileExecutionPlan(center.rootCastId(),center.skillInstanceId(),
+        for(int authored=0;authored<authoredCount;authored++)for(int index=0;index<volley;index++)batch.add(new ProjectileExecutionPlan(center.rootCastId(),center.skillInstanceId(),
                 context.skillInstanceId()+"-batch-"+context.barrageBatch()+"-projectile-"+(authored*volley+index),owner,center.skillId(),center.compiledPlanHash(),
                 center.snapshot(),center.generation(),center.remainingContinuationBudgets(),center.remainingSpawnedEffects(),center.remainingTriggeredSecondaries(),
                 now+Math.round(authored*pattern.intervalSeconds()*1e9),configId,origin,
-                ProjectileContinuation.yaw(pattern.direction(direction,authored),volley==3?(index-1)*12:0).multiply(center.velocity().length()),
+                ProjectileContinuation.yaw(context.profile().skillId().equals("charged_bolt")
+                        ?pattern.randomizedDirection(direction,authored,authoredCount,context.rootCastId())
+                        :pattern.direction(direction,authored,authoredCount),volley==3?(index-1)*12:0).multiply(center.velocity().length()),
                 center.radius(),center.maxDistance(),center.maxLifetimeSeconds(),center.motion()));
         return java.util.List.copyOf(batch);
     }

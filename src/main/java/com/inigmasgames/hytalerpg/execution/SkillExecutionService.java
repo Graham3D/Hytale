@@ -211,6 +211,16 @@ public final class SkillExecutionService {
     }
     public boolean nextRuthless(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return ruthless.nextEmpowered(new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Key(actor,slot));}
     public int attunementStacks(UUID actor,com.inigmasgames.hytalerpg.domain.SkillSlot slot){return attunement.stacks(new AttunementLedger.Key(actor,slot),now());}
+    /** Read-only committed-loadout query used by passive reaction owners. */
+    public boolean equipped(UUID actor,String skillId){
+        var state=loadouts.getPresentationView(actor).state();
+        for(var slot:com.inigmasgames.hytalerpg.domain.SkillSlot.values())
+            if(state.skill(slot).filter(value->value.value().equals(skillId)).isPresent())return true;
+        return false;
+    }
+    public int effectiveSkillLevel(UUID actor,String skillId){
+        return EffectiveSkillLevel.resolve(loadouts.masteryXp(actor,skillId),0);
+    }
 
     public void recordExecutionFailure(SkillExecutionContext context,String stage,RuntimeException failure){
         emit(context.request(),RpgTraceEventType.SKILL_EXECUTION_FAILED,context.rootCastId(),context.skillInstanceId(),

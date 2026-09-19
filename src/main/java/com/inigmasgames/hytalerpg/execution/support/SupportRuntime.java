@@ -31,6 +31,18 @@ public final class SupportRuntime {
     public synchronized SkillExecutionContext activeContext(UUID actor,String skill){
         var aura=active.getOrDefault(actor,new LinkedHashMap<>()).get(skill);return aura==null?null:aura.context;
     }
+    /** Snapshot-only lookup for authoritative contribution observers; contains no ECS/world objects. */
+    public synchronized List<SkillExecutionContext> activeMemberContexts(String skill,UUID member,double now){
+        if(skill==null||member==null||!Double.isFinite(now))throw new IllegalArgumentException("INVALID_AURA_MEMBER_QUERY");
+        return active.entrySet().stream().sorted(Map.Entry.comparingByKey()).map(entry->entry.getValue().get(skill))
+                .filter(Objects::nonNull).filter(aura->now<=aura.validUntil&&aura.members.contains(member))
+                .map(aura->aura.context).toList();
+    }
+    public synchronized Set<UUID> activeMembers(SkillExecutionContext context,double now){
+        if(context==null||!Double.isFinite(now))throw new IllegalArgumentException("INVALID_AURA_MEMBER_SNAPSHOT");
+        var aura=active.getOrDefault(context.request().actorId(),new LinkedHashMap<>()).get(context.profile().skillId());
+        return aura==null||aura.context!=context||now>aura.validUntil?Set.of():Set.copyOf(aura.members);
+    }
     public synchronized SupportProgress state(UUID actor){return session(actor).state;}
     /** Persist immutable activation/toggle authority without any native object on the worker. */
     public synchronized java.util.concurrent.CompletionStage<Void> prepareDurable(SkillExecutionContext context,SupportWorldPort port){

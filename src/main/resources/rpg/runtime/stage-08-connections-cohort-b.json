@@ -46,16 +46,14 @@
       "skillId": "lightning_bolt",
       "family": "LINE",
       "secondaryFamilies": [],
-      "allowedMainHandKinds": [
-        "STAFF",
-        "WAND"
-      ],
+      "allowedMainHandKinds": [],
       "requiredOffHandKinds": [],
       "resourceType": "MANA",
       "resourceCost": 16,
       "cooldownSeconds": 6,
       "windupSeconds": 0.15,
-      "basePowerSource": "MAGIC_WEAPON",
+      "basePowerSource": "INNATE",
+      "innateBasePower": 20,
       "scaling": "MAGIC",
       "connection": {
         "kind": "LINE",
@@ -78,54 +76,8 @@
           "degreesPerSecond": 0,
           "contactCooldown": 0,
           "healFraction": 0,
-          "status": "",
-          "statusSeconds": 0
-        }
-      }
-    },
-    {
-      "skillId": "chain_lightning",
-      "family": "DIRECT_TARGET",
-      "secondaryFamilies": [],
-      "allowedMainHandKinds": [
-        "STAFF",
-        "WAND"
-      ],
-      "requiredOffHandKinds": [],
-      "resourceType": "MANA",
-      "resourceCost": 24,
-      "cooldownSeconds": 10,
-      "windupSeconds": 0,
-      "basePowerSource": "MAGIC_WEAPON",
-      "scaling": "MAGIC",
-      "connection": {
-        "kind": "CHAIN",
-        "range": 22,
-        "width": 0.02,
-        "height": 0.02,
-        "depth": 0,
-        "speed": 0,
-        "lifetimeSeconds": 0.25,
-        "intervalSeconds": 0.08,
-        "coefficient": 1.25,
-        "upkeepPerSecond": 0,
-        "radius": 0,
-        "originHeight": 1.35,
-        "element": "LIGHTNING",
-        "details": {
-          "jumpRadius": 8,
-          "jumpCoefficients": [
-            1.25,
-            1,
-            0.8,
-            0.65
-          ],
-          "bladeCount": 0,
-          "degreesPerSecond": 0,
-          "contactCooldown": 0,
-          "healFraction": 0,
-          "status": "",
-          "statusSeconds": 0
+          "status": "ELECTRIFIED",
+          "statusSeconds": 6
         }
       }
     },

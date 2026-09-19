@@ -264,6 +264,24 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         }
     }
     public void cancel(UUID owner,String reason){corpses.cancelUncommitted(owner);for(var lease:registry.cancel(owner))emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason",reason));}
+    /** Relocates existing native entities only; ownership, Health, expiry and attack clocks remain untouched. */
+    public int relocateOwned(Store<EntityStore> store,UUID owner,UUID world,Vec3 destination){
+        var leases=registry.owned(Objects.requireNonNull(owner),Objects.requireNonNull(world));
+        var points=com.inigmasgames.hytalerpg.execution.summon.SummonFormation.points(Objects.requireNonNull(destination),Math.max(1,leases.size()));
+        int moved=0;
+        for(int i=0;i<leases.size();i++){
+            var lease=leases.get(i);var ref=store.getExternalData().getRefFromUUID(lease.entity());
+            if(!alive(store,ref))continue;
+            Vec3 requested=points.get(i),ground=HytaleAreaQueries.ground(store,requested.add(new Vec3(0,2,0)),new Vec3(0,-1,0),4).orElse(destination);
+            var transform=store.getComponent(ref,TransformComponent.getComponentType());
+            if(transform==null)continue;
+            transform.teleportPosition(vector(ground));
+            var marker=store.getComponent(ref,SummonProjection.getComponentType());if(marker!=null)marker.nextQuery=0;
+            var npc=store.getComponent(ref,NPCEntity.getComponentType());if(npc!=null)npc.saveLeashInformation(vector(destination),transform.getRotation());
+            moved++;emit(lease,RpgTraceEventType.SUMMON_FOLLOW_STATE,Map.of("state","TELEPORT_WITH_OWNER","destination",ground.toString(),"preservedState",true));
+        }
+        return moved;
+    }
     @Override public Query<EntityStore> getQuery(){return Query.and(SummonProjection.getComponentType(),NPCEntity.getComponentType(),TransformComponent.getComponentType());}
     @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.BEFORE,RoleSystems.BehaviourTickSystem.class));}
     @Override public void tick(float delta,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){

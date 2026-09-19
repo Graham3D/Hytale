@@ -641,6 +641,8 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
         RpgPlayerStateRepository.LoadResult loaded = repository.load(player);
         RpgPlayerState state = loaded.state();
         List<String> loadWarnings = new ArrayList<>(loaded.warnings());
+        boolean lightningMigrated = migrateLightningIds(state);
+        if (lightningMigrated) loadWarnings.add("LIGHTNING_SKILL_IDS_MIGRATED");
         for (String id : state.equippedSkills) if (id != null && catalog.skill(new SkillId(id)).isEmpty())
             loadWarnings.add("UNKNOWN_SKILL:" + id);
         for (String id : state.equippedPassives) if (id != null && catalog.passive(new PassiveId(id)).isEmpty())
@@ -662,7 +664,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
                 state.revision++;
                 loadWarnings.add("PASSIVE_NODES_RECONCILED:"+state.inactivePassives);
             }
-            if(loaded.migrated()||inactiveChanged)repository.save(state);
+            if(loaded.migrated()||inactiveChanged||lightningMigrated)repository.save(state);
         }
         if (loaded.migrated()) trace(player, RpgTraceEventType.MIGRATION, reference(),
                 details("sourceSchemaVersion", loaded.sourceSchema(), "schemaVersion", state.schemaVersion,
@@ -676,6 +678,23 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
             trace(player,RpgTraceEventType.PROGRESSION_REWARD_RECOVERED,reference(),details("operation","LOAD_RECOVERY",
                     "sequence",holder.state.rewards.sequence(),"receiptHash",holder.state.rewards.lastReceiptHash()));
         return holder;
+    }
+    private static boolean migrateLightningIds(RpgPlayerState state) {
+        boolean changed=false;
+        changed|=migrateSkillId(state,"spark","charged_bolt");
+        changed|=migrateSkillId(state,"chain_lightning","lightning_bolt");
+        return changed;
+    }
+
+    private static boolean migrateSkillId(RpgPlayerState state,String from,String to){
+        boolean changed=false;
+        for(int i=0;i<state.equippedSkills.length;i++)if(from.equals(state.equippedSkills[i])){state.equippedSkills[i]=to;changed=true;}
+        if(state.learnedSkills.remove(from)){state.learnedSkills.add(to);changed=true;}
+        Long mastery=state.skillMastery.remove(from);
+        if(mastery!=null){state.skillMastery.merge(to,mastery,Math::max);changed=true;}
+        var cooldown=state.cooldowns.remove(from);
+        if(cooldown!=null){state.cooldowns.putIfAbsent(to,cooldown);changed=true;}
+        return changed;
     }
 
     private void removeRoutesToSkill(RpgPlayerState state, SkillSlot slot) {

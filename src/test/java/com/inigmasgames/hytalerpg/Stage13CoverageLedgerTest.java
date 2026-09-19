@@ -28,8 +28,8 @@ class Stage13CoverageLedgerTest {
             skills.add(Map.of("id",skill.id().value(),"name",skill.name(),"family",p.family(),"status",status,"activationGate",gate,"limitations",limitations,"connectedProof",false));
             rows.append("| ").append(skill.name()).append(" (`").append(skill.id().value()).append("`) | ").append(p.family()).append(" | ").append(status).append(" | ").append(String.join("; ",limitations)).append(" |\n");
         }
-        assertEquals(91,skills.size());assertEquals(91,profiles.all().size());assertEquals(3,gates.size());
-        assertTrue(gates.containsKey("frenzy"));assertTrue(gates.containsKey("guard"));assertTrue(gates.containsKey("bone_cage"));
+        assertEquals(96,skills.size());assertEquals(96,profiles.all().size());assertEquals(4,gates.size());
+        assertTrue(gates.containsKey("frenzy"));assertTrue(gates.containsKey("guard"));assertTrue(gates.containsKey("bone_cage"));assertTrue(gates.containsKey("storm_strike"));
         assertFalse(gates.containsKey("snipe")); // T owner-authored range; connected release still unverified.
         rows.append("\n## Passives\n\nEvery row has retained compiler/runtime tests; exact eligible/rejected targets are in the 6,030-cell matrix. Native/client behavior is still unverified.\n\n| Passive | Modifier operations | Status |\n|---|---|---|\n");
         for(var p:catalog.passives().stream().sorted(Comparator.comparing(v->v.id().value())).toList()){
@@ -40,7 +40,7 @@ class Stage13CoverageLedgerTest {
         assertEquals(67,passives.size());assertTrue(passives.stream().noneMatch(p->p.get("name").equals("Swift Recovery")));
         Path output=Path.of("build/stage13-hardening");Files.createDirectories(output);
         Files.writeString(output.resolve("coverage.json"),new GsonBuilder().setPrettyPrinting().create().toJson(Map.of("skills",skills,"passives",passives,"runtimeGates",gates,
-            "releaseReady",false,"connectedProof",false,"classificationCompleteForRelease",false,"explanation","Three native integration gaps are not established universal engine impossibilities; do not promote them to implemented/proven-capability-blocked.")));
+            "releaseReady",false,"connectedProof",false,"classificationCompleteForRelease",false,"explanation","Four native integration gates are not established universal engine impossibilities; do not promote them to implemented/proven-capability-blocked.")));
         Files.writeString(output.resolve("coverage.md"),rows);
     }
 }

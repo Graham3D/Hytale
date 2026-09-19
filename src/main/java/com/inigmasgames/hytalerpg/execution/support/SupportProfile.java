@@ -17,7 +17,8 @@ public record SupportProfile(Kind kind,double range,double radius,double coeffic
         this(kind,range,radius,coefficient,reservationFraction,toggleLockSeconds,0,0);
     }
     public enum Kind { HEAL, MANAGUARD, MANA_REGEN, TAUNT, WEAKEN, MARK, FEAR, RALLY, HOWL, REFLECT, SHIELD, IMBUE,
-        THORNS, CHILL_AURA, COOLDOWN_AURA, DAMAGE_AURA, OVERFLOW, SHARED_SHIELD, CONSUME_MINION, MAX_HEALTH_DAMAGE_CAP, MANTLE_OF_FLAME }
+        THORNS, CHILL_AURA, COOLDOWN_AURA, DAMAGE_AURA, OVERFLOW, SHARED_SHIELD, CONSUME_MINION, MAX_HEALTH_DAMAGE_CAP, MANTLE_OF_FLAME,
+        MANTLE_OF_THUNDER }
     public SupportProfile {
         if(kind==null)throw new IllegalArgumentException("Support kind missing");
         for(double value:new double[]{range,radius,coefficient,reservationFraction,toggleLockSeconds,durationSeconds,movementIncreased,upkeepPerSecond,damageInterval,chillInterval})
@@ -30,8 +31,8 @@ public record SupportProfile(Kind kind,double range,double radius,double coeffic
         if(kind==Kind.MANTLE_OF_FLAME&&(reservationFraction!=0||upkeepPerSecond!=0||durationSeconds!=0||damageInterval!=0||chillInterval!=0))
             throw new IllegalArgumentException("MANTLE_HAS_NO_RESERVATION_UPKEEP_OR_TIMER_PAYLOAD");
     }
-    public boolean aura(){return kind==Kind.MANAGUARD||kind==Kind.MANA_REGEN||kind==Kind.THORNS||kind==Kind.CHILL_AURA||kind==Kind.COOLDOWN_AURA||kind==Kind.DAMAGE_AURA||kind==Kind.MANTLE_OF_FLAME;}
-    public boolean allyAura(){return kind==Kind.MANA_REGEN||kind==Kind.THORNS||kind==Kind.COOLDOWN_AURA;}
+    public boolean aura(){return kind==Kind.MANAGUARD||kind==Kind.MANA_REGEN||kind==Kind.THORNS||kind==Kind.CHILL_AURA||kind==Kind.COOLDOWN_AURA||kind==Kind.DAMAGE_AURA||kind==Kind.MANTLE_OF_FLAME||kind==Kind.MANTLE_OF_THUNDER;}
+    public boolean allyAura(){return kind==Kind.MANA_REGEN||kind==Kind.THORNS||kind==Kind.COOLDOWN_AURA||kind==Kind.MANTLE_OF_THUNDER;}
     public boolean hostileAura(){return kind==Kind.CHILL_AURA||kind==Kind.COOLDOWN_AURA||kind==Kind.DAMAGE_AURA;}
     public boolean finiteEffect(){return !aura()&&kind!=Kind.HEAL;}
     public boolean hostileTarget(){return kind==Kind.TAUNT||kind==Kind.WEAKEN||kind==Kind.MARK||kind==Kind.FEAR;}

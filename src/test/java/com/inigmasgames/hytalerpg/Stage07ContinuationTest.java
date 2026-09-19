@@ -118,7 +118,7 @@ class Stage07ContinuationTest {
         var catalog=com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical();var compatibility=new com.inigmasgames.hytalerpg.links.CompatibilityService();
         for(String passive:List.of("piercing","fork","chain","return")) {
             assertTrue(compatibility.assess(catalog.skill(new SkillId("fire_bolt")).orElseThrow(),catalog.passive(new PassiveId(passive)).orElseThrow()).accepted());
-            for(String denied:List.of("quick_slash","wind_cutter","chain_lightning"))assertFalse(compatibility.assess(
+            for(String denied:List.of("quick_slash","wind_cutter"))assertFalse(compatibility.assess(
                     catalog.skill(new SkillId(denied)).orElseThrow(),catalog.passive(new PassiveId(passive)).orElseThrow()).accepted());
         }
     }

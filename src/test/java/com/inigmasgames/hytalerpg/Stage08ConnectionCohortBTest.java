@@ -12,19 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import static com.inigmasgames.hytalerpg.Stage08ConnectionTest.*;
 
 class Stage08ConnectionCohortBTest {
-    @Test void exactFiveProfilesCompleteStage08WithoutExpandingCatalog() {
-        var p=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(36+Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES,p.all().values().stream().filter(profile->profile.support()==null&&profile.summon()==null&&profile.summonAction()==null&&profile.conversion()==null&&profile.cage()==null).count());
+    @Test void retiredChainLightningLeavesFourCohortProfilesAndInternalChainCapability() {
+        var p=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());
+        assertFalse(p.supports("chain_lightning"));
         var root=p.require("root_lash");assertEquals(ConnectionProfile.Kind.TETHER,root.connection().kind());assertEquals(12,root.connection().range());
         assertEquals(.7,root.connection().width());assertEquals(.7,root.damageCoefficient());assertEquals(Map.of("ROOT",1.5),root.authoredStatuses());assertEquals(9,root.resourceCost());
         var line=p.require("lightning_bolt");assertEquals(.15,line.windupSeconds());assertEquals(1.45,line.damageCoefficient());assertEquals(24,line.connection().range());
-        var chain=p.require("chain_lightning");assertEquals(Stage04SkillProfile.Family.DIRECT_TARGET,chain.family());assertEquals(.08,chain.connection().intervalSeconds());
-        assertEquals(List.of(1.25,1d,.8,.65),chain.connection().details().jumpCoefficients());assertEquals(8,chain.connection().details().jumpRadius());
         var orbit=p.require("orbiting_shadow_blades");assertEquals(4,orbit.connection().details().bladeCount());assertEquals(120,orbit.connection().details().degreesPerSecond());
         assertEquals(2.8,orbit.connection().range());assertEquals(.3,orbit.connection().radius());assertEquals(1.1,orbit.connection().originHeight());assertEquals(.75,orbit.connection().details().contactCooldown());
         var drain=p.require("life_drain");assertEquals(0,drain.resourceCost());assertEquals(8,drain.cooldownSeconds());assertEquals(5,drain.connection().upkeepPerSecond());assertEquals(.6,drain.connection().details().healFraction());
     }
     @Test void requiredTargetAbsenceRejectsBeforeCostOrCooldown() {
-        for(String skill:List.of("root_lash","chain_lightning","life_drain")) {
+        for(String skill:List.of("root_lash","life_drain")) {
             var h=new Harness(skill);assertFalse(h.cast().committed());assertEquals(200,h.mana);assertEquals(0,h.resourceWrites);
             assertTrue(h.kernel.cooldowns().canActivate(h.owner,skill));assertEquals(0,h.runtime.size());
         }
@@ -49,27 +48,12 @@ class Stage08ConnectionCohortBTest {
         var h=new Harness("lightning_bolt");h.cast();assertTrue(h.service.cancel(h.owner,"NATIVE_DAMAGE_INTERRUPT"));
         assertEquals(200,h.mana);assertTrue(h.hits.isEmpty());assertTrue(h.kernel.cooldowns().canActivate(h.owner,"lightning_bolt"));
     }
-    @Test void chainUsesFourDistinctTargetsAtExactOffsetsAndCoefficients() {
-        var h=chain();assertTrue(h.cast().committed());assertEquals(1,h.hits.size());h.advance(.079);assertEquals(1,h.hits.size());
-        h.advance(.08);assertEquals(2,h.hits.size());h.advance(.16);assertEquals(3,h.hits.size());h.advance(.24);assertEquals(4,h.hits.size());
-        assertEquals(List.of(id(1),id(2),id(3),id(4)),h.hits.stream().map(Hit::id).toList());assertEquals(List.of(1.25,1d,.8,.65),h.hits.stream().map(Hit::coefficient).toList());
-        assertEquals(176,h.mana);assertEquals(1,h.resourceWrites);assertEquals(List.of("CHAIN_COMPLETE"),h.ends);assertEquals(0,h.runtime.size());
-    }
-    @Test void chainTieBreakIsStableAndPreviousDeathKeepsLastImpactPoint() {
-        var h=new Harness("chain_lightning");h.targets.add(enemy(1,0,1.35,5));h.targets.add(enemy(3,-4,1.35,5));h.targets.add(enemy(2,4,1.35,5));h.cast();
-        h.targets.removeIf(t->t.id().equals(id(1)));h.advance(.08);assertEquals(id(2),h.hits.getLast().id());assertEquals(2,h.hits.size());
-    }
-    @Test void chainDoesNotRevisitOrJumpOutsideRadiusOrThroughWall() {
-        var h=new Harness("chain_lightning");h.targets.add(enemy(1,0,1.35,5));h.targets.add(enemy(2,8.11,1.35,5));h.cast();h.advance(.08);
-        assertEquals(1,h.hits.size());assertEquals(List.of("CHAIN_NO_VALID_JUMP"),h.ends);
-        var blocked=new Harness("chain_lightning");blocked.wallZ=6;blocked.targets.add(enemy(1,0,1.35,5));blocked.targets.add(enemy(2,0,1.35,7));blocked.cast();blocked.advance(.08);assertEquals(1,blocked.hits.size());
-    }
-    @Test void chainCandidateOverflowRejectsNextWholeJump() {
-        var h=chain();h.cast();h.overflow=true;h.advance(.08);assertEquals(1,h.hits.size());assertEquals(List.of("CANDIDATE_BUDGET_REJECTED"),h.ends);assertEquals(176,h.mana);
-    }
-    @Test void baseChainIsNotPermissionForProjectileChainPassive() {
-        for(String passive:List.of("chain","fork","return","piercing")){var h=new Harness("chain_lightning");assertFalse(h.link(passive));}
-        for(String passive:List.of("echo","skill_delay")){var h=new Harness("life_drain");assertFalse(h.link(passive));}
+    @Test void chainLightningIsRetiredAndLightningBoltAcceptsOnlyItsAuthoredChainExtension() {
+        var profiles=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());
+        assertFalse(profiles.supports("chain_lightning"));
+        var h=new Harness("lightning_bolt");assertTrue(h.link("chain"));
+        for(String passive:List.of("fork","return","piercing")){var denied=new Harness("lightning_bolt");assertFalse(denied.link(passive));}
+        for(String passive:List.of("echo","skill_delay")){var denied=new Harness("life_drain");assertFalse(denied.link(passive));}
         var drain=Stage01BTestSupport.bundle().catalog().skill(new SkillId("life_drain")).orElseThrow();assertFalse(drain.canCrit());
     }
     @Test void fourBladeOffsetsShareOneTargetCooldownNotFourDpsClocks() {
@@ -125,7 +109,6 @@ class Stage08ConnectionCohortBTest {
     }
     static String id(int n){return new UUID(0,n).toString();}
     static ConnectionWorldPort.Target enemy(int n,double x,double y,double z){return target(id(n),x,y,z);}
-    static Harness chain(){var h=new Harness("chain_lightning");for(int n=1;n<=4;n++)h.targets.add(enemy(n,(n-1)*7,1.35,5));return h;}
     static Harness orbit(){var h=new Harness("orbiting_shadow_blades");h.targets.add(new ConnectionWorldPort.Target(id(1),new AreaGeometry.Bounds(new Vec3(-4,.8,-4),new Vec3(4,1.4,4))));return h;}
     static Harness drain(){var h=new Harness("life_drain");h.targets.add(enemy(1,0,1.35,5));return h;}
 }

@@ -22,7 +22,7 @@ import java.util.Set;
 
 /** Immutable canonical catalog loaded from checked-in, versioned content data. */
 public final class RpgCatalog {
-    public static final int EXPECTED_SKILLS = 91;
+    public static final int EXPECTED_SKILLS = 96;
     public static final int EXPECTED_PASSIVES = 67;
 
     private final Map<SkillId, SkillDefinition> skills;

@@ -1,0 +1,8 @@
+{
+  "RenderMode":"Erosion","ParticleRotationInfluence":"Billboard","LinearFiltering":true,"LightInfluence":0.0,
+  "ParticleRotateWithSpawner":true,"MaxConcurrentParticles":1,"ParticleLifeSpan":{"Min":8,"Max":8},
+  "SpawnRate":{"Min":1,"Max":1},"SpawnBurst":true,"TotalParticles":{"Min":1,"Max":1},"LifeSpan":8,
+  "Particle":{"Texture":"Particles/Textures/Hywind/Lightning/staticfield.png","FrameSize":{"Width":64,"Height":64},"ScaleRatioConstraint":"OneToOne","SoftParticles":"Require",
+    "InitialAnimationFrame":{"Opacity":0.9,"Color":"#ffffff","FrameIndex":{"Min":0,"Max":0},"Scale":{"X":{"Min":6,"Max":6}}},
+    "Animation":{"16":{"FrameIndex":{"Min":1,"Max":1}},"32":{"FrameIndex":{"Min":2,"Max":2}},"48":{"FrameIndex":{"Min":3,"Max":3}},"64":{"FrameIndex":{"Min":4,"Max":4}},"80":{"FrameIndex":{"Min":5,"Max":5}},"100":{"Opacity":0.25,"FrameIndex":{"Min":0,"Max":0}}}}
+}

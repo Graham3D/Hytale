@@ -147,6 +147,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final PeriodicStatusRuntime<SkillExecutionContext, PeriodicTarget> periodicStatuses = new PeriodicStatusRuntime<>();
     private final HitProcRuntime hitProcs=new HitProcRuntime();
     private final ChillSourceRegistry chillSources=new ChillSourceRegistry();
+    private final com.inigmasgames.hytalerpg.execution.lightning.LightningRuntime lightning=
+            new com.inigmasgames.hytalerpg.execution.lightning.LightningRuntime();
     private final ProliferationRuntime proliferation=new ProliferationRuntime();
     private final OwnedFieldBudget fieldCapacity=new OwnedFieldBudget();
     private final AreaRuntime areas = new AreaRuntime(fieldCapacity);
@@ -352,7 +354,26 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                                       HytaleBossBarTracker bosses) {
         this.inputs = inputs; this.executions = executions; this.kernel = kernel;
         this.trace = trace; this.reactions = reactions; this.vfx = vfx; this.bosses = bosses;
-        this.nativeBasics=new NativeBasicAttackObserver(kernel,trace,executions::observeNativeBasicRootHit);
+        this.nativeBasics=new NativeBasicAttackObserver(kernel,trace,this::onNativeBasicHit);
+    }
+
+    private void onNativeBasicHit(UUID actor,UUID victim,double actualHealthLoss,double now){
+        executions.observeNativeBasicRootHit(actor,now);
+        chargeMantles(actor,victim,actualHealthLoss,now);
+    }
+
+    private void chargeMantles(UUID contributor,UUID victim,double actualHealthLoss,double now){
+        if(support==null||actualHealthLoss<=0||!kernel.statuses().inspect(victim).active().containsKey(RpgStatusType.ELECTRIFIED))return;
+        for(var mantle:support.runtime().activeMemberContexts("mantle_of_thunder",contributor,now)){
+            UUID owner=mantle.request().actorId();
+            var charged=lightning.mantleDamage(owner,actualHealthLoss,mantle.snapshot().basePower(),true,now);
+            if(charged.code().equals("ALACRITY_TRIGGERED"))for(var member:support.runtime().activeMembers(mantle,now)){
+                kernel.statuses().apply(member,RpgStatusType.ALACRITY,ControlProfile.NORMAL,6);
+                kernel.cooldowns().setAuraRate(member,.30,1,.25);
+            }
+            emit(mantle,RpgTraceEventType.STATUS_REQUEST,Map.of("status","MANTLE_CHARGE","contributor",contributor,
+                    "victim",victim,"result",charged.code(),"amount",charged.amount(),"state",charged.state()));
+        }
     }
 
     @Override public Query<EntityStore> getQuery() {
@@ -609,6 +630,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 Map.of("distance", finalPosition.subtract(motion.plan.origin()).horizontalLength(), "clamped", clamped,
                         "durationSeconds", motion.elapsed,"validatedTravelMeters",motion.travel.meters(),
                         "travelEvidenceValid",motion.travel.valid(),"momentumIncreased",motion.travel.increased(motion.context)));
+        if(motion.context.profile().skillId().equals("teleport")){
+            Store<EntityStore> store=buffer.getStore();
+            presentAuthoredParticle(motion.context,store,motion.plan.origin(),"Teleport","TELEPORT_ORIGIN");
+            presentAuthoredParticle(motion.context,store,finalPosition,"Cinematic_Portal_Appear_XXL","TELEPORT_ARRIVAL");
+            if(summons!=null)summons.relocateOwned(store,actor,motion.context.target().worldId(),finalPosition);
+        }
         if (motion.context.profile().hasFamily(Stage04SkillProfile.Family.STRIKE)&&!motion.context.profile().movement().details().pathDamage()
                 &&movementSupported(buffer.getStore(),motion.actor,finalPosition)) {
             Ref<EntityStore> ref = motion.actor;
@@ -1023,7 +1050,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             connections.start(context,System.nanoTime()/1e9,connectionWorld());
             return SkillExecutionResult.committed("CONNECTION_STARTED",0,0);
         }
-        @Override public SkillExecutionResult executeSupport(SkillExecutionContext context){return support.execute(store,actor,context,buffer);}
+        @Override public SkillExecutionResult executeSupport(SkillExecutionContext context){
+            var result=support.execute(store,actor,context,buffer);
+            if(context.profile().skillId().equals("mantle_of_thunder")){
+                if(result.code().equals("AURA_ACTIVE"))lightning.activateMantle(playerRef.getUuid(),System.nanoTime()/1e9);
+                else if(result.code().equals("AURA_OFF"))lightning.forget(playerRef.getUuid());
+            }
+            return result;
+        }
         @Override public SkillExecutionResult executeConversion(SkillExecutionContext context){return conversions.execute(store,buffer,actor,context);}
         @Override public com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets captureSummonModifiers(com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets authored){
             return support==null?authored:support.runtime().finite().outgoingModifiers(playerRef.getWorldUuid(),playerRef.getUuid(),authored,System.nanoTime()/1e9);
@@ -1168,7 +1202,19 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                         }
                         applyProjectileKnockback(context,value);
                     }
-                    if(!outcome.cancelled()&&!authored.status().isBlank()&&ref.isValid()) {
+                    if(!outcome.cancelled()&&outcome.actualHealthLoss()>0&&authored.status().equals("ELECTRIFIED")&&ref.isValid()){
+                        UUID targetId=UUID.fromString(target.id());var before=kernel.statuses().inspect(targetId).active().get(RpgStatusType.ELECTRIFIED);
+                        String gate=context.profile().skillId().equals("ball_lightning")
+                                ?lightning.ballLightning(playerRef.getUuid(),targetId,System.nanoTime()/1e9,deterministicRoll(context.rootCastId(),targetId,"BALL")):"APPLY";
+                        if(gate.equals("APPLY")){
+                            var status=kernel.statuses().applyElectrified(targetId,6);
+                            buffer.ensureComponent(ref,AreaStatusProjection.getComponentType());
+                            HytaleAreaStatuses.synchronize(kernel.statuses(),targetId,ref,store,actor);
+                            emit(context,RpgTraceEventType.STATUS_APPLIED,Map.of("status","ELECTRIFIED","targetId",target.id(),"stacks",status.stacks(),"reason",gate));
+                            if(before==null&&executions.equipped(playerRef.getUuid(),"storm_strike"))triggerStormStrike(context,value);
+                        }else emit(context,RpgTraceEventType.STATUS_REJECTED,Map.of("status","ELECTRIFIED","targetId",target.id(),"reason",gate));
+                    }
+                    if(!outcome.cancelled()&&!authored.status().isBlank()&&!authored.status().equals("ELECTRIFIED")&&ref.isValid()) {
                         observeControl(store,ref,context,()->{
                         var npc=store.getComponent(ref,NPCEntity.getComponentType());
                         var control=areaControls.resolve(npc.getRoleName(),value.protectedTarget(),value.boss());
@@ -1181,6 +1227,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                         HytaleAreaStatuses.synchronize(kernel.statuses(),UUID.fromString(target.id()),ref,store,actor);
                         });
                     }
+                    if(context.profile().skillId().equals("lightning_bolt")&&!outcome.cancelled()&&outcome.actualHealthLoss()>0)
+                        presentAuthoredParticle(context,store,target.bounds().centre(),"Laser_Impact","LIGHTNING_BOLT_IMPACT");
                     if(!outcome.cancelled()&&effectCenter!=null&&ProfileComponentPolicy.enemyPosition(context.profile()))applyPassiveAreaPosition(context,ref,effectCenter);
                     return outcome.actualHealthLoss()+splashHealthLost;
                 }
@@ -1200,6 +1248,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 public void present(SkillExecutionContext context,ConnectionShape shape,String phase,double seconds) {
                     if(context.profile().connection().friendlyTether()){
                         // Friendly tethers are presented coherently through presentTether; never respawn particles here.
+                        return;
+                    }
+                    if(context.profile().skillId().equals("lightning_bolt")){
+                        Vec3 delta=shape.end().subtract(shape.start());double length=delta.length();
+                        int samples=Math.max(1,Math.min(16,(int)Math.ceil(length/1.5)));Vec3 step=delta.multiply(1.0/samples);
+                        for(int i=0;i<=samples;i++)presentAuthoredParticle(context,store,shape.start().add(step.multiply(i)),"Hywind_Lightning_Strike","LIGHTNING_BOLT_"+phase);
                         return;
                     }
                     try{vfx.presentConnection(store.getExternalData().getWorld(),shape,context.profile().connection().element(),phase,seconds);}
@@ -1268,6 +1322,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public SkillExecutionResult executeArea(SkillExecutionContext context) {
             if(context.target()!=null) {areaPlacement=context.target().point();areaDirection=context.target().direction();}
             if (areaPlacement == null || areaDirection == null) throw new IllegalStateException("AREA_PLACEMENT_NOT_VALIDATED");
+            if(context.profile().skillId().equals("lightning_coil"))
+                lightning.placeCoil(context.skillInstanceId(),playerRef.getUuid(),context.snapshot().basePower(),System.nanoTime()/1e9);
             areas.start(context, areaPlacement, areaDirection, System.nanoTime() / 1_000_000_000.0,
                     context.compiledPlan().executionModifiers().radiusFactor(), areaWorld());
             return SkillExecutionResult.committed("AREA_DISPATCHED", 0, 0);
@@ -1318,7 +1374,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                                 "error",failure.getClass().getSimpleName(),"message",boundedMessage(failure)));
                     }
                 }
-                @Override public void endVisuals(SkillExecutionContext c){blizzardVisuals.end(c,buffer);}
+                @Override public void endVisuals(SkillExecutionContext c){
+                    blizzardVisuals.end(c,buffer);
+                    if(c.profile().skillId().equals("static_field"))lightning.forgetField(c.skillInstanceId());
+                    if(c.profile().skillId().equals("lightning_coil"))lightning.expireCoil(c.skillInstanceId(),System.nanoTime()/1e9+8);
+                }
                 @Override public void descendingVisual(SkillExecutionContext context, Vec3 position, double seconds) {
                     vfx.presentDescending(store.getExternalData().getWorld(), position, context.profile().area().element(), seconds);
                 }
@@ -1330,12 +1390,23 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     NPCEntity npc = store.getComponent(reference, NPCEntity.getComponentType());
                     ControlProfile control = areaControls.resolve(npc.getRoleName(), candidate.protectedTarget(), candidate.boss());
                     if (control.protectedEntity()) return false;
+                    if(context.profile().skillId().equals("static_field")){
+                        var exposure=lightning.expose(context.skillInstanceId(),UUID.fromString(target.id()),true,1,System.nanoTime()/1e9);
+                        if(exposure.applyVulnerability()){
+                            var applied=kernel.statuses().apply(UUID.fromString(target.id()),RpgStatusType.LIGHTNING_VULNERABILITY,control,5);
+                            emit(context,RpgTraceEventType.STATUS_APPLIED,Map.of("targetId",target.id(),"status",applied.type().name(),
+                                    "durationSeconds",applied.remainingSeconds(),"exposureSeconds",exposure.exposureSeconds()));
+                        }
+                        return true;
+                    }
+                    if(context.profile().skillId().equals("lightning_coil"))return true; // construct scans only; charge authority observes weapon roots
                     if (!payload.status().isBlank() && store.getComponent(reference, EffectControllerComponent.getComponentType()) == null)
                         return false;
                     String causeId = switch (payload.element()) {
                         case "COLD" -> "Ice"; case "FIRE" -> "Fire"; case "EARTH" -> "Earth";
                         case "POISON" -> "Poison"; case "PHYSICAL" -> "Physical"; case "NATURE" -> "RPG_Nature";
-                        case "VOID" -> "RPG_Void"; default -> throw new IllegalStateException("UNMAPPED_AREA_DAMAGE_CHANNEL");
+                        case "VOID" -> "RPG_Void"; case "LIGHTNING" -> "Lightning";
+                        default -> throw new IllegalStateException("UNMAPPED_AREA_DAMAGE_CHANNEL");
                     };
                     DamageCause cause = DamageCause.getAssetMap().getAsset(causeId);
                     if (cause == null) throw new IllegalStateException("MISSING_NATIVE_DAMAGE_CAUSE_" + causeId);
@@ -1373,6 +1444,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                         int sound=com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent.getAssetMap().getIndex("SFX_Ice_Ball_Death");
                         if(sound>=0)com.hypixel.hytale.server.core.universe.world.SoundUtil.playSoundEvent3d(sound,com.hypixel.hytale.protocol.SoundCategory.SFX,p.x(),p.y(),p.z(),store);
                         emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase",phase,"position",p.toString(),"template","Impact_Ice","sound","SFX_Ice_Ball_Death"));
+                        return;
+                    }
+                    if(context.profile().skillId().equals("static_field")){
+                        if(context.effects().once("STATIC_FIELD_PRESENT"))presentAuthoredParticle(context,store,shape.origin(),"Hywind_Static_Field","STATIC_FIELD");
+                        return;
+                    }
+                    if(context.profile().skillId().equals("lightning_coil")){
+                        if(context.effects().once("LIGHTNING_COIL_PRESENT"))presentAuthoredParticle(context,store,shape.origin(),"Goblin_Generator_On","LIGHTNING_COIL");
                         return;
                     }
                     vfx.presentArea(store.getExternalData().getWorld(), shape, phase, context.profile().area().element(),
@@ -1786,6 +1865,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(support!=null)buckets=frozenOutgoingSnapshot?support.runtime().finite().victimModifiers(
                     playerRef.getWorldUuid(),playerRef.getUuid(),UUID.fromString(target.stableId()),buckets,System.nanoTime()/1e9):
                     support.runtime().finite().damageModifiers(playerRef.getWorldUuid(),playerRef.getUuid(),UUID.fromString(target.stableId()),buckets,System.nanoTime()/1e9);
+            if(isLightning(cause))coefficient*=kernel.statuses().lightningDamageFactor(UUID.fromString(target.stableId()));
             DamageCalculationService.Result result = weaponHit!=null?weaponHit.calculate(kernel.damage(),component,effective,buckets,context.snapshot().criticalMultiplier()):kernel.damage().calculate(new DamageCalculationService.Request(
                     context.snapshot().basePower(), effective, coefficient,
                     buckets, !periodic, criticalChance,
@@ -1806,6 +1886,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             "multiplier", context.snapshot().criticalMultiplier()));
             EntityStatMap targetStats = store.getComponent(target.handle(), EntityStatMap.getComponentType());
             double before = health(targetStats);
+            boolean mantleEligible=kernel.statuses().inspect(UUID.fromString(target.stableId())).active().containsKey(RpgStatusType.ELECTRIFIED);
             var targetHealth=targetStats==null?null:targetStats.get(DefaultEntityStatTypes.getHealth());
             double minimum=targetHealth==null?Double.NaN:targetHealth.getMin();
             boolean frozenBefore=context.compiledPlan().hitProcs().shatter()&&kernel.statuses().inspect(UUID.fromString(target.stableId())).active().containsKey(RpgStatusType.FROZEN);
@@ -1820,6 +1901,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             rootComponent&&!periodic&&context.profile().strike()!=null?context.profile().strike().details().victimCoefficient():
                             com.inigmasgames.hytalerpg.combat.damage.VictimCoefficient.NONE),context);
             double after = health(targetStats);
+            if(mantleEligible&&!periodic&&canProc)chargeMantles(playerRef.getUuid(),UUID.fromString(target.stableId()),Math.max(0,before-after),System.nanoTime()/1e9);
             if(leechEligible)recoverObservedLeech(context,target,nativeResult,effectId);
             if(weaponHit==null&&!context.compiledPlan().conditionalRepeat().isEmpty()){
                 try{executions.observedConditionalRepeat(context,new ConditionalRepeatRuntime.Hit(UUID.fromString(target.stableId()),target.position(),rootComponent,
@@ -1848,12 +1930,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private String procElement(SkillExecutionContext c,DamageCause cause){
             if(cause==DamageCause.PHYSICAL)return "PHYSICAL";
             if(cause==DamageCause.getAssetMap().getAsset("Ice"))return "COLD";
+            if(cause==DamageCause.getAssetMap().getAsset("Lightning"))return "LIGHTNING";
             if(cause==DamageCause.PROJECTILE){
                 if(c.compiledPlan().finalTags().contains("PHYSICAL"))return "PHYSICAL";
                 if(c.compiledPlan().finalTags().contains("COLD"))return "COLD";
             }
             return "OTHER";
         }
+        private boolean isLightning(DamageCause cause){return cause!=null&&cause==DamageCause.getAssetMap().getAsset("Lightning");}
         private DamageOutcome resolvedProcDamage(SkillExecutionContext child,StrikeGeometryService.Candidate<Ref<EntityStore>> target,double amount,DamageCause cause,boolean periodic,String effect){
             var result=new HytaleDamageAdapter().applyResolved(target.handle(),damageAccessor(),actor,cause,new HytaleDamageMetadata(playerRef.getUuid(),child.rootCastId(),child.skillInstanceId(),child.request().correlationId(),amount,Double.NaN,effect,false,
                     child.derivedRelease()||child.request().origin()==SkillExecutionRequest.Origin.TRIGGERED?HytaleDamageMetadata.Origin.TRIGGERED:periodic?HytaleDamageMetadata.Origin.PERIODIC:HytaleDamageMetadata.Origin.DIRECT),amount,null,child);
@@ -2035,10 +2119,26 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     support.controlResolved(store,target.handle(),context,false,"NATIVE_EFFECT_STATE_CHANGED");
                 var result=batch.results().getLast();return result.outcome().name()+':'+result.type().name()+":stacks="+result.stacks();
             }
+            var electrifiedBefore=kernel.statuses().inspect(targetId).active().get(RpgStatusType.ELECTRIFIED);
+            int beforeStacks=electrifiedBefore==null?0:electrifiedBefore.stacks();
+            if(type==RpgStatusType.ELECTRIFIED){
+                double roll=deterministicRoll(context.rootCastId(),targetId,context.skillInstanceId());
+                String gate=switch(context.profile().skillId()){
+                    case "charged_bolt" -> lightning.chargedBolt(context.rootCastId(),targetId,roll);
+                    case "ball_lightning" -> lightning.ballLightning(playerRef.getUuid(),targetId,System.nanoTime()/1e9,roll);
+                    default -> "APPLY";
+                };
+                if(!gate.equals("APPLY")){
+                    emit(context,RpgTraceEventType.STATUS_REJECTED,Map.of("targetId",targetId,"status",type.name(),"reason",gate,"roll",roll));
+                    return gate;
+                }
+            }
             var npc=store.getComponent(target.handle(),NPCEntity.getComponentType());
             var result = type==RpgStatusType.ROOT
                     ? com.inigmasgames.hytalerpg.execution.projectile.ProjectileControlPolicy.root(kernel.statuses(),projectile,
                             targetId,context.rootCastId(),npc==null?"":npc.getRoleName(),control)
+                    : type==RpgStatusType.ELECTRIFIED
+                    ? kernel.statuses().applyElectrified(targetId,projectile.statusSeconds())
                     : projectile.statusSeconds() > 0.0
                     ? kernel.statuses().apply(targetId, type, control, projectile.statusSeconds())
                     : kernel.statuses().apply(targetId, type, control);
@@ -2057,7 +2157,36 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             trace.emit(playerRef.getUuid(), event, ids(context), Map.of("targetId", target.stableId(),
                     "status", result.type().name(), "stacks", result.stacks(),
                     "durationSeconds", result.remainingSeconds(), "detail", result.detail(),"nativeBehaviorVerified",false));
+            if(type==RpgStatusType.ELECTRIFIED&&context.profile().skillId().equals("lightning_arrow")
+                    && deterministicRoll(context.rootCastId(),targetId,"VULNERABILITY")<.25){
+                var vulnerability=kernel.statuses().apply(targetId,RpgStatusType.LIGHTNING_VULNERABILITY,control,5);
+                emit(context,RpgTraceEventType.STATUS_APPLIED,Map.of("targetId",targetId,"status",vulnerability.type().name(),
+                        "durationSeconds",vulnerability.remainingSeconds(),"detail",vulnerability.detail()));
+            }
+            if(type==RpgStatusType.ELECTRIFIED&&beforeStacks==0&&result.stacks()>0&&executions.equipped(playerRef.getUuid(),"storm_strike"))
+                triggerStormStrike(context,target);
             return result.outcome().name() + ':' + result.type().name() + ":stacks=" + result.stacks();
+        }
+
+        private void triggerStormStrike(SkillExecutionContext source,StrikeGeometryService.Candidate<Ref<EntityStore>> target){
+            double now=System.nanoTime()/1e9;
+            String verdict=lightning.stormStrike(playerRef.getUuid(),UUID.fromString(target.stableId()),true,
+                    source.derivedRelease(),source.profile().skillId().equals("storm_strike"),now);
+            if(!verdict.equals("TRIGGER"))return;
+            int level=executions.effectiveSkillLevel(playerRef.getUuid(),"storm_strike");
+            double coefficient=1.75*(1+.0125*Math.max(0,level-1));
+            var calculated=kernel.damage().calculate(new DamageCalculationService.Request(20,
+                    source.snapshot().derivedStats().effective(RpgAttribute.INT),coefficient,source.snapshot().modifiers(),true,
+                    source.snapshot().criticalChance(),source.snapshot().criticalMultiplier()));
+            resolvedProcDamage(source,target,calculated.preMitigationDamage(),DamageCause.getAssetMap().getAsset("Lightning"),false,
+                    source.skillInstanceId()+"/storm-strike");
+            presentAuthoredParticle(source,store,target.position().add(new Vec3(0,1,0)),"Hywind_Lightning_Strike","STORM_STRIKE");
+            presentAuthoredParticle(source,store,target.position(),"Laser_Impact","STORM_STRIKE_IMPACT");
+        }
+
+        private double deterministicRoll(String root,UUID target,String salt){
+            long value=java.util.UUID.nameUUIDFromBytes((root+'|'+target+'|'+salt).getBytes(java.nio.charset.StandardCharsets.UTF_8)).getLeastSignificantBits();
+            return (value>>>11)*0x1.0p-53;
         }
 
         private double applyProjectileKnockback(SkillExecutionContext context,

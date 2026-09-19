@@ -41,12 +41,12 @@ class Stage04ExecutionTest {
     @Test void sixPilotProfilesAreCanonicalAndPounceUsesInnatePower() {
         var catalog = com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical();
         var profiles = Stage04SkillProfiles.loadCanonical(catalog);
-        assertEquals(91, catalog.skills().size());
+        assertEquals(96, catalog.skills().size());
         assertEquals(67, catalog.passives().size());
         assertTrue(profiles.all().keySet().containsAll(Set.of(
                 "quick_slash", "heavy_swing", "shield_bash", "quickstep", "pounce", "riposte")));
         assertEquals(Stage04SkillProfiles.EXPECTED_STAGE04_PILOTS
-                + Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS + Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES,
+                + Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS + Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES + 4,
                 profiles.all().values().stream().filter(profile -> profile.area() == null && profile.connection() == null && profile.support() == null && profile.summon() == null && profile.summonAction() == null && profile.conversion() == null && profile.cage() == null).count());
         assertEquals("INNATE", profiles.require("pounce").basePowerSource());
         assertEquals(20.0, profiles.require("pounce").innateBasePower());

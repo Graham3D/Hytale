@@ -11,6 +11,7 @@ public final class NativeProjectilePayloads {
             case "PHYSICAL" -> "Physical";
             case "FIRE" -> "Fire";
             case "COLD" -> "Ice";
+            case "LIGHTNING" -> "Lightning";
             case "ARCANE" -> "RPG_Arcane";
             case "VOID" -> "RPG_Void";
             case "NECROTIC" -> "RPG_Necrotic";

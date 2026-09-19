@@ -32,7 +32,7 @@ class Stage10CageGateTest {
         assertEquals(10,Stage04SkillProfiles.EXPECTED_STAGE10_PROFILES);assertEquals(10,stage10.size());
         for(var id:stage10)assertTrue(profiles.supports(id),id);
         // The original 60 profiles remain; Stage13 explicitly adds the previously absent catalog records.
-        assertEquals(61,profiles.all().size()-Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES-3); // Includes the approved Stage10 development fixture.
-        assertEquals(91,Stage01BTestSupport.bundle().catalog().skills().size());
+        assertEquals(67,profiles.all().size()-Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES-3); // Includes the approved Stage10 development fixture and R048 Lightning profiles.
+        assertEquals(96,Stage01BTestSupport.bundle().catalog().skills().size());
     }
 }

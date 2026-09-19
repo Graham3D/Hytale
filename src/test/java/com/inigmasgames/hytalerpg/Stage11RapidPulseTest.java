@@ -13,7 +13,7 @@ class Stage11RapidPulseTest {
         for(String id:List.of("poison_cloud","vortex","earthquake","blizzard","wall_of_fire","void_beam","life_drain","ball_lightning","chilling_aura","reaping_storm"))assertTrue(f.accepts(id,"rapid_pulse"),id);
     }
     @Test void rejectsFlightContactsAndOneOffSequencesRatherThanChangingTheirSamplingClock(){
-        for(String id:List.of("snipe","quick_slash","fire_bolt","orbiting_shadow_blades","chain_lightning","avalanche","void_cataclysm","root_snare","wolf_summon","thorns_aura"))assertFalse(f.accepts(id,"rapid_pulse"),id);
+        for(String id:List.of("snipe","quick_slash","fire_bolt","orbiting_shadow_blades","avalanche","void_cataclysm","root_snare","wolf_summon","thorns_aura"))assertFalse(f.accepts(id,"rapid_pulse"),id);
     }
     @Test void auraHasIndependentDamageAndChillClocksWithoutUpkeepDiscount(){
         var a=f.profiles.require("chilling_aura").support();var p=f.effective("chilling_aura","rapid_pulse").support();

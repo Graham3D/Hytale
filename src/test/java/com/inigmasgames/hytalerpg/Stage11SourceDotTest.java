@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage11SourceDotTest {
     final Stage11FoundationTest f=new Stage11FoundationTest();
-    @Test void combustionPositiveAndTwoNegativeFixtures(){assertTrue(f.accepts("fire_bolt","combustion"));assertFalse(f.accepts("spark","combustion"));assertFalse(f.accepts("frost_bolt","combustion"));}
+    @Test void combustionPositiveAndTwoNegativeFixtures(){assertTrue(f.accepts("fire_bolt","combustion"));assertFalse(f.accepts("charged_bolt","combustion"));assertFalse(f.accepts("frost_bolt","combustion"));}
     @Test void virulenceCanonicalFixturesRemainContentCompatibilityNotProfileCoverage(){assertTrue(f.accepts("venom_spray","virulence"));assertTrue(f.accepts("poison_cloud","virulence"));assertFalse(f.accepts("fireball","virulence"));assertFalse(f.accepts("frost_bolt","virulence"));}
     @Test void concentratedVenomRequiresActualStackablePoison(){assertTrue(f.accepts("poison_cloud","concentrated_venom"));assertFalse(f.accepts("frost_bolt","concentrated_venom"));assertFalse(f.accepts("vortex","concentrated_venom"));}
     @Test void fireBoltPenaltyDoesNotEnterBurnCoefficientOrCrit(){

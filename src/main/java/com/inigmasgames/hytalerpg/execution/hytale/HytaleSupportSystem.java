@@ -216,7 +216,8 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
         NativeManaRegenerationAdapter.install(stats,()->runtime.manaRegenerationIncreased(player.getUuid(),System.nanoTime()/1e9));
         runtime.tick(player.getUuid(),System.nanoTime()/1e9,alive(store,ref),new Port(store,ref,buffer));
-        kernel.cooldowns().setAuraRate(player.getUuid(),runtime.cooldownRecoveryIncreased(player.getUuid(),System.nanoTime()/1e9),1,.25);
+        kernel.cooldowns().setAuraRate(player.getUuid(),runtime.cooldownRecoveryIncreased(player.getUuid(),System.nanoTime()/1e9)
+                +kernel.statuses().cooldownRecoveryRate(player.getUuid()),1,.25);
         try{if(kernel.cooldowns().checkpoint(player.getUuid()))cooldownSaveWarnings.remove(player.getUuid());}
         catch(RuntimeException failure){if(cooldownSaveWarnings.add(player.getUuid()))
             com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure).log("RPG_COOLDOWN_CHECKPOINT_FAILED player=%s",player.getUuid());}
@@ -327,7 +328,8 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             if(context.profile().support().kind()!=SupportProfile.Kind.COOLDOWN_AURA)return;
             var affected=new HashSet<>(allies);var previous=cooldownRecipients.put(context.skillInstanceId(),Set.copyOf(allies));
             if(previous!=null)affected.addAll(previous);
-            for(var id:affected)kernel.cooldowns().setAuraRate(id,runtime.cooldownRecoveryIncreased(id,System.nanoTime()/1e9),1,.25);
+            for(var id:affected)kernel.cooldowns().setAuraRate(id,runtime.cooldownRecoveryIncreased(id,System.nanoTime()/1e9)
+                    +kernel.statuses().cooldownRecoveryRate(id),1,.25);
             // Native Cooldown.getCooldown() returns maximum, not remaining work. No exported remaining/charge progress getter exists.
             // Setting maximum or restarting native cooldowns would violate the elapsed-work contract.
             if(warnedCooldownRoots.add(context.skillInstanceId()))trace(context,"AURA_CAPABILITY_BLOCKED",Map.of(
@@ -342,7 +344,8 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 if(buffer!=null)buffer.run(remove);else store.getExternalData().getWorld().execute(()->remove.accept(store));
             }
             warnedCooldownRoots.remove(context.skillInstanceId());var previous=cooldownRecipients.remove(context.skillInstanceId());
-            if(previous!=null)for(var id:previous)kernel.cooldowns().setAuraRate(id,runtime.cooldownRecoveryIncreased(id,System.nanoTime()/1e9),1,.25);
+            if(previous!=null)for(var id:previous)kernel.cooldowns().setAuraRate(id,runtime.cooldownRecoveryIncreased(id,System.nanoTime()/1e9)
+                    +kernel.statuses().cooldownRecoveryRate(id),1,.25);
         }
         public double heal(SkillExecutionContext context,UUID target,double requested){
             if(!valid(context).equals("PASS"))throw new IllegalStateException("HEAL_OWNER_INVALID");

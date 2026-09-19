@@ -176,7 +176,7 @@ public record Stage04SkillProfile(
         public StrikeDetails {
             victimCoefficient=victimCoefficient==null?com.inigmasgames.hytalerpg.combat.damage.VictimCoefficient.NONE:victimCoefficient;
             if(finisher&&victimCoefficient!=com.inigmasgames.hytalerpg.combat.damage.VictimCoefficient.NONE)throw new IllegalArgumentException("Conflicting authored strike conditions");
-            if (!Set.of("PHYSICAL", "FIRE", "NECROTIC", "VOID").contains(element)
+            if (!Set.of("PHYSICAL", "FIRE", "NECROTIC", "VOID", "LIGHTNING").contains(element)
                     || !finite(height, actionLockSeconds, movementFactor) || height <= 0 || height > 64
                     || actionLockSeconds < 0 || actionLockSeconds > 10 || movementFactor <= 0 || movementFactor > 1)
                 throw new IllegalArgumentException("Invalid strike element/geometry/cadence");
@@ -329,7 +329,7 @@ public record Stage04SkillProfile(
             if (!Set.of("", "NATIVE_BOW_MAX_RANGE_UNVERIFIED").contains(nativeCapabilityGate))
                 throw new IllegalArgumentException("Unknown projectile capability gate");
             bossSlowOptInRoles = Set.copyOf(bossSlowOptInRoles == null ? Set.of() : bossSlowOptInRoles);
-            if (!Set.of("PHYSICAL", "FIRE", "COLD", "ARCANE", "VOID", "NECROTIC").contains(element)
+            if (!Set.of("PHYSICAL", "FIRE", "COLD", "ARCANE", "VOID", "NECROTIC", "LIGHTNING").contains(element)
                     || chillStacks < 0 || chillStacks > 5 || !Double.isFinite(bossRootSlow)
                     || bossRootSlow < 0 || bossRootSlow > 1 || bossSlowOptInRoles.size() > 256
                     || bossSlowOptInRoles.stream().anyMatch(role -> role == null || role.isBlank())

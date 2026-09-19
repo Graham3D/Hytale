@@ -88,10 +88,10 @@
     },
     {
       "kind": "Skill",
-      "id": "spark",
-      "name": "Spark",
-      "fileName": "SkillSpark.png",
-      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Spark.json"
+      "id": "charged_bolt",
+      "name": "Charged Bolt",
+      "fileName": "SkillChargedbolt.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Charged_Bolt.json"
     },
     {
       "kind": "Skill",
@@ -417,17 +417,52 @@
     },
     {
       "kind": "Skill",
+      "id": "lightning_coil",
+      "name": "Lightning Coil",
+      "fileName": "SkillLightningcoil.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Lightning_Coil.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "teleport",
+      "name": "Teleport",
+      "fileName": "SkillTeleport.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Teleport.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "static_field",
+      "name": "Static Field",
+      "fileName": "SkillStaticfield.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Static_Field.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "storm_strike",
+      "name": "Storm Strike",
+      "fileName": "SkillStormstrike.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Storm_Strike.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "lightning_arrow",
+      "name": "Lightning Arrow",
+      "fileName": "SkillLightningarrow.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Lightning_Arrow.json"
+    },
+    {
+      "kind": "Skill",
+      "id": "mantle_of_thunder",
+      "name": "Mantle of Thunder",
+      "fileName": "SkillMantleofthunder.png",
+      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Mantle_Of_Thunder.json"
+    },
+    {
+      "kind": "Skill",
       "id": "void_beam",
       "name": "Void Beam",
       "fileName": "SkillVoidbeam.png",
       "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Void_Beam.json"
-    },
-    {
-      "kind": "Skill",
-      "id": "chain_lightning",
-      "name": "Chain Lightning",
-      "fileName": "SkillChainlightning.png",
-      "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Chain_Lightning.json"
     },
     {
       "kind": "Skill",

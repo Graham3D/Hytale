@@ -10,6 +10,7 @@ import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.component.dependency.SystemGroupDependency;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageModule;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
@@ -20,6 +21,8 @@ import com.inigmasgames.hytalerpg.combat.diagnostics.CombatTrace;
 import com.inigmasgames.hytalerpg.diagnostics.RpgTraceEventType;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.function.DoubleSupplier;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.inigmasgames.hytalerpg.combat.resource.HostileCombatTracker;
 import com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem;
@@ -95,6 +98,32 @@ public final class HytaleDamageLifecycleSystems {
 
         }
     }
+    }
+    /** Applies the shared Electrified Physical-miss contract at the native post-filter boundary. */
+    public static final class ElectrifiedPhysicalMiss extends DamageEventSystem {
+        private final com.inigmasgames.hytalerpg.combat.status.StatusService statuses;
+        private final DoubleSupplier roll;
+        public ElectrifiedPhysicalMiss(com.inigmasgames.hytalerpg.combat.status.StatusService statuses){this(statuses,Math::random);}
+        ElectrifiedPhysicalMiss(com.inigmasgames.hytalerpg.combat.status.StatusService statuses,DoubleSupplier roll){
+            this.statuses=java.util.Objects.requireNonNull(statuses);this.roll=java.util.Objects.requireNonNull(roll);
+        }
+        @Override public Query<EntityStore> getQuery(){return com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType();}
+        @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(
+                new SystemGroupDependency<>(Order.AFTER,DamageModule.get().getFilterDamageGroup()),
+                new SystemDependency<>(Order.BEFORE,Filter.class));}
+        @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,
+                                     CommandBuffer<EntityStore> buffer,Damage damage){
+            if(damage.isCancelled()||damage.getAmount()<=0||damage.getCause()!=DamageCause.PHYSICAL
+                    ||!(damage.getSource() instanceof Damage.EntitySource source)||source.getRef()==chunk.getReferenceTo(index))return;
+            UUID id=chunk.getComponent(index,com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType()).getUuid();
+            double chance=statuses.physicalMissChance(id),sample=roll.getAsDouble();
+            if(shouldMiss(chance,sample))damage.setCancelled(true);
+        }
+        public static boolean shouldMiss(double chance,double roll){
+            if(!Double.isFinite(chance)||chance<0||chance>.25||!Double.isFinite(roll)||roll<0||roll>=1)
+                throw new IllegalArgumentException("INVALID_PHYSICAL_MISS_INPUT");
+            return roll<chance;
+        }
     }
     public static final class Application extends TraceSystem {
         public Application(CombatTrace trace) { super(trace); }

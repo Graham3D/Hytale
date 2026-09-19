@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,8 +49,7 @@ public final class R046OrbisInterruptionTest {
         Fixture fixture = fixture();
         FakeTts tts = new FakeTts();
         FakePlayback playback = new FakePlayback();
-        List<OrbisSpeechEvent> events = java.util.Collections.synchronizedList(
-                new ArrayList<>());
+        List<OrbisSpeechEvent> events = new CopyOnWriteArrayList<>();
         CountDownLatch interrupted = new CountDownLatch(1);
         try (OrbisSpeechCoordinator speech = fixture.coordinator(tts, playback)) {
             OrbisSpeechRequest request = request(fixture.profile, "One active sentence.");
@@ -81,8 +81,7 @@ public final class R046OrbisInterruptionTest {
         Fixture fixture = fixture();
         FakeTts tts = new FakeTts();
         FakePlayback playback = new FakePlayback();
-        List<OrbisSpeechEvent> events = java.util.Collections.synchronizedList(
-                new ArrayList<>());
+        List<OrbisSpeechEvent> events = new CopyOnWriteArrayList<>();
         CountDownLatch interrupted = new CountDownLatch(1);
         try (OrbisSpeechCoordinator speech = fixture.coordinator(tts, playback)) {
             OrbisSpeechRequest request = request(fixture.profile,
@@ -112,8 +111,7 @@ public final class R046OrbisInterruptionTest {
         FakeTts tts = new FakeTts();
         tts.blockFirst = true;
         FakePlayback playback = new FakePlayback();
-        List<OrbisSpeechEvent> events = java.util.Collections.synchronizedList(
-                new ArrayList<>());
+        List<OrbisSpeechEvent> events = new CopyOnWriteArrayList<>();
         try (OrbisSpeechCoordinator speech = fixture.coordinator(tts, playback)) {
             OrbisSpeechRequest request = request(fixture.profile,
                     "Stale generation.", "Never synthesize this.");

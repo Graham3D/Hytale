@@ -21,7 +21,7 @@ class Stage13StrikeClosureTest {
     final StrikeGeometryService geometry = new StrikeGeometryService();
 
     @ParameterizedTest @CsvSource({"spear_thrust,SPEAR,STAMINA,6,1.1,1.1", "dagger_flurry,DAGGER,STAMINA,10,4,.35",
-        "maul_swing,MACE,STAMINA,9,2,.9", "scythe_sweep,SWORD,MANA,8,4,1", "spark,SWORD,MANA,7,2,.9",
+        "maul_swing,MACE,STAMINA,9,2,.9", "scythe_sweep,SWORD,MANA,8,4,1",
         "whirlwind,SWORD,STAMINA,16,8,.55"})
     void exactAuthoredRootCommit(String skill, String weapon, String resource, double cost, double cooldown, double coefficient) {
         var h = new Stage11ResourcePassivesTest.H(skill); h.weapon = weapon;
@@ -34,7 +34,7 @@ class Stage13StrikeClosureTest {
         assertEquals("COOLDOWN_ACTIVE", h.cast().code()); assertEquals(1, h.contexts.size());
         assertEquals(1, h.cooldownSaves);
     }
-    @ParameterizedTest @ValueSource(strings={"spark", "scythe_sweep"})
+    @ParameterizedTest @ValueSource(strings={"scythe_sweep"})
     void innateMagicDoesNotBorrowHeldWeapon(String skill) {
         var h = new Stage11ResourcePassivesTest.H(skill) {
             @Override public Equipment equipment() { return new Equipment(null, null); }
@@ -42,12 +42,12 @@ class Stage13StrikeClosureTest {
         assertTrue(h.cast().committed());
         assertEquals(20, h.last().snapshot().basePower());
         assertEquals("MAGIC", h.last().profile().scaling());
-        assertEquals(skill.equals("spark") ? "FIRE" : "NECROTIC", h.last().profile().strike().details().element());
+        assertEquals("NECROTIC", h.last().profile().strike().details().element());
         assertTrue(h.last().profile().strike().statusId().isEmpty());
     }
     @Test void noInventedBurnStunOrMultistrikeEligibility() {
         var f = new Stage11FoundationTest();
-        assertFalse(f.accepts("spark", "combustion"));
+        assertFalse(f.accepts("charged_bolt", "combustion"));
         assertFalse(f.accepts("dagger_flurry", "multistrike"));
         assertFalse(f.accepts("whirlwind", "multistrike"));
         assertEquals("", profiles.require("maul_swing").strike().statusId());
@@ -82,7 +82,7 @@ class Stage13StrikeClosureTest {
         var resolved = f.effective("dagger_flurry", "long_reach");
         assertEquals(3, resolved.strike().range());
         assertEquals(profiles.require("dagger_flurry").strike().details(), resolved.strike().details());
-        assertEquals("FIRE", f.effective("spark", "long_reach").strike().details().element());
+        assertEquals("NECROTIC", f.effective("scythe_sweep", "long_reach").strike().details().element());
     }
     @Test void spearUsesFullPointEightWidthAndOnlyTwoPointFiveHeight() {
         var s = profiles.require("spear_thrust").strike(); assertEquals(.4, s.lineHalfWidth());
@@ -97,7 +97,7 @@ class Stage13StrikeClosureTest {
         assertEquals(List.of(body), geometry.query(Vec3.ZERO,Vec3.FORWARD,s,List.of(body)).accepted());
     }
     @Test void equalDistanceUsesStableIdentityNotInputOrder() {
-        var s=profiles.require("spark").strike(); var a=point("a",1,0,1); var b=point("b",-1,0,1);
+        var s=profiles.require("scythe_sweep").strike(); var a=point("a",1,0,1); var b=point("b",-1,0,1);
         assertEquals(List.of(a,b),geometry.query(Vec3.ZERO,Vec3.FORWARD,s,List.of(b,a)).accepted());
     }
     @Test void sixtyFourAcceptedTargetsAreNeverSilentlyCutToLegacySixteen() {
@@ -120,18 +120,18 @@ class Stage13StrikeClosureTest {
     }
     @Test void protectedCollisionTargetCannotBeAccepted() {
         var target=new StrikeGeometryService.Candidate<>("protected","protected",new Vec3(0,0,1),true,true,false);
-        assertTrue(geometry.query(Vec3.ZERO,Vec3.FORWARD,profiles.require("spark").strike(),List.of(target)).accepted().isEmpty());
+        assertTrue(geometry.query(Vec3.ZERO,Vec3.FORWARD,profiles.require("scythe_sweep").strike(),List.of(target)).accepted().isEmpty());
     }
     @ParameterizedTest @ValueSource(strings={"resourceCost","cooldownSeconds","windupSeconds","innateBasePower"})
     void nonfiniteTopLevelProfileValuesCannotReachTheKernel(String field) {
-        var gson=new Gson();var object=gson.toJsonTree(profiles.require("spark")).getAsJsonObject();
+        var gson=new Gson();var object=gson.toJsonTree(profiles.require("scythe_sweep")).getAsJsonObject();
         for(double value:new double[]{Double.NaN,Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY}) {
             object.addProperty(field,value); assertThrows(RuntimeException.class,()->gson.fromJson(object,Stage04SkillProfile.class));
         }
     }
     @ParameterizedTest @ValueSource(strings={"range","angleDegrees","lineHalfWidth","repeatIntervalSeconds","coefficient","statusSeconds"})
     void nonfiniteStrikeInputsCannotEscapeNumericValidation(String field) {
-        var gson=new Gson();var object=gson.toJsonTree(profiles.require("spark")).getAsJsonObject();
+        var gson=new Gson();var object=gson.toJsonTree(profiles.require("scythe_sweep")).getAsJsonObject();
         object.getAsJsonObject("strike").addProperty(field,Double.NaN);
         assertThrows(RuntimeException.class,()->gson.fromJson(object,Stage04SkillProfile.class));
     }

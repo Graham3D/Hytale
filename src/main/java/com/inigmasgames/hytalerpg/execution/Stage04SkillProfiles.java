@@ -15,10 +15,10 @@ public final class Stage04SkillProfiles {
     public static final int EXPECTED_STAGE04_PILOTS = 6;
     public static final int EXPECTED_STAGE05_PILOTS = 6;
     public static final int EXPECTED_STAGE06_PROFILES = 15;
-    public static final int EXPECTED_STAGE08_PROFILES = 8;
+    public static final int EXPECTED_STAGE08_PROFILES = 7;
     public static final int EXPECTED_STAGE09_PROFILES = 16;
     public static final int EXPECTED_STAGE10_PROFILES = 10;
-    public static final int EXPECTED_STAGE13_PROFILES = 27;
+    public static final int EXPECTED_STAGE13_PROFILES = 26;
     private final Map<String, Stage04SkillProfile> profiles;
 
     public Stage04SkillProfiles(List<Stage04SkillProfile> profiles) {
@@ -45,7 +45,7 @@ public final class Stage04SkillProfiles {
             profiles.addAll(load("/rpg/runtime/stage-06-area-cohort-b.json", 6));
             profiles.addAll(load("/rpg/runtime/stage-06-area-cohort-c.json", 6));
             profiles.addAll(load("/rpg/runtime/stage-08-connections-cohort-a.json", 3));
-            profiles.addAll(load("/rpg/runtime/stage-08-connections-cohort-b.json", 5));
+            profiles.addAll(load("/rpg/runtime/stage-08-connections-cohort-b.json", 4));
             profiles.addAll(load("/rpg/runtime/stage-09-support-cohort-a.json", 3));
             profiles.addAll(load("/rpg/runtime/stage-09-support-cohort-b.json", 5));
             profiles.addAll(load("/rpg/runtime/stage-09-support-cohort-c.json", 4));
@@ -58,7 +58,7 @@ public final class Stage04SkillProfiles {
             profiles.addAll(load("/rpg/runtime/stage-10-summons-cohort-f.json", 1));
             profiles.addAll(load("/rpg/runtime/stage-10-summons-cohort-g.json", 1));
             profiles.addAll(load("/rpg/runtime/stage-10-summons-cohort-h.json", 1));
-            profiles.addAll(load("/rpg/runtime/stage-13-strikes-cohort-a.json", 6));
+            profiles.addAll(load("/rpg/runtime/stage-13-strikes-cohort-a.json", 5));
             profiles.addAll(load("/rpg/runtime/stage-13-projectiles-cohort-b.json", 6));
             profiles.addAll(load("/rpg/runtime/stage-13-projectiles-cohort-c.json", 6));
             profiles.addAll(load("/rpg/runtime/stage-13-movement-cohort-d.json", 5));
@@ -66,8 +66,9 @@ public final class Stage04SkillProfiles {
             profiles.addAll(load("/rpg/runtime/stage-13-stance-cohort-f.json", 1));
             profiles.addAll(load("/rpg/runtime/stage-13-support-tether-cohort-v.json", 2));
             profiles.addAll(load("/rpg/runtime/mantle-of-flame-v1.json", 1));
+            profiles.addAll(load("/rpg/runtime/lightning-v2.json", 7));
             Stage04SkillProfiles loaded = new Stage04SkillProfiles(profiles);
-            int expected = EXPECTED_STAGE04_PILOTS + EXPECTED_STAGE05_PILOTS + EXPECTED_STAGE06_PROFILES + EXPECTED_STAGE08_PROFILES + EXPECTED_STAGE09_PROFILES + EXPECTED_STAGE10_PROFILES + EXPECTED_STAGE13_PROFILES + 3;
+            int expected = EXPECTED_STAGE04_PILOTS + EXPECTED_STAGE05_PILOTS + EXPECTED_STAGE06_PROFILES + EXPECTED_STAGE08_PROFILES + EXPECTED_STAGE09_PROFILES + EXPECTED_STAGE10_PROFILES + EXPECTED_STAGE13_PROFILES + 10;
             if (loaded.profiles.size() != expected)
                 throw new IllegalStateException("Expected " + expected + " runtime pilot skills, got " + loaded.profiles.size());
             return loaded;

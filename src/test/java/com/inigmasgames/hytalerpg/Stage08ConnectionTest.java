@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage08ConnectionTest {
     @Test void pilotProfilesRetainCatalogAndExactAuthoredGeometry() {
         var catalog=Stage01BTestSupport.bundle().catalog();var p=Stage04SkillProfiles.loadCanonical(catalog);
-        assertEquals(91,catalog.skills().size());assertEquals(67,catalog.passives().size());
+        assertEquals(96,catalog.skills().size());assertEquals(67,catalog.passives().size());
         assertEquals(Stage04SkillProfiles.EXPECTED_STAGE08_PROFILES+1,p.all().values().stream().filter(x->x.connection()!=null).count());
         var wave=p.require("wind_cutter");assertEquals(Stage04SkillProfile.Family.LINE,wave.family());
         assertEquals(16,wave.connection().range());assertEquals(1.2,wave.connection().width());assertEquals(2.5,wave.connection().height());
@@ -182,7 +182,7 @@ class Stage08ConnectionTest {
         void advance(double seconds){clock.set(Math.round(seconds*1e9));runtime.tick(owner,seconds,this);service.tickScheduled(owner,this);}
         long cooldownEndTraces(){return tracer.records.stream().filter(r->r.eventType().name().equals("COOLDOWN_STARTED")).count();}
         public boolean actorAliveAndUsable(){return true;}
-        public Equipment equipment(){String kind=profile.allowedMainHandKinds().stream().sorted().findFirst().orElseThrow();return new Equipment(new Item("fixture",kind,new ItemPowerDescriptor("fixture",Set.of(kind),20d,20d)),null);}
+        public Equipment equipment(){var kind=profile.allowedMainHandKinds().stream().sorted().findFirst();return kind.<Equipment>map(value->new Equipment(new Item("fixture",value,new ItemPowerDescriptor("fixture",Set.of(value),20d,20d)),null)).orElseGet(()->new Equipment(null,null));}
         public NativeResourcePort resources(){return this;}
         public Validation familyPrerequisites(Stage04SkillProfile p,CompiledSkillPlan plan){String verdict=runtime.admission(owner,p.connection().channel());
             if(verdict.equals("PASS")&&p.connection().requiresTarget())verdict=ConnectionTargeting.select(p.connection(),this).verdict();

@@ -21,12 +21,13 @@
     },
     {
       "skillId": "ball_lightning", "family": "ORB", "secondaryFamilies": [],
-      "allowedMainHandKinds": ["STAFF", "WAND"], "requiredOffHandKinds": [],
+      "allowedMainHandKinds": [], "requiredOffHandKinds": [],
       "resourceType": "MANA", "resourceCost": 18, "cooldownSeconds": 10, "windupSeconds": 0,
-      "basePowerSource": "MAGIC_WEAPON", "scaling": "MAGIC",
+      "basePowerSource": "INNATE", "innateBasePower": 20, "scaling": "MAGIC",
       "connection": {"kind": "ORB", "range": 18, "width": 0, "height": 3, "depth": 0,
         "speed": 5, "lifetimeSeconds": 5, "intervalSeconds": 0.75, "coefficient": 0.35,
-        "upkeepPerSecond": 0, "radius": 1.8, "originHeight": 1.35, "element": "LIGHTNING"}
+        "upkeepPerSecond": 0, "radius": 1.8, "originHeight": 1.35, "element": "LIGHTNING",
+        "details":{"status":"ELECTRIFIED","statusSeconds":6}}
     }
   ]
 }

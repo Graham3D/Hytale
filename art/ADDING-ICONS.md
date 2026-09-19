@@ -2,7 +2,7 @@
 
 You do not need Codex, Java, Gradle, or a JAR editor.
 
-The current R036 catalog contains **91 skills and 67 passives**. The updater reads
+The current R048 catalog contains **96 skills and 67 passives**. The updater reads
 the index embedded in the installed build and intentionally rejects artwork for
 content that build does not know.
 
@@ -27,6 +27,15 @@ content that build does not know.
 | Blessing of Protection | SkillBlessingofprotection.png | art/Skills |
 | Mantle of Flame | SkillMantleofflame.png | art/Skills |
 | Summon Skeleton Archers | SkillSummonskeletonarchers.png | art/Skills |
+| Charged Bolt | SkillChargedbolt.png | art/Skills |
+| Lightning Bolt | SkillLightningbolt.png | art/Skills |
+| Ball Lightning | SkillBalllightning.png | art/Skills |
+| Lightning Coil | SkillLightningcoil.png | art/Skills |
+| Teleport | SkillTeleport.png | art/Skills |
+| Static Field | SkillStaticfield.png | art/Skills |
+| Storm Strike | SkillStormstrike.png | art/Skills |
+| Lightning Arrow | SkillLightningarrow.png | art/Skills |
+| Mantle of Thunder | SkillMantleofthunder.png | art/Skills |
 
 The authoritative CSV contains the exact filename for **every** skill and passive,
 including skills that still use fallback artwork. Add a correctly named PNG to
@@ -67,13 +76,13 @@ folder. The updater safely packages them inside the existing RPG JAR under
 `Common/Icons/Items/RPG/` (skills) and
 `Common/UI/Custom/Icons/RPG/` (skills and passives), then installs that JAR to:
 
-`C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/HyARPG.jar`
+`C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar`
 
 Keep the original PNGs here. After installing a newer RPG build, run the updater
 again to reapply your complete artwork collection. Do not put loose PNGs directly
 in the mods folder and do not add a fourth mod.
 
-The tool checks the embedded 91-skill/67-passive filename index, validates every
+The tool checks the embedded 96-skill/67-passive filename index, validates every
 image, creates a staged JAR, verifies unrelated entries are unchanged, and makes
 a hash-verified backup before replacing the installed JAR atomically.
 Backups and before/after hashes live in **icon-backups** in the GitHub folder.

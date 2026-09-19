@@ -39,7 +39,7 @@ class Stage12AcquisitionTest {
         var sources=new LearningSources(C,List.of(new LearningSources.Binding("goblin_scrapper","goblin_scrapper",ProgressionMath.AcquisitionRarity.COMMON)));
         assertEquals(66,sources.assignedSources());assertEquals(0,sources.verifiedBindings());
         assertTrue(sources.resolve("goblin_scrapper",ProgressionMath.Rank.BOSS,500).isEmpty());
-        assertEquals(25,C.skills().stream().filter(s->s.sourceAcquisition().signatureEnemyId().startsWith("UNASSIGNED")).count()); // Includes the blocked Skeleton Archer development fixture.
+        assertEquals(30,C.skills().stream().filter(s->s.sourceAcquisition().signatureEnemyId().startsWith("UNASSIGNED")).count()); // Includes five newly unassigned Lightning skills.
     }
     @Test void verifiedExplicitAliasesShareOneSourceAndUnknownIdentitiesCannotRoll(){
         var sources=new LearningSources(verifiedFixture(),List.of(new LearningSources.Binding("goblin_scrapper","goblin_scrapper",ProgressionMath.AcquisitionRarity.COMMON),new LearningSources.Binding("goblin_patrol","goblin_scrapper",ProgressionMath.AcquisitionRarity.COMMON)));

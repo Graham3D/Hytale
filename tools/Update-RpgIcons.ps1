@@ -132,7 +132,7 @@ try {
         $manifest = Read-JsonEntry $zip 'manifest.json'
         if ($manifest.Group -ne 'InigmasGames' -or $manifest.Name -ne 'Hywind') { throw 'Target is not the unified Hywind mod.' }
         $index = Read-JsonEntry $zip 'rpg/presentation/icon-index.json'
-        if ($index.schemaVersion -ne 1 -or @($index.entries).Count -notin @(153,156,157,158)) { throw 'Unsupported icon index; do not patch this build.' }
+        if ($index.schemaVersion -ne 1 -or @($index.entries).Count -notin @(153,156,157,158,163)) { throw 'Unsupported icon index; do not patch this build.' }
         $byFile = @{}
         $ids = @{}
         $catalogIds = @{}
@@ -160,7 +160,8 @@ try {
         if ($ids.Count -ne $catalogIds.Count -or -not (($skillCount -eq 87 -and $passiveCount -eq 66) -or
             ($skillCount -eq 89 -and $passiveCount -eq 67) -or
             ($skillCount -eq 90 -and $passiveCount -eq 67) -or
-            ($skillCount -eq 91 -and $passiveCount -eq 67))) { throw 'Icon index does not cover the full catalog.' }
+            ($skillCount -eq 91 -and $passiveCount -eq 67) -or
+            ($skillCount -eq 96 -and $passiveCount -eq 67))) { throw 'Icon index does not cover the full catalog.' }
         foreach ($kind in @('Skill','Passive')) {
             $folder = Join-Path $ArtRoot ($kind + 's')
             if (-not (Test-Path -LiteralPath $folder -PathType Container)) { continue }

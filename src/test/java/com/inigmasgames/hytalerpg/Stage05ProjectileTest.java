@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage05ProjectileTest {
     @Test void sixProjectilePilotsRemainCanonicalAndSnipeRemainsNativeGated() {
         Stage04SkillProfiles profiles = profiles();
-        assertEquals(12 + Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES, profiles.all().values().stream().filter(profile -> profile.area() == null && profile.connection() == null && profile.support() == null && profile.summon() == null && profile.summonAction() == null && profile.conversion() == null && profile.cage() == null).count());
+        assertEquals(12 + Stage04SkillProfiles.EXPECTED_STAGE13_PROFILES + 4, profiles.all().values().stream().filter(profile -> profile.area() == null && profile.connection() == null && profile.support() == null && profile.summon() == null && profile.summonAction() == null && profile.conversion() == null && profile.cage() == null).count());
         // Retained identity; T owner contract replaces the unverified native maximum with an authored cap.
         assertEquals("",profiles.require("snipe").projectile().details().nativeCapabilityGate());
         assertEquals(85,profiles.require("snipe").projectile().speed());

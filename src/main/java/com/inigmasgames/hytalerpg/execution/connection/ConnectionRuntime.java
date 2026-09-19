@@ -202,7 +202,28 @@ public final class ConnectionRuntime {
         if(p.kind()==ConnectionProfile.Kind.TETHER){var target=boundTarget(field,field.origin,port);if(target==null){finish(field,"TETHER_TARGET_INVALID",port);return;}
             shape=ConnectionShape.line(field.origin,target.bounds().centre(),p.width(),p.height());targets=List.of(target);}
         else {shape=ConnectionShape.line(field.origin,port.unobstructedEndpoint(field.origin,field.origin.add(field.direction.multiply(p.range()))),p.width(),p.height());targets=targets(field,shape,port);}
-        if(targets==null)return;hit(field,targets,0,p.coefficient(),false,shape.start().add(shape.end()).multiply(.5),port);
+        if(targets==null)return;
+        boolean linkedLightning=field.context.profile().skillId().equals("lightning_bolt")&&field.context.compiledPlan().projectileModifiers().chain()>0;
+        double coefficient=p.coefficient()*(linkedLightning?.70:1);
+        hit(field,targets,0,coefficient,false,shape.start().add(shape.end()).multiply(.5),port);
+        if(linkedLightning&&!targets.isEmpty()&&!field.done){
+            var visited=new HashSet<String>();for(var target:targets)visited.add(target.id());
+            var from=targets.getLast();Vec3 point=from.bounds().centre();
+            for(int jump=0;jump<2;jump++){
+                final Vec3 searchOrigin=point;
+                var found=port.query(ConnectionShape.cylinder(point,8,16),64);
+                if(found.overflow()||found.targets().size()>64){finish(field,"CANDIDATE_BUDGET_REJECTED",port);return;}
+                var next=found.targets().stream().filter(t->!visited.contains(t.id()))
+                        .filter(t->ConnectionShape.pointDistanceSquared(searchOrigin,t.bounds())<=64+1e-9&&port.lineOfSight(searchOrigin,t))
+                        .sorted(Comparator.comparingDouble((ConnectionWorldPort.Target t)->ConnectionShape.pointDistanceSquared(searchOrigin,t.bounds()))
+                                .thenComparing(ConnectionWorldPort.Target::id)).findFirst().orElse(null);
+                if(next==null)break;
+                visited.add(next.id());Vec3 prior=point;point=next.bounds().centre();
+                hit(field,List.of(next),jump+1,coefficient,false,point,port);
+                if(field.done)break;
+                port.present(field.context,ConnectionShape.line(prior,point,p.width(),p.height()),"CHAIN_IMPACT",.15);
+            }
+        }
         if(!field.done){port.present(field.context,shape,"IMPACT",p.kind()==ConnectionProfile.Kind.TETHER?.25:.15);finish(field,"LINE_COMPLETE",port);}
     }
     private void chain(Field field,double elapsed,ConnectionWorldPort port){

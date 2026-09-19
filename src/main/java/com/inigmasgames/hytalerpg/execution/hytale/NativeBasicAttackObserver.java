@@ -25,6 +25,9 @@ import java.util.*;
 
 /** Pinned execution-side witness, never a packet/button/timestamp heuristic. Native damage remains untouched. */
 public final class NativeBasicAttackObserver {
+    @FunctionalInterface public interface ObservedHit {
+        void accept(UUID actor,UUID victim,double actualHealthLoss,double now);
+    }
     private record Root(InteractionChain chain,NativeBasicAttackPaths paths,RootWeaponHit receipt,String item){}
     private record Witness(Root root,boolean charged,double healthBefore,Ref<EntityStore> source,String victim){}
     private record CacheKey(String item,RootInteraction root,Map<String,String> variables){}
@@ -34,8 +37,8 @@ public final class NativeBasicAttackObserver {
     private final NativeItemPowerRegistry items=NativeItemPowerRegistry.loadCanonical();
     private final RpgCombatKernel kernel;
     private final CombatTrace trace;
-    private final java.util.function.BiConsumer<UUID,Double> onHit;
-    public NativeBasicAttackObserver(RpgCombatKernel kernel,CombatTrace trace,java.util.function.BiConsumer<UUID,Double> onHit){
+    private final ObservedHit onHit;
+    public NativeBasicAttackObserver(RpgCombatKernel kernel,CombatTrace trace,ObservedHit onHit){
         this.kernel=kernel;this.trace=trace;this.onHit=onHit;
     }
     public synchronized void forget(UUID actor){roots.remove(actor);}
@@ -145,7 +148,7 @@ public final class NativeBasicAttackObserver {
                 var recovery=owner.kernel.resources().recoverHostileWeaponHit(receipt,new EntityStatResourcePort(stats));
                 details.put("recoveryApplied",recovery.applied());details.put("manaRecovered",recovery.manaRecovered());details.put("staminaRecovered",recovery.staminaRecovered());
             }catch(RuntimeException boundary){details.put("recoveryFailure",boundary.getMessage());}
-            try{owner.onHit.accept(receipt.actor(),System.nanoTime()/1e9);}
+            try{owner.onHit.accept(receipt.actor(),UUID.fromString(witness.victim()),Math.max(0,witness.healthBefore()-hp.get()),System.nanoTime()/1e9);}
             catch(RuntimeException boundary){details.put("comboFailure",String.valueOf(boundary.getMessage()));}
             owner.trace.emit(receipt.actor(),RpgTraceEventType.NATIVE_BASIC_HIT_OBSERVED,new CombatTrace.Context(receipt.id(),receipt.id(),receipt.id()),details);
 
