@@ -210,3 +210,9 @@ The installed `Hywind.jar` SHA-256 is `D20A7E6C25989E28BF0D64DD313CEAF1708B35755
 R056 is implemented, packaged, and deployed from implementation commit `b2f2e273f35c229beab45f85f69cf3a8bb776231`. It removes the redundant `BREAK SELECTED` control, fixes the cross-document CustomUI patch that disconnected the client during link removal, permits authoritative replacement drops into occupied and `UNBOUND` Skill nodes, expands the library to fifteen rows, and corrects the header/tree artwork, title, tabs, instructions, search styling, and connector-port placement requested by connected QA.
 
 The installed `Hywind.jar` SHA-256 is `3E5B854FE001DF71F3C0779D76778AF1BA39E6575521F258A565D5602AFF690B`. The verified full-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T025740Z`. The complete retained suite, unified package audit, isolated smoke, and two deployed startup/restart cycles pass. Connected-client rendering and interaction remain pending; see `r056-skill-tree-qa-corrections.md`.
+
+## R057 Skill Tree frame hotfix
+
+R057 is implemented, packaged, and deployed from implementation commit `a2d514c4`. It promotes the lighter-blue native header to the outer primary title frame, removes the inset duplicate, restores the instruction copy to a centered horizontal footer region, and doubles connector-arrow visuals to 18x18.
+
+The installed `Hywind.jar` SHA-256 is `155715D457516954CDF2815900BD0A7331EA4ED17C7A1CB4FEA7BD9D586AF2D6`. The verified full-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T031728Z`. Full retained validation, isolated smoke, and two deployed startup/restart cycles pass. Connected visual confirmation remains pending; see `r057-skill-tree-frame-hotfix.md`.
