@@ -45,6 +45,15 @@ public final class GroundSparkSteering {
 
     public double segmentRemaining() { return segmentRemaining; }
 
+    /**
+     * Spark uses a native projectile only as a replicated visual carrier. A no-contact native
+     * course end is therefore not authoritative while Hywind's ground crawler owns movement.
+     * Real entity and block contacts must still enter the normal impact path.
+     */
+    public static boolean ownsNativeCourseEnd(String skillId, boolean entityContact, boolean blockContact) {
+        return "charged_bolt".equals(skillId) && !entityContact && !blockContact;
+    }
+
     private void chooseSegment() {
         double magnitude;
         double roll = random.nextDouble();

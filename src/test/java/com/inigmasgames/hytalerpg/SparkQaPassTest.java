@@ -69,6 +69,13 @@ class SparkQaPassTest {
         assertTrue(service.onEnemyContact(second,"enemy-a"),"separate sparks from one cast may hit the same enemy");
     }
 
+    @Test void customGroundMotionOwnsOnlyAContactFreeNativeCourseEnd() {
+        assertTrue(GroundSparkSteering.ownsNativeCourseEnd("charged_bolt",false,false));
+        assertFalse(GroundSparkSteering.ownsNativeCourseEnd("charged_bolt",true,false));
+        assertFalse(GroundSparkSteering.ownsNativeCourseEnd("charged_bolt",false,true));
+        assertFalse(GroundSparkSteering.ownsNativeCourseEnd("fire_bolt",false,false));
+    }
+
     @Test void projectilePresentationIsSmallHorizontalAndHasNoCastOriginEffect() throws Exception {
         var gson=new Gson();
         JsonObject spawner=gson.fromJson(new InputStreamReader(require("/Server/Particles/Hywind/Hywind_Charged_Bolt_Frame.particlespawner"),StandardCharsets.UTF_8),JsonObject.class);
@@ -87,7 +94,8 @@ class SparkQaPassTest {
         for(String contract:List.of("direction=direction.horizontalNormalized()","SPARK_GROUND_ORIGIN_UNAVAILABLE",
                 "advanceGroundSpark(carrier,deltaSeconds,store,buffer)","HytaleAreaQueries.projectileContact",
                 "instance.remaining(\"RICOCHET\")<=0","SPARK_GROUND_SUPPORT_LOST","if(!isGroundSpark(context)) {",
-                "if(isGroundSpark(context))physics.getVelocity().set(0,0,0)"))assertTrue(source.contains(contract),contract);
+                "if(isGroundSpark(context))physics.getVelocity().set(0,0,0)","GROUND_CRAWLER_OWNS_MOVEMENT",
+                "buffer.tryRemoveComponent(projectileRef"))assertTrue(source.contains(contract),contract);
     }
 
     private static java.io.InputStream require(String path){return java.util.Objects.requireNonNull(SparkQaPassTest.class.getResourceAsStream(path),path);}

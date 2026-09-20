@@ -2384,6 +2384,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         if(!hasContinuations(carrier.context)) {onProjectileImpact(carrier,projectileRef,position,blockPosition,hitEntity,buffer,Vec3.ZERO);return;}
         var physics=buffer.getComponent(projectileRef,StandardPhysicsProvider.getComponentType());
         boolean courseEnd=hitEntity==null&&blockPosition==null;
+        boolean groundCrawlerOwnsCourseEnd=GroundSparkSteering.ownsNativeCourseEnd(
+                carrier.context.profile().skillId(),hitEntity!=null,blockPosition!=null);
         Vector3i nativeBlock=courseEnd&&physics!=null&&physics.isBounced()?physics.bounceBlockPosition():blockPosition;
         Vector3i savedBlock=nativeBlock==null?null:new Vector3i(nativeBlock);
         Vector3d savedPosition=position==null?null:new Vector3d(position);
@@ -2394,6 +2396,17 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         buffer.run(ignored->buffer.run(afterNative->{
             if(projectiles.get(carrier.instance.plan().projectileInstanceId())!=carrier || !projectileRef.isValid()
                     || carrier.instance.motionRevision()!=revision)return;
+            if(groundCrawlerOwnsCourseEnd) {
+                buffer.tryRemoveComponent(projectileRef,
+                        com.hypixel.hytale.server.core.modules.entity.DespawnComponent.getComponentType());
+                moveGroundSparkCarrier(carrier,carrier.instance.flight().lastPosition(),buffer);
+                if(!carrier.insertion.groundCourseRecovered) {
+                    carrier.insertion.groundCourseRecovered=true;
+                    emitProjectile(carrier,RpgTraceEventType.PROJECTILE_NATIVE_COURSE_IGNORED,
+                            Map.of("reason","GROUND_CRAWLER_OWNS_MOVEMENT","nativeCourseEnd",true));
+                }
+                return;
+            }
             if(courseEnd&&savedBlock!=null)buffer.tryRemoveComponent(projectileRef,
                     com.hypixel.hytale.server.core.modules.entity.DespawnComponent.getComponentType());
             onProjectileImpact(carrier,projectileRef,savedPosition,savedBlock,hitEntity,buffer,savedNormal);
@@ -3513,7 +3526,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     isGroundSpark(context)?new GroundSparkSteering(instance.plan().projectileInstanceId(),instance.direction(),instance.motionRevision()):null);
         }
     }
-    private static final class NativeInsertion { boolean completed; }
+    private static final class NativeInsertion { boolean completed;boolean groundCourseRecovered; }
     private record PeriodicTarget(Ref<EntityStore> actor, Ref<EntityStore> victim) { }
     private record DamageOutcome(double preMitigationDamage, double actualHealthLoss, boolean cancelled,double increasedUnit,double victimCoefficientFactor,
             double nativeAmount,double healthBefore,double healthAfter) {
