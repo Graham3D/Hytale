@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.19",
-    "revision": "R064",
+    "version": "0.1.0-merge.20",
+    "revision": "R065",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "c5b44f47a3c35eb1d7ab8591eedcd0b0e38df16d",
+    "implementationCommit": "d220c2b80e26a0f69c1eb239d336a7fb8ece4450",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "AD3D9D87CE0BECAA392AB158B9C7EFB15DC45FC86B9F8C774AF369A0C4AE6B01",
-    "bytes": 13436441,
+    "sha256": "1D577A47E9475E4EA392AA837A82909FB915978724219CB8C09FC56C036C94C0",
+    "bytes": 13436439,
     "entries": 5864,
     "classes": 2209,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T18:36:56.2759311Z",
+    "deployedAtUtc": "2026-09-20T19:07:10.7770643Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "AD3D9D87CE0BECAA392AB158B9C7EFB15DC45FC86B9F8C774AF369A0C4AE6B01",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T183655Z",
-    "fullBackupFiles": 755,
-    "fullBackupBytes": 875987491,
+    "installedSha256": "1D577A47E9475E4EA392AA837A82909FB915978724219CB8C09FC56C036C94C0",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T190709Z",
+    "fullBackupFiles": 760,
+    "fullBackupBytes": 879048966,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.18",
-        "revision": "R063",
-        "sha256": "D0E6BE36FDD87323C83BC81650E95F6BDB79299BCD820BF90B7DFD6D5303B2EC"
+        "version": "0.1.0-merge.19",
+        "revision": "R064",
+        "sha256": "AD3D9D87CE0BECAA392AB158B9C7EFB15DC45FC86B9F8C774AF369A0C4AE6B01"
       }
     ]
   },
@@ -85,6 +85,8 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
+    "R065 Spark renders as one horizontal block-face plane, follows the ground carrier, and cycles the four 80x80 chargedbolt frames at 100 ms per frame",
+    "R065 Spark travels visibly farther and more slowly at 12 m/s over its 10 m actual-path budget",
     "R064 Spark survives the contact-free native course-end callback, emits PROJECTILE_NATIVE_COURSE_IGNORED once per carrier, and visibly enters its custom ground-crawling travel",
     "R063 Spark follows flat, uphill, and downhill terrain at the intended ground offset and terminates when support falls outside tolerance",
     "R063 Spark ignores vertical camera pitch, produces independent chaotic forward-biased trajectories, and retains its actual-path travel range",
