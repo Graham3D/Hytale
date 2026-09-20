@@ -58,10 +58,10 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         commands.set("#GraphEditorSubtitle.TextSpans", Message.raw(model.subtitle()));
         commands.setObject("#GraphEditorSkillsTab.Background", texture(HYTALE_ASSETS
                 + (tab == CursorCanvasEditor.LibraryKind.SKILL
-                ? "HeaderTabSelectedBackground@2x.png" : "HeaderTabBackground@2x.png"), 9));
+                ? "HeaderTabSelectedBackground.png" : "HeaderTabBackground.png"), 9));
         commands.setObject("#GraphEditorPassivesTab.Background", texture(HYTALE_ASSETS
                 + (tab == CursorCanvasEditor.LibraryKind.PASSIVE
-                ? "HeaderTabSelectedBackground@2x.png" : "HeaderTabBackground@2x.png"), 9));
+                ? "HeaderTabSelectedBackground.png" : "HeaderTabBackground.png"), 9));
         commands.set("#GraphEditorSearch.TextSpans", Message.raw(model.query().isBlank()
                 ? (tab == CursorCanvasEditor.LibraryKind.SKILL ? "Search skills..." : "Search passives...") : model.query()));
         commands.set("#GraphEditorNoMatches.Visible", page.isEmpty());
@@ -78,7 +78,7 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 commands.set("#GraphLibraryRow" + i + " #Category.TextSpans", Message.raw(entry.category()));
                 commands.setObject("#GraphLibraryRow" + i + " #Icon.Background", texture(entry.iconPath()));
                 commands.setObject("#GraphLibraryRow" + i + ".Background",
-                        texture(HYTALE_ASSETS + "ContainerPanelLightPatch@2x.png", 4));
+                        texture(HYTALE_ASSETS + "ContainerPanelLightPatch.png", 4));
             }
         }
         renderScrollbar(commands, model.scrollOffset(), model.maximumScrollOffset(), model.totalMatches(), page.size());
@@ -154,8 +154,8 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                     texture(node.occupied()?SKILL_TREE_ASSETS + "skilltree_passive_occupied.png"
                             :SKILL_TREE_ASSETS + "skilltree_passive_unoccupied.png"));
             if("skill".equals(node.type()))commands.setObject(selector+" #Circle.Background",
-                    texture(node.occupied()?SKILL_TREE_ASSETS + "Slot@2x.png"
-                            :SKILL_TREE_ASSETS + "SpecialSlotTemporary@2x.png"));
+                    texture(node.occupied()?SKILL_TREE_ASSETS + "Slot.png"
+                            :SKILL_TREE_ASSETS + "SpecialSlotTemporary.png"));
             if("skill".equals(node.type()))commands.setObject(selector+" #Circle.Anchor",anchor(35,0,62,62));
             if("passive".equals(node.type()))commands.setObject(selector+" #Circle.Anchor",anchor(35,0,54,54));
             if("joint".equals(node.type()))commands.setObject(selector+" #Triangle.Anchor",anchor(0,0,72,72));
@@ -174,7 +174,7 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                         anchor((int)Math.round(port.point().x() - point.x()) - 6,
                                 (int)Math.round(port.point().y() - point.y()) - 6, 12, 12));
                 commands.setObject(selector+" #Port"+portIndex+".Background",
-                        texture(SKILL_TREE_ASSETS + "StructuralCraftingArrowUp@2x.png"));
+                        texture(SKILL_TREE_ASSETS + "StructuralCraftingArrowUp.png"));
                 portIndex++;
             }
             index++;

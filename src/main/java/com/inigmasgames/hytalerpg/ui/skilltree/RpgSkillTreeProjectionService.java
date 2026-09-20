@@ -21,7 +21,7 @@ import java.util.UUID;
 
 /** Canonical catalog/state -> static Skill Tree projection; it never mutates authority. */
 public final class RpgSkillTreeProjectionService {
-    public static final String PLACEHOLDER_ICON = "Assets/SkillTree/Hytale/UnknownItemIcon@2x.png";
+    public static final String PLACEHOLDER_ICON = "Assets/SkillTree/Hytale/UnknownItemIcon.png";
     public static final String CURRENT_WEAPON_FILTER = "Compatible with current weapon";
     private final RpgCatalog catalog;
     private final RpgLoadoutOperations loadouts;

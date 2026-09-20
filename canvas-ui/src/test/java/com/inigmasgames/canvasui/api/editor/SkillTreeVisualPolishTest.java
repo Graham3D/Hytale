@@ -39,14 +39,16 @@ class SkillTreeVisualPolishTest {
         assertFalse(ui.contains("Common/UI/Custom/Assets/SkillTree"));
         assertFalse(renderer.contains("Common/UI/Custom/Assets/SkillTree"));
         assertTrue(renderer.contains("private static final String SKILL_TREE_ASSETS = \"Assets/SkillTree/\""));
-        assertTrue(renderer.contains("node.occupied()?SKILL_TREE_ASSETS + \"Slot@2x.png\""));
-        assertTrue(renderer.contains(":SKILL_TREE_ASSETS + \"SpecialSlotTemporary@2x.png\""));
+        assertTrue(renderer.contains("node.occupied()?SKILL_TREE_ASSETS + \"Slot.png\""));
+        assertTrue(renderer.contains(":SKILL_TREE_ASSETS + \"SpecialSlotTemporary.png\""));
         assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"skilltree_joint.png\""));
-        assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"StructuralCraftingArrowUp@2x.png\""));
-        assertTrue(ui.contains("Assets/SkillTree/Hytale/ContainerFullPatch@2x.png"));
-        assertTrue(ui.contains("Assets/SkillTree/Hytale/DiagramCraftingBackground@2x.png"));
-        assertTrue(ui.contains("Assets/SkillTree/Hytale/Buttons/Primary@2x.png"));
-        assertTrue(ui.contains("Assets/SkillTree/Hytale/Buttons/Destructive@2x.png"));
+        assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"StructuralCraftingArrowUp.png\""));
+        assertTrue(ui.contains("Assets/SkillTree/Hytale/ContainerFullPatch.png"));
+        assertTrue(ui.contains("Assets/SkillTree/Hytale/DiagramCraftingBackground.png"));
+        assertTrue(ui.contains("Assets/SkillTree/Hytale/Buttons/Primary.png"));
+        assertTrue(ui.contains("Assets/SkillTree/Hytale/Buttons/Destructive.png"));
+        assertFalse(ui.contains("@2x.png"));
+        assertFalse(renderer.contains("@2x.png"));
     }
 
     @Test void saveUsesExistingCommitAuthorityAndExitUsesTheVisibleFooterRegion() throws Exception {

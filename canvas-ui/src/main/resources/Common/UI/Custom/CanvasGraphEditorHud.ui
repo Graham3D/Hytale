@@ -3,23 +3,23 @@ Group {
   Group #GraphWorldScrim { Anchor: (Full: 0); Background: (Color: #02091399); }
   Group #GraphEditorSurface {
     Anchor: (Left: 90, Right: 90, Top: 50, Bottom: 50);
-    Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch@2x.png", Border: 23);
-    Group { Anchor: (Left: 12, Right: 12, Top: 10, Height: 76); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerHeader@2x.png", HorizontalBorder: 50, VerticalBorder: 0); }
-    Group { Anchor: (Horizontal: 236, Top: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationTop@2x.png"; }
-    Group { Anchor: (Horizontal: 236, Bottom: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationBottom@2x.png"; }
+    Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23);
+    Group { Anchor: (Left: 12, Right: 12, Top: 10, Height: 76); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerHeader.png", HorizontalBorder: 50, VerticalBorder: 0); }
+    Group { Anchor: (Horizontal: 236, Top: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationTop.png"; }
+    Group { Anchor: (Horizontal: 236, Bottom: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationBottom.png"; }
     Label #GraphEditorBrand { Text: "HYWIND RPG"; Anchor: (Left: 28, Top: 24, Width: 250, Height: 28); Style: (FontSize: 19, TextColor: #78c6d0); }
     Label #GraphEditorTitle { Text: "SKILL TREE"; Anchor: (Horizontal: 300, Top: 8, Height: 30); Style: (FontSize: 22, TextColor: #f2d488, HorizontalAlignment: Center); }
     Label #GraphEditorSubtitle { Text: "SHAPE YOUR JOURNEY"; Anchor: (Horizontal: 300, Top: 38, Height: 20); Style: (FontSize: 10, TextColor: #b9cce0, HorizontalAlignment: Center); }
     Label #GraphEditorRevision { Text: "REV"; Anchor: (Right: 28, Top: 24, Width: 90, Height: 26); Style: (FontSize: 13, TextColor: #f2d488, HorizontalAlignment: End); }
 
     Group #GraphWorkspace { Anchor: (Left: 24, Right: 24, Top: 90, Bottom: 94); Background: (Color: #020a1200);
-      Group #GraphLibraryFrame { Anchor: (Left: 0, Top: 0, Width: 252, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch@2x.png", Border: 23); }
-      Group #GraphTreeFrame { Anchor: (Left: 260, Right: 260, Top: 0, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/DiagramCraftingBackground@2x.png", Border: 24); }
-      Group #GraphEditorSkillsTab { Anchor: (Left: 12, Top: 40, Width: 108, Height: 34); Background: (TexturePath: "Assets/SkillTree/Hytale/HeaderTabSelectedBackground@2x.png", Border: 9); }
+      Group #GraphLibraryFrame { Anchor: (Left: 0, Top: 0, Width: 252, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23); }
+      Group #GraphTreeFrame { Anchor: (Left: 260, Right: 260, Top: 0, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/DiagramCraftingBackground.png", Border: 24); }
+      Group #GraphEditorSkillsTab { Anchor: (Left: 12, Top: 40, Width: 108, Height: 34); Background: (TexturePath: "Assets/SkillTree/Hytale/HeaderTabSelectedBackground.png", Border: 9); }
       Label { Text: "SKILLS"; Anchor: (Left: 28, Top: 49, Width: 68, Height: 18); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
-      Group #GraphEditorPassivesTab { Anchor: (Left: 124, Top: 40, Width: 116, Height: 34); Background: (TexturePath: "Assets/SkillTree/Hytale/HeaderTabBackground@2x.png", Border: 9); }
+      Group #GraphEditorPassivesTab { Anchor: (Left: 124, Top: 40, Width: 116, Height: 34); Background: (TexturePath: "Assets/SkillTree/Hytale/HeaderTabBackground.png", Border: 9); }
       Label { Text: "PASSIVES"; Anchor: (Left: 130, Top: 49, Width: 84, Height: 18); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
-      Group { Anchor: (Left: 12, Top: 84, Width: 228, Height: 38); Background: (TexturePath: "Assets/SkillTree/Hytale/InputBox@2x.png", Border: 10); }
+      Group { Anchor: (Left: 12, Top: 84, Width: 228, Height: 38); Background: (TexturePath: "Assets/SkillTree/Hytale/InputBox.png", Border: 10); }
       Label #GraphEditorSearch { Text: "Search skills..."; Anchor: (Left: 18, Top: 93, Width: 200, Height: 20); Style: (FontSize: 11, TextColor: #b9cce0); }
       Label #GraphEditorNoMatches { Visible: false; Text: "No matches"; Anchor: (Left: 18, Top: 140, Width: 190, Height: 22); Style: (FontSize: 11, TextColor: #8fa2b4); }
       Group #GraphLibraryRow0 { Anchor: (Left: 8, Top: 132, Width: 200, Height: 42); Background: (Color: #183a56f2);
@@ -288,13 +288,13 @@ Group {
       Group #GraphPreview1 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 3, Height: 3); Background: (Color: #ffffffff); }
       Group #GraphPreview2 { Visible: false; Anchor: (Left: 220, Top: 20, Width: 3, Height: 3); Background: (Color: #ffffffff); }
       Group #GraphTargetHighlight { Visible: false; Anchor: (Left: 220, Top: 20, Width: 18, Height: 18); Background: (Color: #a8ffb466); }
-      Group #GraphInspectorPanel { Anchor: (Right: 0, Top: 0, Width: 252, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch@2x.png", Border: 23);
+      Group #GraphInspectorPanel { Anchor: (Right: 0, Top: 0, Width: 252, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23);
         Label { Text: "DETAILS"; Anchor: (Left: 18, Top: 14, Width: 216, Height: 20); Style: (FontSize: 12, TextColor: #f2d488); }
         Group #GraphInspectorIcon { Visible: false; Anchor: (Left: 18, Top: 46, Width: 58, Height: 58); Background: (Color: #172536ff); }
         Label #GraphInspectorName { Text: "Select a Skill or Passive"; Anchor: (Left: 86, Top: 46, Width: 148, Height: 36); Style: (FontSize: 15, TextColor: #ffffff, Wrap: true); }
         Label #GraphInspectorDescriptor { Text: ""; Anchor: (Left: 86, Top: 84, Width: 148, Height: 22); Style: (FontSize: 9, TextColor: #78c6d0); }
         Label #GraphInspectorDescription { Text: "Select a Skill or Passive to view details."; Anchor: (Left: 18, Top: 122, Width: 216, Height: 72); Style: (FontSize: 11, TextColor: #b9cce0, Wrap: true); }
-        Group { Anchor: (Left: 18, Top: 202, Width: 216, Height: 2); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider@2x.png", Border: 1); }
+        Group { Anchor: (Left: 18, Top: 202, Width: 216, Height: 2); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); }
         Group #GraphInspectorRow0 { Visible: false; Anchor: (Left: 18, Top: 216, Width: 216, Height: 48); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 28); Style: (FontSize: 11, TextColor: #eef6ff, Wrap: true); } }
         Group #GraphInspectorRow1 { Visible: false; Anchor: (Left: 18, Top: 266, Width: 216, Height: 48); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 28); Style: (FontSize: 11, TextColor: #eef6ff, Wrap: true); } }
         Group #GraphInspectorRow2 { Visible: false; Anchor: (Left: 18, Top: 316, Width: 216, Height: 48); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 28); Style: (FontSize: 11, TextColor: #eef6ff, Wrap: true); } }
@@ -313,9 +313,9 @@ Group {
     }
     Label #GraphEditorDrag { Text: "Drag a library entry onto a matching node."; Anchor: (Left: 34, Right: 310, Bottom: 62, Height: 20); Style: (FontSize: 10, TextColor: #f2d488); }
     Label #GraphEditorStatus { Text: "Ready"; Anchor: (Left: 34, Right: 310, Bottom: 34, Height: 22); Style: (FontSize: 11, TextColor: #9be4ae); }
-    Group #GraphEditorSave { Anchor: (Right: 154, Bottom: 24, Width: 120, Height: 44); Background: (TexturePath: "Assets/SkillTree/Hytale/Buttons/Primary@2x.png", VerticalBorder: 8, HorizontalBorder: 40); }
+    Group #GraphEditorSave { Anchor: (Right: 154, Bottom: 24, Width: 120, Height: 44); Background: (TexturePath: "Assets/SkillTree/Hytale/Buttons/Primary.png", VerticalBorder: 8, HorizontalBorder: 40); }
     Label { Text: "SAVE"; Anchor: (Right: 154, Bottom: 35, Width: 120, Height: 22); Style: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center); }
-    Group #GraphEditorExit { Anchor: (Right: 24, Bottom: 24, Width: 120, Height: 44); Background: (TexturePath: "Assets/SkillTree/Hytale/Buttons/Destructive@2x.png", Border: 8); }
+    Group #GraphEditorExit { Anchor: (Right: 24, Bottom: 24, Width: 120, Height: 44); Background: (TexturePath: "Assets/SkillTree/Hytale/Buttons/Destructive.png", Border: 8); }
     Label { Text: "EXIT"; Anchor: (Right: 24, Bottom: 35, Width: 120, Height: 22); Style: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center); }
   }
 }
