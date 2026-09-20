@@ -1,4 +1,14 @@
-$Container = "Common/Container.ui";
+@GraphEditorTitleStyle = LabelStyle(
+  FontSize: 15,
+  VerticalAlignment: Center,
+  RenderUppercase: true,
+  TextColor: #b4c8c9,
+  FontName: "Secondary",
+  RenderBold: true,
+  ShrinkTextToFit: true,
+  MinShrinkTextToFitFontSize: 11,
+  LetterSpacing: 0
+);
 
 Group {
   Anchor: (Full: 0);
@@ -10,7 +20,7 @@ Group {
     Group #GraphEditorPrimaryHeader { Anchor: (Left: 18, Right: 18, Top: 18, Height: 46); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerPanelLightPatch.png", Border: 6); }
     Group { Anchor: (Width: 236, Top: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationTop.png"; }
     Group { Anchor: (Width: 236, Bottom: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationBottom.png"; }
-    Label #GraphEditorTitle { Text: "SKILL TREE"; Anchor: (Left: 18, Right: 18, Top: 18, Height: 46); Style: (...$Container.@TitleStyle, HorizontalAlignment: Center); }
+    Label #GraphEditorTitle { Text: "SKILL TREE"; Anchor: (Left: 18, Right: 18, Top: 18, Height: 46); Style: (...@GraphEditorTitleStyle, HorizontalAlignment: Center); }
 
     Group #GraphWorkspace { Anchor: (Left: 24, Right: 24, Top: 78, Bottom: 94); Background: (Color: #020a1200);
       Group #GraphLibraryFrame { Anchor: (Left: 0, Top: 0, Width: 252, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23); }

@@ -54,7 +54,10 @@ class SkillTreeVisualPolishTest {
         assertTrue(ui.contains("Assets/SkillTree/Hytale/ContainerFullPatch.png"));
         assertTrue(ui.contains("#GraphEditorPrimaryFrame { Anchor: (Full: 0)"));
         assertTrue(ui.contains("#GraphEditorPrimaryHeader { Anchor: (Left: 18, Right: 18, Top: 18, Height: 46)"));
-        assertTrue(ui.contains("...$Container.@TitleStyle"));
+        assertTrue(ui.contains("...@GraphEditorTitleStyle"));
+        assertTrue(ui.contains("FontName: \"Secondary\""));
+        assertTrue(ui.contains("RenderUppercase: true"));
+        assertFalse(ui.contains("Common/Container.ui"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/DiagramCraftingBackground.png"));
         assertTrue(ui.contains("Anchor: (Width: 236, Top: 4, Height: 11)"));
         assertTrue(ui.contains("Anchor: (Width: 236, Bottom: 4, Height: 11)"));
