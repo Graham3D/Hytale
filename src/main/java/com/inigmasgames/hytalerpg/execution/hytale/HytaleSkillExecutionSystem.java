@@ -2995,6 +2995,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if(++steps>64)throw new IllegalStateException("SPARK_STEP_BUDGET");
                 double distance=Math.min(.20,remaining);
                 Vec3 direction=instance.returning()?casterPoint(carrier,store).subtract(current).horizontalNormalized():steering.direction();
+                if(!instance.returning()&&carrier.context.compiledPlan().projectileModifiers().homing())
+                    direction=homingUpdate(carrier,current,store).direction().horizontalNormalized();
                 instance.redirect(direction);steering.markOwnedRevision(instance.motionRevision());
                 Vec3 horizontal=current.add(direction.multiply(distance));
                 var support=HytaleAreaQueries.ground(store,new Vec3(horizontal.x(),current.y()+1.10,horizontal.z()),new Vec3(0,-1,0),2.85);
@@ -3120,7 +3122,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         return vec(store.getComponent(carrier.actor,TransformComponent.getComponentType()).getPosition()).add(new Vec3(0,1.35,0));
     }
     private void steerHoming(ProjectileCarrier carrier,Vec3 position,CommandBuffer<EntityStore> buffer) {
-        var store=buffer.getStore();
+        var update=homingUpdate(carrier,position,buffer.getStore());
+        if(update.direction().distanceSquared(carrier.instance.direction())>1e-12) {
+            carrier.instance.redirect(update.direction());resumeCarrier(carrier,position,buffer,false);
+        }
+    }
+    private com.inigmasgames.hytalerpg.execution.projectile.ProjectileHoming.Update homingUpdate(
+            ProjectileCarrier carrier,Vec3 position,Store<EntityStore> store) {
         var pattern=carrier.context.profile().projectile().details().pattern();boolean authored=pattern.homingTurnDegrees()>0;
         java.util.function.Function<String,java.util.Optional<com.inigmasgames.hytalerpg.execution.projectile.ProjectileHoming.Target>> live=id->{
             var ref=store.getExternalData().getRefFromUUID(UUID.fromString(id));
@@ -3152,11 +3160,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         var update=authored?carrier.instance.homing().authored(carrier.instance.totalSeconds(),position,carrier.instance.direction(),
                 carrier.context.target().entityId()==null?null:carrier.context.target().entityId().toString(),acquisition,pattern,candidates,live)
                 :carrier.instance.homing().update(carrier.instance.totalSeconds(),position,carrier.instance.direction(),candidates,live);
-        if(update.direction().distanceSquared(carrier.instance.direction())>1e-12) {
-            carrier.instance.redirect(update.direction());resumeCarrier(carrier,position,buffer,false);
-        }
         if(update.reacquired())emitProjectile(carrier,RpgTraceEventType.PROJECTILE_HOMING_QUERY,
                 Map.of("reason","HOMING_ACQUISITION","targetId",update.targetId()==null?"NONE":update.targetId(),"intervalSeconds",.10,"turnCapDegreesPerSecond",authored?pattern.homingTurnDegrees():120));
+        return update;
     }
 
     /** Isolated native construction fixture only; does not activate a skill or claim client/gameplay proof. */

@@ -736,8 +736,14 @@
     "soundRecipeId": "rpg.sound.skill.charged_bolt",
     "linkCompatibilityTags": [
       "CAN_ACQUIRE_ENEMY_TARGET",
+      "CAN_CHAIN",
       "CAN_CRIT",
+      "CAN_FORK",
       "CAN_KILL",
+      "CAN_PIERCE",
+      "CAN_RETURN",
+      "CAN_RICOCHET",
+      "CAN_TERRAIN_BOUNCE",
       "DAMAGE",
       "DIRECT_HIT",
       "DISCRETE_ACTIVATION",
@@ -745,10 +751,13 @@
       "LIGHTNING",
       "HAS_COOLDOWN",
       "HAS_RANGE",
+      "HAS_TERMINATION",
       "MANA_RESOURCE",
       "SCALABLE_PAYLOAD",
       "SPELL_CAST",
-      "PROJECTILE"
+      "PROJECTILE",
+      "SUPPORTS_MULTIPLE_PROJECTILES",
+      "SUPPORTS_STEERING"
     ],
     "sourceAcquisition": {
       "signatureEnemyId": "Emberwulf",

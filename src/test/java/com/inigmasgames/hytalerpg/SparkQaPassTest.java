@@ -9,6 +9,12 @@ import com.inigmasgames.hytalerpg.execution.projectile.ProjectileContinuation;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry;
 import com.inigmasgames.hytalerpg.execution.projectile.RpgProjectileService;
+import com.inigmasgames.hytalerpg.domain.LinkNodeId;
+import com.inigmasgames.hytalerpg.domain.PassiveId;
+import com.inigmasgames.hytalerpg.domain.PassiveSlot;
+import com.inigmasgames.hytalerpg.domain.SkillId;
+import com.inigmasgames.hytalerpg.domain.SkillSlot;
+import com.inigmasgames.hytalerpg.links.CompatibilityService;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -19,6 +25,37 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SparkQaPassTest {
+    @Test void everyProjectileFamilyPassiveCanLinkToSparkAndCompileAnActualModifier() {
+        var bundle=Stage01BTestSupport.bundle();var skill=bundle.catalog().skill(new SkillId("charged_bolt")).orElseThrow();
+        var compatibility=new CompatibilityService();
+        var projectilePassives=List.of("piercing","fork","chain","ricochet","return","volley","barrage","homing",
+                "accelerant","ballistics","shrapnel","splinterburst","orbit");
+        for(String id:projectilePassives)assertTrue(compatibility.assess(skill,bundle.catalog().passive(new PassiveId(id)).orElseThrow()).accepted(),id);
+
+        var owner=java.util.UUID.randomUUID();assertTrue(bundle.service().equipSkill(owner,SkillSlot.SKILL01,skill.id()).success());
+        assertTrue(bundle.service().equipPassive(owner,PassiveSlot.PASSIVE01,new PassiveId("volley")).success());
+        assertTrue(bundle.service().link(owner,LinkNodeId.PASSIVE01,LinkNodeId.SKILL01).success());
+        var plan=bundle.service().getPresentationView(owner).plans().get(SkillSlot.SKILL01);
+        assertNotNull(plan);assertTrue(plan.projectileModifiers().volley());assertEquals(3,plan.projectileModifiers().batchSize());
+    }
+
+    @Test void volleyMultipliesEveryAuthoredSparkAndHomingHasAGroundCrawlerRuntimePath() throws Exception {
+        var bundle=Stage01BTestSupport.bundle();var owner=java.util.UUID.randomUUID();
+        assertTrue(bundle.service().equipSkill(owner,SkillSlot.SKILL01,new SkillId("charged_bolt")).success());
+        assertTrue(bundle.service().equipPassive(owner,PassiveSlot.PASSIVE01,new PassiveId("volley")).success());
+        assertTrue(bundle.service().link(owner,LinkNodeId.PASSIVE01,LinkNodeId.SKILL01).success());
+        var base=Stage06AreaRuntimeTest.context("charged_bolt");var plan=bundle.service().getPresentationView(owner).plans().get(SkillSlot.SKILL01);
+        var context=new com.inigmasgames.hytalerpg.execution.SkillExecutionContext(
+                new com.inigmasgames.hytalerpg.execution.SkillExecutionRequest(owner,SkillSlot.SKILL01,"fixture",1,"spark-volley",Vec3.FORWARD),
+                base.rootCastId(),base.skillInstanceId(),base.profile(),plan,base.snapshot(),base.equipment(),base.target(),false);
+        var batch=new RpgProjectileService(new ProjectileLifecycleRegistry()).buildBatch(context,owner,new Vec3(0,.49,0),Vec3.FORWARD,"fixture",6,1);
+        assertEquals(0,batch.size()%3);assertTrue(batch.size()>=9&&batch.size()<=15);
+
+        String source=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
+        assertTrue(source.contains("projectileModifiers().homing())"));
+        assertTrue(source.contains("direction=homingUpdate(carrier,current,store).direction().horizontalNormalized()"));
+    }
+
     @Test void sparkIsCanonicalDisplayNameWhileChargedBoltRemainsTheStableLegacyIdentity() {
         var catalog=Stage01BTestSupport.bundle().catalog();
         var skill=catalog.resolveSkill("Spark").value();
