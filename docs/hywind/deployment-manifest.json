@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.9",
-    "revision": "R054",
+    "version": "0.1.0-merge.10",
+    "revision": "R055",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "859795861d6e3cc0deed37bfe66584849cf0f765",
+    "implementationCommit": "c09304047dca23cd2bbf818b764c0b1e0e7c59d9",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "D20A7E6C25989E28BF0D64DD313CEAF1708B357552B1CC2A607621F5549BD477",
-    "bytes": 13402695,
+    "sha256": "55F571F58F26199A0B5058F5AAF06EE5C1BD85215856FDCDBAEEDE6F5B41FEC0",
+    "bytes": 13402866,
     "entries": 5851,
     "classes": 2206,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T01:34:06.8250437Z",
+    "deployedAtUtc": "2026-09-20T02:18:18.3576665Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "D20A7E6C25989E28BF0D64DD313CEAF1708B357552B1CC2A607621F5549BD477",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T013406Z",
-    "fullBackupFiles": 663,
-    "fullBackupBytes": 548971552,
+    "installedSha256": "55F571F58F26199A0B5058F5AAF06EE5C1BD85215856FDCDBAEEDE6F5B41FEC0",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T021817Z",
+    "fullBackupFiles": 671,
+    "fullBackupBytes": 554724772,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.8",
-        "revision": "R053",
-        "sha256": "62C33FC19C0D7FBCE2CD5EC484F366EABFA02796B89840D46E821737C26DB5F5"
+        "version": "0.1.0-merge.9",
+        "revision": "R054",
+        "sha256": "D20A7E6C25989E28BF0D64DD313CEAF1708B357552B1CC2A607621F5549BD477"
       }
     ]
   },
@@ -64,7 +64,7 @@
   "validation": {
     "rpgJUnitTests": 2367,
     "nativeControlJUnitTests": 67,
-    "canvasJUnitTests": 41,
+    "canvasJUnitTests": 43,
     "tavernJUnitTests": 5,
     "tavernRetainedExecutableGates": 8,
     "npcRetainedExecutableGates": 149,
@@ -85,6 +85,11 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
+    "R055 successful client CustomUI document load and server join",
+    "R055 centered title, removed branding/revision/subtitle, and matched top/bottom ornaments",
+    "R055 thirteen-row Skill/Passive library and inline focused search without duplicate controls",
+    "R055 native-framed center workspace and Details panel with non-overlapping divided sections",
+    "R055 E/R/UNBOUND Skill labels, inset connector ports, and center-workspace node confinement",
     "R054 successful client CustomUI document load and server join",
     "R054 logical density references render the packaged native art without red-X fallbacks",
     "R054 occupied Skill uses Slot art and empty Skill uses SpecialSlotTemporary art",

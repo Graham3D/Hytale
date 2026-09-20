@@ -197,4 +197,10 @@ Connected QA subsequently proved R053's direct `@2x` texture references did not 
 
 R054 is implemented, packaged, and deployed from implementation commit `859795861d6e3cc0deed37bfe66584849cf0f765`. It preserves the exact Inventory artwork bytes but references each Hytale density variant through its required logical filename, including occupied `Slot.png` and empty `SpecialSlotTemporary.png`. All copied frame, tab, panel, button, divider, placeholder, and connector-arrow references were corrected through the same central rule.
 
+## R055 Skill Tree composition and interaction polish
+
+R055 is implemented, packaged, and deployed from implementation commit `c09304047dca23cd2bbf818b764c0b1e0e7c59d9`. The editor now uses native Inventory container chrome for all three functional windows, renders the ornamental tree background without nine-slice distortion, exposes thirteen library rows, and presents a divided non-overlapping Details layout. The duplicate Search Mode overlay was removed in favor of a single native focus control aligned over the existing search field. Skill labels use the player-facing `E`, `R`, and `UNBOUND` bindings; connector ports overlap their node silhouettes; and both restored and actively dragged nodes are clamped to the center tree workspace.
+
+Branding, revision, subtitle, layout-success text, passive Current Link, and validation footer copy were removed from the editor presentation. The complete retained Gradle gate, package audit, isolated unified-plugin smoke, deployment backup, hash check, and two-cycle deployed startup/restart validation passed. Connected client rendering and interaction remain explicitly pending.
+
 The installed `Hywind.jar` SHA-256 is `D20A7E6C25989E28BF0D64DD313CEAF1708B357552B1CC2A607621F5549BD477`. The full stopped-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T013406Z`. Focused tests, the complete retained suite, 59-document CustomUI validation, package audit, isolated smoke, and two post-deployment restart cycles pass. Connected-client visual confirmation remains pending; see `r054-skill-tree-density-reference-hotfix-report.md`.
