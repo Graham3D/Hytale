@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.20",
-    "revision": "R065",
+    "version": "0.1.0-merge.21",
+    "revision": "R066",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "d220c2b80e26a0f69c1eb239d336a7fb8ece4450",
+    "implementationCommit": "ac7a77d25a1a9db4a80134d4824573e2ec4f3278",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "1D577A47E9475E4EA392AA837A82909FB915978724219CB8C09FC56C036C94C0",
-    "bytes": 13436439,
-    "entries": 5864,
+    "sha256": "5541596CF3EDA107658EAFB897A1449A69972F170FC6C56286335570464B9FE0",
+    "bytes": 13437132,
+    "entries": 5865,
     "classes": 2209,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T19:07:10.7770643Z",
+    "deployedAtUtc": "2026-09-20T19:37:04.0999384Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "1D577A47E9475E4EA392AA837A82909FB915978724219CB8C09FC56C036C94C0",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T190709Z",
-    "fullBackupFiles": 760,
-    "fullBackupBytes": 879048966,
+    "installedSha256": "5541596CF3EDA107658EAFB897A1449A69972F170FC6C56286335570464B9FE0",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T193703Z",
+    "fullBackupFiles": 768,
+    "fullBackupBytes": 877784481,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.19",
-        "revision": "R064",
-        "sha256": "AD3D9D87CE0BECAA392AB158B9C7EFB15DC45FC86B9F8C774AF369A0C4AE6B01"
+        "version": "0.1.0-merge.20",
+        "revision": "R065",
+        "sha256": "1D577A47E9475E4EA392AA837A82909FB915978724219CB8C09FC56C036C94C0"
       }
     ]
   },
@@ -85,6 +85,9 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
+    "R066 Spark renders the canonical blue/white sheet on a fixed horizontal +Y model quad with an exact one-block footprint and no billboard rotation",
+    "R066 each Spark advances all four 80x80 frames at 100 ms per frame, follows its authoritative projectile, and disappears when that projectile terminates",
+    "R066 no yellow point light, tiny inherited model scale, Fireball carrier mesh, or particle-emitter fallback remains visible",
     "R065 Spark renders as one horizontal block-face plane, follows the ground carrier, and cycles the four 80x80 chargedbolt frames at 100 ms per frame",
     "R065 Spark travels visibly farther and more slowly at 12 m/s over its 10 m actual-path budget",
     "R064 Spark survives the contact-free native course-end callback, emits PROJECTILE_NATIVE_COURSE_IGNORED once per carrier, and visibly enters its custom ground-crawling travel",
