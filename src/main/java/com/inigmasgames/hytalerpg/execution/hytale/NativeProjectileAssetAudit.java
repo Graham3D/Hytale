@@ -40,11 +40,13 @@ public final class NativeProjectileAssetAudit {
                 ||sparkAsset.getMinScale()!=1||sparkAsset.getMaxScale()!=1
                 ||sparkAsset.getLight()!=null||(sparkAsset.getParticles()!=null&&sparkAsset.getParticles().length!=0))
             throw new IllegalStateException("SPARK_WORLD_QUAD_MODEL_UNRESOLVED");
-        var sparkFly=sparkAsset.getAnimationSetMap().get("FlyIdle");
-        if(sparkFly==null||sparkFly.getAnimations().length!=1
-                ||!"VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim".equals(sparkFly.getAnimations()[0].getAnimation())
-                ||!sparkFly.getAnimations()[0].isLooping())
-            throw new IllegalStateException("SPARK_WORLD_QUAD_ANIMATION_UNRESOLVED");
+        for(String state:List.of("Idle","FlyIdle")) {
+            var animationSet=sparkAsset.getAnimationSetMap().get(state);
+            if(animationSet==null||animationSet.getAnimations().length!=1
+                    ||!"VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim".equals(animationSet.getAnimations()[0].getAnimation())
+                    ||!animationSet.getAnimations()[0].isLooping())
+                throw new IllegalStateException("SPARK_WORLD_QUAD_ANIMATION_UNRESOLVED:"+state);
+        }
         var nativeCrossbow=ProjectileConfig.getAssetMap().getAsset("Projectile_Config_Arrow_Crossbow");
         var payload=profiles.require("crossbow_bolt").projectile();
         if(nativeCrossbow==null||nativeCrossbow.getModel()==null)throw new IllegalStateException("NATIVE_CROSSBOW_CONTROL_MISSING");

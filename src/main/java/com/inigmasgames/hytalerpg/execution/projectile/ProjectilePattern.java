@@ -29,6 +29,10 @@ public record ProjectilePattern(int count,double horizontalDegrees,double vertic
     public int rootLaunches(CompiledSkillPlan plan) {
         return Math.multiplyExact(count,plan.projectileModifiers().rootLaunches(plan.executionModifiers().echoDelaySeconds()>0));
     }
+    /** Exact root reservation after deterministic variable-count selection. */
+    public int selectedRootLaunches(CompiledSkillPlan plan,String rootCastId) {
+        return Math.multiplyExact(selectedCount(rootCastId),plan.projectileModifiers().rootLaunches(plan.executionModifiers().echoDelaySeconds()>0));
+    }
     public double procCoefficient(CompiledSkillPlan plan) { return 1d/(count*plan.projectileModifiers().batchSize()); }
     public Vec3 direction(Vec3 forward,int index) {
         return direction(forward,index,count);

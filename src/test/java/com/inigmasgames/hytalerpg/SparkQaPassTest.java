@@ -38,6 +38,29 @@ class SparkQaPassTest {
             assertEquals(.5,plan.origin().y(),1e-12);}
     }
 
+    @Test void variableBoltCountReleasesEveryRootReservationAfterTheLastSparkEnds() {
+        var base=Stage06AreaRuntimeTest.context("charged_bolt");
+        var registry=new ProjectileLifecycleRegistry();var service=new RpgProjectileService(registry);
+        boolean exercisedVariableCount=false;
+        for(int cast=0;cast<32;cast++){
+            String root="spark-budget-root-"+cast,instance=root+"-skill";var old=base.snapshot();
+            var snapshot=new com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshot(root,instance,old.actorId(),old.rawAttributes(),
+                    old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),
+                    old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),
+                    old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
+            var context=new com.inigmasgames.hytalerpg.execution.SkillExecutionContext(base.request(),root,instance,base.profile(),
+                    base.compiledPlan(),snapshot,base.equipment(),base.target(),false);
+            assertEquals("PASS",registry.admission(base.request().actorId(),base.profile().projectile().details().pattern().rootLaunches(base.compiledPlan())));
+            var plans=service.buildBatch(context,base.request().actorId(),new Vec3(0,.5,0),Vec3.FORWARD,"fixture",6,cast+1);
+            int declared=plans.getFirst().remainingContinuationBudgets().get("ROOT_LAUNCHES");
+            assertEquals(plans.size(),declared,"the root ledger must reserve only the deterministic selected count");
+            exercisedVariableCount|=plans.size()<base.profile().projectile().details().pattern().count();
+            var instances=plans.stream().map(ProjectileInstance::new).toList();registry.registerAll(instances);instances.forEach(registry::remove);
+            assertEquals(0,registry.size());assertEquals(0,registry.rootCount(),"completed variable Spark casts must not leak promises");
+        }
+        assertTrue(exercisedVariableCount);
+    }
+
     @Test void steeringIsReplayStableIndependentIrregularAndAlwaysForwardBiased() {
         var a=new GroundSparkSteering("spark-a",Vec3.FORWARD,0);
         var replay=new GroundSparkSteering("spark-a",Vec3.FORWARD,0);
@@ -89,8 +112,11 @@ class SparkQaPassTest {
         assertEquals("VFX/RPG/Spark/Spark_Strip_Vertical.png",model.get("Texture").getAsString());
         assertEquals(1,model.get("MinScale").getAsDouble(),1e-12);assertEquals(1,model.get("MaxScale").getAsDouble(),1e-12);
         assertFalse(model.has("Particles"));assertFalse(model.has("Light"),"the former yellow point-light fallback must not exist");
-        var fly=model.getAsJsonObject("AnimationSets").getAsJsonObject("FlyIdle").getAsJsonArray("Animations").get(0).getAsJsonObject();
-        assertEquals("VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim",fly.get("Animation").getAsString());assertTrue(fly.get("Looping").getAsBoolean());
+        for(String state:List.of("Idle","FlyIdle")){
+            var animationState=model.getAsJsonObject("AnimationSets").getAsJsonObject(state).getAsJsonArray("Animations").get(0).getAsJsonObject();
+            assertEquals("VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim",animationState.get("Animation").getAsString());
+            assertTrue(animationState.get("Looping").getAsBoolean());
+        }
 
         JsonObject blocky=gson.fromJson(new InputStreamReader(require("/Common/VFX/RPG/Spark/Spark_Quad.blockymodel"),StandardCharsets.UTF_8),JsonObject.class);
         var node=blocky.getAsJsonArray("nodes").get(0).getAsJsonObject();var shape=node.getAsJsonObject("shape");
@@ -100,7 +126,7 @@ class SparkQaPassTest {
         assertEquals(2,size.get("x").getAsDouble()*stretch.get("x").getAsDouble()/32,1e-12);
         assertEquals(2,size.get("y").getAsDouble()*stretch.get("z").getAsDouble()/32,1e-12);
 
-        JsonObject animation=gson.fromJson(new InputStreamReader(require("/Common/VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim"),StandardCharsets.UTF_8),JsonObject.class);
+        JsonObject animation=gson.fromJson(new InputStreamReader(require("/Common/VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim"),StandardCharsets.UTF_8),JsonObject.class);
         assertEquals(24,animation.get("duration").getAsInt());assertFalse(animation.get("holdLastKeyframe").getAsBoolean());
         var uv=animation.getAsJsonObject("nodeAnimations").getAsJsonObject("SparkPlane").getAsJsonArray("shapeUvOffset");
         assertEquals(4,uv.size());
@@ -114,6 +140,8 @@ class SparkQaPassTest {
         assertTrue(transparent&&blueWhite,"the packaged model texture must retain transparent and blue/white pixels");
         assertNull(SparkQaPassTest.class.getResource("/Common/VFX/RPG/Spark/chargedbolt.png"),
                 "the horizontal atlas that corrupted unrelated HUD icon sampling must not be packaged");
+        assertNull(SparkQaPassTest.class.getResource("/Common/VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim"),
+                "the prior animation URI must not survive and be served from a stale client cache");
         for(String icon:List.of("/Common/Icons/Items/RPG/SkillChargedbolt.png","/Common/Icons/Items/RPG/SkillStaticfield.png")){
             var image=javax.imageio.ImageIO.read(require(icon));assertEquals(128,image.getWidth(),icon);assertEquals(128,image.getHeight(),icon);
         }
@@ -127,7 +155,7 @@ class SparkQaPassTest {
                 "advanceGroundSpark(carrier,deltaSeconds,store,buffer)","HytaleAreaQueries.projectileContact",
                 "instance.remaining(\"RICOCHET\")<=0","SPARK_GROUND_SUPPORT_LOST","if(!isGroundSpark(context)) {",
                 "if(isGroundSpark(context))physics.getVelocity().set(0,0,0)","GROUND_CRAWLER_OWNS_MOVEMENT",
-                "buffer.tryRemoveComponent(projectileRef"))assertTrue(source.contains(contract),contract);
+                "buffer.tryRemoveComponent(projectileRef","if(isGroundSpark(carrier.context))return;"))assertTrue(source.contains(contract),contract);
     }
 
     private static java.io.InputStream require(String path){return java.util.Objects.requireNonNull(SparkQaPassTest.class.getResourceAsStream(path),path);}

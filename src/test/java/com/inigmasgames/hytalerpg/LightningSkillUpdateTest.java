@@ -89,7 +89,7 @@ class LightningSkillUpdateTest {
                 "/Server/Particles/Hywind/Hywind_Static_Field.particlesystem",
                 "/Server/ProjectileConfigs/RPG/Projectile_Config_Hywind_Charged_Bolt.json",
                 "/Common/VFX/RPG/Spark/Spark_Quad.blockymodel",
-                "/Common/VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim",
+                "/Common/VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim",
                 "/Common/VFX/RPG/Spark/Spark_Strip_Vertical.png",
                 "/Common/Particles/Textures/Hywind/Lightning/lightning.png",
                 "/Common/Particles/Textures/Hywind/Lightning/staticfield.png"))assertNotNull(getClass().getResource(resource),resource);

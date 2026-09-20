@@ -2604,7 +2604,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         projectiles.remove(projectileId, carrier);
         if (projectileRef != null && projectileRef.isValid()) buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
         projectileService.onTerrainContact(carrier.instance, vec(position));
-        projectileVisual(carrier,store,()->vfx.presentProjectileExpiry(store.getExternalData().getWorld(),vec(position),carrier.context.profile().projectile().details().element()));
+        presentProjectileExpiry(carrier,store,vec(position));
         emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
                 Map.of("reason", "TERRAIN_HIT", "travelledDistance", carrier.instance.flight().travelled()));
         finishProjectileContext(carrier.context, "PROJECTILE_TERRAIN_HIT");
@@ -2655,7 +2655,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             boolean range = observation.travelled() + 1.0e-6 >= observation.maxDistance();
             String reason = range ? "MAX_RANGE" : "MAX_LIFETIME";
             projectileService.onForwardTermination(carrier.instance, reason, observation.position());
-            projectileVisual(carrier,store,()->vfx.presentProjectileExpiry(store.getExternalData().getWorld(),observation.position(),carrier.context.profile().projectile().details().element()));
+            presentProjectileExpiry(carrier,store,observation.position());
             emitProjectile(carrier, range ? RpgTraceEventType.PROJECTILE_MAX_RANGE : RpgTraceEventType.PROJECTILE_EXPIRED,
                     Map.of("reason", reason, "travelledDistance", observation.travelled(),
                             "elapsed", observation.elapsed(), "maxDistance", observation.maxDistance(),
@@ -3430,13 +3430,19 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private void terminateProjectile(ProjectileCarrier carrier, String reason, Vec3 position,
                                      CommandBuffer<EntityStore> buffer) {
         if(reason.equals("MAX_RANGE")||reason.equals("MAX_LIFETIME")||reason.equals("FORWARD_BUDGET_EXHAUSTED"))
-            projectileVisual(carrier,buffer.getStore(),()->vfx.presentProjectileExpiry(buffer.getStore().getExternalData().getWorld(),position,carrier.context.profile().projectile().details().element()));
+            presentProjectileExpiry(carrier,buffer.getStore(),position);
         projectiles.remove(carrier.instance.plan().projectileInstanceId(), carrier);
         if (carrier.projectile.isValid()) buffer.tryRemoveEntity(carrier.projectile, RemoveReason.REMOVE);
         projectileService.onForwardTermination(carrier.instance, reason, position);
         emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERMINATED,
                 Map.of("reason", reason, "travelledDistance", carrier.instance.flight().travelled()));
         finishProjectileContext(carrier.context, "PROJECTILE_" + reason);
+    }
+    private void presentProjectileExpiry(ProjectileCarrier carrier,Store<EntityStore> store,Vec3 position) {
+        // Spark's world quad is its complete presentation; the generic vertical expiry tick is visually incorrect.
+        if(isGroundSpark(carrier.context))return;
+        projectileVisual(carrier,store,()->vfx.presentProjectileExpiry(store.getExternalData().getWorld(),position,
+                carrier.context.profile().projectile().details().element()));
     }
     private static CombatTrace.Context ids(SkillExecutionContext context) {
         return new CombatTrace.Context(context.rootCastId(), context.skillInstanceId(), context.request().correlationId());

@@ -89,7 +89,7 @@ public record ProjectileExecutionPlan(
                 Map.of("SHRAPNEL",modifiers.shrapnel()?1:0,"SPLINTERBURST",modifiers.splinterburst()?1:0,
                         "PIERCE", modifiers.pierce(), "FORK", modifiers.fork(), "CHAIN", modifiers.chain(),
                         "RICOCHET", modifiers.ricochet(), "RETURN", modifiers.returning(),
-                        "ROOT_LAUNCHES",projectile.details().pattern().rootLaunches(context.compiledPlan()),"IS_LAUNCH",1),
+                        "ROOT_LAUNCHES",projectile.details().pattern().selectedRootLaunches(context.compiledPlan(),context.rootCastId()),"IS_LAUNCH",1),
                 // Echo is the second authorized release of this root, not another first release.
                 // The retained registry validates the declared ordinal against existing root carriers.
                 budgets.maxSpawnedEffects() - (context.echo() ? 2 : 1), budgets.maxTriggeredSecondaries(),
