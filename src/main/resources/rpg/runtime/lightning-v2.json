@@ -7,16 +7,16 @@
       "resourceType": "MANA", "resourceCost": 7, "cooldownSeconds": 1.25, "windupSeconds": 0,
       "basePowerSource": "INNATE", "innateBasePower": 20, "scaling": "MAGIC",
       "projectile": {
-        "configId": "Projectile_Config_Hywind_Charged_Bolt", "speed": 24,
-        "maxDistance": 6, "radius": 0.22, "gravity": 0, "targetCap": 3,
+        "configId": "Projectile_Config_Hywind_Charged_Bolt", "speed": 12,
+        "maxDistance": 10, "radius": 0.22, "gravity": 0, "targetCap": 3,
         "coefficient": 0.32, "statusId": "ELECTRIFIED", "statusSeconds": 6,
         "periodicCoefficient": 0, "periodicTicks": 0, "periodicIntervalSeconds": 0,
         "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false, "knockbackDistance": 0,
-        "configIdsByWeaponKind": {}, "speedsByWeaponKind": {}, "independentLifetimeSeconds": 0.5,
+        "configIdsByWeaponKind": {}, "speedsByWeaponKind": {}, "independentLifetimeSeconds": 0,
         "details": {
           "element": "LIGHTNING", "chillStacks": 0, "bossRootSlow": 0, "bossSlowOptInRoles": [],
           "pattern": {"count": 5, "minimumCount": 3, "horizontalDegrees": 60, "verticalDegrees": 16, "intervalSeconds": 0, "homingTurnDegrees": 0, "acquisitionRadius": 0, "ballisticAim": false},
-          "presentation": {"castParticle": "", "projectileParticle": "Hywind_Charged_Bolt", "impactParticle": "Laser_Impact", "projectileScale": 0.32, "impactScale": 1}
+          "presentation": {"castParticle": "", "projectileParticle": "Hywind_Charged_Bolt", "impactParticle": "Laser_Impact", "projectileScale": 1, "impactScale": 1}
         }
       }
     },
