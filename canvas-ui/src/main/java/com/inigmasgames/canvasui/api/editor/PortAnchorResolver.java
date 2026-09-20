@@ -19,6 +19,8 @@ public final class PortAnchorResolver {
     public static CanvasPoint relative(Canvas canvas, CanvasNode node, String portId) {
         CanvasPort port = canvas.definition().nodeType(node.type()).port(portId);
         if (port == null) throw new IllegalArgumentException("missing port: " + portId);
+        // Skill inputs and triangular-joint ports are authored anchors. Only Passive ports orbit.
+        if ("skill".equals(node.type()) || "joint".equals(node.type())) return port.anchorPosition();
         String key = PREFIX + portId;
         try {
             String x = node.metadata().get(key + ".x");
@@ -38,6 +40,7 @@ public final class PortAnchorResolver {
     public static boolean orbitConnected(Canvas canvas, String nodeId) {
         CanvasNode node = canvas.node(nodeId);
         if (node == null) return false;
+        if (!"passive".equals(node.type())) return false;
         NodeDefinition type = canvas.definition().nodeType(node.type());
         Map<String, List<CanvasPoint>> destinations = new java.util.LinkedHashMap<>();
         for (CanvasEdge edge : canvas.edges()) {

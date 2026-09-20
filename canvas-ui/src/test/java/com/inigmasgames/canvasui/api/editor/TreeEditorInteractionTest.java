@@ -113,6 +113,28 @@ class TreeEditorInteractionTest {
         assertEquals(after,PortAnchorResolver.relative(restored,restored.node("passive"),"out"));
     }
 
+    @Test void skillAndJointPortsStayOnTheirAuthoredEdgesWhilePassivePortsMayOrbit(){
+        var skill=NodeDefinition.builder("skill").size(132,62).port(CanvasPort.input("in","rpg",2,66,62)).build();
+        var joint=NodeDefinition.builder("joint").size(72,72)
+                .port(CanvasPort.bidirectional("a","rpg",2,18,6))
+                .port(CanvasPort.bidirectional("b","rpg",2,36,6))
+                .port(CanvasPort.bidirectional("c","rpg",2,54,6)).build();
+        var passive=NodeDefinition.builder("passive").size(124,54).port(CanvasPort.output("out","rpg",2,89,27)).build();
+        Canvas canvas=new Canvas(CanvasDefinition.builder("fixed-ports").pannable(false).zoomable(false)
+                .registerNodeType(skill).registerNodeType(joint).registerNodeType(passive).build());
+        canvas.createNode("skill","skill",CanvasPoint.of(400,250),Map.of());
+        canvas.createNode("joint","joint",CanvasPoint.of(300,100),Map.of());
+        canvas.createNode("passive","passive",CanvasPoint.of(100,300),Map.of());
+        canvas.connect("one","passive","out","joint","a",EdgeStyle.standard("test"));
+        canvas.connect("two","joint","b","skill","in",EdgeStyle.standard("test"));
+        assertFalse(PortAnchorResolver.orbitConnected(canvas,"skill"));
+        assertFalse(PortAnchorResolver.orbitConnected(canvas,"joint"));
+        assertEquals(CanvasPoint.of(66,62),PortAnchorResolver.relative(canvas,canvas.node("skill"),"in"));
+        assertEquals(CanvasPoint.of(18,6),PortAnchorResolver.relative(canvas,canvas.node("joint"),"a"));
+        assertEquals(CanvasPoint.of(36,6),PortAnchorResolver.relative(canvas,canvas.node("joint"),"b"));
+        assertEquals(CanvasPoint.of(54,6),PortAnchorResolver.relative(canvas,canvas.node("joint"),"c"));
+    }
+
     @Test void commonImmutableViewModelSupportsHudAndReadOnlySearchMode() throws Exception {
         Canvas canvas=canvas();var window=LibraryBrowser.window(List.of(
                 entry("bolt","Lightning Bolt",CursorCanvasEditor.LibraryKind.SKILL)),"light",0,10);

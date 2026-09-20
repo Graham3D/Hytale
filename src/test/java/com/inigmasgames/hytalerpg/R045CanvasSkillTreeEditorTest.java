@@ -172,6 +172,12 @@ class R045CanvasSkillTreeEditorTest {
         assertTrue(java.util.Arrays.stream(after.equippedSkills).allMatch(java.util.Objects::isNull));
         assertTrue(java.util.Arrays.stream(after.equippedPassives).allMatch(java.util.Objects::isNull));
         assertTrue(after.linkEdges().isEmpty());assertEquals(learned,after.learnedSkills);assertEquals(owned,after.ownedPassives);
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(520,95),editor.canvas().node("joint01").position());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(930,95),editor.canvas().node("joint02").position());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(360,275),editor.canvas().node("skill01").position());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(940,275),editor.canvas().node("skill03").position());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(280,500),editor.canvas().node("passive01").position());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(1230,500),editor.canvas().node("passive06").position());
     }
 
     @Test void breakingJointToSkillHidesOnlySelectedSplineAndKeepsDetachedDraftPortIdentity(){

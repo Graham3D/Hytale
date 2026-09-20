@@ -40,8 +40,18 @@ public final class CanvasGraphSearchPage extends InteractiveCustomUIPage<CanvasG
         SkillTreeViewModel frame=view.get();
         CanvasGraphEditorHud.writeFrame(commands,frame,null,null);
         commands.set("#GraphSearchInput.Value",frame.query());
+        renderSearchChrome(commands,frame);
         events.addEventBinding(CustomUIEventBindingType.ValueChanged,"#GraphSearchInput",
                 new EventData().append("Action","change").append("@Value","#GraphSearchInput.Value"),false);
+        events.addEventBinding(CustomUIEventBindingType.Validating,"#GraphSearchInput",
+                new EventData().append("Action","done").append("@Value","#GraphSearchInput.Value"),false);
+        events.addEventBinding(CustomUIEventBindingType.Activating,"#GraphSearchClose",
+                new EventData().append("Action","done").append("@Value","#GraphSearchInput.Value"),false);
+        events.addEventBinding(CustomUIEventBindingType.Activating,"#GraphSearchOutside",
+                new EventData().append("Action","done").append("@Value","#GraphSearchInput.Value"),false);
+        for(int i=0;i<CanvasGraphEditorHud.LIBRARY_ROWS;i++)events.addEventBinding(
+                CustomUIEventBindingType.Activating,"#GraphSearchResult"+i,
+                new EventData().append("Action","select-index").append("@Value",Integer.toString(i)),false);
     }
 
     @Override public void handleDataEvent(@Nonnull Ref<EntityStore> ref,@Nonnull Store<EntityStore> store,Data data) {
@@ -53,13 +63,19 @@ public final class CanvasGraphSearchPage extends InteractiveCustomUIPage<CanvasG
         if("skills".equals(data.action)||"passives".equals(data.action)){
             refresh(action.apply(data.action,data.value));return;
         }
-        if("done".equals(data.action))close();
+        if("select-index".equals(data.action)){action.apply(data.action,data.value);close();return;}
+        if("done".equals(data.action)){action.apply("done",data.value);close();}
     }
 
     private void refresh(SkillTreeViewModel model){sendUpdate(frame(model),false);}
     private UICommandBuilder frame(SkillTreeViewModel model){
         UICommandBuilder update=new UICommandBuilder();
-        CanvasGraphEditorHud.writeFrame(update,model,null,null);return update;
+        CanvasGraphEditorHud.writeFrame(update,model,null,null);renderSearchChrome(update,model);return update;
+    }
+
+    private static void renderSearchChrome(UICommandBuilder commands,SkillTreeViewModel model){
+        for(int i=0;i<CanvasGraphEditorHud.LIBRARY_ROWS;i++)
+            commands.set("#GraphSearchResult"+i+".Visible",i<model.entries().size());
     }
 
     @Override public void onDismiss(@Nonnull Ref<EntityStore> ref,@Nonnull Store<EntityStore> store){dismissed.run();}

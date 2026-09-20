@@ -50,7 +50,7 @@ class SkillTreeVisualPolishTest {
         assertTrue(renderer.contains("node.occupied()?SKILL_TREE_ASSETS + \"Slot.png\""));
         assertTrue(renderer.contains(":SKILL_TREE_ASSETS + \"SpecialSlotTemporary.png\""));
         assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"skilltree_joint.png\""));
-        assertTrue(renderer.contains("StructuralCraftingArrow\" + port.orientation()"));
+        assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"skilltree_port.png\""));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/ContainerFullPatch.png"));
         assertTrue(ui.contains("#GraphEditorPrimaryFrame { Anchor: (Full: 0)"));
         assertTrue(ui.contains("#GraphEditorPrimaryHeader { Anchor: (Left: 18, Right: 18, Top: 18, Height: 46)"));
@@ -59,7 +59,8 @@ class SkillTreeVisualPolishTest {
         assertTrue(ui.contains("FontName: \"Secondary\""));
         assertTrue(ui.contains("RenderUppercase: true"));
         assertTrue(ui.contains("MaskTexturePath: \"Assets/SkillTree/Hytale/TextGradient.png\""));
-        assertTrue(ui.contains("Assets/SkillTree/Hytale/TabSelectedOverlay.png"));
+        assertTrue(ui.contains("#GraphEditorTitleSelection { Anchor: (Width: 83, Top: 2, Height: 62)"));
+        assertTrue(ui.contains("Background: \"Assets/SkillTree/Hytale/TabSelectedOverlay.png\""));
         assertFalse(ui.contains("Common/Container.ui"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/DiagramCraftingBackground.png"));
         assertTrue(ui.contains("Anchor: (Width: 236, Top: 4, Height: 11)"));
@@ -83,7 +84,11 @@ class SkillTreeVisualPolishTest {
         assertTrue(ui.contains("Assets/SkillTree/Hytale/Divider.png"));
         assertTrue(service.contains("this::constrainEditorNode"));
         assertTrue(service.contains("CanvasGraphEditorHud.TREE_LEFT"));
-        assertTrue(search.contains("only the"));
+        assertTrue(search.contains("native page owns typing"));
+        assertTrue(search.contains("#GraphSearchFocus"));
+        assertTrue(search.contains("#GraphSearchClose"));
+        assertTrue(search.contains("#GraphSearchOutside"));
+        assertTrue(search.contains("#GraphSearchResult15"));
         assertFalse(search.contains("GraphSearchReadOnlyShade"));
         assertFalse(search.contains("GraphSearchSkills"));
         assertFalse(ui.contains("GraphDeleteLink"));
@@ -91,11 +96,18 @@ class SkillTreeVisualPolishTest {
         assertTrue(ui.contains("DiagramCraftingBackground.png\", Border: 82"));
         assertTrue(ui.contains("pairing a Passive to Skill"));
         assertTrue(ui.contains("Anchor: (Left: 300, Right: 300, Bottom: 62, Height: 34)"));
-        assertTrue(renderer.contains("- 9, 18, 18"));
+        assertTrue(renderer.contains("- 5, 10, 10"));
         assertTrue(ui.contains("#GraphEditorReset"));
         assertTrue(ui.contains("Text: \"RESET\""));
         assertTrue(search.contains("Left: 126, Top: 182"));
         assertTrue(renderer.contains("model.searchMode()"));
+        assertTrue(ui.contains("#GraphInspectorRow0 { Visible: false; Anchor: (Left: 18, Top: 232, Width: 216, Height: 88)"));
+        assertTrue(ui.contains("#GraphInspectorRow5 { Visible: false; Anchor: (Left: 18, Top: 682, Width: 216, Height: 88)"));
+        String searchPage=Files.readString(Path.of("src/main/java/com/inigmasgames/canvasui/rendering/CanvasGraphSearchPage.java"));
+        assertTrue(searchPage.contains("CustomUIEventBindingType.Validating"));
+        assertTrue(searchPage.contains("select-index"));
+        assertTrue(searchPage.contains("GraphSearchOutside"));
+        assertTrue(service.contains("SKILLTREE_SEARCH_RESULT_SELECTED"));
     }
 
     @Test void saveUsesExistingCommitAuthorityAndExitUsesTheVisibleFooterRegion() throws Exception {

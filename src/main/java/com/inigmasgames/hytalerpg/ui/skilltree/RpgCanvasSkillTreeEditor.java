@@ -160,7 +160,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         MutationResult result=mutations.reset(player,mutations.view(player).state().revision);
         if(!result.success())return reject(result.code()+": "+result.message(),presentationSnapshot);
         portBindings.clear(player);
-        return new Result(true,"Skill Tree reset",authoritativeSnapshot(presentationSnapshot));
+        return new Result(true,"Skill Tree reset and reorganized",authoritativeSnapshot(canonicalResetLayout(presentationSnapshot)));
     }
 
     @Override public Inspector inspect(String entryId,String nodeId){
@@ -188,14 +188,14 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
 
     private Canvas createCanvas() {
         NodeDefinition skill = NodeDefinition.builder("skill").size(132, 62)
-                .port(CanvasPort.input("in", "rpg-link", 8, 35, 31)).build();
+                .port(CanvasPort.input("in", "rpg-link", 8, 66, 62)).build();
         // max=2 permits an atomic reparent candidate; the authoritative snapshot always restores one output.
         NodeDefinition passive = NodeDefinition.builder("passive").size(124, 54)
                 .port(CanvasPort.output("out", "rpg-link", 2, 89, 27)).build();
         NodeDefinition joint = NodeDefinition.builder("joint").size(72, 72)
-                .port(CanvasPort.bidirectional("a", "rpg-link", 2, 36, 5))
-                .port(CanvasPort.bidirectional("b", "rpg-link", 2, 67, 53))
-                .port(CanvasPort.bidirectional("c", "rpg-link", 2, 5, 53)).build();
+                .port(CanvasPort.bidirectional("a", "rpg-link", 2, 18, 6))
+                .port(CanvasPort.bidirectional("b", "rpg-link", 2, 36, 6))
+                .port(CanvasPort.bidirectional("c", "rpg-link", 2, 54, 6)).build();
         CanvasDefinition definition = CanvasDefinition.builder("rpg-skill-tree-" + player)
                 .pannable(false).zoomable(false).panGesture(PanGesture.MIDDLE_BUTTON)
                 .allowCycles(false).allowDuplicateEdges(false)
@@ -209,18 +209,38 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
                             "Use Passive → Skill/Joint or Joint → Skill");
                 }).build();
         Canvas result = new Canvas(definition);
-        result.createNode(LinkNodeId.SKILL01.externalId(), "skill", CanvasPoint.of(680, 42), Map.of());
-        result.createNode(LinkNodeId.SKILL02.externalId(), "skill", CanvasPoint.of(680, 204), Map.of());
-        result.createNode(LinkNodeId.SKILL03.externalId(), "skill", CanvasPoint.of(680, 366), Map.of());
-        result.createNode(LinkNodeId.JOINT01.externalId(), "joint", CanvasPoint.of(515, 118), Map.of());
-        result.createNode(LinkNodeId.JOINT02.externalId(), "joint", CanvasPoint.of(515, 304), Map.of());
-        result.createNode(LinkNodeId.PASSIVE01.externalId(), "passive", CanvasPoint.of(300, 48), Map.of());
-        result.createNode(LinkNodeId.PASSIVE02.externalId(), "passive", CanvasPoint.of(300, 116), Map.of());
-        result.createNode(LinkNodeId.PASSIVE03.externalId(), "passive", CanvasPoint.of(300, 184), Map.of());
-        result.createNode(LinkNodeId.PASSIVE04.externalId(), "passive", CanvasPoint.of(300, 292), Map.of());
-        result.createNode(LinkNodeId.PASSIVE05.externalId(), "passive", CanvasPoint.of(300, 360), Map.of());
-        result.createNode(LinkNodeId.PASSIVE06.externalId(), "passive", CanvasPoint.of(300, 428), Map.of());
+        for(LinkNodeId id:LinkNodeId.values())result.createNode(id.externalId(),id.kind().name().toLowerCase(),canonicalPosition(id),Map.of());
         return result;
+    }
+
+    private static CanvasSnapshot canonicalResetLayout(CanvasSnapshot presentation){
+        List<CanvasSnapshot.NodeState> nodes=new ArrayList<>();
+        for(CanvasSnapshot.NodeState node:presentation.nodes()){
+            LinkNodeId id;try{id=LinkNodeId.parse(node.nodeId());}catch(IllegalArgumentException ignored){continue;}
+            Map<String,String> metadata=new LinkedHashMap<>();
+            node.metadata().forEach((key,value)->{
+                if(!key.startsWith(com.inigmasgames.canvasui.api.editor.PortAnchorResolver.PREFIX))metadata.put(key,value);
+            });
+            CanvasPoint position=canonicalPosition(id);
+            nodes.add(new CanvasSnapshot.NodeState(node.nodeId(),node.type(),position.x(),position.y(),metadata,node.enabled()));
+        }
+        return new CanvasSnapshot(presentation.canvasId(),presentation.viewport(),nodes,List.of(),null);
+    }
+
+    private static CanvasPoint canonicalPosition(LinkNodeId id){
+        return switch(id){
+            case JOINT01 -> CanvasPoint.of(520,95);
+            case JOINT02 -> CanvasPoint.of(930,95);
+            case SKILL01 -> CanvasPoint.of(360,275);
+            case SKILL02 -> CanvasPoint.of(650,275);
+            case SKILL03 -> CanvasPoint.of(940,275);
+            case PASSIVE01 -> CanvasPoint.of(280,500);
+            case PASSIVE02 -> CanvasPoint.of(470,500);
+            case PASSIVE03 -> CanvasPoint.of(660,500);
+            case PASSIVE04 -> CanvasPoint.of(850,500);
+            case PASSIVE05 -> CanvasPoint.of(1040,500);
+            case PASSIVE06 -> CanvasPoint.of(1230,500);
+        };
     }
 
     private CanvasSnapshot authoritativeSnapshot(CanvasSnapshot presentation) {

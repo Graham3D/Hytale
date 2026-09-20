@@ -1,10 +1,15 @@
 Group {
   Anchor: (Full: 0);
-  // The editor composition is supplied by CanvasGraphEditorHud.ui. This page adds only the
-  // native keyboard-focus control, precisely over the passive HUD search field.
+  // The native page owns typing, but retains the exact editor composition beneath these controls.
+  Button #GraphSearchOutside {
+    Anchor: (Full: 0);
+    Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #00000000), Pressed: (Background: #00000000));
+  }
+  Group #GraphSearchFocus { Anchor: (Left: 125, Top: 181, Width: 230, Height: 40); Background: (Color: #78c6d0ff); }
+  Group { Anchor: (Left: 127, Top: 183, Width: 226, Height: 36); Background: (Color: #202b42ff); }
   Group { Anchor: (Left: 126, Top: 182, Width: 228, Height: 38); Background: (Color: #00000000);
     TextField #GraphSearchInput {
-      Anchor: (Width: 228, Height: 38);
+      Anchor: (Left: 0, Top: 0, Width: 194, Height: 38);
       Background: (Color: #00000000);
       Padding: (Horizontal: 6, Vertical: 8);
       Style: (FontSize: 11, TextColor: #b9cce0);
@@ -12,4 +17,25 @@ Group {
       PlaceholderText: "Search skills...";
     }
   }
+  Button #GraphSearchClose {
+    Anchor: (Left: 324, Top: 186, Width: 26, Height: 30);
+    Style: ButtonStyle(Default: (Background: #29455cff), Hovered: (Background: #3d607aff), Pressed: (Background: #1d3448ff));
+  }
+  Label { Text: "X"; Anchor: (Left: 324, Top: 191, Width: 26, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff, HorizontalAlignment: Center, VerticalAlignment: Center); }
+  Button #GraphSearchResult0 { Visible: false; Anchor: (Left: 122, Top: 222, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult1 { Visible: false; Anchor: (Left: 122, Top: 265, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult2 { Visible: false; Anchor: (Left: 122, Top: 308, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult3 { Visible: false; Anchor: (Left: 122, Top: 351, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult4 { Visible: false; Anchor: (Left: 122, Top: 394, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult5 { Visible: false; Anchor: (Left: 122, Top: 437, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult6 { Visible: false; Anchor: (Left: 122, Top: 480, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult7 { Visible: false; Anchor: (Left: 122, Top: 523, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult8 { Visible: false; Anchor: (Left: 122, Top: 566, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult9 { Visible: false; Anchor: (Left: 122, Top: 609, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult10 { Visible: false; Anchor: (Left: 122, Top: 652, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult11 { Visible: false; Anchor: (Left: 122, Top: 695, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult12 { Visible: false; Anchor: (Left: 122, Top: 738, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult13 { Visible: false; Anchor: (Left: 122, Top: 781, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult14 { Visible: false; Anchor: (Left: 122, Top: 824, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
+  Button #GraphSearchResult15 { Visible: false; Anchor: (Left: 122, Top: 867, Width: 218, Height: 39); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #78c6d022), Pressed: (Background: #78c6d044)); }
 }

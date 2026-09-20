@@ -1297,13 +1297,25 @@ public final class CursorHudProbeService implements AutoCloseable {
                 if("skills".equals(action)||"passives".equals(action)){
                     libraryTab="skills".equals(action)?CursorCanvasEditor.LibraryKind.SKILL:
                             CursorCanvasEditor.LibraryKind.PASSIVE;libraryScrollOffset=0;
-                }else{
+                }else if("select-index".equals(action)){
+                    int row;try{row=Integer.parseInt(value);}catch(NumberFormatException ignored){row=-1;}
+                    List<CursorCanvasEditor.LibraryEntry> page=editorPage();
+                    if(row>=0&&row<page.size()){
+                        CursorCanvasEditor.LibraryEntry selected=page.get(row);
+                        lockedEntryId=selected.id();lockedNodeId="";hoveredEntryId=selected.id();hoveredNodeId="";
+                        editorStatus="Selected "+selected.name();
+                        traceLifecycle("SKILLTREE_SEARCH_RESULT_SELECTED","entry="+selected.id()+" row="+row);
+                    }
+                    return editorView(true);
+                }else if("change".equals(action)||"clear".equals(action)){
                     libraryQuery="clear".equals(action)?"":value==null?"":value;libraryScrollOffset=0;
+                }else if("done".equals(action)){
+                    libraryQuery=value==null?libraryQuery:value;
                 }
                 editorStatus=libraryQuery.isBlank()?"Full "+libraryTab.name().toLowerCase(Locale.ROOT)+" library"
                         :"Search: "+libraryQuery;
-                traceLifecycle("SKILLTREE_SEARCH_CHANGED","tab="+libraryTab+" query="+libraryQuery
-                        +" matches="+editorProjection().totalMatches());
+                traceLifecycle("done".equals(action)?"SKILLTREE_SEARCH_FINISHED":"SKILLTREE_SEARCH_CHANGED",
+                        "tab="+libraryTab+" query="+libraryQuery+" matches="+editorProjection().totalMatches());
                 return editorView(true);
             },()->world.execute(()->{if(sessions.get(playerId)==this){searchPage=null;renderEditor();}}));
             Ref<EntityStore> ref=playerRef.getReference();
