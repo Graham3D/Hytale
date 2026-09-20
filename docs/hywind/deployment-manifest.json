@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.22",
-    "revision": "R067",
+    "version": "0.1.0-merge.23",
+    "revision": "R068",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "ea19efd0a6fe623c852fde2ebc977bb6e504b817",
+    "implementationCommit": "869d484d01e1d82d1edf8aed9eb92942bedb744c",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "50C0EACCD46F167AE9B24B010811C3A4732F7D3FAE831930E85098D7BD323B49",
-    "bytes": 13434030,
+    "sha256": "7A5CAD3020BF53E7626F45DDF8D91E6ED4A4B90C5F94F1676D10416741D50353",
+    "bytes": 13434126,
     "entries": 5865,
     "classes": 2209,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T20:00:56.5783862Z",
+    "deployedAtUtc": "2026-09-20T20:20:54.1209688Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "50C0EACCD46F167AE9B24B010811C3A4732F7D3FAE831930E85098D7BD323B49",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T200055Z",
-    "fullBackupFiles": 773,
-    "fullBackupBytes": 882472976,
+    "installedSha256": "7A5CAD3020BF53E7626F45DDF8D91E6ED4A4B90C5F94F1676D10416741D50353",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T202053Z",
+    "fullBackupFiles": 779,
+    "fullBackupBytes": 885616363,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.21",
-        "revision": "R066",
-        "sha256": "5541596CF3EDA107658EAFB897A1449A69972F170FC6C56286335570464B9FE0"
+        "version": "0.1.0-merge.22",
+        "revision": "R067",
+        "sha256": "50C0EACCD46F167AE9B24B010811C3A4732F7D3FAE831930E85098D7BD323B49"
       }
     ]
   },
@@ -62,7 +62,7 @@
     "taverns": "mods/InigmasGames_Taverns"
   },
   "validation": {
-    "rpgJUnitTests": 2377,
+    "rpgJUnitTests": 2378,
     "nativeControlJUnitTests": 67,
     "canvasJUnitTests": 47,
     "tavernJUnitTests": 5,
@@ -85,6 +85,9 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
+    "R068 repeated Spark casts remain available after earlier variable three-to-five-bolt casts terminate, provided normal Mana/cooldown requirements pass",
+    "R068 Spark visibly cycles all four vertical-strip frames through the carrier's Idle animation state as well as FlyIdle",
+    "R068 Spark terminates without the generic vertical projectile-expiry marker",
     "R067 Spark renders at a two-block square footprint, travels at 6 m/s, and retains an actual-path budget of 15 m",
     "R067 Spark's native-style vertical animation strip resolves independently from the authored E/R ability icons and no HUD slot displays a terrain/map snapshot",
     "R067 Spark still costs 7 Mana; low-resource activation is rejected with LOW MANA and succeeds normally after Mana recovery",
