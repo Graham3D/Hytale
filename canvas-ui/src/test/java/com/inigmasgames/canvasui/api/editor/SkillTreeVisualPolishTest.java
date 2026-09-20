@@ -100,4 +100,14 @@ class SkillTreeVisualPolishTest {
         assertTrue(service.contains("VISIBLE_EXIT_REGION"));
         assertTrue(service.contains("private boolean saveHit"));
     }
+
+    @Test void graphEditorDoesNotOpenACompetingCustomPage() throws Exception {
+        String service = Files.readString(SERVICE);
+        assertTrue(service.contains("editorHud = new CanvasGraphEditorHud"));
+        assertTrue(service.contains("manager.addCustomHud(playerRef, editorHud)"));
+        assertFalse(service.contains("CanvasGraphEscapePage"));
+        assertFalse(service.contains("openEscapePage"));
+        assertFalse(service.contains("ESCAPE_DISMISS"));
+        assertFalse(Files.exists(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphEscapePage.ui")));
+    }
 }

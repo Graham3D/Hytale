@@ -59,7 +59,6 @@ import com.inigmasgames.canvasui.rendering.CanvasCursorProbePage;
 import com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend;
 import com.inigmasgames.canvasui.rendering.HytaleCursorHudInputBackend;
 import com.inigmasgames.canvasui.rendering.CanvasGraphEditorHud;
-import com.inigmasgames.canvasui.rendering.CanvasGraphEscapePage;
 import com.inigmasgames.canvasui.rendering.CanvasGraphSearchPage;
 import com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend;
 import com.inigmasgames.canvasui.runtime.CanvasInputController;
@@ -583,7 +582,6 @@ public final class CursorHudProbeService implements AutoCloseable {
         private final TreeLinkInteraction linkInteraction = new TreeLinkInteraction();
         private String libraryQuery = "";
         private CanvasGraphSearchPage searchPage;
-        private CanvasGraphEscapePage escapePage;
         private String editorStatus = "Ready";
         private String hoveredEntryId = "";
         private String hoveredNodeId = "";
@@ -702,7 +700,6 @@ public final class CursorHudProbeService implements AutoCloseable {
                 graphInput = new CanvasInputController(graph, backend, this::persistGraph,
                         this::graphRenderDue, this::recordGraphPointer, this::constrainEditorNode,
                         nodeId -> PortAnchorResolver.orbitConnected(graph,nodeId));
-                openEscapePage();
                 renderEditor();
                 traceLifecycle("GRAPH_EDITOR_READY", "editor=" + editor.editorId()
                         + " nodes=" + graph.nodes().size() + " edges=" + graph.edges().size());
@@ -1198,8 +1195,7 @@ public final class CursorHudProbeService implements AutoCloseable {
 
         private void openSearch(){
             if(searchPage!=null)return;
-            if(player.getPageManager().getCustomPage()!=null&&player.getPageManager().getCustomPage()!=escapePage){editorStatus="Close the current page before searching";renderEditor();return;}
-            if(escapePage!=null){escapePage.closeSilently();escapePage=null;}
+            if(player.getPageManager().getCustomPage()!=null){editorStatus="Close the current page before searching";renderEditor();return;}
             libraryDrag.cancel();
             searchPage=new CanvasGraphSearchPage(playerRef,()->editorView(true),(action,value)->{
                 if("skills".equals(action)||"passives".equals(action)){
@@ -1213,19 +1209,10 @@ public final class CursorHudProbeService implements AutoCloseable {
                 traceLifecycle("SKILLTREE_SEARCH_CHANGED","tab="+libraryTab+" query="+libraryQuery
                         +" matches="+editorProjection().totalMatches());
                 return editorView(true);
-            },()->world.execute(()->{if(sessions.get(playerId)==this){searchPage=null;openEscapePage();renderEditor();}}));
+            },()->world.execute(()->{if(sessions.get(playerId)==this){searchPage=null;renderEditor();}}));
             Ref<EntityStore> ref=playerRef.getReference();
             if(ref==null||!ref.isValid()){searchPage=null;editorStatus="Search unavailable: player reference lost";renderEditor();return;}
             player.getPageManager().openCustomPage(ref,ref.getStore(),searchPage);
-        }
-
-        private void openEscapePage(){
-            if(context!=Context.GRAPH_EDITOR||escapePage!=null||searchPage!=null||closing.get())return;
-            Ref<EntityStore> ref=playerRef.getReference();
-            if(ref==null||!ref.isValid())return;
-            escapePage=new CanvasGraphEscapePage(playerRef,()->world.execute(()->
-                    CursorHudProbeService.this.close(playerId,"ESCAPE_DISMISS")));
-            player.getPageManager().openCustomPage(ref,ref.getStore(),escapePage);
         }
 
         private void scheduleDragAnimation(long generation,boolean accepted){
@@ -1368,8 +1355,6 @@ public final class CursorHudProbeService implements AutoCloseable {
             } catch (RuntimeException error) { cleanupFailures.add("PAGE:" + error.getClass().getSimpleName()); }
             try { if(searchPage!=null)searchPage.closeFromService(); }
             catch(RuntimeException error){cleanupFailures.add("SEARCH_PAGE:"+error.getClass().getSimpleName());}
-            try { if(escapePage!=null)escapePage.closeSilently(); }
-            catch(RuntimeException error){cleanupFailures.add("ESCAPE_PAGE:"+error.getClass().getSimpleName());}
             try { restoreCamera(this); }
             catch (RuntimeException error) { cleanupFailures.add("CAMERA:" + error.getClass().getSimpleName()); }
 
