@@ -16,7 +16,7 @@
         "details": {
           "element": "LIGHTNING", "chillStacks": 0, "bossRootSlow": 0, "bossSlowOptInRoles": [],
           "pattern": {"count": 5, "minimumCount": 3, "horizontalDegrees": 60, "verticalDegrees": 16, "intervalSeconds": 0, "homingTurnDegrees": 0, "acquisitionRadius": 0, "ballisticAim": false},
-          "presentation": {"castParticle": "", "projectileParticle": "Hywind_Charged_Bolt", "impactParticle": "Laser_Impact", "projectileScale": 1, "impactScale": 1}
+          "presentation": {"castParticle": "", "projectileParticle": "", "impactParticle": "Laser_Impact", "projectileScale": 1, "impactScale": 1}
         }
       }
     },
