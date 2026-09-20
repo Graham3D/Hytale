@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.16",
-    "revision": "R061",
+    "version": "0.1.0-merge.17",
+    "revision": "R062",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "abd9b4f47f63afa3efaed64080f571bc3017c17e",
+    "implementationCommit": "3160d525b529827cd5700199d3d3e5be436b1d9d",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "61C1887E7D9A2418BE96C2CCCEE947B22375C9DD2D9C8C2782525745DDDB473E",
-    "bytes": 13426483,
-    "entries": 5861,
+    "sha256": "1FFD58CB854AE36EDC4EFD11A1304B3A99DDB338F49FC034EEC9A23BE3A49A1C",
+    "bytes": 13430097,
+    "entries": 5862,
     "classes": 2207,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T15:00:38.9428427Z",
+    "deployedAtUtc": "2026-09-20T16:00:51.9277207Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "61C1887E7D9A2418BE96C2CCCEE947B22375C9DD2D9C8C2782525745DDDB473E",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T150038Z",
-    "fullBackupFiles": 721,
-    "fullBackupBytes": 576498397,
+    "installedSha256": "1FFD58CB854AE36EDC4EFD11A1304B3A99DDB338F49FC034EEC9A23BE3A49A1C",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T160051Z",
+    "fullBackupFiles": 731,
+    "fullBackupBytes": 725233562,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.15",
-        "revision": "R060",
-        "sha256": "67713D1DB43D1661DE9EAA94DE76434CBECDC01ECF40B9F0FEBB92FE8E50ABBD"
+        "version": "0.1.0-merge.16",
+        "revision": "R061",
+        "sha256": "61C1887E7D9A2418BE96C2CCCEE947B22375C9DD2D9C8C2782525745DDDB473E"
       }
     ]
   },
@@ -64,14 +64,14 @@
   "validation": {
     "rpgJUnitTests": 2370,
     "nativeControlJUnitTests": 67,
-    "canvasJUnitTests": 46,
+    "canvasJUnitTests": 47,
     "tavernJUnitTests": 5,
     "tavernRetainedExecutableGates": 8,
     "npcRetainedExecutableGates": 149,
     "npcLiveLocalModelTests": "SKIPPED_BY_RETAINED_HARNESS",
     "customUiDocuments": 59,
     "authoredIconHashesVerified": 17,
-    "skillTreeAssetHashesVerified": 33,
+    "skillTreeAssetHashesVerified": 34,
     "packageAudit": "PASS",
     "isolatedSmoke": "PASS",
     "deploymentDryRun": "PASS",
@@ -85,6 +85,12 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
+    "R062 Details content remains contained within its divided inspector rows without text overflow",
+    "R062 Search visually remains inside the Library, exposes the active X control, preserves query/tab/scroll/Inspector state, and restores graph control after result click, Enter, X, outside click, or first Escape",
+    "R062 selected-page gold trim renders at native proportions and sits flush with the Skill Tree header frame",
+    "R062 Skill connector ports render on the bottom edge, Joint ports remain fixed to the triangle's straight edge, and Passive ports retain active-drag orbit behavior",
+    "R062 owner-authored white connector-port artwork replaces the gold triangle and integrates with white splines",
+    "R062 confirmed Reset clears equipped tree content and links, strips stale port anchors, and restores the canonical two-Joint/three-Skill/six-Passive layout",
     "R061 native-gradient Skill Tree title and selected-page gold line/up-pointer render like the Inventory header",
     "R061 tab/footer/confirmation button labels highlight on hover",
     "R061 focused Search Skills field stays aligned with one placeholder and unchanged typography",
