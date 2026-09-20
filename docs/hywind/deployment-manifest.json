@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.15",
-    "revision": "R060",
+    "version": "0.1.0-merge.16",
+    "revision": "R061",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "b77ac826a5f69aa4cefa3488b1f208c73e89719f",
+    "implementationCommit": "abd9b4f47f63afa3efaed64080f571bc3017c17e",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "67713D1DB43D1661DE9EAA94DE76434CBECDC01ECF40B9F0FEBB92FE8E50ABBD",
-    "bytes": 13420236,
-    "entries": 5859,
+    "sha256": "61C1887E7D9A2418BE96C2CCCEE947B22375C9DD2D9C8C2782525745DDDB473E",
+    "bytes": 13426483,
+    "entries": 5861,
     "classes": 2207,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T14:21:07.2073078Z",
+    "deployedAtUtc": "2026-09-20T15:00:38.9428427Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "67713D1DB43D1661DE9EAA94DE76434CBECDC01ECF40B9F0FEBB92FE8E50ABBD",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T142106Z",
-    "fullBackupFiles": 710,
-    "fullBackupBytes": 574307444,
+    "installedSha256": "61C1887E7D9A2418BE96C2CCCEE947B22375C9DD2D9C8C2782525745DDDB473E",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T150038Z",
+    "fullBackupFiles": 721,
+    "fullBackupBytes": 576498397,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.14",
-        "revision": "R059",
-        "sha256": "2072D6AAD3E834A6FAFA4A7E9BB2E73289E27A6D6953C36A6D3FBC9CE06DBEC8"
+        "version": "0.1.0-merge.15",
+        "revision": "R060",
+        "sha256": "67713D1DB43D1661DE9EAA94DE76434CBECDC01ECF40B9F0FEBB92FE8E50ABBD"
       }
     ]
   },
@@ -64,14 +64,14 @@
   "validation": {
     "rpgJUnitTests": 2370,
     "nativeControlJUnitTests": 67,
-    "canvasJUnitTests": 45,
+    "canvasJUnitTests": 46,
     "tavernJUnitTests": 5,
     "tavernRetainedExecutableGates": 8,
     "npcRetainedExecutableGates": 149,
     "npcLiveLocalModelTests": "SKIPPED_BY_RETAINED_HARNESS",
     "customUiDocuments": 59,
     "authoredIconHashesVerified": 17,
-    "skillTreeAssetHashesVerified": 31,
+    "skillTreeAssetHashesVerified": 33,
     "packageAudit": "PASS",
     "isolatedSmoke": "PASS",
     "deploymentDryRun": "PASS",
@@ -85,6 +85,13 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
+    "R061 native-gradient Skill Tree title and selected-page gold line/up-pointer render like the Inventory header",
+    "R061 tab/footer/confirmation button labels highlight on hover",
+    "R061 focused Search Skills field stays aligned with one placeholder and unchanged typography",
+    "R061 center ornament reaches all four Skill Tree frame bounds without stretched corners and the Library shows sixteen entries",
+    "R061 Reset confirmation is screen-centered and confirmed Reset remains scoped to equipped tree content",
+    "R061 dirty Exit opens a centered Exit without saving Yes/No confirmation; No retains the draft and Yes discards it",
+    "R061 Save commits drafted node/link changes and shows a large centered green Saved acknowledgement that fades out",
     "R060 /rpg skilltree visibly opens the graph HUD and remains active until the player exits",
     "R060 red Exit restores camera, HUD, and input exactly once; Escape-key parity remains pending without the removed unsafe page sidecar",
     "R058 dominant outer Primary Frame, native centered title, and undistorted fixed-aspect center ornament",
