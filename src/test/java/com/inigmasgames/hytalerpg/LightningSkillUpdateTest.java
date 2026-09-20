@@ -25,6 +25,8 @@ class LightningSkillUpdateTest {
         assertTrue(catalog.skill(new SkillId("chain_lightning")).isEmpty());
         assertTrue(catalog.skill(new SkillId("spark")).isEmpty());
         assertEquals("charged_bolt",catalog.resolveSkill("Spark").value().id().value());
+        assertEquals("Spark",catalog.resolveSkill("Spark").value().name());
+        assertEquals("charged_bolt",catalog.resolveSkill("Charged Bolt").value().id().value());
         assertEquals(3,profiles.require("charged_bolt").projectile().details().pattern().minimumCount());
         assertEquals(5,profiles.require("charged_bolt").projectile().details().pattern().count());
         assertTrue(profiles.require("lightning_bolt").allowedMainHandKinds().isEmpty());

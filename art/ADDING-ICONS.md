@@ -27,7 +27,7 @@ content that build does not know.
 | Blessing of Protection | SkillBlessingofprotection.png | art/Skills |
 | Mantle of Flame | SkillMantleofflame.png | art/Skills |
 | Summon Skeleton Archers | SkillSummonskeletonarchers.png | art/Skills |
-| Charged Bolt | SkillChargedbolt.png | art/Skills |
+| Spark | SkillChargedbolt.png | art/Skills |
 | Lightning Bolt | SkillLightningbolt.png | art/Skills |
 | Ball Lightning | SkillBalllightning.png | art/Skills |
 | Lightning Coil | SkillLightningcoil.png | art/Skills |

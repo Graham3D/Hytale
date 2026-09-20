@@ -26,6 +26,7 @@ final class HytaleAreaQueries {
     private static final Box RAY = new Box(-.01, -.01, -.01, .01, .01, .01);
     record Candidate(Ref<EntityStore> ref, AreaGeometry.Bounds bounds) { }
     record Result(List<Candidate> candidates, boolean overflow) { }
+    record ProjectileContact(Vec3 point,Vec3 normal,double fraction) { }
     static boolean loaded(Store<EntityStore> store,Vec3 point) {
         return store.getExternalData().getWorld().getChunkIfLoaded(com.hypixel.hytale.math.util.ChunkUtil.indexChunkFromBlock(point.x(),point.z()))!=null;
     }
@@ -77,6 +78,21 @@ final class HytaleAreaQueries {
         CollisionModule.findCollisions(new Box(-radius,-radius,-radius,radius,radius,radius),vector(origin),vector(destination.subtract(origin)),result,store);
         for(int i=0;i<result.getBlockCollisionCount();i++)if(result.getBlockCollision(i).collisionStart<1-1e-6)return false;
         return true;
+    }
+    static Optional<ProjectileContact> projectileContact(Store<EntityStore> store,Vec3 origin,Vec3 destination,double radius) {
+        if(!Double.isFinite(radius)||radius<=0)throw new IllegalArgumentException("Invalid projectile sweep radius");
+        var result=new CollisionResult();result.setDefaultPlayerSettings();
+        result.disableCharacterCollisions();result.disableTriggerBlocks();result.disableDamageBlocks();
+        Vec3 delta=destination.subtract(origin);
+        CollisionModule.findCollisions(new Box(-radius,-radius,-radius,radius,radius,radius),vector(origin),vector(delta),result,store);
+        BlockCollisionData closest=null;
+        for(int i=0;i<result.getBlockCollisionCount();i++){
+            var hit=result.getBlockCollision(i);
+            if(hit.collisionStart<1-1e-6&&(closest==null||hit.collisionStart<closest.collisionStart))closest=hit;
+        }
+        if(closest==null)return Optional.empty();
+        double fraction=Math.clamp(closest.collisionStart,0,1);
+        return Optional.of(new ProjectileContact(origin.add(delta.multiply(fraction)),vec(closest.collisionNormal),fraction));
     }
     /** Saves the original aiming ray's world endpoint; does not acquire an enemy or cross its first blocking surface. */
     static Vec3 rayEndpoint(Store<EntityStore> store,Vec3 origin,Vec3 direction,double range) {

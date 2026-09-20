@@ -89,7 +89,7 @@
     {
       "kind": "Skill",
       "id": "charged_bolt",
-      "name": "Charged Bolt",
+      "name": "Spark",
       "fileName": "SkillChargedbolt.png",
       "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Charged_Bolt.json"
     },

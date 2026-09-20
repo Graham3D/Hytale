@@ -36,7 +36,7 @@ class TreeEditorInteractionTest {
     @Test void continuousWindowClampsOffsetAfterSearchAndExposesProportionalScrollbar(){
         var source=List.of(entry("a","Arc",CursorCanvasEditor.LibraryKind.SKILL),
                 entry("b","Ball Lightning",CursorCanvasEditor.LibraryKind.SKILL),
-                entry("c","Charged Bolt",CursorCanvasEditor.LibraryKind.SKILL),
+                entry("c","Spark",CursorCanvasEditor.LibraryKind.SKILL),
                 entry("d","Fire Bolt",CursorCanvasEditor.LibraryKind.SKILL));
         var bottom=LibraryBrowser.window(source,"",99,2);
         assertEquals(2,bottom.offset());assertEquals(List.of("c","d"),bottom.entries().stream().map(CursorCanvasEditor.LibraryEntry::id).toList());

@@ -88,6 +88,7 @@ import com.inigmasgames.hytalerpg.execution.projectile.ProjectileBallistics;
 import com.inigmasgames.hytalerpg.execution.projectile.FireballCharge;
 import com.inigmasgames.hytalerpg.execution.projectile.FireballTrajectory;
 import com.inigmasgames.hytalerpg.execution.projectile.FireProjectilePresentation;
+import com.inigmasgames.hytalerpg.execution.projectile.GroundSparkSteering;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileDetonation;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileContinuationBalance;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileLaunchQueue;
@@ -1794,6 +1795,15 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 Vec3 eye=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition()).add(new Vec3(0,1.35,0));
                 Vec3 direction=context.target()==null?aim(store,actor):context.target().point().subtract(eye).normalized();
                 Vec3 origin=eye.add(direction.multiply(.65));
+                if(isGroundSpark(context)) {
+                    direction=direction.horizontalNormalized();
+                    Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
+                    Vec3 release=feet.add(direction.multiply(.55));
+                    Vec3 ground=HytaleAreaQueries.ground(store,release.add(new Vec3(0,1.6,0)),new Vec3(0,-1,0),3)
+                            .orElseThrow(()->new IllegalStateException("SPARK_GROUND_ORIGIN_UNAVAILABLE"));
+                    if(Math.abs(ground.y()-feet.y())>1.1)throw new IllegalStateException("SPARK_GROUND_ORIGIN_OUT_OF_TOLERANCE");
+                    origin=ground.add(new Vec3(0,.49,0));
+                }
                 if(authored.details().pattern().ballisticAim()) {
                     origin=eye.add(context.target().direction().multiply(.65));
                     if(!authored.details().motion().timedBallistic())direction=ballisticSolution(context.profile(),context.compiledPlan(),origin,context.target().point())
@@ -1821,17 +1831,19 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 emitAuthoredProjectileCast(context,plans);
                 presentProjectileSound(context,store,origin,FireProjectilePresentation.launchSound(context.profile().skillId(),context.derivedRelease()),
                         "FIRE_PROJECTILE_LAUNCH_SOUND","PROJECTILE_LAUNCH_SOUND");
-                presentAuthoredParticle(context,store,origin,authored.details().presentation().castParticle(),"CAST_PARTICLE");
-                try{
-                    if(context.profile().skillId().equals("snipe"))
-                        com.hypixel.hytale.server.core.entity.AnimationUtils.playAnimation(actor,
-                                com.hypixel.hytale.protocol.AnimationSlot.Action,"Shortbow","ShootCharged",true,store);
-                    else NativeStrikeFeedback.play(store,actor,context,0);
-                }catch(RuntimeException unavailable){
-                    emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","PROJECTILE_CAST_ANIMATION_UNAVAILABLE","connectedProof",false));
+                if(!isGroundSpark(context)) {
+                    presentAuthoredParticle(context,store,origin,authored.details().presentation().castParticle(),"CAST_PARTICLE");
+                    try{
+                        if(context.profile().skillId().equals("snipe"))
+                            com.hypixel.hytale.server.core.entity.AnimationUtils.playAnimation(actor,
+                                    com.hypixel.hytale.protocol.AnimationSlot.Action,"Shortbow","ShootCharged",true,store);
+                        else NativeStrikeFeedback.play(store,actor,context,0);
+                    }catch(RuntimeException unavailable){
+                        emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","PROJECTILE_CAST_ANIMATION_UNAVAILABLE","connectedProof",false));
+                    }
+                    try{if(!authored.details().presentation().authored())vfx.present(store.getExternalData().getWorld(),player,context.compiledPlan().vfxRecipeId());}
+                    catch(RuntimeException unavailable){emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","PROJECTILE_RECIPE_UNAVAILABLE","connectedProof",false));}
                 }
-                try{if(!authored.details().presentation().authored())vfx.present(store.getExternalData().getWorld(),player,context.compiledPlan().vfxRecipeId());}
-                catch(RuntimeException unavailable){emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","PROJECTILE_RECIPE_UNAVAILABLE","connectedProof",false));}
                 return SkillExecutionResult.committed("PROJECTILE_STARTED",0,0);
             } catch(RuntimeException error) {
                 for(var carrier:spawned) {
@@ -2421,7 +2433,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         // It is cancellation, not a terrain contact that may be resurrected by Return.
         if(hitEntity==null && blockPosition==null) {cancelProjectile(carrier,"NATIVE_COURSE_ENDED",vec(position),buffer);return;}
         if(!port.actorAliveAndUsable()) {cancelProjectile(carrier,"ACTOR_NOT_ALIVE",vec(position),buffer);return;}
-        if(expireContinuationClock(carrier,buffer))return;
+        if(!isGroundSpark(carrier.context)&&expireContinuationClock(carrier,buffer))return;
         if(!hasContinuations(carrier.context)&&!carrier.instance.contactWithinRange(vec(position))) {
             Vec3 end=ProjectileSweep.limit(carrier.instance.flight().lastPosition(),vec(position),carrier.instance.remainingDistance());
             carrier.instance.observe(0,end);finishProjectileTerminal(carrier,"MAX_RANGE",end,buffer);return;
@@ -2444,7 +2456,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             applyContinuation(carrier,continuations.forwardEnd(carrier.instance,end,casterPoint(carrier,store),"MAX_RANGE"),end,buffer);return;
         }
         if (hitEntity != null && hitEntity.isValid()) {
-            if(hasContinuations(carrier.context) && !HytaleAreaQueries.clear(store,carrier.instance.flight().lastPosition(),vec(position))) {
+            if(hasContinuations(carrier.context) && !isGroundSpark(carrier.context)
+                    && !HytaleAreaQueries.clear(store,carrier.instance.flight().lastPosition(),vec(position))) {
                 cancelProjectile(carrier,"OCCLUDED_NATIVE_CONTACT",vec(position),buffer);return;
             }
             StrikeGeometryService.Candidate<Ref<EntityStore>> target = port.candidate(hitEntity);
@@ -2607,6 +2620,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             TransformComponent transform = store.getComponent(carrier.projectile, TransformComponent.getComponentType());
             if (transform == null) {cancelProjectile(carrier,"PROJECTILE_TRANSFORM_MISSING",null,buffer);continue;}
+            if(isGroundSpark(carrier.context)) {
+                advanceGroundSpark(carrier,deltaSeconds,store,buffer);
+                continue;
+            }
             if(carrier.instance.plan().motion().timedBallistic())carrier.instance.observe(0,vec(transform.getPosition()));
             if(!FireProjectilePresentation.suppressesGenericTrail(carrier.context.profile().skillId()))
                 carrier.visuals.sample(vec(transform.getPosition()),System.nanoTime()).ifPresent(segment->
@@ -2909,9 +2926,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
 
     private static boolean hasContinuations(SkillExecutionContext context) {
         var modifiers=context.compiledPlan().projectileModifiers();
-        return modifiers.pierce()+modifiers.fork()+modifiers.chain()+modifiers.returning()+modifiers.ricochet()>0
+        return isGroundSpark(context)||modifiers.pierce()+modifiers.fork()+modifiers.chain()+modifiers.returning()+modifiers.ricochet()>0
                 || modifiers.homing() || modifiers.shrapnel() || modifiers.splinterburst() || modifiers.accelerant() || modifiers.ballistics()
                 || context.profile().projectile().details().pattern().homingTurnDegrees()>0;
+    }
+    private static boolean isGroundSpark(SkillExecutionContext context) {
+        return context!=null&&context.profile()!=null&&context.profile().skillId().equals("charged_bolt");
     }
     /** Chain's 30% less Hit modifier belongs to the supported projectile once. Descendant
      * snapshots inherit it as a coefficient factor; a second/third hop never compounds it. */
@@ -2946,6 +2966,62 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             finishProjectileTerminal(carrier,reason,observation.position(),buffer);
         }catch(RuntimeException failure){cancelProjectile(carrier,"AIRBORNE_EXPLOSION_FAILURE",observation.position(),buffer);}
         return true;
+    }
+    private void advanceGroundSpark(ProjectileCarrier carrier,float deltaSeconds,Store<EntityStore> store,
+            CommandBuffer<EntityStore> buffer) {
+        try {
+            if(!Float.isFinite(deltaSeconds)||deltaSeconds<0)throw new IllegalStateException("SPARK_INVALID_TICK_DELTA");
+            var instance=carrier.instance;var steering=carrier.sparkSteering;
+            if(steering==null)throw new IllegalStateException("SPARK_STEERING_MISSING");
+            steering.synchronize(instance.direction(),instance.motionRevision());
+            Vec3 current=instance.flight().lastPosition();
+            double remaining=Math.min(instance.remainingDistance(),instance.plan().velocity().length()*deltaSeconds);
+            int steps=0;
+            while(remaining>1e-8) {
+                if(++steps>64)throw new IllegalStateException("SPARK_STEP_BUDGET");
+                double distance=Math.min(.20,remaining);
+                Vec3 direction=instance.returning()?casterPoint(carrier,store).subtract(current).horizontalNormalized():steering.direction();
+                instance.redirect(direction);steering.markOwnedRevision(instance.motionRevision());
+                Vec3 horizontal=current.add(direction.multiply(distance));
+                var support=HytaleAreaQueries.ground(store,new Vec3(horizontal.x(),current.y()+1.10,horizontal.z()),new Vec3(0,-1,0),2.85);
+                if(support.isEmpty()) {finishProjectileTerminal(carrier,"SPARK_GROUND_SUPPORT_LOST",current,buffer);return;}
+                Vec3 next=support.get().add(new Vec3(0,.49,0));
+                double rise=next.y()-current.y();
+                if(rise>1.05||rise< -1.35) {finishProjectileTerminal(carrier,"SPARK_GROUND_TOLERANCE_EXCEEDED",current,buffer);return;}
+                var contact=HytaleAreaQueries.projectileContact(store,current,next,instance.plan().radius());
+                boolean traversable=contact.isEmpty()||contact.get().normal().y()>.45||rise>.05&&rise<=1.05;
+                if(!traversable) {
+                    Vec3 point=contact.get().point();
+                    if(processSweptContacts(carrier,point,buffer))return;
+                    instance.observe(0,point);moveGroundSparkCarrier(carrier,point,buffer);
+                    if(instance.remaining("RICOCHET")<=0) {finishProjectileTerminal(carrier,"TERRAIN_CONTINUATION_EXHAUSTED",point,buffer);return;}
+                    var decision=continuations.afterTerrain(instance,point,casterPoint(carrier,store),contact.get().normal());
+                    applyContinuation(carrier,decision,point,buffer);return;
+                }
+                if(processSweptContacts(carrier,next,buffer))return;
+                var observation=instance.observe(0,next);current=next;remaining-=distance;steering.consume(distance);
+                moveGroundSparkCarrier(carrier,current,buffer);
+                if(observation.expired()) {finishGroundSparkTravel(carrier,current,buffer);return;}
+            }
+            var elapsed=instance.observe(deltaSeconds,current);
+            if(elapsed.expired())finishGroundSparkTravel(carrier,current,buffer);
+        } catch(RuntimeException error) {
+            cancelProjectile(carrier,"SPARK_GROUND_TICK_FAILURE_"+error.getClass().getSimpleName(),carrier.instance.flight().lastPosition(),buffer);
+        }
+    }
+    private void finishGroundSparkTravel(ProjectileCarrier carrier,Vec3 point,CommandBuffer<EntityStore> buffer) {
+        String reason=carrier.instance.remainingDistance()<=1e-6?"MAX_RANGE":"MAX_LIFETIME";
+        var decision=continuations.forwardEnd(carrier.instance,point,casterPoint(carrier,buffer.getStore()),reason);
+        if(decision.action()==ProjectileContinuation.Action.TERMINATE)finishProjectileTerminal(carrier,reason,point,buffer);
+        else applyContinuation(carrier,decision,point,buffer);
+    }
+    private void moveGroundSparkCarrier(ProjectileCarrier carrier,Vec3 point,CommandBuffer<EntityStore> buffer) {
+        var physics=buffer.getComponent(carrier.projectile,StandardPhysicsProvider.getComponentType());
+        var transform=buffer.getComponent(carrier.projectile,TransformComponent.getComponentType());
+        var velocity=buffer.getComponent(carrier.projectile,com.hypixel.hytale.server.core.modules.physics.component.Velocity.getComponentType());
+        if(physics==null||transform==null||velocity==null)throw new IllegalStateException("SPARK_NATIVE_COMPONENT_MISSING");
+        physics.getPosition().set(vector(point));physics.getVelocity().set(0,0,0);physics.setState(StandardPhysicsProvider.STATE.ACTIVE);
+        transform.setPosition(physics.getPosition());velocity.set(physics.getVelocity());
     }
     private void advanceModifiedProjectile(ProjectileCarrier carrier,Vec3 nativePosition,CommandBuffer<EntityStore> buffer) {
         try {
@@ -2995,7 +3071,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         contacts.sort(java.util.Comparator.comparingDouble(Contact::fraction).thenComparing(Contact::id));
         for(var contact:contacts) {
             Vec3 point=from.add(end.subtract(from).multiply(contact.fraction()));
-            if(!HytaleAreaQueries.clear(buffer.getStore(),from,point))break;
+            if(!isGroundSpark(carrier.context)&&!HytaleAreaQueries.clear(buffer.getStore(),from,point))break;
             int revision=instance.motionRevision();
             onProjectileImpact(carrier,carrier.projectile,vector(point),null,contact.ref(),buffer,Vec3.ZERO);
             if(projectiles.get(instance.plan().projectileInstanceId())!=carrier||instance.motionRevision()!=revision)return true;
@@ -3089,7 +3165,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             var velocity=holder.getComponent(com.hypixel.hytale.server.core.modules.physics.component.Velocity.getComponentType());
             if(physics==null||velocity==null)throw new IllegalStateException("PROJECTILE_PHYSICS_MISSING");
             spawnStage=ProjectileSpawnDiagnostics.Stage.VELOCITY_ASSIGNMENT;
-            physics.getVelocity().set(vector(plan.velocity()));velocity.set(physics.getVelocity());
+            if(isGroundSpark(context))physics.getVelocity().set(0,0,0);
+            else physics.getVelocity().set(vector(plan.velocity()));
+            velocity.set(physics.getVelocity());
             spawnStage=ProjectileSpawnDiagnostics.Stage.CONTINUATION_SETUP;
             projectiles.put(plan.projectileInstanceId(),carrier);configureContinuationCarrier(carrier,buffer);
             var bound=carrier;
@@ -3104,10 +3182,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if(bound.projectile.isValid())
                     emitProjectile(bound,RpgTraceEventType.PROJECTILE_SPAWNED,Map.of("configId",plan.configId(),"speed",plan.velocity().length(),
                             "maxDistance",plan.maxDistance(),"maximumLifetimeSeconds",plan.maxLifetimeSeconds(),"radius",plan.radius(),
-                            "nativeProjectileRef",bound.projectile.toString(),"barrageBatch",bound.context.barrageBatch()));
+                            "nativeProjectileRef",bound.projectile.toString(),"barrageBatch",bound.context.barrageBatch(),
+                            "groundCrawler",isGroundSpark(bound.context),"verticalVelocity",plan.velocity().y()));
             });
             spawnStage=ProjectileSpawnDiagnostics.Stage.PRESENTATION;
-            if(context.effects().projectileVisuals().cast(context.skillInstanceId()+"/"+context.barrageBatch()))projectileVisual(carrier,buffer.getStore(),()->vfx.presentContact(buffer.getStore().getExternalData().getWorld(),plan.origin(),
+            if(!isGroundSpark(context)&&context.effects().projectileVisuals().cast(context.skillInstanceId()+"/"+context.barrageBatch()))projectileVisual(carrier,buffer.getStore(),()->vfx.presentContact(buffer.getStore().getExternalData().getWorld(),plan.origin(),
                     bound.context.profile().projectile().details().element(),.10,1));
             return carrier;
         } catch(RuntimeException error) {
@@ -3151,7 +3230,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private void resumeCarrier(ProjectileCarrier carrier,Vec3 point,CommandBuffer<EntityStore> buffer,boolean resetHitPhase) {
         var physics=buffer.getComponent(carrier.projectile,StandardPhysicsProvider.getComponentType());
         if(physics==null)throw new IllegalStateException("CONTINUATION_PHYSICS_MISSING");
-        physics.getPosition().set(vector(point));physics.getVelocity().set(vector(carrier.instance.direction().multiply(carrier.instance.plan().velocity().length())));
+        physics.getPosition().set(vector(point));
+        if(isGroundSpark(carrier.context))physics.getVelocity().set(0,0,0);
+        else physics.getVelocity().set(vector(carrier.instance.direction().multiply(carrier.instance.plan().velocity().length())));
         physics.setState(StandardPhysicsProvider.STATE.ACTIVE);
         var transform=buffer.getComponent(carrier.projectile,TransformComponent.getComponentType());
         var velocity=buffer.getComponent(carrier.projectile,com.hypixel.hytale.server.core.modules.physics.component.Velocity.getComponentType());
@@ -3399,7 +3480,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         details.put("manaCost",context.snapshot().resourceCost().amount());details.put("cooldownSeconds",context.snapshot().cooldownSeconds());
         details.put("magicPower",context.snapshot().basePower());details.put("baseCoefficient",context.profile().projectile().coefficient()>0
                 ?context.profile().projectile().coefficient():context.profile().projectile().details().explosion().coefficient());
-        details.put("directionX",context.target().direction().x());details.put("directionY",context.target().direction().y());details.put("directionZ",context.target().direction().z());
+        Vec3 castDirection=isGroundSpark(context)?first.velocity().normalized():context.target().direction();
+        details.put("directionX",castDirection.x());details.put("directionY",castDirection.y());details.put("directionZ",castDirection.z());
         if(skill.equals("fireball")){
             var tier=FireProjectilePresentation.tier(context.request().fireballChargeStage());
             details.put("chargeStage",context.request().fireballChargeStage());details.put("projectileVisualTier",tier.name());
@@ -3419,14 +3501,16 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
     private record ProjectileCarrier(SkillExecutionContext context, Ref<EntityStore> actor, UUID actorId,
             Ref<EntityStore> projectile, ProjectileInstance instance,com.inigmasgames.hytalerpg.vfx.ProjectileReadability visuals,
-            ProjectileDetonation detonation,NativeInsertion insertion,SummonProjectileLineage summonLineage) {
+            ProjectileDetonation detonation,NativeInsertion insertion,SummonProjectileLineage summonLineage,
+            GroundSparkSteering sparkSteering) {
         ProjectileCarrier(SkillExecutionContext context,Ref<EntityStore> actor,UUID actorId,Ref<EntityStore> projectile,ProjectileInstance instance){
             this(context,actor,actorId,projectile,instance,null);
         }
         ProjectileCarrier(SkillExecutionContext context,Ref<EntityStore> actor,UUID actorId,Ref<EntityStore> projectile,
                 ProjectileInstance instance,SummonProjectileLineage lineage){
             this(context,actor,actorId,projectile,instance,new com.inigmasgames.hytalerpg.vfx.ProjectileReadability(instance.plan().origin(),System.nanoTime()),
-                    new ProjectileDetonation(context.profile().projectile().details().explosion()),new NativeInsertion(),lineage);
+                    new ProjectileDetonation(context.profile().projectile().details().explosion()),new NativeInsertion(),lineage,
+                    isGroundSpark(context)?new GroundSparkSteering(instance.plan().projectileInstanceId(),instance.direction(),instance.motionRevision()):null);
         }
     }
     private static final class NativeInsertion { boolean completed; }

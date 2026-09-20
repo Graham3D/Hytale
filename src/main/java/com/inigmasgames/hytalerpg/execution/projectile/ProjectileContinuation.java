@@ -58,6 +58,9 @@ public final class ProjectileContinuation {
                 return new Decision(Action.CHAIN,direction,List.of(child),"CHAIN_TARGET_"+selected.get().id);
             }
         }
+        // Spark owns enemy penetration intrinsically. Its per-carrier hit ledger still guarantees
+        // one hit per target, while Fork/Chain/Pierce above retain their normal precedence.
+        if(instance.plan().skillId().equals("charged_bolt"))return decision(Action.PIERCE,instance,"SPARK_ENEMY_PENETRATION");
         return forwardEnd(instance,point,caster,"ENEMY_CONTINUATION_EXHAUSTED");
     }
     public Decision forwardEnd(ProjectileInstance instance,Vec3 point,Vec3 caster,String reason) {

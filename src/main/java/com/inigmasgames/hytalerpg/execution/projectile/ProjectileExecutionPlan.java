@@ -110,7 +110,7 @@ public record ProjectileExecutionPlan(
                 center.snapshot(),center.generation(),center.remainingContinuationBudgets(),center.remainingSpawnedEffects(),center.remainingTriggeredSecondaries(),
                 now+Math.round(authored*pattern.intervalSeconds()*1e9),configId,origin,
                 ProjectileContinuation.yaw(context.profile().skillId().equals("charged_bolt")
-                        ?pattern.randomizedDirection(direction,authored,authoredCount,context.rootCastId())
+                        ?pattern.randomizedDirection(direction.horizontalNormalized(),authored,authoredCount,context.rootCastId()).horizontalNormalized()
                         :pattern.direction(direction,authored,authoredCount),volley==3?(index-1)*12:0).multiply(center.velocity().length()),
                 center.radius(),center.maxDistance(),center.maxLifetimeSeconds(),center.motion()));
         return java.util.List.copyOf(batch);
