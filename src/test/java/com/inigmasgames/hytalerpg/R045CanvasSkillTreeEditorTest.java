@@ -5,13 +5,17 @@ import com.inigmasgames.hytalerpg.ui.skilltree.RpgCanvasSkillTreeEditor;
 import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeMutationService;
 import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeProjectionService;
 import com.inigmasgames.hytalerpg.ui.skilltree.StaticSkillTreeLayout;
+import com.inigmasgames.hytalerpg.ui.skilltree.SkillTreePortBindingStore;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class R045CanvasSkillTreeEditorTest {
+    @TempDir Path temporary;
     @Test void libraryDropsAreTypedAndPersistThroughTheAuthoritativeRpgMutation() {
         var bundle = Stage01BTestSupport.bundle();
         var layout = new StaticSkillTreeLayout();
@@ -28,7 +32,7 @@ class R045CanvasSkillTreeEditorTest {
         var skill = editor.assign("fire_bolt", "skill01", editor.canvas().snapshot());
         assertTrue(skill.accepted(), skill.message());
         editor.canvas().restore(skill.authoritativeSnapshot());
-        assertEquals("Fire Bolt", editor.canvas().node("skill01").metadata().get("label"));
+        assertEquals("Fire Bolt (Ability2)", editor.canvas().node("skill01").metadata().get("label"));
         assertEquals("fire_bolt", bundle.service().getPresentationView(player).state().skill(
                 com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL01).orElseThrow().value());
     }
@@ -99,8 +103,51 @@ class R045CanvasSkillTreeEditorTest {
         var broken=editor.breakLink(first,editor.canvas().snapshot());assertTrue(broken.accepted(),broken.message());
         editor.canvas().restore(broken.authoritativeSnapshot());
         assertNull(editor.canvas().edge(first));assertNotNull(editor.canvas().edge(other));
-        assertEquals("Fire Bolt",editor.canvas().node("skill01").metadata().get("label"));
+        assertEquals("Fire Bolt (Ability2)",editor.canvas().node("skill01").metadata().get("label"));
         assertEquals("Potency",editor.canvas().node("passive01").metadata().get("label"));
+    }
+
+    @Test void exactJointPortsSurviveRedrawReopenAndUnrelatedMutation(){
+        var bundle=Stage01BTestSupport.bundle();var layout=new StaticSkillTreeLayout();UUID player=UUID.randomUUID();
+        var mutations=new RpgSkillTreeMutationService(bundle.service(),layout);
+        var projection=new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true);
+        var bindings=new SkillTreePortBindingStore(temporary.resolve("ports"));
+        var editor=new RpgCanvasSkillTreeEditor(player,projection,mutations,bindings);
+        assign(editor,"fire_bolt","skill01");assign(editor,"potency","passive01");
+        connect(editor,"joint01","c","skill01","in",true);
+        connect(editor,"passive01","out","joint01","a",true);
+        var expected=editor.canvas().edges().stream().collect(java.util.stream.Collectors.toMap(
+                com.inigmasgames.canvasui.api.CanvasEdge::edgeId,
+                edge->edge.sourcePortId()+"->"+edge.targetPortId()));
+        editor.canvas().moveNode("passive02",com.inigmasgames.canvasui.api.CanvasPoint.of(340,420));
+        editor.canvas().restore(editor.commit(editor.canvas().snapshot()).authoritativeSnapshot());
+        var reopened=new RpgCanvasSkillTreeEditor(player,projection,mutations,bindings);
+        var actual=reopened.canvas().edges().stream().collect(java.util.stream.Collectors.toMap(
+                com.inigmasgames.canvasui.api.CanvasEdge::edgeId,
+                edge->edge.sourcePortId()+"->"+edge.targetPortId()));
+        assertEquals(expected,actual);
+        assertTrue(actual.values().contains("c->in"));assertTrue(actual.values().contains("out->a"));
+    }
+
+    @Test void clearingOccupiedSkillPreservesTopologyAndInspectorIsStructured(){
+        var bundle=Stage01BTestSupport.bundle();var layout=new StaticSkillTreeLayout();UUID player=UUID.randomUUID();
+        var editor=new RpgCanvasSkillTreeEditor(player,new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true),
+                new RpgSkillTreeMutationService(bundle.service(),layout),new SkillTreePortBindingStore(temporary.resolve("clear-ports")));
+        assign(editor,"fire_bolt","skill01");assign(editor,"potency","passive01");
+        connect(editor,"passive01","out","skill01","in",true);int edges=editor.canvas().edges().size();
+        var details=editor.inspect("fire_bolt","");
+        assertEquals("SKILL",details.kind());assertEquals("Fire Bolt",details.name());
+        assertEquals(java.util.List.of("RESOURCE","COOLDOWN","RANGE","DAMAGE","REQUIRES","LINKED PASSIVES"),
+                details.rows().stream().map(com.inigmasgames.canvasui.api.editor.CursorCanvasEditor.DetailRow::label).toList());
+        var cleared=editor.clearNode("skill01",editor.canvas().snapshot());assertTrue(cleared.accepted(),cleared.message());
+        editor.canvas().restore(cleared.authoritativeSnapshot());
+        assertFalse(Boolean.parseBoolean(editor.canvas().node("skill01").metadata().get("occupied")));
+        assertEquals(edges,editor.canvas().edges().size());
+        String preservedPort=editor.canvas().edges().iterator().next().sourcePortId()+"->"+editor.canvas().edges().iterator().next().targetPortId();
+        assign(editor,"fire_bolt","skill01");
+        assertEquals(edges,editor.canvas().edges().size());
+        assertEquals(preservedPort,editor.canvas().edges().iterator().next().sourcePortId()+"->"+editor.canvas().edges().iterator().next().targetPortId());
+        assertFalse(editor.clearNode("passive01",editor.canvas().snapshot()).accepted());
     }
 
     private static void assign(RpgCanvasSkillTreeEditor editor, String content, String node) {

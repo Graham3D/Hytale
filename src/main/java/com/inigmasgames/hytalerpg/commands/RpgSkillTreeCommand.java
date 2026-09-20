@@ -15,16 +15,19 @@ import com.inigmasgames.hytalerpg.ui.skilltree.RpgCanvasSkillTreeEditor;
 import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeProjectionService;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
 import com.inigmasgames.canvasui.CanvasUI;
+import com.inigmasgames.hytalerpg.ui.skilltree.SkillTreePortBindingStore;
 
 public final class RpgSkillTreeCommand extends AbstractPlayerCommand {
     private final RpgSkillTreeProjectionService projection;
     private final RpgSkillTreeMutationService mutations;
     private final RpgUiTraceService trace;
+    private final SkillTreePortBindingStore portBindings;
 
     public RpgSkillTreeCommand(RpgSkillTreeProjectionService projection,
-                               RpgSkillTreeMutationService mutations, RpgUiTraceService trace) {
+                               RpgSkillTreeMutationService mutations, RpgUiTraceService trace,
+                               SkillTreePortBindingStore portBindings) {
         super("skilltree", "Open the server-authoritative RPG Canvas Skill Tree.");
-        this.projection = projection; this.mutations = mutations; this.trace = trace;
+        this.projection = projection; this.mutations = mutations; this.trace = trace;this.portBindings=portBindings;
         setPermissionGroup(GameMode.Adventure);
     }
 
@@ -32,7 +35,7 @@ public final class RpgSkillTreeCommand extends AbstractPlayerCommand {
                                      PlayerRef playerRef, World world) {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) { context.sendMessage(Message.raw("Player UI manager is unavailable.")); return; }
-        var result = CanvasUI.openCursorEditor(new RpgCanvasSkillTreeEditor(playerRef.getUuid(), projection, mutations),
+        var result = CanvasUI.openCursorEditor(new RpgCanvasSkillTreeEditor(playerRef.getUuid(), projection, mutations,portBindings),
                 player, playerRef, world, store, ref);
         context.sendMessage(Message.raw(result.message()));
     }

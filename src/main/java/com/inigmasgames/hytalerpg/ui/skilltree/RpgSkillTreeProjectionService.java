@@ -124,8 +124,15 @@ public final class RpgSkillTreeProjectionService {
                     && view.state().skill(route.getLast().skillSlot()).map(def.id()::equals).orElse(false))
                 view.state().passive(slot).flatMap(catalog::passive).map(PassiveDefinition::name).ifPresent(linked::add);
         });
-        return new StaticSkillTreeViewModel.Details("SKILL", def.id().value(), def.name(), def.family(), def.description(),
-                List.of("Weapon: " + value(def.weaponRequirement()), "Resource: " + value(def.castCost()),
+        List<StaticSkillTreeViewModel.DetailRow> rows=List.of(
+                new StaticSkillTreeViewModel.DetailRow("RESOURCE",value(def.castCost()),"RESOURCE"),
+                new StaticSkillTreeViewModel.DetailRow("COOLDOWN",value(def.cooldown()),"COOLDOWN"),
+                new StaticSkillTreeViewModel.DetailRow("RANGE",value(def.maxRange()),"RANGE"),
+                new StaticSkillTreeViewModel.DetailRow("DAMAGE",value(def.powerCoefficient()),"DAMAGE"),
+                new StaticSkillTreeViewModel.DetailRow("REQUIRES",requirement(def.weaponRequirement()),"REQUIREMENT"),
+                new StaticSkillTreeViewModel.DetailRow("LINKED PASSIVES",linked.isEmpty()?"None":String.join(", ",linked),"LINK"));
+        return new StaticSkillTreeViewModel.Details("SKILL", def.id().value(), def.name(), skillDescriptor(def), def.description(),
+                RpgSkillIcons.forSkill(def.id().value()),rows,List.of("Weapon: " + value(def.weaponRequirement()), "Resource: " + value(def.castCost()),
                         "Cooldown: " + value(def.cooldown()), "Cast: " + value(def.castTime()),
                         "Range: " + value(def.maxRange()), "Geometry: " + value(def.geometry()),
                         "Power: " + value(def.powerCoefficient()), "Status/control: " + join(def.statusApplications()),
@@ -143,16 +150,31 @@ public final class RpgSkillTreeProjectionService {
                 break;
             }
         }
+        List<StaticSkillTreeViewModel.DetailRow> rows=List.of(
+                new StaticSkillTreeViewModel.DetailRow("EFFECT",join(def.modifierOps()),"EFFECT"),
+                new StaticSkillTreeViewModel.DetailRow("CAN CONNECT TO",compatibility(def),"COMPATIBILITY"),
+                new StaticSkillTreeViewModel.DetailRow("CANNOT CONNECT TO",join(def.incompatibleTags()),"EXCLUSION"),
+                new StaticSkillTreeViewModel.DetailRow("CURRENT LINK",assigned+" / "+parent,"LINK"));
         return new StaticSkillTreeViewModel.Details("PASSIVE", def.id().value(), def.name(), def.tier(), def.description(),
-                List.of("Compatible: " + join(def.compatibleTags()), "Required families: " + join(def.requiredFamilies()),
+                RpgSkillIcons.forPassive(def.id().value()),rows,List.of("Compatible: " + join(def.compatibleTags()), "Required families: " + join(def.requiredFamilies()),
                         "Incompatible: " + join(def.incompatibleTags()), "Effect: " + join(def.modifierOps()),
                         "Assigned node: " + assigned, "Effective parent Skill: " + parent),
                 "Validation occurs atomically on Apply");
     }
 
     private static StaticSkillTreeViewModel.Details emptyDetails() {
-        return new StaticSkillTreeViewModel.Details("NONE", "", "Select content", "",
-                "Choose a tree node or a library entry to inspect canonical details.", List.of(), "");
+        return new StaticSkillTreeViewModel.Details("NONE", "", "Select a Skill or Passive", "",
+                "Select a Skill or Passive to view details.", "",List.of(), List.of(), "");
+    }
+
+    private static String requirement(String value){return value==null||value.isBlank()||"None".equalsIgnoreCase(value.trim())?"No requirements":value.trim();}
+    private static String skillDescriptor(SkillDefinition def){
+        String element=def.tags().stream().map(String::toUpperCase).filter(v->Set.of("FIRE","ICE","FROST","ARCANE","LIGHTNING","PHYSICAL","SHADOW","HOLY").contains(v)).findFirst().orElse("");
+        return element.isBlank()?def.family().toUpperCase(Locale.ROOT):def.family().toUpperCase(Locale.ROOT)+" · "+element;
+    }
+    private static String compatibility(PassiveDefinition def){
+        LinkedHashSet<String> values=new LinkedHashSet<>();values.addAll(def.requiredFamilies());values.addAll(def.compatibleTags());values.addAll(def.requiredCapabilities());values.addAll(def.compatibleAnyPayloads());
+        return join(values);
     }
 
     private static boolean matches(String name, String description, Iterable<String> keywords, String needle) {

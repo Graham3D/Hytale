@@ -30,6 +30,30 @@ public interface CursorCanvasEditor {
         }
     }
 
+    record DetailRow(String label, String value, String semanticKind) {
+        public DetailRow {
+            label = label == null ? "" : label;
+            value = value == null ? "" : value;
+            semanticKind = semanticKind == null ? "TEXT" : semanticKind;
+        }
+    }
+
+    record Inspector(String kind, String id, String name, String descriptor, String description,
+                     String iconPath, List<DetailRow> rows, String footer) {
+        public Inspector {
+            kind = kind == null ? "NONE" : kind;
+            id = id == null ? "" : id;
+            name = name == null || name.isBlank() ? "Select a Skill or Passive" : name;
+            descriptor = descriptor == null ? "" : descriptor;
+            description = description == null ? "Select a Skill or Passive to view details." : description;
+            iconPath = iconPath == null ? "" : iconPath;
+            rows = rows == null ? List.of() : List.copyOf(rows);
+            footer = footer == null ? "" : footer;
+        }
+        public static Inspector neutral() { return new Inspector("NONE", "", "Select a Skill or Passive",
+                "", "Select a Skill or Passive to view details.", "", List.of(), ""); }
+    }
+
     String editorId();
     String title();
     Canvas canvas();
@@ -40,6 +64,14 @@ public interface CursorCanvasEditor {
 
     /** Breaks exactly one persistent graph edge by its stable authority-owned identity. */
     Result breakLink(String linkId, CanvasSnapshot presentationSnapshot);
+
+    /** Clears one occupied content node through the consumer's authority. */
+    default Result clearNode(String nodeId, CanvasSnapshot presentationSnapshot) {
+        return new Result(false, "This editor does not support clearing nodes", presentationSnapshot);
+    }
+
+    /** Immutable contextual detail projection. Empty arguments request the neutral state. */
+    default Inspector inspect(String entryId, String nodeId) { return Inspector.neutral(); }
 
     /** Commits a candidate topology or accepts a presentation-only node move. */
     Result commit(CanvasSnapshot candidateSnapshot);

@@ -76,10 +76,12 @@ public final class RpgCommand extends AbstractCommandCollection {
                       RpgUiTraceService uiTrace, RpgHudCoordinator hud,
                       RpgSkillTreeProjectionService skillTreeProjection,
                       RpgSkillTreeMutationService skillTreeMutations,
-                      NativeAbilityProjectionService nativeAbilities) {
+                      NativeAbilityProjectionService nativeAbilities,
+                      java.nio.file.Path skillTreePresentationDirectory) {
         super("rpg", "Configure and inspect the server-authoritative RPG Link Tree.");
         addSubCommand(new RpgCharacterCommand(uiProjection, allocation, uiTrace));
-        addSubCommand(new RpgSkillTreeCommand(skillTreeProjection, skillTreeMutations, uiTrace));
+        addSubCommand(new RpgSkillTreeCommand(skillTreeProjection, skillTreeMutations, uiTrace,
+                new com.inigmasgames.hytalerpg.ui.skilltree.SkillTreePortBindingStore(skillTreePresentationDirectory)));
         addSubCommand(new EquipCommand(catalog, loadouts));
         addSubCommand(new UnequipCommand(loadouts));
         addSubCommand(new LinkCommand(loadouts));

@@ -63,15 +63,31 @@ try {
         'rpg/catalog/skills.json',
         'rpg/catalog/passives.json',
         'rpg/presentation/icon-index.json',
+        'Common/UI/Custom/Assets/SkillTree/skilltree_joint.png',
+        'Common/UI/Custom/Assets/SkillTree/skilltree_passive_occupied.png',
+        'Common/UI/Custom/Assets/SkillTree/skilltree_passive_unoccupied.png',
+        'Common/UI/Custom/Assets/SkillTree/Slot@2x.png',
+        'Common/UI/Custom/Assets/SkillTree/SpecialSlotTemporary@2x.png',
+        'Common/UI/Custom/Assets/SkillTree/StructuralCraftingArrowUp@2x.png',
         'hywind-build.properties'
     )
     foreach ($requiredEntry in $required) {
         if ($null -eq $zip.GetEntry($requiredEntry)) { throw "Missing required merged entry: $requiredEntry" }
     }
 
+    $repository = Split-Path $PSScriptRoot -Parent
+    foreach($asset in @('skilltree_joint.png','skilltree_passive_occupied.png','skilltree_passive_unoccupied.png',
+            'Slot@2x.png','SpecialSlotTemporary@2x.png','StructuralCraftingArrowUp@2x.png')){
+        $relative='Common/UI/Custom/Assets/SkillTree/'+$asset
+        $source=Join-Path $repository ('canvas-ui\src\main\resources\'+($relative -replace '/','\'))
+        $entry=$zip.GetEntry($relative);$memory=[IO.MemoryStream]::new();$stream=$entry.Open()
+        try{$stream.CopyTo($memory)}finally{$stream.Dispose()}
+        if((&$bytesHash $memory.ToArray()) -ne (&$sha256 $source)){throw "Packaged Skill Tree asset hash mismatch: $asset"}
+        $memory.Dispose()
+    }
+
     # Owner-authored icon bytes must survive clean/build/package unchanged. art is the drop workflow;
     # src/main/resources is the canonical Gradle source and the JAR must match it exactly.
-    $repository = Split-Path $PSScriptRoot -Parent
     $indexEntry = $zip.GetEntry('rpg/presentation/icon-index.json')
     $indexReader = [IO.StreamReader]::new($indexEntry.Open(), [Text.UTF8Encoding]::new($false), $true)
     try { $iconIndex = $indexReader.ReadToEnd() | ConvertFrom-Json } finally { $indexReader.Dispose() }

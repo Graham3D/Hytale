@@ -25,6 +25,9 @@ public record StaticSkillTreeViewModel(
             this(id, title, subtitle, occupied, RpgSkillTreeProjectionService.PLACEHOLDER_ICON);
         }
     }
+    public record DetailRow(String label, String value, String semanticKind) {
+        public DetailRow { semanticKind = semanticKind == null ? "TEXT" : semanticKind; }
+    }
     public record Details(String kind, String id, String name, String category, String description,
-                          List<String> facts, String validation) {}
+                          String iconPath, List<DetailRow> rows, List<String> facts, String validation) {}
 }

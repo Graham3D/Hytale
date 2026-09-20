@@ -14,7 +14,8 @@ import java.util.List;
 public record SkillTreeViewModel(String title, String subtitle, CursorCanvasEditor.LibraryKind libraryKind,
                                  String query, List<CursorCanvasEditor.LibraryEntry> entries,
                                  int scrollOffset, int maximumScrollOffset, int totalMatches,
-                                 List<Node> nodes, List<Link> links, String status, boolean searchMode) {
+                                 List<Node> nodes, List<Link> links, CursorCanvasEditor.Inspector inspector,
+                                 String status, boolean searchMode) {
     public SkillTreeViewModel {
         title = title == null || title.isBlank() ? "SKILL TREE" : title;
         subtitle = subtitle == null ? "SHAPE YOUR JOURNEY" : subtitle;
@@ -22,12 +23,21 @@ public record SkillTreeViewModel(String title, String subtitle, CursorCanvasEdit
         entries = List.copyOf(entries);
         nodes = List.copyOf(nodes);
         links = List.copyOf(links);
+        inspector = inspector == null ? CursorCanvasEditor.Inspector.neutral() : inspector;
         status = status == null ? "" : status;
     }
 
     public static SkillTreeViewModel project(String title, Canvas canvas,
                                              CursorCanvasEditor.LibraryKind kind, String query,
                                              LibraryBrowser.Window window, String selectedLinkId,
+                                             String status, boolean searchMode) {
+        return project(title,canvas,kind,query,window,selectedLinkId,CursorCanvasEditor.Inspector.neutral(),status,searchMode);
+    }
+
+    public static SkillTreeViewModel project(String title, Canvas canvas,
+                                             CursorCanvasEditor.LibraryKind kind, String query,
+                                             LibraryBrowser.Window window, String selectedLinkId,
+                                             CursorCanvasEditor.Inspector inspector,
                                              String status, boolean searchMode) {
         List<Node> nodes = new ArrayList<>();
         for (CanvasNode node : canvas.nodes()) {
@@ -48,7 +58,7 @@ public record SkillTreeViewModel(String title, String subtitle, CursorCanvasEdit
         for (CanvasEdge edge : canvas.edges())
             links.add(new Link(edge.edgeId(), geometry.route(canvas, edge), edge.edgeId().equals(selectedLinkId)));
         return new SkillTreeViewModel(title, "SHAPE YOUR JOURNEY", kind, query, window.entries(),
-                window.offset(), window.maximumOffset(), window.totalMatches(), nodes, links, status, searchMode);
+                window.offset(), window.maximumOffset(), window.totalMatches(), nodes, links,inspector,status, searchMode);
     }
 
     public record Node(String nodeId, String type, CanvasPoint point, int width, int height,

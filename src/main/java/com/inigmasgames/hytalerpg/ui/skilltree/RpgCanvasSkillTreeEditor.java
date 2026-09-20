@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.nio.file.Path;
 
 /** RPG authority adapter for the production CanvasUI graph editor. */
 public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
@@ -33,13 +34,20 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
     private final UUID player;
     private final RpgSkillTreeProjectionService projection;
     private final RpgSkillTreeMutationService mutations;
+    private final SkillTreePortBindingStore portBindings;
     private final Canvas canvas;
 
     public RpgCanvasSkillTreeEditor(UUID player, RpgSkillTreeProjectionService projection,
                                     RpgSkillTreeMutationService mutations) {
+        this(player,projection,mutations,new SkillTreePortBindingStore(Path.of(System.getProperty("java.io.tmpdir"),"hywind-skilltree-port-tests",player.toString())));
+    }
+
+    public RpgCanvasSkillTreeEditor(UUID player, RpgSkillTreeProjectionService projection,
+                                    RpgSkillTreeMutationService mutations,SkillTreePortBindingStore portBindings) {
         this.player = player;
         this.projection = projection;
         this.mutations = mutations;
+        this.portBindings=java.util.Objects.requireNonNull(portBindings);
         this.canvas = createCanvas();
         canvas.restore(authoritativeSnapshot(canvas.snapshot()));
     }
@@ -72,6 +80,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         long revision = mutations.view(player).state().revision;
         MutationResult mutation = mutations.assignCanvas(player, revision, node, entry.id());
         if (!mutation.success()) return reject(mutation.code() + ": " + mutation.message(), presentationSnapshot);
+        restoreDormant(node);
         return new Result(true, entry.name() + " assigned to " + node.externalId(),
                 authoritativeSnapshot(presentationSnapshot));
     }
@@ -79,10 +88,10 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
     @Override public Result commit(CanvasSnapshot candidateSnapshot) {
         RpgLoadoutView current = mutations.view(player);
         Map<LinkNodeId, LinkNodeId> existing = outgoing(current.state().linkEdges());
-        List<NodePair> candidate = candidatePairs(candidateSnapshot);
-        NodePair addition = null;
+        List<EdgeCandidate> candidate = candidatePairs(candidateSnapshot);
+        EdgeCandidate addition = null;
         for (int i = candidate.size() - 1; i >= 0; i--) {
-            NodePair pair = candidate.get(i);
+            EdgeCandidate pair = candidate.get(i);
             if (!pair.target.equals(existing.get(pair.source))) { addition = pair; break; }
         }
         if (addition == null) return new Result(true, "Layout saved", authoritativeSnapshot(candidateSnapshot));
@@ -91,9 +100,14 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         proposed.put(addition.source, addition.target);
         String capacity = jointCapacityFailure(proposed);
         if (capacity != null) return reject(capacity, candidateSnapshot);
-        MutationResult result = mutations.link(player, addition.source, addition.target);
+        EdgeCandidate acceptedCandidate = addition;
+        MutationResult result = mutations.link(player, acceptedCandidate.source, acceptedCandidate.target);
         if (!result.success()) return reject(result.code() + ": " + result.message(), candidateSnapshot);
-        return new Result(true, "Parented " + addition.source.externalId() + " → " + addition.target.externalId(),
+        LinkEdge accepted=mutations.view(player).state().linkEdges().stream()
+                .filter(edge->edge.sourceNodeId()==acceptedCandidate.source&&edge.targetNodeId()==acceptedCandidate.target).findFirst()
+                .orElseThrow(()->new IllegalStateException("ACCEPTED_LINK_MISSING"));
+        portBindings.bind(player,accepted,acceptedCandidate.sourcePort,acceptedCandidate.targetPort);
+        return new Result(true, "Parented " + acceptedCandidate.source.externalId() + " → " + acceptedCandidate.target.externalId(),
                 authoritativeSnapshot(candidateSnapshot));
     }
 
@@ -105,7 +119,33 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         try { result = mutations.unlinkEdge(player, linkId); }
         catch (IllegalArgumentException error) { return reject("Invalid link identity", presentationSnapshot); }
         if (!result.success()) return reject(result.code() + ": " + result.message(), presentationSnapshot);
+        portBindings.remove(player,linkId);
+        portBindings.prune(player,mutations.view(player).state().linkEdges());
         return new Result(true, "Link broken", authoritativeSnapshot(presentationSnapshot));
+    }
+
+    @Override public Result clearNode(String nodeId,CanvasSnapshot presentationSnapshot){
+        LinkNodeId node;try{node=LinkNodeId.parse(nodeId);}catch(IllegalArgumentException error){return reject("Unknown node",presentationSnapshot);}
+        if(node.kind()!=LinkNodeId.NodeKind.SKILL)return reject("Only occupied Skill nodes can be unequipped",presentationSnapshot);
+        var projected=projection.project(player,StaticSkillTreeViewModel.Tab.SKILLS,"","","",node,"").nodes().get(node);
+        if(projected==null||!projected.occupied())return reject("Skill node is already empty",presentationSnapshot);
+        portBindings.preserveForClear(player,node,presentationSnapshot);
+        MutationResult result=mutations.clear(player,mutations.view(player).state().revision,node);
+        if(!result.success())return reject(result.code()+": "+result.message(),presentationSnapshot);
+        return new Result(true,"Unequipped "+projected.title()+"; topology preserved",authoritativeSnapshot(presentationSnapshot));
+    }
+
+    @Override public Inspector inspect(String entryId,String nodeId){
+        LinkNodeId node=null;if(nodeId!=null&&!nodeId.isBlank())try{node=LinkNodeId.parse(nodeId);}catch(IllegalArgumentException ignored){}
+        StaticSkillTreeViewModel.Tab tab=LibraryKind.PASSIVE.name().equalsIgnoreCase(kindOf(entryId,node))?StaticSkillTreeViewModel.Tab.PASSIVES:StaticSkillTreeViewModel.Tab.SKILLS;
+        var details=projection.project(player,tab,"","","",node,entryId==null?"":entryId).details();
+        return new Inspector(details.kind(),details.id(),details.name(),details.category(),details.description(),details.iconPath(),
+                details.rows().stream().map(row->new DetailRow(row.label(),row.value(),row.semanticKind())).toList(),details.validation());
+    }
+
+    private String kindOf(String entryId,LinkNodeId node){
+        if(entryId!=null&&!entryId.isBlank())for(var entry:library(LibraryKind.PASSIVE))if(entry.id().equals(entryId))return LibraryKind.PASSIVE.name();
+        return node!=null&&node.kind()==LinkNodeId.NodeKind.PASSIVE?LibraryKind.PASSIVE.name():LibraryKind.SKILL.name();
     }
 
     private Result reject(String message, CanvasSnapshot presentation) {
@@ -166,39 +206,39 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             CanvasSnapshot.NodeState prior = old.get(id.externalId());
             CanvasPoint fallback = canvas.node(id.externalId()).position();
             StaticSkillTreeViewModel.TreeNode content = projected.nodes().get(id);
+            String label=content == null ? id.externalId() : content.title();
+            if(id.kind()==LinkNodeId.NodeKind.SKILL&&content!=null&&content.occupied())label+=" ("+nativeBinding(id)+")";
             Map<String, String> metadata = Map.of(
-                    "label", content == null ? id.externalId() : content.title(),
-                    "subtitle", content == null ? id.kind().name() : content.subtitle(),
+                    "label", label,
+                    "subtitle", "",
                     "icon", content == null ? "" : content.iconPath(),
                     "occupied", Boolean.toString(content != null && content.occupied()));
             nodes.add(new CanvasSnapshot.NodeState(id.externalId(), id.kind().name().toLowerCase(),
                     prior == null ? fallback.x() : prior.x(), prior == null ? fallback.y() : prior.y(), metadata, true));
         }
+        portBindings.prune(player,view.state().linkEdges());
         List<CanvasSnapshot.EdgeState> edges = edgeStates(view.state().linkEdges());
         return new CanvasSnapshot(canvas.definition().canvasId(), presentation.viewport(), nodes, edges,
                 presentation.selectedNodeId());
     }
 
     private List<CanvasSnapshot.EdgeState> edgeStates(List<LinkEdge> links) {
-        Map<LinkNodeId, Integer> nextPort = new EnumMap<>(LinkNodeId.class);
-        List<CanvasSnapshot.EdgeState> result = new ArrayList<>();
-        for (LinkEdge edge : links) {
-            String sourcePort = edge.sourceNodeId().kind() == LinkNodeId.NodeKind.PASSIVE ? "out"
-                    : jointPort(edge.sourceNodeId(), nextPort);
-            String targetPort = edge.targetNodeId().kind() == LinkNodeId.NodeKind.SKILL ? "in"
-                    : jointPort(edge.targetNodeId(), nextPort);
-            result.add(new CanvasSnapshot.EdgeState(edge.edgeId().value(), edge.sourceNodeId().externalId(), sourcePort,
-                    edge.targetNodeId().externalId(), targetPort, EdgeStyle.standard("rpg-parent")));
-        }
-        return List.copyOf(result);
+        return portBindings.states(player,links);
     }
 
-    private static String jointPort(LinkNodeId joint, Map<LinkNodeId, Integer> nextPort) {
-        int index = nextPort.getOrDefault(joint, 0);
-        if (index >= JOINT_PORTS.length) throw new IllegalStateException(joint.externalId() + " exceeds three linked nodes");
-        nextPort.put(joint, index + 1);
-        return JOINT_PORTS[index];
+    private void restoreDormant(LinkNodeId node){
+        for(var dormant:portBindings.dormant(player,node)){
+            boolean live=mutations.view(player).state().linkEdges().stream().anyMatch(edge->edge.sourceNodeId()==dormant.source()&&edge.targetNodeId()==dormant.target());
+            if(live){portBindings.remove(player,dormant.edgeId());continue;}
+            MutationResult linked=mutations.link(player,dormant.source(),dormant.target());
+            if(!linked.success())continue;
+            LinkEdge accepted=mutations.view(player).state().linkEdges().stream()
+                    .filter(edge->edge.sourceNodeId()==dormant.source()&&edge.targetNodeId()==dormant.target()).findFirst().orElseThrow();
+            portBindings.bind(player,accepted,dormant.sourcePort(),dormant.targetPort());portBindings.remove(player,dormant.edgeId());
+        }
     }
+
+    private static String nativeBinding(LinkNodeId node){return switch(node){case SKILL01->"Ability2";case SKILL02->"Ability3";case SKILL03->"Unavailable";default->"";};}
 
     private static Map<LinkNodeId, LinkNodeId> outgoing(List<LinkEdge> edges) {
         Map<LinkNodeId, LinkNodeId> result = new EnumMap<>(LinkNodeId.class);
@@ -206,10 +246,10 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         return result;
     }
 
-    private static List<NodePair> candidatePairs(CanvasSnapshot snapshot) {
-        List<NodePair> result = new ArrayList<>();
+    private static List<EdgeCandidate> candidatePairs(CanvasSnapshot snapshot) {
+        List<EdgeCandidate> result = new ArrayList<>();
         for (CanvasSnapshot.EdgeState edge : snapshot.edges()) {
-            try { result.add(new NodePair(LinkNodeId.parse(edge.sourceNodeId()), LinkNodeId.parse(edge.targetNodeId()))); }
+            try { result.add(new EdgeCandidate(LinkNodeId.parse(edge.sourceNodeId()),edge.sourcePortId(),LinkNodeId.parse(edge.targetNodeId()),edge.targetPortId())); }
             catch (IllegalArgumentException ignored) { }
         }
         return result;
@@ -228,5 +268,5 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         return null;
     }
 
-    private record NodePair(LinkNodeId source, LinkNodeId target) { }
+    private record EdgeCandidate(LinkNodeId source,String sourcePort,LinkNodeId target,String targetPort) { }
 }

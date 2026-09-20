@@ -301,7 +301,8 @@ public final class HywindPlugin extends TavernsPlugin {
         rpgHud.configureFinisherPips(executions::finisherPips);
         rpgHud.configureOwnerPublication(encounterRewards::ownerPublished);
         var rpgCommand=new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
-                uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities);
+                uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities,
+                rpgDataDirectory().resolve("skill-tree-port-bindings"));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
         getCommandRegistry().registerCommand(rpgCommand);
         if(Boolean.getBoolean("rpg.healingPresentationProbe")||com.inigmasgames.hytalerpg.execution.hytale.HealingProbePolicy.liveTestBuild()){

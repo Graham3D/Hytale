@@ -24,8 +24,10 @@ import com.hypixel.hytale.protocol.packets.inventory.DropItemStack;
 import com.hypixel.hytale.protocol.packets.inventory.SetActiveSlot;
 import com.hypixel.hytale.protocol.packets.inventory.SwitchHotbarBlockSet;
 import com.hypixel.hytale.protocol.packets.player.MouseInteraction;
+import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.CameraManager;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.HudManager;
 import com.hypixel.hytale.server.core.event.events.player.PlayerInteractEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent;
@@ -83,6 +85,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -573,6 +576,13 @@ public final class CursorHudProbeService implements AutoCloseable {
         private String libraryQuery = "";
         private CanvasGraphSearchPage searchPage;
         private String editorStatus = "Ready";
+        private String hoveredEntryId = "";
+        private String hoveredNodeId = "";
+        private String lockedEntryId = "";
+        private String lockedNodeId = "";
+        private Set<HudComponent> priorVisibleHud = Set.of();
+        private Map<String, CustomUIHud> priorCustomHuds = Map.of();
+        private boolean modalHudLease;
         private long packetSamples;
         private long eventSamples;
         private long tracedSamples;
@@ -667,6 +677,11 @@ public final class CursorHudProbeService implements AutoCloseable {
                 HudManager manager = player.getHudManager();
                 if (manager.getCustomHud(CanvasGraphEditorHud.KEY) != null)
                     throw new IllegalStateException("CanvasUI graph-editor HUD key is already owned");
+                priorVisibleHud = Set.copyOf(manager.getVisibleHudComponents());
+                priorCustomHuds = new LinkedHashMap<>(manager.getCustomHuds());
+                modalHudLease = true;
+                for (String key : List.copyOf(priorCustomHuds.keySet())) manager.removeCustomHud(playerRef, key);
+                manager.setVisibleHudComponents(playerRef, Set.of());
                 editorHud = new CanvasGraphEditorHud(playerRef, editor.title());
                 manager.addCustomHud(playerRef, editorHud);
                 CursorHudGraphEditorBackend backend = new CursorHudGraphEditorBackend(graph,
@@ -816,25 +831,41 @@ public final class CursorHudProbeService implements AutoCloseable {
                 }
                 return true;
             }
+            if (sample.kind() == CursorProbeSample.Kind.MOTION) {
+                if (updateInspectorHover(local)) renderEditor();
+                return false;
+            }
             if (sample.kind() != CursorProbeSample.Kind.BUTTON) return false;
             MouseButtonType button = enumValue(MouseButtonType.class, sample.button());
             MouseButtonState state = enumValue(MouseButtonState.class, sample.state());
             if(state==MouseButtonState.Pressed&&linkInteraction.contextOpen()){
                 CanvasPoint anchor=linkInteraction.popupAnchor();
                 if(button==MouseButtonType.Left&&inside(local,anchor.x()+8,anchor.y()+42,50,34)){
-                    breakLink(linkInteraction.contextTargetLinkId(),"CONTEXT_CONFIRM");return true;
+                    if(linkInteraction.nodeContext())clearNode(linkInteraction.contextTargetNodeId());
+                    else breakLink(linkInteraction.contextTargetLinkId(),"CONTEXT_CONFIRM");
+                    return true;
                 }
                 if(button==MouseButtonType.Left&&inside(local,anchor.x()+68,anchor.y()+42,50,34)){
-                    linkInteraction.dismissContext();editorStatus="Link break cancelled";renderEditor();return true;
+                    boolean nodeContext=linkInteraction.nodeContext();
+                    linkInteraction.dismissContext();editorStatus=nodeContext?"Unequip cancelled":"Link break cancelled";renderEditor();return true;
                 }
                 linkInteraction.dismissContext();renderEditor();
             }
             if(button==MouseButtonType.Right&&state==MouseButtonState.Pressed){
                 CanvasHitTester.Hit foreground=new CanvasHitTester().hit(graph,local);
-                if(!foreground.background())return false;
+                if(!foreground.background()){
+                    CanvasNode node=graph.node(foreground.nodeId());
+                    if(!foreground.port()&&node!=null&&"skill".equals(node.type())
+                            &&Boolean.parseBoolean(node.metadata().getOrDefault("occupied","false"))){
+                        CanvasPoint popup=contextAnchor(local);
+                        linkInteraction.openNodeContext(node.nodeId(),popup);editorStatus="Unequip Skill?";
+                        lockedNodeId=node.nodeId();lockedEntryId="";
+                        traceLifecycle("SKILLTREE_NODE_CONTEXT_OPENED","node="+node.nodeId());renderEditor();return true;
+                    }
+                    return false;
+                }
                 String edge=linkGeometry.hit(graph,local);
-                if(edge!=null){CanvasPoint popup=CanvasPoint.of(Math.min(690,Math.max(208,local.x())),
-                            Math.min(372,Math.max(4,local.y())));
+                if(edge!=null){CanvasPoint popup=contextAnchor(local);
                     linkInteraction.openContext(edge,popup);editorStatus="Break Link?";
                     traceLifecycle("SKILLTREE_LINK_CONTEXT_OPENED","link="+edge);renderEditor();return true;}
                 return false;
@@ -868,14 +899,19 @@ public final class CursorHudProbeService implements AutoCloseable {
                     List<CursorCanvasEditor.LibraryEntry> page = editorPage();
                     if (row >= 0 && row < page.size()) {
                         CanvasPoint origin=CanvasPoint.of(32,132+row*46+21);
-                        libraryDrag.arm(page.get(row),local,origin);
-                        editorStatus = "Hold and drag " + page.get(row).name();
+                        CursorCanvasEditor.LibraryEntry entry=page.get(row);
+                        lockedEntryId=entry.id();lockedNodeId="";
+                        libraryDrag.arm(entry,local,origin);
+                        editorStatus = "Hold and drag " + entry.name();
                         renderEditor();
                     }
                     return true;
                 }
                 CanvasHitTester.Hit foreground=new CanvasHitTester().hit(graph,local);
-                if(!foreground.background()){linkInteraction.clear();return false;}
+                if(!foreground.background()){
+                    if(!foreground.port()){lockedNodeId=foreground.nodeId();lockedEntryId="";renderEditor();}
+                    linkInteraction.clear();return false;
+                }
                 String edge=linkGeometry.hit(graph,local);
                 if(edge!=null){linkInteraction.select(edge);editorStatus="Link selected";
                     traceLifecycle("SKILLTREE_LINK_SELECTED","link="+edge);renderEditor();return true;}
@@ -1028,7 +1064,36 @@ public final class CursorHudProbeService implements AutoCloseable {
         private SkillTreeViewModel editorView(boolean searchMode){
             LibraryBrowser.Window window=editorProjection();libraryScrollOffset=window.offset();
             return SkillTreeViewModel.project("SKILL TREE",graph,libraryTab,libraryQuery,window,
-                    linkInteraction.selectedLinkId(),editorStatus,searchMode);
+                    linkInteraction.selectedLinkId(),inspector(),editorStatus,searchMode);
+        }
+
+        private CursorCanvasEditor.Inspector inspector(){
+            if(libraryDrag.active())return editor.inspect(libraryDrag.entry().id(),"");
+            if(!hoveredEntryId.isBlank())return editor.inspect(hoveredEntryId,"");
+            if(!hoveredNodeId.isBlank())return editor.inspect("",hoveredNodeId);
+            if(!lockedEntryId.isBlank())return editor.inspect(lockedEntryId,"");
+            if(!lockedNodeId.isBlank())return editor.inspect("",lockedNodeId);
+            return CursorCanvasEditor.Inspector.neutral();
+        }
+
+        private boolean updateInspectorHover(CanvasPoint local){
+            String entry="";String node="";
+            if(local.x()>=8&&local.x()<=208&&local.y()>=132&&local.y()<592){
+                int row=(int)((local.y()-132)/46);List<CursorCanvasEditor.LibraryEntry> page=editorPage();
+                if(row>=0&&row<page.size())entry=page.get(row).id();
+            }else{
+                CanvasHitTester.Hit hit=new CanvasHitTester().hit(graph,local);
+                if(!hit.background()&&!hit.port()){
+                    CanvasNode candidate=graph.node(hit.nodeId());
+                    if(candidate!=null&&(candidate.type().equals("skill")||candidate.type().equals("passive")))node=candidate.nodeId();
+                }
+            }
+            if(entry.equals(hoveredEntryId)&&node.equals(hoveredNodeId))return false;
+            hoveredEntryId=entry;hoveredNodeId=node;return true;
+        }
+
+        private CanvasPoint contextAnchor(CanvasPoint local){
+            return CanvasPoint.of(Math.min(690,Math.max(208,local.x())),Math.min(372,Math.max(4,local.y())));
         }
 
         private int scrollbarThumbHeight(LibraryBrowser.Window window){
@@ -1109,6 +1174,17 @@ public final class CursorHudProbeService implements AutoCloseable {
             else if(graph.edge(linkId)==null)linkInteraction.clear();
             traceLifecycle(result.accepted()?"SKILLTREE_LINK_BROKEN":"SKILLTREE_LINK_BREAK_REJECTED",
                     "link="+linkId+" reason="+reason+" message="+result.message());renderEditor();
+        }
+
+        private void clearNode(String nodeId){
+            traceLifecycle("SKILLTREE_NODE_CLEAR_REQUESTED","node="+nodeId);
+            CursorCanvasEditor.Result result=editor.clearNode(nodeId,graph.snapshot());
+            graph.restore(result.authoritativeSnapshot());editorStatus=result.message();
+            if(result.accepted()){
+                lockedNodeId=nodeId;lockedEntryId="";linkInteraction.broken();persistEditorLayout();
+            }else linkInteraction.dismissContext();
+            traceLifecycle(result.accepted()?"SKILLTREE_NODE_CLEARED":"SKILLTREE_NODE_CLEAR_REJECTED",
+                    "node="+nodeId+" message="+result.message());renderEditor();
         }
 
         private boolean inside(CanvasPoint point,double left,double top,double width,double height){
@@ -1192,6 +1268,8 @@ public final class CursorHudProbeService implements AutoCloseable {
                 if (editorHud != null && player.getHudManager().getCustomHud(CanvasGraphEditorHud.KEY) == editorHud)
                     player.getHudManager().removeCustomHud(playerRef, CanvasGraphEditorHud.KEY);
             } catch (RuntimeException error) { cleanupFailures.add("EDITOR_HUD:" + error.getClass().getSimpleName()); }
+            try { restoreModalHud(); }
+            catch (RuntimeException error) { cleanupFailures.add("MODAL_HUD_RESTORE:" + error.getClass().getSimpleName()); }
             try { if (editor != null) editor.closed(reason); }
             catch (RuntimeException error) { cleanupFailures.add("EDITOR_CLOSE:" + error.getClass().getSimpleName()); }
             try {
@@ -1248,6 +1326,16 @@ public final class CursorHudProbeService implements AutoCloseable {
                     gameplayObserved.get(), gameplayGuarded.get(), gameplayAllowed.get(), transform.state(),
                     dragBegins, dragEnds, persistenceWrites, inputGuard.active(playerId),
                     cleanupFailures.isEmpty() ? "PASS" : cleanupFailures);
+        }
+
+        private void restoreModalHud(){
+            if(!modalHudLease)return;
+            HudManager manager=player.getHudManager();
+            for(String key:List.copyOf(manager.getCustomHuds().keySet()))manager.removeCustomHud(playerRef,key);
+            manager.setVisibleHudComponents(playerRef,priorVisibleHud);
+            for(CustomUIHud prior:priorCustomHuds.values())manager.addCustomHud(playerRef,prior);
+            modalHudLease=false;
+            traceLifecycle("MODAL_HUD_RESTORED","native="+priorVisibleHud.size()+" custom="+priorCustomHuds.size());
         }
 
         private synchronized void writeLine(String line) {

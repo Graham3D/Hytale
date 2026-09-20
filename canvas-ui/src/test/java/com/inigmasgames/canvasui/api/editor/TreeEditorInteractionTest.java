@@ -75,6 +75,9 @@ class TreeEditorInteractionTest {
         assertEquals("edge-a",geometry.hit(canvas,CanvasPoint.of(260,127)));
         var state=new TreeLinkInteraction();state.select("edge-a");assertEquals("edge-a",state.selectedLinkId());
         state.openContext("edge-a",CanvasPoint.of(260,127));assertEquals("edge-a",state.contextTargetLinkId());
+        state.openNodeContext("skill-a",CanvasPoint.of(140,125));assertTrue(state.nodeContext());
+        assertEquals("skill-a",state.contextTargetNodeId());assertNull(state.contextTargetLinkId());
+        state.dismissContext();assertNull(state.contextTargetNodeId());
         state.select("other");assertNull(state.contextTargetLinkId());assertEquals(1,canvas.edges().size());
         state.clear();assertNull(state.selectedLinkId());assertEquals(1,canvas.edges().size());
     }
@@ -98,12 +101,18 @@ class TreeEditorInteractionTest {
         assertThrows(UnsupportedOperationException.class,()->search.entries().clear());
         String editor=Files.readString(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphEditorHud.ui"));
         String searchUi=Files.readString(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphSearchPage.ui"));
-        assertTrue(editor.contains("SKILL LIBRARY"));assertTrue(editor.contains("SHAPE YOUR JOURNEY"));
+        assertFalse(editor.contains("SKILL LIBRARY"));assertTrue(editor.contains("SHAPE YOUR JOURNEY"));
+        assertTrue(editor.contains("GraphInspectorPanel"));assertTrue(editor.contains("GraphContextPrompt"));
+        assertTrue(editor.contains("Select a Skill or Passive to view details."));
         assertFalse(editor.contains("PREV"));assertFalse(editor.contains("NEXT"));
         assertFalse(editor.toLowerCase().contains("skill points"));
         assertFalse(editor.contains("HorizontalAlignment: Right"));
         assertTrue(editor.contains("HorizontalAlignment: End"));
         assertTrue(searchUi.contains("SEARCH MODE"));assertTrue(searchUi.contains("GraphSearchInput"));
+        String service=Files.readString(Path.of("src/main/java/com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java"));
+        assertTrue(service.contains("priorVisibleHud = Set.copyOf(manager.getVisibleHudComponents())"));
+        assertTrue(service.contains("priorCustomHuds = new LinkedHashMap<>(manager.getCustomHuds())"));
+        assertTrue(service.contains("manager.setVisibleHudComponents(playerRef,priorVisibleHud)"));
     }
 
     private static Canvas canvas(){

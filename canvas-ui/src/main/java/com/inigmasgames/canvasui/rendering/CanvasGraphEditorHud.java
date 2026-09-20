@@ -79,6 +79,7 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         renderScrollbar(commands, model.scrollOffset(), model.maximumScrollOffset(), model.totalMatches(), page.size());
         renderNodes(commands, model.nodes());
         renderContinuousEdges(commands, model.links());
+        renderInspector(commands,model.inspector());
         renderDrag(commands, drag);
         commands.set("#GraphPreview0.Visible", false);
         commands.set("#GraphPreview1.Visible", false);
@@ -139,15 +140,29 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 case "passive" -> node.selected() ? "#744ca1ff" : "#4c326bf2";
                 default -> node.selected() ? "#a26c24ff" : "#6d4a20f2";
             };
-            commands.setObject(selector + ".Background", color(("joint".equals(node.type())||"passive".equals(node.type()))
-                    ? "#00000000" : body));
+            commands.setObject(selector + ".Background", color("#00000000"));
             commands.set(selector + " #Title.TextSpans", Message.raw(node.label()));
-            commands.set(selector + " #Subtitle.TextSpans", Message.raw(node.subtitle()));
+            commands.setObject(selector+" #Title.Anchor",anchor(0,-25,node.width(),22));
+            commands.set(selector + " #Subtitle.Visible", false);
             commands.set(selector + " #Triangle.Visible", "joint".equals(node.type()));
-            commands.set(selector + " #Circle.Visible", "passive".equals(node.type()));
+            commands.set(selector + " #Circle.Visible", "passive".equals(node.type())||"skill".equals(node.type()));
+            commands.set(selector + " #Triangle.TextSpans",Message.raw(""));
+            commands.set(selector + " #Circle.TextSpans",Message.raw(""));
+            if("joint".equals(node.type()))commands.setObject(selector+" #Triangle.Background",
+                    texture("Common/UI/Custom/Assets/SkillTree/skilltree_joint.png"));
+            if("passive".equals(node.type()))commands.setObject(selector+" #Circle.Background",
+                    texture(node.occupied()?"Common/UI/Custom/Assets/SkillTree/skilltree_passive_occupied.png"
+                            :"Common/UI/Custom/Assets/SkillTree/skilltree_passive_unoccupied.png"));
+            if("skill".equals(node.type()))commands.setObject(selector+" #Circle.Background",
+                    texture(node.occupied()?"Common/UI/Custom/Assets/SkillTree/SpecialSlotTemporary@2x.png"
+                            :"Common/UI/Custom/Assets/SkillTree/Slot@2x.png"));
+            if("skill".equals(node.type()))commands.setObject(selector+" #Circle.Anchor",anchor(35,0,62,62));
+            if("passive".equals(node.type()))commands.setObject(selector+" #Circle.Anchor",anchor(35,0,54,54));
+            if("joint".equals(node.type()))commands.setObject(selector+" #Triangle.Anchor",anchor(0,0,72,72));
             boolean icon = !"joint".equals(node.type()) && node.occupied();
             commands.set(selector + " #Icon.Visible", icon);
-            if (icon) commands.setObject(selector + " #Icon.Background", texture(node.icon()));
+            if (icon) {commands.setObject(selector + " #Icon.Background", texture(node.icon()));
+                commands.setObject(selector+" #Icon.Anchor",anchor((node.width()-40)/2,(node.height()-40)/2,40,40));}
             commands.set(selector + " #Port0.Visible", false);
             commands.set(selector + " #Port1.Visible", false);
             commands.set(selector + " #Port2.Visible", false);
@@ -158,6 +173,8 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 commands.setObject(selector + " #Port" + portIndex + ".Anchor",
                         anchor((int)Math.round(port.point().x() - point.x()) - 6,
                                 (int)Math.round(port.point().y() - point.y()) - 6, 12, 12));
+                commands.setObject(selector+" #Port"+portIndex+".Background",
+                        texture("Common/UI/Custom/Assets/SkillTree/StructuralCraftingArrowUp@2x.png"));
                 portIndex++;
             }
             index++;
@@ -212,8 +229,27 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         if(visible)commands.setObject("#GraphLinkContext.Anchor",anchor(
                 (int)Math.round(Math.min(690,Math.max(208,links.popupAnchor().x()))),
                 (int)Math.round(Math.min(372,Math.max(4,links.popupAnchor().y()))),126,88));
+        commands.set("#GraphContextPrompt.TextSpans",Message.raw(links!=null&&links.nodeContext()?"Unequip Skill?":"Break Link?"));
         commands.set("#GraphDeleteLink.Visible",links!=null&&links.selectedLinkId()!=null);
         commands.set("#GraphDeleteLinkLabel.Visible",links!=null&&links.selectedLinkId()!=null);
+    }
+
+    private static void renderInspector(UICommandBuilder commands,CursorCanvasEditor.Inspector inspector){
+        CursorCanvasEditor.Inspector value=inspector==null?CursorCanvasEditor.Inspector.neutral():inspector;
+        commands.set("#GraphInspectorName.TextSpans",Message.raw(value.name()));
+        commands.set("#GraphInspectorDescriptor.TextSpans",Message.raw(value.descriptor()));
+        commands.set("#GraphInspectorDescription.TextSpans",Message.raw(value.description()));
+        commands.set("#GraphInspectorIcon.Visible",!value.iconPath().isBlank());
+        if(!value.iconPath().isBlank())commands.setObject("#GraphInspectorIcon.Background",texture(value.iconPath()));
+        commands.set("#GraphInspectorFooter.TextSpans",Message.raw(value.footer()));
+        for(int i=0;i<6;i++){
+            boolean visible=i<value.rows().size();String selector="#GraphInspectorRow"+i;
+            commands.set(selector+".Visible",visible);
+            if(visible){CursorCanvasEditor.DetailRow row=value.rows().get(i);
+                commands.set(selector+" #Label.TextSpans",Message.raw(row.label()));
+                commands.set(selector+" #Value.TextSpans",Message.raw(row.value()));
+            }
+        }
     }
 
     private static PatchStyle color(String value) { return new PatchStyle().setColor(Value.of(value)); }
