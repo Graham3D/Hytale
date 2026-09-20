@@ -65,9 +65,9 @@ class SkillTreeVisualPolishTest {
         String renderer = Files.readString(RENDERER);
         String service = Files.readString(SERVICE);
         String search = Files.readString(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphSearchPage.ui"));
-        assertTrue(renderer.contains("LIBRARY_ROWS = 13"));
-        assertTrue(ui.contains("#GraphLibraryRow12"));
-        assertTrue(ui.contains("Top: 652"));
+        assertTrue(renderer.contains("LIBRARY_ROWS = 15"));
+        assertTrue(ui.contains("#GraphLibraryRow14"));
+        assertTrue(ui.contains("Top: 696"));
         assertTrue(ui.contains("#GraphInspectorRow5"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/Divider.png"));
         assertTrue(service.contains("this::constrainEditorNode"));
@@ -75,6 +75,9 @@ class SkillTreeVisualPolishTest {
         assertTrue(search.contains("only the"));
         assertFalse(search.contains("GraphSearchReadOnlyShade"));
         assertFalse(search.contains("GraphSearchSkills"));
+        assertFalse(ui.contains("GraphDeleteLink"));
+        assertTrue(ui.contains("VerticalBorder: 80"));
+        assertTrue(ui.contains("pairing a Passive to Skill"));
     }
 
     @Test void saveUsesExistingCommitAuthorityAndExitUsesTheVisibleFooterRegion() throws Exception {

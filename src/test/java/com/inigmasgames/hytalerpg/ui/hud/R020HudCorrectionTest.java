@@ -108,4 +108,11 @@ class R020HudCorrectionTest {
         assertFalse(coordinator.contains("HUD_VISIBILITY_RESTORED"));
         assertFalse(coordinator.contains("HUD_REFRESHED"));
     }
+
+    @Test void modalCustomUiOwnershipPreventsCrossDocumentHudPatches() throws Exception {
+        String coordinator = Files.readString(COORDINATOR);
+        assertTrue(coordinator.contains("if (!session.ownsActiveHuds()) return;"));
+        assertTrue(coordinator.contains("manager.getCustomHud(RpgHud.KEY) == hud"));
+        assertTrue(coordinator.contains("manager.getCustomHud(FinisherHud.KEY) == combo"));
+    }
 }

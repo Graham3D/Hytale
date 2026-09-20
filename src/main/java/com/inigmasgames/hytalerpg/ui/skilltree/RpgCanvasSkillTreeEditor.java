@@ -73,15 +73,12 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             return reject("Joint nodes route links and cannot hold content", presentationSnapshot);
         if ((entry.kind() == LibraryKind.SKILL) != (node.kind() == LinkNodeId.NodeKind.SKILL))
             return reject("Drop skills on Skill nodes and passives on Passive nodes", presentationSnapshot);
-        StaticSkillTreeViewModel.TreeNode current = projection.project(player, StaticSkillTreeViewModel.Tab.SKILLS,
-                "", "", "", null, "").nodes().get(node);
-        if (current != null && current.occupied())
-            return reject(node.externalId() + " is occupied; automatic replacement is disabled", presentationSnapshot);
         long revision = mutations.view(player).state().revision;
         MutationResult mutation = mutations.assignCanvas(player, revision, node, entry.id());
         if (!mutation.success()) return reject(mutation.code() + ": " + mutation.message(), presentationSnapshot);
         restoreDormant(node);
-        return new Result(true, entry.name() + " assigned to " + node.externalId(),
+        return new Result(true, entry.name() + " assigned to " + node.externalId()
+                + (node == LinkNodeId.SKILL03 ? " (stored unbound; this build has no native Ability4 input)" : ""),
                 authoritativeSnapshot(presentationSnapshot));
     }
 

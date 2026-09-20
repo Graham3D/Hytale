@@ -62,6 +62,11 @@ public final class RpgHudCoordinator {
         long now = System.nanoTime();
         if (now - session.lastPollNanos < POLL_NANOS) return;
         session.lastPollNanos = now;
+        // CanvasUI takes an exclusive modal lease over CustomUI HUD documents while its graph editor is open.
+        // Updating a removed HUD object sends selectors into the active editor document and the client correctly
+        // disconnects on the missing element. Preserve the latest authoritative model in the coordinator and resume
+        // projection after CanvasUI restores these exact HUD instances.
+        if (!session.ownsActiveHuds()) return;
         try {
             RpgHudViewModel previous = session.model;
             RpgHudViewModel next = projection.hud(playerRef.getUuid(), resources.read(stats), xpFixtures.get(playerRef.getUuid()));
@@ -140,6 +145,10 @@ public final class RpgHudCoordinator {
             this.combo=combo;
             this.playerRef = playerRef; this.manager = manager; this.hud = hud;
             this.model = model; this.lastPollNanos = now;
+        }
+        private boolean ownsActiveHuds() {
+            return manager.getCustomHud(RpgHud.KEY) == hud
+                    && manager.getCustomHud(FinisherHud.KEY) == combo;
         }
     }
 }

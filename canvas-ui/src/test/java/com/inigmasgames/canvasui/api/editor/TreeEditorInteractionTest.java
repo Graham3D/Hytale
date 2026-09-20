@@ -58,12 +58,12 @@ class TreeEditorInteractionTest {
         assertEquals(TreeDragController.State.IDLE,drag.state());
     }
 
-    @Test void compatibleEmptyNearestNodeWinsWhileWrongOccupiedAndDistantTargetsReject(){
+    @Test void compatibleNearestNodeWinsIncludingAuthorityControlledReplacementWhileWrongAndDistantTargetsReject(){
         Canvas canvas=canvas();var resolver=new TreeDropResolver();
         var direct=resolver.resolve(canvas,CursorCanvasEditor.LibraryKind.SKILL,CanvasPoint.of(140,125));
         assertTrue(direct.accepted());assertEquals("skill-a",direct.nodeId());
         assertFalse(resolver.resolve(canvas,CursorCanvasEditor.LibraryKind.PASSIVE,CanvasPoint.of(140,125)).accepted());
-        assertFalse(resolver.resolve(canvas,CursorCanvasEditor.LibraryKind.SKILL,CanvasPoint.of(440,125)).accepted());
+        assertTrue(resolver.resolve(canvas,CursorCanvasEditor.LibraryKind.SKILL,CanvasPoint.of(440,125)).accepted());
         assertFalse(resolver.resolve(canvas,CursorCanvasEditor.LibraryKind.SKILL,CanvasPoint.of(700,400)).accepted());
     }
 

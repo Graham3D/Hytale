@@ -5,7 +5,7 @@ import com.inigmasgames.canvasui.api.CanvasNode;
 import com.inigmasgames.canvasui.api.CanvasPoint;
 import com.inigmasgames.canvasui.api.NodeDefinition;
 
-/** Resolves compatible empty nodes from live layout geometry. */
+/** Resolves compatible content nodes from live layout geometry. Authority decides replacement semantics. */
 public final class TreeDropResolver {
     public static final double SNAP_MARGIN = 18.0;
 
@@ -27,8 +27,6 @@ public final class TreeDropResolver {
             if (best==null || candidate.compareTo(best)<0) best=candidate;
         }
         if (best==null) return Result.rejected("No compatible node near release point");
-        if (Boolean.parseBoolean(best.node.metadata().getOrDefault("occupied","false")))
-            return Result.rejected(best.node.nodeId()+" is occupied");
         return new Result(true,best.node.nodeId(),best.center,"PASS");
     }
 

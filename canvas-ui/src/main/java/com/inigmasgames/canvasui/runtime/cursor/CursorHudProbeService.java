@@ -889,9 +889,6 @@ public final class CursorHudProbeService implements AutoCloseable {
             }
             if (button != MouseButtonType.Left) return false;
             if (state == MouseButtonState.Pressed) {
-                if(inside(local,700,10,116,30)&&linkInteraction.selectedLinkId()!=null){
-                    breakLink(linkInteraction.selectedLinkId(),"VISIBLE_DELETE");return true;
-                }
                 if (local.x() >= 12 && local.x() <= 240 && local.y() >= 14 && local.y() <= 48) {
                     libraryDrag.cancel();
                     libraryTab = local.x() < 122 ? CursorCanvasEditor.LibraryKind.SKILL
@@ -912,7 +909,7 @@ public final class CursorHudProbeService implements AutoCloseable {
                     }else{updateScrollbar(local.y()-thumbHeight/2.0);}
                     renderEditor();return true;
                 }
-                if (local.x() >= 8 && local.x() <= 208
+                if (local.x() >= 8 && local.x() <= 226
                         && local.y() >= CanvasGraphEditorHud.LIBRARY_ROW_TOP
                         && local.y() < CanvasGraphEditorHud.LIBRARY_ROW_TOP
                         + CanvasGraphEditorHud.LIBRARY_ROWS * CanvasGraphEditorHud.LIBRARY_ROW_STEP) {
@@ -1101,7 +1098,7 @@ public final class CursorHudProbeService implements AutoCloseable {
 
         private boolean updateInspectorHover(CanvasPoint local){
             String entry="";String node="";
-            if(local.x()>=8&&local.x()<=208&&local.y()>=CanvasGraphEditorHud.LIBRARY_ROW_TOP
+            if(local.x()>=8&&local.x()<=226&&local.y()>=CanvasGraphEditorHud.LIBRARY_ROW_TOP
                     &&local.y()<CanvasGraphEditorHud.LIBRARY_ROW_TOP
                     +CanvasGraphEditorHud.LIBRARY_ROWS*CanvasGraphEditorHud.LIBRARY_ROW_STEP){
                 int row=(int)((local.y()-CanvasGraphEditorHud.LIBRARY_ROW_TOP)

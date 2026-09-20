@@ -19,13 +19,13 @@ import java.util.List;
 /** Fixed-pool passive HUD renderer for the production cursor graph editor. */
 public final class CanvasGraphEditorHud extends CustomUIHud {
     public static final String KEY = "inigmas:canvasui:graph-editor";
-    public static final int LIBRARY_ROWS = 13;
+    public static final int LIBRARY_ROWS = 15;
     public static final int WORKSPACE_LEFT = 114;
     public static final int WORKSPACE_TOP = 140;
-    public static final int LIBRARY_ROW_TOP = 100;
-    public static final int LIBRARY_ROW_STEP = 46;
-    public static final int LIBRARY_TRACK_TOP = 100;
-    public static final int LIBRARY_TRACK_HEIGHT = 598;
+    public static final int LIBRARY_ROW_TOP = 94;
+    public static final int LIBRARY_ROW_STEP = 43;
+    public static final int LIBRARY_TRACK_TOP = 94;
+    public static final int LIBRARY_TRACK_HEIGHT = 645;
     public static final int LIBRARY_TRACK_LEFT = 230;
     public static final int TREE_LEFT = 272;
     public static final int TREE_RIGHT = 1420;
@@ -69,7 +69,9 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 ? (tab == CursorCanvasEditor.LibraryKind.SKILL ? "Search skills..." : "Search passives...") : model.query()));
         commands.set("#GraphEditorNoMatches.Visible", page.isEmpty());
         commands.set("#GraphEditorDrag.TextSpans", Message.raw(drag == null
-                ? "Drag a library entry onto a matching node. Drag ports to create links."
+                ? "Drag a Skill or Passive from the Library on the left onto a matching empty slot. "
+                + "Drag a connector from one node port to another compatible node to create a link, "
+                + "pairing a Passive to Skill."
                 : drag.state() + ": " + drag.entry().name()));
         for (int i = 0; i < LIBRARY_ROWS; i++) {
             boolean visible = i < page.size();
@@ -173,8 +175,8 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 if (portIndex >= 3) break;
                 commands.set(selector + " #Port" + portIndex + ".Visible", true);
                 commands.setObject(selector + " #Port" + portIndex + ".Anchor",
-                        anchor((int)Math.round(port.point().x() - point.x()) - 6,
-                                (int)Math.round(port.point().y() - point.y()) - 6, 12, 12));
+                        anchor((int)Math.round(port.point().x() - point.x()) - 3,
+                                (int)Math.round(port.point().y() - point.y()) - 3, 9, 9));
                 commands.setObject(selector+" #Port"+portIndex+".Background",
                         texture(SKILL_TREE_ASSETS + "StructuralCraftingArrowUp.png"));
                 portIndex++;
@@ -232,8 +234,6 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 (int)Math.round(Math.min(690,Math.max(208,links.popupAnchor().x()))),
                 (int)Math.round(Math.min(372,Math.max(4,links.popupAnchor().y()))),126,88));
         commands.set("#GraphContextPrompt.TextSpans",Message.raw(links!=null&&links.nodeContext()?"Unequip Skill?":"Break Link?"));
-        commands.set("#GraphDeleteLink.Visible",links!=null&&links.selectedLinkId()!=null);
-        commands.set("#GraphDeleteLinkLabel.Visible",links!=null&&links.selectedLinkId()!=null);
     }
 
     private static void renderInspector(UICommandBuilder commands,CursorCanvasEditor.Inspector inspector){

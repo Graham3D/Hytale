@@ -1,10 +1,15 @@
-$Common = "Common.ui";
-
 Group {
   Anchor: (Full: 0);
   // The editor composition is supplied by CanvasGraphEditorHud.ui. This page adds only the
   // native keyboard-focus control, precisely over the passive HUD search field.
-  Group { Anchor: (Left: 126, Top: 194, Width: 228, Height: 38); Background: (Color: #07111bff);
-    $Common.@TextField #GraphSearchInput { Anchor: (Width: 228, Height: 38); PlaceholderText: "Search skills..."; }
+  Group { Anchor: (Left: 126, Top: 194, Width: 228, Height: 38); Background: (Color: #00000000);
+    TextField #GraphSearchInput {
+      Anchor: (Width: 228, Height: 38);
+      Background: (Color: #00000000);
+      Padding: (Horizontal: 6, Vertical: 8);
+      Style: (FontSize: 11, TextColor: #b9cce0);
+      PlaceholderStyle: (FontSize: 11, TextColor: #b9cce0);
+      PlaceholderText: "Search skills...";
+    }
   }
 }

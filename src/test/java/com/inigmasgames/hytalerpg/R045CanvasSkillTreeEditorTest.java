@@ -88,12 +88,21 @@ class R045CanvasSkillTreeEditorTest {
         assertFalse(result.allowed());
     }
 
-    @Test void occupiedAssignmentsRejectAndExactEdgeBreakPreservesNodesAndOtherEdges() {
+    @Test void occupiedAssignmentsReplaceAtomicallyAndExactEdgeBreakPreservesNodesAndOtherEdges() {
         var bundle=Stage01BTestSupport.bundle();var layout=new StaticSkillTreeLayout();UUID player=UUID.randomUUID();
         var editor=new RpgCanvasSkillTreeEditor(player,new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true),
                 new RpgSkillTreeMutationService(bundle.service(),layout));
         assign(editor,"fire_bolt","skill01");
-        assertFalse(editor.assign("quick_slash","skill01",editor.canvas().snapshot()).accepted());
+        var replacement=editor.assign("quick_slash","skill01",editor.canvas().snapshot());
+        assertTrue(replacement.accepted(),replacement.message());editor.canvas().restore(replacement.authoritativeSnapshot());
+        assertEquals("Quick Slash [E]",editor.canvas().node("skill01").metadata().get("label"));
+        var unbound=editor.assign("fire_bolt","skill03",editor.canvas().snapshot());
+        assertTrue(unbound.accepted(),unbound.message());assertTrue(unbound.message().contains("stored unbound"));
+        editor.canvas().restore(unbound.authoritativeSnapshot());
+        var unboundReplacement=editor.assign("quick_slash","skill03",editor.canvas().snapshot());
+        assertTrue(unboundReplacement.accepted(),unboundReplacement.message());
+        editor.canvas().restore(unboundReplacement.authoritativeSnapshot());
+        assertEquals("Quick Slash [UNBOUND]",editor.canvas().node("skill03").metadata().get("label"));
         assign(editor,"potency","passive01");assign(editor,"efficiency","passive02");
         connect(editor,"passive01","out","skill01","in",true);
         String first=editor.canvas().edges().iterator().next().edgeId();
@@ -103,7 +112,7 @@ class R045CanvasSkillTreeEditorTest {
         var broken=editor.breakLink(first,editor.canvas().snapshot());assertTrue(broken.accepted(),broken.message());
         editor.canvas().restore(broken.authoritativeSnapshot());
         assertNull(editor.canvas().edge(first));assertNotNull(editor.canvas().edge(other));
-        assertEquals("Fire Bolt [E]",editor.canvas().node("skill01").metadata().get("label"));
+        assertEquals("Quick Slash [E]",editor.canvas().node("skill01").metadata().get("label"));
         assertEquals("Potency",editor.canvas().node("passive01").metadata().get("label"));
     }
 
