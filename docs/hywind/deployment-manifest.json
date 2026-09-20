@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.17",
-    "revision": "R062",
+    "version": "0.1.0-merge.18",
+    "revision": "R063",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "3160d525b529827cd5700199d3d3e5be436b1d9d",
+    "implementationCommit": "cd52435c4f6494906c8feff1da925b621b749e6b",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "1FFD58CB854AE36EDC4EFD11A1304B3A99DDB338F49FC034EEC9A23BE3A49A1C",
-    "bytes": 13430097,
-    "entries": 5862,
-    "classes": 2207,
+    "sha256": "D0E6BE36FDD87323C83BC81650E95F6BDB79299BCD820BF90B7DFD6D5303B2EC",
+    "bytes": 13435930,
+    "entries": 5864,
+    "classes": 2209,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T16:00:51.9277207Z",
+    "deployedAtUtc": "2026-09-20T18:17:45.6022791Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "1FFD58CB854AE36EDC4EFD11A1304B3A99DDB338F49FC034EEC9A23BE3A49A1C",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T160051Z",
-    "fullBackupFiles": 731,
-    "fullBackupBytes": 725233562,
+    "installedSha256": "D0E6BE36FDD87323C83BC81650E95F6BDB79299BCD820BF90B7DFD6D5303B2EC",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T181744Z",
+    "fullBackupFiles": 748,
+    "fullBackupBytes": 872764265,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.16",
-        "revision": "R061",
-        "sha256": "61C1887E7D9A2418BE96C2CCCEE947B22375C9DD2D9C8C2782525745DDDB473E"
+        "version": "0.1.0-merge.17",
+        "revision": "R062",
+        "sha256": "1FFD58CB854AE36EDC4EFD11A1304B3A99DDB338F49FC034EEC9A23BE3A49A1C"
       }
     ]
   },
@@ -62,7 +62,7 @@
     "taverns": "mods/InigmasGames_Taverns"
   },
   "validation": {
-    "rpgJUnitTests": 2370,
+    "rpgJUnitTests": 2376,
     "nativeControlJUnitTests": 67,
     "canvasJUnitTests": 47,
     "tavernJUnitTests": 5,
@@ -85,6 +85,11 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
+    "R063 Spark follows flat, uphill, and downhill terrain at the intended ground offset and terminates when support falls outside tolerance",
+    "R063 Spark ignores vertical camera pitch, produces independent chaotic forward-biased trajectories, and retains its actual-path travel range",
+    "R063 each bolt penetrates and damages multiple enemies once each while separate bolts may hit the same enemy and Electrified remains root-cast/target deduplicated",
+    "R063 walls terminate Spark by default while the existing Ricochet passive supplies its authored terrain bounces and speed penalty",
+    "R063 each Spark renders as a compact horizontal ground plane using the supplied art with no intrusive cast animation or cast-origin lightning effect",
     "R062 Details content remains contained within its divided inspector rows without text overflow",
     "R062 Search visually remains inside the Library, exposes the active X control, preserves query/tab/scroll/Inspector state, and restores graph control after result click, Enter, X, outside click, or first Escape",
     "R062 selected-page gold trim renders at native proportions and sits flush with the Skill Tree header frame",
