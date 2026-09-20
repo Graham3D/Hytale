@@ -77,29 +77,42 @@ class SparkQaPassTest {
         assertFalse(GroundSparkSteering.ownsNativeCourseEnd("fire_bolt",false,false));
     }
 
-    @Test void projectilePresentationIsOneBlockHorizontalAndCyclesFourFramesAtOneHundredMilliseconds() throws Exception {
+    @Test void projectilePresentationIsAnUnscaledHorizontalModelQuadWithNoYellowFallback() throws Exception {
         var gson=new Gson();
         JsonObject projectile=gson.fromJson(new InputStreamReader(require("/Server/ProjectileConfigs/RPG/Projectile_Config_Hywind_Charged_Bolt.json"),StandardCharsets.UTF_8),JsonObject.class);
         assertEquals(12,projectile.get("LaunchForce").getAsDouble(),1e-12);
         assertEquals(12,projectile.getAsJsonObject("Physics").get("TerminalVelocityAir").getAsDouble(),1e-12);
-        JsonObject spawner=gson.fromJson(new InputStreamReader(require("/Server/Particles/Hywind/Hywind_Charged_Bolt_Frame.particlespawner"),StandardCharsets.UTF_8),JsonObject.class);
-        assertEquals("None",spawner.get("ParticleRotationInfluence").getAsString());
-        var initial=spawner.getAsJsonObject("Particle").getAsJsonObject("InitialAnimationFrame");
-        assertEquals(90,initial.getAsJsonObject("Rotation").getAsJsonObject("X").get("Min").getAsDouble());
-        assertEquals(1,initial.getAsJsonObject("Scale").getAsJsonObject("X").get("Min").getAsDouble(),1e-12);
-        assertEquals(.4,spawner.getAsJsonObject("ParticleLifeSpan").get("Min").getAsDouble(),1e-12);
-        assertEquals(1,spawner.get("MaxConcurrentParticles").getAsInt());
-        assertEquals(0,spawner.get("TrailSpawnerPositionMultiplier").getAsInt());
-        assertEquals(0,spawner.get("TrailSpawnerRotationMultiplier").getAsInt());
-        var animation=spawner.getAsJsonObject("Particle").getAsJsonObject("Animation");
-        assertEquals(0,animation.getAsJsonObject("0").getAsJsonObject("FrameIndex").get("Min").getAsInt());
-        assertEquals(1,animation.getAsJsonObject("25").getAsJsonObject("FrameIndex").get("Min").getAsInt());
-        assertEquals(2,animation.getAsJsonObject("50").getAsJsonObject("FrameIndex").get("Min").getAsInt());
-        assertEquals(3,animation.getAsJsonObject("75").getAsJsonObject("FrameIndex").get("Min").getAsInt());
+        assertNull(SparkQaPassTest.class.getResource("/Server/Particles/Hywind/Hywind_Charged_Bolt.particlesystem"));
+        assertNull(SparkQaPassTest.class.getResource("/Server/Particles/Hywind/Hywind_Charged_Bolt_Frame.particlespawner"));
         JsonObject model=gson.fromJson(new InputStreamReader(require("/Server/Models/Projectiles/Hywind_Charged_Bolt.json"),StandardCharsets.UTF_8),JsonObject.class);
-        assertEquals(.06,model.get("MaxScale").getAsDouble(),1e-12);
-        assertEquals(1,model.getAsJsonArray("Particles").get(0).getAsJsonObject().get("Scale").getAsDouble(),1e-12);
-        assertTrue(Stage06AreaRuntimeTest.profile("charged_bolt").projectile().details().presentation().castParticle().isBlank());
+        assertEquals("VFX/RPG/Spark/Spark_Quad.blockymodel",model.get("Model").getAsString());
+        assertEquals("VFX/RPG/Spark/chargedbolt.png",model.get("Texture").getAsString());
+        assertEquals(1,model.get("MinScale").getAsDouble(),1e-12);assertEquals(1,model.get("MaxScale").getAsDouble(),1e-12);
+        assertFalse(model.has("Particles"));assertFalse(model.has("Light"),"the former yellow point-light fallback must not exist");
+        var fly=model.getAsJsonObject("AnimationSets").getAsJsonObject("FlyIdle").getAsJsonArray("Animations").get(0).getAsJsonObject();
+        assertEquals("VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim",fly.get("Animation").getAsString());assertTrue(fly.get("Looping").getAsBoolean());
+
+        JsonObject blocky=gson.fromJson(new InputStreamReader(require("/Common/VFX/RPG/Spark/Spark_Quad.blockymodel"),StandardCharsets.UTF_8),JsonObject.class);
+        var node=blocky.getAsJsonArray("nodes").get(0).getAsJsonObject();var shape=node.getAsJsonObject("shape");
+        assertEquals("quad",shape.get("type").getAsString());assertEquals("+Y",shape.getAsJsonObject("settings").get("normal").getAsString());
+        assertEquals("fullbright",shape.get("shadingMode").getAsString());assertTrue(shape.get("doubleSided").getAsBoolean());
+        var size=shape.getAsJsonObject("settings").getAsJsonObject("size");var stretch=shape.getAsJsonObject("stretch");
+        assertEquals(1,size.get("x").getAsDouble()*stretch.get("x").getAsDouble()/32,1e-12);
+        assertEquals(1,size.get("y").getAsDouble()*stretch.get("z").getAsDouble()/32,1e-12);
+
+        JsonObject animation=gson.fromJson(new InputStreamReader(require("/Common/VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim"),StandardCharsets.UTF_8),JsonObject.class);
+        assertEquals(24,animation.get("duration").getAsInt());assertFalse(animation.get("holdLastKeyframe").getAsBoolean());
+        var uv=animation.getAsJsonObject("nodeAnimations").getAsJsonObject("SparkPlane").getAsJsonArray("shapeUvOffset");
+        assertEquals(4,uv.size());
+        for(int i=0;i<4;i++){var frame=uv.get(i).getAsJsonObject();assertEquals(i*6,frame.get("time").getAsInt());assertEquals(i*-80,frame.getAsJsonObject("delta").get("x").getAsInt());}
+
+        var texture=javax.imageio.ImageIO.read(require("/Common/VFX/RPG/Spark/chargedbolt.png"));
+        assertEquals(320,texture.getWidth());assertEquals(80,texture.getHeight());boolean transparent=false,blueWhite=false;
+        for(int y=0;y<texture.getHeight();y++)for(int x=0;x<texture.getWidth();x++){int argb=texture.getRGB(x,y),alpha=argb>>>24;
+            transparent|=alpha==0;int red=argb>>16&255,green=argb>>8&255,blue=argb&255;blueWhite|=alpha>200&&blue>180&&blue>=red&&blue>=green;}
+        assertTrue(transparent&&blueWhite,"the packaged model texture must retain transparent and blue/white pixels");
+        var presentation=Stage06AreaRuntimeTest.profile("charged_bolt").projectile().details().presentation();
+        assertTrue(presentation.castParticle().isBlank());assertTrue(presentation.projectileParticle().isBlank());
     }
 
     @Test void productionAdapterOwnsGroundSamplingManualMotionWallRicochetAndAnimationSuppression() throws Exception {

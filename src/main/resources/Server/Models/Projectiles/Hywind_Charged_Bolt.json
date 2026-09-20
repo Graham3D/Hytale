@@ -1,7 +1,12 @@
 {
-  "Model":"Items/Projectiles/Fireball.blockymodel","Texture":"Items/Projectiles/Fireball.png",
+  "Model":"VFX/RPG/Spark/Spark_Quad.blockymodel",
+  "Texture":"VFX/RPG/Spark/chargedbolt.png",
   "HitBox":{"Max":{"X":0.22,"Y":0.22,"Z":0.22},"Min":{"X":-0.22,"Y":-0.22,"Z":-0.22}},
-  "MinScale":0.06,"MaxScale":0.06,
-  "Particles":[{"PositionOffset":{"X":0,"Y":0,"Z":0},"SystemId":"Hywind_Charged_Bolt","TargetNodeName":"","Scale":1}],
-  "Light":{"Color":"#fff36a"}
+  "MinScale":1,"MaxScale":1,
+  "AnimationSets":{
+    "FlyIdle":{"Animations":[{
+      "Animation":"VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim",
+      "BlendingDuration":0,"Speed":1,"Looping":true
+    }]}
+  }
 }

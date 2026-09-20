@@ -33,6 +33,18 @@ public final class NativeProjectileAssetAudit {
                 checked++;
             }
         }
+        var sparkAsset=com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset.getAssetMap().getAsset("Hywind_Charged_Bolt");
+        if(sparkAsset==null
+                ||!"VFX/RPG/Spark/Spark_Quad.blockymodel".equals(sparkAsset.getModel())
+                ||!"VFX/RPG/Spark/chargedbolt.png".equals(sparkAsset.getTexture())
+                ||sparkAsset.getMinScale()!=1||sparkAsset.getMaxScale()!=1
+                ||sparkAsset.getLight()!=null||(sparkAsset.getParticles()!=null&&sparkAsset.getParticles().length!=0))
+            throw new IllegalStateException("SPARK_WORLD_QUAD_MODEL_UNRESOLVED");
+        var sparkFly=sparkAsset.getAnimationSetMap().get("FlyIdle");
+        if(sparkFly==null||sparkFly.getAnimations().length!=1
+                ||!"VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim".equals(sparkFly.getAnimations()[0].getAnimation())
+                ||!sparkFly.getAnimations()[0].isLooping())
+            throw new IllegalStateException("SPARK_WORLD_QUAD_ANIMATION_UNRESOLVED");
         var nativeCrossbow=ProjectileConfig.getAssetMap().getAsset("Projectile_Config_Arrow_Crossbow");
         var payload=profiles.require("crossbow_bolt").projectile();
         if(nativeCrossbow==null||nativeCrossbow.getModel()==null)throw new IllegalStateException("NATIVE_CROSSBOW_CONTROL_MISSING");
@@ -105,6 +117,8 @@ public final class NativeProjectileAssetAudit {
         return Map.ofEntries(Map.entry("resolvedConfigs",checked),Map.entry("emptyNativeInteractions",true),Map.entry("typedElements",true),
                 Map.entry("shippedCrossbowSpeed",nativeCrossbow.getLaunchForce()),Map.entry("shippedCrossbowRadius",payload.radius()),
                 Map.entry("shippedCrossbowGravity",nativeCrossbow.getGravity()),Map.entry("equipment",equipment),Map.entry("connectedProof",false),
+                Map.entry("sparkPresentation",Map.of("model","FIXED_HORIZONTAL_WORLD_QUAD","texture",sparkAsset.getTexture(),
+                        "animation","FOUR_FRAMES_100MS","yellowFallback",false)),
                 Map.entry("nativeChargedBow",Map.of("speed",85,"gravity",25,"radius",.075,"maximumRange","RPG_AUTHORED_48M_NOT_NATIVE_MAXIMUM","release",release,
                         "snipeGravity",0,"snipeModel",snipeModel.getModelAssetId(),"snipeModelEqualsNative",true)),
                 Map.entry("snipeActivationGate",snipe.details().nativeCapabilityGate()),Map.entry("firePresentation",firePresentation));
