@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.14",
-    "revision": "R059",
+    "version": "0.1.0-merge.15",
+    "revision": "R060",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "55d724418f5907cca2be9b26f364c33fafee47f0",
+    "implementationCommit": "b77ac826a5f69aa4cefa3488b1f208c73e89719f",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "2072D6AAD3E834A6FAFA4A7E9BB2E73289E27A6D6953C36A6D3FBC9CE06DBEC8",
-    "bytes": 13421958,
-    "entries": 5861,
-    "classes": 2208,
-    "uiDocuments": 2091,
+    "sha256": "67713D1DB43D1661DE9EAA94DE76434CBECDC01ECF40B9F0FEBB92FE8E50ABBD",
+    "bytes": 13420236,
+    "entries": 5859,
+    "classes": 2207,
+    "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T14:08:52.6828055Z",
+    "deployedAtUtc": "2026-09-20T14:21:07.2073078Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "2072D6AAD3E834A6FAFA4A7E9BB2E73289E27A6D6953C36A6D3FBC9CE06DBEC8",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T140851Z",
-    "fullBackupFiles": 698,
-    "fullBackupBytes": 571396865,
+    "installedSha256": "67713D1DB43D1661DE9EAA94DE76434CBECDC01ECF40B9F0FEBB92FE8E50ABBD",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T142106Z",
+    "fullBackupFiles": 710,
+    "fullBackupBytes": 574307444,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.13",
-        "revision": "R058",
-        "sha256": "931071DF264A2BA2C7EFBBEFE2EEA8167A89AA57EAA627760ED8D9FA69FC075F"
+        "version": "0.1.0-merge.14",
+        "revision": "R059",
+        "sha256": "2072D6AAD3E834A6FAFA4A7E9BB2E73289E27A6D6953C36A6D3FBC9CE06DBEC8"
       }
     ]
   },
@@ -64,12 +64,12 @@
   "validation": {
     "rpgJUnitTests": 2370,
     "nativeControlJUnitTests": 67,
-    "canvasJUnitTests": 44,
+    "canvasJUnitTests": 45,
     "tavernJUnitTests": 5,
     "tavernRetainedExecutableGates": 8,
     "npcRetainedExecutableGates": 149,
     "npcLiveLocalModelTests": "SKIPPED_BY_RETAINED_HARNESS",
-    "customUiDocuments": 60,
+    "customUiDocuments": 59,
     "authoredIconHashesVerified": 17,
     "skillTreeAssetHashesVerified": 31,
     "packageAudit": "PASS",
@@ -85,7 +85,8 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
-    "R059 successful connected client join with all CustomUI documents loaded",
+    "R060 /rpg skilltree visibly opens the graph HUD and remains active until the player exits",
+    "R060 red Exit restores camera, HUD, and input exactly once; Escape-key parity remains pending without the removed unsafe page sidecar",
     "R058 dominant outer Primary Frame, native centered title, and undistorted fixed-aspect center ornament",
     "R058 frozen exact-edge Break Link confirmation removes only the selected visible spline and preserves all other port identities",
     "R058 confirmed Reset clears only equipped tree content and links while retaining learned/owned/progression state",
