@@ -39,9 +39,7 @@ public final class TreeLinkGeometry {
     }
 
     public static CanvasPoint port(Canvas canvas,String nodeId,String portId){
-        CanvasNode node=canvas.node(nodeId);
-        CanvasPort port=canvas.definition().nodeType(node.type()).port(portId);
-        return canvas.viewport().toScreen(node.position().add(port.anchorPosition().x(),port.anchorPosition().y()));
+        return PortAnchorResolver.screen(canvas,nodeId,portId);
     }
     private static void add(List<Segment> target,CanvasPoint a,CanvasPoint b){if(!a.equals(b))target.add(new Segment(a,b));}
     private static double distance(CanvasPoint p,Segment s){

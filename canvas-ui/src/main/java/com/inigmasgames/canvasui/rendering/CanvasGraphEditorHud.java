@@ -178,7 +178,7 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                         anchor((int)Math.round(port.point().x() - point.x()) - 9,
                                 (int)Math.round(port.point().y() - point.y()) - 9, 18, 18));
                 commands.setObject(selector+" #Port"+portIndex+".Background",
-                        texture(SKILL_TREE_ASSETS + "StructuralCraftingArrowUp.png"));
+                        texture(SKILL_TREE_ASSETS + "StructuralCraftingArrow" + port.orientation() + ".png"));
                 portIndex++;
             }
             index++;
@@ -232,8 +232,9 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         commands.set("#GraphLinkContext.Visible",visible);
         if(visible)commands.setObject("#GraphLinkContext.Anchor",anchor(
                 (int)Math.round(Math.min(690,Math.max(208,links.popupAnchor().x()))),
-                (int)Math.round(Math.min(372,Math.max(4,links.popupAnchor().y()))),126,88));
-        commands.set("#GraphContextPrompt.TextSpans",Message.raw(links!=null&&links.nodeContext()?"Unequip Skill?":"Break Link?"));
+                (int)Math.round(Math.min(372,Math.max(4,links.popupAnchor().y()))),156,88));
+        commands.set("#GraphContextPrompt.TextSpans",Message.raw(links!=null&&links.resetContext()?"Reset Skill Tree?":
+                links!=null&&links.nodeContext()?"Unequip Skill?":"Break Link?"));
     }
 
     private static void renderInspector(UICommandBuilder commands,CursorCanvasEditor.Inspector inspector){

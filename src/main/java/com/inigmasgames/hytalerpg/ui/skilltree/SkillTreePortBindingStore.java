@@ -62,6 +62,16 @@ public final class SkillTreePortBindingStore {
         save(player,values);
     }
 
+    public synchronized void preserveDormant(UUID player,CanvasSnapshot snapshot,Set<String> edgeIds){
+        Properties values=load(player);
+        for(CanvasSnapshot.EdgeState edge:snapshot.edges())if(edgeIds.contains(edge.edgeId())){
+            String key=edge.edgeId();values.setProperty(key+".source",edge.sourcePortId());values.setProperty(key+".target",edge.targetPortId());
+            values.setProperty(key+".sourceNode",edge.sourceNodeId());values.setProperty(key+".targetNode",edge.targetNodeId());
+            values.setProperty(key+".dormant","true");
+        }
+        save(player,values);
+    }
+
     public synchronized List<CanvasSnapshot.EdgeState> states(UUID player,List<LinkEdge> live){
         Properties values=load(player);List<CanvasSnapshot.EdgeState> result=new ArrayList<>();Set<String> liveIds=new HashSet<>();
         for(LinkEdge edge:live){Binding binding=resolve(player,edge,live);bind(player,edge,binding.sourcePort(),binding.targetPort());liveIds.add(edge.edgeId().value());
@@ -92,6 +102,11 @@ public final class SkillTreePortBindingStore {
     public synchronized void remove(UUID player,String edgeId){Properties values=load(player);boolean changed=false;
         for(String suffix:List.of(".source",".target",".sourceNode",".targetNode",".dormant"))changed|=values.remove(edgeId+suffix)!=null;
         if(changed)save(player,values);
+    }
+
+    public synchronized void clear(UUID player){
+        try{Files.deleteIfExists(path(player));}
+        catch(IOException error){throw new IllegalStateException("SKILLTREE_PORT_BINDING_CLEAR_FAILED",error);}
     }
 
     public synchronized void prune(UUID player,List<LinkEdge> edges){

@@ -70,6 +70,11 @@ public interface CursorCanvasEditor {
         return new Result(false, "This editor does not support clearing nodes", presentationSnapshot);
     }
 
+    /** Clears equipped tree content and topology without touching ownership or progression. */
+    default Result resetTree(CanvasSnapshot presentationSnapshot) {
+        return new Result(false, "This editor does not support resetting the tree", presentationSnapshot);
+    }
+
     /** Immutable contextual detail projection. Empty arguments request the neutral state. */
     default Inspector inspect(String entryId, String nodeId) { return Inspector.neutral(); }
 

@@ -44,8 +44,11 @@ public record SkillTreeViewModel(String title, String subtitle, CursorCanvasEdit
             NodeDefinition definition = canvas.definition().nodeType(node.type());
             CanvasPoint point = canvas.viewport().toScreen(node.position());
             List<Port> ports = new ArrayList<>();
-            for (CanvasPort port : definition.ports().values())
-                ports.add(new Port(port.portId(), point.add(port.anchorPosition().x(), port.anchorPosition().y())));
+            for (CanvasPort port : definition.ports().values()) {
+                CanvasPoint anchor = PortAnchorResolver.relative(canvas,node,port.portId());
+                ports.add(new Port(port.portId(), point.add(anchor.x(), anchor.y()),
+                        PortAnchorResolver.orientation(anchor,node,definition)));
+            }
             nodes.add(new Node(node.nodeId(), node.type(), point, definition.width(), definition.height(),
                     node.metadata().getOrDefault("label", node.nodeId()),
                     node.metadata().getOrDefault("subtitle", node.type()),
@@ -66,7 +69,7 @@ public record SkillTreeViewModel(String title, String subtitle, CursorCanvasEdit
                        boolean selected, List<Port> ports) {
         public Node { ports = List.copyOf(ports); }
     }
-    public record Port(String portId, CanvasPoint point) { }
+    public record Port(String portId, CanvasPoint point, String orientation) { }
     public record Link(String edgeId, List<TreeLinkGeometry.Segment> segments, boolean selected) {
         public Link { segments = List.copyOf(segments); }
     }

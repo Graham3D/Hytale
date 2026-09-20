@@ -89,6 +89,19 @@ class TreeEditorInteractionTest {
                 TreeLinkGeometry.port(canvas,"passive","out"),TreeLinkGeometry.port(canvas,"skill-a","in")));
     }
 
+    @Test void draggedConnectedNodeOrbitsItsPortAndPersistsTheResultInSnapshotMetadata(){
+        Canvas canvas=canvas();canvas.connect("edge-a","passive","out","skill-a","in",EdgeStyle.standard("test"));
+        CanvasPoint before=PortAnchorResolver.relative(canvas,canvas.node("passive"),"out");
+        canvas.moveNode("passive",CanvasPoint.of(100,250));
+        assertTrue(PortAnchorResolver.orbitConnected(canvas,"passive"));
+        CanvasPoint after=PortAnchorResolver.relative(canvas,canvas.node("passive"),"out");
+        assertNotEquals(before,after);
+        assertEquals("Up",PortAnchorResolver.orientation(after,canvas.node("passive"),
+                canvas.definition().nodeType("passive")));
+        Canvas restored=canvas();restored.restore(canvas.snapshot());
+        assertEquals(after,PortAnchorResolver.relative(restored,restored.node("passive"),"out"));
+    }
+
     @Test void commonImmutableViewModelSupportsHudAndReadOnlySearchMode() throws Exception {
         Canvas canvas=canvas();var window=LibraryBrowser.window(List.of(
                 entry("bolt","Lightning Bolt",CursorCanvasEditor.LibraryKind.SKILL)),"light",0,10);

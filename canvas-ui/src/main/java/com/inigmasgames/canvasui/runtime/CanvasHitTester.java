@@ -5,6 +5,7 @@ import com.inigmasgames.canvasui.api.CanvasNode;
 import com.inigmasgames.canvasui.api.CanvasPoint;
 import com.inigmasgames.canvasui.api.CanvasPort;
 import com.inigmasgames.canvasui.api.NodeDefinition;
+import com.inigmasgames.canvasui.api.editor.PortAnchorResolver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +19,8 @@ public final class CanvasHitTester {
         for (CanvasNode node : reverse) {
             NodeDefinition type = canvas.definition().nodeType(node.type());
             for (CanvasPort port : type.ports().values()) {
-                CanvasPoint anchor = node.position().add(port.anchorPosition().x(), port.anchorPosition().y());
+                CanvasPoint relative = PortAnchorResolver.relative(canvas, node, port.portId());
+                CanvasPoint anchor = node.position().add(relative.x(), relative.y());
                 if (distance(point, anchor) <= 13) return new Hit(node.nodeId(), port.portId(), true);
             }
             if (point.x() >= node.position().x() && point.y() >= node.position().y()

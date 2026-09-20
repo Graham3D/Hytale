@@ -59,6 +59,7 @@ import com.inigmasgames.canvasui.rendering.CanvasCursorProbePage;
 import com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend;
 import com.inigmasgames.canvasui.rendering.HytaleCursorHudInputBackend;
 import com.inigmasgames.canvasui.rendering.CanvasGraphEditorHud;
+import com.inigmasgames.canvasui.rendering.CanvasGraphEscapePage;
 import com.inigmasgames.canvasui.rendering.CanvasGraphSearchPage;
 import com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend;
 import com.inigmasgames.canvasui.runtime.CanvasInputController;
@@ -66,6 +67,7 @@ import com.inigmasgames.canvasui.runtime.CanvasHitTester;
 import com.inigmasgames.canvasui.api.editor.CursorCanvasEditor;
 import com.inigmasgames.canvasui.api.editor.CursorEditorOpenResult;
 import com.inigmasgames.canvasui.api.editor.LibraryBrowser;
+import com.inigmasgames.canvasui.api.editor.PortAnchorResolver;
 import com.inigmasgames.canvasui.api.editor.SkillTreeViewModel;
 import com.inigmasgames.canvasui.api.editor.TreeDragController;
 import com.inigmasgames.canvasui.api.editor.TreeDropResolver;
@@ -476,6 +478,12 @@ public final class CursorHudProbeService implements AutoCloseable {
                 String y = values.getProperty(node.nodeId() + ".y");
                 if (x != null && y != null) canvas.moveNode(node.nodeId(),
                         CanvasPoint.of(Double.parseDouble(x), Double.parseDouble(y)));
+                Map<String,String> metadata=new LinkedHashMap<>(canvas.node(node.nodeId()).metadata());
+                for(String name:values.stringPropertyNames()){
+                    String prefix=node.nodeId()+".meta.";
+                    if(name.startsWith(prefix))metadata.put(name.substring(prefix.length()),values.getProperty(name));
+                }
+                canvas.updateNodeMetadata(node.nodeId(),metadata);
             }
         } catch (IOException | RuntimeException error) {
             LOGGER.atWarning().withCause(error).log("CANVASUI_LAYOUT_LOAD_FAILED editor=%s player=%s", editorId, player);
@@ -575,6 +583,7 @@ public final class CursorHudProbeService implements AutoCloseable {
         private final TreeLinkInteraction linkInteraction = new TreeLinkInteraction();
         private String libraryQuery = "";
         private CanvasGraphSearchPage searchPage;
+        private CanvasGraphEscapePage escapePage;
         private String editorStatus = "Ready";
         private String hoveredEntryId = "";
         private String hoveredNodeId = "";
@@ -691,7 +700,9 @@ public final class CursorHudProbeService implements AutoCloseable {
                         this::renderEditor, value -> editorStatus = value == null ? "" : value,
                         preview -> recordPatch(editorHud.renderPreview(preview), currentSampleReceivedNanos));
                 graphInput = new CanvasInputController(graph, backend, this::persistGraph,
-                        this::graphRenderDue, this::recordGraphPointer, this::constrainEditorNode);
+                        this::graphRenderDue, this::recordGraphPointer, this::constrainEditorNode,
+                        nodeId -> PortAnchorResolver.orbitConnected(graph,nodeId));
+                openEscapePage();
                 renderEditor();
                 traceLifecycle("GRAPH_EDITOR_READY", "editor=" + editor.editorId()
                         + " nodes=" + graph.nodes().size() + " edges=" + graph.edges().size());
@@ -743,6 +754,10 @@ public final class CursorHudProbeService implements AutoCloseable {
                 if (handleCalibration(sample)) continue;
                 if (sample.source() == CursorProbeSample.Source.EVENT && sample.validPosition()
                         && transform.ready() && leftPressed(sample)) {
+                    if(context==Context.GRAPH_EDITOR&&resetHit(sample.x(),sample.y())){
+                        linkInteraction.openResetContext(CanvasPoint.of(470,300));editorStatus="Reset Skill Tree?";
+                        traceLifecycle("SKILLTREE_RESET_CONTEXT_OPENED","scope=CURRENT_TREE_ONLY");renderEditor();continue;
+                    }
                     if (context == Context.GRAPH_EDITOR && saveHit(sample.x(), sample.y())) {
                         persistGraph();
                         continue;
@@ -827,6 +842,13 @@ public final class CursorHudProbeService implements AutoCloseable {
             return point.x()>=right-120&&point.x()<=right&&point.y()>=bottom-44&&point.y()<=bottom;
         }
 
+        private boolean resetHit(double rawX,double rawY){
+            if(context!=Context.GRAPH_EDITOR)return false;
+            CanvasPoint point=transform.toViewport(rawX,rawY);
+            double bottom=transform.viewportHeight()-74;
+            return point.x()>=180&&point.x()<=300&&point.y()>=bottom-44&&point.y()<=bottom;
+        }
+
         private boolean routeEditor(CursorProbeSample sample, CanvasPoint local) {
             if(searchPage!=null)return true;
             if (libraryDrag.animating()) return true;
@@ -858,13 +880,14 @@ public final class CursorHudProbeService implements AutoCloseable {
             if(state==MouseButtonState.Pressed&&linkInteraction.contextOpen()){
                 CanvasPoint anchor=linkInteraction.popupAnchor();
                 if(button==MouseButtonType.Left&&inside(local,anchor.x()+8,anchor.y()+42,50,34)){
-                    if(linkInteraction.nodeContext())clearNode(linkInteraction.contextTargetNodeId());
+                    if(linkInteraction.resetContext())resetTree();
+                    else if(linkInteraction.nodeContext())clearNode(linkInteraction.contextTargetNodeId());
                     else breakLink(linkInteraction.contextTargetLinkId(),"CONTEXT_CONFIRM");
                     return true;
                 }
                 if(button==MouseButtonType.Left&&inside(local,anchor.x()+68,anchor.y()+42,50,34)){
-                    boolean nodeContext=linkInteraction.nodeContext();
-                    linkInteraction.dismissContext();editorStatus=nodeContext?"Unequip cancelled":"Link break cancelled";renderEditor();return true;
+                    boolean nodeContext=linkInteraction.nodeContext(),resetContext=linkInteraction.resetContext();
+                    linkInteraction.dismissContext();editorStatus=resetContext?"Reset cancelled":nodeContext?"Unequip cancelled":"Link break cancelled";renderEditor();return true;
                 }
                 linkInteraction.dismissContext();renderEditor();
             }
@@ -1055,6 +1078,10 @@ public final class CursorHudProbeService implements AutoCloseable {
                 for (CanvasNode node : graph.nodes()) {
                     values.setProperty(node.nodeId() + ".x", Double.toString(node.position().x()));
                     values.setProperty(node.nodeId() + ".y", Double.toString(node.position().y()));
+                    node.metadata().forEach((key,value)->{
+                        if(key.startsWith(PortAnchorResolver.PREFIX))
+                            values.setProperty(node.nodeId()+".meta."+key,value);
+                    });
                 }
                 try (var output = Files.newOutputStream(temporary, StandardOpenOption.CREATE,
                         StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
@@ -1171,7 +1198,8 @@ public final class CursorHudProbeService implements AutoCloseable {
 
         private void openSearch(){
             if(searchPage!=null)return;
-            if(player.getPageManager().getCustomPage()!=null){editorStatus="Close the current page before searching";renderEditor();return;}
+            if(player.getPageManager().getCustomPage()!=null&&player.getPageManager().getCustomPage()!=escapePage){editorStatus="Close the current page before searching";renderEditor();return;}
+            if(escapePage!=null){escapePage.closeSilently();escapePage=null;}
             libraryDrag.cancel();
             searchPage=new CanvasGraphSearchPage(playerRef,()->editorView(true),(action,value)->{
                 if("skills".equals(action)||"passives".equals(action)){
@@ -1185,10 +1213,19 @@ public final class CursorHudProbeService implements AutoCloseable {
                 traceLifecycle("SKILLTREE_SEARCH_CHANGED","tab="+libraryTab+" query="+libraryQuery
                         +" matches="+editorProjection().totalMatches());
                 return editorView(true);
-            },()->world.execute(()->{if(sessions.get(playerId)==this){searchPage=null;renderEditor();}}));
+            },()->world.execute(()->{if(sessions.get(playerId)==this){searchPage=null;openEscapePage();renderEditor();}}));
             Ref<EntityStore> ref=playerRef.getReference();
             if(ref==null||!ref.isValid()){searchPage=null;editorStatus="Search unavailable: player reference lost";renderEditor();return;}
             player.getPageManager().openCustomPage(ref,ref.getStore(),searchPage);
+        }
+
+        private void openEscapePage(){
+            if(context!=Context.GRAPH_EDITOR||escapePage!=null||searchPage!=null||closing.get())return;
+            Ref<EntityStore> ref=playerRef.getReference();
+            if(ref==null||!ref.isValid())return;
+            escapePage=new CanvasGraphEscapePage(playerRef,()->world.execute(()->
+                    CursorHudProbeService.this.close(playerId,"ESCAPE_DISMISS")));
+            player.getPageManager().openCustomPage(ref,ref.getStore(),escapePage);
         }
 
         private void scheduleDragAnimation(long generation,boolean accepted){
@@ -1224,6 +1261,18 @@ public final class CursorHudProbeService implements AutoCloseable {
             }else linkInteraction.dismissContext();
             traceLifecycle(result.accepted()?"SKILLTREE_NODE_CLEARED":"SKILLTREE_NODE_CLEAR_REJECTED",
                     "node="+nodeId+" message="+result.message());renderEditor();
+        }
+
+        private void resetTree(){
+            traceLifecycle("SKILLTREE_RESET_REQUESTED","scope=CURRENT_TREE_ONLY");
+            CursorCanvasEditor.Result result=editor.resetTree(graph.snapshot());
+            graph.restore(result.authoritativeSnapshot());editorStatus=result.message();
+            if(result.accepted()){
+                linkInteraction.clear();lockedNodeId="";lockedEntryId="";hoveredNodeId="";hoveredEntryId="";
+                persistEditorLayout();
+            }else linkInteraction.dismissContext();
+            traceLifecycle(result.accepted()?"SKILLTREE_RESET_COMMITTED":"SKILLTREE_RESET_REJECTED",
+                    "message="+result.message());renderEditor();
         }
 
         private boolean inside(CanvasPoint point,double left,double top,double width,double height){
@@ -1319,6 +1368,8 @@ public final class CursorHudProbeService implements AutoCloseable {
             } catch (RuntimeException error) { cleanupFailures.add("PAGE:" + error.getClass().getSimpleName()); }
             try { if(searchPage!=null)searchPage.closeFromService(); }
             catch(RuntimeException error){cleanupFailures.add("SEARCH_PAGE:"+error.getClass().getSimpleName());}
+            try { if(escapePage!=null)escapePage.closeSilently(); }
+            catch(RuntimeException error){cleanupFailures.add("ESCAPE_PAGE:"+error.getClass().getSimpleName());}
             try { restoreCamera(this); }
             catch (RuntimeException error) { cleanupFailures.add("CAMERA:" + error.getClass().getSimpleName()); }
 

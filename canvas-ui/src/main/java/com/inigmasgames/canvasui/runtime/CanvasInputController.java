@@ -18,10 +18,12 @@ import com.inigmasgames.canvasui.api.GraphValidationException;
 import com.inigmasgames.canvasui.api.PanGesture;
 import com.inigmasgames.canvasui.api.PortDirection;
 import com.inigmasgames.canvasui.api.CanvasRenderBackend;
+import com.inigmasgames.canvasui.api.editor.PortAnchorResolver;
 
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.LongConsumer;
 
 public final class CanvasInputController {
@@ -33,6 +35,7 @@ public final class CanvasInputController {
     private final BooleanSupplier renderDue;
     private final LongConsumer recordPointer;
     private final BiFunction<CanvasNode, CanvasPoint, CanvasPoint> moveConstraint;
+    private final Consumer<String> nodeMoved;
     private final CanvasHitTester hitTester = new CanvasHitTester();
     private final CanvasDragController drag = new CanvasDragController();
     private final CanvasPanController pan = new CanvasPanController();
@@ -51,19 +54,27 @@ public final class CanvasInputController {
     /** Production input core shared by the CustomUI page and passive cursor-HUD renderers. */
     public CanvasInputController(Canvas canvas, CanvasRenderBackend backend, Runnable persist,
                                  BooleanSupplier renderDue, LongConsumer recordPointer) {
-        this(canvas, backend, persist, renderDue, recordPointer, (node, point) -> point);
+        this(canvas, backend, persist, renderDue, recordPointer, (node, point) -> point, ignored -> { });
     }
 
     /** Production input core with an optional presentation-space node movement constraint. */
     public CanvasInputController(Canvas canvas, CanvasRenderBackend backend, Runnable persist,
                                  BooleanSupplier renderDue, LongConsumer recordPointer,
                                  BiFunction<CanvasNode, CanvasPoint, CanvasPoint> moveConstraint) {
+        this(canvas,backend,persist,renderDue,recordPointer,moveConstraint,ignored -> { });
+    }
+
+    public CanvasInputController(Canvas canvas, CanvasRenderBackend backend, Runnable persist,
+                                 BooleanSupplier renderDue, LongConsumer recordPointer,
+                                 BiFunction<CanvasNode, CanvasPoint, CanvasPoint> moveConstraint,
+                                 Consumer<String> nodeMoved) {
         this.canvas = Objects.requireNonNull(canvas);
         this.backend = Objects.requireNonNull(backend);
         this.persist = Objects.requireNonNull(persist);
         this.renderDue = Objects.requireNonNull(renderDue);
         this.recordPointer = Objects.requireNonNull(recordPointer);
         this.moveConstraint = Objects.requireNonNull(moveConstraint);
+        this.nodeMoved = Objects.requireNonNull(nodeMoved);
     }
 
     void button(PlayerMouseButtonEvent event) {
@@ -89,6 +100,7 @@ public final class CanvasInputController {
                         drag.update(pointer, canvas.viewport()));
                 if (drag.thresholdPassed()) {
                     canvas.moveNode(drag.nodeId(), next);
+                    nodeMoved.accept(drag.nodeId());
                     if (renderDue.getAsBoolean()) backend.updateNodeAndEdges(drag.nodeId());
                 }
             } else if (pan.active() && delta != null) {
@@ -125,6 +137,7 @@ public final class CanvasInputController {
                         drag.update(pointer, canvas.viewport()));
                 if (drag.thresholdPassed()) {
                     canvas.moveNode(drag.nodeId(), next);
+                    nodeMoved.accept(drag.nodeId());
                     if (renderDue.getAsBoolean()) backend.updateNodeAndEdges(drag.nodeId());
                 }
             } else if (pan.active() && deltaX != null && deltaY != null) {
@@ -207,9 +220,7 @@ public final class CanvasInputController {
     }
 
     private CanvasPoint sourceScreenPoint() {
-        CanvasNode node = canvas.node(connectionNode);
-        CanvasPort port = canvas.definition().nodeType(node.type()).port(connectionPort);
-        return canvas.viewport().toScreen(node.position().add(port.anchorPosition().x(), port.anchorPosition().y()));
+        return PortAnchorResolver.screen(canvas, connectionNode, connectionPort);
     }
 
     private void updateConnectionPreview() {
@@ -224,9 +235,7 @@ public final class CanvasInputController {
     }
 
     private CanvasPoint portScreenPoint(String nodeId, String portId) {
-        CanvasNode node = canvas.node(nodeId);
-        CanvasPort port = canvas.definition().nodeType(node.type()).port(portId);
-        return canvas.viewport().toScreen(node.position().add(port.anchorPosition().x(), port.anchorPosition().y()));
+        return PortAnchorResolver.screen(canvas, nodeId, portId);
     }
 
     private static double distance(CanvasPoint a, CanvasPoint b) {
@@ -238,6 +247,7 @@ public final class CanvasInputController {
     }
 
     public boolean dragging() { return drag.active(); }
+    public String draggingNodeId() { return drag.active() ? drag.nodeId() : null; }
     public LinkDragState linkState() { return linkState; }
     public void clear() {
         drag.end(); pan.end(); connectionNode = null; connectionPort = null; connectionPress = null;

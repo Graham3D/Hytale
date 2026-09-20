@@ -50,10 +50,11 @@ class SkillTreeVisualPolishTest {
         assertTrue(renderer.contains("node.occupied()?SKILL_TREE_ASSETS + \"Slot.png\""));
         assertTrue(renderer.contains(":SKILL_TREE_ASSETS + \"SpecialSlotTemporary.png\""));
         assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"skilltree_joint.png\""));
-        assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"StructuralCraftingArrowUp.png\""));
+        assertTrue(renderer.contains("StructuralCraftingArrow\" + port.orientation()"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/ContainerFullPatch.png"));
-        assertTrue(ui.contains("#GraphEditorPrimaryHeader { Anchor: (Left: 0, Right: 0, Top: 0, Height: 38)"));
-        assertFalse(ui.contains("Anchor: (Left: 12, Right: 12, Top: 20, Height: 38)"));
+        assertTrue(ui.contains("#GraphEditorPrimaryFrame { Anchor: (Full: 0)"));
+        assertTrue(ui.contains("#GraphEditorPrimaryHeader { Anchor: (Left: 18, Right: 18, Top: 18, Height: 46)"));
+        assertTrue(ui.contains("...$Container.@TitleStyle"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/DiagramCraftingBackground.png"));
         assertTrue(ui.contains("Anchor: (Width: 236, Top: 4, Height: 11)"));
         assertTrue(ui.contains("Anchor: (Width: 236, Bottom: 4, Height: 11)"));
@@ -80,10 +81,13 @@ class SkillTreeVisualPolishTest {
         assertFalse(search.contains("GraphSearchReadOnlyShade"));
         assertFalse(search.contains("GraphSearchSkills"));
         assertFalse(ui.contains("GraphDeleteLink"));
-        assertTrue(ui.contains("VerticalBorder: 80"));
+        assertTrue(ui.contains("#GraphTreeBackground { Anchor: (Width: 900, Height: 530)"));
+        assertFalse(ui.contains("DiagramCraftingBackground.png\", HorizontalBorder"));
         assertTrue(ui.contains("pairing a Passive to Skill"));
         assertTrue(ui.contains("Anchor: (Left: 300, Right: 300, Bottom: 62, Height: 34)"));
         assertTrue(renderer.contains("- 9, 18, 18"));
+        assertTrue(ui.contains("#GraphEditorReset"));
+        assertTrue(ui.contains("Text: \"RESET\""));
     }
 
     @Test void saveUsesExistingCommitAuthorityAndExitUsesTheVisibleFooterRegion() throws Exception {

@@ -7,6 +7,7 @@ import com.inigmasgames.hytalerpg.progress.RpgLoadoutService;
 import com.inigmasgames.hytalerpg.progress.RpgLoadoutView;
 
 import java.util.UUID;
+import java.util.Set;
 
 /** Converts a static content-node assignment into one authoritative compile/save transaction. */
 public final class RpgSkillTreeMutationService {
@@ -43,6 +44,9 @@ public final class RpgSkillTreeMutationService {
     public MutationResult unlinkEdge(UUID player, String edgeId) {
         return loadouts.unlink(player, new EdgeId(edgeId));
     }
+
+    public MutationResult reset(UUID player,long expectedRevision){return loadouts.resetSkillTree(player,expectedRevision);}
+    public MutationResult unlinkEdges(UUID player,Set<String> edgeIds){return loadouts.unlinkEdges(player,edgeIds);}
 
     public RpgLoadoutView view(UUID player) { return loadouts.getPresentationView(player); }
 }

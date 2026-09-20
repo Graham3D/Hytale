@@ -309,6 +309,34 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
         }
     }
 
+    /** Atomic editor reset: equipped content and topology only; ownership/progression remain untouched. */
+    public MutationResult resetSkillTree(UUID player,long expectedRevision){
+        String correlation=reference();Holder holder=holder(player);
+        synchronized(holder){ensureUsable(player,holder);
+            if(holder.state.revision!=expectedRevision)return MutationResult.failure(ValidationCode.STALE_REVISION,
+                    "Expected RPG revision "+expectedRevision+" but authoritative revision is "+holder.state.revision+'.',
+                    correlation,holder.state.revision);
+            return mutate(holder,player,correlation,candidate->{
+                java.util.Arrays.fill(candidate.equippedSkills,null);
+                java.util.Arrays.fill(candidate.equippedPassives,null);
+                candidate.inactivePassives.clear();
+                candidate.linkEdges(List.of());
+            });
+        }
+    }
+
+    public MutationResult unlinkEdges(UUID player,Set<String> edgeIds){
+        String correlation=reference();Holder holder=holder(player);
+        synchronized(holder){ensureUsable(player,holder);
+            Set<String> ids=Set.copyOf(edgeIds);
+            MutationResult result=mutate(holder,player,correlation,candidate->candidate.linkEdges(
+                    candidate.linkEdges().stream().filter(edge->!ids.contains(edge.edgeId().value())).toList()));
+            if(result.success())trace(player,RpgTraceEventType.UNLINK,correlation,
+                    details("edgeIds",ids,"validationResult","PASS","RPG revision",result.revision()));
+            return result;
+        }
+    }
+
     @Override public CompilationResult compile(UUID player) {
         Holder holder = holder(player);
         synchronized (holder) { ensureUsable(player,holder); return compileTraced(player, holder.state, reference()); }

@@ -109,16 +109,40 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
     }
 
     @Override public Result breakLink(String linkId, CanvasSnapshot presentationSnapshot) {
-        boolean exists = mutations.view(player).state().linkEdges().stream()
-                .anyMatch(edge -> edge.edgeId().value().equals(linkId));
-        if (!exists) return reject("Link is no longer present", presentationSnapshot);
+        List<LinkEdge> live=mutations.view(player).state().linkEdges();
+        boolean exists=live.stream().anyMatch(edge->edge.edgeId().value().equals(linkId));
+        if(!exists){
+            if(presentationSnapshot.edges().stream().noneMatch(edge->edge.edgeId().equals(linkId)))
+                return reject("Link is no longer present",presentationSnapshot);
+            portBindings.remove(player,linkId);
+            return new Result(true,"Link broken",authoritativeSnapshot(withoutEdge(presentationSnapshot,linkId)));
+        }
+        Set<String> removal=detachedAfterRemoval(live,linkId);
+        Set<String> dormant=new LinkedHashSet<>(removal);dormant.remove(linkId);
+        if(!dormant.isEmpty())portBindings.preserveDormant(player,presentationSnapshot,dormant);
         MutationResult result;
-        try { result = mutations.unlinkEdge(player, linkId); }
+        try { result = mutations.unlinkEdges(player, removal); }
         catch (IllegalArgumentException error) { return reject("Invalid link identity", presentationSnapshot); }
         if (!result.success()) return reject(result.code() + ": " + result.message(), presentationSnapshot);
         portBindings.remove(player,linkId);
         portBindings.prune(player,mutations.view(player).state().linkEdges());
         return new Result(true, "Link broken", authoritativeSnapshot(presentationSnapshot));
+    }
+
+    private static Set<String> detachedAfterRemoval(List<LinkEdge> links,String selected){
+        List<LinkEdge> remaining=links.stream().filter(edge->!edge.edgeId().value().equals(selected)).toList();
+        Set<LinkNodeId> reachesSkill=new LinkedHashSet<>();
+        for(LinkNodeId node:LinkNodeId.values())if(node.kind()==LinkNodeId.NodeKind.SKILL)reachesSkill.add(node);
+        boolean changed;do{changed=false;for(LinkEdge edge:remaining)if(reachesSkill.contains(edge.targetNodeId()))
+            changed|=reachesSkill.add(edge.sourceNodeId());}while(changed);
+        Set<String> removal=new LinkedHashSet<>();removal.add(selected);
+        for(LinkEdge edge:remaining)if(!reachesSkill.contains(edge.sourceNodeId()))removal.add(edge.edgeId().value());
+        return removal;
+    }
+
+    private static CanvasSnapshot withoutEdge(CanvasSnapshot snapshot,String edgeId){
+        return new CanvasSnapshot(snapshot.canvasId(),snapshot.viewport(),snapshot.nodes(),
+                snapshot.edges().stream().filter(edge->!edge.edgeId().equals(edgeId)).toList(),snapshot.selectedNodeId());
     }
 
     @Override public Result clearNode(String nodeId,CanvasSnapshot presentationSnapshot){
@@ -130,6 +154,13 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         MutationResult result=mutations.clear(player,mutations.view(player).state().revision,node);
         if(!result.success())return reject(result.code()+": "+result.message(),presentationSnapshot);
         return new Result(true,"Unequipped "+projected.title()+"; topology preserved",authoritativeSnapshot(presentationSnapshot));
+    }
+
+    @Override public Result resetTree(CanvasSnapshot presentationSnapshot){
+        MutationResult result=mutations.reset(player,mutations.view(player).state().revision);
+        if(!result.success())return reject(result.code()+": "+result.message(),presentationSnapshot);
+        portBindings.clear(player);
+        return new Result(true,"Skill Tree reset",authoritativeSnapshot(presentationSnapshot));
     }
 
     @Override public Inspector inspect(String entryId,String nodeId){
@@ -205,11 +236,13 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             StaticSkillTreeViewModel.TreeNode content = projected.nodes().get(id);
             String label=content == null ? id.externalId() : content.title();
             if(id.kind()==LinkNodeId.NodeKind.SKILL)label+=" ["+nativeHotkey(id)+"]";
-            Map<String, String> metadata = Map.of(
-                    "label", label,
-                    "subtitle", "",
-                    "icon", content == null ? "" : content.iconPath(),
-                    "occupied", Boolean.toString(content != null && content.occupied()));
+            Map<String, String> metadata = new LinkedHashMap<>();
+            if(prior!=null)prior.metadata().forEach((key,value)->{
+                if(key.startsWith(com.inigmasgames.canvasui.api.editor.PortAnchorResolver.PREFIX))metadata.put(key,value);
+            });
+            metadata.put("label",label);metadata.put("subtitle","");
+            metadata.put("icon",content == null ? "" : content.iconPath());
+            metadata.put("occupied",Boolean.toString(content != null && content.occupied()));
             nodes.add(new CanvasSnapshot.NodeState(id.externalId(), id.kind().name().toLowerCase(),
                     prior == null ? fallback.x() : prior.x(), prior == null ? fallback.y() : prior.y(), metadata, true));
         }

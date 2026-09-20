@@ -56,6 +56,14 @@ public final class Canvas {
         return after;
     }
 
+    public synchronized CanvasNode updateNodeMetadata(String nodeId, Map<String, String> metadata) {
+        CanvasNode before = requireNode(nodeId);
+        CanvasNode after = new CanvasNode(before.nodeId(), before.type(), before.position(), metadata, before.enabled());
+        nodes.put(nodeId, after);
+        changed();
+        return after;
+    }
+
     public synchronized void removeNode(String nodeId) {
         CanvasNode removed = requireNode(nodeId);
         List<String> attached = edges.values().stream()

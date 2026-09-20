@@ -159,6 +159,35 @@ class R045CanvasSkillTreeEditorTest {
         assertFalse(editor.clearNode("passive01",editor.canvas().snapshot()).accepted());
     }
 
+    @Test void resetClearsOnlyEquippedTreeAndLeavesOwnershipProgressionAndMastery(){
+        var bundle=Stage01BTestSupport.bundle();var layout=new StaticSkillTreeLayout();UUID player=UUID.randomUUID();
+        var editor=new RpgCanvasSkillTreeEditor(player,new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true),
+                new RpgSkillTreeMutationService(bundle.service(),layout),new SkillTreePortBindingStore(temporary.resolve("reset-ports")));
+        assign(editor,"fire_bolt","skill01");assign(editor,"potency","passive01");
+        connect(editor,"passive01","out","skill01","in",true);
+        var before=bundle.service().getPresentationView(player).state();
+        var learned=java.util.Set.copyOf(before.learnedSkills);var owned=java.util.Map.copyOf(before.ownedPassives);
+        var result=editor.resetTree(editor.canvas().snapshot());assertTrue(result.accepted(),result.message());
+        editor.canvas().restore(result.authoritativeSnapshot());var after=bundle.service().getPresentationView(player).state();
+        assertTrue(java.util.Arrays.stream(after.equippedSkills).allMatch(java.util.Objects::isNull));
+        assertTrue(java.util.Arrays.stream(after.equippedPassives).allMatch(java.util.Objects::isNull));
+        assertTrue(after.linkEdges().isEmpty());assertEquals(learned,after.learnedSkills);assertEquals(owned,after.ownedPassives);
+    }
+
+    @Test void breakingJointToSkillHidesOnlySelectedSplineAndKeepsDetachedDraftPortIdentity(){
+        var bundle=Stage01BTestSupport.bundle();var layout=new StaticSkillTreeLayout();UUID player=UUID.randomUUID();
+        var editor=new RpgCanvasSkillTreeEditor(player,new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true),
+                new RpgSkillTreeMutationService(bundle.service(),layout),new SkillTreePortBindingStore(temporary.resolve("break-ports")));
+        assign(editor,"fire_bolt","skill01");assign(editor,"potency","passive01");
+        connect(editor,"joint01","c","skill01","in",true);connect(editor,"passive01","out","joint01","a",true);
+        String selected=editor.canvas().edges().stream().filter(edge->edge.sourceNodeId().equals("joint01")).findFirst().orElseThrow().edgeId();
+        String retained=editor.canvas().edges().stream().filter(edge->edge.sourceNodeId().equals("passive01")).findFirst().orElseThrow().edgeId();
+        var result=editor.breakLink(selected,editor.canvas().snapshot());assertTrue(result.accepted(),result.message());
+        editor.canvas().restore(result.authoritativeSnapshot());assertNull(editor.canvas().edge(selected));
+        assertNotNull(editor.canvas().edge(retained));assertEquals("out",editor.canvas().edge(retained).sourcePortId());
+        assertEquals("a",editor.canvas().edge(retained).targetPortId());
+    }
+
     private static void assign(RpgCanvasSkillTreeEditor editor, String content, String node) {
         var result = editor.assign(content, node, editor.canvas().snapshot());
         assertTrue(result.accepted(), result.message());
