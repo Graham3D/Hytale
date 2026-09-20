@@ -204,3 +204,9 @@ R055 is implemented, packaged, and deployed from implementation commit `c0930404
 Branding, revision, subtitle, layout-success text, passive Current Link, and validation footer copy were removed from the editor presentation. The complete retained Gradle gate, package audit, isolated unified-plugin smoke, deployment backup, hash check, and two-cycle deployed startup/restart validation passed. Connected client rendering and interaction remain explicitly pending.
 
 The installed `Hywind.jar` SHA-256 is `D20A7E6C25989E28BF0D64DD313CEAF1708B357552B1CC2A607621F5549BD477`. The full stopped-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T013406Z`. Focused tests, the complete retained suite, 59-document CustomUI validation, package audit, isolated smoke, and two post-deployment restart cycles pass. Connected-client visual confirmation remains pending; see `r054-skill-tree-density-reference-hotfix-report.md`.
+
+## R056 Skill Tree connected-QA corrections
+
+R056 is implemented, packaged, and deployed from implementation commit `b2f2e273f35c229beab45f85f69cf3a8bb776231`. It removes the redundant `BREAK SELECTED` control, fixes the cross-document CustomUI patch that disconnected the client during link removal, permits authoritative replacement drops into occupied and `UNBOUND` Skill nodes, expands the library to fifteen rows, and corrects the header/tree artwork, title, tabs, instructions, search styling, and connector-port placement requested by connected QA.
+
+The installed `Hywind.jar` SHA-256 is `3E5B854FE001DF71F3C0779D76778AF1BA39E6575521F258A565D5602AFF690B`. The verified full-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T025740Z`. The complete retained suite, unified package audit, isolated smoke, and two deployed startup/restart cycles pass. Connected-client rendering and interaction remain pending; see `r056-skill-tree-qa-corrections.md`.

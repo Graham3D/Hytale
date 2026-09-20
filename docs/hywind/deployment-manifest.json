@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.10",
-    "revision": "R055",
+    "version": "0.1.0-merge.11",
+    "revision": "R056",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "c09304047dca23cd2bbf818b764c0b1e0e7c59d9",
+    "implementationCommit": "b2f2e273f35c229beab45f85f69cf3a8bb776231",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "55F571F58F26199A0B5058F5AAF06EE5C1BD85215856FDCDBAEEDE6F5B41FEC0",
-    "bytes": 13402866,
+    "sha256": "3E5B854FE001DF71F3C0779D76778AF1BA39E6575521F258A565D5602AFF690B",
+    "bytes": 13402812,
     "entries": 5851,
     "classes": 2206,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T02:18:18.3576665Z",
+    "deployedAtUtc": "2026-09-20T02:57:41.5269439Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "55F571F58F26199A0B5058F5AAF06EE5C1BD85215856FDCDBAEEDE6F5B41FEC0",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T021817Z",
-    "fullBackupFiles": 671,
-    "fullBackupBytes": 554724772,
+    "installedSha256": "3E5B854FE001DF71F3C0779D76778AF1BA39E6575521F258A565D5602AFF690B",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T025740Z",
+    "fullBackupFiles": 679,
+    "fullBackupBytes": 556386682,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.9",
-        "revision": "R054",
-        "sha256": "D20A7E6C25989E28BF0D64DD313CEAF1708B357552B1CC2A607621F5549BD477"
+        "version": "0.1.0-merge.10",
+        "revision": "R055",
+        "sha256": "55F571F58F26199A0B5058F5AAF06EE5C1BD85215856FDCDBAEEDE6F5B41FEC0"
       }
     ]
   },
@@ -85,6 +85,11 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
+    "R056 successful client CustomUI document load and server join",
+    "R056 link-break Yes/No confirmation without the former BREAK SELECTED control or disconnect",
+    "R056 replacement drop onto occupied E/R/UNBOUND Skill nodes while preserving authoritative topology",
+    "R056 fifteen-row library, centered tabs/instructions/title, inset ports, and corrected header/tree background scaling",
+    "R056 search focus keeps the authored font/size; client cursor recenter remains a native InteractiveCustomUIPage behavior",
     "R055 successful client CustomUI document load and server join",
     "R055 centered title, removed branding/revision/subtitle, and matched top/bottom ornaments",
     "R055 thirteen-row Skill/Passive library and inline focused search without duplicate controls",
