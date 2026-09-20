@@ -21,6 +21,7 @@ import com.inigmasgames.canvasui.api.CanvasRenderBackend;
 
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
+import java.util.function.BiFunction;
 import java.util.function.LongConsumer;
 
 public final class CanvasInputController {
@@ -31,6 +32,7 @@ public final class CanvasInputController {
     private final Runnable persist;
     private final BooleanSupplier renderDue;
     private final LongConsumer recordPointer;
+    private final BiFunction<CanvasNode, CanvasPoint, CanvasPoint> moveConstraint;
     private final CanvasHitTester hitTester = new CanvasHitTester();
     private final CanvasDragController drag = new CanvasDragController();
     private final CanvasPanController pan = new CanvasPanController();
@@ -49,11 +51,19 @@ public final class CanvasInputController {
     /** Production input core shared by the CustomUI page and passive cursor-HUD renderers. */
     public CanvasInputController(Canvas canvas, CanvasRenderBackend backend, Runnable persist,
                                  BooleanSupplier renderDue, LongConsumer recordPointer) {
+        this(canvas, backend, persist, renderDue, recordPointer, (node, point) -> point);
+    }
+
+    /** Production input core with an optional presentation-space node movement constraint. */
+    public CanvasInputController(Canvas canvas, CanvasRenderBackend backend, Runnable persist,
+                                 BooleanSupplier renderDue, LongConsumer recordPointer,
+                                 BiFunction<CanvasNode, CanvasPoint, CanvasPoint> moveConstraint) {
         this.canvas = Objects.requireNonNull(canvas);
         this.backend = Objects.requireNonNull(backend);
         this.persist = Objects.requireNonNull(persist);
         this.renderDue = Objects.requireNonNull(renderDue);
         this.recordPointer = Objects.requireNonNull(recordPointer);
+        this.moveConstraint = Objects.requireNonNull(moveConstraint);
     }
 
     void button(PlayerMouseButtonEvent event) {
@@ -75,7 +85,8 @@ public final class CanvasInputController {
             if (event.getScreenPoint() != null) updatePointer(event.getScreenPoint());
             else if (delta != null) pointer = pointer.add(delta.x, delta.y);
             if (drag.active()) {
-                CanvasPoint next = drag.update(pointer, canvas.viewport());
+                CanvasPoint next = moveConstraint.apply(canvas.node(drag.nodeId()),
+                        drag.update(pointer, canvas.viewport()));
                 if (drag.thresholdPassed()) {
                     canvas.moveNode(drag.nodeId(), next);
                     if (renderDue.getAsBoolean()) backend.updateNodeAndEdges(drag.nodeId());
@@ -110,7 +121,8 @@ public final class CanvasInputController {
             if (screenPoint != null) pointer = screenPoint;
             else if (deltaX != null && deltaY != null) pointer = pointer.add(deltaX, deltaY);
             if (drag.active()) {
-                CanvasPoint next = drag.update(pointer, canvas.viewport());
+                CanvasPoint next = moveConstraint.apply(canvas.node(drag.nodeId()),
+                        drag.update(pointer, canvas.viewport()));
                 if (drag.thresholdPassed()) {
                     canvas.moveNode(drag.nodeId(), next);
                     if (renderDue.getAsBoolean()) backend.updateNodeAndEdges(drag.nodeId());

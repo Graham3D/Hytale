@@ -42,14 +42,6 @@ public final class CanvasGraphSearchPage extends InteractiveCustomUIPage<CanvasG
         commands.set("#GraphSearchInput.Value",frame.query());
         events.addEventBinding(CustomUIEventBindingType.ValueChanged,"#GraphSearchInput",
                 new EventData().append("Action","change").append("@Value","#GraphSearchInput.Value"),false);
-        events.addEventBinding(CustomUIEventBindingType.Activating,"#GraphSearchDone",
-                new EventData().append("Action","done"),false);
-        events.addEventBinding(CustomUIEventBindingType.Activating,"#GraphSearchClear",
-                new EventData().append("Action","clear"),false);
-        events.addEventBinding(CustomUIEventBindingType.Activating,"#GraphSearchSkills",
-                new EventData().append("Action","skills"),false);
-        events.addEventBinding(CustomUIEventBindingType.Activating,"#GraphSearchPassives",
-                new EventData().append("Action","passives"),false);
     }
 
     @Override public void handleDataEvent(@Nonnull Ref<EntityStore> ref,@Nonnull Store<EntityStore> store,Data data) {

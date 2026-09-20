@@ -101,14 +101,15 @@ class TreeEditorInteractionTest {
         assertThrows(UnsupportedOperationException.class,()->search.entries().clear());
         String editor=Files.readString(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphEditorHud.ui"));
         String searchUi=Files.readString(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphSearchPage.ui"));
-        assertFalse(editor.contains("SKILL LIBRARY"));assertTrue(editor.contains("SHAPE YOUR JOURNEY"));
+        assertFalse(editor.contains("SKILL LIBRARY"));assertFalse(editor.contains("SHAPE YOUR JOURNEY"));
         assertTrue(editor.contains("GraphInspectorPanel"));assertTrue(editor.contains("GraphContextPrompt"));
         assertTrue(editor.contains("Select a Skill or Passive to view details."));
         assertFalse(editor.contains("PREV"));assertFalse(editor.contains("NEXT"));
         assertFalse(editor.toLowerCase().contains("skill points"));
         assertFalse(editor.contains("HorizontalAlignment: Right"));
-        assertTrue(editor.contains("HorizontalAlignment: End"));
-        assertTrue(searchUi.contains("SEARCH MODE"));assertTrue(searchUi.contains("GraphSearchInput"));
+        assertFalse(editor.contains("#GraphEditorBrand"));assertFalse(editor.contains("#GraphEditorRevision"));
+        assertFalse(searchUi.contains("SEARCH MODE"));assertTrue(searchUi.contains("GraphSearchInput"));
+        assertFalse(searchUi.contains("GraphSearchSkills"));assertFalse(searchUi.contains("GraphSearchDone"));
         String service=Files.readString(Path.of("src/main/java/com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java"));
         assertTrue(service.contains("priorVisibleHud = Set.copyOf(manager.getVisibleHudComponents())"));
         assertTrue(service.contains("priorCustomHuds = new LinkedHashMap<>(manager.getCustomHuds())"));

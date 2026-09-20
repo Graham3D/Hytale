@@ -153,13 +153,12 @@ public final class RpgSkillTreeProjectionService {
         List<StaticSkillTreeViewModel.DetailRow> rows=List.of(
                 new StaticSkillTreeViewModel.DetailRow("EFFECT",join(def.modifierOps()),"EFFECT"),
                 new StaticSkillTreeViewModel.DetailRow("CAN CONNECT TO",compatibility(def),"COMPATIBILITY"),
-                new StaticSkillTreeViewModel.DetailRow("CANNOT CONNECT TO",join(def.incompatibleTags()),"EXCLUSION"),
-                new StaticSkillTreeViewModel.DetailRow("CURRENT LINK",assigned+" / "+parent,"LINK"));
+                new StaticSkillTreeViewModel.DetailRow("CANNOT CONNECT TO",join(def.incompatibleTags()),"EXCLUSION"));
         return new StaticSkillTreeViewModel.Details("PASSIVE", def.id().value(), def.name(), def.tier(), def.description(),
                 RpgSkillIcons.forPassive(def.id().value()),rows,List.of("Compatible: " + join(def.compatibleTags()), "Required families: " + join(def.requiredFamilies()),
                         "Incompatible: " + join(def.incompatibleTags()), "Effect: " + join(def.modifierOps()),
                         "Assigned node: " + assigned, "Effective parent Skill: " + parent),
-                "Validation occurs atomically on Apply");
+                "");
     }
 
     private static StaticSkillTreeViewModel.Details emptyDetails() {

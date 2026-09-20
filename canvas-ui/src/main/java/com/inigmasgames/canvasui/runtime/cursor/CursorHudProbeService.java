@@ -627,7 +627,10 @@ public final class CursorHudProbeService implements AutoCloseable {
                     ? new CanvasPointerTransform(saved) : new CanvasPointerTransform();
             this.graph = context == Context.DRAG_PROOF ? createProofGraph()
                     : context == Context.GRAPH_EDITOR ? java.util.Objects.requireNonNull(editor.canvas()) : null;
-            if (context == Context.GRAPH_EDITOR) applyStoredLayout(graph, editor.editorId(), playerId);
+            if (context == Context.GRAPH_EDITOR) {
+                applyStoredLayout(graph, editor.editorId(), playerId);
+                constrainEditorNodes();
+            }
             traceLifecycle("CREATED", "screenPointDomain=EMPIRICAL_LANDMARKS physicalViewport=UNAVAILABLE logicalScale=UNAVAILABLE");
         }
 
@@ -688,7 +691,7 @@ public final class CursorHudProbeService implements AutoCloseable {
                         this::renderEditor, value -> editorStatus = value == null ? "" : value,
                         preview -> recordPatch(editorHud.renderPreview(preview), currentSampleReceivedNanos));
                 graphInput = new CanvasInputController(graph, backend, this::persistGraph,
-                        this::graphRenderDue, this::recordGraphPointer);
+                        this::graphRenderDue, this::recordGraphPointer, this::constrainEditorNode);
                 renderEditor();
                 traceLifecycle("GRAPH_EDITOR_READY", "editor=" + editor.editorId()
                         + " nodes=" + graph.nodes().size() + " edges=" + graph.edges().size());
@@ -889,7 +892,7 @@ public final class CursorHudProbeService implements AutoCloseable {
                 if(inside(local,700,10,116,30)&&linkInteraction.selectedLinkId()!=null){
                     breakLink(linkInteraction.selectedLinkId(),"VISIBLE_DELETE");return true;
                 }
-                if (local.x() >= 12 && local.x() <= 240 && local.y() >= 40 && local.y() <= 74) {
+                if (local.x() >= 12 && local.x() <= 240 && local.y() >= 14 && local.y() <= 48) {
                     libraryDrag.cancel();
                     libraryTab = local.x() < 122 ? CursorCanvasEditor.LibraryKind.SKILL
                             : CursorCanvasEditor.LibraryKind.PASSIVE;
@@ -898,8 +901,9 @@ public final class CursorHudProbeService implements AutoCloseable {
                     renderEditor();
                     return true;
                 }
-                if(inside(local,12,84,228,38)){openSearch();return true;}
-                if(inside(local,CanvasGraphEditorHud.LIBRARY_TRACK_LEFT,132,14,456)){
+                if(inside(local,12,54,228,38)){openSearch();return true;}
+                if(inside(local,CanvasGraphEditorHud.LIBRARY_TRACK_LEFT,
+                        CanvasGraphEditorHud.LIBRARY_TRACK_TOP,14,CanvasGraphEditorHud.LIBRARY_TRACK_HEIGHT)){
                     LibraryBrowser.Window window=editorProjection();
                     int thumbHeight=scrollbarThumbHeight(window);
                     int thumbTop=scrollbarThumbTop(window,thumbHeight);
@@ -908,11 +912,16 @@ public final class CursorHudProbeService implements AutoCloseable {
                     }else{updateScrollbar(local.y()-thumbHeight/2.0);}
                     renderEditor();return true;
                 }
-                if (local.x() >= 8 && local.x() <= 208 && local.y() >= 132 && local.y() < 592) {
-                    int row = (int)((local.y() - 132) / 46);
+                if (local.x() >= 8 && local.x() <= 208
+                        && local.y() >= CanvasGraphEditorHud.LIBRARY_ROW_TOP
+                        && local.y() < CanvasGraphEditorHud.LIBRARY_ROW_TOP
+                        + CanvasGraphEditorHud.LIBRARY_ROWS * CanvasGraphEditorHud.LIBRARY_ROW_STEP) {
+                    int row = (int)((local.y() - CanvasGraphEditorHud.LIBRARY_ROW_TOP)
+                            / CanvasGraphEditorHud.LIBRARY_ROW_STEP);
                     List<CursorCanvasEditor.LibraryEntry> page = editorPage();
                     if (row >= 0 && row < page.size()) {
-                        CanvasPoint origin=CanvasPoint.of(32,132+row*46+21);
+                        CanvasPoint origin=CanvasPoint.of(32,CanvasGraphEditorHud.LIBRARY_ROW_TOP
+                                +row*CanvasGraphEditorHud.LIBRARY_ROW_STEP+21);
                         CursorCanvasEditor.LibraryEntry entry=page.get(row);
                         lockedEntryId=entry.id();lockedNodeId="";
                         libraryDrag.arm(entry,local,origin);
@@ -1092,8 +1101,11 @@ public final class CursorHudProbeService implements AutoCloseable {
 
         private boolean updateInspectorHover(CanvasPoint local){
             String entry="";String node="";
-            if(local.x()>=8&&local.x()<=208&&local.y()>=132&&local.y()<592){
-                int row=(int)((local.y()-132)/46);List<CursorCanvasEditor.LibraryEntry> page=editorPage();
+            if(local.x()>=8&&local.x()<=208&&local.y()>=CanvasGraphEditorHud.LIBRARY_ROW_TOP
+                    &&local.y()<CanvasGraphEditorHud.LIBRARY_ROW_TOP
+                    +CanvasGraphEditorHud.LIBRARY_ROWS*CanvasGraphEditorHud.LIBRARY_ROW_STEP){
+                int row=(int)((local.y()-CanvasGraphEditorHud.LIBRARY_ROW_TOP)
+                        /CanvasGraphEditorHud.LIBRARY_ROW_STEP);List<CursorCanvasEditor.LibraryEntry> page=editorPage();
                 if(row>=0&&row<page.size())entry=page.get(row).id();
             }else{
                 CanvasHitTester.Hit hit=new CanvasHitTester().hit(graph,local);
@@ -1108,6 +1120,22 @@ public final class CursorHudProbeService implements AutoCloseable {
 
         private CanvasPoint contextAnchor(CanvasPoint local){
             return CanvasPoint.of(Math.min(690,Math.max(208,local.x())),Math.min(372,Math.max(4,local.y())));
+        }
+
+        private CanvasPoint constrainEditorNode(CanvasNode node,CanvasPoint requested){
+            NodeDefinition definition=graph.definition().nodeType(node.type());
+            double x=Math.max(CanvasGraphEditorHud.TREE_LEFT,
+                    Math.min(CanvasGraphEditorHud.TREE_RIGHT-definition.width(),requested.x()));
+            double y=Math.max(CanvasGraphEditorHud.TREE_TOP,
+                    Math.min(CanvasGraphEditorHud.TREE_BOTTOM-definition.height(),requested.y()));
+            return CanvasPoint.of(x,y);
+        }
+
+        private void constrainEditorNodes(){
+            for(CanvasNode node:List.copyOf(graph.nodes())){
+                CanvasPoint constrained=constrainEditorNode(node,node.position());
+                if(!constrained.equals(node.position()))graph.moveNode(node.nodeId(),constrained);
+            }
         }
 
         private int scrollbarThumbHeight(LibraryBrowser.Window window){

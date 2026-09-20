@@ -18,7 +18,7 @@ public record SkillTreeViewModel(String title, String subtitle, CursorCanvasEdit
                                  String status, boolean searchMode) {
     public SkillTreeViewModel {
         title = title == null || title.isBlank() ? "SKILL TREE" : title;
-        subtitle = subtitle == null ? "SHAPE YOUR JOURNEY" : subtitle;
+        subtitle = subtitle == null ? "" : subtitle;
         query = query == null ? "" : query;
         entries = List.copyOf(entries);
         nodes = List.copyOf(nodes);
@@ -57,7 +57,7 @@ public record SkillTreeViewModel(String title, String subtitle, CursorCanvasEdit
         List<Link> links = new ArrayList<>();
         for (CanvasEdge edge : canvas.edges())
             links.add(new Link(edge.edgeId(), geometry.route(canvas, edge), edge.edgeId().equals(selectedLinkId)));
-        return new SkillTreeViewModel(title, "SHAPE YOUR JOURNEY", kind, query, window.entries(),
+        return new SkillTreeViewModel(title, "", kind, query, window.entries(),
                 window.offset(), window.maximumOffset(), window.totalMatches(), nodes, links,inspector,status, searchMode);
     }
 

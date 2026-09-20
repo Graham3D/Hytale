@@ -40,6 +40,17 @@ class CanvasPortLinkControllerTest {
         assertEquals(CanvasInputController.LinkDragState.IDLE,input.linkState());
     }
 
+    @Test void optionalMovementConstraintKeepsDraggedNodesInsideAnEditorRegion(){
+        Canvas canvas=canvas();ProbeBackend backend=new ProbeBackend();
+        CanvasInputController input=new CanvasInputController(canvas,backend,()->{},()->true,n->{},
+                (node,point)->CanvasPoint.of(Math.max(20,Math.min(80,point.x())),
+                        Math.max(20,Math.min(80,point.y()))));
+        input.button(CanvasPoint.of(50,25),MouseButtonType.Left,MouseButtonState.Pressed);
+        input.motion(CanvasPoint.of(-500,-500),null,null);
+        input.button(CanvasPoint.of(-500,-500),MouseButtonType.Left,MouseButtonState.Released);
+        assertEquals(CanvasPoint.of(20,20),canvas.node("passive").position());
+    }
+
     private static Canvas canvas(){
         var source=NodeDefinition.builder("passive").size(100,50).port(CanvasPort.output("out","rpg",2,100,25)).build();
         var target=NodeDefinition.builder("skill").size(100,50).port(CanvasPort.input("in","rpg",2,0,25)).build();

@@ -18,6 +18,7 @@ class SkillTreeVisualPolishTest {
         assertTrue(ui.contains("#GraphEditorSurface"));
         assertTrue(ui.contains("#GraphLibraryFrame"));
         assertTrue(ui.contains("#GraphTreeFrame"));
+        assertTrue(ui.contains("#GraphTreeBackground"));
         assertTrue(ui.contains("#GraphInspectorPanel"));
         assertTrue(ui.contains("#GraphLibraryFrame { Anchor: (Left: 0, Top: 0, Width: 252"));
         assertTrue(ui.contains("#GraphInspectorPanel { Anchor: (Right: 0, Top: 0, Width: 252"));
@@ -28,6 +29,11 @@ class SkillTreeVisualPolishTest {
         assertFalse(ui.contains("#GraphEditorClose"));
         assertFalse(ui.contains("Text: \"CLOSE\""));
         assertFalse(ui.contains("Text: \"SKILL LIBRARY\""));
+        assertFalse(ui.contains("HYWIND RPG"));
+        assertFalse(ui.contains("SHAPE YOUR JOURNEY"));
+        assertFalse(ui.contains("#GraphEditorRevision"));
+        assertFalse(ui.contains("#GraphEditorStatus"));
+        assertFalse(ui.contains("#GraphInspectorFooter"));
         assertFalse(ui.contains("Tutorial"));
         assertFalse(ui.contains("Import"));
         assertFalse(ui.contains("Export"));
@@ -45,10 +51,30 @@ class SkillTreeVisualPolishTest {
         assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"StructuralCraftingArrowUp.png\""));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/ContainerFullPatch.png"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/DiagramCraftingBackground.png"));
+        assertTrue(ui.contains("Anchor: (Width: 236, Top: 4, Height: 11)"));
+        assertTrue(ui.contains("Anchor: (Width: 236, Bottom: 4, Height: 11)"));
+        assertFalse(ui.contains("Anchor: (Horizontal: 236"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/Buttons/Primary.png"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/Buttons/Destructive.png"));
         assertFalse(ui.contains("@2x.png"));
         assertFalse(renderer.contains("@2x.png"));
+    }
+
+    @Test void libraryInspectorSearchAndTreeBoundsMatchThePolishContract() throws Exception {
+        String ui = Files.readString(UI);
+        String renderer = Files.readString(RENDERER);
+        String service = Files.readString(SERVICE);
+        String search = Files.readString(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphSearchPage.ui"));
+        assertTrue(renderer.contains("LIBRARY_ROWS = 13"));
+        assertTrue(ui.contains("#GraphLibraryRow12"));
+        assertTrue(ui.contains("Top: 652"));
+        assertTrue(ui.contains("#GraphInspectorRow5"));
+        assertTrue(ui.contains("Assets/SkillTree/Hytale/Divider.png"));
+        assertTrue(service.contains("this::constrainEditorNode"));
+        assertTrue(service.contains("CanvasGraphEditorHud.TREE_LEFT"));
+        assertTrue(search.contains("only the"));
+        assertFalse(search.contains("GraphSearchReadOnlyShade"));
+        assertFalse(search.contains("GraphSearchSkills"));
     }
 
     @Test void saveUsesExistingCommitAuthorityAndExitUsesTheVisibleFooterRegion() throws Exception {

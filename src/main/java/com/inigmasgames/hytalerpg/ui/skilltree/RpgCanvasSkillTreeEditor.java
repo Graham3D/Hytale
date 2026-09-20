@@ -94,7 +94,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             EdgeCandidate pair = candidate.get(i);
             if (!pair.target.equals(existing.get(pair.source))) { addition = pair; break; }
         }
-        if (addition == null) return new Result(true, "Layout saved", authoritativeSnapshot(candidateSnapshot));
+        if (addition == null) return new Result(true, "Ready", authoritativeSnapshot(candidateSnapshot));
 
         Map<LinkNodeId, LinkNodeId> proposed = new EnumMap<>(existing);
         proposed.put(addition.source, addition.target);
@@ -160,14 +160,14 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
 
     private Canvas createCanvas() {
         NodeDefinition skill = NodeDefinition.builder("skill").size(132, 62)
-                .port(CanvasPort.input("in", "rpg-link", 8, 0, 31)).build();
+                .port(CanvasPort.input("in", "rpg-link", 8, 35, 31)).build();
         // max=2 permits an atomic reparent candidate; the authoritative snapshot always restores one output.
         NodeDefinition passive = NodeDefinition.builder("passive").size(124, 54)
-                .port(CanvasPort.output("out", "rpg-link", 2, 124, 27)).build();
+                .port(CanvasPort.output("out", "rpg-link", 2, 89, 27)).build();
         NodeDefinition joint = NodeDefinition.builder("joint").size(72, 72)
-                .port(CanvasPort.bidirectional("a", "rpg-link", 2, 36, 0))
-                .port(CanvasPort.bidirectional("b", "rpg-link", 2, 72, 55))
-                .port(CanvasPort.bidirectional("c", "rpg-link", 2, 0, 55)).build();
+                .port(CanvasPort.bidirectional("a", "rpg-link", 2, 36, 5))
+                .port(CanvasPort.bidirectional("b", "rpg-link", 2, 67, 53))
+                .port(CanvasPort.bidirectional("c", "rpg-link", 2, 5, 53)).build();
         CanvasDefinition definition = CanvasDefinition.builder("rpg-skill-tree-" + player)
                 .pannable(false).zoomable(false).panGesture(PanGesture.MIDDLE_BUTTON)
                 .allowCycles(false).allowDuplicateEdges(false)
@@ -186,12 +186,12 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         result.createNode(LinkNodeId.SKILL03.externalId(), "skill", CanvasPoint.of(680, 366), Map.of());
         result.createNode(LinkNodeId.JOINT01.externalId(), "joint", CanvasPoint.of(515, 118), Map.of());
         result.createNode(LinkNodeId.JOINT02.externalId(), "joint", CanvasPoint.of(515, 304), Map.of());
-        result.createNode(LinkNodeId.PASSIVE01.externalId(), "passive", CanvasPoint.of(236, 15), Map.of());
-        result.createNode(LinkNodeId.PASSIVE02.externalId(), "passive", CanvasPoint.of(236, 83), Map.of());
-        result.createNode(LinkNodeId.PASSIVE03.externalId(), "passive", CanvasPoint.of(236, 151), Map.of());
-        result.createNode(LinkNodeId.PASSIVE04.externalId(), "passive", CanvasPoint.of(236, 259), Map.of());
-        result.createNode(LinkNodeId.PASSIVE05.externalId(), "passive", CanvasPoint.of(236, 327), Map.of());
-        result.createNode(LinkNodeId.PASSIVE06.externalId(), "passive", CanvasPoint.of(236, 395), Map.of());
+        result.createNode(LinkNodeId.PASSIVE01.externalId(), "passive", CanvasPoint.of(300, 48), Map.of());
+        result.createNode(LinkNodeId.PASSIVE02.externalId(), "passive", CanvasPoint.of(300, 116), Map.of());
+        result.createNode(LinkNodeId.PASSIVE03.externalId(), "passive", CanvasPoint.of(300, 184), Map.of());
+        result.createNode(LinkNodeId.PASSIVE04.externalId(), "passive", CanvasPoint.of(300, 292), Map.of());
+        result.createNode(LinkNodeId.PASSIVE05.externalId(), "passive", CanvasPoint.of(300, 360), Map.of());
+        result.createNode(LinkNodeId.PASSIVE06.externalId(), "passive", CanvasPoint.of(300, 428), Map.of());
         return result;
     }
 
@@ -207,7 +207,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             CanvasPoint fallback = canvas.node(id.externalId()).position();
             StaticSkillTreeViewModel.TreeNode content = projected.nodes().get(id);
             String label=content == null ? id.externalId() : content.title();
-            if(id.kind()==LinkNodeId.NodeKind.SKILL&&content!=null&&content.occupied())label+=" ("+nativeBinding(id)+")";
+            if(id.kind()==LinkNodeId.NodeKind.SKILL)label+=" ["+nativeHotkey(id)+"]";
             Map<String, String> metadata = Map.of(
                     "label", label,
                     "subtitle", "",
@@ -238,7 +238,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         }
     }
 
-    private static String nativeBinding(LinkNodeId node){return switch(node){case SKILL01->"Ability2";case SKILL02->"Ability3";case SKILL03->"Unavailable";default->"";};}
+    private static String nativeHotkey(LinkNodeId node){return switch(node){case SKILL01->"E";case SKILL02->"R";case SKILL03->"UNBOUND";default->"";};}
 
     private static Map<LinkNodeId, LinkNodeId> outgoing(List<LinkEdge> edges) {
         Map<LinkNodeId, LinkNodeId> result = new EnumMap<>(LinkNodeId.class);

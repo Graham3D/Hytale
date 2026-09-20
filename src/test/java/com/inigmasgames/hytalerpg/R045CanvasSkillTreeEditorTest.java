@@ -32,7 +32,7 @@ class R045CanvasSkillTreeEditorTest {
         var skill = editor.assign("fire_bolt", "skill01", editor.canvas().snapshot());
         assertTrue(skill.accepted(), skill.message());
         editor.canvas().restore(skill.authoritativeSnapshot());
-        assertEquals("Fire Bolt (Ability2)", editor.canvas().node("skill01").metadata().get("label"));
+        assertEquals("Fire Bolt [E]", editor.canvas().node("skill01").metadata().get("label"));
         assertEquals("fire_bolt", bundle.service().getPresentationView(player).state().skill(
                 com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL01).orElseThrow().value());
     }
@@ -103,7 +103,7 @@ class R045CanvasSkillTreeEditorTest {
         var broken=editor.breakLink(first,editor.canvas().snapshot());assertTrue(broken.accepted(),broken.message());
         editor.canvas().restore(broken.authoritativeSnapshot());
         assertNull(editor.canvas().edge(first));assertNotNull(editor.canvas().edge(other));
-        assertEquals("Fire Bolt (Ability2)",editor.canvas().node("skill01").metadata().get("label"));
+        assertEquals("Fire Bolt [E]",editor.canvas().node("skill01").metadata().get("label"));
         assertEquals("Potency",editor.canvas().node("passive01").metadata().get("label"));
     }
 

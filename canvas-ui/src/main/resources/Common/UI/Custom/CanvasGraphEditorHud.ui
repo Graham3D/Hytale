@@ -5,76 +5,89 @@ Group {
     Anchor: (Left: 90, Right: 90, Top: 50, Bottom: 50);
     Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23);
     Group { Anchor: (Left: 12, Right: 12, Top: 10, Height: 76); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerHeader.png", HorizontalBorder: 50, VerticalBorder: 0); }
-    Group { Anchor: (Horizontal: 236, Top: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationTop.png"; }
-    Group { Anchor: (Horizontal: 236, Bottom: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationBottom.png"; }
-    Label #GraphEditorBrand { Text: "HYWIND RPG"; Anchor: (Left: 28, Top: 24, Width: 250, Height: 28); Style: (FontSize: 19, TextColor: #78c6d0); }
-    Label #GraphEditorTitle { Text: "SKILL TREE"; Anchor: (Horizontal: 300, Top: 8, Height: 30); Style: (FontSize: 22, TextColor: #f2d488, HorizontalAlignment: Center); }
-    Label #GraphEditorSubtitle { Text: "SHAPE YOUR JOURNEY"; Anchor: (Horizontal: 300, Top: 38, Height: 20); Style: (FontSize: 10, TextColor: #b9cce0, HorizontalAlignment: Center); }
-    Label #GraphEditorRevision { Text: "REV"; Anchor: (Right: 28, Top: 24, Width: 90, Height: 26); Style: (FontSize: 13, TextColor: #f2d488, HorizontalAlignment: End); }
+    Group { Anchor: (Width: 236, Top: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationTop.png"; }
+    Group { Anchor: (Width: 236, Bottom: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationBottom.png"; }
+    Label #GraphEditorTitle { Text: "SKILL TREE"; Anchor: (Horizontal: 300, Top: 21, Height: 42); Style: (FontSize: 32, TextColor: #f2d488, HorizontalAlignment: Center); }
 
     Group #GraphWorkspace { Anchor: (Left: 24, Right: 24, Top: 90, Bottom: 94); Background: (Color: #020a1200);
       Group #GraphLibraryFrame { Anchor: (Left: 0, Top: 0, Width: 252, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23); }
-      Group #GraphTreeFrame { Anchor: (Left: 260, Right: 260, Top: 0, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/DiagramCraftingBackground.png", Border: 24); }
-      Group #GraphEditorSkillsTab { Anchor: (Left: 12, Top: 40, Width: 108, Height: 34); Background: (TexturePath: "Assets/SkillTree/Hytale/HeaderTabSelectedBackground.png", Border: 9); }
-      Label { Text: "SKILLS"; Anchor: (Left: 28, Top: 49, Width: 68, Height: 18); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
-      Group #GraphEditorPassivesTab { Anchor: (Left: 124, Top: 40, Width: 116, Height: 34); Background: (TexturePath: "Assets/SkillTree/Hytale/HeaderTabBackground.png", Border: 9); }
-      Label { Text: "PASSIVES"; Anchor: (Left: 130, Top: 49, Width: 84, Height: 18); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
-      Group { Anchor: (Left: 12, Top: 84, Width: 228, Height: 38); Background: (TexturePath: "Assets/SkillTree/Hytale/InputBox.png", Border: 10); }
-      Label #GraphEditorSearch { Text: "Search skills..."; Anchor: (Left: 18, Top: 93, Width: 200, Height: 20); Style: (FontSize: 11, TextColor: #b9cce0); }
-      Label #GraphEditorNoMatches { Visible: false; Text: "No matches"; Anchor: (Left: 18, Top: 140, Width: 190, Height: 22); Style: (FontSize: 11, TextColor: #8fa2b4); }
-      Group #GraphLibraryRow0 { Anchor: (Left: 8, Top: 132, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphTreeFrame { Anchor: (Left: 260, Right: 260, Top: 0, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23); }
+      Group #GraphTreeBackground { Anchor: (Left: 272, Right: 272, Top: 12, Bottom: 12); Background: "Assets/SkillTree/Hytale/DiagramCraftingBackground.png"; }
+      Group #GraphEditorSkillsTab { Anchor: (Left: 12, Top: 14, Width: 108, Height: 34); Background: (TexturePath: "Assets/SkillTree/Hytale/HeaderTabSelectedBackground.png", Border: 9); }
+      Label { Text: "SKILLS"; Anchor: (Left: 28, Top: 23, Width: 68, Height: 18); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+      Group #GraphEditorPassivesTab { Anchor: (Left: 124, Top: 14, Width: 116, Height: 34); Background: (TexturePath: "Assets/SkillTree/Hytale/HeaderTabBackground.png", Border: 9); }
+      Label { Text: "PASSIVES"; Anchor: (Left: 130, Top: 23, Width: 84, Height: 18); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
+      Group { Anchor: (Left: 12, Top: 54, Width: 228, Height: 38); Background: (TexturePath: "Assets/SkillTree/Hytale/InputBox.png", Border: 10); }
+      Label #GraphEditorSearch { Text: "Search skills..."; Anchor: (Left: 18, Top: 63, Width: 200, Height: 20); Style: (FontSize: 11, TextColor: #b9cce0); }
+      Label #GraphEditorNoMatches { Visible: false; Text: "No matches"; Anchor: (Left: 18, Top: 108, Width: 190, Height: 22); Style: (FontSize: 11, TextColor: #8fa2b4); }
+      Group #GraphLibraryRow0 { Anchor: (Left: 8, Top: 100, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow1 { Anchor: (Left: 8, Top: 178, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow1 { Anchor: (Left: 8, Top: 146, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow2 { Anchor: (Left: 8, Top: 224, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow2 { Anchor: (Left: 8, Top: 192, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow3 { Anchor: (Left: 8, Top: 270, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow3 { Anchor: (Left: 8, Top: 238, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow4 { Anchor: (Left: 8, Top: 316, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow4 { Anchor: (Left: 8, Top: 284, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow5 { Anchor: (Left: 8, Top: 362, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow5 { Anchor: (Left: 8, Top: 330, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 5, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 5, Width: 130, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 25, Width: 130, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow6 { Visible: false; Anchor: (Left: 8, Top: 408, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow6 { Visible: false; Anchor: (Left: 8, Top: 376, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 3, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 3, Width: 144, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 22, Width: 144, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow7 { Visible: false; Anchor: (Left: 8, Top: 454, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow7 { Visible: false; Anchor: (Left: 8, Top: 422, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 3, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 3, Width: 144, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 22, Width: 144, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow8 { Visible: false; Anchor: (Left: 8, Top: 500, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow8 { Visible: false; Anchor: (Left: 8, Top: 468, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 3, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 3, Width: 144, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 22, Width: 144, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryRow9 { Visible: false; Anchor: (Left: 8, Top: 546, Width: 200, Height: 42); Background: (Color: #183a56f2);
+      Group #GraphLibraryRow9 { Visible: false; Anchor: (Left: 8, Top: 514, Width: 200, Height: 42); Background: (Color: #183a56f2);
         Group #Icon { Anchor: (Left: 6, Top: 3, Width: 36, Height: 36); Background: (Color: #172536ff); }
         Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 3, Width: 144, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
         Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 22, Width: 144, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
       }
-      Group #GraphLibraryScrollbarTrack { Anchor: (Left: 230, Top: 132, Width: 10, Height: 456); Background: (Color: #07111bff); }
-      Group #GraphLibraryScrollbarThumb { Anchor: (Left: 232, Top: 134, Width: 6, Height: 60); Background: (Color: #78c6d0ff); }
-      Label #GraphLibraryPosition { Text: "1-10 / 0"; Anchor: (Left: 12, Top: 594, Width: 216, Height: 18); Style: (FontSize: 9, TextColor: #8fb0c8, HorizontalAlignment: Center); }
+      Group #GraphLibraryRow10 { Visible: false; Anchor: (Left: 8, Top: 560, Width: 200, Height: 42); Background: (Color: #183a56f2);
+        Group #Icon { Anchor: (Left: 6, Top: 3, Width: 36, Height: 36); Background: (Color: #172536ff); }
+        Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 3, Width: 144, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 22, Width: 144, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group #GraphLibraryRow11 { Visible: false; Anchor: (Left: 8, Top: 606, Width: 200, Height: 42); Background: (Color: #183a56f2);
+        Group #Icon { Anchor: (Left: 6, Top: 3, Width: 36, Height: 36); Background: (Color: #172536ff); }
+        Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 3, Width: 144, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 22, Width: 144, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group #GraphLibraryRow12 { Visible: false; Anchor: (Left: 8, Top: 652, Width: 200, Height: 42); Background: (Color: #183a56f2);
+        Group #Icon { Anchor: (Left: 6, Top: 3, Width: 36, Height: 36); Background: (Color: #172536ff); }
+        Label #Name { Text: "Item"; Anchor: (Left: 48, Top: 3, Width: 144, Height: 20); Style: (FontSize: 12, TextColor: #eef6ff); }
+        Label #Category { Text: "Category"; Anchor: (Left: 48, Top: 22, Width: 144, Height: 16); Style: (FontSize: 9, TextColor: #8fbcd4); }
+      }
+      Group #GraphLibraryScrollbarTrack { Anchor: (Left: 230, Top: 100, Width: 10, Height: 598); Background: (Color: #07111bff); }
+      Group #GraphLibraryScrollbarThumb { Anchor: (Left: 232, Top: 102, Width: 6, Height: 60); Background: (Color: #78c6d0ff); }
+      Label #GraphLibraryPosition { Text: "1-13 / 0"; Anchor: (Left: 12, Top: 704, Width: 216, Height: 18); Style: (FontSize: 9, TextColor: #8fb0c8, HorizontalAlignment: Center); }
       Group #GraphEdgeDot0 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
       Group #GraphEdgeDot1 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
       Group #GraphEdgeDot2 { Visible: false; Anchor: (Left: 0, Top: 0, Width: 5, Height: 5); Background: (Color: #74d9eaff); }
@@ -290,18 +303,18 @@ Group {
       Group #GraphTargetHighlight { Visible: false; Anchor: (Left: 220, Top: 20, Width: 18, Height: 18); Background: (Color: #a8ffb466); }
       Group #GraphInspectorPanel { Anchor: (Right: 0, Top: 0, Width: 252, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23);
         Label { Text: "DETAILS"; Anchor: (Left: 18, Top: 14, Width: 216, Height: 20); Style: (FontSize: 12, TextColor: #f2d488); }
-        Group #GraphInspectorIcon { Visible: false; Anchor: (Left: 18, Top: 46, Width: 58, Height: 58); Background: (Color: #172536ff); }
-        Label #GraphInspectorName { Text: "Select a Skill or Passive"; Anchor: (Left: 86, Top: 46, Width: 148, Height: 36); Style: (FontSize: 15, TextColor: #ffffff, Wrap: true); }
-        Label #GraphInspectorDescriptor { Text: ""; Anchor: (Left: 86, Top: 84, Width: 148, Height: 22); Style: (FontSize: 9, TextColor: #78c6d0); }
-        Label #GraphInspectorDescription { Text: "Select a Skill or Passive to view details."; Anchor: (Left: 18, Top: 122, Width: 216, Height: 72); Style: (FontSize: 11, TextColor: #b9cce0, Wrap: true); }
-        Group { Anchor: (Left: 18, Top: 202, Width: 216, Height: 2); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); }
-        Group #GraphInspectorRow0 { Visible: false; Anchor: (Left: 18, Top: 216, Width: 216, Height: 48); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 28); Style: (FontSize: 11, TextColor: #eef6ff, Wrap: true); } }
-        Group #GraphInspectorRow1 { Visible: false; Anchor: (Left: 18, Top: 266, Width: 216, Height: 48); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 28); Style: (FontSize: 11, TextColor: #eef6ff, Wrap: true); } }
-        Group #GraphInspectorRow2 { Visible: false; Anchor: (Left: 18, Top: 316, Width: 216, Height: 48); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 28); Style: (FontSize: 11, TextColor: #eef6ff, Wrap: true); } }
-        Group #GraphInspectorRow3 { Visible: false; Anchor: (Left: 18, Top: 366, Width: 216, Height: 48); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 28); Style: (FontSize: 11, TextColor: #eef6ff, Wrap: true); } }
-        Group #GraphInspectorRow4 { Visible: false; Anchor: (Left: 18, Top: 416, Width: 216, Height: 48); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 28); Style: (FontSize: 11, TextColor: #eef6ff, Wrap: true); } }
-        Group #GraphInspectorRow5 { Visible: false; Anchor: (Left: 18, Top: 466, Width: 216, Height: 48); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 28); Style: (FontSize: 11, TextColor: #eef6ff, Wrap: true); } }
-        Label #GraphInspectorFooter { Text: ""; Anchor: (Left: 18, Right: 18, Bottom: 20, Height: 42); Style: (FontSize: 9, TextColor: #8fb0c8, Wrap: true); }
+        Group #GraphInspectorIcon { Visible: false; Anchor: (Left: 18, Top: 44, Width: 62, Height: 62); Background: (Color: #172536ff); }
+        Label #GraphInspectorName { Text: "Select a Skill or Passive"; Anchor: (Left: 90, Top: 44, Width: 144, Height: 42); Style: (FontSize: 16, TextColor: #ffffff, Wrap: true); }
+        Label #GraphInspectorDescriptor { Text: ""; Anchor: (Left: 90, Top: 88, Width: 144, Height: 20); Style: (FontSize: 9, TextColor: #78c6d0, Wrap: true); }
+        Group { Anchor: (Left: 18, Top: 118, Width: 216, Height: 2); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); }
+        Label #GraphInspectorDescription { Text: "Select a Skill or Passive to view details."; Anchor: (Left: 18, Top: 132, Width: 216, Height: 82); Style: (FontSize: 11, TextColor: #b9cce0, Wrap: true); }
+        Group { Anchor: (Left: 18, Top: 224, Width: 216, Height: 2); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); }
+        Group #GraphInspectorRow0 { Visible: false; Anchor: (Left: 18, Top: 238, Width: 216, Height: 62); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 34); Style: (FontSize: 10, TextColor: #eef6ff, Wrap: true); } Group { Anchor: (Left: 0, Bottom: 0, Width: 216, Height: 1); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); } }
+        Group #GraphInspectorRow1 { Visible: false; Anchor: (Left: 18, Top: 304, Width: 216, Height: 62); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 34); Style: (FontSize: 10, TextColor: #eef6ff, Wrap: true); } Group { Anchor: (Left: 0, Bottom: 0, Width: 216, Height: 1); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); } }
+        Group #GraphInspectorRow2 { Visible: false; Anchor: (Left: 18, Top: 370, Width: 216, Height: 62); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 34); Style: (FontSize: 10, TextColor: #eef6ff, Wrap: true); } Group { Anchor: (Left: 0, Bottom: 0, Width: 216, Height: 1); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); } }
+        Group #GraphInspectorRow3 { Visible: false; Anchor: (Left: 18, Top: 436, Width: 216, Height: 62); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 34); Style: (FontSize: 10, TextColor: #eef6ff, Wrap: true); } Group { Anchor: (Left: 0, Bottom: 0, Width: 216, Height: 1); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); } }
+        Group #GraphInspectorRow4 { Visible: false; Anchor: (Left: 18, Top: 502, Width: 216, Height: 62); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 34); Style: (FontSize: 10, TextColor: #eef6ff, Wrap: true); } Group { Anchor: (Left: 0, Bottom: 0, Width: 216, Height: 1); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); } }
+        Group #GraphInspectorRow5 { Visible: false; Anchor: (Left: 18, Top: 568, Width: 216, Height: 62); Label #Label { Text: "LABEL"; Anchor: (Left: 0, Top: 0, Width: 216, Height: 16); Style: (FontSize: 9, TextColor: #f2d488); } Label #Value { Text: "Value"; Anchor: (Left: 0, Top: 18, Width: 216, Height: 34); Style: (FontSize: 10, TextColor: #eef6ff, Wrap: true); } Group { Anchor: (Left: 0, Bottom: 0, Width: 216, Height: 1); Background: (TexturePath: "Assets/SkillTree/Hytale/Divider.png", Border: 1); } }
       }
       Group #GraphLinkContext { Visible: false; Anchor: (Left: 350, Top: 180, Width: 126, Height: 88); Background: (Color: #172536ff);
         Label #GraphContextPrompt { Text: "Break Link?"; Anchor: (Left: 8, Top: 8, Width: 110, Height: 20); Style: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center); }
@@ -312,7 +325,6 @@ Group {
       }
     }
     Label #GraphEditorDrag { Text: "Drag a library entry onto a matching node."; Anchor: (Left: 34, Right: 310, Bottom: 62, Height: 20); Style: (FontSize: 10, TextColor: #f2d488); }
-    Label #GraphEditorStatus { Text: "Ready"; Anchor: (Left: 34, Right: 310, Bottom: 34, Height: 22); Style: (FontSize: 11, TextColor: #9be4ae); }
     Group #GraphEditorSave { Anchor: (Right: 154, Bottom: 24, Width: 120, Height: 44); Background: (TexturePath: "Assets/SkillTree/Hytale/Buttons/Primary.png", VerticalBorder: 8, HorizontalBorder: 40); }
     Label { Text: "SAVE"; Anchor: (Right: 154, Bottom: 35, Width: 120, Height: 22); Style: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center); }
     Group #GraphEditorExit { Anchor: (Right: 24, Bottom: 24, Width: 120, Height: 44); Background: (TexturePath: "Assets/SkillTree/Hytale/Buttons/Destructive.png", Border: 8); }

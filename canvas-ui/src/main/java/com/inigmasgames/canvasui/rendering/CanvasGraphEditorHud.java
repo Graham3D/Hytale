@@ -7,7 +7,6 @@ import com.hypixel.hytale.server.core.ui.PatchStyle;
 import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.inigmasgames.canvasui.CanvasUI;
 import com.inigmasgames.canvasui.api.CanvasPoint;
 import com.inigmasgames.canvasui.api.editor.CursorCanvasEditor;
 import com.inigmasgames.canvasui.api.editor.SkillTreeViewModel;
@@ -20,12 +19,18 @@ import java.util.List;
 /** Fixed-pool passive HUD renderer for the production cursor graph editor. */
 public final class CanvasGraphEditorHud extends CustomUIHud {
     public static final String KEY = "inigmas:canvasui:graph-editor";
-    public static final int LIBRARY_ROWS = 10;
+    public static final int LIBRARY_ROWS = 13;
     public static final int WORKSPACE_LEFT = 114;
     public static final int WORKSPACE_TOP = 140;
-    public static final int LIBRARY_TRACK_TOP = 132;
-    public static final int LIBRARY_TRACK_HEIGHT = 456;
+    public static final int LIBRARY_ROW_TOP = 100;
+    public static final int LIBRARY_ROW_STEP = 46;
+    public static final int LIBRARY_TRACK_TOP = 100;
+    public static final int LIBRARY_TRACK_HEIGHT = 598;
     public static final int LIBRARY_TRACK_LEFT = 230;
+    public static final int TREE_LEFT = 272;
+    public static final int TREE_RIGHT = 1420;
+    public static final int TREE_TOP = 36;
+    public static final int TREE_BOTTOM = 748;
     private static final String SKILL_TREE_ASSETS = "Assets/SkillTree/";
     private static final String HYTALE_ASSETS = SKILL_TREE_ASSETS + "Hytale/";
     private static final int NODE_POOL = 11;
@@ -41,7 +46,6 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
     @Override protected void build(@Nonnull UICommandBuilder commands) {
         commands.append("CanvasGraphEditorHud.ui");
         commands.set("#GraphEditorTitle.TextSpans", Message.raw(title));
-        commands.set("#GraphEditorRevision.TextSpans", Message.raw(CanvasUI.REVISION));
     }
 
     public void render(SkillTreeViewModel model, DragVisual drag, TreeLinkInteraction links) {
@@ -55,7 +59,6 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         CursorCanvasEditor.LibraryKind tab = model.libraryKind();
         List<CursorCanvasEditor.LibraryEntry> page = model.entries();
         commands.set("#GraphEditorTitle.TextSpans", Message.raw(model.title()));
-        commands.set("#GraphEditorSubtitle.TextSpans", Message.raw(model.subtitle()));
         commands.setObject("#GraphEditorSkillsTab.Background", texture(HYTALE_ASSETS
                 + (tab == CursorCanvasEditor.LibraryKind.SKILL
                 ? "HeaderTabSelectedBackground.png" : "HeaderTabBackground.png"), 9));
@@ -65,7 +68,6 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         commands.set("#GraphEditorSearch.TextSpans", Message.raw(model.query().isBlank()
                 ? (tab == CursorCanvasEditor.LibraryKind.SKILL ? "Search skills..." : "Search passives...") : model.query()));
         commands.set("#GraphEditorNoMatches.Visible", page.isEmpty());
-        commands.set("#GraphEditorStatus.TextSpans", Message.raw(model.status()));
         commands.set("#GraphEditorDrag.TextSpans", Message.raw(drag == null
                 ? "Drag a library entry onto a matching node. Drag ports to create links."
                 : drag.state() + ": " + drag.entry().name()));
@@ -241,7 +243,6 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         commands.set("#GraphInspectorDescription.TextSpans",Message.raw(value.description()));
         commands.set("#GraphInspectorIcon.Visible",!value.iconPath().isBlank());
         if(!value.iconPath().isBlank())commands.setObject("#GraphInspectorIcon.Background",texture(value.iconPath()));
-        commands.set("#GraphInspectorFooter.TextSpans",Message.raw(value.footer()));
         for(int i=0;i<6;i++){
             boolean visible=i<value.rows().size();String selector="#GraphInspectorRow"+i;
             commands.set(selector+".Visible",visible);
