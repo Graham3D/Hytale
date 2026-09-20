@@ -739,10 +739,15 @@ public final class CursorHudProbeService implements AutoCloseable {
                 record(sample);
                 if (handleCalibration(sample)) continue;
                 if (sample.source() == CursorProbeSample.Source.EVENT && sample.validPosition()
-                        && transform.ready() && leftPressed(sample)
-                        && closeHit(sample.x(), sample.y())) {
-                    CursorHudProbeService.this.close(playerId, "VISIBLE_CLOSE_REGION");
-                    return;
+                        && transform.ready() && leftPressed(sample)) {
+                    if (context == Context.GRAPH_EDITOR && saveHit(sample.x(), sample.y())) {
+                        persistGraph();
+                        continue;
+                    }
+                    if (closeHit(sample.x(), sample.y())) {
+                        CursorHudProbeService.this.close(playerId, "VISIBLE_EXIT_REGION");
+                        return;
+                    }
                 }
                 try { routeGraph(sample); }
                 catch (RuntimeException error) {
@@ -806,8 +811,17 @@ public final class CursorHudProbeService implements AutoCloseable {
         private boolean closeHit(double rawX,double rawY){
             if(context!=Context.GRAPH_EDITOR)return transform.closeHit(rawX,rawY);
             CanvasPoint point=transform.toViewport(rawX,rawY);
-            double right=transform.viewportWidth()-90;
-            return point.x()>=right-98&&point.x()<=right&&point.y()>=64&&point.y()<=106;
+            double right=transform.viewportWidth()-114;
+            double bottom=transform.viewportHeight()-74;
+            return point.x()>=right-120&&point.x()<=right&&point.y()>=bottom-44&&point.y()<=bottom;
+        }
+
+        private boolean saveHit(double rawX,double rawY){
+            if(context!=Context.GRAPH_EDITOR)return false;
+            CanvasPoint point=transform.toViewport(rawX,rawY);
+            double right=transform.viewportWidth()-244;
+            double bottom=transform.viewportHeight()-74;
+            return point.x()>=right-120&&point.x()<=right&&point.y()>=bottom-44&&point.y()<=bottom;
         }
 
         private boolean routeEditor(CursorProbeSample sample, CanvasPoint local) {
@@ -875,17 +889,17 @@ public final class CursorHudProbeService implements AutoCloseable {
                 if(inside(local,700,10,116,30)&&linkInteraction.selectedLinkId()!=null){
                     breakLink(linkInteraction.selectedLinkId(),"VISIBLE_DELETE");return true;
                 }
-                if (local.x() >= 8 && local.x() <= 228 && local.y() >= 40 && local.y() <= 74) {
+                if (local.x() >= 12 && local.x() <= 240 && local.y() >= 40 && local.y() <= 74) {
                     libraryDrag.cancel();
-                    libraryTab = local.x() < 114 ? CursorCanvasEditor.LibraryKind.SKILL
+                    libraryTab = local.x() < 122 ? CursorCanvasEditor.LibraryKind.SKILL
                             : CursorCanvasEditor.LibraryKind.PASSIVE;
                     libraryScrollOffset = 0;
                     editorStatus = libraryTab == CursorCanvasEditor.LibraryKind.SKILL ? "Skill library" : "Passive library";
                     renderEditor();
                     return true;
                 }
-                if(inside(local,8,84,220,38)){openSearch();return true;}
-                if(inside(local,210,132,20,456)){
+                if(inside(local,12,84,228,38)){openSearch();return true;}
+                if(inside(local,CanvasGraphEditorHud.LIBRARY_TRACK_LEFT,132,14,456)){
                     LibraryBrowser.Window window=editorProjection();
                     int thumbHeight=scrollbarThumbHeight(window);
                     int thumbTop=scrollbarThumbTop(window,thumbHeight);
