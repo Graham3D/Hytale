@@ -83,10 +83,11 @@ class LightningSkillUpdateTest {
 
     @Test void customParticleAndProjectileAssetsArePackaged(){
         for(String resource:java.util.List.of(
-                "/Server/Particles/Hywind/Hywind_Charged_Bolt.particlesystem",
                 "/Server/Particles/Hywind/Hywind_Lightning_Strike.particlesystem",
                 "/Server/Particles/Hywind/Hywind_Static_Field.particlesystem",
                 "/Server/ProjectileConfigs/RPG/Projectile_Config_Hywind_Charged_Bolt.json",
+                "/Common/VFX/RPG/Spark/Spark_Quad.blockymodel",
+                "/Common/VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim",
                 "/Common/Particles/Textures/Hywind/Lightning/chargedbolt.png",
                 "/Common/Particles/Textures/Hywind/Lightning/lightning.png",
                 "/Common/Particles/Textures/Hywind/Lightning/staticfield.png"))assertNotNull(getClass().getResource(resource),resource);
