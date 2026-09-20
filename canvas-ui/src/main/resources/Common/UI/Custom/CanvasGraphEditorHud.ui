@@ -3,11 +3,12 @@ Group {
   Group #GraphWorldScrim { Anchor: (Full: 0); Background: (Color: #02091399); }
   Group #GraphEditorSurface {
     Anchor: (Left: 90, Right: 90, Top: 50, Bottom: 50);
-    Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23);
-    Group { Anchor: (Left: 12, Right: 12, Top: 20, Height: 38); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerHeader.png", HorizontalBorder: 50, VerticalBorder: 0); }
+    Background: (Color: #020a1200);
+    Group #GraphEditorPrimaryFrame { Anchor: (Left: 0, Right: 0, Top: 38, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23); }
+    Group #GraphEditorPrimaryHeader { Anchor: (Left: 0, Right: 0, Top: 0, Height: 38); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerHeader.png", HorizontalBorder: 50, VerticalBorder: 0); }
     Group { Anchor: (Width: 236, Top: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationTop.png"; }
     Group { Anchor: (Width: 236, Bottom: 4, Height: 11); Background: "Assets/SkillTree/Hytale/ContainerDecorationBottom.png"; }
-    Label #GraphEditorTitle { Text: "SKILL TREE"; Anchor: (Horizontal: 300, Top: 12, Height: 56); Style: (FontSize: 32, TextColor: #f2d488, HorizontalAlignment: Center, VerticalAlignment: Center); }
+    Label #GraphEditorTitle { Text: "SKILL TREE"; Anchor: (Left: 600, Right: 600, Top: 0, Height: 38); Style: (FontSize: 32, TextColor: #f2d488, HorizontalAlignment: Center, VerticalAlignment: Center); }
 
     Group #GraphWorkspace { Anchor: (Left: 24, Right: 24, Top: 90, Bottom: 94); Background: (Color: #020a1200);
       Group #GraphLibraryFrame { Anchor: (Left: 0, Top: 0, Width: 252, Bottom: 0); Background: (TexturePath: "Assets/SkillTree/Hytale/ContainerFullPatch.png", Border: 23); }
@@ -332,7 +333,7 @@ Group {
         Label { Text: "No"; Anchor: (Left: 68, Top: 50, Width: 50, Height: 18); Style: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center); }
       }
     }
-    Label #GraphEditorDrag { Text: "Drag a Skill or Passive from the Library on the left onto a matching empty slot. Drag a connector from one node port to another compatible node to create a link, pairing a Passive to Skill."; Anchor: (Horizontal: 1180, Bottom: 62, Height: 34); Style: (FontSize: 10, TextColor: #f2d488, HorizontalAlignment: Center, VerticalAlignment: Center, Wrap: true); }
+    Label #GraphEditorDrag { Text: "Drag a Skill or Passive from the Library on the left onto a matching empty slot. Drag a connector from one node port to another compatible node to create a link, pairing a Passive to Skill."; Anchor: (Left: 300, Right: 300, Bottom: 62, Height: 34); Style: (FontSize: 10, TextColor: #f2d488, HorizontalAlignment: Center, VerticalAlignment: Center, Wrap: true); }
     Group #GraphEditorSave { Anchor: (Right: 154, Bottom: 24, Width: 120, Height: 44); Background: (TexturePath: "Assets/SkillTree/Hytale/Buttons/Primary.png", VerticalBorder: 8, HorizontalBorder: 40); }
     Label { Text: "SAVE"; Anchor: (Right: 154, Bottom: 35, Width: 120, Height: 22); Style: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center); }
     Group #GraphEditorExit { Anchor: (Right: 24, Bottom: 24, Width: 120, Height: 44); Background: (TexturePath: "Assets/SkillTree/Hytale/Buttons/Destructive.png", Border: 8); }

@@ -175,8 +175,8 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 if (portIndex >= 3) break;
                 commands.set(selector + " #Port" + portIndex + ".Visible", true);
                 commands.setObject(selector + " #Port" + portIndex + ".Anchor",
-                        anchor((int)Math.round(port.point().x() - point.x()) - 3,
-                                (int)Math.round(port.point().y() - point.y()) - 3, 9, 9));
+                        anchor((int)Math.round(port.point().x() - point.x()) - 9,
+                                (int)Math.round(port.point().y() - point.y()) - 9, 18, 18));
                 commands.setObject(selector+" #Port"+portIndex+".Background",
                         texture(SKILL_TREE_ASSETS + "StructuralCraftingArrowUp.png"));
                 portIndex++;

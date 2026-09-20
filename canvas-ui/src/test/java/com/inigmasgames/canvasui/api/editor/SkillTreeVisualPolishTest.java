@@ -16,6 +16,8 @@ class SkillTreeVisualPolishTest {
     @Test void fourDecorativeFramesAndFooterActionsMatchTheApprovedComposition() throws Exception {
         String ui = Files.readString(UI);
         assertTrue(ui.contains("#GraphEditorSurface"));
+        assertTrue(ui.contains("#GraphEditorPrimaryFrame"));
+        assertTrue(ui.contains("#GraphEditorPrimaryHeader"));
         assertTrue(ui.contains("#GraphLibraryFrame"));
         assertTrue(ui.contains("#GraphTreeFrame"));
         assertTrue(ui.contains("#GraphTreeBackground"));
@@ -50,6 +52,8 @@ class SkillTreeVisualPolishTest {
         assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"skilltree_joint.png\""));
         assertTrue(renderer.contains("SKILL_TREE_ASSETS + \"StructuralCraftingArrowUp.png\""));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/ContainerFullPatch.png"));
+        assertTrue(ui.contains("#GraphEditorPrimaryHeader { Anchor: (Left: 0, Right: 0, Top: 0, Height: 38)"));
+        assertFalse(ui.contains("Anchor: (Left: 12, Right: 12, Top: 20, Height: 38)"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/DiagramCraftingBackground.png"));
         assertTrue(ui.contains("Anchor: (Width: 236, Top: 4, Height: 11)"));
         assertTrue(ui.contains("Anchor: (Width: 236, Bottom: 4, Height: 11)"));
@@ -78,6 +82,8 @@ class SkillTreeVisualPolishTest {
         assertFalse(ui.contains("GraphDeleteLink"));
         assertTrue(ui.contains("VerticalBorder: 80"));
         assertTrue(ui.contains("pairing a Passive to Skill"));
+        assertTrue(ui.contains("Anchor: (Left: 300, Right: 300, Bottom: 62, Height: 34)"));
+        assertTrue(renderer.contains("- 9, 18, 18"));
     }
 
     @Test void saveUsesExistingCommitAuthorityAndExitUsesTheVisibleFooterRegion() throws Exception {
