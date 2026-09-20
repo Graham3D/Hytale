@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.6",
-    "revision": "R051",
+    "version": "0.1.0-merge.7",
+    "revision": "R052",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "d79cfa39",
+    "implementationCommit": "39f85447bc383eba1f6483a5e60309dd2cc157fd",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "5AF009B3E833DD38DFFE965FCE2479A94F9C5EDCD4241D5A99EF0C9298BEE4C3",
-    "bytes": 13279688,
-    "entries": 5816,
-    "classes": 2198,
+    "sha256": "CF062E57BBB6DB4FC230CFBC4277B8A2B0DF2AAAEA7159B55F9996EFA07EFD39",
+    "bytes": 13324978,
+    "entries": 5831,
+    "classes": 2206,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-19T22:03:09.2230654Z",
+    "deployedAtUtc": "2026-09-20T00:10:06.4057312Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "5AF009B3E833DD38DFFE965FCE2479A94F9C5EDCD4241D5A99EF0C9298BEE4C3",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260919T220308Z",
-    "fullBackupFiles": 630,
-    "fullBackupBytes": 533083951,
+    "installedSha256": "CF062E57BBB6DB4FC230CFBC4277B8A2B0DF2AAAEA7159B55F9996EFA07EFD39",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T001005Z",
+    "fullBackupFiles": 649,
+    "fullBackupBytes": 542050969,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.5",
-        "revision": "R050",
-        "sha256": "BCED6B2B7386AE047890C70A48C31767BD1B497A25BFF3959D3585BF3EC49466"
+        "version": "0.1.0-merge.7",
+        "revision": "R052-pre-final",
+        "sha256": "FCFE183BECE3239EE9193943C83E81EC67EECDA5C0265A6731B9B666D821A603"
       }
     ]
   },
@@ -62,9 +62,9 @@
     "taverns": "mods/InigmasGames_Taverns"
   },
   "validation": {
-    "rpgJUnitTests": 2365,
+    "rpgJUnitTests": 2367,
     "nativeControlJUnitTests": 67,
-    "canvasJUnitTests": 37,
+    "canvasJUnitTests": 38,
     "tavernJUnitTests": 5,
     "tavernRetainedExecutableGates": 8,
     "npcRetainedExecutableGates": 149,
@@ -84,7 +84,12 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
-    "R051 successful client CustomUI document load and server join",
+    "R052 successful client CustomUI document load and server join",
+    "R052 square Skill/Passive/Joint frames and authoritative Ability2/Ability3 labels",
+    "R052 inspector hover, locked selection, drag precedence, and Search Mode retention",
+    "R052 exact connector-port persistence through close/reopen and restart",
+    "R052 occupied-Skill right-click confirmation, topology retention, and re-equip restoration",
+    "R052 exact native/custom HUD restoration on every editor exit path",
     "R050 centered layout and integrated Search Mode",
     "R050 scrollbar, accepted/rejected icon drag, and measured cursor patch telemetry",
     "R050 repeated port-link preview/snap/commit, invalid and Skill-to-Skill rejection",
