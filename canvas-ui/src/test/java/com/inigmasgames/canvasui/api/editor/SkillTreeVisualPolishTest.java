@@ -55,8 +55,11 @@ class SkillTreeVisualPolishTest {
         assertTrue(ui.contains("#GraphEditorPrimaryFrame { Anchor: (Full: 0)"));
         assertTrue(ui.contains("#GraphEditorPrimaryHeader { Anchor: (Left: 18, Right: 18, Top: 18, Height: 46)"));
         assertTrue(ui.contains("...@GraphEditorTitleStyle"));
+        assertTrue(ui.contains("FontSize: 19"));
         assertTrue(ui.contains("FontName: \"Secondary\""));
         assertTrue(ui.contains("RenderUppercase: true"));
+        assertTrue(ui.contains("MaskTexturePath: \"Assets/SkillTree/Hytale/TextGradient.png\""));
+        assertTrue(ui.contains("Assets/SkillTree/Hytale/TabSelectedOverlay.png"));
         assertFalse(ui.contains("Common/Container.ui"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/DiagramCraftingBackground.png"));
         assertTrue(ui.contains("Anchor: (Width: 236, Top: 4, Height: 11)"));
@@ -73,9 +76,9 @@ class SkillTreeVisualPolishTest {
         String renderer = Files.readString(RENDERER);
         String service = Files.readString(SERVICE);
         String search = Files.readString(Path.of("src/main/resources/Common/UI/Custom/CanvasGraphSearchPage.ui"));
-        assertTrue(renderer.contains("LIBRARY_ROWS = 15"));
-        assertTrue(ui.contains("#GraphLibraryRow14"));
-        assertTrue(ui.contains("Top: 696"));
+        assertTrue(renderer.contains("LIBRARY_ROWS = 16"));
+        assertTrue(ui.contains("#GraphLibraryRow15"));
+        assertTrue(ui.contains("Top: 739"));
         assertTrue(ui.contains("#GraphInspectorRow5"));
         assertTrue(ui.contains("Assets/SkillTree/Hytale/Divider.png"));
         assertTrue(service.contains("this::constrainEditorNode"));
@@ -84,21 +87,27 @@ class SkillTreeVisualPolishTest {
         assertFalse(search.contains("GraphSearchReadOnlyShade"));
         assertFalse(search.contains("GraphSearchSkills"));
         assertFalse(ui.contains("GraphDeleteLink"));
-        assertTrue(ui.contains("#GraphTreeBackground { Anchor: (Width: 900, Height: 530)"));
-        assertFalse(ui.contains("DiagramCraftingBackground.png\", HorizontalBorder"));
+        assertTrue(ui.contains("#GraphTreeBackground { Anchor: (Left: 272, Right: 272, Top: 12, Bottom: 12)"));
+        assertTrue(ui.contains("DiagramCraftingBackground.png\", Border: 82"));
         assertTrue(ui.contains("pairing a Passive to Skill"));
         assertTrue(ui.contains("Anchor: (Left: 300, Right: 300, Bottom: 62, Height: 34)"));
         assertTrue(renderer.contains("- 9, 18, 18"));
         assertTrue(ui.contains("#GraphEditorReset"));
         assertTrue(ui.contains("Text: \"RESET\""));
+        assertTrue(search.contains("Left: 126, Top: 182"));
+        assertTrue(renderer.contains("model.searchMode()"));
     }
 
     @Test void saveUsesExistingCommitAuthorityAndExitUsesTheVisibleFooterRegion() throws Exception {
         String service = Files.readString(SERVICE);
-        assertTrue(service.contains("context == Context.GRAPH_EDITOR && saveHit(sample.x(), sample.y())"));
+        assertTrue(service.contains("&&saveHit(sample.x(), sample.y())"));
         assertTrue(service.contains("persistGraph();"));
         assertTrue(service.contains("VISIBLE_EXIT_REGION"));
         assertTrue(service.contains("private boolean saveHit"));
+        assertTrue(service.contains("Exit without saving?"));
+        assertTrue(service.contains("SKILLTREE_EXIT_WITHOUT_SAVE_CONFIRMED"));
+        assertTrue(service.contains("showSavedFeedback()"));
+        assertTrue(service.contains("this::markGraphDirty"));
     }
 
     @Test void graphEditorDoesNotOpenACompetingCustomPage() throws Exception {

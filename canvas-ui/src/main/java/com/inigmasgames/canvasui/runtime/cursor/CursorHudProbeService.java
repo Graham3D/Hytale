@@ -50,6 +50,7 @@ import com.inigmasgames.canvasui.api.CanvasInputCapabilities;
 import com.inigmasgames.canvasui.api.CanvasNode;
 import com.inigmasgames.canvasui.api.CanvasPoint;
 import com.inigmasgames.canvasui.api.CanvasPort;
+import com.inigmasgames.canvasui.api.CanvasSnapshot;
 import com.inigmasgames.canvasui.api.EdgeStyle;
 import com.inigmasgames.canvasui.api.NodeDefinition;
 import com.inigmasgames.canvasui.api.NodeVisual;
@@ -585,8 +586,13 @@ public final class CursorHudProbeService implements AutoCloseable {
         private String editorStatus = "Ready";
         private String hoveredEntryId = "";
         private String hoveredNodeId = "";
+        private String hoveredControl = "";
         private String lockedEntryId = "";
         private String lockedNodeId = "";
+        private String savedGraphFingerprint = "";
+        private boolean unsavedGraphChanges;
+        private long saveFeedbackGeneration;
+        private int saveFeedbackAlpha;
         private Set<HudComponent> priorVisibleHud = Set.of();
         private Map<String, CustomUIHud> priorCustomHuds = Map.of();
         private boolean modalHudLease;
@@ -637,6 +643,7 @@ public final class CursorHudProbeService implements AutoCloseable {
             if (context == Context.GRAPH_EDITOR) {
                 applyStoredLayout(graph, editor.editorId(), playerId);
                 constrainEditorNodes();
+                savedGraphFingerprint=graphFingerprint(graph.snapshot());
             }
             traceLifecycle("CREATED", "screenPointDomain=EMPIRICAL_LANDMARKS physicalViewport=UNAVAILABLE logicalScale=UNAVAILABLE");
         }
@@ -697,7 +704,7 @@ public final class CursorHudProbeService implements AutoCloseable {
                 CursorHudGraphEditorBackend backend = new CursorHudGraphEditorBackend(graph,
                         this::renderEditor, value -> editorStatus = value == null ? "" : value,
                         preview -> recordPatch(editorHud.renderPreview(preview), currentSampleReceivedNanos));
-                graphInput = new CanvasInputController(graph, backend, this::persistGraph,
+                graphInput = new CanvasInputController(graph, backend, this::markGraphDirty,
                         this::graphRenderDue, this::recordGraphPointer, this::constrainEditorNode,
                         nodeId -> PortAnchorResolver.orbitConnected(graph,nodeId));
                 renderEditor();
@@ -749,19 +756,27 @@ public final class CursorHudProbeService implements AutoCloseable {
             for (CursorProbeSample sample : input.drain(256)) {
                 record(sample);
                 if (handleCalibration(sample)) continue;
+                if(context==Context.GRAPH_EDITOR&&sample.kind()==CursorProbeSample.Kind.MOTION
+                        &&sample.validPosition()&&transform.ready()&&updateEditorControlHover(sample))renderEditor();
                 if (sample.source() == CursorProbeSample.Source.EVENT && sample.validPosition()
                         && transform.ready() && leftPressed(sample)) {
-                    if(context==Context.GRAPH_EDITOR&&resetHit(sample.x(),sample.y())){
-                        linkInteraction.openResetContext(CanvasPoint.of(470,300));editorStatus="Reset Skill Tree?";
+                    if(context==Context.GRAPH_EDITOR&&!linkInteraction.contextOpen()
+                            &&resetHit(sample.x(),sample.y())){
+                        linkInteraction.openResetContext(centeredContextAnchor());editorStatus="Reset Skill Tree?";
                         traceLifecycle("SKILLTREE_RESET_CONTEXT_OPENED","scope=CURRENT_TREE_ONLY");renderEditor();continue;
                     }
-                    if (context == Context.GRAPH_EDITOR && saveHit(sample.x(), sample.y())) {
+                    if (context == Context.GRAPH_EDITOR&&!linkInteraction.contextOpen()
+                            &&saveHit(sample.x(), sample.y())) {
                         persistGraph();
                         continue;
                     }
-                    if (closeHit(sample.x(), sample.y())) {
-                        CursorHudProbeService.this.close(playerId, "VISIBLE_EXIT_REGION");
-                        return;
+                    if (!linkInteraction.contextOpen()&&closeHit(sample.x(), sample.y())) {
+                        if(context==Context.GRAPH_EDITOR&&unsavedGraphChanges){
+                            linkInteraction.openExitContext(centeredContextAnchor());
+                            editorStatus="Exit without saving?";
+                            traceLifecycle("SKILLTREE_EXIT_CONTEXT_OPENED","dirty=true");renderEditor();continue;
+                        }
+                        CursorHudProbeService.this.close(playerId,"VISIBLE_EXIT_REGION");return;
                     }
                 }
                 try { routeGraph(sample); }
@@ -846,6 +861,25 @@ public final class CursorHudProbeService implements AutoCloseable {
             return point.x()>=180&&point.x()<=300&&point.y()>=bottom-44&&point.y()<=bottom;
         }
 
+        private boolean updateEditorControlHover(CursorProbeSample sample){
+            String next="";
+            if(resetHit(sample.x(),sample.y()))next="reset";
+            else if(saveHit(sample.x(),sample.y()))next="save";
+            else if(closeHit(sample.x(),sample.y()))next="exit";
+            else{
+                CanvasPoint local=transform.convert(sample.x(),sample.y(),graph.viewport(),
+                        CanvasPoint.of(CanvasGraphEditorHud.WORKSPACE_LEFT,CanvasGraphEditorHud.WORKSPACE_TOP)).local();
+                if(linkInteraction.contextOpen()&&linkInteraction.popupAnchor()!=null){
+                    CanvasPoint anchor=linkInteraction.popupAnchor();
+                    if(inside(local,anchor.x()+30,anchor.y()+48,60,34))next="context-yes";
+                    else if(inside(local,anchor.x()+120,anchor.y()+48,60,34))next="context-no";
+                }else if(inside(local,12,14,108,34))next="skills";
+                else if(inside(local,124,14,116,34))next="passives";
+            }
+            if(next.equals(hoveredControl))return false;
+            hoveredControl=next;return true;
+        }
+
         private boolean routeEditor(CursorProbeSample sample, CanvasPoint local) {
             if(searchPage!=null)return true;
             if (libraryDrag.animating()) return true;
@@ -876,15 +910,21 @@ public final class CursorHudProbeService implements AutoCloseable {
             MouseButtonState state = enumValue(MouseButtonState.class, sample.state());
             if(state==MouseButtonState.Pressed&&linkInteraction.contextOpen()){
                 CanvasPoint anchor=linkInteraction.popupAnchor();
-                if(button==MouseButtonType.Left&&inside(local,anchor.x()+8,anchor.y()+42,50,34)){
-                    if(linkInteraction.resetContext())resetTree();
+                if(button==MouseButtonType.Left&&inside(local,anchor.x()+30,anchor.y()+48,60,34)){
+                    if(linkInteraction.exitContext()){
+                        traceLifecycle("SKILLTREE_EXIT_WITHOUT_SAVE_CONFIRMED","dirty="+unsavedGraphChanges);
+                        CursorHudProbeService.this.close(playerId,"EXIT_WITHOUT_SAVE");return true;
+                    }else if(linkInteraction.resetContext())resetTree();
                     else if(linkInteraction.nodeContext())clearNode(linkInteraction.contextTargetNodeId());
                     else breakLink(linkInteraction.contextTargetLinkId(),"CONTEXT_CONFIRM");
                     return true;
                 }
-                if(button==MouseButtonType.Left&&inside(local,anchor.x()+68,anchor.y()+42,50,34)){
-                    boolean nodeContext=linkInteraction.nodeContext(),resetContext=linkInteraction.resetContext();
-                    linkInteraction.dismissContext();editorStatus=resetContext?"Reset cancelled":nodeContext?"Unequip cancelled":"Link break cancelled";renderEditor();return true;
+                if(button==MouseButtonType.Left&&inside(local,anchor.x()+120,anchor.y()+48,60,34)){
+                    boolean nodeContext=linkInteraction.nodeContext(),resetContext=linkInteraction.resetContext(),
+                            exitContext=linkInteraction.exitContext();
+                    linkInteraction.dismissContext();editorStatus=exitContext?"Continue editing":
+                            resetContext?"Reset cancelled":nodeContext?"Unequip cancelled":"Link break cancelled";
+                    renderEditor();return true;
                 }
                 linkInteraction.dismissContext();renderEditor();
             }
@@ -967,7 +1007,7 @@ public final class CursorHudProbeService implements AutoCloseable {
                     CursorCanvasEditor.Result result = editor.assign(entry.id(), target.nodeId(), graph.snapshot());
                     graph.restore(result.authoritativeSnapshot());
                     accepted=result.accepted();message=result.message();
-                    if (accepted){destination=target.center();persistEditorLayout();}
+                    if (accepted){destination=target.center();acceptAuthoritativeMutation();}
                 }
                 editorStatus=message;
                 libraryDrag.animateTo(destination,accepted,System.currentTimeMillis());
@@ -1049,13 +1089,31 @@ public final class CursorHudProbeService implements AutoCloseable {
             graphPeakNanos = Math.max(graphPeakNanos, nanos);
         }
 
+        private void markGraphDirty(){
+            if(context!=Context.GRAPH_EDITOR){persistGraph();return;}
+            boolean before=unsavedGraphChanges;
+            unsavedGraphChanges=!graphFingerprint(graph.snapshot()).equals(savedGraphFingerprint);
+            if(before!=unsavedGraphChanges)traceLifecycle("SKILLTREE_DIRTY_CHANGED","dirty="+unsavedGraphChanges);
+        }
+
+        private void acceptAuthoritativeMutation(){
+            persistEditorLayout();
+            savedGraphFingerprint=graphFingerprint(graph.snapshot());
+            unsavedGraphChanges=false;
+        }
+
         private void persistGraph() {
             persistenceWrites++;
             if (editor != null) {
                 CursorCanvasEditor.Result result = editor.commit(graph.snapshot());
                 graph.restore(result.authoritativeSnapshot());
                 editorStatus = result.message();
-                if (result.accepted()) persistEditorLayout();
+                if (result.accepted()) {
+                    persistEditorLayout();
+                    savedGraphFingerprint=graphFingerprint(graph.snapshot());
+                    unsavedGraphChanges=false;
+                    showSavedFeedback();
+                }
                 traceLifecycle(result.accepted() ? "GRAPH_COMMIT_ACCEPTED" : "GRAPH_COMMIT_REJECTED",
                         "message=" + result.message() + " nodes=" + graph.nodes().size()
                                 + " edges=" + graph.edges().size());
@@ -1140,7 +1198,13 @@ public final class CursorHudProbeService implements AutoCloseable {
         }
 
         private CanvasPoint contextAnchor(CanvasPoint local){
-            return CanvasPoint.of(Math.min(690,Math.max(208,local.x())),Math.min(372,Math.max(4,local.y())));
+            return CanvasPoint.of(Math.min(1210,Math.max(272,local.x())),Math.min(640,Math.max(24,local.y())));
+        }
+
+        private CanvasPoint centeredContextAnchor(){
+            double left=transform.viewportWidth()/2.0-CanvasGraphEditorHud.WORKSPACE_LEFT-105;
+            double top=transform.viewportHeight()/2.0-CanvasGraphEditorHud.WORKSPACE_TOP-48;
+            return contextAnchor(CanvasPoint.of(left,top));
         }
 
         private CanvasPoint constrainEditorNode(CanvasNode node,CanvasPoint requested){
@@ -1190,7 +1254,39 @@ public final class CursorHudProbeService implements AutoCloseable {
 
         private void renderEditor() {
             if (editorHud == null) return;
-            editorHud.render(editorView(false),dragVisual(),linkInteraction);
+            editorHud.render(editorView(false),dragVisual(),linkInteraction,hoveredControl,saveFeedbackAlpha);
+        }
+
+        private void showSavedFeedback(){
+            long generation=++saveFeedbackGeneration;saveFeedbackAlpha=255;renderEditor();
+            scheduleSavedFade(generation,0);
+        }
+
+        private void scheduleSavedFade(long generation,int step){
+            int[] alpha={210,155,100,45,0};
+            if(step>=alpha.length)return;
+            long delay=step==0?600:150;
+            java.util.concurrent.CompletableFuture.delayedExecutor(delay,java.util.concurrent.TimeUnit.MILLISECONDS)
+                    .execute(()->world.execute(()->{
+                        if(closing.get()||sessions.get(playerId)!=this||saveFeedbackGeneration!=generation)return;
+                        saveFeedbackAlpha=alpha[step];editorHud.renderSaveFeedback(saveFeedbackAlpha);
+                        scheduleSavedFade(generation,step+1);
+                    }));
+        }
+
+        private static String graphFingerprint(CanvasSnapshot snapshot){
+            StringBuilder value=new StringBuilder();
+            snapshot.nodes().stream().sorted(java.util.Comparator.comparing(CanvasSnapshot.NodeState::nodeId))
+                    .forEach(node->{
+                        value.append(node.nodeId()).append('|').append(node.x()).append('|').append(node.y()).append('|');
+                        node.metadata().entrySet().stream().sorted(Map.Entry.comparingByKey())
+                                .forEach(entry->value.append(entry.getKey()).append('=').append(entry.getValue()).append(';'));
+                    });
+            snapshot.edges().stream().sorted(java.util.Comparator.comparing(CanvasSnapshot.EdgeState::edgeId))
+                    .forEach(edge->value.append(edge.edgeId()).append('|').append(edge.sourceNodeId()).append(':')
+                            .append(edge.sourcePortId()).append('>').append(edge.targetNodeId()).append(':')
+                            .append(edge.targetPortId()).append(';'));
+            return value.toString();
         }
 
         private void openSearch(){
@@ -1233,7 +1329,7 @@ public final class CursorHudProbeService implements AutoCloseable {
                 traceLifecycle("SKILLTREE_LINK_BREAK_REJECTED","reason=STALE_LINK");renderEditor();return;}
             CursorCanvasEditor.Result result=editor.breakLink(linkId,graph.snapshot());
             graph.restore(result.authoritativeSnapshot());editorStatus=result.message();
-            if(result.accepted()){linkInteraction.broken();persistEditorLayout();}
+            if(result.accepted()){linkInteraction.broken();acceptAuthoritativeMutation();}
             else if(graph.edge(linkId)==null)linkInteraction.clear();
             traceLifecycle(result.accepted()?"SKILLTREE_LINK_BROKEN":"SKILLTREE_LINK_BREAK_REJECTED",
                     "link="+linkId+" reason="+reason+" message="+result.message());renderEditor();
@@ -1244,7 +1340,7 @@ public final class CursorHudProbeService implements AutoCloseable {
             CursorCanvasEditor.Result result=editor.clearNode(nodeId,graph.snapshot());
             graph.restore(result.authoritativeSnapshot());editorStatus=result.message();
             if(result.accepted()){
-                lockedNodeId=nodeId;lockedEntryId="";linkInteraction.broken();persistEditorLayout();
+                lockedNodeId=nodeId;lockedEntryId="";linkInteraction.broken();acceptAuthoritativeMutation();
             }else linkInteraction.dismissContext();
             traceLifecycle(result.accepted()?"SKILLTREE_NODE_CLEARED":"SKILLTREE_NODE_CLEAR_REJECTED",
                     "node="+nodeId+" message="+result.message());renderEditor();
@@ -1256,7 +1352,7 @@ public final class CursorHudProbeService implements AutoCloseable {
             graph.restore(result.authoritativeSnapshot());editorStatus=result.message();
             if(result.accepted()){
                 linkInteraction.clear();lockedNodeId="";lockedEntryId="";hoveredNodeId="";hoveredEntryId="";
-                persistEditorLayout();
+                acceptAuthoritativeMutation();
             }else linkInteraction.dismissContext();
             traceLifecycle(result.accepted()?"SKILLTREE_RESET_COMMITTED":"SKILLTREE_RESET_REJECTED",
                     "message="+result.message());renderEditor();

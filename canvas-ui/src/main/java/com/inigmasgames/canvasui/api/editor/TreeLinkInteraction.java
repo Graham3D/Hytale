@@ -10,13 +10,15 @@ public final class TreeLinkInteraction {
     private String contextTargetLinkId;
     private String contextTargetNodeId;
     private boolean resetContext;
+    private boolean exitContext;
     private CanvasPoint popupAnchor;
 
-    public void select(String linkId){selectedLinkId=linkId;contextTargetLinkId=null;contextTargetNodeId=null;resetContext=false;popupAnchor=null;state=linkId==null?State.NONE:State.LINK_SELECTED;}
-    public void openContext(String linkId,CanvasPoint anchor){selectedLinkId=linkId;contextTargetLinkId=linkId;contextTargetNodeId=null;resetContext=false;popupAnchor=anchor;state=State.CONTEXT_CONFIRM_OPEN;}
-    public void openNodeContext(String nodeId,CanvasPoint anchor){contextTargetLinkId=null;contextTargetNodeId=nodeId;resetContext=false;popupAnchor=anchor;state=State.CONTEXT_CONFIRM_OPEN;}
-    public void openResetContext(CanvasPoint anchor){contextTargetLinkId=null;contextTargetNodeId=null;resetContext=true;popupAnchor=anchor;state=State.CONTEXT_CONFIRM_OPEN;}
-    public void dismissContext(){contextTargetLinkId=null;contextTargetNodeId=null;resetContext=false;popupAnchor=null;state=selectedLinkId==null?State.NONE:State.LINK_SELECTED;}
+    public void select(String linkId){selectedLinkId=linkId;contextTargetLinkId=null;contextTargetNodeId=null;resetContext=false;exitContext=false;popupAnchor=null;state=linkId==null?State.NONE:State.LINK_SELECTED;}
+    public void openContext(String linkId,CanvasPoint anchor){selectedLinkId=linkId;contextTargetLinkId=linkId;contextTargetNodeId=null;resetContext=false;exitContext=false;popupAnchor=anchor;state=State.CONTEXT_CONFIRM_OPEN;}
+    public void openNodeContext(String nodeId,CanvasPoint anchor){contextTargetLinkId=null;contextTargetNodeId=nodeId;resetContext=false;exitContext=false;popupAnchor=anchor;state=State.CONTEXT_CONFIRM_OPEN;}
+    public void openResetContext(CanvasPoint anchor){contextTargetLinkId=null;contextTargetNodeId=null;resetContext=true;exitContext=false;popupAnchor=anchor;state=State.CONTEXT_CONFIRM_OPEN;}
+    public void openExitContext(CanvasPoint anchor){contextTargetLinkId=null;contextTargetNodeId=null;resetContext=false;exitContext=true;popupAnchor=anchor;state=State.CONTEXT_CONFIRM_OPEN;}
+    public void dismissContext(){contextTargetLinkId=null;contextTargetNodeId=null;resetContext=false;exitContext=false;popupAnchor=null;state=selectedLinkId==null?State.NONE:State.LINK_SELECTED;}
     public void broken(){select(null);}
     public void clear(){select(null);}
     public State state(){return state;}
@@ -25,6 +27,7 @@ public final class TreeLinkInteraction {
     public String contextTargetNodeId(){return contextTargetNodeId;}
     public boolean nodeContext(){return contextTargetNodeId!=null;}
     public boolean resetContext(){return resetContext;}
+    public boolean exitContext(){return exitContext;}
     public CanvasPoint popupAnchor(){return popupAnchor;}
     public boolean contextOpen(){return state==State.CONTEXT_CONFIRM_OPEN;}
 }

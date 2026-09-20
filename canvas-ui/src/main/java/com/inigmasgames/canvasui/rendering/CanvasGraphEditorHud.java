@@ -19,13 +19,13 @@ import java.util.List;
 /** Fixed-pool passive HUD renderer for the production cursor graph editor. */
 public final class CanvasGraphEditorHud extends CustomUIHud {
     public static final String KEY = "inigmas:canvasui:graph-editor";
-    public static final int LIBRARY_ROWS = 15;
+    public static final int LIBRARY_ROWS = 16;
     public static final int WORKSPACE_LEFT = 114;
     public static final int WORKSPACE_TOP = 140;
     public static final int LIBRARY_ROW_TOP = 94;
     public static final int LIBRARY_ROW_STEP = 43;
     public static final int LIBRARY_TRACK_TOP = 94;
-    public static final int LIBRARY_TRACK_HEIGHT = 645;
+    public static final int LIBRARY_TRACK_HEIGHT = 688;
     public static final int LIBRARY_TRACK_LEFT = 230;
     public static final int TREE_LEFT = 272;
     public static final int TREE_RIGHT = 1420;
@@ -49,8 +49,15 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
     }
 
     public void render(SkillTreeViewModel model, DragVisual drag, TreeLinkInteraction links) {
+        render(model,drag,links,"",0);
+    }
+
+    public void render(SkillTreeViewModel model, DragVisual drag, TreeLinkInteraction links,
+                       String hoveredControl, int savedAlpha) {
         UICommandBuilder commands = new UICommandBuilder();
         writeFrame(commands, model, drag, links);
+        renderControlState(commands,model.libraryKind(),hoveredControl);
+        renderSaveFeedback(commands,savedAlpha);
         update(false, commands);
     }
 
@@ -65,6 +72,11 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         commands.setObject("#GraphEditorPassivesTab.Background", texture(HYTALE_ASSETS
                 + (tab == CursorCanvasEditor.LibraryKind.PASSIVE
                 ? "HeaderTabSelectedBackground.png" : "HeaderTabBackground.png"), 9));
+        commands.set("#GraphEditorSkillsTabLabel.Style.TextColor",
+                tab==CursorCanvasEditor.LibraryKind.SKILL?"#ffe682":"#b4c8c9");
+        commands.set("#GraphEditorPassivesTabLabel.Style.TextColor",
+                tab==CursorCanvasEditor.LibraryKind.PASSIVE?"#ffe682":"#b4c8c9");
+        commands.set("#GraphEditorSearch.Visible",!model.searchMode());
         commands.set("#GraphEditorSearch.TextSpans", Message.raw(model.query().isBlank()
                 ? (tab == CursorCanvasEditor.LibraryKind.SKILL ? "Search skills..." : "Search passives...") : model.query()));
         commands.set("#GraphEditorNoMatches.Visible", page.isEmpty());
@@ -133,6 +145,32 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
                 anchor((int)Math.round(preview.target().x())-9, (int)Math.round(preview.target().y())-9,18,18));
         update(false, commands);
         return new PatchMetrics(preview == null ? 4 : 9, preview == null ? 96 : 420);
+    }
+
+    public void renderSaveFeedback(int alpha) {
+        UICommandBuilder commands=new UICommandBuilder();
+        renderSaveFeedback(commands,alpha);
+        update(false,commands);
+    }
+
+    private static void renderSaveFeedback(UICommandBuilder commands,int alpha){
+        int bounded=Math.max(0,Math.min(255,alpha));
+        commands.set("#GraphEditorSaved.Visible",bounded>0);
+        commands.set("#GraphEditorSaved.Style.TextColor",String.format("#65e884%02x",bounded));
+    }
+
+    private static void renderControlState(UICommandBuilder commands,CursorCanvasEditor.LibraryKind tab,
+                                           String hoveredControl){
+        String hover=hoveredControl==null?"":hoveredControl;
+        commands.set("#GraphEditorSkillsTabLabel.Style.TextColor","skills".equals(hover)?"#eaebee":
+                tab==CursorCanvasEditor.LibraryKind.SKILL?"#ffe682":"#b4c8c9");
+        commands.set("#GraphEditorPassivesTabLabel.Style.TextColor","passives".equals(hover)?"#eaebee":
+                tab==CursorCanvasEditor.LibraryKind.PASSIVE?"#ffe682":"#b4c8c9");
+        commands.set("#GraphEditorResetLabel.Style.TextColor","reset".equals(hover)?"#eaebee":"#d3d6db");
+        commands.set("#GraphEditorSaveLabel.Style.TextColor","save".equals(hover)?"#eaebee":"#d3d6db");
+        commands.set("#GraphEditorExitLabel.Style.TextColor","exit".equals(hover)?"#eaebee":"#d3d6db");
+        commands.set("#GraphContextYesLabel.Style.TextColor","context-yes".equals(hover)?"#ffe682":"#ffffff");
+        commands.set("#GraphContextNoLabel.Style.TextColor","context-no".equals(hover)?"#ffe682":"#ffffff");
     }
 
     private static void renderNodes(UICommandBuilder commands, List<SkillTreeViewModel.Node> nodes) {
@@ -231,9 +269,10 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
         boolean visible=links!=null&&links.contextOpen()&&links.popupAnchor()!=null;
         commands.set("#GraphLinkContext.Visible",visible);
         if(visible)commands.setObject("#GraphLinkContext.Anchor",anchor(
-                (int)Math.round(Math.min(690,Math.max(208,links.popupAnchor().x()))),
-                (int)Math.round(Math.min(372,Math.max(4,links.popupAnchor().y()))),156,88));
-        commands.set("#GraphContextPrompt.TextSpans",Message.raw(links!=null&&links.resetContext()?"Reset Skill Tree?":
+                (int)Math.round(Math.min(1210,Math.max(272,links.popupAnchor().x()))),
+                (int)Math.round(Math.min(640,Math.max(24,links.popupAnchor().y()))),210,96));
+        commands.set("#GraphContextPrompt.TextSpans",Message.raw(links!=null&&links.exitContext()?"Exit without saving?":
+                links!=null&&links.resetContext()?"Reset Skill Tree?":
                 links!=null&&links.nodeContext()?"Unequip Skill?":"Break Link?"));
     }
 

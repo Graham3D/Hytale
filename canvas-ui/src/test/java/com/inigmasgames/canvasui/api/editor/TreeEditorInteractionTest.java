@@ -89,6 +89,17 @@ class TreeEditorInteractionTest {
                 TreeLinkGeometry.port(canvas,"passive","out"),TreeLinkGeometry.port(canvas,"skill-a","in")));
     }
 
+    @Test void exitConfirmationIsDistinctAndFrozenUntilDecision(){
+        var state=new TreeLinkInteraction();
+        state.select("edge-a");
+        state.openExitContext(CanvasPoint.of(700,360));
+        assertTrue(state.contextOpen());assertTrue(state.exitContext());
+        assertFalse(state.resetContext());assertFalse(state.nodeContext());
+        assertEquals("edge-a",state.selectedLinkId());
+        state.dismissContext();assertFalse(state.contextOpen());assertFalse(state.exitContext());
+        assertEquals("edge-a",state.selectedLinkId());
+    }
+
     @Test void draggedConnectedNodeOrbitsItsPortAndPersistsTheResultInSnapshotMetadata(){
         Canvas canvas=canvas();canvas.connect("edge-a","passive","out","skill-a","in",EdgeStyle.standard("test"));
         CanvasPoint before=PortAnchorResolver.relative(canvas,canvas.node("passive"),"out");
