@@ -29,6 +29,8 @@ class LightningSkillUpdateTest {
         assertEquals("charged_bolt",catalog.resolveSkill("Charged Bolt").value().id().value());
         assertEquals(3,profiles.require("charged_bolt").projectile().details().pattern().minimumCount());
         assertEquals(5,profiles.require("charged_bolt").projectile().details().pattern().count());
+        assertEquals(6,profiles.require("charged_bolt").projectile().speed());
+        assertEquals(15,profiles.require("charged_bolt").projectile().maxDistance());
         assertTrue(profiles.require("lightning_bolt").allowedMainHandKinds().isEmpty());
         assertTrue(profiles.require("ball_lightning").allowedMainHandKinds().isEmpty());
         assertEquals(java.util.Set.of("BOW"),profiles.require("lightning_arrow").allowedMainHandKinds());
@@ -88,7 +90,7 @@ class LightningSkillUpdateTest {
                 "/Server/ProjectileConfigs/RPG/Projectile_Config_Hywind_Charged_Bolt.json",
                 "/Common/VFX/RPG/Spark/Spark_Quad.blockymodel",
                 "/Common/VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim",
-                "/Common/VFX/RPG/Spark/chargedbolt.png",
+                "/Common/VFX/RPG/Spark/Spark_Strip_Vertical.png",
                 "/Common/Particles/Textures/Hywind/Lightning/lightning.png",
                 "/Common/Particles/Textures/Hywind/Lightning/staticfield.png"))assertNotNull(getClass().getResource(resource),resource);
         var model=new com.google.gson.Gson().fromJson(new java.io.InputStreamReader(

@@ -7,8 +7,8 @@
       "resourceType": "MANA", "resourceCost": 7, "cooldownSeconds": 1.25, "windupSeconds": 0,
       "basePowerSource": "INNATE", "innateBasePower": 20, "scaling": "MAGIC",
       "projectile": {
-        "configId": "Projectile_Config_Hywind_Charged_Bolt", "speed": 12,
-        "maxDistance": 10, "radius": 0.22, "gravity": 0, "targetCap": 3,
+        "configId": "Projectile_Config_Hywind_Charged_Bolt", "speed": 6,
+        "maxDistance": 15, "radius": 0.22, "gravity": 0, "targetCap": 3,
         "coefficient": 0.32, "statusId": "ELECTRIFIED", "statusSeconds": 6,
         "periodicCoefficient": 0, "periodicTicks": 0, "periodicIntervalSeconds": 0,
         "ammoItemId": "", "ammoQuantity": 0, "fullyCharged": false, "knockbackDistance": 0,

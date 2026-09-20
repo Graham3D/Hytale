@@ -36,7 +36,7 @@ public final class NativeProjectileAssetAudit {
         var sparkAsset=com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset.getAssetMap().getAsset("Hywind_Charged_Bolt");
         if(sparkAsset==null
                 ||!"VFX/RPG/Spark/Spark_Quad.blockymodel".equals(sparkAsset.getModel())
-                ||!"VFX/RPG/Spark/chargedbolt.png".equals(sparkAsset.getTexture())
+                ||!"VFX/RPG/Spark/Spark_Strip_Vertical.png".equals(sparkAsset.getTexture())
                 ||sparkAsset.getMinScale()!=1||sparkAsset.getMaxScale()!=1
                 ||sparkAsset.getLight()!=null||(sparkAsset.getParticles()!=null&&sparkAsset.getParticles().length!=0))
             throw new IllegalStateException("SPARK_WORLD_QUAD_MODEL_UNRESOLVED");
