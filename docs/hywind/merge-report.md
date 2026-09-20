@@ -190,3 +190,11 @@ The installed `Hywind.jar` SHA-256 is `CF062E57BBB6DB4FC230CFBC4277B8A2B0DF2AAAE
 R053 is implemented, packaged, and deployed from implementation commit `a5f003857ade700844aabddfe6a98dbf3fa395e1`. It fixes the connected red-X texture boundary by using client-relative CustomUI URIs, corrects the empty/occupied Skill-slot mapping, packages pinned Hytale Inventory frame/button art, provides the required four-frame composition, and moves Save/Exit to the bottom-right without changing R052 graph authority.
 
 The installed `Hywind.jar` SHA-256 is `62C33FC19C0D7FBCE2CD5EC484F366EABFA02796B89840D46E821737C26DB5F5`. The full stopped-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T010442Z`. The complete retained suite, CustomUI validator, 24-asset Skill Tree hash/URI gate, package audit, isolated smoke, and two post-deployment restart cycles pass. Connected-client visual validation remains pending; see `r053-skill-tree-visual-polish-correction-report.md`.
+
+Connected QA subsequently proved R053's direct `@2x` texture references did not resolve and displayed red-X fallbacks. R054 supersedes that URI implementation.
+
+## R054 Skill Tree density-reference hotfix
+
+R054 is implemented, packaged, and deployed from implementation commit `859795861d6e3cc0deed37bfe66584849cf0f765`. It preserves the exact Inventory artwork bytes but references each Hytale density variant through its required logical filename, including occupied `Slot.png` and empty `SpecialSlotTemporary.png`. All copied frame, tab, panel, button, divider, placeholder, and connector-arrow references were corrected through the same central rule.
+
+The installed `Hywind.jar` SHA-256 is `D20A7E6C25989E28BF0D64DD313CEAF1708B357552B1CC2A607621F5549BD477`. The full stopped-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T013406Z`. Focused tests, the complete retained suite, 59-document CustomUI validation, package audit, isolated smoke, and two post-deployment restart cycles pass. Connected-client visual confirmation remains pending; see `r054-skill-tree-density-reference-hotfix-report.md`.

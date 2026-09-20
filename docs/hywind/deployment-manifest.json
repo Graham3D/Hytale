@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.8",
-    "revision": "R053",
+    "version": "0.1.0-merge.9",
+    "revision": "R054",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "a5f003857ade700844aabddfe6a98dbf3fa395e1",
+    "implementationCommit": "859795861d6e3cc0deed37bfe66584849cf0f765",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "62C33FC19C0D7FBCE2CD5EC484F366EABFA02796B89840D46E821737C26DB5F5",
-    "bytes": 13402715,
+    "sha256": "D20A7E6C25989E28BF0D64DD313CEAF1708B357552B1CC2A607621F5549BD477",
+    "bytes": 13402695,
     "entries": 5851,
     "classes": 2206,
     "uiDocuments": 2090,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T01:04:43.6313053Z",
+    "deployedAtUtc": "2026-09-20T01:34:06.8250437Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "62C33FC19C0D7FBCE2CD5EC484F366EABFA02796B89840D46E821737C26DB5F5",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T010442Z",
-    "fullBackupFiles": 657,
-    "fullBackupBytes": 545962554,
+    "installedSha256": "D20A7E6C25989E28BF0D64DD313CEAF1708B357552B1CC2A607621F5549BD477",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T013406Z",
+    "fullBackupFiles": 663,
+    "fullBackupBytes": 548971552,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.7",
-        "revision": "R052",
-        "sha256": "CF062E57BBB6DB4FC230CFBC4277B8A2B0DF2AAAEA7159B55F9996EFA07EFD39"
+        "version": "0.1.0-merge.8",
+        "revision": "R053",
+        "sha256": "62C33FC19C0D7FBCE2CD5EC484F366EABFA02796B89840D46E821737C26DB5F5"
       }
     ]
   },
@@ -85,10 +85,10 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
-    "R053 successful client CustomUI document load and server join",
-    "R053 no red-X fallbacks and correct occupied/empty Skill, Passive, Joint, and connector-port art",
-    "R053 four-frame composition, equal Library/Inspector widths, flexible Tree frame, and bottom-right Save/Exit controls",
-    "R053 Save checkpoint, Exit cleanup, drag/drop, inspector, linking, and persistence retain R052 behavior",
+    "R054 successful client CustomUI document load and server join",
+    "R054 logical density references render the packaged native art without red-X fallbacks",
+    "R054 occupied Skill uses Slot art and empty Skill uses SpecialSlotTemporary art",
+    "R054 frame/button presentation and all retained R052 editor interactions remain functional",
     "R052 successful client CustomUI document load and server join",
     "R052 square Skill/Passive/Joint frames and authoritative Ability2/Ability3 labels",
     "R052 inspector hover, locked selection, drag precedence, and Search Mode retention",
