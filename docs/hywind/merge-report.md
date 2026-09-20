@@ -222,3 +222,9 @@ The installed `Hywind.jar` SHA-256 is `155715D457516954CDF2815900BD0A7331EA4ED17
 R058 is implemented, packaged, and deployed from implementation commit `56d368cec533eca28fce67c7041010a8357e4ca8`. It restores one dominant native outer frame and title style, preserves the center ornament without non-uniform distortion, repairs frozen exact-edge link removal, adds a tree-only confirmed Reset operation, orients connector arrows outward, persists destination-facing port movement during active node drags, and routes Escape through the same exact-once close/cleanup path as Exit.
 
 The installed `Hywind.jar` SHA-256 is `931071DF264A2BA2C7EFBBEFE2EEA8167A89AA57EAA627760ED8D9FA69FC075F`. The verified full-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T131311Z`. The complete retained suite, 60-document CustomUI validation, 31-asset Skill Tree hash gate, package audit, deployment dry run, isolated smoke, and two deployed startup/restart cycles pass. Connected-client visual and input verification remains pending; see `r058-skill-tree-ui-qa-corrections.md`.
+
+## R059 CustomUI load hotfix
+
+R059 is implemented, packaged, and deployed from implementation commit `55d724418f5907cca2be9b26f364c33fafee47f0`. It removes the client-unresolvable `Common/Container.ui` import introduced in R058 and embeds the exact installed native title-style properties locally, preserving the intended Hytale typography without crossing the CustomUI package boundary.
+
+The installed `Hywind.jar` SHA-256 is `2072D6AAD3E834A6FAFA4A7E9BB2E73289E27A6D6953C36A6D3FBC9CE06DBEC8`. The verified full-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T140851Z`. The clean retained suite, 60-document CustomUI validation, package audit, and two deployed startup/restart cycles pass. Connected-client join verification remains pending; see `r059-customui-load-hotfix.md`.
