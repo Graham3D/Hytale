@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import com.inigmasgames.hytalerpg.execution.projectile.GroundSparkSteering;
+import com.inigmasgames.hytalerpg.execution.projectile.GroundSparkTerrainPolicy;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileContinuation;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance;
 import com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry;
@@ -100,6 +101,15 @@ class SparkQaPassTest {
         assertFalse(GroundSparkSteering.ownsNativeCourseEnd("fire_bolt",false,false));
     }
 
+    @Test void groundedTravelAllowsExactlyOneBlockUpOrDown() {
+        assertTrue(GroundSparkTerrainPolicy.traversableHeight(1));
+        assertTrue(GroundSparkTerrainPolicy.traversableHeight(-1));
+        assertTrue(GroundSparkTerrainPolicy.barrier(2));
+        assertTrue(GroundSparkTerrainPolicy.unsupportedDrop(-2));
+        assertFalse(GroundSparkTerrainPolicy.traversableHeight(2));
+        assertFalse(GroundSparkTerrainPolicy.traversableHeight(-2));
+    }
+
     @Test void projectilePresentationIsAnUnscaledHorizontalModelQuadWithNoYellowFallback() throws Exception {
         var gson=new Gson();
         JsonObject projectile=gson.fromJson(new InputStreamReader(require("/Server/ProjectileConfigs/RPG/Projectile_Config_Hywind_Charged_Bolt.json"),StandardCharsets.UTF_8),JsonObject.class);
@@ -108,30 +118,35 @@ class SparkQaPassTest {
         assertNull(SparkQaPassTest.class.getResource("/Server/Particles/Hywind/Hywind_Charged_Bolt.particlesystem"));
         assertNull(SparkQaPassTest.class.getResource("/Server/Particles/Hywind/Hywind_Charged_Bolt_Frame.particlespawner"));
         JsonObject model=gson.fromJson(new InputStreamReader(require("/Server/Models/Projectiles/Hywind_Charged_Bolt.json"),StandardCharsets.UTF_8),JsonObject.class);
-        assertEquals("VFX/RPG/Spark/Spark_Quad.blockymodel",model.get("Model").getAsString());
+        assertEquals("VFX/RPG/Spark/Spark_TriplePlane_R069.blockymodel",model.get("Model").getAsString());
         assertEquals("VFX/RPG/Spark/Spark_Strip_Vertical.png",model.get("Texture").getAsString());
         assertEquals(1,model.get("MinScale").getAsDouble(),1e-12);assertEquals(1,model.get("MaxScale").getAsDouble(),1e-12);
         assertFalse(model.has("Particles"));assertFalse(model.has("Light"),"the former yellow point-light fallback must not exist");
         for(String state:List.of("Idle","FlyIdle")){
             var animationState=model.getAsJsonObject("AnimationSets").getAsJsonObject(state).getAsJsonArray("Animations").get(0).getAsJsonObject();
-            assertEquals("VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim",animationState.get("Animation").getAsString());
+            assertEquals("VFX/RPG/Spark/Spark_TriplePlane_FourFrame_R069.blockyanim",animationState.get("Animation").getAsString());
             assertTrue(animationState.get("Looping").getAsBoolean());
         }
 
-        JsonObject blocky=gson.fromJson(new InputStreamReader(require("/Common/VFX/RPG/Spark/Spark_Quad.blockymodel"),StandardCharsets.UTF_8),JsonObject.class);
-        var node=blocky.getAsJsonArray("nodes").get(0).getAsJsonObject();var shape=node.getAsJsonObject("shape");
-        assertEquals("quad",shape.get("type").getAsString());assertEquals("+Y",shape.getAsJsonObject("settings").get("normal").getAsString());
-        assertEquals("fullbright",shape.get("shadingMode").getAsString());assertTrue(shape.get("doubleSided").getAsBoolean());
-        var size=shape.getAsJsonObject("settings").getAsJsonObject("size");var stretch=shape.getAsJsonObject("stretch");
-        assertEquals(2,size.get("x").getAsDouble()*stretch.get("x").getAsDouble()/32,1e-12);
-        assertEquals(2,size.get("y").getAsDouble()*stretch.get("z").getAsDouble()/32,1e-12);
+        JsonObject blocky=gson.fromJson(new InputStreamReader(require("/Common/VFX/RPG/Spark/Spark_TriplePlane_R069.blockymodel"),StandardCharsets.UTF_8),JsonObject.class);
+        var nodes=blocky.getAsJsonArray("nodes");assertEquals(3,nodes.size());var normals=new java.util.HashSet<String>();
+        for(var value:nodes){var shape=value.getAsJsonObject().getAsJsonObject("shape");
+            assertEquals("quad",shape.get("type").getAsString());normals.add(shape.getAsJsonObject("settings").get("normal").getAsString());
+            assertEquals("fullbright",shape.get("shadingMode").getAsString());assertTrue(shape.get("doubleSided").getAsBoolean());
+            var size=shape.getAsJsonObject("settings").getAsJsonObject("size");var stretch=shape.getAsJsonObject("stretch");
+            assertEquals(80,size.get("x").getAsDouble());assertEquals(80,size.get("y").getAsDouble());
+            assertEquals(.8,stretch.get("x").getAsDouble());assertEquals(.8,stretch.get("y").getAsDouble());assertEquals(.8,stretch.get("z").getAsDouble());
+        }
+        assertEquals(java.util.Set.of("+X","+Y","+Z"),normals);
 
-        JsonObject animation=gson.fromJson(new InputStreamReader(require("/Common/VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim"),StandardCharsets.UTF_8),JsonObject.class);
+        JsonObject animation=gson.fromJson(new InputStreamReader(require("/Common/VFX/RPG/Spark/Spark_TriplePlane_FourFrame_R069.blockyanim"),StandardCharsets.UTF_8),JsonObject.class);
         assertEquals(24,animation.get("duration").getAsInt());assertFalse(animation.get("holdLastKeyframe").getAsBoolean());
-        var uv=animation.getAsJsonObject("nodeAnimations").getAsJsonObject("SparkPlane").getAsJsonArray("shapeUvOffset");
-        assertEquals(4,uv.size());
-        for(int i=0;i<4;i++){var frame=uv.get(i).getAsJsonObject();assertEquals(i*6,frame.get("time").getAsInt());
-            assertEquals(0,frame.getAsJsonObject("delta").get("x").getAsInt());assertEquals(i*-80,frame.getAsJsonObject("delta").get("y").getAsInt());}
+        var animated=animation.getAsJsonObject("nodeAnimations");assertEquals(3,animated.size());
+        for(String node:List.of("SparkPlaneHorizontal","SparkPlaneVerticalX","SparkPlaneVerticalZ")){
+            var uv=animated.getAsJsonObject(node).getAsJsonArray("shapeUvOffset");assertEquals(4,uv.size());
+            for(int i=0;i<4;i++){var frame=uv.get(i).getAsJsonObject();assertEquals(i*6,frame.get("time").getAsInt());
+                assertEquals(0,frame.getAsJsonObject("delta").get("x").getAsInt());assertEquals(i*-80,frame.getAsJsonObject("delta").get("y").getAsInt());}
+        }
 
         var texture=javax.imageio.ImageIO.read(require("/Common/VFX/RPG/Spark/Spark_Strip_Vertical.png"));
         assertEquals(80,texture.getWidth());assertEquals(320,texture.getHeight());boolean transparent=false,blueWhite=false;
@@ -142,11 +157,14 @@ class SparkQaPassTest {
                 "the horizontal atlas that corrupted unrelated HUD icon sampling must not be packaged");
         assertNull(SparkQaPassTest.class.getResource("/Common/VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim"),
                 "the prior animation URI must not survive and be served from a stale client cache");
+        assertNull(SparkQaPassTest.class.getResource("/Common/VFX/RPG/Spark/Spark_Quad.blockymodel"));
+        assertNull(SparkQaPassTest.class.getResource("/Common/VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim"));
         for(String icon:List.of("/Common/Icons/Items/RPG/SkillChargedbolt.png","/Common/Icons/Items/RPG/SkillStaticfield.png")){
             var image=javax.imageio.ImageIO.read(require(icon));assertEquals(128,image.getWidth(),icon);assertEquals(128,image.getHeight(),icon);
         }
         var presentation=Stage06AreaRuntimeTest.profile("charged_bolt").projectile().details().presentation();
         assertTrue(presentation.castParticle().isBlank());assertTrue(presentation.projectileParticle().isBlank());
+        assertEquals("Laser_Impact",presentation.impactParticle());
     }
 
     @Test void productionAdapterOwnsGroundSamplingManualMotionWallRicochetAndAnimationSuppression() throws Exception {
@@ -155,7 +173,9 @@ class SparkQaPassTest {
                 "advanceGroundSpark(carrier,deltaSeconds,store,buffer)","HytaleAreaQueries.projectileContact",
                 "instance.remaining(\"RICOCHET\")<=0","SPARK_GROUND_SUPPORT_LOST","if(!isGroundSpark(context)) {",
                 "if(isGroundSpark(context))physics.getVelocity().set(0,0,0)","GROUND_CRAWLER_OWNS_MOVEMENT",
-                "buffer.tryRemoveComponent(projectileRef","if(isGroundSpark(carrier.context))return;"))assertTrue(source.contains(contract),contract);
+                "buffer.tryRemoveComponent(projectileRef","if(isGroundSpark(carrier.context))return;",
+                "resolveGroundSparkTerrainContact(carrier","presentSparkImpact(carrier,store,horizontal,\"SPARK_STEP_BARRIER_IMPACT\")",
+                "presentSparkImpact(carrier,store,vec(position),\"SPARK_NATIVE_TERRAIN_IMPACT\")"))assertTrue(source.contains(contract),contract);
     }
 
     private static java.io.InputStream require(String path){return java.util.Objects.requireNonNull(SparkQaPassTest.class.getResourceAsStream(path),path);}

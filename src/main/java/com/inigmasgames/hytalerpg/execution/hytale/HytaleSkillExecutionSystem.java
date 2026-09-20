@@ -2565,7 +2565,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         details.put("travelledDistance", carrier.instance.flight().travelled());
         emitProjectile(carrier, RpgTraceEventType.PROJECTILE_TERRAIN_HIT, details);
-        if(carrier.context.profile().skillId().equals("fire_bolt")){
+        if(isGroundSpark(carrier.context))presentSparkImpact(carrier,store,vec(position),"SPARK_NATIVE_TERRAIN_IMPACT");
+        else if(carrier.context.profile().skillId().equals("fire_bolt")){
             presentAuthoredParticle(carrier.context,store,vec(position),carrier.context.profile().projectile().details().presentation().impactParticle(),"PROJECTILE_IMPACT");
             emitProjectile(carrier,RpgTraceEventType.FIRE_BOLT_CONTACT,Map.of("contactType","TERRAIN","travelDistance",carrier.instance.flight().travelled(),
                     "preMitigationDamage",0,"finalHealthRemoved",0,"burnApplicationResult","NONE","terminationReason","TERRAIN_HIT"));
@@ -2997,19 +2998,27 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 instance.redirect(direction);steering.markOwnedRevision(instance.motionRevision());
                 Vec3 horizontal=current.add(direction.multiply(distance));
                 var support=HytaleAreaQueries.ground(store,new Vec3(horizontal.x(),current.y()+1.10,horizontal.z()),new Vec3(0,-1,0),2.85);
-                if(support.isEmpty()) {finishProjectileTerminal(carrier,"SPARK_GROUND_SUPPORT_LOST",current,buffer);return;}
+                if(support.isEmpty()) {
+                    var wall=HytaleAreaQueries.projectileContact(store,current,horizontal,instance.plan().radius());
+                    if(wall.isPresent()){resolveGroundSparkTerrainContact(carrier,wall.get(),buffer);return;}
+                    finishProjectileTerminal(carrier,"SPARK_GROUND_SUPPORT_LOST",current,buffer);return;
+                }
                 Vec3 next=support.get().add(new Vec3(0,.49,0));
                 double rise=next.y()-current.y();
-                if(rise>1.05||rise< -1.35) {finishProjectileTerminal(carrier,"SPARK_GROUND_TOLERANCE_EXCEEDED",current,buffer);return;}
+                if(com.inigmasgames.hytalerpg.execution.projectile.GroundSparkTerrainPolicy.barrier(rise)) {
+                    var wall=HytaleAreaQueries.projectileContact(store,current,horizontal,instance.plan().radius());
+                    if(wall.isPresent()){resolveGroundSparkTerrainContact(carrier,wall.get(),buffer);return;}
+                    presentSparkImpact(carrier,store,horizontal,"SPARK_STEP_BARRIER_IMPACT");
+                    finishProjectileTerminal(carrier,"SPARK_GROUND_BARRIER_TOO_HIGH",current,buffer);return;
+                }
+                if(com.inigmasgames.hytalerpg.execution.projectile.GroundSparkTerrainPolicy.unsupportedDrop(rise)) {
+                    finishProjectileTerminal(carrier,"SPARK_GROUND_DROP_TOO_DEEP",current,buffer);return;
+                }
                 var contact=HytaleAreaQueries.projectileContact(store,current,next,instance.plan().radius());
-                boolean traversable=contact.isEmpty()||contact.get().normal().y()>.45||rise>.05&&rise<=1.05;
+                boolean traversable=contact.isEmpty()||contact.get().normal().y()>.45||rise>.05
+                        &&com.inigmasgames.hytalerpg.execution.projectile.GroundSparkTerrainPolicy.traversableHeight(rise);
                 if(!traversable) {
-                    Vec3 point=contact.get().point();
-                    if(processSweptContacts(carrier,point,buffer))return;
-                    instance.observe(0,point);moveGroundSparkCarrier(carrier,point,buffer);
-                    if(instance.remaining("RICOCHET")<=0) {finishProjectileTerminal(carrier,"TERRAIN_CONTINUATION_EXHAUSTED",point,buffer);return;}
-                    var decision=continuations.afterTerrain(instance,point,casterPoint(carrier,store),contact.get().normal());
-                    applyContinuation(carrier,decision,point,buffer);return;
+                    resolveGroundSparkTerrainContact(carrier,contact.get(),buffer);return;
                 }
                 if(processSweptContacts(carrier,next,buffer))return;
                 var observation=instance.observe(0,next);current=next;remaining-=distance;steering.consume(distance);
@@ -3021,6 +3030,22 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         } catch(RuntimeException error) {
             cancelProjectile(carrier,"SPARK_GROUND_TICK_FAILURE_"+error.getClass().getSimpleName(),carrier.instance.flight().lastPosition(),buffer);
         }
+    }
+    private void resolveGroundSparkTerrainContact(ProjectileCarrier carrier,HytaleAreaQueries.ProjectileContact contact,
+            CommandBuffer<EntityStore> buffer) {
+        Vec3 point=contact.point();
+        if(processSweptContacts(carrier,point,buffer))return;
+        carrier.instance.observe(0,point);moveGroundSparkCarrier(carrier,point,buffer);
+        presentSparkImpact(carrier,buffer.getStore(),point,"SPARK_TERRAIN_IMPACT");
+        if(carrier.instance.remaining("RICOCHET")<=0) {
+            finishProjectileTerminal(carrier,"TERRAIN_CONTINUATION_EXHAUSTED",point,buffer);return;
+        }
+        var decision=continuations.afterTerrain(carrier.instance,point,casterPoint(carrier,buffer.getStore()),contact.normal());
+        applyContinuation(carrier,decision,point,buffer);
+    }
+    private void presentSparkImpact(ProjectileCarrier carrier,Store<EntityStore> store,Vec3 point,String phase) {
+        var particle=carrier.context.profile().projectile().details().presentation().impactParticle();
+        if(!particle.isBlank())presentAuthoredParticle(carrier.context,store,point,particle,phase);
     }
     private void finishGroundSparkTravel(ProjectileCarrier carrier,Vec3 point,CommandBuffer<EntityStore> buffer) {
         String reason=carrier.instance.remainingDistance()<=1e-6?"MAX_RANGE":"MAX_LIFETIME";

@@ -1,0 +1,48 @@
+{
+  "formatVersion": 1,
+  "lod": "auto",
+  "nodes": [
+    {
+      "id": "0",
+      "name": "SparkPlaneHorizontal",
+      "children": [],
+      "position": {"x": 0, "y": 0, "z": 0},
+      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "shape": {
+        "type": "quad", "offset": {"x": 0, "y": 0, "z": 0},
+        "stretch": {"x": 0.8, "y": 0.8, "z": 0.8},
+        "settings": {"size": {"x": 80, "y": 80}, "normal": "+Y", "isStaticBox": true},
+        "visible": true, "doubleSided": true, "shadingMode": "fullbright", "unwrapMode": "custom",
+        "textureLayout": {"front": {"offset": {"x": 0, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0}}
+      }
+    },
+    {
+      "id": "1",
+      "name": "SparkPlaneVerticalX",
+      "children": [],
+      "position": {"x": 0, "y": 0, "z": 0},
+      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "shape": {
+        "type": "quad", "offset": {"x": 0, "y": 0, "z": 0},
+        "stretch": {"x": 0.8, "y": 0.8, "z": 0.8},
+        "settings": {"size": {"x": 80, "y": 80}, "normal": "+X", "isStaticBox": true},
+        "visible": true, "doubleSided": true, "shadingMode": "fullbright", "unwrapMode": "custom",
+        "textureLayout": {"front": {"offset": {"x": 0, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0}}
+      }
+    },
+    {
+      "id": "2",
+      "name": "SparkPlaneVerticalZ",
+      "children": [],
+      "position": {"x": 0, "y": 0, "z": 0},
+      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "shape": {
+        "type": "quad", "offset": {"x": 0, "y": 0, "z": 0},
+        "stretch": {"x": 0.8, "y": 0.8, "z": 0.8},
+        "settings": {"size": {"x": 80, "y": 80}, "normal": "+Z", "isStaticBox": true},
+        "visible": true, "doubleSided": true, "shadingMode": "fullbright", "unwrapMode": "custom",
+        "textureLayout": {"front": {"offset": {"x": 0, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0}}
+      }
+    }
+  ]
+}

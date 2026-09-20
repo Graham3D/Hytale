@@ -1,15 +1,15 @@
 {
-  "Model":"VFX/RPG/Spark/Spark_Quad.blockymodel",
+  "Model":"VFX/RPG/Spark/Spark_TriplePlane_R069.blockymodel",
   "Texture":"VFX/RPG/Spark/Spark_Strip_Vertical.png",
   "HitBox":{"Max":{"X":0.22,"Y":0.22,"Z":0.22},"Min":{"X":-0.22,"Y":-0.22,"Z":-0.22}},
   "MinScale":1,"MaxScale":1,
   "AnimationSets":{
     "Idle":{"Animations":[{
-      "Animation":"VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim",
+      "Animation":"VFX/RPG/Spark/Spark_TriplePlane_FourFrame_R069.blockyanim",
       "BlendingDuration":0,"Speed":1,"Looping":true
     }]},
     "FlyIdle":{"Animations":[{
-      "Animation":"VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim",
+      "Animation":"VFX/RPG/Spark/Spark_TriplePlane_FourFrame_R069.blockyanim",
       "BlendingDuration":0,"Speed":1,"Looping":true
     }]}
   }

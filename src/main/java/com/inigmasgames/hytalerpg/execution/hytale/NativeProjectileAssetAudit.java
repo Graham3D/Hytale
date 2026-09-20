@@ -35,7 +35,7 @@ public final class NativeProjectileAssetAudit {
         }
         var sparkAsset=com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset.getAssetMap().getAsset("Hywind_Charged_Bolt");
         if(sparkAsset==null
-                ||!"VFX/RPG/Spark/Spark_Quad.blockymodel".equals(sparkAsset.getModel())
+                ||!"VFX/RPG/Spark/Spark_TriplePlane_R069.blockymodel".equals(sparkAsset.getModel())
                 ||!"VFX/RPG/Spark/Spark_Strip_Vertical.png".equals(sparkAsset.getTexture())
                 ||sparkAsset.getMinScale()!=1||sparkAsset.getMaxScale()!=1
                 ||sparkAsset.getLight()!=null||(sparkAsset.getParticles()!=null&&sparkAsset.getParticles().length!=0))
@@ -43,7 +43,7 @@ public final class NativeProjectileAssetAudit {
         for(String state:List.of("Idle","FlyIdle")) {
             var animationSet=sparkAsset.getAnimationSetMap().get(state);
             if(animationSet==null||animationSet.getAnimations().length!=1
-                    ||!"VFX/RPG/Spark/Spark_Quad_FourFrame_R068.blockyanim".equals(animationSet.getAnimations()[0].getAnimation())
+                    ||!"VFX/RPG/Spark/Spark_TriplePlane_FourFrame_R069.blockyanim".equals(animationSet.getAnimations()[0].getAnimation())
                     ||!animationSet.getAnimations()[0].isLooping())
                 throw new IllegalStateException("SPARK_WORLD_QUAD_ANIMATION_UNRESOLVED:"+state);
         }
