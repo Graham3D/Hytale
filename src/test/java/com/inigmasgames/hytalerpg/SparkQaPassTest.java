@@ -27,14 +27,15 @@ class SparkQaPassTest {
         assertTrue(catalog.skill(new com.inigmasgames.hytalerpg.domain.SkillId("spark")).isEmpty());
     }
 
-    @Test void authoredBatchIgnoresPitchAndRetainsThreeToFiveBoltsAndSixMeterPathBudget() {
+    @Test void authoredBatchIgnoresPitchAndUsesTheSlowerTenMeterTravelContract() {
         var context=Stage06AreaRuntimeTest.context("charged_bolt");
         var service=new RpgProjectileService(new ProjectileLifecycleRegistry());
         var plans=service.buildBatch(context,context.request().actorId(),new Vec3(0,.5,0),new Vec3(.2,.97,.1),
-                "Projectile_Config_Hywind_Charged_Bolt",24,1);
+                "Projectile_Config_Hywind_Charged_Bolt",12,1);
         assertTrue(plans.size()>=3&&plans.size()<=5);
-        for(var plan:plans){assertEquals(0,plan.velocity().y(),1e-12);assertEquals(24,plan.velocity().length(),1e-12);
-            assertEquals(6,plan.maxDistance(),1e-12);assertEquals(.5,plan.origin().y(),1e-12);}
+        for(var plan:plans){assertEquals(0,plan.velocity().y(),1e-12);assertEquals(12,plan.velocity().length(),1e-12);
+            assertEquals(10,plan.maxDistance(),1e-12);assertEquals(10.0/12.0,plan.maxLifetimeSeconds(),1e-12);
+            assertEquals(.5,plan.origin().y(),1e-12);}
     }
 
     @Test void steeringIsReplayStableIndependentIrregularAndAlwaysForwardBiased() {
@@ -76,13 +77,25 @@ class SparkQaPassTest {
         assertFalse(GroundSparkSteering.ownsNativeCourseEnd("fire_bolt",false,false));
     }
 
-    @Test void projectilePresentationIsSmallHorizontalAndHasNoCastOriginEffect() throws Exception {
+    @Test void projectilePresentationIsOneBlockHorizontalAndCyclesFourFramesAtOneHundredMilliseconds() throws Exception {
         var gson=new Gson();
+        JsonObject projectile=gson.fromJson(new InputStreamReader(require("/Server/ProjectileConfigs/RPG/Projectile_Config_Hywind_Charged_Bolt.json"),StandardCharsets.UTF_8),JsonObject.class);
+        assertEquals(12,projectile.get("LaunchForce").getAsDouble(),1e-12);
+        assertEquals(12,projectile.getAsJsonObject("Physics").get("TerminalVelocityAir").getAsDouble(),1e-12);
         JsonObject spawner=gson.fromJson(new InputStreamReader(require("/Server/Particles/Hywind/Hywind_Charged_Bolt_Frame.particlespawner"),StandardCharsets.UTF_8),JsonObject.class);
         assertEquals("None",spawner.get("ParticleRotationInfluence").getAsString());
         var initial=spawner.getAsJsonObject("Particle").getAsJsonObject("InitialAnimationFrame");
         assertEquals(90,initial.getAsJsonObject("Rotation").getAsJsonObject("X").get("Min").getAsDouble());
-        assertEquals(.32,initial.getAsJsonObject("Scale").getAsJsonObject("X").get("Min").getAsDouble(),1e-12);
+        assertEquals(1,initial.getAsJsonObject("Scale").getAsJsonObject("X").get("Min").getAsDouble(),1e-12);
+        assertEquals(.4,spawner.getAsJsonObject("ParticleLifeSpan").get("Min").getAsDouble(),1e-12);
+        assertEquals(1,spawner.get("MaxConcurrentParticles").getAsInt());
+        assertEquals(0,spawner.get("TrailSpawnerPositionMultiplier").getAsInt());
+        assertEquals(0,spawner.get("TrailSpawnerRotationMultiplier").getAsInt());
+        var animation=spawner.getAsJsonObject("Particle").getAsJsonObject("Animation");
+        assertEquals(0,animation.getAsJsonObject("0").getAsJsonObject("FrameIndex").get("Min").getAsInt());
+        assertEquals(1,animation.getAsJsonObject("25").getAsJsonObject("FrameIndex").get("Min").getAsInt());
+        assertEquals(2,animation.getAsJsonObject("50").getAsJsonObject("FrameIndex").get("Min").getAsInt());
+        assertEquals(3,animation.getAsJsonObject("75").getAsJsonObject("FrameIndex").get("Min").getAsInt());
         JsonObject model=gson.fromJson(new InputStreamReader(require("/Server/Models/Projectiles/Hywind_Charged_Bolt.json"),StandardCharsets.UTF_8),JsonObject.class);
         assertEquals(.06,model.get("MaxScale").getAsDouble(),1e-12);
         assertEquals(1,model.getAsJsonArray("Particles").get(0).getAsJsonObject().get("Scale").getAsDouble(),1e-12);
