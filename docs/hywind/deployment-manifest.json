@@ -4,14 +4,14 @@
   "product": {
     "group": "InigmasGames",
     "name": "Hywind",
-    "version": "0.1.0-merge.12",
-    "revision": "R057",
+    "version": "0.1.0-merge.13",
+    "revision": "R058",
     "main": "com.inigmasgames.hywind.HywindPlugin",
     "artifact": "Hywind.jar"
   },
   "source": {
     "branch": "hywind-merge",
-    "implementationCommit": "a2d514c43059082b3d65e48caef8e6ac13e7e2ae",
+    "implementationCommit": "56d368cec533eca28fce67c7041010a8357e4ca8",
     "r050BaseCommit": "cd363c7a",
     "continuationBaseCommit": "e2e0758ed6f9b7d4caedf984ebf9705bd1c95fda",
     "tavernSourceRevision": "R056"
@@ -24,21 +24,21 @@
   },
   "candidate": {
     "path": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale/build/libs/Hywind.jar",
-    "sha256": "155715D457516954CDF2815900BD0A7331EA4ED17C7A1CB4FEA7BD9D586AF2D6",
-    "bytes": 13402813,
-    "entries": 5851,
-    "classes": 2206,
-    "uiDocuments": 2090,
+    "sha256": "931071DF264A2BA2C7EFBBEFE2EEA8167A89AA57EAA627760ED8D9FA69FC075F",
+    "bytes": 13421863,
+    "entries": 5861,
+    "classes": 2208,
+    "uiDocuments": 2091,
     "authoredIconHashesVerified": 17
   },
   "deployment": {
-    "deployedAtUtc": "2026-09-20T03:17:28.8776929Z",
+    "deployedAtUtc": "2026-09-20T13:13:12.2944396Z",
     "targetSave": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG",
     "installedJar": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
-    "installedSha256": "155715D457516954CDF2815900BD0A7331EA4ED17C7A1CB4FEA7BD9D586AF2D6",
-    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T031728Z",
-    "fullBackupFiles": 682,
-    "fullBackupBytes": 559928314,
+    "installedSha256": "931071DF264A2BA2C7EFBBEFE2EEA8167A89AA57EAA627760ED8D9FA69FC075F",
+    "backupDirectory": "C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-rollback/hywind-deploy-20260920T131311Z",
+    "fullBackupFiles": 691,
+    "fullBackupBytes": 567923139,
     "activeFirstPartyArtifacts": ["Hywind.jar"],
     "preservedExternalArtifacts": [
       {
@@ -49,9 +49,9 @@
     "retiredArtifacts": [
       {
         "name": "Hywind.jar",
-        "version": "0.1.0-merge.11",
-        "revision": "R056",
-        "sha256": "3E5B854FE001DF71F3C0779D76778AF1BA39E6575521F258A565D5602AFF690B"
+        "version": "0.1.0-merge.12",
+        "revision": "R057",
+        "sha256": "155715D457516954CDF2815900BD0A7331EA4ED17C7A1CB4FEA7BD9D586AF2D6"
       }
     ]
   },
@@ -62,16 +62,16 @@
     "taverns": "mods/InigmasGames_Taverns"
   },
   "validation": {
-    "rpgJUnitTests": 2367,
+    "rpgJUnitTests": 2370,
     "nativeControlJUnitTests": 67,
-    "canvasJUnitTests": 43,
+    "canvasJUnitTests": 44,
     "tavernJUnitTests": 5,
     "tavernRetainedExecutableGates": 8,
     "npcRetainedExecutableGates": 149,
     "npcLiveLocalModelTests": "SKIPPED_BY_RETAINED_HARNESS",
-    "customUiDocuments": 59,
+    "customUiDocuments": 60,
     "authoredIconHashesVerified": 17,
-    "skillTreeAssetHashesVerified": 24,
+    "skillTreeAssetHashesVerified": 31,
     "packageAudit": "PASS",
     "isolatedSmoke": "PASS",
     "deploymentDryRun": "PASS",
@@ -85,6 +85,11 @@
     "clientInterpolation": "NO_SUPPORTED_CLIENT_SCRIPT_OR_POSITION_INTERPOLATION_PATH;SERVER_PATCH_ROUNDTRIP_REQUIRED"
   },
   "connectedPending": [
+    "R058 dominant outer Primary Frame, native centered title, and undistorted fixed-aspect center ornament",
+    "R058 frozen exact-edge Break Link confirmation removes only the selected visible spline and preserves all other port identities",
+    "R058 confirmed Reset clears only equipped tree content and links while retaining learned/owned/progression state",
+    "R058 outward eight-direction connector arrows and active-drag destination-facing port orbit with persisted drop anchors",
+    "R058 Escape and Exit share exact-once Skill Tree cleanup and restore the normal HUD/input state",
     "R057 promoted lighter-blue native header art to the outer primary title frame with no inset duplicate",
     "R057 horizontal centered instruction copy and doubled 18x18 connector-arrow graphics",
     "R056 successful client CustomUI document load and server join",

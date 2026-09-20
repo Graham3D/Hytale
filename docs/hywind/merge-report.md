@@ -216,3 +216,9 @@ The installed `Hywind.jar` SHA-256 is `3E5B854FE001DF71F3C0779D76778AF1BA39E6575
 R057 is implemented, packaged, and deployed from implementation commit `a2d514c4`. It promotes the lighter-blue native header to the outer primary title frame, removes the inset duplicate, restores the instruction copy to a centered horizontal footer region, and doubles connector-arrow visuals to 18x18.
 
 The installed `Hywind.jar` SHA-256 is `155715D457516954CDF2815900BD0A7331EA4ED17C7A1CB4FEA7BD9D586AF2D6`. The verified full-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T031728Z`. Full retained validation, isolated smoke, and two deployed startup/restart cycles pass. Connected visual confirmation remains pending; see `r057-skill-tree-frame-hotfix.md`.
+
+## R058 Skill Tree UI QA corrections
+
+R058 is implemented, packaged, and deployed from implementation commit `56d368cec533eca28fce67c7041010a8357e4ca8`. It restores one dominant native outer frame and title style, preserves the center ornament without non-uniform distortion, repairs frozen exact-edge link removal, adds a tree-only confirmed Reset operation, orients connector arrows outward, persists destination-facing port movement during active node drags, and routes Escape through the same exact-once close/cleanup path as Exit.
+
+The installed `Hywind.jar` SHA-256 is `931071DF264A2BA2C7EFBBEFE2EEA8167A89AA57EAA627760ED8D9FA69FC075F`. The verified full-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T131311Z`. The complete retained suite, 60-document CustomUI validation, 31-asset Skill Tree hash gate, package audit, deployment dry run, isolated smoke, and two deployed startup/restart cycles pass. Connected-client visual and input verification remains pending; see `r058-skill-tree-ui-qa-corrections.md`.
