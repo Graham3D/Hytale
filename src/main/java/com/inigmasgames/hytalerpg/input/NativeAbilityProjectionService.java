@@ -171,7 +171,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
         String skillId = skill == null ? "" : skill.value();
         if (skill == null) {
             if (isOwnedItem(currentId)) {
-                boolean succeeded = container.setItemStackForSlot(nativeIndex, ItemStack.EMPTY).succeeded();
+                boolean succeeded = clearOwnedProjection(container, nativeIndex);
                 updateStatus(player, session, logicalSlot,
                         new SlotStatus("", succeeded ? "" : currentId,
                                 succeeded ? "CLEARED" : "NATIVE_CONTAINER_WRITE_REJECTED"), reason);
@@ -182,7 +182,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
             return;
         }
         if (!executable.supports(skillId)) {
-            if (isOwnedItem(currentId)) container.setItemStackForSlot(nativeIndex, ItemStack.EMPTY);
+            if (isOwnedItem(currentId)) clearOwnedProjection(container, nativeIndex);
             updateStatus(player, session, logicalSlot,
                     new SlotStatus(skillId, "", "EXECUTOR_NOT_IMPLEMENTED"), reason);
             return;
@@ -193,7 +193,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
                     new SlotStatus(skillId, currentId, "NATIVE_SLOT_OCCUPIED"), reason);
             return;
         }
-        if (desiredId.equals(currentId)) {
+        if (desiredId.equals(currentId) && !"PLAYER_READY".equals(reason)) {
             updateStatus(player, session, logicalSlot, new SlotStatus(skillId, desiredId, "PROJECTED"), reason);
             return;
         }
@@ -203,7 +203,14 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
                     new SlotStatus(skillId, desiredId, "NATIVE_ITEM_ASSET_MISSING"), reason);
             return;
         }
-        boolean succeeded = container.setItemStackForSlot(nativeIndex, desired).succeeded();
+        // AbilitySlots enforce player-facing rune filters. Hywind owns only RPG_Ability_* stacks,
+        // so projection must use the authoritative filter-bypass overload when clearing/replacing
+        // those stacks. On join, deliberately remove/re-add an already matching stack once: this
+        // repairs client-side icon state retained from an older rejected clear without churning on
+        // the periodic reconciliation tick.
+        boolean succeeded = true;
+        if (desiredId.equals(currentId)) succeeded = clearOwnedProjection(container, nativeIndex);
+        if (succeeded) succeeded = writeOwnedProjection(container, nativeIndex, desiredId, desired);
         updateStatus(player, session, logicalSlot,
                 new SlotStatus(skillId, succeeded ? desiredId : currentId,
                         succeeded ? "PROJECTED" : "NATIVE_CONTAINER_WRITE_REJECTED"), reason);
@@ -241,7 +248,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
         for (short index : new short[]{ABILITY2_PRIMARY_INDEX, ABILITY3_PRIMARY_INDEX}) {
             ItemStack current = container.getItemStack(index);
             if (!ItemStack.isEmpty(current) && isOwnedItem(current.getItemId())) {
-                boolean succeeded = container.setItemStackForSlot(index, ItemStack.EMPTY).succeeded();
+                boolean succeeded = clearOwnedProjection(container, index);
                 trace(player, succeeded ? RpgTraceEventType.NATIVE_ABILITY_SLOT_CLEARED
                                 : RpgTraceEventType.NATIVE_ABILITY_SLOT_CONFLICT,
                         reference(), Map.of("nativePrimaryIndex", index, "nativeItemId", current.getItemId(),
@@ -249,6 +256,24 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
                                 "reason", reason));
             }
         }
+    }
+
+    /** Removes only a Hywind-owned projection while bypassing AbilitySlots' player rune filter. */
+    static boolean clearOwnedProjection(ItemContainer container, short nativeIndex) {
+        ItemStack current = container.getItemStack(nativeIndex);
+        if (ItemStack.isEmpty(current)) return true;
+        if (!isOwnedItem(current.getItemId())) return false;
+        return container.removeItemStackFromSlot(nativeIndex, false).succeeded()
+                && ItemStack.isEmpty(container.getItemStack(nativeIndex));
+    }
+
+    /** Writes a validated Hywind projection and verifies the authoritative post-state. */
+    static boolean writeOwnedProjection(ItemContainer container, short nativeIndex,
+                                        String desiredId, ItemStack desired) {
+        ItemStack current = container.getItemStack(nativeIndex);
+        if (!ItemStack.isEmpty(current) && !isOwnedItem(current.getItemId())) return false;
+        return container.setItemStackForSlot(nativeIndex, desired, false).succeeded()
+                && desiredId.equals(container.getItemStack(nativeIndex).getItemId());
     }
 
     private void trace(UUID player, RpgTraceEventType event, String correlation, Map<String, ?> details) {
