@@ -1,10 +1,10 @@
 # Hywind merger and deployment report
 
 Status: **DEPLOYED / CONNECTED VALIDATION PENDING**
-Candidate/deployed SHA-256: `25F2751EAD48767D0FABF958D983B7FC52B93CFA657EE165307FB450C68703B4`
-Version/revision: `0.1.0-merge.4` / `R049`
-Deployment time: `2026-09-19T20:15:10.0413574Z`
-Implementation commit: `da18f0f8594dd745798cc117588eccd37047127b`
+Candidate/deployed SHA-256: `C77AB5EA1B22CEBA254B3B3EF5F89FF7671735486F648FE8E605AE2FEED83606`
+Version/revision: `0.1.0-merge.26` / `R071`
+Deployment time: `2026-09-21T12:53:07.8273075Z`
+Implementation commit: `242f9e27c097437b363cc6d4e529c11c8e58dae9`
 
 Hywind now contains the required RPG, CanvasUI, Immersive NPC/Orbis, and Tavern Management subsystems behind one manifest and one Hytale plugin lifecycle. `Hywind.jar` is installed as the only active first-party project JAR in the RPG save. Automated tests, package validation, fresh and copied-data server smokes, rollback rehearsal, live deployment, and two post-deployment restart cycles passed. Connected-client rendering/input/gameplay QA remains explicitly unverified.
 
@@ -300,3 +300,9 @@ The installed `Hywind.jar` SHA-256 is `B060542E6776364A639A89C83081031FD06C62AEF
 R070 is implemented, packaged, and deployed from implementation commit `0aa56967be641d9cdb1ef6953887920ab2027bba`. Spark now publishes the projectile capabilities its existing runtime already implements, so Piercing, Fork, Chain, Ricochet, Return, Volley, Barrage, Accelerant, Ballistics, Shrapnel, Splinterburst, and Orbit pass through the same compatibility authority used by the Skill Tree, graph validator, compiler, and server. Volley specifically links to Spark and multiplies each authored three-to-five-bolt release into a bounded nine-to-fifteen-projectile cast. Homing now also has a Spark-specific ground-crawler path that keeps steering horizontal while terrain following remains authoritative.
 
 The installed `Hywind.jar` SHA-256 is `3E8C7A11A9E9DED4A107A8C7E85221862B748445071169311B7D2DAF53052AE3`. The verified full-save rollback is `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260920T212930Z`. The clean full retained suite (2,381 RPG tests), package audit, isolated Hytale-server smoke, deployment dry run, and two deployed startup/restart cycles pass. Connected-client Skill Tree parenting and projectile-modifier gameplay verification remains pending; see `r070-spark-projectile-passives.md`.
+
+## R071 native ability icon repair
+
+R071 fixes the connected Reset/rejoin stale-HUD-icon failure. Hytale's player-facing AbilitySlots filter rejected the old clear operation, leaving Hywind-owned native ability items and their corrupted client icon state behind. Projection now uses verified authoritative transactions only for `RPG_Ability_*` stacks, preserves every foreign/native rune, and performs one matching-stack refresh at player-ready so already-affected saves self-repair on join.
+
+The installed `Hywind.jar` SHA-256 is `C77AB5EA1B22CEBA254B3B3EF5F89FF7671735486F648FE8E605AE2FEED83606`. Full merged validation, package audit, isolated smoke, deployment rehearsal, full-save backup, exact installed hash verification, and two deployed startup/shutdown cycles pass. Connected icon verification remains pending; see `r071-native-ability-icon-repair.md`.
