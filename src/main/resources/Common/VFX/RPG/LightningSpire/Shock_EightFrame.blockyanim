@@ -1,0 +1,7 @@
+{
+  "formatVersion":1,"duration":48,"holdLastKeyframe":false,"nodeAnimations":{
+    "ShockHorizontal":{"position":[],"orientation":[],"shapeStretch":[],"shapeVisible":[],"shapeUvOffset":[{"time":0,"delta":{"x":0,"y":0}},{"time":6,"delta":{"x":0,"y":-49}},{"time":12,"delta":{"x":0,"y":-98}},{"time":18,"delta":{"x":0,"y":-147}},{"time":24,"delta":{"x":0,"y":-196}},{"time":30,"delta":{"x":0,"y":-245}},{"time":36,"delta":{"x":0,"y":-294}},{"time":42,"delta":{"x":0,"y":-343}}]},
+    "ShockVerticalX":{"position":[],"orientation":[],"shapeStretch":[],"shapeVisible":[],"shapeUvOffset":[{"time":0,"delta":{"x":0,"y":0}},{"time":6,"delta":{"x":0,"y":-49}},{"time":12,"delta":{"x":0,"y":-98}},{"time":18,"delta":{"x":0,"y":-147}},{"time":24,"delta":{"x":0,"y":-196}},{"time":30,"delta":{"x":0,"y":-245}},{"time":36,"delta":{"x":0,"y":-294}},{"time":42,"delta":{"x":0,"y":-343}}]},
+    "ShockVerticalZ":{"position":[],"orientation":[],"shapeStretch":[],"shapeVisible":[],"shapeUvOffset":[{"time":0,"delta":{"x":0,"y":0}},{"time":6,"delta":{"x":0,"y":-49}},{"time":12,"delta":{"x":0,"y":-98}},{"time":18,"delta":{"x":0,"y":-147}},{"time":24,"delta":{"x":0,"y":-196}},{"time":30,"delta":{"x":0,"y":-245}},{"time":36,"delta":{"x":0,"y":-294}},{"time":42,"delta":{"x":0,"y":-343}}]}
+  }
+}

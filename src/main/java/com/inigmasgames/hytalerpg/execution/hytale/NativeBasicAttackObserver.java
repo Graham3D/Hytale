@@ -29,8 +29,16 @@ public final class NativeBasicAttackObserver {
         void accept(UUID actor,UUID victim,double actualHealthLoss,Store<EntityStore> store,
                     CommandBuffer<EntityStore> buffer,Ref<EntityStore> source,double now);
     }
+    @FunctionalInterface public interface FriendlyConstructHit {
+        boolean intercept(UUID actor,Ref<EntityStore> target,String hitIdentity,Store<EntityStore> store,
+                          CommandBuffer<EntityStore> buffer,Ref<EntityStore> source,double now);
+    }
+    @FunctionalInterface public interface ConstructDamageGate {
+        boolean intercept(Ref<EntityStore> target,Store<EntityStore> store,
+                          CommandBuffer<EntityStore> buffer,Ref<EntityStore> source,double now);
+    }
     private record Root(InteractionChain chain,NativeBasicAttackPaths paths,RootWeaponHit receipt,String item){}
-    private record Witness(Root root,boolean charged,double healthBefore,Ref<EntityStore> source,String victim){}
+    private record Witness(Root root,boolean charged,double healthBefore,Ref<EntityStore> source,String victim,String identity){}
     private record CacheKey(String item,RootInteraction root,Map<String,String> variables){}
     private static final MetaKey<Witness> WITNESS=Damage.META_REGISTRY.registerMetaObject(ignored->null,false,"InigmasGames:NativeBasicHitWitness",null);
     private final Map<UUID,List<Root>> roots=new HashMap<>();
@@ -39,9 +47,13 @@ public final class NativeBasicAttackObserver {
     private final RpgCombatKernel kernel;
     private final CombatTrace trace;
     private final ObservedHit onHit;
+    private FriendlyConstructHit constructHits=(actor,target,identity,store,buffer,source,now)->false;
+    private ConstructDamageGate constructDamageGate=(target,store,buffer,source,now)->false;
     public NativeBasicAttackObserver(RpgCombatKernel kernel,CombatTrace trace,ObservedHit onHit){
         this.kernel=kernel;this.trace=trace;this.onHit=onHit;
     }
+    public synchronized void configureFriendlyConstructHits(FriendlyConstructHit value){constructHits=Objects.requireNonNull(value);}
+    public synchronized void configureConstructDamageGate(ConstructDamageGate value){constructDamageGate=Objects.requireNonNull(value);}
     public synchronized void forget(UUID actor){roots.remove(actor);}
     private synchronized void start(UUID actor,Ref<EntityStore> actorRef,InteractionChainStartEvent event){
         var chain=event.getChain();var context=event.getContext();var item=context.getOriginalItemType();
@@ -83,7 +95,8 @@ public final class NativeBasicAttackObserver {
                         var kind=root.paths().classify(operationRoot.getOperation(operation));
                         if(kind.isPresent()){
                             if(matched!=null)throw new IllegalStateException("NATIVE_BASIC_AMBIGUOUS_ACTIVE_DAMAGE");
-                            matched=new Witness(root,kind.get()==NativeBasicAttackPaths.Kind.CHARGED,before,source,victim);
+                            String identity=root.receipt().id()+"/"+Integer.toUnsignedString(System.identityHashCode(chain))+"/"+operation+"/"+victim;
+                            matched=new Witness(root,kind.get()==NativeBasicAttackPaths.Kind.CHARGED,before,source,victim,identity);
                         }
                     }
                 }
@@ -115,15 +128,22 @@ public final class NativeBasicAttackObserver {
         @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemGroupDependency<>(Order.AFTER,DamageModule.get().getFilterDamageGroup()),new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
-            if(damage.isCancelled()||damage.getAmount()<=0||HytaleDamageAdapter.metadata(damage)!=null
-                    ||damage.getSource()==null||damage.getSource().getClass()!=Damage.EntitySource.class||damage.getIfPresentMetaObject(Damage.INTERACTION_TYPE)!=InteractionType.Primary)return;
-            var source=((Damage.EntitySource)damage.getSource()).getRef();var target=chunk.getReferenceTo(i);
+            if(damage.isCancelled()||damage.getAmount()<=0)return;
+            var target=chunk.getReferenceTo(i);var source=damage.getSource() instanceof Damage.EntitySource entitySource?entitySource.getRef():null;
+            if(owner.constructDamageGate.intercept(target,store,buffer,source,System.nanoTime()/1e9)){
+                damage.setCancelled(true);return;
+            }
+            if(HytaleDamageAdapter.metadata(damage)!=null||source==null
+                    ||damage.getIfPresentMetaObject(Damage.INTERACTION_TYPE)!=InteractionType.Primary)return;
             if(source==target||!source.isValid())return;
             var player=buffer.getComponent(source,PlayerRef.getComponentType());if(player==null)return;
             try{
-                if(!HytaleAreaQueries.hostile(store,target,source))return;
                 var hp=chunk.getComponent(i,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());if(hp==null||hp.get()<=0)return;
                 var witness=owner.find(player.getUuid(),source,target,hp.get(),chunk.getComponent(i,UUIDComponent.getComponentType()).getUuid().toString());
+                if(witness!=null&&owner.constructHits.intercept(player.getUuid(),target,witness.identity(),store,buffer,source,System.nanoTime()/1e9)){
+                    damage.setCancelled(true);return;
+                }
+                if(!HytaleAreaQueries.hostile(store,target,source))return;
                 if(witness!=null)damage.putMetaObject(WITNESS,witness);
             }catch(RuntimeException boundary){owner.failure(player.getUuid(),boundary.getMessage());}
 

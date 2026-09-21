@@ -1,0 +1,7 @@
+{
+  "formatVersion":1,"lod":"auto","nodes":[
+    {"id":"0","name":"ShockHorizontal","children":[],"position":{"x":0,"y":0,"z":0},"orientation":{"x":0,"y":0,"z":0,"w":1},"shape":{"type":"quad","offset":{"x":0,"y":0,"z":0},"stretch":{"x":1,"y":1,"z":1},"settings":{"size":{"x":56,"y":49},"normal":"+Y","isStaticBox":true},"visible":true,"doubleSided":true,"shadingMode":"fullbright","unwrapMode":"custom","textureLayout":{"front":{"offset":{"x":0,"y":0},"mirror":{"x":false,"y":false},"angle":0}}}},
+    {"id":"1","name":"ShockVerticalX","children":[],"position":{"x":0,"y":0,"z":0},"orientation":{"x":0,"y":0,"z":0,"w":1},"shape":{"type":"quad","offset":{"x":0,"y":0,"z":0},"stretch":{"x":1,"y":1,"z":1},"settings":{"size":{"x":56,"y":49},"normal":"+X","isStaticBox":true},"visible":true,"doubleSided":true,"shadingMode":"fullbright","unwrapMode":"custom","textureLayout":{"front":{"offset":{"x":0,"y":0},"mirror":{"x":false,"y":false},"angle":0}}}},
+    {"id":"2","name":"ShockVerticalZ","children":[],"position":{"x":0,"y":0,"z":0},"orientation":{"x":0,"y":0,"z":0,"w":1},"shape":{"type":"quad","offset":{"x":0,"y":0,"z":0},"stretch":{"x":1,"y":1,"z":1},"settings":{"size":{"x":56,"y":49},"normal":"+Z","isStaticBox":true},"visible":true,"doubleSided":true,"shadingMode":"fullbright","unwrapMode":"custom","textureLayout":{"front":{"offset":{"x":0,"y":0},"mirror":{"x":false,"y":false},"angle":0}}}}
+  ]
+}

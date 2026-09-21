@@ -1,0 +1,6 @@
+{
+  "Model":"VFX/RPG/LightningSpire/LightningSpire_R072.blockymodel",
+  "Texture":"VFX/RPG/LightningSpire/LightningSpire.png",
+  "HitBox":{"Max":{"X":0.8,"Y":3.6,"Z":0.8},"Min":{"X":-0.8,"Y":0,"Z":-0.8}},
+  "MinScale":1,"MaxScale":1
+}

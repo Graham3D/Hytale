@@ -117,7 +117,8 @@ public final class ProfileComponentPolicy {
                     ConnectionProfile.Kind.ORB,ConnectionProfile.Kind.ORBIT).contains(p.connection().kind());
     }
     public static boolean finiteDuration(Stage04SkillProfile p){
-        return p.summon()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().duration()>0
+        return p.skillId().equals("lightning_coil")
+                ||p.summon()!=null||p.cage()!=null||p.summonAction()!=null&&p.summonAction().duration()>0
                 ||p.support()!=null&&p.support().durationSeconds()>0&&p.support().kind()!=SupportProfile.Kind.FEAR&&p.support().kind()!=SupportProfile.Kind.TAUNT
                 ||p.connection()!=null&&Set.of(ConnectionProfile.Kind.ORB,ConnectionProfile.Kind.ORBIT).contains(p.connection().kind())
                 ||p.area()!=null&&(p.area().lifetimeSeconds()>0&&(p.area().trap()||p.area().periodic()||p.area().impactCount()>1)

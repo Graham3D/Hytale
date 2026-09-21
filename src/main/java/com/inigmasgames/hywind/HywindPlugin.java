@@ -276,6 +276,9 @@ public final class HywindPlugin extends TavernsPlugin {
         com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.SummonProjection::new));
+        com.inigmasgames.hytalerpg.execution.hytale.LightningSpireProjection.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.execution.hytale.LightningSpireProjection.class,
+                com.inigmasgames.hytalerpg.execution.hytale.LightningSpireProjection::new));
         getEntityStoreRegistry().registerSystem(summonSystem);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSummonSystem.Removal(summonSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSummonSystem.Death(summonSystem));

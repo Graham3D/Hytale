@@ -40,6 +40,21 @@ public final class CompatibilityService {
                 Set.of("COMPONENT_SHRAPNEL","AREA","BURST","DAMAGE","HAS_RADIUS"));
     }
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
+        if(skill.id().value().equals("lightning_coil")){
+            String id=passive.id().value();
+            var component=new LinkedHashSet<>(skill.linkCompatibilityTags());component.addAll(skill.tags());
+            if(Set.of("potency","efficiency","second_wind","overcharge","concentration","expanded_radius",
+                    "lingering","executioner","opportunist","vacuum","repulsion","attunement","leeching","long_reach").contains(id))
+                return CompatibilityResult.accepted(component);
+            if(Set.of("shockwave","rapid_pulse","mobile_domain","cascade","aftermath","echo","swarm",
+                    "minion_empowerment","death_pact","piercing","fork","chain","return","ricochet","homing",
+                    "accelerant","ballistics","shrapnel","splinterburst","multistrike","ruthless","cleaving_edge",
+                    "phantom_reach").contains(id)
+                    ||passive.requiredFamilies().stream().anyMatch(Set.of("PROJECTILE","STRIKE","SUMMON")::contains))
+                return CompatibilityResult.rejected(ValidationCode.EXCLUDED_DELIVERY,
+                        "Lightning Spire exposes a timed deployable construct and repeated radial discharge; it is not a Projectile, Strike, Summon, periodic pulse, replayable cast, or expiring-area payload.",
+                        Set.of("LIGHTNING_SPIRE_COMPONENT_BOUNDARY"),component);
+        }
         if(skill.id().value().equals("lightning_bolt")&&passive.id().value().equals("chain")){
             var component=new LinkedHashSet<>(skill.linkCompatibilityTags());component.addAll(skill.tags());
             component.addAll(Set.of("LINE","CAN_CHAIN","DAMAGE","SCALABLE_PAYLOAD"));

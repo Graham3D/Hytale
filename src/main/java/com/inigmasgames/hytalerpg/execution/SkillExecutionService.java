@@ -356,13 +356,14 @@ public final class SkillExecutionService {
             BasePowerResolver.Resolution power = resolvePower(prepared.profile, prepared.equipment);
             preparationStage="COOLDOWN_PREPARATION";
             var cooldownTerms=BlizzardCooldownPolicy.terms(prepared.profile,prepared.plan,attributes);
-            var cooldown = kernel.cooldowns().calculate(prepared.request.actorId(),cooldownTerms.baseSeconds(),cooldownTerms.durationFactor(),
+            var cooldown = kernel.cooldowns().calculate(prepared.request.actorId(),cooldownTerms.baseSeconds(),cooldownTerms.durationFactor()*spirePotencyCooldownFactor(prepared.profile,prepared.plan),
                     cooldownTerms.recovery(),cooldownTerms.modifiers());
             preparationStage="MODIFIER_CONSTRUCTION";
             Map<String, Double> status = prepared.profile.authoredStatuses();
             // CombatSnapshotFactory alone installs compiled Increased modifiers (including Potency).
             var payloadLess=new java.util.ArrayList<>(prepared.plan.projectileModifiers().payloadLess());
-            if(releaseModifiers.expandedRadius()&&!prepared.plan.radiusOnlyOnSecondary())payloadLess.add(.10);
+            if(releaseModifiers.expandedRadius()&&!prepared.plan.radiusOnlyOnSecondary())payloadLess.add(prepared.profile.skillId().equals("lightning_coil")?.15:.10);
+            if(prepared.profile.skillId().equals("lightning_coil")&&prepared.plan.passiveOrder().stream().anyMatch(id->id.value().equals("efficiency")))payloadLess.add(.10);
             if(prepared.plan.zones().mobileDomain())payloadLess.add(.20);
             if(prepared.plan.retaliation())payloadLess.add(.30);
             if(prepared.plan.positions().active()&&!prepared.plan.positionOnlyOnSecondary())payloadLess.add(.10);
@@ -459,12 +460,15 @@ public final class SkillExecutionService {
             }else {
                 var terms=BlizzardCooldownPolicy.terms(prepared.profile,prepared.plan,attributes);
                 kernel.cooldowns().submitSpend(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity(),
-                    terms.baseSeconds(),terms.durationFactor(),terms.recovery(),terms.modifiers())
+                    terms.baseSeconds(),terms.durationFactor()*spirePotencyCooldownFactor(prepared.profile,prepared.plan),terms.recovery(),terms.modifiers())
                     .whenComplete((value,error)->{if(error==null)cooldown.complete(value);else cooldown.completeExceptionally(error);});
             }
         }catch(RuntimeException error){cooldown.completeExceptionally(error);}
         if(cooldown.isDone()&&authority.isDone())return completePersistence(prepared.request.actorId(),port);
         return SkillExecutionResult.pending("DURABLE_COMMIT_PENDING");
+    }
+    private static double spirePotencyCooldownFactor(Stage04SkillProfile profile,CompiledSkillPlan plan){
+        return profile.skillId().equals("lightning_coil")&&plan.passiveOrder().stream().anyMatch(id->id.value().equals("potency"))?1.10:1;
     }
     /** Existing native owner tick calls this; a ready check never starts a blocking storage operation. */
     public SkillExecutionResult completePersistence(UUID actor,SkillExecutionPort port){

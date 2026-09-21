@@ -418,7 +418,7 @@
     {
       "kind": "Skill",
       "id": "lightning_coil",
-      "name": "Lightning Coil",
+      "name": "Lightning Spire",
       "fileName": "SkillLightningcoil.png",
       "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Lightning_Coil.json"
     },

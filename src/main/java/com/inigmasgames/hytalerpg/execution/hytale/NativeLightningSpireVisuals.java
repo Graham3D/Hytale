@@ -1,0 +1,94 @@
+package com.inigmasgames.hytalerpg.execution.hytale;
+
+import com.hypixel.hytale.component.*;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.protocol.AnimationSlot;
+import com.hypixel.hytale.server.core.asset.type.model.config.Model;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.entity.AnimationUtils;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.modules.entity.DespawnComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.*;
+import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
+import com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier;
+import com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier;
+import com.hypixel.hytale.server.core.modules.time.TimeResource;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime;
+import com.inigmasgames.hytalerpg.execution.math.Vec3;
+import java.util.*;
+import org.joml.Vector3d;
+
+/** Native model carriers for the damageable Spire, charge gauge and bounded hit/wave flashes. */
+final class NativeLightningSpireVisuals {
+    static final double MODEL_HEIGHT=3.6,TOP_OFFSET=3.45;
+    private record Carrier(Ref<EntityStore> ref,Store<EntityStore> store,Vec3 ground,double deployedAt,double readyAt,
+                           Ref<EntityStore> gauge,double[] sway){}
+    private final Map<String,Carrier> carriers=new HashMap<>();
+    private final Map<String,Ref<EntityStore>> gauges=new HashMap<>();
+
+    Ref<EntityStore> deploy(LightningSpireRuntime.View view,Vec3 ground,double now,CommandBuffer<EntityStore> buffer){
+        if(buffer==null)throw new IllegalStateException("LIGHTNING_SPIRE_BUFFER_MISSING");
+        var store=buffer.getStore();var asset=require("Hywind_Lightning_Spire");var model=Model.createStaticScaledModel(asset,1);
+        var holder=EntityStore.REGISTRY.newHolder();UUID id=UUID.randomUUID();
+        holder.addComponent(UUIDComponent.getComponentType(),new UUIDComponent(id));
+        holder.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
+        holder.addComponent(TransformComponent.getComponentType(),transform(ground.add(new Vec3(0,-MODEL_HEIGHT,0)),0,0));
+        holder.addComponent(ModelComponent.getComponentType(),new ModelComponent(model));
+        holder.addComponent(BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));
+        holder.addComponent(LightningSpireProjection.getComponentType(),new LightningSpireProjection(view.instance(),view.owner()));
+        var stats=new EntityStatMap();stats.update();int health=DefaultEntityStatTypes.getHealth();var hp=stats.get(health);
+        if(hp==null)throw new IllegalStateException("LIGHTNING_SPIRE_NATIVE_HEALTH_MISSING");
+        stats.putModifier(health,"RPG_LIGHTNING_SPIRE_MAX",new StaticModifier(Modifier.ModifierTarget.MAX,
+                StaticModifier.CalculationType.ADDITIVE,(float)(view.maximumHealth()-hp.getMax())));
+        stats.update();stats.setStatValue(health,(float)view.maximumHealth());holder.addComponent(EntityStatMap.getComponentType(),stats);
+        holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
+        Ref<EntityStore> ref=buffer.addEntity(holder,AddReason.SPAWN);
+        carriers.put(view.instance(),new Carrier(ref,store,ground,now,now+LightningSpireRuntime.EMERGENCE_SECONDS,null,new double[4]));
+        return ref;
+    }
+
+    void tick(LightningSpireRuntime.View view,double now,double delta,CommandBuffer<EntityStore> buffer){
+        var c=carriers.get(view.instance());if(c==null||!c.ref.isValid())return;
+        var transform=buffer.getComponent(c.ref,TransformComponent.getComponentType());if(transform==null)return;
+        double progress=Math.clamp((now-c.deployedAt)/LightningSpireRuntime.EMERGENCE_SECONDS,0,1);
+        double eased=1-Math.pow(1-progress,3);double y=c.ground.y()-MODEL_HEIGHT*(1-eased);
+        // Critically damped presentation-only spring. Collision/authoritative position never moves.
+        double angle=c.sway[0],velocity=c.sway[1];velocity+=(-34*angle-11*velocity)*Math.min(delta,.1);angle+=velocity*Math.min(delta,.1);
+        angle=Math.clamp(angle,Math.toRadians(-7),Math.toRadians(7));c.sway[0]=angle;c.sway[1]=velocity;
+        transform.setPosition(new Vector3d(c.ground.x(),y,c.ground.z()));
+        transform.setRotation(new Rotation3f((float)(angle*c.sway[2]),0,(float)(angle*c.sway[3])));
+    }
+
+    void friendlyHit(String instance,Vec3 attacker,int percent,double now,CommandBuffer<EntityStore> buffer){
+        var c=carriers.get(instance);if(c==null||!c.ref.isValid())return;
+        Vec3 away=c.ground.subtract(attacker);double length=Math.sqrt(away.x()*away.x()+away.z()*away.z());
+        if(length<1e-6){away=new Vec3(1,0,0);length=1;}c.sway[2]=away.z()/length;c.sway[3]=-away.x()/length;
+        c.sway[1]=Math.toRadians(24);spawn("Hywind_Lightning_Spire_Shock",c.ground.add(new Vec3(0,TOP_OFFSET,0)),.42f,buffer,true);
+        setGauge(instance,Math.clamp(percent,0,100),buffer);
+    }
+    void wave(String instance,CommandBuffer<EntityStore> buffer){var c=carriers.get(instance);if(c!=null){spawn("Hywind_Lightning_Spire_Shockwave",c.ground.add(new Vec3(0,.03,0)),.50f,buffer,true);setGauge(instance,0,buffer);}}
+    Ref<EntityStore> ref(String instance){var c=carriers.get(instance);return c==null?null:c.ref;}
+    Optional<String> instance(Ref<EntityStore> ref,Store<EntityStore> store){var p=ref==null?null:store.getComponent(ref,LightningSpireProjection.getComponentType());return p==null?Optional.empty():Optional.of(p.instance());}
+    boolean destroyed(String instance,Store<EntityStore> store){var c=carriers.get(instance);if(c==null||!c.ref.isValid())return true;var stats=store.getComponent(c.ref,EntityStatMap.getComponentType());var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());return hp==null||hp.get()<=hp.getMin();}
+    void end(String instance,boolean explosion,CommandBuffer<EntityStore> buffer){var c=carriers.remove(instance);if(c==null)return;
+        if(explosion&&buffer!=null)try{com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("Explosion_Medium",new Vector3d(c.ground.x(),c.ground.y()+1,c.ground.z()),buffer.getStore());}catch(RuntimeException ignored){}
+        remove(c.ref,c.store,buffer);var gauge=gauges.remove(instance);if(gauge!=null)remove(gauge,c.store,buffer);}
+    void cancel(UUID owner,CommandBuffer<EntityStore> buffer){carriers.entrySet().stream().filter(e->{var p=e.getValue().store.getComponent(e.getValue().ref,LightningSpireProjection.getComponentType());return p!=null&&p.owner().equals(owner);}).map(Map.Entry::getKey).toList().forEach(id->end(id,false,buffer));}
+
+    private static void spawn(String id,Vec3 p,float seconds,CommandBuffer<EntityStore> buffer,boolean animate){var store=buffer.getStore();var model=Model.createStaticScaledModel(require(id),1);var h=EntityStore.REGISTRY.newHolder();
+        h.addComponent(UUIDComponent.getComponentType(),new UUIDComponent(UUID.randomUUID()));h.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
+        h.addComponent(TransformComponent.getComponentType(),transform(p,0,0));h.addComponent(ModelComponent.getComponentType(),new ModelComponent(model));h.addComponent(BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));
+        h.addComponent(ActiveAnimationComponent.getComponentType(),new ActiveAnimationComponent());h.addComponent(DespawnComponent.getComponentType(),DespawnComponent.despawnInSeconds(store.getResource(TimeResource.getResourceType()),seconds));h.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
+        var ref=buffer.addEntity(h,AddReason.SPAWN);if(animate)AnimationUtils.playAnimation(ref,AnimationSlot.Movement,"Idle",true,buffer);}
+    private void setGauge(String instance,int percent,CommandBuffer<EntityStore> buffer){var c=carriers.get(instance);if(c==null)return;percent=Math.clamp((percent/10)*10,0,100);
+        var model=Model.createStaticScaledModel(require("Hywind_Lightning_Spire_Gauge_"+percent),1);var existing=gauges.get(instance);
+        if(existing!=null&&existing.isValid()){buffer.replaceComponent(existing,ModelComponent.getComponentType(),new ModelComponent(model));buffer.replaceComponent(existing,BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));return;}
+        var h=EntityStore.REGISTRY.newHolder();var store=buffer.getStore();h.addComponent(UUIDComponent.getComponentType(),new UUIDComponent(UUID.randomUUID()));h.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
+        h.addComponent(TransformComponent.getComponentType(),transform(c.ground.add(new Vec3(0,TOP_OFFSET+1,0)),0,0));h.addComponent(ModelComponent.getComponentType(),new ModelComponent(model));h.addComponent(BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));h.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());gauges.put(instance,buffer.addEntity(h,AddReason.SPAWN));}
+    private static ModelAsset require(String id){var asset=ModelAsset.getAssetMap().getAsset(id);if(asset==null)throw new IllegalStateException("LIGHTNING_SPIRE_MODEL_UNRESOLVED:"+id);return asset;}
+    private static TransformComponent transform(Vec3 p,double pitch,double roll){return new TransformComponent(new Vector3d(p.x(),p.y(),p.z()),new Rotation3f((float)pitch,0,(float)roll));}
+    private static void remove(Ref<EntityStore> ref,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){if(ref==null||!ref.isValid())return;if(buffer!=null&&buffer.getStore()==store)buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);else store.getExternalData().getWorld().execute(()->{if(ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);});}
+}

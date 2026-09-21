@@ -1,0 +1,6 @@
+{
+  "formatVersion":1,"duration":27,"holdLastKeyframe":true,"nodeAnimations":{
+    "WaveX":{"position":[],"orientation":[],"shapeVisible":[],"shapeStretch":[{"time":0,"delta":{"x":0,"y":0,"z":0}},{"time":9,"delta":{"x":2.571,"y":2.571,"z":2.571}},{"time":18,"delta":{"x":5.143,"y":5.143,"z":5.143}}],"shapeUvOffset":[{"time":0,"delta":{"x":0,"y":0}},{"time":9,"delta":{"x":0,"y":-64}},{"time":18,"delta":{"x":0,"y":-128}}]},
+    "WaveZ":{"position":[],"orientation":[],"shapeVisible":[],"shapeStretch":[{"time":0,"delta":{"x":0,"y":0,"z":0}},{"time":9,"delta":{"x":2.571,"y":2.571,"z":2.571}},{"time":18,"delta":{"x":5.143,"y":5.143,"z":5.143}}],"shapeUvOffset":[{"time":0,"delta":{"x":0,"y":0}},{"time":9,"delta":{"x":0,"y":-64}},{"time":18,"delta":{"x":0,"y":-128}}]}
+  }
+}

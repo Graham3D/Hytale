@@ -75,7 +75,8 @@ class LightningSkillUpdateTest {
         assertEquals(.32,p.require("charged_bolt").projectile().coefficient());assertEquals(3,p.require("charged_bolt").projectile().targetCap());
         assertEquals(16,p.require("lightning_bolt").resourceCost());assertEquals(6,p.require("lightning_bolt").cooldownSeconds());assertEquals(1.45,p.require("lightning_bolt").connection().coefficient());
         assertEquals(18,p.require("ball_lightning").resourceCost());assertEquals(10,p.require("ball_lightning").cooldownSeconds());assertEquals(.35,p.require("ball_lightning").connection().coefficient());
-        assertEquals(22,p.require("lightning_coil").resourceCost());assertEquals(18,p.require("lightning_coil").cooldownSeconds());assertEquals(8,p.require("lightning_coil").area().lifetimeSeconds());
+        assertEquals(22,p.require("lightning_coil").resourceCost());assertEquals(18,p.require("lightning_coil").cooldownSeconds());assertEquals(5,p.require("lightning_coil").area().lifetimeSeconds());
+        assertEquals(6,p.require("lightning_coil").area().radius());assertEquals(1.8,p.require("lightning_coil").area().coefficient());
         assertEquals(16,p.require("teleport").resourceCost());assertEquals(8,p.require("teleport").cooldownSeconds());assertEquals(14,p.require("teleport").movement().maxDistance());
         assertEquals(24,p.require("static_field").resourceCost());assertEquals(18,p.require("static_field").cooldownSeconds());assertEquals(0,p.require("static_field").area().coefficient());
         assertEquals(0,p.require("storm_strike").resourceCost());assertEquals(1.75,p.require("storm_strike").strike().coefficient());
@@ -115,13 +116,13 @@ class LightningSkillUpdateTest {
         }
     }
 
-    @Test void productionAdapterChargesOnlyObservedNativeWeaponRootsAndQueuesOneOwnedDischarge() throws Exception {
+    @Test void productionAdapterUsesFriendlyNativeMeleeWitnessesAndRepeatedOwnedDischarges() throws Exception {
         String source=java.nio.file.Files.readString(java.nio.file.Path.of(
                 "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
-        assertTrue(source.contains("lightning.chargeCoil(coil.instance(),actor,actualHealthLoss,true,now)"));
+        assertTrue(source.contains("spires.friendlyMelee(projection.instance(),hitIdentity,now)"));
         assertTrue(source.contains("HytaleSupportSystem.eligibleAlly(store,ownerRef,source)"));
-        assertTrue(source.contains("pendingCoilDischarges.putIfAbsent(coil.instance(),coil)"));
-        assertTrue(source.contains("coil.instance()+\"/discharge\",false,true,false"));
+        assertTrue(source.contains("for(var wave:spires.drainWaves(owner))"));
+        assertTrue(source.contains("wave.instance()+\"/wave/\"+wave.sequence()"));
         assertTrue(source.contains("kernel.statuses().applyElectrified(targetId,6);kernel.statuses().applyElectrified(targetId,6)"));
     }
 }
