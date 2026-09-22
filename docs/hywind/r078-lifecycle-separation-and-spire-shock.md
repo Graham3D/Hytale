@@ -41,3 +41,17 @@ The client model carrier did not reliably advance its `.blockyanim`. R078 export
 ## Verification boundary
 
 Automated coverage includes instance-exact Spire overlap/cleanup, nonblocking projectile ownership, typed concurrency policy, dynamic cooldown work-rate transitions, cast-rate math, and all eight packaged Shock frames. Packaging, bare-server smoke, install deployment, and post-deployment verification are required before release. Connected-client verification remains necessary for the two/three-Spire interaction matrix and visible Shock frame playback.
+
+## Deployment record
+
+R078 was packaged and deployed on 2026-09-22 as `InigmasGames:Hywind@0.1.0-merge.33`.
+
+- Installed JAR: `C:\Users\Zemio\AppData\Roaming\Hytale\data\pre-release\Saves\RPG\mods\Hywind.jar`
+- SHA-256: `BF7F10FE0FDD1A11E280F6753AAA70A2CA52C19356E1DAECE08F1D5026C314DF`
+- Rollback snapshot: `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260922T142634Z`
+- Package verification: PASS (5,953 entries, 2,234 classes, 2,090 UI documents)
+- Isolated server smoke: PASS
+- Live-save restart verification: PASS on two consecutive starts and clean shutdowns
+- Full automated suite: 2,395 of 2,397 tests passed. The two failures are unchanged, unrelated byte-baseline checks for Mantle and Healing assets; neither asserted file changed in R078.
+
+Connected-client acceptance remains intentionally open: each accepted Spire hit must visibly play exactly one complete eight-frame Shock animation, and multiple simultaneously active Spires must retain independent health, strike gauge, shockwave, expiry, and cleanup state.
