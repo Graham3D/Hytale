@@ -35,7 +35,7 @@ final class NativeLightningSpireVisuals {
     static final String TOTEM_SPAWN="SFX_Deployable_Totem_Slowing_Spawn",TOTEM_DESPAWN="SFX_Deployable_Totem_Slowing_Despawn";
     static final String METAL_HIT="SFX_Metal_Break",WAVE_SOUND="SFX_Portal_Neutral_Open";
     private record Carrier(Ref<EntityStore> ref,Store<EntityStore> store,Vec3 ground,double deployedAt,
-                           EffectControllerComponent effects,LightningSpireEntityLifecycle lifecycle,double[] sway,boolean[] cues){}
+                           EffectControllerComponent effects,LightningSpireEntityLifecycle lifecycle,double[] motion,boolean[] cues){}
     record HealthProbe(LightningSpireEntityLifecycle.State state,boolean refValid,boolean statMapPresent,
                        boolean healthPresent,double currentHealth,double minimumHealth,boolean healthyEntityObserved){
         boolean destroyed(){return state==LightningSpireEntityLifecycle.State.DESTROYED;}
@@ -61,7 +61,8 @@ final class NativeLightningSpireVisuals {
         stats.update();stats.setStatValue(health,(float)view.maximumHealth());holder.addComponent(EntityStatMap.getComponentType(),stats);
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         Ref<EntityStore> ref=buffer.addEntity(holder,AddReason.SPAWN);
-        carriers.put(view.instance(),new Carrier(ref,store,ground,now,effects,new LightningSpireEntityLifecycle(),new double[4],new boolean[3]));
+        carriers.put(view.instance(),new Carrier(ref,store,ground,now,effects,new LightningSpireEntityLifecycle(),
+                new double[]{Double.NaN},new boolean[3]));
         return ref;
     }
 
@@ -73,22 +74,23 @@ final class NativeLightningSpireVisuals {
         if(age>=TOTEM_SPAWN_CUE_SECONDS&&!c.cues[1]){sound(TOTEM_SPAWN,c.ground,c.store);c.cues[1]=true;}
         if(progress>=1&&!c.cues[2]){applyEffect(c.ref,c.effects,c.store,IDLE_AUDIO,(float)Math.max(.1,view.readyRemaining()));c.cues[2]=true;}
         double eased=1-Math.pow(1-progress,3);double y=c.ground.y()-MODEL_HEIGHT*(1-eased);
-        // Critically damped presentation-only spring. Collision/authoritative position never moves.
-        double angle=c.sway[0],velocity=c.sway[1];velocity+=(-34*angle-11*velocity)*Math.min(delta,.1);angle+=velocity*Math.min(delta,.1);
-        angle=Math.clamp(angle,Math.toRadians(-7),Math.toRadians(7));c.sway[0]=angle;c.sway[1]=velocity;
-        // The carrier pivots at its grounded model origin. A small damped emergence wobble therefore
-        // leaves the base planted while the narrow upper prism visibly bears most of the motion.
-        double riseWobble=progress<1?Math.sin(age*15)*Math.toRadians(3.25)*(1-.45*progress):0;
+        // Both emergence and a player strike use the same authored shake envelope. The strike path
+        // changes rotation only: authoritative position and the grounded rise coordinate stay fixed.
+        double wobble=shake(age);
+        if(Double.isFinite(c.motion[0]))wobble+=shake(now-c.motion[0]);
         transform.setPosition(new Vector3d(c.ground.x(),y,c.ground.z()));
-        transform.setRotation(new Rotation3f((float)(angle*c.sway[2]+riseWobble*.62),0,
-                (float)(angle*c.sway[3]+riseWobble*.78)));
+        transform.setRotation(new Rotation3f((float)(wobble*.62),0,(float)(wobble*.78)));
     }
 
-    void friendlyHit(String instance,Vec3 attacker,int percent,double now,CommandBuffer<EntityStore> buffer){
+    static double shake(double elapsed){
+        if(!Double.isFinite(elapsed)||elapsed<0||elapsed>=LightningSpireRuntime.EMERGENCE_SECONDS)return 0;
+        double progress=Math.clamp(elapsed/LightningSpireRuntime.EMERGENCE_SECONDS,0,1);
+        return Math.sin(elapsed*15)*Math.toRadians(3.25)*(1-.45*progress);
+    }
+
+    void friendlyHit(String instance,int percent,double now,CommandBuffer<EntityStore> buffer){
         var c=carriers.get(instance);if(c==null||!c.ref.isValid())return;
-        Vec3 away=c.ground.subtract(attacker);double length=Math.sqrt(away.x()*away.x()+away.z()*away.z());
-        if(length<1e-6){away=new Vec3(1,0,0);length=1;}c.sway[2]=away.z()/length;c.sway[3]=-away.x()/length;
-        c.sway[1]=Math.toRadians(24);sound(METAL_HIT,c.ground.add(new Vec3(0,1.4,0)),c.store);
+        c.motion[0]=now;sound(METAL_HIT,c.ground.add(new Vec3(0,1.4,0)),c.store);
         spawn("Hywind_Lightning_Spire_Shock",c.ground.add(new Vec3(0,TOP_OFFSET,0)),.42f,buffer,true);
         setGauge(instance,Math.clamp(percent,0,100),buffer);
     }

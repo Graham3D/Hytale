@@ -393,8 +393,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         if(context!=null)emit(context,RpgTraceEventType.STATUS_REQUEST,Map.of("status","LIGHTNING_SPIRE_CHARGE","contributor",actor,
                 "result",result.code(),"chargeHits",result.chargeHits(),"chargePercent",result.chargePercent(),"waveSequence",result.waveSequence()));
         if(result.code().equals("CHARGED")||result.code().equals("DISCHARGE")){
-            spireVisuals.friendlyHit(projection.instance(),vec(store.getComponent(source,TransformComponent.getComponentType()).getPosition()),
-                    result.discharge()?100:result.chargePercent(),now,buffer);
+            spireVisuals.friendlyHit(projection.instance(),result.discharge()?100:result.chargePercent(),now,buffer);
             if(context!=null)emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_FRIENDLY_HIT",
                     "contributor",actor,"shockModel","Hywind_Lightning_Spire_Shock","gaugePercent",
                     result.discharge()?100:result.chargePercent(),"waveQueued",result.discharge(),"connectedProof",false));

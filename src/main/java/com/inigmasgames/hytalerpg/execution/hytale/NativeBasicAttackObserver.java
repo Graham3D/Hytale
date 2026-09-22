@@ -109,6 +109,10 @@ public final class NativeBasicAttackObserver {
     private void failure(UUID actor,String boundary){
         trace.emit(actor,RpgTraceEventType.NATIVE_BASIC_HIT_REJECTED,new CombatTrace.Context("","",""),Map.of("boundary",String.valueOf(boundary)));
     }
+    static boolean directPhysical(DamageCause cause){
+        if(cause==null)return false;
+        return "Physical".equalsIgnoreCase(cause.getId())||"Physical".equalsIgnoreCase(cause.getInherits());
+    }
     public static final class Start extends EntityEventSystem<EntityStore,InteractionChainStartEvent>{
         private final NativeBasicAttackObserver owner;
         public Start(NativeBasicAttackObserver owner){super(InteractionChainStartEvent.class);this.owner=owner;}
@@ -139,9 +143,23 @@ public final class NativeBasicAttackObserver {
             var player=buffer.getComponent(source,PlayerRef.getComponentType());if(player==null)return;
             try{
                 var hp=chunk.getComponent(i,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());if(hp==null||hp.get()<=0)return;
-                var witness=owner.find(player.getUuid(),source,target,hp.get(),chunk.getComponent(i,UUIDComponent.getComponentType()).getUuid().toString());
+                String victim=chunk.getComponent(i,UUIDComponent.getComponentType()).getUuid().toString();
+                var witness=owner.find(player.getUuid(),source,target,hp.get(),victim);
                 if(witness!=null&&owner.constructHits.intercept(player.getUuid(),target,witness.identity(),store,buffer,source,System.nanoTime()/1e9)){
                     damage.setCancelled(true);return;
+                }
+                // DamageEntityInteraction is the authoritative direct-hit transaction. Some native
+                // weapon roots clear their active InteractionChain entry before this damage event,
+                // so the general-purpose witness above cannot identify them. The fallback is limited
+                // to a projected Spire plus a direct PlayerRef Primary physical event; it can neither
+                // classify projectiles nor broaden ordinary combat observation.
+                var projection=store.getComponent(target,LightningSpireProjection.getComponentType());
+                if(witness==null&&projection!=null&&directPhysical(damage.getCause())){
+                    String identity="spire-physical/"+player.getUuid()+"/"+projection.instance()+"/"
+                            +Integer.toUnsignedString(System.identityHashCode(damage));
+                    if(owner.constructHits.intercept(player.getUuid(),target,identity,store,buffer,source,System.nanoTime()/1e9)){
+                        damage.setCancelled(true);return;
+                    }
                 }
                 if(!HytaleAreaQueries.hostile(store,target,source))return;
                 if(witness!=null)damage.putMetaObject(WITNESS,witness);
