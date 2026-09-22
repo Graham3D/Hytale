@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 public final class LightningSpireRuntime {
     public static final int HITS_PER_WAVE = 10;
-    public static final double EMERGENCE_SECONDS = .9;
+    public static final double EMERGENCE_SECONDS = 2;
     public static final double BASE_READY_SECONDS = 5;
     public static final double BASE_RADIUS = 6;
     public static final double BASE_COEFFICIENT = 1.80;

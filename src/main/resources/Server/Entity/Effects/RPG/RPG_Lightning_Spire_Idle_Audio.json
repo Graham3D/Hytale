@@ -1,0 +1,7 @@
+{
+  "ApplicationEffects": {
+    "WorldSoundEventId": "SFX_Portal_Void"
+  },
+  "OverlapBehavior": "Overwrite",
+  "Infinite": true
+}

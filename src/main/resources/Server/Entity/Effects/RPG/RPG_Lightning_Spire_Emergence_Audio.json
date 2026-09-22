@@ -1,0 +1,8 @@
+{
+  "ApplicationEffects": {
+    "WorldSoundEventId": "SFX_Ability_Ground_Slam_Wave"
+  },
+  "OverlapBehavior": "Overwrite",
+  "Infinite": false,
+  "Duration": 2.0
+}

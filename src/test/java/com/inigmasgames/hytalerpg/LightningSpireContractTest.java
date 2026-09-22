@@ -21,12 +21,15 @@ final class LightningSpireContractTest {
     }
 
     @Test void ownerAssetsAndNativeModelCarriersArePackaged(){
+        assertEquals(2,com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EMERGENCE_SECONDS,1e-9);
         for(String resource:List.of(
                 "/Common/VFX/RPG/LightningSpire/LightningSpire_R072.blockymodel",
                 "/Common/VFX/RPG/LightningSpire/LightningSpire.png",
                 "/Common/VFX/RPG/LightningSpire/Shock_Strip_Vertical.png",
                 "/Common/VFX/RPG/LightningSpire/Shockwave_Strip_Vertical.png",
                 "/Common/VFX/RPG/LightningSpire/skill_lightningspire_bg.png",
+                "/Server/Entity/Effects/RPG/RPG_Lightning_Spire_Emergence_Audio.json",
+                "/Server/Entity/Effects/RPG/RPG_Lightning_Spire_Idle_Audio.json",
                 "/Server/Models/RPG/Hywind_Lightning_Spire.json",
                 "/Server/Models/RPG/Hywind_Lightning_Spire_Shock.json",
                 "/Server/Models/RPG/Hywind_Lightning_Spire_Shockwave.json"))assertNotNull(getClass().getResource(resource),resource);

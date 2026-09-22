@@ -9,22 +9,22 @@ final class LightningSpireRuntimeTest {
         var r=new LightningSpireRuntime();var owner=UUID.randomUUID();var spec=LightningSpireRuntime.Spec.base(20,1,1,1);
         var deployed=r.deploy("spire",owner,spec,10);
         assertEquals(97.5,deployed.maximumHealth(),1e-9);assertEquals(2.2275,deployed.coefficient(),1e-9);
-        assertEquals("EMERGING",r.friendlyMelee("spire","early",10.5).code());
+        assertEquals("EMERGING",r.friendlyMelee("spire","early",11.9).code());
         for(int wave=1;wave<=3;wave++){
             for(int hit=1;hit<=10;hit++){
-                var result=r.friendlyMelee("spire","w"+wave+"h"+hit,11+wave*.01+hit*.0001);
+                var result=r.friendlyMelee("spire","w"+wave+"h"+hit,12+wave*.01+hit*.0001);
                 assertEquals(hit==10?"DISCHARGE":"CHARGED",result.code());
             }
             var waves=r.drainWaves(owner);assertEquals(1,waves.size());assertEquals(wave,waves.getFirst().sequence());
         }
-        assertTrue(r.active(owner));assertEquals(3,r.inspectOwner(owner,11.5).orElseThrow().completedWaves());
+        assertTrue(r.active(owner));assertEquals(3,r.inspectOwner(owner,12.5).orElseThrow().completedWaves());
     }
 
     @Test void duplicateNativeHitIdentityCannotDoubleChargeAndExpiryDropsPartialCharge(){
         var r=new LightningSpireRuntime();var owner=UUID.randomUUID();r.deploy("spire",owner,LightningSpireRuntime.Spec.base(1,1,1,1),0);
-        assertEquals("CHARGED",r.friendlyMelee("spire","root/op/target",1).code());
-        assertEquals("DUPLICATE",r.friendlyMelee("spire","root/op/target",1.01).code());
-        var ended=r.expire(owner,5.91).orElseThrow();assertEquals(LightningSpireRuntime.EndReason.READY_EXPIRED,ended.reason());
+        assertEquals("CHARGED",r.friendlyMelee("spire","root/op/target",2.1).code());
+        assertEquals("DUPLICATE",r.friendlyMelee("spire","root/op/target",2.11).code());
+        var ended=r.expire(owner,7.01).orElseThrow();assertEquals(LightningSpireRuntime.EndReason.READY_EXPIRED,ended.reason());
         assertFalse(r.active(owner));assertTrue(r.drainWaves(owner).isEmpty());
     }
 
