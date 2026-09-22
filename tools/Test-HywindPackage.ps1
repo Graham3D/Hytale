@@ -63,6 +63,7 @@ try {
         'rpg/catalog/skills.json',
         'rpg/catalog/passives.json',
         'rpg/presentation/icon-index.json',
+        'Server/Particles/RPG/LightningSpire/Hywind_Lightning_Spire_Emergence.particlesystem',
         'Common/UI/Custom/Assets/SkillTree/skilltree_joint.png',
         'Common/UI/Custom/Assets/SkillTree/skilltree_passive_occupied.png',
         'Common/UI/Custom/Assets/SkillTree/skilltree_passive_unoccupied.png',

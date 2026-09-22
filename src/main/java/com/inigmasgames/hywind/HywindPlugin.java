@@ -454,6 +454,10 @@ public final class HywindPlugin extends TavernsPlugin {
         com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.requireAssets();
         com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.requireMantleAssets();
         com.inigmasgames.hytalerpg.input.NativeSupportTetherAudit.requireAssets();
+        if(com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.getAssetMap()
+                .getAsset("Hywind_Lightning_Spire_Emergence")==null)
+            throw new IllegalStateException("LIGHTNING_SPIRE_EMERGENCE_PARTICLE_UNRESOLVED");
+        LOGGER.atInfo().log("RPG_LIGHTNING_SPIRE_ASSETS emergenceParticle=Hywind_Lightning_Spire_Emergence result=PASS connectedProof=false");
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeActionLock.requireAsset();
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeFeedback.requireAssets();
         var projectileAudit=com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileAssetAudit.requireAssets(

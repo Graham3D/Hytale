@@ -24,14 +24,15 @@ final class LightningSpireRuntimeTest {
         var r=new LightningSpireRuntime();var owner=UUID.randomUUID();r.deploy("spire",owner,LightningSpireRuntime.Spec.base(1,1,1,1),0);
         assertEquals("CHARGED",r.friendlyMelee("spire","root/op/target",2.1).code());
         assertEquals("DUPLICATE",r.friendlyMelee("spire","root/op/target",2.11).code());
-        var ended=r.expire(owner,7.01).orElseThrow();assertEquals(LightningSpireRuntime.EndReason.READY_EXPIRED,ended.reason());
+        assertTrue(r.expire(owner,11.99).isEmpty());
+        var ended=r.expire(owner,12.01).orElseThrow();assertEquals(LightningSpireRuntime.EndReason.READY_EXPIRED,ended.reason());
         assertFalse(r.active(owner));assertTrue(r.drainWaves(owner).isEmpty());
     }
 
     @Test void oneActivePerCasterAndModifierMathStayComponentScoped(){
         var r=new LightningSpireRuntime();var owner=UUID.randomUUID();
         var spec=LightningSpireRuntime.Spec.base(1,1.4,.7,1.3);
-        assertEquals(7,spec.readySeconds(),1e-9);assertEquals(4.2,spec.radius(),1e-9);assertEquals(2.34,spec.coefficient(),1e-9);
+        assertEquals(14,spec.readySeconds(),1e-9);assertEquals(4.2,spec.radius(),1e-9);assertEquals(2.34,spec.coefficient(),1e-9);
         assertEquals(50,spec.maximumHealth(),1e-9);r.deploy("a",owner,spec,0);
         assertThrows(IllegalStateException.class,()->r.deploy("b",owner,spec,0));
         assertEquals(LightningSpireRuntime.EndReason.DESTROYED,r.destroy("a").orElseThrow().reason());

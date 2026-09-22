@@ -76,8 +76,12 @@ final class NativeLightningSpireVisuals {
         // Critically damped presentation-only spring. Collision/authoritative position never moves.
         double angle=c.sway[0],velocity=c.sway[1];velocity+=(-34*angle-11*velocity)*Math.min(delta,.1);angle+=velocity*Math.min(delta,.1);
         angle=Math.clamp(angle,Math.toRadians(-7),Math.toRadians(7));c.sway[0]=angle;c.sway[1]=velocity;
+        // The carrier pivots at its grounded model origin. A small damped emergence wobble therefore
+        // leaves the base planted while the narrow upper prism visibly bears most of the motion.
+        double riseWobble=progress<1?Math.sin(age*15)*Math.toRadians(3.25)*(1-.45*progress):0;
         transform.setPosition(new Vector3d(c.ground.x(),y,c.ground.z()));
-        transform.setRotation(new Rotation3f((float)(angle*c.sway[2]),0,(float)(angle*c.sway[3])));
+        transform.setRotation(new Rotation3f((float)(angle*c.sway[2]+riseWobble*.62),0,
+                (float)(angle*c.sway[3]+riseWobble*.78)));
     }
 
     void friendlyHit(String instance,Vec3 attacker,int percent,double now,CommandBuffer<EntityStore> buffer){

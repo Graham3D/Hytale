@@ -1,0 +1,18 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Mace_Signature_Ground_Hit_Crack",
+      "PositionOffset": { "Y": 0.04 },
+      "FixedRotation": true,
+      "StartDelay": 0
+    },
+    {
+      "SpawnerId": "Mace_Signature_Ground_Hit_Smoke",
+      "PositionOffset": { "Y": 0.04 },
+      "FixedRotation": true,
+      "StartDelay": 0
+    }
+  ],
+  "BoundingRadius": 8,
+  "IsImportant": true
+}

@@ -3959,7 +3959,7 @@
     "weaponRequirement": "None", "scalingClass": "Magic", "basePowerSource": "INNATE", "innateBasePower": 20,
     "resourceType": "MANA", "castCost": "Mana 22", "upkeep": "", "castTime": "Instant", "cooldown": "18 s",
     "targetMode": "Validated ground point within 12 m", "maxRange": "12 m", "geometry": "6 m discharge radius",
-    "travelSpeed": "N/A", "lifetime": "2 s emergence + 5 s READY", "powerCoefficient": "1.80x Magic Power per shockwave; +1.25% coefficient per skill level after level 1", "canCrit": true,
+    "travelSpeed": "N/A", "lifetime": "2 s emergence + 10 s READY", "powerCoefficient": "1.80x Magic Power per shockwave; +1.25% coefficient per skill level after level 1", "canCrit": true,
     "statusApplications": ["+2 Electrified on each shockwave victim"],
     "vfxRecipeId": "rpg.vfx.skill.lightning_coil", "soundRecipeId": "rpg.sound.skill.lightning_coil",
     "linkCompatibilityTags": ["GROUND_ZONE", "LIGHTNING", "DEPLOYABLE", "CONSTRUCT", "TIMED", "AREA", "RADIUS", "DAMAGE", "ACTIVE", "FINITE_RESOURCE_COST", "HAS_COOLDOWN", "HAS_FINITE_DURATION", "HAS_RADIUS", "HAS_RANGE", "MANA_RESOURCE", "SCALABLE_PAYLOAD", "SPELL_CAST", "CAN_CRIT", "CAN_KILL", "CAN_AFFECT_ENEMY_POSITION"],

@@ -383,13 +383,22 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                                              CommandBuffer<EntityStore> buffer,Ref<EntityStore> source,double now){
         var projection=store.getComponent(target,LightningSpireProjection.getComponentType());if(projection==null)return false;
         var ownerRef=store.getExternalData().getRefFromUUID(projection.owner());
-        if(ownerRef==null||!ownerRef.isValid()||!HytaleSupportSystem.eligibleAlly(store,ownerRef,source))return false;
+        // NativeBasicAttackObserver only reaches this boundary for a witnessed PlayerRef melee root.
+        // All players are intentional friendly charge contributors; NPC/hostile damage continues
+        // through the ordinary health path and can destroy the Spire.
+        if(ownerRef==null||!ownerRef.isValid()||source==null||!source.isValid()
+                ||buffer.getComponent(source,PlayerRef.getComponentType())==null)return false;
         var result=spires.friendlyMelee(projection.instance(),hitIdentity,now);
         var context=spireContexts.get(projection.instance());
         if(context!=null)emit(context,RpgTraceEventType.STATUS_REQUEST,Map.of("status","LIGHTNING_SPIRE_CHARGE","contributor",actor,
                 "result",result.code(),"chargeHits",result.chargeHits(),"chargePercent",result.chargePercent(),"waveSequence",result.waveSequence()));
-        if(result.code().equals("CHARGED")||result.code().equals("DISCHARGE"))spireVisuals.friendlyHit(projection.instance(),
-                vec(store.getComponent(source,TransformComponent.getComponentType()).getPosition()),result.discharge()?100:result.chargePercent(),now,buffer);
+        if(result.code().equals("CHARGED")||result.code().equals("DISCHARGE")){
+            spireVisuals.friendlyHit(projection.instance(),vec(store.getComponent(source,TransformComponent.getComponentType()).getPosition()),
+                    result.discharge()?100:result.chargePercent(),now,buffer);
+            if(context!=null)emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_FRIENDLY_HIT",
+                    "contributor",actor,"shockModel","Hywind_Lightning_Spire_Shock","gaugePercent",
+                    result.discharge()?100:result.chargePercent(),"waveQueued",result.discharge(),"connectedProof",false));
+        }
         // Every allied direct melee event is zero-damage, including emergence and expiry races.
         return true;
     }
@@ -452,6 +461,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         var view=spires.inspectOwner(owner,now).orElse(null);if(view==null)return;
         var context=spireContexts.get(view.instance());if(context==null){spires.cancel(owner,com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EndReason.OWNER_CLEANUP);spireVisuals.end(view.instance(),false,port.buffer);return;}
         spireVisuals.tick(view,now,delta,port.buffer);
+        if(view.phase()==com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.Phase.READY
+                &&context.effects().once("LIGHTNING_SPIRE_READY"))
+            emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_READY","attackable",true,
+                    "readySeconds",com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.BASE_READY_SECONDS,
+                    "maximumHealth",view.maximumHealth(),"connectedProof",false));
         var nativeHealth=spireVisuals.health(view.instance(),view.phase(),port.buffer);
         if(nativeHealth.destroyed()){
             spires.destroy(view.instance());spireContexts.remove(view.instance());spireVisuals.end(view.instance(),true,port.buffer);
@@ -470,6 +484,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         for(var wave:spires.drainWaves(owner)){
             spireVisuals.wave(wave.instance(),port.buffer);
+            emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_SHOCKWAVE",
+                    "model","Hywind_Lightning_Spire_Shockwave","radius",wave.radius(),"wave",wave.sequence(),
+                    "impactParticle","Laser_Impact","connectedProof",false));
             var shape=new AreaGeometry(AreaGeometry.Kind.DISC,context.target().point(),Vec3.FORWARD,wave.radius(),0,0,0,4);
             var found=HytaleAreaQueries.query(port.store,port.actor,shape::intersects,64);
             if(found.overflow()){emit(context,RpgTraceEventType.AREA_QUERY_REJECTED,Map.of("reason","LIGHTNING_SPIRE_CANDIDATE_BUDGET","wave",wave.sequence()));continue;}
@@ -1472,7 +1489,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 double now=System.nanoTime()/1e9;var view=spires.deploy(context.skillInstanceId(),playerRef.getUuid(),spec,now);
                 try{
                     spireVisuals.deploy(view,areaPlacement,now,buffer);spireContexts.put(context.skillInstanceId(),context);
-                    presentAuthoredParticle(context,store,areaPlacement,"Debug_Ability_Ground_Crack_Parts","LIGHTNING_SPIRE_EMERGENCE");
+                    presentAuthoredParticle(context,store,areaPlacement,"Hywind_Lightning_Spire_Emergence","LIGHTNING_SPIRE_EMERGENCE");
                     emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_DEPLOYED","emergenceSeconds",
                             com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EMERGENCE_SECONDS,"readySeconds",spec.readySeconds(),
                             "radius",spec.radius(),"coefficient",spec.coefficient(),"maximumHealth",spec.maximumHealth(),"model","Hywind_Lightning_Spire"));
@@ -3598,6 +3615,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private void presentAuthoredParticle(SkillExecutionContext context,Store<EntityStore> store,Vec3 point,String particle,String phase){
         if(particle==null||particle.isBlank())return;
         try{
+            if(com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.getAssetMap().getAsset(particle)==null)
+                throw new IllegalStateException("PARTICLE_SYSTEM_UNRESOLVED");
             com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect(particle,vector(point),store);
             emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase",phase,"particle",particle,"pointX",point.x(),"pointY",point.y(),"pointZ",point.z(),"connectedProof",false));
         }catch(RuntimeException failure){emit(context,RpgTraceEventType.AREA_PRESENTATION,
