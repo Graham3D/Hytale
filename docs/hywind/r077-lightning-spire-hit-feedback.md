@@ -16,4 +16,14 @@ The R076 trace showed four accepted player strikes and `LIGHTNING_SPIRE_CHARGE`,
 - Emergence now spawns Hytale's `Undead_Digging` particle system.
 - The discharge now uses a packaged particle-system wrapper around Hytale's `Portal_Hedera_Spawn2_Shockwave2` spawner. Gameplay radius, damage, target impacts, and `Laser_Impact` remain unchanged.
 
+## Release evidence
+
+- Version: `0.1.0-merge.32` / `R077`
+- Deployed JAR SHA-256: `47FC0031961951BBB37FBFD3ED4D08B754AA16BB2E15666D138FCE8FD9B0B688`
+- Full test suite, native-control tests, CustomUI validation, and JAR verification: PASS
+- Isolated clean-start smoke: PASS; Hywind, RPG, CanvasUI, PersistentNPCs, and Taverns all started without a legacy plugin root
+- Post-deployment verification: PASS across two server restarts with the installed hash unchanged
+- Rollback snapshot: `C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale-rollback\hywind-deploy-20260922T030214Z`
+- The merged JAR now packages PersistentNPCs' documented non-secret default `config.json`; the broad repository ignore rule had previously omitted it and prevented clean-save startup.
+
 Connected-client QA remains required for world rendering and audible SFX acceptance.
