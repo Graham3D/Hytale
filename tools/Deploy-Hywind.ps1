@@ -51,9 +51,9 @@ try {
     try { $manifest = $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
 } finally { $zip.Dispose() }
 if ($manifest.Group -ne 'InigmasGames' -or $manifest.Name -ne 'Hywind' -or
-    $manifest.Version -ne '0.1.0-merge.28' -or $manifest.Metadata.RpgRevision -ne 'R073' -or
+    $manifest.Version -ne '0.1.0-merge.29' -or $manifest.Metadata.RpgRevision -ne 'R074' -or
     $manifest.Metadata.TavernSourceRevision -ne 'R056' -or $manifest.Main -ne 'com.inigmasgames.hywind.HywindPlugin') {
-    throw 'Candidate is not the approved Hywind 0.1.0-merge.28 / R073 package with Taverns R056.'
+    throw 'Candidate is not the approved Hywind 0.1.0-merge.29 / R074 package with Taverns R056.'
 }
 
 $candidateHash = Get-Sha256 $CandidateJar

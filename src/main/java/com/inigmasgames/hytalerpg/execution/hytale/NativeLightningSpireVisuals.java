@@ -22,6 +22,7 @@ import com.hypixel.hytale.server.core.modules.time.TimeResource;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime;
+import com.inigmasgames.hytalerpg.execution.lightning.LightningSpireEntityLifecycle;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import java.util.*;
 import org.joml.Vector3d;
@@ -34,7 +35,11 @@ final class NativeLightningSpireVisuals {
     static final String TOTEM_SPAWN="SFX_Deployable_Totem_Slowing_Spawn",TOTEM_DESPAWN="SFX_Deployable_Totem_Slowing_Despawn";
     static final String METAL_HIT="SFX_Metal_Break",WAVE_SOUND="SFX_Portal_Neutral_Open";
     private record Carrier(Ref<EntityStore> ref,Store<EntityStore> store,Vec3 ground,double deployedAt,
-                           EffectControllerComponent effects,double[] sway,boolean[] cues){}
+                           EffectControllerComponent effects,LightningSpireEntityLifecycle lifecycle,double[] sway,boolean[] cues){}
+    record HealthProbe(LightningSpireEntityLifecycle.State state,boolean refValid,boolean statMapPresent,
+                       boolean healthPresent,double currentHealth,double minimumHealth,boolean healthyEntityObserved){
+        boolean destroyed(){return state==LightningSpireEntityLifecycle.State.DESTROYED;}
+    }
     private final Map<String,Carrier> carriers=new HashMap<>();
     private final Map<String,Ref<EntityStore>> gauges=new HashMap<>();
 
@@ -56,7 +61,7 @@ final class NativeLightningSpireVisuals {
         stats.update();stats.setStatValue(health,(float)view.maximumHealth());holder.addComponent(EntityStatMap.getComponentType(),stats);
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         Ref<EntityStore> ref=buffer.addEntity(holder,AddReason.SPAWN);
-        carriers.put(view.instance(),new Carrier(ref,store,ground,now,effects,new double[4],new boolean[3]));
+        carriers.put(view.instance(),new Carrier(ref,store,ground,now,effects,new LightningSpireEntityLifecycle(),new double[4],new boolean[3]));
         return ref;
     }
 
@@ -86,7 +91,13 @@ final class NativeLightningSpireVisuals {
     void wave(String instance,CommandBuffer<EntityStore> buffer){var c=carriers.get(instance);if(c!=null){sound(WAVE_SOUND,c.ground,c.store);spawn("Hywind_Lightning_Spire_Shockwave",c.ground.add(new Vec3(0,.03,0)),.50f,buffer,true);setGauge(instance,0,buffer);}}
     Ref<EntityStore> ref(String instance){var c=carriers.get(instance);return c==null?null:c.ref;}
     Optional<String> instance(Ref<EntityStore> ref,Store<EntityStore> store){var p=ref==null?null:store.getComponent(ref,LightningSpireProjection.getComponentType());return p==null?Optional.empty():Optional.of(p.instance());}
-    boolean destroyed(String instance,Store<EntityStore> store){var c=carriers.get(instance);if(c==null||!c.ref.isValid())return true;var stats=store.getComponent(c.ref,EntityStatMap.getComponentType());var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());return hp==null||hp.get()<=hp.getMin();}
+    HealthProbe health(String instance,LightningSpireRuntime.Phase phase,CommandBuffer<EntityStore> buffer){
+        var c=carriers.get(instance);if(c==null)return new HealthProbe(LightningSpireEntityLifecycle.State.DESTROYED,false,false,false,-1,-1,false);
+        boolean valid=c.ref.isValid();var stats=valid?buffer.getComponent(c.ref,EntityStatMap.getComponentType()):null;
+        var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());double current=hp==null?-1:hp.get(),minimum=hp==null?-1:hp.getMin();
+        var state=c.lifecycle.observe(phase,valid,hp!=null,current,minimum);
+        return new HealthProbe(state,valid,stats!=null,hp!=null,current,minimum,c.lifecycle.healthyEntityObserved());
+    }
     void end(String instance,boolean explosion,CommandBuffer<EntityStore> buffer){var c=carriers.remove(instance);if(c==null)return;
         sound(TOTEM_DESPAWN,c.ground.add(new Vec3(0,1,0)),c.store);
         if(explosion&&buffer!=null)try{com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect("Explosion_Medium",new Vector3d(c.ground.x(),c.ground.y()+1,c.ground.z()),buffer.getStore());}catch(RuntimeException ignored){}

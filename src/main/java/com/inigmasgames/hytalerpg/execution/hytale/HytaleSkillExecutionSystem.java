@@ -452,9 +452,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         var view=spires.inspectOwner(owner,now).orElse(null);if(view==null)return;
         var context=spireContexts.get(view.instance());if(context==null){spires.cancel(owner,com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EndReason.OWNER_CLEANUP);spireVisuals.end(view.instance(),false,port.buffer);return;}
         spireVisuals.tick(view,now,delta,port.buffer);
-        if(spireVisuals.destroyed(view.instance(),port.store)){
+        var nativeHealth=spireVisuals.health(view.instance(),view.phase(),port.buffer);
+        if(nativeHealth.destroyed()){
             spires.destroy(view.instance());spireContexts.remove(view.instance());spireVisuals.end(view.instance(),true,port.buffer);
-            emit(context,RpgTraceEventType.AREA_TERMINATED,Map.of("reason","LIGHTNING_SPIRE_DESTROYED","completedWaves",view.completedWaves()));
+            emit(context,RpgTraceEventType.AREA_TERMINATED,Map.of("reason","LIGHTNING_SPIRE_DESTROYED","completedWaves",view.completedWaves(),
+                    "phase",view.phase().name(),"nativeHealthState",nativeHealth.state().name(),"nativeRefValid",nativeHealth.refValid(),
+                    "nativeStatMapPresent",nativeHealth.statMapPresent(),"nativeHealthPresent",nativeHealth.healthPresent(),
+                    "nativeCurrentHealth",nativeHealth.currentHealth(),"nativeMinimumHealth",nativeHealth.minimumHealth(),
+                    "nativeHealthyEntityObserved",nativeHealth.healthyEntityObserved()));
             executions.terminate(context,"LIGHTNING_SPIRE_DESTROYED");return;
         }
         var expired=spires.expire(owner,now);
