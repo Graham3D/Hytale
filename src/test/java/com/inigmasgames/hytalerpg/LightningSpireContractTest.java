@@ -29,10 +29,15 @@ final class LightningSpireContractTest {
                 "/Common/VFX/RPG/LightningSpire/Shock_Strip_Vertical.png",
                 "/Common/VFX/RPG/LightningSpire/Shockwave_Strip_Vertical.png",
                 "/Common/VFX/RPG/LightningSpire/skill_lightningspire_bg.png",
+                "/Common/VFX/RPG/LightningSpire/LightningSpire_Gauge_25.png",
+                "/Common/VFX/RPG/LightningSpire/LightningSpire_Gauge_75.png",
                 "/Server/Entity/Effects/RPG/RPG_Lightning_Spire_Emergence_Audio.json",
                 "/Server/Entity/Effects/RPG/RPG_Lightning_Spire_Idle_Audio.json",
                 "/Server/Particles/RPG/LightningSpire/Hywind_Lightning_Spire_Emergence.particlesystem",
+                "/Server/Particles/RPG/LightningSpire/Hywind_Lightning_Spire_Shockwave.particlesystem",
                 "/Server/Models/RPG/Hywind_Lightning_Spire.json",
+                "/Server/Models/RPG/Hywind_Lightning_Spire_Gauge_25.json",
+                "/Server/Models/RPG/Hywind_Lightning_Spire_Gauge_75.json",
                 "/Server/Models/RPG/Hywind_Lightning_Spire_Shock.json",
                 "/Server/Models/RPG/Hywind_Lightning_Spire_Shockwave.json"))assertNotNull(getClass().getResource(resource),resource);
     }

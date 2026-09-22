@@ -341,10 +341,12 @@ public final class Phase00Plugin extends JavaPlugin {
         com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.requireAssets();
         com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.requireMantleAssets();
         com.inigmasgames.hytalerpg.input.NativeSupportTetherAudit.requireAssets();
-        if(com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.getAssetMap()
-                .getAsset("Hywind_Lightning_Spire_Emergence")==null)
+        var spireParticles=com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.getAssetMap();
+        if(spireParticles.getAsset("Undead_Digging")==null)
             throw new IllegalStateException("LIGHTNING_SPIRE_EMERGENCE_PARTICLE_UNRESOLVED");
-        LOGGER.atInfo().log("RPG_LIGHTNING_SPIRE_ASSETS emergenceParticle=Hywind_Lightning_Spire_Emergence result=PASS connectedProof=false");
+        if(spireParticles.getAsset("Hywind_Lightning_Spire_Shockwave")==null)
+            throw new IllegalStateException("LIGHTNING_SPIRE_SHOCKWAVE_PARTICLE_UNRESOLVED");
+        LOGGER.atInfo().log("RPG_LIGHTNING_SPIRE_ASSETS emergenceParticle=Undead_Digging shockwaveParticle=Hywind_Lightning_Spire_Shockwave result=PASS connectedProof=false");
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeActionLock.requireAsset();
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeFeedback.requireAssets();
         var projectileAudit=com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileAssetAudit.requireAssets(

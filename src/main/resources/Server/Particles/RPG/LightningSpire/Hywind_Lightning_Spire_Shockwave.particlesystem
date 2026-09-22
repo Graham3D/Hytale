@@ -1,0 +1,12 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Portal_Hedera_Spawn2_Shockwave2",
+      "PositionOffset": { "Y": 0.03 },
+      "FixedRotation": true,
+      "StartDelay": 0
+    }
+  ],
+  "BoundingRadius": 8,
+  "IsImportant": true
+}

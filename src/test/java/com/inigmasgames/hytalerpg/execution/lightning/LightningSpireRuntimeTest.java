@@ -5,15 +5,16 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 final class LightningSpireRuntimeTest {
-    @Test void emergenceIsExcludedAndEveryTenDistinctReadyHitsCreatesAnotherWave(){
+    @Test void emergenceIsExcludedAndEveryFourDistinctReadyHitsCreatesAnotherWave(){
         var r=new LightningSpireRuntime();var owner=UUID.randomUUID();var spec=LightningSpireRuntime.Spec.base(20,1,1,1);
         var deployed=r.deploy("spire",owner,spec,10);
         assertEquals(97.5,deployed.maximumHealth(),1e-9);assertEquals(2.2275,deployed.coefficient(),1e-9);
         assertEquals("EMERGING",r.friendlyMelee("spire","early",11.9).code());
         for(int wave=1;wave<=3;wave++){
-            for(int hit=1;hit<=10;hit++){
+            for(int hit=1;hit<=4;hit++){
                 var result=r.friendlyMelee("spire","w"+wave+"h"+hit,12+wave*.01+hit*.0001);
-                assertEquals(hit==10?"DISCHARGE":"CHARGED",result.code());
+                assertEquals(hit==4?"DISCHARGE":"CHARGED",result.code());
+                assertEquals(hit==4?0:hit*25,result.chargePercent());
             }
             var waves=r.drainWaves(owner);assertEquals(1,waves.size());assertEquals(wave,waves.getFirst().sequence());
         }

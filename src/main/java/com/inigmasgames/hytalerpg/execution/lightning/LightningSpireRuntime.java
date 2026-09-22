@@ -15,7 +15,7 @@ import java.util.UUID;
  * damageable entity and presentation; this ledger owns the gameplay transitions.
  */
 public final class LightningSpireRuntime {
-    public static final int HITS_PER_WAVE = 10;
+    public static final int HITS_PER_WAVE = 4;
     public static final double EMERGENCE_SECONDS = 2;
     public static final double BASE_READY_SECONDS = 10;
     public static final double BASE_RADIUS = 6;
@@ -61,7 +61,7 @@ public final class LightningSpireRuntime {
             deployedAt=now;readyAt=now+EMERGENCE_SECONDS;expiresAt=readyAt+spec.readySeconds();}
         View view(double now){Phase phase=now<readyAt?Phase.EMERGING:Phase.READY;
             double emergence=Math.clamp((now-deployedAt)/EMERGENCE_SECONDS,0,1);
-            return new View(instance,owner,phase,emergence,Math.max(0,expiresAt-Math.max(now,readyAt)),hits,hits*10,waves,
+            return new View(instance,owner,phase,emergence,Math.max(0,expiresAt-Math.max(now,readyAt)),hits,percent(hits),waves,
                     spec.radius(),spec.coefficient(),spec.maximumHealth());}
     }
 
@@ -87,12 +87,12 @@ public final class LightningSpireRuntime {
     public synchronized ChargeResult friendlyMelee(String instance,String hitIdentity,double now){
         requireTime(now);requireId(hitIdentity);var state=byInstance.get(requireId(instance));
         if(state==null||state.ended)return new ChargeResult("MISSING",0,0,0);
-        if(now<state.readyAt)return new ChargeResult("EMERGING",state.hits,state.hits*10,0);
-        if(now>=state.expiresAt)return new ChargeResult("EXPIRED",state.hits,state.hits*10,0);
+        if(now<state.readyAt)return new ChargeResult("EMERGING",state.hits,percent(state.hits),0);
+        if(now>=state.expiresAt)return new ChargeResult("EXPIRED",state.hits,percent(state.hits),0);
         // Root/operation/target identity is supplied by the native authored-hit witness.
-        if(!HitDedup.claim(state.instance,hitIdentity))return new ChargeResult("DUPLICATE",state.hits,state.hits*10,0);
+        if(!HitDedup.claim(state.instance,hitIdentity))return new ChargeResult("DUPLICATE",state.hits,percent(state.hits),0);
         state.hits++;
-        if(state.hits<HITS_PER_WAVE)return new ChargeResult("CHARGED",state.hits,state.hits*10,0);
+        if(state.hits<HITS_PER_WAVE)return new ChargeResult("CHARGED",state.hits,percent(state.hits),0);
         state.hits=0;long sequence=++state.waves;
         if(state.pending.size()>=MAX_PENDING_WAVES)throw new IllegalStateException("LIGHTNING_SPIRE_PENDING_WAVE_BUDGET");
         state.pending.addLast(new Wave(state.instance,state.owner,sequence,state.spec.radius(),state.spec.coefficient()));
@@ -114,6 +114,7 @@ public final class LightningSpireRuntime {
 
     private static String requireId(String value){if(value==null||value.isBlank()||value.length()>512)throw new IllegalArgumentException("INVALID_LIGHTNING_SPIRE_ID");return value;}
     private static void requireTime(double now){if(!Double.isFinite(now)||now<0)throw new IllegalArgumentException("INVALID_TIME");}
+    private static int percent(int hits){return Math.clamp(hits*100/HITS_PER_WAVE,0,100);}
 
     /** Bounded per-Spire strike identity set; reset only with that deployment. */
     private static final class HitDedup {

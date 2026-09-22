@@ -388,12 +388,15 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         // through the ordinary health path and can destroy the Spire.
         if(ownerRef==null||!ownerRef.isValid()||source==null||!source.isValid()
                 ||buffer.getComponent(source,PlayerRef.getComponentType())==null)return false;
-        var result=spires.friendlyMelee(projection.instance(),hitIdentity,now);
         var context=spireContexts.get(projection.instance());
+        com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.ChargeResult result;
+        try{result=spires.friendlyMelee(projection.instance(),hitIdentity,now);}
+        catch(RuntimeException failure){if(context!=null)emit(context,RpgTraceEventType.STATUS_REQUEST,Map.of("status","LIGHTNING_SPIRE_CHARGE_FAILURE","boundary",String.valueOf(failure.getMessage())));return true;}
         if(context!=null)emit(context,RpgTraceEventType.STATUS_REQUEST,Map.of("status","LIGHTNING_SPIRE_CHARGE","contributor",actor,
                 "result",result.code(),"chargeHits",result.chargeHits(),"chargePercent",result.chargePercent(),"waveSequence",result.waveSequence()));
         if(result.code().equals("CHARGED")||result.code().equals("DISCHARGE")){
-            spireVisuals.friendlyHit(projection.instance(),result.discharge()?100:result.chargePercent(),now,buffer);
+            try{spireVisuals.friendlyHit(projection.instance(),result.discharge()?100:result.chargePercent(),now,buffer);}
+            catch(RuntimeException failure){if(context!=null)emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_HIT_PRESENTATION_FAILURE","boundary",String.valueOf(failure.getMessage()),"connectedProof",false));}
             if(context!=null)emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_FRIENDLY_HIT",
                     "contributor",actor,"shockModel","Hywind_Lightning_Spire_Shock","gaugePercent",
                     result.discharge()?100:result.chargePercent(),"waveQueued",result.discharge(),"connectedProof",false));
@@ -482,9 +485,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             executions.terminate(context,"LIGHTNING_SPIRE_READY_EXPIRED");return;
         }
         for(var wave:spires.drainWaves(owner)){
-            spireVisuals.wave(wave.instance(),port.buffer);
+            try{spireVisuals.wave(wave.instance(),port.buffer);}
+            catch(RuntimeException failure){emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_WAVE_PRESENTATION_FAILURE","boundary",String.valueOf(failure.getMessage()),"connectedProof",false));}
             emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_SHOCKWAVE",
-                    "model","Hywind_Lightning_Spire_Shockwave","radius",wave.radius(),"wave",wave.sequence(),
+                    "particle","Hywind_Lightning_Spire_Shockwave","radius",wave.radius(),"wave",wave.sequence(),
                     "impactParticle","Laser_Impact","connectedProof",false));
             var shape=new AreaGeometry(AreaGeometry.Kind.DISC,context.target().point(),Vec3.FORWARD,wave.radius(),0,0,0,4);
             var found=HytaleAreaQueries.query(port.store,port.actor,shape::intersects,64);
@@ -1488,7 +1492,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 double now=System.nanoTime()/1e9;var view=spires.deploy(context.skillInstanceId(),playerRef.getUuid(),spec,now);
                 try{
                     spireVisuals.deploy(view,areaPlacement,now,buffer);spireContexts.put(context.skillInstanceId(),context);
-                    presentAuthoredParticle(context,store,areaPlacement,"Hywind_Lightning_Spire_Emergence","LIGHTNING_SPIRE_EMERGENCE");
+                    presentAuthoredParticle(context,store,areaPlacement,"Undead_Digging","LIGHTNING_SPIRE_EMERGENCE");
                     emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_DEPLOYED","emergenceSeconds",
                             com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EMERGENCE_SECONDS,"readySeconds",spec.readySeconds(),
                             "radius",spec.radius(),"coefficient",spec.coefficient(),"maximumHealth",spec.maximumHealth(),"model","Hywind_Lightning_Spire"));

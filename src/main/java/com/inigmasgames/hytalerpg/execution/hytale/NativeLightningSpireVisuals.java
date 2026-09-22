@@ -29,7 +29,7 @@ import org.joml.Vector3d;
 
 /** Native model carriers for the damageable Spire, charge gauge and bounded hit/wave flashes. */
 final class NativeLightningSpireVisuals {
-    static final double MODEL_HEIGHT=3.6,TOP_OFFSET=3.45;
+    static final double MODEL_HEIGHT=3.6,TOP_OFFSET=3.45,SHOCK_OFFSET=1.75;
     static final double TOTEM_SPAWN_CUE_SECONDS=.9;
     static final String EMERGENCE_AUDIO="RPG_Lightning_Spire_Emergence_Audio",IDLE_AUDIO="RPG_Lightning_Spire_Idle_Audio";
     static final String TOTEM_SPAWN="SFX_Deployable_Totem_Slowing_Spawn",TOTEM_DESPAWN="SFX_Deployable_Totem_Slowing_Despawn";
@@ -90,11 +90,19 @@ final class NativeLightningSpireVisuals {
 
     void friendlyHit(String instance,int percent,double now,CommandBuffer<EntityStore> buffer){
         var c=carriers.get(instance);if(c==null||!c.ref.isValid())return;
-        c.motion[0]=now;sound(METAL_HIT,c.ground.add(new Vec3(0,1.4,0)),c.store);
-        spawn("Hywind_Lightning_Spire_Shock",c.ground.add(new Vec3(0,TOP_OFFSET,0)),.42f,buffer,true);
-        setGauge(instance,Math.clamp(percent,0,100),buffer);
+        c.motion[0]=now;var failures=new ArrayList<String>();
+        attempt(failures,"GAUGE",()->setGauge(instance,Math.clamp(percent,0,100),buffer));
+        attempt(failures,"SOUND",()->sound(METAL_HIT,c.ground.add(new Vec3(0,1.4,0)),c.store));
+        attempt(failures,"SHOCK",()->spawn("Hywind_Lightning_Spire_Shock",c.ground.add(new Vec3(0,SHOCK_OFFSET,0)),.85f,buffer,true));
+        if(!failures.isEmpty())throw new IllegalStateException("LIGHTNING_SPIRE_HIT_PRESENTATION:"+String.join("|",failures));
     }
-    void wave(String instance,CommandBuffer<EntityStore> buffer){var c=carriers.get(instance);if(c!=null){sound(WAVE_SOUND,c.ground,c.store);spawn("Hywind_Lightning_Spire_Shockwave",c.ground.add(new Vec3(0,.03,0)),.50f,buffer,true);setGauge(instance,0,buffer);}}
+    void wave(String instance,CommandBuffer<EntityStore> buffer){var c=carriers.get(instance);if(c!=null){
+        var failures=new ArrayList<String>();attempt(failures,"GAUGE",()->setGauge(instance,0,buffer));
+        attempt(failures,"SOUND",()->sound(WAVE_SOUND,c.ground,c.store));
+        attempt(failures,"PARTICLE",()->com.hypixel.hytale.server.core.universe.world.ParticleUtil.spawnParticleEffect(
+                "Hywind_Lightning_Spire_Shockwave",new Vector3d(c.ground.x(),c.ground.y()+.03,c.ground.z()),c.store));
+        if(!failures.isEmpty())throw new IllegalStateException("LIGHTNING_SPIRE_WAVE_PRESENTATION:"+String.join("|",failures));
+    }}
     Ref<EntityStore> ref(String instance){var c=carriers.get(instance);return c==null?null:c.ref;}
     Optional<String> instance(Ref<EntityStore> ref,Store<EntityStore> store){var p=ref==null?null:store.getComponent(ref,LightningSpireProjection.getComponentType());return p==null?Optional.empty():Optional.of(p.instance());}
     HealthProbe health(String instance,LightningSpireRuntime.Phase phase,CommandBuffer<EntityStore> buffer){
@@ -114,12 +122,13 @@ final class NativeLightningSpireVisuals {
         h.addComponent(UUIDComponent.getComponentType(),new UUIDComponent(UUID.randomUUID()));h.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
         h.addComponent(TransformComponent.getComponentType(),transform(p,0,0));h.addComponent(ModelComponent.getComponentType(),new ModelComponent(model));h.addComponent(BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));
         h.addComponent(ActiveAnimationComponent.getComponentType(),new ActiveAnimationComponent());h.addComponent(DespawnComponent.getComponentType(),DespawnComponent.despawnInSeconds(store.getResource(TimeResource.getResourceType()),seconds));h.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
-        var ref=buffer.addEntity(h,AddReason.SPAWN);if(animate)AnimationUtils.playAnimation(ref,AnimationSlot.Movement,"Idle",true,buffer);}
-    private void setGauge(String instance,int percent,CommandBuffer<EntityStore> buffer){var c=carriers.get(instance);if(c==null)return;percent=Math.clamp((percent/10)*10,0,100);
+        var ref=buffer.addEntity(h,AddReason.SPAWN);if(animate)buffer.run(committed->{if(ref.isValid())AnimationUtils.playAnimation(ref,AnimationSlot.Movement,"Idle",true,committed);});}
+    private void setGauge(String instance,int percent,CommandBuffer<EntityStore> buffer){var c=carriers.get(instance);if(c==null)return;percent=Math.clamp(percent,0,100);
         var model=Model.createStaticScaledModel(require("Hywind_Lightning_Spire_Gauge_"+percent),1);var existing=gauges.get(instance);
         if(existing!=null&&existing.isValid()){buffer.replaceComponent(existing,ModelComponent.getComponentType(),new ModelComponent(model));buffer.replaceComponent(existing,BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));return;}
         var h=EntityStore.REGISTRY.newHolder();var store=buffer.getStore();h.addComponent(UUIDComponent.getComponentType(),new UUIDComponent(UUID.randomUUID()));h.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
         h.addComponent(TransformComponent.getComponentType(),transform(c.ground.add(new Vec3(0,TOP_OFFSET+1,0)),0,0));h.addComponent(ModelComponent.getComponentType(),new ModelComponent(model));h.addComponent(BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));h.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());gauges.put(instance,buffer.addEntity(h,AddReason.SPAWN));}
+    private static void attempt(List<String> failures,String phase,Runnable action){try{action.run();}catch(RuntimeException failure){failures.add(phase+":"+String.valueOf(failure.getMessage()));}}
     private static ModelAsset require(String id){var asset=ModelAsset.getAssetMap().getAsset(id);if(asset==null)throw new IllegalStateException("LIGHTNING_SPIRE_MODEL_UNRESOLVED:"+id);return asset;}
     private static void applyEffect(Ref<EntityStore> ref,EffectControllerComponent controller,Store<EntityStore> store,String id,float seconds){
         var effect=EntityEffect.getAssetMap().getAsset(id);if(effect==null)throw new IllegalStateException("LIGHTNING_SPIRE_EFFECT_UNRESOLVED:"+id);

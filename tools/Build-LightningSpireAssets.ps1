@@ -48,7 +48,7 @@ $bar=[Drawing.Bitmap]::new((Join-Path $Repository 'art/UI/skill_lightningspire_b
 $frame=[Drawing.Bitmap]::new((Join-Path $Repository 'art/UI/skill_lightningspire_frame.png'))
 try {
     $serverModels=Join-Path $Repository 'src/main/resources/Server/Models/RPG';Ensure-Directory $serverModels
-    foreach($percent in 0,10,20,30,40,50,60,70,80,90,100){
+    foreach($percent in 0,25,50,75,100){
         $gauge=[Drawing.Bitmap]::new(128,24,[Drawing.Imaging.PixelFormat]::Format32bppArgb)
         try{$g=[Drawing.Graphics]::FromImage($gauge);try{
             $g.Clear([Drawing.Color]::Transparent);$g.DrawImage($background,[Drawing.Rectangle]::new(4,0,120,24))
