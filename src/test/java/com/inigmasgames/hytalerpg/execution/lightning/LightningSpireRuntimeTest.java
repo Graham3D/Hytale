@@ -30,13 +30,15 @@ final class LightningSpireRuntimeTest {
         assertFalse(r.active(owner));assertTrue(r.drainWaves(owner).isEmpty());
     }
 
-    @Test void oneActivePerCasterAndModifierMathStayComponentScoped(){
+    @Test void sameCasterInstancesCoexistAndKeepIndependentState(){
         var r=new LightningSpireRuntime();var owner=UUID.randomUUID();
         var spec=LightningSpireRuntime.Spec.base(1,1.4,.7,1.3);
         assertEquals(14,spec.readySeconds(),1e-9);assertEquals(4.2,spec.radius(),1e-9);assertEquals(2.34,spec.coefficient(),1e-9);
         assertEquals(50,spec.maximumHealth(),1e-9);r.deploy("a",owner,spec,0);
-        assertThrows(IllegalStateException.class,()->r.deploy("b",owner,spec,0));
+        assertDoesNotThrow(()->r.deploy("b",owner,spec,0));assertEquals(2,r.inspectOwnerAll(owner,2.1).size());
+        assertEquals("CHARGED",r.friendlyMelee("a","a-hit",2.1).code());
+        assertEquals(25,r.inspect("a",2.1).orElseThrow().chargePercent());assertEquals(0,r.inspect("b",2.1).orElseThrow().chargePercent());
         assertEquals(LightningSpireRuntime.EndReason.DESTROYED,r.destroy("a").orElseThrow().reason());
-        assertDoesNotThrow(()->r.deploy("b",owner,spec,0));
+        assertTrue(r.inspect("b",2.1).isPresent());assertEquals(1,r.inspectOwnerAll(owner,2.1).size());
     }
 }

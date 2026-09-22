@@ -89,9 +89,9 @@ foreach ($iteration in 1..2) {
         iteration = $iteration
         exitCode = $process.ExitCode
         hywindDiscovered = [bool]($plain -match 'InigmasGames:Hywind from path Hywind\.jar')
-        hywindStarted = [bool]($plain -match 'HYWIND_STARTED version=0\.1\.0-merge\.32 revision=R077')
+        hywindStarted = [bool]($plain -match 'HYWIND_STARTED version=0\.1\.0-merge\.33 revision=R078')
         tavernsStarted = [bool]($plain -match 'Taverns revision R056 started with persistence schema 3 and generic Core support')
-        hywindShutdown = [bool]($plain -match 'HYWIND_SHUTDOWN version=0\.1\.0-merge\.32 revision=R077')
+        hywindShutdown = [bool]($plain -match 'HYWIND_SHUTDOWN version=0\.1\.0-merge\.33 revision=R078')
         legacyPluginDiscovered = [bool]($plain -match 'InigmasGames:(HytaleRPGPhase00Audit|CanvasUI|ImmersiveNPCs|Taverns) from path')
         scopedFailure = [bool]($plain -match '(?i)(Failed to setup plugin InigmasGames:Hywind|shutdownReason\.pluginError|reason: mod_error|HYWIND_PARTIAL_CLEANUP_FAILED|Failed to create HytaleServer)')
         log = $log

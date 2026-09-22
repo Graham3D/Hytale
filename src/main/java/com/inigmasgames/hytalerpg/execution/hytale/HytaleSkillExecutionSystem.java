@@ -166,8 +166,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final Map<UUID,FireballChargePresentation> fireballCharges=new HashMap<>();
     public double activeSkillRemaining(UUID owner,String skill){
         double now=System.nanoTime()/1e9;
-        if(skill.equals("lightning_coil"))return spires.inspectOwner(owner,now).map(value->value.phase()==com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.Phase.EMERGING
-                ?value.readyRemaining()+com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EMERGENCE_SECONDS*(1-value.emergenceProgress()):value.readyRemaining()).orElse(0d);
+        if(skill.equals("lightning_coil"))return spires.inspectOwnerAll(owner,now).stream().mapToDouble(value->value.phase()==com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.Phase.EMERGING
+                ?value.readyRemaining()+com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EMERGENCE_SECONDS*(1-value.emergenceProgress()):value.readyRemaining()).max().orElse(0d);
         return areas.activeRemaining(owner,skill,now);
     }
     private final ConnectionRuntime connections=new ConnectionRuntime(fieldCapacity);
@@ -398,7 +398,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             try{spireVisuals.friendlyHit(projection.instance(),result.discharge()?100:result.chargePercent(),now,buffer);}
             catch(RuntimeException failure){if(context!=null)emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_HIT_PRESENTATION_FAILURE","boundary",String.valueOf(failure.getMessage()),"connectedProof",false));}
             if(context!=null)emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_FRIENDLY_HIT",
-                    "contributor",actor,"shockModel","Hywind_Lightning_Spire_Shock","gaugePercent",
+                    "contributor",actor,"shockModel","Hywind_Lightning_Spire_Shock_Frame_0","shockFrames",8,"frameMilliseconds",100,"gaugePercent",
                     result.discharge()?100:result.chargePercent(),"waveQueued",result.discharge(),"connectedProof",false));
         }
         // Every allied direct melee event is zero-damage, including emergence and expiry races.
@@ -460,55 +460,57 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
 
     private void advanceLightningSpire(UUID owner,double now,double delta,Port port){
-        var view=spires.inspectOwner(owner,now).orElse(null);if(view==null)return;
-        var context=spireContexts.get(view.instance());if(context==null){spires.cancel(owner,com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EndReason.OWNER_CLEANUP);spireVisuals.end(view.instance(),false,port.buffer);return;}
-        spireVisuals.tick(view,now,delta,port.buffer);
-        if(view.phase()==com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.Phase.READY
-                &&context.effects().once("LIGHTNING_SPIRE_READY"))
-            emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_READY","attackable",true,
-                    "readySeconds",com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.BASE_READY_SECONDS,
-                    "maximumHealth",view.maximumHealth(),"connectedProof",false));
-        var nativeHealth=spireVisuals.health(view.instance(),view.phase(),port.buffer);
-        if(nativeHealth.destroyed()){
-            spires.destroy(view.instance());spireContexts.remove(view.instance());spireVisuals.end(view.instance(),true,port.buffer);
-            emit(context,RpgTraceEventType.AREA_TERMINATED,Map.of("reason","LIGHTNING_SPIRE_DESTROYED","completedWaves",view.completedWaves(),
-                    "phase",view.phase().name(),"nativeHealthState",nativeHealth.state().name(),"nativeRefValid",nativeHealth.refValid(),
-                    "nativeStatMapPresent",nativeHealth.statMapPresent(),"nativeHealthPresent",nativeHealth.healthPresent(),
-                    "nativeCurrentHealth",nativeHealth.currentHealth(),"nativeMinimumHealth",nativeHealth.minimumHealth(),
-                    "nativeHealthyEntityObserved",nativeHealth.healthyEntityObserved()));
-            executions.terminate(context,"LIGHTNING_SPIRE_DESTROYED");return;
-        }
-        var expired=spires.expire(owner,now);
-        if(expired.isPresent()){
-            spireContexts.remove(view.instance());spireVisuals.end(view.instance(),true,port.buffer);
-            emit(context,RpgTraceEventType.AREA_TERMINATED,Map.of("reason","LIGHTNING_SPIRE_READY_EXPIRED","completedWaves",expired.get().completedWaves()));
-            executions.terminate(context,"LIGHTNING_SPIRE_READY_EXPIRED");return;
-        }
-        for(var wave:spires.drainWaves(owner)){
-            try{spireVisuals.wave(wave.instance(),port.buffer);}
-            catch(RuntimeException failure){emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_WAVE_PRESENTATION_FAILURE","boundary",String.valueOf(failure.getMessage()),"connectedProof",false));}
-            emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_SHOCKWAVE",
-                    "particle","Hywind_Lightning_Spire_Shockwave","radius",wave.radius(),"wave",wave.sequence(),
-                    "impactParticle","Laser_Impact","connectedProof",false));
-            var shape=new AreaGeometry(AreaGeometry.Kind.DISC,context.target().point(),Vec3.FORWARD,wave.radius(),0,0,0,4);
-            var found=HytaleAreaQueries.query(port.store,port.actor,shape::intersects,64);
-            if(found.overflow()){emit(context,RpgTraceEventType.AREA_QUERY_REJECTED,Map.of("reason","LIGHTNING_SPIRE_CANDIDATE_BUDGET","wave",wave.sequence()));continue;}
-            int damaged=0;
-            for(var value:found.candidates()){
-                var target=port.candidate(value.ref());
-                if(target==null||target.protectedTarget()||!HytaleAreaQueries.hostile(port.store,target.handle(),port.actor)
-                        ||!HytaleAreaQueries.clear(port.store,context.target().point().add(new Vec3(0,.1,0)),target.bounds().centre()))continue;
-                var outcome=port.damage(context,target,(int)Math.min(Integer.MAX_VALUE,wave.sequence()),wave.coefficient(),
-                        context.snapshot().criticalChance(),DamageCause.getAssetMap().getAsset("Lightning"),false,
-                        wave.instance()+"/wave/"+wave.sequence()+"/"+target.stableId(),false,true,false);
-                if(outcome.cancelled()||outcome.actualHealthLoss()<=0)continue;
-                UUID targetId=UUID.fromString(target.stableId());kernel.statuses().applyElectrified(targetId,6);kernel.statuses().applyElectrified(targetId,6);
-                port.buffer.ensureComponent(target.handle(),AreaStatusProjection.getComponentType());HytaleAreaStatuses.synchronize(kernel.statuses(),targetId,target.handle(),port.store,port.actor);
-                port.applyPassiveAreaPosition(context,target.handle(),context.target().point());
-                presentAuthoredParticle(context,port.store,target.position(),"Laser_Impact","LIGHTNING_SPIRE_WAVE");damaged++;
+        spireVisuals.tickHitFlashes(now,port.buffer);
+        for(var view:spires.inspectOwnerAll(owner,now)){
+            var context=spireContexts.get(view.instance());
+            if(context==null){spires.cancel(view.instance(),com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EndReason.OWNER_CLEANUP);spireVisuals.end(view.instance(),false,port.buffer);continue;}
+            spireVisuals.tick(view,now,delta,port.buffer);
+            if(view.phase()==com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.Phase.READY
+                    &&context.effects().once("LIGHTNING_SPIRE_READY"))
+                emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_READY","attackable",true,
+                        "readySeconds",view.readyRemaining(),"maximumHealth",view.maximumHealth(),"connectedProof",false));
+            var nativeHealth=spireVisuals.health(view.instance(),view.phase(),port.buffer);
+            if(nativeHealth.destroyed()){
+                spires.destroy(view.instance());spireContexts.remove(view.instance());spireVisuals.end(view.instance(),true,port.buffer);
+                emit(context,RpgTraceEventType.AREA_TERMINATED,Map.of("reason","LIGHTNING_SPIRE_DESTROYED","completedWaves",view.completedWaves(),
+                        "phase",view.phase().name(),"nativeHealthState",nativeHealth.state().name(),"nativeRefValid",nativeHealth.refValid(),
+                        "nativeStatMapPresent",nativeHealth.statMapPresent(),"nativeHealthPresent",nativeHealth.healthPresent(),
+                        "nativeCurrentHealth",nativeHealth.currentHealth(),"nativeMinimumHealth",nativeHealth.minimumHealth(),
+                        "nativeHealthyEntityObserved",nativeHealth.healthyEntityObserved()));
+                executions.terminate(context,"LIGHTNING_SPIRE_DESTROYED");continue;
             }
-            emit(context,RpgTraceEventType.AREA_HIT,Map.of("phase","LIGHTNING_SPIRE_WAVE","wave",wave.sequence(),"targets",damaged,
-                    "coefficient",wave.coefficient(),"radius",wave.radius(),"electrifiedStacks",2));
+            var expired=spires.expire(view.instance(),now);
+            if(expired.isPresent()){
+                spireContexts.remove(view.instance());spireVisuals.end(view.instance(),true,port.buffer);
+                emit(context,RpgTraceEventType.AREA_TERMINATED,Map.of("reason","LIGHTNING_SPIRE_READY_EXPIRED","completedWaves",expired.get().completedWaves()));
+                executions.terminate(context,"LIGHTNING_SPIRE_READY_EXPIRED");continue;
+            }
+            for(var wave:spires.drainWaves(view.instance())){
+                try{spireVisuals.wave(wave.instance(),port.buffer);}
+                catch(RuntimeException failure){emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_WAVE_PRESENTATION_FAILURE","boundary",String.valueOf(failure.getMessage()),"connectedProof",false));}
+                emit(context,RpgTraceEventType.AREA_PRESENTATION,Map.of("phase","LIGHTNING_SPIRE_SHOCKWAVE",
+                        "particle","Hywind_Lightning_Spire_Shockwave","radius",wave.radius(),"wave",wave.sequence(),
+                        "impactParticle","Laser_Impact","connectedProof",false));
+                var shape=new AreaGeometry(AreaGeometry.Kind.DISC,context.target().point(),Vec3.FORWARD,wave.radius(),0,0,0,4);
+                var found=HytaleAreaQueries.query(port.store,port.actor,shape::intersects,64);
+                if(found.overflow()){emit(context,RpgTraceEventType.AREA_QUERY_REJECTED,Map.of("reason","LIGHTNING_SPIRE_CANDIDATE_BUDGET","wave",wave.sequence()));continue;}
+                int damaged=0;
+                for(var value:found.candidates()){
+                    var target=port.candidate(value.ref());
+                    if(target==null||target.protectedTarget()||!HytaleAreaQueries.hostile(port.store,target.handle(),port.actor)
+                            ||!HytaleAreaQueries.clear(port.store,context.target().point().add(new Vec3(0,.1,0)),target.bounds().centre()))continue;
+                    var outcome=port.damage(context,target,(int)Math.min(Integer.MAX_VALUE,wave.sequence()),wave.coefficient(),
+                            context.snapshot().criticalChance(),DamageCause.getAssetMap().getAsset("Lightning"),false,
+                            wave.instance()+"/wave/"+wave.sequence()+"/"+target.stableId(),false,true,false);
+                    if(outcome.cancelled()||outcome.actualHealthLoss()<=0)continue;
+                    UUID targetId=UUID.fromString(target.stableId());kernel.statuses().applyElectrified(targetId,6);kernel.statuses().applyElectrified(targetId,6);
+                    port.buffer.ensureComponent(target.handle(),AreaStatusProjection.getComponentType());HytaleAreaStatuses.synchronize(kernel.statuses(),targetId,target.handle(),port.store,port.actor);
+                    port.applyPassiveAreaPosition(context,target.handle(),context.target().point());
+                    presentAuthoredParticle(context,port.store,target.position(),"Laser_Impact","LIGHTNING_SPIRE_WAVE");damaged++;
+                }
+                emit(context,RpgTraceEventType.AREA_HIT,Map.of("phase","LIGHTNING_SPIRE_WAVE","wave",wave.sequence(),"targets",damaged,
+                        "coefficient",wave.coefficient(),"radius",wave.radius(),"electrifiedStacks",2));
+            }
         }
     }
 
@@ -640,8 +642,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         nativeBasics.forget(actor);
         activeCoils.values().removeIf(coil->coil.owner().equals(actor));
         pendingCoilDischarges.values().removeIf(coil->coil.owner().equals(actor));
-        spires.cancel(actor,com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EndReason.OWNER_CLEANUP)
-                .ifPresent(ended->{spireContexts.remove(ended.instance());spireVisuals.end(ended.instance(),false,buffer);});
+        for(var ended:spires.cancel(actor,com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EndReason.OWNER_CLEANUP)){
+            spireContexts.remove(ended.instance());spireVisuals.end(ended.instance(),false,buffer);
+        }
         spireVisuals.cancel(actor,buffer);
         lightning.forget(actor);
         if(support!=null)support.forgetProgressionPlayer(actor);
@@ -853,6 +856,17 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         @Override public SkillExecutionResult stopActiveSupport(Stage04SkillProfile profile){return support==null?null:
                 support.runtime().stopActive(playerRef.getUuid(),profile.skillId(),support.port(store,actor));}
+        @Override public SkillExecutionResult commandExisting(Stage04SkillProfile profile,com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,SkillExecutionRequest request){
+            if(!profile.skillId().equals("bomb_toss"))return null;
+            var ground=projectileFuses.values().stream().filter(value->value.carrier.actorId.equals(playerRef.getUuid())
+                    &&value.carrier.context.profile().skillId().equals("bomb_toss")).findFirst().orElse(null);
+            if(ground==null)return null;var carrier=ground.carrier;String id=carrier.instance.plan().projectileInstanceId();
+            var point=carrier.detonation.contact(ground.point,true,System.nanoTime()/1e9).orElse(null);if(point==null)return null;
+            if(!projectileFuses.remove(id,ground))return SkillExecutionResult.rejected("COMMAND_INSTANCE_RACE");
+            try{applyAuthoredExplosion(carrier.context,this,point,id+"/command-existing",carrier.instance.plan().generation()==0);
+                return SkillExecutionResult.committed("EXISTING_INSTANCE_COMMANDED",0,0);
+            }finally{projectileService.onForwardTermination(carrier.instance,"COMMAND_EXISTING",point);finishProjectileContext(carrier.context,"COMMAND_EXISTING");}
+        }
         @Override public Validation familyPrerequisites(Stage04SkillProfile profile,
                                                       com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan) {
             return familyPrerequisites(profile,plan,1);
@@ -908,8 +922,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             if (profile.area() != null) {
                 String admitted = profile.skillId().equals("lightning_coil")
-                        ?(spires.active(playerRef.getUuid())?"LIGHTNING_SPIRE_ALREADY_ACTIVE":"PASS")
-                        :areas.admission(playerRef.getUuid(), profile.skillId(), profile.area().trap());
+                        ?"PASS":areas.admission(playerRef.getUuid(), profile.skillId(), profile.area().trap());
                 if (!admitted.equals("PASS")) return Validation.reject(admitted);
                 Vec3 feet = vec(store.getComponent(actor, TransformComponent.getComponentType()).getPosition());
                 areaDirection = aim(store, actor);
@@ -1098,7 +1111,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             if(profile.area()!=null) {
                 String admission=profile.skillId().equals("lightning_coil")
-                        ?(spires.active(playerRef.getUuid())?"LIGHTNING_SPIRE_ALREADY_ACTIVE":"PASS")
+                        ?"PASS"
                         :areas.admission(playerRef.getUuid(),profile.skillId(),profile.area().trap());
                 if(!admission.equals("PASS"))return Validation.reject(admission);
                 if(context.compiledPlan().zones().mobileDomain()){
@@ -1497,7 +1510,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EMERGENCE_SECONDS,"readySeconds",spec.readySeconds(),
                             "radius",spec.radius(),"coefficient",spec.coefficient(),"maximumHealth",spec.maximumHealth(),"model","Hywind_Lightning_Spire"));
                     return SkillExecutionResult.committed("LIGHTNING_SPIRE_DEPLOYED",0,0);
-                }catch(RuntimeException failure){spires.cancel(playerRef.getUuid(),com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EndReason.OWNER_CLEANUP);spireVisuals.end(context.skillInstanceId(),false,buffer);throw failure;}
+                }catch(RuntimeException failure){spires.cancel(context.skillInstanceId(),com.inigmasgames.hytalerpg.execution.lightning.LightningSpireRuntime.EndReason.OWNER_CLEANUP);spireVisuals.end(context.skillInstanceId(),false,buffer);throw failure;}
             }
             areas.start(context, areaPlacement, areaDirection, System.nanoTime() / 1_000_000_000.0,
                     context.compiledPlan().executionModifiers().radiusFactor(), areaWorld());
@@ -1639,6 +1652,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 }
                 @Override public void trace(SkillExecutionContext context, String event, Map<String, ?> details) {
                     emit(context, RpgTraceEventType.valueOf(event), details);
+                    if(event.equals("AREA_TERMINATED"))executions.terminate(context,String.valueOf(details.get("reason")));
                 }
             };
         }

@@ -3,6 +3,7 @@ package com.inigmasgames.hytalerpg.links;
 import com.inigmasgames.hytalerpg.content.RpgCatalog;
 import com.inigmasgames.hytalerpg.combat.balance.CombatBalanceProfile;
 import com.inigmasgames.hytalerpg.domain.CompiledSkillPlan;
+import com.inigmasgames.hytalerpg.domain.ConcurrentInstancePolicy;
 import com.inigmasgames.hytalerpg.domain.LinkNodeId;
 import com.inigmasgames.hytalerpg.domain.PassiveDefinition;
 import com.inigmasgames.hytalerpg.domain.PassiveId;
@@ -169,6 +170,7 @@ public final class LinkCompiler {
         }
         continuation.sort(Comparator.comparingInt(LinkCompiler::continuationRank).thenComparing(String::compareTo));
         List<PassiveId> order = bindings.stream().map(binding -> binding.definition().id()).toList();
+        var concurrentInstances=ConcurrentInstancePolicy.forSkill(skill.id().value());
         String canonical = slot + "|" + skill.id().value() + "|" + family + "|" + sorted(finalTags)
                 + "|" + order + "|" + targeting + "|" + geometry + "|" + multiplicity + "|" + continuation
                 + "|" + resource + "|" + power + "|" + triggers + "|" + spawnCost
@@ -186,12 +188,13 @@ public final class LinkCompiler {
                 + "|" + com.inigmasgames.hytalerpg.domain.ResourceModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.StrikeModifiers.from(order)
                 + "|" + com.inigmasgames.hytalerpg.domain.PositionModifiers.from(order)
+                + "|concurrentInstances=" + concurrentInstances
                 + "|planSchema=" + CompiledSkillPlan.CURRENT_SCHEMA;
         var kernelModifiers = new CompiledSkillPlan.KernelModifiers(scalablePayloadIncreased,
                 resourceCostMultiplier, cooldownRecoveryBonus);
         return new CompiledSkillPlan(CompiledSkillPlan.CURRENT_SCHEMA, slot, skill.id(), hash(canonical), family,
                 finalTags, order, routes, targeting, geometry, multiplicity, continuation, resource, power, kernelModifiers, triggers,
-                skill.vfxRecipeId(), skill.soundRecipeId(), CompiledSkillPlan.SafetyBudgets.baseline(spawnCost), false, List.of());
+                skill.vfxRecipeId(), skill.soundRecipeId(), concurrentInstances, CompiledSkillPlan.SafetyBudgets.baseline(spawnCost), false, List.of());
     }
 
     private List<PassiveBinding> bindingsFor(RpgPlayerState state, GraphValidationResult graph, SkillSlot skillSlot) {
@@ -239,7 +242,7 @@ public final class LinkCompiler {
         return new CompiledSkillPlan(CompiledSkillPlan.CURRENT_SCHEMA, slot, id, hash(slot + "|" + id.value() + "|DEGRADED"),
                 "UNKNOWN", Set.of("DEGRADED"), List.of(), Map.of(), List.of(), List.of(), List.of(), List.of(),
                 List.of(), List.of(), CompiledSkillPlan.KernelModifiers.NONE, List.of(), "", "",
-                CompiledSkillPlan.SafetyBudgets.baseline(0), true, List.of(reason));
+                ConcurrentInstancePolicy.forSkill(id.value()), CompiledSkillPlan.SafetyBudgets.baseline(0), true, List.of(reason));
     }
 
     private record PassiveBinding(PassiveSlot slot, PassiveDefinition definition, List<LinkNodeId> route) {}

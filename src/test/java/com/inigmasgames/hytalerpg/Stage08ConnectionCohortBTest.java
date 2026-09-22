@@ -78,7 +78,7 @@ class Stage08ConnectionCohortBTest {
         assertEquals(25,ConnectionShape.segmentDistanceSquared(Vec3.ZERO,new Vec3(0,0,10),bounds(5,0,5,0)),1e-9);
     }
     @Test void drainDebitsTwentyFractionalSlicesAndConvertsActualLossOnce() {
-        var h=drain();h.cast();assertEquals(0,h.resourceWrites);assertTrue(h.kernel.cooldowns().canActivate(h.owner,"life_drain"));
+        var h=drain();h.cast();assertEquals(0,h.resourceWrites);assertFalse(h.kernel.cooldowns().canActivate(h.owner,"life_drain"));
         for(int n=1;n<=20;n++)h.advance(n*.25);
         assertEquals(20,h.hits.size());assertEquals(175,h.mana);assertEquals(20,h.resourceWrites);assertEquals(2.75,h.hits.stream().mapToDouble(Hit::coefficient).sum(),1e-9);
         double wisdom=h.contexts.getFirst().snapshot().derivedStats().healingMultiplier();assertEquals(55*.6*wisdom,h.healRequests.stream().mapToDouble(Double::doubleValue).sum(),1e-9);

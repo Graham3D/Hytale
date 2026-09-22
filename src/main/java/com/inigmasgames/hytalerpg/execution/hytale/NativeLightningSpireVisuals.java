@@ -42,6 +42,10 @@ final class NativeLightningSpireVisuals {
     }
     private final Map<String,Carrier> carriers=new HashMap<>();
     private final Map<String,Ref<EntityStore>> gauges=new HashMap<>();
+    private record ShockFlash(Ref<EntityStore> ref,Store<EntityStore> store,double started,int[] frame){}
+    private final List<ShockFlash> shockFlashes=new ArrayList<>();
+    static final double SHOCK_FRAME_SECONDS=.1;
+    static final int SHOCK_FRAMES=8;
 
     Ref<EntityStore> deploy(LightningSpireRuntime.View view,Vec3 ground,double now,CommandBuffer<EntityStore> buffer){
         if(buffer==null)throw new IllegalStateException("LIGHTNING_SPIRE_BUFFER_MISSING");
@@ -93,8 +97,23 @@ final class NativeLightningSpireVisuals {
         c.motion[0]=now;var failures=new ArrayList<String>();
         attempt(failures,"GAUGE",()->setGauge(instance,Math.clamp(percent,0,100),buffer));
         attempt(failures,"SOUND",()->sound(METAL_HIT,c.ground.add(new Vec3(0,1.4,0)),c.store));
-        attempt(failures,"SHOCK",()->spawn("Hywind_Lightning_Spire_Shock",c.ground.add(new Vec3(0,SHOCK_OFFSET,0)),.85f,buffer,true));
+        attempt(failures,"SHOCK",()->shockFlashes.add(new ShockFlash(
+                spawn("Hywind_Lightning_Spire_Shock_Frame_0",c.ground.add(new Vec3(0,SHOCK_OFFSET,0)),.9f,buffer),c.store,now,new int[]{0})));
         if(!failures.isEmpty())throw new IllegalStateException("LIGHTNING_SPIRE_HIT_PRESENTATION:"+String.join("|",failures));
+    }
+    /** Server-driven frame projection avoids the generic model carrier's non-advancing animation slot. */
+    void tickHitFlashes(double now,CommandBuffer<EntityStore> buffer){
+        var iterator=shockFlashes.iterator();while(iterator.hasNext()){
+            var flash=iterator.next();double age=Math.max(0,now-flash.started());int frame=(int)Math.floor(age/SHOCK_FRAME_SECONDS);
+            if(frame>=SHOCK_FRAMES||!flash.ref().isValid()){
+                remove(flash.ref(),flash.store(),buffer);iterator.remove();continue;
+            }
+            if(frame==flash.frame()[0])continue;
+            var model=Model.createStaticScaledModel(require("Hywind_Lightning_Spire_Shock_Frame_"+frame),1);
+            buffer.replaceComponent(flash.ref(),ModelComponent.getComponentType(),new ModelComponent(model));
+            buffer.replaceComponent(flash.ref(),BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));
+            flash.frame()[0]=frame;
+        }
     }
     void wave(String instance,CommandBuffer<EntityStore> buffer){var c=carriers.get(instance);if(c!=null){
         var failures=new ArrayList<String>();attempt(failures,"GAUGE",()->setGauge(instance,0,buffer));
@@ -118,11 +137,11 @@ final class NativeLightningSpireVisuals {
         remove(c.ref,c.store,buffer);var gauge=gauges.remove(instance);if(gauge!=null)remove(gauge,c.store,buffer);}
     void cancel(UUID owner,CommandBuffer<EntityStore> buffer){carriers.entrySet().stream().filter(e->{var p=e.getValue().store.getComponent(e.getValue().ref,LightningSpireProjection.getComponentType());return p!=null&&p.owner().equals(owner);}).map(Map.Entry::getKey).toList().forEach(id->end(id,false,buffer));}
 
-    private static void spawn(String id,Vec3 p,float seconds,CommandBuffer<EntityStore> buffer,boolean animate){var store=buffer.getStore();var model=Model.createStaticScaledModel(require(id),1);var h=EntityStore.REGISTRY.newHolder();
+    private static Ref<EntityStore> spawn(String id,Vec3 p,float seconds,CommandBuffer<EntityStore> buffer){var store=buffer.getStore();var model=Model.createStaticScaledModel(require(id),1);var h=EntityStore.REGISTRY.newHolder();
         h.addComponent(UUIDComponent.getComponentType(),new UUIDComponent(UUID.randomUUID()));h.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
         h.addComponent(TransformComponent.getComponentType(),transform(p,0,0));h.addComponent(ModelComponent.getComponentType(),new ModelComponent(model));h.addComponent(BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));
-        h.addComponent(ActiveAnimationComponent.getComponentType(),new ActiveAnimationComponent());h.addComponent(DespawnComponent.getComponentType(),DespawnComponent.despawnInSeconds(store.getResource(TimeResource.getResourceType()),seconds));h.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
-        var ref=buffer.addEntity(h,AddReason.SPAWN);if(animate)buffer.run(committed->{if(ref.isValid())AnimationUtils.playAnimation(ref,AnimationSlot.Movement,"Idle",true,committed);});}
+        h.addComponent(DespawnComponent.getComponentType(),DespawnComponent.despawnInSeconds(store.getResource(TimeResource.getResourceType()),seconds));h.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
+        return buffer.addEntity(h,AddReason.SPAWN);}
     private void setGauge(String instance,int percent,CommandBuffer<EntityStore> buffer){var c=carriers.get(instance);if(c==null)return;percent=Math.clamp(percent,0,100);
         var model=Model.createStaticScaledModel(require("Hywind_Lightning_Spire_Gauge_"+percent),1);var existing=gauges.get(instance);
         if(existing!=null&&existing.isValid()){buffer.replaceComponent(existing,ModelComponent.getComponentType(),new ModelComponent(model));buffer.replaceComponent(existing,BoundingBox.getComponentType(),new BoundingBox(model.getBoundingBox()));return;}

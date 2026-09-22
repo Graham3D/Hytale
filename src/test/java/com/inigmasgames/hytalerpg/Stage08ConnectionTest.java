@@ -59,7 +59,7 @@ class Stage08ConnectionTest {
     }
     @Test void beamPaysEveryQuarterSecondBeforeDamageAndEndsAtFiveSeconds() {
         var h=beam();assertTrue(h.cast().committed());assertEquals(0,h.hits.size());assertEquals(200,h.mana);assertEquals(0,h.resourceWrites);
-        assertTrue(h.kernel.cooldowns().canActivate(h.owner,"void_beam"));
+        assertFalse(h.kernel.cooldowns().canActivate(h.owner,"void_beam"));
         assertEquals(SkillInstanceLifecycle.Phase.CHANNEL,h.lifecycle.active(h.owner).orElseThrow().phase());
         for(int n=1;n<=100;n++)h.advance(n*.05);
         assertEquals(20,h.hits.size());assertEquals(2.25,h.hits.stream().mapToDouble(Hit::coefficient).sum(),1e-9);

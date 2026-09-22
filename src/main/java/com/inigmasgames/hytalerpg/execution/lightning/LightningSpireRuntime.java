@@ -3,6 +3,7 @@ package com.inigmasgames.hytalerpg.execution.lightning;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -66,20 +67,23 @@ public final class LightningSpireRuntime {
     }
 
     private final Map<String,State> byInstance=new HashMap<>();
-    private final Map<UUID,String> byOwner=new HashMap<>();
+    private final Map<UUID,LinkedHashSet<String>> byOwner=new HashMap<>();
 
     public synchronized View deploy(String instance,UUID owner,Spec spec,double now){
         requireTime(now);requireId(instance);Objects.requireNonNull(owner);Objects.requireNonNull(spec);
-        if(byOwner.containsKey(owner))throw new IllegalStateException("LIGHTNING_SPIRE_ALREADY_ACTIVE");
         if(byInstance.size()>=MAX_SPIRES)throw new IllegalStateException("LIGHTNING_SPIRE_BUDGET");
         var state=new State(instance,owner,spec,now);
         if(byInstance.putIfAbsent(instance,state)!=null)throw new IllegalStateException("LIGHTNING_SPIRE_INSTANCE_EXISTS");
-        byOwner.put(owner,instance);return state.view(now);
+        byOwner.computeIfAbsent(owner,ignored->new LinkedHashSet<>()).add(instance);return state.view(now);
     }
 
-    public synchronized boolean active(UUID owner){return byOwner.containsKey(Objects.requireNonNull(owner));}
+    public synchronized boolean active(UUID owner){var ids=byOwner.get(Objects.requireNonNull(owner));return ids!=null&&!ids.isEmpty();}
     public synchronized Optional<View> inspectOwner(UUID owner,double now){
-        requireTime(now);String id=byOwner.get(Objects.requireNonNull(owner));return id==null?Optional.empty():Optional.of(byInstance.get(id).view(now));
+        var all=inspectOwnerAll(owner,now);return all.isEmpty()?Optional.empty():Optional.of(all.getLast());
+    }
+    public synchronized List<View> inspectOwnerAll(UUID owner,double now){
+        requireTime(now);var ids=byOwner.get(Objects.requireNonNull(owner));if(ids==null)return List.of();
+        return ids.stream().map(byInstance::get).filter(Objects::nonNull).map(state->state.view(now)).toList();
     }
     public synchronized Optional<View> inspect(String instance,double now){requireTime(now);var s=byInstance.get(requireId(instance));return s==null?Optional.empty():Optional.of(s.view(now));}
 
@@ -100,17 +104,23 @@ public final class LightningSpireRuntime {
     }
 
     public synchronized List<Wave> drainWaves(UUID owner){
-        Objects.requireNonNull(owner);String id=byOwner.get(owner);if(id==null)return List.of();var state=byInstance.get(id);
-        var result=new ArrayList<Wave>(state.pending);state.pending.clear();return List.copyOf(result);
+        var result=new ArrayList<Wave>();for(var view:inspectOwnerAll(owner,0))result.addAll(drainWaves(view.instance()));return List.copyOf(result);
     }
+    public synchronized List<Wave> drainWaves(String instance){var state=byInstance.get(requireId(instance));if(state==null)return List.of();
+        var result=new ArrayList<Wave>(state.pending);state.pending.clear();return List.copyOf(result);}
 
     public synchronized Optional<Ended> expire(UUID owner,double now){
-        requireTime(now);String id=byOwner.get(Objects.requireNonNull(owner));if(id==null)return Optional.empty();
-        var state=byInstance.get(id);return now>=state.expiresAt?Optional.of(remove(state,EndReason.READY_EXPIRED)):Optional.empty();
+        requireTime(now);for(var view:inspectOwnerAll(owner,now)){var ended=expire(view.instance(),now);if(ended.isPresent())return ended;}return Optional.empty();
     }
+    public synchronized Optional<Ended> expire(String instance,double now){requireTime(now);var state=byInstance.get(requireId(instance));
+        return state!=null&&now>=state.expiresAt?Optional.of(remove(state,EndReason.READY_EXPIRED)):Optional.empty();}
     public synchronized Optional<Ended> destroy(String instance){var state=byInstance.get(requireId(instance));return state==null?Optional.empty():Optional.of(remove(state,EndReason.DESTROYED));}
-    public synchronized Optional<Ended> cancel(UUID owner,EndReason reason){String id=byOwner.get(Objects.requireNonNull(owner));var state=id==null?null:byInstance.get(id);return state==null?Optional.empty():Optional.of(remove(state,Objects.requireNonNull(reason)));}
-    private Ended remove(State state,EndReason reason){state.ended=true;byInstance.remove(state.instance,state);byOwner.remove(state.owner,state.instance);HitDedup.forget(state.instance);return new Ended(state.instance,state.owner,reason,state.waves);}
+    public synchronized List<Ended> cancel(UUID owner,EndReason reason){var result=new ArrayList<Ended>();
+        for(var view:inspectOwnerAll(Objects.requireNonNull(owner),0)){var state=byInstance.get(view.instance());if(state!=null)result.add(remove(state,Objects.requireNonNull(reason)));}
+        return List.copyOf(result);}
+    public synchronized Optional<Ended> cancel(String instance,EndReason reason){var state=byInstance.get(requireId(instance));return state==null?Optional.empty():Optional.of(remove(state,Objects.requireNonNull(reason)));}
+    private Ended remove(State state,EndReason reason){state.ended=true;byInstance.remove(state.instance,state);var ids=byOwner.get(state.owner);
+        if(ids!=null){ids.remove(state.instance);if(ids.isEmpty())byOwner.remove(state.owner);}HitDedup.forget(state.instance);return new Ended(state.instance,state.owner,reason,state.waves);}
 
     private static String requireId(String value){if(value==null||value.isBlank()||value.length()>512)throw new IllegalArgumentException("INVALID_LIGHTNING_SPIRE_ID");return value;}
     private static void requireTime(double now){if(!Double.isFinite(now)||now<0)throw new IllegalArgumentException("INVALID_TIME");}

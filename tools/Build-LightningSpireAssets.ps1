@@ -17,6 +17,18 @@ function Convert-HorizontalStrip([string]$Source,[string]$Destination,[int]$Fram
         } finally {$output.Dispose()}
     } finally {$image.Dispose()}
 }
+function Export-HorizontalFrames([string]$Source,[string]$DestinationDirectory,[string]$Prefix,[int]$FrameWidth,[int]$FrameHeight,[int]$Frames) {
+    $image=[Drawing.Bitmap]::new($Source)
+    try {
+        if($image.Width-ne $FrameWidth*$Frames-or$image.Height-ne$FrameHeight){throw "Unexpected frame-strip dimensions: $Source"}
+        for($i=0;$i-lt$Frames;$i++){
+            $frame=[Drawing.Bitmap]::new($FrameWidth,$FrameHeight,[Drawing.Imaging.PixelFormat]::Format32bppArgb)
+            try{$graphics=[Drawing.Graphics]::FromImage($frame);try{
+                $graphics.DrawImage($image,[Drawing.Rectangle]::new(0,0,$FrameWidth,$FrameHeight),[Drawing.Rectangle]::new($i*$FrameWidth,0,$FrameWidth,$FrameHeight),[Drawing.GraphicsUnit]::Pixel)
+            }finally{$graphics.Dispose()};$frame.Save((Join-Path $DestinationDirectory "$Prefix$i.png"),[Drawing.Imaging.ImageFormat]::Png)}finally{$frame.Dispose()}
+        }
+    } finally {$image.Dispose()}
+}
 
 $vfxDir=Join-Path $Repository 'src/main/resources/Common/VFX/RPG/LightningSpire'
 $modelDir=$vfxDir
@@ -31,6 +43,7 @@ $model | ConvertTo-Json -Depth 100 | Set-Content (Join-Path $modelDir 'Lightning
 Copy-Item (Join-Path $Repository 'art/Models/LightningSpire.png') (Join-Path $modelDir 'LightningSpire.png') -Force
 
 Convert-HorizontalStrip (Join-Path $Repository 'art/Particles/shock.png') (Join-Path $vfxDir 'Shock_Strip_Vertical.png') 56 49 8
+Export-HorizontalFrames (Join-Path $Repository 'art/Particles/shock.png') $vfxDir 'Shock_Frame_' 56 49 8
 Convert-HorizontalStrip (Join-Path $Repository 'art/Particles/shockwave.png') (Join-Path $vfxDir 'Shockwave_Strip_Vertical.png') 56 64 3
 Copy-Item (Join-Path $Repository 'art/UI/skill_lightningspire_bar.png') (Join-Path $uiDir 'skill_lightningspire_bar.png') -Force
 Copy-Item (Join-Path $Repository 'art/UI/skill_lightningspire_bg.png') (Join-Path $uiDir 'skill_lightningspire_bg.png') -Force
@@ -48,6 +61,10 @@ $bar=[Drawing.Bitmap]::new((Join-Path $Repository 'art/UI/skill_lightningspire_b
 $frame=[Drawing.Bitmap]::new((Join-Path $Repository 'art/UI/skill_lightningspire_frame.png'))
 try {
     $serverModels=Join-Path $Repository 'src/main/resources/Server/Models/RPG';Ensure-Directory $serverModels
+    foreach($frameIndex in 0..7){
+        $shockConfig=[ordered]@{Model='VFX/RPG/LightningSpire/Shock_TriplePlane.blockymodel';Texture="VFX/RPG/LightningSpire/Shock_Frame_$frameIndex.png";HitBox=[ordered]@{Max=[ordered]@{X=.05;Y=.05;Z=.05};Min=[ordered]@{X=-.05;Y=-.05;Z=-.05}};MinScale=1;MaxScale=1}
+        $shockConfig|ConvertTo-Json -Depth 5|Set-Content (Join-Path $serverModels "Hywind_Lightning_Spire_Shock_Frame_$frameIndex.json") -Encoding utf8
+    }
     foreach($percent in 0,25,50,75,100){
         $gauge=[Drawing.Bitmap]::new(128,24,[Drawing.Imaging.PixelFormat]::Format32bppArgb)
         try{$g=[Drawing.Graphics]::FromImage($gauge);try{

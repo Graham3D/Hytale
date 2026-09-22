@@ -51,6 +51,8 @@ public final class RpgUiProjectionService {
 
     public RpgHudViewModel hud(UUID player, HytaleResourceViewAdapter.Snapshot resources, XpView xpOverride) {
         RpgLoadoutView view = loadouts.getPresentationView(player);
+        DerivedStats currentDerived=derive(view);
+        cooldowns.setOwnerRecovery(player,currentDerived.cooldownRecovery());
         XpView projectedXp = xpOverride == null ? xp.project(view.state().currentXp) : xpOverride;
         List<SkillSlotView> slots = new ArrayList<>(3);
         for (SkillSlot slot : SkillSlot.values()) {
@@ -74,15 +76,8 @@ public final class RpgUiProjectionService {
                             com.inigmasgames.hytalerpg.combat.resource.ResourceType.valueOf(profile.resourceType()),profile.resourceCost()),plan,attunement.applyAsInt(player,slot));
                     if(!resourceService.canAfford(player,cost,readOnlyResources(resources)))resourceFailure="LOW_"+cost.type().name();
                 }
-                var cooldownTerms=com.inigmasgames.hytalerpg.execution.BlizzardCooldownPolicy.terms(profile,plan,derive(view));
+                var cooldownTerms=com.inigmasgames.hytalerpg.execution.BlizzardCooldownPolicy.terms(profile,plan,currentDerived);
                 duration=cooldowns.calculate(player,cooldownTerms.baseSeconds(),cooldownTerms.durationFactor(),cooldownTerms.recovery(),cooldownTerms.modifiers()).finalSeconds();
-                if(id.get().value().equals("blizzard")){
-                    remaining=Math.max(remaining,activeRemaining.applyAsDouble(player,"blizzard"));
-                    // Blizzard's read-only HUD sweep is synchronized to its actual
-                    // active area lifetime; the active-root admission gate is the
-                    // authoritative no-overlap rule even when recovery is present.
-                    duration=profile.area().lifetimeSeconds();
-                }
             }
             boolean ready = stage04.supports(id.get().value()) && plan != null && !plan.degraded()
                     && (stage04.require(id.get().value()).family().name().equals(plan.finalFamily())

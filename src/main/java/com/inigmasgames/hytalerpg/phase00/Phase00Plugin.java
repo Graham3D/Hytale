@@ -346,7 +346,10 @@ public final class Phase00Plugin extends JavaPlugin {
             throw new IllegalStateException("LIGHTNING_SPIRE_EMERGENCE_PARTICLE_UNRESOLVED");
         if(spireParticles.getAsset("Hywind_Lightning_Spire_Shockwave")==null)
             throw new IllegalStateException("LIGHTNING_SPIRE_SHOCKWAVE_PARTICLE_UNRESOLVED");
-        LOGGER.atInfo().log("RPG_LIGHTNING_SPIRE_ASSETS emergenceParticle=Undead_Digging shockwaveParticle=Hywind_Lightning_Spire_Shockwave result=PASS connectedProof=false");
+        var spireModels=com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset.getAssetMap();
+        for(int frame=0;frame<8;frame++)if(spireModels.getAsset("Hywind_Lightning_Spire_Shock_Frame_"+frame)==null)
+            throw new IllegalStateException("LIGHTNING_SPIRE_SHOCK_FRAME_UNRESOLVED:"+frame);
+        LOGGER.atInfo().log("RPG_LIGHTNING_SPIRE_ASSETS emergenceParticle=Undead_Digging shockwaveParticle=Hywind_Lightning_Spire_Shockwave shockFrames=8 frameMilliseconds=100 result=PASS connectedProof=false");
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeActionLock.requireAsset();
         com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeFeedback.requireAssets();
         var projectileAudit=com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileAssetAudit.requireAssets(

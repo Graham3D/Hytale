@@ -11,7 +11,7 @@ public record FoundationModifiers(boolean longReach, boolean rapidInvocation,boo
         return new FoundationModifiers(ids.contains("long_reach"),ids.contains("rapid_invocation"),ids.contains("concentration"),ids.contains("lingering"),ids.contains("second_wind"),ids.contains("reversal"),ids.contains("momentum"));
     }
     public double rangeFactor(){return longReach?1.25:1;}
-    public double windup(double authored){return authored==0?0:rapidInvocation?Math.max(.05,authored*.8):authored;}
+    public double windup(double authored){return new com.inigmasgames.hytalerpg.execution.CastRateModifiers(rapidInvocation?.25:0,0,0).windup(authored);}
     public int chargeCapacity(){return secondWind?2:1;}
     public double rechargeFactor(){return secondWind?1.3:1;}
 }

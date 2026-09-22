@@ -24,10 +24,11 @@ public record CompiledSkillPlan(
         List<String> triggerHooks,
         String vfxRecipeId,
         String soundRecipeId,
+        ConcurrentInstancePolicy concurrentInstances,
         SafetyBudgets safetyBudgets,
         boolean degraded,
         List<String> degradedReasons) {
-    public static final int CURRENT_SCHEMA = 41;
+    public static final int CURRENT_SCHEMA = 42;
     public boolean impactOnlyOnSecondary(){return geometryModifiers.contains("IMPACT_SCOPE=SECONDARY_ONLY");}
     public boolean retaliation(){return passiveOrder.stream().anyMatch(p->p.value().equals("retaliation"));}
     public String conditionalRepeat(){return passiveOrder.stream().map(PassiveId::value).filter(p->p.equals("critical_trigger")||p.equals("kill_trigger")).findFirst().orElse("");}
@@ -55,6 +56,7 @@ public record CompiledSkillPlan(
         triggerHooks = List.copyOf(triggerHooks);
         degradedReasons = List.copyOf(degradedReasons);
         if (kernelModifiers == null) kernelModifiers = KernelModifiers.NONE;
+        if (concurrentInstances == null) concurrentInstances = ConcurrentInstancePolicy.unrestricted();
     }
 
     /** Typed subset consumed by the Stage 02 kernel. Descriptive operations remain for later executors. */

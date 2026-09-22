@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Stage13PresentationAETest {
-    @Test void blizzardHudSeparatesActiveCooldownFromManaFailureWithoutWritingGameplay(){
+    @Test void blizzardHudUsesAuthoritativeCooldownRatherThanActiveEffectLifetime(){
         var bundle=Stage01BTestSupport.bundle();var kernel=RpgCombatKernel.createProduction();var actor=UUID.randomUUID();
         assertTrue(bundle.service().equipSkill(actor,SkillSlot.SKILL02,new SkillId("blizzard")).success());
         var projection=new RpgUiProjectionService(bundle.catalog(),bundle.service(),kernel.derivedStats(),kernel.cooldowns());
@@ -20,8 +20,8 @@ class Stage13PresentationAETest {
         int saves=bundle.repository().saves;
         var emptyMana=new HytaleResourceViewAdapter.Snapshot(new NativeResourceView(0,100),new NativeResourceView(100,100),new NativeResourceView(100,100));
         var active=projection.hud(actor,emptyMana,null).skills().get(1);
-        assertEquals(SkillSlotView.State.COOLDOWN,active.state());assertEquals("LOW_MANA",active.unavailableReason());
-        assertEquals(3,active.cooldownDurationSeconds());assertEquals("3",CooldownSweep.countdown(active.cooldownRemainingSeconds()));
+        assertEquals(SkillSlotView.State.INSUFFICIENT_RESOURCE,active.state());assertEquals("LOW_MANA",active.unavailableReason());
+        assertEquals("",CooldownSweep.countdown(active.cooldownRemainingSeconds()));
         remaining[0]=0;
         var starved=projection.hud(actor,emptyMana,null).skills().get(1);
         assertEquals(SkillSlotView.State.INSUFFICIENT_RESOURCE,starved.state());assertEquals("LOW_MANA",starved.unavailableReason());

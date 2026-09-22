@@ -27,6 +27,7 @@ public final class SkillExecutionService {
     private final RpgCombatKernel kernel;
     private final SkillExecutorRegistry executors;
     private final SkillInstanceLifecycle lifecycle;
+    private final ConcurrentInstanceRegistry concurrentInstances=new ConcurrentInstanceRegistry();
     private final RpgSkillTracer tracer;
     private final SkillReleaseScheduler releases = new SkillReleaseScheduler();
     private final ConditionalRepeatRuntime conditionalRepeats=new ConditionalRepeatRuntime();
@@ -43,7 +44,7 @@ public final class SkillExecutionService {
     private final com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger ruthless=new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger();
     private final java.util.function.LongSupplier nanoTime;
     private final Map<UUID, Prepared> windups = new LinkedHashMap<>();
-    private final Map<UUID, SkillExecutionContext> activeContexts = new LinkedHashMap<>();
+    private final Map<String, SkillExecutionContext> activeContexts = new LinkedHashMap<>();
 
     public SkillExecutionService(RpgLoadoutOperations loadouts, Stage04SkillProfiles profiles,
                                  RpgCombatKernel kernel, SkillExecutorRegistry executors,
@@ -73,7 +74,7 @@ public final class SkillExecutionService {
     public SkillExecutionResult request(SkillExecutionRequest request, SkillExecutionPort port) {
         String root = "input-" + request.chainId() + '-' + request.correlationId().substring(0, Math.min(8, request.correlationId().length()));
         String pendingInstance = "activation-" + UUID.randomUUID();
-        if(persistenceCommits.containsKey(request.actorId())||channelCooldowns.containsKey(request.actorId()))return SkillExecutionResult.pending("PREVIOUS_DURABLE_COMMIT_PENDING");
+        if(persistenceCommits.containsKey(request.actorId()))return SkillExecutionResult.pending("PREVIOUS_DURABLE_COMMIT_PENDING");
         emit(request, RpgTraceEventType.SKILL_ACTIVATION_REQUEST, root, pendingInstance,
                 Map.of("action", request.action(), "skillSlot", request.slot().externalId(),"origin",request.origin()));
         Prepared prepared;
@@ -81,6 +82,11 @@ public final class SkillExecutionService {
             var equipped=loadouts.getPresentationView(request.actorId()).state().skill(request.slot());
             if(equipped.isPresent()&&profiles.supports(equipped.get().value())){
                 var profile=profiles.require(equipped.get().value());
+                var plan=loadouts.getPresentationView(request.actorId()).plans().get(request.slot());
+                if(plan!=null&&plan.concurrentInstances().mode()==com.inigmasgames.hytalerpg.domain.ConcurrentInstancePolicy.Mode.COMMAND_EXISTING){
+                    var commanded=port.commandExisting(profile,plan,request);
+                    if(commanded!=null){emit(request,RpgTraceEventType.STATUS_REQUEST,root,pendingInstance,Map.of("status","COMMAND_EXISTING","skillId",profile.skillId(),"result",commanded.code(),"resourceCharged",false,"cooldownStarted",false));return commanded;}
+                }
                 if(profile.support()!=null&&profile.support().aura()){
                     var stopped=port.stopActiveSupport(profile);
                     if(stopped!=null)return stopped.committed()||stopped.status()==SkillExecutionResult.Status.PENDING?stopped:reject(request,root,pendingInstance,stopped.code());
@@ -139,7 +145,7 @@ public final class SkillExecutionService {
     public boolean pendingCast(UUID actor){return persistenceCommits.containsKey(actor)||lifecycle.active(actor).isPresent()||releases.pending(actor)||activeWindupSeconds(actor).isPresent();}
     /** Delayed authored contacts must still belong to the live root, not just an old scheduler entry. */
     public boolean ownsActiveRoot(SkillExecutionContext context){
-        return lifecycle.active(context.request().actorId()).map(a->a.instanceId().equals(context.skillInstanceId())).orElse(false);
+        return lifecycle.owns(context.request().actorId(),context.skillInstanceId());
     }
     /** Derived releases were separately admitted by the bounded release owner, not the manual-cast lifecycle.
      * Explicit cancellation still removes/cancels their world-owned repeat schedule. */
@@ -154,21 +160,18 @@ public final class SkillExecutionService {
         Prepared windup;
         synchronized (windups) { windup = windups.remove(actor); }
         if(windup!=null)retaliation.complete(actor,windup.request.correlationId(),false,now());
-        SkillExecutionContext context;
-        synchronized (activeContexts) { context = activeContexts.remove(actor); }
-        Optional<SkillInstanceLifecycle.Active> cancelled = lifecycle.cancel(actor);
-        if (cancelled.isEmpty()) return !queued.isEmpty();
-        if (context == null && windup == null) return true; // No fabricated context during a claimed release.
-        if(context!=null) startEndedChannelCooldown(context);
-        SkillExecutionRequest request = context != null ? context.request() : windup.request;
-        String root = context != null ? context.rootCastId() : windup.rootCastId;
-        String instance = context != null ? context.skillInstanceId() : windup.instanceId;
-        if (cancelled.get().phase() == SkillInstanceLifecycle.Phase.MOVEMENT)
-            emit(request, RpgTraceEventType.MOVEMENT_CANCELLED, root, instance, Map.of("reason", reason));
-        else if (cancelled.get().phase() == SkillInstanceLifecycle.Phase.REACTION)
-            emit(request, RpgTraceEventType.REACTION_CANCELLED, root, instance, Map.of("reason", reason));
-        emit(request, RpgTraceEventType.SKILL_TERMINATED, root, instance,
-                Map.of("reason", reason, "phase", cancelled.get().phase().name()));
+        var cancelled=lifecycle.cancelAll(actor);concurrentInstances.cancel(actor);var contexts=new java.util.ArrayList<SkillExecutionContext>();
+        synchronized(activeContexts){activeContexts.values().removeIf(value->{if(value.request().actorId().equals(actor))contexts.add(value);return value.request().actorId().equals(actor);});}
+        if(cancelled.isEmpty())return !queued.isEmpty()||windup!=null;
+        for(var state:cancelled){
+            var context=contexts.stream().filter(value->value.skillInstanceId().equals(state.instanceId())).findFirst().orElse(null);
+            SkillExecutionRequest eventRequest=context!=null?context.request():windup!=null&&windup.instanceId.equals(state.instanceId())?windup.request:null;
+            if(eventRequest==null)continue;
+            String root=context!=null?context.rootCastId():windup.rootCastId;
+            if(state.phase()==SkillInstanceLifecycle.Phase.MOVEMENT)emit(eventRequest,RpgTraceEventType.MOVEMENT_CANCELLED,root,state.instanceId(),Map.of("reason",reason));
+            else if(state.phase()==SkillInstanceLifecycle.Phase.REACTION)emit(eventRequest,RpgTraceEventType.REACTION_CANCELLED,root,state.instanceId(),Map.of("reason",reason));
+            emit(eventRequest,RpgTraceEventType.SKILL_TERMINATED,root,state.instanceId(),Map.of("reason",reason,"phase",state.phase().name()));
+        }
         return true;
     }
 
@@ -227,9 +230,10 @@ public final class SkillExecutionService {
                 ExecutionFailureDiagnostics.describe(stage,failure));
     }
     public void terminate(SkillExecutionContext context, String reason) {
-        if (lifecycle.terminate(context.request().actorId(), context.skillInstanceId())) {
-            startEndedChannelCooldown(context);
-            synchronized (activeContexts) { activeContexts.remove(context.request().actorId()); }
+        boolean action=lifecycle.terminate(context.request().actorId(), context.skillInstanceId());
+        boolean effect=concurrentInstances.terminate(context.request().actorId(),context.profile().skillId(),context.skillInstanceId());
+        if (action||effect) {
+            synchronized (activeContexts) { activeContexts.remove(context.skillInstanceId()); }
             emit(context.request(), RpgTraceEventType.SKILL_TERMINATED, context.rootCastId(),
                     context.skillInstanceId(), Map.of("reason", reason));
         }
@@ -299,6 +303,8 @@ public final class SkillExecutionService {
             emitProjectileRejection(request, root, instance, profile, "COOLDOWN_ACTIVE");
             throw new Rejection("COOLDOWN_ACTIVE", instance);
         }
+        String concurrency=concurrentInstances.admission(request.actorId(),profile.skillId(),plan.concurrentInstances());
+        if(!concurrency.equals("PASS"))throw new Rejection(concurrency,instance);
         return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks,false,effectiveSkillLevel);
     }
 
@@ -428,7 +434,6 @@ public final class SkillExecutionService {
             }catch(RuntimeException error){
                 if(!pending.cooldown.isCompletedExceptionally())continue; // capacity rejection is retried, never a failed uncertain debt
             }
-            if(channel(pending.prepared.profile))channelCooldowns.remove(actor);
             persistenceCommits.remove(actor,pending);cancelledPersistence.remove(actor);
         }
     }
@@ -451,18 +456,10 @@ public final class SkillExecutionService {
             port.prepareDurable(context).whenComplete((value,error)->{if(error==null)authority.complete(null);else authority.completeExceptionally(error);});
         }catch(RuntimeException error){authority.completeExceptionally(error);cooldown.complete(null);}
         if(!cooldown.isDone())try{
-            if(channel(prepared.profile)){
-                synchronized(channelCooldowns){
-                    if(channelCooldowns.size()>=256)throw new IllegalStateException("CHANNEL_COOLDOWN_PERSISTENCE_CAPACITY");
-                    channelCooldowns.put(prepared.request.actorId(),new ChannelCooldown(context));
-                }
-                cooldown.complete(null);
-            }else {
-                var terms=BlizzardCooldownPolicy.terms(prepared.profile,prepared.plan,attributes);
-                kernel.cooldowns().submitSpend(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity(),
-                    terms.baseSeconds(),terms.durationFactor()*spirePotencyCooldownFactor(prepared.profile,prepared.plan),terms.recovery(),terms.modifiers())
-                    .whenComplete((value,error)->{if(error==null)cooldown.complete(value);else cooldown.completeExceptionally(error);});
-            }
+            var terms=BlizzardCooldownPolicy.terms(prepared.profile,prepared.plan,attributes);
+            kernel.cooldowns().submitSpend(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity(),
+                terms.baseSeconds(),terms.durationFactor()*spirePotencyCooldownFactor(prepared.profile,prepared.plan),terms.recovery(),terms.modifiers())
+                .whenComplete((value,error)->{if(error==null)cooldown.complete(value);else cooldown.completeExceptionally(error);});
         }catch(RuntimeException error){cooldown.completeExceptionally(error);}
         if(cooldown.isDone()&&authority.isDone())return completePersistence(prepared.request.actorId(),port);
         return SkillExecutionResult.pending("DURABLE_COMMIT_PENDING");
@@ -473,7 +470,6 @@ public final class SkillExecutionService {
     /** Existing native owner tick calls this; a ready check never starts a blocking storage operation. */
     public SkillExecutionResult completePersistence(UUID actor,SkillExecutionPort port){
         pollCancelledPersistence();
-        pollChannelCooldowns();
         if(cancelledPersistence.contains(actor))return SkillExecutionResult.pending("CANCELLED_COMMIT_SETTLEMENT_PENDING");
         var pending=persistenceCommits.get(actor);
         if(pending==null)return null;
@@ -493,7 +489,7 @@ public final class SkillExecutionService {
             if(cooldownSpend!=null){kernel.cooldowns().acceptSpend(cooldownSpend);cooldownStarted=true;}
             pending.authority.getNow(null);
             if(!port.actorAliveAndUsable()||!port.equipment().equals(prepared.equipment)
-                    ||!lifecycle.active(prepared.request.actorId()).map(a->a.instanceId().equals(prepared.instanceId)).orElse(false))
+                    ||!lifecycle.owns(prepared.request.actorId(),prepared.instanceId))
                 throw new IllegalStateException("PENDING_COMMIT_OWNER_CHANGED");
             var plan=loadouts.getPresentationView(prepared.request.actorId()).plans().get(prepared.request.slot());
             if(plan==null||!plan.planHash().equals(prepared.plan.planHash()))throw new IllegalStateException("PENDING_COMMIT_LOADOUT_CHANGED");
@@ -511,7 +507,6 @@ public final class SkillExecutionService {
                 persistenceCommits.put(prepared.request.actorId(),pending);cancelledPersistence.add(prepared.request.actorId());
             }
             try{if(resourceCommitted)kernel.resources().refundCommittedCost(token,port.resources());else kernel.resources().refundIfUncommitted(token);}catch(RuntimeException ignored){}
-            if(channel(prepared.profile))channelCooldowns.remove(prepared.request.actorId());
             port.abandonDurable(context);lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);releases.finish(prepared.instanceId);
             return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_FAILED_"+error.getClass().getSimpleName());
         }
@@ -520,6 +515,9 @@ public final class SkillExecutionService {
                         "cooldownSeconds", context.snapshot().cooldownSeconds(),
                         "compiledPlanHash", prepared.plan.planHash(),"chargeCapacity",prepared.plan.foundationModifiers().chargeCapacity(),
                         "chargesRemaining",kernel.cooldowns().availableCharges(prepared.request.actorId(),prepared.profile.skillId(),prepared.plan.foundationModifiers().chargeCapacity())));
+        if(cooldownSpend!=null)emit(prepared.request,RpgTraceEventType.COOLDOWN_STARTED,prepared.rootCastId,prepared.instanceId,
+                Map.of("skillId",prepared.profile.skillId(),"atCommit",true,"afterChannelEnd",false,
+                        "seconds",cooldownSpend.calculation().finalSeconds(),"requiredWork",cooldownSpend.calculation().baseSeconds()*cooldownSpend.calculation().durationFactor()));
         try{port.commitConsumable(context);}catch(RuntimeException failure){
             kernel.resources().finish(token);releases.finish(prepared.instanceId);
             port.abandonRelease(context);terminate(context,"CONSUMABLE_COMMIT_FAILED_"+failure.getMessage());
@@ -540,6 +538,7 @@ public final class SkillExecutionService {
             result = executors.require(prepared.profile.family()).execute(context, port);
             kernel.resources().finish(token);
             if (result.committed()) {
+                if(persistent(context.profile()))concurrentInstances.activate(context.request().actorId(),context.profile().skillId(),context.skillInstanceId(),context.compiledPlan().concurrentInstances());
                 releases.primaryReleased(context,now());
                 traceEchoSchedule(context);
             } else {
@@ -568,7 +567,7 @@ public final class SkillExecutionService {
         if(channel(context.profile())) {
             if(!lifecycle.transition(context.request().actorId(),context.skillInstanceId(),SkillInstanceLifecycle.Phase.COMMITTED,SkillInstanceLifecycle.Phase.CHANNEL))
                 throw new IllegalStateException("Channel lifecycle transition failed");
-            synchronized(activeContexts){activeContexts.put(context.request().actorId(),context);}
+            synchronized(activeContexts){activeContexts.put(context.skillInstanceId(),context);}
         } else if (context.profile().area() != null || context.profile().connection()!=null || context.profile().support()!=null) {
             // The area registry owns the finite effect after dispatch; it does not lock unrelated casts for its lifetime.
             lifecycle.terminate(context.request().actorId(), context.skillInstanceId());
@@ -578,55 +577,31 @@ public final class SkillExecutionService {
             if (!lifecycle.transition(context.request().actorId(), context.skillInstanceId(),
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.STRIKE_REPEAT))
                 throw new IllegalStateException("Strike-repeat lifecycle transition failed");
-            synchronized (activeContexts) { activeContexts.put(context.request().actorId(), context); }
+            synchronized (activeContexts) { activeContexts.put(context.skillInstanceId(), context); }
         } else if (context.profile().family() == Stage04SkillProfile.Family.MOVEMENT) {
             if (!lifecycle.transition(context.request().actorId(), context.skillInstanceId(),
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.MOVEMENT))
                 throw new IllegalStateException("Movement lifecycle transition failed");
-            synchronized (activeContexts) { activeContexts.put(context.request().actorId(), context); }
+            synchronized (activeContexts) { activeContexts.put(context.skillInstanceId(), context); }
         } else if (context.profile().family() == Stage04SkillProfile.Family.REACTION) {
             if (!lifecycle.transition(context.request().actorId(), context.skillInstanceId(),
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.REACTION))
                 throw new IllegalStateException("Reaction lifecycle transition failed");
-            synchronized (activeContexts) { activeContexts.put(context.request().actorId(), context); }
+            synchronized (activeContexts) { activeContexts.put(context.skillInstanceId(), context); }
         } else if (context.profile().family() == Stage04SkillProfile.Family.PROJECTILE) {
             if (!lifecycle.transition(context.request().actorId(), context.skillInstanceId(),
                     SkillInstanceLifecycle.Phase.COMMITTED, SkillInstanceLifecycle.Phase.PROJECTILE))
                 throw new IllegalStateException("Projectile lifecycle transition failed");
-            synchronized (activeContexts) { activeContexts.put(context.request().actorId(), context); }
+            synchronized (activeContexts) { activeContexts.put(context.skillInstanceId(), context); }
         } else terminate(context, context.profile().conversion()!=null?"CONVERSION_DISPATCH_COMPLETE":(context.profile().summon()!=null||context.profile().summonAction()!=null)?"SUMMON_DISPATCH_COMPLETE":"STRIKE_COMPLETE");
     }
 
     private double now() { return nanoTime.getAsLong()/1e9; }
+    private static boolean persistent(Stage04SkillProfile profile){return profile.area()!=null||profile.projectile()!=null||profile.connection()!=null
+            ||profile.support()!=null||profile.summon()!=null||profile.conversion()!=null;}
     private static boolean channel(Stage04SkillProfile profile){return profile.connection()!=null&&profile.connection().channel();}
-    private void startEndedChannelCooldown(SkillExecutionContext context) {
-        if(!channel(context.profile())||context.derivedRelease())return;
-        var pending=channelCooldowns.get(context.request().actorId());
-        if(pending==null)throw new IllegalStateException("CHANNEL_COOLDOWN_TICKET_MISSING");
-        pending.ended=true;pollChannelCooldowns();
-    }
-    private static final class ChannelCooldown {
-        final SkillExecutionContext context;boolean ended;
-        java.util.concurrent.CompletableFuture<com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend> receipt;
-        ChannelCooldown(SkillExecutionContext context){this.context=context;}
-    }
-    private final Map<UUID,ChannelCooldown> channelCooldowns=new java.util.concurrent.ConcurrentHashMap<>();
-    public void pollChannelCooldowns(){synchronized(channelCooldowns){
-        int count=0;for(var entry:channelCooldowns.entrySet()){
-            if(++count>8)break;var pending=entry.getValue();if(!pending.ended)continue;
-            if(pending.receipt==null){
-                var c=pending.context;
-                try{pending.receipt=kernel.cooldowns().submitSpend(c.request().actorId(),c.profile().skillId(),1,c.profile().cooldownSeconds(),
-                        1,c.snapshot().derivedStats().cooldownRecovery(),c.compiledPlan().kernelModifiers()).toCompletableFuture();}
-                catch(RuntimeException unavailable){continue;} // Reserved intent survives capacity/uncertainty; no new cast is admitted.
-            }
-            if(!pending.receipt.isDone())continue;
-            var spend=pending.receipt.getNow(null);kernel.cooldowns().acceptSpend(spend);channelCooldowns.remove(entry.getKey(),pending);
-            var context=pending.context;
-            emit(context.request(),RpgTraceEventType.COOLDOWN_STARTED,context.rootCastId(),context.skillInstanceId(),
-                    Map.of("skillId",context.profile().skillId(),"afterChannelEnd",true,"seconds",spend.calculation().finalSeconds()));
-        }}
-    }
+    /** Compatibility maintenance hook; channel cooldowns now enter the ordinary COMMIT spend path. */
+    public void pollChannelCooldowns(){ }
     public int pendingReleaseCount() { return releases.size(); }
 
     /** Called from the owner's actual world tick with a fresh native port, never a stale retained command buffer. */

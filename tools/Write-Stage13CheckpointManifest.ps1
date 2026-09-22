@@ -11,7 +11,7 @@ foreach($file in Get-ChildItem -LiteralPath $manifestEvidence -File -Recurse|Sor
 }
 $manifest=[ordered]@{manifestSchema=1;purpose='CHECKSUM_VERIFIED_BLOCKED_DEVELOPMENT_CHECKPOINT_NOT_RELEASE';
     code=@{revision='R032';version='0.0.25';sha256=$verification.jarSha256};
-    content=@{canonicalSkills=87;canonicalPassives=66;runtimeProfiles=87;compiledPlanSchema=41};
+    content=@{canonicalSkills=87;canonicalPassives=66;runtimeProfiles=87;compiledPlanSchema=42};
     adapter=@{hytaleVersion='0.7.0-pre.1';build='e8b4d191fc98a977bf5546a951a7b25473d323e3';
         serverSha256='EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3';
         assetsSha256='46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39';connected='UNVERIFIED'};

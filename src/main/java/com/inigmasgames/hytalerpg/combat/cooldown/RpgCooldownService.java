@@ -13,6 +13,7 @@ public final class RpgCooldownService {
     private final LongSupplier nanoTime;
     private final Map<Key, Work> work = new HashMap<>();
     private final Map<UUID, AuraRate> auraRates = new HashMap<>();
+    private final Map<UUID,Double> ownerRecoveryRates = new HashMap<>();
     public interface Persistence {Map<String,SavedCooldown> load(UUID actor);void save(UUID actor,Map<String,SavedCooldown> values);}
     public interface AsyncPersistence extends Persistence {
         java.util.concurrent.CompletionStage<Void> submit(UUID actor,Map<String,SavedCooldown> values);
@@ -27,10 +28,10 @@ public final class RpgCooldownService {
         if(pendingSpends.size()>=256||pendingSpends.containsKey(actor))throw new IllegalStateException("COOLDOWN_PERSISTENCE_CAPACITY");
         if(!canActivate(actor,skill,capacity))throw new IllegalStateException("Skill has no available charge");
         var calculation=calculate(actor,base,factor,wisdom,modifiers);long now=nanoTime.getAsLong();
-        double recovery=wisdom+(modifiers==null?0:modifiers.cooldownRecoveryBonus());
+        setOwnerRecovery(actor,wisdom);double recovery=modifiers==null?0:modifiers.cooldownRecoveryBonus();
         var saved=new HashMap<>(snapshot(actor));var current=work.get(new Key(actor,skill));var next=current==null?new Work(now):current.copy();
         var spend=new Spend(actor,skill,UUID.randomUUID(),calculation);
-        next.queue.addLast(new Charge(spend.token(),calculation.finalSeconds()*rate(actor,recovery,now),recovery));saved.put(skill,next.saved());
+        next.queue.addLast(new Charge(spend.token(),calculation.finalSeconds()*rate(actor,recovery,true,now),recovery,true));saved.put(skill,next.saved());
         var receipt=async.submit(actor,SavedCooldown.validate(saved)).toCompletableFuture();
         pendingSpends.put(actor,new PendingSpend(spend,next,receipt));
         return receipt.thenApply(ignored->spend).minimalCompletionStage();
@@ -51,7 +52,7 @@ public final class RpgCooldownService {
         int count=0;for(var actor:java.util.List.copyOf(pendingSaves.keySet())){if(++count>8)break;pollPersistence(actor);}
         count=0;for(var actor:java.util.List.copyOf(detaching.keySet())){
             if(++count>8)break;if(pendingSpends.containsKey(actor)||pendingSaves.containsKey(actor))continue;
-            try{queueSave(actor,snapshot(actor),()->{work.keySet().removeIf(k->k.actor.equals(actor));auraRates.remove(actor);restored.remove(actor);checkpoints.remove(actor);detaching.remove(actor);},true);}
+            try{queueSave(actor,snapshot(actor),()->{work.keySet().removeIf(k->k.actor.equals(actor));auraRates.remove(actor);ownerRecoveryRates.remove(actor);restored.remove(actor);checkpoints.remove(actor);detaching.remove(actor);},true);}
             catch(RuntimeException unavailable){/* Retain bounded settlement intent and deny reconnect authority. */}
         }
     }
@@ -112,7 +113,7 @@ public final class RpgCooldownService {
             return;
         }
         if(persistence!=null)persistence.save(actor,snapshot(actor));
-        work.keySet().removeIf(k->k.actor.equals(actor));auraRates.remove(actor);restored.remove(actor);checkpoints.remove(actor);
+        work.keySet().removeIf(k->k.actor.equals(actor));auraRates.remove(actor);ownerRecoveryRates.remove(actor);restored.remove(actor);checkpoints.remove(actor);
     }
     public RpgCooldownService(CombatBalanceProfile profile, LongSupplier nanoTime) {
         this.profile = profile; this.nanoTime = nanoTime;
@@ -135,11 +136,11 @@ public final class RpgCooldownService {
                                           double wisdomRecovery,CompiledSkillPlan.KernelModifiers modifiers){
         if (!canActivate(actor, skillId,capacity)) throw new IllegalStateException("Skill has no available charge");
         Calculation calculation = calculate(actor,baseSeconds,durationFactor,wisdomRecovery,modifiers);
-        long now=nanoTime.getAsLong();double baseRecovery=wisdomRecovery+(modifiers==null?0:modifiers.cooldownRecoveryBonus());
-        double rate=rate(actor,baseRecovery,now);
+        setOwnerRecovery(actor,wisdomRecovery);long now=nanoTime.getAsLong();double baseRecovery=modifiers==null?0:modifiers.cooldownRecoveryBonus();
+        double rate=rate(actor,baseRecovery,true,now);
         var saved=new HashMap<>(snapshot(actor));var key=new Key(actor,skillId);var current=work.get(key);
         var next=current==null?new Work(now):current.copy();var token=UUID.randomUUID();
-        next.queue.addLast(new Charge(token,calculation.finalSeconds*rate,baseRecovery));
+        next.queue.addLast(new Charge(token,calculation.finalSeconds*rate,baseRecovery,true));
         saved.put(skillId,next.saved());
         if(persistence!=null)persistence.save(actor,SavedCooldown.validate(saved)); // Persist before the paid executor may run.
         work.put(key,next);return new Spend(actor,skillId,token,calculation);
@@ -154,6 +155,7 @@ public final class RpgCooldownService {
     }
     public synchronized Calculation calculate(UUID actor,double baseSeconds,double durationFactor,double wisdomRecovery,
                                                CompiledSkillPlan.KernelModifiers modifiers){
+        setOwnerRecovery(actor,wisdomRecovery);
         var aura=auraRates.get(actor);long now=nanoTime.getAsLong();
         double bonus=aura!=null&&aura.expires>now?aura.recovery:0;
         double penalty=aura!=null&&aura.expires>now?aura.durationMultiplier:1;
@@ -167,6 +169,14 @@ public final class RpgCooldownService {
         work.forEach((key,value)->{if(key.actor.equals(actor))advance(actor,value,now);});
         if(recovery==0&&durationMultiplier==1)auraRates.remove(actor);
         else auraRates.put(actor,new AuraRate(recovery,durationMultiplier,now+Math.round(leaseSeconds*1e9)));
+    }
+    /** Applies only to future work; work accumulated at the previous owner rate is committed first. */
+    public synchronized void setOwnerRecovery(UUID actor,double recovery){
+        if(actor==null||!Double.isFinite(recovery)||recovery<0)throw new IllegalArgumentException("Invalid owner cooldown recovery");
+        long now=nanoTime.getAsLong();double normalized=clamp(recovery,0,profile.cooldownRecoveryCap);
+        if(Math.abs(ownerRecoveryRates.getOrDefault(actor,0d)-normalized)<1e-12)return;
+        work.forEach((key,value)->{if(key.actor.equals(actor))advance(actor,value,now);});
+        if(normalized==0)ownerRecoveryRates.remove(actor);else ownerRecoveryRates.put(actor,normalized);
     }
     public Calculation calculate(double baseSeconds, double durationFactor, double wisdomRecovery,
                                  CompiledSkillPlan.KernelModifiers modifiers) {
@@ -183,7 +193,7 @@ public final class RpgCooldownService {
         var value=work.get(key);if(value==null)return 0;
         long now=nanoTime.getAsLong();advance(actor,value,now);
         if(value.queue.isEmpty()){work.remove(key);return 0;}
-        var first=value.queue.getFirst();return first.remaining/rate(actor,first.baseRecovery,now);
+        var first=value.queue.getFirst();return first.remaining/rate(actor,first.baseRecovery,first.dynamicOwnerRate,now);
     }
     private void advance(UUID actor,Work value,long now){
         if(detaching.containsKey(actor))now=Math.max(value.last,Math.min(now,detaching.get(actor)));
@@ -196,36 +206,37 @@ public final class RpgCooldownService {
     private void advanceSegment(UUID actor,Work value,double seconds,long at){
         // At most two queue entries; carry elapsed work serially into the next charge, never in parallel.
         while(seconds>0&&!value.queue.isEmpty()){
-            var first=value.queue.getFirst();double speed=rate(actor,first.baseRecovery,at),needed=first.remaining/speed;
+            var first=value.queue.getFirst();double speed=rate(actor,first.baseRecovery,first.dynamicOwnerRate,at),needed=first.remaining/speed;
             if(seconds+1e-12<needed){first.remaining-=seconds*speed;return;}
             seconds=Math.max(0,seconds-needed);value.queue.removeFirst();
         }
     }
-    private double rate(UUID actor,double baseRecovery,long now){
+    private double rate(UUID actor,double baseRecovery,boolean dynamicOwnerRate,long now){
         var aura=auraRates.get(actor);boolean active=aura!=null&&now<aura.expires;
-        return (1+clamp(baseRecovery+(active?aura.recovery:0),0,profile.cooldownRecoveryCap))/(active?aura.durationMultiplier:1);
+        double owner=dynamicOwnerRate?ownerRecoveryRates.getOrDefault(actor,0d):0;
+        return (1+clamp(owner+baseRecovery+(active?aura.recovery:0),0,profile.cooldownRecoveryCap))/(active?aura.durationMultiplier:1);
     }
     public synchronized boolean clear(UUID actor, String skillId) {
         var saved=new HashMap<>(snapshot(actor));saved.remove(skillId);if(persistence!=null)persistence.save(actor,saved);
         return work.remove(new Key(actor,skillId))!=null;
     }
     public synchronized void clear(UUID actor) {
-        restore(actor);if(persistence!=null)persistence.save(actor,Map.of());work.keySet().removeIf(key -> key.actor.equals(actor));auraRates.remove(actor);
+        restore(actor);if(persistence!=null)persistence.save(actor,Map.of());work.keySet().removeIf(key -> key.actor.equals(actor));auraRates.remove(actor);ownerRecoveryRates.remove(actor);
     }
     private static double clamp(double value, double min, double max) { return Math.max(min, Math.min(max, value)); }
     private record Key(UUID actor, String skill) { }
     private record AuraRate(double recovery,double durationMultiplier,long expires){}
-    private static final class Charge {final UUID token;double remaining;final double baseRecovery;
-        Charge(UUID token,double remaining,double recovery){this.token=token;this.remaining=remaining;this.baseRecovery=recovery;}
-        Charge copy(){return new Charge(token,remaining,baseRecovery);}}
+    private static final class Charge {final UUID token;double remaining;final double baseRecovery;final boolean dynamicOwnerRate;
+        Charge(UUID token,double remaining,double recovery,boolean dynamicOwnerRate){this.token=token;this.remaining=remaining;this.baseRecovery=recovery;this.dynamicOwnerRate=dynamicOwnerRate;}
+        Charge copy(){return new Charge(token,remaining,baseRecovery,dynamicOwnerRate);}}
     private static final class Work {
         final java.util.ArrayDeque<Charge> queue=new java.util.ArrayDeque<>();long last;
         Work(long now){last=now;}
-        Work(SavedCooldown saved,long now){this(now);queue.add(new Charge(UUID.randomUUID(),saved.remainingWork(),saved.baseRecovery()));
-            saved.queued().forEach(v->queue.add(new Charge(UUID.randomUUID(),v.remainingWork(),v.baseRecovery())));}
+        Work(SavedCooldown saved,long now){this(now);queue.add(new Charge(UUID.randomUUID(),saved.remainingWork(),saved.baseRecovery(),saved.dynamicOwnerRate()));
+            saved.queued().forEach(v->queue.add(new Charge(UUID.randomUUID(),v.remainingWork(),v.baseRecovery(),v.dynamicOwnerRate())));}
         Work copy(){var result=new Work(last);queue.forEach(v->result.queue.add(v.copy()));return result;}
-        SavedCooldown saved(){var first=queue.getFirst();return new SavedCooldown(first.remaining,first.baseRecovery,
-                queue.stream().skip(1).map(v->new SavedCooldown.Queued(v.remaining,v.baseRecovery)).toList());}
+        SavedCooldown saved(){var first=queue.getFirst();return new SavedCooldown(first.remaining,first.baseRecovery,first.dynamicOwnerRate,
+                queue.stream().skip(1).map(v->new SavedCooldown.Queued(v.remaining,v.baseRecovery,v.dynamicOwnerRate)).toList());}
     }
     public record Spend(UUID actor,String skill,UUID token,Calculation calculation){}
     public record Calculation(double baseSeconds, double durationFactor, double wisdomRecovery,

@@ -3,6 +3,7 @@ package com.inigmasgames.hytalerpg;
 import com.inigmasgames.hytalerpg.content.RpgCatalog;
 import com.inigmasgames.hytalerpg.combat.resource.ResourceType;
 import com.inigmasgames.hytalerpg.domain.PassiveSlot;
+import com.inigmasgames.hytalerpg.domain.CompiledSkillPlan;
 import com.inigmasgames.hytalerpg.execution.*;
 import com.inigmasgames.hytalerpg.execution.projectile.*;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
@@ -32,6 +33,16 @@ class Stage13AuthoredProjectileTest {
         assertEquals(count,plans(h,10).size());assertEquals(0,h.last().profile().windupSeconds());
         h.service.terminate(h.last(),"FIXTURE_NATIVE_COMPLETION_NOT_CLAIMED");
         assertEquals("COOLDOWN_ACTIVE",h.cast().code());assertEquals(1,h.contexts.size());assertEquals(1,h.cooldownSaves);
+    }
+    @Test void bombCommandBypassesActiveCooldownWithoutSecondPayment(){
+        var h=new Stage11ResourcePassivesTest.H("bomb_toss"){
+            boolean commandAvailable;
+            @Override public SkillExecutionResult commandExisting(Stage04SkillProfile profile,CompiledSkillPlan plan,SkillExecutionRequest request){
+                return commandAvailable?SkillExecutionResult.committed("EXISTING_INSTANCE_COMMANDED",0,0):null;
+            }
+        };h.weapon="BOMB";assertTrue(h.cast().committed());assertEquals(92,h.current(ResourceType.STAMINA));assertEquals(1,h.cooldownSaves);
+        h.commandAvailable=true;var command=h.cast();assertTrue(command.committed());assertEquals("EXISTING_INSTANCE_COMMANDED",command.code());
+        assertEquals(92,h.current(ResourceType.STAMINA));assertEquals(1,h.cooldownSaves);assertEquals(1,h.contexts.size());
     }
     @Test void snipeCannotPromoteDevelopmentFallbackIntoAProductionCast(){
         var h=new Stage11ResourcePassivesTest.H("snipe");h.weapon="BOW";

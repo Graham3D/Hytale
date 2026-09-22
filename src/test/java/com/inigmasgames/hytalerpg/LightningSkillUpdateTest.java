@@ -121,7 +121,7 @@ class LightningSkillUpdateTest {
                 "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java"));
         assertTrue(source.contains("spires.friendlyMelee(projection.instance(),hitIdentity,now)"));
         assertTrue(source.contains("HytaleSupportSystem.eligibleAlly(store,ownerRef,source)"));
-        assertTrue(source.contains("for(var wave:spires.drainWaves(owner))"));
+        assertTrue(source.contains("for(var wave:spires.drainWaves(view.instance()))"));
         assertTrue(source.contains("wave.instance()+\"/wave/\"+wave.sequence()"));
         assertTrue(source.contains("kernel.statuses().applyElectrified(targetId,6);kernel.statuses().applyElectrified(targetId,6)"));
     }

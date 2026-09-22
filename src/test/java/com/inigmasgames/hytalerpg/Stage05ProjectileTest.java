@@ -208,7 +208,8 @@ class Stage05ProjectileTest {
         assertTrue(harness.execute().committed());
         var records = ((Stage01BTestSupport.RecordingTracer) harness.bundle.tracer()).records.stream()
                 .filter(record -> "stage05-correlation".equals(record.correlationId())).toList();
-        assertEquals(4, records.size());
+        assertEquals(5, records.size());
+        assertEquals(1,records.stream().filter(record->record.eventType()==com.inigmasgames.hytalerpg.diagnostics.RpgTraceEventType.COOLDOWN_STARTED).count());
         assertEquals(1, records.stream().map(record -> record.details().get("rootCastId")).distinct().count());
         assertEquals(1, records.stream().map(record -> record.details().get("skillInstanceId")).distinct().count());
         assertEquals(1, harness.port.dispatches);

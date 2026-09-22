@@ -33,6 +33,8 @@ public interface SkillExecutionPort {
             com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets authored){return authored;}
     /** Null means no owned active Aura. Stopping one is not a second activation transaction. */
     default SkillExecutionResult stopActiveSupport(Stage04SkillProfile profile){return null;}
+    /** Null means no authored command target exists; a non-null result bypasses normal new-cast payment/cooldown. */
+    default SkillExecutionResult commandExisting(Stage04SkillProfile profile,CompiledSkillPlan plan,SkillExecutionRequest request){return null;}
     SkillExecutionResult executeStrike(SkillExecutionContext context);
     SkillExecutionResult executeMovement(SkillExecutionContext context);
     SkillExecutionResult executeReaction(SkillExecutionContext context);
