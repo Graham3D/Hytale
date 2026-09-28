@@ -31,14 +31,14 @@ $running = @(Get-CimInstance Win32_Process | Where-Object {
 if ($running.Count) { throw 'Hytale or HytaleServer is running; deployment is intentionally blocked.' }
 
 $validationJson = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Test-HyArpgPackage.ps1') `
-    -JarPath $CandidateJar -ExpectedVersion '0.2.0-R139' -ExpectedRevision 'R139'
+    -JarPath $CandidateJar -ExpectedVersion '0.2.0-R140' -ExpectedRevision 'R140'
 if ($LASTEXITCODE -ne 0) { throw 'Candidate package validation failed.' }
 $validation = $validationJson | ConvertFrom-Json
 if ($validation.result -ne 'PASS') { throw 'Candidate package validation did not report PASS.' }
 
 $knownActive = @('Hywind.jar', 'HyARPG.jar') | ForEach-Object { Join-Path $TargetMods $_ } | Where-Object { Test-Path -LiteralPath $_ }
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
-$rollback = Join-Path $RollbackRoot "HyARPG-R139-CustomUI-Hotfix-$stamp"
+$rollback = Join-Path $RollbackRoot "HyARPG-R140-EventBinding-Hotfix-$stamp"
 $plan = [ordered]@{
     result = if ($DryRun) { 'DRY_RUN' } else { 'PENDING' }
     candidate = $CandidateJar

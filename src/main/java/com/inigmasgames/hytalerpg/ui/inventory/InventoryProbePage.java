@@ -130,8 +130,6 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         for (var name : List.of("Sort", "Consolidate", "QuickEquip", "DropSelected"))
             events.addEventBinding(CustomUIEventBindingType.Activating, "#" + name,
                     event(name.toLowerCase(Locale.ROOT), ""), false);
-        events.addEventBinding(CustomUIEventBindingType.Dropped, "#DropBackdrop",
-                event("dropoutside", ""), false);
         events.addEventBinding(CustomUIEventBindingType.Activating, "#Split",
                 event("split", "").append("@Quantity", "#SplitQuantity.Value"), false);
         events.addEventBinding(CustomUIEventBindingType.Activating, "#SelectedSkill", event("next-skill", ""), false);
