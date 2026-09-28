@@ -50,6 +50,15 @@ try {
         'rpg/gear/native-bindings-v1.json',
         'Common/UI/Custom/RpgHud.ui',
         'Common/UI/Custom/RpgSkillTree.ui',
+        'Common/UI/Custom/RpgInventory/GridCommon.ui',
+        'Common/UI/Custom/RpgInventory/Slot@2x.png',
+        'Common/UI/Custom/RpgInventory/QuantityPopupSlotOverlay@2x.png',
+        'Common/UI/Custom/RpgInventory/SlotItemBrokenCracksOverlay@2x.png',
+        'Common/UI/Custom/RpgInventory/SlotItemBrokenIconOverlay@2x.png',
+        'Common/UI/Custom/RpgInventory/UnknownItemIcon@2x.png',
+        'Common/UI/Custom/RpgInventory/DurabilityBar@2x.png',
+        'Common/UI/Custom/RpgInventory/DurabilityBarBackground@2x.png',
+        'Common/UI/Custom/RpgInventory/CursedSpiral.png',
         'Common/UI/Custom/Hud/TavernsRevision.ui',
         'comfort_registry.json',
         'prepared_foods.json',
@@ -64,6 +73,7 @@ try {
         '^com/inigmasgames/persistentnpcs/',
         '^Server/NPC/Roles/(ImmersiveNPCs|PersistentNPCs)/',
         '^Common/UI/Custom/Pages/ImmersiveNpc',
+        '^Common/UI/Custom/Pages/ProfileInventory/',
         '(^|/)immersive_voice_worker\.py$',
         '(^|/)(ai-providers|llm-providers|orbis-resources)\.json$',
         '(?i)\.(onnx|safetensors|ckpt|pt|pth)$'
@@ -73,6 +83,26 @@ try {
         @($forbiddenPatterns | Where-Object { $name -match $_ }).Count -gt 0
     })
     if ($forbidden.Count) { throw "ImmersiveNPCs/AI payload leaked into HyARPG: $($forbidden -join ', ')" }
+
+    foreach ($section in @(
+            'Common/UI/Custom/InventoryNativeAlias/Section1.ui',
+            'Common/UI/Custom/InventoryNativeWorkspace/Section702.ui')) {
+        $sectionEntry = $zip.GetEntry($section)
+        if ($null -eq $sectionEntry) { throw "Missing generated native inventory document: $section" }
+        $sectionReader = [IO.StreamReader]::new($sectionEntry.Open(), [Text.UTF8Encoding]::new($false), $true)
+        try { $sectionText = $sectionReader.ReadToEnd() } finally { $sectionReader.Dispose() }
+        if ($sectionText -notmatch '\.\./RpgInventory/GridCommon\.ui' -or
+                $sectionText -match 'ProfileInventory') {
+            throw "Native inventory document has an orphan or ImmersiveNPC-owned base import: $section"
+        }
+    }
+    foreach ($uiEntry in $zip.Entries | Where-Object { $_.FullName -like '*.ui' }) {
+        $uiReader = [IO.StreamReader]::new($uiEntry.Open(), [Text.UTF8Encoding]::new($false), $true)
+        try { $uiText = $uiReader.ReadToEnd() } finally { $uiReader.Dispose() }
+        if ($uiText -match 'ProfileInventory') {
+            throw "Packaged HyARPG UI still references the ImmersiveNPC ProfileInventory resource: $($uiEntry.FullName)"
+        }
+    }
 
     $ability4Assets = 0
     foreach ($entry in $zip.Entries | Where-Object { $_.FullName -like 'Server/Item/Items/RPG/*.json' -or $_.FullName -like 'Server/Item/Items/RPG/*/*.json' }) {
