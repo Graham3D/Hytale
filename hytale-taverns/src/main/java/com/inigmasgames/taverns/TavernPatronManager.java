@@ -1369,7 +1369,7 @@ final class TavernPatronManager {
     static BlockType loadedBlockType(World world, int x, int y, int z) {
         WorldChunk chunk = world.getChunkIfLoaded(
                 ChunkUtil.indexChunkFromBlock(x, z));
-        return chunk == null ? null : chunk.getBlockType(x, y, z);
+        return chunk == null ? null : BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
     }
 
     private static boolean isPassable(BlockType block) {

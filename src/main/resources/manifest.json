@@ -2,7 +2,7 @@
   "Group": "InigmasGames",
   "Name": "HyARPG",
   "Version": "${version}",
-  "Description": "Independent server-authoritative HyARPG combat, skills, progression, items, and HUD runtime.",
+  "Description": "Merged HyARPG and Tavern gameplay runtime with CanvasUI, Ability4, combat, progression, gear, and Tavern management.",
   "Authors": [{ "Name": "Inigmas Games" }],
   "Website": "https://github.com/inigmas-games",
   "ServerVersion": "=${hytaleVersion}",
@@ -21,6 +21,6 @@
     "RpgRevision": "${rpgRevision}",
     "Stage": "13",
     "Product": "HyARPG",
-    "SeparationCheckpoint": "A"
+    "SeparationCheckpoint": "A-CORRECTED"
   }
 }

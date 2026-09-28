@@ -1,28 +1,30 @@
-# HyARPG
+# Merged HyARPG + Tavern
 
-HyARPG is the independently deployable Hytale ARPG runtime. It owns combat,
-skills, passives, progression, equipment, encounters, the skill tree, CanvasUI,
-HUD integration, and native Ability4 support.
+This artifact is the merged gameplay product. It owns HyARPG combat, skills,
+passives, progression, equipment, encounters, the skill tree, CanvasUI, HUD and
+native Ability4 support, plus Tavern cores, comfort, service, prepared food,
+table serving, patrons, and Tavern persistence.
 
-HyARPG does not package or start ImmersiveNPCs, Tavern Management, Orbis,
-Nemotron/Ollama integration, speech recognition, speech synthesis, NPC cognition,
-NPC persistence, provider configuration, voice workers, or model-training assets.
-The historical `persistent-npcs` and `hytale-taverns` source directories remain
-available for their own products, but are not Gradle projects or dependencies of
-the HyARPG build.
+The merged artifact does not package or start ImmersiveNPCs, PersistentNPCs,
+Orbis, Nemotron/Ollama integration, speech recognition, speech synthesis, NPC
+cognition, ImmersiveNPC persistence, provider configuration, voice workers, or
+model-training assets. `persistent-npcs` remains an independent source product;
+`hytale-taverns` is a dependency of this merged gameplay build and has no AI
+runtime dependency.
 
 Current identity:
 
 - plugin: `InigmasGames:HyARPG`
 - bootstrap: `com.inigmasgames.hywind.HyArpgPlugin`
 - artifact: `build/libs/HyARPG.jar`
-- revision: `R137`
+- revision: `R138`
 - Hytale API: `0.7.0-pre.4`
 
 Existing save-data roots are deliberately retained without migration:
 
 - `mods/InigmasGames_HytaleRPGPhase00Audit`
 - `mods/InigmasGames_CanvasUI`
+- `mods/InigmasGames_Taverns`
 
 ## Build and verify
 
@@ -33,9 +35,8 @@ Set-Location "C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale"
 .\gradlew.bat clean check build
 ```
 
-The build runs the deterministic RPG and CanvasUI tests, the native-control
-cohort, CustomUI validation, asset-grant audit, and the standalone-JAR ownership
-audit.
+The build runs deterministic RPG, CanvasUI, and Tavern tests, the native-control
+cohort, CustomUI validation, asset-grant audit, and merged-JAR ownership audit.
 
 For an isolated server smoke:
 
@@ -50,8 +51,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Deploy-HyArpg.ps
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Deploy-HyArpg.ps1
 ```
 
-Deployment moves the former merged `Hywind.jar` to an explicit rollback folder,
-installs exactly one `HyARPG.jar`, and does not write any save/config directory.
+Deployment moves the prior merged gameplay artifact to an explicit rollback
+folder and installs exactly one `HyARPG.jar`. It never deploys ImmersiveNPCs.
 
 ## Owner-managed RPG icons
 

@@ -60,6 +60,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.inigmasgames.taverns.api.SpatialPlayerItemPolicy;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import java.util.List;
 import java.util.Map;
@@ -612,6 +613,7 @@ final class TableServingManager {
             Ref<EntityStore> foodRef,
             TableServingComponent serving,
             InteractionContext context) {
+        if (!SpatialPlayerItemPolicy.nativeMode(playerRef, context.getCommandBuffer())) return false;
         ItemStack foodStack = serving.itemStack();
         String rootId = foodStack.getItem().getInteractions().get(InteractionType.Secondary);
         CommandBuffer<EntityStore> commandBuffer = context.getCommandBuffer();
@@ -673,6 +675,7 @@ final class TableServingManager {
             boolean consumed = !sameStack(chainResult, foodStack);
 
             if (consumed) {
+                if (!SpatialPlayerItemPolicy.nativeMode(playerRef, commandBuffer)) return;
                 if (chainResult != null && !chainResult.isEmpty()) {
                     CombinedItemContainer inventory = InventoryComponent.getCombined(
                             commandBuffer, playerRef,
@@ -699,6 +702,7 @@ final class TableServingManager {
             Ref<EntityStore> foodRef,
             TableServingComponent serving,
             CommandBuffer<EntityStore> commandBuffer) {
+        if (!SpatialPlayerItemPolicy.nativeMode(playerRef, commandBuffer)) return false;
         ItemStack foodStack = serving.itemStack();
         CombinedItemContainer inventory = InventoryComponent.getCombined(
                 commandBuffer, playerRef, InventoryComponent.STORAGE_HOTBAR_BACKPACK);
@@ -726,6 +730,7 @@ final class TableServingManager {
             Ref<EntityStore> plateRef,
             TableServingComponent serving,
             CommandBuffer<EntityStore> commandBuffer) {
+        if (!SpatialPlayerItemPolicy.nativeMode(playerRef, commandBuffer)) return false;
         TableKey key = key(worldId(commandBuffer.getStore()), serving);
         ServingState state = servings.get(key);
         if (state != null && state.food != null && state.food.isValid()) {
@@ -941,7 +946,7 @@ final class TableServingManager {
     private static BlockType loadedBlockType(World world, int x, int y, int z) {
         WorldChunk chunk = world.getChunkIfLoaded(
                 ChunkUtil.indexChunkFromBlock(x, z));
-        return chunk == null ? null : chunk.getBlockType(x, y, z);
+        return chunk == null ? null : BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
     }
 
     private static void stripLegacyItemComponents(

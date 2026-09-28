@@ -68,7 +68,7 @@ try {
     }
 } finally { $assets.Dispose() }
 
-foreach ($resources in @('src/main/resources/Server', 'canvas-ui/src/main/resources/Server')) {
+foreach ($resources in @('src/main/resources/Server', 'canvas-ui/src/main/resources/Server', 'hytale-taverns/src/main/resources/Server')) {
     $projectAssets = Join-Path $root $resources
     if ([IO.Directory]::Exists($projectAssets)) {
         foreach ($file in [IO.Directory]::EnumerateFiles($projectAssets, '*.json', [IO.SearchOption]::AllDirectories)) {
@@ -91,16 +91,20 @@ $sources = @(
     'src/main/java/com/inigmasgames/hytalerpg/commands/RpgGearCommand.java',
     'src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleAmmoAdapter.java',
     'src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearLoot.java',
-    'src/main/java/com/inigmasgames/hytalerpg/ui/inventory/SpatialInventoryTransferCoordinator.java'
+    'src/main/java/com/inigmasgames/hytalerpg/ui/inventory/SpatialInventoryTransferCoordinator.java',
+    'hytale-taverns/src/main/java/com/inigmasgames/taverns/CoreModeManager.java',
+    'hytale-taverns/src/main/java/com/inigmasgames/taverns/TableServingManager.java'
 )
 $requiredGuards = @{
     'src/main/java/com/inigmasgames/hytalerpg/commands/RpgGearCommand.java' = 'SpatialInventoryTransferCoordinator.grantGeneratedQaItem'
     'src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleAmmoAdapter.java' = 'spatialOwner'
     'src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearLoot.java' = 'SpatialBagComponent.OwnershipMode.NATIVE'
     'src/main/java/com/inigmasgames/hytalerpg/ui/inventory/SpatialInventoryTransferCoordinator.java' = 'OwnershipMode.NATIVE'
+    'hytale-taverns/src/main/java/com/inigmasgames/taverns/CoreModeManager.java' = 'SpatialPlayerItemPolicy.nativeMode'
+    'hytale-taverns/src/main/java/com/inigmasgames/taverns/TableServingManager.java' = 'SpatialPlayerItemPolicy.nativeMode'
 }
 $calls = '\.(addItemStack|giveItem|addOrDropItemStacks)\s*\('
-foreach ($folder in @('src/main/java','canvas-ui/src/main/java')) {
+foreach ($folder in @('src/main/java','canvas-ui/src/main/java','hytale-taverns/src/main/java')) {
     $dir = Join-Path $root $folder
     foreach ($file in [IO.Directory]::EnumerateFiles($dir, '*.java', [IO.SearchOption]::AllDirectories)) {
         if ([IO.File]::ReadAllText($file) -match $calls) {

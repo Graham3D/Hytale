@@ -12,7 +12,7 @@ class SpatialMigrationPreflightTest {
 
     @Test void catalogUsesExplicitReviewedBindingsAndNoUnknownFallback() {
         assertEquals(2, CATALOG.revision());
-        assertEquals(5576, CATALOG.bindingCount());
+        assertEquals(5608, CATALOG.bindingCount());
         assertEquals(new SpatialLayout.Size(2, 4), CATALOG.size("Weapon_Shortbow_Iron"));
         assertEquals(new SpatialLayout.Size(2, 4), CATALOG.size("Weapon_Staff_Adamantite"));
         assertEquals(new SpatialLayout.Size(2, 3), CATALOG.size("Armor_Iron_Chest"));
@@ -20,7 +20,8 @@ class SpatialMigrationPreflightTest {
         assertEquals(new SpatialLayout.Size(2, 4), CATALOG.size("RPG_Gear_battleaxe_adamantite_h_Legendary"));
         assertEquals(new SpatialLayout.Size(2, 4), CATALOG.size("RPG_Gear_shortbow_copper_n"));
         assertEquals(new SpatialLayout.Size(1, 1), CATALOG.size("RPG_Ability_Fireball"));
-        assertNull(CATALOG.size("Core_Tavern"));
+        assertEquals(new SpatialLayout.Size(1, 1), CATALOG.size("Core_Tavern"));
+        assertEquals(new SpatialLayout.Size(1, 1), CATALOG.size("Tavern_Prepared_Food_Bread"));
         assertNull(CATALOG.size("Invented_Unreviewed_Weapon"));
     }
 

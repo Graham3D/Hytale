@@ -33458,6 +33458,198 @@
       "height": 2,
       "rule": "ManagedGear/Tool_Shovel_Iron",
       "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_tool_shovel_iron_nm.json"
+    },
+    "Bench_Dishwasher": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Bench/Taverns/Bench_Dishwasher.json"
+    },
+    "Core_Bedroom": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Core/Core_Bedroom.json"
+    },
+    "Core_Kitchen": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Core/Core_Kitchen.json"
+    },
+    "Core_Tavern": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Core/Core_Tavern.json"
+    },
+    "Tavern_Prepared_Food_Bread": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Bread.json"
+    },
+    "Tavern_Prepared_Food_Cheese": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Cheese.json"
+    },
+    "Tavern_Prepared_Food_Fish_Grilled": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Fish_Grilled.json"
+    },
+    "Tavern_Prepared_Food_Kebab_Fruit": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Kebab_Fruit.json"
+    },
+    "Tavern_Prepared_Food_Kebab_Meat": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Kebab_Meat.json"
+    },
+    "Tavern_Prepared_Food_Kebab_Mushroom": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Kebab_Mushroom.json"
+    },
+    "Tavern_Prepared_Food_Pie_Apple": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Pie_Apple.json"
+    },
+    "Tavern_Prepared_Food_Pie_Meat": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Pie_Meat.json"
+    },
+    "Tavern_Prepared_Food_Pie_Pumpkin": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Pie_Pumpkin.json"
+    },
+    "Tavern_Prepared_Food_Popcorn": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Popcorn.json"
+    },
+    "Tavern_Prepared_Food_Salad_Berry": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Salad_Berry.json"
+    },
+    "Tavern_Prepared_Food_Salad_Caesar": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Salad_Caesar.json"
+    },
+    "Tavern_Prepared_Food_Salad_Mushroom": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Salad_Mushroom.json"
+    },
+    "Tavern_Prepared_Food_Vegetable_Cooked": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Vegetable_Cooked.json"
+    },
+    "Tavern_Prepared_Food_Wildmeat_Cooked": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Food_Wildmeat_Cooked.json"
+    },
+    "Tavern_Prepared_Plant_Fruit_Apple": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/Food",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Food/Taverns/Tavern_Prepared_Plant_Fruit_Apple.json"
+    },
+    "Furniture_Tavern_Service": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Furniture/Tavern/Furniture_Tavern_Service.json"
+    },
+    "Tavern_Currency_Copper_Coffer": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Currency/Tavern_Currency_Copper_Coffer.json"
+    },
+    "Tavern_Currency_Copper_Coins": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Currency/Tavern_Currency_Copper_Coins.json"
+    },
+    "Tavern_Currency_Copper_Pile": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Currency/Tavern_Currency_Copper_Pile.json"
+    },
+    "Tavern_Currency_Gold_Coffer": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/SmallItem",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Currency/Tavern_Currency_Gold_Coffer.json"
+    },
+    "Tavern_Currency_Gold_Coins": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/SmallItem",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Currency/Tavern_Currency_Gold_Coins.json"
+    },
+    "Tavern_Currency_Gold_Pile": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/SmallItem",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Currency/Tavern_Currency_Gold_Pile.json"
+    },
+    "Tavern_Currency_Silver_Coffer": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Currency/Tavern_Currency_Silver_Coffer.json"
+    },
+    "Tavern_Currency_Silver_Coins": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Currency/Tavern_Currency_Silver_Coins.json"
+    },
+    "Tavern_Currency_Silver_Pile": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Currency/Tavern_Currency_Silver_Pile.json"
+    },
+    "Dirty_Plate": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Dirty_Plate.json"
+    },
+    "Tavern_Clean_Plate": {
+      "width": 1,
+      "height": 1,
+      "rule": "Taverns/BlockType",
+      "source": "hytale-taverns/src/main/resources/Server/Item/Items/Taverns/Tavern_Clean_Plate.json"
     }
   }
 }

@@ -42,7 +42,7 @@ import com.hypixel.hytale.server.core.modules.entity.item.ItemPhysicsComponent;
 import com.hypixel.hytale.server.core.modules.interaction.system.InteractionSystems;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.inigmasgames.persistentnpcs.PersistentNpcsPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import java.nio.file.Path;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -59,7 +59,8 @@ import javax.annotation.Nonnull;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
-public abstract class TavernsPlugin extends PersistentNpcsPlugin {
+/** Tavern gameplay lifecycle with no ImmersiveNPCs or AI runtime dependency. */
+public abstract class TavernsPlugin extends JavaPlugin {
     public static final String CORE_ITEM_ID = CoreDefinitions.TAVERN.itemId();
     public static final String TAVERN_SERVICE_ITEM_ID = "Furniture_Tavern_Service";
     public static final String REVISION = "R056";
@@ -78,14 +79,13 @@ public abstract class TavernsPlugin extends PersistentNpcsPlugin {
         super(init);
     }
 
-    /** Allows the unified Hywind lifecycle to retain the legacy Tavern data root. */
+    /** Allows the merged ARPG lifecycle to retain the legacy Tavern data root. */
     protected Path tavernsDataDirectory() {
         return getDataDirectory();
     }
 
     @Override
     protected void setup() {
-        super.setup();
         Path dataDirectory = tavernsDataDirectory();
         repository = new TavernRepository(
                 dataDirectory,
@@ -183,11 +183,13 @@ public abstract class TavernsPlugin extends PersistentNpcsPlugin {
                         playerRef, new TavernsHud(playerRef));
             }
         });
+
+        getLogger().at(Level.INFO).log(
+                "TAVERNS_SETUP revision=%s data=%s aiIntegration=NONE", REVISION, dataDirectory);
     }
 
     @Override
     protected void start() {
-        super.start();
         coreMode.start();
         // LoadedAssetsEvent may be emitted before the final vanilla Item map is
         // populated. Resolve once more at plugin start, after asset loading.
@@ -195,26 +197,23 @@ public abstract class TavernsPlugin extends PersistentNpcsPlugin {
         getLogger().at(Level.INFO).log(
                 "Taverns revision %s started with persistence schema %s and generic Core support.",
                 REVISION, TavernRepository.CURRENT_SCHEMA_VERSION);
+
     }
 
     @Override
     protected void shutdown() {
-        try {
-            if (coreMode != null) {
-                coreMode.shutdown();
-            }
-            if (comfortTooltipInstaller != null) {
-                comfortTooltipInstaller.restore();
-            }
-            if (tableServingManager != null) {
-                tableServingManager.restoreEmptyHandSecondary();
-                TableServingUseInteraction.uninstall(tableServingManager);
-            }
-            if (patronManager != null) {
-                patronManager.shutdown();
-            }
-        } finally {
-            super.shutdown();
+        if (coreMode != null) {
+            coreMode.shutdown();
+        }
+        if (comfortTooltipInstaller != null) {
+            comfortTooltipInstaller.restore();
+        }
+        if (tableServingManager != null) {
+            tableServingManager.restoreEmptyHandSecondary();
+            TableServingUseInteraction.uninstall(tableServingManager);
+        }
+        if (patronManager != null) {
+            patronManager.shutdown();
         }
     }
 
@@ -231,6 +230,7 @@ public abstract class TavernsPlugin extends PersistentNpcsPlugin {
             getLogger().at(Level.SEVERE).withCause(exception)
                     .log("Could not resolve Comfort data after Item assets loaded");
         }
+
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

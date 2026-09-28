@@ -12,7 +12,6 @@ import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.inigmasgames.canvasui.CanvasUI;
 import com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand;
@@ -22,6 +21,7 @@ import com.inigmasgames.canvasui.demo.CanvasInputProbeCommand;
 import com.inigmasgames.canvasui.runtime.CanvasService;
 import com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard;
 import com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService;
+import com.inigmasgames.taverns.TavernsPlugin;
 import com.inigmasgames.hytalerpg.commands.RpgCommand;
 import com.inigmasgames.hytalerpg.content.RpgCatalog;
 import com.inigmasgames.hytalerpg.diagnostics.RpgSkillTraceService;
@@ -71,8 +71,8 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Roo
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
 
-/** Independent production bootstrap for HyARPG gameplay and presentation. */
-public final class HyArpgPlugin extends JavaPlugin {
+/** Production bootstrap for merged HyARPG, Tavern, and CanvasUI gameplay. */
+public final class HyArpgPlugin extends TavernsPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private PacketFilter inboundWatcher;
     private PacketFilter outboundWatcher;
@@ -99,6 +99,7 @@ public final class HyArpgPlugin extends JavaPlugin {
     private CursorHudProbeService cursorProbe;
     private boolean canvasSetup;
     private boolean rpgSetup;
+    private boolean tavernsSetup;
     private enum StartupState { STARTING, RUNNING, STOPPING, STOPPED }
     private volatile StartupState startupState=StartupState.STARTING;
 
@@ -110,6 +111,11 @@ public final class HyArpgPlugin extends JavaPlugin {
 
     public HyArpgPlugin(@Nonnull JavaPluginInit init) {
         super(init);
+    }
+
+    @Override
+    protected Path tavernsDataDirectory() {
+        return legacyDataDirectory("InigmasGames_Taverns");
     }
 
     private Path rpgDataDirectory() {
@@ -147,6 +153,8 @@ public final class HyArpgPlugin extends JavaPlugin {
                     event -> com.inigmasgames.hywind.readypath.ReadyPathProbe.mark("ALL_WORLDS_LOADED_OBSERVED", null));
         }
         try {
+            tavernsSetup = true;
+            super.setup();
             com.hypixel.hytale.server.npc.NPCPlugin.get().registerCoreComponentType(
                     "HywindOpenBarterShop", com.inigmasgames.hytalerpg.ui.inventory.HywindOpenBarterShopAction.Builder::new);
             var triggerVolumes = com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin.get();
@@ -159,9 +167,9 @@ public final class HyArpgPlugin extends JavaPlugin {
             setupCanvas();
             rpgSetup = true;
             setupRpg();
-            LOGGER.atInfo().log("HYARPG_DATA_ROOTS bootstrap=%s gameplay=%s presentation=%s",
-                    getDataDirectory(), rpgDataDirectory(), canvasDataDirectory());
-            LOGGER.atInfo().log("HYARPG_SETUP version=%s revision=%s modules=GAMEPLAY,PRESENTATION",
+            LOGGER.atInfo().log("HYARPG_DATA_ROOTS bootstrap=%s gameplay=%s presentation=%s taverns=%s",
+                    getDataDirectory(), rpgDataDirectory(), canvasDataDirectory(), tavernsDataDirectory());
+            LOGGER.atInfo().log("HYARPG_SETUP version=%s revision=%s modules=GAMEPLAY,PRESENTATION,TAVERNS aiIntegration=NONE",
                     getManifest().getVersion(), BuildIdentity.REVISION);
         } catch (RuntimeException | Error failure) {
             startupState=StartupState.STOPPING;
@@ -332,6 +340,14 @@ public final class HyArpgPlugin extends JavaPlugin {
         com.inigmasgames.hytalerpg.ui.inventory.SpatialBagComponent.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.ui.inventory.SpatialBagComponent.class,"RpgSpatialBag",
                 com.inigmasgames.hytalerpg.ui.inventory.SpatialBagComponent.CODEC));
+        com.inigmasgames.taverns.api.SpatialPlayerItemPolicy.bind((ref, accessor) -> {
+            var player = accessor.getComponent(ref, PlayerRef.getComponentType());
+            if (player == null) return false;
+            var bag = accessor.getComponent(ref,
+                    com.inigmasgames.hytalerpg.ui.inventory.SpatialBagComponent.getComponentType());
+            return bag == null || bag.mode(player.getUuid())
+                    == com.inigmasgames.hytalerpg.ui.inventory.SpatialBagComponent.OwnershipMode.NATIVE;
+        });
         var difficultyCombat=new com.inigmasgames.hytalerpg.execution.hytale.HytaleDifficultyCombat(skillTrace);
         encounterRewards.configureCombat(difficultyCombat);
         encounterRewards.configureUnlockNotification((id,mode)->{
@@ -745,6 +761,7 @@ public final class HyArpgPlugin extends JavaPlugin {
         try {
             // Mandatory native feedback is validated before RPG world work starts.
             com.inigmasgames.hytalerpg.execution.hytale.NativeStrikeFeedback.requireAssets();
+            super.start();
             startRpg();
             startupState=StartupState.RUNNING;
             LOGGER.atInfo().log("HYARPG_STARTED version=%s revision=%s", getManifest().getVersion(), BuildIdentity.REVISION);
@@ -768,6 +785,8 @@ public final class HyArpgPlugin extends JavaPlugin {
                 if (canvasSetup) shutdownCanvas();
             } finally {
                 canvasSetup = false;
+                if (tavernsSetup) super.shutdown();
+                tavernsSetup = false;
             }
         }
         startupState=StartupState.STOPPED;
@@ -789,6 +808,13 @@ public final class HyArpgPlugin extends JavaPlugin {
             LOGGER.atSevere().withCause(cleanupFailure).log("HYARPG_PARTIAL_CLEANUP_FAILED module=PRESENTATION");
         } finally {
             canvasSetup = false;
+        }
+        try {
+            if (tavernsSetup) super.shutdown();
+        } catch (RuntimeException cleanupFailure) {
+            LOGGER.atSevere().withCause(cleanupFailure).log("HYARPG_PARTIAL_CLEANUP_FAILED module=TAVERNS");
+        } finally {
+            tavernsSetup = false;
         }
         startupState=StartupState.STOPPED;
     }

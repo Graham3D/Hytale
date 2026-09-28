@@ -27,7 +27,7 @@ try {
     if ($manifest.Group -ne 'InigmasGames' -or $manifest.Name -ne 'HyARPG' -or
         $manifest.Version -ne $ExpectedVersion -or $manifest.Main -ne 'com.inigmasgames.hywind.HyArpgPlugin' -or
         $manifest.Metadata.RpgRevision -ne $ExpectedRevision -or $manifest.Metadata.Product -ne 'HyARPG' -or
-        $manifest.Metadata.SeparationCheckpoint -ne 'A') {
+        $manifest.Metadata.SeparationCheckpoint -ne 'A-CORRECTED') {
         throw 'HyARPG manifest identity/version/bootstrap/revision mismatch.'
     }
     if ($manifest.Dependencies.PSObject.Properties.Name -contains 'InigmasGames:ImmersiveNPCs') {
@@ -41,11 +41,19 @@ try {
         'com/inigmasgames/hytalerpg/ui/hud/RpgHud.class',
         'com/inigmasgames/hytalerpg/combat/RpgCombatKernel.class',
         'com/inigmasgames/canvasui/CanvasUI.class',
+        'com/inigmasgames/taverns/TavernsPlugin.class',
+        'com/inigmasgames/taverns/CoreModeManager.class',
+        'com/inigmasgames/taverns/TavernPatronManager.class',
+        'com/inigmasgames/taverns/api/SpatialPlayerItemPolicy.class',
         'rpg/catalog/skills.json',
         'rpg/catalog/passives.json',
         'rpg/gear/native-bindings-v1.json',
         'Common/UI/Custom/RpgHud.ui',
         'Common/UI/Custom/RpgSkillTree.ui',
+        'Common/UI/Custom/Hud/TavernsRevision.ui',
+        'comfort_registry.json',
+        'prepared_foods.json',
+        'Server/Item/Items/Core/Core_Tavern.json',
         'rpg-build.properties'
     )
     foreach ($entry in $required) {
@@ -54,10 +62,7 @@ try {
 
     $forbiddenPatterns = @(
         '^com/inigmasgames/persistentnpcs/',
-        '^com/inigmasgames/taverns/',
         '^Server/NPC/Roles/(ImmersiveNPCs|PersistentNPCs)/',
-        '^Server/Item/Items/.*/Taverns?/',
-        '^Server/Item/Items/Taverns?/',
         '^Common/UI/Custom/Pages/ImmersiveNpc',
         '(^|/)immersive_voice_worker\.py$',
         '(^|/)(ai-providers|llm-providers|orbis-resources)\.json$',
@@ -85,6 +90,7 @@ try {
         bytes = (Get-Item -LiteralPath $resolved).Length
         entries = $zip.Entries.Count
         classes = @($names | Where-Object { $_ -like '*.class' }).Count
+        tavernClasses = @($names | Where-Object { $_ -like 'com/inigmasgames/taverns/*.class' -or $_ -like 'com/inigmasgames/taverns/*/*.class' }).Count
         ability4Assets = $ability4Assets
         manifest = "$($manifest.Group):$($manifest.Name)@$($manifest.Version)"
         revision = $manifest.Metadata.RpgRevision

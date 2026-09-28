@@ -4,7 +4,7 @@ plugins {
 
 group = maven_group
 version = project.version
-// Independently deployable HyARPG artifact. Existing RPG and CanvasUI data roots are retained.
+// Merged HyARPG + Tavern artifact. Existing gameplay and presentation data roots are retained.
 tasks.named('jar') { archiveFileName = 'HyARPG.jar' }
 
 def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
@@ -25,10 +25,12 @@ repositories { mavenCentral() }
 
 dependencies {
     implementation project(':canvas-ui')
+    implementation project(':hytale-taverns')
     compileOnly files(serverJar)
     compileOnly files(htDevLibJar)
     testImplementation files(serverJar)
     testImplementation project(':canvas-ui')
+    testImplementation project(':hytale-taverns')
     testImplementation platform('org.junit:junit-bom:5.12.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -125,6 +127,7 @@ tasks.register('nativeControlTest', Test) {
 tasks.check {
     dependsOn tasks.named('nativeControlTest')
     dependsOn ':canvas-ui:check'
+    dependsOn ':hytale-taverns:check'
 }
 
 tasks.register('verifyHyArpgJar', Exec) {
@@ -182,19 +185,26 @@ tasks.processResources {
         expand(version: project.version, rpgRevision: rpg_revision, hytaleVersion: hytale_version)
     }
     def gearLanguage = file('src/main/gearLanguage/server.lang')
+    def tavernLanguage = file('hytale-taverns/src/main/tavernLanguage/server.lang')
     inputs.file(gearLanguage)
+    inputs.file(tavernLanguage)
     doLast {
         def mergedLanguage = new File(destinationDir, 'Server/Languages/en-US/server.lang')
         mergedLanguage.append(System.lineSeparator() + gearLanguage.getText('UTF-8'), 'UTF-8')
+        mergedLanguage.append(System.lineSeparator() + tavernLanguage.getText('UTF-8'), 'UTF-8')
     }
 }
 
 tasks.named('jar') {
     dependsOn ':canvas-ui:classes'
+    dependsOn ':hytale-taverns:classes'
     duplicatesStrategy = DuplicatesStrategy.FAIL
     from(project(':canvas-ui').sourceSets.main.output) {
         exclude 'manifest.json'
         exclude 'com/inigmasgames/canvasui/CanvasUIPlugin.class'
+    }
+    from(project(':hytale-taverns').sourceSets.main.output) {
+        exclude 'manifest.json'
     }
 }
 

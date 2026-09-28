@@ -78,11 +78,13 @@ $summary = [ordered]@{
     installedSmokeSha256 = Get-Sha256 (Join-Path $mods 'HyARPG.jar')
     firstPartyJarCount = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | Where-Object Name -ne 'HYTALEDEVLIB-0.5.0.jar').Count
     hyarpgDiscovered = [bool]($plain -match 'InigmasGames:HyARPG from path HyARPG\.jar')
-    hyarpgSetup = [bool]($plain -match 'HYARPG_SETUP version=0\.2\.0-R137 revision=R137 modules=GAMEPLAY,PRESENTATION')
-    rpgSetup = [bool]($plain -match 'HYTALE_RPG_SETUP revision=R137 version=0\.2\.0-R137 hytale=0\.7\.0-pre\.4 stage=13')
+    hyarpgSetup = [bool]($plain -match 'HYARPG_SETUP version=0\.2\.0-R138 revision=R138 modules=GAMEPLAY,PRESENTATION,TAVERNS aiIntegration=NONE')
+    tavernsSetup = [bool]($plain -match 'TAVERNS_SETUP revision=R056 .* aiIntegration=NONE')
+    tavernsStarted = [bool]($plain -match 'Taverns revision R056 started with persistence schema .* generic Core support')
+    rpgSetup = [bool]($plain -match 'HYTALE_RPG_SETUP revision=R138 version=0\.2\.0-R138 hytale=0\.7\.0-pre\.4 stage=13')
     ability4Audit = [bool]($plain -match '(?i)(Ability4|nativeAbility4)')
-    hyarpgStarted = [bool]($plain -match 'HYARPG_STARTED version=0\.2\.0-R137 revision=R137')
-    hyarpgShutdown = [bool]($plain -match 'HYARPG_SHUTDOWN version=0\.2\.0-R137 revision=R137')
+    hyarpgStarted = [bool]($plain -match 'HYARPG_STARTED version=0\.2\.0-R138 revision=R138')
+    hyarpgShutdown = [bool]($plain -match 'HYARPG_SHUTDOWN version=0\.2\.0-R138 revision=R138')
     pluginManagerStarted = [bool]($plain -match 'Plugin manager started!')
     serverBooted = [bool]($plain -match 'Hytale Server Booted')
     immersiveDiscovered = [bool]($plain -match 'InigmasGames:(ImmersiveNPCs|PersistentNPCs) from path')
@@ -94,7 +96,8 @@ $summary = [ordered]@{
 }
 $summary.result = if ($summary.processExitCode -eq 0 -and
     $summary.candidateSha256 -eq $summary.installedSmokeSha256 -and $summary.firstPartyJarCount -eq 1 -and
-    $summary.hyarpgDiscovered -and $summary.hyarpgSetup -and $summary.rpgSetup -and $summary.ability4Audit -and
+    $summary.hyarpgDiscovered -and $summary.hyarpgSetup -and $summary.tavernsSetup -and $summary.tavernsStarted -and
+    $summary.rpgSetup -and $summary.ability4Audit -and
     $summary.hyarpgStarted -and $summary.hyarpgShutdown -and $summary.pluginManagerStarted -and $summary.serverBooted -and
     -not $summary.immersiveDiscovered -and -not $summary.aiRuntimeObserved -and
     ($summary.npcDataBefore | ConvertTo-Json -Compress) -eq ($summary.npcDataAfter | ConvertTo-Json -Compress) -and

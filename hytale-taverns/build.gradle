@@ -16,7 +16,6 @@ java {
 repositories { mavenCentral() }
 
 dependencies {
-    api project(':persistent-npcs')
     compileOnly files(serverJar)
     testImplementation files(serverJar)
     testImplementation platform('org.junit:junit-bom:5.12.2')
@@ -66,7 +65,7 @@ tasks.check {
 }
 
 tasks.processResources {
-    // Hywind owns the sole root manifest and generates the merged en-US language file.
+    // The merged ARPG artifact owns the sole root manifest and generated language file.
     exclude 'manifest.json'
     exclude 'Server/Languages/en-US/server.lang'
 }
