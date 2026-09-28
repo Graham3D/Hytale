@@ -95,6 +95,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
     private java.util.concurrent.ExecutorService difficultyIo;
     private com.inigmasgames.hytalerpg.difficulty.HytaleDifficultyPortals difficultyPortals;
     private com.inigmasgames.hytalerpg.spawning.NativeWorldSpawnDensity worldSpawnDensity;
+    private com.inigmasgames.hywind.compat.RpgGameplayEventPublisher immersiveEvents =
+            com.inigmasgames.hywind.compat.RpgGameplayEventPublisher.NO_OP;
     private CanvasService canvasService;
     private CursorHudProbeService cursorProbe;
     private boolean canvasSetup;
@@ -155,6 +157,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         try {
             tavernsSetup = true;
             super.setup();
+            setupOptionalImmersiveBridge();
             com.hypixel.hytale.server.npc.NPCPlugin.get().registerCoreComponentType(
                     "HywindOpenBarterShop", com.inigmasgames.hytalerpg.ui.inventory.HywindOpenBarterShopAction.Builder::new);
             var triggerVolumes = com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin.get();
@@ -169,7 +172,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
             setupRpg();
             LOGGER.atInfo().log("HYARPG_DATA_ROOTS bootstrap=%s gameplay=%s presentation=%s taverns=%s",
                     getDataDirectory(), rpgDataDirectory(), canvasDataDirectory(), tavernsDataDirectory());
-            LOGGER.atInfo().log("HYARPG_SETUP version=%s revision=%s modules=GAMEPLAY,PRESENTATION,TAVERNS aiIntegration=NONE",
+            LOGGER.atInfo().log("HYARPG_SETUP version=%s revision=%s modules=GAMEPLAY,PRESENTATION,TAVERNS aiIntegration=OPTIONAL_BRIDGE_V1",
                     getManifest().getVersion(), BuildIdentity.REVISION);
         } catch (RuntimeException | Error failure) {
             startupState=StartupState.STOPPING;
@@ -235,6 +238,30 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 com.inigmasgames.canvasui.rendering.HytaleCursorHudInputBackend.INSTANCE.id(),
                 com.inigmasgames.canvasui.rendering.HytaleCursorHudInputBackend.INSTANCE.capabilities());
 
+        }
+    }
+
+    private void setupOptionalImmersiveBridge() {
+        var identifier = new com.hypixel.hytale.common.plugin.PluginIdentifier(
+                "InigmasGames", "ImmersiveNPCs");
+        var candidate = com.hypixel.hytale.server.core.plugin.PluginManager.get()
+                .getPlugin(identifier);
+        if (candidate == null) {
+            LOGGER.atInfo().log("HYARPG_IMMERSIVE_BRIDGE status=NO_OP reason=PLUGIN_NOT_INSTALLED");
+            immersiveEvents = com.inigmasgames.hywind.compat.RpgGameplayEventPublisher.NO_OP;
+            return;
+        }
+        try {
+            immersiveEvents = com.inigmasgames.hywind.compat.ImmersiveNpcBridgeConnector.connect(
+                    candidate,
+                    getManifest().getVersion().toString(),
+                    message -> LOGGER.atInfo().log("%s", message),
+                    message -> LOGGER.atWarning().log("%s", message));
+        } catch (LinkageError | RuntimeException incompatible) {
+            immersiveEvents = com.inigmasgames.hywind.compat.RpgGameplayEventPublisher.NO_OP;
+            LOGGER.atWarning().log(
+                    "HYARPG_IMMERSIVE_BRIDGE status=DISABLED reason=CONTRACT_UNAVAILABLE providerVersion=%s error=%s",
+                    candidate.getManifest().getVersion(), incompatible.getClass().getSimpleName());
         }
     }
 
@@ -489,7 +516,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace,combatKernel.statuses()));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Filter(combatTrace));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace));
-        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Inspect(combatTrace, combatKernel.hostileCombat()));
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Inspect(
+                combatTrace, combatKernel.hostileCombat(), immersiveEvents));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.ReactionObserver(skillExecutionSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeBasicAttackObserver.Start(skillExecutionSystem.nativeBasics()));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeBasicAttackObserver.Before(skillExecutionSystem.nativeBasics()));
@@ -703,6 +731,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
 
     private void shutdownRpg() {
         startupState=StartupState.STOPPING;
+        immersiveEvents.close();
+        immersiveEvents = com.inigmasgames.hywind.compat.RpgGameplayEventPublisher.NO_OP;
         if (inventoryEntryProbe != null) inventoryEntryProbe.close();
         if (tabTraceProbe != null) tabTraceProbe.close();
         if(persistenceReady!=null)persistenceReady.close();

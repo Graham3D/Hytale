@@ -142,7 +142,17 @@ public final class HytaleDamageLifecycleSystems {
     }
     public static final class Inspect extends TraceSystem {
         private final HostileCombatTracker combat;
-        public Inspect(CombatTrace trace, HostileCombatTracker combat) { super(trace); this.combat = combat; }
+        private final com.inigmasgames.hywind.compat.RpgGameplayEventPublisher gameplayEvents;
+        public Inspect(CombatTrace trace, HostileCombatTracker combat) {
+            this(trace, combat, com.inigmasgames.hywind.compat.RpgGameplayEventPublisher.NO_OP);
+        }
+        public Inspect(CombatTrace trace, HostileCombatTracker combat,
+                       com.inigmasgames.hywind.compat.RpgGameplayEventPublisher gameplayEvents) {
+            super(trace);
+            this.combat = combat;
+            this.gameplayEvents = gameplayEvents == null
+                    ? com.inigmasgames.hywind.compat.RpgGameplayEventPublisher.NO_OP : gameplayEvents;
+        }
         @Override public SystemGroup<EntityStore> getGroup() { return DamageModule.get().getInspectDamageGroup(); }
         @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer, Damage damage) {
@@ -161,13 +171,23 @@ public final class HytaleDamageLifecycleSystems {
             EntityStatMap stats = chunk.getComponent(index, EntityStatMap.getComponentType());
             double after = stats == null || stats.get(DefaultEntityStatTypes.getHealth()) == null ? Double.NaN
                     : stats.get(DefaultEntityStatTypes.getHealth()).get();
+            double actualHealthLoss = Double.isFinite(after) && Double.isFinite(metadata.targetHealthBefore())
+                    ? Math.max(0.0, metadata.targetHealthBefore() - after) : -1.0;
             trace.emit(metadata.actorId(), RpgTraceEventType.DAMAGE_INSPECTED,
                     new CombatTrace.Context(metadata.rootCastId(), metadata.skillInstanceId(), metadata.correlationId()),
                     Map.of("preMitigation", metadata.preMitigationDamage(), "filteredAmount", damage.getAmount(),
                             "healthBefore", metadata.targetHealthBefore(), "healthAfter", after,
-                            "actualHealthLoss", Double.isFinite(after) && Double.isFinite(metadata.targetHealthBefore())
-                                    ? Math.max(0.0, metadata.targetHealthBefore() - after) : -1.0,
+                            "actualHealthLoss", actualHealthLoss,
                             "cancelled", damage.isCancelled(),"effectInstanceId",metadata.effectInstanceId(),"canProc",metadata.canProc()));
+            if (!damage.isCancelled() && actualHealthLoss > 0.0) {
+                var targetIdentity = chunk.getComponent(index,
+                        com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+                gameplayEvents.entityDamaged(
+                        new com.inigmasgames.hywind.compat.RpgGameplayEventPublisher.DamageObservation(
+                                metadata.actorId(), targetIdentity == null ? null : targetIdentity.getUuid(),
+                                metadata.skillInstanceId(), metadata.correlationId(),
+                                actualHealthLoss, after));
+            }
 
         }
     }

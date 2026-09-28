@@ -27,11 +27,14 @@ try {
     if ($manifest.Group -ne 'InigmasGames' -or $manifest.Name -ne 'HyARPG' -or
         $manifest.Version -ne $ExpectedVersion -or $manifest.Main -ne 'com.inigmasgames.hywind.HyArpgPlugin' -or
         $manifest.Metadata.RpgRevision -ne $ExpectedRevision -or $manifest.Metadata.Product -ne 'HyARPG' -or
-        $manifest.Metadata.SeparationCheckpoint -ne 'A-CORRECTED') {
+        $manifest.Metadata.SeparationCheckpoint -ne 'C') {
         throw 'HyARPG manifest identity/version/bootstrap/revision mismatch.'
     }
     if ($manifest.Dependencies.PSObject.Properties.Name -contains 'InigmasGames:ImmersiveNPCs') {
         throw 'Manifest contains a hard ImmersiveNPCs dependency.'
+    }
+    if (-not ($manifest.OptionalDependencies.PSObject.Properties.Name -contains 'InigmasGames:ImmersiveNPCs')) {
+        throw 'Manifest is missing the optional ImmersiveNPCs bridge declaration.'
     }
 
     $required = @(
@@ -71,6 +74,7 @@ try {
 
     $forbiddenPatterns = @(
         '^com/inigmasgames/persistentnpcs/',
+        '^com/inigmasgames/compat/immersivenpcs/',
         '^Server/NPC/Roles/(ImmersiveNPCs|PersistentNPCs)/',
         '^Common/UI/Custom/Pages/ImmersiveNpc',
         '^Common/UI/Custom/Pages/ProfileInventory/',
@@ -83,6 +87,13 @@ try {
         @($forbiddenPatterns | Where-Object { $name -match $_ }).Count -gt 0
     })
     if ($forbidden.Count) { throw "ImmersiveNPCs/AI payload leaked into HyARPG: $($forbidden -join ', ')" }
+
+    $tavernHudEntry = $zip.GetEntry('Common/UI/Custom/Hud/TavernsRevision.ui')
+    $tavernHudReader = [IO.StreamReader]::new($tavernHudEntry.Open(), [Text.UTF8Encoding]::new($false), $true)
+    try { $tavernHud = $tavernHudReader.ReadToEnd() } finally { $tavernHudReader.Dispose() }
+    if ($tavernHud -match '#RevisionLabel' -or $tavernHud -match 'TAVERNS\s+R\d+') {
+        throw 'Tavern composite HUD still renders a second revision badge.'
+    }
 
     foreach ($section in @(
             'Common/UI/Custom/InventoryNativeAlias/Section1.ui',

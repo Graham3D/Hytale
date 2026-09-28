@@ -9,7 +9,7 @@ $package = Join-Path $env:APPDATA 'Hytale\install\pre-release\package\game\lates
 $serverJar = Join-Path $package 'Server\HytaleServer.jar'
 $assets = Join-Path $package 'Assets.zip'
 $sourceSave = Join-Path $env:APPDATA 'Hytale\data\pre-release\Saves\ImmersiveNPCs'
-$artifact = Join-Path $projectRoot 'dist\ImmersiveNPCs-0.6.4-R171-PRE4-COMPAT.jar'
+$artifact = Join-Path $projectRoot 'dist\ImmersiveNPCs-0.6.4-R172-PRE4-COMPAT.jar'
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $runDirectory = Join-Path $projectRoot "run\checkpoint-b-$stamp"
 $mods = Join-Path $runDirectory 'mods'
@@ -99,9 +99,9 @@ $summary = [ordered]@{
     exactlyOneProjectJar = @($activeJars | Where-Object {
         $_.Name -like 'PersistentNPCs-*.jar' -or $_.Name -like 'ImmersiveNPCs-*.jar'
     }).Count -eq 1
-    pluginDiscovered = [bool]($plain -match 'ImmersiveNPCs-0\.6\.4-R171-PRE4-COMPAT\.jar')
+    pluginDiscovered = [bool]($plain -match 'ImmersiveNPCs-0\.6\.4-R172-PRE4-COMPAT\.jar')
     pluginEnabled = [bool]($plain -match 'Enabled plugin InigmasGames:ImmersiveNPCs')
-    revisionStarted = [bool]($plain -match 'Immersive AI R171-PRE4-COMPAT started')
+    revisionStarted = [bool]($plain -match 'Immersive AI R172-PRE4-COMPAT started')
     migrationArchived = (-not $legacyMigrationExpected) -or
         [bool]($plain -match 'IMMERSIVE_NPC_DATA_MIGRATION .* archived=')
     profileStoreReady = [bool]($plain -match 'SAVE_WORLD_DATA_READY.*profiles=')

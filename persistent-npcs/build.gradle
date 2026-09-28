@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.inigmasgames.persistentnpcs'
-version = '0.6.4-R171-pre4-compat'
+version = '0.6.4-R172-pre4-compat'
 // The retained upstream PowerShell harness intentionally owns build/classes.
 // Keep Gradle outputs separate so a full multi-project build cannot race it.
 layout.buildDirectory = file('gradle-build')
@@ -19,6 +19,7 @@ java {
 }
 
 dependencies {
+    implementation project(':immersive-compat-api')
     compileOnly files(serverJar)
     testImplementation files(serverJar)
 }
@@ -53,7 +54,7 @@ tasks.register('validateReleaseResources', Exec) {
     description = 'Runs the retained ImmersiveNPC resource and installed-asset validator.'
     commandLine 'pwsh.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
         file('validate-release-resources.ps1'), '-ServerJar', serverJar,
-        '-ArtifactName', 'ImmersiveNPCs-0.6.4-R171-PRE4-COMPAT.jar'
+        '-ArtifactName', 'ImmersiveNPCs-0.6.4-R172-PRE4-COMPAT.jar'
 }
 
 tasks.register('retainedTests', Exec) {
@@ -71,5 +72,7 @@ tasks.check {
 }
 
 tasks.jar {
-    archiveFileName = 'ImmersiveNPCs-0.6.4-R171-PRE4-COMPAT.jar'
+    archiveFileName = 'ImmersiveNPCs-0.6.4-R172-PRE4-COMPAT.jar'
+    dependsOn ':immersive-compat-api:classes'
+    from(project(':immersive-compat-api').sourceSets.main.output)
 }

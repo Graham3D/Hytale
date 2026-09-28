@@ -78,13 +78,14 @@ $summary = [ordered]@{
     installedSmokeSha256 = Get-Sha256 (Join-Path $mods 'HyARPG.jar')
     firstPartyJarCount = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | Where-Object Name -ne 'HYTALEDEVLIB-0.5.0.jar').Count
     hyarpgDiscovered = [bool]($plain -match 'InigmasGames:HyARPG from path HyARPG\.jar')
-    hyarpgSetup = [bool]($plain -match 'HYARPG_SETUP version=0\.2\.0-R140 revision=R140 modules=GAMEPLAY,PRESENTATION,TAVERNS aiIntegration=NONE')
+    hyarpgSetup = [bool]($plain -match 'HYARPG_SETUP version=0\.2\.0-R141 revision=R141 modules=GAMEPLAY,PRESENTATION,TAVERNS aiIntegration=OPTIONAL_BRIDGE_V1')
     tavernsSetup = [bool]($plain -match 'TAVERNS_SETUP revision=R056 .* aiIntegration=NONE')
     tavernsStarted = [bool]($plain -match 'Taverns revision R056 started with persistence schema .* generic Core support')
-    rpgSetup = [bool]($plain -match 'HYTALE_RPG_SETUP revision=R140 version=0\.2\.0-R140 hytale=0\.7\.0-pre\.4 stage=13')
+    rpgSetup = [bool]($plain -match 'HYTALE_RPG_SETUP revision=R141 version=0\.2\.0-R141 hytale=0\.7\.0-pre\.4 stage=13')
     ability4Audit = [bool]($plain -match '(?i)(Ability4|nativeAbility4)')
-    hyarpgStarted = [bool]($plain -match 'HYARPG_STARTED version=0\.2\.0-R140 revision=R140')
-    hyarpgShutdown = [bool]($plain -match 'HYARPG_SHUTDOWN version=0\.2\.0-R140 revision=R140')
+    bridgeNoOp = [bool]($plain -match 'HYARPG_IMMERSIVE_BRIDGE status=NO_OP reason=PLUGIN_NOT_INSTALLED')
+    hyarpgStarted = [bool]($plain -match 'HYARPG_STARTED version=0\.2\.0-R141 revision=R141')
+    hyarpgShutdown = [bool]($plain -match 'HYARPG_SHUTDOWN version=0\.2\.0-R141 revision=R141')
     pluginManagerStarted = [bool]($plain -match 'Plugin manager started!')
     serverBooted = [bool]($plain -match 'Hytale Server Booted')
     immersiveDiscovered = [bool]($plain -match 'InigmasGames:(ImmersiveNPCs|PersistentNPCs) from path')
@@ -97,7 +98,7 @@ $summary = [ordered]@{
 $summary.result = if ($summary.processExitCode -eq 0 -and
     $summary.candidateSha256 -eq $summary.installedSmokeSha256 -and $summary.firstPartyJarCount -eq 1 -and
     $summary.hyarpgDiscovered -and $summary.hyarpgSetup -and $summary.tavernsSetup -and $summary.tavernsStarted -and
-    $summary.rpgSetup -and $summary.ability4Audit -and
+    $summary.rpgSetup -and $summary.ability4Audit -and $summary.bridgeNoOp -and
     $summary.hyarpgStarted -and $summary.hyarpgShutdown -and $summary.pluginManagerStarted -and $summary.serverBooted -and
     -not $summary.immersiveDiscovered -and -not $summary.aiRuntimeObserved -and
     ($summary.npcDataBefore | ConvertTo-Json -Compress) -eq ($summary.npcDataAfter | ConvertTo-Json -Compress) -and

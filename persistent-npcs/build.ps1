@@ -23,7 +23,7 @@ if (-not (Test-Path -LiteralPath $ServerJar)) {
 
 $classes = Join-Path $projectRoot 'build\classes'
 $dist = Join-Path $projectRoot 'dist'
-$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.4-R171-PRE4-COMPAT.jar'
+$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.4-R172-PRE4-COMPAT.jar'
 & (Join-Path $projectRoot 'validate-release-resources.ps1') -ServerJar $ServerJar -ArtifactName ([IO.Path]::GetFileName($outputJar))
 $resolvedClasses = [IO.Path]::GetFullPath($classes)
 $resolvedBuildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot 'build'))
@@ -35,7 +35,12 @@ if (Test-Path -LiteralPath $classes) {
 }
 New-Item -ItemType Directory -Force -Path $classes, $dist | Out-Null
 
-$sources = @(Get-ChildItem -LiteralPath (Join-Path $projectRoot 'src\main\java') -Recurse -File -Filter '*.java' | ForEach-Object FullName)
+$sources = @(
+    Get-ChildItem -LiteralPath (Join-Path $projectRoot 'src\main\java') -Recurse -File -Filter '*.java' |
+        ForEach-Object FullName
+    Get-ChildItem -LiteralPath (Join-Path $projectRoot '..\immersive-compat-api\src\main\java') -Recurse -File -Filter '*.java' |
+        ForEach-Object FullName
+)
 if ($sources.Count -eq 0) {
     throw 'No Java sources found.'
 }

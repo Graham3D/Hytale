@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "mode": "compatible",
+  "processExitCode": 0,
+  "hyarpgStarted": true,
+  "pluginManagerStarted": true,
+  "compatibleHandshakeHyArpg": true,
+  "compatibleHandshakeImmersive": true,
+  "immersiveStarted": true,
+  "incompatibleFixtureStarted": false,
+  "incompatibleBridgeDisabled": false,
+  "fatalFailure": false,
+  "logPath": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\evidence\\checkpoint-c\\compatible\\server-smoke-20260928-141729.txt"
+}

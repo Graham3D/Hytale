@@ -1,0 +1,33 @@
+{
+  "checkpoint": "C",
+  "capturedAtUtc": "2026-09-28T18:20:00Z",
+  "hyarpg": {
+    "revision": "R141",
+    "sha256": "CBCD3B679199203391A79BA9AD376C5A86C799030B526B0AA328D9BF8AE44B05",
+    "standalone": "PASS",
+    "tavernGameplay": "PASS",
+    "ability4": "PASS",
+    "immersiveRuntimeStarted": false,
+    "immersiveDataCreated": false
+  },
+  "immersiveNpcs": {
+    "revision": "R172-PRE4-COMPAT",
+    "sha256": "F052DA5B03D6EB257F79651E48B36A97D9C66103C8D4C59F07504D0D28667138",
+    "standalone": "PASS",
+    "moonshine": "READY",
+    "nemotron": "READY",
+    "chatterbox": "READY"
+  },
+  "compatiblePair": {
+    "result": "PASS",
+    "apiVersion": 1,
+    "capabilities": ["COMBAT_EVENTS", "NPC_EVENT_OBSERVATION"]
+  },
+  "incompatiblePair": {
+    "result": "PASS",
+    "bridgeDisabled": true,
+    "pluginsContinued": true
+  },
+  "eventConversionTest": "PASS",
+  "connectedClientVerification": false
+}

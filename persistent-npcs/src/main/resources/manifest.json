@@ -1,7 +1,7 @@
 {
   "Group": "InigmasGames",
   "Name": "ImmersiveNPCs",
-  "Version": "0.6.4-R171-pre4-compat",
+  "Version": "0.6.4-R172-pre4-compat",
   "Description": "Immersive AI: persistent Hytale NPCs with replaceable local or remote inference providers and server-authoritative cognition.",
   "Authors": [
     {

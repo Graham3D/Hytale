@@ -142,8 +142,9 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 /** Standalone ImmersiveNPC lifecycle and Hytale plugin entry point. */
-public final class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R171-PRE4-COMPAT";
+public final class PersistentNpcsPlugin extends JavaPlugin
+        implements com.inigmasgames.compat.immersivenpcs.v1.ImmersiveNpcBridge {
+    public static final String REVISION = "R172-PRE4-COMPAT";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
@@ -174,6 +175,8 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
     private RegressionCandidateExtractor regressionCandidates;
     private PacketFilter customGridInboundWatcher;
     private PacketFilter customGridOutboundWatcher;
+    private volatile com.inigmasgames.persistentnpcs.compat.ImmersiveNpcCompatibilityBridge
+            hyArpgBridge;
     private final Instant pluginConstructedAt;
 
     public PersistentNpcsPlugin(@Nonnull JavaPluginInit init) {
@@ -295,6 +298,8 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
         NpcPerceptionService perception = new NpcPerceptionService(runtimes, profileRegistry);
         NpcActionRegistry actionRegistry = new NpcActionRegistry();
         NpcEventBus eventBus = new NpcEventBus();
+        hyArpgBridge = new com.inigmasgames.persistentnpcs.compat.ImmersiveNpcCompatibilityBridge(
+                REVISION, eventBus, id -> profileRegistry.byId(id).isPresent(), frameworkLog);
         frameworkLog.accept("Imported " + authoredRelationships
                 + " authored NPC relationship record(s) into the existing store.");
         NpcEmotionStore emotionStore = new NpcEmotionStore(dataDirectory);
@@ -661,6 +666,7 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
 
     @Override
     protected void shutdown() {
+        hyArpgBridge = null;
         if (npcStats != null) {
             try { npcStats.close(); }
             catch (RuntimeException failure) { getLogger().at(Level.SEVERE).withCause(failure).log("NPC_STATS_SHUTDOWN_FAILED"); }
@@ -726,6 +732,27 @@ public final class PersistentNpcsPlugin extends JavaPlugin {
             npcInventories.close();
         }
         PersistentNpcsApi.shutdown();
+    }
+
+    @Override
+    public com.inigmasgames.compat.immersivenpcs.v1.BridgeHandshake handshake(
+            com.inigmasgames.compat.immersivenpcs.v1.BridgeHello hello) {
+        var bridge = hyArpgBridge;
+        if (bridge == null) {
+            return new com.inigmasgames.compat.immersivenpcs.v1.BridgeHandshake(
+                    false,
+                    com.inigmasgames.compat.immersivenpcs.v1.ImmersiveNpcBridge.API_VERSION,
+                    "InigmasGames:ImmersiveNPCs", REVISION, java.util.Set.of(),
+                    "SERVICE_NOT_READY");
+        }
+        return bridge.handshake(hello);
+    }
+
+    @Override
+    public void publish(com.inigmasgames.compat.immersivenpcs.v1.GameplayEvent event) {
+        var bridge = hyArpgBridge;
+        if (bridge == null) throw new IllegalStateException("IMMERSIVE_BRIDGE_NOT_READY");
+        bridge.publish(event);
     }
 
     private void reloadProfile() {

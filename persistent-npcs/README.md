@@ -4,7 +4,7 @@ An independent Hytale server plugin for persistent, server-authoritative NPC
 conversations backed by replaceable local or remote inference providers. It is
 separate from Tavern and has no Tavern dependency.
 
-The current pre-release port is `R171-PRE4-COMPAT`. It carries the complete R170
+The current pre-release port is `R172-PRE4-COMPAT`. It carries the complete R170
 feature baseline forward with the minimal Hytale `0.7.0-pre.4` API delta: exact
 plugin compatibility metadata and asset-map resolution for block IDs returned by
 `WorldChunk.getBlock(...)`. It does not depend on HyARPG or Tavern.
@@ -177,7 +177,7 @@ Mara remained text-only and entirely local; R014 adds the optional local voice p
 
 ## Requirements
 
-- Hytale pre-release `0.7.0-pre.4` for the R171 build
+- Hytale pre-release `0.7.0-pre.4` for the R172 build
 - Java 25 JDK for building
 - Ollama, LM Studio, or another local OpenAI-compatible server
 - No cloud service, API subscription, or paid API key
@@ -197,7 +197,7 @@ The installer now defaults only to:
 %APPDATA%\Hytale\data\pre-release\Saves\ImmersiveNPCs\mods
 ```
 
-The R171 artifact is `dist/ImmersiveNPCs-0.6.4-R171-PRE4-COMPAT.jar`.
+The R172 artifact is `dist/ImmersiveNPCs-0.6.4-R172-PRE4-COMPAT.jar`.
 The installer archives prior project JARs beneath `C:\HytaleRollback`, migrates
 the old `InigmasGames_PersistentNPCs` data identity by copying missing files only,
 and retains the complete legacy tree in the save-local

@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 
-/** Persistent revision badge plus the per-Core Crystal Shard balance and resize delta. */
+/** Tavern gameplay HUD; the merged ARPG runtime owns the single revision badge. */
 final class TavernsHud extends CustomUIHud {
     static final String KEY = "TavernsHud";
 
@@ -49,7 +49,6 @@ final class TavernsHud extends CustomUIHud {
     @Override
     protected void build(@Nonnull UICommandBuilder commandBuilder) {
         commandBuilder.append("Hud/TavernsRevision.ui");
-        commandBuilder.set("#RevisionLabel.Text", "TAVERNS  " + TavernsPlugin.REVISION);
         populateCounter(commandBuilder);
         populateComfort(commandBuilder);
         populateComfortValueOverlay(commandBuilder);

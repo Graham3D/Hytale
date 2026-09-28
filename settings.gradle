@@ -1,3 +1,4 @@
 rootProject.name = 'HytaleRPG'
 include 'canvas-ui'
 include 'hytale-taverns'
+include 'immersive-compat-api'

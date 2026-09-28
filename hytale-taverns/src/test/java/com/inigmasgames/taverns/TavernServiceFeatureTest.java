@@ -54,6 +54,8 @@ public final class TavernServiceFeatureTest {
                 "Tavern Service announcement HUD is missing");
         require(hud.contains("Anchor: (Top: 122, Width: 560, Height: 48)"),
                 "Tavern Service announcement is not top-centered");
+        require(!hud.contains("#RevisionLabel") && !hud.contains("TAVERNS  R"),
+                "Tavern HUD must not render a second merged-product revision badge");
 
         System.out.println("TavernServiceFeatureTest passed");
     }

@@ -6,7 +6,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
-$artifactName = 'ImmersiveNPCs-0.6.4-R171-PRE4-COMPAT.jar'
+$artifactName = 'ImmersiveNPCs-0.6.4-R172-PRE4-COMPAT.jar'
 $sourceJar = Join-Path $projectRoot (Join-Path 'dist' $artifactName)
 if (-not (Test-Path -LiteralPath $sourceJar)) {
     & (Join-Path $projectRoot 'build.ps1')

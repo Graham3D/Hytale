@@ -1,0 +1,12 @@
+{
+  "Group": "InigmasGames",
+  "Name": "ImmersiveNPCs",
+  "Version": "9.0.0",
+  "Description": "Checkpoint C incompatible-provider loader fixture.",
+  "Authors": [{ "Name": "Inigmas Games QA" }],
+  "Main": "checkpointc.fixture.IncompatibleImmersivePlugin",
+  "ServerVersion": "=0.7.0-pre.4",
+  "Dependencies": {},
+  "IncludesAssetPack": false,
+  "DisabledByDefault": false
+}

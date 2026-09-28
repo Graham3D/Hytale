@@ -1,0 +1,33 @@
+{
+  "result": "PASS",
+  "capturedAtUtc": "2026-09-28T18:19:56.0939581Z",
+  "processExitCode": 0,
+  "candidateSha256": "CBCD3B679199203391A79BA9AD376C5A86C799030B526B0AA328D9BF8AE44B05",
+  "installedSmokeSha256": "CBCD3B679199203391A79BA9AD376C5A86C799030B526B0AA328D9BF8AE44B05",
+  "firstPartyJarCount": 1,
+  "hyarpgDiscovered": true,
+  "hyarpgSetup": true,
+  "tavernsSetup": true,
+  "tavernsStarted": true,
+  "rpgSetup": true,
+  "ability4Audit": true,
+  "bridgeNoOp": true,
+  "hyarpgStarted": true,
+  "hyarpgShutdown": true,
+  "pluginManagerStarted": true,
+  "serverBooted": true,
+  "immersiveDiscovered": false,
+  "aiRuntimeObserved": false,
+  "npcDataBefore": {
+    "exists": false,
+    "files": 0,
+    "bytes": 0
+  },
+  "npcDataAfter": {
+    "exists": false,
+    "files": 0,
+    "bytes": 0
+  },
+  "scopedFailure": false,
+  "connectedClientVerified": false
+}

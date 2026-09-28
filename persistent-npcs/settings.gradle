@@ -1,1 +1,3 @@
 rootProject.name = 'ImmersiveNPCs'
+include 'immersive-compat-api'
+project(':immersive-compat-api').projectDir = file('../immersive-compat-api')

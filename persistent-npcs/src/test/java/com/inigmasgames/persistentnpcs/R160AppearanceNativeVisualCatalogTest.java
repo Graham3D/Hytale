@@ -94,7 +94,7 @@ public final class R160AppearanceNativeVisualCatalogTest {
         }
 
         Path jar = Path.of("dist",
-                "ImmersiveNPCs-0.6.4-R171-PRE4-COMPAT.jar");
+                "ImmersiveNPCs-0.6.4-R172-PRE4-COMPAT.jar");
         assert Files.isRegularFile(jar) : jar;
         try (JarFile archive = new JarFile(jar.toFile())) {
             long catalogImages = archive.stream().map(java.util.zip.ZipEntry::getName)

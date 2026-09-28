@@ -26,11 +26,13 @@ repositories { mavenCentral() }
 dependencies {
     implementation project(':canvas-ui')
     implementation project(':hytale-taverns')
+    compileOnly project(':immersive-compat-api')
     compileOnly files(serverJar)
     compileOnly files(htDevLibJar)
     testImplementation files(serverJar)
     testImplementation project(':canvas-ui')
     testImplementation project(':hytale-taverns')
+    testImplementation project(':immersive-compat-api')
     testImplementation platform('org.junit:junit-bom:5.12.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

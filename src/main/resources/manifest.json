@@ -12,7 +12,8 @@
   },
   "OptionalDependencies": {
     "HytaleDevLib:HytaleDevLib": "*",
-    "Hytale:BuilderTools": "*"
+    "Hytale:BuilderTools": "*",
+    "InigmasGames:ImmersiveNPCs": "*"
   },
   "DisabledByDefault": false,
   "Main": "com.inigmasgames.hywind.HyArpgPlugin",
@@ -21,6 +22,6 @@
     "RpgRevision": "${rpgRevision}",
     "Stage": "13",
     "Product": "HyARPG",
-    "SeparationCheckpoint": "A-CORRECTED"
+    "SeparationCheckpoint": "C"
   }
 }

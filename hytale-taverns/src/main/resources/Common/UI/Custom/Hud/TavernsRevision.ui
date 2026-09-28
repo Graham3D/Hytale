@@ -1,15 +1,3 @@
-Group {
-  Anchor: (Top: 20, Right: 20, Width: 166, Height: 34);
-  Background: #07120B(0.82);
-  LayoutMode: CenterMiddle;
-  Padding: (Horizontal: 12, Vertical: 6);
-
-  Label #RevisionLabel {
-    Text: "TAVERNS  R033";
-    Style: (FontSize: 14, TextColor: #7CFF93, Alignment: Center);
-  }
-}
-
 Group #RelaxingHud {
   Anchor: (Top: 64, Width: 360, Height: 54);
   Visible: false;
