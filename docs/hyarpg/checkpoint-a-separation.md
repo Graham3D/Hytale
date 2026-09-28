@@ -50,11 +50,13 @@ and Tavern data roots are retained in place; no schema migration is performed.
 - Isolated Hytale server boot with only the merged artifact plus optional
   HytaleDevLib: PASS; Tavern and ARPG setup/start/shutdown observed, no AI runtime
   observed, and no ImmersiveNPCs data root created.
-- Candidate artifact SHA-256:
+- Installed artifact SHA-256:
   `5DDAFB5BD0131DF1888DE70DE693ED0F9755123638F12EBAB64A2B8CB0710041`.
-- R137 rollback/reference artifact before corrected deployment:
-  `C:\Users\Zemio\AppData\Roaming\Hytale\data\pre-release\Saves\RPG\mods\HyARPG.jar`
+- R137 rollback/reference artifact:
+  `C:\HytaleRollback\HyARPG-Checkpoint-A-R137-20260928-124958\HyARPG.jar`
   (`A303C8C9FB5670EB392B70D2D4F6D8C913EA2911DB7A8778443DFB10C24CEFDA`).
+- Recursive content fingerprints for RPG, CanvasUI, Tavern, and ImmersiveNPCs
+  data roots matched before/after deployment; the deployment touched no data root.
 - Former merged R136 rollback artifact:
   `C:\HytaleRollback\HyARPG-Checkpoint-A-R136-20260928-122535\Hywind.jar`
   (`7AE998E6C96D391693E0DC5843AF037208A6D3A815E723CBCBA6EB99B05FA6CE`).
