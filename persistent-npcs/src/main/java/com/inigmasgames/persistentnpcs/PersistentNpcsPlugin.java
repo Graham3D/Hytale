@@ -141,9 +141,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
-/** Internal ImmersiveNPC lifecycle retained under the single Hywind bootstrap. */
-public abstract class PersistentNpcsPlugin extends JavaPlugin {
-    public static final String REVISION = "R170-CREATIVE-FULL-PROFILE-GENERATION";
+/** Standalone ImmersiveNPC lifecycle and Hytale plugin entry point. */
+public final class PersistentNpcsPlugin extends JavaPlugin {
+    public static final String REVISION = "R171-PRE4-COMPAT";
 
     private final AtomicReference<NpcProfile> testProfile = new AtomicReference<>();
     private ProfileRepository profiles;
@@ -176,18 +176,9 @@ public abstract class PersistentNpcsPlugin extends JavaPlugin {
     private PacketFilter customGridOutboundWatcher;
     private final Instant pluginConstructedAt;
 
-    protected PersistentNpcsPlugin(@Nonnull JavaPluginInit init) {
+    public PersistentNpcsPlugin(@Nonnull JavaPluginInit init) {
         super(init);
         pluginConstructedAt = Instant.now();
-    }
-
-    /**
-     * Storage authority for the character subsystem. Hywind overrides this to
-     * keep the established ImmersiveNPCs data root instead of creating a fresh
-     * store under the new plugin identity.
-     */
-    protected Path charactersDataDirectory() {
-        return getDataDirectory();
     }
 
     @Override
@@ -200,7 +191,7 @@ public abstract class PersistentNpcsPlugin extends JavaPlugin {
                     "IMMERSIVE_AI_INCOMPATIBLE_RUNTIME %s", runtimeCompatibility.blockerMessage());
         }
         Path dataDirectory = ImmersiveNpcDataMigration.resolveAndMigrate(
-                charactersDataDirectory(), message -> getLogger().at(Level.INFO).log("%s", message));
+                getDataDirectory(), message -> getLogger().at(Level.INFO).log("%s", message));
         FrameworkConfig config = new ConfigRepository(dataDirectory).load();
         java.util.function.Consumer<String> frameworkLog =
                 message -> getLogger().at(Level.INFO).log("%s", message);

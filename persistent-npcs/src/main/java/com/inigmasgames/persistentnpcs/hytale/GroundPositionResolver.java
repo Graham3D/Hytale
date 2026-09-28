@@ -39,9 +39,9 @@ public final class GroundPositionResolver {
     }
 
     private static boolean walkable(WorldChunk chunk, int x, int y, int z) {
-        BlockType ground = chunk.getBlockType(x, y, z);
-        BlockType feet = chunk.getBlockType(x, y + 1, z);
-        BlockType head = chunk.getBlockType(x, y + 2, z);
+        BlockType ground = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
+        BlockType feet = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y + 1, z));
+        BlockType head = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y + 2, z));
         return ground != null && ground.getMaterial() == BlockMaterial.Solid
                 && empty(feet) && empty(head);
     }

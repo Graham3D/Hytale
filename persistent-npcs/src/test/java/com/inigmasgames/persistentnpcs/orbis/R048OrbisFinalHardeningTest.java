@@ -65,7 +65,8 @@ public final class R048OrbisFinalHardeningTest {
         String install = Files.readString(Path.of("install.ps1"));
         assert !coordinator.contains(".join();");
         assert traces.contains("toggleAsync(");
-        assert install.contains("logs\\npcs");
-        assert install.contains("Remove-Item -LiteralPath $obsoleteNpcLogs -Recurse -Force");
+        assert install.contains("ImmersiveNPCs-Legacy-Backups");
+        assert install.contains("Move-Item -LiteralPath $legacyData -Destination $resolvedArchive");
+        assert !install.contains("Remove-Item -LiteralPath $obsoleteNpcLogs -Recurse -Force");
     }
 }

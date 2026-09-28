@@ -1,21 +1,19 @@
 param(
-    [string]$SaveName = 'NPC',
-    [string]$ModsDirectory
+    [string]$SaveName = 'ImmersiveNPCs',
+    [string]$ModsDirectory,
+    [string]$RollbackRoot = 'C:\HytaleRollback'
 )
 
 $ErrorActionPreference = 'Stop'
-throw 'This standalone ImmersiveNPCs installer was retired by the Hywind merger. Build at the repository root and deploy with tools\Deploy-Hywind.ps1 so RPG, CanvasUI, and NPC lifecycles cannot overlap.'
-
-# Historical implementation retained below for provenance only. It is intentionally unreachable.
 $projectRoot = $PSScriptRoot
-$artifactName = 'ImmersiveNPCs-0.6.3-R170-CREATIVE-FULL-PROFILE-GENERATION.jar'
+$artifactName = 'ImmersiveNPCs-0.6.4-R171-PRE4-COMPAT.jar'
 $sourceJar = Join-Path $projectRoot (Join-Path 'dist' $artifactName)
 if (-not (Test-Path -LiteralPath $sourceJar)) {
     & (Join-Path $projectRoot 'build.ps1')
 }
 
 if ([string]::IsNullOrWhiteSpace($ModsDirectory)) {
-    $ModsDirectory = Join-Path $env:APPDATA "Hytale\UserData\Saves\$SaveName\mods"
+    $ModsDirectory = Join-Path $env:APPDATA "Hytale\data\pre-release\Saves\$SaveName\mods"
 }
 
 New-Item -ItemType Directory -Force -Path $ModsDirectory | Out-Null
@@ -96,6 +94,15 @@ if (-not (Test-Path -LiteralPath $llmProvidersPath -PathType Leaf)) {
     }
 }
 Write-Host "Selected NEMOTRON in $llmProvidersPath"
+
+foreach ($defaultName in 'ai-providers.json','latency-budgets.json') {
+    $defaultTarget = Join-Path $authoritativeData $defaultName
+    if (-not (Test-Path -LiteralPath $defaultTarget -PathType Leaf)) {
+        Copy-Item -LiteralPath (Join-Path $projectRoot "src\main\resources\defaults\$defaultName") `
+            -Destination $defaultTarget
+        Write-Host "Installed modern ImmersiveNPCs default $defaultName at $defaultTarget"
+    }
+}
 
 $orbisResourcesPath = Join-Path $authoritativeData 'orbis-resources.json'
 if (-not (Test-Path -LiteralPath $orbisResourcesPath -PathType Leaf)) {
@@ -182,30 +189,32 @@ Get-ChildItem -LiteralPath $profilesDirectory -Directory -ErrorAction SilentlyCo
         }
     }
 
-# R048 removes the obsolete always-on audit destination only. Profile-local traces and all
-# authored/persistent state are outside this exact path and are deliberately untouched.
-$obsoleteNpcLogs = [IO.Path]::GetFullPath((Join-Path $authoritativeData 'logs\npcs'))
-if (-not $obsoleteNpcLogs.StartsWith($authoritativeData, [StringComparison]::OrdinalIgnoreCase)) {
-    throw "Unsafe obsolete NPC log path: $obsoleteNpcLogs"
-}
-if (Test-Path -LiteralPath $obsoleteNpcLogs -PathType Container) {
-    Remove-Item -LiteralPath $obsoleteNpcLogs -Recurse -Force
-    Write-Host "Removed obsolete non-recoverable always-on NPC logs at $obsoleteNpcLogs"
+$destination = Join-Path $ModsDirectory $artifactName
+$resolvedDestination = [IO.Path]::GetFullPath($destination)
+$stagedDestination = $resolvedDestination + '.installing'
+Copy-Item -LiteralPath $sourceJar -Destination $stagedDestination -Force
+if ((Get-FileHash -Algorithm SHA256 -LiteralPath $sourceJar).Hash -cne
+        (Get-FileHash -Algorithm SHA256 -LiteralPath $stagedDestination).Hash) {
+    throw 'Staged ImmersiveNPCs artifact hash does not match the build output.'
 }
 
-$destination = Join-Path $ModsDirectory $artifactName
-Copy-Item -LiteralPath $sourceJar -Destination $destination -Force
-$resolvedDestination = [IO.Path]::GetFullPath($destination)
-Get-ChildItem -LiteralPath $resolvedMods -File |
+$priorBuilds = @(Get-ChildItem -LiteralPath $resolvedMods -File |
     Where-Object { $_.Name -like 'PersistentNPCs-*.jar' -or $_.Name -like 'ImmersiveNPCs-*.jar' } |
-    Where-Object { $_.FullName -ne $resolvedDestination } |
-    ForEach-Object {
-        $priorBuild = $_.FullName
-        try {
-            Remove-Item -LiteralPath $priorBuild -Force -ErrorAction Stop
-        } catch {
-            Write-Warning "Could not remove locked prior build '$priorBuild'. Close the running save and run install.ps1 again."
-        }
+    Where-Object { $_.FullName -ne $resolvedDestination })
+if (Test-Path -LiteralPath $resolvedDestination -PathType Leaf) {
+    $priorBuilds += Get-Item -LiteralPath $resolvedDestination
+}
+if ($priorBuilds.Count -gt 0) {
+    New-Item -ItemType Directory -Force -Path $RollbackRoot | Out-Null
+    $rollbackDirectory = Join-Path $RollbackRoot `
+        ('ImmersiveNPCs-Checkpoint-B-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    New-Item -ItemType Directory -Force -Path $rollbackDirectory | Out-Null
+    foreach ($priorBuild in $priorBuilds) {
+        Move-Item -LiteralPath $priorBuild.FullName `
+            -Destination (Join-Path $rollbackDirectory $priorBuild.Name)
     }
+    Write-Host "Archived prior ImmersiveNPCs JAR(s) at $rollbackDirectory"
+}
+Move-Item -LiteralPath $stagedDestination -Destination $resolvedDestination -Force
 Write-Host "Installed $destination"
 Write-Host 'Restart the world/local server before testing Java or configuration changes.'

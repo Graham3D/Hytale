@@ -348,7 +348,7 @@ public final class HytaleAutonomousCognitionController {
                 WorldChunk chunk = world.getChunkIfLoaded(ChunkUtil.indexChunkFromBlock(x, z));
                 if (chunk == null) continue;
                 for (int y = oy - 3; y <= oy + 5; y++) {
-                    BlockType block = chunk.getBlockType(x, y, z);
+                    BlockType block = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
                     if (block == null || block == BlockType.EMPTY) continue;
                     String type = CLASSIFIER.classifyBlock(block);
                     if (type.isBlank()) continue;
@@ -441,7 +441,7 @@ public final class HytaleAutonomousCognitionController {
         int z = (int) Math.floor(fact.z());
         WorldChunk chunk = world.getChunkIfLoaded(ChunkUtil.indexChunkFromBlock(x, z));
         if (chunk == null) return false;
-        BlockType block = chunk.getBlockType(x, y, z);
+        BlockType block = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
         return block != null && block != BlockType.EMPTY && fact.assetId().equals(block.getId());
     }
 

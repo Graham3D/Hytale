@@ -1,5 +1,5 @@
 param(
-    [string]$ServerJar = "$env:APPDATA\Hytale\install\release\package\game\latest\Server\HytaleServer.jar"
+    [string]$ServerJar = "$env:APPDATA\Hytale\install\pre-release\package\game\latest\Server\HytaleServer.jar"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -23,7 +23,7 @@ if (-not (Test-Path -LiteralPath $ServerJar)) {
 
 $classes = Join-Path $projectRoot 'build\classes'
 $dist = Join-Path $projectRoot 'dist'
-$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.3-R170-CREATIVE-FULL-PROFILE-GENERATION.jar'
+$outputJar = Join-Path $dist 'ImmersiveNPCs-0.6.4-R171-PRE4-COMPAT.jar'
 & (Join-Path $projectRoot 'validate-release-resources.ps1') -ServerJar $ServerJar -ArtifactName ([IO.Path]::GetFileName($outputJar))
 $resolvedClasses = [IO.Path]::GetFullPath($classes)
 $resolvedBuildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot 'build'))

@@ -1200,7 +1200,7 @@ public final class HytaleNpcActionService implements NpcActionExecutor {
                     continue;
                 }
                 for (int y = oy - 3; y <= oy + 3; y++) {
-                    BlockType block = chunk.getBlockType(x, y, z);
+                    BlockType block = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
                     if (block == null || block.getBench() == null
                             || !requiredIds.contains(block.getBench().getId())) {
                         continue;

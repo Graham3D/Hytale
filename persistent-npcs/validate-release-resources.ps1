@@ -9,7 +9,7 @@ $plugin = Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot 'src/main/java/
 $revisionMatch = [regex]::Match($plugin, 'public static final String REVISION = "([^"]+)"')
 $revision = $revisionMatch.Groups[1].Value
 $expectedArtifact = 'ImmersiveNPCs-' + $manifest.Version.ToUpperInvariant() + '.jar'
-if (-not $revisionMatch.Success -or $manifest.Version.ToUpperInvariant() -cne ('0.6.3-' + $revision) -or $ArtifactName -cne $expectedArtifact) {
+if (-not $revisionMatch.Success -or $manifest.Version.ToUpperInvariant() -cne ('0.6.4-' + $revision) -or $ArtifactName -cne $expectedArtifact) {
     throw 'Release version drift: HUD REVISION, manifest Version, and output JAR must agree.'
 }
 $installer = Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot 'install.ps1')

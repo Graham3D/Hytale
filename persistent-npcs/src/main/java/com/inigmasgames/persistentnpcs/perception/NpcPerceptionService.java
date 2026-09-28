@@ -309,7 +309,7 @@ public final class NpcPerceptionService implements NpcPerceptionGateway {
                     continue;
                 }
                 for (int y = oy - 4; y <= oy + 10; y++) {
-                    BlockType block = chunk.getBlockType(x, y, z);
+                    BlockType block = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
                     double distance = origin.distance(x + 0.5, y + 0.5, z + 0.5);
                     if (block != null && block != BlockType.EMPTY) {
                         boolean station = block.getBench() != null;

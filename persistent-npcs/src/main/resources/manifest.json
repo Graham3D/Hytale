@@ -1,7 +1,7 @@
 {
   "Group": "InigmasGames",
   "Name": "ImmersiveNPCs",
-  "Version": "0.6.3-R170-creative-full-profile-generation",
+  "Version": "0.6.4-R171-pre4-compat",
   "Description": "Immersive AI: persistent Hytale NPCs with replaceable local or remote inference providers and server-authoritative cognition.",
   "Authors": [
     {
@@ -9,7 +9,7 @@
     }
   ],
   "Main": "com.inigmasgames.persistentnpcs.PersistentNpcsPlugin",
-  "ServerVersion": ">=0.6.0-pre.13.1 <0.7.0",
+  "ServerVersion": "=0.7.0-pre.4",
   "Dependencies": {
     "Hytale:NPC": "*"
   },
