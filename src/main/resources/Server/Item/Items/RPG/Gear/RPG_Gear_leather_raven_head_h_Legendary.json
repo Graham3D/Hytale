@@ -1,0 +1,51 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.leather_raven.head.h"
+  },
+  "Quality": "RPG_Gear_Legendary",
+  "MaxStack": 1,
+  "MaxDurability": 205,
+  "Model": "Items/Armors/Leather_Raven/Head.blockymodel",
+  "Texture": "Items/Armors/Leather_Raven/Head_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Leather_Raven_Head.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Leather"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Head",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "EarAccessory",
+      "Ear",
+      "Haircut",
+      "HeadAccessory"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

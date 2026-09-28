@@ -1,0 +1,65 @@
+{
+  "Model": "Arrow_Crude",
+  "SpawnRotationOffset": {
+    "Pitch": 2,
+    "Yaw": 0.25,
+    "Roll": 0
+  },
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 32,
+    "TerminalVelocityAir": 50,
+    "TerminalVelocityWater": 15,
+    "RotationMode": "VelocityDamped",
+    "Bounciness": 0.0,
+    "SticksVertically": true
+  },
+  "LaunchForce": 35,
+  "SpawnOffset": {
+    "X": 0.15,
+    "Y": -0.25,
+    "Z": 0
+  },
+  "LaunchLocalSoundEventId": "SFX_Bow_T1_Shoot_Local",
+  "LaunchWorldSoundEventId": "SFX_Bow_T1_Shoot",
+  "Interactions": {
+    "ProjectileHit": {
+      "Interactions": [
+        {
+          "Type": "Replace",
+          "Var": "Primary_Shoot_Damage_Strength_2",
+          "DefaultValue": {
+            "Interactions": [
+              "RPG_GearRoute_I_Weapon_Shortbow_Primary_Shoot_Damage"
+            ]
+          }
+        },
+        {
+          "Type": "Replace",
+          "Var": "Primary_Shoot_Impact_Strength_2",
+          "DefaultValue": {
+            "Interactions": [
+              "RPG_GearRoute_I_Common_Projectile_Impact_Effects"
+            ]
+          }
+        },
+        "RPG_GearRoute_I_Common_Projectile_Despawn"
+      ]
+    },
+    "ProjectileMiss": {
+      "Interactions": [
+        "RPG_GearRoute_I_Block_Break_Projectile",
+        {
+          "Type": "Replace",
+          "Var": "Primary_Shoot_Miss_Strength_2",
+          "DefaultValue": {
+            "Interactions": [
+              "RPG_GearRoute_I_Common_Projectile_Miss"
+            ]
+          }
+        },
+        "RPG_GearRoute_I_Common_Projectile_Despawn"
+      ]
+    }
+  }
+}

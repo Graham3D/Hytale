@@ -1,0 +1,49 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.robes_oracle.legs.nm"
+  },
+  "Quality": "RPG_Gear_Legendary",
+  "MaxStack": 1,
+  "MaxDurability": 150,
+  "Model": "Items/Armors/Silk/Legs.blockymodel",
+  "Texture": "Items/Armors/Silk/Legs_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cloth_Silk_Legs.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Cloth_Silk"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Legs",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Pants",
+      "Shoes"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

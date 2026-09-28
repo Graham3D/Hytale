@@ -24,6 +24,18 @@ import java.util.*;
 /** Exact 0.7 legacy natural spawn -> real post-Apply contribution -> native DeathComponent -> durable awards. */
 public final class HytaleEncounterRewards implements AutoCloseable {
     private final EnemyRewardRegistry registry=EnemyRewardRegistry.load();
+    private com.inigmasgames.hytalerpg.difficulty.EncounterProfileResolver difficulty;
+    private HytaleDifficultyCombat difficultyCombat;
+    public void configureCombat(HytaleDifficultyCombat combat){difficultyCombat=Objects.requireNonNull(combat);}
+    private com.inigmasgames.hytalerpg.difficulty.GolemEncounterBinding golemBindings;
+    private final com.inigmasgames.hytalerpg.difficulty.GolemMilestones golemCatalog=com.inigmasgames.hytalerpg.difficulty.GolemMilestones.load();
+    private java.util.function.BiConsumer<UUID,com.inigmasgames.hytalerpg.difficulty.DifficultyId> unlocked=(player,mode)->{};
+    public void configureUnlockNotification(java.util.function.BiConsumer<UUID,com.inigmasgames.hytalerpg.difficulty.DifficultyId> callback){unlocked=Objects.requireNonNull(callback);}
+    public void configureGolems(com.inigmasgames.hytalerpg.difficulty.WorldDifficultyRegistry worlds){golemBindings=new com.inigmasgames.hytalerpg.difficulty.GolemEncounterBinding(worlds);}
+    public void configureDifficulty(com.inigmasgames.hytalerpg.difficulty.EncounterProfileResolver resolver){
+        if(difficulty!=null)throw new IllegalStateException("DIFFICULTY_ALREADY_CONFIGURED");
+        difficulty=Objects.requireNonNull(resolver);
+    }
     private final PersistentEncounterRuntime runtime;
     private final RpgLoadoutService loadouts;
     private final RpgSkillTracer trace;
@@ -37,25 +49,59 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     private final Map<String,Long> deathOrigins=Collections.synchronizedMap(new LinkedHashMap<>());
     public void invalidateHealthCredit(UUID world,UUID recipient){injuries.invalidate(world,recipient);}
     public void forgetPlayer(UUID actor){injuries.forget(actor);}
+    private volatile java.util.function.BooleanSupplier active=()->true;
+    private volatile boolean closed;
+    public void configureActive(java.util.function.BooleanSupplier gate){active=Objects.requireNonNull(gate);}
+    private boolean running(){return !closed&&active.getAsBoolean();}
     private boolean failureLogged;
     private long nextDeliveryNanos;
     private final java.util.function.LongSupplier nanoTime;
     private Runnable ownerMaintenance=()->{};
     public void configureOwnerMaintenance(Runnable maintenance){ownerMaintenance=Objects.requireNonNull(maintenance);}
     private volatile PartyMembershipProvider parties=PartyMembershipProvider.UNAVAILABLE;
+    private com.inigmasgames.hytalerpg.gear.GearLootService gearLoot;
+    private com.inigmasgames.hytalerpg.gear.HytaleGearEquipment gearEquipment;
+    public void configureGearLoot(com.inigmasgames.hytalerpg.gear.GearLootService service,com.inigmasgames.hytalerpg.gear.HytaleGearEquipment equipment){gearLoot=Objects.requireNonNull(service);gearEquipment=Objects.requireNonNull(equipment);}
+    /** Durable reward worker callback; the native world projection has its own acknowledgement. */
+    public void lootDelivered(EncounterContributions.DeathPlan plan,com.inigmasgames.hytalerpg.gear.GearLootService.Loot loot){
+        var spawn=plan.spawn();String correlation=spawn.enemy().toString();
+        var details=new LinkedHashMap<String,Object>();details.put("eventId",spawn.eventId());details.put("runtimeRole",spawn.roleId());
+        details.put("canonicalRole",spawn.combatIdentity());details.put("rewardDecision",loot.state());details.put("reason",loot.reason());
+        details.put("eligibleContributors",plan.shares().stream().map(s->s.player().toString()).toList());
+        if(loot.allocation()!=null)details.put("player",loot.allocation().sponsor());
+        emit(null,RpgTraceEventType.GEAR_ROLL,correlation,details);
+        if(loot.result()!=null&&loot.result().item()!=null){var item=loot.result().item();
+            emit(loot.allocation().sponsor(),RpgTraceEventType.GEAR_GENERATED,correlation,Map.of("eventId",spawn.eventId(),"itemId",item.identity(),
+                    "baseId",item.baseId(),"rarity",item.rarity().name(),"affixes",item.affixes().size(),"deliveryState",loot.state()));}
+        emit(null,RpgTraceEventType.ENCOUNTER_CLOSED,correlation,Map.of("eventId",spawn.eventId(),"decision",loot.state(),"reason",loot.reason()));
+    }
+    public void gearProjected(com.inigmasgames.hytalerpg.gear.GearLootService.Loot loot){
+        var item=loot.result().item();
+        emit(loot.allocation().sponsor(),RpgTraceEventType.REWARD_DELIVERED,loot.source().enemy().toString(),Map.of(
+                "eventId",loot.source().eventId(),"itemId",item.identity(),"baseId",item.baseId(),"rarity",item.rarity().name(),
+                "state","NATIVE_WORLD_ITEM_PROJECTED","delivery","WORLD"));
+    }
+    private com.inigmasgames.hytalerpg.gear.GearClaims.Policy gearPolicy(UUID world,UUID actor){
+        if(gearLoot==null)return null;
+        try{return parties.lootPolicy(world,actor);}catch(IllegalStateException unavailable){return null;} // Party items blocked; XP remains independent.
+    }
     public HytaleEncounterRewards(FileEncounterStore store,RpgLoadoutService loadouts,RpgSkillTracer trace,com.inigmasgames.hytalerpg.combat.RpgCombatKernel kernel){
         this(store,loadouts,trace,kernel,System::nanoTime);
     }
     public HytaleEncounterRewards(FileEncounterStore store,RpgLoadoutService loadouts,RpgSkillTracer trace,com.inigmasgames.hytalerpg.combat.RpgCombatKernel kernel,java.util.function.LongSupplier nanoTime){
         this.nanoTime=Objects.requireNonNull(nanoTime);
         this.runtime=new PersistentEncounterRuntime(store,(player,reward,opportunity)->{
+            var priorUnlocks=reward.milestone()==null?Set.<com.inigmasgames.hytalerpg.difficulty.DifficultyId>of():loadouts.getPresentationView(player).state().difficulty.unlocks();
             if(opportunity==null)loadouts.awardEarned(player,reward);
             else loadouts.awardGenerated(player,reward.eventId(),before->opportunity.decide(reward,before,Math::random));
+            if(reward.milestone()!=null)for(var mode:loadouts.getPresentationView(player).state().difficulty.unlocks())if(!priorUnlocks.contains(mode))
+                try{unlocked.accept(player,mode);}catch(RuntimeException notificationFailure){/* Earned persistence already succeeded; presentation cannot roll it back. */}
             progressionLatency.committed(player,reward.eventId(),deathOrigins.getOrDefault(reward.eventId(),-1L));
         });this.loadouts=loadouts;this.trace=trace;this.kernel=Objects.requireNonNull(kernel);
     }
     public int verifiedLearningBindings(){return learning.verifiedBindings();}
     public synchronized java.util.concurrent.CompletionStage<Void> invalidateConverted(UUID world,UUID enemy){
+        if(difficultyCombat!=null)difficultyCombat.detach(world,enemy);
         var key=new ExclusionKey(world,enemy);var existing=exclusionTickets.get(key);if(existing!=null)return existing;
         if(exclusionTickets.size()>=EncounterContributions.MAX_ENCOUNTERS)throw new FileEncounterStore.CapacityRejected();
         try(var lease=durableEffects.reserve()){
@@ -65,11 +111,11 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             var receipt=result.minimalCompletionStage();exclusionTickets.put(key,receipt);return receipt;
         }
     }
-    @Override public void close(){try{durableEffects.close();}finally{runtime.close();}}
+    @Override public void close(){closed=true;try{durableEffects.close();}finally{runtime.close();}}
     public void configurePartyProvider(PartyMembershipProvider provider){parties=Objects.requireNonNull(provider);}
     public String partyAvailability(){return parties.availability();}
     public java.util.concurrent.CompletionStage<Boolean> attachObserved(UUID world,UUID enemy,String role,Optional<EnemyRewardRegistry.Spawn> spawn){return runtime.attachNative(world,enemy,role,spawn);}
-    public void detachObserved(UUID world,UUID enemy){runtime.detachNative(world,enemy);}
+    public void detachObserved(UUID world,UUID enemy){if(difficultyCombat!=null)difficultyCombat.forget(world,enemy);runtime.detachNative(world,enemy);}
     public record DamageObservation(UUID world,UUID enemy,UUID actor,double before,double after,double maximum,double nativeAmount,long observedAt,
                                     String root,String instance,String correlation){
         public DamageObservation{
@@ -80,14 +126,18 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     }
     /** Production handoff seam: the factory executes NOW, never on a persistence thread. */
     public synchronized PersistentEncounterRuntime.Submission<Boolean> observeDamage(DamageObservation o,java.util.function.Supplier<Runnable> captureMastery){
+        var gearPolicy=gearPolicy(o.world(),o.actor());
         try(var effect=durableEffects.reserve()){
             var submission=runtime.submitDamage(o.world(),o.enemy(),o.actor(),o.before(),o.after(),o.maximum(),true,o.observedAt());
             if(!submission.provisional())return submission;
             var award=captureMastery.get();var details=new LinkedHashMap<String,Object>();
             details.put("world",o.world());details.put("enemy",o.enemy());details.put("kind","DAMAGE");details.put("healthBefore",o.before());details.put("healthAfter",o.after());
             details.put("actualHealthLost",o.before()-o.after());details.put("nativeAmount",o.nativeAmount());details.put("rootCastId",o.root());details.put("skillInstanceId",o.instance());
+            details.put("eventId","enemy-death/"+o.world()+"/"+o.enemy());details.put("player",o.actor());
+            details.put("source",o.root().isBlank()?"NATIVE_ENTITY_SOURCE":"HYWIND_DAMAGE_METADATA");
             var immutable=Map.copyOf(details);
-            effect.submit(submission.durable(),accepted->{if(accepted){emit(o.actor(),RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,o.correlation(),immutable);award.run();}});
+            effect.submit(submission.durable(),accepted->{if(accepted){emit(o.actor(),RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,o.correlation(),immutable);award.run();
+                if(gearLoot!=null&&gearPolicy!=null)gearLoot.contribute(o.world(),o.enemy(),o.actor(),gearPolicy,o.observedAt());}});
             return submission;
         }
     }
@@ -116,11 +166,13 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             if(actor==null||!actor.isValid()||enemy==null||store.getComponent(actor,PlayerRef.getComponentType())==null
                     ||!HytaleAreaQueries.hostile(store,target,actor)||excluded(store,target))return;
             try(var effect=durableEffects.reserve()){
+                var gearPolicy=gearPolicy(world(store),context.request().actorId());var gearWorld=world(store);long gearObserved=System.currentTimeMillis();
                 var submission=runtime.submitControl(world(store),enemy,context.request().actorId(),true,taunt,true,System.currentTimeMillis());
                 if(!submission.provisional())return;
                 var award=prepareMastery(world(store),enemy,context,true);var player=context.request().actorId();var correlation=context.request().correlationId();
                 var details=Map.of("kind",taunt?"TAUNT":"CONTROL","enemy",enemy,"evidence",evidence,"rootCastId",context.rootCastId(),"skillInstanceId",context.skillInstanceId(),"connectedProof",false);
-                effect.submit(submission.durable(),accepted->{if(accepted){emit(player,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,correlation,details);award.run();}});
+                effect.submit(submission.durable(),accepted->{if(accepted){emit(player,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_OBSERVED,correlation,details);award.run();
+                    if(gearLoot!=null&&gearPolicy!=null)gearLoot.contribute(gearWorld,enemy,player,gearPolicy,gearObserved);}});
             }
         });
     }
@@ -165,7 +217,7 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     private static UUID world(Store<EntityStore> store){return store.getExternalData().getWorld().getWorldConfig().getUuid();}
     private static UUID id(Store<EntityStore> store,Ref<EntityStore> ref){var component=ref==null||!ref.isValid()?null:store.getComponent(ref,UUIDComponent.getComponentType());return component==null?null:component.getUuid();}
     private static Vec3 position(Store<EntityStore> store,Ref<EntityStore> ref){var p=store.getComponent(ref,TransformComponent.getComponentType()).getPosition();return new Vec3(p.x(),p.y(),p.z());}
-    private static boolean excluded(Store<EntityStore> store,Ref<EntityStore> ref){
+    static boolean excluded(Store<EntityStore> store,Ref<EntityStore> ref){
         var npc=store.getComponent(ref,NPCEntity.getComponentType());
         return npc==null||npc.isReserved()||store.getComponent(ref,PlayerRef.getComponentType())!=null
                 ||store.getComponent(ref,SummonProjection.getComponentType())!=null||store.getComponent(ref,ConversionProjection.getComponentType())!=null
@@ -188,24 +240,75 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     public static boolean nativeWorldSpawnEvidence(AddReason reason,int environment,int spawnConfiguration){
         return reason==AddReason.SPAWN&&environment!=Integer.MIN_VALUE&&spawnConfiguration!=Integer.MIN_VALUE;
     }
+    /** Absent optional native health snapshots are an uncredited hit, never a persistence failure. */
+    public static boolean creditableNativeHealth(UUID player,double before,double after,double maximum,double nativeAmount){
+        return player!=null&&Double.isFinite(before)&&Double.isFinite(after)&&Double.isFinite(maximum)&&Double.isFinite(nativeAmount)
+                &&before>=after&&after>=0&&maximum>0&&nativeAmount>=0;
+    }
     private void added(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store){
         if(excluded(store,ref))return;
         var npc=store.getComponent(ref,NPCEntity.getComponentType());var world=world(store);var enemy=id(store,ref);
+        var roleId=npc.getRoleName();
+        boolean golem=golemCatalog.role(roleId).isPresent();
+        var resolvedRole=registry.resolveRole(roleId);
+        if(!golem&&resolvedRole.isEmpty())return; // Unknown native NPCs never create reward attachments.
+        Object combatTicket=difficultyCombat==null?null:difficultyCombat.begin(world,enemy);
+        if(reason==AddReason.SPAWN&&golemBindings!=null&&golem){
+            // Native SpawnMarkerEntity sets its owner reference in NPCPlugin's POST-add callback.
+            // Defer to the world's queue, but only for this captured SPAWN event; LOAD never mints evidence.
+            var nativeWorld=store.getExternalData().getWorld();
+            nativeWorld.execute(()->safely("GOLEM_SOURCE_BINDING",()->{
+                var current=nativeWorld.getEntityRef(enemy);if(current==null||!current.isValid()||excluded(store,current))return;
+                var currentNpc=store.getComponent(current,NPCEntity.getComponentType());if(currentNpc==null)return;
+                String marker="";UUID markerId=null;
+                var source=store.getComponent(current,com.hypixel.hytale.server.npc.components.SpawnMarkerReference.getComponentType());
+                if(source!=null){var owner=source.getReference().getEntity(store);
+                    if(owner!=null&&owner.isValid()){var component=store.getComponent(owner,com.hypixel.hytale.server.spawning.spawnmarkers.SpawnMarkerEntity.getComponentType());
+                        if(component!=null){marker=component.getSpawnMarkerId();markerId=id(store,owner);}}}
+                var placement=store.getComponent(current,com.inigmasgames.hytalerpg.difficulty.CampaignEncounterProjection.getComponentType());
+                var candidate=golemBindings.classify(world,enemy,currentNpc.getRoleName(),marker,markerId,placement,System.currentTimeMillis());
+                if(difficulty!=null)candidate=candidate.flatMap(s->difficulty.author(s,com.inigmasgames.hytalerpg.difficulty.AuthoredEncounterCatalog.CAMPAIGN_GOLEM));
+                attachNativeCombat(store,world,enemy,currentNpc.getRoleName(),candidate,reason,combatTicket);
+            }));return;
+        }
         // WorldSpawnJobSystems initializes these before NPCPlugin.Store.addEntity(SPAWN).
         // Manual NPCPlugin spawns retain Integer.MIN_VALUE and cannot masquerade as natural spawns.
         Optional<EnemyRewardRegistry.Spawn> spawn=Optional.empty();
         if(nativeWorldSpawnEvidence(reason,npc.getEnvironment(),npc.getSpawnConfiguration())
-                &&registry.roles().stream().anyMatch(r->r.roleId().equals(npc.getRoleName())))
-            spawn=registry.classify(world,enemy,npc.getRoleName(),biome(store,ref),EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN,System.currentTimeMillis());
-        String addedReason=reason.name(),role=npc.getRoleName();
+                &&resolvedRole.isPresent())
+            spawn=difficulty==null?Optional.empty():difficulty.classifyAuthored(registry,world,enemy,roleId,biome(store,ref),EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN,System.currentTimeMillis());
+        if(reason==AddReason.SPAWN&&resolvedRole.isPresent())emit(null,RpgTraceEventType.ENEMY_RESOLVED,enemy.toString(),Map.of(
+                "world",world,"enemy",enemy,"runtimeRole",roleId,"canonicalRole",resolvedRole.get().canonical().roleId(),
+                "alias",resolvedRole.get().alias(),"rewardEligible",spawn.isPresent(),"source","NATIVE_SPAWN"));
+        attachNativeCombat(store,world,enemy,roleId,spawn,reason,combatTicket);
+    }
+    private void attachNativeCombat(Store<EntityStore> store,UUID world,UUID enemy,String role,Optional<EnemyRewardRegistry.Spawn> spawn,AddReason reason,Object ticket){
+        var nativeWorld=store.getExternalData().getWorld();
         attachObserved(world,enemy,role,spawn).whenComplete((attached,error)->{
-            if(error==null&&attached)emit(null,RpgTraceEventType.ENCOUNTER_CONTEXT_RESTORED,enemy.toString(),Map.of("world",world,"enemy",enemy,"role",role,"nativeAddReason",addedReason,"awardCreated",false));
+            // The asynchronous closure carries immutable snapshots/IDs only; native work is reacquired on its world queue.
+            var saved=error==null&&attached?runtime.spawn(world,enemy):Optional.<EnemyRewardRegistry.Spawn>empty();
+            if(error==null&&attached)emit(null,RpgTraceEventType.ENCOUNTER_STARTED,enemy.toString(),Map.of("world",world,"enemy",enemy,"runtimeRole",role,
+                    "canonicalRole",saved.map(EnemyRewardRegistry.Spawn::combatIdentity).orElse("UNKNOWN"),"nativeAddReason",reason.name(),"eventId",saved.map(EnemyRewardRegistry.Spawn::eventId).orElse("")));
+            if(difficultyCombat!=null&&error==null)nativeWorld.execute(()->safely("DIFFICULTY_NATIVE_PROJECTION",()->{
+                try{difficultyCombat.ready(nativeWorld.getEntityStore().getStore(),enemy,ticket,saved,reason==AddReason.SPAWN);}
+                catch(IllegalStateException local){String message=String.valueOf(local.getMessage());
+                    if(!message.startsWith("DIFFICULTY_NATIVE_BASELINE_MISMATCH")&&!message.equals("DIFFICULTY_NATIVE_HEALTH_MISSING"))throw local;
+                    emit(null,RpgTraceEventType.ENCOUNTER_REWARD_REJECTED,enemy.toString(),Map.of("enemy",enemy,"runtimeRole",role,
+                            "reason",message,"scope","LOCAL_NATIVE_PROJECTION"));
+                    invalidateConverted(world,enemy);
+                }
+            }));
         });
     }
     private void damage(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,Damage damage){
         var target=chunk.getReferenceTo(index);var world=world(store);var enemy=id(store,target);
         if(!runtime.observing(world,enemy)||damage.isCancelled())return;
-        if(excluded(store,target)||!runtime.attaching(world,enemy)&&!runtime.spawn(world,enemy).orElseThrow().roleId().equals(store.getComponent(target,NPCEntity.getComponentType()).getRoleName())){invalidateConverted(world,enemy);return;}
+        if(excluded(store,target)){invalidateConverted(world,enemy);return;}
+        if(!runtime.attaching(world,enemy)){
+            var spawn=runtime.spawn(world,enemy);
+            if(spawn.isEmpty())return; // An unclassified native NPC has no reward context to inspect.
+            if(!spawn.get().roleId().equals(store.getComponent(target,NPCEntity.getComponentType()).getRoleName())){invalidateConverted(world,enemy);return;}
+        }
         var metadata=HytaleDamageAdapter.metadata(damage);if(metadata!=null&&metadata.noCredit())return;
         Ref<EntityStore> actor=null;
         if(metadata!=null)actor=store.getExternalData().getRefFromUUID(metadata.actorId());
@@ -216,9 +319,17 @@ public final class HytaleEncounterRewards implements AutoCloseable {
                 if(conversion!=null&&conversion.lease!=null)actor=store.getExternalData().getRefFromUUID(conversion.lease.owner());
             }
         }
-        if(actor==null||!actor.isValid()||store.getComponent(actor,PlayerRef.getComponentType())==null||!HytaleAreaQueries.hostile(store,target,actor))return;
+        // A registered natural spawn and a native-applied hit from a real player are
+        // sufficient. Provokable animals can lack an attitude view at hit time;
+        // contribution must not depend on that optional targeting state.
+        if(actor==null||!actor.isValid()||store.getComponent(actor,PlayerRef.getComponentType())==null)return;
         var hp=chunk.getComponent(index,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());if(hp==null)return;
         double before=SupportDamageSystems.observedHealthBefore(damage);var player=id(store,actor);
+        if(!creditableNativeHealth(player,before,hp.get(),hp.getMax(),damage.getAmount())){
+            emit(player,RpgTraceEventType.ENCOUNTER_CONTRIBUTION_SKIPPED,enemy.toString(),Map.of("world",world,"enemy",enemy,
+                    "reason",player==null?"NO_PLAYER_ID":"NATIVE_HEALTH_BEFORE_UNAVAILABLE","source",metadata==null?"NATIVE_ENTITY_SOURCE":"HYWIND_METADATA"));
+            return;
+        }
         var context=HytaleDamageAdapter.executionContext(damage);
         observeDamage(new DamageObservation(world,enemy,player,before,hp.get(),hp.getMax(),damage.getAmount(),System.currentTimeMillis(),
                 metadata==null?"":metadata.rootCastId(),metadata==null?"":metadata.skillInstanceId(),metadata==null?enemy.toString():metadata.correlationId()),
@@ -238,9 +349,15 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         if(death.getDeathInfo()==null)return;
         var hp=store.getComponent(ref,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());if(hp==null||hp.get()>hp.getMin())return;
         var world=world(store);var enemy=id(store,ref);if(!runtime.observing(world,enemy))return;
-        if(excluded(store,ref)||!runtime.attaching(world,enemy)&&!runtime.spawn(world,enemy).orElseThrow().roleId().equals(store.getComponent(ref,NPCEntity.getComponentType()).getRoleName())){invalidateConverted(world,enemy);return;}
+        if(excluded(store,ref)){invalidateConverted(world,enemy);return;}
+        if(!runtime.attaching(world,enemy)){
+            var spawn=runtime.spawn(world,enemy);
+            if(spawn.isEmpty())return;
+            if(!spawn.get().roleId().equals(store.getComponent(ref,NPCEntity.getComponentType()).getRoleName())){invalidateConverted(world,enemy);return;}
+        }
         try(var ticket=durableEffects.reserve()){
         var participants=new ArrayList<EncounterContributions.Participant>();
+        var gearMf=new HashMap<UUID,Double>();
         // Normal path queries credited identities only. While a checkpoint is loading, its old
         // contributor IDs are not yet known: capture a bounded presence superset NOW, then the
         // deterministic ledger admits only persisted/observed contributors after recovery.
@@ -256,37 +373,42 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             // Only event-time presence/position/party facts here. Progression is resolved AFTER
             // causally prior mastery on the ordered effects worker, never from this placeholder.
             participants.add(new EncounterContributions.Participant(player,world,position(store,actor),1,true,null,null));
+            if(gearEquipment!=null)gearMf.put(player,gearEquipment.magicFind(actor,store));
         }
         var provider=parties;
         var facts=PartyMembershipProvider.apply(world,participants,provider);var availability=provider.availability();
-        captureDeath(ticket,world,enemy,position(store,ref),System.currentTimeMillis(),facts,availability);
+        captureDeath(ticket,world,enemy,position(store,ref),System.currentTimeMillis(),facts,availability,Map.copyOf(gearMf));
         }
     }
     public synchronized void captureDeath(UUID world,UUID enemy,Vec3 position,long observedAt,List<EncounterContributions.Participant> eventFacts,String partyAvailability){
         if(eventFacts.size()>EncounterContributions.MAX_CONTRIBUTORS||partyAvailability.length()>512)throw new FileEncounterStore.CapacityRejected();
-        try(var ticket=durableEffects.reserve()){captureDeath(ticket,world,enemy,position,observedAt,List.copyOf(eventFacts),partyAvailability);}
+        try(var ticket=durableEffects.reserve()){captureDeath(ticket,world,enemy,position,observedAt,List.copyOf(eventFacts),partyAvailability,Map.of());}
     }
-    private void captureDeath(DurableEncounterEffects.Reservation ticket,UUID world,UUID enemy,Vec3 position,long observedAt,List<EncounterContributions.Participant> facts,String availability){
+    private void captureDeath(DurableEncounterEffects.Reservation ticket,UUID world,UUID enemy,Vec3 position,long observedAt,List<EncounterContributions.Participant> facts,String availability,Map<UUID,Double> gearMf){
         long observedNanos=System.nanoTime();
         var prepared=runtime.prepareDeathNative(world,enemy,position,observedAt);
         ticket.submit(prepared,maybe->{
-            if(maybe.isEmpty())return;var observation=maybe.orElseThrow();
+            if(maybe.isEmpty())return;var observation=maybe.get();
             var spawn=observation.snapshot().spawn();
             synchronized(deathOrigins){if(deathOrigins.size()>=512)deathOrigins.remove(deathOrigins.keySet().iterator().next());deathOrigins.put(spawn.eventId(),observedNanos);}
-            var resolved=facts.stream().map(p->{
+            var resolved=facts.stream().filter(p->spawn.combat()!=null?loadouts.getPresentationView(p.player()).state().difficulty.unlocked(spawn.combat().difficulty()):spawn.milestone()==null||loadouts.getPresentationView(p.player()).state().difficulty.unlocked(spawn.milestone().difficulty())).map(p->{
                 double wisdom=kernel.effectiveAttributes().effective(loadouts.rawAttribute(p.player(),com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS));
                 return new EncounterContributions.Participant(p.player(),p.world(),p.position(),loadouts.characterLevel(p.player()),p.loaded(),p.partyId(),
-                        learning.resolve(spawn.combatIdentity(),spawn.rank(),wisdom).orElse(null));
+                        spawn.milestone()==null?learning.resolve(spawn.combatIdentity(),spawn.rank(),wisdom).orElse(null):null);
             }).toList();
+            if(gearLoot!=null)gearLoot.freezeMagicFind(spawn.eventId(),gearMf);
             var p=runtime.finishDeath(observation,resolved);
             emit(null,RpgTraceEventType.ENCOUNTER_DEATH_FROZEN,enemy.toString(),Map.of("world",world,"enemy",enemy,"eventId",p.spawn().eventId(),"recipients",p.shares().size(),"nativeDeath",true,"partyProvider",availability));
+            emit(null,p.shares().isEmpty()?RpgTraceEventType.ENCOUNTER_CLOSED:RpgTraceEventType.REWARD_ELIGIBLE,enemy.toString(),Map.of(
+                    "eventId",p.spawn().eventId(),"runtimeRole",p.spawn().roleId(),"canonicalRole",p.spawn().combatIdentity(),
+                    "reason",p.shares().isEmpty()?"NO_ELIGIBLE_CONTRIBUTOR":"ELIGIBLE_SHARES","recipients",p.shares().size()));
         });
     }
     /** Tests may fence this finite snapshot off the native thread; native callbacks never wait on it. */
     public java.util.concurrent.CompletionStage<Void> durableFrontier(){return durableEffects.frontier();}
     public Map<String,Object> handoffMetrics(){return Map.of("effects",durableEffects.metrics(),"runtime",runtime.handoffMetrics(),"players",loadouts.persistenceMetrics(),"publication",progressionLatency.snapshot());}
     public void ownerPublished(UUID player){if(loadouts.ready(player))progressionLatency.published(player,trace);}
-    public void deliveryTick(){safely("DURABLE_DEATH_DELIVERY",this::deliver);}
+    public void deliveryTick(){if(!running())return;safely("DURABLE_DEATH_DELIVERY",this::deliver);}
     private synchronized void deliver(){
         ownerMaintenance.run();
         long now=nanoTime.getAsLong();if(now<nextDeliveryNanos)return;nextDeliveryNanos=now+1_000_000_000L;
@@ -297,12 +419,13 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     }
     private java.util.concurrent.CompletionStage<Integer> delivery;
     private synchronized void safely(String boundary,Runnable operation){
+        if(!running())return;
         try{operation.run();}catch(RuntimeException error){
             // These callbacks observe an already native-applied event. A rejected capture is
             // explicit incomplete evidence, not permission to reward from a partial ledger.
             runtime.rejectIncompleteNativeObservation();
             synchronized(this){if(failureLogged)return;failureLogged=true;}
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log("RPG_ENCOUNTER_FAILURE boundary=%s error=%s detail=%s awardsUnavailable=%s nativeCombatUnchanged=true",boundary,error.getClass().getName(),String.valueOf(error.getMessage()),runtime.unavailable());
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log("RPG_ENCOUNTER_FAILURE boundary=%s error=%s detail=%s awardsUnavailable=%s failClosed=true",boundary,error.getClass().getName(),String.valueOf(error.getMessage()),runtime.unavailable());
             emit(null,RpgTraceEventType.ENCOUNTER_REWARD_REJECTED,"",Map.of("boundary",boundary,"error",String.valueOf(error.getMessage()),"awardsUnavailable",runtime.unavailable()));
         }
     }

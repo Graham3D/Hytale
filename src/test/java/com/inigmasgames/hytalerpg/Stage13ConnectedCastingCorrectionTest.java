@@ -131,7 +131,7 @@ class Stage13ConnectedCastingCorrectionTest {
         assertEquals("OMITTED",fields.get("itemId"));assertTrue(fields.toString().length()<1000);assertFalse(fields.toString().contains("secret"));
     }
     @Test void everyAuthoredStrikeGeometryAllowsZeroCandidatesWithoutWeakeningEntityConnections(){
-        var profiles=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(96,profiles.all().size());
+        var profiles=Stage04SkillProfiles.loadCanonical(Stage01BTestSupport.bundle().catalog());assertEquals(97,profiles.all().size());
         var geometry=new StrikeGeometryService();
         for(var p:profiles.all().values())if(p.strike()!=null)
             assertTrue(StrikeCastPrerequisites.check(()->geometry.query(Vec3.ZERO,Vec3.FORWARD,p.strike(),List.of())).accepted(),p.skillId());

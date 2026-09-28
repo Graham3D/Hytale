@@ -34,7 +34,7 @@ class Stage11SecondWindTest {
     @Test void unsupportedCapacityCannotGrantExtraCharges(){var h=new H();assertThrows(IllegalArgumentException.class,()->h.charges(3));assertThrows(IllegalArgumentException.class,()->h.charges(0));}
     @Test void compatibilityAcceptsQuickstepAndRejectsAuraAndChannel(){var f=new Stage11FoundationTest();assertTrue(f.accepts("quickstep","second_wind"));assertFalse(f.accepts("emanatism","second_wind"));assertFalse(f.accepts("void_beam","second_wind"));}
     @Test void playerSchemaFiveMigratesDebtWithoutRefillingOrLosingLoadout(){
-        var state=RpgPlayerState.create(UUID.randomUUID());state.equippedSkills[0]="quickstep";state.cooldowns.put("quickstep",new SavedCooldown(3,.2));var gson=new com.google.gson.Gson();var json=gson.toJsonTree(state).getAsJsonObject();json.addProperty("schemaVersion",5);json.getAsJsonObject("cooldowns").getAsJsonObject("quickstep").remove("queued");
+        var state=RpgPlayerState.create(UUID.randomUUID());state.equippedSkills[0]="quickstep";state.cooldowns.put("quickstep",new SavedCooldown(3,.2));var gson=new com.google.gson.Gson();var json=gson.toJsonTree(state).getAsJsonObject();json.addProperty("schemaVersion",5);json.remove("difficulty");json.remove("gearEconomy");json.getAsJsonObject("cooldowns").getAsJsonObject("quickstep").remove("queued");
         var migration=new RpgStateMigrator().migrate(json);var restored=gson.fromJson(migration.state(),RpgPlayerState.class);restored.normalizeShape();assertEquals(RpgPlayerState.CURRENT_SCHEMA,restored.schemaVersion);assertEquals(3,restored.cooldowns.get("quickstep").remainingWork());assertTrue(restored.cooldowns.get("quickstep").queued().isEmpty());assertEquals("quickstep",restored.equippedSkills[0]);
     }
     @Test void realRepositoryRoundTripsSerialQueue(){var state=RpgPlayerState.create(UUID.randomUUID());state.cooldowns.put("quickstep",new SavedCooldown(1,.2,List.of(new SavedCooldown.Queued(3,.1))));var repo=new FileRpgPlayerStateRepository(temp);repo.save(state);assertEquals(state.cooldowns,repo.load(state.playerUuid()).state().cooldowns);}
@@ -61,7 +61,7 @@ class Stage11SecondWindTest {
         assertEquals(1,h.kernel.cooldowns().snapshot(h.actor).get("quickstep").queued().size());assertEquals("COOLDOWN_ACTIVE",h.cast().code());
     }
     @Test void migrationThroughRepositoryRetainsRecoverableOriginalSchemaFiveFile(){
-        var state=RpgPlayerState.create(UUID.randomUUID());state.cooldowns.put("quickstep",new SavedCooldown(2,0));var json=new com.google.gson.Gson().toJsonTree(state).getAsJsonObject();json.addProperty("schemaVersion",5);json.getAsJsonObject("cooldowns").getAsJsonObject("quickstep").remove("queued");
+        var state=RpgPlayerState.create(UUID.randomUUID());state.cooldowns.put("quickstep",new SavedCooldown(2,0));var json=new com.google.gson.Gson().toJsonTree(state).getAsJsonObject();json.addProperty("schemaVersion",5);json.remove("difficulty");json.remove("gearEconomy");json.getAsJsonObject("cooldowns").getAsJsonObject("quickstep").remove("queued");
         var repo=new FileRpgPlayerStateRepository(temp);assertDoesNotThrow(()->java.nio.file.Files.writeString(repo.path(state.playerUuid()),json.toString()));var loaded=repo.load(state.playerUuid());assertTrue(loaded.migrated());assertEquals(2,loaded.state().cooldowns.get("quickstep").remainingWork());
         assertDoesNotThrow(()->assertEquals(json.toString(),java.nio.file.Files.readString(repo.path(state.playerUuid()).resolveSibling(state.playerUuid()+".json.bak"))));
     }

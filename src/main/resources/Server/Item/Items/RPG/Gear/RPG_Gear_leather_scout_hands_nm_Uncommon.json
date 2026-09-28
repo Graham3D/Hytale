@@ -1,0 +1,46 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.leather_scout.hands.nm"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 110,
+  "Model": "Items/Armors/Leather_Light/Hands.blockymodel",
+  "Texture": "Items/Armors/Leather_Light/Hands_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Leather_Light_Hands.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Leather"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Hands",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": []
+  },
+  "DurabilityLossOnHit": 0.5
+}

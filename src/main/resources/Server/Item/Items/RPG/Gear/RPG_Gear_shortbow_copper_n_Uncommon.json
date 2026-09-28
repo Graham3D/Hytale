@@ -1,0 +1,1050 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.shortbow_copper.n"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 80,
+  "Model": "Items/Weapons/Bow/Copper.blockymodel",
+  "Texture": "Items/Weapons/Bow/Copper_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Weapon_Bow_Copper.png",
+  "PlayerAnimationsId": "Bow",
+  "Tags": {
+    "Type": [
+      "Weapon"
+    ],
+    "Family": [
+      "Bow"
+    ]
+  },
+  "Interactions": {
+    "Primary": "RPG_GearRoute_R_Root_Weapon_Shortbow_Primary_Shoot",
+    "Secondary": "RPG_GearRoute_R_Root_Weapon_Shortbow_Secondary_Guard",
+    "Ability1": "RPG_GearRoute_R_Root_Weapon_Shortbow_Signature_Volley",
+    "SwapFrom": {
+      "Interactions": [
+        {
+          "Type": "StatsCondition",
+          "Costs": {
+            "Ammo": 1
+          },
+          "Next": {
+            "Type": "ModifyInventory",
+            "RequiredGameMode": "Adventure",
+            "ItemToAdd": {
+              "Id": "Weapon_Arrow_Crude",
+              "Quantity": 1
+            },
+            "Next": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "StaminaRegenDelay": -1
+              }
+            }
+          }
+        },
+        {
+          "Type": "StatsCondition",
+          "Costs": {
+            "SignatureCharges": 1
+          },
+          "Next": {
+            "Type": "ChangeStat",
+            "Behaviour": "Set",
+            "StatModifiers": {
+              "StaminaRegenDelay": -1
+            }
+          }
+        },
+        {
+          "Type": "ChangeActiveSlot"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {
+    "Primary_Shoot_Charge": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "AllowIndefiniteHold": true,
+          "DisplayProgress": false,
+          "Effects": {
+            "ItemAnimationId": "ShootCharging",
+            "ClearAnimationOnFinish": true,
+            "ClearSoundEventOnFinish": true,
+            "WorldSoundEventId": "SFX_Bow_T2_Draw",
+            "LocalSoundEventId": "SFX_Bow_T2_Draw_Local",
+            "Particles": [
+              {
+                "PositionOffset": {
+                  "X": 0.075,
+                  "Y": -0.4,
+                  "Z": 0.075
+                },
+                "RotationOffset": {
+                  "Pitch": 0,
+                  "Roll": 0,
+                  "Yaw": 90
+                },
+                "Scale": 0.5,
+                "TargetNodeName": "Handle",
+                "SystemId": "Bow_Charging"
+              }
+            ]
+          },
+          "HorizontalSpeedMultiplier": 0.667,
+          "Next": {
+            "0.0": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "StaminaRegenDelay": -1
+              }
+            },
+            "0.1": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "Ammo": 0,
+                "StaminaRegenDelay": -1
+              },
+              "Next": {
+                "Type": "Replace",
+                "Var": "Primary_Shoot_Strength_0",
+                "DefaultValue": {
+                  "Interactions": [
+                    "RPG_GearRoute_I_Weapon_Shortbow_Primary_Shoot_Strength_0"
+                  ]
+                }
+              }
+            },
+            "0.3": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "Ammo": 0,
+                "StaminaRegenDelay": -1
+              },
+              "Next": {
+                "Type": "Replace",
+                "Var": "Primary_Shoot_Strength_1",
+                "DefaultValue": {
+                  "Interactions": [
+                    "RPG_GearRoute_I_Weapon_Shortbow_Primary_Shoot_Strength_1"
+                  ]
+                }
+              }
+            },
+            "0.6": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "Ammo": 0,
+                "StaminaRegenDelay": -1
+              },
+              "Next": {
+                "Type": "Replace",
+                "Var": "Primary_Shoot_Strength_2",
+                "DefaultValue": {
+                  "Interactions": [
+                    "RPG_GearRoute_I_Weapon_Shortbow_Primary_Shoot_Strength_2"
+                  ]
+                }
+              }
+            },
+            "0.9": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "Ammo": 0,
+                "StaminaRegenDelay": -1
+              },
+              "Next": {
+                "Type": "Replace",
+                "Var": "Primary_Shoot_Strength_3",
+                "DefaultValue": {
+                  "Interactions": [
+                    "RPG_GearRoute_I_Weapon_Shortbow_Primary_Shoot_Strength_3"
+                  ]
+                }
+              }
+            },
+            "1.2": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "Ammo": 0,
+                "StaminaRegenDelay": -1
+              },
+              "Next": {
+                "Type": "Replace",
+                "Var": "Primary_Shoot_Strength_4",
+                "DefaultValue": {
+                  "Interactions": [
+                    "RPG_GearRoute_I_Weapon_Shortbow_Primary_Shoot_Strength_4"
+                  ]
+                }
+              }
+            }
+          },
+          "$Comment": "Charging up a standard primary shot"
+        }
+      ]
+    },
+    "Primary_Shoot_Strength_0": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "ShootCharged",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Shortbow_Strength_0",
+          "$Comment": "Launching a shot with 0.0s charge"
+        }
+      ]
+    },
+    "Primary_Shoot_Strength_1": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "ShootCharged",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Shortbow_Strength_1",
+          "$Comment": "Launching a shot with 0.3s charge"
+        }
+      ]
+    },
+    "Primary_Shoot_Strength_2": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "ShootCharged",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Shortbow_Strength_2",
+          "$Comment": "Launching a shot with 0.6s charge"
+        }
+      ]
+    },
+    "Primary_Shoot_Strength_3": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "ShootCharged",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Shortbow_Strength_3",
+          "$Comment": "Launching a shot with 0.9s charge"
+        }
+      ]
+    },
+    "Primary_Shoot_Strength_4": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "ShootCharged",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Shortbow_Strength_4",
+          "$Comment": "Launching a shot with full charge (1.2s+)"
+        }
+      ]
+    },
+    "Primary_Shoot_Damage_Strength_0": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.97,
+                "AirResistanceMax": 0.96,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Exp"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 0.5,
+                "Z": -1
+              },
+              "Force": 0,
+              "VelocityType": "Add"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Dagger_Stab",
+                "Scale": 1
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "Class": "Charged",
+            "BaseDamage": {
+              "Projectile": 1
+            }
+          }
+        }
+      ]
+    },
+    "Primary_Shoot_Damage_Strength_1": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.97,
+                "AirResistanceMax": 0.96,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Exp"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 0.5,
+                "Z": -1
+              },
+              "Force": 0,
+              "VelocityType": "Add"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Dagger_Stab",
+                "Scale": 1
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "Class": "Charged",
+            "BaseDamage": {
+              "Projectile": 2
+            }
+          }
+        }
+      ]
+    },
+    "Primary_Shoot_Damage_Strength_2": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.97,
+                "AirResistanceMax": 0.96,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Exp"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 0.5,
+                "Z": -1
+              },
+              "Force": 0,
+              "VelocityType": "Add"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Dagger_Stab",
+                "Scale": 1
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "Class": "Charged",
+            "BaseDamage": {
+              "Projectile": 3
+            }
+          }
+        }
+      ]
+    },
+    "Primary_Shoot_Damage_Strength_3": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.97,
+                "AirResistanceMax": 0.96,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Exp"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 0.5,
+                "Z": -1
+              },
+              "Force": 1,
+              "VelocityType": "Add"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Dagger_Stab",
+                "Scale": 1
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "Class": "Charged",
+            "BaseDamage": {
+              "Projectile": 5
+            }
+          }
+        }
+      ]
+    },
+    "Primary_Shoot_Damage_Strength_4": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.99,
+                "AirResistanceMax": 0.98,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Linear"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 0.5,
+                "Z": -1
+              },
+              "Force": 8,
+              "VelocityType": "Set"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Dagger_Stab_Charged",
+                "Scale": 1
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "Class": "Charged",
+            "BaseDamage": {
+              "Projectile": 15
+            }
+          },
+          "TargetedDamage": {
+            "Head": {
+              "DamageEffects": {
+                "Knockback": {
+                  "Type": "Force",
+                  "VelocityConfig": {
+                    "AirResistance": 0.99,
+                    "AirResistanceMax": 0.98,
+                    "GroundResistance": 0.94,
+                    "GroundResistanceMax": 0.3,
+                    "Threshold": 3.0,
+                    "Style": "Linear"
+                  },
+                  "Direction": {
+                    "X": 0.0,
+                    "Y": 0.5,
+                    "Z": -1
+                  },
+                  "Force": 8,
+                  "VelocityType": "Set"
+                },
+                "WorldParticles": [
+                  {
+                    "SystemId": "Impact_Critical",
+                    "Scale": 1,
+                    "RotationOffset": {
+                      "Yaw": 180,
+                      "Pitch": 0,
+                      "Roll": 0
+                    }
+                  }
+                ]
+              },
+              "DamageCalculator": {
+                "BaseDamage": {
+                  "Projectile": 20
+                }
+              }
+            }
+          },
+          "EntityStatsOnHit": [
+            {
+              "EntityStatId": "SignatureEnergy",
+              "Amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "Primary_Shoot_Impact_Strength_0": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_NoCharge_Hit",
+            "WorldSoundEventId": "SFX_Arrow_NoCharge_Hit"
+          },
+          "$Comment": "Effects played when basic primary arrow impacts an entity"
+        }
+      ]
+    },
+    "Primary_Shoot_Impact_Strength_1": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_HalfCharge_Hit",
+            "WorldSoundEventId": "SFX_Arrow_HalfCharge_Hit"
+          },
+          "$Comment": "Effects played when basic primary arrow impacts an entity"
+        }
+      ]
+    },
+    "Primary_Shoot_Impact_Strength_2": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_HalfCharge_Hit",
+            "WorldSoundEventId": "SFX_Arrow_HalfCharge_Hit"
+          },
+          "$Comment": "Effects played when 0.4s charge arrow impacts an entity"
+        }
+      ]
+    },
+    "Primary_Shoot_Impact_Strength_3": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_FullCharge_Hit",
+            "WorldSoundEventId": "SFX_Arrow_FullCharge_Hit"
+          },
+          "$Comment": "Effects played when 0.6s charge arrow impacts an entity"
+        }
+      ]
+    },
+    "Primary_Shoot_Impact_Strength_4": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_FullCharge_Hit",
+            "WorldSoundEventId": "SFX_Arrow_FullCharge_Hit"
+          },
+          "$Comment": "Effects played when full charge arrow impacts an entity"
+        }
+      ]
+    },
+    "Primary_Shoot_Miss_Strength_0": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 5,
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_NoCharge_Miss",
+            "WorldSoundEventId": "SFX_Arrow_NoCharge_Miss"
+          }
+        }
+      ]
+    },
+    "Primary_Shoot_Miss_Strength_1": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 5,
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_HalfCharge_Miss",
+            "WorldSoundEventId": "SFX_Arrow_HalfCharge_Miss"
+          }
+        }
+      ]
+    },
+    "Primary_Shoot_Miss_Strength_2": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 5,
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_HalfCharge_Miss",
+            "WorldSoundEventId": "SFX_Arrow_HalfCharge_Miss"
+          }
+        }
+      ]
+    },
+    "Primary_Shoot_Miss_Strength_3": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 5,
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_FullCharge_Miss",
+            "WorldSoundEventId": "SFX_Arrow_FullCharge_Miss"
+          }
+        }
+      ]
+    },
+    "Primary_Shoot_Miss_Strength_4": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 5,
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_FullCharge_Miss",
+            "WorldSoundEventId": "SFX_Arrow_FullCharge_Miss"
+          }
+        }
+      ]
+    },
+    "Signature_Activate_Effects": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Bow_T2_Signature_Nock",
+            "LocalSoundEventId": "SFX_Bow_T2_Signature_Nock_Local"
+          }
+        }
+      ]
+    },
+    "Signature_Volley_Charge": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "AllowIndefiniteHold": true,
+          "DisplayProgress": false,
+          "Effects": {
+            "ItemAnimationId": "ShootCharging",
+            "ClearAnimationOnFinish": true,
+            "ClearSoundEventOnFinish": true,
+            "WorldSoundEventId": "SFX_Bow_T2_Draw",
+            "LocalSoundEventId": "SFX_Bow_T2_Draw_Local",
+            "Particles": [
+              {
+                "PositionOffset": {
+                  "X": -0.125,
+                  "Y": -0.4,
+                  "Z": 0.075
+                },
+                "RotationOffset": {
+                  "Pitch": 15,
+                  "Roll": 0,
+                  "Yaw": 90
+                },
+                "Scale": 0.5,
+                "TargetNodeName": "Handle",
+                "SystemId": "Bow_Charging"
+              },
+              {
+                "PositionOffset": {
+                  "X": 0.075,
+                  "Y": -0.4,
+                  "Z": 0.075
+                },
+                "RotationOffset": {
+                  "Pitch": 0,
+                  "Roll": 0,
+                  "Yaw": 90
+                },
+                "Scale": 0.5,
+                "TargetNodeName": "Handle",
+                "SystemId": "Bow_Charging"
+              },
+              {
+                "PositionOffset": {
+                  "X": 0.275,
+                  "Y": -0.4,
+                  "Z": 0.075
+                },
+                "RotationOffset": {
+                  "Pitch": -15,
+                  "Roll": 0,
+                  "Yaw": 90
+                },
+                "Scale": 0.5,
+                "TargetNodeName": "Handle",
+                "SystemId": "Bow_Charging"
+              }
+            ]
+          },
+          "HorizontalSpeedMultiplier": 0.667,
+          "Next": {
+            "0": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "StaminaRegenDelay": -1
+              },
+              "Next": "RPG_GearRoute_I_Weapon_Shortbow_Signature_Volley_Strength_0"
+            },
+            "0.75": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "StaminaRegenDelay": -1
+              },
+              "Next": "RPG_GearRoute_I_Weapon_Shortbow_Signature_Volley_Strength_1"
+            },
+            "1.5": {
+              "Type": "ChangeStat",
+              "Behaviour": "Set",
+              "StatModifiers": {
+                "StaminaRegenDelay": -1
+              },
+              "Next": "RPG_GearRoute_I_Weapon_Shortbow_Signature_Volley_Strength_2"
+            }
+          },
+          "$Comment": "Charging the signature volley attack"
+        }
+      ]
+    },
+    "Signature_Volley_Effects": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "LocalSoundEventId": "SFX_Bow_T2_Signature_Shoot_Local",
+            "WorldSoundEventId": "SFX_Bow_T2_Signature_Shoot",
+            "Particles": [
+              {
+                "PositionOffset": {
+                  "X": -0.075,
+                  "Y": 0.4,
+                  "Z": 0.075
+                },
+                "RotationOffset": {
+                  "Pitch": 0,
+                  "Roll": 0,
+                  "Yaw": 90
+                },
+                "TargetNodeName": "Handle",
+                "SystemId": "Bow_Signature_Launch"
+              }
+            ]
+          },
+          "$Comment": "Effects upon launching a signature volley."
+        }
+      ]
+    },
+    "Signature_Volley_Impact": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_FullCharge_Hit",
+            "WorldSoundEventId": "SFX_Arrow_FullCharge_Hit",
+            "Particles": [
+              {
+                "SystemId": "Explosion_Big"
+              }
+            ]
+          },
+          "$Comment": "Effects played when signature volley arrow impacts an entity"
+        }
+      ]
+    },
+    "Signature_Volley_Miss": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 5,
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_FullCharge_Miss",
+            "WorldSoundEventId": "SFX_Arrow_FullCharge_Miss",
+            "Particles": [
+              {
+                "SystemId": "Explosion_Big"
+              }
+            ]
+          },
+          "$Comment": "Effects played when signature volley hits the ground"
+        }
+      ]
+    },
+    "Signature_Volley_Damage": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.99,
+                "AirResistanceMax": 0.98,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Linear"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 0.5,
+                "Z": -1
+              },
+              "Force": 22,
+              "VelocityType": "Add"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Daggers_Signature",
+                "Scale": 1
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "Class": "Signature",
+            "BaseDamage": {
+              "Projectile": 11
+            }
+          }
+        }
+      ]
+    },
+    "Guard_Start_StaminaCost": {
+      "Interactions": [
+        {
+          "$Comment": "The amount of stamina consumed upon starting guarding",
+          "Type": "ChangeStat",
+          "StatModifiers": {
+            "Stamina": -0.5
+          }
+        }
+      ]
+    },
+    "Guard_Wield": {
+      "Interactions": [
+        {
+          "Type": "Wielding",
+          "OnItemChangeBehavior": "Finish",
+          "Effects": {
+            "ItemAnimationId": "Guard",
+            "ClearAnimationOnFinish": true,
+            "WorldSoundEventId": "SFX_Bow_T1_Raise",
+            "LocalSoundEventId": "SFX_Bow_T1_Raise_Local"
+          },
+          "Forks": {
+            "Primary": {
+              "Interactions": [
+                {
+                  "Type": "Replace",
+                  "Var": "Guard_Bash",
+                  "DefaultOk": true,
+                  "DefaultValue": {
+                    "Interactions": [
+                      "RPG_GearRoute_I_Weapon_Shortbow_Secondary_Guard_Bash"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "AngledWielding": {
+            "Angle": 0,
+            "AngleDistance": 90,
+            "DamageModifiers": {
+              "Physical": 0,
+              "Projectile": 0,
+              "Poison": 0
+            },
+            "KnockbackModifiers": {
+              "Physical": 0.25,
+              "Projectile": 0.25
+            }
+          },
+          "StaminaCost": {
+            "Value": 8.89,
+            "CostType": "Damage"
+          },
+          "CancelOnOtherClick": false,
+          "Failed": {
+            "Type": "Replace",
+            "Var": "Guard_Break",
+            "DefaultOk": true,
+            "DefaultValue": {
+              "Interactions": [
+                {
+                  "Type": "Simple",
+                  "Effects": {
+                    "Particles": [
+                      {
+                        "SystemId": "Shield_Shatter"
+                      }
+                    ],
+                    "WorldSoundEventId": "SFX_Shield_T1_Break",
+                    "LocalSoundEventId": "SFX_Shield_T1_Break"
+                  }
+                }
+              ]
+            }
+          },
+          "BlockedEffects": {
+            "WorldSoundEventId": "SFX_Bow_T1_Block_Impact",
+            "WorldParticles": [
+              {
+                "SystemId": "Shield_Block"
+              }
+            ]
+          },
+          "Next": {
+            "$Comment": "Standard regen delay upon ending guarding on all weapons",
+            "Type": "ChangeStat",
+            "Behaviour": "Min",
+            "StatModifiers": {
+              "StaminaRegenDelay": -0.5
+            },
+            "OnItemChangeBehavior": "Ignore"
+          }
+        }
+      ]
+    },
+    "Guard_Bash": {
+      "Interactions": [
+        {
+          "Type": "ApplyEffect",
+          "EffectId": "Stamina_Broken_Immune"
+        },
+        {
+          "Type": "Serial",
+          "Interactions": [
+            {
+              "Type": "ApplyEffect",
+              "EffectId": "Stamina_Broken_Immune"
+            },
+            {
+              "Type": "ChangeStat",
+              "StatModifiers": {
+                "Stamina": -2
+              },
+              "Effects": {
+                "ItemAnimationId": "GuardBash",
+                "WorldSoundEventId": "SFX_Bow_T1_Swing",
+                "LocalSoundEventId": "SFX_Bow_T1_Swing_Local"
+              },
+              "RunTime": 0.167,
+              "Next": {
+                "Type": "ChangeStat",
+                "Behaviour": "Min",
+                "StatModifiers": {
+                  "StaminaRegenDelay": -1
+                },
+                "Next": {
+                  "Type": "Replace",
+                  "Var": "Guard_Bash_Selector",
+                  "DefaultOk": true,
+                  "DefaultValue": {
+                    "Interactions": [
+                      "RPG_GearRoute_I_Weapon_Shortbow_Secondary_Guard_Bash_Selector"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "$Comment": "Effects and stamina consumed upon a guard bash"
+        }
+      ]
+    },
+    "Guard_Bash_Damage": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.97,
+                "AirResistanceMax": 0.96,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Exp"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 1.0,
+                "Z": -2.0
+              },
+              "Force": 12,
+              "VelocityType": "Set"
+            },
+            "WorldSoundEventId": "SFX_T1_Impact_Blunt",
+            "LocalSoundEventId": "SFX_T1_Impact_Blunt",
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Shortbow_Bash"
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Projectile": 0
+            }
+          }
+        }
+      ]
+    }
+  },
+  "Weapon": {
+    "EntityStatsToClear": [
+      "SignatureEnergy",
+      "SignatureCharges",
+      "Ammo"
+    ],
+    "StatModifiers": {
+      "SignatureEnergy": [
+        {
+          "Amount": 6,
+          "CalculationType": "Additive"
+        }
+      ],
+      "SignatureCharges": [
+        {
+          "Amount": 1,
+          "CalculationType": "Additive"
+        }
+      ],
+      "Ammo": [
+        {
+          "Amount": 1,
+          "CalculationType": "Additive"
+        }
+      ]
+    }
+  },
+  "DurabilityLossOnHit": 0.58
+}

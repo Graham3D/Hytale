@@ -1,17 +1,3450 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "profileId": "rpg.encounters.r031.pilot",
-  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
-  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "serverSha256": "B5FD9FF3E55E0A5D4DACCC6A7A3A4F89FF45F1B539BF32894E4A15DE343E6A5D",
+  "assetsSha256": "C02E69A0FA4088B965D0CA9D01C6A55610229EFA3F78F91FB45463108F07D022",
   "roles": [
-    {"roleId":"Wolf_Black","combatIdentity":"wolf_black","rank":"COMMON","rarity":"ORDINARY","assetPath":"Server/NPC/Roles/Creature/Mammal/Wolf_Black.json","assetSha256":"6D3F4E98DAC9D6C480B441338CB2BA0043A4CC3AF9EB7331EC8501802C0FDF42","evidence":"ASSET_AUDITED_CONNECTED_UNVERIFIED"},
-    {"roleId":"Trork_Warrior","combatIdentity":"trork_warrior","rank":"COMMON","rarity":"ORDINARY","assetPath":"Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Warrior.json","assetSha256":"CB1D4223BD75CDED0F2C25B5B8167076413DC04F9130D4A3353A1A40938B3E73","evidence":"ASSET_AUDITED_CONNECTED_UNVERIFIED"},
-    {"roleId":"Skeleton_Archer","combatIdentity":"skeleton_archer","rank":"COMMON","rarity":"ORDINARY","assetPath":"Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archer.json","assetSha256":"01ACE605BA60D1D3ED59EFC2FDA013EE665BC036F7D3065F7E5B47DF7B172657","evidence":"ASSET_AUDITED_CONNECTED_UNVERIFIED"}
+    {
+      "roleId": "Antelope",
+      "nativeHealth": 81,
+      "attackReference": 25,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Antelope.json",
+      "assetSha256": "B0F5A8E4FFBF5E8E264BAAF6F4C3996937594852D8C5FB20B21D7E7FDF9BFA01",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "antelope",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Bear_Grizzly",
+      "nativeHealth": 124,
+      "attackReference": 38,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Bear_Grizzly.json",
+      "assetSha256": "5B303419DEEBF80164947DAA143BD560073DDFAAE02666F81648617653FE6858",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "bear_grizzly",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Bear_Polar",
+      "nativeHealth": 103,
+      "attackReference": 48,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Bear_Polar.json",
+      "assetSha256": "553847F9651AADABC98B1F3ED87559C5B44342BF2CA7C37F3EE3903EF3F6D6E6",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "bear_polar",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Bear_Voidtaken_D1",
+      "nativeHealth": 550,
+      "attackReference": 36,
+      "assetPath": "Server/NPC/Roles/Creature/Hunt/Bear_Voidtaken_D1.json",
+      "assetSha256": "4817C59964DF19C31659ABA3EB702F80E5403B5516420BC31FC764CAB30297CF",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "bear_voidtaken_d1",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Bison",
+      "nativeHealth": 126,
+      "attackReference": 45,
+      "assetPath": "Server/NPC/Roles/Creature/Livestock/Bison.json",
+      "assetSha256": "7A264EA1CDFD404DCB43697567ACDE569310FB51E2CE31C7A447CD0693A57C73",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "bison",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Boar",
+      "nativeHealth": 81,
+      "attackReference": 10,
+      "assetPath": "Server/NPC/Roles/Creature/Livestock/Boar.json",
+      "assetSha256": "49B0C8AE90A4373E764264A8FEF7BC6339E99D375305053BE3384611B25AFE3C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "boar",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Camel",
+      "nativeHealth": 126,
+      "attackReference": 30,
+      "assetPath": "Server/NPC/Roles/Creature/Livestock/Camel.json",
+      "assetSha256": "DA79D21C0C74C6596014F3965AB59D2FF3D202FC1087832F0EBB70270B766E55",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "camel",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Cow",
+      "nativeHealth": 103,
+      "attackReference": 20,
+      "assetPath": "Server/NPC/Roles/Creature/Livestock/Cow.json",
+      "assetSha256": "7E03FD863D347B7D6C8C34FA612D7B8597C73845EB0EB9D4549C55DAC61D65F2",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "cow",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Cow_Undead",
+      "nativeHealth": 124,
+      "attackReference": 35,
+      "assetPath": "Server/NPC/Roles/Undead/Cow_Undead.json",
+      "assetSha256": "B3EE5A87A826B93435C36FC2E4757FA4BFD446DFB5A25BBB0CBA3919430D3099",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "cow_undead",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Crawler_Void",
+      "nativeHealth": 70,
+      "attackReference": 16,
+      "assetPath": "Server/NPC/Roles/Void/Crawler_Void.json",
+      "assetSha256": "B1A65607C933B086EE28495B8BE791972AD5BE72A0AFC65FB16E25E09CB852EC",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "crawler_void",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Crocodile",
+      "nativeHealth": 145,
+      "attackReference": 48,
+      "assetPath": "Server/NPC/Roles/Creature/Reptile/Crocodile.json",
+      "assetSha256": "7EC1A56E6C20B84440E8D63A72C0E71191363D8938B21CCABD646196572EB0F6",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "crocodile",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Deer_Stag",
+      "nativeHealth": 103,
+      "attackReference": 25,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Deer_Stag.json",
+      "assetSha256": "79DD12FBB1521E31B950E87FD8C9B33493D3B084F6A8F896643171C41527E97C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "deer_stag",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Emberwulf",
+      "nativeHealth": 193,
+      "attackReference": 64,
+      "assetPath": "Server/NPC/Roles/Creature/Mythic/Emberwulf.json",
+      "assetSha256": "658C481F3F6563C1FA6B782E6E317E5E444EE35007CB84CDA66F3997A01FB649",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "emberwulf",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Eye_Void",
+      "nativeHealth": 100,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Void/Eye_Void.json",
+      "assetSha256": "8A3D9AE0B92CA09FD96E8D8C8F2DF81A71D1C4240D5915C0B5499B20F985C7A5",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "eye_void",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Fen_Stalker",
+      "nativeHealth": 74,
+      "attackReference": 29,
+      "assetPath": "Server/NPC/Roles/Creature/Mythic/Fen_Stalker.json",
+      "assetSha256": "4511A2264F74DCD337DE8B8DF3F814F0C5D02D736BA7539999AEED18236E3760",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "fen_stalker",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Feran_Burrower",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Feran/Feran_Burrower.json",
+      "assetSha256": "0AEA399DE2F9102B10985ECE7805C7E767A461AEFA3D7D5B017F9A7959129F9E",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "feran_burrower",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Feran_Civilian",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Feran/Feran_Civilian.json",
+      "assetSha256": "8C78B4CBCECCDA06410250908648994DE06FDB6C490469DCCF75B55E8B747E3D",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "feran_civilian",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Feran_Longtooth",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Feran/Feran_Longtooth.json",
+      "assetSha256": "8C947A78F935236243301F7CB819631635FB8E245613E3919A868C88F447F703",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "feran_longtooth",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Feran_Sharptooth",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Feran/Feran_Sharptooth.json",
+      "assetSha256": "F1724055105F59793F336F37337E51BC1B177C4CED94C0EB6BF9345903E3B8F7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "feran_sharptooth",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Feran_Windwalker",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Feran/Feran_Windwalker.json",
+      "assetSha256": "45C7689F84BE7B8854B05EB4EA8062FA4075693656C0C6E4FE5FB79F3BBF0B51",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "feran_windwalker",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Fox",
+      "nativeHealth": 38,
+      "attackReference": 17,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Fox.json",
+      "assetSha256": "E7E3118471EAE6573AB8CA63BE13FEBC43AC6AE808097A9571A0D52C07125D30",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "fox",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Ghoul",
+      "nativeHealth": 193,
+      "attackReference": 48,
+      "assetPath": "Server/NPC/Roles/Undead/Ghoul.json",
+      "assetSha256": "ACF11036B751C4923304796C34CDB04057BEBE47B42F42DEF35B4E45FF78BBF1",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "ghoul",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Goat",
+      "nativeHealth": 81,
+      "attackReference": 10,
+      "assetPath": "Server/NPC/Roles/Creature/Livestock/Goat.json",
+      "assetSha256": "2C8006383FE64FF03CDBBA3FB7A466047A93A00146667C0346C57F28935C3B7F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "goat",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Goblin_Burner",
+      "nativeHealth": 160,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Burner.json",
+      "assetSha256": "1B72FFFA31B4C2D7EF5927AFFF2345D960FAFFBE3BAE61B6EBCAD75BE501F144",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "goblin_burner",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Goblin_Feastmaster",
+      "nativeHealth": 350,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Feastmaster.json",
+      "assetSha256": "CB008C461B31791EE9EDA25A946F18B5AFBF01A4FC66E2C3DE8FFDFA01271B23",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "goblin_feastmaster",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Goblin_Guardian",
+      "nativeHealth": 90,
+      "attackReference": 20,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Guardian.json",
+      "assetSha256": "4F3D0114B4ADDA21D79B8DB606E2A9BC7F3677F0F392420203CE7A4F2A02CC3E",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "goblin_guardian",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Goblin_Lobber",
+      "nativeHealth": 80,
+      "attackReference": 18,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Lobber.json",
+      "assetSha256": "302CD3CC062341E075250EFE0422C00B02FD5134D884C6CE5B032C31CCBAF7DE",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "goblin_lobber",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Goblin_Lobber_Turret",
+      "nativeHealth": 70,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Lobber_Turret.json",
+      "assetSha256": "AFEB70E4FE6E5C264D86B697D2757BCDA8E55EA902B993847267D2BC0E37142A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "goblin_lobber_turret",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Goblin_Miner",
+      "nativeHealth": 140,
+      "attackReference": 48,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Miner.json",
+      "assetSha256": "5C6155F5FF5ABCBF3F7EFAA5EC51BED8D3E38445F31BDCF9BE644A9420B95228",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "goblin_miner",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Goblin_Scrapper",
+      "nativeHealth": 36,
+      "attackReference": 16,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Scrapper.json",
+      "assetSha256": "016CE5DFB9375C400F6BEFC2109DEEDD4836069DD2933E3677F9ABBF67EF6FB5",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "goblin_scrapper",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Goblin_Turret",
+      "nativeHealth": 20,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Turret.json",
+      "assetSha256": "0C6F664472429C3116146141C64C5367DC3AA21D267B6F6EB61D17273B10E338",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "goblin_turret",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Golem_Crystal_Earth",
+      "nativeHealth": 160,
+      "attackReference": 10,
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Earth.json",
+      "assetSha256": "8A93A3ACB4872289DCA45686F80D188FD8A00AC22D454E4C22B94A030569DA06",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "golem_crystal_earth",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Golem_Crystal_Flame",
+      "nativeHealth": 283,
+      "attackReference": 10,
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Flame.json",
+      "assetSha256": "9C05BC2F9F70C242C5D862000F7E6822E758CF9BBAE45B929DCE6ED97273F7D0",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "golem_crystal_flame",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Golem_Crystal_Frost",
+      "nativeHealth": 224,
+      "attackReference": 10,
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Frost.json",
+      "assetSha256": "798F05745B3577BCC12B70DD286A3D8F4F2C76E718E38B4CD574FB81BE672C89",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "golem_crystal_frost",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Golem_Crystal_Sand",
+      "nativeHealth": 193,
+      "attackReference": 47,
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Sand.json",
+      "assetSha256": "C1078A1D19F60C13F56D61D009E062523CC18FBC742AD9B6000DA1DC8BCC4792",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "golem_crystal_sand",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Golem_Crystal_Thunder",
+      "nativeHealth": 193,
+      "attackReference": 10,
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Thunder.json",
+      "assetSha256": "BCEEC07BE7AC996056C047F66CB7E593D228E7D8219FD06AB6F181A99D9DD675",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "golem_crystal_thunder",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Golem_Firesteel",
+      "nativeHealth": 224,
+      "attackReference": 10,
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Firesteel.json",
+      "assetSha256": "7117E1725A8306E235EDD01802C295A3AF95CBEBEAD8EB05BD910AE3285C0D9F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "golem_firesteel",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Horse",
+      "nativeHealth": 124,
+      "attackReference": 30,
+      "assetPath": "Server/NPC/Roles/Creature/Livestock/Horse.json",
+      "assetSha256": "A9B921914A6A3A80FAF8425FA46212DFADD9B1D8E733041D2FA19BDD1ED20411",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "horse",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Horse_Skeleton",
+      "nativeHealth": 160,
+      "attackReference": 30,
+      "assetPath": "Server/NPC/Roles/Undead/Horse_Skeleton.json",
+      "assetSha256": "CEB2787CFD86E70477B085A7F356B994B7882DDA5A25A4F372BDEA082F2DBDCB",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "horse_skeleton",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Horse_Skeleton_Armored",
+      "nativeHealth": 90,
+      "attackReference": 35,
+      "assetPath": "Server/NPC/Roles/Undead/Horse_Skeleton_Armored.json",
+      "assetSha256": "C158E2BF82E1746CA128088BD09870A605ACF849B4B01A2D9F11A91A4135A818",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "horse_skeleton_armored",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Hound_Bleached",
+      "nativeHealth": 126,
+      "attackReference": 30,
+      "assetPath": "Server/NPC/Roles/Undead/Hound_Bleached.json",
+      "assetSha256": "058B153DB9F5120195581E1E76903F3D59BB505D1417DE3FF28A463721B5FC10",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "hound_bleached",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Hyena",
+      "nativeHealth": 103,
+      "attackReference": 27,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Hyena.json",
+      "assetSha256": "54ADD9CC8A732908E6AB9E5D87162ADD013D125BAF598D588A20A8DBF93C4E02",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "hyena",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Kweebec_Razorleaf",
+      "nativeHealth": 105,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Kweebec/Kweebec_Razorleaf.json",
+      "assetSha256": "C3F037B2F561014822D2C7FCB148F5BAC70435839908CD3DC070745A2BF3A907",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "kweebec_razorleaf",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Larva_Silk",
+      "nativeHealth": 25,
+      "attackReference": 12,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Larva_Silk.json",
+      "assetSha256": "392A90458E8615422436D032F57239512AB86E464415B61772FD4D7F8899FE16",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "larva_silk",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Larva_Void",
+      "nativeHealth": 15,
+      "attackReference": 8,
+      "assetPath": "Server/NPC/Roles/Void/Larva_Void.json",
+      "assetSha256": "212D541ECA12E90786F73C5186DF40DE7DD65628BD4B7881084A6222364B45EB",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "larva_void",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Leopard_Snow",
+      "nativeHealth": 103,
+      "attackReference": 36,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Leopard_Snow.json",
+      "assetSha256": "E1891DC0D029F94858DE80B3CF0D05457083AAEF89FC9109B1449AD31C294BDC",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "leopard_snow",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Molerat",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Molerat.json",
+      "assetSha256": "594F9B64CDE078462A9450A7EAD3DB537161D69AF10290AF5B4C9EA9B71A2840",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "molerat",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Moose_Bull",
+      "nativeHealth": 124,
+      "attackReference": 50,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Moose_Bull.json",
+      "assetSha256": "06EDD1F6DCA4D5D4388A09D1CFC84D493E9E8320664F8CEA963A889929E148A2",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "moose_bull",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Moose_Cow",
+      "nativeHealth": 103,
+      "attackReference": 50,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Moose_Cow.json",
+      "assetSha256": "E5B554B3313E03A2542503B1262EDF44EF849765E93290B9811E463C123EA2F7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "moose_cow",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Mosshorn",
+      "nativeHealth": 124,
+      "attackReference": 12,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Mosshorn.json",
+      "assetSha256": "877951FC6EE3D0123A8E17CE0EB04FB4DD951B8572509DE7EA55BADE67ED82D4",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "mosshorn",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Mosshorn_Plain",
+      "nativeHealth": 124,
+      "attackReference": 12,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Mosshorn_Plain.json",
+      "assetSha256": "F730DCC735AA90BB4D32CDC6CFF65BF1A5F55249ED9DC738EBD7286B1BCB78A7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "mosshorn_plain",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Outlander_Berserker",
+      "nativeHealth": 103,
+      "attackReference": 27,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Berserker.json",
+      "assetSha256": "123450DE8DAFDEAC9B163E016479ECB7F98D8259ED9AC3F9675596881052E709",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "outlander_berserker",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Outlander_Brute",
+      "nativeHealth": 124,
+      "attackReference": 35,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Brute.json",
+      "assetSha256": "868094F3E33D85664D60B172E099B38CA38DF8F4B0EFC70127DF05A471056889",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "outlander_brute",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Outlander_Cultist",
+      "nativeHealth": 81,
+      "attackReference": 21,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Cultist.json",
+      "assetSha256": "CB69E9ABCC1A5C3E59CD2F1F035642FD8F562532ECA262AD9C9C87E49D675D15",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "outlander_cultist",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Outlander_Hunter",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Hunter.json",
+      "assetSha256": "4F29876F32FC22A9373B53BA871D78F968937441646038902081284127BCB61B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "outlander_hunter",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Outlander_Marauder",
+      "nativeHealth": 103,
+      "attackReference": 27,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Marauder.json",
+      "assetSha256": "EEDDBD541C339B5A3BD63982A7400568D70C8F2D56D3AAE0242AB3D28CA3FAF3",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "outlander_marauder",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Outlander_Peon",
+      "nativeHealth": 81,
+      "attackReference": 21,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Peon.json",
+      "assetSha256": "5E0EAD1D15ED1C87239A610B9055F9441E9AF921FD348E4D3A8BF440BDE3128A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "outlander_peon",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Outlander_Priest",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Priest.json",
+      "assetSha256": "8F99887A09C13769E4896F1DF3075CFA6C05182BB7CCC6FD41B9417CD65F05CA",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "outlander_priest",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Outlander_Sorcerer",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Sorcerer.json",
+      "assetSha256": "7CA7EDCFC5AC9E0CA0A4AF596FFAB4EF0F5CDB58EF209E19E77009E865E5C52B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "outlander_sorcerer",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Outlander_Stalker",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Stalker.json",
+      "assetSha256": "A72E0025E5CB10B8BF17B4EADAD8F9462C90ABA885FB31C12B5C4949C61956EC",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "outlander_stalker",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Pig_Undead",
+      "nativeHealth": 103,
+      "attackReference": 27,
+      "assetPath": "Server/NPC/Roles/Undead/Pig_Undead.json",
+      "assetSha256": "3433A551F406AD2AF641C06321CBF0F303FAC6495F418DB49E7B6FA9D11FB682",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "pig_undead",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Piranha",
+      "nativeHealth": 38,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Aquatic/Freshwater/Piranha.json",
+      "assetSha256": "8FACABAE786A7B1B459C3D9A1F6FF62CD96A2AF3EC1933EA88B70B13A6263815",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "piranha",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Piranha_Black",
+      "nativeHealth": 45,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Aquatic/Freshwater/Piranha_Black.json",
+      "assetSha256": "2CF8ACB94891AF4652BBA8FF10F02812C1F48B0C86784DABB8EAC49B99466D8C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "piranha_black",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Ram",
+      "nativeHealth": 124,
+      "attackReference": 15,
+      "assetPath": "Server/NPC/Roles/Creature/Livestock/Ram.json",
+      "assetSha256": "B667C9ADCC9C2547C29D436A88B210C599B7FEC201A0FB5EE4E56772F71B48E1",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "ram",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Raptor_Cave",
+      "nativeHealth": 103,
+      "attackReference": 27,
+      "assetPath": "Server/NPC/Roles/Creature/Reptile/Raptor_Cave.json",
+      "assetSha256": "FA579634A18E81D2C25228DC3005EE6FEEC332B54C8F1301EB6CCCD468B54E80",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "raptor_cave",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Rat",
+      "nativeHealth": 15,
+      "attackReference": 9,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Rat.json",
+      "assetSha256": "CC24F2B7136ED4FA7D3E3D7F4A0C0C2CA9AF2A42AD648E901CE10946A66FAD88",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "rat",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Rex_Cave",
+      "nativeHealth": 400,
+      "attackReference": 68,
+      "assetPath": "Server/NPC/Roles/Creature/Reptile/Rex_Cave.json",
+      "assetSha256": "712C2AD22ED98B21C4CA1C8A1F1AEBAF92D7DB80BC277D867AED12E9A6145DEB",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "rex_cave",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Risen_Gunner",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Risen_Gunner.json",
+      "assetSha256": "3591474248EA5F69CA9F9A9B076DA96DF7444ED4A8C97933231DAFEB8281F983",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "risen_gunner",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Risen_Knight",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Risen_Knight.json",
+      "assetSha256": "BBE52C11F5FC9BF3EA6DE7173CE927A4B9CE0AA10C04B494EBEF2F405A4C0AC4",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "risen_knight",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Scarak_Broodmother",
+      "nativeHealth": 145,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Broodmother.json",
+      "assetSha256": "9ABE61C3E84792F47E968A2330957C24DF5B8FF8C5EB8C91BB0CF76A97098A6F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "scarak_broodmother",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Scarak_Defender",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Defender.json",
+      "assetSha256": "7466D276AC8D059E4BB404AE3556A9C0A5DB27514E50B4451430F1CFD1F04B2D",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "scarak_defender",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Scarak_Fighter",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Fighter.json",
+      "assetSha256": "F8A033A780BE8C858F6FA3EEBDB2A8AF32DBBFB501B49734EF101FCE65140384",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "scarak_fighter",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Scarak_Fighter_Royal_Guard",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Fighter_Royal_Guard.json",
+      "assetSha256": "5346AE3FF7F35306365C4FACF5267DCB0E2C2F583F5449DF86F6D8D5B1AF2F9F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "scarak_fighter_royal_guard",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Scarak_Louse",
+      "nativeHealth": 21,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Louse.json",
+      "assetSha256": "0179DD23B87D5CAEB23E0A516F66637161B241C81269CD87E86B596357CC438F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "scarak_louse",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Scarak_Seeker",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Seeker.json",
+      "assetSha256": "78699BB81DFAD5B83EFA6D96F9D9C09A0E7ADAC7FEB1942EB9C55A57799C21EF",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "scarak_seeker",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Scorpion",
+      "nativeHealth": 124,
+      "attackReference": 35,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Scorpion.json",
+      "assetSha256": "776BBEEAE43D0D3CFD57B9CE8CB0B245C51880102EDD735B11025311456B37BB",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "scorpion",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Shadow_Knight",
+      "nativeHealth": 400,
+      "attackReference": 119,
+      "assetPath": "Server/NPC/Roles/Undead/Shadow_Knight.json",
+      "assetSha256": "14BC383FB4D1B56F6D11D50A531FBD38C6D4373D46B98CC77A7F725BF75E381B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "shadow_knight",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Archer",
+      "nativeHealth": 60,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archer.json",
+      "assetSha256": "9BCA4249C897BCB0615C3FE467343F74F9A6C9C0D7EBC0CAD488D9A29A56C6A5",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_archer",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Archmage",
+      "nativeHealth": 88,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archmage.json",
+      "assetSha256": "7D3AEEED0FB78DFBB103B546714970FFD9B932CC6B4939F64BCB14A3A31DC0A4",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_archmage",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Alchemist",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Alchemist.json",
+      "assetSha256": "3576E07E9A8DFA9AB783E3DA0AA53BA03849E3114E93532275B003EFF2B39548",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_burnt_alchemist",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Archer",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Archer.json",
+      "assetSha256": "B2031B9C677310950C0BD8957DD49ADE8B4BE3D1F30969C5B40CAAC844796E6C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_burnt_archer",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Gunner",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Gunner.json",
+      "assetSha256": "62BCAB34505CF83A982EEF0322899D1BBDE6711178E44079902C59933E980CBF",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_burnt_gunner",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Knight",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Knight.json",
+      "assetSha256": "464BDA44D9D1034FE4666490CC31E8969E1DADA2FB84070F0847C9F099382F0C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_burnt_knight",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Lancer",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Lancer.json",
+      "assetSha256": "97505759406B02F514E98B3057A079E8D4824F639B3891DDE1E9399D72A0E27D",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_burnt_lancer",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Praetorian",
+      "nativeHealth": 226,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Praetorian.json",
+      "assetSha256": "B5410BEAE993C645AE3DC3BBCEC56C021295207ABE149140D990A328A36BCDCA",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_burnt_praetorian",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Soldier",
+      "nativeHealth": 124,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Soldier.json",
+      "assetSha256": "9B64B74D179D7124C51BA9E6DD781A91485CAAD7FBC18F04940050B1014EA1B1",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_burnt_soldier",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Wizard",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Wizard.json",
+      "assetSha256": "0B38CDC2A85E25BFD1F473D2BC8A139FA8CEE83FA11ED2A2F57455C549A2C063",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_burnt_wizard",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Elite",
+      "nativeHealth": 350,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Elite.json",
+      "assetSha256": "7C6468E0EFC9D1F7583803A920F9277A1951573D7D074FF3CF4C151BAC3094D5",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_elite",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Fighter",
+      "nativeHealth": 70,
+      "attackReference": 16,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Fighter.json",
+      "assetSha256": "5E070D4822F76EEC2D15BE9EF47503ED070E1641542CAFE87EB8DBACD6426877",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_fighter",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Frost_Archer",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Archer.json",
+      "assetSha256": "568D5DDE8E0E00FBA44BDA676020C531E65F263BDA3140B5599E9C512C8BEDC7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_frost_archer",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Frost_Archmage",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Archmage.json",
+      "assetSha256": "50DAEAAEE39D9D3250B2FDC6CD76FFAF97A241D1467BDDD960E1EBE5EB1B4068",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_frost_archmage",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Frost_Fighter",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Fighter.json",
+      "assetSha256": "3B2B7E2DADFEA0E1EA74CB6B0DC83EDD7D01246C164ECD4D64C3A1F879D1DC25",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_frost_fighter",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Frost_Knight",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Knight.json",
+      "assetSha256": "DB9765039DD6F03E34750E6F11C6AD604EE26ACF48292DD65F793087A37952F9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_frost_knight",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Frost_Mage",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Mage.json",
+      "assetSha256": "B7982BD6E8E57089E83FB8A2051268B396144DB929341AFCC08BFD2996434071",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_frost_mage",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Frost_Ranger",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Ranger.json",
+      "assetSha256": "CBB0641EADE9F5AB09D64642CFD09E380C2812900E43E0FFDFCDB8DECB0DC156",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_frost_ranger",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Frost_Scout",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Scout.json",
+      "assetSha256": "445095010A57632F7BF2A197520042625036B8CE886DFF61EFFED580E69AFE8E",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_frost_scout",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Frost_Soldier",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Soldier.json",
+      "assetSha256": "13505701817833A5695C6722351C1F9B41966FAC090BD714163ED044DC864E97",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_frost_soldier",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Incandescent_Fighter",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Fighter.json",
+      "assetSha256": "6DC11938FE7405BA25542EE5C5B429E708E7DA83CA73AD21A8C3507F45D41908",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_incandescent_fighter",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Incandescent_Footman",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Footman.json",
+      "assetSha256": "1871F4123E2A56DBE9C79BF6B4EBDAAD74F38204C3FD624E16184ABAE910D9A1",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_incandescent_footman",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Incandescent_Mage",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Mage.json",
+      "assetSha256": "6DBA65D9079B8292CC44FC972C8E4E48FB7FE2A15F8ECC4C3BDEEFC18CE926D5",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_incandescent_mage",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Knight",
+      "nativeHealth": 130,
+      "attackReference": 24,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Knight.json",
+      "assetSha256": "534EA630F704093CF58EA77A053C95EF927D83B1493496AFCE22C2E002174205",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_knight",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Mage",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Mage.json",
+      "assetSha256": "EBC73E0331E1D8E2B78DEA6C44764F9CDD83FD6F6D242798BF1EEE1F17F9949A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_mage",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Pirate_Captain",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Pirate/Skeleton_Pirate_Captain.json",
+      "assetSha256": "86A89554E5B9FF926502817AB7A26BA84E937E6C2C030CFFD2E0845F14C5D733",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_pirate_captain",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Pirate_Gunner",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Pirate/Skeleton_Pirate_Gunner.json",
+      "assetSha256": "6449DC54533D7F7E17A3E7EC1FF302E9F294D0715C68C904BBD47D6E61C3D9F0",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_pirate_gunner",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Pirate_Striker",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Pirate/Skeleton_Pirate_Striker.json",
+      "assetSha256": "D01B0A30D4E0CD6E205FA9F9359FE68992A6356D18CFC061362224CA3F8914D8",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_pirate_striker",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Ranger",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Ranger.json",
+      "assetSha256": "0F5F2F06019FB84EFB12A4DAE320E019DF44615BD9678F7AED64ACA2F702CB10",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_ranger",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Sand_Archer",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Archer.json",
+      "assetSha256": "1469E8CC811093DA50E752A27CFBAE84179F744FE2588C652902E0B51BCB73F2",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_sand_archer",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Sand_Archmage",
+      "nativeHealth": 38,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Archmage.json",
+      "assetSha256": "6FFAAFB445C6847B638E9BD881F6F55F1EBB51E7270264D4ECA0E2AFF252A260",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_sand_archmage",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Sand_Assassin",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Assassin.json",
+      "assetSha256": "1AF78BF8E8C46C2912C6585D99EC1C14EAFA1497D38F5A04EDD0810D5FC79889",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_sand_assassin",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Sand_Guard",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Guard.json",
+      "assetSha256": "8880D9B437F11ACA7934E1717070B9F6F1D41DB56A178AD53CA317A45B4D6A2B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_sand_guard",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Sand_Mage",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Mage.json",
+      "assetSha256": "7C5F477179907AC867CCC4A9FB135CCBD5EF9F3B4FBE86C748D9A222F4466125",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_sand_mage",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Sand_Ranger",
+      "nativeHealth": 29,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Ranger.json",
+      "assetSha256": "9050CEAF52EE5D0F593E0A47792A807AFFFFDA7B17D806ACDFF1E96FF2291CF9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_sand_ranger",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Sand_Scout",
+      "nativeHealth": 29,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Scout.json",
+      "assetSha256": "70486AF73001C8D3DBDD11D1C69FF2A9E4D7FC5574D3984C78E3C8B21DEA9233",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_sand_scout",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Sand_Soldier",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Soldier.json",
+      "assetSha256": "59E7008CAB21BC919932FE2CE98C7DFEE837033AD0B356DC4178FB6FC8E301CC",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_sand_soldier",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Scout",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout.json",
+      "assetSha256": "28D93A5C856BB1965D82D33E78B173027944569D7F14ABE4F25F5F53C9AC99EE",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_scout",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Skeleton_Soldier",
+      "nativeHealth": 100,
+      "attackReference": 20,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Soldier.json",
+      "assetSha256": "25012A58A014AB7872D29FBEBE440AD196BAA67FA4580C258998F5EA0E1DB8E4",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "skeleton_soldier",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Slug_Magma",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Slug_Magma.json",
+      "assetSha256": "326EB934DE9F19C316D70D9242C1302139F968F5B87814A99AF50DE0C8A06150",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "slug_magma",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Snake_Cobra",
+      "nativeHealth": 74,
+      "attackReference": 29,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Snake_Cobra.json",
+      "assetSha256": "862E65B1AF9F5B68ECE86C2E326E156066E750D64236EA1A4E5B5B1D171FFE2E",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "snake_cobra",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Snake_Marsh",
+      "nativeHealth": 36,
+      "attackReference": 14,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Snake_Marsh.json",
+      "assetSha256": "C77DFA9B16E2CC7FC1A57791AA4BD238D8B4C504EDC6A19BFC98AE08BE39374B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "snake_marsh",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Snake_Rattle",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Snake_Rattle.json",
+      "assetSha256": "65CF8AB7F0F9269369AE174D2807AA20CD9DB96769BB8968A347AA18A67776CF",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "snake_rattle",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Snapdragon",
+      "nativeHealth": 103,
+      "attackReference": 27,
+      "assetPath": "Server/NPC/Roles/Creature/Mythic/Snapdragon.json",
+      "assetSha256": "761282020C769FA5ABFE7293EED7C0868A32CEA102EB853CFDFCA1D8B65F08CC",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "snapdragon",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Spider",
+      "nativeHealth": 60,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Spider.json",
+      "assetSha256": "2193F0CC1FB67F62C3A446F980939B63938382BAF26674F4C3808DD2ED1684A9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "spider",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Spider_Cave",
+      "nativeHealth": 120,
+      "attackReference": 22,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Spider_Cave.json",
+      "assetSha256": "7BB665A664740DBE7F65352B08A80030BC5BB0F4AA70BBE307FFEED839A72ED8",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "spider_cave",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Spirit_Ember",
+      "nativeHealth": 126,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Elemental/Spirit/Spirit_Ember.json",
+      "assetSha256": "8359F6C3E396455E2FEA5CE5121A43ACA786226A1349A51FDC0651683A94D4F9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "spirit_ember",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Spirit_Frost",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Elemental/Spirit/Spirit_Frost.json",
+      "assetSha256": "0B92109AB5687A446934C46B50E69548181833986B5423BF9CBC0CA8244EEE9E",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "spirit_frost",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Spirit_Root",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Elemental/Spirit/Spirit_Root.json",
+      "assetSha256": "DC84B64417714B1BA119D996F488603588F5743839C58DED75583105F20459A9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "spirit_root",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Spirit_Thunder",
+      "nativeHealth": 249,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Elemental/Spirit/Spirit_Thunder.json",
+      "assetSha256": "0AAC55EF93B350A02B6490CE5119441A3139E9835C0F71A973A4915C4EE40297",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "spirit_thunder",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Tiger_Sabertooth",
+      "nativeHealth": 124,
+      "attackReference": 46,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Tiger_Sabertooth.json",
+      "assetSha256": "EE0B8FFBA309AB9AE0787FF3783A0F8A64FBC746B48A7FC63020529705E4C61F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "tiger_sabertooth",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Toad_Rhino",
+      "nativeHealth": 124,
+      "attackReference": 35,
+      "assetPath": "Server/NPC/Roles/Creature/Reptile/Toad_Rhino.json",
+      "assetSha256": "A9FB90627C44DA4BC77AB45330AE9AD483E776B783419DCC5DE89312DADB46AE",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "toad_rhino",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Toad_Rhino_Magma",
+      "nativeHealth": 124,
+      "attackReference": 35,
+      "assetPath": "Server/NPC/Roles/Creature/Reptile/Toad_Rhino_Magma.json",
+      "assetSha256": "F56D6B33D4845422910A924CBD59235D94CC2780E430B93B704A3001CF9F2A6A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "toad_rhino_magma",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Brawler",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Brawler.json",
+      "assetSha256": "1566E5739850EC705AFA8E22EE44ED909E09E2B3226AFE8F4E06CE1408E46EC5",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_brawler",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Chieftain",
+      "nativeHealth": 124,
+      "attackReference": 35,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Chieftain.json",
+      "assetSha256": "13A64E6C7167F7BA3D717B2716350D431FEC912BE2AB62CE53FC78C981805863",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_chieftain",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Doctor_Witch",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Doctor_Witch.json",
+      "assetSha256": "43FE6C4AA2800D0655DA5823F216A234206CBBCF615FA5A870F5217835918A16",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_doctor_witch",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Guard",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Guard.json",
+      "assetSha256": "B1632D66C0A0264BB0999F50E89E6BFB9ED87B35D2C4E50B6AAC836C6E11D411",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_guard",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Hunter",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Hunter.json",
+      "assetSha256": "64EBF187A3ED2F2DAA74AB4593347D5C46B55682DD797D9DC349A67158B24492",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_hunter",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Mauler",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Mauler.json",
+      "assetSha256": "C4864B4882EAE972D2855A031553196E13BD1093E65A299D82BF66329456131E",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_mauler",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Sentry",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Sentry.json",
+      "assetSha256": "1CE7F71F429E53C8D96A28914DF7E06F098A5C3D62C15D8FE2AD8A1098686098",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_sentry",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Shaman",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Shaman.json",
+      "assetSha256": "7CD3E414434984748421E4D02F1260AAB48E103FAA97B1F391F0A70D21CDF93A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_shaman",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Unarmed",
+      "nativeHealth": 42,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Unarmed.json",
+      "assetSha256": "F769BF986CAAB79FA3DEDCB2D296910107D126D7E94ACE11D775483A2631C2F5",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_unarmed",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Trork_Warrior",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Warrior.json",
+      "assetSha256": "CB1D4223BD75CDED0F2C25B5B8167076413DC04F9130D4A3353A1A40938B3E73",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "trork_warrior",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Void_Spawn_Entombed",
+      "nativeHealth": 700,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Void/Void_Spawn_Entombed.json",
+      "assetSha256": "2A3839EE1FDE395422C0B92772CE1E562549CC58A50DA043A5D8334C62FA1E98",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "void_spawn_entombed",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Void_Spectre",
+      "nativeHealth": 30,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Void/Void_Spectre.json",
+      "assetSha256": "E527A7370FCE03709FEEFE164E3DBE546BED19C2B71711EA8EED2FDAB18C8944",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "void_spectre",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Void_Tentacle",
+      "nativeHealth": 75,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Void/Void_Tentacle.json",
+      "assetSha256": "ED6413C24DF45403836346576B4ABB4307B5A24AEE835E7FB0E71825A505ABDB",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "void_tentacle",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Voidtaken_Goblin_Surge",
+      "nativeHealth": 36,
+      "attackReference": 22,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Voidtaken_Goblin_Surge.json",
+      "assetSha256": "35DEAB0CDB0B8B4AEBD45601AA4B746172099051071C14E376B2C08CDA5BF4D9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "voidtaken_goblin_surge",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Warthog",
+      "nativeHealth": 103,
+      "attackReference": 10,
+      "assetPath": "Server/NPC/Roles/Creature/Livestock/Warthog.json",
+      "assetSha256": "9DE4361E95234A7B4AE4C8F985FEFECD0CD78D45EF98CF7AEAE0C5AFBDB67EB5",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "warthog",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Werewolf",
+      "nativeHealth": 283,
+      "attackReference": 66,
+      "assetPath": "Server/NPC/Roles/Undead/Werewolf.json",
+      "assetSha256": "C08E8296AEAA4297413D827FED1C7075AAEC4B84F2E4954C923F673D6BA07E7B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "werewolf",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Wolf_Black",
+      "nativeHealth": 103,
+      "attackReference": 27,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Wolf_Black.json",
+      "assetSha256": "6D3F4E98DAC9D6C480B441338CB2BA0043A4CC3AF9EB7331EC8501802C0FDF42",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "wolf_black",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Wolf_Outlander_Priest",
+      "nativeHealth": 107,
+      "attackReference": 5,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Wolf_Outlander_Priest.json",
+      "assetSha256": "A3575AA36130C3AA38E6D7A80093F45ED7D1A4EDE14838BAB4F138AE9AEA1CC2",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "wolf_outlander_priest",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Wolf_Outlander_Sorcerer",
+      "nativeHealth": 118,
+      "attackReference": 5,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Wolf_Outlander_Sorcerer.json",
+      "assetSha256": "67E0656D2794C6639F3DBBC30DAA3456F79C078229810F8CD8B021F906BA5921",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "wolf_outlander_sorcerer",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Wolf_Trork_Hunter",
+      "nativeHealth": 38,
+      "attackReference": 6,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Wolf_Trork_Hunter.json",
+      "assetSha256": "150098B7B33DA79690EB0032686215120BA85AA88116AA15729E0AB5601DC7D6",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "wolf_trork_hunter",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Wolf_Trork_Shaman",
+      "nativeHealth": 118,
+      "attackReference": 5,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Wolf_Trork_Shaman.json",
+      "assetSha256": "161B7064ACC7B0D7BF8BFF7899EA02E32142F7CA8CBB4BCBE293EF4EABC5CE30",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "wolf_trork_shaman",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Wolf_White",
+      "nativeHealth": 103,
+      "attackReference": 27,
+      "assetPath": "Server/NPC/Roles/Creature/Mammal/Wolf_White.json",
+      "assetSha256": "05F16879A61C2F7D91ED92EFED41417298001062A8AB7FFB1AC8D85816452660",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "wolf_white",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Wraith",
+      "nativeHealth": 193,
+      "attackReference": 40,
+      "assetPath": "Server/NPC/Roles/Undead/Wraith.json",
+      "assetSha256": "9C04FB84AE526A3F058F9DAF5D52691E53E53F7A16821DD560BCF286385929E0",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "wraith",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Wraith_Lantern",
+      "nativeHealth": 30,
+      "attackReference": 10,
+      "assetPath": "Server/NPC/Roles/Undead/Wraith_Lantern.json",
+      "assetSha256": "70C5434D05F6C7545D2AB8D4A6E132E655B5C724524FADFA1C21CA809BFA7FCD",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "wraith_lantern",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Yeti",
+      "nativeHealth": 226,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Creature/Mythic/Yeti.json",
+      "assetSha256": "EC39397E2B883713FC273ECD2725AE29C4C5783040C6F08FA42842A3E57B9BBC",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "yeti",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Zombie",
+      "nativeHealth": 90,
+      "attackReference": 18,
+      "assetPath": "Server/NPC/Roles/Undead/Zombie/Zombie.json",
+      "assetSha256": "6E958D12FB0148F3A86C7EEAEF620B174675B7FA2E98175798C29FAFD0813ECD",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "zombie",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Zombie_Aberrant",
+      "nativeHealth": 400,
+      "attackReference": 119,
+      "assetPath": "Server/NPC/Roles/Undead/Zombie/Zombie_Aberrant.json",
+      "assetSha256": "374DD159D3881BAE05EF3758DE7B95014CB4B11425077605FE90D1A1C30DBD0D",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "zombie_aberrant",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Zombie_Aberrant_Big",
+      "nativeHealth": 341,
+      "attackReference": 86,
+      "assetPath": "Server/NPC/Roles/Undead/Zombie/Zombie_Aberrant_Big.json",
+      "assetSha256": "058EF23AB55EF3CA1E3B7CB2658014D363F0644FD178DCCB9B678B66B6B2B15B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "zombie_aberrant_big",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Zombie_Aberrant_Small",
+      "nativeHealth": 126,
+      "attackReference": 30,
+      "assetPath": "Server/NPC/Roles/Undead/Zombie/Zombie_Aberrant_Small.json",
+      "assetSha256": "3075FA1582454F10E6DAD5ADD47786B66E0DB62308FC1B68B5AF1BB74E7B5184",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "zombie_aberrant_small",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Zombie_Burnt",
+      "nativeHealth": 126,
+      "attackReference": 30,
+      "assetPath": "Server/NPC/Roles/Undead/Zombie/Zombie_Burnt.json",
+      "assetSha256": "EBA7B0E9FC5E9C08BDDC986ECC19CB2784AD04620FE804784DA3F3D12C65EF6E",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "zombie_burnt",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Zombie_Frost",
+      "nativeHealth": 81,
+      "attackReference": 21,
+      "assetPath": "Server/NPC/Roles/Undead/Zombie/Zombie_Frost.json",
+      "assetSha256": "7C557D09F7DB6E731941103AE5A64B87E6E0992C6535CFA9507B62B0E41D9A92",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "zombie_frost",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    },
+    {
+      "roleId": "Zombie_Sand",
+      "nativeHealth": 49,
+      "attackReference": 18,
+      "assetPath": "Server/NPC/Roles/Undead/Zombie/Zombie_Sand.json",
+      "assetSha256": "113A0E35062C346974F6F2BC0F6853058A43607EAD7144AB3C65B529EC595868",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "combatIdentity": "zombie_sand",
+      "rank": "COMMON",
+      "rarity": "ORDINARY"
+    }
+  ],
+  "aliases": [
+    {
+      "roleId": "Bear_Voidtaken_D2",
+      "nativeHealth": 700,
+      "attackReference": 38,
+      "assetPath": "Server/NPC/Roles/Creature/Hunt/Bear_Voidtaken_D2.json",
+      "assetSha256": "6C9F877AD7B27C671648D10F41AF9BDC7B21FCB52C5F6F2EC5ED908B3A1EEFF0",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Bear_Voidtaken_D1"
+    },
+    {
+      "roleId": "Bear_Voidtaken_D3",
+      "nativeHealth": 850,
+      "attackReference": 38,
+      "assetPath": "Server/NPC/Roles/Creature/Hunt/Bear_Voidtaken_D3.json",
+      "assetSha256": "E43474FB16ED43CAF554643B699B1A1F43AE35A89BFAA4319A1F9DDC5133A156",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Bear_Voidtaken_D1"
+    },
+    {
+      "roleId": "Coffer_Goblin_Burner",
+      "nativeHealth": 80,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Coffer_Goblin_Burner.json",
+      "assetSha256": "E73B40EF8912155687C7732575A96EC0B41A782B36CD9CCCE607D26FBF7512D1",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Goblin_Burner"
+    },
+    {
+      "roleId": "Coffer_Goblin_Feastmaster",
+      "nativeHealth": 700,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Coffer_Goblin_Feastmaster.json",
+      "assetSha256": "BC364F50C12C814F0B909E258DE82ECD6978B3F0F095E686A78C5E247FCBBC18",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Goblin_Feastmaster"
+    },
+    {
+      "roleId": "Coffer_Goblin_Guardian",
+      "nativeHealth": 110,
+      "attackReference": 20,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Coffer_Goblin_Guardian.json",
+      "assetSha256": "2143E99B2681C66C290BC41BD1F9A0B7BC660B6681F27F572A1B76B17D32921A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Goblin_Guardian"
+    },
+    {
+      "roleId": "Coffer_Goblin_Lobber",
+      "nativeHealth": 100,
+      "attackReference": 18,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Coffer_Goblin_Lobber.json",
+      "assetSha256": "D34BE74DA171487824C3EC96549F2D5B148C60176B7A94FF1844474FB737D9AB",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Goblin_Lobber"
+    },
+    {
+      "roleId": "Coffer_Goblin_Miner",
+      "nativeHealth": 170,
+      "attackReference": 48,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Coffer_Goblin_Miner.json",
+      "assetSha256": "CE667EF62A2EFA370232C61EB19C232CA583FA10C6773BE7A84C11A8E2BFE78B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Goblin_Miner"
+    },
+    {
+      "roleId": "Coffer_Goblin_Scrapper",
+      "nativeHealth": 44,
+      "attackReference": 16,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Coffer_Goblin_Scrapper.json",
+      "assetSha256": "F1252264EBEEE6C1513738C2E19C796884D32C8959AF3DAA05E57B4FF8C93295",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Goblin_Scrapper"
+    },
+    {
+      "roleId": "Coffer_Goblin_Turret",
+      "nativeHealth": 22,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Goblin/Coffer_Goblin_Turret.json",
+      "assetSha256": "3028050D8234AD8ED33646ED5C87E861460B87268AA6E29B384B34B3B6DF0849",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Goblin_Turret"
+    },
+    {
+      "roleId": "Crawler_Void_Anomaly",
+      "nativeHealth": 70,
+      "attackReference": 16,
+      "assetPath": "Server/NPC/Roles/Void/Crawler_Void_Anomaly.json",
+      "assetSha256": "C7E870F8ED6E02622D8B5F9CBEE25906CD2844822CD4F2F20218A9BAB2DA644A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Crawler_Void"
+    },
+    {
+      "roleId": "Crawler_Void_Surge",
+      "nativeHealth": 50,
+      "attackReference": 14,
+      "assetPath": "Server/NPC/Roles/Void/Crawler_Void_Surge.json",
+      "assetSha256": "D6B4AA52C534EFD1F6ABFF48026242DB90052C2F5BF4F25E5E7EA01B6DB56165",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Crawler_Void"
+    },
+    {
+      "roleId": "Dungeon_Scarak_Broodmother",
+      "nativeHealth": 145,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Dungeon/Dungeon_Scarak_Broodmother.json",
+      "assetSha256": "9ABE61C3E84792F47E968A2330957C24DF5B8FF8C5EB8C91BB0CF76A97098A6F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Broodmother"
+    },
+    {
+      "roleId": "Dungeon_Scarak_Defender",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Dungeon/Dungeon_Scarak_Defender.json",
+      "assetSha256": "D12B47DA95539A38BF1BCCAE04805CE222B15621FBEBB9AE74592E85837D7019",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Defender"
+    },
+    {
+      "roleId": "Dungeon_Scarak_Defender_Patrol",
+      "nativeHealth": 158,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Dungeon/Dungeon_Scarak_Defender_Patrol.json",
+      "assetSha256": "E23DAAB3DE7110FE5383A41105487C5A5782F7B51BEBB5ED6F367FF419C088ED",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Defender"
+    },
+    {
+      "roleId": "Dungeon_Scarak_Fighter",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Dungeon/Dungeon_Scarak_Fighter.json",
+      "assetSha256": "F2BDAC639BFD24D1CDA21D7A69DDDB07EC1DF3DB514AF7B0A52FFDFB217B222A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Fighter"
+    },
+    {
+      "roleId": "Dungeon_Scarak_Fighter_Patrol",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Dungeon/Dungeon_Scarak_Fighter_Patrol.json",
+      "assetSha256": "AB85DF3824CA0D420C8043AED8DA5841E7F62AEB525AF3382FED61801A3565CA",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Fighter"
+    },
+    {
+      "roleId": "Dungeon_Scarak_Louse",
+      "nativeHealth": 21,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Dungeon/Dungeon_Scarak_Louse.json",
+      "assetSha256": "0179DD23B87D5CAEB23E0A516F66637161B241C81269CD87E86B596357CC438F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Louse"
+    },
+    {
+      "roleId": "Dungeon_Scarak_Seeker",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Dungeon/Dungeon_Scarak_Seeker.json",
+      "assetSha256": "F4633412AE225296E27493780BE08316592D76AEDEBE27EB3864D8830841631E",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Seeker"
+    },
+    {
+      "roleId": "Dungeon_Scarak_Seeker_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Dungeon/Dungeon_Scarak_Seeker_Patrol.json",
+      "assetSha256": "94BCC0F2D3BFA3BE1FB7ACCBF999E9022F69B9417D8F2FE65B4E1F264E92D6F9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Seeker"
+    },
+    {
+      "roleId": "Dungeon_Skeleton_Sand_Archer",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Dungeon/Dungeon_Skeleton_Sand_Archer.json",
+      "assetSha256": "6845A0E2FBDB824B15D529E80AAA3E166E8E3D25C84504D48A65D555D9C5FB27",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Archer"
+    },
+    {
+      "roleId": "Dungeon_Skeleton_Sand_Assassin",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Dungeon/Dungeon_Skeleton_Sand_Assassin.json",
+      "assetSha256": "5BD1DE4815CBEB2783ED74398115038B49CB9CFD9E16CD9A70ED1039A2E07E2C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Assassin"
+    },
+    {
+      "roleId": "Dungeon_Skeleton_Sand_Mage",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Dungeon/Dungeon_Skeleton_Sand_Mage.json",
+      "assetSha256": "32F0E915C869EA16354C4469D8D89DDEA8E23197AAE94A43E68EC6EB15EE538B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Mage"
+    },
+    {
+      "roleId": "Dungeon_Skeleton_Sand_Soldier",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Dungeon/Dungeon_Skeleton_Sand_Soldier.json",
+      "assetSha256": "55C0DB919FB3C44F9480F5896D3205D65833390C62CEC704935F554FD9EBC658",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Soldier"
+    },
+    {
+      "roleId": "Eye_Void_Surge",
+      "nativeHealth": 90,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Void/Eye_Void_Surge.json",
+      "assetSha256": "5EB35056D2530C48CEDE27A766AEA80330AC77C9B0F68D9691209F903C1B564A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Eye_Void"
+    },
+    {
+      "roleId": "Kweebec_Razorleaf_Patrol",
+      "nativeHealth": 105,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Kweebec/Kweebec_Razorleaf_Patrol.json",
+      "assetSha256": "A691A428AEF561DD770ACE9F48954926E9D1D215AA1E1A96912E6375FC2749E0",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Kweebec_Razorleaf"
+    },
+    {
+      "roleId": "Larva_Void_Surge",
+      "nativeHealth": 15,
+      "attackReference": 7,
+      "assetPath": "Server/NPC/Roles/Void/Larva_Void_Surge.json",
+      "assetSha256": "C270D4D927CCA27BF4456C6E53CC83C3FBA669C5F13AC66CD71C0E0141F40318",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Larva_Void"
+    },
+    {
+      "roleId": "Scarak_Defender_Patrol",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Defender_Patrol.json",
+      "assetSha256": "9071F6625F08B5C7A180C0A7FE5FF1277315C52AB2D3F27B59913D2CC9DDFF6C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Defender"
+    },
+    {
+      "roleId": "Scarak_Fighter_Patrol",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Fighter_Patrol.json",
+      "assetSha256": "F6DAEE4001D0F8F9E38EA4A4BB0B7F63256E92C58355720D1BFEADF17D8F4E90",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Fighter"
+    },
+    {
+      "roleId": "Scarak_Seeker_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Seeker_Patrol.json",
+      "assetSha256": "94BCC0F2D3BFA3BE1FB7ACCBF999E9022F69B9417D8F2FE65B4E1F264E92D6F9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Scarak_Seeker"
+    },
+    {
+      "roleId": "Skeleton_Archer_Patrol",
+      "nativeHealth": 60,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archer_Patrol.json",
+      "assetSha256": "891E6E07C705436BE573F18412D5DFD21B5CD5279E41684031BDF32327B39B77",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Archer"
+    },
+    {
+      "roleId": "Skeleton_Archer_Turret",
+      "nativeHealth": 60,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archer_Turret.json",
+      "assetSha256": "6BD4DA19C0ED9633BA946E5249F7B4BD88D61C21AAFC47A6571D0DE122B1C35C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Archer"
+    },
+    {
+      "roleId": "Skeleton_Archer_Wander",
+      "nativeHealth": 60,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archer_Wander.json",
+      "assetSha256": "8443B15D8FFE49B71C151FE0B128D12B81518632D5606213C594E9AA07869605",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Archer"
+    },
+    {
+      "roleId": "Skeleton_Archmage_Patrol",
+      "nativeHealth": 88,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archmage_Patrol.json",
+      "assetSha256": "50D211E2A352923FE14D5D1F9621E67D2AC47B77675AE0D4B608B8AE713F74F3",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Archmage"
+    },
+    {
+      "roleId": "Skeleton_Archmage_Wander",
+      "nativeHealth": 88,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archmage_Wander.json",
+      "assetSha256": "9864B85206A28679EA9BB85282AF9B99DC6C90B5DA64032338EC53A8C7101308",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Archmage"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Alchemist_Patrol",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Alchemist_Patrol.json",
+      "assetSha256": "1A220BB8EAABEF2C41C70274187DFBC6EF85C2B709C46E8B0B65077320AA7E18",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Alchemist"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Alchemist_Wander",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Alchemist_Wander.json",
+      "assetSha256": "A4B6D91AFF6683C2E2DC1481471254128ECF9AD7DC2A1D04856F502624CCF9C9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Alchemist"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Archer_Patrol",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Archer_Patrol.json",
+      "assetSha256": "781BD45AE69C19BFF152BCEFA6AAF00F6A2C7F4A659D41B7D092F57A2C3B9841",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Archer"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Archer_Wander",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Archer_Wander.json",
+      "assetSha256": "7CFC1319347913F1822965A02AEC69E66B73069B353DA616B2003EDD56053E49",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Archer"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Gunner_Patrol",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Gunner_Patrol.json",
+      "assetSha256": "D05173472307001284387995101D143C6EC08EFE54FAD739224C2D8AC0524530",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Gunner"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Gunner_Wander",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Gunner_Wander.json",
+      "assetSha256": "947BEEBBF2074023BE5C4FE9DA3DE30496DCB8E2666B4C5818FFF62CE36DAC78",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Gunner"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Knight_Patrol",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Knight_Patrol.json",
+      "assetSha256": "764615A24FA2C2B9CC6AE0265088979A185C0D4C0CF7036827F452A62544D555",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Knight"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Knight_Wander",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Knight_Wander.json",
+      "assetSha256": "2259395B5A6C772ACAAD580B8F60C29AE701E51A16D6F07FCE307647DBC56BC3",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Knight"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Lancer_Patrol",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Lancer_Patrol.json",
+      "assetSha256": "59ADEECBFAA3CDFAEA7B43654AE41F77E4BB675F5B78F165F3A1563BC208DB4D",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Lancer"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Lancer_Wander",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Lancer_Wander.json",
+      "assetSha256": "C8B64881D39FD974289CE0312466B8EEBB4371E81B8D5F3DE10C08DBD4E1E5BF",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Lancer"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Praetorian_Patrol",
+      "nativeHealth": 226,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Praetorian_Patrol.json",
+      "assetSha256": "96ACA27957656562AC0FF85F2A7C1FEF079C1F44BD7A70FD6A5B1EE72D336E0A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Praetorian"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Praetorian_Wander",
+      "nativeHealth": 226,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Praetorian_Wander.json",
+      "assetSha256": "E55073092F6608D08987104B59A91D8425C5763B29563633898D6FACC6020B0C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Praetorian"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Soldier_Patrol",
+      "nativeHealth": 124,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Soldier_Patrol.json",
+      "assetSha256": "93409A9E82CD9FE0B2205B7FD4F83CC996529FA4DD1BF39D07EB6BF9F7B2AFAD",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Soldier"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Soldier_Wander",
+      "nativeHealth": 124,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Soldier_Wander.json",
+      "assetSha256": "61EAD4AC58844DDA2856B5A2797B9F1BAA2BF8F90348AAEF53BA99655A4F5EB9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Soldier"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Wizard_Patrol",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Wizard_Patrol.json",
+      "assetSha256": "A46149A170846BB576097D90E5B3D691368C15ADE98B8F8E0E5464419E9F7F14",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Wizard"
+    },
+    {
+      "roleId": "Skeleton_Burnt_Wizard_Wander",
+      "nativeHealth": 81,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Wizard_Wander.json",
+      "assetSha256": "DDD0A71FBC259AB29C6225D5DD6F931C65E5EA3DED884971DAE1BBDC575FBB35",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Burnt_Wizard"
+    },
+    {
+      "roleId": "Skeleton_Elite_Phase_2",
+      "nativeHealth": 350,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Elite_Phase_2.json",
+      "assetSha256": "49CD3DBF9A91BB12847C09F381E3F624F6324F6FC2C681FFEAE4E697D5D1DFD8",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Elite"
+    },
+    {
+      "roleId": "Skeleton_Fighter_Patrol",
+      "nativeHealth": 70,
+      "attackReference": 16,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Fighter_Patrol.json",
+      "assetSha256": "B6E460E137C4CA53F3609F510FE21660C7F3B8E8C7E1D1964DF06466CB1FFAE7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Fighter"
+    },
+    {
+      "roleId": "Skeleton_Fighter_Wander",
+      "nativeHealth": 70,
+      "attackReference": 16,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Fighter_Wander.json",
+      "assetSha256": "D37F34D031D91ADA8E8A2E13C9B29239CC38C4ED1A153C9ADA70840E39BCF780",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Fighter"
+    },
+    {
+      "roleId": "Skeleton_Frost_Archer_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Archer_Patrol.json",
+      "assetSha256": "CC46B740D6A90F03B74609108C2C4CA6C1A7307348742219E2A6249F65ADE453",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Archer"
+    },
+    {
+      "roleId": "Skeleton_Frost_Archer_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Archer_Wander.json",
+      "assetSha256": "B596ADD18AAB6B0231CC05F7DF0B9A07F609A9EB97F175890FB4E63DCB2F5133",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Archer"
+    },
+    {
+      "roleId": "Skeleton_Frost_Archmage_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Archmage_Patrol.json",
+      "assetSha256": "4C83B80B33E186A2BD888AE2141140804B1D8583EF62D948D800825A6FA68BD3",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Archmage"
+    },
+    {
+      "roleId": "Skeleton_Frost_Archmage_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Archmage_Wander.json",
+      "assetSha256": "884F0B42DB321052C88994276C361663877476D1E5902A7B2708EDEF98A96FC0",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Archmage"
+    },
+    {
+      "roleId": "Skeleton_Frost_Fighter_Patrol",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Fighter_Patrol.json",
+      "assetSha256": "17E8721F35447C24BFFCAABADCC4D16FD7F5D72B8B49BA1411BD62C68B4E6E57",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Fighter"
+    },
+    {
+      "roleId": "Skeleton_Frost_Fighter_Wander",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Fighter_Wander.json",
+      "assetSha256": "040C19E9C19776B229207C15EEA2BBDEB3E38F0994690FF649C88261040FF0C7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Fighter"
+    },
+    {
+      "roleId": "Skeleton_Frost_Knight_Patrol",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Knight_Patrol.json",
+      "assetSha256": "B1A9A2501845546541C307C0305F4258E4466B706BCEFF35AD26C067B7DFD60A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Knight"
+    },
+    {
+      "roleId": "Skeleton_Frost_Knight_Wander",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Knight_Wander.json",
+      "assetSha256": "EA9F2A3BA20B95DC93E19404231DCF066B3AEBFDE69A9F9CFA12CD8AE7ACF5C0",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Knight"
+    },
+    {
+      "roleId": "Skeleton_Frost_Mage_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Mage_Patrol.json",
+      "assetSha256": "9DE5438590F91473453E62E713E8542DB8C1AFE573032A6C43A11AA2CA405005",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Mage"
+    },
+    {
+      "roleId": "Skeleton_Frost_Mage_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Mage_Wander.json",
+      "assetSha256": "85A184BA3D0F279CD4E259A2FAAEC1C3F332E1211D1B3D028FD655EC83366732",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Mage"
+    },
+    {
+      "roleId": "Skeleton_Frost_Ranger_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Ranger_Patrol.json",
+      "assetSha256": "E7CB89640BB2D256B65018E52797D972B9125B27A9B742F8F4C655CF5845722F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Ranger"
+    },
+    {
+      "roleId": "Skeleton_Frost_Ranger_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Ranger_Wander.json",
+      "assetSha256": "B751C48FED0F3BE60151A39CAF0368C74F99A98C9BA838E8827B22448F4FDE10",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Ranger"
+    },
+    {
+      "roleId": "Skeleton_Frost_Scout_Patrol",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Scout_Patrol.json",
+      "assetSha256": "258D163752AF31A25F650CBE83D4A94CF222CBD00CCF907CB7C5AAD30CFE5DA6",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Scout"
+    },
+    {
+      "roleId": "Skeleton_Frost_Scout_Wander",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Scout_Wander.json",
+      "assetSha256": "1CAA17355714DE89A5C44140D5F759F838039AC53AED15CE92D302F056F4873E",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Scout"
+    },
+    {
+      "roleId": "Skeleton_Frost_Soldier_Patrol",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Soldier_Patrol.json",
+      "assetSha256": "C004C90CC73322BA66B45C6BF8D76CDC84BB0DBCDBFE40D9290017F22D9CAC23",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Soldier"
+    },
+    {
+      "roleId": "Skeleton_Frost_Soldier_Wander",
+      "nativeHealth": 74,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Soldier_Wander.json",
+      "assetSha256": "1F037519BC3E0A2A4FC3A74CC7CD49142C74CC70B156FFF3E7713F2A37E7C2D7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Frost_Soldier"
+    },
+    {
+      "roleId": "Skeleton_Incandescent_Fighter_Patrol",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Fighter_Patrol.json",
+      "assetSha256": "E66ED582772FD93A43812276B949D3AEF22A6B9B48D0B596E3AC50D2CF591B75",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Incandescent_Fighter"
+    },
+    {
+      "roleId": "Skeleton_Incandescent_Fighter_Wander",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Fighter_Wander.json",
+      "assetSha256": "0796E2493B28348B96073E37D611A885D34529EE37D74EE0C4B72997349EF7AB",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Incandescent_Fighter"
+    },
+    {
+      "roleId": "Skeleton_Incandescent_Footman_Patrol",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Footman_Patrol.json",
+      "assetSha256": "197EDA09CBE952C7B43C6E300C928C4DB14CEEEB725A3F557323D48F2698B99C",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Incandescent_Footman"
+    },
+    {
+      "roleId": "Skeleton_Incandescent_Footman_Wander",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Footman_Wander.json",
+      "assetSha256": "16005779DAAFA3A40EACDEF4EBF1572F7CEEE7A9C44B47B6842FD3175FA58C14",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Incandescent_Footman"
+    },
+    {
+      "roleId": "Skeleton_Incandescent_Mage_Patrol",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Mage_Patrol.json",
+      "assetSha256": "1C4A2B95022BD3DFFB6BACC07E8E0BF71287C7043820FA7873BDDF44C956F870",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Incandescent_Mage"
+    },
+    {
+      "roleId": "Skeleton_Incandescent_Mage_Wander",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Mage_Wander.json",
+      "assetSha256": "8CBC52FAA3A01DE800A6FE959290D0CA1F59B20B5929CC60E6E69AB4BC6A524B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Incandescent_Mage"
+    },
+    {
+      "roleId": "Skeleton_Knight_Patrol",
+      "nativeHealth": 130,
+      "attackReference": 24,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Knight_Patrol.json",
+      "assetSha256": "22935F6CEF58E52AC7494EA8A0F9BB0DC81D21207DFA54731607BCE28E4B0882",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Knight"
+    },
+    {
+      "roleId": "Skeleton_Knight_Wander",
+      "nativeHealth": 130,
+      "attackReference": 24,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Knight_Wander.json",
+      "assetSha256": "E3242E3251DEDD4BB357BCBF2C9DC7546E423C25F0CBE9C76E601B90968A67AA",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Knight"
+    },
+    {
+      "roleId": "Skeleton_Mage_Patrol",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Mage_Patrol.json",
+      "assetSha256": "5F9D5D2812FCF16678065BFDCC97FBA553163657E369FD31B183F3073359ACF7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Mage"
+    },
+    {
+      "roleId": "Skeleton_Mage_Wander",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Mage_Wander.json",
+      "assetSha256": "62BD3CF53243F8E23334131831A7C0066A93C527C168CC55B1F0E05E4814FB38",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Mage"
+    },
+    {
+      "roleId": "Skeleton_Pirate_Captain_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Pirate/Skeleton_Pirate_Captain_Patrol.json",
+      "assetSha256": "E24D8EC1B2F15771C2C9E72B66DB7AD06B256F6E70B26F3D66EEBC02A5162383",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Pirate_Captain"
+    },
+    {
+      "roleId": "Skeleton_Pirate_Captain_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Pirate/Skeleton_Pirate_Captain_Wander.json",
+      "assetSha256": "E182F5BF9FBD985BC119BDC58CF63C279DBF66D45BCA69522D9F4CF7EA36C446",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Pirate_Captain"
+    },
+    {
+      "roleId": "Skeleton_Pirate_Gunner_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Pirate/Skeleton_Pirate_Gunner_Patrol.json",
+      "assetSha256": "6F63F0C4A7820BB4D385A87B3BDB9022F29EE2AEB8577C6B838B788153B4081B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Pirate_Gunner"
+    },
+    {
+      "roleId": "Skeleton_Pirate_Gunner_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Pirate/Skeleton_Pirate_Gunner_Wander.json",
+      "assetSha256": "A8EC4F867E073E423CF8A609BD747BFB8FA72982F0CC9EE5815836B8F241599B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Pirate_Gunner"
+    },
+    {
+      "roleId": "Skeleton_Pirate_Striker_Patrol",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Pirate/Skeleton_Pirate_Striker_Patrol.json",
+      "assetSha256": "A7687FC5ECE1E4CE4B0B115D179A10F7B446E76886C09C1C0B025E9DCE267028",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Pirate_Striker"
+    },
+    {
+      "roleId": "Skeleton_Pirate_Striker_Wander",
+      "nativeHealth": 103,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Pirate/Skeleton_Pirate_Striker_Wander.json",
+      "assetSha256": "FAC639A54F0B3EB633233AA600207F50ADBAD9BD643979427590D13BD7DA8557",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Pirate_Striker"
+    },
+    {
+      "roleId": "Skeleton_Ranger_Patrol",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Ranger_Patrol.json",
+      "assetSha256": "E8BDA3A30A51A04BB022DFACEDA399DDFEC41D2DCF544AB71094BF633497FCAF",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Ranger"
+    },
+    {
+      "roleId": "Skeleton_Ranger_Wander",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Ranger_Wander.json",
+      "assetSha256": "24229E56CA45288EB2EAC3FA3B641F40DD48649CF9541621EE50DF5AA6321DF7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Ranger"
+    },
+    {
+      "roleId": "Skeleton_Sand_Archer_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Archer_Patrol.json",
+      "assetSha256": "56A192DCD32E7D092D501F40BB399C83A923067B3D277D2C70BADD265ADB4DCC",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Archer"
+    },
+    {
+      "roleId": "Skeleton_Sand_Archer_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Archer_Wander.json",
+      "assetSha256": "73CD85946CE96A0372A840C09EE3ED475D8BF610B692D8263C369DBD4250E8A4",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Archer"
+    },
+    {
+      "roleId": "Skeleton_Sand_Archmage_Patrol",
+      "nativeHealth": 38,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Archmage_Patrol.json",
+      "assetSha256": "712DA24C7A1DB2B49A527F7131E2D44D14FAB45527CC52DE7B7E5901DF1E9481",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Archmage"
+    },
+    {
+      "roleId": "Skeleton_Sand_Archmage_Wander",
+      "nativeHealth": 38,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Archmage_Wander.json",
+      "assetSha256": "41A444A9A5E30A398B1BF0059AC36E9044DC094858D13B34FBCFD704DD8A8E03",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Archmage"
+    },
+    {
+      "roleId": "Skeleton_Sand_Assassin_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Assassin_Patrol.json",
+      "assetSha256": "7D54391F7103761BE616E9DD850E8C7589AD0B3B8DB715B53F9B597B89BDAFEE",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Assassin"
+    },
+    {
+      "roleId": "Skeleton_Sand_Assassin_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Assassin_Wander.json",
+      "assetSha256": "16437F6914B1D5CD067721D6620FA2640B70A0D3F1302547A8EB4F079386B02B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Assassin"
+    },
+    {
+      "roleId": "Skeleton_Sand_Guard_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Guard_Patrol.json",
+      "assetSha256": "C660B783984FAAED246DC4F6348F73639BC28CE84766E797CB9EB099188D7F97",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Guard"
+    },
+    {
+      "roleId": "Skeleton_Sand_Guard_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Guard_Wander.json",
+      "assetSha256": "E001FFCED2BE19EC0082E863B4B31B1E1286DB96175445F8599A9183ECF66FB7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Guard"
+    },
+    {
+      "roleId": "Skeleton_Sand_Mage_Patrol",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Mage_Patrol.json",
+      "assetSha256": "B0F544AD53567FE7753DA8EE84E4048BE7245F1DFBA92FBA78CBEB686A6B43C7",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Mage"
+    },
+    {
+      "roleId": "Skeleton_Sand_Mage_Wander",
+      "nativeHealth": 49,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Mage_Wander.json",
+      "assetSha256": "EBEAFBBBA6BCDE5589789D1C39FDF69155C050162DFC9412796BFD259255458F",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Mage"
+    },
+    {
+      "roleId": "Skeleton_Sand_Ranger_Patrol",
+      "nativeHealth": 29,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Ranger_Patrol.json",
+      "assetSha256": "C2B0EF790116FAE86104A03DD807CF8C0BD20500366C463FBAFDD2BA98140233",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Ranger"
+    },
+    {
+      "roleId": "Skeleton_Sand_Ranger_Wander",
+      "nativeHealth": 29,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Ranger_Wander.json",
+      "assetSha256": "F3E91EABF447A14D4078F8FA5F835F4F832D74EC1CB6F21F6CB68BA10591EC99",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Ranger"
+    },
+    {
+      "roleId": "Skeleton_Sand_Scout_Patrol",
+      "nativeHealth": 29,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Scout_Patrol.json",
+      "assetSha256": "143DDEE78A780FA44AD6B048C0D10D921588550DA30CC4F62D073E7ED7A0054B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Scout"
+    },
+    {
+      "roleId": "Skeleton_Sand_Scout_Wander",
+      "nativeHealth": 29,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Scout_Wander.json",
+      "assetSha256": "B7C1C6FA8B7C909999BD23AACE0576E038C17999F41289E6051AEE1433CD6A9B",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Scout"
+    },
+    {
+      "roleId": "Skeleton_Sand_Soldier_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Soldier_Patrol.json",
+      "assetSha256": "13CCF96026A22309E864EA80FC86E8C7D8061F3F1E3BA6BBFD615CB09DD6988A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Soldier"
+    },
+    {
+      "roleId": "Skeleton_Sand_Soldier_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Soldier_Wander.json",
+      "assetSha256": "E98677E37C16CC1C20FFE3B8EC3C4E66BEEF43D1CC1E1ABEB180F52B0C22CC69",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Sand_Soldier"
+    },
+    {
+      "roleId": "Skeleton_Scout_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout_Patrol.json",
+      "assetSha256": "5777D4924F5D31E019C58427120919C7BACCCE8BFB2E1A26442E7C05B165041A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Scout"
+    },
+    {
+      "roleId": "Skeleton_Scout_Wander",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout_Wander.json",
+      "assetSha256": "B1EED1FB1EEEC6E9C31604F2A9FF90B5A1BB87A7F64BEF135A843A675F9D4458",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Scout"
+    },
+    {
+      "roleId": "Skeleton_Soldier_Patrol",
+      "nativeHealth": 100,
+      "attackReference": 20,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Soldier_Patrol.json",
+      "assetSha256": "D1ADA0E7E619BF2092EE243A37CE876BEFB7C5266E9A25AF4788E9B33677B02A",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Soldier"
+    },
+    {
+      "roleId": "Skeleton_Soldier_Wander",
+      "nativeHealth": 100,
+      "attackReference": 20,
+      "assetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Soldier_Wander.json",
+      "assetSha256": "19FE896EF35A87DA1AD9E88B68485D426340FCD733FCE59C50C9F4820B9F67B0",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Skeleton_Soldier"
+    },
+    {
+      "roleId": "Spider_Cave_Ambush",
+      "nativeHealth": 120,
+      "attackReference": 22,
+      "assetPath": "Server/NPC/Roles/Creature/Vermin/Spider_Cave_Ambush.json",
+      "assetSha256": "2A49D70050A97DADDC41C8684060DE3DED411DEA2AF833CD20D3390198C070B9",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Spider_Cave"
+    },
+    {
+      "roleId": "Trork_Sentry_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Sentry_Patrol.json",
+      "assetSha256": "251B76EE922034C0C73CF16BB55A7F37FD32DA93FDDE61DBF9D2ACCCA4258B58",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Trork_Sentry"
+    },
+    {
+      "roleId": "Trork_Warrior_Patrol",
+      "nativeHealth": 61,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Warrior_Patrol.json",
+      "assetSha256": "9F1ECE38AC93E7B6AAD8AEAAE66BF6B686525AE81C351C4DFE7103B5CBB77B39",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Trork_Warrior"
+    },
+    {
+      "roleId": "Void_Spawn_Entombed_Anomaly",
+      "nativeHealth": 700,
+      "attackReference": 1,
+      "assetPath": "Server/NPC/Roles/Void/Void_Spawn_Entombed_Anomaly.json",
+      "assetSha256": "4E94F6F6E3930AA5C3A519CB18351EA4B0392D1120ED7C5CD12029F06B7939A3",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Void_Spawn_Entombed"
+    },
+    {
+      "roleId": "Void_Spawn_Surge",
+      "nativeHealth": 700,
+      "attackReference": 18,
+      "assetPath": "Server/NPC/Roles/Void/Void_Spawn_Surge.json",
+      "assetSha256": "1BB358299C28A2FEECCF9ACADF4ED20B8930DFF292C402523B0CE07F17245BDE",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Void_Spawn_Entombed"
+    },
+    {
+      "roleId": "Void_Tentacle_Surge",
+      "nativeHealth": 36,
+      "attackReference": 24,
+      "assetPath": "Server/NPC/Roles/Void/Void_Tentacle_Surge.json",
+      "assetSha256": "0912CD6BA920C3B451256AFE9064CD79D298D451DFEE9AD3EF85D4AA86D04C9D",
+      "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
+      "canonicalRoleId": "Void_Tentacle"
+    }
   ],
   "biomes": [
-    {"worldgenName":"Default","zoneId":"Zone1_Tier1","biomeId":"Forest_Birch","rpgBand":"emerald_wilds","combatLevel":5,"assetPath":"Server/World/Default/Zones/Zone1_Tier1/Tile.Forest_Birch.json","assetSha256":"41A8C5AED98D412EDA4F44E1A8612BBCF03ECD96A8B99B612720AEEC4EB5E0D9"},
-    {"worldgenName":"Default","zoneId":"Zone2_Tier1","biomeId":"Savannah_Plains","rpgBand":"howling_sands","combatLevel":25,"assetPath":"Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Plains.json","assetSha256":"D1477F83A4209DABA5BF97D37E1A973D46638971C171D66CD21116B2F856E887"},
-    {"worldgenName":"Default","zoneId":"Zone3_Tier1","biomeId":"Forest_Fir","rpgBand":"whisperfrost","combatLevel":45,"assetPath":"Server/World/Default/Zones/Zone3_Tier1/Tile.Forest_Fir.json","assetSha256":"6FFB86E3963A7C9010243A31AC102C1511AB5190368558DD1446FFA727EC8104"},
-    {"worldgenName":"Default","zoneId":"Zone4_Tier4","biomeId":"Wastes_Grasslands","rpgBand":"devastated_lands","combatLevel":65,"assetPath":"Server/World/Default/Zones/Zone4_Tier4/Tile.Wastes_Grasslands.json","assetSha256":"0F8D7DC405850361B7258CC435E8CBDDBFEBF613B7837793166DF840987A0C77"}
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Shallow_Ocean",
+      "biomeId": "Shore",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Shallow_Ocean/Tile.Shore.json",
+      "assetSha256": "1C92AAF2749600119942BDA5F627125F067F7FD8BA34CBF0630A8FEDC6716CEA"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Shore",
+      "biomeId": "Beach",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Shore/Tile.Beach.json",
+      "assetSha256": "4CD38D8D3C439AF85FF48EAE0671DD5E8CC316BA4C1CB6C5DAF48BD92818AB61"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Spawn",
+      "biomeId": "Plains_Spawn",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Spawn/Tile.Plains_Spawn.json",
+      "assetSha256": "0A302CCD63B7044DADD35829213B9CCE382C873949FD3558CE9AB74CA867968C"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Temple",
+      "biomeId": "Plains_Temple",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Temple/Tile.Plains_Temple.json",
+      "assetSha256": "7C147832530A95649475C32B7E622CF1984432B3799BFD8D58858481337A9A68"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier1",
+      "biomeId": "Forest_Birch",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier1/Tile.Forest_Birch.json",
+      "assetSha256": "41A8C5AED98D412EDA4F44E1A8612BBCF03ECD96A8B99B612720AEEC4EB5E0D9"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier1",
+      "biomeId": "Forest_Flower",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier1/Tile.Forest_Flower.json",
+      "assetSha256": "6713D143005A32F1F4AA7A67239319EAFC42706AC3FB3D29F87FDBEFE37F7961"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier1",
+      "biomeId": "Plains_Birch",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier1/Tile.Plains_Birch.json",
+      "assetSha256": "08038EF6AA2014749ED97E09F1A51662B1E05198030BEC9A43501667D9816C5B"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier1",
+      "biomeId": "Plains_Smooth",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier1/Tile.Plains_Smooth.json",
+      "assetSha256": "D3232952026D43756AC65741F5157135ED40C5FCCA320A0F18965C8012854557"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier2",
+      "biomeId": "Forest_Aspen",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier2/Tile.Forest_Aspen.json",
+      "assetSha256": "3451EA6E737E5C1FE4D0CF3CF34A64DFC773064E00F37A3B3AA73DE2D7DE649D"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier2",
+      "biomeId": "Forest_Gully",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier2/Tile.Forest_Gully.json",
+      "assetSha256": "4F36FA7BD2134428CC7EFCB5F05BE4ED445F3179961EF6DDF0FAFC24DDBDE292"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier2",
+      "biomeId": "Plains_Gorge",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier2/Tile.Plains_Gorge.json",
+      "assetSha256": "AA25D5AC47FF9FF7B8F7B8990C5088724413ACF8FF13C50AC343B6F6636E4E60"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier2",
+      "biomeId": "Plains_Tallgrass",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier2/Tile.Plains_Tallgrass.json",
+      "assetSha256": "5FB11DE222AE0E209180C0491383D913B71D02427A55DC77A97632A1D4B06F09"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier3",
+      "biomeId": "Forest_Autumn",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier3/Tile.Forest_Autumn.json",
+      "assetSha256": "8DB6B5027100F35570410F520863C9457C61CB1067B0A1DF45FC0B06712B403B"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier3",
+      "biomeId": "Forest_Azure",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier3/Tile.Forest_Azure.json",
+      "assetSha256": "EDFA92EDC947C3FEAAC1243AFBFAB1AECEF7D8A44968CA67185B96219DB945B5"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier3",
+      "biomeId": "Forest_Moss",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier3/Tile.Forest_Moss.json",
+      "assetSha256": "BF73FF94929FC027F72106C1BFE7182040F439DF7B1C0A5E892397DF91A5A1A7"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier3",
+      "biomeId": "Forest_Swamp",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier3/Tile.Forest_Swamp.json",
+      "assetSha256": "D791E075F94B7C2D704947045130C94BB68846CA42DB3FD557038BA2B7C10AB5"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone1_Tier3",
+      "biomeId": "Plains_Gorge",
+      "rpgBand": "emerald_wilds",
+      "combatLevel": 5,
+      "assetPath": "Server/World/Default/Zones/Zone1_Tier3/Tile.Plains_Gorge.json",
+      "assetSha256": "AD2427065BE695080FC8E5EE358E57DB051BC99B28E30F501B8C40B84D7FA568"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Shallow_Ocean",
+      "biomeId": "Coral_Orange",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Coral_Orange.json",
+      "assetSha256": "8C71AF5E4E70BDDB449DFE9BC5DE95F85DF9222C979EFC468B07ED49603BD812"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Shallow_Ocean",
+      "biomeId": "Coral_Red",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Coral_Red.json",
+      "assetSha256": "070D62C2FE131033F9D6274605436D63082C30020BA3EA5F32E19FBE0491CFC4"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Shallow_Ocean",
+      "biomeId": "Coral_Yellow",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Coral_Yellow.json",
+      "assetSha256": "31B63F4F256E532E81E2C5DF056460BB89431A08945986F30FCD19BAC16189EC"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Shallow_Ocean",
+      "biomeId": "Grass_Yellow",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Grass_Yellow.json",
+      "assetSha256": "EA7659F6C72F6C1040A037CE17372D413A143D0F28A7D3FAB48D55B23E51530F"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Shallow_Ocean",
+      "biomeId": "Shallow_Sand",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Shallow_Sand.json",
+      "assetSha256": "2AF2874FF9A62C8443301678071007D940BD07CF364C10DDBFB25F9423B1F6CA"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Shore",
+      "biomeId": "Beach_Palm",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Shore/Tile.Beach_Palm.json",
+      "assetSha256": "E2155BB603D1170F312D4554C0DB84951F5A6F9063E55ECBCDE38BFCB211F8D4"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Shore",
+      "biomeId": "Beach_Smooth",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Shore/Tile.Beach_Smooth.json",
+      "assetSha256": "F84D6B3340789D7BAF21CD6F6A60A367D65ABB202AD06F8EF419B5AFEB306D46"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier1",
+      "biomeId": "Savannah_Boab",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Boab.json",
+      "assetSha256": "58A9FA8CC24D25B22444EA62273D138F4B89CC12F69E548A0E4E73011CAE41FE"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier1",
+      "biomeId": "Savannah_Forest",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Forest.json",
+      "assetSha256": "E04E11B4582D9FE8FABBEA27B17E52EB4F4980FB1699A5DE08398ADDD62AC196"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier1",
+      "biomeId": "Savannah_Plains",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Plains.json",
+      "assetSha256": "D1477F83A4209DABA5BF97D37E1A973D46638971C171D66CD21116B2F856E887"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier1",
+      "biomeId": "Savannah_Rock",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Rock.json",
+      "assetSha256": "9B0F51AE8665A270BBCA35DBBEFB60DB015A4B215EC5CE7209A9C9689834DE45"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier1",
+      "biomeId": "Scrub_Bushland",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier1/Tile.Scrub_Bushland.json",
+      "assetSha256": "92AB62B2F9B0159D55054CB42273827ABE37C9F002E32E9FD8C522FE85883E56"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier2",
+      "biomeId": "Desert_Oasis",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier2/Tile.Desert_Oasis.json",
+      "assetSha256": "6F09B4AF79D0AB94CE06A2C90D454C9B747ED449C6FB5626E876264AD44B96DB"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier2",
+      "biomeId": "Desert_Red",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier2/Tile.Desert_Red.json",
+      "assetSha256": "F483E2EF03B87DEE752BDF07389240EFDAB76A462C60EAEF8BA8D47A7334C81A"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier2",
+      "biomeId": "Desert_Rock",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier2/Tile.Desert_Rock.json",
+      "assetSha256": "4308986728BB14A4005B70C1F43D6159AD50E61F10A27B58116181EFB6167BFF"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier2",
+      "biomeId": "Desert_Springs",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier2/Tile.Desert_Springs.json",
+      "assetSha256": "820779A36633DBEB6301230705220039237636D1C14BCEB8A00F21D662A22063"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier3",
+      "biomeId": "Desert_Barren",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier3/Tile.Desert_Barren.json",
+      "assetSha256": "6E575EFFCA7AEBD6D6E63C68A97E14064797236BA2D8997297F76EAB6321FA5F"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone2_Tier3",
+      "biomeId": "Desert_Mushroom",
+      "rpgBand": "howling_sands",
+      "combatLevel": 25,
+      "assetPath": "Server/World/Default/Zones/Zone2_Tier3/Tile.Desert_Mushroom.json",
+      "assetSha256": "514CE3E60537632E1454024F2E452CA2D9DE6CBC0C64C1F9B09D731705584667"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shallow_Ocean_Tier1",
+      "biomeId": "Shore_Cold",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier1/Tile.Shore_Cold.json",
+      "assetSha256": "F7EDE3788206728B13CEBA14007181E0215E356382F5A0F9954CC268C3877903"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shallow_Ocean_Tier1",
+      "biomeId": "Shore_Warm",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier1/Tile.Shore_Warm.json",
+      "assetSha256": "CBD16E963FEB7918690EEA48E96FDD88F022F93DB5BF5B6D87CA5D25DEC33A67"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shallow_Ocean_Tier2",
+      "biomeId": "Shore_Cold",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier2/Tile.Shore_Cold.json",
+      "assetSha256": "5B60D7717425AD72D3877B7170245459BF0ECBF457260031A3F5C9D91C878977"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shallow_Ocean_Tier2",
+      "biomeId": "Shore_Warm",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier2/Tile.Shore_Warm.json",
+      "assetSha256": "B234FA54E2ECBA47BD2CCAC970AE0E4CABD7256E9F67BC59ACBE4DB81CD7E954"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shallow_Ocean_Tier3",
+      "biomeId": "Shore_Cold",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier3/Tile.Shore_Cold.json",
+      "assetSha256": "54D4A6D6DA0BD1D8A861E3943B409EF85CFDE7A725684C5DD977EED9749AC5E9"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shore_Tier1",
+      "biomeId": "Beach_Rocky",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shore_Tier1/Tile.Beach_Rocky.json",
+      "assetSha256": "91FE7C810B180A2A48BBB309D2B754F6E4E0512F3C0254BC47324FCB5C1D140B"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shore_Tier1",
+      "biomeId": "Beach_Tundra",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shore_Tier1/Tile.Beach_Tundra.json",
+      "assetSha256": "3E7B1642F5E802E4A3326882C246C5C37CC5DFB30705E7695F8D334E25C236C3"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shore_Tier2",
+      "biomeId": "Beach_Rocky",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shore_Tier2/Tile.Beach_Rocky.json",
+      "assetSha256": "6A662C9DEE526AFE449620844BA267317DEF0DA671AF61A8199C32739A5B2141"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shore_Tier2",
+      "biomeId": "Beach_Tundra",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shore_Tier2/Tile.Beach_Tundra.json",
+      "assetSha256": "F0D040750C423422989B76F5F93BD308C96DAEC3F9914E298BD39C7CEAA99A47"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Shore_Tier3",
+      "biomeId": "Beach_Frozen",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Shore_Tier3/Tile.Beach_Frozen.json",
+      "assetSha256": "92F97BE24C768A43E97738B0E6534866CC80BF2D8B66BA56D46C8F2819E1A5BB"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier1",
+      "biomeId": "Forest_Fir",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier1/Tile.Forest_Fir.json",
+      "assetSha256": "6FFB86E3963A7C9010243A31AC102C1511AB5190368558DD1446FFA727EC8104"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier1",
+      "biomeId": "Forest_Redwood",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier1/Tile.Forest_Redwood.json",
+      "assetSha256": "08AB348E561611442EFBAB36F18F77F09B922A5A5258AC3CAD9291A60070A2FB"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier1",
+      "biomeId": "Forest_Tundra",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier1/Tile.Forest_Tundra.json",
+      "assetSha256": "6AC5DC4FDC20AA186D3680EC6F634A3902D02EA671FE4D9A12AFE08AF78B615E"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier1",
+      "biomeId": "Plains_Hotsprings",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier1/Tile.Plains_Hotsprings.json",
+      "assetSha256": "62A286513DF9A8E618C8FDAFF194740B34ABCC92CC75711AB38A7E709C159D51"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier1",
+      "biomeId": "Plains_Shire",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier1/Tile.Plains_Shire.json",
+      "assetSha256": "669D4F7CAF142EAFE7F7BC23C30E2380E73A5FBEA1F7A46EAA4C0FE54F56E8FA"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier2",
+      "biomeId": "Forest_Cedar",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier2/Tile.Forest_Cedar.json",
+      "assetSha256": "806ED262C247C0B97A9FCE011B83E8C613A33CBC11BDA1CD1E3332165FA0E351"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier2",
+      "biomeId": "Forest_Cedar_Mixed",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier2/Tile.Forest_Cedar_Mixed.json",
+      "assetSha256": "01C7B49EABB9E6DBC0972EADC484509BA7209C9AAA53C7040C3A5A06028BDB30"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier2",
+      "biomeId": "Plains_Frozen",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier2/Tile.Plains_Frozen.json",
+      "assetSha256": "9E623B273BDA6CB5CF4E59010F20062E738F043ACCE2EA3A2770A1CDA2BF8B2F"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier2",
+      "biomeId": "Plains_Tundra",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier2/Tile.Plains_Tundra.json",
+      "assetSha256": "14332B7464CE1E0B388ECDF2B102E3E484BD17E630B262F60861E9788E99ECA9"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier3",
+      "biomeId": "Forest_Frozen",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier3/Tile.Forest_Frozen.json",
+      "assetSha256": "5A3D90131AD883ECB44491044D2EE23BC64F8725137AC6BC2718D56C14DABB61"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier3",
+      "biomeId": "Forest_Frozen_Light",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier3/Tile.Forest_Frozen_Light.json",
+      "assetSha256": "E9ACA24F5F2321997699E407F9C35C7CE1E087AF450131D9AB7018E071B0FDEF"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone3_Tier3",
+      "biomeId": "Plains_Frozen_Frost",
+      "rpgBand": "whisperfrost",
+      "combatLevel": 45,
+      "assetPath": "Server/World/Default/Zones/Zone3_Tier3/Tile.Plains_Frozen_Frost.json",
+      "assetSha256": "F68729979FEA9B9C29462AB0F202C3C1CAA1AC9EB0A90FF951E9D7B20606367C"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Shallow_Ocean_Tier4",
+      "biomeId": "Ocean_Wastes",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Shallow_Ocean_Tier4/Tile.Ocean_Wastes.json",
+      "assetSha256": "78F60C8E16430052CF33897E5819479A805BDF84967BD110F4186B8B1306A81D"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Shallow_Ocean_Tier5",
+      "biomeId": "Ocean_Lava",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Shallow_Ocean_Tier5/Tile.Ocean_Lava.json",
+      "assetSha256": "B820D0A13ADAF0B7F366CAFCE7248F36295857E564704A34D4B9C3F7E567E67B"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Shore_Tier4",
+      "biomeId": "Beach_Wastes",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Shore_Tier4/Tile.Beach_Wastes.json",
+      "assetSha256": "460C104809222E9E085ACF98E2DDC59878A9645470BFC0652E4CA4415C33E64F"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Shore_Tier5",
+      "biomeId": "Beach_Lava",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Shore_Tier5/Tile.Beach_Lava.json",
+      "assetSha256": "0D1E056B59F9077028C45E48C0E99D80F7C8928F275CB22B1F94BBDD1F52E5ED"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier4",
+      "biomeId": "Desert_Dunes",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier4/Tile.Desert_Dunes.json",
+      "assetSha256": "5C0C8488A82B011F187242F4BC07CA1B017751FDEC952DB33D9F99454BF799B9"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier4",
+      "biomeId": "Forest_Ghost",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier4/Tile.Forest_Ghost.json",
+      "assetSha256": "36A8D69B891FAA7FC18502DC9851699E12C0AA2FA3C0F603767CDA9E75DDAF80"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier4",
+      "biomeId": "Forest_Swamp",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier4/Tile.Forest_Swamp.json",
+      "assetSha256": "BC5135F27CA2BD9D83B35398FFEAE9BE33EF6C73F918AC9E3B57331C5EB5F2DF"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier4",
+      "biomeId": "Wastes_Geysers",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier4/Tile.Wastes_Geysers.json",
+      "assetSha256": "26A30DFC08F7B313B7FDCB46D97C45C89837EE9553A8FA58B7BA43AA8245023D"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier4",
+      "biomeId": "Wastes_Grasslands",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier4/Tile.Wastes_Grasslands.json",
+      "assetSha256": "0F8D7DC405850361B7258CC435E8CBDDBFEBF613B7837793166DF840987A0C77"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier5",
+      "biomeId": "Desert_Ash",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier5/Tile.Desert_Ash.json",
+      "assetSha256": "C1DEE02BC8CDBF4C9E85E2113507ABA8B384C4BF5F6322C3BBEF0F56ABAC8C4C"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier5",
+      "biomeId": "Forest_Burned",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier5/Tile.Forest_Burned.json",
+      "assetSha256": "35B131243CE52000BBF9AECE58907B2A434BDD2269C0F52FCB9E168BA7B70303"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier5",
+      "biomeId": "Forest_Roots",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier5/Tile.Forest_Roots.json",
+      "assetSha256": "0E44583C9454162102980E2A2D76C2E406C7AC19CC2C97AF95D8BC5C452DF4A5"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier5",
+      "biomeId": "Wastes_Ash",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier5/Tile.Wastes_Ash.json",
+      "assetSha256": "C58E8F29A8427030F534D65A0C3B4B7C78ECC25FC8AFBA139F2FB30399339329"
+    },
+    {
+      "worldgenName": "Default",
+      "zoneId": "Zone4_Tier5",
+      "biomeId": "Wastes_Lava",
+      "rpgBand": "devastated_lands",
+      "combatLevel": 65,
+      "assetPath": "Server/World/Default/Zones/Zone4_Tier5/Tile.Wastes_Lava.json",
+      "assetSha256": "68DCAECF8DB51C19601FC86B16292F83157038F26D49EFB786A1495061E3A19B"
+    }
   ]
 }

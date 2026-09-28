@@ -24,6 +24,7 @@ import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.inventory.InventoryComponent;
@@ -135,6 +136,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final LinkTreeVfxService vfx;
     private final HytaleBossBarTracker bosses;
     private final Map<UUID, Long> windupEnds = new HashMap<>();
+    private final Map<UUID, Long> sentinelHintAt = new HashMap<>();
     private final Map<UUID, Motion> motions = new HashMap<>();
     private final Map<UUID, Counter> counters = new HashMap<>();
     private final com.inigmasgames.hytalerpg.execution.strike.StrikeSequenceRegistry<RepeatingStrike> repeatingStrikes = new com.inigmasgames.hytalerpg.execution.strike.StrikeSequenceRegistry<>();
@@ -186,6 +188,32 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     store.getComponent(owner,EntityStatMap.getComponentType()),null,buffer);
             var candidate=port.candidate(target);var context=lease.context();
             if(candidate==null||candidate.protectedTarget()||!HytaleAreaQueries.hostile(store,target,owner))return;
+            if(lease.ironSentinel()){
+                var sentinel=store.getExternalData().getRefFromUUID(lease.entity());
+                if(!HytaleSummonSystem.alive(store,sentinel))return;
+                var range=lease.sentinelStats();
+                var random=new java.util.SplittableRandom((lease.token()+"/attack/"+attack).hashCode());
+                double base=range.finalPhysicalMin()+random.nextDouble()*(range.finalPhysicalMax()-range.finalPhysicalMin());
+                var item=lease.boundItem();
+                var calculation=kernel.damage().calculate(new DamageCalculationService.Request(base,0,lease.coefficient(),
+                        com.inigmasgames.hytalerpg.execution.summon.IronSentinelAffixes.physicalModifiers(item),true,
+                        com.inigmasgames.hytalerpg.execution.summon.IronSentinelAffixes.criticalChance(item),
+                        com.inigmasgames.hytalerpg.execution.summon.IronSentinelAffixes.criticalMultiplier(item)));
+                try{com.hypixel.hytale.server.core.entity.AnimationUtils.playAnimation(sentinel,
+                        com.hypixel.hytale.protocol.AnimationSlot.Action,"Alerted",true,store);}
+                catch(RuntimeException visual){summons.emit(lease,RpgTraceEventType.SUMMON_REJECTED,
+                        Map.of("phase","SENTINEL_ATTACK_PRESENTATION","boundary",String.valueOf(visual.getMessage())));}
+                var result=new HytaleDamageAdapter().applyObserved(target,store,sentinel,DamageCause.PHYSICAL,
+                        new HytaleDamageMetadata(playerRef.getUuid(),lease.rootCastId(),lease.skillInstanceId(),
+                                lease.correlationId(),calculation.preMitigationDamage(),Double.NaN,
+                                lease.token()+"/attack/"+attack,false,HytaleDamageMetadata.Origin.DIRECT),calculation,null,context);
+                summons.emit(lease,RpgTraceEventType.SUMMON_ATTACK,Map.of("entity",lease.entity(),"target",candidate.stableId(),
+                        "attack",attack,"basePower",base,"preMitigation",calculation.preMitigationDamage(),
+                        "actualHealthLoss",Math.max(0,result.healthBefore()-result.healthAfter()),"cancelled",result.cancelled(),
+                        "critical",calculation.critical(),"increasedFactor",calculation.modifierFactor(),
+                        "nativeAttackDamage",false));
+                return;
+            }
             var cause=connectionCause(context.profile().summon().element());
             if(cause==null)throw new IllegalStateException("SUMMON_NATIVE_DAMAGE_CAUSE_MISSING_"+context.profile().summon().element());
             if(lease.nativeRanged()&&cause!=DamageCause.PHYSICAL)throw new IllegalStateException("SUMMON_ARROW_PHYSICAL_CAUSE_INVALID");
@@ -552,6 +580,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             NativeStrikeActionLock.clear(store,ref);
             cancel(actor, "ACTOR_UNUSABLE", buffer); return;
         }
+        if(summons!=null)summons.restoreIfNeeded(store,ref);
         advanceLightningSpire(actor,System.nanoTime()/1e9,deltaSeconds,port);
         Counter counter = counters.remove(actor);
         if (counter != null) {
@@ -589,6 +618,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             var activation=new SkillExecutionRequest(request.player(), request.slot(),request.action(),request.chainId(),request.correlationId(),request.desiredMovement(),SkillExecutionRequest.Origin.MANUAL,fireballStage);
             SkillExecutionResult result = executions.requestNative(activation,
                     new Port(store, ref, playerRef, player, stats, null, buffer), request.expectedSkill());
+            if(result.code().equals("NO_AIMED_GROUND_ITEM")){
+                long now=System.currentTimeMillis();
+                if(now-sentinelHintAt.getOrDefault(actor,0L)>=8_000){
+                    sentinelHintAt.put(actor,now);
+                    playerRef.sendMessage(Message.raw("Iron Sentinel needs a supported managed weapon or armor on the ground within 6 blocks. Drop a generated gear item, then aim directly at it."));
+                }
+            }
             if(request.expectedSkill().equals("fireball")){
                 clearFireballCharge(store,ref,actor);
                 trace.emit(actor,result.committed()||result.status()==SkillExecutionResult.Status.PENDING?RpgTraceEventType.FIREBALL_CHARGE_RELEASE:RpgTraceEventType.FIREBALL_CHARGE_CANCEL,
@@ -630,6 +666,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
 
     public void cancel(UUID actor, String reason) {
         cancel(actor, reason, null);
+    }
+    /** Transfer has a live owner: remove the native charge movement modifier before the holder leaves. */
+    public void prepareWorldTransfer(Store<EntityStore> store,Ref<EntityStore> ref,UUID actor){
+        clearFireballCharge(store,ref,actor);
+        if(summons!=null)summons.dormancyForTransfer(store,actor);
+        cancel(actor,"DIFFICULTY_TRANSFER",null);
     }
 
     private void cancel(UUID actor, String reason, CommandBuffer<EntityStore> buffer) {
@@ -843,8 +885,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     && store.getComponent(actor, DeathComponent.getComponentType()) == null;
         }
         @Override public Equipment equipment() { return equipment.read(actor, store); }
+        @Override public com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects gearEffects(){return com.inigmasgames.hytalerpg.gear.GearNativeItems.effects(actor,store);}
+        @Override public int itemGrantedSkillLevels(String skillId,Equipment equipped){return gearEffects().allSkillRanks();}
         @Override public NativeResourcePort resources() { return new EntityStatResourcePort(stats,()->{if(support!=null)support.invalidateHealthCredit(playerRef.getWorldUuid(),playerRef.getUuid());}); }
         @Override public java.util.concurrent.CompletionStage<Void> prepareDurable(SkillExecutionContext context){
+            if(context.profile().summon()!=null&&context.profile().summon().ironSentinel())
+                return summons.prepareIron(store,actor,context);
             if(context.profile().support()!=null)return support.runtime().prepareDurable(context,support.port(store,actor));
             if(context.profile().conversion()!=null)return conversions.prepareDurable(context);
             return java.util.concurrent.CompletableFuture.completedStage(null);
@@ -853,6 +899,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             inputs.stopHeld(context.request());
             if(context.profile().support()!=null)support.runtime().abandonDurable(context);
             if(context.profile().conversion()!=null)conversions.abandonDurable(context);
+            if(context.profile().summon()!=null&&context.profile().summon().ironSentinel())summons.abandonIron(context);
         }
         @Override public SkillExecutionResult stopActiveSupport(Stage04SkillProfile profile){return support==null?null:
                 support.runtime().stopActive(playerRef.getUuid(),profile.skillId(),support.port(store,actor));}
@@ -1054,6 +1101,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         @Override public Validation validateDurableCompletion(SkillExecutionContext context){
             if(context.target()==null||!context.target().worldId().equals(playerRef.getWorldUuid()))return Validation.reject("PENDING_WORLD_CHANGED");
+            if(context.profile().summon()!=null&&context.profile().summon().ironSentinel())
+                return summons.validateIron(store,actor,context);
             if(context.profile().support()!=null&&context.profile().support().aura()){
                 String code=support.port(store,actor,buffer).valid(context);return code.equals("PASS")?Validation.pass():Validation.reject(code);
             }
@@ -1080,6 +1129,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             }
             if(profile.conversion()!=null)return conversions.validate(store,actor,context);
             if(profile.summonAction()!=null)return summons.validateAction(store,actor,context);
+            if(profile.summon()!=null&&profile.summon().ironSentinel())return summons.validateIron(store,actor,context);
             if(profile.summon()!=null){
                 if(context.derivedRelease())return Validation.reject("SUMMON_REPEAT_FORBIDDEN");
                 if(feet.subtract(target.point()).length()>profile.summon().range())return Validation.reject("SUMMON_COMMITTED_TARGET_OUT_OF_RANGE");
@@ -1455,6 +1505,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         }
         @Override public void abandonRelease(SkillExecutionContext context) {
             inputs.stopHeld(context.request());
+            if(context.profile().summon()!=null&&context.profile().summon().ironSentinel()
+                    &&summons!=null)summons.abandonIron(context);
             if(summons!=null)summons.corpses().abandon(context.request().actorId(),context.skillInstanceId());
             if(context.profile().projectile()!=null && !context.compiledPlan().orbit() && context.derivedRelease())
                 projectileService.registry().abandonLaunch(context.request().actorId(),context.rootCastId());

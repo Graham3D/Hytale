@@ -1,0 +1,6 @@
+{
+  "Type": "ClearEntityEffect",
+  "Entity": "Target",
+  "EntityEffectId": "Crossbow_Combo_1",
+  "Next": "RPG_GearRoute_I_Weapon_Crossbow_Damage_Combo_Clear_2"
+}

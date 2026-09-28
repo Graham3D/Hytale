@@ -5,8 +5,10 @@ import com.hypixel.hytale.component.dependency.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
 import com.hypixel.hytale.server.core.asset.type.attitude.Attitude;
 import com.hypixel.hytale.server.core.modules.entity.component.*;
+import com.hypixel.hytale.server.core.modules.i18n.I18nModule;
 import com.hypixel.hytale.server.core.modules.entity.damage.*;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
@@ -29,6 +31,9 @@ import com.inigmasgames.hytalerpg.execution.area.AreaGeometry;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import com.inigmasgames.hytalerpg.execution.summon.SummonRegistry;
 import com.inigmasgames.hytalerpg.execution.summon.CorpseLedger;
+import com.inigmasgames.hytalerpg.execution.summon.IronSentinelBinding;
+import com.inigmasgames.hytalerpg.execution.summon.SummonDistanceRecovery;
+import com.inigmasgames.hytalerpg.gear.HytaleGearLoot;
 import java.util.*;
 import org.joml.Vector3d;
 
@@ -39,7 +44,6 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     public static final double OWNER_IDLE_RADIUS=8.0;
     /** Hysteresis prevents repeated Idle/ReturnHome transitions at the outer radius. */
     public static final double OWNER_FOLLOW_STOP_RADIUS=6.0;
-    public static final double OWNER_RECOVERY_DISTANCE=64.0;
     private static final int PENDING_ARROW_CAP=256,PENDING_ARROW_DRAIN=64;
     @FunctionalInterface public interface Attack {
         void apply(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> owner,
@@ -53,6 +57,19 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                   Vec3 point,double radius,double coefficient,String effect,boolean frozenSnapshot);
     }
     private final SummonRegistry registry=new SummonRegistry();
+    private volatile HytaleGearLoot gearLoot;
+    private final Map<String,IronSentinelBinding> preparedIron=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<UUID,IronSentinelBinding> spawningIron=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<UUID,IronSentinelBinding> activeIron=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Set<UUID> pendingIronOwners=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Set<UUID> sentinelAffixLabels=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Set<String> preparedReplacementCasts=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Set<UUID> replacingIronTokens=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Map<UUID,SummonRegistry.Lease> outgoingIron=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Set<UUID> restoreInFlight=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Map<UUID,Double> restoreRetryAt=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<UUID,Double> lastHealthCheckpoint=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Set<String> abandonedIron=java.util.concurrent.ConcurrentHashMap.newKeySet();
     private final DecoyNativeAttraction decoyAttraction;
     private final CorpseLedger corpses;
     private final CombatTrace trace;
@@ -69,6 +86,74 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     }
     public SummonRegistry registry(){return registry;}
     public CorpseLedger corpses(){return corpses;}
+    public void configureIronSentinel(HytaleGearLoot loot){gearLoot=Objects.requireNonNull(loot);}
+    private Optional<HytaleGearLoot.GroundSource> ironSource(Store<EntityStore> store,Ref<EntityStore> owner,Vec3 aim){
+        var loot=gearLoot;if(loot==null||aim==null||aim.length()<1e-6)return Optional.empty();
+        var player=store.getComponent(owner,PlayerRef.getComponentType());
+        var origin=position(store,owner).add(new Vec3(0,1.35,0));
+        var direction=aim.normalized();
+        return loot.visibleGroundSources(player.getWorldUuid(),store).stream().filter(candidate->{
+            var target=candidate.entity();var transform=store.getComponent(target,TransformComponent.getComponentType());
+            if(transform==null)return false;
+            var p=position(store,target);var centre=p.add(new Vec3(0,.55,0));var delta=centre.subtract(origin);
+            double dot=delta.x()*direction.x()+delta.y()*direction.y()+delta.z()*direction.z();
+            if(delta.length()>6||dot<0||delta.subtract(direction.multiply(dot)).length()>1.5
+                    ||!HytaleAreaQueries.clear(store,origin,centre))return false;
+            return true;
+        }).min(Comparator.<HytaleGearLoot.GroundSource>comparingDouble(candidate->position(store,candidate.entity()).subtract(origin).length())
+                .thenComparing(HytaleGearLoot.GroundSource::event));
+    }
+    public java.util.concurrent.CompletionStage<Void> prepareIron(Store<EntityStore> store,Ref<EntityStore> owner,SkillExecutionContext context){
+        var loot=gearLoot;if(loot==null)return java.util.concurrent.CompletableFuture.failedStage(new IllegalStateException("IRON_SENTINEL_GEAR_UNAVAILABLE"));
+        var player=store.getComponent(owner,PlayerRef.getComponentType());
+        if(context.target()==null||!context.target().worldId().equals(player.getWorldUuid()))
+            return java.util.concurrent.CompletableFuture.failedStage(new IllegalStateException("IRON_SENTINEL_TARGET_WORLD_CHANGED"));
+        var source=loot.visibleGroundSources(player.getWorldUuid(),store).stream().filter(candidate->{
+            var id=store.getComponent(candidate.entity(),UUIDComponent.getComponentType());
+            return id!=null&&id.getUuid().equals(context.target().entityId());
+        }).findFirst().orElse(null);
+        if(source==null)return java.util.concurrent.CompletableFuture.failedStage(new IllegalStateException("IRON_SENTINEL_WORLD_ITEM_GONE"));
+        try{loot.requireForgeEligibility(source.row().result().item(),player.getUuid(),store,owner);}
+        catch(RuntimeException rejected){return java.util.concurrent.CompletableFuture.failedStage(rejected);}
+        if(!pendingIronOwners.add(player.getUuid()))return java.util.concurrent.CompletableFuture.failedStage(
+                new IllegalStateException("IRON_SENTINEL_CAST_IN_PROGRESS"));
+        UUID instance=UUID.randomUUID();
+        boolean replacing=loot.sentinel(player.getUuid()).filter(row->row.state()!=IronSentinelBinding.State.DEAD
+                &&row.state()!=IronSentinelBinding.State.ABORTED).isPresent();
+        var preparation=replacing?loot.prepareReplacingSentinel(source,player.getUuid(),instance,player.getWorldUuid(),context.target().point(),
+                context.effectiveSkillLevel(),context.profile().summon().attackInterval(),
+                context.compiledPlan().summonModifiers().healthAndPowerFactor()):
+                loot.prepareSentinel(source,player.getUuid(),instance,player.getWorldUuid(),context.target().point(),
+                context.effectiveSkillLevel(),context.profile().summon().attackInterval(),
+                context.compiledPlan().summonModifiers().healthAndPowerFactor());
+        return preparation.thenAccept(binding->{
+            if(abandonedIron.remove(context.skillInstanceId())){loot.abandonSentinel(binding.ownerId(),binding.instanceId());
+                throw new IllegalStateException("IRON_SENTINEL_CAST_ABANDONED");}
+            preparedIron.put(context.skillInstanceId(),binding);
+            if(replacing)preparedReplacementCasts.add(context.skillInstanceId());
+        }).whenComplete((ignored,error)->{if(error!=null)pendingIronOwners.remove(player.getUuid());});
+    }
+    public SkillExecutionPort.Validation validateIron(Store<EntityStore> store,Ref<EntityStore> owner,SkillExecutionContext context){
+        if(context.derivedRelease())return SkillExecutionPort.Validation.reject("IRON_SENTINEL_REPEAT_FORBIDDEN");
+        var bound=preparedIron.get(context.skillInstanceId());
+        if(bound==null||!bound.ownerId().equals(context.request().actorId())
+                ||!bound.worldId().equals(context.target().worldId())||!bound.position().equals(context.target().point()))
+            return SkillExecutionPort.Validation.reject("IRON_SENTINEL_PREPARED_BINDING_MISSING");
+        var origin=position(store,owner).add(new Vec3(0,1.35,0));
+        if(origin.subtract(bound.position()).length()>6||!HytaleAreaQueries.clear(store,origin,bound.position().add(new Vec3(0,.2,0))))
+            return SkillExecutionPort.Validation.reject("IRON_SENTINEL_TARGET_RANGE_OR_LOS");
+        try{var loot=gearLoot;var view=loot==null?null:store.getComponent(owner,PlayerRef.getComponentType());
+            if(view==null||!view.getWorldUuid().equals(bound.worldId()))return SkillExecutionPort.Validation.reject("IRON_SENTINEL_OWNER_CHANGED");
+        }catch(RuntimeException rejected){return SkillExecutionPort.Validation.reject("IRON_SENTINEL_OWNER_CHANGED");}
+        return SkillExecutionPort.Validation.pass();
+    }
+    public void abandonIron(SkillExecutionContext context){
+        pendingIronOwners.remove(context.request().actorId());
+        preparedReplacementCasts.remove(context.skillInstanceId());
+        var row=preparedIron.remove(context.skillInstanceId());
+        if(row!=null){var loot=gearLoot;if(loot!=null)loot.abandonSentinel(row.ownerId(),row.instanceId());}
+        else abandonedIron.add(context.skillInstanceId());
+    }
     private boolean enqueueArrowHit(SummonRegistry.Lease lease,UUID target,int ordinal,double nativeAmount,int nativeCauseIndex){
         while(true){int current=pendingArrowCount.get();if(current>=PENDING_ARROW_CAP)return false;
             if(pendingArrowCount.compareAndSet(current,current+1))break;}
@@ -115,7 +200,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     }
     private Optional<SummonRegistry.Lease> selectOwned(Store<EntityStore> store,Ref<EntityStore> owner,Vec3 aim,double range){
         var player=store.getComponent(owner,PlayerRef.getComponentType());var origin=position(store,owner).add(new Vec3(0,1.35,0));var direction=aim.normalized();
-        return registry.owned(player.getUuid(),player.getWorldUuid()).stream().filter(l->l.context().compiledPlan().finalTags().contains("TEMPORARY_COMBAT_SUMMON")&&now()<l.expires())
+        return registry.owned(player.getUuid(),player.getWorldUuid()).stream().filter(l->l.context()!=null&&l.context().compiledPlan().finalTags().contains("TEMPORARY_COMBAT_SUMMON")&&now()<l.expires())
                 .filter(l->{var ref=store.getExternalData().getRefFromUUID(l.entity());if(!alive(store,ref))return false;
                     var point=position(store,ref).add(new Vec3(0,.4,0));var delta=point.subtract(origin);double dot=delta.x()*direction.x()+delta.y()*direction.y()+delta.z()*direction.z();
                     return delta.length()<=range&&dot>=0&&delta.subtract(direction.multiply(dot)).length()<=1.25&&HytaleAreaQueries.clear(store,origin,point);})
@@ -130,7 +215,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
             if(committedCorpse(context).isEmpty())return SkillExecutionPort.Validation.reject("COMMITTED_CORPSE_PERMIT_UNAVAILABLE");
         }else{
             var lease=registry.owned(player.getUuid(),target.worldId(),target.entityId()).orElse(null);var ref=store.getExternalData().getRefFromUUID(target.entityId());
-            if(lease==null||now()>=lease.expires()||!alive(store,ref)||!lease.context().compiledPlan().finalTags().contains("TEMPORARY_COMBAT_SUMMON"))
+            if(lease==null||now()>=lease.expires()||!alive(store,ref)||lease.context()==null||!lease.context().compiledPlan().finalTags().contains("TEMPORARY_COMBAT_SUMMON"))
                 return SkillExecutionPort.Validation.reject("OWNED_COMBAT_SUMMON_UNAVAILABLE");
             point=position(store,ref);
         }
@@ -157,6 +242,25 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,int effectiveSkillLevel,Vec3 aim){
         var spec=profile.summon();
         if(!NPCPlugin.get().hasRoleName(spec.roleId()))return SkillExecutionPort.Validation.reject("SUMMON_ROLE_UNAVAILABLE");
+        if(spec.ironSentinel()){
+            if(gearLoot==null)return SkillExecutionPort.Validation.reject("IRON_SENTINEL_GEAR_UNAVAILABLE");
+            var player=store.getComponent(owner,PlayerRef.getComponentType());
+            if(pendingIronOwners.contains(player.getUuid()))return SkillExecutionPort.Validation.reject("IRON_SENTINEL_CAST_IN_PROGRESS");
+            var existing=gearLoot.sentinel(player.getUuid()).orElse(null);
+            if(existing!=null&&existing.state()==IronSentinelBinding.State.PREPARED)
+                return SkillExecutionPort.Validation.reject("SENTINEL_REPLACEMENT_WAIT_FOR_ACTIVE_ACTOR");
+            var aimed=ironSource(store,owner,aim).orElse(null);
+            if(aimed==null)return SkillExecutionPort.Validation.reject("NO_AIMED_GROUND_ITEM");
+            String denial=aimed.row().allocation().denial(player.getUuid(),System.currentTimeMillis());
+            if(!denial.isEmpty())return SkillExecutionPort.Validation.reject("TARGET_ALREADY_CLAIMED: "+denial);
+            try{gearLoot.requireForgeEligibility(aimed.row().result().item(),player.getUuid(),store,owner);}
+            catch(RuntimeException rejected){
+                String reason=rejected.getMessage();
+                return SkillExecutionPort.Validation.reject(reason!=null&&reason.startsWith("TARGET_")?reason:
+                        "TARGET_UNSUPPORTED_GEAR: "+reason);
+            }
+            return SkillExecutionPort.Validation.pass();
+        }
         var player=store.getComponent(owner,PlayerRef.getComponentType());int count=plan.summonModifiers().count(spec.baseCount(effectiveSkillLevel));
         String admission=replacesBatch(profile)?registry.admissionReplacing(player.getUuid(),player.getWorldUuid(),profile.skillId(),count,spec.decoy()):
                 registry.admission(player.getUuid(),count,spec.decoy());
@@ -167,6 +271,12 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                 SkillExecutionPort.Validation.reject("SUMMON_NO_VALID_GROUND");
     }
     public CommittedTarget capture(Store<EntityStore> store,Ref<EntityStore> owner,Stage04SkillProfile profile,Vec3 aim){
+        if(profile.summon().ironSentinel()){
+            var source=ironSource(store,owner,aim).orElseThrow(()->new IllegalStateException("IRON_SENTINEL_GROUND_ITEM_GONE"));
+            var player=store.getComponent(owner,PlayerRef.getComponentType());
+            return new CommittedTarget(player.getWorldUuid(),position(store,owner),position(store,source.entity()),aim,
+                    store.getComponent(source.entity(),UUIDComponent.getComponentType()).getUuid());
+        }
         if(profile.summon().corpseRequired()){
             var corpse=selectCorpse(store,owner,aim,profile.summon().range()).orElseThrow();
             return new CommittedTarget(corpse.world(),position(store,owner),corpse.anchor(),aim,corpse.entity());
@@ -190,6 +300,25 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     }
     public SkillExecutionResult execute(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> owner,SkillExecutionContext context){
         if(buffer==null)throw new IllegalStateException("SUMMON_WORLD_COMMAND_BUFFER_REQUIRED");
+        if(context.profile().summon().ironSentinel()){
+            var binding=preparedIron.remove(context.skillInstanceId());
+            if(binding==null)throw new IllegalStateException("IRON_SENTINEL_BINDING_NOT_PREPARED");
+            boolean replacing=preparedReplacementCasts.remove(context.skillInstanceId());
+            SummonRegistry.Lease lease;
+            try{
+                if(replacing&&registry.iron(binding.ownerId()).isPresent()){
+                    var replacement=registry.reserveReplacingIronSentinel(context,now(),binding.boundItem());
+                    lease=replacement.reserved().getFirst();outgoingIron.put(lease.token(),replacement.replaced().getFirst());
+                }else lease=registry.reserveIronSentinel(context,now(),binding.boundItem());
+            }catch(RuntimeException failure){pendingIronOwners.remove(binding.ownerId());gearLoot.abandonSentinel(binding.ownerId(),binding.instanceId());throw failure;}
+            if(replacing)replacingIronTokens.add(lease.token());
+            spawningIron.put(lease.token(),binding);
+            try{buffer.run(actual->spawnBatch(actual,owner,context,List.of(lease)));}
+            catch(RuntimeException failure){spawningIron.remove(lease.token());registry.remove(lease.token());
+                outgoingIron.remove(lease.token());replacingIronTokens.remove(lease.token());pendingIronOwners.remove(binding.ownerId());
+                gearLoot.abandonSentinel(binding.ownerId(),binding.instanceId());throw failure;}
+            return SkillExecutionResult.committed("IRON_SENTINEL_SPAWN_QUEUED",0,0);
+        }
         CorpseLedger.Claim claim=null;
         if(context.profile().summon().corpseRequired()){
             if(committedCorpse(context).isEmpty())throw new IllegalStateException("COMMITTED_CORPSE_PERMIT_UNAVAILABLE");
@@ -220,6 +349,8 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
             if(!alive(store,owner)||!context.target().worldId().equals(store.getComponent(owner,PlayerRef.getComponentType()).getWorldUuid()))
                 throw new IllegalStateException("SUMMON_OWNER_GONE");
             var point=context.target().point();var origin=position(store,owner);var spec=context.profile().summon();
+            if(spec.ironSentinel())point=HytaleAreaQueries.ground(store,point.add(new Vec3(0,1,0)),new Vec3(0,-1,0),3)
+                    .orElseThrow(()->new IllegalStateException("IRON_SENTINEL_NO_GROUND"));
             if(origin.subtract(point).length()>spec.range()||!HytaleAreaQueries.clear(store,origin.add(new Vec3(0,1.35,0)),point))
                 throw new IllegalStateException("SUMMON_COMMITTED_PLACEMENT_INVALID");
             var points=new ArrayList<Vec3>();
@@ -239,7 +370,10 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                             created.add(ref); // Track first; any subsequent failure has an exact rollback target.
                             actual.addComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType(),NonSerialized.get());
                             npc.getRole().setDeathItemsDropped();
-                            actual.addComponent(ref,SummonProjection.getComponentType(),new SummonProjection(lease.token()));
+                            var projection=new SummonProjection(lease.token());
+                            projection.awaitingForgeCommit=replacingIronTokens.contains(lease.token());
+                            actual.addComponent(ref,SummonProjection.getComponentType(),projection);
+                            presentSummonNameplate(actual,ref,npc,lease,context.effectiveSkillLevel());
                             var stats=actual.getComponent(ref,EntityStatMap.getComponentType());
                             int health=DefaultEntityStatTypes.getHealth();var nativeHealth=stats.get(health);
                             double maximum=lease.maximumHealth();
@@ -256,14 +390,207 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
             for(var lease:leases)emit(lease,RpgTraceEventType.SUMMON_SPAWNED,Map.of("entity",lease.entity(),"rewardEligible",false,
                     "lifetime",Math.max(1,context.profile().summon().lifetime()*context.compiledPlan().summonModifiers().lifetimeFactor()),
                     "nativeDamageInteractions",lease.nativeRanged(),"nativeSpawnPresentation",lease.nativeRanged(),"spawnLockSeconds",lease.nativeRanged()?1.5:0,"serialized",false));
+            if(spec.ironSentinel()){
+                var lease=leases.getFirst();var source=spawningIron.remove(lease.token());
+                if(source==null)throw new IllegalStateException("IRON_SENTINEL_BINDING_CACHE_MISSING");
+                activeIron.put(lease.token(),source);
+                if(replacingIronTokens.contains(lease.token()))activateReplacementAfterSpawn(store,lease,source,points.getFirst());
+                else{gearLoot.activateSentinel(lease.owner(),source.instanceId(),source.sourceEvent(),lease.boundItem().identity(),
+                        context.target().worldId(),points.getFirst(),lease.maximumHealth());pendingIronOwners.remove(lease.owner());}
+            }
         }catch(RuntimeException failure){
+            if(context.profile().summon().ironSentinel())for(var lease:leases){
+                var binding=spawningIron.remove(lease.token());var active=activeIron.remove(lease.token());
+                if(binding==null)binding=active;
+                if(binding!=null&&gearLoot!=null)gearLoot.abandonSentinel(binding.ownerId(),binding.instanceId());
+                outgoingIron.remove(lease.token());replacingIronTokens.remove(lease.token());pendingIronOwners.remove(lease.owner());
+            }
             for(var ref:created)if(ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);
             for(var lease:leases)registry.remove(lease.token());
             emit(leases.getFirst(),RpgTraceEventType.SUMMON_REJECTED,Map.of("boundary",String.valueOf(failure.getMessage()),
                     "rollbackEntities",created.size(),"resourceRefund",false));
         }
     }
+    private void activateReplacementAfterSpawn(Store<EntityStore> store,SummonRegistry.Lease lease,
+                                               IronSentinelBinding source,Vec3 point){
+        activateReplacementAfterSpawn(store,lease,source,point,0);
+    }
+    private void activateReplacementAfterSpawn(Store<EntityStore> store,SummonRegistry.Lease lease,
+                                               IronSentinelBinding source,Vec3 point,int attempt){
+        gearLoot.activateReplacingSentinel(lease.owner(),source.instanceId(),source.sourceEvent(),
+                lease.boundItem().identity(),lease.world(),point,lease.maximumHealth()).whenComplete((ignored,error)->{
+            if(error!=null){
+                if(attempt<4){java.util.concurrent.CompletableFuture.delayedExecutor(1,java.util.concurrent.TimeUnit.SECONDS)
+                        .execute(()->activateReplacementAfterSpawn(store,lease,source,point,attempt+1));}
+                else emit(lease,RpgTraceEventType.SUMMON_REJECTED,Map.of("phase","REPLACEMENT_ACTIVATION",
+                        "boundary",String.valueOf(error.getMessage()),"nativeActorSuspended",true));
+                return;
+            }
+            var world=store.getExternalData().getWorld();
+            try{world.execute(()->{
+                var actual=world.getEntityStore().getStore();
+                var old=outgoingIron.remove(lease.token());
+                if(old!=null){
+                    registry.remove(old.token());activeIron.remove(old.token());lastHealthCheckpoint.remove(old.token());
+                    var oldRef=actual.getExternalData().getRefFromUUID(old.entity());
+                    if(oldRef!=null&&oldRef.isValid())actual.removeEntity(oldRef,RemoveReason.REMOVE);
+                    emit(old,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason","REPLACED",
+                            "replacementRoot",lease.rootCastId(),"deathPact",false));
+                }
+                var newRef=actual.getExternalData().getRefFromUUID(lease.entity());
+                if(newRef!=null&&newRef.isValid()){
+                    var marker=actual.getComponent(newRef,SummonProjection.getComponentType());
+                    if(marker!=null){marker.awaitingForgeCommit=false;marker.nextQuery=0;}
+                }
+                replacingIronTokens.remove(lease.token());pendingIronOwners.remove(lease.owner());
+            });}catch(RuntimeException worldClosing){
+                replacingIronTokens.remove(lease.token());pendingIronOwners.remove(lease.owner());
+            }
+        });
+    }
+    /** Rebuilds a native projection only after the gear ledger has claimed the one durable binding. */
+    public void restoreIfNeeded(Store<EntityStore> store,Ref<EntityStore> owner){
+        var loot=gearLoot;if(loot==null||!alive(store,owner))return;
+        var player=store.getComponent(owner,PlayerRef.getComponentType());if(player==null)return;
+        UUID id=player.getUuid(),worldId=player.getWorldUuid();double clock=now();
+        var visible=loot.sentinel(id).orElse(null);
+        if(visible==null||visible.state()==IronSentinelBinding.State.DEAD||visible.state()==IronSentinelBinding.State.ABORTED)return;
+        if(visible.state()==IronSentinelBinding.State.PREPARED
+                &&System.currentTimeMillis()-visible.createdAt()<30_000)return;
+        if(preparedIron.values().stream().anyMatch(row->row.ownerId().equals(id))
+                ||spawningIron.values().stream().anyMatch(row->row.ownerId().equals(id)))return;
+        if(registry.iron(id).isPresent()||clock<restoreRetryAt.getOrDefault(id,0d)||!restoreInFlight.add(id))return;
+        var world=store.getExternalData().getWorld();Vec3 at=position(store,owner);
+        loot.claimSentinelRestore(id,worldId,at).whenComplete((claimed,error)->{
+            if(error!=null||claimed==null||claimed.isEmpty()){
+                if(error!=null)restoreFailure(visible,"CLAIM",error);
+                restoreInFlight.remove(id);restoreRetryAt.put(id,now()+3);
+                return;
+            }
+            try{world.execute(()->{
+                var actual=world.getEntityStore().getStore();var live=actual.getExternalData().getRefFromUUID(id);
+                if(!owner.isValid()||!owner.equals(live)||!alive(actual,live)||!worldId.equals(actual.getComponent(live,PlayerRef.getComponentType()).getWorldUuid())
+                        ||pendingIronOwners.contains(id)||loot.sentinel(id).filter(row->row.instanceId().equals(claimed.get().instanceId())
+                        &&row.state()==IronSentinelBinding.State.RESTORING).isEmpty()){
+                    loot.terminateSentinel(id,claimed.get().instanceId(),false,worldId,at,claimed.get().currentHealth());
+                    restoreInFlight.remove(id);restoreRetryAt.put(id,now()+3);return;
+                }
+                spawnRestored(actual,live,claimed.get());
+            });}catch(RuntimeException scheduling){
+                restoreFailure(claimed.get(),"SCHEDULE",scheduling);
+                loot.terminateSentinel(id,claimed.get().instanceId(),false,worldId,at,claimed.get().currentHealth());
+                restoreInFlight.remove(id);restoreRetryAt.put(id,now()+3);
+            }
+        });
+    }
+    private void spawnRestored(Store<EntityStore> store,Ref<EntityStore> owner,IronSentinelBinding binding){
+        SummonRegistry.Lease lease=null;var created=new ArrayList<Ref<EntityStore>>();Vec3 point=position(store,owner);
+        try{
+            lease=registry.restoreIronSentinel(binding,now());
+            point=HytaleAreaQueries.ground(store,point.add(new Vec3(2,2,0)),new Vec3(0,-1,0),4)
+                    .orElseThrow(()->new IllegalStateException("SENTINEL_RESTORE_NO_GROUND"));
+            var selected=lease;var current=Math.min(binding.currentHealth(),lease.maximumHealth());
+            var result=NPCPlugin.get().spawnNPCWithSpaceValidation(store,lease.roleId(),null,vector(point),
+                    store.getComponent(owner,TransformComponent.getComponentType()).getRotation(),(npc,ref,actual)->{
+                        created.add(ref);
+                        actual.addComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType(),NonSerialized.get());
+                        npc.getRole().setDeathItemsDropped();
+                        actual.addComponent(ref,SummonProjection.getComponentType(),new SummonProjection(selected.token()));
+                        presentSummonNameplate(actual,ref,npc,selected,binding.restoredLevel());
+                        var stats=actual.getComponent(ref,EntityStatMap.getComponentType());int health=DefaultEntityStatTypes.getHealth();
+                        var nativeHealth=stats.get(health);
+                        stats.putModifier(health,"RPG_SUMMON_MAX",new StaticModifier(Modifier.ModifierTarget.MAX,
+                                StaticModifier.CalculationType.ADDITIVE,(float)(selected.maximumHealth()-nativeHealth.getMax())));
+                        stats.update();stats.setStatValue(health,(float)current);
+                        if(Math.abs(stats.get(health).getMax()-selected.maximumHealth())>.001)
+                            throw new IllegalStateException("SENTINEL_RESTORE_HEALTH_PROJECTION_MISMATCH");
+                        if(!registry.activate(selected,actual.getComponent(ref,UUIDComponent.getComponentType()).getUuid(),now()))
+                            throw new IllegalStateException("SENTINEL_RESTORE_ACTIVATION_REJECTED");
+                        installAllegiance(actual,owner);
+                    });
+            if(result!=SpawnTestResult.TEST_OK)throw new IllegalStateException("SENTINEL_RESTORE_NATIVE_"+result);
+            activeIron.put(lease.token(),binding);
+            UUID worldId=binding.worldId();Vec3 placed=point;
+            lootFinishRestore(binding,current,placed,lease.token(),store.getExternalData().getWorld());
+            emit(lease,RpgTraceEventType.SUMMON_SPAWNED,Map.of("entity",lease.entity(),"restored",true,
+                    "boundItem",binding.boundItem().identity(),"currentHealth",current,"world",worldId));
+        }catch(RuntimeException failure){
+            if(lease!=null){activeIron.remove(lease.token());lastHealthCheckpoint.remove(lease.token());registry.remove(lease.token());}
+            for(var ref:created)if(ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);
+            restoreFailure(binding,"SPAWN",failure);
+            gearLoot.terminateSentinel(binding.ownerId(),binding.instanceId(),false,binding.worldId(),point,binding.currentHealth());
+            restoreInFlight.remove(binding.ownerId());restoreRetryAt.put(binding.ownerId(),now()+3);
+        }
+    }
+    private void lootFinishRestore(IronSentinelBinding binding,double health,Vec3 point,UUID token,
+            com.hypixel.hytale.server.core.universe.world.World world){
+        gearLoot.finishSentinelRestore(binding.ownerId(),binding.instanceId(),health,binding.worldId(),point)
+                .whenComplete((result,error)->{
+                    restoreInFlight.remove(binding.ownerId());
+                    if(error==null)return;
+                    restoreFailure(binding,"COMMIT",error);
+                    restoreRetryAt.put(binding.ownerId(),now()+3);
+                    world.execute(()->{var actual=world.getEntityStore().getStore();var lease=registry.remove(token).orElse(null);
+                        activeIron.remove(token);lastHealthCheckpoint.remove(token);
+                        if(lease!=null){var ref=actual.getExternalData().getRefFromUUID(lease.entity());
+                            if(ref!=null&&ref.isValid())actual.removeEntity(ref,RemoveReason.REMOVE);}
+                    });
+                    gearLoot.terminateSentinel(binding.ownerId(),binding.instanceId(),false,binding.worldId(),point,health);
+                });
+    }
+    private void restoreFailure(IronSentinelBinding binding,String phase,Throwable error){
+        String message=String.valueOf(error.getMessage());if(message.length()>200)message=message.substring(0,200);
+        var identity="iron-sentinel-"+binding.instanceId();
+        trace.emit(binding.ownerId(),RpgTraceEventType.SUMMON_REJECTED,
+                new CombatTrace.Context(identity,identity,identity),Map.of("phase","RESTORE_"+phase,"boundary",message));
+    }
     public void cancel(UUID owner,String reason){corpses.cancelUncommitted(owner);for(var lease:registry.cancel(owner))emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason",reason));}
+    /** Explicit player dismissal is terminal for the bound source and never awards death benefits. */
+    public int unsummon(Store<EntityStore> store,UUID owner){
+        if(pendingIronOwners.contains(owner))throw new IllegalStateException("Iron Sentinel cast is still in progress");
+        var loot=gearLoot;var binding=loot==null?null:loot.sentinel(owner).orElse(null);
+        if(binding!=null&&binding.state()!=IronSentinelBinding.State.DEAD&&binding.state()!=IronSentinelBinding.State.ABORTED){
+            if(binding.state()==IronSentinelBinding.State.PREPARED)throw new IllegalStateException("Iron Sentinel forge is still in progress");
+            loot.terminateSentinel(owner,binding.instanceId(),true,binding.worldId(),binding.position(),binding.currentHealth());
+        }
+        int count=0;
+        for(var lease:registry.owned(owner,store.getExternalData().getWorld().getWorldConfig().getUuid())){
+            registry.remove(lease.token());decoyAttraction.release(store,lease.token());
+            activeIron.remove(lease.token());spawningIron.remove(lease.token());lastHealthCheckpoint.remove(lease.token());
+            var ref=store.getExternalData().getRefFromUUID(lease.entity());
+            if(ref!=null&&ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);
+            emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason","VOLUNTARY","deathPact",false));count++;
+        }
+        // Reserved non-Sentinel leases have no native actor yet, but still consume ownership.
+        for(var lease:registry.cancel(owner)){
+            emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason","VOLUNTARY","deathPact",false));count++;
+        }
+        sentinelAffixLabels.remove(owner);restoreRetryAt.remove(owner);
+        return count+(binding!=null&&binding.state()!=IronSentinelBinding.State.DEAD&&binding.state()!=IronSentinelBinding.State.ABORTED&&count==0?1:0);
+    }
+    public boolean toggleSentinelAffixes(Store<EntityStore> store,UUID owner){
+        boolean enabled=sentinelAffixLabels.add(owner);if(!enabled)sentinelAffixLabels.remove(owner);
+        for(var lease:registry.owned(owner,store.getExternalData().getWorld().getWorldConfig().getUuid()))if(lease.ironSentinel()){
+            var ref=store.getExternalData().getRefFromUUID(lease.entity());var npc=ref==null?null:store.getComponent(ref,NPCEntity.getComponentType());
+            if(npc!=null)presentSummonNameplate(store,ref,npc,lease,activeIron.get(lease.token())==null?1:activeIron.get(lease.token()).restoredLevel());
+        }
+        return enabled;
+    }
+    /** A world handoff removes only the native projection; the bound receipt remains durable. */
+    public void dormancyForTransfer(Store<EntityStore> store,UUID owner){
+        for(var lease:registry.owned(owner,store.getExternalData().getWorld().getWorldConfig().getUuid()))if(lease.ironSentinel()){
+            var ref=store.getExternalData().getRefFromUUID(lease.entity());
+            if(ref!=null&&ref.isValid()){
+                var binding=activeIron.remove(lease.token());lastHealthCheckpoint.remove(lease.token());registry.remove(lease.token());
+                if(binding!=null&&gearLoot!=null){var stats=store.getComponent(ref,EntityStatMap.getComponentType());
+                    var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
+                    gearLoot.terminateSentinel(owner,binding.instanceId(),false,lease.world(),position(store,ref),
+                            hp==null?binding.currentHealth():Math.max(0,hp.get()));}
+                store.removeEntity(ref,RemoveReason.REMOVE);
+                emit(lease,RpgTraceEventType.SUMMON_FOLLOW_STATE,Map.of("state","DORMANT_FOR_TRANSFER"));
+            }
+        }
+    }
     /** Relocates existing native entities only; ownership, Health, expiry and attack clocks remain untouched. */
     public int relocateOwned(Store<EntityStore> store,UUID owner,UUID world,Vec3 destination){
         var leases=registry.owned(Objects.requireNonNull(owner),Objects.requireNonNull(world));
@@ -290,24 +617,45 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         var ref=chunk.getReferenceTo(index);var marker=chunk.getComponent(index,SummonProjection.getComponentType());
         var lease=registry.find(marker.token).orElse(null);
         if(lease==null){decoyAttraction.release(store,marker.token);buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);return;}
+        if(marker.awaitingForgeCommit)return;
         var owner=store.getExternalData().getRefFromUUID(lease.owner());
         double now=now();String ended=null;
         if(!alive(store,owner))ended="OWNER_GONE";
         else if(!alive(store,ref))ended="SUMMON_DIED";
         else if(now>=lease.expires())ended="EXPIRED";
-        else if(lease.nativeRanged()&&position(store,owner).subtract(position(store,ref)).length()>OWNER_RECOVERY_DISTANCE)ended="LEASH_EXCEEDED";
-        else if(!lease.nativeRanged()&&position(store,owner).subtract(position(store,ref)).length()>lease.context().profile().summon().leash())ended="LEASH_EXCEEDED";
         if(ended!=null){
             var reason=switch(ended){case "EXPIRED"->SummonRegistry.EndReason.NATURAL_EXPIRY;case "OWNER_GONE"->SummonRegistry.EndReason.OWNER_GONE;
-                case "LEASH_EXCEEDED"->SummonRegistry.EndReason.LEASH;default->enemyDeath(store,ref,owner)?SummonRegistry.EndReason.ENEMY_KILL:SummonRegistry.EndReason.OTHER_DEATH;};
+                default->enemyDeath(store,ref,owner)?SummonRegistry.EndReason.ENEMY_KILL:SummonRegistry.EndReason.OTHER_DEATH;};
             endNative(store,buffer,ref,lease,reason);return;
+        }
+        if(!decoy(lease))try{recoverDistantMinion(store,ref,owner,lease,marker,now);}
+        catch(RuntimeException recoveryFailure){
+            marker.farSince=now;
+            emit(lease,RpgTraceEventType.SUMMON_REJECTED,Map.of("phase","DISTANCE_RECOVERY",
+                    "boundary",String.valueOf(recoveryFailure.getMessage())));
+        }
+        if(lease.ironSentinel()){
+            if(now>=lastHealthCheckpoint.getOrDefault(lease.token(),0d)+1){
+                lastHealthCheckpoint.put(lease.token(),now);
+                var hp=store.getComponent(ref,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());
+                var binding=activeIron.get(lease.token());
+                if(hp!=null&&binding!=null&&gearLoot!=null)
+                    gearLoot.checkpointSentinel(lease.owner(),binding.instanceId(),hp.get(),lease.world(),position(store,ref));
+            }
         }
         // Native NPC AddedSystem owns Spawn presentation and NewSpawnComponent. RPG must remain dormant too.
         if(store.getComponent(ref,NewSpawnComponent.getComponentType())!=null)return;
+        if(!marker.nameplateReady){
+            var npc=store.getComponent(ref,NPCEntity.getComponentType());
+            presentSummonNameplate(store,ref,npc,lease,lease.ironSentinel()?
+                    (activeIron.get(lease.token())==null?1:activeIron.get(lease.token()).restoredLevel()):
+                    lease.context().effectiveSkillLevel());
+            marker.nameplateReady=true;
+        }
         if(now<marker.nextQuery)return;marker.nextQuery=now+.1;
         try{
             var origin=position(store,owner);var here=position(store,ref);
-            if(lease.nativeRanged()){
+            if(lease.nativeRanged()||lease.ironSentinel()){
                 var npc=store.getComponent(ref,NPCEntity.getComponentType());var ownerTransform=store.getComponent(owner,TransformComponent.getComponentType());
                 npc.saveLeashInformation(ownerTransform.getPosition(),ownerTransform.getRotation());
             }
@@ -321,13 +669,13 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                     .sorted(Comparator.<HytaleAreaQueries.Candidate>comparingDouble(c->c.bounds().centre().subtract(here).length())
                             .thenComparing(c->store.getComponent(c.ref(),UUIDComponent.getComponentType()).getUuid())).toList();
             if(candidates.size()>64)throw new IllegalStateException("SUMMON_ACCEPTED_TARGET_CAP");
-            if(lease.context().profile().summon().decoy()){
+            if(!lease.ironSentinel()&&lease.context().profile().summon().decoy()){
                 for(var candidate:candidates)if(decoyAttraction.request(store,owner,ref,candidate.ref(),lease))
                     emit(lease,RpgTraceEventType.DECOY_ATTRACT_REQUEST,Map.of("target",store.getComponent(candidate.ref(),UUIDComponent.getComponentType()).getUuid(),"nativeAttackObserved",false,"encounterRole","Wolf_Black"));
                 return; // Static idle: never seek, claim an attack, or invoke the damage adapter.
             }
             var marked=store.getComponent(ref,MarkedEntitySupport.getComponentType());
-            if(lease.nativeRanged()&&candidates.isEmpty()){
+            if((lease.nativeRanged()||lease.ironSentinel())&&candidates.isEmpty()){
                 // The stock ReturnHome body motion seeks NPCEntity.leashPoint. The leash point
                 // above is refreshed from the owner every sample, so this is native pathfinding
                 // follow behavior and never a player teleport or friendly combat target.
@@ -338,7 +686,7 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                     marker.combatEngaged=false;marker.followState="FOLLOW_OWNER";
                     emit(lease,RpgTraceEventType.SUMMON_FOLLOW_STATE,Map.of("state","FOLLOW_OWNER","distance",ownerDistance,
                              "startRadius",OWNER_IDLE_RADIUS,"stopRadius",OWNER_FOLLOW_STOP_RADIUS));
-                }else if(ownerDistance<=OWNER_FOLLOW_STOP_RADIUS&&marker.followingOwner){
+                }else if(ownerDistance<=OWNER_FOLLOW_STOP_RADIUS&&(marker.followingOwner||marker.combatEngaged)){
                     state.setState(ref,"Idle",null,store);marker.followingOwner=false;
                     marker.combatEngaged=false;marker.followState="IDLE_NEAR_OWNER";
                     emit(lease,RpgTraceEventType.SUMMON_FOLLOW_STATE,Map.of("state","IDLE_NEAR_OWNER","distance",ownerDistance,
@@ -360,9 +708,17 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                 if(claimed>0)attack.apply(store,buffer,owner,target,lease,claimed,0,-1);
             }
         }catch(RuntimeException failure){
-            decoyAttraction.release(store,lease.token());
-            registry.remove(lease.token());buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);
-            emit(lease,RpgTraceEventType.SUMMON_REJECTED,Map.of("boundary",String.valueOf(failure.getMessage()),"phase","TICK","quarantined",true));
+            if(failure instanceof IllegalStateException&&String.valueOf(failure.getMessage()).contains("Store is currently processing")){
+                // An ECS operation refused this tick. The durable companion remains alive;
+                // removing it here caused the false death/restore loop seen in connected QA.
+                marker.nextQuery=now+5;
+                emit(lease,RpgTraceEventType.SUMMON_REJECTED,Map.of("boundary",failure.getMessage(),
+                        "phase","TICK_RETRY","nativeActorPreserved",true));
+            }else{
+                decoyAttraction.release(store,lease.token());
+                endNative(store,buffer,ref,lease,SummonRegistry.EndReason.NATIVE_REMOVAL);
+                emit(lease,RpgTraceEventType.SUMMON_REJECTED,Map.of("boundary",String.valueOf(failure.getMessage()),"phase","TICK","quarantined",true));
+            }
         }
 
         }
@@ -374,7 +730,17 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
     }
     private void endNative(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> ref,SummonRegistry.Lease lease,SummonRegistry.EndReason reason){
         decoyAttraction.release(store,lease.token());
-        Vec3 anchor=position(store,ref);var end=registry.end(lease.token(),reason);
+        Vec3 anchor=position(store,ref);var end=registry.end(lease.token(),reason);lastHealthCheckpoint.remove(lease.token());
+        if(lease.ironSentinel()){
+            var binding=activeIron.remove(lease.token());
+            if(binding!=null&&gearLoot!=null){
+                var stats=store.getComponent(ref,EntityStatMap.getComponentType());
+                var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
+                double current=hp==null?binding.currentHealth():Math.max(0,hp.get());
+                boolean death=reason==SummonRegistry.EndReason.ENEMY_KILL||reason==SummonRegistry.EndReason.OTHER_DEATH;
+                gearLoot.terminateSentinel(lease.owner(),binding.instanceId(),death,lease.world(),anchor,current);
+            }
+        }
         buffer.tryRemoveEntity(ref,RemoveReason.REMOVE);
         if(end.isEmpty())return;
         if(end.get().deathPact())buffer.run(actual->{
@@ -392,6 +758,55 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                 &&HytaleAreaQueries.hostile(store,source.getRef(),owner);
     }
     private static Vec3 position(Store<EntityStore> store,Ref<EntityStore> ref){var v=store.getComponent(ref,TransformComponent.getComponentType()).getPosition();return new Vec3(v.x(),v.y(),v.z());}
+    private static boolean decoy(SummonRegistry.Lease lease){return !lease.ironSentinel()&&lease.context().profile().summon().decoy();}
+    private void recoverDistantMinion(Store<EntityStore> store,Ref<EntityStore> ref,Ref<EntityStore> owner,
+                                      SummonRegistry.Lease lease,SummonProjection marker,double now){
+        Vec3 ownerPoint=position(store,owner);
+        double distance=ownerPoint.subtract(position(store,ref)).length();
+        var observed=SummonDistanceRecovery.observe(distance,marker.farSince,now);
+        marker.farSince=observed.farSince();
+        if(!observed.recover())return;
+        // Try several nearby ground points. A closed doorway need not have line of sight
+        // from the minion, but the destination must have room for its body.
+        var offsets=List.of(new Vec3(1.5,0,0),new Vec3(-1.5,0,0),new Vec3(0,0,1.5),new Vec3(0,0,-1.5),
+                new Vec3(2,0,2),new Vec3(-2,0,2),new Vec3(2,0,-2),new Vec3(-2,0,-2));
+        for(int i=0;i<offsets.size();i++){
+            Vec3 offset=offsets.get(Math.floorMod(lease.token().hashCode()+i,offsets.size()));
+            var ground=HytaleAreaQueries.ground(store,ownerPoint.add(offset).add(new Vec3(0,2,0)),new Vec3(0,-1,0),4);
+            if(ground.isEmpty())continue;
+            Vec3 landing=ground.get();
+            if(landing.subtract(ownerPoint).length()>4||!HytaleAreaQueries.projectileClear(store,
+                    landing.add(new Vec3(0,.6,0)),landing.add(new Vec3(0,1.6,0)),.35))continue;
+            var transform=store.getComponent(ref,TransformComponent.getComponentType());
+            transform.teleportPosition(vector(landing));
+            var npc=store.getComponent(ref,NPCEntity.getComponentType());
+            if(npc!=null)npc.saveLeashInformation(vector(ownerPoint),transform.getRotation());
+            marker.nextQuery=0;marker.farSince=0;
+            emit(lease,RpgTraceEventType.SUMMON_FOLLOW_STATE,Map.of("state","RECOVERED_OWNER_DISTANCE",
+                    "distance",distance,"delaySeconds",SummonDistanceRecovery.DELAY_SECONDS,"destination",landing.toString()));
+            return;
+        }
+    }
+    private void presentSummonNameplate(Store<EntityStore> store,Ref<EntityStore> ref,NPCEntity npc,
+                                               SummonRegistry.Lease lease,int level){
+        try{
+        String key=npc.getRole()==null?null:npc.getRole().getNameTranslationKey();
+        String name=key==null?null:I18nModule.get().getMessage("en-US",key);
+        if(name==null||name.isBlank()||name.startsWith("server."))
+            name=lease.roleId().replace("RPG_Summon_","").replace("RPG_","").replace('_',' ');
+        String shown=EnemyNameplateText.format(name,level);
+        if(lease.ironSentinel()&&sentinelAffixLabels.contains(lease.owner())){
+            var rows=com.inigmasgames.hytalerpg.ui.hud.SentinelAffixPresentation.of(lease.boundItem()).rows();
+            shown=shown+"\n"+String.join("\n",rows);
+        }
+        var plate=store.getComponent(ref,Nameplate.getComponentType());
+        if(plate==null)store.addComponent(ref,Nameplate.getComponentType(),new Nameplate(shown));
+        else plate.setText(shown);
+        }catch(RuntimeException presentationFailure){
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                    "RPG_SUMMON_NAMEPLATE_FAILED role=%s error=%s",lease.roleId(),presentationFailure.toString());
+        }
+    }
     private static Vector3d vector(Vec3 v){return new Vector3d(v.x(),v.y(),v.z());}
     private static double now(){return System.nanoTime()/1e9;}
     public static boolean replacesBatch(Stage04SkillProfile profile){return profile!=null&&SKELETON_ARCHERS.equals(profile.skillId());}
@@ -426,7 +841,8 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                 "error",failure.getClass().getSimpleName(),"boundary",boundary));
     }
     void emit(SummonRegistry.Lease lease,RpgTraceEventType event,Map<String,?> details){
-        emitContext(lease.context(),event,details);
+        if(lease.context()!=null)emitContext(lease.context(),event,details);
+        else trace.emit(lease.owner(),event,new CombatTrace.Context(lease.rootCastId(),lease.skillInstanceId(),lease.correlationId()),details);
     }
     private void emitContext(SkillExecutionContext context,RpgTraceEventType event,Map<String,?> details){
         trace.emit(context.request().actorId(),event,new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),details);
@@ -440,7 +856,22 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUMMON)){
             var marker=store.getComponent(ref,SummonProjection.getComponentType());
             summons.decoyAttraction.release(store,marker.token);
-            summons.registry.remove(marker.token).ifPresent(lease->summons.emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason","NATIVE_REMOVE_"+reason)));
+            summons.registry.remove(marker.token).ifPresent(lease->{
+                summons.lastHealthCheckpoint.remove(lease.token());
+                if(lease.ironSentinel()){
+                    var binding=summons.activeIron.remove(lease.token());
+                    if(binding!=null&&summons.gearLoot!=null&&!marker.awaitingForgeCommit){
+                        var stats=store.getComponent(ref,EntityStatMap.getComponentType());
+                        var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
+                        var transform=store.getComponent(ref,TransformComponent.getComponentType());
+                        Vec3 at=transform==null?binding.position():position(store,ref);
+                        summons.gearLoot.terminateSentinel(lease.owner(),binding.instanceId(),false,lease.world(),at,
+                                hp==null?binding.currentHealth():Math.max(0,hp.get()));
+                    }
+                    summons.emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason",
+                            marker.awaitingForgeCommit?"REPLACEMENT_PENDING_NATIVE_REMOVE_"+reason:"DORMANT_NATIVE_REMOVE_"+reason));
+                }else summons.emit(lease,RpgTraceEventType.SUMMON_TERMINATED,Map.of("reason","NATIVE_REMOVE_"+reason));
+            });
 
         }
     }
@@ -472,10 +903,19 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
             if(damage.getSource() instanceof Damage.EntitySource source){
                 var attacker=source.getRef();
                 if(attacker!=null&&attacker.isValid()&&store.getComponent(attacker,SummonProjection.getComponentType())!=null){
-                    damage.setCancelled(true);var projection=store.getComponent(attacker,SummonProjection.getComponentType());
+                    var projection=store.getComponent(attacker,SummonProjection.getComponentType());
                     var lease=summons.registry.find(projection.token).orElse(null);var target=chunk.getReferenceTo(index);
+                    com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageMetadata metadata;
+                    try{metadata=com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter.metadata(damage);}
+                    catch(RuntimeException malformed){metadata=null;damage.setCancelled(true);}
+                    var sentinelOwner=lease==null?null:store.getExternalData().getRefFromUUID(lease.owner());
+                    boolean authored=lease!=null&&lease.ironSentinel()&&metadata!=null
+                            &&lease.owner().equals(metadata.actorId())&&metadata.effectInstanceId()!=null
+                            &&metadata.effectInstanceId().startsWith(lease.token()+"/attack/")
+                            &&alive(store,sentinelOwner)&&alive(store,target)&&HytaleAreaQueries.hostile(store,target,sentinelOwner);
+                    if(!authored)damage.setCancelled(true);
                     var owner=lease==null?null:store.getExternalData().getRefFromUUID(lease.owner());
-                    if(lease!=null&&lease.nativeRanged()&&alive(store,owner)&&alive(store,target)&&HytaleAreaQueries.hostile(store,target,owner)){
+                    if(!authored&&lease!=null&&lease.nativeRanged()&&alive(store,owner)&&alive(store,target)&&HytaleAreaQueries.hostile(store,target,owner)){
                         int ordinal=summons.registry.claimAttack(lease.token(),now());
                         if(ordinal>0){UUID targetId=store.getComponent(target,UUIDComponent.getComponentType()).getUuid();
                             if(!summons.enqueueArrowHit(lease,targetId,ordinal,damage.getAmount(),damage.getDamageCauseIndex()))summons.emit(lease,RpgTraceEventType.SUMMON_REJECTED,
@@ -488,6 +928,15 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
                     var owner=lease==null?null:store.getExternalData().getRefFromUUID(lease.owner());
                     if(owner==null||attacker==null||!attacker.isValid()||!HytaleAreaQueries.hostile(store,attacker,owner))damage.setCancelled(true);
                 }
+            }
+            var victim=chunk.getReferenceTo(index);var marker=store.getComponent(victim,SummonProjection.getComponentType());
+            var lease=marker==null?null:summons.registry.find(marker.token).orElse(null);
+            if(lease!=null&&lease.ironSentinel()&&!damage.isCancelled()){
+                var cause=DamageCause.getAssetMap().getAsset(damage.getDamageCauseIndex());
+                String id=cause==null?"":cause.getId();
+                double reduction=id.equals("Physical")||id.equals("Projectile")?lease.sentinelStats().finalProtection():
+                        com.inigmasgames.hytalerpg.execution.summon.IronSentinelAffixes.resistances(lease.boundItem()).getOrDefault(id,0d);
+                damage.setAmount((float)(damage.getAmount()*(1-reduction)));
             }
 
         }

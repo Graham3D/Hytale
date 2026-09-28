@@ -14,6 +14,8 @@ public record RewardIntent(UUID player,EarnedReward reward,RewardCheckpoint befo
         before.advance(reward,hash); // Validate arithmetic and legacy consistency BEFORE persisting intent.
     }
     public static RewardIntent create(UUID player,EarnedReward reward,RewardCheckpoint before){
+        // Ordinary rewards retain their historical hash shape and never overwrite difficulty progression.
+        if(reward.milestone()==null)before=before.withoutDifficulty();
         return new RewardIntent(player,reward,before,calculate(player,reward,before));
     }
     public RewardCheckpoint after(){return before.advance(reward,hash);}

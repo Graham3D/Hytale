@@ -41,6 +41,8 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
     public synchronized void abandonDurable(SkillExecutionContext context){exclusionReceipts.remove(context.skillInstanceId());}
     public HytaleConversionSystem(CombatTrace trace,HytaleBossBarTracker bosses,com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService vfx){this.trace=trace;this.bosses=bosses;this.vfx=vfx;}
     public void cancel(UUID owner){for(var lease:registry.owned(owner))registry.end(lease.token());}
+    /** Voluntary release restores each converted native NPC on its next world tick. */
+    public int dismissOwned(UUID owner){var leases=registry.owned(owner);for(var lease:leases)registry.end(lease.token());return leases.size();}
     private static UUID world(ComponentAccessor<EntityStore> store){return store.getExternalData().getWorld().getWorldConfig().getUuid();}
     private static UUID id(ComponentAccessor<EntityStore> store,Ref<EntityStore> ref){var c=ref==null||!ref.isValid()?null:store.getComponent(ref,UUIDComponent.getComponentType());return c==null?null:c.getUuid();}
     private static Vec3 point(Store<EntityStore> store,Ref<EntityStore> ref){var p=store.getComponent(ref,TransformComponent.getComponentType()).getPosition();return new Vec3(p.x(),p.y(),p.z());}

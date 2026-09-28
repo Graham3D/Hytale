@@ -1,0 +1,65 @@
+{
+  "Model": "Arrow_Shortbow_Signature",
+  "SpawnRotationOffset": {
+    "Pitch": 2,
+    "Yaw": 5,
+    "Roll": 0
+  },
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 30,
+    "TerminalVelocityAir": 50,
+    "TerminalVelocityWater": 15,
+    "RotationMode": "VelocityDamped",
+    "Bounciness": 0.0,
+    "SticksVertically": true
+  },
+  "LaunchForce": 60,
+  "SpawnOffset": {
+    "X": 0,
+    "Y": -0.25,
+    "Z": 0
+  },
+  "LaunchLocalSoundEventId": "SFX_Bow_T2_Shoot_Local",
+  "LaunchWorldSoundEventId": "SFX_Bow_T2_Shoot",
+  "Interactions": {
+    "ProjectileHit": {
+      "Interactions": [
+        {
+          "Type": "Replace",
+          "Var": "Signature_Volley_Damage",
+          "DefaultValue": {
+            "Interactions": [
+              "RPG_GearRoute_I_Weapon_Shortbow_Signature_Volley_Damage"
+            ]
+          }
+        },
+        {
+          "Type": "Replace",
+          "Var": "Signature_Volley_Impact",
+          "DefaultValue": {
+            "Interactions": [
+              "RPG_GearRoute_I_Common_Projectile_Impact_Effects"
+            ]
+          }
+        },
+        "RPG_GearRoute_I_Common_Projectile_Despawn"
+      ]
+    },
+    "ProjectileMiss": {
+      "Interactions": [
+        "RPG_GearRoute_I_Block_Break_Projectile",
+        {
+          "Type": "Replace",
+          "Var": "Signature_Volley_Miss",
+          "DefaultValue": {
+            "Interactions": [
+              "RPG_GearRoute_I_Common_Projectile_Miss"
+            ]
+          }
+        },
+        "RPG_GearRoute_I_Common_Projectile_Despawn"
+      ]
+    }
+  }
+}

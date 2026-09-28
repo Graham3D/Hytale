@@ -6,6 +6,11 @@ import java.util.*;
 public interface PartyMembershipProvider {
     /** Return a coherent snapshot for exactly these previously credited, loaded candidates. Missing keys mean solo. */
     Map<UUID,String> snapshot(UUID world,Set<UUID> candidates);
+    /** Full stable join order and consent revision are required for item allocation. */
+    default com.inigmasgames.hytalerpg.gear.GearClaims.Policy lootPolicy(UUID world,UUID actor){
+        if(snapshot(world,Set.of(actor)).containsKey(actor))throw new IllegalStateException("Party loot policy provider not connected");
+        return com.inigmasgames.hytalerpg.gear.GearClaims.Policy.solo(actor);
+    }
     default String availability(){return "TRUSTED_SERVER_PROVIDER_CONNECTED_UNVERIFIED";}
     PartyMembershipProvider UNAVAILABLE=new PartyMembershipProvider(){
         public Map<UUID,String> snapshot(UUID world,Set<UUID> candidates){return Map.of();}

@@ -106,13 +106,13 @@ class Stage07ContinuationTest {
     @Test void forkBatchOverflowIsAtomicAndCannotEvictAnotherRoot() {
         var registry=new ProjectileLifecycleRegistry();var owner=UUID.randomUUID();
         var context=context(owner,"fork");var service=new RpgProjectileService(registry);ProjectileInstance first=null;
-        for(int i=0;i<23;i++) {
+        for(int i=0;i<47;i++) {
             var plan=service.buildPlan(context,owner,Vec3.ZERO,Vec3.FORWARD,"fixture",24,1);
             plan=copyPlan(plan,"root-"+i,"instance-"+i);var next=service.onProjectileSpawn(plan);if(i==0)first=next;
         }
         var decision=new ProjectileContinuation(registry).afterEnemy(first,Vec3.ZERO,new Vec3(0,0,-1),List.of(),2);
         assertEquals(ProjectileContinuation.Action.TERMINATE,decision.action());assertEquals("OWNER_PROJECTILE_BUDGET",decision.reason());
-        assertEquals(23,registry.size());assertEquals(1,registry.spent(owner,first.plan().rootCastId()));
+        assertEquals(47,registry.size());assertEquals(1,registry.spent(owner,first.plan().rootCastId()));
     }
     @Test void firstFourCompatibilityHasPositiveAndNegativeTypedGatesWithoutLineLeaks() {
         var catalog=com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical();var compatibility=new com.inigmasgames.hytalerpg.links.CompatibilityService();

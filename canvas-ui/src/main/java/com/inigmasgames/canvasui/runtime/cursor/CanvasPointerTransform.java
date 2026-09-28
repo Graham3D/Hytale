@@ -147,6 +147,13 @@ public final class CanvasPointerTransform {
         return 2.0 * CANVAS_HEIGHT / Math.abs(value.rawBottom()-value.rawTop());
     }
 
+    /** A persisted landmark fit is unusable after the local client viewport changes size. */
+    public boolean matchesViewport(double width,double height) {
+        if (!ready() || !finite(width,height) || width<=0 || height<=0) return false;
+        return Math.abs(viewportWidth()-width) <= Math.max(12.0,width*.03)
+                && Math.abs(viewportHeight()-height) <= Math.max(12.0,height*.08);
+    }
+
     public CanvasPoint toViewport(double rawX, double rawY) {
         return toViewport(CanvasPoint.of(rawX, rawY));
     }

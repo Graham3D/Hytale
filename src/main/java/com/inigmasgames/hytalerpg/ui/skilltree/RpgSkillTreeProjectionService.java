@@ -99,7 +99,7 @@ public final class RpgSkillTreeProjectionService {
         for (LinkNodeId joint : StaticSkillTreeLayout.JOINTS)
             result.put(joint, new StaticSkillTreeViewModel.TreeNode(joint,
                     joint == LinkNodeId.JOINT01 ? "Joint A" : "Joint B",
-                    joint == LinkNodeId.JOINT01 ? "3 Passive inputs" : "2 / 3 Passive inputs", true));
+                    "Four directional ports; up to three incoming routes", true));
         return Map.copyOf(result);
     }
 

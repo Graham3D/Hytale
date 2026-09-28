@@ -19,7 +19,7 @@ public final class PortAnchorResolver {
     public static CanvasPoint relative(Canvas canvas, CanvasNode node, String portId) {
         CanvasPort port = canvas.definition().nodeType(node.type()).port(portId);
         if (port == null) throw new IllegalArgumentException("missing port: " + portId);
-        // Skill inputs and triangular-joint ports are authored anchors. Only Passive ports orbit.
+        // Skill inputs and four-direction joint ports are authored anchors. Only Passive ports orbit.
         if ("skill".equals(node.type()) || "joint".equals(node.type())) return port.anchorPosition();
         String key = PREFIX + portId;
         try {

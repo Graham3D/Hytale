@@ -106,6 +106,7 @@ public final class CursorHudProbeService implements AutoCloseable {
         PASSIVE_HUD("CURSOR_CAMERA_PASSIVE_HUD"),
         CUSTOM_PAGE_CONTROL("CURSOR_CAMERA_CUSTOM_PAGE_CONTROL"),
         DRAG_PROOF("CURSOR_CAMERA_DRAG_PROOF"),
+        INVENTORY_DRAG_PROOF("CURSOR_CAMERA_INVENTORY_DRAG_PROOF"),
         GRAPH_EDITOR("CURSOR_CAMERA_GRAPH_EDITOR");
 
         private final String label;
@@ -164,6 +165,17 @@ public final class CursorHudProbeService implements AutoCloseable {
 
     public OpenResult open(Context context, Player player, PlayerRef playerRef, World world,
                            Store<EntityStore> store, Ref<EntityStore> ref) {
+        return open(context, player, playerRef, world, store, ref, null);
+    }
+
+    public OpenResult openInventoryDragProof(Player player, PlayerRef playerRef, World world,
+                                              Store<EntityStore> store, Ref<EntityStore> ref, String itemId) {
+        if (itemId == null || itemId.isBlank()) return new OpenResult(false, "No item icon for drag proof.", null);
+        return open(Context.INVENTORY_DRAG_PROOF, player, playerRef, world, store, ref, itemId);
+    }
+
+    private OpenResult open(Context context, Player player, PlayerRef playerRef, World world,
+                            Store<EntityStore> store, Ref<EntityStore> ref, String itemId) {
         if (closed) return new OpenResult(false, "Cursor-HUD service is closed.", null);
         UUID playerId = playerRef.getUuid();
         close(playerId, "REPLACED_BY_NEW_PROBE");
@@ -173,7 +185,7 @@ public final class CursorHudProbeService implements AutoCloseable {
             return new OpenResult(false, "Another observed server-camera owner is active; close it before CanvasUI.", null);
         }
         CanvasPointerTransform.Calibration saved = calibrations.get(playerId);
-        if (context == Context.DRAG_PROOF && saved == null) {
+        if ((context == Context.DRAG_PROOF || context == Context.INVENTORY_DRAG_PROOF) && saved == null) {
             return new OpenResult(false,
                     "Run /canvasui-cursor-probe and complete TL, TR, BL, BR, CENTER calibration first.", null);
         }
@@ -182,7 +194,7 @@ public final class CursorHudProbeService implements AutoCloseable {
 
         Session session;
         try {
-            session = new Session(context, null, player, playerRef, world, camera, priorCamera, newTracePath(), saved);
+            session = new Session(context, null, player, playerRef, world, camera, priorCamera, newTracePath(), saved, itemId);
         } catch (IOException error) {
             LOGGER.atWarning().withCause(error).log("CANVASUI_CURSOR_TRACE_OPEN_FAILED revision=%s", CanvasUI.REVISION);
             return new OpenResult(false, "Unable to create the bounded cursor-HUD trace.", null);
@@ -212,7 +224,8 @@ public final class CursorHudProbeService implements AutoCloseable {
                     session.tracePath.getFileName());
             String instruction = context == Context.PASSIVE_HUD
                     ? " Click TL, TR, BL, BR, CENTER targets in order."
-                    : context == Context.DRAG_PROOF ? " Drag either graph node and release." : "";
+                    : context == Context.DRAG_PROOF ? " Drag either graph node and release."
+                    : context == Context.INVENTORY_DRAG_PROOF ? " Drag the bow from any covered cell and release over the grid." : "";
             return new OpenResult(true, "CanvasUI " + CanvasUI.REVISION + " active: " + context.label() + "." + instruction,
                     session.tracePath);
         } catch (RuntimeException error) {
@@ -235,21 +248,26 @@ public final class CursorHudProbeService implements AutoCloseable {
         if (priorCamera != null && priorCamera.isLocked && priorCamera.cameraSettings != null)
             return new CursorEditorOpenResult(false, "Another observed server-camera owner is active.", null);
         CanvasPointerTransform.Calibration saved = calibrations.get(playerId);
-        if (saved == null) {
-            saved = recoverLatestCalibration();
-            if (saved != null) {
-                calibrations.put(playerId, saved);
-                persistCalibration(playerId, saved);
-            }
-        }
         if (saved == null) return new CursorEditorOpenResult(false,
                 "Canvas cursor mapping is unavailable. Run /canvasui-cursor-probe once to calibrate this client.", null);
+        var localViewport=localSingleplayerViewport();
+        if(localViewport.isPresent()&&!new CanvasPointerTransform(saved).matchesViewport(
+                localViewport.get().width,localViewport.get().height)){
+            calibrations.remove(playerId);
+            LOGGER.atWarning().log("CANVASUI_STALE_CURSOR_CALIBRATION player=%s stored=%.0fx%.0f current=%dx%d",
+                    playerId,new CanvasPointerTransform(saved).viewportWidth(),
+                    new CanvasPointerTransform(saved).viewportHeight(),
+                    localViewport.get().width,localViewport.get().height);
+            return new CursorEditorOpenResult(false,
+                    "Display size changed since cursor calibration. Run /canvasui-cursor-probe, click its five markers, then reopen the Skill Tree.",null);
+        }
+        calibrations.put(playerId,saved);
         CameraManager camera = store.getComponent(ref, CameraManager.getComponentType());
         if (camera == null) return new CursorEditorOpenResult(false, "CameraManager is unavailable.", null);
         Session session;
         try {
             session = new Session(Context.GRAPH_EDITOR, editor, player, playerRef, world, camera, priorCamera,
-                    newTracePath(), saved);
+                    newTracePath(), saved, null);
         } catch (IOException | RuntimeException error) {
             LOGGER.atWarning().withCause(error).log("CANVASUI_GRAPH_EDITOR_CREATE_FAILED revision=%s editor=%s",
                     CanvasUI.REVISION, editor.editorId());
@@ -277,6 +295,22 @@ public final class CursorHudProbeService implements AutoCloseable {
             return new CursorEditorOpenResult(false, "Graph editor failed to acquire input/display ownership: "
                     + error.getClass().getSimpleName(), session.tracePath);
         }
+    }
+
+    /** Only a local maximized single-player client shares the server's desktop viewport. */
+    private static java.util.Optional<java.awt.Dimension> localSingleplayerViewport(){
+        String[] arguments=ProcessHandle.current().info().arguments().orElse(new String[0]);
+        if(java.util.Arrays.stream(arguments).noneMatch("--singleplayer"::equals))return java.util.Optional.empty();
+        String appData=System.getenv("APPDATA");
+        if(appData==null||appData.isBlank())return java.util.Optional.empty();
+        Path settings=Path.of(appData,"Hytale","data","pre-release","Settings.json");
+        try{
+            String json=Files.readString(settings,StandardCharsets.UTF_8);
+            if(!json.matches("(?s).*\\\"(?:Maximized|Fullscreen)\\\"\\s*:\\s*true.*"))
+                return java.util.Optional.empty();
+            if(java.awt.GraphicsEnvironment.isHeadless())return java.util.Optional.empty();
+            return java.util.Optional.of(java.awt.Toolkit.getDefaultToolkit().getScreenSize());
+        }catch(IOException|java.awt.HeadlessException error){return java.util.Optional.empty();}
     }
 
     public void route(PlayerMouseButtonEvent event) {
@@ -432,33 +466,6 @@ public final class CursorHudProbeService implements AutoCloseable {
         }
     }
 
-    private CanvasPointerTransform.Calibration recoverLatestCalibration() {
-        if (!Files.isDirectory(traceDirectory)) return null;
-        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
-                "rawX=([-+0-9.Ee]+)\\.\\.([-+0-9.Ee]+) rawY=([-+0-9.Ee]+)\\.\\.([-+0-9.Ee]+) cornerErr=([-+0-9.Ee]+) centerErr=([-+0-9.Ee]+)");
-        try (var stream = Files.list(traceDirectory)) {
-            List<Path> paths = stream.filter(path -> path.getFileName().toString().endsWith(".jsonl"))
-                    .sorted(java.util.Comparator.comparingLong(this::lastModified).reversed()).limit(12).toList();
-            for (Path path : paths) {
-                List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-                for (int i = lines.size() - 1; i >= 0; i--) {
-                    if (!lines.get(i).contains("COORDINATE_MAPPING_ACCEPTED")) continue;
-                    var match = pattern.matcher(lines.get(i));
-                    if (match.find()) return new CanvasPointerTransform.Calibration(
-                            Double.parseDouble(match.group(1)), Double.parseDouble(match.group(2)),
-                            Double.parseDouble(match.group(3)), Double.parseDouble(match.group(4)),
-                            Double.parseDouble(match.group(5)), Double.parseDouble(match.group(6)));
-                }
-            }
-        } catch (IOException | RuntimeException ignored) { }
-        return null;
-    }
-
-    private long lastModified(Path path) {
-        try { return Files.getLastModifiedTime(path).toMillis(); }
-        catch (IOException ignored) { return 0L; }
-    }
-
     private static CanvasPointerTransform.Calibration calibration(java.util.Properties values) {
         return new CanvasPointerTransform.Calibration(Double.parseDouble(values.getProperty("rawLeft")),
                 Double.parseDouble(values.getProperty("rawRight")), Double.parseDouble(values.getProperty("rawTop")),
@@ -569,6 +576,8 @@ public final class CursorHudProbeService implements AutoCloseable {
         private final CanvasPointerTransform transform;
         private final Canvas graph;
         private final CursorCanvasEditor editor;
+        private final String inventoryDragItemId;
+        private CanvasPoint inventoryDragOrigin;
         private CanvasInputController graphInput;
         private CanvasCursorProbeHud hud;
         private CanvasGraphEditorHud editorHud;
@@ -624,9 +633,10 @@ public final class CursorHudProbeService implements AutoCloseable {
 
         private Session(Context context, CursorCanvasEditor editor, Player player, PlayerRef playerRef, World world,
                         CameraManager camera, SetServerCamera priorCamera, Path tracePath,
-                        CanvasPointerTransform.Calibration saved) throws IOException {
+                        CanvasPointerTransform.Calibration saved, String inventoryDragItemId) throws IOException {
             this.context = context;
             this.editor = editor;
+            this.inventoryDragItemId = inventoryDragItemId;
             this.player = player;
             this.playerRef = playerRef;
             this.world = world;
@@ -639,6 +649,7 @@ public final class CursorHudProbeService implements AutoCloseable {
             this.transform = saved != null && context != Context.PASSIVE_HUD
                     ? new CanvasPointerTransform(saved) : new CanvasPointerTransform();
             this.graph = context == Context.DRAG_PROOF ? createProofGraph()
+                    : context == Context.INVENTORY_DRAG_PROOF ? createInventoryDragGraph()
                     : context == Context.GRAPH_EDITOR ? java.util.Objects.requireNonNull(editor.canvas()) : null;
             if (context == Context.GRAPH_EDITOR) {
                 applyStoredLayout(graph, editor.editorId(), playerId);
@@ -666,13 +677,26 @@ public final class CursorHudProbeService implements AutoCloseable {
             return canvas;
         }
 
+        private Canvas createInventoryDragGraph() {
+            NodeDefinition bow = NodeDefinition.builder("inventory-bow").size(92, 184)
+                    .renderer(c -> proofVisual(c.node(), "2 x 4"))
+                    .build();
+            CanvasDefinition definition = CanvasDefinition.builder("inventory-drag-proof-" + playerId)
+                    .pannable(false).zoomable(false).panGesture(PanGesture.MIDDLE_BUTTON)
+                    .registerNodeType(bow).listener(this::traceCanvasEvent).build();
+            Canvas canvas = new Canvas(definition);
+            canvas.createNode("inventory-bow", "inventory-bow", CanvasPoint.of(0, 0), Map.of("label", "Bow"));
+            return canvas;
+        }
+
         private NodeVisual proofVisual(CanvasNode node, String state) {
             return new NodeVisual(node.metadata().getOrDefault("label", node.nodeId()), state,
                     "#28476af2", "#78c6d0", "#eef6ff");
         }
 
         private void installDisplay() {
-            if (context == Context.PASSIVE_HUD || context == Context.DRAG_PROOF) {
+            if (context == Context.PASSIVE_HUD || context == Context.DRAG_PROOF
+                    || context == Context.INVENTORY_DRAG_PROOF) {
                 HudManager manager = player.getHudManager();
                 if (manager.getCustomHud(CanvasCursorProbeHud.KEY) != null)
                     throw new IllegalStateException("CanvasUI cursor-HUD key is already owned");
@@ -689,6 +713,14 @@ public final class CursorHudProbeService implements AutoCloseable {
                             + " input=" + HytaleCursorHudInputBackend.INSTANCE.id()
                             + " capture=" + HytaleCursorHudInputBackend.INSTANCE.captureSemantics()
                             + " capabilities=" + capabilities);
+                } else if (context == Context.INVENTORY_DRAG_PROOF) {
+                    hud.setInventoryProofVisible(inventoryDragItemId);
+                    CursorHudCanvasBackend backend = new CursorHudCanvasBackend(graph, hud, true);
+                    graphInput = new CanvasInputController(graph, backend, this::persistGraph,
+                            this::graphRenderDue, this::recordGraphPointer);
+                    backend.topologyChanged();
+                    traceLifecycle("INVENTORY_DRAG_BACKEND_READY",
+                            "footprint=2x4 grid=18x4 pitch=46 nativeMutation=false");
                 }
             } else if (context == Context.GRAPH_EDITOR) {
                 HudManager manager = player.getHudManager();
@@ -1103,6 +1135,25 @@ public final class CursorHudProbeService implements AutoCloseable {
         }
 
         private void persistGraph() {
+            if (context == Context.INVENTORY_DRAG_PROOF) {
+                CanvasNode bow = graph.node("inventory-bow");
+                CanvasPoint origin = inventoryDragOrigin == null ? bow.position() : inventoryDragOrigin;
+                CanvasPoint release = lastCoordinates == null ? null : lastCoordinates.local();
+                boolean valid = release != null && release.x() >= 0 && release.x() < 828
+                        && release.y() >= 0 && release.y() < 184;
+                int targetColumn = Math.max(0, Math.min(16, (int)Math.round(bow.position().x() / 46.0)));
+                CanvasPoint target = valid ? CanvasPoint.of(targetColumn * 46, 0) : origin;
+                graph.moveNode("inventory-bow", target);
+                hud.updateInventoryGraph(graph);
+                hud.inventoryStatus(valid
+                        ? "Snapped to column " + targetColumn + "; native bow and backing slot unchanged."
+                        : "Release outside the bag cancelled; native bow unchanged.");
+                traceLifecycle("INVENTORY_DRAG_RELEASE", "accepted=" + valid
+                        + " source=" + origin + " target=" + target
+                        + " nativeMutation=false");
+                inventoryDragOrigin = null;
+                return;
+            }
             persistenceWrites++;
             if (editor != null) {
                 CursorCanvasEditor.Result result = editor.commit(graph.snapshot());
@@ -1375,7 +1426,11 @@ public final class CursorHudProbeService implements AutoCloseable {
         }
 
         private void traceCanvasEvent(CanvasEvent event) {
-            if (event.type() == CanvasEventType.DRAG_STARTED) dragBegins++;
+            if (event.type() == CanvasEventType.DRAG_STARTED) {
+                dragBegins++;
+                if (context == Context.INVENTORY_DRAG_PROOF)
+                    inventoryDragOrigin = graph.node("inventory-bow").position();
+            }
             if (event.type() == CanvasEventType.DRAG_ENDED) dragEnds++;
             if (event.type() == CanvasEventType.NODE_CREATED || event.type() == CanvasEventType.CANVAS_CHANGED) return;
             writeLine("{\"type\":\"CANVAS_EVENT\",\"revision\":\"" + json(CanvasUI.REVISION)
@@ -1389,7 +1444,10 @@ public final class CursorHudProbeService implements AutoCloseable {
             tracedSamples++;
             CanvasPointerTransform.Coordinates coordinates = sample.validPosition() && transform.ready()
                     ? transform.convert(sample.x(), sample.y(), graph == null
-                    ? com.inigmasgames.canvasui.api.CanvasViewport.ORIGIN : graph.viewport()) : null;
+                    ? com.inigmasgames.canvasui.api.CanvasViewport.ORIGIN : graph.viewport(),
+                    context==Context.GRAPH_EDITOR
+                            ? CanvasPoint.of(CanvasGraphEditorHud.WORKSPACE_LEFT,CanvasGraphEditorHud.WORKSPACE_TOP)
+                            : CanvasPoint.of(CanvasPointerTransform.CANVAS_LEFT,CanvasPointerTransform.CANVAS_TOP)) : null;
             writeLine("{\"type\":\"POINTER_INPUT\",\"revision\":\"" + json(CanvasUI.REVISION)
                     + "\",\"session\":\"" + token + "\",\"context\":\"" + context.label()
                     + "\",\"sequence\":" + sample.sequence() + ",\"source\":\"" + sample.source()

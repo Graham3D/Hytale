@@ -3,6 +3,8 @@ package com.inigmasgames.hytalerpg;
 import com.inigmasgames.hytalerpg.content.RpgCatalog;
 import com.inigmasgames.hytalerpg.combat.resource.ResourceType;
 import com.inigmasgames.hytalerpg.domain.PassiveSlot;
+import com.inigmasgames.hytalerpg.domain.LinkNodeId;
+import com.inigmasgames.hytalerpg.domain.PassiveId;
 import com.inigmasgames.hytalerpg.domain.CompiledSkillPlan;
 import com.inigmasgames.hytalerpg.execution.*;
 import com.inigmasgames.hytalerpg.execution.projectile.*;
@@ -73,20 +75,56 @@ class Stage13AuthoredProjectileTest {
     @Test void volleyMultipliesAuthoredPelletsButNotRootPayments(){
         var h=cast("blunderbuss_shot","GUN","volley");var list=plans(h,0);assertEquals(24,list.size());assertEquals(1d/24,HitProcRuntime.coefficient(h.last()));
         var registry=new ProjectileLifecycleRegistry();registry.registerAll(list.stream().map(ProjectileInstance::new).toList(),h.last().effects().projectileLifetime());
-        assertEquals(24,registry.size());assertEquals("OWNER_PROJECTILE_BUDGET",registry.admission(h.actor,1));assertEquals(1,h.cooldownSaves);
+        assertEquals(24,registry.size());assertEquals("PASS",registry.admission(h.actor,24));
+        assertEquals("OWNER_PROJECTILE_BUDGET",registry.admission(h.actor,25));assertEquals(1,h.cooldownSaves);
     }
     @Test void futureBarragePromisesIncludeEveryAuthoredMissile(){
         var h=cast("arcane_missiles","WAND","barrage");var pattern=h.last().profile().projectile().details().pattern();
         assertEquals(15,pattern.rootLaunches(h.last().compiledPlan()));var registry=new ProjectileLifecycleRegistry();
         registry.registerAll(plans(h,0).stream().map(ProjectileInstance::new).toList());assertEquals(15,registry.spent(h.actor,h.last().rootCastId()));
-        assertEquals("OWNER_PROJECTILE_BUDGET",registry.admission(h.actor,10));assertEquals("PASS",registry.admission(h.actor,9));
+        assertEquals("OWNER_PROJECTILE_BUDGET",registry.admission(h.actor,34));assertEquals("PASS",registry.admission(h.actor,33));
     }
-    @Test void invalidFortyFiveMissileLaunchIsRejectedAtomicallyByOwnerCapacity(){
+    @Test void volleyBarrageFiveMissileSkillCanReserveAndReleaseAllFortyFiveCarriers(){
         var h=cast("arcane_missiles","WAND","volley","barrage");var registry=new ProjectileLifecycleRegistry();
         assertEquals(45,h.last().profile().projectile().details().pattern().rootLaunches(h.last().compiledPlan()));
-        assertEquals("OWNER_PROJECTILE_BUDGET",registry.admission(h.actor,45));
-        assertThrows(IllegalStateException.class,()->registry.registerAll(plans(h,0).stream().map(ProjectileInstance::new).toList()));
-        assertEquals(0,registry.size());assertEquals(0,registry.rootCount());
+        assertEquals(ProjectileLifecycleRegistry.OWNER_CAP,h.last().compiledPlan().safetyBudgets().maxLiveProjectiles());
+        assertEquals("PASS",registry.admission(h.actor,45));
+        var profile=h.last().profile().projectile();
+        for(int batch=0;batch<3;batch++) {
+            var release=batch==0?h.last():h.last().barrageCopy(batch);
+            var projectiles=ProjectileExecutionPlan.launchBatch(release,h.actor,Vec3.ZERO,Vec3.FORWARD,
+                    profile.configId(),profile.speed(),batch*180_000_000L);
+            assertEquals(15,projectiles.size());
+            registry.registerAll(projectiles.stream().map(ProjectileInstance::new).toList());
+        }
+        assertEquals(45,registry.size());assertEquals(45,registry.spent(h.actor,h.last().rootCastId()));
+        assertEquals("PASS",registry.admission(h.actor,3));
+        assertEquals("OWNER_PROJECTILE_BUDGET",registry.admission(h.actor,4));
+        registry.removeOwnedBy(h.actor);assertEquals(0,registry.size());assertEquals(0,registry.rootCount());
+    }
+    @Test void chainedJointsWithBarrageCompileAndSparkCastFitsProjectileBudget(){
+        var h=new Stage11ResourcePassivesTest.H("charged_bolt");h.weapon="WAND";
+        var equipped=Map.of(PassiveSlot.PASSIVE01,"volley",PassiveSlot.PASSIVE02,"homing",PassiveSlot.PASSIVE04,"barrage");
+        for(var entry:equipped.entrySet())assertTrue(h.b.service().equipPassive(h.actor,entry.getKey(),new PassiveId(entry.getValue())).success());
+        assertTrue(h.b.service().link(h.actor,LinkNodeId.JOINT02,LinkNodeId.SKILL01).success());
+        assertTrue(h.b.service().link(h.actor,LinkNodeId.JOINT01,LinkNodeId.JOINT02).success());
+        assertTrue(h.b.service().link(h.actor,LinkNodeId.PASSIVE01,LinkNodeId.JOINT02).success());
+        assertTrue(h.b.service().link(h.actor,LinkNodeId.PASSIVE02,LinkNodeId.JOINT02).success());
+        assertTrue(h.b.service().link(h.actor,LinkNodeId.PASSIVE04,LinkNodeId.JOINT01).success());
+        var cast=h.cast();assertTrue(cast.committed(),cast.code());
+        assertEquals(Set.of("volley","homing","barrage"),h.last().compiledPlan().passiveOrder().stream().map(id->id.value()).collect(java.util.stream.Collectors.toSet()));
+        var pattern=h.last().profile().projectile().details().pattern();
+        assertEquals(45,pattern.rootLaunches(h.last().compiledPlan()));
+        var registry=new ProjectileLifecycleRegistry();assertEquals("PASS",registry.admission(h.actor,pattern.rootLaunches(h.last().compiledPlan())));
+        var projectile=h.last().profile().projectile();
+        for(int batch=0;batch<3;batch++) {
+            var release=batch==0?h.last():h.last().barrageCopy(batch);
+            var plans=ProjectileExecutionPlan.launchBatch(release,h.actor,Vec3.ZERO,Vec3.FORWARD,
+                    projectile.configId(),projectile.speed(),batch*180_000_000L);
+            registry.registerAll(plans.stream().map(ProjectileInstance::new).toList());
+        }
+        assertTrue(registry.size()>=27&&registry.size()<=45);
+        registry.removeOwnedBy(h.actor);assertEquals(0,registry.rootCount());
     }
     @Test void fiveMissilesUseFiveDeadlinesAndOneFifthProcs(){
         var h=cast("arcane_missiles","SPELLBOOK");var list=plans(h,1_000_000_000);

@@ -22,6 +22,7 @@ public final class BoundedTraceWriter implements AutoCloseable {
     private final Consumer<Throwable> failure;private final Sink sink;
     private final TraceArchiveManager.Compression compression;private final boolean verify;
     private volatile TraceSegmentWriter segmentWriter;
+    private volatile boolean closed;
     private long reportedDropped,reportedFailed;
     @FunctionalInterface interface Sink {void write(byte[] line)throws Exception;}
     public record Metrics(long accepted,long written,long dropped,long failed,int queuedRecords,long retainedBytes,
@@ -46,6 +47,7 @@ public final class BoundedTraceWriter implements AutoCloseable {
         },new ThreadPoolExecutor.AbortPolicy());
     }
     public boolean submit(Object record){
+        if(closed){dropped.incrementAndGet();return false;}
         byte[] line;
         try{var limited=new LimitedWriter();json.toJson(record,limited);line=(limited.value+System.lineSeparator()).getBytes(StandardCharsets.UTF_8);}
         catch(RuntimeException error){drop(error);return false;}
@@ -60,7 +62,7 @@ public final class BoundedTraceWriter implements AutoCloseable {
                 finally{bytes.addAndGet(-line.length);}
             });
             accepted.incrementAndGet();return true;
-        }catch(RejectedExecutionException full){bytes.addAndGet(-line.length);drop(full);return false;}
+        }catch(RejectedExecutionException full){bytes.addAndGet(-line.length);if(!closed)drop(full);return false;}
     }
     private void drop(Throwable error){dropped.incrementAndGet();notifyFailure(error);}
     private void notifyFailure(Throwable error){try{failure.accept(error);}catch(RuntimeException ignored){}}
@@ -80,6 +82,7 @@ public final class BoundedTraceWriter implements AutoCloseable {
             worker.getQueue().size(),bytes.get(),current==null?0:current.activeBytes(),current==null?0:current.activeEvents());}
     public TraceArchiveManager.Metrics archiveMetrics(){var current=segmentWriter;return current==null?null:current.archive().metrics();}
     @Override public void close(){
+        closed=true;
         worker.shutdown();
         boolean drained=false;
         try{

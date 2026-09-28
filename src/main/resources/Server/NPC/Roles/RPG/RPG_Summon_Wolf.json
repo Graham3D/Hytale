@@ -7,7 +7,7 @@
   "DefaultNPCAttitude": "Ignore",
   "ApplySeparation": true,
   "PickupDropOnDeath": false,
-  "MotionControllerList": [{"Type": "Walk", "MaxWalkSpeed": 6.5, "Gravity": 10,
+  "MotionControllerList": [{"Type": "Walk", "MaxWalkSpeed": 7.0, "Gravity": 10,
     "MaxFallSpeed": 15, "Acceleration": 10, "MaxClimbHeight": 1, "MaxDropHeight": 2}],
   "Instructions": [{"Sensor": {"Type": "Target"},
     "BodyMotion": {"Type": "Seek", "SlowDownDistance": 3, "StopDistance": 1.5, "RelativeSpeed": 1}}],

@@ -1,0 +1,18 @@
+{
+  "Duration": 2,
+  "OverlapBehavior": "Overwrite",
+  "DamageResistance": {
+    "Physical": [
+      {
+        "Amount": 0.204,
+        "CalculationType": "Percent"
+      }
+    ],
+    "Projectile": [
+      {
+        "Amount": 0.204,
+        "CalculationType": "Percent"
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_cobalt.hands.n"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 110,
+  "Model": "Items/Armors/Cobalt/Hands.blockymodel",
+  "Texture": "Items/Armors/Cobalt/Hands_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cobalt_Hands.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Cobalt"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Hands",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": []
+  },
+  "DurabilityLossOnHit": 0.5
+}

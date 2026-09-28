@@ -20,6 +20,8 @@ public final class RpgStateMigrator {
                 case 6 -> migrateV6ToV7(state);
                 case 7 -> migrateV7ToV8(state);
                 case 8 -> migrateV8ToV9(state);
+                case 9 -> migrateV9ToV10(state);
+                case 10 -> migrateV10ToV11(state);
                 default -> throw new IllegalStateException("No migration from RPG schema v" + version);
             };
             version = state.get("schemaVersion").getAsInt();
@@ -94,6 +96,13 @@ public final class RpgStateMigrator {
     }
 
     public record MigrationResult(JsonObject state, int sourceVersion, int targetVersion, boolean migrated) {}
+    private static JsonObject migrateV10ToV11(JsonObject state){
+        if(state.has("gearEconomy"))throw new IllegalStateException("Unexpected pre-schema-11 gear economy");
+        // Legacy attained mastery ranks remain the fallback until the first explicit upgrade.
+        // No components, debt or synthetic upgrade receipts are inferred.
+        state.add("gearEconomy",new com.google.gson.Gson().toJsonTree(com.inigmasgames.hytalerpg.gear.GearEconomyProgress.INITIAL));
+        state.addProperty("schemaVersion",11);return state;
+    }
     private static JsonObject migrateV4ToV5(JsonObject state){
         // Old builds had no shared shielding. Initialize from the existing deficit, never a fresh full ally shield.
         var guard=state.getAsJsonObject("support").getAsJsonObject("managuard");
@@ -125,5 +134,11 @@ public final class RpgStateMigrator {
         // Never infer meaningful family use, previous pity or spent Insight from dev-granted ownership/mastery.
         state.add("acquisition",new com.google.gson.Gson().toJsonTree(AcquisitionProgress.INITIAL));
         state.addProperty("schemaVersion",9);return state;
+    }
+    private static JsonObject migrateV9ToV10(JsonObject state) {
+        // No earlier production difficulty ledger existed; never infer golem kills from XP or dev ownership.
+        if(state.has("difficulty"))throw new IllegalStateException("Unexpected pre-schema-10 difficulty ledger");
+        state.add("difficulty",new com.google.gson.Gson().toJsonTree(com.inigmasgames.hytalerpg.difficulty.DifficultyProgress.INITIAL));
+        state.addProperty("schemaVersion",10);return state;
     }
 }

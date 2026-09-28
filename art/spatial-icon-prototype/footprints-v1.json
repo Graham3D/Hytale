@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "slotPixels": 64,
+  "entries": [
+    {"itemBaseId": "Weapon_Shortbow_Copper", "familyId": "shortbow", "displayName": "Copper Shortbow", "invWidth": 2, "invHeight": 3, "itemFamily": "bows", "notes": "Prototype short-bow target; intentionally separate from live FootprintCatalog.", "sample": true},
+    {"itemBaseId": "Weapon_Shortbow_Iron", "familyId": "longbow", "displayName": "Iron Bow (2x4 proxy)", "invWidth": 2, "invHeight": 4, "itemFamily": "bows", "notes": "No Longbow asset ID exists in the installed stock set. A second shortbow proves a 2x4 bow render; this does not classify it as a real longbow.", "sample": true},
+    {"itemBaseId": "Weapon_Crossbow_Iron", "familyId": "crossbow", "displayName": "Iron Crossbow", "invWidth": 2, "invHeight": 4, "itemFamily": "crossbows", "notes": "First-pass crossbow target for the eventual weapon batch.", "sample": false},
+    {"itemBaseId": "Weapon_Wand_Wood", "familyId": "wand", "displayName": "Wood Wand", "invWidth": 1, "invHeight": 2, "itemFamily": "wands", "notes": "First-pass wand target.", "sample": false},
+    {"itemBaseId": "Weapon_Sword_Iron", "familyId": "short_sword", "displayName": "Iron Sword", "invWidth": 1, "invHeight": 3, "itemFamily": "swords", "notes": "Installed sword used for the short-sword visual target.", "sample": true},
+    {"itemBaseId": "Weapon_Staff_Wizard", "familyId": "long_staff", "displayName": "Wizard Staff", "invWidth": 1, "invHeight": 4, "itemFamily": "staffs", "notes": "Installed long staff with explicit item icon properties.", "sample": true},
+    {"itemBaseId": "Armor_Iron_Head", "familyId": "helm", "displayName": "Iron Helm", "invWidth": 2, "invHeight": 2, "itemFamily": "helmets", "notes": "Installed armor preview with explicit item icon properties.", "sample": true},
+    {"itemBaseId": "Armor_Iron_Hands", "familyId": "gloves", "displayName": "Iron Gloves", "invWidth": 2, "invHeight": 2, "itemFamily": "gloves", "notes": "First-pass glove target.", "sample": false},
+    {"itemBaseId": null, "familyId": "boots", "displayName": "Boots", "invWidth": 2, "invHeight": 2, "itemFamily": "boots", "notes": "No standalone boot item family confirmed in the installed stock set; target reserved.", "sample": false},
+    {"itemBaseId": null, "familyId": "belt", "displayName": "Belt", "invWidth": 2, "invHeight": 1, "itemFamily": "belts", "notes": "No standalone belt item family confirmed in the installed stock set; target reserved.", "sample": false},
+    {"itemBaseId": "Armor_Iron_Chest", "familyId": "body_armor", "displayName": "Iron Body Armor", "invWidth": 2, "invHeight": 3, "itemFamily": "body_armor", "notes": "First-pass body-armor target.", "sample": false},
+    {"itemBaseId": "Weapon_Shield_Iron", "familyId": "large_shield", "displayName": "Iron Shield", "invWidth": 2, "invHeight": 3, "itemFamily": "shields", "notes": "First-pass shield target.", "sample": false},
+    {"itemBaseId": "Weapon_Shield_Ruined_Giant", "familyId": "bigger_shield", "displayName": "Ruined Giant Shield", "invWidth": 2, "invHeight": 4, "itemFamily": "shields", "notes": "First-pass oversized-shield target.", "sample": false}
+  ]
+}

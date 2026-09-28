@@ -1,0 +1,746 @@
+{
+  "schemaVersion": 1,
+  "slotPixels": 64,
+  "chestTemplate": {
+    "Translation": [
+      0,
+      0
+    ],
+    "Rotation": [
+      10,
+      -30,
+      -5
+    ],
+    "Scale": 0.45
+  },
+  "items": [
+    {
+      "itemId": "Armor_Iron_Chest",
+      "label": "Iron Chest",
+      "family": "chest",
+      "invWidth": 2,
+      "invHeight": 3,
+      "sourceItemAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Chest.json",
+      "iconPropertiesSource": "Server/Item/Items/Armor/Iron/Armor_Iron_Chest.json",
+      "sourceModelPath": "Common/Items/Armors/Iron/Chest.blockymodel",
+      "sourceTexturePath": "Common/Items/Armors/Iron/Chest_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Armor_Iron_Chest.png",
+      "baseline": {
+        "png": "baseline/Armor_Iron_Chest.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Scale": 0.45,
+          "Translation": [
+            0,
+            -13.2
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            114,
+            27,
+            426,
+            486
+          ],
+          "scaledVisibleSize": [
+            116,
+            171
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.5425,
+          "decisionMargin": 0.0109,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.5316,
+            "180": 0.5425
+          }
+        },
+        "sha256": "8af2592ff3be918f25ecf46ebda6da324f1765c4ec10d8837c705ec7648985e7"
+      },
+      "test": {
+        "png": "test/Armor_Iron_Chest.png",
+        "pose": {
+          "Translation": [
+            0,
+            0
+          ],
+          "Rotation": [
+            10,
+            -30,
+            -5
+          ],
+          "Scale": 0.45
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            82,
+            28,
+            431,
+            487
+          ],
+          "scaledVisibleSize": [
+            116,
+            153
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.5452,
+          "decisionMargin": 0.0559,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.4892,
+            "180": 0.5452
+          }
+        },
+        "sha256": "feaf6e83c7ac57585bd6dbf8139c5af7f5b05ab7f1375b0cefc818955458e87d"
+      },
+      "pixelIdentical": false
+    },
+    {
+      "itemId": "Armor_Leather_Heavy_Chest",
+      "label": "Heavy Leather Chest",
+      "family": "chest",
+      "invWidth": 2,
+      "invHeight": 3,
+      "sourceItemAsset": "Server/Item/Items/Armor/Leather_Heavy/Armor_Leather_Heavy_Chest.json",
+      "iconPropertiesSource": "Server/Item/Items/Armor/Leather_Heavy/Armor_Leather_Heavy_Chest.json",
+      "sourceModelPath": "Common/Items/Armors/Leather_Heavy/Chest.blockymodel",
+      "sourceTexturePath": "Common/Items/Armors/Leather_Heavy/Chest_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Armor_Leather_Heavy_Chest.png",
+      "baseline": {
+        "png": "baseline/Armor_Leather_Heavy_Chest.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Scale": 0.405,
+          "Translation": [
+            0,
+            -6.6
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            83,
+            0,
+            417,
+            454
+          ],
+          "scaledVisibleSize": [
+            116,
+            158
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.5612,
+          "decisionMargin": 0.0716,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.4896,
+            "180": 0.5612
+          }
+        },
+        "sha256": "52e3330835e2388e20f6c6bcdfde8048bcf5689c671656d9c8cc56a5d3f50fc1"
+      },
+      "test": {
+        "png": "test/Armor_Leather_Heavy_Chest.png",
+        "pose": {
+          "Translation": [
+            0,
+            0
+          ],
+          "Rotation": [
+            10,
+            -30,
+            -5
+          ],
+          "Scale": 0.45
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            33,
+            0,
+            446,
+            436
+          ],
+          "scaledVisibleSize": [
+            116,
+            122
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.3715,
+          "decisionMargin": 0.0554,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.3161,
+            "180": 0.3715
+          }
+        },
+        "sha256": "469cb1ab908c327e3c164f2435dd3656f2a361a7e3152473946fc86a4347caab"
+      },
+      "pixelIdentical": false
+    },
+    {
+      "itemId": "Armor_Iron_Head",
+      "label": "Iron Head",
+      "family": "head",
+      "invWidth": 2,
+      "invHeight": 2,
+      "sourceItemAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Head.json",
+      "iconPropertiesSource": "Server/Item/Items/Armor/Iron/Armor_Iron_Head.json",
+      "sourceModelPath": "Common/Items/Armors/Iron/Head.blockymodel",
+      "sourceTexturePath": "Common/Items/Armors/Iron/Head_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Armor_Iron_Head.png",
+      "baseline": {
+        "png": "baseline/Armor_Iron_Head.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Scale": 0.5,
+          "Translation": [
+            0,
+            -15
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            24,
+            49,
+            483,
+            418
+          ],
+          "scaledVisibleSize": [
+            116,
+            93
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.6074,
+          "decisionMargin": 0.0424,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.565,
+            "180": 0.6074
+          }
+        },
+        "sha256": "d31b91420d563d25fa786d56c4dc8be083680bf31506699f35efde5c347beaee"
+      },
+      "test": {
+        "png": "test/Armor_Iron_Head.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Scale": 0.5,
+          "Translation": [
+            0,
+            0
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            24,
+            49,
+            483,
+            418
+          ],
+          "scaledVisibleSize": [
+            116,
+            93
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.6074,
+          "decisionMargin": 0.0424,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.565,
+            "180": 0.6074
+          }
+        },
+        "sha256": "d31b91420d563d25fa786d56c4dc8be083680bf31506699f35efde5c347beaee"
+      },
+      "pixelIdentical": true
+    },
+    {
+      "itemId": "Armor_Bronze_Ornate_Head",
+      "label": "Ornate Bronze Head",
+      "family": "head",
+      "invWidth": 2,
+      "invHeight": 2,
+      "sourceItemAsset": "Server/Item/Items/Armor/Bronze_Ornate/Armor_Bronze_Ornate_Head.json",
+      "iconPropertiesSource": "Server/Item/Items/Armor/Bronze_Ornate/Armor_Bronze_Ornate_Head.json",
+      "sourceModelPath": "Common/Items/Armors/Bronze_Ornate/Head.blockymodel",
+      "sourceTexturePath": "Common/Items/Armors/Bronze_Ornate/Head_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Armor_Bronze_Ornate_Head.png",
+      "baseline": {
+        "png": "baseline/Armor_Bronze_Ornate_Head.png",
+        "pose": {
+          "Rotation": [
+            29.815,
+            41.065,
+            15.19
+          ],
+          "Scale": 0.5,
+          "Translation": [
+            -2.7,
+            -12.9
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            74,
+            81,
+            489,
+            512
+          ],
+          "scaledVisibleSize": [
+            112,
+            116
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.6841,
+          "decisionMargin": 0.0495,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.6346,
+            "180": 0.6841
+          }
+        },
+        "sha256": "f796bb02e48fc50d5eb3d9929487dd5a65e885f16155cc6b0ddd30fb7564fbed"
+      },
+      "test": {
+        "png": "test/Armor_Bronze_Ornate_Head.png",
+        "pose": {
+          "Rotation": [
+            29.815,
+            41.065,
+            15.19
+          ],
+          "Scale": 0.5,
+          "Translation": [
+            0,
+            0
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            74,
+            81,
+            489,
+            512
+          ],
+          "scaledVisibleSize": [
+            112,
+            116
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.6841,
+          "decisionMargin": 0.0495,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.6346,
+            "180": 0.6841
+          }
+        },
+        "sha256": "f796bb02e48fc50d5eb3d9929487dd5a65e885f16155cc6b0ddd30fb7564fbed"
+      },
+      "pixelIdentical": true
+    },
+    {
+      "itemId": "Armor_Iron_Hands",
+      "label": "Iron Hands",
+      "family": "hands",
+      "invWidth": 2,
+      "invHeight": 2,
+      "sourceItemAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Hands.json",
+      "iconPropertiesSource": "Server/Item/Items/Armor/Iron/Armor_Iron_Hands.json",
+      "sourceModelPath": "Common/Items/Armors/Iron/Hands.blockymodel",
+      "sourceTexturePath": "Common/Items/Armors/Iron/Hands_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Armor_Iron_Hands.png",
+      "baseline": {
+        "png": "baseline/Armor_Iron_Hands.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Scale": 0.92,
+          "Translation": [
+            15,
+            -33
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            17,
+            71,
+            476,
+            400
+          ],
+          "scaledVisibleSize": [
+            116,
+            83
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.2774,
+          "decisionMargin": 0.0001,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.2772,
+            "180": 0.2774
+          }
+        },
+        "sha256": "0bc5ce5c2c6ce128ce5fd7096464cc3146621f7466d71f0fad717e962d3eee20"
+      },
+      "test": {
+        "png": "test/Armor_Iron_Hands.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Scale": 0.92,
+          "Translation": [
+            0,
+            0
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            17,
+            71,
+            476,
+            400
+          ],
+          "scaledVisibleSize": [
+            116,
+            83
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.2774,
+          "decisionMargin": 0.0001,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.2772,
+            "180": 0.2774
+          }
+        },
+        "sha256": "0bc5ce5c2c6ce128ce5fd7096464cc3146621f7466d71f0fad717e962d3eee20"
+      },
+      "pixelIdentical": true
+    },
+    {
+      "itemId": "Armor_Leather_Raven_Hands",
+      "label": "Raven Leather Hands",
+      "family": "hands",
+      "invWidth": 2,
+      "invHeight": 2,
+      "sourceItemAsset": "Server/Item/Items/Armor/Leather_Raven/Armor_Leather_Raven_Hands.json",
+      "iconPropertiesSource": "Server/Item/Items/Armor/Leather_Raven/Armor_Leather_Raven_Hands.json",
+      "sourceModelPath": "Common/Items/Armors/Leather_Raven/Hands.blockymodel",
+      "sourceTexturePath": "Common/Items/Armors/Leather_Raven/Hands_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Armor_Leather_Raven_Hands.png",
+      "baseline": {
+        "png": "baseline/Armor_Leather_Raven_Hands.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Scale": 0.8,
+          "Translation": [
+            3.6,
+            5.4
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            11,
+            0,
+            470,
+            431
+          ],
+          "scaledVisibleSize": [
+            116,
+            109
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.6721,
+          "decisionMargin": 0.0866,
+          "reviewRequired": false,
+          "candidates": {
+            "0": 0.5855,
+            "180": 0.6721
+          }
+        },
+        "sha256": "8beeb2fe626d62d67059bec6fbfd4676d93a2346e85ff2f6b7039c1ebdd6766f"
+      },
+      "test": {
+        "png": "test/Armor_Leather_Raven_Hands.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Scale": 0.8,
+          "Translation": [
+            0,
+            0
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            11,
+            0,
+            470,
+            431
+          ],
+          "scaledVisibleSize": [
+            116,
+            109
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.6721,
+          "decisionMargin": 0.0866,
+          "reviewRequired": false,
+          "candidates": {
+            "0": 0.5855,
+            "180": 0.6721
+          }
+        },
+        "sha256": "8beeb2fe626d62d67059bec6fbfd4676d93a2346e85ff2f6b7039c1ebdd6766f"
+      },
+      "pixelIdentical": true
+    },
+    {
+      "itemId": "Armor_Bronze_Legs",
+      "label": "Bronze Legs",
+      "family": "legs",
+      "invWidth": 2,
+      "invHeight": 3,
+      "sourceItemAsset": "Server/Item/Items/Armor/Bronze/Armor_Bronze_Legs.json",
+      "iconPropertiesSource": "Server/Item/Items/Armor/Bronze/Armor_Bronze_Legs.json",
+      "sourceModelPath": "Common/Items/Armors/Bronze/Legs.blockymodel",
+      "sourceTexturePath": "Common/Items/Armors/Bronze/Legs_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Armor_Bronze_Legs.png",
+      "baseline": {
+        "png": "baseline/Armor_Bronze_Legs.png",
+        "pose": {
+          "Scale": 0.5,
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Translation": [
+            -1.2,
+            -5
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            37,
+            82,
+            496,
+            483
+          ],
+          "scaledVisibleSize": [
+            116,
+            101
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.4454,
+          "decisionMargin": 0.0017,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.4438,
+            "180": 0.4454
+          }
+        },
+        "sha256": "0f189d8e73cfe5211031cb1ba0cd46b16d9acdc53d922d4e2b367bb373e89fa8"
+      },
+      "test": {
+        "png": "test/Armor_Bronze_Legs.png",
+        "pose": {
+          "Scale": 0.5,
+          "Rotation": [
+            22.5,
+            45,
+            22.5
+          ],
+          "Translation": [
+            0,
+            0
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            37,
+            82,
+            496,
+            483
+          ],
+          "scaledVisibleSize": [
+            116,
+            101
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 180,
+          "alphaIoU": 0.4454,
+          "decisionMargin": 0.0017,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.4438,
+            "180": 0.4454
+          }
+        },
+        "sha256": "0f189d8e73cfe5211031cb1ba0cd46b16d9acdc53d922d4e2b367bb373e89fa8"
+      },
+      "pixelIdentical": true
+    },
+    {
+      "itemId": "Armor_Leather_Raven_Legs",
+      "label": "Raven Leather Legs",
+      "family": "legs",
+      "invWidth": 2,
+      "invHeight": 3,
+      "sourceItemAsset": "Server/Item/Items/Armor/Leather_Raven/Armor_Leather_Raven_Legs.json",
+      "iconPropertiesSource": "Server/Item/Items/Armor/Leather_Raven/Armor_Leather_Raven_Legs.json",
+      "sourceModelPath": "Common/Items/Armors/Leather_Raven/Legs.blockymodel",
+      "sourceTexturePath": "Common/Items/Armors/Leather_Raven/Legs_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Armor_Leather_Raven_Legs.png",
+      "baseline": {
+        "png": "baseline/Armor_Leather_Raven_Legs.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            50.065,
+            22.5
+          ],
+          "Scale": 0.67,
+          "Translation": [
+            -2.1,
+            -0.3
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            56,
+            84,
+            512,
+            449
+          ],
+          "scaledVisibleSize": [
+            116,
+            93
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 0,
+          "alphaIoU": 0.7523,
+          "decisionMargin": 0.0046,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.7523,
+            "180": 0.7477
+          }
+        },
+        "sha256": "667e2669fc9375a9ae0b9658c0af8c962a46d64a883134cf442f1e6b6e1f736a"
+      },
+      "test": {
+        "png": "test/Armor_Leather_Raven_Legs.png",
+        "pose": {
+          "Rotation": [
+            22.5,
+            50.065,
+            22.5
+          ],
+          "Scale": 0.67,
+          "Translation": [
+            0,
+            0
+          ]
+        },
+        "fit": {
+          "visibleBoundsInRender": [
+            56,
+            84,
+            512,
+            449
+          ],
+          "scaledVisibleSize": [
+            116,
+            93
+          ],
+          "paddingPixels": 6
+        },
+        "stockPoseAlignment": {
+          "rollDegrees": 0,
+          "alphaIoU": 0.7523,
+          "decisionMargin": 0.0046,
+          "reviewRequired": true,
+          "candidates": {
+            "0": 0.7523,
+            "180": 0.7477
+          }
+        },
+        "sha256": "667e2669fc9375a9ae0b9658c0af8c962a46d64a883134cf442f1e6b6e1f736a"
+      },
+      "pixelIdentical": true
+    }
+  ]
+}

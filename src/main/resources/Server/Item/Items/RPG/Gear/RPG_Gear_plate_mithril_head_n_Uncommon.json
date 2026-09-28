@@ -1,0 +1,51 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_mithril.head.n"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 130,
+  "Model": "Items/Armors/Mithril/Head.blockymodel",
+  "Texture": "Items/Armors/Mithril/Head_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Mithril_Head.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Mithril"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Head",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "EarAccessory",
+      "Ear",
+      "Haircut",
+      "HeadAccessory"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

@@ -1,0 +1,24 @@
+$C = "Common.ui";
+
+Group {
+  LayoutMode: Center;
+  $C.@Panel {
+    Anchor: (Width: 930, Height: 430);
+    Padding: (Full: 20);
+    LayoutMode: Top;
+    Group { Anchor: (Height: 44); LayoutMode: Left;
+      Label { Text: "NATIVE ITEMGRID SPATIAL ALIAS PROBE"; Anchor: (Width: 760, Height: 40); Style: (FontSize: 20, TextColor: #55c6cf); }
+      TextButton #Close { Text: "Close"; Anchor: (Width: 100, Height: 36); }
+    }
+    Label { Text: "Hytale's native cursor; eight visual bow cells refer to one source. Read-only test."; Anchor: (Height: 32); Style: (FontSize: 14, TextColor: #d8ad55); }
+    Group #NativeGridArea { Anchor: (Width: 828, Height: 184); Background: #0b1320;
+      Group #NativeGridHost { Anchor: (Full: 0); }
+      Group #BowVisual { HitTestVisible: false; Anchor: (Left: 0, Top: 0, Width: 92, Height: 184); Background: #29455c;
+        ItemIcon #BowIcon { Anchor: (Left: 14, Top: 60, Width: 64, Height: 64); }
+        Label { Text: "2 x 4"; Anchor: (Left: 20, Bottom: 6, Width: 56, Height: 20); Style: (FontSize: 13, TextColor: #eef6ff); }
+      }
+    }
+    Label #NativeAliasStatus { Text: "Test click-click and hold-drag from each bow cell. No real item moves."; Anchor: (Height: 60); Style: (FontSize: 14, TextColor: #dce6ed); }
+    Label { Text: "If the native cursor does not start or a cell misses, close and report which cell."; Anchor: (Height: 30); Style: (FontSize: 13, TextColor: #9aa9b8); }
+  }
+}

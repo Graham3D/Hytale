@@ -24,6 +24,19 @@ public final class RpgHudCoordinator {
     private final RpgUiTraceService trace;
     private java.util.function.ToIntFunction<UUID> finisherPips=ignored->0;
     private java.util.function.Consumer<UUID> ownerPublished=ignored->{};
+    private java.util.function.Function<UUID,java.util.Optional<com.inigmasgames.hytalerpg.execution.summon.IronSentinelBinding>> sentinelSource=ignored->java.util.Optional.empty();
+    public void configureSentinelAffixes(java.util.function.Function<UUID,java.util.Optional<com.inigmasgames.hytalerpg.execution.summon.IronSentinelBinding>> source){sentinelSource=java.util.Objects.requireNonNull(source);}
+    public boolean toggleSentinelAffixes(UUID player){
+        var session=sessions.get(player);
+        if(session==null)throw new IllegalStateException("RPG HUD is not ready");
+        session.sentinelAffixesOn=!session.sentinelAffixesOn;
+        if(session.ownsActiveHuds())session.hud.refreshSentinelAffixes(session.sentinelAffixesOn?sentinelLines(player):null);
+        return session.sentinelAffixesOn;
+    }
+    private SentinelAffixPresentation.Lines sentinelLines(UUID player){
+        return SentinelAffixPresentation.of(sentinelSource.apply(player).map(
+                com.inigmasgames.hytalerpg.execution.summon.IronSentinelBinding::boundItem).orElse(null));
+    }
     public void configureOwnerPublication(java.util.function.Consumer<UUID> observer){ownerPublished=java.util.Objects.requireNonNull(observer);}
     public void configureFinisherPips(java.util.function.ToIntFunction<UUID> reader){this.finisherPips=java.util.Objects.requireNonNull(reader);}
     private final Map<UUID, Session> sessions = new ConcurrentHashMap<>();
@@ -34,6 +47,7 @@ public final class RpgHudCoordinator {
     }
 
     public void install(PlayerRef playerRef, Player player, EntityStatMap stats) {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_HUD_INSTALL_SERVER_ONLY", playerRef.getUuid())) {
         UUID id = playerRef.getUuid();
         teardown(id, "REINSTALL");
         HudManager manager = player.getHudManager();
@@ -54,9 +68,11 @@ public final class RpgHudCoordinator {
         traceXp(id, model, true);
         if (model.showLevelUpNotice()) trace.trace(id, "LEVEL_UP_INDICATOR_SHOWN", ref(),
                 Map.of("pendingLevelUpPoints", model.pendingLevelUpPoints(), "initial", true));
+
+        }
     }
 
-    public void tick(PlayerRef playerRef, EntityStatMap stats) {
+    public void tick(PlayerRef playerRef, EntityStatMap stats, boolean emptyHand) {
         Session session = sessions.get(playerRef.getUuid());
         if (session == null) return;
         long now = System.nanoTime();
@@ -71,12 +87,14 @@ public final class RpgHudCoordinator {
             RpgHudViewModel previous = session.model;
             RpgHudViewModel next = projection.hud(playerRef.getUuid(), resources.read(stats), xpFixtures.get(playerRef.getUuid()));
             session.combo.refresh(next,finisherPips.applyAsInt(playerRef.getUuid()));
+            if(session.sentinelAffixesOn)session.hud.refreshSentinelAffixes(sentinelLines(playerRef.getUuid()));
             ownerPublished.accept(playerRef.getUuid());
-            if (next.equals(previous)) return;
+            if (next.equals(previous) && session.emptyHand == emptyHand) return;
             boolean xpChanged = !next.xp().equals(previous.xp());
             boolean noticeChanged = next.showLevelUpNotice() != previous.showLevelUpNotice();
-            session.hud.refresh(next);
+            session.hud.refresh(next,emptyHand);
             session.model = next;
+            session.emptyHand = emptyHand;
             traceCooldownTransitions(playerRef.getUuid(),previous,next);
             if (xpChanged) traceXp(playerRef.getUuid(), next, false);
             if (noticeChanged) trace.trace(playerRef.getUuid(), next.showLevelUpNotice()
@@ -138,8 +156,9 @@ public final class RpgHudCoordinator {
 
     private static final class Session {
         private final PlayerRef playerRef; private final HudManager manager;
-        private final RpgHud hud; private RpgHudViewModel model; private long lastPollNanos;
+        private final RpgHud hud; private RpgHudViewModel model; private long lastPollNanos; private boolean emptyHand;
         private final FinisherHud combo;
+        private boolean sentinelAffixesOn;
         private Session(PlayerRef playerRef, HudManager manager, RpgHud hud,FinisherHud combo,
                         RpgHudViewModel model, long now) {
             this.combo=combo;

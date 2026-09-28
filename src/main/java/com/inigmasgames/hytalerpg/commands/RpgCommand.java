@@ -70,6 +70,15 @@ import java.util.UUID;
 
 /** Temporary command editing frontend. Authority remains in RpgLoadoutOperations. */
 public final class RpgCommand extends AbstractCommandCollection {
+    private final RpgCharacterCommand characterCommand;
+    private final com.inigmasgames.hytalerpg.ui.inventory.CommandInventoryEntryAdapter inventoryEntry;
+    public com.inigmasgames.hytalerpg.ui.inventory.CommandInventoryEntryAdapter inventoryEntry() { return inventoryEntry; }
+    public void configureTabTrace(com.inigmasgames.hytalerpg.ui.inventory.TabTraceProbe probe) {
+        addSubCommand(new RpgTabTraceCommand(probe));
+    }
+    public void configureInventoryProbe(com.inigmasgames.hytalerpg.ui.inventory.NativeInventoryEntryProbe probe) {
+        addSubCommand(new RpgInventoryProbeCommand(probe));
+    }
     public RpgCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts,
                       RpgCombatKernel kernel, CombatTrace combatTrace,
                       RpgUiProjectionService uiProjection, AttributeAllocationService allocation,
@@ -79,16 +88,28 @@ public final class RpgCommand extends AbstractCommandCollection {
                       NativeAbilityProjectionService nativeAbilities,
                       java.nio.file.Path skillTreePresentationDirectory) {
         super("rpg", "Configure and inspect the server-authoritative RPG Link Tree.");
-        addSubCommand(new RpgCharacterCommand(uiProjection, allocation, uiTrace));
-        addSubCommand(new RpgSkillTreeCommand(skillTreeProjection, skillTreeMutations, uiTrace,
-                new com.inigmasgames.hytalerpg.ui.skilltree.SkillTreePortBindingStore(skillTreePresentationDirectory)));
+        var skillTreeEntry = new com.inigmasgames.hytalerpg.ui.skilltree.SkillTreeEntryAdapter(
+                skillTreeProjection, skillTreeMutations,
+                new com.inigmasgames.hytalerpg.ui.skilltree.SkillTreePortBindingStore(skillTreePresentationDirectory));
+        inventoryEntry = new com.inigmasgames.hytalerpg.ui.inventory.CommandInventoryEntryAdapter(
+                uiProjection, allocation, skillTreeEntry);
+        characterCommand = new RpgCharacterCommand(inventoryEntry);
+        addSubCommand(characterCommand);
+        addSubCommand(new RpgInventoryCommand(inventoryEntry));
+        addSubCommand(new RpgIconPoseCommand());
+        addSubCommand(new RpgSkillTreeCommand(skillTreeEntry));
         addSubCommand(new EquipCommand(catalog, loadouts));
         addSubCommand(new UnequipCommand(loadouts));
         addSubCommand(new LinkCommand(loadouts));
         addSubCommand(new UnlinkCommand(loadouts));
         addSubCommand(new LoadoutCommand(catalog, loadouts));
         addSubCommand(new CompileCommand(loadouts));
-        if(loadouts instanceof com.inigmasgames.hytalerpg.progress.RpgLoadoutService authority)addSubCommand(new RpgProgressionCommand(authority));
+        if(loadouts instanceof com.inigmasgames.hytalerpg.progress.RpgLoadoutService authority){
+            addSubCommand(new RpgProgressionCommand(authority));
+            addSubCommand(new RpgLevelCommand(authority,uiProjection,hud));
+            addSubCommand(new RpgIronSentinelQaCommand(authority));
+            addSubCommand(new RpgReadyPathCommand(authority));
+        }
         addSubCommand(new StatsCommand(loadouts, kernel, combatTrace));
         addSubCommand(new DevCommand(catalog, loadouts, kernel, combatTrace, allocation, uiTrace, hud, nativeAbilities));
     }

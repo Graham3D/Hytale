@@ -422,7 +422,7 @@
       "sourceAsset": "Server/Item/Items/Weapon/Crossbow/Weapon_Crossbow_Ancient_Steel.json",
       "sourceProperty": "InteractionVars/Standard_Projectile_Damage/Interactions/0/DamageCalculator/BaseDamage/Projectile",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
-      "basePower": 16.0
+      "basePower": 10.5
     },
     {
       "itemId": "Weapon_Crossbow_Iron",
@@ -584,7 +584,7 @@
       "sourceAsset": "Server/Item/Items/Weapon/Flamethrower/Weapon_Flamethrower_Scrap.json",
       "sourceProperty": "InteractionVars/Burn_Damage/Interactions/0/DamageCalculator/BaseDamage/Fire",
       "selectionPolicy": "NATIVE_UNCHARGED_BASE",
-      "basePower": 12.0
+      "basePower": 6
     },
     {
       "itemId": "Weapon_Gun_Blunderbuss",

@@ -1,0 +1,51 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.robes_oracle.head.h"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 205,
+  "Model": "Items/Armors/Silk/Head.blockymodel",
+  "Texture": "Items/Armors/Silk/Head_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cloth_Silk_Head.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Cloth_Silk"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Head",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "EarAccessory",
+      "Ear",
+      "Haircut",
+      "HeadAccessory"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

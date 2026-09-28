@@ -1,0 +1,46 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_copper.hands.h"
+  },
+  "Quality": "RPG_Gear_Common",
+  "MaxStack": 1,
+  "MaxDurability": 160,
+  "Model": "Items/Armors/Copper/Hands.blockymodel",
+  "Texture": "Items/Armors/Copper/Hands_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Copper_Hands.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Copper"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Hands",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": []
+  },
+  "DurabilityLossOnHit": 0.5
+}

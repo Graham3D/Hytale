@@ -1,0 +1,647 @@
+{
+  "schemaVersion": 1,
+  "specification": "Gear Master Document v1.2 §17.1",
+  "sourceSha256": "7F88D6E319E292F9E0A059DD1EDDEB3F3E67E182A873BC5BF00ED9F8ACCEF7F3",
+  "templates": [
+    {
+      "id": "WA-001",
+      "playerTooltipTemplate": "+V to Minimum and Maximum Physical Damage"
+    },
+    {
+      "id": "WA-002",
+      "playerTooltipTemplate": "+V% Enhanced Physical Damage"
+    },
+    {
+      "id": "WA-003",
+      "playerTooltipTemplate": "+V Magic Power"
+    },
+    {
+      "id": "WA-004",
+      "playerTooltipTemplate": "+V% Spell Damage"
+    },
+    {
+      "id": "WA-005",
+      "playerTooltipTemplate": "+V% Attack Damage"
+    },
+    {
+      "id": "WA-006",
+      "playerTooltipTemplate": "+V% Physical Damage"
+    },
+    {
+      "id": "WA-007",
+      "playerTooltipTemplate": "+V% Elemental Damage"
+    },
+    {
+      "id": "WA-008",
+      "playerTooltipTemplate": "+V% Attack Speed"
+    },
+    {
+      "id": "WA-009",
+      "playerTooltipTemplate": "+V% Faster Cast Rate"
+    },
+    {
+      "id": "WA-010",
+      "playerTooltipTemplate": "+V% Critical Hit Chance"
+    },
+    {
+      "id": "WA-011",
+      "playerTooltipTemplate": "+V% Critical Damage"
+    },
+    {
+      "id": "WA-012",
+      "playerTooltipTemplate": "+V% Skill Cooldown Recovery"
+    },
+    {
+      "id": "WA-013",
+      "playerTooltipTemplate": "+V% Damage Over Time"
+    },
+    {
+      "id": "WA-014",
+      "playerTooltipTemplate": "+V m Melee Reach"
+    },
+    {
+      "id": "WA-015",
+      "playerTooltipTemplate": "+V% Projectile Speed"
+    },
+    {
+      "id": "WA-016",
+      "playerTooltipTemplate": "+V% Projectile Range"
+    },
+    {
+      "id": "WA-017",
+      "playerTooltipTemplate": "Adds V Wind Damage"
+    },
+    {
+      "id": "WA-018",
+      "playerTooltipTemplate": "Adds V Water Damage"
+    },
+    {
+      "id": "WA-019",
+      "playerTooltipTemplate": "Adds V Fire Damage"
+    },
+    {
+      "id": "WA-020",
+      "playerTooltipTemplate": "Adds V Earth Damage"
+    },
+    {
+      "id": "WA-021",
+      "playerTooltipTemplate": "Adds V Lightning Damage"
+    },
+    {
+      "id": "WA-022",
+      "playerTooltipTemplate": "Adds V Void Damage"
+    },
+    {
+      "id": "WA-023",
+      "playerTooltipTemplate": "+V% Wind Damage"
+    },
+    {
+      "id": "WA-024",
+      "playerTooltipTemplate": "+V% Water Damage"
+    },
+    {
+      "id": "WA-025",
+      "playerTooltipTemplate": "+V% Fire Damage"
+    },
+    {
+      "id": "WA-026",
+      "playerTooltipTemplate": "+V% Earth Damage"
+    },
+    {
+      "id": "WA-027",
+      "playerTooltipTemplate": "+V% Lightning Damage"
+    },
+    {
+      "id": "WA-028",
+      "playerTooltipTemplate": "+V% Void Damage"
+    },
+    {
+      "id": "WA-029",
+      "playerTooltipTemplate": "+V% Wind Penetration"
+    },
+    {
+      "id": "WA-030",
+      "playerTooltipTemplate": "+V% Water Penetration"
+    },
+    {
+      "id": "WA-031",
+      "playerTooltipTemplate": "+V% Fire Penetration"
+    },
+    {
+      "id": "WA-032",
+      "playerTooltipTemplate": "+V% Earth Penetration"
+    },
+    {
+      "id": "WA-033",
+      "playerTooltipTemplate": "+V% Lightning Penetration"
+    },
+    {
+      "id": "WA-034",
+      "playerTooltipTemplate": "+V% Void Penetration"
+    },
+    {
+      "id": "WA-035",
+      "playerTooltipTemplate": "Converts V% Physical Damage to Wind"
+    },
+    {
+      "id": "WA-036",
+      "playerTooltipTemplate": "Converts V% Physical Damage to Water"
+    },
+    {
+      "id": "WA-037",
+      "playerTooltipTemplate": "Converts V% Physical Damage to Fire"
+    },
+    {
+      "id": "WA-038",
+      "playerTooltipTemplate": "Converts V% Physical Damage to Earth"
+    },
+    {
+      "id": "WA-039",
+      "playerTooltipTemplate": "Converts V% Physical Damage to Lightning"
+    },
+    {
+      "id": "WA-040",
+      "playerTooltipTemplate": "Converts V% Physical Damage to Void"
+    },
+    {
+      "id": "WA-041",
+      "playerTooltipTemplate": "+V% Damage to Nearby Enemies"
+    },
+    {
+      "id": "WA-042",
+      "playerTooltipTemplate": "+V% Damage to Distant Enemies"
+    },
+    {
+      "id": "WA-043",
+      "playerTooltipTemplate": "+V% Damage from Behind"
+    },
+    {
+      "id": "WA-044",
+      "playerTooltipTemplate": "+V% Damage to Enemies Below 30% Health"
+    },
+    {
+      "id": "WA-045",
+      "playerTooltipTemplate": "+V% Damage to Enemies Above 80% Health"
+    },
+    {
+      "id": "WA-046",
+      "playerTooltipTemplate": "+V% Damage to Stunned, Frozen, Rooted, or Feared Enemies"
+    },
+    {
+      "id": "WA-047",
+      "playerTooltipTemplate": "+V% Damage to Burning Enemies"
+    },
+    {
+      "id": "WA-048",
+      "playerTooltipTemplate": "+V% Damage to Chilled Enemies"
+    },
+    {
+      "id": "WA-049",
+      "playerTooltipTemplate": "+V% Damage to Electrified Enemies"
+    },
+    {
+      "id": "WA-050",
+      "playerTooltipTemplate": "+V% Damage to Poisoned Enemies"
+    },
+    {
+      "id": "WA-051",
+      "playerTooltipTemplate": "+V% Damage to Bleeding Enemies"
+    },
+    {
+      "id": "WA-052",
+      "playerTooltipTemplate": "+V% Damage to Elite, Miniboss, and Boss Enemies"
+    },
+    {
+      "id": "WA-053",
+      "playerTooltipTemplate": "V% Chance to Bleed on Hit"
+    },
+    {
+      "id": "WA-054",
+      "playerTooltipTemplate": "V% Chance to Burn on Hit"
+    },
+    {
+      "id": "WA-055",
+      "playerTooltipTemplate": "V% Chance to Poison on Hit"
+    },
+    {
+      "id": "WA-056",
+      "playerTooltipTemplate": "V% Chance to Chill on Hit"
+    },
+    {
+      "id": "WA-057",
+      "playerTooltipTemplate": "V% Chance to Electrify on Hit"
+    },
+    {
+      "id": "WA-058",
+      "playerTooltipTemplate": "V% Chance to Slow on Hit"
+    },
+    {
+      "id": "WA-059",
+      "playerTooltipTemplate": "V% Chance to Stun for 0.6 sec on Hit"
+    },
+    {
+      "id": "WA-060",
+      "playerTooltipTemplate": "V% Chance to Silence for 1.5 sec on Hit"
+    },
+    {
+      "id": "WA-061",
+      "playerTooltipTemplate": "V% Chance to Blind for 2 sec on Hit"
+    },
+    {
+      "id": "WA-062",
+      "playerTooltipTemplate": "V% Chance to Fear for 1.5 sec on Hit"
+    },
+    {
+      "id": "WA-063",
+      "playerTooltipTemplate": "V% Chance to Root for 1 sec on Hit"
+    },
+    {
+      "id": "WA-064",
+      "playerTooltipTemplate": "+V% Status Penetration"
+    },
+    {
+      "id": "WA-065",
+      "playerTooltipTemplate": "+V% Burn Damage"
+    },
+    {
+      "id": "WA-066",
+      "playerTooltipTemplate": "+V% Poison Damage"
+    },
+    {
+      "id": "WA-067",
+      "playerTooltipTemplate": "+V% Bleed Damage"
+    },
+    {
+      "id": "WA-068",
+      "playerTooltipTemplate": "+V% Burn, Poison, and Bleed Duration"
+    },
+    {
+      "id": "WA-069",
+      "playerTooltipTemplate": "+V Defense"
+    },
+    {
+      "id": "WA-070",
+      "playerTooltipTemplate": "+V% Enhanced Defense"
+    },
+    {
+      "id": "WA-071",
+      "playerTooltipTemplate": "+V% Defense"
+    },
+    {
+      "id": "WA-072",
+      "playerTooltipTemplate": "+V% Wind Resistance"
+    },
+    {
+      "id": "WA-073",
+      "playerTooltipTemplate": "+V% Water Resistance"
+    },
+    {
+      "id": "WA-074",
+      "playerTooltipTemplate": "+V% Fire Resistance"
+    },
+    {
+      "id": "WA-075",
+      "playerTooltipTemplate": "+V% Earth Resistance"
+    },
+    {
+      "id": "WA-076",
+      "playerTooltipTemplate": "+V% Lightning Resistance"
+    },
+    {
+      "id": "WA-077",
+      "playerTooltipTemplate": "+V% Void Resistance"
+    },
+    {
+      "id": "WA-078",
+      "playerTooltipTemplate": "+V% to All Elemental Resistances"
+    },
+    {
+      "id": "WA-079",
+      "playerTooltipTemplate": "+V% Status Resistance"
+    },
+    {
+      "id": "WA-080",
+      "playerTooltipTemplate": "V% Reduced Hard Control Duration"
+    },
+    {
+      "id": "WA-081",
+      "playerTooltipTemplate": "V% Reduced Slow Effect"
+    },
+    {
+      "id": "WA-082",
+      "playerTooltipTemplate": "V% Reduced Knockback"
+    },
+    {
+      "id": "WA-083",
+      "playerTooltipTemplate": "V% Reduced Block Stamina Cost"
+    },
+    {
+      "id": "WA-084",
+      "playerTooltipTemplate": "V% Reduced Critical Bonus Damage Taken"
+    },
+    {
+      "id": "WA-085",
+      "playerTooltipTemplate": "+V Strength"
+    },
+    {
+      "id": "WA-086",
+      "playerTooltipTemplate": "+V Dexterity"
+    },
+    {
+      "id": "WA-087",
+      "playerTooltipTemplate": "+V Intelligence"
+    },
+    {
+      "id": "WA-088",
+      "playerTooltipTemplate": "+V Wisdom"
+    },
+    {
+      "id": "WA-089",
+      "playerTooltipTemplate": "+V Luck"
+    },
+    {
+      "id": "WA-090",
+      "playerTooltipTemplate": "+V to All Attributes"
+    },
+    {
+      "id": "WA-091",
+      "playerTooltipTemplate": "+V Maximum Health"
+    },
+    {
+      "id": "WA-092",
+      "playerTooltipTemplate": "+V Maximum Mana"
+    },
+    {
+      "id": "WA-093",
+      "playerTooltipTemplate": "+V Maximum Stamina"
+    },
+    {
+      "id": "WA-094",
+      "playerTooltipTemplate": "+V Health on Hit"
+    },
+    {
+      "id": "WA-095",
+      "playerTooltipTemplate": "+V Mana on Hit"
+    },
+    {
+      "id": "WA-096",
+      "playerTooltipTemplate": "V% Life Stolen per Hit"
+    },
+    {
+      "id": "WA-097",
+      "playerTooltipTemplate": "V% Mana Stolen per Hit"
+    },
+    {
+      "id": "WA-098",
+      "playerTooltipTemplate": "Restores V% Maximum Health on Kill"
+    },
+    {
+      "id": "WA-099",
+      "playerTooltipTemplate": "+V% Mana Regeneration"
+    },
+    {
+      "id": "WA-100",
+      "playerTooltipTemplate": "+V% Stamina Regeneration"
+    },
+    {
+      "id": "WA-101",
+      "playerTooltipTemplate": "V% Reduced Mana Cost"
+    },
+    {
+      "id": "WA-102",
+      "playerTooltipTemplate": "V% Reduced Stamina Skill Cost"
+    },
+    {
+      "id": "WA-103",
+      "playerTooltipTemplate": "+V Healing Power"
+    },
+    {
+      "id": "WA-104",
+      "playerTooltipTemplate": "+V% Healing"
+    },
+    {
+      "id": "WA-105",
+      "playerTooltipTemplate": "+V% Barrier Strength"
+    },
+    {
+      "id": "WA-106",
+      "playerTooltipTemplate": "+V% Tether Range"
+    },
+    {
+      "id": "WA-107",
+      "playerTooltipTemplate": "V% Reduced Channel Mana Cost"
+    },
+    {
+      "id": "WA-108",
+      "playerTooltipTemplate": "+V% Channel Effect per Second, up to 3 sec"
+    },
+    {
+      "id": "WA-109",
+      "playerTooltipTemplate": "V% Reduced Hard Control Duration while Channeling"
+    },
+    {
+      "id": "WA-110",
+      "playerTooltipTemplate": "+V% Buff and Barrier Duration"
+    },
+    {
+      "id": "WA-111",
+      "playerTooltipTemplate": "+V% Healing Received"
+    },
+    {
+      "id": "WA-112",
+      "playerTooltipTemplate": "After Cleansing, gain a V% Max Health Barrier for 3 sec"
+    },
+    {
+      "id": "WA-113",
+      "playerTooltipTemplate": "+V% Minion Damage"
+    },
+    {
+      "id": "WA-114",
+      "playerTooltipTemplate": "+V% Minion Maximum Health"
+    },
+    {
+      "id": "WA-115",
+      "playerTooltipTemplate": "+V% Minion Defense"
+    },
+    {
+      "id": "WA-116",
+      "playerTooltipTemplate": "+V% Minion Elemental Resistances"
+    },
+    {
+      "id": "WA-117",
+      "playerTooltipTemplate": "+V% Minion Attack Speed"
+    },
+    {
+      "id": "WA-118",
+      "playerTooltipTemplate": "+V% Minion Movement Speed"
+    },
+    {
+      "id": "WA-119",
+      "playerTooltipTemplate": "+V% Minion Duration"
+    },
+    {
+      "id": "WA-120",
+      "playerTooltipTemplate": "V% Reduced Summon Mana Cost"
+    },
+    {
+      "id": "WA-121",
+      "playerTooltipTemplate": "+V to All Active Skills"
+    },
+    {
+      "id": "WA-122",
+      "playerTooltipTemplate": "+V to [Skill]"
+    },
+    {
+      "id": "WA-123",
+      "playerTooltipTemplate": "+V to Wind Skills"
+    },
+    {
+      "id": "WA-124",
+      "playerTooltipTemplate": "+V to Water Skills"
+    },
+    {
+      "id": "WA-125",
+      "playerTooltipTemplate": "+V to Fire Skills"
+    },
+    {
+      "id": "WA-126",
+      "playerTooltipTemplate": "+V to Earth Skills"
+    },
+    {
+      "id": "WA-127",
+      "playerTooltipTemplate": "+V to Lightning Skills"
+    },
+    {
+      "id": "WA-128",
+      "playerTooltipTemplate": "+V to Void Skills"
+    },
+    {
+      "id": "WA-129",
+      "playerTooltipTemplate": "+V to Martial Skills"
+    },
+    {
+      "id": "WA-130",
+      "playerTooltipTemplate": "+V to Healing Skills"
+    },
+    {
+      "id": "WA-131",
+      "playerTooltipTemplate": "+V to Summoning Skills"
+    },
+    {
+      "id": "WA-132",
+      "playerTooltipTemplate": "+V to Strike Skills"
+    },
+    {
+      "id": "WA-133",
+      "playerTooltipTemplate": "+V to Projectile Skills"
+    },
+    {
+      "id": "WA-134",
+      "playerTooltipTemplate": "V% Chance to Bleed and Reduce Health Regen on Hit"
+    },
+    {
+      "id": "WA-135",
+      "playerTooltipTemplate": "V% Chance to Deal Bonus Physical Damage Based on Target Health"
+    },
+    {
+      "id": "WA-136",
+      "playerTooltipTemplate": "V% Chance to Double Physical Damage"
+    },
+    {
+      "id": "WA-137",
+      "playerTooltipTemplate": "V% Chance to Impale; Next 3 Hits Deal Stored Physical Damage"
+    },
+    {
+      "id": "WA-138",
+      "playerTooltipTemplate": "V% Chance to Reduce Defense by 15% for 3 sec"
+    },
+    {
+      "id": "WA-139",
+      "playerTooltipTemplate": "Execute Eligible Enemies at or Below 5% Health"
+    },
+    {
+      "id": "WA-140",
+      "playerTooltipTemplate": "V% Chance on Melee Hit to Take 5% Less Hit Damage for 3 sec"
+    },
+    {
+      "id": "WA-141",
+      "playerTooltipTemplate": "V% Chance to Strike with Offhand for 40% Damage"
+    },
+    {
+      "id": "WA-142",
+      "playerTooltipTemplate": "Returns V Physical Damage to Melee Attackers"
+    },
+    {
+      "id": "WA-143",
+      "playerTooltipTemplate": "V% Chance on Kill to Explode for 35% of Hit Damage"
+    },
+    {
+      "id": "WA-144",
+      "playerTooltipTemplate": "Grants Rank 1 [Skill] while Equipped"
+    },
+    {
+      "id": "WA-145",
+      "playerTooltipTemplate": "V% Chance on Hit to Cast Rank 1 Fire Bolt"
+    },
+    {
+      "id": "WA-146",
+      "playerTooltipTemplate": "V% Chance on Hit to Cast Rank 1 Frost Bolt"
+    },
+    {
+      "id": "WA-147",
+      "playerTooltipTemplate": "V% Chance on Block to Cast Rank 1 Minor Heal"
+    },
+    {
+      "id": "WA-148",
+      "playerTooltipTemplate": "Grants Rank 1 Emanatism Aura while Equipped"
+    },
+    {
+      "id": "WA-149",
+      "playerTooltipTemplate": "Grants Rank 1 Thorns Aura while Equipped"
+    },
+    {
+      "id": "WA-150",
+      "playerTooltipTemplate": "Grants Rank 1 Pedanticism Aura while Equipped"
+    },
+    {
+      "id": "WA-151",
+      "playerTooltipTemplate": "+V% Magic Find"
+    },
+    {
+      "id": "WA-152",
+      "playerTooltipTemplate": "+V% Currency Find"
+    },
+    {
+      "id": "WA-153",
+      "playerTooltipTemplate": "V% Chance to Prevent Durability Loss"
+    },
+    {
+      "id": "WA-154",
+      "playerTooltipTemplate": "Requirements -V%"
+    },
+    {
+      "id": "WA-155",
+      "playerTooltipTemplate": "+V m Light Radius"
+    },
+    {
+      "id": "WA-156",
+      "playerTooltipTemplate": "+V m Currency and Material Pickup Radius"
+    },
+    {
+      "id": "WA-157",
+      "playerTooltipTemplate": "+V Minimum Physical Damage"
+    },
+    {
+      "id": "WA-158",
+      "playerTooltipTemplate": "+V Maximum Physical Damage"
+    },
+    {
+      "id": "GA-159",
+      "playerTooltipTemplate": "+V Armor"
+    },
+    {
+      "id": "GA-160",
+      "playerTooltipTemplate": "+V% Enhanced Armor"
+    }
+  ]
+}

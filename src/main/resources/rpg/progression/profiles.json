@@ -2,15 +2,136 @@
   "schemaVersion": 1,
   "profileId": "rpg.progression.r031",
   "biomeBands": [
-    {"id":"emerald_wilds","minimumLevel":1,"maximumLevel":20,"verifiedNativeBiomeIds":["Default/Zone1_Tier1/Forest_Birch"]},
-    {"id":"howling_sands","minimumLevel":21,"maximumLevel":40,"verifiedNativeBiomeIds":["Default/Zone2_Tier1/Savannah_Plains"]},
-    {"id":"whisperfrost","minimumLevel":41,"maximumLevel":60,"verifiedNativeBiomeIds":["Default/Zone3_Tier1/Forest_Fir"]},
-    {"id":"devastated_lands","minimumLevel":61,"maximumLevel":80,"verifiedNativeBiomeIds":["Default/Zone4_Tier4/Wastes_Grasslands"]},
-    {"id":"authored_endgame","minimumLevel":81,"maximumLevel":99,"verifiedNativeBiomeIds":[]}
+    {
+      "id": "emerald_wilds",
+      "minimumLevel": 1,
+      "maximumLevel": 20,
+      "verifiedNativeBiomeIds": [
+        "Default/Zone1_Shallow_Ocean/Shore",
+        "Default/Zone1_Shore/Beach",
+        "Default/Zone1_Spawn/Plains_Spawn",
+        "Default/Zone1_Temple/Plains_Temple",
+        "Default/Zone1_Tier1/Forest_Birch",
+        "Default/Zone1_Tier1/Forest_Flower",
+        "Default/Zone1_Tier1/Plains_Birch",
+        "Default/Zone1_Tier1/Plains_Smooth",
+        "Default/Zone1_Tier2/Forest_Aspen",
+        "Default/Zone1_Tier2/Forest_Gully",
+        "Default/Zone1_Tier2/Plains_Gorge",
+        "Default/Zone1_Tier2/Plains_Tallgrass",
+        "Default/Zone1_Tier3/Forest_Autumn",
+        "Default/Zone1_Tier3/Forest_Azure",
+        "Default/Zone1_Tier3/Forest_Moss",
+        "Default/Zone1_Tier3/Forest_Swamp",
+        "Default/Zone1_Tier3/Plains_Gorge"
+      ]
+    },
+    {
+      "id": "howling_sands",
+      "minimumLevel": 21,
+      "maximumLevel": 40,
+      "verifiedNativeBiomeIds": [
+        "Default/Zone2_Shallow_Ocean/Coral_Orange",
+        "Default/Zone2_Shallow_Ocean/Coral_Red",
+        "Default/Zone2_Shallow_Ocean/Coral_Yellow",
+        "Default/Zone2_Shallow_Ocean/Grass_Yellow",
+        "Default/Zone2_Shallow_Ocean/Shallow_Sand",
+        "Default/Zone2_Shore/Beach_Palm",
+        "Default/Zone2_Shore/Beach_Smooth",
+        "Default/Zone2_Tier1/Savannah_Boab",
+        "Default/Zone2_Tier1/Savannah_Forest",
+        "Default/Zone2_Tier1/Savannah_Plains",
+        "Default/Zone2_Tier1/Savannah_Rock",
+        "Default/Zone2_Tier1/Scrub_Bushland",
+        "Default/Zone2_Tier2/Desert_Oasis",
+        "Default/Zone2_Tier2/Desert_Red",
+        "Default/Zone2_Tier2/Desert_Rock",
+        "Default/Zone2_Tier2/Desert_Springs",
+        "Default/Zone2_Tier3/Desert_Barren",
+        "Default/Zone2_Tier3/Desert_Mushroom"
+      ]
+    },
+    {
+      "id": "whisperfrost",
+      "minimumLevel": 41,
+      "maximumLevel": 60,
+      "verifiedNativeBiomeIds": [
+        "Default/Zone3_Shallow_Ocean_Tier1/Shore_Cold",
+        "Default/Zone3_Shallow_Ocean_Tier1/Shore_Warm",
+        "Default/Zone3_Shallow_Ocean_Tier2/Shore_Cold",
+        "Default/Zone3_Shallow_Ocean_Tier2/Shore_Warm",
+        "Default/Zone3_Shallow_Ocean_Tier3/Shore_Cold",
+        "Default/Zone3_Shore_Tier1/Beach_Rocky",
+        "Default/Zone3_Shore_Tier1/Beach_Tundra",
+        "Default/Zone3_Shore_Tier2/Beach_Rocky",
+        "Default/Zone3_Shore_Tier2/Beach_Tundra",
+        "Default/Zone3_Shore_Tier3/Beach_Frozen",
+        "Default/Zone3_Tier1/Forest_Fir",
+        "Default/Zone3_Tier1/Forest_Redwood",
+        "Default/Zone3_Tier1/Forest_Tundra",
+        "Default/Zone3_Tier1/Plains_Hotsprings",
+        "Default/Zone3_Tier1/Plains_Shire",
+        "Default/Zone3_Tier2/Forest_Cedar",
+        "Default/Zone3_Tier2/Forest_Cedar_Mixed",
+        "Default/Zone3_Tier2/Plains_Frozen",
+        "Default/Zone3_Tier2/Plains_Tundra",
+        "Default/Zone3_Tier3/Forest_Frozen",
+        "Default/Zone3_Tier3/Forest_Frozen_Light",
+        "Default/Zone3_Tier3/Plains_Frozen_Frost"
+      ]
+    },
+    {
+      "id": "devastated_lands",
+      "minimumLevel": 61,
+      "maximumLevel": 80,
+      "verifiedNativeBiomeIds": [
+        "Default/Zone4_Shallow_Ocean_Tier4/Ocean_Wastes",
+        "Default/Zone4_Shallow_Ocean_Tier5/Ocean_Lava",
+        "Default/Zone4_Shore_Tier4/Beach_Wastes",
+        "Default/Zone4_Shore_Tier5/Beach_Lava",
+        "Default/Zone4_Tier4/Desert_Dunes",
+        "Default/Zone4_Tier4/Forest_Ghost",
+        "Default/Zone4_Tier4/Forest_Swamp",
+        "Default/Zone4_Tier4/Wastes_Geysers",
+        "Default/Zone4_Tier4/Wastes_Grasslands",
+        "Default/Zone4_Tier5/Desert_Ash",
+        "Default/Zone4_Tier5/Forest_Burned",
+        "Default/Zone4_Tier5/Forest_Roots",
+        "Default/Zone4_Tier5/Wastes_Ash",
+        "Default/Zone4_Tier5/Wastes_Lava"
+      ]
+    },
+    {
+      "id": "authored_endgame",
+      "minimumLevel": 81,
+      "maximumLevel": 99,
+      "verifiedNativeBiomeIds": []
+    }
   ],
   "difficulties": [
-    {"id":"NORMAL","enabled":true,"healthMultiplier":1.0,"damageMultiplier":1.0,"authoredEncounterRegistry":"","disabledReason":""},
-    {"id":"NIGHTMARE","enabled":false,"healthMultiplier":1.8,"damageMultiplier":1.35,"authoredEncounterRegistry":"","disabledReason":"UNAUTHORED_SPAWN_ENCOUNTER_SOURCE_DATA"},
-    {"id":"HELL","enabled":false,"healthMultiplier":3.0,"damageMultiplier":1.8,"authoredEncounterRegistry":"","disabledReason":"UNAUTHORED_SPAWN_ENCOUNTER_SOURCE_DATA"}
+    {
+      "id": "NORMAL",
+      "enabled": true,
+      "healthMultiplier": 1.0,
+      "damageMultiplier": 1.0,
+      "authoredEncounterRegistry": "",
+      "disabledReason": ""
+    },
+    {
+      "id": "NIGHTMARE",
+      "enabled": false,
+      "healthMultiplier": 1.8,
+      "damageMultiplier": 1.35,
+      "authoredEncounterRegistry": "",
+      "disabledReason": "UNAUTHORED_SPAWN_ENCOUNTER_SOURCE_DATA"
+    },
+    {
+      "id": "HELL",
+      "enabled": false,
+      "healthMultiplier": 3.0,
+      "damageMultiplier": 1.8,
+      "authoredEncounterRegistry": "",
+      "disabledReason": "UNAUTHORED_SPAWN_ENCOUNTER_SOURCE_DATA"
+    }
   ]
 }

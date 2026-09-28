@@ -27,6 +27,8 @@ class Stage13EscrowArchiveRollbackTest {
         try(var encounters=FileEncounterStore.durableV2(running.resolve("encounters"))){encounters.disqualify(world,enemy);}
         // Opaque world bytes test coordinated backup coverage, not native save compatibility/rendering.
         Files.createDirectories(running.resolve("world"));Files.writeString(running.resolve("world/opaque-fixture"),"same-checkpoint-world-bytes");
+        // Build a genuine pre-upgrade fixture with the archived writer. A schema-10 save is not downgrade-compatible.
+        writeArchivedFixture(jar,running.resolve("players"),state);
         copy(running,checkpoint);var original=hashes(checkpoint);
         state.support=actual.nextRevision();repository.save(state); // Independent later state must NOT leak into rollback.
         copy(checkpoint,restored);assertEquals(original,hashes(restored));
@@ -57,6 +59,18 @@ class Stage13EscrowArchiveRollbackTest {
         assertEquals(original,hashes(checkpoint));
     }
     private static void copy(Path from,Path to)throws Exception{try(var paths=Files.walk(from)){for(var p:paths.toList()){var target=to.resolve(from.relativize(p));if(Files.isDirectory(p))Files.createDirectories(target);else Files.copy(p,target);}}}
+    private static void writeArchivedFixture(Path jar,Path players,RpgPlayerState fixture)throws Exception{
+        assertEquals(com.inigmasgames.hytalerpg.difficulty.DifficultyProgress.INITIAL,fixture.difficulty);
+        var server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Server/HytaleServer.jar");
+        try(var legacy=new URLClassLoader(new URL[]{jar.toUri().toURL(),server.toUri().toURL()},ClassLoader.getPlatformClassLoader())){
+            var json=new com.google.gson.Gson().toJsonTree(fixture).getAsJsonObject();json.remove("difficulty");json.remove("gearEconomy");json.addProperty("schemaVersion",9);
+            var gsonClass=legacy.loadClass("com.google.gson.Gson");var gson=gsonClass.getConstructor().newInstance();
+            var playerClass=legacy.loadClass("com.inigmasgames.hytalerpg.progress.RpgPlayerState");
+            var state=gsonClass.getMethod("fromJson",String.class,Class.class).invoke(gson,json.toString(),playerClass);
+            var repoClass=legacy.loadClass("com.inigmasgames.hytalerpg.progress.FileRpgPlayerStateRepository");
+            repoClass.getMethod("save",playerClass).invoke(repoClass.getConstructor(Path.class).newInstance(players),state);
+        }
+    }
     private static Map<String,String> hashes(Path root)throws Exception{var out=new TreeMap<String,String>();try(var paths=Files.walk(root)){for(var p:paths.filter(Files::isRegularFile).toList())out.put(root.relativize(p).toString(),sha(p));}return out;}
     private static String sha(Path path)throws Exception{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(path)));}
 }

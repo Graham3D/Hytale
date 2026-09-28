@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 /** Durable presentation-topology binding. Gameplay edges remain coordinate-free. */
 public final class SkillTreePortBindingStore {
-    private static final Set<String> JOINT_PORTS=Set.of("a","b","c");
+    private static final Set<String> JOINT_PORTS=Set.of("a","b","c","d");
     private final Path directory;
     public SkillTreePortBindingStore(Path directory){this.directory=directory;}
 
@@ -132,7 +132,7 @@ public final class SkillTreePortBindingStore {
         case SKILL -> !source&&"in".equals(port);case PASSIVE -> source&&"out".equals(port);case JOINT -> JOINT_PORTS.contains(port);};}
     private static String allocate(LinkNodeId node,Set<String> used,boolean source){
         if(node.kind()==LinkNodeId.NodeKind.SKILL)return "in";if(node.kind()==LinkNodeId.NodeKind.PASSIVE)return "out";
-        for(String port:List.of("a","b","c"))if(!used.contains(port))return port;throw new IllegalStateException(node.externalId()+" has no free presentation port");
+        for(String port:List.of("a","b","c","d"))if(!used.contains(port))return port;throw new IllegalStateException(node.externalId()+" has no free presentation port");
     }
     private Properties load(UUID player){Properties values=new Properties();Path path=path(player);if(!Files.isRegularFile(path))return values;
         try(var input=Files.newInputStream(path)){values.load(input);return values;}catch(IOException e){throw new IllegalStateException("SKILLTREE_PORT_BINDING_LOAD_FAILED",e);}}

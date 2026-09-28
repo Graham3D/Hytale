@@ -21,7 +21,7 @@ public final class EncounterContributions {
     }
     public record Share(UUID player,long xp,long insight,int commonPotPlayerLevel,int eligiblePartyMembers,LearningSources.Opportunity learning){
         public Share(UUID player,long xp,long insight,int commonPotPlayerLevel,int eligiblePartyMembers){this(player,xp,insight,commonPotPlayerLevel,eligiblePartyMembers,null);}
-        public Share {Objects.requireNonNull(player);if(xp<1||insight<1||commonPotPlayerLevel<1||commonPotPlayerLevel>99||eligiblePartyMembers<1||eligiblePartyMembers>MAX_CONTRIBUTORS)throw new IllegalArgumentException("INVALID_DEATH_SHARE");}
+        public Share {Objects.requireNonNull(player);if(xp<0||insight<0||commonPotPlayerLevel<1||commonPotPlayerLevel>99||eligiblePartyMembers<1||eligiblePartyMembers>MAX_CONTRIBUTORS)throw new IllegalArgumentException("INVALID_DEATH_SHARE");}
     }
     /** Save original context and anti-farm watermark with credits; reload must not start a fresh encounter. */
     public record Snapshot(EnemyRewardRegistry.Spawn spawn,List<Credit> credits,long firstCombat,long progressAt,
@@ -42,11 +42,12 @@ public final class EncounterContributions {
         public DeathPlan {Objects.requireNonNull(spawn);Objects.requireNonNull(deathPosition);shares=List.copyOf(shares);
             if(deathAtMillis<spawn.spawnedAtMillis()||shares.size()>MAX_CONTRIBUTORS)throw new IllegalArgumentException("INVALID_DEATH_PLAN");
             Set<UUID> unique=new HashSet<>();
-            for(var share:shares)if(!unique.add(share.player())||share.insight()!=spawn.rank().insight
-                    ||share.xp()!=ProgressionMath.equalShare(ProgressionMath.enemyReward(spawn.level(),spawn.rank(),spawn.rarity(),share.commonPotPlayerLevel()),share.eligiblePartyMembers()))throw new IllegalArgumentException("DEATH_SHARE_PROFILE_MISMATCH");}
+            for(var share:shares)if(!unique.add(share.player())||share.insight()!=(spawn.level()>0?spawn.rank().insight:0)
+                    ||share.xp()!=(spawn.level()>0?ProgressionMath.equalShare(ProgressionMath.enemyReward(spawn.level(),spawn.rank(),spawn.rarity(),share.commonPotPlayerLevel()),share.eligiblePartyMembers()):0))throw new IllegalArgumentException("DEATH_SHARE_PROFILE_MISMATCH");}
         public EarnedReward reward(Share share){
             if(!shares.contains(share))throw new IllegalArgumentException("NOT_AN_ELIGIBLE_DEATH_SHARE");
-            return new EarnedReward(spawn.eventId(),share.xp(),share.insight(),Map.of(),"ELIGIBLE_ENEMY_DEATH","","",spawn.enemy().toString());
+            return new EarnedReward(spawn.eventId(),share.xp(),share.insight(),Map.of(),"ELIGIBLE_ENEMY_DEATH","","",spawn.enemy().toString(),null,
+                    spawn.milestone()==null?null:new com.inigmasgames.hytalerpg.difficulty.MilestoneAward(spawn.world(),spawn.enemy(),spawn.eventId(),deathAtMillis,spawn.milestone()));
         }
     }
     private static final class Encounter {
@@ -122,6 +123,7 @@ public final class EncounterContributions {
     }
     public synchronized boolean masteryEligible(UUID world,UUID enemy,UUID player,int playerLevel,long now){
         if(playerLevel<1||playerLevel>99)return false;var e=active(world,enemy,now);
+        if(e!=null&&e.spawn.level()==0)return false; // Historical milestone-only encounters retain their unassigned level.
         if(e==null||e.spawn.level()-playerLevel<=-11||e.firstCombat<0||now-e.progressAt>FARM_WINDOW_MS)return false;
         var contribution=e.contributors.get(player);return contribution!=null&&recent(contribution.observedAtMillis(),now);
     }
@@ -144,9 +146,9 @@ public final class EncounterContributions {
         for(var group:groups.values()){
             // Explicit conservative engineering policy for the unspecified mixed-level common party pot.
             int commonLevel=group.stream().mapToInt(Participant::level).max().orElseThrow();
-            long pot=ProgressionMath.enemyReward(e.spawn.level(),e.spawn.rank(),e.spawn.rarity(),commonLevel);
-            long xp=ProgressionMath.equalShare(pot,group.size());
-            group.stream().sorted(Comparator.comparing(p->p.player().toString())).forEach(p->shares.add(new Share(p.player(),xp,e.spawn.rank().insight,commonLevel,group.size(),p.learning())));
+            long pot=e.spawn.level()>0?ProgressionMath.enemyReward(e.spawn.level(),e.spawn.rank(),e.spawn.rarity(),commonLevel):0;
+            long xp=e.spawn.level()>0?ProgressionMath.equalShare(pot,group.size()):0;
+            group.stream().sorted(Comparator.comparing(p->p.player().toString())).forEach(p->shares.add(new Share(p.player(),xp,e.spawn.level()>0?e.spawn.rank().insight:0,commonLevel,group.size(),p.learning())));
         }
         e.death=new DeathPlan(e.spawn,position,now,shares);return e.death;
     }

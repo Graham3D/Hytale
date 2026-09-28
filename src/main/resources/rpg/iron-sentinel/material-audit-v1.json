@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "assetsSha256": "C02E69A0FA4088B965D0CA9D01C6A55610229EFA3F78F91FB45463108F07D022",
+  "bases": [
+    {
+      "baseId": "gm.battleaxe_iron.h",
+      "nativeItemId": "Weapon_Battleaxe_Iron",
+      "model": "Items/Weapons/Battleaxe/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Iron.json",
+      "sourceSha256": "E1819F9BC8343DD99A83F8DA3511DE34C813C3AEFC366D1E8D8164A4D2415C51"
+    },
+    {
+      "baseId": "gm.battleaxe_iron.n",
+      "nativeItemId": "Weapon_Battleaxe_Iron",
+      "model": "Items/Weapons/Battleaxe/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Iron.json",
+      "sourceSha256": "E1819F9BC8343DD99A83F8DA3511DE34C813C3AEFC366D1E8D8164A4D2415C51"
+    },
+    {
+      "baseId": "gm.battleaxe_iron.nm",
+      "nativeItemId": "Weapon_Battleaxe_Iron",
+      "model": "Items/Weapons/Battleaxe/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Iron.json",
+      "sourceSha256": "E1819F9BC8343DD99A83F8DA3511DE34C813C3AEFC366D1E8D8164A4D2415C51"
+    },
+    {
+      "baseId": "gm.daggers_iron.h",
+      "nativeItemId": "Weapon_Daggers_Iron",
+      "model": "Items/Weapons/Dagger/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Iron.json",
+      "sourceSha256": "EA3687904111BB32DCA134FADDCC6C87CB8E6124CFCC7472DCE8EBEBF14F5EFB"
+    },
+    {
+      "baseId": "gm.daggers_iron.n",
+      "nativeItemId": "Weapon_Daggers_Iron",
+      "model": "Items/Weapons/Dagger/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Iron.json",
+      "sourceSha256": "EA3687904111BB32DCA134FADDCC6C87CB8E6124CFCC7472DCE8EBEBF14F5EFB"
+    },
+    {
+      "baseId": "gm.daggers_iron.nm",
+      "nativeItemId": "Weapon_Daggers_Iron",
+      "model": "Items/Weapons/Dagger/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Daggers/Weapon_Daggers_Iron.json",
+      "sourceSha256": "EA3687904111BB32DCA134FADDCC6C87CB8E6124CFCC7472DCE8EBEBF14F5EFB"
+    },
+    {
+      "baseId": "gm.longsword_iron.h",
+      "nativeItemId": "Weapon_Longsword_Iron",
+      "model": "Items/Weapons/Longsword/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Iron.json",
+      "sourceSha256": "1C4F0456F4732D46B51505CA5350A8F49A6B032186DE5760BDD9E528C84D70A2"
+    },
+    {
+      "baseId": "gm.longsword_iron.n",
+      "nativeItemId": "Weapon_Longsword_Iron",
+      "model": "Items/Weapons/Longsword/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Iron.json",
+      "sourceSha256": "1C4F0456F4732D46B51505CA5350A8F49A6B032186DE5760BDD9E528C84D70A2"
+    },
+    {
+      "baseId": "gm.longsword_iron.nm",
+      "nativeItemId": "Weapon_Longsword_Iron",
+      "model": "Items/Weapons/Longsword/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Iron.json",
+      "sourceSha256": "1C4F0456F4732D46B51505CA5350A8F49A6B032186DE5760BDD9E528C84D70A2"
+    },
+    {
+      "baseId": "gm.mace_iron.h",
+      "nativeItemId": "Weapon_Mace_Iron",
+      "model": "Items/Weapons/Mace/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Iron.json",
+      "sourceSha256": "8DE4BC35A4BAD79C30061EE6CE837EEB9DF4203B60C1EC536058912B89B12FA1"
+    },
+    {
+      "baseId": "gm.mace_iron.n",
+      "nativeItemId": "Weapon_Mace_Iron",
+      "model": "Items/Weapons/Mace/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Iron.json",
+      "sourceSha256": "8DE4BC35A4BAD79C30061EE6CE837EEB9DF4203B60C1EC536058912B89B12FA1"
+    },
+    {
+      "baseId": "gm.mace_iron.nm",
+      "nativeItemId": "Weapon_Mace_Iron",
+      "model": "Items/Weapons/Mace/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Iron.json",
+      "sourceSha256": "8DE4BC35A4BAD79C30061EE6CE837EEB9DF4203B60C1EC536058912B89B12FA1"
+    },
+    {
+      "baseId": "gm.plate_iron.chest.h",
+      "nativeItemId": "Armor_Iron_Chest",
+      "model": "Items/Armors/Iron/Chest.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Chest.json",
+      "sourceSha256": "C5BB9D8A4453AAF1FAD47A4086646B5795ABCEF6D0C8144FE80F6315D3DCF198"
+    },
+    {
+      "baseId": "gm.plate_iron.chest.n",
+      "nativeItemId": "Armor_Iron_Chest",
+      "model": "Items/Armors/Iron/Chest.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Chest.json",
+      "sourceSha256": "C5BB9D8A4453AAF1FAD47A4086646B5795ABCEF6D0C8144FE80F6315D3DCF198"
+    },
+    {
+      "baseId": "gm.plate_iron.chest.nm",
+      "nativeItemId": "Armor_Iron_Chest",
+      "model": "Items/Armors/Iron/Chest.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Chest.json",
+      "sourceSha256": "C5BB9D8A4453AAF1FAD47A4086646B5795ABCEF6D0C8144FE80F6315D3DCF198"
+    },
+    {
+      "baseId": "gm.plate_iron.hands.h",
+      "nativeItemId": "Armor_Iron_Hands",
+      "model": "Items/Armors/Iron/Hands.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Hands.json",
+      "sourceSha256": "5B871CD6D369827D559FAE7D5AF5F847BE827CF211B8453A1E351D0DFD08AB1D"
+    },
+    {
+      "baseId": "gm.plate_iron.hands.n",
+      "nativeItemId": "Armor_Iron_Hands",
+      "model": "Items/Armors/Iron/Hands.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Hands.json",
+      "sourceSha256": "5B871CD6D369827D559FAE7D5AF5F847BE827CF211B8453A1E351D0DFD08AB1D"
+    },
+    {
+      "baseId": "gm.plate_iron.hands.nm",
+      "nativeItemId": "Armor_Iron_Hands",
+      "model": "Items/Armors/Iron/Hands.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Hands.json",
+      "sourceSha256": "5B871CD6D369827D559FAE7D5AF5F847BE827CF211B8453A1E351D0DFD08AB1D"
+    },
+    {
+      "baseId": "gm.plate_iron.head.h",
+      "nativeItemId": "Armor_Iron_Head",
+      "model": "Items/Armors/Iron/Head.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Head.json",
+      "sourceSha256": "EC01A8BEFB091B7BD5CDD0CB0A661F91C67F3C118F2A4EF7D8BE20566357AFC0"
+    },
+    {
+      "baseId": "gm.plate_iron.head.n",
+      "nativeItemId": "Armor_Iron_Head",
+      "model": "Items/Armors/Iron/Head.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Head.json",
+      "sourceSha256": "EC01A8BEFB091B7BD5CDD0CB0A661F91C67F3C118F2A4EF7D8BE20566357AFC0"
+    },
+    {
+      "baseId": "gm.plate_iron.head.nm",
+      "nativeItemId": "Armor_Iron_Head",
+      "model": "Items/Armors/Iron/Head.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Head.json",
+      "sourceSha256": "EC01A8BEFB091B7BD5CDD0CB0A661F91C67F3C118F2A4EF7D8BE20566357AFC0"
+    },
+    {
+      "baseId": "gm.plate_iron.legs.h",
+      "nativeItemId": "Armor_Iron_Legs",
+      "model": "Items/Armors/Iron/Legs.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Legs.json",
+      "sourceSha256": "D382EAE4A88C73916116B9608F0C76A1C36EAC361ED1BCF97BD3F411C15CF308"
+    },
+    {
+      "baseId": "gm.plate_iron.legs.n",
+      "nativeItemId": "Armor_Iron_Legs",
+      "model": "Items/Armors/Iron/Legs.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Legs.json",
+      "sourceSha256": "D382EAE4A88C73916116B9608F0C76A1C36EAC361ED1BCF97BD3F411C15CF308"
+    },
+    {
+      "baseId": "gm.plate_iron.legs.nm",
+      "nativeItemId": "Armor_Iron_Legs",
+      "model": "Items/Armors/Iron/Legs.blockymodel",
+      "sourceAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Legs.json",
+      "sourceSha256": "D382EAE4A88C73916116B9608F0C76A1C36EAC361ED1BCF97BD3F411C15CF308"
+    },
+    {
+      "baseId": "gm.shortbow_iron.h",
+      "nativeItemId": "Weapon_Shortbow_Iron",
+      "model": "Items/Weapons/Bow/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Iron.json",
+      "sourceSha256": "4F961F8A4513ADC4CCF786D4B56616A96DD9D57CFE403459C4693AAED267D902"
+    },
+    {
+      "baseId": "gm.shortbow_iron.n",
+      "nativeItemId": "Weapon_Shortbow_Iron",
+      "model": "Items/Weapons/Bow/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Iron.json",
+      "sourceSha256": "4F961F8A4513ADC4CCF786D4B56616A96DD9D57CFE403459C4693AAED267D902"
+    },
+    {
+      "baseId": "gm.shortbow_iron.nm",
+      "nativeItemId": "Weapon_Shortbow_Iron",
+      "model": "Items/Weapons/Bow/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Iron.json",
+      "sourceSha256": "4F961F8A4513ADC4CCF786D4B56616A96DD9D57CFE403459C4693AAED267D902"
+    },
+    {
+      "baseId": "gm.sword_iron.h",
+      "nativeItemId": "Weapon_Sword_Iron",
+      "model": "Items/Weapons/Sword/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Iron.json",
+      "sourceSha256": "AE4E17D7B2570F84B1D4D5F08C690078DA82FA022CA423741CF46E36923C4C73"
+    },
+    {
+      "baseId": "gm.sword_iron.n",
+      "nativeItemId": "Weapon_Sword_Iron",
+      "model": "Items/Weapons/Sword/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Iron.json",
+      "sourceSha256": "AE4E17D7B2570F84B1D4D5F08C690078DA82FA022CA423741CF46E36923C4C73"
+    },
+    {
+      "baseId": "gm.sword_iron.nm",
+      "nativeItemId": "Weapon_Sword_Iron",
+      "model": "Items/Weapons/Sword/Iron.blockymodel",
+      "sourceAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Iron.json",
+      "sourceSha256": "AE4E17D7B2570F84B1D4D5F08C690078DA82FA022CA423741CF46E36923C4C73"
+    }
+  ]
+}

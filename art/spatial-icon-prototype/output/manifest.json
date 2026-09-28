@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "slotPixels": 64,
+  "items": [
+    {
+      "itemId": "Weapon_Shortbow_Copper",
+      "familyId": "shortbow",
+      "displayName": "Copper Shortbow",
+      "itemFamily": "bows",
+      "invWidth": 2,
+      "invHeight": 3,
+      "sourceItemAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Copper.json",
+      "sourceModelPath": "Common/Items/Weapons/Bow/Copper.blockymodel",
+      "sourceTexturePath": "Common/Items/Weapons/Bow/Copper_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Weapon_Bow_Copper.png",
+      "iconProperties": {
+        "Scale": 0.4,
+        "Translation": [
+          -25,
+          -39
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "iconPropertiesSource": "Server/Item/Items/Weapon/Shortbow/Template_Weapon_Shortbow.json",
+      "poseSource": "resolved native IconProperties plus shipped icon alpha silhouette",
+      "propertiesApplication": "Authored Rotation and Scale applied to 3D model; native Translation recorded; spatial fit replaces native 64px framing to center within the footprint",
+      "stockPoseAlignment": {
+        "rollDegrees": 180,
+        "alphaIoU": 0.5555,
+        "decisionMargin": 0.4069,
+        "reviewRequired": false,
+        "candidates": {
+          "0": 0.1486,
+          "180": 0.5555
+        }
+      },
+      "outputPng": "Weapon_Shortbow_Copper-2x3.png",
+      "renderMethod": "Blender Cycles blockymodel reconstruction + authored IconProperties pose + stock-silhouette roll check + alpha-bounds uniform fit",
+      "fit": {
+        "visibleBoundsInRender": [
+          45,
+          45,
+          504,
+          504
+        ],
+        "scaledVisibleSize": [
+          116,
+          116
+        ],
+        "paddingPixels": 6
+      }
+    },
+    {
+      "itemId": "Weapon_Shortbow_Iron",
+      "familyId": "longbow",
+      "displayName": "Iron Bow (2x4 proxy)",
+      "itemFamily": "bows",
+      "invWidth": 2,
+      "invHeight": 4,
+      "sourceItemAsset": "Server/Item/Items/Weapon/Shortbow/Weapon_Shortbow_Iron.json",
+      "sourceModelPath": "Common/Items/Weapons/Bow/Iron.blockymodel",
+      "sourceTexturePath": "Common/Items/Weapons/Bow/Iron_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Weapon_Bow_Iron.png",
+      "iconProperties": {
+        "Scale": 0.4,
+        "Translation": [
+          -25,
+          -39
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "iconPropertiesSource": "Server/Item/Items/Weapon/Shortbow/Template_Weapon_Shortbow.json",
+      "poseSource": "resolved native IconProperties plus shipped icon alpha silhouette",
+      "propertiesApplication": "Authored Rotation and Scale applied to 3D model; native Translation recorded; spatial fit replaces native 64px framing to center within the footprint",
+      "stockPoseAlignment": {
+        "rollDegrees": 180,
+        "alphaIoU": 0.653,
+        "decisionMargin": 0.432,
+        "reviewRequired": false,
+        "candidates": {
+          "0": 0.221,
+          "180": 0.653
+        }
+      },
+      "outputPng": "Weapon_Shortbow_Iron-2x4.png",
+      "renderMethod": "Blender Cycles blockymodel reconstruction + authored IconProperties pose + stock-silhouette roll check + alpha-bounds uniform fit",
+      "fit": {
+        "visibleBoundsInRender": [
+          32,
+          57,
+          490,
+          490
+        ],
+        "scaledVisibleSize": [
+          116,
+          110
+        ],
+        "paddingPixels": 6
+      }
+    },
+    {
+      "itemId": "Weapon_Sword_Iron",
+      "familyId": "short_sword",
+      "displayName": "Iron Sword",
+      "itemFamily": "swords",
+      "invWidth": 1,
+      "invHeight": 3,
+      "sourceItemAsset": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Iron.json",
+      "sourceModelPath": "Common/Items/Weapons/Sword/Iron.blockymodel",
+      "sourceTexturePath": "Common/Items/Weapons/Sword/Iron_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Weapon_Sword_Iron.png",
+      "iconProperties": {
+        "Scale": 0.35,
+        "Translation": [
+          -22,
+          -22
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "iconPropertiesSource": "Server/Item/Items/Weapon/Sword/Template_Weapon_Sword.json",
+      "poseSource": "resolved native IconProperties plus shipped icon alpha silhouette",
+      "propertiesApplication": "Authored Rotation and Scale applied to 3D model; native Translation recorded; spatial fit replaces native 64px framing to center within the footprint",
+      "stockPoseAlignment": {
+        "rollDegrees": 180,
+        "alphaIoU": 0.4063,
+        "decisionMargin": 0.0422,
+        "reviewRequired": true,
+        "candidates": {
+          "0": 0.3641,
+          "180": 0.4063
+        }
+      },
+      "outputPng": "Weapon_Sword_Iron-1x3.png",
+      "renderMethod": "Blender Cycles blockymodel reconstruction + authored IconProperties pose + stock-silhouette roll check + alpha-bounds uniform fit",
+      "fit": {
+        "visibleBoundsInRender": [
+          0,
+          80,
+          432,
+          512
+        ],
+        "scaledVisibleSize": [
+          52,
+          52
+        ],
+        "paddingPixels": 6
+      }
+    },
+    {
+      "itemId": "Weapon_Staff_Wizard",
+      "familyId": "long_staff",
+      "displayName": "Wizard Staff",
+      "itemFamily": "staffs",
+      "invWidth": 1,
+      "invHeight": 4,
+      "sourceItemAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wizard.json",
+      "sourceModelPath": "Common/Items/Weapons/Staff/Wizard.blockymodel",
+      "sourceTexturePath": "Common/Items/Weapons/Staff/Wizard_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Weapon_Staff_Wizard.png",
+      "iconProperties": {
+        "Scale": 0.23,
+        "Translation": [
+          -65,
+          -65
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "iconPropertiesSource": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wizard.json",
+      "poseSource": "resolved native IconProperties plus shipped icon alpha silhouette",
+      "propertiesApplication": "Authored Rotation and Scale applied to 3D model; native Translation recorded; spatial fit replaces native 64px framing to center within the footprint",
+      "stockPoseAlignment": {
+        "rollDegrees": 180,
+        "alphaIoU": 0.5873,
+        "decisionMargin": 0.3253,
+        "reviewRequired": false,
+        "candidates": {
+          "0": 0.262,
+          "180": 0.5873
+        }
+      },
+      "outputPng": "Weapon_Staff_Wizard-1x4.png",
+      "renderMethod": "Blender Cycles blockymodel reconstruction + authored IconProperties pose + stock-silhouette roll check + alpha-bounds uniform fit",
+      "fit": {
+        "visibleBoundsInRender": [
+          122,
+          0,
+          512,
+          412
+        ],
+        "scaledVisibleSize": [
+          52,
+          55
+        ],
+        "paddingPixels": 6
+      }
+    },
+    {
+      "itemId": "Armor_Iron_Head",
+      "familyId": "helm",
+      "displayName": "Iron Helm",
+      "itemFamily": "helmets",
+      "invWidth": 2,
+      "invHeight": 2,
+      "sourceItemAsset": "Server/Item/Items/Armor/Iron/Armor_Iron_Head.json",
+      "sourceModelPath": "Common/Items/Armors/Iron/Head.blockymodel",
+      "sourceTexturePath": "Common/Items/Armors/Iron/Head_Texture.png",
+      "sourceIconPath": "Common/Icons/ItemsGenerated/Armor_Iron_Head.png",
+      "iconProperties": {
+        "Rotation": [
+          22.5,
+          45,
+          22.5
+        ],
+        "Scale": 0.5,
+        "Translation": [
+          0,
+          -15
+        ]
+      },
+      "iconPropertiesSource": "Server/Item/Items/Armor/Iron/Armor_Iron_Head.json",
+      "poseSource": "resolved native IconProperties plus shipped icon alpha silhouette",
+      "propertiesApplication": "Authored Rotation and Scale applied to 3D model; native Translation recorded; spatial fit replaces native 64px framing to center within the footprint",
+      "stockPoseAlignment": {
+        "rollDegrees": 180,
+        "alphaIoU": 0.6074,
+        "decisionMargin": 0.0424,
+        "reviewRequired": true,
+        "candidates": {
+          "0": 0.565,
+          "180": 0.6074
+        }
+      },
+      "outputPng": "Armor_Iron_Head-2x2.png",
+      "renderMethod": "Blender Cycles blockymodel reconstruction + authored IconProperties pose + stock-silhouette roll check + alpha-bounds uniform fit",
+      "fit": {
+        "visibleBoundsInRender": [
+          24,
+          49,
+          483,
+          418
+        ],
+        "scaledVisibleSize": [
+          116,
+          93
+        ],
+        "paddingPixels": 6
+      }
+    }
+  ]
+}

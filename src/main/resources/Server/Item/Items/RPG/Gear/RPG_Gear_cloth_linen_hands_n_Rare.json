@@ -1,0 +1,46 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.cloth_linen.hands.n"
+  },
+  "Quality": "RPG_Gear_Rare",
+  "MaxStack": 1,
+  "MaxDurability": 70,
+  "Model": "Items/Armors/Linen/Hands.blockymodel",
+  "Texture": "Items/Armors/Linen/Hands_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cloth_Linen_Hands.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Cloth_Linen"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Hands",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": []
+  },
+  "DurabilityLossOnHit": 0.5
+}

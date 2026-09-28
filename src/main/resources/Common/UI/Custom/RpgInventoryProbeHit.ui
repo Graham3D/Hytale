@@ -1,0 +1,8 @@
+Button {
+  Anchor: (Width: 64, Height: 64);
+  Style: ButtonStyle(
+    Default: (Background: #00000000),
+    Hovered: (Background: #d8ad5533),
+    Pressed: (Background: #d8ad5555)
+  );
+}

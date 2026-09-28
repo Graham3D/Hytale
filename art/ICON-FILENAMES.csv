@@ -1,4 +1,5 @@
 Kind,Name,Filename,Folder,CanonicalId
+"Skill","Iron Sentinel","SkillIronsentinel.png","art/Skills","iron_sentinel"
 "Skill","Quick Slash","SkillQuickslash.png","art/Skills","quick_slash"
 "Skill","Heavy Swing","SkillHeavyswing.png","art/Skills","heavy_swing"
 "Skill","Spear Thrust","SkillSpearthrust.png","art/Skills","spear_thrust"

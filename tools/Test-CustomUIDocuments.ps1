@@ -166,9 +166,22 @@ foreach ($document in $documents) {
         $replacement = if ($match.Groups['value'].Value -eq 'Left') { 'Start' } else { 'End' }
         $errors.Add("$($document.Name) ($matchLine): unsupported LabelAlignment '$($match.Groups['value'].Value)'; use '$replacement'.")
     }
+
+    # The pre.4 client Anchor codec rejects MaxHeight at document load time.
+    foreach ($match in [regex]::Matches($text, '(?m)\bMaxHeight\s*:')) {
+        $matchLine = 1 + ([regex]::Matches($text.Substring(0, $match.Index), "`n")).Count
+        $errors.Add("$($document.Name) ($matchLine): unsupported Anchor field MaxHeight in 0.7.0-pre.4.")
+    }
+
+    # Hytale UI references the logical .png name; @2x names are physical
+    # density variants. Addressing the variant directly renders a red X.
+    foreach ($match in [regex]::Matches($text, 'TexturePath\s*:\s*"Icons/Hytale/[^"\r\n]+@2x\.png"')) {
+        $matchLine = 1 + ([regex]::Matches($text.Substring(0, $match.Index), "`n")).Count
+        $errors.Add("$($document.Name) ($matchLine): refer to the logical Icons/Hytale/*.png path, not its @2x asset variant.")
+    }
 }
 
 if ($documents.Count -eq 0) { throw 'No CustomUI .ui documents were found in the validation targets.' }
 if ($errors.Count -gt 0) { throw "CustomUI validation failed:`n$($errors -join "`n")" }
 
-"Validated $($documents.Count) CustomUI document(s): no invalid escapes, unterminated strings, unbalanced delimiters, labeled Button misuse, invalid LabelAlignment values, or late imported-control macro arguments."
+"Validated $($documents.Count) CustomUI document(s): no invalid escapes, unterminated strings, unbalanced delimiters, labeled Button misuse, invalid LabelAlignment values, unsupported MaxHeight anchors, or late imported-control macro arguments."

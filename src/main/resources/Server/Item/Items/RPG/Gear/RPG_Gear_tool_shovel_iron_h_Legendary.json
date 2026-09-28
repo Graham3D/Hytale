@@ -1,0 +1,128 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.tool.shovel.iron.h"
+  },
+  "Quality": "RPG_Gear_Legendary",
+  "MaxStack": 1,
+  "MaxDurability": 175,
+  "Model": "Items/Tools/Shovel/Iron.blockymodel",
+  "Texture": "Items/Tools/Shovel/Iron_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Tool_Shovel_Iron.png",
+  "PlayerAnimationsId": "Shovel",
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        "Shovel_Attack"
+      ]
+    }
+  },
+  "InteractionVars": {
+    "Shovel_Dig_Effect": {
+      "Interactions": [
+        {
+          "Parent": "Shovel_Dig_Effect",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Tool_T1_Swing",
+            "LocalSoundEventId": "SFX_Shovel_T1_Swing_RL_Local"
+          }
+        }
+      ]
+    },
+    "Shovel_Dig_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Shovel_Dig_Damage",
+          "DamageCalculator": {
+            "Type": "Dps",
+            "BaseDamage": {
+              "Physical": 5
+            }
+          },
+          "DamageEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Impact"
+          }
+        }
+      ]
+    }
+  },
+  "Tool": {
+    "Specs": [
+      {
+        "Power": 1,
+        "GatherType": "SoftBlocks"
+      },
+      {
+        "Power": 0.5,
+        "GatherType": "Soils",
+        "HitSoundLayer": "SFX_Shovel_T2_Impact_Nice"
+      },
+      {
+        "Power": 0.05,
+        "GatherType": "Woods"
+      },
+      {
+        "Power": 0.05,
+        "GatherType": "Rocks"
+      },
+      {
+        "Power": 0.5,
+        "GatherType": "Benches"
+      },
+      {
+        "Power": 0.001,
+        "GatherType": "Metals",
+        "IsIncorrect": true,
+        "HitSoundLayer": "SFX_Pickaxe_Impact_Poor"
+      },
+      {
+        "Power": 0.046,
+        "GatherType": "OreCopper"
+      },
+      {
+        "Power": 0.042,
+        "GatherType": "OreIron"
+      },
+      {
+        "Power": 0.042,
+        "GatherType": "OreSilver"
+      },
+      {
+        "Power": 0.042,
+        "GatherType": "OreGold"
+      },
+      {
+        "Power": 0.036,
+        "GatherType": "OreThorium"
+      },
+      {
+        "Power": 0.036,
+        "GatherType": "OreCobalt"
+      },
+      {
+        "Power": 0.032,
+        "GatherType": "OreAdamantite"
+      },
+      {
+        "Power": 0.028,
+        "GatherType": "OreMithril"
+      }
+    ],
+    "DurabilityLossBlockTypes": [
+      {
+        "BlockSets": [
+          "Stone",
+          "Rock",
+          "Ores",
+          "Soil",
+          "Wood"
+        ],
+        "DurabilityLossOnHit": 0.05
+      }
+    ]
+  }
+}

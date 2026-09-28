@@ -28,7 +28,7 @@ class Stage13CoverageLedgerTest {
             skills.add(Map.of("id",skill.id().value(),"name",skill.name(),"family",p.family(),"status",status,"activationGate",gate,"limitations",limitations,"connectedProof",false));
             rows.append("| ").append(skill.name()).append(" (`").append(skill.id().value()).append("`) | ").append(p.family()).append(" | ").append(status).append(" | ").append(String.join("; ",limitations)).append(" |\n");
         }
-        assertEquals(96,skills.size());assertEquals(96,profiles.all().size());assertEquals(4,gates.size());
+        assertEquals(97,skills.size());assertEquals(97,profiles.all().size());assertEquals(4,gates.size());
         assertTrue(gates.containsKey("frenzy"));assertTrue(gates.containsKey("guard"));assertTrue(gates.containsKey("bone_cage"));assertTrue(gates.containsKey("storm_strike"));
         assertFalse(gates.containsKey("snipe")); // T owner-authored range; connected release still unverified.
         rows.append("\n## Passives\n\nEvery row has retained compiler/runtime tests; exact eligible/rejected targets are in the 6,030-cell matrix. Native/client behavior is still unverified.\n\n| Passive | Modifier operations | Status |\n|---|---|---|\n");

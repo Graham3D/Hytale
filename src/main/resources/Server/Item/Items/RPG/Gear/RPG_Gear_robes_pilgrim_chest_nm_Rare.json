@@ -1,0 +1,48 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.robes_pilgrim.chest.nm"
+  },
+  "Quality": "RPG_Gear_Rare",
+  "MaxStack": 1,
+  "MaxDurability": 110,
+  "Model": "Items/Armors/Cotton/Chest.blockymodel",
+  "Texture": "Items/Armors/Cotton/Chest_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cloth_Cotton_Chest.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Cloth_Cotton"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Chest",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Overtop"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

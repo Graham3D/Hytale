@@ -27,6 +27,8 @@ public final class RpgUiProjectionService {
     private final RpgCooldownService cooldowns;
     private final CharacterXpProjectionService xp = new CharacterXpProjectionService();
     private final Stage04SkillProfiles stage04;
+    private java.util.function.Function<UUID,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects> gearEffects=actor->com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects.NONE;
+    public void configureGearEffects(java.util.function.Function<UUID,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects> provider){gearEffects=java.util.Objects.requireNonNull(provider);}
     private java.util.function.ToDoubleBiFunction<UUID,String> activeRemaining=(owner,skill)->0;
     public void configureActiveRemaining(java.util.function.ToDoubleBiFunction<UUID,String> reader){activeRemaining=java.util.Objects.requireNonNull(reader);}
     private com.inigmasgames.hytalerpg.combat.resource.RpgResourceService resourceService;
@@ -43,7 +45,7 @@ public final class RpgUiProjectionService {
     public CharacterSheetViewModel character(UUID player, String displayName,
                                              HytaleResourceViewAdapter.Snapshot resources) {
         RpgLoadoutView view = loadouts.getPresentationView(player);
-        DerivedStats derived = derive(view);
+        DerivedStats derived = derive(player,view);
         return new CharacterSheetViewModel(view.state().revision, displayName,
                 xp.project(view.state().currentXp), view.state().unspentAttributePoints,
                 view.state().pendingLevelUpPoints, derived, resources.mana(), resources.health(), resources.stamina());
@@ -51,7 +53,7 @@ public final class RpgUiProjectionService {
 
     public RpgHudViewModel hud(UUID player, HytaleResourceViewAdapter.Snapshot resources, XpView xpOverride) {
         RpgLoadoutView view = loadouts.getPresentationView(player);
-        DerivedStats currentDerived=derive(view);
+        DerivedStats currentDerived=derive(player,view);
         cooldowns.setOwnerRecovery(player,currentDerived.cooldownRecovery());
         XpView projectedXp = xpOverride == null ? xp.project(view.state().currentXp) : xpOverride;
         List<SkillSlotView> slots = new ArrayList<>(3);
@@ -96,6 +98,14 @@ public final class RpgUiProjectionService {
 
     public CharacterXpProjectionService xp() { return xp; }
 
+    /** Read the same Mana reservation ceiling used by resource admission. */
+    public double usableMana(UUID player, HytaleResourceViewAdapter.Snapshot resources) {
+        return resourceService == null ? resources.mana().maximum()
+                : resourceService.spendableMaximum(player,
+                        com.inigmasgames.hytalerpg.combat.resource.ResourceType.MANA,
+                        readOnlyResources(resources));
+    }
+
     private static com.inigmasgames.hytalerpg.combat.resource.NativeResourcePort readOnlyResources(HytaleResourceViewAdapter.Snapshot snapshot){
         return new com.inigmasgames.hytalerpg.combat.resource.NativeResourcePort(){
             private com.inigmasgames.hytalerpg.ui.model.NativeResourceView value(com.inigmasgames.hytalerpg.combat.resource.ResourceType type){
@@ -107,11 +117,29 @@ public final class RpgUiProjectionService {
         };
     }
 
-    private DerivedStats derive(RpgLoadoutView view) {
+    /** Read the actual equipped loadout for workspace selection, without executing a skill. */
+    public List<EquippedSkill> equippedSkills(UUID player) {
+        RpgLoadoutView view = loadouts.getPresentationView(player);
+        List<EquippedSkill> result = new ArrayList<>();
+        for (SkillSlot slot : SkillSlot.values()) view.state().skill(slot).ifPresent(id -> {
+            var plan = view.plans().get(slot);
+            String previewState = !stage04.supports(id.value()) ? "Runtime profile unavailable"
+                    : plan == null ? "Compiled plan unavailable"
+                    : plan.degraded() ? "Compiled plan degraded"
+                    : "Output preview unavailable: no shared evaluator";
+            result.add(new EquippedSkill(slot, id.value(),
+                    catalog.skill(id).map(value -> value.name()).orElse("Unavailable skill"), previewState));
+        });
+        return List.copyOf(result);
+    }
+
+    public record EquippedSkill(SkillSlot slot, String id, String name, String previewState) { }
+
+    private DerivedStats derive(UUID player,RpgLoadoutView view) {
         EnumMap<RpgAttribute, Integer> raw = new EnumMap<>(RpgAttribute.class);
         for (RpgAttribute attribute : RpgAttribute.values())
             raw.put(attribute, view.state().attributes.getOrDefault(attribute.name(), 10));
-        return derivedStats.derive(raw);
+        return gearEffects.apply(player).derive(derivedStats,raw);
     }
 
     private static String abilityAction(SkillSlot slot) { return "Ability" + (slot.index() + 2); }

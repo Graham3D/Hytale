@@ -1,0 +1,204 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.sword_crude.h"
+  },
+  "Quality": "RPG_Gear_Common",
+  "MaxStack": 1,
+  "MaxDurability": 150,
+  "Model": "Items/Weapons/Sword/Crude.blockymodel",
+  "Texture": "Items/Weapons/Sword/Crude_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Weapon_Sword_Crude.png",
+  "PlayerAnimationsId": "Sword",
+  "Tags": {
+    "Type": [
+      "Weapon"
+    ],
+    "Family": [
+      "Sword"
+    ]
+  },
+  "Interactions": {
+    "Primary": "Root_Weapon_Sword_Primary",
+    "Secondary": "Root_Weapon_Sword_Secondary_Guard",
+    "Ability1": "Root_Weapon_Sword_Signature_Vortexstrike"
+  },
+  "InteractionVars": {
+    "Swing_Left": {
+      "Interactions": [
+        {
+          "$Comment": "FX for the start of the attack go here",
+          "Parent": "Weapon_Sword_Primary_Swing_Left",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Sword_T1_Swing",
+            "LocalSoundEventId": "SFX_Sword_T1_Swing_RL_Local"
+          }
+        }
+      ]
+    },
+    "Swing_Right": {
+      "Interactions": [
+        {
+          "$Comment": "FX for the start of the attack go here",
+          "Parent": "Weapon_Sword_Primary_Swing_Right",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Sword_T1_Swing",
+            "LocalSoundEventId": "SFX_Sword_T1_Swing_LR_Local"
+          }
+        }
+      ]
+    },
+    "Swing_Down": {
+      "Interactions": [
+        {
+          "$Comment": "FX for the start of the attack go here",
+          "Parent": "Weapon_Sword_Primary_Swing_Down",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Sword_T1_Swing_Down",
+            "LocalSoundEventId": "SFX_Sword_T1_Swing_Down_Local"
+          }
+        }
+      ]
+    },
+    "Swing_Left_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Weapon_Sword_Primary_Swing_Left_Damage",
+          "DamageEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
+            "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
+          },
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Physical": 6
+            }
+          },
+          "Type": "RPG_GearDamage"
+        }
+      ]
+    },
+    "Swing_Right_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Weapon_Sword_Primary_Swing_Right_Damage",
+          "DamageEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
+            "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
+          },
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Physical": 6
+            }
+          },
+          "Type": "RPG_GearDamage"
+        }
+      ]
+    },
+    "Swing_Down_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Weapon_Sword_Primary_Swing_Down_Damage",
+          "DamageEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
+            "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
+          },
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Physical": 11
+            }
+          },
+          "Type": "RPG_GearDamage"
+        }
+      ]
+    },
+    "Thrust_Selector": {
+      "Interactions": [
+        {
+          "Parent": "Weapon_Sword_Primary_Thrust_Selector",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Lunge",
+            "LocalSoundEventId": "SFX_Sword_T1_Lunge_Local"
+          }
+        }
+      ]
+    },
+    "Thrust_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Weapon_Sword_Primary_Thrust_Damage",
+          "DamageEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
+            "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
+          },
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Physical": 16
+            }
+          },
+          "EntityStatsOnHit": [
+            {
+              "EntityStatId": "SignatureEnergy",
+              "Amount": 3
+            }
+          ],
+          "Type": "RPG_GearDamage"
+        }
+      ]
+    },
+    "Vortexstrike_Spin_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Weapon_Sword_Signature_Vortexstrike_Spin_Damage",
+          "DamageEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
+            "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
+          },
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Physical": 12
+            }
+          },
+          "EntityStatsOnHit": [],
+          "Type": "RPG_GearDamage"
+        }
+      ]
+    },
+    "Vortexstrike_Stab_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Weapon_Sword_Signature_Vortexstrike_Stab_Damage",
+          "DamageEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
+            "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
+          },
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Physical": 35
+            }
+          },
+          "EntityStatsOnHit": [],
+          "Type": "RPG_GearDamage"
+        }
+      ]
+    },
+    "Guard_Wield": {
+      "Interactions": [
+        {
+          "Parent": "Weapon_Sword_Secondary_Guard_Wield",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Block",
+            "LocalSoundEventId": "SFX_Sword_T1_Block_Local"
+          },
+          "StaminaCost": {
+            "Value": 5.56,
+            "CostType": "Damage"
+          },
+          "BlockedEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Guard_Hit"
+          }
+        }
+      ]
+    }
+  },
+  "Weapon": {},
+  "DurabilityLossOnHit": 0.21
+}

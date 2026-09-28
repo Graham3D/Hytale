@@ -58,7 +58,7 @@ public final class NativeBasicAttackObserver {
     private synchronized void start(UUID actor,Ref<EntityStore> actorRef,InteractionChainStartEvent event){
         var chain=event.getChain();var context=event.getContext();var item=context.getOriginalItemType();
         if(event.getType()!=InteractionType.Primary||chain.getForkedChainId()!=null||context.getEntity()!=actorRef||item==null||item.getWeapon()==null)return;
-        var entry=items.find(item.getId()).orElse(null);
+        var entry=items.find(com.inigmasgames.hytalerpg.gear.GearNativeItems.nativeId(item.getId())).orElse(null);
         if(entry==null||!Set.of("SWORD","LONGSWORD","DAGGER","BATTLEAXE","MACE","SPEAR").contains(entry.kind()))return;
         if(!Objects.equals(item.getInteractions().get(InteractionType.Primary),event.getRootInteractionId()))return;
         var variables=context.getInteractionVars();if(variables!=null&&variables.size()>256)throw new IllegalStateException("NATIVE_BASIC_ITEM_VARIABLE_LIMIT");

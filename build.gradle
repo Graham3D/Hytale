@@ -4,8 +4,8 @@ plugins {
 
 group = maven_group
 version = project.version
-// One deployable first-party artifact. Legacy data roots are retained explicitly by HywindPlugin.
-tasks.named('jar') { archiveFileName = 'Hywind.jar' }
+// Independently deployable HyARPG artifact. Existing RPG and CanvasUI data roots are retained.
+tasks.named('jar') { archiveFileName = 'HyARPG.jar' }
 
 def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
 def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")
@@ -25,14 +25,10 @@ repositories { mavenCentral() }
 
 dependencies {
     implementation project(':canvas-ui')
-    implementation project(':persistent-npcs')
-    implementation project(':hytale-taverns')
     compileOnly files(serverJar)
     compileOnly files(htDevLibJar)
     testImplementation files(serverJar)
     testImplementation project(':canvas-ui')
-    testImplementation project(':persistent-npcs')
-    testImplementation project(':hytale-taverns')
     testImplementation platform('org.junit:junit-bom:5.12.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -40,7 +36,7 @@ dependencies {
 
 sourceSets.main.java {
     // The legacy bootstrap remains as source provenance for retained tests but is
-    // not compiled or packaged. HywindPlugin is the sole production entrypoint.
+    // not compiled or packaged. HyArpgPlugin is the sole production entrypoint.
     exclude 'com/inigmasgames/hytalerpg/phase00/Phase00Plugin.java'
 }
 
@@ -50,6 +46,16 @@ tasks.register('validateCustomUi', Exec) {
     commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
         file('tools/Test-CustomUIDocuments.ps1'), '-Path', projectDir
 }
+
+tasks.register('auditSpatialGrantAssets', Exec) {
+    group = 'verification'
+    description = 'Fails if an enabled asset or unreviewed project producer can grant directly to native inventory.'
+    dependsOn tasks.named('processResources')
+    commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+        file('tools/Test-SpatialGrantAssets.ps1'), '-AssetsZip', assetsZip, '-ProjectRoot', projectDir
+}
+
+tasks.named('check') { dependsOn tasks.named('auditSpatialGrantAssets') }
 
 allprojects {
     tasks.matching { it.name == 'processResources' }.configureEach {
@@ -76,6 +82,14 @@ tasks.test {
     exclude '**/Stage13NativeAttitudeCacheTest*'
     exclude '**/Stage13NativeHealingBeamTest*'
     exclude '**/MantleNativeSourceContractTest*'
+    exclude '**/DifficultyNativeCommandTest*'
+    exclude '**/GearQaNativeCommandTest*'
+    exclude '**/ReadyPathNativeCommandTest*'
+    exclude '**/InventoryProbeBagTest*'
+    exclude '**/NativeContainerFilterBypassTest*'
+    exclude '**/SpatialBagAggregateTest*'
+    exclude '**/GearQaSpatialDeliveryTest*'
+    exclude '**/NativeWorkspaceGridTest*'
 }
 
 tasks.register('nativeControlTest', Test) {
@@ -96,6 +110,14 @@ tasks.register('nativeControlTest', Test) {
         includeTestsMatching '*Stage13NativeAttitudeCacheTest'
         includeTestsMatching '*Stage13NativeHealingBeamTest'
         includeTestsMatching '*MantleNativeSourceContractTest'
+        includeTestsMatching '*DifficultyNativeCommandTest'
+        includeTestsMatching '*GearQaNativeCommandTest'
+        includeTestsMatching '*ReadyPathNativeCommandTest'
+        includeTestsMatching '*InventoryProbeBagTest'
+        includeTestsMatching '*NativeContainerFilterBypassTest'
+        includeTestsMatching '*SpatialBagAggregateTest'
+        includeTestsMatching '*GearQaSpatialDeliveryTest'
+        includeTestsMatching '*NativeWorkspaceGridTest'
     }
     // Separate JVM: native codecs require Hytale's logger; retained UI tests exercise the JUL fallback.
     systemProperty 'java.util.logging.manager', 'com.hypixel.hytale.logger.backend.HytaleLogManager'
@@ -103,59 +125,76 @@ tasks.register('nativeControlTest', Test) {
 tasks.check {
     dependsOn tasks.named('nativeControlTest')
     dependsOn ':canvas-ui:check'
-    dependsOn ':persistent-npcs:check'
-    dependsOn ':hytale-taverns:check'
 }
 
-tasks.register('verifyHywindJar', Exec) {
+tasks.register('verifyHyArpgJar', Exec) {
     group = 'verification'
-    description = 'Validates the single-plugin Hywind package and merged resource contract.'
+    description = 'Validates the standalone HyARPG package and ownership boundary.'
     dependsOn tasks.named('jar')
+    dependsOn tasks.named('auditSpatialGrantAssets')
     commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
-        file('tools/Test-HywindPackage.ps1'), '-JarPath', tasks.named('jar').get().archiveFile.get().asFile,
+        file('tools/Test-HyArpgPackage.ps1'), '-JarPath', tasks.named('jar').get().archiveFile.get().asFile,
         '-ExpectedVersion', project.version, '-ExpectedRevision', rpg_revision
 }
 
 tasks.check {
-    dependsOn tasks.named('verifyHywindJar')
+    dependsOn tasks.named('verifyHyArpgJar')
 }
 
 tasks.processResources {
     def liveProbe = providers.gradleProperty('healingProbeLiveTest').map { it == 'true' }.getOrElse(false)
     inputs.property('healingProbeLiveTest', liveProbe)
+    inputs.file(assetsZip)
     doLast {
+        def stockPrefabPath = 'Server/Prefabs/Testing/VolumeShowcase/Trigger_Volume_Showcase.prefab.json'
+        def stockAssets = new java.util.zip.ZipFile(assetsZip)
+        try {
+            def entry = stockAssets.getEntry(stockPrefabPath)
+            if (entry == null) throw new GradleException("Stock trigger prefab missing: ${stockPrefabPath}")
+            def original = stockAssets.getInputStream(entry).withCloseable { it.getText('UTF-8') }
+            def unsafe = '"Type": "GiveItem"'
+            if (original.split(java.util.regex.Pattern.quote(unsafe), -1).length != 2)
+                throw new GradleException('Expected exactly one stock GiveItem effect in trigger showcase')
+            def target = new File(destinationDir, stockPrefabPath)
+            target.parentFile.mkdirs()
+            target.setText(original.replace(unsafe, '"Type": "HywindSpatialGrant"'), 'UTF-8')
+        } finally { stockAssets.close() }
         def marker = new File(destinationDir, 'healing-probe-live-test.txt')
         if (liveProbe) marker.text = 'R032-AP'
         else if (marker.exists()) marker.delete()
+        def nativeAliasSections = new File(destinationDir, 'Common/UI/Custom/InventoryNativeAlias')
+        def sectionTemplate = new File(nativeAliasSections, 'Section1.ui').getText('UTF-8')
+        (2..1024).each { sectionId ->
+            new File(nativeAliasSections, "Section${sectionId}.ui").setText(
+                sectionTemplate.replace('InventorySectionId: 1;', "InventorySectionId: ${sectionId};"), 'UTF-8')
+        }
+        def nativeWorkspaceSections = new File(destinationDir, 'Common/UI/Custom/InventoryNativeWorkspace')
+        def workspaceTemplate = new File(nativeWorkspaceSections, 'Section1.ui').getText('UTF-8')
+        (2..1024).each { sectionId ->
+            new File(nativeWorkspaceSections, "Section${sectionId}.ui").setText(
+                workspaceTemplate.replace('InventorySectionId: 1;', "InventorySectionId: ${sectionId};"), 'UTF-8')
+        }
     }
     inputs.property('version', project.version)
     inputs.property('rpgRevision', rpg_revision)
     inputs.property('hytaleVersion', hytale_version)
-    filesMatching(['manifest.json', 'rpg-build.properties', 'hywind-build.properties']) {
+    filesMatching(['manifest.json', 'rpg-build.properties']) {
         expand(version: project.version, rpgRevision: rpg_revision, hytaleVersion: hytale_version)
     }
-    def tavernLanguage = project(':hytale-taverns').file('src/main/tavernLanguage/server.lang')
-    inputs.file(tavernLanguage)
+    def gearLanguage = file('src/main/gearLanguage/server.lang')
+    inputs.file(gearLanguage)
     doLast {
         def mergedLanguage = new File(destinationDir, 'Server/Languages/en-US/server.lang')
-        mergedLanguage.append(System.lineSeparator() + tavernLanguage.getText('UTF-8'), 'UTF-8')
+        mergedLanguage.append(System.lineSeparator() + gearLanguage.getText('UTF-8'), 'UTF-8')
     }
 }
 
 tasks.named('jar') {
-    dependsOn ':canvas-ui:classes', ':persistent-npcs:classes', ':hytale-taverns:classes'
+    dependsOn ':canvas-ui:classes'
     duplicatesStrategy = DuplicatesStrategy.FAIL
     from(project(':canvas-ui').sourceSets.main.output) {
         exclude 'manifest.json'
         exclude 'com/inigmasgames/canvasui/CanvasUIPlugin.class'
-    }
-    from(project(':persistent-npcs').sourceSets.main.output) {
-        exclude 'manifest.json'
-        exclude 'Server/Languages/en-US/server.lang'
-    }
-    from(project(':hytale-taverns').sourceSets.main.output) {
-        exclude 'manifest.json'
-        exclude 'Server/Languages/en-US/server.lang'
     }
 }
 

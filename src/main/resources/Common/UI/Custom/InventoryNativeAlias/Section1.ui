@@ -1,0 +1,9 @@
+$Base = "../Pages/ProfileInventory/GridCommon.ui";
+$Base.@ProbeGrid #NativeAliasGrid {
+  InventorySectionId: 1;
+  Anchor: (Width: 828, Height: 184);
+  SlotsPerRow: 18;
+  Style: (...$Base.@ProbeGridStyle, SlotSize: 46, SlotSpacing: 0, SlotIconSize: 40);
+  Padding: 0;
+  RenderItemQualityBackground: false;
+}

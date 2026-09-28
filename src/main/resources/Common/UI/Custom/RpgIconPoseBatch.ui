@@ -1,0 +1,209 @@
+$C = "Common.ui";
+Group { LayoutMode: Center;
+  $C.@Panel { Anchor: (Full: 18, MaxWidth: 1040); Padding: (Full: 16); LayoutMode: Top;
+    Label { Text: "SPATIAL ICON POSE TEST  |  Escape to close"; Anchor: (Height: 36); Style: (FontSize: 20, TextColor: #e7bb69); }
+    Label { Text: "Read-only art preview. It does not create gear or change the inventory."; Anchor: (Height: 30); Style: (FontSize: 14, TextColor: #b6c9da); }
+    Group { FlexWeight: 1; LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; KeepScrollPosition: true;
+Group { Anchor: (Height: 354); LayoutMode: Left; Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Chest"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Armor_Leather_Light_Chest"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 192); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Armor_Leather_Light_Chest.png"); }
+                }
+              }
+              Label { Text: "2x3  scale 0.45"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Hands"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Armor_Leather_Light_Hands"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 128); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Armor_Leather_Light_Hands.png"); }
+                }
+              }
+              Label { Text: "2x2  scale 0.645"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Head"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Armor_Leather_Light_Head"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 128); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Armor_Leather_Light_Head.png"); }
+                }
+              }
+              Label { Text: "2x2  scale 0.5"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Legs"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Armor_Leather_Light_Legs"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 192); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Armor_Leather_Light_Legs.png"); }
+                }
+              }
+              Label { Text: "2x3  scale 0.445"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            } }
+Group { Anchor: (Height: 354); LayoutMode: Left; Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Sword"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Sword_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 64, Height: 192); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Sword_Iron.png"); }
+                }
+              }
+              Label { Text: "1x3  scale 0.35"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Daggers"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Daggers_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 64, Height: 128); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Daggers_Iron.png"); }
+                }
+              }
+              Label { Text: "1x2  scale 0.4"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Short Bow"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Shortbow_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Shortbow_Iron.png"); }
+                }
+              }
+              Label { Text: "2x4  scale 0.4"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Long Bow proxy (proxy)"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Shortbow_Copper"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Shortbow_Copper.png"); }
+                }
+              }
+              Label { Text: "2x4  scale 0.4"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            } }
+Group { Anchor: (Height: 354); LayoutMode: Left; Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Crossbow"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Crossbow_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Crossbow_Iron.png"); }
+                }
+              }
+              Label { Text: "2x4  scale 0.5"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Battleaxe"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Battleaxe_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Battleaxe_Iron.png"); }
+                }
+              }
+              Label { Text: "2x4  scale 0.3"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Mace"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Mace_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 64, Height: 192); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Mace_Iron.png"); }
+                }
+              }
+              Label { Text: "1x3  scale 0.32"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Longsword"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Longsword_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Longsword_Iron.png"); }
+                }
+              }
+              Label { Text: "2x4  scale 0.36"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            } }
+Group { Anchor: (Height: 354); LayoutMode: Left; Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Spear"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Spear_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Spear_Iron.png"); }
+                }
+              }
+              Label { Text: "2x4  scale 0.24"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Shield"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Shield_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 192); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Shield_Iron.png"); }
+                }
+              }
+              Label { Text: "2x3  scale 0.4"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Staff"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Staff_Iron"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Staff_Iron.png"); }
+                }
+              }
+              Label { Text: "2x4  scale 0.3"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Wand"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Wand_Wood"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 64, Height: 128); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Wand_Wood.png"); }
+                }
+              }
+              Label { Text: "1x2  scale 0.6"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            } }
+Group { Anchor: (Height: 354); LayoutMode: Left; Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Book"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Spellbook_Fire"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 64, Height: 128); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Spellbook_Fire.png"); }
+                }
+              }
+              Label { Text: "1x2  scale 0.545"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Rifle"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Assault_Rifle"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Assault_Rifle.png"); }
+                }
+              }
+              Label { Text: "2x4  scale 0.37"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Blunderbuss"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Gun_Blunderbuss"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Gun_Blunderbuss.png"); }
+                }
+              }
+              Label { Text: "2x4  scale 0.38"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            }
+Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
+              Label { Text: "Bomb"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Weapon_Bomb_Fire"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
+              Group { Anchor: (Height: 258); LayoutMode: Center;
+                Group { Anchor: (Width: 64, Height: 64); Background: #9fadb9;
+                  Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/PoseBatch/Weapon_Bomb_Fire.png"); }
+                }
+              }
+              Label { Text: "1x1  scale 0.87"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
+            } }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "Type": "RPG_GearProjectile",
+  "RunTime": 0.2,
+  "Effects": {
+    "ItemAnimationId": "ShootCharged",
+    "ClearAnimationOnFinish": true
+  },
+  "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Shortbow_Strength_0"
+}

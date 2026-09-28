@@ -1,0 +1,48 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_mithril.chest.h"
+  },
+  "Quality": "RPG_Gear_Rare",
+  "MaxStack": 1,
+  "MaxDurability": 250,
+  "Model": "Items/Armors/Mithril/Chest.blockymodel",
+  "Texture": "Items/Armors/Mithril/Chest_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Mithril_Chest.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Mithril"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Chest",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Overtop"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

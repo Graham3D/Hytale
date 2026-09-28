@@ -1,25 +1,28 @@
-# Hywind
+# HyARPG
 
-Hywind is the single first-party Hytale plugin for this project. It combines the
-ARPG/RPG runtime, CanvasUI presentation/input framework, persistent Immersive NPCs,
-Orbis intelligence integrations, and Tavern Management under one lifecycle owner:
+HyARPG is the independently deployable Hytale ARPG runtime. It owns combat,
+skills, passives, progression, equipment, encounters, the skill tree, CanvasUI,
+HUD integration, and native Ability4 support.
 
-- plugin identity: `InigmasGames:Hywind`
-- bootstrap: `com.inigmasgames.hywind.HywindPlugin`
-- artifact: `build/libs/Hywind.jar`
-- pinned Hytale API: `0.7.0-pre.3.1`
+HyARPG does not package or start ImmersiveNPCs, Tavern Management, Orbis,
+Nemotron/Ollama integration, speech recognition, speech synthesis, NPC cognition,
+NPC persistence, provider configuration, voice workers, or model-training assets.
+The historical `persistent-npcs` and `hytale-taverns` source directories remain
+available for their own products, but are not Gradle projects or dependencies of
+the HyARPG build.
 
-The merger deliberately preserves the existing save data roots instead of moving or
-duplicating player/world data:
+Current identity:
+
+- plugin: `InigmasGames:HyARPG`
+- bootstrap: `com.inigmasgames.hywind.HyArpgPlugin`
+- artifact: `build/libs/HyARPG.jar`
+- revision: `R137`
+- Hytale API: `0.7.0-pre.4`
+
+Existing save-data roots are deliberately retained without migration:
 
 - `mods/InigmasGames_HytaleRPGPhase00Audit`
 - `mods/InigmasGames_CanvasUI`
-- `mods/ImmersiveNPCs`
-- `mods/InigmasGames_Taverns`
-
-`HytaleDevLib` remains an optional external dependency. Tavern, Kitchen and Bedroom
-Core data remain in their established schema-3 root; no cross-world coordinate data
-is imported or rewritten by the merger.
 
 ## Build and verify
 
@@ -30,35 +33,35 @@ Set-Location "C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale"
 .\gradlew.bat clean check build
 ```
 
-The root check includes the RPG retained and native-control suites, CanvasUI tests,
-the retained deterministic NPC suite, Tavern persistence/Core/accounting tests,
-installed-asset validation, CustomUI validation, and the merged JAR audit.
+The build runs the deterministic RPG and CanvasUI tests, the native-control
+cohort, CustomUI validation, asset-grant audit, and the standalone-JAR ownership
+audit.
 
 For an isolated server smoke:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\Run-HywindSmoke.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Run-HyArpgSmoke.ps1
 ```
 
-For a cutover plan with no writes:
+Preview or perform the narrow RPG-save deployment:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\Deploy-Hywind.ps1" -DryRun
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Deploy-HyArpg.ps1 -DryRun
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Deploy-HyArpg.ps1
 ```
 
-Historical cohort deployment scripts target superseded split artifacts and must not
-be used for Hywind deployment.
+Deployment moves the former merged `Hywind.jar` to an explicit rollback folder,
+installs exactly one `HyARPG.jar`, and does not write any save/config directory.
 
 ## Owner-managed RPG icons
 
 Put canonical `Skill*.png` and `Passive*.png` files in `art/Skills` and
-`art/Passives`, close Hytale, and run `Update RPG Icons.cmd`. The updater now targets
-the installed `Hywind.jar`, validates the unified manifest, takes a content-addressed
-backup, and never touches save data.
+`art/Passives`, close Hytale, and run `Update RPG Icons.cmd`. The updater validates
+the standalone HyARPG manifest and never edits save data.
 
 ## Engineering records
 
-- Hywind merger/cutover: `docs/hywind/merge-report.md`
+- Checkpoint A ownership/separation report: `docs/hyarpg/checkpoint-a-separation.md`
 - RPG Stage 13 history: `docs/stage-13/`
 - CanvasUI history: `docs/canvas-ui/development-report.md`
-- persistent NPC retained documentation: `persistent-npcs/docs/`
+- ImmersiveNPCs documentation: `persistent-npcs/docs/` (independent product)

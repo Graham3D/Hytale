@@ -13,6 +13,14 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Stage09SupportRuntimeTest {
+    @Test void transferGuardRunsBeforeExistingAuraCommands(){
+        int[] toggles={0};var h=new Harness("emanatism"){
+            @Override public SkillExecutionResult stopActiveSupport(Stage04SkillProfile p){toggles[0]++;return null;}
+        };
+        h.execution.configureTransferGuard(actor->true);
+        assertEquals(SkillExecutionResult.Status.REJECTED,h.cast().status());
+        assertEquals(0,toggles[0]);assertEquals(100,h.mana);assertEquals(0,h.reserved);
+    }
     @Test void healRunsRealCommitAndWisdomHealingNotDamage(){
         var h=new Harness("minor_heal");assertTrue(h.cast().committed());
         assertEquals(88,h.mana);assertEquals(60.6,h.health,1e-9);assertEquals(0,h.runtime.auraCount());

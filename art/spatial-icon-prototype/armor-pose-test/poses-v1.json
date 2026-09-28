@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "slotPixels": 64,
+  "chestTemplate": {
+    "Translation": [0, 0],
+    "Rotation": [10, -30, -5],
+    "Scale": 0.45
+  },
+  "otherArmorRule": "preserve per-item Rotation and Scale; set Translation to [0, 0]",
+  "samples": [
+    {"itemId": "Armor_Iron_Chest", "label": "Iron Chest", "family": "chest", "invWidth": 2, "invHeight": 3},
+    {"itemId": "Armor_Leather_Heavy_Chest", "label": "Heavy Leather Chest", "family": "chest", "invWidth": 2, "invHeight": 3},
+    {"itemId": "Armor_Iron_Head", "label": "Iron Head", "family": "head", "invWidth": 2, "invHeight": 2},
+    {"itemId": "Armor_Bronze_Ornate_Head", "label": "Ornate Bronze Head", "family": "head", "invWidth": 2, "invHeight": 2},
+    {"itemId": "Armor_Iron_Hands", "label": "Iron Hands", "family": "hands", "invWidth": 2, "invHeight": 2},
+    {"itemId": "Armor_Leather_Raven_Hands", "label": "Raven Leather Hands", "family": "hands", "invWidth": 2, "invHeight": 2},
+    {"itemId": "Armor_Bronze_Legs", "label": "Bronze Legs", "family": "legs", "invWidth": 2, "invHeight": 3},
+    {"itemId": "Armor_Leather_Raven_Legs", "label": "Raven Leather Legs", "family": "legs", "invWidth": 2, "invHeight": 3}
+  ]
+}

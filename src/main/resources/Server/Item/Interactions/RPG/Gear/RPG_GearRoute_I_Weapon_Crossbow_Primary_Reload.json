@@ -1,0 +1,31 @@
+{
+  "Type": "DurabilityCondition",
+  "Threshold": 0,
+  "Operator": "GreaterThan",
+  "Next": {
+    "Type": "StatsCondition",
+    "Costs": {
+      "Ammo": 1
+    },
+    "Failed": {
+      "Type": "Replace",
+      "Var": "Reload_Start",
+      "DefaultValue": "RPG_GearRoute_R_Root_Common_StatAmmoReload_Entry"
+    },
+    "Next": {
+      "Type": "ChangeStat",
+      "StatModifiers": {
+        "Ammo": -1
+      },
+      "Next": {
+        "Type": "Replace",
+        "Var": "Standard_Projectile_Launch",
+        "DefaultValue": {
+          "Interactions": [
+            "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@ class Stage13PresentationAHTest {
     @Test void carrierHasExplicitExistingNativeTextureNotTheFailedInferredEmptyPng()throws Exception{
         var model=json(Path.of("src/main/resources/Server/Models/RPG/RPG_Healing_Stream.json"));
         try(var zip=new ZipFile(Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip").toFile())){
-            assertNull(zip.getEntry("Common/NPC/MISC/Empty.png"),"AG connected missing-texture control");
+            assertNotNull(zip.getEntry("Common/NPC/MISC/Empty.png"),"Pre.4 now ships an explicit Empty.png; carrier still uses the native Ground Slam texture");
             for(String key:List.of("Model","Texture")){
                 var entry=zip.getEntry("Common/"+model.get(key).getAsString());
                 assertNotNull(entry,key+" must resolve to real shipped bytes");assertTrue(entry.getSize()>0);

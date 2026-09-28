@@ -15,6 +15,7 @@ public interface SkillExecutionPort {
     }
     /** Authoritative equipment integration boundary; zero until an audited item grants this skill. */
     default int itemGrantedSkillLevels(String skillId,Equipment equipment){return 0;}
+    default com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects gearEffects(){return com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects.NONE;}
     /** Native ports must capture an authored reference for Quick Slash; pure family fixtures may omit it. */
     default com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile captureWeaponLightAttack(Equipment equipment){return null;}
     /** Native handoff needs an immutable world/aim anchor, not necessarily an entity target. */

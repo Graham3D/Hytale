@@ -26,7 +26,7 @@ class Stage13NativeTickMetricsTest {
         for(String required:List.of("observeDamage(","prepareDeathNative(","detachObserved(","rewards.deliveryTick()","runtime.drainReadyPlans(8)"))assertTrue(rewards.contains(required),required);
         assertFalse(rewards.contains("durableEffects.await()"));assertFalse(rewards.contains("runtime.drain(8)"));assertFalse(rewards.contains("runtime.death("));
         var support=Files.readString(base.resolve("execution/hytale/HytaleSupportSystem.java"));assertTrue(support.contains("SupportProgressStore.Async"));assertTrue(support.contains("NATIVE_SYNCHRONOUS_SUPPORT_SAVE_FORBIDDEN"));
-        assertTrue(java.lang.reflect.Modifier.isSynchronized(com.inigmasgames.hytalerpg.execution.hytale.HytalePlayerPersistenceReady.class.getMethod("begin",UUID.class,UUID.class).getModifiers()),"cross-world readiness capacity check and insertion must be atomic");
+        assertTrue(java.lang.reflect.Modifier.isSynchronized(com.inigmasgames.hytalerpg.execution.hytale.HytalePlayerPersistenceReady.class.getMethod("begin",com.hypixel.hytale.server.core.universe.PlayerRef.class,UUID.class).getModifiers()),"cross-world readiness capacity check and insertion must be atomic and retain connection identity");
         var conversion=new com.inigmasgames.hytalerpg.execution.hytale.HytaleConversionSystem(null,null,null);
         var receipts=conversion.getClass().getDeclaredField("exclusionReceipts");receipts.setAccessible(true);
         assertInstanceOf(java.util.concurrent.ConcurrentMap.class,receipts.get(conversion),"owner completion removal and cross-world admission share receipt storage");

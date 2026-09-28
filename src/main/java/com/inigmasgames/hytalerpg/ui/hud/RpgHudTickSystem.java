@@ -6,6 +6,8 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.inventory.InventoryComponent;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -21,7 +23,8 @@ public final class RpgHudTickSystem extends EntityTickingSystem<EntityStore> {
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.HUD)){
         PlayerRef player = chunk.getComponent(index, PlayerRef.getComponentType());
         EntityStatMap stats = chunk.getComponent(index, EntityStatMap.getComponentType());
-        if (player != null && stats != null) coordinator.tick(player, stats);
+        if (player != null && stats != null) coordinator.tick(player, stats,
+                ItemStack.isEmpty(InventoryComponent.getItemInHand(store,chunk.getReferenceTo(index))));
 
         }
     }

@@ -3,6 +3,7 @@
   "Reference": "Template_Intelligent",
   "Parameters": {
     "WanderRadius": { "Value": 3 },
+    "MaxSpeed": { "Value": 7.0 },
     "FollowPatrolPath": { "Value": false },
     "Patrol": { "Value": false },
     "FlockArray": { "Value": ["Skeleton_Fighter", "Skeleton_Archer"], "TypeHint": "String" },

@@ -70,7 +70,8 @@ public final class NativeBlizzardVisuals {
             // A real installed native solid cube; this fixture is forbidden in any connected/live world.
             if(chunk.getBlock(4,200,4)!=0)throw new IllegalStateException("BLIZZARD_AUDIT_REQUIRES_AIR");
             try{
-                if(!chunk.setBlock(4,200,4,"Rock_Stone"))throw new IllegalStateException("BLIZZARD_AUDIT_SOLID_PLACEMENT");
+                var rock=com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.getAssetMap().getAsset("Rock_Stone");
+                if(rock==null||!chunk.setBlock(4,200,4,com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.getAssetMap().getIndex("Rock_Stone"),rock,0,0,0))throw new IllegalStateException("BLIZZARD_AUDIT_SOLID_PLACEMENT");
                 var hit=HytaleAreaQueries.shardContact(store,new Vec3(4.5,204,4.5),new Vec3(4.5,198,4.5),.1).orElseThrow();
                 if(Math.abs(hit.y()-201)>.025)throw new IllegalStateException("BLIZZARD_FIRST_SURFACE_WRONG:"+hit.y());
                 var originalTransform=store.getComponent(carrier.ref,TransformComponent.getComponentType());
@@ -83,7 +84,7 @@ public final class NativeBlizzardVisuals {
                     throw new IllegalStateException("BLIZZARD_TRANSFORM_UPDATE_FAILED");
                 if(store.getComponent(carrier.ref,TransformComponent.getComponentType())!=originalTransform||originalTransform.getSectionRef()!=section)
                     throw new IllegalStateException("BLIZZARD_NATIVE_SECTION_MEMBERSHIP_LOST");
-            }finally{chunk.setBlock(4,200,4,0);}
+            }finally{chunk.setBlock(4,200,4,0,com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.EMPTY,0,0,0);}
             once.set(false);
             store.forEachChunk((java.util.function.BiConsumer<ArchetypeChunk<EntityStore>,CommandBuffer<EntityStore>>)(archetype,buffer)->{
                 if(once.compareAndSet(false,true))visuals.end(context,buffer);

@@ -1,0 +1,11 @@
+{
+  "Type": "Condition",
+  "RequiredGameMode": "Adventure",
+  "Next": {
+    "Type": "BreakBlock",
+    "Next": "RPG_GearRoute_I_Trigger_Explosion_State_Generic"
+  },
+  "Failed": {
+    "Type": "Simple"
+  }
+}

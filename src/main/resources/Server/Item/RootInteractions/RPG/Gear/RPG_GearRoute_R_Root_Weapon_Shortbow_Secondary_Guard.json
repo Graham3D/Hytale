@@ -1,0 +1,66 @@
+{
+  "RequireNewClick": true,
+  "Rules": {
+    "Interrupting": [
+      "Primary"
+    ]
+  },
+  "Interactions": [
+    {
+      "Type": "StatsCondition",
+      "Costs": {
+        "Ammo": 1
+      },
+      "Next": {
+        "Type": "ChangeStat",
+        "Behaviour": "Set",
+        "StatModifiers": {
+          "Ammo": 0
+        },
+        "Next": {
+          "Type": "ModifyInventory",
+          "RequiredGameMode": "Adventure",
+          "ItemToAdd": {
+            "Id": "Weapon_Arrow_Crude",
+            "Quantity": 1
+          },
+          "Next": {
+            "Type": "ChangeStat",
+            "Behaviour": "Set",
+            "StatModifiers": {
+              "StaminaRegenDelay": -1
+            }
+          }
+        }
+      }
+    },
+    {
+      "Type": "StatsCondition",
+      "Costs": {
+        "SignatureCharges": 1
+      },
+      "Next": {
+        "Type": "ChangeStat",
+        "Behaviour": "Set",
+        "StatModifiers": {
+          "StaminaRegenDelay": -1
+        }
+      }
+    },
+    {
+      "Type": "Replace",
+      "Var": "Guard_Start",
+      "DefaultOk": true,
+      "DefaultValue": {
+        "Interactions": [
+          "RPG_GearRoute_I_Weapon_Shortbow_Secondary_Guard"
+        ]
+      }
+    }
+  ],
+  "Tags": {
+    "Attack": [
+      "Melee"
+    ]
+  }
+}

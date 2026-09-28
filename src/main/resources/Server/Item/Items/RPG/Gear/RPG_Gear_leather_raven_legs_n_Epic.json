@@ -1,0 +1,49 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.leather_raven.legs.n"
+  },
+  "Quality": "RPG_Gear_Epic",
+  "MaxStack": 1,
+  "MaxDurability": 110,
+  "Model": "Items/Armors/Leather_Raven/Legs.blockymodel",
+  "Texture": "Items/Armors/Leather_Raven/Legs_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Leather_Raven_Legs.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Leather"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Legs",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Pants",
+      "Shoes"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

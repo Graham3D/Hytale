@@ -40,6 +40,16 @@ public final class CanvasUI {
         return current.openEditor(editor, player, playerRef, world, store, ref);
     }
 
+    /** Read-only 2x4 item drag input proof; no inventory ownership changes. */
+    public static CursorHudProbeService.OpenResult openInventoryDragProof(Player player,
+            PlayerRef playerRef, World world, Store<EntityStore> store, Ref<EntityStore> ref,
+            String itemId) {
+        CursorHudProbeService current = cursorEditors;
+        if (current == null) return new CursorHudProbeService.OpenResult(false,
+                "CanvasUI cursor input is not enabled.", null);
+        return current.openInventoryDragProof(player, playerRef, world, store, ref, itemId);
+    }
+
     public static void install(CanvasService value, CursorHudProbeService editors) {
         service = value;
         cursorEditors = editors;

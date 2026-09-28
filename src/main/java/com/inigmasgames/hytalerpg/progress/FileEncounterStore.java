@@ -31,6 +31,10 @@ public final class FileEncounterStore implements AutoCloseable {
     }
     private static final Gson JSON=new GsonBuilder().disableHtmlEscaping().create();
     private final Path directory;
+    private Consumer<EncounterContributions.DeathPlan> gearDelivery=ignored->{};
+    private Consumer<String> gearFault=ignored->{};
+    public synchronized void configureGearFault(Consumer<String> fault){gearFault=Objects.requireNonNull(fault);}
+    public synchronized void configureGearDelivery(Consumer<EncounterContributions.DeathPlan> delivery){gearDelivery=Objects.requireNonNull(delivery);}
     private final Consumer<Boundary> fault;
     private final Consumer<JournalBoundary> journalFault;
     private final Consumer<GroupBoundary> groupFault;
@@ -52,6 +56,24 @@ public final class FileEncounterStore implements AutoCloseable {
     // need validation once per cached context, not three filesystem probes for every WAL frame.
     private final Map<EncounterJournal.Key,AdmissionState> admissionStates=new LinkedHashMap<>(16,.75f,true);
     public EncounterPersistenceTimings timings(){return timings;}
+    /** Gear receipts share the existing encounter writer lock, checksums and atomic publication. */
+    public <T> T gearTransaction(String namespace,String key,Class<T> type,Function<Optional<T>,T> operation){
+        if(!Set.of("claims","loot","cursors","salvage","sentinels","sentinel-replacement-backups","spatial-pickups","spatial-equipment","spatial-stock","spatial-stock-drop").contains(namespace)||key==null||key.isBlank()||key.length()>512)throw new IllegalArgumentException("Gear receipt key");
+        return locked(()->{Path path=directory.resolve("gear").resolve(namespace).resolve(RewardIntent.digest(key)+".json");
+            T before=Files.exists(path)?read(path,type):null;T after=Objects.requireNonNull(operation.apply(Optional.ofNullable(before)));
+            if(!after.equals(before)){write(path,after,before!=null);try{gearFault.accept("AFTER_"+namespace);}catch(RuntimeException failure){uncertain=true;throw failure;}}return after;});
+    }
+    public <T> Optional<T> gearRead(String namespace,String key,Class<T> type){
+        if(!Set.of("claims","loot","cursors","salvage","sentinels","sentinel-replacement-backups","spatial-pickups","spatial-equipment","spatial-stock","spatial-stock-drop").contains(namespace))throw new IllegalArgumentException("Gear namespace");
+        return locked(()->{Path path=directory.resolve("gear").resolve(namespace).resolve(RewardIntent.digest(key)+".json");return Files.exists(path)?Optional.of(read(path,type)):Optional.empty();});
+    }
+    /** Bounded diagnostic/projection query, executed only on the gear IO worker. */
+    public <T> List<T> gearRecords(String namespace,Class<T> type){
+        if(!Set.of("loot","salvage","sentinels","spatial-pickups","spatial-equipment","spatial-stock","spatial-stock-drop").contains(namespace))throw new IllegalArgumentException("Gear namespace");
+        return locked(()->{var result=new ArrayList<T>();Path folder=directory.resolve("gear").resolve(namespace);if(!Files.exists(folder))return List.of();
+            try(var files=Files.newDirectoryStream(folder,"*.json")){for(Path path:files){if(result.size()>=4096)throw new IllegalStateException("Gear projection index capacity; archival index required");result.add(read(path,type));}}
+            catch(IOException error){throw persistenceFailure(error);}return List.copyOf(result);});
+    }
     public FileEncounterStore(Path directory){this(directory,ignored->{});}
     /** Fault injection is for process-interruption tests only. */
     public FileEncounterStore(Path directory,Consumer<Boundary> fault){this(directory,fault,ignored->{});}
@@ -249,6 +271,7 @@ public final class FileEncounterStore implements AutoCloseable {
                     delivery=new Delivery(plan,delivery.next()+1);write(path,delivery,true);fault.accept(Boundary.AFTER_CURSOR);
                 }
                 if(delivery.next()==plan.shares().size()){
+                    gearDelivery.accept(plan);
                     write(complete,plan,false);fault.accept(Boundary.AFTER_COMPLETION);deleteCompleted(path);
                 }
                 if(attempts==awardBudget)break;

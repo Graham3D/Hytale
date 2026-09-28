@@ -1,0 +1,30 @@
+﻿{
+    "result":  "PASS",
+    "capturedAtUtc":  "2026-09-28T16:24:59.6091749Z",
+    "processExitCode":  0,
+    "candidateSha256":  "A303C8C9FB5670EB392B70D2D4F6D8C913EA2911DB7A8778443DFB10C24CEFDA",
+    "installedSmokeSha256":  "A303C8C9FB5670EB392B70D2D4F6D8C913EA2911DB7A8778443DFB10C24CEFDA",
+    "firstPartyJarCount":  1,
+    "hyarpgDiscovered":  true,
+    "hyarpgSetup":  true,
+    "rpgSetup":  true,
+    "ability4Audit":  true,
+    "hyarpgStarted":  true,
+    "hyarpgShutdown":  true,
+    "pluginManagerStarted":  true,
+    "serverBooted":  true,
+    "immersiveDiscovered":  false,
+    "aiRuntimeObserved":  false,
+    "npcDataBefore":  {
+                          "exists":  false,
+                          "files":  0,
+                          "bytes":  0
+                      },
+    "npcDataAfter":  {
+                         "exists":  false,
+                         "files":  0,
+                         "bytes":  0
+                     },
+    "scopedFailure":  false,
+    "connectedClientVerified":  false
+}

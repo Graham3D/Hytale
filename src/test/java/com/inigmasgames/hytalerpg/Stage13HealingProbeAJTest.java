@@ -29,9 +29,9 @@ class Stage13HealingProbeAJTest {
         var spawn=json.getAsJsonObject("SpawnProvider");assertEquals("Global",spawn.get("Id").getAsString());
         assertEquals(64,spawn.getAsJsonObject("SpawnPoint").get("Y").getAsDouble());
         assertFalse(json.get("IsSpawningNPC").getAsBoolean());
-        var launcher=Files.readString(Path.of("tools/New-HealingProbeAI.ps1"));
-        assertTrue(launcher.contains("Refuse to reuse a world"));assertTrue(launcher.contains("'authenticated'"));
-        assertTrue(launcher.contains("tools/fixtures/healing-probe-world.json"));
+        // The former AI/NPC comparison launcher belongs to ImmersiveNPCs and is
+        // intentionally absent from the standalone HyARPG tool surface.
+        assertTrue(Files.exists(Path.of("tools/fixtures/healing-probe-world.json")));
     }
     @Test void lifecycleIsNullSafeAndSetupFailuresAreExplicit()throws Exception{
         var source=Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HealingPresentationProbe.java"));

@@ -7,8 +7,12 @@ public final class EffectiveSkillLevel {
     private EffectiveSkillLevel(){ }
 
     public static int resolve(long masteryXp,int itemGrantedLevels){
+        return resolveBase(ProgressionMath.masteryLevel(masteryXp),itemGrantedLevels);
+    }
+    public static int resolveBase(int baseRank,int itemGrantedLevels){
+        if(baseRank<1||baseRank>20)throw new IllegalArgumentException("INVALID_BASE_SKILL_RANK");
         if(itemGrantedLevels<0||itemGrantedLevels>1000)throw new IllegalArgumentException("INVALID_ITEM_SKILL_LEVELS");
-        return Math.addExact(ProgressionMath.masteryLevel(masteryXp),itemGrantedLevels);
+        return Math.addExact(baseRank,itemGrantedLevels);
     }
 
     public static int summonSkeletonArchers(int effectiveSkillLevel){

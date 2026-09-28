@@ -1,0 +1,49 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.cloth_cinder.legs.n"
+  },
+  "Quality": "RPG_Gear_Epic",
+  "MaxStack": 1,
+  "MaxDurability": 120,
+  "Model": "Items/Armors/Cindercloth/Legs.blockymodel",
+  "Texture": "Items/Armors/Cindercloth/Legs_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cloth_Cindercloth_Legs.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Iron"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Legs",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Pants",
+      "Shoes"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

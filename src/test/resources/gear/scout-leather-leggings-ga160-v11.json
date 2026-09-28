@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "identity": "8925cba6-57ea-3d37-8b38-f21a14b189bc",
+  "definitionRevision": "gm.1.1.stage1.v1",
+  "baseId": "gm.leather_scout.legs.n",
+  "baseName": "Scout Leather Leggings",
+  "category": "ARMOR",
+  "sourceEra": "NORMAL",
+  "itemLevel": 5,
+  "rarity": "UNCOMMON",
+  "intrinsicThousandths": 1000,
+  "intrinsicStats": {
+    "protectionPoints": 2.6,
+    "health": 2.5
+  },
+  "requirements": {
+    "level": 1,
+    "attributes": {
+      "DEX": 10
+    }
+  },
+  "affixes": [
+    {
+      "familyId": "GA-160",
+      "side": "PREFIX",
+      "exclusionGroup": "local_armor_increased",
+      "tier": 5,
+      "value": 11.7,
+      "requirements": {
+        "level": 1,
+        "attributes": {
+          "DEX": 10
+        }
+      },
+      "description": "11.7% increased local armor protection of this piece, after its local protection-point additions. Does not multiply Health, Mana, Stamina, elemental resistance or the armor of other pieces. Native mitigation is applied once.",
+      "name": "Fortified"
+    }
+  ],
+  "rngVersion": "gear-event-sha256-split-v1",
+  "qaOnly": false
+}

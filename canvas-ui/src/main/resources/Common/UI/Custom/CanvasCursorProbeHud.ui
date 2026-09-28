@@ -38,6 +38,19 @@ Group {
       Label #CursorDragStatus { Text: "Drag either node; release persists once."; Anchor: (Left: 16, Bottom: 10, Width: 500, Height: 22); Style: (FontSize: 12, TextColor: #d4e0ec); }
     }
 
+    Group #CursorInventoryDragProof {
+      Visible: false;
+      Anchor: (Left: 24, Top: 82, Width: 830, Height: 470);
+      Group #CursorInventoryGrid { Anchor: (Left: 0, Top: 0, Width: 828, Height: 184); Background: #25445c; }
+      Group #CursorInventoryBow {
+        Anchor: (Left: 0, Top: 0, Width: 92, Height: 184); Background: #29455c;
+        ItemIcon #Icon { Anchor: (Left: 14, Top: 60, Width: 64, Height: 64); }
+        Label { Text: "2 x 4"; Anchor: (Left: 20, Bottom: 6, Width: 56, Height: 20); Style: (FontSize: 13, TextColor: #eef6ff); }
+      }
+      Label #CursorInventoryStatus { Text: "Hold left mouse on any bow cell, drag, then release over the grid."; Anchor: (Left: 0, Top: 212, Width: 820, Height: 42); Style: (FontSize: 13, TextColor: #d4e0ec); }
+      Label { Text: "READ-ONLY INPUT PROOF - native inventory and the existing inventory page stay unchanged"; Anchor: (Left: 0, Top: 266, Width: 820, Height: 30); Style: (FontSize: 12, TextColor: #f2d488); }
+    }
+
     Group #CursorProbeCalibration {
       Anchor: (Left: 0, Top: 0, Width: 900, Height: 610);
       Group { Anchor: (Left: 12, Top: 70, Width: 24, Height: 24); Background: (Color: #1b7287dd); }

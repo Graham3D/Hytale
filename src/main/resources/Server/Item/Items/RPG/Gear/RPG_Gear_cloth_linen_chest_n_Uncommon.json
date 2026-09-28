@@ -1,0 +1,48 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.cloth_linen.chest.n"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 70,
+  "Model": "Items/Armors/Linen/Chest.blockymodel",
+  "Texture": "Items/Armors/Linen/Chest_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cloth_Linen_Chest.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Cloth_Linen"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Chest",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Overtop"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

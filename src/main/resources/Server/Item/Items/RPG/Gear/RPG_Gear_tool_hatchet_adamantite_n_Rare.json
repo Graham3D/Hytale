@@ -1,0 +1,130 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.tool.hatchet.adamantite.n"
+  },
+  "Quality": "RPG_Gear_Rare",
+  "MaxStack": 1,
+  "MaxDurability": 120,
+  "Model": "Items/Tools/Hatchet/Adamantite.blockymodel",
+  "Texture": "Items/Tools/Hatchet/Adamantite_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Tool_Hatchet_Adamantite.png",
+  "PlayerAnimationsId": "Hatchet",
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "Interactions": {
+    "Primary": "Hatchet_Attack"
+  },
+  "InteractionVars": {
+    "Hatchet_Chop_Effect": {
+      "Interactions": [
+        {
+          "Parent": "Hatchet_Chop_Effect",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Tool_T1_Swing",
+            "LocalSoundEventId": "SFX_Hatchet_T1_Swing_RL_Local"
+          }
+        }
+      ]
+    },
+    "Hatchet_Chop_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Hatchet_Chop_Damage",
+          "DamageCalculator": {
+            "Type": "Dps",
+            "BaseDamage": {
+              "Physical": 5
+            }
+          },
+          "DamageEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Impact"
+          }
+        }
+      ]
+    }
+  },
+  "Tool": {
+    "Specs": [
+      {
+        "Power": 1,
+        "GatherType": "SoftBlocks"
+      },
+      {
+        "Power": 0.05,
+        "GatherType": "Soils"
+      },
+      {
+        "Power": 0.5,
+        "GatherType": "Woods"
+      },
+      {
+        "Power": 0.05,
+        "GatherType": "Rocks"
+      },
+      {
+        "Power": 0.5,
+        "GatherType": "Benches"
+      },
+      {
+        "Power": 0.001,
+        "GatherType": "Metals",
+        "IsIncorrect": true,
+        "HitSoundLayer": "SFX_Pickaxe_Impact_Poor"
+      },
+      {
+        "Power": 0.017,
+        "GatherType": "VolcanicRocks"
+      },
+      {
+        "Power": 0.046,
+        "GatherType": "OreCopper"
+      },
+      {
+        "Power": 0.046,
+        "GatherType": "OreIron"
+      },
+      {
+        "Power": 0.046,
+        "GatherType": "OreSilver"
+      },
+      {
+        "Power": 0.046,
+        "GatherType": "OreGold"
+      },
+      {
+        "Power": 0.046,
+        "GatherType": "OreThorium"
+      },
+      {
+        "Power": 0.046,
+        "GatherType": "OreCobalt"
+      },
+      {
+        "Power": 0.042,
+        "GatherType": "OreAdamantite"
+      },
+      {
+        "Power": 0.036,
+        "GatherType": "OreMithril"
+      }
+    ],
+    "DurabilityLossBlockTypes": [
+      {
+        "BlockSets": [
+          "Stone",
+          "Rock",
+          "Ores",
+          "Soil",
+          "Wood"
+        ],
+        "DurabilityLossOnHit": 0.25
+      }
+    ]
+  },
+  "Utility": {
+    "Compatible": true
+  }
+}

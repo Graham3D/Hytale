@@ -45,7 +45,10 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
             return receipt.minimalCompletionStage();
         }
     }
-    public synchronized boolean observing(UUID world,UUID enemy){var key=new Key(world,enemy);var a=attachments.get(key);return !unavailable&&(a!=null?!a.closing:loaded.contains(key));}
+    public synchronized boolean observing(UUID world,UUID enemy){
+        var key=new Key(world,enemy);var a=attachments.get(key);
+        return !unavailable&&(a!=null?!a.closing&&(!a.tail.isDone()||loaded.contains(key)):loaded.contains(key));
+    }
     public synchronized boolean attaching(UUID world,UUID enemy){var a=attachments.get(new Key(world,enemy));return a!=null&&!a.tail.isDone();}
     /** Takes finite provisional predecessors BEFORE publishing this transition's tail. */
     private <T> CompletableFuture<T> transition(List<Key> keys,Supplier<T> operation){

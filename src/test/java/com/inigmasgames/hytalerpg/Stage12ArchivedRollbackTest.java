@@ -37,7 +37,7 @@ class Stage12ArchivedRollbackTest {
             // Include permanent encounter exclusion authority in the coordinated filesystem checkpoint.
             var encounters=new FileEncounterStore(running.resolve("encounters"));UUID world=UUID.randomUUID(),enemy=UUID.randomUUID();encounters.disqualify(world,enemy);encounters.close();
             copy(running,backup);Map<String,String> baseline=hashes(backup);
-            var upgraded=new FileRpgPlayerStateRepository(running.resolve("players")).load(player).state();assertEquals(9,upgraded.schemaVersion);assertEquals(10,upgraded.currentXp);
+            var upgraded=new FileRpgPlayerStateRepository(running.resolve("players")).load(player).state();assertEquals(RpgPlayerState.CURRENT_SCHEMA,upgraded.schemaVersion);assertEquals(10,upgraded.currentXp);
             var downgrade=assertThrows(InvocationTargetException.class,()->repoClass.getMethod("load",UUID.class).invoke(repository,player));
             assertTrue(downgrade.getCause().getMessage().contains("newer than supported"));
             // Restore to a fresh directory. No recursive deletion or one-sided rollback.
