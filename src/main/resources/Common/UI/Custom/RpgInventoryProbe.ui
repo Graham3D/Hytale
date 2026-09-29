@@ -40,6 +40,7 @@ Group {
       TextButton #Close { Text: "X"; Anchor: (Width: 60, Height: 48); Style: @Tab; }
     }
     Label #OwnershipNotice { Visible: false; Anchor: (Height: 0); }
+    Group { Anchor: (Height: 12); }
     Group #BodyViewport { FlexWeight: 1; LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; KeepScrollPosition: true;
     Group #InventoryContent {
       LayoutMode: Top;
@@ -69,17 +70,17 @@ Group {
           Group { Anchor: (Height: 30); LayoutMode: Left; Group { Anchor: (Width: 24, Height: 24); Background: (TexturePath: "Icons/Hytale/StaminaIcon.png"); } Label { Text: "Stamina"; Anchor: (Width: 116, Height: 28); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #ResourceStamina { Anchor: (Width: 158, Height: 28); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } }
           }
         }
-        Group { Anchor: (Width: 12); }
-        $C.@Panel #GearFrame { Anchor: (Width: 480, Height: 430); LayoutMode: Left;
+        Group { Anchor: (Width: 16); }
+        $C.@Panel #GearFrame { Anchor: (Width: 480, Height: 430); LayoutMode: Left; Padding: (Horizontal: 12);
           Group { Anchor: (Width: 80); LayoutMode: Top; Padding: (Top: 10);
             Group { Anchor: (Height: 156); Group #EquipFrameWeapon { Anchor: (Left: 3, Top: 9, Width: 74, Height: 138); Group { Anchor: (Left: 0, Top: 0, Width: 74, Height: 74); Background: (TexturePath: "Icons/Hytale/SlotDefault.png"); } Group { Anchor: (Left: 0, Bottom: 0, Width: 74, Height: 74); Background: (TexturePath: "Icons/Hytale/SlotDefault.png"); } ItemIcon #EquipWeapon { Visible: false; Anchor: (Left: 6, Top: 38, Width: 62, Height: 62); } } }
             Group { Anchor: (Height: 88); Group #EquipFrameHead { Anchor: (Left: 3, Top: 7, Width: 74, Height: 74); Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/Hytale/SlotDefault.png"); } Group #EmptyHead { HitTestVisible: false; Anchor: (Left: 5, Top: 5, Width: 64, Height: 64); Background: (TexturePath: "Icons/Hytale/ArmorSlotIconHead.png"); } ItemIcon #EquipHead { Visible: false; Anchor: (Left: 6, Top: 5, Width: 62, Height: 62); } } }
             Group { Anchor: (Height: 88); Group #EquipFrameChest { Anchor: (Left: 3, Top: 7, Width: 74, Height: 74); Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/Hytale/SlotDefault.png"); } Group #EmptyChest { HitTestVisible: false; Anchor: (Left: 5, Top: 5, Width: 64, Height: 64); Background: (TexturePath: "Icons/Hytale/ArmorSlotIconChest.png"); } ItemIcon #EquipChest { Visible: false; Anchor: (Left: 6, Top: 5, Width: 62, Height: 62); } } }
             Group { Anchor: (Height: 88); Group #EquipFrameRingLeft { Anchor: (Left: 3, Top: 7, Width: 74, Height: 74); Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/Hytale/SlotDefault.png"); } Button #RingEquipLeft { Anchor: (Full: 0); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #d8ad5533), Pressed: (Background: #d8ad5555)); } Group #RingEmptyLeft { HitTestVisible: false; Anchor: (Left: 5, Top: 5, Width: 64, Height: 64); Background: (TexturePath: "Icons/Hytale/RingSlotIconLeft.png"); } ItemIcon #RingItemLeft { Visible: false; HitTestVisible: false; Anchor: (Left: 6, Top: 6, Width: 62, Height: 62); } } }
           }
-          Group { Anchor: (Width: 320, Height: 430);
-            Group { Anchor: (Width: 320, Height: 309, Bottom: 0); Background: (TexturePath: "Icons/Hytale/CharacterBackground.png"); }
-            CharacterPreviewComponent #PlayerPreview { Anchor: (Width: 320, Height: 430); }
+          Group { Anchor: (Width: 296, Height: 430);
+            Group { Anchor: (Width: 296, Height: 286, Bottom: 0); Background: (TexturePath: "Icons/Hytale/CharacterBackground.png"); }
+            CharacterPreviewComponent #PlayerPreview { Anchor: (Width: 296, Height: 430); }
             Button #ArmorVisibility { Anchor: (Right: 8, Bottom: 8, Width: 28, Height: 28); TooltipText: "Toggle armor appearance"; TextTooltipStyle: @InventoryTooltip;
               Group #ArmorVisibleIcon { HitTestVisible: false; Anchor: (Full: 0); Background: (TexturePath: "Icons/Hytale/ArmorVisibilityOn.png"); }
               Group #ArmorHiddenIcon { Visible: false; HitTestVisible: false; Anchor: (Full: 0); Background: (TexturePath: "Icons/Hytale/ArmorVisibilityOff.png"); }
@@ -92,8 +93,8 @@ Group {
             Group { Anchor: (Height: 88); Group #EquipFrameRingRight { Anchor: (Left: 3, Top: 7, Width: 74, Height: 74); Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/Hytale/SlotDefault.png"); } Button #RingEquipRight { Anchor: (Full: 0); Style: ButtonStyle(Default: (Background: #00000000), Hovered: (Background: #d8ad5533), Pressed: (Background: #d8ad5555)); } Group #RingEmptyRight { HitTestVisible: false; Anchor: (Left: 5, Top: 5, Width: 64, Height: 64); Background: (TexturePath: "Icons/Hytale/RingSlotIconRight.png"); } ItemIcon #RingItemRight { Visible: false; HitTestVisible: false; Anchor: (Left: 6, Top: 6, Width: 62, Height: 62); } } }
           }
         }
-        Group { Anchor: (Width: 12); }
-        $C.@Panel #GlobalStatsFrame { Anchor: (Width: 372, Height: 430); LayoutMode: Top; Padding: (Full: 10);
+        Group { Anchor: (Width: 16); }
+        $C.@Panel #GlobalStatsFrame { Anchor: (Width: 364, Height: 430); LayoutMode: Top; Padding: (Full: 10);
           Group #CombatFrame { Anchor: (Height: 148); LayoutMode: Top;
             Label { Text: "COMBAT STATS"; Anchor: (Height: 28); Background: #29455c; Style: (FontName: "Secondary", FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center); }
             Group { Anchor: (Height: 30); LayoutMode: Top; Group { Anchor: (Height: 28); LayoutMode: Left; Group { Anchor: (Width: 22, Height: 22); Background: (TexturePath: "Icons/Hytale/CharacterPanelStatIconMelee.png"); } Label { Text: "Weapon Damage"; Anchor: (Width: 194, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #WeaponDamage { Anchor: (Width: 126, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
@@ -119,10 +120,11 @@ Group {
           TextButton #Advanced { Text: "ADVANCED STATS  ›"; Anchor: (Height: 32); Style: @Action; }
         }
       }
-      Group { Anchor: (Height: 12); }
+      Group { Anchor: (Height: 16); }
       $C.@Panel #InventoryFrame { Anchor: (Width: 1216); LayoutMode: Top; Padding: (Horizontal: 30, Vertical: 8);
       Group { Anchor: (Height: 38); LayoutMode: Left; Padding: (Top: 3); Background: (TexturePath: "Icons/Hytale/ContainerHeader.png", HorizontalBorder: 50, VerticalBorder: 0);
-        Label { Text: "INVENTORY"; Anchor: (Width: 778, Height: 32); Style: (FontName: "Secondary", FontSize: 17, TextColor: #ffffff, RenderBold: true); }
+        Group { Anchor: (Width: 16); }
+        Label { Text: "INVENTORY"; Anchor: (Width: 762, Height: 32); Style: (FontName: "Secondary", FontSize: 17, TextColor: #ffffff, RenderBold: true); }
         Group { Anchor: (Width: 24, Height: 32); Group { Anchor: (Left: 4, Top: 8, Width: 16, Height: 16); Background: (TexturePath: "Icons/Hytale/SearchIcon.png"); } }
         TextField #Search { Anchor: (Width: 280, Height: 32); Background: #202b42; Padding: (Horizontal: 10, Vertical: 4); Style: (FontName: "Secondary", FontSize: 15, TextColor: #eef6ff); PlaceholderStyle: (FontName: "Secondary", FontSize: 15, TextColor: #9aa9b8); PlaceholderText: "Search..."; }
         TextButton #Clear { Text: "×"; Anchor: (Width: 38, Height: 32); Style: @Action; }

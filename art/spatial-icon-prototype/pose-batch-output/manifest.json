@@ -34,12 +34,13 @@
         ]
       },
       "posePolicy": "CHEST_TEMPLATE",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
           62,
-          23,
+          30,
           474,
-          482
+          489
         ],
         "scaledSize": [
           109,
@@ -90,12 +91,13 @@
         ]
       },
       "posePolicy": "NATIVE_ARMOR_ZERO_OFFSETS",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
           21,
-          44,
-          480,
-          460
+          51,
+          479,
+          468
         ],
         "scaledSize": [
           104,
@@ -146,12 +148,13 @@
         ]
       },
       "posePolicy": "NATIVE_ARMOR_ZERO_OFFSETS",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
           60,
-          33,
+          20,
           432,
-          492
+          478
         ],
         "scaledSize": [
           85,
@@ -202,12 +205,13 @@
         ]
       },
       "posePolicy": "NATIVE_ARMOR_ZERO_OFFSETS",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
-          133,
-          45,
-          388,
-          504
+          132,
+          8,
+          387,
+          467
         ],
         "scaledSize": [
           90,
@@ -247,7 +251,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Sword/Template_Weapon_Sword.json",
       "pose": {
         "Rotation": [
-          0,
+          45,
           90,
           0
         ],
@@ -257,23 +261,24 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": -45,
       "fit": {
         "sourceBounds": [
-          173,
-          76,
-          339,
-          512
+          257,
+          7,
+          469,
+          593
         ],
         "scaledSize": [
           47,
-          123
+          129
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
           8,
-          34
+          31
         ],
         "clampedToFootprint": false
       },
@@ -303,7 +308,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Daggers/Template_Weapon_Daggers.json",
       "pose": {
         "Rotation": [
-          0,
+          45,
           90,
           0
         ],
@@ -313,13 +318,14 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": -45,
       "fit": {
         "sourceBounds": [
-          146,
-          14,
-          366,
-          474
+          234,
+          107,
+          492,
+          648
         ],
         "scaledSize": [
           47,
@@ -369,16 +375,17 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "SHORTBOW_UPRIGHT_0_90_0",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
           190,
-          35,
+          27,
           297,
           485
         ],
         "scaledSize": [
-          52,
+          51,
           220
         ],
         "baselineFitFraction": 0.9,
@@ -394,9 +401,9 @@
       "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Bow_Iron.png"
     },
     {
-      "family": "Long Bow proxy",
+      "family": "Short Bow",
       "itemId": "Weapon_Shortbow_Copper",
-      "proxy": true,
+      "proxy": false,
       "width": 2,
       "height": 4,
       "file": "Weapon_Shortbow_Copper.png",
@@ -425,7 +432,8 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "SHORTBOW_UPRIGHT_0_90_0",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
           202,
@@ -471,9 +479,9 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Crossbow/Template_Weapon_Crossbow.json",
       "pose": {
         "Rotation": [
-          0,
+          330,
           90,
-          0
+          45
         ],
         "Scale": 0.5,
         "Translation": [
@@ -481,23 +489,24 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
-          126,
-          164,
-          512,
-          309
+          185,
+          125,
+          336,
+          512
         ],
         "scaledSize": [
-          104,
-          39
+          86,
+          220
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
-          12,
-          108
+          21,
+          18
         ],
         "clampedToFootprint": false
       },
@@ -527,7 +536,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Battleaxe/Template_Weapon_Battleaxe.json",
       "pose": {
         "Rotation": [
-          0,
+          45,
           90,
           0
         ],
@@ -537,16 +546,17 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": -45,
       "fit": {
         "sourceBounds": [
-          212,
-          15,
-          299,
-          475
+          306,
+          75,
+          420,
+          679
         ],
         "scaledSize": [
-          42,
+          41,
           220
         ],
         "baselineFitFraction": 0.9,
@@ -583,7 +593,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Mace/Template_Weapon_Mace.json",
       "pose": {
         "Rotation": [
-          0,
+          45,
           90,
           0
         ],
@@ -593,22 +603,23 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": -45,
       "fit": {
         "sourceBounds": [
-          202,
-          0,
-          310,
-          429
+          296,
+          146,
+          430,
+          722
         ],
         "scaledSize": [
-          41,
+          38,
           162
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
-          11,
+          13,
           15
         ],
         "clampedToFootprint": false
@@ -639,7 +650,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Iron.json",
       "pose": {
         "Rotation": [
-          0,
+          45,
           90,
           0
         ],
@@ -649,22 +660,23 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": -45,
       "fit": {
         "sourceBounds": [
-          155,
-          68,
-          357,
-          512
+          239,
+          18,
+          487,
+          602
         ],
         "scaledSize": [
-          100,
+          93,
           220
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
-          14,
+          17,
           18
         ],
         "clampedToFootprint": false
@@ -695,7 +707,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Iron.json",
       "pose": {
         "Rotation": [
-          0,
+          45,
           90,
           0
         ],
@@ -705,16 +717,17 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": -45,
       "fit": {
         "sourceBounds": [
-          237,
-          35,
-          275,
-          488
+          341,
+          87,
+          385,
+          667
         ],
         "scaledSize": [
-          18,
+          17,
           220
         ],
         "baselineFitFraction": 0.9,
@@ -751,8 +764,8 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Shield/Template_Weapon_Shield.json",
       "pose": {
         "Rotation": [
-          0,
-          90,
+          315,
+          270,
           0
         ],
         "Scale": 0.4,
@@ -761,23 +774,24 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
-          118,
-          21,
-          394,
-          481
+          20,
+          20,
+          478,
+          478
         ],
         "scaledSize": [
-          97,
-          162
+          104,
+          104
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
-          15,
-          15
+          12,
+          44
         ],
         "clampedToFootprint": false
       },
@@ -807,7 +821,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Iron.json",
       "pose": {
         "Rotation": [
-          0,
+          45,
           90,
           0
         ],
@@ -817,22 +831,23 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": -45,
       "fit": {
         "sourceBounds": [
-          222,
-          5,
-          309,
-          378
+          314,
+          203,
+          413,
+          692
         ],
         "scaledSize": [
-          51,
+          44,
           220
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
-          38,
+          42,
           18
         ],
         "clampedToFootprint": false
@@ -863,7 +878,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
       "pose": {
         "Rotation": [
-          0,
+          45,
           90,
           0
         ],
@@ -873,23 +888,24 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": -45,
       "fit": {
         "sourceBounds": [
-          126,
-          58,
-          359,
-          477
+          211,
+          106,
+          483,
+          641
         ],
         "scaledSize": [
           47,
-          84
+          92
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
           8,
-          22
+          18
         ],
         "clampedToFootprint": false
       },
@@ -919,7 +935,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Fire.json",
       "pose": {
         "Rotation": [
-          0,
+          45,
           90,
           0
         ],
@@ -929,23 +945,24 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
-          29,
-          26,
-          421,
-          486
+          12,
+          42,
+          471,
+          500
         ],
         "scaledSize": [
           47,
-          55
+          47
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
           8,
-          36
+          40
         ],
         "clampedToFootprint": false
       },
@@ -975,7 +992,7 @@
       "nativePoseSource": "Server/Item/Items/Hypixel/Minigames/GunPvP/Weapon_Assault_Rifle.json",
       "pose": {
         "Rotation": [
-          0,
+          315,
           90,
           0
         ],
@@ -985,23 +1002,24 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
-          22,
-          121,
-          481,
-          327
+          57,
+          19,
+          483,
+          477
         ],
         "scaledSize": [
           104,
-          47
+          112
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
           12,
-          104
+          72
         ],
         "clampedToFootprint": false
       },
@@ -1031,7 +1049,7 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Gun/Weapon_Gun_Blunderbuss.json",
       "pose": {
         "Rotation": [
-          0,
+          320,
           90,
           0
         ],
@@ -1041,23 +1059,24 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
-          49,
-          188,
-          508,
-          312
+          41,
+          50,
+          483,
+          508
         ],
         "scaledSize": [
           104,
-          28
+          108
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
           12,
-          114
+          74
         ],
         "clampedToFootprint": false
       },
@@ -1087,9 +1106,9 @@
       "nativePoseSource": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb_Fire.json",
       "pose": {
         "Rotation": [
-          0,
-          90,
-          0
+          4.685,
+          6.935,
+          315
         ],
         "Scale": 0.87,
         "Translation": [
@@ -1097,23 +1116,24 @@
           0
         ]
       },
-      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "posePolicy": "NATIVE_WEAPON_CENTERED",
+      "imageRollDegrees": 0,
       "fit": {
         "sourceBounds": [
-          102,
-          0,
-          434,
-          373
+          142,
+          146,
+          512,
+          512
         ],
         "scaledSize": [
-          42,
-          47
+          47,
+          46
         ],
         "baselineFitFraction": 0.9,
         "scaleRatioToNative": 1.0,
         "positionPixels": [
-          11,
-          8
+          8,
+          9
         ],
         "clampedToFootprint": false
       },

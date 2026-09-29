@@ -75,7 +75,7 @@ Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41;
               Label { Text: "2x4  scale 0.4"; Anchor: (Height: 22); Style: (FontSize: 12, TextColor: #b6c9da); }
             }
 Group { Anchor: (Width: 240, Height: 350); LayoutMode: Top; Background: #192d41; Padding: (Full: 6);
-              Label { Text: "Long Bow proxy (proxy)"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
+              Label { Text: "Short Bow"; Anchor: (Height: 24); Style: (FontSize: 16, TextColor: #e7bb69); }
               Label { Text: "Weapon_Shortbow_Copper"; Anchor: (Height: 25); Style: (FontSize: 11, TextColor: #d4e2ee); }
               Group { Anchor: (Height: 258); LayoutMode: Center;
                 Group { Anchor: (Width: 128, Height: 256); Background: #9fadb9;

@@ -15,16 +15,12 @@ import java.util.Set;
 /** Packaged templates and object-codec anchors, matching the client-tested CanvasUI path. */
 final class InventoryProbeBag {
     private static final int PITCH = InventoryGridGeometry.PITCH;
-    // Each prototype render is documented in
-    // art/spatial-icon-prototype/pose-batch-output/manifest.json. Other items
-    // continue to use their shipped Hytale ItemIcon; never mix an untracked PNG.
+    // The gallery contains all bounded proof renders, including failed UV
+    // reconstructions. Only visually reviewed entries replace native icons.
+    // Missing faces on the spear, sword and armor must never ship as live art.
     private static final Set<String> POSE_BATCH = Set.of(
-            "Armor_Leather_Light_Chest", "Armor_Leather_Light_Hands",
-            "Armor_Leather_Light_Head", "Armor_Leather_Light_Legs",
-            "Weapon_Sword_Iron", "Weapon_Daggers_Iron", "Weapon_Shortbow_Iron",
-            "Weapon_Shortbow_Copper", "Weapon_Crossbow_Iron", "Weapon_Battleaxe_Iron",
-            "Weapon_Mace_Iron", "Weapon_Longsword_Iron", "Weapon_Spear_Iron",
-            "Weapon_Shield_Iron", "Weapon_Staff_Iron", "Weapon_Wand_Wood",
+            "Weapon_Shortbow_Iron", "Weapon_Shortbow_Copper",
+            "Weapon_Mace_Iron", "Weapon_Shield_Iron", "Weapon_Staff_Iron",
             "Weapon_Spellbook_Fire", "Weapon_Assault_Rifle",
             "Weapon_Gun_Blunderbuss", "Weapon_Bomb_Fire");
     private final Map<String, String> selectors = new HashMap<>();

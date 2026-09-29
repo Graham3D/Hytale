@@ -9,7 +9,7 @@
     {"family": "Sword", "itemId": "Weapon_Sword_Iron"},
     {"family": "Daggers", "itemId": "Weapon_Daggers_Iron"},
     {"family": "Short Bow", "itemId": "Weapon_Shortbow_Iron"},
-    {"family": "Long Bow proxy", "itemId": "Weapon_Shortbow_Copper", "proxy": true},
+    {"family": "Short Bow", "itemId": "Weapon_Shortbow_Copper"},
     {"family": "Crossbow", "itemId": "Weapon_Crossbow_Iron"},
     {"family": "Battleaxe", "itemId": "Weapon_Battleaxe_Iron"},
     {"family": "Mace", "itemId": "Weapon_Mace_Iron"},
