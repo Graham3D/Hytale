@@ -59,6 +59,8 @@ try {
         'Common/UI/Custom/RpgAdvancedStatSection.ui',
         'Common/UI/Custom/RpgInventoryProbe.ui',
         'Common/UI/Custom/Icons/Hytale/SlotDefault@2x.png',
+        'Common/UI/Custom/Icons/Hytale/ContainerHeader@2x.png',
+        'Common/UI/Custom/Icons/Hytale/ContainerDecorationTop@2x.png',
         'Common/UI/Custom/Icons/Hytale/CharacterBackground@2x.png',
         'Common/UI/Custom/Icons/Hytale/AutoSortIcon@2x.png',
         'Common/UI/Custom/Icons/Hytale/ArmorVisibilityOn@2x.png',

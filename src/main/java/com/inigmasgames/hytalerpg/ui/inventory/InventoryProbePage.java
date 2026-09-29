@@ -640,6 +640,17 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                     close();
                     return;
                 }
+                if ("Map".equals(data.value)) {
+                    var entity = store.getComponent(ref, Player.getComponentType());
+                    if (entity == null) return;
+                    // Release only this page's empty cursor alias before asking the
+                    // client to show its built-in Map page. No custom map is created.
+                    if (nativeWindow != null && entity.getWindowManager().getWindow(nativeWindow.getId()) == nativeWindow)
+                        entity.getWindowManager().closeWindow(ref, nativeWindow.getId(), store);
+                    grab = null; nativeGrabCell = -1;
+                    entity.getPageManager().setPage(ref, store, Page.Map);
+                    return;
+                }
                 if (grab != null) bag.select(commands, grab.id(), false);
                 grab = null; nativeGrabCell = -1; route = data.value;
                 for (var name : ROUTES) if (!"Skills".equals(name))
@@ -654,7 +665,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                     commands.set("#RouteMessage.Text", route.toUpperCase(Locale.ROOT));
                     commands.set("#RouteDetail.Text", switch (route) {
                         case "Quests" -> renderQuests(commands);
-                        case "Bestiary", "Map", "Friends", "Party" -> "Coming soon.";
+                        case "Bestiary", "Friends", "Party" -> "Coming soon.";
                         default -> "";
                     });
                 }

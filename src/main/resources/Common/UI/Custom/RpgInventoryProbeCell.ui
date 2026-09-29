@@ -1,7 +1,5 @@
 Group {
   Anchor: (Width: 74, Height: 74);
   HitTestVisible: false;
-  Background: #29455c;
-  Padding: (Full: 1);
-  Group { Anchor: (Full: 0); Background: #0b1320; }
+  Background: (TexturePath: "RpgInventory/Slot.png");
 }
