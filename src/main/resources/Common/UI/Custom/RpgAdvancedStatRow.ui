@@ -1,11 +1,17 @@
 $C = "Common.ui";
+@StatTooltip = TextTooltipStyle(
+  Background: (TexturePath: "Icons/Hytale/ItemTooltipDefault.png", Border: 24),
+  MaxWidth: 400,
+  LabelStyle: (FontName: "Secondary", FontSize: 16, Wrap: true),
+  Padding: 24
+);
 @StatRow = TextButtonStyle(
-  Default: (Background: #16283b, LabelStyle: (FontSize: 14, TextColor: #dce6ed)),
-  Hovered: (Background: #29455c, LabelStyle: (FontSize: 14, TextColor: #ffffff)),
-  Pressed: (Background: #1d3448, LabelStyle: (FontSize: 14, TextColor: #ffffff))
+  Default: (Background: #16283b, LabelStyle: (FontName: "Secondary", FontSize: 14, TextColor: #dce6ed)),
+  Hovered: (Background: #29455c, LabelStyle: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff)),
+  Pressed: (Background: #1d3448, LabelStyle: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff))
 );
 Group { Anchor: (Height: 31);
-  TextButton #Open { Anchor: (Full: 0); Text: ""; Style: @StatRow; }
-  Label #Name { HitTestVisible: false; Anchor: (Left: 8, Top: 3, Width: 214, Height: 27); Style: (FontSize: 14, TextColor: #dce6ed); }
-  Label #Value { HitTestVisible: false; Anchor: (Right: 8, Top: 3, Width: 95, Height: 27); Style: (FontSize: 14, TextColor: #ffffff, Alignment: End); }
+  TextButton #Open { Anchor: (Full: 0); Text: ""; Style: @StatRow; TextTooltipStyle: @StatTooltip; }
+  Label #Name { HitTestVisible: false; Anchor: (Left: 8, Top: 3, Width: 214, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #dce6ed); }
+  Label #Value { HitTestVisible: false; Anchor: (Right: 8, Top: 3, Width: 95, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); }
 }

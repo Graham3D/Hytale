@@ -77,6 +77,7 @@ final class InventoryProbeBag {
                 artWidth, artHeight);
         commands.setObject(selector + " #PoseArt.Anchor", artAnchor);
         commands.setObject(selector + " #RarityArt.Anchor", artAnchor);
+        commands.setObject(selector + " #RarityGlow.Anchor", artAnchor);
         // ItemIcon scales to its anchor. Keep that anchor square so a square
         // source canvas cannot be stretched to a tall spatial footprint.
         // The rarity and selection layers still cover the entire footprint.
@@ -100,6 +101,12 @@ final class InventoryProbeBag {
                 commands.setObject(selector + " #RarityArt.Background", new PatchStyle()
                         .setTexturePath(Value.of(rarityArt)).setColor(Value.of(color + "88")));
                 commands.set(selector + " #RarityArt.Visible", true);
+                // CustomUI has tint/alpha but no exposed additive or screen blend.
+                // A second, faint pass through the same unmodified footprint art
+                // lifts its highlight and border without replacing native cells.
+                commands.setObject(selector + " #RarityGlow.Background", new PatchStyle()
+                        .setTexturePath(Value.of(rarityArt)).setColor(Value.of("#ffffff26")));
+                commands.set(selector + " #RarityGlow.Visible", true);
             }
         }
     }

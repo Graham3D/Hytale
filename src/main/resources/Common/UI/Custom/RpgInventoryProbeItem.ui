@@ -2,11 +2,12 @@ Group {
   Anchor: (Width: 74, Height: 74);
   HitTestVisible: false;
   Group #RarityArt { Visible: false; Anchor: (Full: 0); Background: #ffffff; }
+  Group #RarityGlow { Visible: false; Anchor: (Full: 0); Background: #ffffff; }
   ItemIcon #Icon { Anchor: (Width: 56, Height: 56); }
   Group #PoseArt { Visible: false; HitTestVisible: false; Anchor: (Full: 0); }
   Label #Quantity {
     Anchor: (Right: 8, Bottom: 7, Height: 22);
-    Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true);
+    Style: (FontName: "Secondary", FontSize: 15, TextColor: #ffffff, RenderBold: true);
   }
   Group #Dim { Anchor: (Full: 0); Background: #0b1320b3; Visible: false; }
   Group #Selected { Anchor: (Full: 0); Background: #d8ad5533; Visible: false; }

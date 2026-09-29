@@ -3,6 +3,6 @@ Group {
   LayoutMode: Top;
   Background: #20364c;
   Padding: (Horizontal: 12, Vertical: 6);
-  Label #Title { Anchor: (Height: 28); Style: (FontSize: 17, TextColor: #eef6ff); }
-  Label #Detail { Anchor: (Height: 30); Style: (FontSize: 13, TextColor: #b4c7d4); }
+  Label #Title { Anchor: (Height: 28); Style: (FontName: "Secondary", FontSize: 17, TextColor: #eef6ff); }
+  Label #Detail { Anchor: (Height: 30); Style: (FontName: "Secondary", FontSize: 13, TextColor: #b4c7d4); }
 }
