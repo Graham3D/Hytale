@@ -22,16 +22,23 @@ public final class SpatialBagComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("OwnershipMode", Codec.STRING),
                     (component, value) -> component.mode = OwnershipMode.valueOf(value),
                     component -> component.mode.name())
+            .add()
+            .append(new KeyedCodec<>("Rings", Codec.BSON_DOCUMENT),
+                    (component, document) -> component.rings = RpgRingEquipment.fromBson(document),
+                    component -> component.rings.toBson())
             .add().build();
     private static ComponentType<EntityStore, SpatialBagComponent> type;
     private SpatialBagAggregate state;
     private OwnershipMode mode = OwnershipMode.NATIVE;
+    private RpgRingEquipment rings = new RpgRingEquipment(null, null);
 
     public SpatialBagComponent() { }
     public SpatialBagComponent(UUID owner, FootprintCatalog catalog) {
         state = new SpatialBagAggregate(Objects.requireNonNull(owner), catalog.revision());
     }
-    private SpatialBagComponent(SpatialBagAggregate state, OwnershipMode mode) { this.state = state; this.mode = mode; }
+    private SpatialBagComponent(SpatialBagAggregate state, OwnershipMode mode, RpgRingEquipment rings) {
+        this.state = state; this.mode = mode; this.rings = rings;
+    }
     public static void bind(ComponentType<EntityStore, SpatialBagComponent> value) { type = value; }
     public static ComponentType<EntityStore, SpatialBagComponent> getComponentType() { return type; }
     public SpatialBagAggregate state(UUID owner) {
@@ -39,6 +46,39 @@ public final class SpatialBagComponent implements Component<EntityStore> {
         return state;
     }
     public OwnershipMode mode(UUID owner) { state(owner); return mode; }
+    public RpgRingEquipment rings(UUID owner) { state(owner); return rings; }
+    /** The bag exchange and ring slot change publish together in this one saved component. */
+    public synchronized SpatialBagAggregate.Result equipRing(UUID owner, String side, UUID sourceId,
+                                                               long expectedRevision, FootprintCatalog catalog) {
+        if (mode == OwnershipMode.NATIVE) throw new IllegalStateException("Spatial ownership required");
+        var before = state(owner);
+        if (before.revision() != expectedRevision) throw new IllegalStateException("Stale bag revision");
+        var source = before.entry(sourceId).orElseThrow(() -> new IllegalArgumentException("Ring is no longer in bag"));
+        if (!RpgRingEquipment.eligible(source.payload())) throw new IllegalArgumentException("Only a ring fits this slot");
+        var displaced = rings.get(side);
+        var offered = displaced == null ? java.util.List.<SpatialBagAggregate.OfferedItem>of()
+                : java.util.List.of(new SpatialBagAggregate.OfferedItem(displaced.entryId(), displaced.payload()));
+        var result = before.exchange(UUID.randomUUID(), expectedRevision, sourceId, source.payloadJson(),
+                offered, catalog);
+        if (result.accepted()) {
+            state = result.bag();
+            rings = rings.with(side, RpgRingEquipment.Slot.of(sourceId, source.payload()));
+        }
+        return result;
+    }
+    public synchronized SpatialBagAggregate.Result unequipRing(UUID owner, String side, FootprintCatalog catalog) {
+        if (mode == OwnershipMode.NATIVE) throw new IllegalStateException("Spatial ownership required");
+        var before = state(owner);
+        var slot = rings.get(side);
+        if (slot == null) throw new IllegalArgumentException("Ring slot is empty");
+        var result = before.offerAll(UUID.randomUUID(), before.revision(),
+                java.util.List.of(new SpatialBagAggregate.OfferedItem(slot.entryId(), slot.payload())), catalog);
+        if (result.accepted()) {
+            state = result.bag();
+            rings = rings.with(side, null);
+        }
+        return result;
+    }
     /** Copied-save proof only. The caller must enforce the diagnostic marker before invocation. */
     public synchronized void activateQaProof(UUID owner) {
         state(owner);
@@ -67,6 +107,8 @@ public final class SpatialBagComponent implements Component<EntityStore> {
     /** Disposable-save-only cutover; caller must enforce the copied-save marker and durable journal. */
     public synchronized void publishCopiedMigration(UUID owner,SpatialBagAggregate expected,
                                                      SpatialBagAggregate candidate,OwnershipMode target) {
+        if (target == OwnershipMode.QA_PROOF && (rings.left() != null || rings.right() != null))
+            throw new IllegalStateException("Equipped rings must be returned before reverse export");
         if(!((mode==OwnershipMode.QA_PROOF&&target==OwnershipMode.MIGRATION_PROOF)
                 ||(mode==OwnershipMode.MIGRATION_PROOF&&target==OwnershipMode.QA_PROOF&&candidate.entries().isEmpty())))
             throw new IllegalStateException("Invalid copied-save migration mode transition");
@@ -74,5 +116,5 @@ public final class SpatialBagComponent implements Component<EntityStore> {
         mode=target;
     }
     public BsonDocument snapshot() { return state == null ? null : state.toBson(); }
-    @Override public SpatialBagComponent clone() { return new SpatialBagComponent(state, mode); }
+    @Override public SpatialBagComponent clone() { return new SpatialBagComponent(state, mode, rings); }
 }

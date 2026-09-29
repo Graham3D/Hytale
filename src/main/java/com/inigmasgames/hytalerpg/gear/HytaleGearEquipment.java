@@ -36,10 +36,15 @@ public final class HytaleGearEquipment {
         return GearRequirements.resolve(view.level(),view.baseline(),view.equipped().stream()
                 .filter(g->!g.identity().equals(candidate)).map(g->new GearRequirements.Equipped(g.identity(),g.requirements(),GearAffixRuntime.attributes(g))).toList()).permanentAttributes();
     }
-    public double magicFind(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor){var view=findView(actor,accessor);if(view==null)return 0;double gear=0;
-        for(var item:view.equipped())if(!item.qaOnly()&&view.validity().valid().contains(item.identity()))for(var affix:item.affixes())if(affix.familyId().equals("WA-151"))gear+=affix.value()/100.;
-        return GearMagicFind.snapshot(view.validity().permanentAttributes().getOrDefault(RpgAttribute.LUCK,10),gear);
+    public record MagicFindBreakdown(double luck, double equippedGear) {
+        public double total() { return luck + equippedGear; }
     }
+    public MagicFindBreakdown magicFindBreakdown(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor){var view=findView(actor,accessor);if(view==null)return new MagicFindBreakdown(0,0);double gear=0;
+        for(var item:view.equipped())if(!item.qaOnly()&&view.validity().valid().contains(item.identity()))for(var affix:item.affixes())if(affix.familyId().equals("WA-151"))gear+=affix.value()/100.;
+        double luck=GearMagicFind.snapshot(view.validity().permanentAttributes().getOrDefault(RpgAttribute.LUCK,10),0);
+        return new MagicFindBreakdown(luck, GearMagicFind.snapshot(view.validity().permanentAttributes().getOrDefault(RpgAttribute.LUCK,10),gear)-luck);
+    }
+    public double magicFind(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor){return magicFindBreakdown(actor,accessor).total();}
     /** Native readers must not hydrate or wait for persistence on the world thread. */
     View whenReady(UUID player,java.util.function.Supplier<View> read) {
         if(!players.ready(player)){published.remove(player);return null;}

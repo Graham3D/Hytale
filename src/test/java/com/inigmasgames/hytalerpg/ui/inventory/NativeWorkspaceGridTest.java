@@ -3,21 +3,31 @@ package com.inigmasgames.hytalerpg.ui.inventory;
 import org.junit.jupiter.api.Test;
 import org.bson.BsonDocument;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import com.hypixel.hytale.assetstore.AssetRegistry;
+import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
+import com.hypixel.hytale.event.EventBus;
+import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
+import com.hypixel.hytale.server.core.asset.type.item.config.Item;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Regression for every covered cell resolving to one authoritative source identity. */
 final class NativeWorkspaceGridTest {
-    @Test void decorativeBackdropNeverReceivesAnIncompatibleDroppedBinding() throws Exception {
-        String page = Files.readString(Path.of(
-                "src/main/java/com/inigmasgames/hytalerpg/ui/inventory/InventoryProbePage.java"));
-        String document = Files.readString(Path.of(
-                "src/main/resources/Common/UI/Custom/RpgInventoryProbe.ui"));
-        assertTrue(document.contains("Group #DropBackdrop"));
-        assertFalse(page.contains("CustomUIEventBindingType.Dropped, \"#DropBackdrop\""));
+    private static HytaleAssetStore<String, Item, DefaultAssetMap<String, Item>> fixture;
+    @BeforeAll static void setup() throws Exception {
+        com.hypixel.hytale.server.core.Options.parse(new String[]{"--bare"});
+        var builder = HytaleAssetStore.builder(Item.class,
+                new DefaultAssetMap<String, Item>(Map.of("Weapon_Shortbow_Copper", new Item("Weapon_Shortbow_Copper"))))
+                .setPath("Item/Items").setCodec(Item.CODEC).setKeyFunction(Item::getId);
+        fixture = new HytaleAssetStore<>(builder) {
+            private final EventBus events = new EventBus(false);
+            @Override protected EventBus getEventBus() { return events; }
+        };
+        AssetRegistry.register(fixture);
     }
-
+    @AfterAll static void teardown() { if (fixture != null) AssetRegistry.unregister(fixture); }
     @Test void coveredCellsShareOneNativeSourceAndKeepGrabOffset() {
         var layout = new SpatialLayout(InventoryGridGeometry.COLUMNS, InventoryGridGeometry.ROWS);
         assertTrue(layout.add("bow", new SpatialLayout.Size(2, 4), new SpatialLayout.Position(3, 0)));

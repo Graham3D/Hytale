@@ -15,13 +15,19 @@ class InventoryProbeBagTest {
     }
 
     @Test void authoredMagicTilesOnlyRenderAtTheirExactFootprints() {
-        for (var size : new SpatialLayout.Size[]{new SpatialLayout.Size(1, 1), new SpatialLayout.Size(2, 2)}) {
+        for (var size : new SpatialLayout.Size[]{new SpatialLayout.Size(1, 1), new SpatialLayout.Size(1, 2),
+                new SpatialLayout.Size(1, 3), new SpatialLayout.Size(1, 4),
+                new SpatialLayout.Size(2, 2), new SpatialLayout.Size(2, 3), new SpatialLayout.Size(2, 4)}) {
             String path = InventoryProbeBag.rarityArtForQuality("RPG_Gear_Rare", size);
             assertNotNull(path);
             assertNotNull(getClass().getResource("/Common/UI/Custom/" + path));
         }
-        assertNull(InventoryProbeBag.rarityArtForQuality("RPG_Gear_Rare", new SpatialLayout.Size(2, 4)));
+        assertNull(InventoryProbeBag.rarityArtForQuality("RPG_Gear_Rare", new SpatialLayout.Size(2, 1)));
         assertNull(InventoryProbeBag.rarityArtForQuality("Common", new SpatialLayout.Size(1, 1)));
+        assertEquals("#1d4dff", InventoryProbeBag.rarityColorForQuality("RPG_Gear_Rare"));
+        assertEquals("#a000ff", InventoryProbeBag.rarityColorForQuality("RPG_Gear_RandomRare"));
+        assertEquals("#51c534", InventoryProbeBag.rarityColorForQuality("RPG_Gear_Set"));
+        assertEquals("#ff9100", InventoryProbeBag.rarityColorForQuality("RPG_Gear_Legendary"));
     }
 
     @Test void appendedNativeGridUsesItsRootIdForSlotUpdates() {
@@ -31,18 +37,18 @@ class InventoryProbeBagTest {
         assertEquals("#WorkspaceNativeGrid", renderer.nativeGrid(commands, 1));
         renderer.item(commands, entry("bow", 0, 0, 2, 4), "Weapon_Shortbow_Copper", 1);
         assertTrue(Arrays.stream(commands.getCommands()).anyMatch(command ->
-                "#Bag[91] #Icon.ItemId".equals(command.selector)));
+                "#Bag[76] #Icon.ItemId".equals(command.selector)));
     }
 
     @Test void emptyPartialAndFullBagsUsePackagedDocumentsAndAddressExistingChildren() {
-        for (int itemCount : new int[]{0, 3, 90}) {
+        for (int itemCount : new int[]{0, 3, InventoryGridGeometry.CELLS}) {
             var renderer = new InventoryProbeBag();
             var commands = new UICommandBuilder();
             renderer.reset(commands);
             for (int i = 0; i < itemCount; i++)
                 renderer.item(commands, entry("slot" + i, i % 15, i / 15, 1, 1), "Rock_Stone", i + 1);
             var hitSelectors = new HashSet<String>();
-            for (int y = 0; y < 6; y++) for (int x = 0; x < 15; x++)
+            for (int y = 0; y < InventoryGridGeometry.ROWS; y++) for (int x = 0; x < 15; x++)
                 assertTrue(hitSelectors.add(renderer.hit(commands, x, y)));
             int children = 0;
             for (var command : commands.getCommands()) {
@@ -63,8 +69,8 @@ class InventoryProbeBagTest {
                     }
                 }
             }
-            assertEquals(180 + itemCount, children);
-            assertEquals(90, hitSelectors.size());
+            assertEquals(InventoryGridGeometry.CELLS * 2 + itemCount, children);
+            assertEquals(InventoryGridGeometry.CELLS, hitSelectors.size());
         }
     }
 
@@ -74,11 +80,11 @@ class InventoryProbeBagTest {
         renderer.reset(initial);
         renderer.item(initial, entry("stone", 0, 0, 1, 1), "Rock_Stone", 12);
         renderer.item(initial, entry("bow", 1, 0, 2, 4), "Weapon_Shortbow_Iron", 1);
-        var icon = Arrays.stream(initial.getCommands()).filter(c -> "#Bag[91] #Icon.Anchor".equals(c.selector)).findFirst().orElseThrow();
-        assertAnchor(icon, "#Bag[91] #Icon.Anchor", 8, 84, 134, 134);
+        var icon = Arrays.stream(initial.getCommands()).filter(c -> "#Bag[76] #Icon.Anchor".equals(c.selector)).findFirst().orElseThrow();
+        assertAnchor(icon, "#Bag[76] #Icon.Anchor", 8, 84, 134, 134);
         var move = new UICommandBuilder();
         renderer.move(move, entry("bow", 10, 0, 2, 4));
-        assertAnchor(move.getCommands()[0], "#Bag[91].Anchor", 760, 0, 150, 302);
+        assertAnchor(move.getCommands()[0], "#Bag[76].Anchor", 760, 0, 150, 302);
 
         var refresh = new UICommandBuilder();
         renderer.reset(refresh);
@@ -89,15 +95,15 @@ class InventoryProbeBagTest {
         renderer.select(refresh, "bow", false);
         var dims = Arrays.stream(refresh.getCommands()).filter(c -> c.selector.endsWith("#Dim.Visible")).toList();
         assertEquals(2, dims.size());
-        assertEquals("#Bag[90] #Dim.Visible", dims.getFirst().selector);
+        assertEquals("#Bag[75] #Dim.Visible", dims.getFirst().selector);
         assertTrue(BsonDocument.parse(dims.getFirst().data).getBoolean("0").getValue());
         assertFalse(BsonDocument.parse(dims.getLast().data).getBoolean("0").getValue());
         var selected = Arrays.stream(refresh.getCommands()).filter(c -> c.selector.endsWith("#Selected.Visible")).toList();
         assertEquals(2, selected.size());
-        assertEquals("#Bag[90] #Selected.Visible", selected.getFirst().selector);
+        assertEquals("#Bag[75] #Selected.Visible", selected.getFirst().selector);
         var after = new UICommandBuilder();
         renderer.move(after, entry("bow", 13, 0, 2, 4));
-        assertAnchor(after.getCommands()[0], "#Bag[90].Anchor", 988, 0, 150, 302);
+        assertAnchor(after.getCommands()[0], "#Bag[75].Anchor", 988, 0, 150, 302);
     }
 
     private static void assertAnchor(CustomUICommand command, String selector, int left, int top, int width, int height) {

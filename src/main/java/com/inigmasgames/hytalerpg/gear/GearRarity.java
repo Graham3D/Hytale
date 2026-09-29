@@ -6,9 +6,9 @@ import com.inigmasgames.hytalerpg.difficulty.DifficultyId;
 public enum GearRarity {
     COMMON("Normal", "#ffffff", "Common", 0, 0, 1),
     UNCOMMON("Magic", "#1d4dff", "Uncommon", 1, 1, 1),
-    RARE("Rare", "#fff200", "Rare", 3, 6, 10),
-    VERY_RARE("Rare", "#fff200", "Epic", 4, 5, 35),
-    LEGENDARY("Rare", "#fff200", "Legendary", 6, 6, 60),
+    RARE("Rare", "#a000ff", "Rare", 3, 6, 10),
+    VERY_RARE("Rare", "#a000ff", "Epic", 4, 5, 35),
+    LEGENDARY("Legendary", "#ff9100", "Legendary", 6, 6, 60),
     NORMAL("Normal", "#ffffff", "Common", 0, 0, 1),
     MAGIC("Magic", "#1d4dff", "Uncommon", 1, 2, 1);
 
@@ -24,7 +24,7 @@ public enum GearRarity {
         return "Particles/Drop/"+tier+"/Drop_"+tier+".particlesystem";
     }
     public GearQuality quality(){return switch(this){case COMMON,NORMAL->GearQuality.NORMAL;case UNCOMMON,MAGIC->GearQuality.MAGIC;default->GearQuality.RARE;};}
-    public String qualityAsset(){return switch(quality()){case NORMAL->"RPG_Gear_Common";case MAGIC->"RPG_Gear_Rare";case RARE->"RPG_Gear_RandomRare";default->throw new IllegalStateException();};}
+    public String qualityAsset(){if(this==LEGENDARY)return "RPG_Gear_Legendary";return switch(quality()){case NORMAL->"RPG_Gear_Common";case MAGIC->"RPG_Gear_Rare";case RARE->"RPG_Gear_RandomRare";default->throw new IllegalStateException();};}
     public boolean eligible(int itemLevel, DifficultyId era) {
         return itemLevel>=minimumLevel && itemLevel<=99 && (this!=LEGENDARY || era==DifficultyId.HELL);
     }

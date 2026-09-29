@@ -47,5 +47,9 @@ public final class FootprintCatalog {
     public int revision() { return revision; }
     public String sourceAssetsSha256() { return sourceAssetsSha256; }
     public int bindingCount() { return sizes.size(); }
-    public SpatialLayout.Size size(String baseItemId) { return sizes.get(baseItemId); }
+    public SpatialLayout.Size size(String baseItemId) {
+        // Local RPG accessory; the hashed source catalog covers the 5,608 installed stock IDs.
+        if ("RPG_Ring_Copper".equals(baseItemId)) return new SpatialLayout.Size(1, 1);
+        return sizes.get(baseItemId);
+    }
 }

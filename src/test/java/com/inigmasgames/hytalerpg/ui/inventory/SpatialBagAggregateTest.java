@@ -28,7 +28,8 @@ class SpatialBagAggregateTest {
         var builder = HytaleAssetStore.builder(Item.class,
                 new DefaultAssetMap<String, Item>(Map.of(
                         "Rock_Stone", rock,
-                        "Weapon_Shortbow_Iron", new Item("Weapon_Shortbow_Iron"))))
+                        "Weapon_Shortbow_Iron", new Item("Weapon_Shortbow_Iron"),
+                        "RPG_Ring_Copper", new Item("RPG_Ring_Copper"))))
                 .setPath("Item/Items").setCodec(Item.CODEC).setKeyFunction(Item::getId);
         fixture = new HytaleAssetStore<>(builder) {
             private final EventBus events = new EventBus(false);
@@ -38,6 +39,44 @@ class SpatialBagAggregateTest {
     }
     @AfterAll static void teardown() { if (fixture != null) AssetRegistry.unregister(fixture); }
     private final FootprintCatalog catalog = FootprintCatalog.loadDefault();
+
+    @Test void ringTransferIsAtomicAndSurvivesPlayerComponentCodec() {
+        UUID owner = UUID.randomUUID(), id = UUID.randomUUID();
+        var component = new SpatialBagComponent(owner, catalog);
+        component.activateQaProof(owner);
+        var before = component.state(owner);
+        var admitted = before.offer(id, before.revision(), new ItemStack("RPG_Ring_Copper"), catalog);
+        assertTrue(admitted.accepted());
+        component.publish(owner, before, admitted.bag());
+        var equipped = component.equipRing(owner, "left", id, admitted.bag().revision(), catalog);
+        assertTrue(equipped.accepted());
+        assertTrue(component.state(owner).entries().isEmpty());
+        assertEquals(id, component.rings(owner).left().entryId());
+        var encoded = SpatialBagComponent.CODEC.encode(component, new com.hypixel.hytale.codec.ExtraInfo());
+        var restored = SpatialBagComponent.CODEC.decode(encoded, new com.hypixel.hytale.codec.ExtraInfo());
+        assertEquals(id, restored.rings(owner).left().entryId());
+        var legacy = encoded.asDocument().clone();
+        legacy.remove("Rings");
+        assertNull(SpatialBagComponent.CODEC.decode(legacy, new com.hypixel.hytale.codec.ExtraInfo())
+                .rings(owner).left());
+        var unequipped = restored.unequipRing(owner, "left", catalog);
+        assertTrue(unequipped.accepted());
+        assertNull(restored.rings(owner).left());
+        assertEquals("RPG_Ring_Copper", restored.state(owner).entries().iterator().next().payload().getItemId());
+    }
+
+    @Test void sixthRowSaveReflowsIntoFiveRowsWithoutChangingPayloadOrRevision() {
+        UUID owner = UUID.randomUUID();
+        var original = new SpatialBagAggregate(owner, catalog.revision())
+                .offer(UUID.randomUUID(), 0, new ItemStack("Rock_Stone", 7), catalog).bag();
+        var saved = original.toBson();
+        saved.getArray("Entries").get(0).asDocument().put("Y", new BsonInt32(5));
+        var restored = SpatialBagAggregate.fromBson(saved, catalog);
+        assertEquals(original.revision(), restored.revision());
+        assertEquals(original.entries().iterator().next().payloadJson(),
+                restored.entries().iterator().next().payloadJson());
+        assertTrue(restored.entries().iterator().next().position().y() < InventoryGridGeometry.ROWS);
+    }
 
     @Test void legacyRightEdgeReflowsWithoutChangingItemOrReceiptIdentity() {
         UUID owner=UUID.randomUUID(), id=UUID.randomUUID();
@@ -310,12 +349,12 @@ class SpatialBagAggregateTest {
                 existing.entry(source).orElseThrow().payloadJson(),
                 List.of(new SpatialBagAggregate.OfferedItem(displaced,displacedStack)),catalog).receipt());
         var full=empty;
-        for(int i=0;i<86;i++)full=full.offer(UUID.randomUUID(),full.revision(),new ItemStack("Rock_Stone"),catalog).bag();
+        for(int i=0;i<InventoryGridGeometry.CELLS;i++)full=full.offer(UUID.randomUUID(),full.revision(),new ItemStack("Rock_Stone"),catalog).bag();
         var first=full.entries().iterator().next();
         var noFit=full.exchange(UUID.randomUUID(),full.revision(),first.id(),first.payloadJson(),
                 List.of(new SpatialBagAggregate.OfferedItem(UUID.randomUUID(),displacedStack)),catalog);
         assertEquals(SpatialBagAggregate.Outcome.NO_FIT,noFit.receipt().outcome());
-        assertEquals(86,noFit.bag().entries().size());
+        assertEquals(InventoryGridGeometry.CELLS,noFit.bag().entries().size());
         assertEquals(full.revision(),noFit.bag().revision());
     }
     @Test void copiedMigrationRoundTripPreservesExactPayloadAndMode() {

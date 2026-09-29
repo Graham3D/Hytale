@@ -22,6 +22,41 @@ public final class SpatialInventoryTransferCoordinator {
     private static final java.util.concurrent.ConcurrentHashMap<UUID, PlayerRef> pendingQaGrants =
             new java.util.concurrent.ConcurrentHashMap<>();
 
+    /** Uses the same private-bag owner and durable player save as generated QA gear. */
+    public static void grantRingQa(Store<EntityStore> store, Ref<EntityStore> actor,
+                                   PlayerRef player, World world, Consumer<String> reply) {
+        UUID owner = player.getUuid();
+        var component = store.getComponent(actor, SpatialBagComponent.getComponentType());
+        var ring = new ItemStack("RPG_Ring_Copper");
+        if (component == null || component.mode(owner) == SpatialBagComponent.OwnershipMode.NATIVE) {
+            Player.giveItem(ring, actor, store);
+            reply.accept("Copper Ring delivered to native inventory.");
+            return;
+        }
+        if (pendingQaGrants.putIfAbsent(owner, player) != null)
+            throw new IllegalStateException("A gear grant is still saving; wait or reconnect");
+        boolean published = false;
+        try {
+            var before = component.state(owner);
+            var operation = UUID.randomUUID();
+            var result = before.offer(operation, before.revision(), ring, FootprintCatalog.loadDefault());
+            if (!result.accepted()) throw new IllegalStateException("Ring has no free bag cell: " + result.receipt().outcome());
+            var entity = store.getComponent(actor, Player.getComponentType());
+            if (entity == null) throw new IllegalStateException("Player save owner unavailable");
+            component.publish(owner, before, result.bag());
+            published = true;
+            entity.saveConfig(world, entity.toHolder(), true).whenComplete((ignored, error) ->
+                    world.execute(() -> {
+                        pendingQaGrants.remove(owner, player);
+                        reply.accept(error == null ? "Copper Ring saved to spatial inventory."
+                                : "Ring save uncertain; reconnect before requesting another.");
+                    }));
+        } catch (RuntimeException failure) {
+            if (!published) pendingQaGrants.remove(owner, player);
+            throw failure;
+        }
+    }
+
     /** Command-generated gear has no world source to reserve. Its frozen instance ID is
      * the durable issuance receipt, so a repeated seed cannot issue a second copy. */
     public static void grantGeneratedQaItem(ItemStack stack, Store<EntityStore> store,

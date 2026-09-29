@@ -1134,6 +1134,8 @@ public final class HytaleGearLoot implements AutoCloseable {
             var mode=component.mode(owner);
             if(mode!=(reverse?SpatialBagComponent.OwnershipMode.MIGRATION_PROOF:SpatialBagComponent.OwnershipMode.QA_PROOF))
                 throw new IllegalStateException("Wrong migration mode: "+mode);
+            if(reverse && (component.rings(owner).left()!=null || component.rings(owner).right()!=null))
+                throw new IllegalStateException("Unequip both rings before reverse export");
             var before=component.state(owner);
             var storageComponent=store.getComponent(actor,InventoryComponent.Storage.getComponentType());
             if(storageComponent==null)throw new IllegalStateException("Native Storage unavailable");

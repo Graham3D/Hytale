@@ -51,7 +51,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
     private short selectedNativeSlot = -1;
     private String nativeGridSelector;
     private String query = "", route = "Inventory";
-    private int selectedSkill;
+    private AdvancedStatsViewModel advancedModel;
     private boolean advanced;
     private boolean dismissed;
     private boolean openSkillTreeOnDismiss;
@@ -130,9 +130,12 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         for (var name : List.of("Sort", "Consolidate", "QuickEquip", "DropSelected"))
             events.addEventBinding(CustomUIEventBindingType.Activating, "#" + name,
                     event(name.toLowerCase(Locale.ROOT), ""), false);
+        events.addEventBinding(CustomUIEventBindingType.Activating, "#RingEquipLeft", event("ring", "left"), false);
+        events.addEventBinding(CustomUIEventBindingType.Activating, "#RingEquipRight", event("ring", "right"), false);
+        events.addEventBinding(CustomUIEventBindingType.Dropped, "#DropBackdrop",
+                event("dropoutside", ""), false);
         events.addEventBinding(CustomUIEventBindingType.Activating, "#Split",
                 event("split", "").append("@Quantity", "#SplitQuantity.Value"), false);
-        events.addEventBinding(CustomUIEventBindingType.Activating, "#SelectedSkill", event("next-skill", ""), false);
         events.addEventBinding(CustomUIEventBindingType.ValueChanged, "#Search",
                 event("search", "").append("@Query", "#Search.Value"), false);
         for (var type : List.of(CustomUIEventBindingType.FocusGained, CustomUIEventBindingType.FocusLost))
@@ -175,7 +178,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             int section = nativeWindow.getId();
             if (section < 1 || section > 1024 || nativeVirtualBag == null
                     || nativeVirtualBag.getCapacity() != InventoryGridGeometry.CELLS)
-                throw new IllegalStateException("Native workspace window is not a 90-cell alias section");
+                throw new IllegalStateException("Native workspace window has a different grid capacity");
             nativeGridSelector = bag.nativeGrid(commands, section);
             NativeWorkspaceGrid.write(commands, nativeGridSelector, layout, id -> items.get(id).fingerprint);
             for (var binding : new CustomUIEventBindingType[]{CustomUIEventBindingType.SlotClicking,
@@ -245,18 +248,48 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         var d = model.derivedStats();
         commands.set("#Critical.Text", percent(d.criticalChance()));
         commands.set("#Cooldown.Text", percent(d.cooldownRecovery()));
-        commands.set("#MagicFind.Text", percent(d.magicFind()));
+        var magicFind = GearNativeItems.magicFindBreakdown(ref, store);
+        commands.set("#MagicFind.Text", percent(magicFind.total()));
         renderCombatSources(ref, store, commands);
-        commands.set("#DamageModifiers.Text", "Damage modifiers  Heavy " + percent(d.heavyDamageMultiplier() - 1)
-                + "  Light " + percent(d.lightDamageMultiplier() - 1)
-                + "\nMagic " + percent(d.magicDamageMultiplier() - 1));
-        commands.set("#HealingModifier.Text", "Healing modifier  " + percent(d.healingMultiplier() - 1));
-        commands.set("#CriticalMultiplier.Text", "Critical multiplier  x" + one(d.criticalMultiplier()));
-        commands.set("#LearnRate.Text", "Learn rate  " + percent(d.learnRate()));
-        commands.set("#UpgradeSuccess.Text", "Upgrade success  " + percent(d.upgradeSuccess()));
-        commands.set("#CombatSummary.Visible", !advanced);
+        advancedModel = AdvancedStatsViewModel.resolve(model, GearNativeItems.effects(ref, store),
+                NativeArmorDefenseView.read(ref, store), magicFind);
+        renderAdvanced(commands, events);
         commands.set("#AdvancedStats.Visible", advanced);
+        workspacePosition(commands);
         renderEquipment(ref, store, commands);
+    }
+    private void workspacePosition(UICommandBuilder commands) {
+        var anchor = new com.hypixel.hytale.server.core.ui.Anchor();
+        if (advanced) {
+            anchor.setLeft(com.hypixel.hytale.server.core.ui.Value.of(16));
+            anchor.setTop(com.hypixel.hytale.server.core.ui.Value.of(16));
+            anchor.setBottom(com.hypixel.hytale.server.core.ui.Value.of(16));
+            anchor.setWidth(com.hypixel.hytale.server.core.ui.Value.of(1240));
+        } else {
+            anchor.setFull(com.hypixel.hytale.server.core.ui.Value.of(16));
+            anchor.setMaxWidth(com.hypixel.hytale.server.core.ui.Value.of(1240));
+        }
+        commands.setObject("#Workspace.Anchor", anchor);
+    }
+    private void renderAdvanced(UICommandBuilder commands, UIEventBuilder events) {
+        commands.clear("#AdvancedRows");
+        String category = "";
+        int child = 0;
+        for (var row : advancedModel.rows()) {
+            if (!category.equals(row.descriptor().category())) {
+                category = row.descriptor().category();
+                commands.append("#AdvancedRows", "RpgAdvancedStatSection.ui");
+                commands.set("#AdvancedRows[" + child++ + "].Text", category);
+            }
+            commands.append("#AdvancedRows", "RpgAdvancedStatRow.ui");
+            String selector = "#AdvancedRows[" + child++ + "]";
+            commands.set(selector + " #Name.Text", row.descriptor().label());
+            commands.set(selector + " #Value.Text", row.value());
+            commands.set(selector + " #Open.TooltipText", row.sources());
+            events.addEventBinding(CustomUIEventBindingType.Activating, selector + " #Open",
+                    event("advancedstat", row.descriptor().id()), false);
+        }
+        commands.set("#AdvancedDetail.Text", "");
     }
     private void renderCombatSources(Ref<EntityStore> ref, Store<EntityStore> store, UICommandBuilder commands) {
         var equipment = new HytaleEquipmentAdapter().read(ref, store);
@@ -265,18 +298,9 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         commands.set("#WeaponDamage.Text", power != null && power.physicalMinimum() != null
                 ? clean(power.physicalMinimum()) + "–" + clean(power.physicalMaximum()) : "—");
         var equipped = projection.equippedSkills(player.getUuid());
-        if (equipped.isEmpty()) {
-            selectedSkill = 0;
-            commands.set("#SelectedSkill.Text", "No skill equipped");
-            commands.set("#SkillPreview.Text", "");
-            commands.set("#SelectedSkill.Disabled", true);
-        } else {
-            selectedSkill %= equipped.size();
-            var skill = equipped.get(selectedSkill);
-            commands.set("#SelectedSkill.Text", skill.name() + "  ›");
-            commands.set("#SkillPreview.Text", "Open Skills for details");
-            commands.set("#SelectedSkill.Disabled", equipped.size() == 1);
-        }
+        commands.set("#EquippedSpells.Text", equipped.isEmpty() ? "" :
+                "Equipped: " + equipped.stream().map(RpgUiProjectionService.EquippedSkill::name)
+                        .collect(java.util.stream.Collectors.joining(", ")));
         var defense = NativeArmorDefenseView.read(ref, store);
         var physical = defense.directPercent("Physical");
         commands.set("#DefenseRow.Visible", physical.isPresent());
@@ -287,16 +311,11 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                 {"Wind", "Wind"}, {"Water", "Ice"}, {"Fire", "Fire"},
                 {"Earth", "Poison"}, {"Lightning", "Lightning"}, {"Void", "RPG_Void"}
         };
-        boolean anyResistance = false;
         for (var channel : channels) {
             var value = defense.directPercent(channel[1]);
-            commands.set("#Resist" + channel[0] + ".Visible", value.isPresent());
-            if (value.isPresent()) {
-                commands.set("#Resist" + channel[0] + ".Text", channel[0] + "  " + resistance(value));
-                anyResistance = true;
-            }
+            commands.set("#Resist" + channel[0] + ".Text", channel[0] + " Resistance    "
+                    + resistance(value));
         }
-        commands.set("#ResistanceSection.Visible", anyResistance);
     }
     private static String resistance(java.util.OptionalDouble percent) {
         return percent.isPresent() ? one(percent.getAsDouble()) + "%" : "--";
@@ -310,6 +329,19 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             ItemStack stack = armor == null || slot.getValue() >= armor.getInventory().getCapacity()
                     ? null : armor.getInventory().getItemStack((short) slot.getValue());
             showEquipment(commands, slot.name(), stack);
+        }
+        var player = store.getComponent(ref, PlayerRef.getComponentType());
+        var spatial = store.getComponent(ref, SpatialBagComponent.getComponentType());
+        RpgRingEquipment rings = player == null || spatial == null ? new RpgRingEquipment(null, null)
+                : spatial.rings(player.getUuid());
+        for (String side : List.of("Left", "Right")) {
+            var ring = rings.get(side.toLowerCase(Locale.ROOT));
+            commands.set("#RingItem" + side + ".Visible", ring != null);
+            commands.set("#RingEmpty" + side + ".Visible", ring == null);
+            commands.set("#RingEquip" + side + ".TooltipText", ring == null
+                    ? "Select a Copper Ring in the bag, then click to equip."
+                    : "Click to return this ring to the bag.");
+            if (ring != null) commands.set("#RingItem" + side + ".ItemId", ring.payload().getItemId());
         }
     }
     private static void showEquipment(UICommandBuilder commands, String slot, ItemStack stack) {
@@ -513,14 +545,46 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             }
             case "advanced", "back" -> {
                 advanced = "advanced".equals(data.action);
-                commands.set("#CombatSummary.Visible", !advanced);
                 commands.set("#AdvancedStats.Visible", advanced);
+                workspacePosition(commands);
             }
-            case "next-skill" -> {
-                var equipped = projection.equippedSkills(player.getUuid());
-                if (equipped.isEmpty()) return;
-                selectedSkill = (selectedSkill + 1) % equipped.size();
-                renderCombatSources(ref, store, commands);
+            case "advancedstat" -> {
+                if (advanced && advancedModel != null)
+                    commands.set("#AdvancedDetail.Text", advancedModel.sources(data.value));
+            }
+            case "ring" -> {
+                if (nativeWindow == null || !nativeVirtualEmpty()) {
+                    commands.set("#Status.Text", "Finish the current inventory move before using a ring slot.");
+                    break;
+                }
+                var spatial = store.getComponent(ref, SpatialBagComponent.getComponentType());
+                if (spatial == null || spatial.mode(player.getUuid()) == SpatialBagComponent.OwnershipMode.NATIVE) {
+                    commands.set("#Status.Text", "Ring equipment requires spatial inventory.");
+                    break;
+                }
+                try {
+                    var current = spatial.state(player.getUuid());
+                    SpatialBagAggregate.Result result;
+                    if (selectedSpatialEntry != null
+                            && current.entry(selectedSpatialEntry).map(e -> RpgRingEquipment.eligible(e.payload())).orElse(false))
+                        result = spatial.equipRing(player.getUuid(), data.value, selectedSpatialEntry,
+                                current.revision(), CATALOG);
+                    else if (spatial.rings(player.getUuid()).get(data.value) != null)
+                        result = spatial.unequipRing(player.getUuid(), data.value, CATALOG);
+                    else {
+                        commands.set("#Status.Text", "Select a Copper Ring in the bag first.");
+                        break;
+                    }
+                    if (!result.accepted()) {
+                        commands.set("#Status.Text", "Ring transfer needs a free bag cell.");
+                        break;
+                    }
+                    snapshot(ref, store, commands, events);
+                    savePending = true;
+                    savePlacement(ref, store);
+                } catch (RuntimeException failure) {
+                    commands.set("#Status.Text", "Ring transfer could not be completed.");
+                }
             }
             case "allocate" -> {
                 if (allocation == null) return;

@@ -7,7 +7,7 @@ public enum GearQuality {
     public boolean random(){return this==NORMAL || this==MAGIC || this==RARE;}
     public boolean fortuneEligible(){return this==MAGIC || this==RARE;}
     public String color(){return switch(this){
-        case NORMAL->"#ffffff";case MAGIC->"#1d4dff";case RARE->"#fff200";
+        case NORMAL->"#ffffff";case MAGIC->"#1d4dff";case RARE->"#a000ff";
         case SET->"#51c534";case UNIQUE->"#ff9100";
     };}
 }

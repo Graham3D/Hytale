@@ -7,6 +7,7 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemQuality;
 import com.inigmasgames.hytalerpg.gear.GearNativeItems;
+import com.inigmasgames.hytalerpg.gear.GearRarity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -78,31 +79,54 @@ final class InventoryProbeBag {
         commands.set(selector + " #Quantity.Visible", quantity > 1);
         if (quantity > 1) commands.set(selector + " #Quantity.Text", Integer.toString(quantity));
         if (stack != null) {
-            String color = qualityColor(stack);
-            commands.setObject(selector + ".Background", new PatchStyle().setColor(Value.of(color + "cc")));
-            commands.setObject(selector + " #RarityFill.Background",
-                    new PatchStyle().setColor(Value.of(color + "26")));
-            String rarityArt = rarityArt(stack, entry.size());
+            String color = rarityColor(stack);
+            if (color != null) {
+                commands.setObject(selector + " #RarityFill.Background",
+                        new PatchStyle().setColor(Value.of(color + "26")));
+            }
+            String rarityArt = color == null ? null : rarityArtForSize(entry.size());
             if (rarityArt != null) {
                 commands.setObject(selector + " #RarityArt.Background", new PatchStyle()
-                        .setTexturePath(Value.of(rarityArt)).setColor(Value.of("#0049a2")));
+                        .setTexturePath(Value.of(rarityArt)).setColor(Value.of(color)));
                 commands.set(selector + " #RarityArt.Visible", true);
             }
         }
     }
 
-    private static String rarityArt(ItemStack stack, SpatialLayout.Size size) {
+    private static String rarityColor(ItemStack stack) {
+        try {
+            var managed = GearNativeItems.read(stack);
+            if (managed != null) return switch (managed.rarity()) {
+                case COMMON, NORMAL -> null;
+                case UNCOMMON, MAGIC -> "#1d4dff";
+                case RARE, VERY_RARE -> "#a000ff";
+                case LEGENDARY -> "#ff9100";
+            };
+        } catch (RuntimeException invalidManagedItem) { return null; }
         try {
             var quality = ItemQuality.getAssetMap().getAsset(stack.getQualityIndex());
-            return quality == null ? null : rarityArtForQuality(quality.getId(), size);
+            return quality == null ? null : rarityColorForQuality(quality.getId());
         } catch (RuntimeException unavailable) { return null; }
     }
 
     static String rarityArtForQuality(String qualityId, SpatialLayout.Size size) {
-        if (!"RPG_Gear_Rare".equals(qualityId)) return null; // Hywind's Magic quality asset.
-        if (size.width() == 1 && size.height() == 1) return "Icons/RPG/GridRarity-1x1.png";
-        if (size.width() == 2 && size.height() == 2) return "Icons/RPG/GridRarity-2x2.png";
-        return null; // Never stretch an authored tile across an unauthored footprint.
+        return rarityColorForQuality(qualityId) == null ? null : rarityArtForSize(size);
+    }
+
+    static String rarityColorForQuality(String qualityId) {
+        return switch (qualityId) {
+            case "RPG_Gear_Rare" -> "#1d4dff";
+            case "RPG_Gear_RandomRare", "RPG_Gear_Epic" -> "#a000ff";
+            case "RPG_Gear_Set" -> "#51c534";
+            case "RPG_Gear_Legendary", "RPG_Gear_Unique" -> "#ff9100";
+            default -> null;
+        };
+    }
+
+    static String rarityArtForSize(SpatialLayout.Size size) {
+        String footprint = size.width() + "x" + size.height();
+        if (!Set.of("1x1", "1x2", "1x3", "1x4", "2x2", "2x3", "2x4").contains(footprint)) return null;
+        return "Icons/RPG/GridRarity-" + footprint + ".png";
     }
 
     static String qualityColor(ItemStack stack) {

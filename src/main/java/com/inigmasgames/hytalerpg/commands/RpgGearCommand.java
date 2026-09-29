@@ -98,6 +98,17 @@ public final class RpgGearCommand extends AbstractCommandCollection {
                 return java.util.concurrent.CompletableFuture.completedFuture(null);
             }
         });
+        addSubCommand(new AbstractPlayerCommand("ring", "Create one Copper Ring for two-slot equipment QA.") {
+            { requirePermission(AUTHOR_PERMISSION); }
+            @Override protected void execute(CommandContext c,Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,World world) {
+                try {
+                    SpatialInventoryTransferCoordinator.grantRingQa(store, actor, player, world,
+                            message -> player.sendMessage(Message.raw(message)));
+                } catch (RuntimeException failure) {
+                    c.sendMessage(Message.raw("Ring QA: " + failure.getMessage()));
+                }
+            }
+        });
         if(!System.getProperty("rpg.gear.auditRoot","").isBlank()) addSubCommand(new AbstractAsyncCommand("audit","Audit the installed gear registry and native metadata codecs.") {
             { requirePermission(AUTHOR_PERMISSION); }
             @Override protected java.util.concurrent.CompletableFuture<Void> executeAsync(CommandContext c) {

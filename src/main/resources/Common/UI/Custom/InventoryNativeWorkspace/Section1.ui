@@ -1,7 +1,7 @@
 $Base = "../RpgInventory/GridCommon.ui";
 $Base.@ProbeGrid #WorkspaceNativeGrid {
   InventorySectionId: 1;
-  Anchor: (Width: 1140, Height: 456);
+  Anchor: (Width: 1140, Height: 380);
   SlotsPerRow: 15;
   Style: (...$Base.@ProbeGridStyle, SlotSize: 74, SlotSpacing: 2, SlotIconSize: 64);
   Padding: 0;

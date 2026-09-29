@@ -5,7 +5,7 @@
   "SlotTexture": "UI/ItemQualities/Slots/SlotCommon.png",
   "BlockSlotTexture": "UI/ItemQualities/Slots/SlotCommon.png",
   "SpecialSlotTexture": "UI/ItemQualities/Slots/SlotCommon.png",
-  "TextColor": "#fff200",
+  "TextColor": "#a000ff",
   "LocalizationKey": "server.gear.quality.Rare",
   "VisibleQualityLabel": false,
   "RenderSpecialSlot": true,

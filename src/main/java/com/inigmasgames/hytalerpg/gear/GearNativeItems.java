@@ -36,6 +36,15 @@ public final class GearNativeItems {
             com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> accessor) {
         return equipment==null?GearAffixRuntime.Effects.NONE:equipment.effects(actor,accessor);
     }
+    public static double magicFind(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> actor,
+            com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> accessor) {
+        return equipment==null?0:equipment.magicFind(actor,accessor);
+    }
+    public static HytaleGearEquipment.MagicFindBreakdown magicFindBreakdown(
+            com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> actor,
+            com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> accessor) {
+        return equipment==null?new HytaleGearEquipment.MagicFindBreakdown(0,0):equipment.magicFindBreakdown(actor,accessor);
+    }
     public static boolean canUse(ItemStack stack,com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> actor,
                                  com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> accessor) {
         return equipment!=null && equipment.canUse(stack,actor,accessor);

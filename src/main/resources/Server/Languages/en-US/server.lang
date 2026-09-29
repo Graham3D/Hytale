@@ -197,3 +197,7 @@ server.items.RPG_Ability_Lightning_Arrow.name=Lightning Arrow
 server.items.RPG_Ability_Lightning_Arrow.description=Fire one bow arrow as Lightning. Stamina 8. Cooldown 3s.
 server.items.RPG_Ability_Mantle_Of_Thunder.name=Mantle of Thunder
 server.items.RPG_Ability_Mantle_Of_Thunder.description=Reserve 15% Mana and build shared charge against Electrified enemies.
+server.npcRoles.PersistentNPCs_Mara.name = Mara
+server.npcRoles.ImmersiveNPCs_Character.name = Immersive NPC
+server.items.RPG_Ring_Copper.name=Copper Ring
+server.items.RPG_Ring_Copper.description=A simple ring worn in an RPG ring slot.
