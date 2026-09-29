@@ -35,9 +35,16 @@ class InventoryProbeBagTest {
         var commands = new UICommandBuilder();
         renderer.reset(commands);
         assertEquals("#WorkspaceNativeGrid", renderer.nativeGrid(commands, 1));
+        renderer.cells(commands);
         renderer.item(commands, entry("bow", 0, 0, 2, 4), "Weapon_Shortbow_Copper", 1);
         assertTrue(Arrays.stream(commands.getCommands()).anyMatch(command ->
                 "#Bag[76] #Icon.ItemId".equals(command.selector)));
+        assertAnchor(Arrays.stream(commands.getCommands()).filter(command ->
+                "#Bag[76] #PoseArt.Anchor".equals(command.selector)).findFirst().orElseThrow(),
+                "#Bag[76] #PoseArt.Anchor", 0, 1, 150, 300);
+        assertAnchor(Arrays.stream(commands.getCommands()).filter(command ->
+                "#Bag[76] #RarityArt.Anchor".equals(command.selector)).findFirst().orElseThrow(),
+                "#Bag[76] #RarityArt.Anchor", 0, 1, 150, 300);
     }
 
     @Test void emptyPartialAndFullBagsUsePackagedDocumentsAndAddressExistingChildren() {
@@ -45,6 +52,7 @@ class InventoryProbeBagTest {
             var renderer = new InventoryProbeBag();
             var commands = new UICommandBuilder();
             renderer.reset(commands);
+            renderer.cells(commands);
             for (int i = 0; i < itemCount; i++)
                 renderer.item(commands, entry("slot" + i, i % 15, i / 15, 1, 1), "Rock_Stone", i + 1);
             var hitSelectors = new HashSet<String>();
@@ -78,6 +86,7 @@ class InventoryProbeBagTest {
         var renderer = new InventoryProbeBag();
         var initial = new UICommandBuilder();
         renderer.reset(initial);
+        renderer.cells(initial);
         renderer.item(initial, entry("stone", 0, 0, 1, 1), "Rock_Stone", 12);
         renderer.item(initial, entry("bow", 1, 0, 2, 4), "Weapon_Shortbow_Iron", 1);
         var icon = Arrays.stream(initial.getCommands()).filter(c -> "#Bag[76] #Icon.Anchor".equals(c.selector)).findFirst().orElseThrow();
@@ -88,6 +97,7 @@ class InventoryProbeBagTest {
 
         var refresh = new UICommandBuilder();
         renderer.reset(refresh);
+        renderer.cells(refresh);
         renderer.item(refresh, entry("bow", 0, 0, 2, 4), "Weapon_Shortbow_Iron", 1);
         renderer.dim(refresh, "bow", true);
         renderer.dim(refresh, "bow", false);

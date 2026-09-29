@@ -48,6 +48,30 @@ foreach ($candidate in $Path) {
 }
 
 $errors = [System.Collections.Generic.List[string]]::new()
+$gameAssets = Join-Path $env:APPDATA 'Hytale/install/pre-release/package/game/latest/Assets.zip'
+if (Test-Path -LiteralPath $gameAssets) {
+    $gameArchive = [IO.Compression.ZipFile]::OpenRead($gameAssets)
+    try {
+        $commonEntry = $gameArchive.GetEntry('Common/UI/Custom/Common.ui')
+        if ($null -eq $commonEntry) { throw 'Installed Hytale assets lack Common.ui.' }
+        $commonReader = [IO.StreamReader]::new($commonEntry.Open())
+        try { $commonText = $commonReader.ReadToEnd() } finally { $commonReader.Dispose() }
+    }
+    finally { $gameArchive.Dispose() }
+    $commonMacros = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($definition in [regex]::Matches($commonText, '(?m)^\s*@(?<name>\w+)\s*(?:=|\{)')) {
+        [void]$commonMacros.Add($definition.Groups['name'].Value)
+    }
+    foreach ($document in $documents) {
+        if ($document.Text -notmatch '\$C\s*=\s*"Common\.ui"') { continue }
+        foreach ($reference in [regex]::Matches($document.Text, '\$C\.@(?<name>\w+)')) {
+            if (-not $commonMacros.Contains($reference.Groups['name'].Value)) {
+                $referenceLine = 1 + ([regex]::Matches($document.Text.Substring(0, $reference.Index), "`n")).Count
+                $errors.Add("$($document.Name) ($referenceLine): Common.ui has no macro $($reference.Value) in installed Hytale assets.")
+            }
+        }
+    }
+}
 foreach ($document in $documents) {
     $text = $document.Text
     $line = 1

@@ -1,8 +1,6 @@
 Group {
   Anchor: (Width: 74, Height: 74);
   HitTestVisible: false;
-  Background: #58728a;
-  Group #RarityFill { Anchor: (Full: 2); Background: #16283b; }
   Group #RarityArt { Visible: false; Anchor: (Full: 0); Background: #ffffff; }
   ItemIcon #Icon { Anchor: (Width: 56, Height: 56); }
   Group #PoseArt { Visible: false; HitTestVisible: false; Anchor: (Full: 0); }

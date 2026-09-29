@@ -132,8 +132,8 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                     event(name.toLowerCase(Locale.ROOT), ""), false);
         events.addEventBinding(CustomUIEventBindingType.Activating, "#RingEquipLeft", event("ring", "left"), false);
         events.addEventBinding(CustomUIEventBindingType.Activating, "#RingEquipRight", event("ring", "right"), false);
-        events.addEventBinding(CustomUIEventBindingType.Dropped, "#DropBackdrop",
-                event("dropoutside", ""), false);
+        events.addEventBinding(CustomUIEventBindingType.Activating, "#ArmorVisibility",
+                event("armorvisibility", ""), false);
         events.addEventBinding(CustomUIEventBindingType.Activating, "#Split",
                 event("split", "").append("@Quantity", "#SplitQuantity.Value"), false);
         events.addEventBinding(CustomUIEventBindingType.ValueChanged, "#Search",
@@ -185,6 +185,9 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                     CustomUIEventBindingType.Dropped, CustomUIEventBindingType.DragCancelled})
                 events.addEventBinding(binding, nativeGridSelector, event(binding.name(), ""), false);
         }
+        // Opaque visual cells mask the native grid's repeated per-cell icons while
+        // remaining hit-test transparent, preserving its native cursor behavior.
+        bag.cells(commands);
         // Whole-footprint frame; square native art retains its aspect ratio inside the rectangle.
         for (var e : layout.entries()) {
             bag.item(commands, e, items.get(e.id()).fingerprint);
@@ -203,7 +206,8 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                 ? "CHARACTER & INVENTORY  |  Copied-save spatial proof  |  Native Storage migration under test"
                 : "CHARACTER & INVENTORY  |  Development entry  |  Native Storage remains authoritative");
         commands.set("#SpatialActions.Visible", true);
-        commands.set("#QuickEquip.Disabled", spatialOwner);
+        commands.set("#QuickEquip.Visible", !spatialOwner);
+        commands.set("#DropSelected.Visible", !spatialOwner);
         commands.set("#Status.Text", "");
         commands.set("#ItemContext.Text", "");
         commands.set("#Cancel.Visible", nativeWindow == null);
@@ -232,8 +236,9 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         String[] names = {"Strength", "Dexterity", "Intelligence", "Wisdom", "Luck"};
         var attributes = new RpgAttribute[]{RpgAttribute.STR, RpgAttribute.DEX, RpgAttribute.INT, RpgAttribute.WIS, RpgAttribute.LUCK};
         for (int i = 0; i < names.length; i++) {
-            commands.set("#Attribute" + i + ".Text", names[i] + "   "
-                    + clean(model.derivedStats().effective(attributes[i])));
+            commands.set("#Attribute" + i + ".Text", names[i]);
+            commands.set("#AttributeValue" + i + ".Text",
+                    clean(model.derivedStats().effective(attributes[i])));
             commands.set("#AttributePlus" + i + ".Disabled", allocation == null || model.unspentAttributePoints() <= 0);
             if (allocation != null) events.addEventBinding(CustomUIEventBindingType.Activating, "#AttributePlus" + i,
                     event("allocate", attributes[i].name()).append("Revision", Long.toString(model.revision())), false);
@@ -241,10 +246,10 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         commands.set("#Points.Text", "Attribute Points: " + model.unspentAttributePoints());
         commands.set("#Points.Visible", model.unspentAttributePoints() > 0);
         double usableMana = projection.usableMana(player.getUuid(), resourceSnapshot);
-        commands.set("#ResourceHealth.Text", "Health    " + resource(model.health()));
-        commands.set("#ResourceMana.Text", "Mana    " + clean(model.mana().current()) + " / " + clean(usableMana)
+        commands.set("#ResourceHealth.Text", resource(model.health()));
+        commands.set("#ResourceMana.Text", clean(model.mana().current()) + " / " + clean(usableMana)
                 + (usableMana < model.mana().maximum() ? "  (" + clean(model.mana().maximum()) + " total)" : ""));
-        commands.set("#ResourceStamina.Text", "Stamina    " + resource(model.stamina()));
+        commands.set("#ResourceStamina.Text", resource(model.stamina()));
         var d = model.derivedStats();
         commands.set("#Critical.Text", percent(d.criticalChance()));
         commands.set("#Cooldown.Text", percent(d.cooldownRecovery()));
@@ -257,6 +262,12 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         commands.set("#AdvancedStats.Visible", advanced);
         workspacePosition(commands);
         renderEquipment(ref, store, commands);
+        var settings = store.getComponent(ref,
+                com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings.getComponentType());
+        boolean armorHidden = settings != null && settings.hideHelmet() && settings.hideCuirass()
+                && settings.hideGauntlets() && settings.hidePants();
+        commands.set("#ArmorVisibleIcon.Visible", !armorHidden);
+        commands.set("#ArmorHiddenIcon.Visible", armorHidden);
     }
     private void workspacePosition(UICommandBuilder commands) {
         var anchor = new com.hypixel.hytale.server.core.ui.Anchor();
@@ -303,8 +314,6 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                         .collect(java.util.stream.Collectors.joining(", ")));
         var defense = NativeArmorDefenseView.read(ref, store);
         var physical = defense.directPercent("Physical");
-        commands.set("#DefenseRow.Visible", physical.isPresent());
-        if (physical.isPresent()) commands.set("#Defense.Text", resistance(physical));
         // The installed native DamageCause names for frost and poison map to the
         // project's Water and Earth channels. Missing direct modifiers are not 0%.
         String[][] channels = {
@@ -313,12 +322,12 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         };
         for (var channel : channels) {
             var value = defense.directPercent(channel[1]);
-            commands.set("#Resist" + channel[0] + ".Text", channel[0] + " Resistance    "
-                    + resistance(value));
+            commands.set("#Resist" + channel[0] + ".Text", resistance(value));
         }
     }
     private static String resistance(java.util.OptionalDouble percent) {
-        return percent.isPresent() ? one(percent.getAsDouble()) + "%" : "--";
+        return percent.isEmpty() || Math.abs(percent.getAsDouble()) < 0.0001
+                ? "0%" : one(percent.getAsDouble()) + "%";
     }
     private static void renderEquipment(Ref<EntityStore> ref, Store<EntityStore> store, UICommandBuilder commands) {
         showEquipment(commands, "Weapon", InventoryComponent.getItemInHand(store, ref));
@@ -332,10 +341,13 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         }
         var player = store.getComponent(ref, PlayerRef.getComponentType());
         var spatial = store.getComponent(ref, SpatialBagComponent.getComponentType());
+        boolean spatialOwner = player != null && spatial != null
+                && spatial.mode(player.getUuid()) != SpatialBagComponent.OwnershipMode.NATIVE;
         RpgRingEquipment rings = player == null || spatial == null ? new RpgRingEquipment(null, null)
                 : spatial.rings(player.getUuid());
         for (String side : List.of("Left", "Right")) {
             var ring = rings.get(side.toLowerCase(Locale.ROOT));
+            commands.set("#RingEquip" + side + ".Visible", spatialOwner);
             commands.set("#RingItem" + side + ".Visible", ring != null);
             commands.set("#RingEmpty" + side + ".Visible", ring == null);
             commands.set("#RingEquip" + side + ".TooltipText", ring == null
@@ -348,12 +360,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         boolean occupied = !ItemStack.isEmpty(stack);
         commands.set("#Equip" + slot + ".Visible", occupied);
         if (!"Weapon".equals(slot)) commands.set("#Empty" + slot + ".Visible", !occupied);
-        if (occupied) {
-            commands.set("#Equip" + slot + ".ItemId", stack.getItemId());
-            commands.setObject("#EquipFrame" + slot + ".Background",
-                    new com.hypixel.hytale.server.core.ui.PatchStyle().setColor(
-                            com.hypixel.hytale.server.core.ui.Value.of(InventoryProbeBag.qualityColor(stack) + "cc")));
-        }
+        if (occupied) commands.set("#Equip" + slot + ".ItemId", stack.getItemId());
     }
     private static String one(double value) { return String.format(Locale.ROOT, "%.1f", value); }
     private static String clean(double value) {
@@ -425,10 +432,24 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                         nativeWindow.getId(),(short)source));
                 return;
             }
-            case "dropoutside" -> {
-                if (nativeWindow == null || !"Inventory".equals(route)) return;
-                data.slotIndex = -1;
-                nativeDrop(ref,store,data,commands,events);
+            case "armorvisibility" -> {
+                var settings = store.getComponent(ref,
+                        com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings.getComponentType());
+                if (settings == null)
+                    settings = com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings.defaults();
+                boolean hidden = !(settings.hideHelmet() && settings.hideCuirass()
+                        && settings.hideGauntlets() && settings.hidePants());
+                store.putComponent(ref,
+                        com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings.getComponentType(),
+                        new com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings(
+                                settings.showEntityMarkers(), settings.armorItemsPreferredPickupLocation(),
+                                settings.weaponAndToolItemsPreferredPickupLocation(),
+                                settings.usableItemsItemsPreferredPickupLocation(),
+                                settings.solidBlockItemsPreferredPickupLocation(),
+                                settings.miscItemsPreferredPickupLocation(), settings.creativeSettings(),
+                                hidden, hidden, hidden, hidden, settings.voiceSettings()));
+                commands.set("#ArmorVisibleIcon.Visible", !hidden);
+                commands.set("#ArmorHiddenIcon.Visible", hidden);
             }
             case "Dropped" -> {
                 if (nativeWindow == null || !"Inventory".equals(route)) return;

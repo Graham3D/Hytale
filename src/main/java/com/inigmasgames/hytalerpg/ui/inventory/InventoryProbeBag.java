@@ -15,7 +15,9 @@ import java.util.Set;
 /** Packaged templates and object-codec anchors, matching the client-tested CanvasUI path. */
 final class InventoryProbeBag {
     private static final int PITCH = InventoryGridGeometry.PITCH;
-    // Bounded visual test only. The native grid/cursor and inventory owner are unchanged.
+    // Each prototype render is documented in
+    // art/spatial-icon-prototype/pose-batch-output/manifest.json. Other items
+    // continue to use their shipped Hytale ItemIcon; never mix an untracked PNG.
     private static final Set<String> POSE_BATCH = Set.of(
             "Armor_Leather_Light_Chest", "Armor_Leather_Light_Hands",
             "Armor_Leather_Light_Head", "Armor_Leather_Light_Legs",
@@ -31,6 +33,9 @@ final class InventoryProbeBag {
     void reset(UICommandBuilder commands) {
         selectors.clear(); childIndex = 0;
         commands.clear("#Bag");
+    }
+
+    void cells(UICommandBuilder commands) {
         for (int y = 0; y < InventoryGridGeometry.ROWS; y++)
             for (int x = 0; x < InventoryGridGeometry.COLUMNS; x++) {
             String selector = append(commands, "RpgInventoryProbeCell.ui");
@@ -62,6 +67,16 @@ final class InventoryProbeBag {
         move(commands, entry);
         int width = entry.size().width() * PITCH - InventoryGridGeometry.SPACING;
         int height = entry.size().height() * PITCH - InventoryGridGeometry.SPACING;
+        // Pose and rarity canvases were authored at 64 px per logical cell.
+        // Fit them uniformly into the 74 px native slots without stretching.
+        double scale = Math.min(width / (entry.size().width() * 64.0),
+                height / (entry.size().height() * 64.0));
+        int artWidth = (int) Math.floor(entry.size().width() * 64 * scale);
+        int artHeight = (int) Math.floor(entry.size().height() * 64 * scale);
+        Anchor artAnchor = anchor((width - artWidth) / 2, (height - artHeight) / 2,
+                artWidth, artHeight);
+        commands.setObject(selector + " #PoseArt.Anchor", artAnchor);
+        commands.setObject(selector + " #RarityArt.Anchor", artAnchor);
         // ItemIcon scales to its anchor. Keep that anchor square so a square
         // source canvas cannot be stretched to a tall spatial footprint.
         // The rarity and selection layers still cover the entire footprint.
@@ -80,14 +95,10 @@ final class InventoryProbeBag {
         if (quantity > 1) commands.set(selector + " #Quantity.Text", Integer.toString(quantity));
         if (stack != null) {
             String color = rarityColor(stack);
-            if (color != null) {
-                commands.setObject(selector + " #RarityFill.Background",
-                        new PatchStyle().setColor(Value.of(color + "26")));
-            }
             String rarityArt = color == null ? null : rarityArtForSize(entry.size());
             if (rarityArt != null) {
                 commands.setObject(selector + " #RarityArt.Background", new PatchStyle()
-                        .setTexturePath(Value.of(rarityArt)).setColor(Value.of(color)));
+                        .setTexturePath(Value.of(rarityArt)).setColor(Value.of(color + "88")));
                 commands.set(selector + " #RarityArt.Visible", true);
             }
         }
