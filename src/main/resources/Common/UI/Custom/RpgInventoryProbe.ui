@@ -26,7 +26,7 @@ Group #DropBackdrop { Background: #000000(0.55); }
 Group {
   LayoutMode: Center;
   Group #Workspace {
-    Anchor: (Full: 16, MaxWidth: 1240);
+    Anchor: (Full: 16, MaxWidth: 1164);
     LayoutMode: Top;
     Group #Ribbon {
       Anchor: (Height: 48); LayoutMode: Left; Background: (TexturePath: "Icons/Hytale/TopBarBackground.png", HorizontalBorder: 74, VerticalBorder: 12);
@@ -96,13 +96,13 @@ Group {
           }
         }
         Group { Anchor: (Width: 16); }
-        $C.@Panel #GlobalStatsFrame { Anchor: (Width: 364, Height: 430); LayoutMode: Top; Padding: (Full: 10);
+        $C.@Panel #GlobalStatsFrame { Anchor: (Width: 312, Height: 430); LayoutMode: Top; Padding: (Full: 8);
           Group #CombatFrame { Anchor: (Height: 148); LayoutMode: Top;
             Label { Text: "COMBAT STATS"; Anchor: (Height: 28); Background: #29455c; Style: (FontName: "Secondary", FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center); }
-            Group { Anchor: (Height: 30); LayoutMode: Top; Group { Anchor: (Height: 28); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 22, Height: 22); Background: (TexturePath: "Icons/Hytale/CharacterPanelStatIconMelee.png"); } Label { Text: "Weapon Damage"; Anchor: (Width: 186, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #WeaponDamage { Anchor: (Width: 126, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
-            Group { Anchor: (Height: 30); LayoutMode: Top; Group { Anchor: (Height: 28); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 22, Height: 22); Background: (TexturePath: "Icons/Hytale/CharacterPanelStatIconMelee.png"); } Label { Text: "Critical Chance"; Anchor: (Width: 186, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #Critical { Anchor: (Width: 126, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
-            Group { Anchor: (Height: 30); LayoutMode: Top; Group { Anchor: (Height: 28); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 22, Height: 22); Background: (TexturePath: "Icons/Hytale/CharacterPanelStatIconMagic.png"); } Label { Text: "Cooldown Recovery"; Anchor: (Width: 186, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #Cooldown { Anchor: (Width: 126, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
-            Group { Anchor: (Height: 30); LayoutMode: Top; Group { Anchor: (Height: 28); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 22, Height: 22); Background: (TexturePath: "Icons/Hytale/CharacterPanelStatIconMagic.png"); } Label { Text: "Magic Find"; Anchor: (Width: 186, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #MagicFind { Anchor: (Width: 126, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+            Group { Anchor: (Height: 30); LayoutMode: Top; Group { Anchor: (Height: 28); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 22, Height: 22); Background: (TexturePath: "Icons/Hytale/CharacterPanelStatIconMelee.png"); } Label { Text: "Weapon Damage"; Anchor: (Width: 152, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #WeaponDamage { Anchor: (Width: 114, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+            Group { Anchor: (Height: 30); LayoutMode: Top; Group { Anchor: (Height: 28); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 22, Height: 22); Background: (TexturePath: "Icons/Hytale/CharacterPanelStatIconMelee.png"); } Label { Text: "Critical Chance"; Anchor: (Width: 152, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #Critical { Anchor: (Width: 114, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+            Group { Anchor: (Height: 30); LayoutMode: Top; Group { Anchor: (Height: 28); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 22, Height: 22); Background: (TexturePath: "Icons/Hytale/CharacterPanelStatIconMagic.png"); } Label { Text: "Cooldown Recovery"; Anchor: (Width: 152, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #Cooldown { Anchor: (Width: 114, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+            Group { Anchor: (Height: 30); LayoutMode: Top; Group { Anchor: (Height: 28); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 22, Height: 22); Background: (TexturePath: "Icons/Hytale/CharacterPanelStatIconMagic.png"); } Label { Text: "Magic Find"; Anchor: (Width: 152, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #a9c7df); } Label #MagicFind { Anchor: (Width: 114, Height: 27); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
             Label #EquippedSpells { Visible: false; Anchor: (Height: 0); Style: (FontName: "Secondary", FontSize: 12, TextColor: #a9c7df); }
             TextButton #Refresh { Visible: false; Text: "Refresh"; Anchor: (Height: 0); Style: @Action; }
           }
@@ -110,12 +110,12 @@ Group {
           Group #ResistanceFrame { Anchor: (Height: 196); LayoutMode: Top;
             Label { Text: "RESISTANCES"; Anchor: (Height: 28); Background: #29455c; Style: (FontName: "Secondary", FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center); }
             Group #ResistanceSection { LayoutMode: Top;
-              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistWind.png"); } Label { Text: "Wind Resistance"; Anchor: (Width: 182, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistWind { Anchor: (Width: 129, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
-              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistWater.png"); } Label { Text: "Water Resistance"; Anchor: (Width: 182, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistWater { Anchor: (Width: 129, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
-              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistFire.png"); } Label { Text: "Fire Resistance"; Anchor: (Width: 182, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistFire { Anchor: (Width: 129, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
-              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistEarth.png"); } Label { Text: "Earth Resistance"; Anchor: (Width: 182, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistEarth { Anchor: (Width: 129, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
-              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistLightning.png"); } Label { Text: "Lightning Resistance"; Anchor: (Width: 182, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistLightning { Anchor: (Width: 129, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
-              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistVoid.png"); } Label { Text: "Void Resistance"; Anchor: (Width: 182, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistVoid { Anchor: (Width: 129, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistWind.png"); } Label { Text: "Wind Resistance"; Anchor: (Width: 151, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistWind { Anchor: (Width: 114, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistWater.png"); } Label { Text: "Water Resistance"; Anchor: (Width: 151, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistWater { Anchor: (Width: 114, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistFire.png"); } Label { Text: "Fire Resistance"; Anchor: (Width: 151, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistFire { Anchor: (Width: 114, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistEarth.png"); } Label { Text: "Earth Resistance"; Anchor: (Width: 151, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistEarth { Anchor: (Width: 114, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistLightning.png"); } Label { Text: "Lightning Resistance"; Anchor: (Width: 151, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistLightning { Anchor: (Width: 114, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
+              Group { Anchor: (Height: 28); LayoutMode: Top; Group { Anchor: (Height: 26); LayoutMode: Left; Padding: (Left: 8); Group { Anchor: (Width: 23, Height: 23); Background: (TexturePath: "Icons/RPG/ResistVoid.png"); } Label { Text: "Void Resistance"; Anchor: (Width: 151, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #a9c7df); } Label #ResistVoid { Anchor: (Width: 114, Height: 26); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, Alignment: End); } } Group { Anchor: (Height: 1); Background: #29455c; } }
             }
           }
           Group { Anchor: (Height: 8); }
@@ -123,9 +123,9 @@ Group {
         }
       }
       Group { Anchor: (Height: 16); }
-      Group #InventoryFrame { Anchor: (Width: 1216); LayoutMode: Top;
-      Group #InventoryHeader { Anchor: (Height: 38); LayoutMode: Left; Padding: (Horizontal: 17, Top: 3); Background: (TexturePath: "Icons/Hytale/ContainerHeader.png", HorizontalBorder: 50, VerticalBorder: 0);
-        Label { Text: "INVENTORY"; Anchor: (Width: 846, Height: 32); Style: (FontName: "Secondary", FontSize: 17, TextColor: #ffffff, RenderBold: true); }
+      Group #InventoryFrame { Anchor: (Width: 1164); LayoutMode: Top;
+      Group #InventoryHeader { Anchor: (Height: 38); LayoutMode: Left; Padding: (Horizontal: 12, Top: 3); Background: (TexturePath: "Icons/Hytale/ContainerHeader.png", HorizontalBorder: 50, VerticalBorder: 0);
+        Label { Text: "INVENTORY"; Anchor: (Width: 804, Height: 32); Style: (FontName: "Secondary", FontSize: 17, TextColor: #ffffff, RenderBold: true); }
         Group { Anchor: (Width: 300, Height: 32);
           CompactTextField #Search {
             Anchor: (Height: 30, Right: 0);
@@ -150,7 +150,7 @@ Group {
         Label #MatchCount { Visible: false; Anchor: (Width: 0, Height: 0); Style: (FontName: "Secondary", FontSize: 13, TextColor: #9aa9b8, Alignment: Center); }
         TextButton #Cancel { Visible: false; Text: "Cancel selection"; Anchor: (Width: 0, Height: 0); Style: @Action; }
       }
-      Group #InventoryBody { LayoutMode: Top; Padding: (Horizontal: 17, Top: 8, Bottom: 17); Background: (TexturePath: "Icons/Hytale/ContainerPatch.png", Border: 23);
+      Group #InventoryBody { LayoutMode: Top; Padding: (Horizontal: 12, Top: 12, Bottom: 12); Background: (TexturePath: "Icons/Hytale/ContainerPatch.png", Border: 23);
       Group #InventoryActions { Visible: false; Anchor: (Height: 0); LayoutMode: Left;
         TextButton #DropSelected { Text: "Drop"; Anchor: (Width: 86, Height: 32); Style: @Action; }
         TextButton #QuickEquip { Text: "Equip / Move"; Anchor: (Width: 135, Height: 32); Style: @Action; }
@@ -161,7 +161,7 @@ Group {
           TextButton #Split { Text: "Take"; Anchor: (Width: 70, Height: 32); Style: @Action; }
         }
       }
-      Group #Bag { Anchor: (Left: 21, Width: 1140, Height: 380); }
+      Group #Bag { Anchor: (Width: 1140, Height: 380); }
       Label #Coverage { Visible: false; Anchor: (Height: 0); }
       Label #ItemContext { Visible: false; Anchor: (Height: 0); }
       Label #Status { Visible: false; Anchor: (Height: 0); }
