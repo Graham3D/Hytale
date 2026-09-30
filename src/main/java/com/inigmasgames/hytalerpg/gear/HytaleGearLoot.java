@@ -318,7 +318,7 @@ public final class HytaleGearLoot implements AutoCloseable {
             var transform=store.getComponent(actor,TransformComponent.getComponentType());if(transform==null)continue;
             var p=transform.getPosition();
             if(q!=null?p.distanceSquared(q)>6.25:p.distanceSquared(row.position().x(),row.position().y(),row.position().z())>6.25)continue;
-            try{pickup(message->{try{player.sendMessage(Message.raw(message));}catch(RuntimeException disconnected){/* Receipt remains authoritative. */}},store,actor,player,world,row);}
+            try{pickup(message->notice(player,message),store,actor,player,world,row);}
             catch(RuntimeException error){
                 if(now-pickupNoticeAt.getOrDefault(owner,0L)>=10_000){pickupNoticeAt.put(owner,now);
                     try{player.sendMessage(Message.raw("Gear pickup: "+error.getMessage()));}catch(RuntimeException disconnected){/* Receipt remains authoritative. */}}
@@ -714,8 +714,16 @@ public final class HytaleGearLoot implements AutoCloseable {
         for(var entry:bag.entries())if(sameIdentity(entry.payload(),item))return true;
         return false;
     }
+    private static boolean routineInventorySuccess(String message){
+        return message != null && (message.equals("Protected pickup committed to spatial bag once.")
+                || message.equals("Protected stock item admitted to the private bag once.")
+                || message.startsWith("Dropped forgeable gear: ")
+                || message.equals("Item dropped. Walk near it to collect it again.")
+                || message.equals("Gear dropped to protected ground custody. Walk near it to collect it again."));
+    }
     private static void notice(PlayerRef player,String message){
-        if(player==null)return;try{player.sendMessage(Message.raw(message));}catch(RuntimeException disconnected){/* Durable receipt remains authoritative. */}
+        if(player==null||routineInventorySuccess(message))return;
+        try{player.sendMessage(Message.raw(message));}catch(RuntimeException disconnected){/* Durable receipt remains authoritative. */}
     }
     private interface PlayerAction {void run(CommandContext context,Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,World world);}
     public AbstractCommandCollection command(){var commands=new AbstractCommandCollection("loot","Candidate protected loot and economy transactions."){};
@@ -834,7 +842,7 @@ public final class HytaleGearLoot implements AutoCloseable {
         varArgument(com.hypixel.hytale.server.core.command.system.AbstractCommand command,String name,String help){arg=command.withRequiredArg(name,help,ArgTypes.STRING);}
     }
     private void pickup(CommandContext c,Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,World world,GearLootService.Loot row){
-        pickup(message->c.sendMessage(Message.raw(message)),store,actor,player,world,row);
+        pickup(message->{if(!routineInventorySuccess(message))c.sendMessage(Message.raw(message));},store,actor,player,world,row);
     }
     private void pickup(java.util.function.Consumer<String> reply,Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,World world,GearLootService.Loot row){
         UUID owner=player.getUuid();var view=equipment.view(actor,store);var stack=GearNativeItems.create(row.result().item(),view.level(),view.baseline()).withMetadata(SOURCE,new BsonString(row.source().eventId()));

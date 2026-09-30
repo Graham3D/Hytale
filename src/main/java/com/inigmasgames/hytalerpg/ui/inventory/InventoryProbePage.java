@@ -238,9 +238,9 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         var resourceSnapshot = new HytaleResourceViewAdapter().read(stats);
         var model = projection.character(player.getUuid(), player.getUsername(), resourceSnapshot);
         commands.set("#PlayerName.Text", model.displayName());
-        String progress = model.xp().level() == 99 ? "MAX LEVEL"
-                : "XP " + model.xp().xpIntoLevel() + " / " + model.xp().xpToNext();
-        commands.set("#Level.Text", "Level " + model.xp().level() + "    " + progress);
+        String progress = model.xp().level() == 99 ? ""
+                : "    XP " + model.xp().xpIntoLevel() + " / " + model.xp().xpToNext();
+        commands.set("#Level.Text", "Level " + model.xp().level() + progress);
         double fraction = model.xp().level() == 99 ? 1 : model.xp().progress();
         int fill = (int)Math.round(300 * Math.max(0, Math.min(1, fraction)));
         var xpAnchor = new com.hypixel.hytale.server.core.ui.Anchor();
@@ -472,11 +472,13 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             }
             case "Dropped" -> {
                 if (nativeWindow == null || !"Inventory".equals(route)) return;
-                nativeDrop(ref, store, data, commands, events);
+                String gearSlot = NativeGearTargetGrid.slotAt(data.slotIndex);
+                if (gearSlot != null) gearDrop(ref, store, data, gearSlot, commands, events);
+                else nativeDrop(ref, store, data, commands, events);
             }
             case "gearDropped" -> {
                 if (nativeWindow == null || !"Inventory".equals(route)) return;
-                gearDrop(ref, store, data, commands, events);
+                gearDrop(ref, store, data, data.value, commands, events);
             }
             case "sort" -> {
                 var spatial = store.getComponent(ref, SpatialBagComponent.getComponentType());
@@ -786,9 +788,8 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         savePlacement(ref, store);
     }
 
-    private void gearDrop(Ref<EntityStore> ref, Store<EntityStore> store, Data data,
+    private void gearDrop(Ref<EntityStore> ref, Store<EntityStore> store, Data data, String slot,
                           UICommandBuilder commands, UIEventBuilder events) {
-        String slot = data.value;
         int grabbed = nativeGrabCell;
         nativeGrabCell = -1;
         int sourceCell = data.sourceSlotId;
@@ -796,8 +797,14 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             sourceCell = NativeWorkspaceGrid.sourceCell(layout, grabbed);
         boolean sameAlias = data.sourceInventorySectionId == nativeWindow.getId()
                 || data.sourceInventorySectionId == Integer.MIN_VALUE && grabbed >= 0;
+        // The source grid reports the patched absolute target cell; a target
+        // binding may report its local cell instead. Both identify the same
+        // fixed target UI element, while the source and item remain verified.
+        boolean targetCell = NativeGearTargetGrid.contains(slot, data.slotIndex)
+                || "gearDropped".equals(data.action)
+                    && data.slotIndex >= 0 && data.slotIndex < NativeGearTargetGrid.count(slot);
         if (!sameAlias || sourceCell < 0 || sourceCell >= InventoryGridGeometry.CELLS
-                || !NativeGearTargetGrid.contains(slot, data.slotIndex) || !nativeVirtualEmpty()) {
+                || !targetCell || !nativeVirtualEmpty()) {
             commands.set("#Status.Text", "Item changed. Reopen inventory and try again.");
             return;
         }
@@ -1054,6 +1061,17 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         catch (RuntimeException unavailable) { return null; }
     }
     @Override public void onDismiss(Ref<EntityStore> ref, Store<EntityStore> store) {
+        // Destroy the hovered native grid before the page switches so its native
+        // item tooltip cannot survive the Escape transition into gameplay.
+        if (!dismissed && nativeWindow != null && nativeGridSelector != null) {
+            try {
+                var cleanup = new UICommandBuilder();
+                cleanup.clear("#Bag");
+                sendUpdate(cleanup, new UIEventBuilder(), false);
+            } catch (RuntimeException closing) {
+                // Disconnects can dismiss a page after the UI channel closes.
+            }
+        }
         dismissed = true; grab = null; items.clear();
         record("DISMISSED", Map.of("session", session));
         onDismiss.run();

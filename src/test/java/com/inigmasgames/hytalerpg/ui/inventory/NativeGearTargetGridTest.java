@@ -27,9 +27,12 @@ final class NativeGearTargetGridTest {
                 assertTrue(index >= InventoryGridGeometry.CELLS && index < NativeGearTargetGrid.CAPACITY);
                 assertTrue(cells.get(i).asDocument().getBoolean("IsActivatable").getValue());
                 assertTrue(NativeGearTargetGrid.contains(slot, index));
+                assertEquals(slot, NativeGearTargetGrid.slotAt(index));
             }
         }
         assertFalse(NativeGearTargetGrid.contains("Head", 75));
         assertFalse(NativeGearTargetGrid.contains("Unknown", 75));
+        assertNull(NativeGearTargetGrid.slotAt(74));
+        assertNull(NativeGearTargetGrid.slotAt(85));
     }
 }

@@ -19,6 +19,11 @@ final class NativeGearTargetGrid {
     private NativeGearTargetGrid() { }
 
     static int first(String slot) { return FIRST.getOrDefault(slot, -1); }
+    static String slotAt(int index) {
+        for (var entry : FIRST.entrySet())
+            if (contains(entry.getKey(), index)) return entry.getKey();
+        return null;
+    }
     static int count(String slot) { return slot.equals("Weapon") || slot.equals("Offhand") ? 2 : 1; }
     static boolean contains(String slot, int index) {
         int first = first(slot);
