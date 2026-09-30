@@ -123,10 +123,9 @@ Group {
         }
       }
       Group { Anchor: (Height: 16); }
-      $C.@Panel #InventoryFrame { Anchor: (Width: 1216); LayoutMode: Top; Padding: (Horizontal: 30, Vertical: 8);
-      Group { Anchor: (Height: 38); LayoutMode: Left; Padding: (Top: 3); Background: (TexturePath: "Icons/Hytale/ContainerHeader.png", HorizontalBorder: 50, VerticalBorder: 0);
-        Group { Anchor: (Width: 16); }
-        Label { Text: "INVENTORY"; Anchor: (Width: 804, Height: 32); Style: (FontName: "Secondary", FontSize: 17, TextColor: #ffffff, RenderBold: true); }
+      Group #InventoryFrame { Anchor: (Width: 1216); LayoutMode: Top;
+      Group #InventoryHeader { Anchor: (Height: 38); LayoutMode: Left; Padding: (Horizontal: 17, Top: 3); Background: (TexturePath: "Icons/Hytale/ContainerHeader.png", HorizontalBorder: 50, VerticalBorder: 0);
+        Label { Text: "INVENTORY"; Anchor: (Width: 846, Height: 32); Style: (FontName: "Secondary", FontSize: 17, TextColor: #ffffff, RenderBold: true); }
         Group { Anchor: (Width: 300, Height: 32);
           CompactTextField #Search {
             Anchor: (Height: 30, Right: 0);
@@ -151,6 +150,7 @@ Group {
         Label #MatchCount { Visible: false; Anchor: (Width: 0, Height: 0); Style: (FontName: "Secondary", FontSize: 13, TextColor: #9aa9b8, Alignment: Center); }
         TextButton #Cancel { Visible: false; Text: "Cancel selection"; Anchor: (Width: 0, Height: 0); Style: @Action; }
       }
+      Group #InventoryBody { LayoutMode: Top; Padding: (Horizontal: 17, Top: 8, Bottom: 17); Background: (TexturePath: "Icons/Hytale/ContainerPatch.png", Border: 23);
       Group #InventoryActions { Visible: false; Anchor: (Height: 0); LayoutMode: Left;
         TextButton #DropSelected { Text: "Drop"; Anchor: (Width: 86, Height: 32); Style: @Action; }
         TextButton #QuickEquip { Text: "Equip / Move"; Anchor: (Width: 135, Height: 32); Style: @Action; }
@@ -161,12 +161,11 @@ Group {
           TextButton #Split { Text: "Take"; Anchor: (Width: 70, Height: 32); Style: @Action; }
         }
       }
-      Group #BagShell { Anchor: (Width: 1156, Height: 396); Padding: (Full: 8); Background: #0b1320;
-        Group #Bag { Anchor: (Width: 1140, Height: 380); }
-      }
+      Group #Bag { Anchor: (Left: 21, Width: 1140, Height: 380); }
       Label #Coverage { Visible: false; Anchor: (Height: 0); }
       Label #ItemContext { Visible: false; Anchor: (Height: 0); }
       Label #Status { Visible: false; Anchor: (Height: 0); }
+      }
       }
     }
     Group #RouteContent { Visible: false; Anchor: (Height: 690); LayoutMode: Top; Padding: (Full: 12);
