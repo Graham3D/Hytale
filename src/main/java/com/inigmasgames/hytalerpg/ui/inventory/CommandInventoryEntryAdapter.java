@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.inventory.container.filter.FilterType;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
 import com.inigmasgames.hytalerpg.ui.skilltree.SkillTreeEntryAdapter;
+import com.inigmasgames.hytalerpg.gear.HytaleGearLoot;
 
 /** Temporary development entry; a future Page.Inventory bridge can replace only this adapter. */
 public final class CommandInventoryEntryAdapter implements InventoryEntryAdapter {
@@ -20,6 +21,7 @@ public final class CommandInventoryEntryAdapter implements InventoryEntryAdapter
     private final AttributeAllocationService allocation;
     private final SkillTreeEntryAdapter skillTree;
     private java.util.function.Consumer<java.util.UUID> dismissListener = ignored -> {};
+    private java.util.function.Supplier<HytaleGearLoot> gearTransfer = () -> null;
 
     public CommandInventoryEntryAdapter(RpgUiProjectionService projection, AttributeAllocationService allocation,
                                         SkillTreeEntryAdapter skillTree) {
@@ -36,6 +38,10 @@ public final class CommandInventoryEntryAdapter implements InventoryEntryAdapter
         dismissListener = java.util.Objects.requireNonNull(listener);
     }
 
+    public void configureGearTransfer(java.util.function.Supplier<HytaleGearLoot> transfer) {
+        gearTransfer = java.util.Objects.requireNonNull(transfer);
+    }
+
     public boolean open(PlayerRef player, Ref<EntityStore> ref, Store<EntityStore> store, Runnable entryDismiss) {
         var entity = store.getComponent(ref, Player.getComponentType());
         if (entity == null) return false;
@@ -48,7 +54,7 @@ public final class CommandInventoryEntryAdapter implements InventoryEntryAdapter
         // Always provide Hytale's native cursor over a denied presentation alias.
         // In native mode real Storage still owns the payload; in spatial mode the
         // private aggregate owns it. Neither path writes to this empty container.
-        SimpleItemContainer virtualBag = new SimpleItemContainer((short) InventoryGridGeometry.CELLS);
+        SimpleItemContainer virtualBag = new SimpleItemContainer((short) NativeGearTargetGrid.CAPACITY);
         virtualBag.setGlobalFilter(FilterType.DENY_ALL);
         ContainerWindow window = new ContainerWindow(virtualBag);
         var page = new InventoryProbePage(player, projection, null, allocation,
@@ -63,7 +69,8 @@ public final class CommandInventoryEntryAdapter implements InventoryEntryAdapter
                         if (ref.isValid()) open(player, ref, store, entryDismiss);
                     }
                 },
-                () -> { dismissListener.accept(player.getUuid()); entryDismiss.run(); }, window, virtualBag);
+                () -> { dismissListener.accept(player.getUuid()); entryDismiss.run(); }, window, virtualBag,
+                gearTransfer);
         return entity.getPageManager().openCustomPageWithWindows(ref, store, page, window);
     }
 }

@@ -464,6 +464,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
             var generator=new com.inigmasgames.hytalerpg.gear.GearDropGenerator(com.inigmasgames.hytalerpg.gear.GearCatalog.load(),new com.inigmasgames.hytalerpg.gear.GearBindings(),com.inigmasgames.hytalerpg.gear.GearAffixRuntime.ENABLED);
             var loot=new com.inigmasgames.hytalerpg.gear.GearLootService(encounterStore,generator);
             gearLootRuntime=new com.inigmasgames.hytalerpg.gear.HytaleGearLoot(loot,loadouts,gearEquipment,spatialQaMarker);
+            rpgCommand.inventoryEntry().configureGearTransfer(() -> gearLootRuntime);
             summonSystem.configureIronSentinel(gearLootRuntime);
             gearLootRuntime.configureProjectionNotification(encounterRewards::gearProjected);
             encounterRewards.configureGearLoot(loot,gearEquipment);

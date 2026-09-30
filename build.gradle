@@ -94,6 +94,7 @@ tasks.test {
     exclude '**/SpatialBagAggregateTest*'
     exclude '**/GearQaSpatialDeliveryTest*'
     exclude '**/NativeWorkspaceGridTest*'
+    exclude '**/NativeGearTargetGridTest*'
 }
 
 tasks.register('nativeControlTest', Test) {
@@ -122,6 +123,7 @@ tasks.register('nativeControlTest', Test) {
         includeTestsMatching '*SpatialBagAggregateTest'
         includeTestsMatching '*GearQaSpatialDeliveryTest'
         includeTestsMatching '*NativeWorkspaceGridTest'
+        includeTestsMatching '*NativeGearTargetGridTest'
     }
     // Separate JVM: native codecs require Hytale's logger; retained UI tests exercise the JUL fallback.
     systemProperty 'java.util.logging.manager', 'com.hypixel.hytale.logger.backend.HytaleLogManager'
@@ -178,6 +180,14 @@ tasks.processResources {
         (2..1024).each { sectionId ->
             new File(nativeWorkspaceSections, "Section${sectionId}.ui").setText(
                 workspaceTemplate.replace('InventorySectionId: 1;', "InventorySectionId: ${sectionId};"), 'UTF-8')
+        }
+        def gearTargetSections = new File(destinationDir, 'Common/UI/Custom/InventoryGearTargets')
+        ['Weapon', 'Offhand', 'Head', 'Chest', 'Hands', 'Legs'].each { slot ->
+            def template = new File(gearTargetSections, "${slot}Section1.ui").getText('UTF-8')
+            (2..1024).each { sectionId ->
+                new File(gearTargetSections, "${slot}Section${sectionId}.ui").setText(
+                    template.replace('InventorySectionId: 1;', "InventorySectionId: ${sectionId};"), 'UTF-8')
+            }
         }
     }
     inputs.property('version', project.version)

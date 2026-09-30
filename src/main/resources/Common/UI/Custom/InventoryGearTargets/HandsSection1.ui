@@ -1,0 +1,15 @@
+$Base = "../RpgInventory/GridCommon.ui";
+ItemGrid #GearTargetHands {
+  InventorySectionId: 1;
+  Anchor: (Width: 74, Height: 74);
+  SlotsPerRow: 1;
+  Style: (...$Base.@ProbeGridStyle, SlotSize: 74, SlotSpacing: 0, SlotBackground: "TransparentSlot.png");
+  Background: #000000(0);
+  Padding: 0;
+  ShowScrollbar: false;
+  AreItemsDraggable: true;
+  AllowMaxStackDraggableItems: true;
+  DisplayItemQuantity: false;
+  RenderItemQualityBackground: false;
+  RenderEmptySlots: true;
+}

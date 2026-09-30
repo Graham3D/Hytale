@@ -21,6 +21,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
 import com.inigmasgames.hytalerpg.combat.hytale.DerivedStatEntityAdapter;
 import com.inigmasgames.hytalerpg.gear.GearNativeItems;
+import com.inigmasgames.hytalerpg.gear.HytaleGearLoot;
 import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
 import com.inigmasgames.hytalerpg.execution.hytale.HytaleEquipmentAdapter;
 import com.inigmasgames.hytalerpg.ui.HytaleResourceViewAdapter;
@@ -41,6 +42,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
     private final Runnable onDismiss;
     private final ContainerWindow nativeWindow;
     private final SimpleItemContainer nativeVirtualBag;
+    private final java.util.function.Supplier<HytaleGearLoot> gearTransfer;
     private final String session = UUID.randomUUID().toString();
     private final Map<String, View> items = new LinkedHashMap<>();
     private SpatialLayout layout = new SpatialLayout(InventoryGridGeometry.COLUMNS, InventoryGridGeometry.ROWS);
@@ -69,11 +71,20 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                               NativeInventoryEntryProbe probe, AttributeAllocationService allocation,
                               Runnable skillTreeEntry, Runnable onDismiss,
                               ContainerWindow nativeWindow, SimpleItemContainer nativeVirtualBag) {
+        this(player, projection, probe, allocation, skillTreeEntry, onDismiss,
+                nativeWindow, nativeVirtualBag, () -> null);
+    }
+    public InventoryProbePage(PlayerRef player, RpgUiProjectionService projection,
+                              NativeInventoryEntryProbe probe, AttributeAllocationService allocation,
+                              Runnable skillTreeEntry, Runnable onDismiss,
+                              ContainerWindow nativeWindow, SimpleItemContainer nativeVirtualBag,
+                              java.util.function.Supplier<HytaleGearLoot> gearTransfer) {
         super(player, CustomPageLifetime.CanDismiss, Data.CODEC);
         this.player = player; this.projection = projection; this.probe = probe;
         this.allocation = allocation; this.skillTreeEntry = skillTreeEntry;
         this.onDismiss = onDismiss;
         this.nativeWindow = nativeWindow; this.nativeVirtualBag = nativeVirtualBag;
+        this.gearTransfer = gearTransfer;
     }
     public static void preload() { CATALOG.bindingCount(); }
     public boolean isWorkspaceEntry() { return allocation != null; }
@@ -125,7 +136,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
     @Override public void build(Ref<EntityStore> ref, UICommandBuilder commands, UIEventBuilder events, Store<EntityStore> store) {
         commands.append("RpgInventoryProbe.ui");
         for (var name : ROUTES) events.addEventBinding(CustomUIEventBindingType.Activating, "#Route" + name, event("route", name), false);
-        for (var name : List.of("Close", "Clear", "Refresh", "Cancel", "Advanced", "Back"))
+        for (var name : List.of("Close", "Refresh", "Cancel", "Advanced", "Back"))
             events.addEventBinding(CustomUIEventBindingType.Activating, "#" + name, event(name.toLowerCase(Locale.ROOT), ""), false);
         for (var name : List.of("Sort", "Consolidate", "QuickEquip", "DropSelected"))
             events.addEventBinding(CustomUIEventBindingType.Activating, "#" + name,
@@ -177,13 +188,18 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         if (nativeWindow != null) {
             int section = nativeWindow.getId();
             if (section < 1 || section > 1024 || nativeVirtualBag == null
-                    || nativeVirtualBag.getCapacity() != InventoryGridGeometry.CELLS)
+                    || nativeVirtualBag.getCapacity() != NativeGearTargetGrid.CAPACITY)
                 throw new IllegalStateException("Native workspace window has a different grid capacity");
             nativeGridSelector = bag.nativeGrid(commands, section);
             NativeWorkspaceGrid.write(commands, nativeGridSelector, layout, id -> items.get(id).fingerprint);
             for (var binding : new CustomUIEventBindingType[]{CustomUIEventBindingType.SlotClicking,
                     CustomUIEventBindingType.Dropped, CustomUIEventBindingType.DragCancelled})
                 events.addEventBinding(binding, nativeGridSelector, event(binding.name(), ""), false);
+            for (String slot : List.of("Weapon", "Offhand", "Head", "Chest", "Hands", "Legs")) {
+                NativeGearTargetGrid.append(commands, slot, section);
+                events.addEventBinding(CustomUIEventBindingType.Dropped,
+                        "#GearTarget" + slot, event("gearDropped", slot), false);
+            }
         }
         // Opaque visual cells mask the native grid's repeated per-cell icons while
         // remaining hit-test transparent, preserving its native cursor behavior.
@@ -359,7 +375,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
     private static void showEquipment(UICommandBuilder commands, String slot, ItemStack stack) {
         boolean occupied = !ItemStack.isEmpty(stack);
         commands.set("#Equip" + slot + ".Visible", occupied);
-        if (!"Weapon".equals(slot)) commands.set("#Empty" + slot + ".Visible", !occupied);
+        commands.set("#Empty" + slot + ".Visible", !occupied);
         if (occupied) commands.set("#Equip" + slot + ".ItemId", stack.getItemId());
     }
     private static String one(double value) { return String.format(Locale.ROOT, "%.1f", value); }
@@ -387,7 +403,6 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         }
         commands.set("#MatchCount.Visible", !query.isBlank());
         commands.set("#MatchCount.Text", matches + " found");
-        commands.set("#Clear.Visible", !query.isBlank());
         // Deliberately never write Search.Value here or rebuild the page while typing.
     }
     @Override public void handleDataEvent(Ref<EntityStore> ref, Store<EntityStore> store, Data data) {
@@ -454,6 +469,10 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             case "Dropped" -> {
                 if (nativeWindow == null || !"Inventory".equals(route)) return;
                 nativeDrop(ref, store, data, commands, events);
+            }
+            case "gearDropped" -> {
+                if (nativeWindow == null || !"Inventory".equals(route)) return;
+                gearDrop(ref, store, data, commands);
             }
             case "sort" -> {
                 var spatial = store.getComponent(ref, SpatialBagComponent.getComponentType());
@@ -549,12 +568,6 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                 commands.set("#Status.Text", "");
             }
             case "search" -> { query = data.query == null ? "" : data.query.substring(0, Math.min(data.query.length(), 256)); search(commands); }
-            case "clear" -> {
-                // The native preview holds its rotation on the client. Avoid a needless UI patch
-                // when the query is already empty; such patches can reset that local rotation.
-                if (query.isEmpty()) return;
-                query = ""; commands.set("#Search.Value", ""); search(commands);
-            }
             case "focus" -> { record("TEXT_FOCUS", Map.of("event", data.value)); return; }
             case "refresh" -> {
                 if (nativeGrabCell >= 0) {
@@ -767,6 +780,82 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         savePending = true;
         commands.set("#Status.Text", success);
         savePlacement(ref, store);
+    }
+
+    private void gearDrop(Ref<EntityStore> ref, Store<EntityStore> store, Data data,
+                          UICommandBuilder commands) {
+        String slot = data.value;
+        int grabbed = nativeGrabCell;
+        nativeGrabCell = -1;
+        int sourceCell = data.sourceSlotId;
+        if (sourceCell < 0 && grabbed >= 0)
+            sourceCell = NativeWorkspaceGrid.sourceCell(layout, grabbed);
+        boolean sameAlias = data.sourceInventorySectionId == nativeWindow.getId()
+                || data.sourceInventorySectionId == Integer.MIN_VALUE && grabbed >= 0;
+        if (!sameAlias || sourceCell < 0 || sourceCell >= InventoryGridGeometry.CELLS
+                || !NativeGearTargetGrid.contains(slot, data.slotIndex) || !nativeVirtualEmpty()) {
+            commands.set("#Status.Text", "Item changed. Reopen inventory and try again.");
+            return;
+        }
+        var entity = store.getComponent(ref, Player.getComponentType());
+        if (entity == null || entity.getWindowManager().getWindow(nativeWindow.getId()) != nativeWindow) {
+            commands.set("#Status.Text", "Inventory changed. Reopen it and try again.");
+            return;
+        }
+        if (grabbed < 0) grabbed = sourceCell;
+        if (NativeWorkspaceGrid.sourceCell(layout, grabbed) != sourceCell) {
+            commands.set("#Status.Text", "Item changed. Reopen inventory and try again.");
+            return;
+        }
+        var selected = layout.at(grabbed % InventoryGridGeometry.COLUMNS,
+                grabbed / InventoryGridGeometry.COLUMNS).orElse(null);
+        var spatial = store.getComponent(ref, SpatialBagComponent.getComponentType());
+        if (selected == null || spatial == null
+                || spatial.mode(player.getUuid()) == SpatialBagComponent.OwnershipMode.NATIVE) {
+            commands.set("#Status.Text", "Equipment drag requires the spatial bag.");
+            return;
+        }
+        UUID entryId;
+        try { entryId = UUID.fromString(selected.id()); }
+        catch (IllegalArgumentException nativePreview) {
+            commands.set("#Status.Text", "Equipment drag requires the spatial bag.");
+            return;
+        }
+        var source = spatial.state(player.getUuid()).entry(entryId).orElse(null);
+        if (source == null || source.position().x() != selected.position().x()
+                || source.position().y() != selected.position().y()
+                || source.payload().getQuantity() != 1
+                || data.itemStackQuantity > 1) {
+            commands.set("#Status.Text", "Select one current equipment item.");
+            return;
+        }
+        var transfer = gearTransfer.get();
+        if (transfer == null) {
+            commands.set("#Status.Text", "Equipment transfer is unavailable.");
+            return;
+        }
+        String destination = switch (slot) {
+            case "Weapon" -> "held";
+            case "Offhand" -> "offhand";
+            default -> slot.toLowerCase(Locale.ROOT);
+        };
+        savePending = true;
+        commands.set("#Status.Text", "Equipping...");
+        var world = store.getExternalData().getWorld();
+        transfer.transferEquipment(store, ref, player, world, entryId, destination, true,
+                result -> world.execute(() -> {
+                    if (dismissed || !ref.isValid()) return;
+                    savePending = false;
+                    var update = new UICommandBuilder();
+                    var events = new UIEventBuilder();
+                    if ("Equipment transfer saved and finalized.".equals(result)) {
+                        snapshot(ref, store, update, events);
+                    } else {
+                        saveFailed = result.contains("uncertain") || result.contains("Reconnect");
+                        update.set("#Status.Text", result);
+                    }
+                    sendUpdate(update, events, false);
+                }));
     }
 
     private void nativeDrop(Ref<EntityStore> ref, Store<EntityStore> store, Data data,
