@@ -13,8 +13,9 @@ final class NativeGearTargetGridTest {
     }
 
     @Test void targetsUseDistinctDeniedAliasSlotsBeyondTheBag() {
-        assertEquals(83, NativeGearTargetGrid.CAPACITY);
-        for (String slot : new String[]{"Weapon", "Offhand", "Head", "Chest", "Hands", "Legs"}) {
+        assertEquals(85, NativeGearTargetGrid.CAPACITY);
+        for (String slot : new String[]{"Weapon", "Offhand", "Head", "Chest", "Hands", "Legs",
+                "RingLeft", "RingRight"}) {
             var commands = new UICommandBuilder();
             NativeGearTargetGrid.append(commands, slot, 317);
             var encoded = commands.getCommands();

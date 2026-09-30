@@ -195,7 +195,8 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             for (var binding : new CustomUIEventBindingType[]{CustomUIEventBindingType.SlotClicking,
                     CustomUIEventBindingType.Dropped, CustomUIEventBindingType.DragCancelled})
                 events.addEventBinding(binding, nativeGridSelector, event(binding.name(), ""), false);
-            for (String slot : List.of("Weapon", "Offhand", "Head", "Chest", "Hands", "Legs")) {
+            for (String slot : List.of("Weapon", "Offhand", "Head", "Chest", "Hands", "Legs",
+                    "RingLeft", "RingRight")) {
                 NativeGearTargetGrid.append(commands, slot, section);
                 events.addEventBinding(CustomUIEventBindingType.Dropped,
                         "#GearTarget" + slot, event("gearDropped", slot), false);
@@ -345,7 +346,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         return percent.isEmpty() || Math.abs(percent.getAsDouble()) < 0.0001
                 ? "0%" : one(percent.getAsDouble()) + "%";
     }
-    private static void renderEquipment(Ref<EntityStore> ref, Store<EntityStore> store, UICommandBuilder commands) {
+    private void renderEquipment(Ref<EntityStore> ref, Store<EntityStore> store, UICommandBuilder commands) {
         showEquipment(commands, "Weapon", InventoryComponent.getItemInHand(store, ref));
         var utility = store.getComponent(ref, InventoryComponent.Utility.getComponentType());
         showEquipment(commands, "Offhand", utility == null ? null : utility.getActiveItem());
@@ -363,11 +364,14 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                 : spatial.rings(player.getUuid());
         for (String side : List.of("Left", "Right")) {
             var ring = rings.get(side.toLowerCase(Locale.ROOT));
-            commands.set("#RingEquip" + side + ".Visible", spatialOwner);
+            commands.set("#RingEquip" + side + ".Visible",
+                    spatialOwner && (ring != null || nativeWindow == null));
+            commands.set("#EquipDropRing" + side + ".Visible",
+                    spatialOwner && ring == null && nativeWindow != null);
             commands.set("#RingItem" + side + ".Visible", ring != null);
             commands.set("#RingEmpty" + side + ".Visible", ring == null);
             commands.set("#RingEquip" + side + ".TooltipText", ring == null
-                    ? "Select a Copper Ring in the bag, then click to equip."
+                    ? "Drag a Copper Ring from the bag to equip."
                     : "Click to return this ring to the bag.");
             if (ring != null) commands.set("#RingItem" + side + ".ItemId", ring.payload().getItemId());
         }
@@ -472,7 +476,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             }
             case "gearDropped" -> {
                 if (nativeWindow == null || !"Inventory".equals(route)) return;
-                gearDrop(ref, store, data, commands);
+                gearDrop(ref, store, data, commands, events);
             }
             case "sort" -> {
                 var spatial = store.getComponent(ref, SpatialBagComponent.getComponentType());
@@ -783,7 +787,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
     }
 
     private void gearDrop(Ref<EntityStore> ref, Store<EntityStore> store, Data data,
-                          UICommandBuilder commands) {
+                          UICommandBuilder commands, UIEventBuilder events) {
         String slot = data.value;
         int grabbed = nativeGrabCell;
         nativeGrabCell = -1;
@@ -829,6 +833,28 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             commands.set("#Status.Text", "Select one current equipment item.");
             return;
         }
+        if (slot.equals("RingLeft") || slot.equals("RingRight")) {
+            String side = slot.equals("RingLeft") ? "left" : "right";
+            if (!RpgRingEquipment.eligible(source.payload())
+                    || spatial.rings(player.getUuid()).get(side) != null) {
+                commands.set("#Status.Text", "That ring does not fit an empty ring slot.");
+                return;
+            }
+            try {
+                var result = spatial.equipRing(player.getUuid(), side, entryId,
+                        spatial.state(player.getUuid()).revision(), CATALOG);
+                if (!result.accepted()) {
+                    commands.set("#Status.Text", "Ring transfer needs a free bag cell.");
+                    return;
+                }
+                snapshot(ref, store, commands, events);
+                savePending = true;
+                savePlacement(ref, store);
+            } catch (RuntimeException failure) {
+                commands.set("#Status.Text", "Ring transfer could not be completed.");
+            }
+            return;
+        }
         var transfer = gearTransfer.get();
         if (transfer == null) {
             commands.set("#Status.Text", "Equipment transfer is unavailable.");
@@ -847,14 +873,14 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                     if (dismissed || !ref.isValid()) return;
                     savePending = false;
                     var update = new UICommandBuilder();
-                    var events = new UIEventBuilder();
+                    var updateEvents = new UIEventBuilder();
                     if ("Equipment transfer saved and finalized.".equals(result)) {
-                        snapshot(ref, store, update, events);
+                        snapshot(ref, store, update, updateEvents);
                     } else {
                         saveFailed = result.contains("uncertain") || result.contains("Reconnect");
                         update.set("#Status.Text", result);
                     }
-                    sendUpdate(update, events, false);
+                    sendUpdate(update, updateEvents, false);
                 }));
     }
 

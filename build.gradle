@@ -182,7 +182,7 @@ tasks.processResources {
                 workspaceTemplate.replace('InventorySectionId: 1;', "InventorySectionId: ${sectionId};"), 'UTF-8')
         }
         def gearTargetSections = new File(destinationDir, 'Common/UI/Custom/InventoryGearTargets')
-        ['Weapon', 'Offhand', 'Head', 'Chest', 'Hands', 'Legs'].each { slot ->
+        ['Weapon', 'Offhand', 'Head', 'Chest', 'Hands', 'Legs', 'RingLeft', 'RingRight'].each { slot ->
             def template = new File(gearTargetSections, "${slot}Section1.ui").getText('UTF-8')
             (2..1024).each { sectionId ->
                 new File(gearTargetSections, "${slot}Section${sectionId}.ui").setText(

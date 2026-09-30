@@ -11,10 +11,10 @@ import java.util.Map;
 
 /** Empty, denied native cursor targets. Equipment writes remain with HytaleGearLoot. */
 final class NativeGearTargetGrid {
-    static final int CAPACITY = InventoryGridGeometry.CELLS + 8;
+    static final int CAPACITY = InventoryGridGeometry.CELLS + 10;
     private static final Map<String, Integer> FIRST = Map.of(
             "Weapon", 75, "Offhand", 77, "Head", 79, "Chest", 80,
-            "Hands", 81, "Legs", 82);
+            "Hands", 81, "Legs", 82, "RingLeft", 83, "RingRight", 84);
 
     private NativeGearTargetGrid() { }
 
