@@ -14,6 +14,8 @@ R211-U7P5 gives `/rpg spawn` a transient, session-only encounter backend. The co
 
 R215-U7P5 requires an explicit era on `/rpg spawn`, freezes the corresponding authored difficulty profile and affix count at birth, and uses the compact projected name/Health/affix stack for visible connected QA. The world difficulty registry is never rebound by this command.
 
+R216-U7P5 displays the actual selected affix names in successful `/rpg spawn` chat (for example, `Trork Warrior spawned with Extra Strong, Frenzied, and Armor Breaker.`). Explicitly incompatible affixes are named together in a plain-language rejection. Automatic selection with no legal set, unsafe placement, and world-not-ready failures also use player-readable messages. Internal IDs and encounter UUIDs remain in server diagnostics. The command syntax, author permission, transient save behavior, and zero-reward gate are unchanged.
+
 R212-U7P5 resolves each of those nine anchors with Hytale's native walking-NPC column probe and logs native rejection outcomes. QA staging and provenance still enter in `spawnEntity` pre-add; native death drops are suppressed and verified in post-spawn, after the actor Role exists. A missing post-spawn Role rejects the whole local QA group as `QA_ROLE_UNAVAILABLE_POST_SPAWN` before unfreezing it.
 
 | Command | Effect | Access |
