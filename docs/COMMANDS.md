@@ -8,12 +8,15 @@ R205-U7P5 keeps the R201 Master Enemies and monster progression port on the veri
 
 R208-U7P5 adds the QA-only Frost Crystal Golem binding to the same spawn path. Its seven existing native damage variables are certified under the original chained attack root; the two previously bound Golems remain passive-only. A staged QA NPC must have native hostile player attitude. The Frost binding does not enable natural Master Enemies promotion.
 
+R210-U7P5 attaches Hytale's native Healthbar to QA-spawned Master Enemies, including pack members, and hides their R209 projected target bar. Natural monster presentation stays on R209. The QA native component is removed on death or native removal; the clear command removes loaded QA actors through their existing lifecycle.
+
 | Command | Effect | Access |
 | --- | --- | --- |
 | `/rpg enemies status` | Show the current world mode, affix and native binding revisions, enabled role count, native hook availability, and production admission gate. | Adventure; read-only |
 | `/rpg enemies affixes` | List all 27 authored Master Enemies affixes and mechanical descriptions. | Adventure; read-only |
 | `/rpg enemies inspect [entityUuid]` | Inspect the targeted published Master Enemy within 24 m, or a loaded current-world actor by UUID. Operators also see frozen provenance, providers, immunities, rewards, and mitigation projections. | Adventure for nearby target; `inigmasgames.rpg.enemies.author` for UUID/operator detail; read-only |
 | `/rpg spawn <monster> <champion\|unique\|superunique> [affixAlias...]` | Spawn one exact bound, concrete native hostile role as a durable QA-only Master Enemy. Add aliases as trailing words, separated by spaces, with no `--affixAlias` flag. Explicit aliases replace random affix selection; unsupported roles, profiles, native actions, or affix capabilities are rejected with a chat reason and `RPG_ENEMY_QA_SPAWN_REJECTED` server log. `/rpg spawn Golem_Crystal_Frost superunique coldenchanted magicresistant bulwark` uses its QA-only chained native hit binding. `Golem_Crystal_Earth` and `Golem_Firesteel` remain passive-only; `manaburn` requires a certified direct-hit role such as `Larva_Void`. The command requires the active RPG save and the installed 0.7.0-pre.5.1 native receipt patch. | `inigmasgames.rpg.enemies.author`; active campaign world with open Master Enemies admission; zero XP, loot, learning, pity, campaign, and milestone rewards |
+| `/rpg spawn clear` | Remove loaded QA-spawned Master Enemies actors in the current world through native entity removal. Does not remove natural monsters or rewrite save data. Available from R210-U7P5 in the active RPG save. | `inigmasgames.rpg.enemies.author`; removes loaded QA actors and their QA native healthbars |
 
 ## Inventory, character, and skills
 
