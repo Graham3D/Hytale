@@ -33,3 +33,5 @@ Date: 2026-10-07. Current source is the R207-U7P5 worktree plus the changes belo
 4. Run `/rpg spawn Trork_Warrior unique extrastrong frenzied armorbreaker` to check the earlier Trork route remains functional.
 
 Offline checks prove packaging and static owner wiring; they do not certify connected rendering or native Golem action attachment. If the latter rejects, retain the log's precise `ENEMY_ACTION_*` boundary for a focused repair.
+
+Git visibility: this report, `INTEGRATION_MAP.md`, and `COMMANDS.md` are pushed on `codex/checkpoint-c-optional-bridge`. The deployed source remains in the local R207/R208 worktree, which already contained a large set of unrelated uncommitted changes; this documentation commit does not claim to publish a reproducible source snapshot.
