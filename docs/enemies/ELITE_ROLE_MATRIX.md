@@ -23,11 +23,11 @@ Certification describes a role's native binding. At each natural birth, the exis
 | Coffer_Goblin_Scrapper | Goblin_Scrapper | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Coffer_Goblin_Turret | Goblin_Turret | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Cow | Cow | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Cow_Undead | Cow_Undead | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Cow_Undead | Cow_Undead | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Crawler_Void | Crawler_Void | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Crawler_Void_Anomaly | Crawler_Void | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Crawler_Void_Surge | Crawler_Void | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Crocodile | Crocodile | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Crocodile | Crocodile | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Deer_Stag | Deer_Stag | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Dungeon_Scarak_Broodmother | Scarak_Broodmother | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Dungeon_Scarak_Defender | Scarak_Defender | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
@@ -41,16 +41,16 @@ Certification describes a role's native binding. At each natural birth, the exis
 | Dungeon_Skeleton_Sand_Assassin | Skeleton_Sand_Assassin | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Dungeon_Skeleton_Sand_Mage | Skeleton_Sand_Mage | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Dungeon_Skeleton_Sand_Soldier | Skeleton_Sand_Soldier | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Emberwulf | Emberwulf | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Emberwulf | Emberwulf | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Eye_Void | Eye_Void | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Eye_Void_Surge | Eye_Void | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Fen_Stalker | Fen_Stalker | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Fen_Stalker | Fen_Stalker | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Feran_Burrower | Feran_Burrower | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Feran_Civilian | Feran_Civilian | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Feran_Longtooth | Feran_Longtooth | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Feran_Sharptooth | Feran_Sharptooth | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Feran_Windwalker | Feran_Windwalker | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Fox | Fox | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Fox | Fox | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Ghoul | Ghoul | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Goat | Goat | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Goblin_Burner | Goblin_Burner | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
@@ -70,14 +70,14 @@ Certification describes a role's native binding. At each natural birth, the exis
 | Horse | Horse | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Horse_Skeleton | Horse_Skeleton | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Horse_Skeleton_Armored | Horse_Skeleton_Armored | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Hound_Bleached | Hound_Bleached | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Hyena | Hyena | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Hound_Bleached | Hound_Bleached | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
+| Hyena | Hyena | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Kweebec_Razorleaf | Kweebec_Razorleaf | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Kweebec_Razorleaf_Patrol | Kweebec_Razorleaf | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Larva_Silk | Larva_Silk | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Larva_Void | Larva_Void | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Larva_Void_Surge | Larva_Void | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Leopard_Snow | Leopard_Snow | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Leopard_Snow | Leopard_Snow | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Molerat | Molerat | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Moose_Bull | Moose_Bull | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Moose_Cow | Moose_Cow | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
@@ -92,13 +92,13 @@ Certification describes a role's native binding. At each natural birth, the exis
 | Outlander_Priest | Outlander_Priest | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Outlander_Sorcerer | Outlander_Sorcerer | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Outlander_Stalker | Outlander_Stalker | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Pig_Undead | Pig_Undead | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Pig_Undead | Pig_Undead | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Piranha | Piranha | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Piranha_Black | Piranha_Black | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Ram | Ram | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Raptor_Cave | Raptor_Cave | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Rat | Rat | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Rex_Cave | Rex_Cave | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Raptor_Cave | Raptor_Cave | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
+| Rat | Rat | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
+| Rex_Cave | Rex_Cave | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Risen_Gunner | Risen_Gunner | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Risen_Knight | Risen_Knight | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Scarak_Broodmother | Scarak_Broodmother | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
@@ -224,15 +224,15 @@ Certification describes a role's native binding. At each natural birth, the exis
 | Skeleton_Sand_Soldier_Patrol | Skeleton_Sand_Soldier | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Sand_Soldier_Wander | Skeleton_Sand_Soldier | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Scout | Skeleton_Scout | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
-| Skeleton_Scout_Patrol | Skeleton_Scout | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Skeleton_Scout_Wander | Skeleton_Scout | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Skeleton_Scout_Patrol | Skeleton_Scout | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
+| Skeleton_Scout_Wander | Skeleton_Scout | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Skeleton_Soldier | Skeleton_Soldier | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Soldier_Patrol | Skeleton_Soldier | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Soldier_Wander | Skeleton_Soldier | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Slug_Magma | Slug_Magma | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Snake_Cobra | Snake_Cobra | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Snake_Marsh | Snake_Marsh | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Snake_Rattle | Snake_Rattle | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Snake_Cobra | Snake_Cobra | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
+| Snake_Marsh | Snake_Marsh | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
+| Snake_Rattle | Snake_Rattle | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Snapdragon | Snapdragon | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Spider | Spider | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Spider_Cave | Spider_Cave | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
@@ -241,7 +241,7 @@ Certification describes a role's native binding. At each natural birth, the exis
 | Spirit_Frost | Spirit_Frost | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Spirit_Root | Spirit_Root | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Spirit_Thunder | Spirit_Thunder | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Tiger_Sabertooth | Tiger_Sabertooth | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Tiger_Sabertooth | Tiger_Sabertooth | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Toad_Rhino | Toad_Rhino | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Toad_Rhino_Magma | Toad_Rhino_Magma | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Trork_Brawler | Trork_Brawler | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
@@ -265,12 +265,12 @@ Certification describes a role's native binding. At each natural birth, the exis
 | Voidtaken_Goblin_Surge | Voidtaken_Goblin_Surge | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Warthog | Warthog | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Werewolf | Werewolf | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Wolf_Black | Wolf_Black | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Wolf_Black | Wolf_Black | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Wolf_Outlander_Priest | Wolf_Outlander_Priest | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Wolf_Outlander_Sorcerer | Wolf_Outlander_Sorcerer | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Wolf_Trork_Hunter | Wolf_Trork_Hunter | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Wolf_Trork_Shaman | Wolf_Trork_Shaman | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Wolf_White | Wolf_White | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Wolf_White | Wolf_White | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Wraith | Wraith | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Wraith_Lantern | Wraith_Lantern | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Yeti | Yeti | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
@@ -285,6 +285,166 @@ Certification describes a role's native binding. At each natural birth, the exis
 ## Affix decisions for certified roles
 
 The entries below use the real Unique/Hell selector with the authored minimum minion roster. `LEGAL` means that individual card passes admission, not that every combination is legal; the birth planner still enforces group and count constraints. For denied roles, every ME-001..ME-027 card is blocked by the role denial above.
+
+### Cow_Undead
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Crocodile
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Emberwulf
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Fen_Stalker
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Fox
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Golem_Firesteel
 
@@ -318,6 +478,70 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | LEGAL |
 
+### Hound_Bleached
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Hyena
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
 ### Larva_Void
 
 | Affix | Decision |
@@ -349,6 +573,166 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-025 Armor Breaker | LEGAL |
 | ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | LEGAL |
+
+### Leopard_Snow
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Pig_Undead
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Raptor_Cave
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Rat
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Rex_Cave
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Scout
 
@@ -382,6 +766,198 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
+### Skeleton_Scout_Patrol
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-006 Cold Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-007 Lightning Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-008 Poison Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-009 Wind Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-010 Earth Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-011 Void Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-012 Spectral Hit | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-013 Mana Burn | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-014 Cursed | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-015 Knockback | NATIVE_KNOCKBACK_NOT_CERTIFIED |
+| ME-016 Vampiric | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-021 Empowered Minions | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-022 Horde | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Skeleton_Scout_Wander
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-006 Cold Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-007 Lightning Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-008 Poison Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-009 Wind Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-010 Earth Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-011 Void Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-012 Spectral Hit | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-013 Mana Burn | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-014 Cursed | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-015 Knockback | NATIVE_KNOCKBACK_NOT_CERTIFIED |
+| ME-016 Vampiric | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-021 Empowered Minions | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-022 Horde | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Snake_Cobra
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Snake_Marsh
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Snake_Rattle
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Tiger_Sabertooth
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
 ### Trork_Warrior
 
 | Affix | Decision |
@@ -413,3 +989,67 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-025 Armor Breaker | LEGAL |
 | ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | MISSING_SHIELD_OWNER |
+
+### Wolf_Black
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Wolf_White
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | LEGAL |
+| ME-006 Cold Enchanted | LEGAL |
+| ME-007 Lightning Enchanted | LEGAL |
+| ME-008 Poison Enchanted | LEGAL |
+| ME-009 Wind Enchanted | LEGAL |
+| ME-010 Earth Enchanted | LEGAL |
+| ME-011 Void Enchanted | LEGAL |
+| ME-012 Spectral Hit | LEGAL |
+| ME-013 Mana Burn | LEGAL |
+| ME-014 Cursed | LEGAL |
+| ME-015 Knockback | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-016 Vampiric | LEGAL |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | LEGAL |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | LEGAL |
+| ME-021 Empowered Minions | LEGAL |
+| ME-022 Horde | LEGAL |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | LEGAL |
+| ME-025 Armor Breaker | LEGAL |
+| ME-026 Reflective | LEGAL |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
