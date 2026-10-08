@@ -20,4 +20,4 @@
 
 ## Connected QA
 
-Restart the RPG world, then test `/rpg spawn Trork_Warrior unique hell` and `/rpg spawn Skeleton_Archer champion normal`. Check readable colored names at point blank and native tracking distance, upright 360° billboarding while camera pitch or monster facing changes, name → affix → Healthbar order, and cleanup after `/rpg spawn clear`. Native Healthbar still appears after actual HP loss; the affix row remains persistent.
+Restart the RPG world, then test `/rpg spawn Trork_Warrior unique hell` and `/rpg spawn Skeleton_Archer champion normal`. Check readable colored names at point blank and native tracking distance, upright 360° billboarding while camera pitch or monster facing changes, name → affix → Healthbar order, and cleanup after `/rpg spawn clear`. Native Healthbar behavior is unchanged from R222; the affix row remains persistent.
