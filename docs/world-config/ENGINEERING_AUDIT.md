@@ -1,6 +1,6 @@
 # World configuration integration audit — R235
 
-Status: **audit only; no world-config implementation or deployment**. The owner requested a stop if the proposed wildlife/hostile balance requires substantial work. It does, for the reasons below. The active R235 JAR and save have not been changed by this audit.
+Status: **historical R235 audit**. The owner subsequently authorized the full configuration and native weighted-population implementation. See [OPERATOR.md](OPERATOR.md) for the current binding, supported controls, and limits. The earlier blocker assessment below predates the verified `WorldNPCSpawnStat.setExpected` per-role native selection seam.
 
 ## Input and current state
 

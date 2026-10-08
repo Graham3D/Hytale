@@ -1,0 +1,2966 @@
+{
+  "schemaVersion": 1,
+  "nativeWorldSpawnRoles": [
+    {
+      "id": "Antelope",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Antelope.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Savanna_Animal.json"
+      ]
+    },
+    {
+      "id": "Archaeopteryx",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Raptor/Archaeopteryx.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Jungles_Animal.json"
+      ]
+    },
+    {
+      "id": "Armadillo",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Armadillo.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Plateau_Critter.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Scrub_Critter.json"
+      ]
+    },
+    {
+      "id": "Bat",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Bat.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "StoneAndSoil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Caves.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Caves_Goblins.json"
+      ]
+    },
+    {
+      "id": "Bear_Grizzly",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Bear_Grizzly.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "Soil",
+        "Soil_NoSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 4,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Surface.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Predator.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Mountains_Predator.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Predator.json"
+      ]
+    },
+    {
+      "id": "Bear_Polar",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Bear_Polar.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Glacial_Predator.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Shore.json"
+      ]
+    },
+    {
+      "id": "Bison",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Bison.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Glacial_Animal.json"
+      ]
+    },
+    {
+      "id": "Bluebird",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Bluebird.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Critter.json"
+      ]
+    },
+    {
+      "id": "Bluegill",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Bluegill.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 4,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone0/Spawns_Zone0_Oceans_Temperate.json",
+        "Server/NPC/Spawn/World/Zone0/Spawns_Zone0_Oceans_Warm.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Tier1.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Fish_Tier1.json"
+      ]
+    },
+    {
+      "id": "Boar",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Boar.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil",
+        "Soil_NoSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Surface.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Animal.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Animal.json"
+      ]
+    },
+    {
+      "id": "Bunny",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Bunny.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Surface.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Animal.json"
+      ]
+    },
+    {
+      "id": "Cactee",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mythic/Cactee.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Cactee",
+      "spawnBlockSets": [
+        "Sand"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Desert_Predator.json"
+      ]
+    },
+    {
+      "id": "Camel",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Camel.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Sand"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Desert_Animal.json"
+      ]
+    },
+    {
+      "id": "Catfish",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Catfish.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Tier2.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Tier1.json"
+      ]
+    },
+    {
+      "id": "Chicken",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Chicken.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json"
+      ]
+    },
+    {
+      "id": "Chicken_Desert",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Chicken_Desert.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Plateau_Animal.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Scrub_Animal.json"
+      ]
+    },
+    {
+      "id": "Chicken_Undead",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Chicken_Undead.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Forests_Animal.json"
+      ]
+    },
+    {
+      "id": "Clownfish",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Clownfish.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Shores.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Cow",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Cow.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Tundra_Animal.json"
+      ]
+    },
+    {
+      "id": "Cow_Undead",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Cow_Undead.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Wastes_Animal.json"
+      ]
+    },
+    {
+      "id": "Crab",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Crab.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Sand"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Shore.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Shore.json"
+      ]
+    },
+    {
+      "id": "Crawler_Void",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Void/Crawler_Void.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Void",
+      "spawnBlockSets": [
+        "Soil",
+        "StoneAndSoil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 4,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Caves_Void.json",
+        "Server/NPC/Spawn/World/Void/Tier1_Night_NPC2.json",
+        "Server/NPC/Spawn/World/Void/Tier2_Night_NPC2.json",
+        "Server/NPC/Spawn/World/Void/Tier3_Night_NPC2.json"
+      ]
+    },
+    {
+      "id": "Crocodile",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Creature/Reptile/Crocodile.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "Portals_Oasis_Soil",
+        "Soil"
+      ],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Hedera.json",
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Oasis_Predator.json"
+      ]
+    },
+    {
+      "id": "Crow",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Crow.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 5,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Surface.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Tundra_Critter.json"
+      ]
+    },
+    {
+      "id": "Deer_Stag",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Deer_Stag.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json"
+      ]
+    },
+    {
+      "id": "Duck",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Fowl/Duck.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Critter.json"
+      ]
+    },
+    {
+      "id": "Eel_Moray",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Abyssal/Eel_Moray.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone0/Spawns_Zone0_Oceans_Warm.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Tier1.json"
+      ]
+    },
+    {
+      "id": "Emberwulf",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mythic/Emberwulf.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Volcanoes_Predator.json"
+      ]
+    },
+    {
+      "id": "Eye_Void",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Void/Eye_Void.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Void/Tier1_Night_NPC3.json",
+        "Server/NPC/Spawn/World/Void/Tier2_Night_NPC3.json",
+        "Server/NPC/Spawn/World/Void/Tier3_Night_NPC3.json"
+      ]
+    },
+    {
+      "id": "Fen_Stalker",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mythic/Fen_Stalker.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Mud"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Swamps_Predator.json"
+      ]
+    },
+    {
+      "id": "Finch_Green",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Finch_Green.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Critter.json"
+      ]
+    },
+    {
+      "id": "Flamingo",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Flamingo.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Grass",
+        "Portals_Oasis_Soil",
+        "Soil"
+      ],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Animal.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Oasis_Animal.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Plateau_Animal.json"
+      ]
+    },
+    {
+      "id": "Fox",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Fox.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil",
+        "Soil_NoSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Predator.json"
+      ]
+    },
+    {
+      "id": "Frog_Blue",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Critter/Frog_Blue.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Critters",
+      "spawnBlockSets": [
+        "Mud",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Hedera.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Critter.json"
+      ]
+    },
+    {
+      "id": "Frog_Green",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Critter/Frog_Green.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Critters",
+      "spawnBlockSets": [
+        "Mud",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Critter.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Swamps_Critter.json"
+      ]
+    },
+    {
+      "id": "Frog_Orange",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Critter/Frog_Orange.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Critters",
+      "spawnBlockSets": [
+        "Portals_Oasis_Soil",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Critter.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Oasis_Critter.json"
+      ]
+    },
+    {
+      "id": "Frostgill",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Frostgill.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Rock"
+      ],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 4,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone0/Spawns_Zone0_Oceans_Cold.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Caves.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Fish_Shores.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Fish_Tier3.json"
+      ]
+    },
+    {
+      "id": "Gecko",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Critter/Gecko.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Critters",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Savanna_Critter.json"
+      ]
+    },
+    {
+      "id": "Goat",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Goat.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "StoneAndSoil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Mountains_Animal.json"
+      ]
+    },
+    {
+      "id": "Goblin_Scrapper",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Scrapper.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": "Goblin",
+      "spawnBlockSets": [
+        "StoneAndSoil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Caves.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Caves_Goblins.json"
+      ]
+    },
+    {
+      "id": "Goblin_Thief",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Thief.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": "Goblin",
+      "spawnBlockSets": [
+        "Trash"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Caves_Goblins.json"
+      ]
+    },
+    {
+      "id": "Goblin_Turret",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Turret.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": "Goblin",
+      "spawnBlockSets": [
+        "Trash"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Caves.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Caves_Goblins.json"
+      ]
+    },
+    {
+      "id": "Hawk",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Raptor/Hawk.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Rock",
+        "StoneAndSoil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Mountains_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Critter.json"
+      ]
+    },
+    {
+      "id": "Horse",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Horse.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json"
+      ]
+    },
+    {
+      "id": "Horse_Skeleton",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Undead/Horse_Skeleton.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Wastes_Animal.json"
+      ]
+    },
+    {
+      "id": "Hound_Bleached",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Hound_Bleached.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Forests_Predator.json"
+      ]
+    },
+    {
+      "id": "Hyena",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Hyena.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Plateau_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Savanna_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Scrub_Predator.json"
+      ]
+    },
+    {
+      "id": "Jellyfish_Blue",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Jellyfish_Blue.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Jellyfish_Cyan",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Jellyfish_Cyan.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Jellyfish_Green",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Jellyfish_Green.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Jellyfish_Man_Of_War",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Jellyfish_Man_Of_War.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Jellyfish_Red",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Jellyfish_Red.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Jellyfish_Yellow",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Jellyfish_Yellow.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Larva_Void",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Void/Larva_Void.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Vermin",
+      "spawnBlockSets": [
+        "Soil",
+        "StoneAndSoil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 4,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Caves_Void.json",
+        "Server/NPC/Spawn/World/Void/Tier1_Night_NPC1.json",
+        "Server/NPC/Spawn/World/Void/Tier2_Night_NPC1.json",
+        "Server/NPC/Spawn/World/Void/Tier3_Night_NPC1.json"
+      ]
+    },
+    {
+      "id": "Leopard_Snow",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Leopard_Snow.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Glacial_Predator.json"
+      ]
+    },
+    {
+      "id": "Lizard_Sand",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Reptile/Lizard_Sand.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Portals_Oasis_Soil",
+        "Sand",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Critter.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Desert_Critter.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Oasis_Critter.json"
+      ]
+    },
+    {
+      "id": "Lobster",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Lobster.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Meerkat",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Critter/Meerkat.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Critters",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Savanna_Critter.json"
+      ]
+    },
+    {
+      "id": "Minnow",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Minnow.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone0/Spawns_Zone0_Oceans_Temperate.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Tier1.json"
+      ]
+    },
+    {
+      "id": "Moose_Bull",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Moose_Bull.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil",
+        "Soil_NoSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Animal.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Tundra_Animal.json"
+      ]
+    },
+    {
+      "id": "Mosshorn",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Mosshorn.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Swamps_Animal.json"
+      ]
+    },
+    {
+      "id": "Mosshorn_Plain",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Mosshorn_Plain.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json"
+      ]
+    },
+    {
+      "id": "Mouflon",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Mouflon.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "IceAndSnow",
+        "Rock",
+        "Stone"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Animal.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Glacial_Animal.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Mountains_Animal.json"
+      ]
+    },
+    {
+      "id": "Mouse",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Critter/Mouse.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Critters",
+      "spawnBlockSets": [
+        "Soil",
+        "Soil_NoSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Critter.json"
+      ]
+    },
+    {
+      "id": "Outlander_Berserker",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Berserker.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Outlander",
+      "spawnBlockSets": [
+        "Outlander"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Outlander.json"
+      ]
+    },
+    {
+      "id": "Outlander_Hunter",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Hunter.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Outlander_Ranged",
+      "spawnBlockSets": [
+        "Outlander"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Outlander.json"
+      ]
+    },
+    {
+      "id": "Owl_Brown",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Owl_Brown.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 5,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Surface.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Mountains_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Tundra_Critter.json"
+      ]
+    },
+    {
+      "id": "Owl_Snow",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Owl_Snow.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Glacial_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Mountains_Critter.json"
+      ]
+    },
+    {
+      "id": "Parrot",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Parrot.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Critter.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Savanna_Critter.json"
+      ]
+    },
+    {
+      "id": "Penguin",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Penguin.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Glacial_Animal.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Shore.json"
+      ]
+    },
+    {
+      "id": "Pig",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Pig.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json"
+      ]
+    },
+    {
+      "id": "Pig_Undead",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Pig_Undead.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Forests_Animal.json"
+      ]
+    },
+    {
+      "id": "Pig_Wild",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Pig_Wild.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Swamps_Animal.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Tundra_Animal.json"
+      ]
+    },
+    {
+      "id": "Pigeon",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Fowl/Pigeon.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Critter.json"
+      ]
+    },
+    {
+      "id": "Pike",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Pike.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Tier3.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Fish_Tier1.json"
+      ]
+    },
+    {
+      "id": "Piranha",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Piranha.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Tier3.json"
+      ]
+    },
+    {
+      "id": "Piranha_Black",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Piranha_Black.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Critter.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Tier3.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Tier3.json"
+      ]
+    },
+    {
+      "id": "Pterodactyl",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Raptor/Pterodactyl.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Jungles_Predator.json"
+      ]
+    },
+    {
+      "id": "Pufferfish",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Pufferfish.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Shores.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Rabbit",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Rabbit.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil",
+        "Soil_NoSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Animal.json"
+      ]
+    },
+    {
+      "id": "Ram",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Ram.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Plateau_Animal.json"
+      ]
+    },
+    {
+      "id": "Raptor_Cave",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Reptile/Raptor_Cave.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Jungles_Predator.json"
+      ]
+    },
+    {
+      "id": "Rat",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Vermin/Rat.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Vermin",
+      "spawnBlockSets": [
+        "StoneAndSoil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Caves.json",
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Caves_Deep.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Caves_Goblins.json"
+      ]
+    },
+    {
+      "id": "Raven",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Raven.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Hedera.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Swamps_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Hedera.json"
+      ]
+    },
+    {
+      "id": "Rex_Cave",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Reptile/Rex_Cave.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Jungles_Predator.json"
+      ]
+    },
+    {
+      "id": "Salmon",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Salmon.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone0/Spawns_Zone0_Oceans_Cold.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Fish_Tier2.json"
+      ]
+    },
+    {
+      "id": "Scarak_Fighter",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Fighter.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Scarak",
+      "spawnBlockSets": [
+        "StoneAndSoil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Dungeon_Scarak.json"
+      ]
+    },
+    {
+      "id": "Scarak_Seeker",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Seeker.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Rock",
+        "Sand",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Desert_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Plateau_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Scrub_Predator.json"
+      ]
+    },
+    {
+      "id": "Scorpion",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Vermin/Scorpion.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Vermin",
+      "spawnBlockSets": [
+        "Rock",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Plateau_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Scrub_Predator.json"
+      ]
+    },
+    {
+      "id": "Shark_Hammerhead",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Abyssal/Shark_Hammerhead.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone0/Spawns_Zone0_Oceans_Warm.json"
+      ]
+    },
+    {
+      "id": "Sheep",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Sheep.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Burnt_Gunner",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Gunner.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Volcanoes_Predator.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Burnt_Lancer",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Lancer.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Wastes_Predator.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Burnt_Lancer_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Lancer_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Wander_Zone4_Tier2.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Burnt_Praetorian",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Praetorian.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Burnt_Praetorian_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Praetorian_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier2.json",
+        "Server/NPC/Spawn/World/Zone4/Wander_Zone4_Tier1.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Burnt_Soldier_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Soldier_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Wander_Zone4_Tier1.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Fighter",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Fighter.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 4,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier1.json",
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier2.json",
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier3.json",
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier2.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Fighter_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Fighter_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 4,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier1.json",
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier2.json",
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier3.json",
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier2.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Frost_Fighter",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Fighter.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier2.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Frost_Fighter_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Fighter_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier2.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Frost_Knight",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Knight.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Frost_Knight_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Knight_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Frost_Mage",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Mage.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Frost_Mage_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Mage_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Frost_Soldier",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Soldier.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Frost_Soldier_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Soldier_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Incandescent_Footman_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Footman_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Wander_Zone4_Tier2.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Incandescent_Head",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Head.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Forests_Predator.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Incandescent_Mage_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Mage_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Wander_Zone4_Tier2.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Mage",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Mage.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Mage_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Mage_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Wander_Zone1_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Sand_Assassin",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Assassin.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier1.json",
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier2.json",
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Sand_Assassin_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Assassin_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier1.json",
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier2.json",
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Sand_Guard",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Guard.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier1.json",
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Sand_Guard_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Guard_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier1.json",
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier2.json",
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Sand_Mage",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Mage.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Sand_Mage_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Mage_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Wander_Zone2_Tier3.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Scout",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier1.json"
+      ]
+    },
+    {
+      "id": "Skeleton_Scout_Wander",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout_Wander.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Wander_Zone3_Tier1.json"
+      ]
+    },
+    {
+      "id": "Skrill",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Skrill.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Scrub_Critter.json"
+      ]
+    },
+    {
+      "id": "Slug_Magma",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Vermin/Slug_Magma.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Vermin",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Volcanoes_Critter.json"
+      ]
+    },
+    {
+      "id": "Snail_Frost",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Vermin/Snail_Frost.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Critters",
+      "spawnBlockSets": [
+        "IceAndSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Glacial_Critter.json"
+      ]
+    },
+    {
+      "id": "Snail_Magma",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Vermin/Snail_Magma.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Critters",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Volcanoes_Critter.json"
+      ]
+    },
+    {
+      "id": "Snake_Cobra",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Vermin/Snake_Cobra.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil",
+        "Soil_NoSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Predator.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Tundra_Predator.json"
+      ]
+    },
+    {
+      "id": "Snake_Marsh",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Vermin/Snake_Marsh.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Hedera.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Swamps_Predator.json"
+      ]
+    },
+    {
+      "id": "Snake_Rattle",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Vermin/Snake_Rattle.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Scrub_Predator.json"
+      ]
+    },
+    {
+      "id": "Snapdragon",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mythic/Snapdragon.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Jungles_Predator.json"
+      ]
+    },
+    {
+      "id": "Snapjaw",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Snapjaw.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Rock"
+      ],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Caves.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Spark_Living",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mythic/Spark_Living.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Forests_Predator.json",
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Volcanoes_Predator.json"
+      ]
+    },
+    {
+      "id": "Sparrow",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Sparrow.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Surface.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Critter.json"
+      ]
+    },
+    {
+      "id": "Spider",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Vermin/Spider.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Spider",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Predator.json"
+      ]
+    },
+    {
+      "id": "Squirrel",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Critter/Squirrel.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Critters",
+      "spawnBlockSets": [
+        "Soil",
+        "Soil_NoSnow"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Surface.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Critter.json"
+      ]
+    },
+    {
+      "id": "Tang_Blue",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Tang_Blue.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Shores.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Tang_Chevron",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Tang_Chevron.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Tang_Lemon_Peel",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Tang_Lemon_Peel.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Tang_Sailfin",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Marine/Tang_Sailfin.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Shores.json"
+      ]
+    },
+    {
+      "id": "Tetrabird",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Avian/Raptor/Tetrabird.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Animal.json"
+      ]
+    },
+    {
+      "id": "Tiger_Sabertooth",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Tiger_Sabertooth.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "Portals_Oasis_Orange",
+        "Sand",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 4,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Desert_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Oasis_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Savanna_Predator.json"
+      ]
+    },
+    {
+      "id": "Toad_Rhino",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Reptile/Toad_Rhino.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Wastes_Predator.json"
+      ]
+    },
+    {
+      "id": "Toad_Rhino_Magma",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Reptile/Toad_Rhino_Magma.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Volcanoes_Predator.json"
+      ]
+    },
+    {
+      "id": "Tortoise",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Reptile/Tortoise.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Portals_Oasis_Soil",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 4,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Animal.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Shores.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Oasis_Animal.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Plateau_Animal.json"
+      ]
+    },
+    {
+      "id": "Trillodon",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mythic/Trillodon.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Jungles_Animal.json"
+      ]
+    },
+    {
+      "id": "Trilobite",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Abyssal/Trilobite.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Rock"
+      ],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Caves.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Fish_Shores.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Fish_Tier3.json"
+      ]
+    },
+    {
+      "id": "Trilobite_Black",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Abyssal/Trilobite_Black.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Critter.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Fish_Tier3.json"
+      ]
+    },
+    {
+      "id": "Trout_Rainbow",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Freshwater/Trout_Rainbow.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Fish_Tier2.json"
+      ]
+    },
+    {
+      "id": "Turkey",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Turkey.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "Prey",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Swamps_Animal.json"
+      ]
+    },
+    {
+      "id": "Void_Spectre",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Void/Void_Spectre.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Void/Tier3_Night_NPC4.json"
+      ]
+    },
+    {
+      "id": "Vulture",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Raptor/Vulture.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Rock",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Oasis_Critter.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Plateau_Predator.json",
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Scrub_Predator.json"
+      ]
+    },
+    {
+      "id": "Warthog",
+      "category": "WILDLIFE",
+      "roleAsset": "Server/NPC/Roles/Creature/Livestock/Warthog.json",
+      "nativePlayerAttitude": "Neutral",
+      "nativeAttitudeGroup": "PreyBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone2/Spawns_Zone2_Savanna_Animal.json"
+      ]
+    },
+    {
+      "id": "Whale_Humpback",
+      "category": "OTHER",
+      "roleAsset": "Server/NPC/Roles/Aquatic/Abyssal/Whale_Humpback.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [],
+      "spawnFluidTags": [
+        "Water"
+      ],
+      "spawnMovementModes": [
+        "Dive"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone0/Spawns_Zone0_Oceans_Temperate.json"
+      ]
+    },
+    {
+      "id": "Wolf_Black",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Wolf_Black.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Plains_Predator.json"
+      ]
+    },
+    {
+      "id": "Wolf_White",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Creature/Mammal/Wolf_White.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "PredatorsBig",
+      "spawnBlockSets": [
+        "IceAndSnow",
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 2,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Glacial_Predator.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Mountains_Predator.json"
+      ]
+    },
+    {
+      "id": "Woodpecker",
+      "category": "AMBIENT_AVIAN",
+      "roleAsset": "Server/NPC/Roles/Avian/Aerial/Woodpecker.json",
+      "nativePlayerAttitude": null,
+      "nativeAttitudeGroup": null,
+      "spawnBlockSets": [
+        "Birds"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Fly"
+      ],
+      "spawnDefinitions": 3,
+      "sources": [
+        "Server/NPC/Spawn/World/Unique/Spawns_Portals_Goblin_Surface.json",
+        "Server/NPC/Spawn/World/Zone1/Spawns_Zone1_Forests_Critter.json",
+        "Server/NPC/Spawn/World/Zone3/Spawns_Zone3_Forests_Critter.json"
+      ]
+    },
+    {
+      "id": "Wraith",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Wraith.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Empty",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Wastes_Predator.json"
+      ]
+    },
+    {
+      "id": "Zombie_Burnt",
+      "category": "HOSTILE",
+      "roleAsset": "Server/NPC/Roles/Undead/Zombie/Zombie_Burnt.json",
+      "nativePlayerAttitude": "Hostile",
+      "nativeAttitudeGroup": "Predators",
+      "spawnBlockSets": [
+        "Soil"
+      ],
+      "spawnFluidTags": [],
+      "spawnMovementModes": [
+        "Walk"
+      ],
+      "spawnDefinitions": 1,
+      "sources": [
+        "Server/NPC/Spawn/World/Zone4/Spawns_Zone4_Volcanoes_Predator.json"
+      ]
+    }
+  ]
+}
