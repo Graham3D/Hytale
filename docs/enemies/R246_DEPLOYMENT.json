@@ -1,0 +1,22 @@
+{
+  "revision": "R246-U7P5",
+  "deployedAtUtc": "2026-10-09T23:17:35Z",
+  "runtimeSourceCommit": "4ca50b1eb23756cb7b7acbb9f845a45627a3e09c",
+  "branch": "codex/checkpoint-c-optional-bridge",
+  "deployedJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\Hywind.jar",
+  "jarSha256": "9c362dc723d1ef1ba98e09ec4d762304c40a4d12de54fbd068008341afda9ab0",
+  "jarBytes": 19359091,
+  "backupDirectory": "C:\\Users\\Zemio\\.codex\\deploy-backups\\R246-20261009T231724Z",
+  "previousJarSha256": "3847f349d2b93f42374ee0fc253259cf9d80ce11141a465ebf2bcac153a22bce",
+  "worldConfigSha256": "3d7e86ab1b97f36e41f124fd3e03c682923f77f59b898fce8ca0221542df7986",
+  "worldConfigurationUnchanged": true,
+  "automatedTests": {
+    "test": {"tests": 3456, "failures": 0, "errors": 0, "skipped": 0},
+    "nativeControlTest": {"tests": 451, "failures": 0, "errors": 0, "skipped": 0}
+  },
+  "packageValidation": "PASS",
+  "nativePatchSha256": "a032a64e03390ca0aeb6c03c3b1600eaa892c8bc833d1bf3ac39307ccdf3cb20",
+  "umbrellaCheck": "BLOCKED_BY_STALE_R228_ASSET_SET_BASELINE",
+  "connectedAcceptance": "PENDING_OWNER_QA",
+  "serversLaunched": false
+}
