@@ -1,0 +1,42 @@
+{
+  "revision": "R245-U7P5",
+  "deployedAtUtc": "2026-10-09T22:29:10.957586+00:00",
+  "runtimeSourceCommit": "0fe92301efe85c7f04b2ca2ad982780638a813e4",
+  "branch": "codex/checkpoint-c-optional-bridge",
+  "artifact": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\libs\\HyARPG.jar",
+  "deployedJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\Hywind.jar",
+  "jarSha256": "3847f349d2b93f42374ee0fc253259cf9d80ce11141a465ebf2bcac153a22bce",
+  "jarBytes": 19358943,
+  "nativeServer": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\pre-release\\package\\game\\latest\\Server\\HytaleServer.jar",
+  "nativeServerSha256": "a032a64e03390ca0aeb6c03c3b1600eaa892c8bc833d1bf3ac39307ccdf3cb20",
+  "nativeServerChanged": false,
+  "backupDirectory": "C:\\Users\\Zemio\\.codex\\deploy-backups\\R245-20261009T222243Z",
+  "worldConfig": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\world-config.json",
+  "worldConfigSha256": "3d7e86ab1b97f36e41f124fd3e03c682923f77f59b898fce8ca0221542df7986",
+  "worldConfigurationUnchanged": true,
+  "inventoriedEncounterFilesUnchanged": 11,
+  "automatedTests": {
+    "test": {
+      "tests": 3454,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "nativeControlTest": {
+      "tests": 451,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "packageValidation": "PASS",
+  "nativePatchVerifier": "PASS",
+  "resourceParity": "All R244 non-class entries unchanged except manifest.json, rpg-build.properties and canvasui-build.properties revision metadata",
+  "connectedAcceptance": "PENDING_OWNER_QA",
+  "serversLaunched": false,
+  "savedDisposition": {
+    "dba6b29e-b35e-3971-a820-bb78f4d5c47f": "ABORTED/BIRTH_COMPENSATED; unchanged",
+    "2891aefc-43e2-390a-b683-ab5b91f544fb": "ABORTED/BIRTH_COMPENSATED; unchanged",
+    "b418a61e-1dfd-325e-8b93-91c40de004e6": "RESERVED; unchanged; frozen LOAD recovery awaits connected session"
+  }
+}
