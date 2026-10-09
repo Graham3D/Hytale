@@ -944,8 +944,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEntityStoreRegistry().registerSystem(enemyWholeBirthRecovery);
         var enemyWorldRebind=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyWorldRebind(
                 enemyWorldAdmission,enemyBirthOwner,packboundNativeHook!=null,enemyDamageReceiptHook!=null);
-        enemyStagingRecovery.onReconciled(enemyWorldRebind::begin);
-        enemyWholeBirthRecovery.onPublished(enemyWorldRebind::begin);
+        enemyStagingRecovery.onReconciled(enemyWorldRebind::retryInitial);
+        enemyWholeBirthRecovery.onPublished(enemyWorldRebind::retryInitial);
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.AddWorldEvent.class,
                 event->enemyWorldRebind.begin(event.getWorld()));
         for(var existingWorld:com.hypixel.hytale.server.core.universe.Universe.get().getWorlds().values())

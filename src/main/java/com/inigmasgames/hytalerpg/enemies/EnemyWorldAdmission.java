@@ -75,6 +75,11 @@ public final class EnemyWorldAdmission {
     }
 
     public synchronized boolean admits(UUID world){return !failed.contains(world)&&rebound.contains(world)&&recovered.containsKey(world);}
+    /** Recovery callbacks may retry only the initial native audit for this exact world lifetime. */
+    public synchronized boolean initialRebindPending(UUID world,Object lifetime){
+        return lifetime!=null&&loading.get(world)==lifetime&&recovered.containsKey(world)
+                &&!rebound.contains(world)&&!failed.contains(world);
+    }
     /** Read-only diagnostics: only loaded production packs and pending natural births. */
     public synchronized int activePackReservations(UUID world){return capacity.count(world);}
     private record Pending(EnemyBirthPlan birth,long job,int environment,String role,long started,String phase,long sequence){}

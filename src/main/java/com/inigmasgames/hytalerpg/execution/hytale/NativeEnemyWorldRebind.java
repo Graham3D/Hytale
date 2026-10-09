@@ -33,7 +33,10 @@ public final class NativeEnemyWorldRebind {
 
     public void begin(World world){
         UUID worldId=world.getWorldConfig().getUuid();
-        admission.begin(worldId).whenComplete((inventory,error)->{
+        var startup=admission.begin(worldId);
+        Object lifetime=admission.lifetime(worldId);
+        startup.whenComplete((inventory,error)->{
+            if(!admission.current(worldId,lifetime))return;
             if(error!=null){owner.fail(worldId,"WORLD_INVENTORY",error);return;}
             if(!nativePackboundHookReady&&inventory.packs().stream().anyMatch(pack->
                     pack.state()!=EnemyPackRecord.State.ABORTED&&pack.state()!=EnemyPackRecord.State.DEFEATED
@@ -44,6 +47,7 @@ public final class NativeEnemyWorldRebind {
                         new IllegalStateException("ENEMY_PACKBOUND_NATIVE_PATCH_REQUIRED"));return;
             }
             try{world.execute(()->{
+                if(!admission.initialRebindPending(worldId,lifetime))return;
                 try{
                     var reconciled=inspect(world.getEntityStore().getStore(),inventory,owner);
                     admission.rebindComplete(worldId,reconciled);
@@ -56,6 +60,15 @@ public final class NativeEnemyWorldRebind {
             });}
             catch(RuntimeException failure){owner.fail(worldId,"WORLD_INVENTORY_QUEUE",failure);}
         });
+    }
+
+    /** LOAD owners validate each actor; only an unfinished startup audit needs a retry. */
+    public void retryInitial(World world){
+        UUID worldId=world.getWorldConfig().getUuid();
+        Object lifetime=admission.lifetime(worldId);
+        if(admission.initialRebindPending(worldId,lifetime)
+                &&com.hypixel.hytale.server.core.universe.Universe.get().getWorld(worldId)==world)
+            begin(world);
     }
 
     /** Unloaded members retain durable identity and must pass the saved-identity LOAD owner. */
