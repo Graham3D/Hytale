@@ -1,0 +1,45 @@
+{
+  "revision": "R244-U7P5",
+  "deployedAtUtc": "20261009T140311Z",
+  "runtimeSourceCommit": "d6ae5862f9d9bd7a6cb8209de8327c77bc397033",
+  "branch": "codex/checkpoint-c-optional-bridge",
+  "artifact": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\libs\\HyARPG.jar",
+  "deployedJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\Hywind.jar",
+  "jarSha256": "bfda86e29dcf5dab969b9046df64308ae9a2ee759381b64f1d4c00c3fef8e11a",
+  "jarBytes": 19341022,
+  "nativeServer": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\pre-release\\package\\game\\latest\\Server\\HytaleServer.jar",
+  "nativeServerSha256": "a032a64e03390ca0aeb6c03c3b1600eaa892c8bc833d1bf3ac39307ccdf3cb20",
+  "originalServerSha256": "35a34a32175cd92ce5e2a51310953db3a4a64cac89d995cbd4830c52a9b1b904",
+  "backupDirectory": "C:\\Users\\Zemio\\.codex\\deploy-backups\\R244-20261009T140311Z",
+  "worldConfig": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\world-config.json",
+  "configurationChange": {
+    "world.nativeEnvironmentSpawnMultiplier": {
+      "before": 8.0,
+      "after": 4.0
+    }
+  },
+  "allOtherConfigurationValuesPreserved": true,
+  "configBytesPreservedExceptDensity": true,
+  "configSha256Before": "54d09f9d0fcbb5f2a1fe5efde9fb8ab017f9c1ba1f08d6181d68706d7ef120e4",
+  "configSha256After": "3d7e86ab1b97f36e41f124fd3e03c682923f77f59b898fce8ca0221542df7986",
+  "automatedTests": {
+    "test": {
+      "tests": 3445,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "nativeControlTest": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "packageValidation": "PASS",
+  "nativePatchVerifier": "PASS",
+  "resourceParity": "All prior gameplay/role/UI assets unchanged; build metadata and new biome manifest only",
+  "productionProfileContexts": 191970,
+  "connectedAcceptance": "PENDING_OWNER_QA",
+  "serversLaunched": false
+}
