@@ -390,6 +390,20 @@ public final class HytaleDifficultyCombat {
         else if(!shown.equals(plate.getText()))plate.setText(shown);
         plates.put(key,new OwnedPlate(previous==null?prior:previous.previous(),shown));
     }
+    /** Presentation only for a known native hostile without an accepted encounter projection. */
+    public void presentNativeHostileName(Store<EntityStore> store,Ref<EntityStore> ref){
+        if(!store.isInThread()||ref==null||!ref.isValid()||ref.getStore()!=store)
+            throw new IllegalStateException("ENEMY_NATIVE_NAME_WORLD_THREAD");
+        var npc=store.getComponent(ref,NPCEntity.getComponentType());
+        var allegiance=store.getComponent(ref,WorldSupport.getComponentType());
+        if(npc==null||allegiance==null||allegiance.getDefaultPlayerAttitude()!=Attitude.HOSTILE)return;
+        var plate=store.getComponent(ref,Nameplate.getComponentType());
+        if(plate!=null&&plate.getText()!=null&&!plate.getText().isBlank())return;
+        var name=nativeDisplayName(store,ref,npc);
+        if(name==null||name.isBlank())return;
+        if(plate==null)store.addComponent(ref,Nameplate.getComponentType(),new Nameplate(name));
+        else plate.setText(name);
+    }
     /** One native display-name resolution path for ordinary plates and frozen ME birth names. */
     public static String nativeDisplayName(Store<EntityStore> store,Ref<EntityStore> ref,NPCEntity npc){
         String display=null,keyName=npc.getRole()==null?null:npc.getRole().getNameTranslationKey();

@@ -701,7 +701,15 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         if(keys.stream().anyMatch(releasingPreRoot::contains))
             throw new IllegalStateException("ENEMY_PRE_ROOT_RELEASE_REENTRY");
         releasingPreRoot.addAll(keys);
-        try{EnemyStaging.releaseGroup(store,members);}
+        try{
+            EnemyStaging.releaseGroup(store,members);
+            // A declined birth intentionally has no durable RPG encounter. It
+            // still needs the ordinary native hostile name visible to players.
+            for(var member:members){
+                var ref=store.getExternalData().getRefFromUUID(member.entity());
+                if(ref!=null&&ref.isValid())presentNativeHostileName(store,ref);
+            }
+        }
         finally{releasingPreRoot.removeAll(keys);}
     }
     /** After durable compensation, ordinary contexts have been restored by the writer. */
@@ -778,7 +786,6 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     }
     private void added(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store){
         if(qaActor(store,ref))return;
-        if(excluded(store,ref))return;
         if(releasingPreRoot.contains(new ExclusionKey(world(store),id(store,ref))))return;
         // The native flock capture marks members before they enter the entity store. Its birth
         // owner attaches and publishes the sealed group together; the ordinary per-NPC path
@@ -787,6 +794,10 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         if(staging!=null&&store.getComponent(ref,staging)!=null)return;
         var identity=com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity.getComponentType();
         if(identity!=null&&store.getComponent(ref,identity)!=null)return;
+        // Saved ordinary native actors can predate the fallback too. Keep this
+        // presentation independent of encounter enrollment on both add routes.
+        presentNativeHostileName(store,ref);
+        if(excluded(store,ref))return;
         var npc=store.getComponent(ref,NPCEntity.getComponentType());var world=world(store);var enemy=id(store,ref);
         var roleId=npc.getRoleName();
         boolean golem=golemCatalog.role(roleId).isPresent();
@@ -819,6 +830,21 @@ public final class HytaleEncounterRewards implements AutoCloseable {
                 "world",world,"enemy",enemy,"runtimeRole",roleId,"canonicalRole",resolvedRole.get().canonical().roleId(),
                 "alias",resolvedRole.get().alias(),"rewardEligible",spawn.isPresent(),"source","NATIVE_SPAWN"));
         attachNativeCombat(store,world,enemy,roleId,spawn,reason,combatTicket);
+    }
+    private void presentNativeHostileName(Store<EntityStore> store,Ref<EntityStore> ref){
+        if(difficultyCombat==null)return;
+        if(store.getComponent(ref,PlayerRef.getComponentType())!=null
+                ||store.getComponent(ref,SummonProjection.getComponentType())!=null
+                ||store.getComponent(ref,ConversionProjection.getComponentType())!=null
+                ||EntityStore.REGISTRY.getNonSerializedComponentType()!=null
+                    &&store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())!=null)return;
+        var npc=store.getComponent(ref,NPCEntity.getComponentType());
+        if(npc==null||registry.resolveRole(npc.getRoleName()).isEmpty())return;
+        try{difficultyCombat.presentNativeHostileName(store,ref);}
+        catch(RuntimeException failure){
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                    "RPG_ENEMY_NATIVE_NAME_FALLBACK_FAILED role=%s error=%s",npc.getRoleName(),failure.toString());
+        }
     }
     private void attachNativeCombat(Store<EntityStore> store,UUID world,UUID enemy,String role,Optional<EnemyRewardRegistry.Spawn> spawn,AddReason reason,Object ticket){
         var nativeWorld=store.getExternalData().getWorld();
