@@ -74,6 +74,9 @@ class EnemyNativeStagingTest {
             };
             var capture=new NativeEnemySpawnGroups.Capture();var job=new NativeEnemySpawnGroups.Job(world,42,4,"Trork_Warrior",3,5,2);
             var first=member.apply(5);var second=member.apply(5);var unrelated=member.apply(Integer.MIN_VALUE);
+            // Native FlockSpawnTypes may select another concrete role while
+            // retaining the same world-job spawnRoleIndex and configuration.
+            second.getComponent(npcType).setRoleName("Trork_Fighter");
             var reloaded=member.apply(5);var reloadedId=reloaded.getComponent(uuid).getUuid();
             var savedIdentity=new EnemyActorIdentity.State(world,encounter,UUID.randomUUID(),reloadedId,reloadedId,7,"Trork_Warrior");
             reloaded.addComponent(identityType,new EnemyActorIdentity(savedIdentity));
@@ -87,6 +90,7 @@ class EnemyNativeStagingTest {
                 capture.onEntityAdd(first,AddReason.SPAWN,store);capture.onEntityAdd(second,AddReason.SPAWN,store);
             });
             assertEquals(1,reservations.get());assertEquals(2,groups.getFirst().members().size());assertFalse(groups.getFirst().nativeFailed());
+            assertEquals("Trork_Fighter",groups.getFirst().members().get(1).nativeRole());
             var additional=new ArrayList<NativeEnemySpawnGroups.Group>();
             var third=member.apply(5);var fourth=member.apply(5);
             var extensionJob=new NativeEnemySpawnGroups.Job(world,42,4,"Trork_Warrior",3,5,2);

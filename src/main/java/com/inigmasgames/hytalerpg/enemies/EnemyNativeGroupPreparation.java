@@ -26,7 +26,8 @@ public final class EnemyNativeGroupPreparation {
         Objects.requireNonNull(group);Objects.requireNonNull(sources);Objects.requireNonNull(roles);
         Objects.requireNonNull(anchor);Objects.requireNonNull(balance);Objects.requireNonNull(bindingRevision);
         var members=group.members();
-        if(group.nativeFailed()||members.isEmpty()||members.size()!=group.job().expectedMembers()
+        if(group.nativeFailed()||members.isEmpty()||!members.getFirst().nativeRole().equals(group.job().nativeRole())
+                ||members.size()!=group.job().expectedMembers()
                 ||members.size()!=sources.size()||members.size()>8)return Optional.empty();
         var reservation=group.reservation();
         if(!reservation.world().equals(group.job().world())||!Double.isFinite(anchor.x())
@@ -40,7 +41,7 @@ public final class EnemyNativeGroupPreparation {
                     ||!member.staging().encounter().equals(reservation.encounter())
                     ||member.staging().generation()!=reservation.generation()
                     ||!spawn.world().equals(reservation.world())||!spawn.enemy().equals(member.entity())
-                    ||!spawn.roleId().equals(member.nativeRole())||!member.nativeRole().equals(group.job().nativeRole()))return Optional.empty();
+                    ||!spawn.roleId().equals(member.nativeRole()))return Optional.empty();
             var role=roles.apply(member.nativeRole()).orElse(null);
             if(role==null||!role.productionPromotionEnabled())return Optional.empty();
             try{
@@ -85,7 +86,7 @@ public final class EnemyNativeGroupPreparation {
                     ||!member.staging().encounter().equals(originalGroup.reservation().encounter())
                     ||member.staging().generation()!=originalGroup.reservation().generation()
                     ||!spawn.world().equals(member.staging().world())||!spawn.enemy().equals(member.entity())
-                    ||!spawn.roleId().equals(member.nativeRole())||!member.nativeRole().equals(added.job().nativeRole()))
+                    ||!spawn.roleId().equals(member.nativeRole()))
                 return Optional.empty();
             var role=roles.apply(member.nativeRole()).orElse(null);
             if(role==null||!role.productionPromotionEnabled())return Optional.empty();

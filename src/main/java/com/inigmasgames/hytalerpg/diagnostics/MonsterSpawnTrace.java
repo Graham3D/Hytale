@@ -7,12 +7,14 @@ import java.nio.file.*;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Function;
 
 /** Bounded, read-only observation of native jobs and the existing Elite birth handoff. */
 public final class MonsterSpawnTrace implements AutoCloseable {
     public static final int DURATION_SECONDS=120, MAX_DETAILS=10_000, MAX_PRIORITY_DETAILS=2_000;
     private static volatile MonsterSpawnTrace installed;
     private final Path directory;
+    private final Function<UUID,Integer> activeLeases;
     private final ScheduledExecutorService expiry=Executors.newSingleThreadScheduledExecutor(
             task->Thread.ofPlatform().daemon().name("RPG-monster-spawn-trace").unstarted(task));
     private final Gson gson=new Gson();
@@ -30,11 +32,31 @@ public final class MonsterSpawnTrace implements AutoCloseable {
         final Map<String,Long> priorityCounts=new TreeMap<>();
         final Set<String> jobs=new HashSet<>();
         final Map<UUID,Long> lastPopulationAt=new HashMap<>();
+        final List<Bucket> buckets=new ArrayList<>();
+        final Map<UUID,Long> completedJobs=new HashMap<>();
+        final Map<UUID,Long> completedBudget=new HashMap<>();
         long total;
+        Session(){for(int i=0;i<DURATION_SECONDS/10;i++)buckets.add(new Bucket(i));}
+    }
+    private static final class Bucket {
+        final int index;
+        final Map<String,Long> counts=new TreeMap<>(), additions=new TreeMap<>(), removals=new TreeMap<>();
+        final Map<String,Object> population=new TreeMap<>();
+        Bucket(int index){this.index=index;}
+        Map<String,Object> output(){
+            var result=new LinkedHashMap<String,Object>();
+            result.put("type","bucket");result.put("fromSecond",index*10);result.put("toSecond",(index+1)*10);
+            result.put("counts",counts);result.put("additionsByCategory",additions);
+            result.put("removalsByReason",removals);result.put("populationByWorld",population);
+            return result;
+        }
     }
     public record Status(boolean active,long secondsRemaining,long events,long detailedEvents,
             String lastFile,String lastError,Map<String,Long> counts) {}
-    public MonsterSpawnTrace(Path directory){this.directory=Objects.requireNonNull(directory);}
+    public MonsterSpawnTrace(Path directory){this(directory,world->null);}
+    public MonsterSpawnTrace(Path directory,Function<UUID,Integer> activeLeases){
+        this.directory=Objects.requireNonNull(directory);this.activeLeases=Objects.requireNonNull(activeLeases);
+    }
     public synchronized Status start(){
         if(closed)throw new IllegalStateException("Monster spawn trace is stopped");
         if(session!=null)throw new IllegalStateException("Monster spawn trace is already running");
@@ -68,6 +90,23 @@ public final class MonsterSpawnTrace implements AutoCloseable {
         long now=System.currentTimeMillis();
         if(now-current.lastPopulationAt.getOrDefault(world,0L)<1000)return;
         current.lastPopulationAt.put(world,now);
+        try{
+            var bucket=bucket(current,now);
+            var sample=new LinkedHashMap<String,Object>();
+            for(var key:List.of("actual","expected","activeJobs","nativeCap")){
+                var value=field(detail,key+"=");if(value!=null)sample.put(key,value);
+            }
+            for(var key:List.of("completedJobs","completedJobBudget")){
+                var value=field(detail,key+"=");
+                if(value==null)continue;
+                long currentValue=Long.parseLong(value);
+                var previous=(key.equals("completedJobs")?current.completedJobs:current.completedBudget).put(world,currentValue);
+                if(previous!=null&&currentValue>=previous)bucket.counts.merge(key+"Delta",currentValue-previous,Long::sum);
+                sample.put(key,currentValue);
+            }
+            var leases=activeLeases.apply(world);if(leases!=null)sample.put("activePackLeases",leases);
+            bucket.population.put(world.toString(),sample);
+        }catch(RuntimeException ignored){/* A diagnostic sample cannot affect spawning. */}
         record("NATIVE_POPULATION_SAMPLE",world,-1,"all",1,detail);
     }
     private synchronized void recordJob(UUID world,int environment,String role,int nativeJob,String detail){
@@ -80,13 +119,21 @@ public final class MonsterSpawnTrace implements AutoCloseable {
         var current=session;if(current==null)return;
         // The scheduled diagnostic thread owns serialization. A native world tick must never
         // spend time writing the capped detail buffer when the window expires.
-        if(System.currentTimeMillis()>=current.deadline)return;
+        long now=System.currentTimeMillis();if(now>=current.deadline)return;
         // Diagnostics must never throw into Hytale's spawn or world thread.
         try{
             String category=clean(stage,64),nativeRole=clean(role,96),message=clean(detail,512);
             String key=category+"|"+world+"|"+environment+"|"+nativeRole;
             if(current.counts.size()>=50_000&&!current.counts.containsKey(key))key="OTHER|COUNTER_LIMIT";
             current.counts.merge(key,amount,Long::sum);current.total+=amount;
+            var bucket=bucket(current,now);
+            if(category.equals("NATIVE_JOB_CREATED")||category.startsWith("NATIVE_REJECTION_")
+                    ||category.equals("ELITE_PUBLISHED")||category.equals("ELITE_FALLBACK")
+                    ||category.startsWith("PACK_LEASE_"))bucket.counts.merge(category,amount,Long::sum);
+            if(category.equals("NPC_ADDED_NATIVE_JOB")||category.equals("NPC_ADDED_OTHER"))
+                bucket.additions.merge(populationCategory(nativeRole),amount,Long::sum);
+            if(category.equals("NPC_REMOVED"))
+                bucket.removals.merge(Objects.toString(field(message,"reason="),"unknown"),amount,Long::sum);
             var row=Map.<String,Object>of(
                     "time",Instant.now().toString(),"stage",category,"world",world==null?"unknown":world.toString(),
                     "environment",environment,"role",nativeRole,"count",amount,"detail",message);
@@ -100,6 +147,13 @@ public final class MonsterSpawnTrace implements AutoCloseable {
             }else if(current.details.size()<MAX_DETAILS)current.details.add(row);
         }catch(RuntimeException ignored){/* Trace cannot affect native admission. */}
     }
+    private static Bucket bucket(Session session,long now){
+        int index=(int)Math.min(session.buckets.size()-1,Math.max(0,(now-session.started)/10_000L));
+        return session.buckets.get(index);
+    }
+    private static final com.inigmasgames.hytalerpg.spawning.NativePopulationRoles POPULATION_ROLES=
+            com.inigmasgames.hytalerpg.spawning.NativePopulationRoles.load();
+    private static String populationCategory(String role){return POPULATION_ROLES.category(role).name();}
     private static boolean priority(String stage,String detail){
         return stage.equals("PACK_RESERVATION")||stage.startsWith("PACK_LEASE_")
                 ||stage.equals("PACK_REACTIVATED")||stage.equals("PACK_GRANDFATHERED_OVER_CAP")
@@ -132,6 +186,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
                         "ended",Instant.now().toString(),"events",current.total,"detailedEvents",lastDetails,
                         "detailLimit",MAX_DETAILS,"priorityDetailLimit",MAX_PRIORITY_DETAILS,
                         "priorityCounts",current.priorityCounts,"counts",current.counts)));writer.newLine();
+                for(var bucket:current.buckets){writer.write(gson.toJson(bucket.output()));writer.newLine();}
                 for(var event:current.details){writer.write(gson.toJson(event));writer.newLine();}
                 for(var event:current.priorityDetails){writer.write(gson.toJson(event));writer.newLine();}
             }

@@ -79,4 +79,27 @@ class EnemyNativeGroupPreparationTest {
         assertTrue(EnemyNativeGroupPreparation.completeAdditional(originalGroup,original,foreign,List.of(source(third),source(fourth)),
                 id->Optional.of(enabled),balance,manifest.revision()).isEmpty());
     }
+    @Test void certifiedMixedSkeletonFlockRetainsEachConcreteRoleAndOneJobIdentity(){
+        var leaderRole="Skeleton_Frost_Fighter";var memberRole="Skeleton_Frost_Soldier";
+        var nativeJob=new NativeEnemySpawnGroups.Job(world,47,8,leaderRole,3,5,2);
+        var group=new NativeEnemySpawnGroups.Group(nativeJob,new NativeEnemySpawnGroups.Reservation(world,encounter,1),
+                List.of(new NativeEnemySpawnGroups.Member(first,leaderRole,new EnemyStaging.State(world,encounter,first,1,7)),
+                        new NativeEnemySpawnGroups.Member(second,memberRole,new EnemyStaging.State(world,encounter,second,1,7))),false);
+        var request=EnemyNativeGroupPreparation.prepare(group,List.of(sourceRole(first,leaderRole),sourceRole(second,memberRole)),
+                manifest::role,Vec3.ZERO,balance,manifest.revision(),true).orElseThrow();
+        assertEquals(List.of(leaderRole,memberRole),request.originals().stream()
+                .map(candidate->candidate.nativeBaseline().nativeRoleId()).toList());
+        assertTrue(EnemyNativeGroupPreparation.prepare(group,List.of(sourceRole(first,leaderRole),sourceRole(second,leaderRole)),
+                manifest::role,Vec3.ZERO,balance,manifest.revision(),true).isEmpty());
+    }
+    private EnemyNativeGroupPreparation.MemberSource sourceRole(UUID id,String roleId){
+        var profile=AuthoredEncounterCatalog.load().profiles().stream().filter(p->p.roleId().equals(roleId)
+                &&p.difficulty()==DifficultyId.NORMAL).findFirst().orElseThrow();
+        var combat=new EncounterProfileResolver.Resolved(world,id,profile.difficulty(),profile.id(),profile.worldProfileId(),
+                profile.roleId(),profile.biomeKey(),profile.combatLevel(),profile.roleHealth(),profile.roleAttackBasis(),
+                1,1,profile.resistance(),profile.evidence());
+        var spawn=new EnemyRewardRegistry.Spawn(world,id,roleId,roleId.toLowerCase(Locale.ROOT),profile.biomeKey(),
+                profile.combatLevel(),ProgressionMath.Rank.COMMON,ProgressionMath.Rarity.ORDINARY,profile.id(),1000,null,combat);
+        return new EnemyNativeGroupPreparation.MemberSource(spawn,roleId.replace('_',' '));
+    }
 }

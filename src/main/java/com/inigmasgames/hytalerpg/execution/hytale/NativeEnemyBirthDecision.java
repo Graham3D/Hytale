@@ -281,7 +281,12 @@ public final class NativeEnemyBirthDecision {
         for(var member:group.members()){
             var ref=store.getExternalData().getRefFromUUID(member.entity());
             if(ref==null||!ref.isValid())return Optional.empty();
-            var source=rewards.classifyStagedNative(store,ref,role);
+            // Native FlockPlugin may choose a different authored FlockSpawnType for
+            // a member. The exact job provenance is captured by NativeEnemySpawnGroups;
+            // classify each concrete role through its own certified binding.
+            var memberRole=bindings.role(member.nativeRole()).orElse(null);
+            if(memberRole==null||!memberRole.productionPromotionEnabled())return Optional.empty();
+            var source=rewards.classifyStagedNative(store,ref,memberRole);
             if(source.isEmpty())return Optional.empty();
             result.add(source.get());
         }

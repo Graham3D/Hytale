@@ -27,8 +27,11 @@ public final class NativeEnemySpawnGroups extends WorldSpawnJobSystems.Ticking {
     public record Member(UUID entity,String nativeRole,EnemyStaging.State staging){
         public Member{Objects.requireNonNull(entity);Objects.requireNonNull(nativeRole);Objects.requireNonNull(staging);}
     }
-    public record Group(Job job,Reservation reservation,List<Member> members,boolean nativeFailed){
+    public record Group(Job job,Reservation reservation,List<Member> members,boolean nativeFailed,boolean extensionCreatedFlock){
         public Group{members=List.copyOf(members);}
+        public Group(Job job,Reservation reservation,List<Member> members,boolean nativeFailed){
+            this(job,reservation,members,nativeFailed,false);
+        }
     }
     public interface Owner {
         /** Cheap certified-role/world eligibility only. No IO, actor changes or random promotion here. */
@@ -57,7 +60,7 @@ public final class NativeEnemySpawnGroups extends WorldSpawnJobSystems.Ticking {
             var id=holder.getComponent(UUIDComponent.getComponentType());
             if(npc==null||id==null||npc.getEnvironment()!=job.environment()
                     ||npc.getSpawnConfiguration()!=job.spawnConfiguration()||npc.getSpawnRoleIndex()!=job.roleIndex()
-                    ||!npc.getRoleName().equals(job.nativeRole())||!observed.add(id.getUuid()))return;
+                    ||!observed.add(id.getUuid()))return;
             String category="UNKNOWN";
             var support=holder.getComponent(com.hypixel.hytale.server.npc.role.support.WorldSupport.getComponentType());
             if(support!=null)category=String.valueOf(support.getDefaultPlayerAttitude());
@@ -77,7 +80,7 @@ public final class NativeEnemySpawnGroups extends WorldSpawnJobSystems.Ticking {
             var npc=holder.getComponent(NPCEntity.getComponentType());
             // Nested/manual spawns with no world-job provenance never join the incoming group.
             if(npc==null||npc.getEnvironment()!=job.environment()||npc.getSpawnConfiguration()!=job.spawnConfiguration()
-                    ||npc.getSpawnRoleIndex()!=job.roleIndex()||!npc.getRoleName().equals(job.nativeRole()))return;
+                    ||npc.getSpawnRoleIndex()!=job.roleIndex())return;
             var id=holder.getComponent(UUIDComponent.getComponentType());if(id==null)throw new IllegalStateException("NATIVE_SPAWN_UUID_MISSING");
             if(!observed.add(id.getUuid()))return;
             if(MonsterSpawnTrace.enabled()){

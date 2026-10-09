@@ -28,12 +28,16 @@ class MonsterSpawnTraceTest {
             assertEquals(MonsterSpawnTrace.MAX_DETAILS,stopped.detailedEvents());
             assertFalse(MonsterSpawnTrace.enabled());
             var lines=Files.readAllLines(Path.of(stopped.lastFile()));
-            assertEquals(MonsterSpawnTrace.MAX_DETAILS+1,lines.size());
+            assertEquals(MonsterSpawnTrace.MAX_DETAILS+13,lines.size());
             var summary=JsonParser.parseString(lines.getFirst()).getAsJsonObject();
             assertEquals(MonsterSpawnTrace.MAX_DETAILS+11,summary.get("events").getAsLong());
             assertEquals(MonsterSpawnTrace.MAX_DETAILS,summary.get("detailedEvents").getAsInt());
+            var firstBucket=JsonParser.parseString(lines.get(1)).getAsJsonObject();
+            assertEquals("bucket",firstBucket.get("type").getAsString());
+            assertEquals(MonsterSpawnTrace.MAX_DETAILS+11,
+                    firstBucket.getAsJsonObject("counts").get("NATIVE_JOB_CREATED").getAsLong());
             MonsterSpawnTrace.event("AFTER_STOP",world,3,"Wolf_Black","ignored");
-            assertEquals(MonsterSpawnTrace.MAX_DETAILS+1,Files.readAllLines(Path.of(stopped.lastFile())).size());
+            assertEquals(MonsterSpawnTrace.MAX_DETAILS+13,Files.readAllLines(Path.of(stopped.lastFile())).size());
         }
     }
     @Test void rareExtensionAndReservationDecisionsSurviveTheOrdinaryDetailCap() throws Exception {
@@ -54,6 +58,7 @@ class MonsterSpawnTraceTest {
             assertEquals(2,summary.getAsJsonObject("priorityCounts").get("NATIVE_EXTENSION_REJECTED|CHUNK_HEADROOM").getAsLong()
                     +summary.getAsJsonObject("priorityCounts").get("PACK_RESERVATION|WORLD_LIMIT").getAsLong());
             assertEquals(MonsterSpawnTrace.MAX_DETAILS+3,summary.get("detailedEvents").getAsInt());
+            assertEquals(12,lines.stream().filter(line->line.contains("\"type\":\"bucket\"")).count());
             assertTrue(lines.get(lines.size()-3).contains("CHUNK_HEADROOM"));
             assertTrue(lines.get(lines.size()-2).contains("WORLD_LIMIT"));
             assertTrue(lines.getLast().contains("LAST_MEMBER_UNLOADED"));

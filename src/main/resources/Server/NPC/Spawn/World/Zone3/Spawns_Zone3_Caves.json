@@ -1,0 +1,14 @@
+{
+  "Environments": [
+    "Env_Zone3_Caves_Tundra",
+    "Env_Zone3_Caves_Forests",
+    "Env_Zone3_Caves_Glacial",
+    "Env_Zone3_Caves_Mountains",
+    "Env_Zone3_Caves"
+  ],
+  "NPCs": [
+    { "Weight": 5, "Id": "Snapjaw", "SpawnFluidTag": "Water" },
+    { "Weight": 5, "Id": "Frostgill", "SpawnFluidTag": "Water" },
+    { "Weight": 5, "Id": "Trilobite", "SpawnFluidTag": "Water" }
+  ]
+}

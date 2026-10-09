@@ -62,12 +62,13 @@ public final class NativeEnemyFlockExtension {
         var npc=leader==null||!leader.isValid()?null:store.getComponent(leader,NPCEntity.getComponentType());
         var position=leader==null||!leader.isValid()?null:store.getComponent(leader,TransformComponent.getComponentType());
         var flock=leader==null||!leader.isValid()?null:store.getComponent(leader,FlockMembership.getComponentType());
-        if(npc==null||position==null||flock==null||flock.getFlockRef()==null||!flock.getFlockRef().isValid()
+        if(npc==null||position==null||npc.getRole()==null
                 ||npc.getSpawnRoleIndex()!=original.job().roleIndex()
                 ||!npc.getRoleName().equals(original.job().nativeRole()))return Attempt.denied("FLOCK_IDENTITY");
-        var nativeTypes=npc.getRole()==null?null:npc.getRole().getFlockSpawnTypes();
-        if(nativeTypes!=null&&Arrays.stream(nativeTypes).anyMatch(index->index!=original.job().roleIndex()))
-            return Attempt.denied("FLOCK_SPAWN_TYPES");
+        // A native one-member spawn has no FlockMembership yet. trySpawnFlock
+        // creates and joins its flock; an existing flock must still be valid.
+        if(flock!=null&&(flock.getFlockRef()==null||!flock.getFlockRef().isValid()))
+            return Attempt.denied("FLOCK_IDENTITY");
         var population=store.getResource(WorldSpawnData.getResourceType());
         if(population==null)return Attempt.denied("WORLD_POPULATION_RESOURCE");
         int environment=original.job().environment();
@@ -99,7 +100,14 @@ public final class NativeEnemyFlockExtension {
         boolean complete=failure==null&&result!=null&&!result.nativeFailed()&&result.members().size()==additional
                 &&population.getActualNPCs()==beforeWorld+additional
                 &&nativeEnvironment.getActualNPCs()==beforeEnvironment+additional;
-        if(complete)return Attempt.accepted(result);
+        var createdFlock=flock==null?store.getComponent(leader,FlockMembership.getComponentType()):null;
+        var createdFlockRef=createdFlock==null?null:createdFlock.getFlockRef();
+        if(complete){
+            if(flock==null&&(createdFlockRef==null||!createdFlockRef.isValid()))
+                throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_FLOCK_NOT_CREATED");
+            return Attempt.accepted(new NativeEnemySpawnGroups.Group(result.job(),result.reservation(),
+                    result.members(),false,flock==null));
+        }
         if(result!=null){
             for(var member:result.members()){
                 var ref=store.getExternalData().getRefFromUUID(member.entity());
@@ -110,6 +118,7 @@ public final class NativeEnemyFlockExtension {
         }
         if(population.getActualNPCs()!=beforeWorld||nativeEnvironment.getActualNPCs()!=beforeEnvironment)
             throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_POPULATION_ROLLBACK",failure);
+        if(flock==null&&createdFlockRef!=null)removeCreatedFlock(store,leader,createdFlockRef);
         if(failure instanceof Error error)throw error;
         return Attempt.denied(failure==null?"NATIVE_FLOCK_INCOMPLETE":"NATIVE_FLOCK_FAILURE_"+failure.getClass().getSimpleName());
     }
@@ -144,9 +153,20 @@ public final class NativeEnemyFlockExtension {
         if(environment==null)throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_DISCARD_TRACKER");
         int worldBefore=population.getActualNPCs(),environmentBefore=environment.getActualNPCs();
         for(var ref:references)store.removeEntity(ref,RemoveReason.REMOVE);
+        if(added.extensionCreatedFlock()){
+            var leader=store.getExternalData().getRefFromUUID(original.members().getFirst().entity());
+            if(leader==null||!leader.isValid())throw new IllegalStateException("ENEMY_EXTENSION_FLOCK_LEADER_MISSING");
+            var membership=store.getComponent(leader,FlockMembership.getComponentType());
+            removeCreatedFlock(store,leader,membership==null?null:membership.getFlockRef());
+        }
         if(population.getActualNPCs()!=worldBefore-references.size()
                 ||environment.getActualNPCs()!=environmentBefore-references.size())
             throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_DISCARD_POPULATION");
+    }
+    private static void removeCreatedFlock(Store<EntityStore> store,Ref<EntityStore> leader,Ref<EntityStore> flock){
+        if(flock==null||!flock.isValid())throw new IllegalStateException("ENEMY_EXTENSION_FLOCK_ROLLBACK_IDENTITY");
+        store.removeComponent(leader,FlockMembership.getComponentType());
+        if(flock.isValid())store.removeEntity(flock,RemoveReason.REMOVE);
     }
 
     private static Optional<Headroom> headroom(Store<EntityStore> store,Vector3d position,

@@ -54,6 +54,9 @@ class PopulationWeightPlanTest {
         var catalog=NativePopulationRoles.load();
         assertEquals(HOSTILE,catalog.category("Eye_Void"));
         assertEquals(WILDLIFE,catalog.category("Deer_Stag"));
+        assertEquals(WILDLIFE,catalog.category("Squirrel"));
+        assertEquals(WILDLIFE,catalog.category("Fox"));
+        assertEquals(WILDLIFE,catalog.category("Frog_Blue"));
         assertEquals(AMBIENT_AVIAN,catalog.category("Vulture"));
         assertEquals(OTHER,catalog.category("Piranha"));
         assertEquals(OTHER,catalog.category("Unknown_New_Role"));

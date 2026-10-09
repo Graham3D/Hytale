@@ -611,7 +611,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
         worldSpawnDensity = new com.inigmasgames.hytalerpg.spawning.NativeWorldSpawnDensity(worldConfiguration);
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnsCommand(worldSpawnDensity));
         monsterSpawnTrace=new com.inigmasgames.hytalerpg.diagnostics.MonsterSpawnTrace(
-                rpgDataDirectory().resolve("logs").resolve("rpg").resolve("monster-spawn-trace"));
+                rpgDataDirectory().resolve("logs").resolve("rpg").resolve("monster-spawn-trace"),
+                world->enemyWorldAdmission==null?null:enemyWorldAdmission.activePackReservations(world));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnTraceCommand(monsterSpawnTrace,worldSpawnDensity));
         getChunkStoreRegistry().registerSystem(worldSpawnDensity.new Tick());
         populationBalance=new com.inigmasgames.hytalerpg.spawning.NativePopulationBalance(
