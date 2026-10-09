@@ -15,6 +15,11 @@ import org.joml.Vector3d;
 
 /** Native flock extension for a selected Unique demand. No separate placement or population writer. */
 public final class NativeEnemyFlockExtension {
+    public record Attempt(NativeEnemySpawnGroups.Group group,String rejection){
+        public Attempt{if((group==null)==(rejection==null))throw new IllegalArgumentException("ENEMY_EXTENSION_ATTEMPT");}
+        static Attempt accepted(NativeEnemySpawnGroups.Group group){return new Attempt(group,null);}
+        static Attempt denied(String reason){return new Attempt(null,reason);}
+    }
     public record Headroom(int worldActual,double worldExpected,int worldMaximum,
             int environmentActual,double environmentExpected,List<Chunk> nearby){
         public record Chunk(double actual,double expected){
@@ -23,17 +28,27 @@ public final class NativeEnemyFlockExtension {
         }
         public Headroom{nearby=List.copyOf(nearby);}
         public boolean admits(int additional){
-            return additional>0&&additional<=7&&worldActual>=0&&environmentActual>=0
-                    &&Double.isFinite(worldExpected)&&Double.isFinite(environmentExpected)
-                    &&worldActual+additional<=worldMaximum&&worldActual+additional<=worldExpected
-                    &&environmentActual+additional<=environmentExpected&&!nearby.isEmpty()
-                    &&nearby.stream().allMatch(chunk->chunk.actual()+additional<=chunk.expected());
+            return rejection(additional)==null;
+        }
+        public String rejection(int additional){
+            if(additional<=0||additional>7||worldActual<0||environmentActual<0
+                    ||!Double.isFinite(worldExpected)||!Double.isFinite(environmentExpected))return "INVALID_HEADROOM_REQUEST";
+            if(worldActual+additional>worldMaximum)return "WORLD_MAXIMUM";
+            if(worldActual+additional>worldExpected)return "WORLD_EXPECTED";
+            if(environmentActual+additional>environmentExpected)return "ENVIRONMENT_EXPECTED";
+            if(nearby.isEmpty())return "CHUNK_NEIGHBORHOOD_EMPTY";
+            if(nearby.stream().anyMatch(chunk->chunk.actual()+additional>chunk.expected()))return "CHUNK_HEADROOM";
+            return null;
         }
     }
     private NativeEnemyFlockExtension(){}
 
     /** A failed extension removes only its newly captured actors; originals stay staged for ordinary fallback. */
     public static Optional<NativeEnemySpawnGroups.Group> extend(Store<EntityStore> store,
+            NativeEnemySpawnGroups.Group original,SpawnJobData nativeJob,int additional){
+        return Optional.ofNullable(attempt(store,original,nativeJob,additional).group());
+    }
+    public static Attempt attempt(Store<EntityStore> store,
             NativeEnemySpawnGroups.Group original,SpawnJobData nativeJob,int additional){
         Objects.requireNonNull(store);Objects.requireNonNull(original);Objects.requireNonNull(nativeJob);
         if(!store.isInThread()||!store.getExternalData().getWorld().getWorldConfig().getUuid().equals(original.job().world())
@@ -49,17 +64,19 @@ public final class NativeEnemyFlockExtension {
         var flock=leader==null||!leader.isValid()?null:store.getComponent(leader,FlockMembership.getComponentType());
         if(npc==null||position==null||flock==null||flock.getFlockRef()==null||!flock.getFlockRef().isValid()
                 ||npc.getSpawnRoleIndex()!=original.job().roleIndex()
-                ||!npc.getRoleName().equals(original.job().nativeRole()))return Optional.empty();
+                ||!npc.getRoleName().equals(original.job().nativeRole()))return Attempt.denied("FLOCK_IDENTITY");
         var nativeTypes=npc.getRole()==null?null:npc.getRole().getFlockSpawnTypes();
         if(nativeTypes!=null&&Arrays.stream(nativeTypes).anyMatch(index->index!=original.job().roleIndex()))
-            return Optional.empty();
+            return Attempt.denied("FLOCK_SPAWN_TYPES");
         var population=store.getResource(WorldSpawnData.getResourceType());
-        if(population==null)return Optional.empty();
+        if(population==null)return Attempt.denied("WORLD_POPULATION_RESOURCE");
         int environment=original.job().environment();
         var nativeEnvironment=population.getWorldEnvironmentSpawnData(environment);
-        if(nativeEnvironment==null)return Optional.empty();
+        if(nativeEnvironment==null)return Attempt.denied("ENVIRONMENT_UNAVAILABLE");
         var headroom=headroom(store,position.getPosition(),population,environment);
-        if(headroom.isEmpty()||!headroom.get().admits(additional))return Optional.empty();
+        if(headroom.isEmpty())return Attempt.denied("CHUNK_REFERENCE_UNAVAILABLE");
+        var headroomRejection=headroom.get().rejection(additional);
+        if(headroomRejection!=null)return Attempt.denied(headroomRejection);
         int beforeWorld=population.getActualNPCs(),beforeEnvironment=nativeEnvironment.getActualNPCs();
         var group=new NativeEnemySpawnGroups.Group[1];
         Throwable failure=null;
@@ -82,7 +99,7 @@ public final class NativeEnemyFlockExtension {
         boolean complete=failure==null&&result!=null&&!result.nativeFailed()&&result.members().size()==additional
                 &&population.getActualNPCs()==beforeWorld+additional
                 &&nativeEnvironment.getActualNPCs()==beforeEnvironment+additional;
-        if(complete)return Optional.of(result);
+        if(complete)return Attempt.accepted(result);
         if(result!=null){
             for(var member:result.members()){
                 var ref=store.getExternalData().getRefFromUUID(member.entity());
@@ -94,7 +111,7 @@ public final class NativeEnemyFlockExtension {
         if(population.getActualNPCs()!=beforeWorld||nativeEnvironment.getActualNPCs()!=beforeEnvironment)
             throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_POPULATION_ROLLBACK",failure);
         if(failure instanceof Error error)throw error;
-        return Optional.empty();
+        return Attempt.denied(failure==null?"NATIVE_FLOCK_INCOMPLETE":"NATIVE_FLOCK_FAILURE_"+failure.getClass().getSimpleName());
     }
 
     /** Discard a fully captured but unused extension before releasing the original native flock. */
@@ -135,7 +152,8 @@ public final class NativeEnemyFlockExtension {
     private static Optional<Headroom> headroom(Store<EntityStore> store,Vector3d position,
             WorldSpawnData population,int environment){
         var world=store.getExternalData().getWorld();var data=population.getWorldEnvironmentSpawnData(environment);
-        if(data==null)return Optional.empty();
+        // The caller checked this environment on the same world thread.
+        if(data==null)throw new IllegalStateException("ENEMY_NATIVE_ENVIRONMENT_CHANGED");
         var chunks=world.getChunkStore();var chunkStore=chunks.getStore();
         // The native flock implementation offsets x/z by at most 0.5 from its leader.
         int minX=ChunkUtil.chunkCoordinate(position.x-.5),maxX=ChunkUtil.chunkCoordinate(position.x+.5);

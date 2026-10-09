@@ -82,9 +82,15 @@ public final class NativeEnemyBirthDecision {
             if(need.isEmpty())return rollback.fallback("ELITE_DEMAND_OR_CAPACITY");
             if(need.getAsInt()>0){
                 rollback.failClosed=true;
-                rollback.additional=NativeEnemyFlockExtension.extend(store,original,nativeJob,need.getAsInt()).orElse(null);
+                var extension=NativeEnemyFlockExtension.attempt(store,original,nativeJob,need.getAsInt());
+                rollback.additional=extension.group();
                 rollback.failClosed=false;
-                if(rollback.additional==null)return rollback.fallback("NATIVE_EXTENSION_UNAVAILABLE");
+                if(rollback.additional==null){
+                    MonsterSpawnTrace.event("NATIVE_EXTENSION_REJECTED",original.job().world(),original.job().environment(),
+                            original.job().nativeRole(),"job="+original.job().nativeJobId()
+                            +" encounter="+original.reservation().encounter()+" subreason="+extension.rejection());
+                    return rollback.fallback("NATIVE_EXTENSION_UNAVAILABLE",extension.rejection());
+                }
                 var addedSources=classify(store,rollback.additional,role);
                 if(addedSources.isEmpty())return rollback.fallback("EXTENSION_CLASSIFICATION");
                 additionalSources=addedSources.get();
@@ -218,8 +224,12 @@ public final class NativeEnemyBirthDecision {
         NativeEnemySpawnGroups.Group additional;boolean started,failClosed;
         Rollback(Store<EntityStore> store,NativeEnemySpawnGroups.Group original){this.store=store;this.original=original;}
         Optional<Selected> fallback(String reason){
+            return fallback(reason,null);
+        }
+        Optional<Selected> fallback(String reason,String subreason){
             MonsterSpawnTrace.event("ELITE_FALLBACK",original.job().world(),original.job().environment(),original.job().nativeRole(),
-                    "job="+original.job().nativeJobId()+" encounter="+original.reservation().encounter()+" reason="+reason);
+                    "job="+original.job().nativeJobId()+" encounter="+original.reservation().encounter()+" reason="+reason
+                    +(subreason==null?"":" subreason="+subreason));
             restore();return Optional.empty();
         }
         void restore(){started=true;NativeEnemyBirthDecision.this.restore(store,original,additional);}

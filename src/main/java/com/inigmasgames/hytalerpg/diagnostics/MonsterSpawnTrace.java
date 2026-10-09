@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 
 /** Bounded, read-only observation of native jobs and the existing Elite birth handoff. */
 public final class MonsterSpawnTrace implements AutoCloseable {
-    public static final int DURATION_SECONDS=120, MAX_DETAILS=10_000;
+    public static final int DURATION_SECONDS=120, MAX_DETAILS=10_000, MAX_PRIORITY_DETAILS=2_000;
     private static volatile MonsterSpawnTrace installed;
     private final Path directory;
     private final ScheduledExecutorService expiry=Executors.newSingleThreadScheduledExecutor(
@@ -26,6 +26,8 @@ public final class MonsterSpawnTrace implements AutoCloseable {
         final long started=System.currentTimeMillis(), deadline=started+DURATION_SECONDS*1000L;
         final Map<String,Long> counts=new TreeMap<>();
         final List<Map<String,Object>> details=new ArrayList<>();
+        final List<Map<String,Object>> priorityDetails=new ArrayList<>();
+        final Map<String,Long> priorityCounts=new TreeMap<>();
         final Set<String> jobs=new HashSet<>();
         final Map<UUID,Long> lastPopulationAt=new HashMap<>();
         long total;
@@ -46,7 +48,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
         var current=session;
         if(current==null)return new Status(false,0,lastEvents,lastDetails,lastFile,lastError,lastCounts);
         return new Status(true,Math.max(0,(current.deadline-System.currentTimeMillis()+999)/1000),
-                current.total,current.details.size(),lastFile,lastError,Map.copyOf(current.counts));
+                current.total,current.details.size()+current.priorityDetails.size(),lastFile,lastError,Map.copyOf(current.counts));
     }
     public static boolean enabled(){return installed!=null;}
     public static void event(String stage,UUID world,int environment,String role,String detail){
@@ -85,10 +87,29 @@ public final class MonsterSpawnTrace implements AutoCloseable {
             String key=category+"|"+world+"|"+environment+"|"+nativeRole;
             if(current.counts.size()>=50_000&&!current.counts.containsKey(key))key="OTHER|COUNTER_LIMIT";
             current.counts.merge(key,amount,Long::sum);current.total+=amount;
-            if(current.details.size()<MAX_DETAILS)current.details.add(Map.of(
+            var row=Map.<String,Object>of(
                     "time",Instant.now().toString(),"stage",category,"world",world==null?"unknown":world.toString(),
-                    "environment",environment,"role",nativeRole,"count",amount,"detail",message));
+                    "environment",environment,"role",nativeRole,"count",amount,"detail",message);
+            if(priority(category,message)){
+                String reason=field(message,"subreason=");
+                if(reason==null)reason=field(message,"reason=");
+                String priorityKey=category+"|"+(reason==null?"unspecified":reason);
+                if(current.priorityCounts.size()>=512&&!current.priorityCounts.containsKey(priorityKey))priorityKey="OTHER|PRIORITY_LIMIT";
+                current.priorityCounts.merge(priorityKey,amount,Long::sum);
+                if(current.priorityDetails.size()<MAX_PRIORITY_DETAILS)current.priorityDetails.add(row);
+            }else if(current.details.size()<MAX_DETAILS)current.details.add(row);
         }catch(RuntimeException ignored){/* Trace cannot affect native admission. */}
+    }
+    private static boolean priority(String stage,String detail){
+        return stage.equals("PACK_RESERVATION")||stage.equals("NATIVE_EXTENSION_REJECTED")
+                ||stage.equals("ELITE_PLAN_RESULT")||stage.equals("ELITE_FALLBACK_EXCEPTION")
+                ||stage.equals("ELITE_FALLBACK")&&!detail.contains("reason=RARITY_NORMAL")
+                ||stage.equals("ORIGINAL_GROUP_RESTORED")&&!"0".equals(field(detail,"stillStaged="));
+    }
+    private static String field(String detail,String marker){
+        int start=detail.indexOf(marker);if(start<0)return null;
+        start+=marker.length();int end=detail.indexOf(' ',start);
+        return detail.substring(start,end<0?detail.length():end);
     }
     private static String clean(String text,int max){
         if(text==null)return "unknown";
@@ -98,7 +119,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
     private void finish(){
         var current=session;if(current==null)return;
         session=null;if(installed==this)installed=null;
-        lastEvents=current.total;lastDetails=current.details.size();lastCounts=Map.copyOf(current.counts);
+        lastEvents=current.total;lastDetails=current.details.size()+current.priorityDetails.size();lastCounts=Map.copyOf(current.counts);
         Path target=directory.resolve("monster-spawn-"+current.started+".jsonl");
         try{
             Files.createDirectories(directory);
@@ -106,9 +127,11 @@ public final class MonsterSpawnTrace implements AutoCloseable {
             try(var writer=Files.newBufferedWriter(temp,StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE)){
                 writer.write(gson.toJson(Map.of("type","summary","started",Instant.ofEpochMilli(current.started).toString(),
-                        "ended",Instant.now().toString(),"events",current.total,"detailedEvents",current.details.size(),
-                        "detailLimit",MAX_DETAILS,"counts",current.counts)));writer.newLine();
+                        "ended",Instant.now().toString(),"events",current.total,"detailedEvents",lastDetails,
+                        "detailLimit",MAX_DETAILS,"priorityDetailLimit",MAX_PRIORITY_DETAILS,
+                        "priorityCounts",current.priorityCounts,"counts",current.counts)));writer.newLine();
                 for(var event:current.details){writer.write(gson.toJson(event));writer.newLine();}
+                for(var event:current.priorityDetails){writer.write(gson.toJson(event));writer.newLine();}
             }
             Files.move(temp,target,StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING);
             lastFile=target.toString();lastError="none";

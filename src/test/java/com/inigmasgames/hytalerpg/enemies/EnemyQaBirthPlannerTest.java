@@ -3,8 +3,10 @@ package com.inigmasgames.hytalerpg.enemies;
 import com.inigmasgames.hytalerpg.difficulty.DifficultyId;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import com.inigmasgames.hytalerpg.progress.ProgressionMath;
+import com.inigmasgames.hytalerpg.progress.FileEncounterStore;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,6 +43,19 @@ class EnemyQaBirthPlannerTest {
         for(int i=0;i<members;i++)roster.add(candidate(i,role,mode));
         return new EnemyBirthPlanner.Request("qa-seed",id("qa/pack"),Vec3.ZERO,"qa-command/test",roster,
                 List.of(),true,0,true);
+    }
+    @Test void legacyDurableQaPackStillRebindsButCannotFillProductionCapacity(){
+        var qa=planner.planQa(request(3),EnemyQaSpawnRequest.parse("Larva_Void","unique",List.of("stoneskin")));
+        var capacity=new EnemyPackCapacity(balance);
+        var gate=new EnemyWorldAdmission(world->CompletableFuture.completedFuture(
+                new FileEncounterStore.EnemyWorldInventory(List.of(qa),List.of(qa.pack()))),capacity);
+        gate.begin(qa.world()).toCompletableFuture().join();
+        assertEquals(0,capacity.count(qa.world()));
+        assertFalse(gate.admits(qa.world()));
+        assertThrows(IllegalStateException.class,()->gate.rebindComplete(qa.world(),List.of()));
+        gate.rebindComplete(qa.world(),List.of(qa.encounter()));
+        assertTrue(gate.admits(qa.world()));
+        assertEquals(0,capacity.count(qa.world()));
     }
     @Test void trorkUniqueLeaderAndMinionProjectTheirOwnAndInheritedAffixes(){
         var birth=planner.planQa(request(3,"Trork_Warrior",DifficultyId.HELL),EnemyQaSpawnRequest.parse("Trork_Warrior","unique","hell",

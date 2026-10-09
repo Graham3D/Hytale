@@ -36,4 +36,24 @@ class MonsterSpawnTraceTest {
             assertEquals(MonsterSpawnTrace.MAX_DETAILS+1,Files.readAllLines(Path.of(stopped.lastFile())).size());
         }
     }
+    @Test void rareExtensionAndReservationDecisionsSurviveTheOrdinaryDetailCap() throws Exception {
+        var world=UUID.randomUUID();
+        try(var trace=new MonsterSpawnTrace(temp)){
+            trace.start();
+            for(int i=0;i<MonsterSpawnTrace.MAX_DETAILS+20;i++)
+                MonsterSpawnTrace.event("NATIVE_JOB_CREATED",world,1,"Wolf_Black","job="+i);
+            MonsterSpawnTrace.event("NATIVE_EXTENSION_REJECTED",world,1,"Wolf_Black",
+                    "job=7 encounter=abc subreason=CHUNK_HEADROOM");
+            MonsterSpawnTrace.event("PACK_RESERVATION",world,1,"Wolf_Black",
+                    "encounter=abc reason=WORLD_LIMIT");
+            var stopped=trace.stop();
+            var lines=Files.readAllLines(Path.of(stopped.lastFile()));
+            var summary=JsonParser.parseString(lines.getFirst()).getAsJsonObject();
+            assertEquals(2,summary.getAsJsonObject("priorityCounts").get("NATIVE_EXTENSION_REJECTED|CHUNK_HEADROOM").getAsLong()
+                    +summary.getAsJsonObject("priorityCounts").get("PACK_RESERVATION|WORLD_LIMIT").getAsLong());
+            assertEquals(MonsterSpawnTrace.MAX_DETAILS+2,summary.get("detailedEvents").getAsInt());
+            assertTrue(lines.get(lines.size()-2).contains("CHUNK_HEADROOM"));
+            assertTrue(lines.getLast().contains("WORLD_LIMIT"));
+        }
+    }
 }

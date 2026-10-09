@@ -1,6 +1,7 @@
 package com.inigmasgames.hytalerpg.enemies;
 
 import com.inigmasgames.hytalerpg.progress.FileEncounterStore;
+import com.inigmasgames.hytalerpg.diagnostics.MonsterSpawnTrace;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Function;
@@ -36,7 +37,9 @@ public final class EnemyWorldAdmission {
             if(error!=null){result.completeExceptionally(error);return;}
             try{
                 validate(world,inventory);
-                capacity.restore(world,inventory.packs());
+                // Historical durable QA births still need identity/rebind recovery, but
+                // the current QA owner is transient and must not consume production slots.
+                capacity.restore(world,productionCapacityPacks(inventory));
                 synchronized(this){recovered.put(world,inventory);
                     if(!requireNativeReview&&requiredRebind(inventory).isEmpty())rebound.add(world);
                 }
@@ -70,12 +73,20 @@ public final class EnemyWorldAdmission {
         return capacity.reserve(reservation);
     }
     /** Only a pre-seal fallback may use this; no durable special birth may be rolled back here. */
-    public synchronized boolean releaseUnsealed(EnemyPackCapacity.Reservation reservation){return capacity.release(reservation);}
+    public synchronized boolean releaseUnsealed(EnemyPackCapacity.Reservation reservation){
+        boolean released=capacity.release(reservation);
+        MonsterSpawnTrace.event("PACK_RESERVATION",reservation.world(),-1,"all",
+                "encounter="+reservation.encounter()+" reason=UNSEALED_RELEASE released="+released);
+        return released;
+    }
     /** Terminal durable pack state is the authority for releasing a published reservation. */
     public synchronized boolean releaseTerminal(EnemyPackRecord pack){
         if(pack.state()!=EnemyPackRecord.State.ABORTED&&pack.state()!=EnemyPackRecord.State.DEFEATED)
             throw new IllegalStateException("ENEMY_CAPACITY_RELEASE_NONTERMINAL");
-        return capacity.release(EnemyPackCapacity.Reservation.of(pack));
+        boolean released=capacity.release(EnemyPackCapacity.Reservation.of(pack));
+        MonsterSpawnTrace.event("PACK_RESERVATION",pack.worldId(),-1,"all",
+                "encounter="+pack.encounterId()+" reason="+pack.state()+" released="+released);
+        return released;
     }
 
     private static void validate(UUID world,FileEncounterStore.EnemyWorldInventory inventory){
@@ -127,5 +138,15 @@ public final class EnemyWorldAdmission {
         for(var anchor:inventory.anchors())if(anchor.state()==SuperUniqueAnchor.State.RESERVED
                 ||anchor.state()==SuperUniqueAnchor.State.LIVE)required.add(anchor.encounterId());
         return required;
+    }
+
+    private static List<EnemyPackRecord> productionCapacityPacks(FileEncounterStore.EnemyWorldInventory inventory){
+        var births=new HashMap<UUID,EnemyBirthPlan>();
+        for(var birth:inventory.births())births.put(birth.encounter(),birth);
+        return inventory.packs().stream().filter(pack->{
+            var birth=births.get(pack.encounterId());
+            return birth==null||birth.actors().stream()
+                    .anyMatch(actor->actor.spawnOrigin()!=EnemyRewardContext.Origin.QA);
+        }).toList();
     }
 }
