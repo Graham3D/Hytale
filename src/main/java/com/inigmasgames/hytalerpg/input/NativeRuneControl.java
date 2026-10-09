@@ -41,13 +41,13 @@ public final class NativeRuneControl {
     public static void auditAssets() {
         var item = com.hypixel.hytale.server.core.asset.type.item.config.Item.getAssetMap().getAsset(RUNE);
         var root = RootInteraction.getAssetMap().getAsset(ROOT);
-        var ability = item == null ? null : item.getAbility();
+        var ability = item != null && item.getAbility() instanceof com.hypixel.hytale.server.core.asset.type.item.config.CoreItemAbility a ? a : null;
         var operations = new ArrayList<String>();
         if (root != null) for (int i = 0; i < root.getOperationMax(); i++)
             operations.add(root.getOperation(i).getClass().getSimpleName());
         boolean pass = ability != null && ROOT.equals(ability.getCastRootId())
-                && ability.getSlot() == AbilitySlot.Primary && ability.getCost() == 25
-                && ability.getCooldownS() == 12 && ability.getCostType() == AbilityCostType.Mana
+                && ability.getSlot() == AbilitySlot.Core && ability.getCost() == 30
+                && ability.getCooldownS() == 2 && ability.getCostType() == AbilityCostType.Mana
                 && !operations.isEmpty();
         com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass().atInfo().log(
                 "RPG_NATIVE_RUNE_CONTROL_AUDIT revision=%s item=%s root=%s itemPack=%s operations=%s result=%s connectedProof=false",
@@ -84,12 +84,12 @@ public final class NativeRuneControl {
         }
         ItemStack rune = new ItemStack(RUNE);
         if (!rune.isValid()) return "Control refused: shipped Rune_Fireball asset missing.";
-        var ability = rune.getItem().getAbility();
+        var ability = rune.getItem().getAbility() instanceof com.hypixel.hytale.server.core.asset.type.item.config.CoreItemAbility a ? a : null;
         RootInteraction root = RootInteraction.getAssetMap().getAsset(ROOT);
-        if (ability == null || ability.getSlot() != AbilitySlot.Primary || !ROOT.equals(ability.getCastRootId())
-                || ability.getCost() != 25 || ability.getCooldownS() != 12 || ability.getCostType() != AbilityCostType.Mana
+        if (ability == null || ability.getSlot() != AbilitySlot.Core || !ROOT.equals(ability.getCastRootId())
+                || ability.getCost() != 30 || ability.getCooldownS() != 2 || ability.getCostType() != AbilityCostType.Mana
                 || root == null || root.getOperationMax() == 0)
-            return "Control refused: installed shipped Rune does not match audited 0.7.0-pre.1 baseline.";
+            return "Control refused: installed shipped Rune does not match audited 0.7.0-pre.5 baseline.";
 
         Capture capture = new Capture();
         BsonDocument journal = new BsonDocument("trial", new BsonString(capture.id));
@@ -123,7 +123,7 @@ public final class NativeRuneControl {
                 "rootRemote", root.needsRemoteSync(), "primaryIndices", List.of(0, 3),
                 "rpgExecutionSuppressed", true, "durationSeconds", 120));
         return "Native control " + capture.id + ": shipped Fireball in Ability2 AND Ability3 for 120 seconds.\n"
-                + "Aim at empty ground away from people/buildings. Need 25 Mana per cast. Press E once; wait 13 seconds and for 25 Mana; press R once.\n"
+                + "Aim at empty ground away from people/buildings. Need 30 Mana per cast. Press E once; wait 3 seconds and for 30 Mana; press R once.\n"
                 + "Do not edit loadout/inventory during test. Note whether a VANILLA fireball appears. Then /rpg dev rune-control stop. RPG casting is suppressed.";
     }
 

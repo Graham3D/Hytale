@@ -24,8 +24,9 @@
   Padding: 2;
   ShowScrollbar: false;
   AreItemsDraggable: true;
-  AllowMaxStackDraggableItems: true;
+  AllowMaxStackDraggableItems: false;
   DisplayItemQuantity: true;
   RenderItemQualityBackground: true;
   RenderEmptySlots: true;
+  InfoDisplay: None;
 };

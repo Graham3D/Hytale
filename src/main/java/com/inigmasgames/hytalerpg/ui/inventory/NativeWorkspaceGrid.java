@@ -3,7 +3,6 @@ package com.inigmasgames.hytalerpg.ui.inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.ui.ItemGridSlot;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
-import com.inigmasgames.hytalerpg.gear.GearNativeItems;
 import org.bson.BsonArray;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
@@ -28,16 +27,16 @@ final class NativeWorkspaceGrid {
     static void write(UICommandBuilder commands, String selector, SpatialLayout layout,
                       Function<String, ItemStack> item) {
         ItemGridSlot[] slots = new ItemGridSlot[InventoryGridGeometry.CELLS];
+        var presentations = new java.util.HashMap<String,ItemStack>();
         for (int visual = 0; visual < slots.length; visual++) {
             var entry = layout.at(visual % InventoryGridGeometry.COLUMNS,
                     visual / InventoryGridGeometry.COLUMNS).orElse(null);
-            slots[visual] = entry == null ? new ItemGridSlot() :
-                    new ItemGridSlot(new ItemStack(GearNativeItems.nativeId(item.apply(entry.id()).getItemId()),
-                            item.apply(entry.id()).getQuantity()));
+            slots[visual] = entry == null ? new ItemGridSlot() : new ItemGridSlot(
+                    presentations.computeIfAbsent(entry.id(), item));
             slots[visual].setActivatable(true);
         }
         int before = commands.getCommands().length;
-        commands.set(selector + ".Slots", slots);
+        NativeItemGrid.writeSlots(commands, selector, slots);
         var encodedCommands = commands.getCommands();
         if (encodedCommands.length != before + 1)
             throw new IllegalStateException("Native workspace grid slot encoding changed");

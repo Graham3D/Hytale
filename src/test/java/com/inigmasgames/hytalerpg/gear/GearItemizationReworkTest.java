@@ -29,19 +29,21 @@ class GearItemizationReworkTest {
         for(var mf:new double[]{0,.25,.5,.75,1,1.6,2,3}){
             var weights=GearMagicFind.weights(DifficultyId.NORMAL,35,ProgressionMath.Rank.COMMON,mf);
             assertEquals(1,weights.normalized().values().stream().mapToDouble(Double::doubleValue).sum(),1e-12);
-            assertEquals(Set.of(GearRarity.NORMAL,GearRarity.MAGIC,GearRarity.RARE),weights.normalized().keySet());
+            assertEquals(Set.of(GearRarity.NORMAL,GearRarity.MAGIC,GearRarity.RARE,GearRarity.VERY_RARE,GearRarity.LEGENDARY),weights.normalized().keySet());
         }
         var zero=GearMagicFind.distribution(DifficultyId.NORMAL,35,ProgressionMath.Rank.COMMON,0);
         assertEquals(.70,zero.get(GearRarity.NORMAL),1e-12);assertEquals(.27,zero.get(GearRarity.MAGIC),1e-12);
-        assertEquals(.03,zero.get(GearRarity.RARE),1e-12);
+        assertEquals(.03,zero.get(GearRarity.RARE)+zero.get(GearRarity.VERY_RARE),1e-12);
+        assertEquals(0,zero.get(GearRarity.LEGENDARY));
         var high=GearMagicFind.distribution(DifficultyId.NORMAL,35,ProgressionMath.Rank.COMMON,1.6);
         assertTrue(high.get(GearRarity.NORMAL)>=.35&&high.get(GearRarity.NORMAL)<=.50);
         assertTrue(high.get(GearRarity.MAGIC)>=.40&&high.get(GearRarity.MAGIC)<=.50);
-        assertTrue(high.get(GearRarity.RARE)>=.08&&high.get(GearRarity.RARE)<=.15);
+        assertTrue(high.get(GearRarity.RARE)+high.get(GearRarity.VERY_RARE)>=.08
+                &&high.get(GearRarity.RARE)+high.get(GearRarity.VERY_RARE)<=.15);
     }
     @Test void productionGeneratorMatchesWeightsAndKeepsQuantityAndBaseIndependentOfMf(){
         var counts=new EnumMap<GearRarity,int[]>(GearRarity.class);
-        for(var rarity:List.of(GearRarity.NORMAL,GearRarity.MAGIC,GearRarity.RARE))counts.put(rarity,new int[2]);
+        for(var rarity:List.of(GearRarity.NORMAL,GearRarity.MAGIC,GearRarity.RARE,GearRarity.VERY_RARE,GearRarity.LEGENDARY))counts.put(rarity,new int[2]);
         int trials=1200;
         for(int i=0;i<trials;i++){
             var source=source(DifficultyId.NORMAL,35,ProgressionMath.Rank.BOSS,i);
@@ -89,7 +91,7 @@ class GearItemizationReworkTest {
         assertThrows(IllegalArgumentException.class,()->new AuthoredGearDefinition("fake",GearQuality.UNIQUE,"gm.sword_mithril.h",null,null,List.of("boss")));
     }
     @Test void highLevelProductionAffixCountsFollowConfiguredWeights(){
-        var magic=new int[3];var rare=new int[7];int[] totals=new int[2];
+        var magic=new int[3];var rare=new int[7];var veryRare=new int[7];var legendary=new int[7];int[] totals=new int[4];
         for(int i=0;i<2400;i++){
             var source=source(DifficultyId.HELL,95,ProgressionMath.Rank.BOSS,10_000+i);
             var item=generator.generate(source,1.6,source.eventId(),Set.of()).item();
@@ -100,12 +102,15 @@ class GearItemizationReworkTest {
                 assertTrue(item.affixes().stream().filter(a->a.side()==GearCatalog.Side.PREFIX).count()<=3);
                 assertTrue(item.affixes().stream().filter(a->a.side()==GearCatalog.Side.SUFFIX).count()<=3);
             }
+            if(item.rarity()==GearRarity.VERY_RARE){veryRare[item.affixes().size()]++;totals[2]++;}
+            if(item.rarity()==GearRarity.LEGENDARY){legendary[item.affixes().size()]++;totals[3]++;}
         }
-        assertTrue(totals[0]>800&&totals[1]>800);
-        assertEquals(.65,magic[1]/(double)totals[0],.06);
-        assertEquals(.35,magic[2]/(double)totals[0],.06);
-        double[] target={.40,.30,.20,.10};
-        for(int n=3;n<=6;n++)assertEquals(target[n-3],rare[n]/(double)totals[1],.065,"Rare affix count "+n);
+        assertTrue(totals[0]>500&&totals[1]>300&&totals[2]>30&&totals[3]>10);
+        assertEquals(totals[0],magic[1]);
+        assertEquals(.60,rare[2]/(double)totals[1],.10);
+        assertEquals(.40,rare[3]/(double)totals[1],.10);
+        assertEquals(totals[2],veryRare[4]+veryRare[5]);
+        assertEquals(totals[3],legendary[6]);
         System.out.println("ITEMIZATION_HELL95_BOSS trials=2400 magicCounts="+Arrays.toString(magic)
                 +" rareCounts="+Arrays.toString(rare));
     }

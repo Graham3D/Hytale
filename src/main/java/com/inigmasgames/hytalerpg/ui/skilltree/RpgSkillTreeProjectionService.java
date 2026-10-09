@@ -27,11 +27,18 @@ public final class RpgSkillTreeProjectionService {
     private final RpgLoadoutOperations loadouts;
     private final StaticSkillTreeLayout layout;
     private final boolean developmentEntitlements;
+    private final com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles profiles;
+    private java.util.function.Function<UUID,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects> gearEffects =
+            actor -> com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects.NONE;
+    public void configureGearEffects(java.util.function.Function<UUID,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects> source) {
+        gearEffects=java.util.Objects.requireNonNull(source);
+    }
 
     public RpgSkillTreeProjectionService(RpgCatalog catalog, RpgLoadoutOperations loadouts,
                                          StaticSkillTreeLayout layout, boolean developmentEntitlements) {
         this.catalog = catalog; this.loadouts = loadouts; this.layout = layout;
         this.developmentEntitlements = developmentEntitlements;
+        this.profiles=com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles.loadCanonical(catalog);
     }
 
     public StaticSkillTreeViewModel project(UUID player, StaticSkillTreeViewModel.Tab tab, String query,
@@ -60,12 +67,12 @@ public final class RpgSkillTreeProjectionService {
                                                        String weaponFilter, String currentWeaponKind) {
         String needle = clean(query).toLowerCase(Locale.ROOT);
         return catalog.skills().stream()
-                .filter(def -> developmentEntitlements || view.state().learnedSkills.contains(def.id().value()))
+                .filter(def -> developmentEntitlements || loadouts.skillAvailable(view.state().playerUuid(),def.id()))
                 .filter(def -> matches(def.name(), def.description(), def.tags(), needle))
                 .filter(def -> weaponMatches(def.weaponRequirement(), weaponFilter, currentWeaponKind))
                 .sorted(Comparator.comparing(SkillDefinition::name))
                 .map(def -> new StaticSkillTreeViewModel.LibraryItem(def.id().value(), def.name(), def.family(),
-                        def.description(), RpgSkillIcons.forSkill(def.id().value()), def.weaponRequirement())).toList();
+                        def.description()+temporaryLabel(view,def), RpgSkillIcons.forSkill(def.id().value()), def.weaponRequirement())).toList();
     }
 
     List<StaticSkillTreeViewModel.LibraryItem> passives(RpgLoadoutView view, String query) {
@@ -125,13 +132,14 @@ public final class RpgSkillTreeProjectionService {
                 view.state().passive(slot).flatMap(catalog::passive).map(PassiveDefinition::name).ifPresent(linked::add);
         });
         List<StaticSkillTreeViewModel.DetailRow> rows=List.of(
+                new StaticSkillTreeViewModel.DetailRow("RANK",rankText(view,def),"RANK"),
                 new StaticSkillTreeViewModel.DetailRow("RESOURCE",value(def.castCost()),"RESOURCE"),
                 new StaticSkillTreeViewModel.DetailRow("COOLDOWN",value(def.cooldown()),"COOLDOWN"),
                 new StaticSkillTreeViewModel.DetailRow("RANGE",value(def.maxRange()),"RANGE"),
                 new StaticSkillTreeViewModel.DetailRow("DAMAGE",value(def.powerCoefficient()),"DAMAGE"),
                 new StaticSkillTreeViewModel.DetailRow("REQUIRES",requirement(def.weaponRequirement()),"REQUIREMENT"),
                 new StaticSkillTreeViewModel.DetailRow("LINKED PASSIVES",linked.isEmpty()?"None":String.join(", ",linked),"LINK"));
-        return new StaticSkillTreeViewModel.Details("SKILL", def.id().value(), def.name(), skillDescriptor(def), def.description(),
+        return new StaticSkillTreeViewModel.Details("SKILL", def.id().value(), def.name(), skillDescriptor(def), def.description()+temporaryLabel(view,def),
                 RpgSkillIcons.forSkill(def.id().value()),rows,List.of("Weapon: " + value(def.weaponRequirement()), "Resource: " + value(def.castCost()),
                         "Cooldown: " + value(def.cooldown()), "Cast: " + value(def.castTime()),
                         "Range: " + value(def.maxRange()), "Geometry: " + value(def.geometry()),
@@ -164,6 +172,21 @@ public final class RpgSkillTreeProjectionService {
     private static StaticSkillTreeViewModel.Details emptyDetails() {
         return new StaticSkillTreeViewModel.Details("NONE", "", "Select a Skill or Passive", "",
                 "Select a Skill or Passive to view details.", "",List.of(), List.of(), "");
+    }
+    private String temporaryLabel(RpgLoadoutView view,SkillDefinition skill) {
+        return !view.state().learnedSkills.contains(skill.id().value())
+                &&loadouts.skillAvailable(view.state().playerUuid(),skill.id())
+                ? "\nTemporary access while the granting item is equipped." : "";
+    }
+    private String rankText(RpgLoadoutView view,SkillDefinition skill) {
+        var player=view.state().playerUuid();
+        boolean learned=loadouts.learnedSkill(player,skill.id().value());
+        int base=loadouts.baseSkillRank(player,skill.id().value());
+        int bonus=learned&&profiles.supports(skill.id().value())
+                ?com.inigmasgames.hytalerpg.execution.GearSkillRanks.bonus(
+                    gearEffects.apply(player).snapshot(),profiles.require(skill.id().value())):0;
+        int effective=com.inigmasgames.hytalerpg.execution.EffectiveSkillLevel.resolveBase(base,bonus);
+        return base+" base / "+effective+" effective";
     }
 
     private static String requirement(String value){return value==null||value.isBlank()||"None".equalsIgnoreCase(value.trim())?"No requirements":value.trim();}

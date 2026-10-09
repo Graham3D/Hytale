@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "revision": "enemy-name-pools-v1.0",
+  "format": "{stem} the {epithet}",
+  "stems": [
+    "Gorefang",
+    "Ashclaw",
+    "Ironhide",
+    "Grimtooth",
+    "Duskmaw",
+    "Stormscar",
+    "Ruinbone",
+    "Dreadtusk"
+  ],
+  "epithets": [
+    "Cruel",
+    "Relentless",
+    "Scarred",
+    "Stubborn",
+    "Hollow",
+    "Watchful",
+    "Ashen",
+    "Unbroken"
+  ],
+  "maxGeneratedCodepoints": 32,
+  "championNameMode": "CANONICAL_ROLE_DISPLAY",
+  "superUniqueNameMode": "AUTHORED"
+}

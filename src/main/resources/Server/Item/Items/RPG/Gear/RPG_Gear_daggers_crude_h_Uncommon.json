@@ -81,7 +81,9 @@
             "LocalSoundEventId": "SFX_Daggers_T1_Slash_Impact"
           },
           "AngledDamage": [],
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Swing_Left_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -99,7 +101,9 @@
             "LocalSoundEventId": "SFX_Daggers_T1_Slash_Impact"
           },
           "AngledDamage": [],
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Swing_Right_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -117,7 +121,9 @@
             "LocalSoundEventId": "SFX_Daggers_T1_Stab_Impact"
           },
           "AngledDamage": [],
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Stab_Left_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -135,7 +141,9 @@
             "LocalSoundEventId": "SFX_Daggers_T1_Stab_Impact"
           },
           "AngledDamage": [],
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Stab_Right_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -213,7 +221,9 @@
               }
             }
           ],
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Pounce_Sweep_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -291,7 +301,9 @@
               "Amount": 6
             }
           ],
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Pounce_Stab_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -371,7 +383,9 @@
             "WorldSoundEventId": "SFX_Daggers_T1_Slash_Impact",
             "LocalSoundEventId": "SFX_Daggers_T1_Slash_Impact"
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Razorstrike_Slash_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -433,7 +447,9 @@
             "WorldSoundEventId": "SFX_Daggers_T1_Slash_Impact",
             "LocalSoundEventId": "SFX_Daggers_T1_Slash_Impact"
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Razorstrike_Sweep_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -495,7 +511,9 @@
             "WorldSoundEventId": "SFX_Daggers_T1_Slash_Impact",
             "LocalSoundEventId": "SFX_Daggers_T1_Slash_Impact"
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Razorstrike_Lunge_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     }

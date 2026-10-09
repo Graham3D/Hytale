@@ -1,0 +1,2254 @@
+{
+  "schemaVersion": 2,
+  "bindings": {
+    "Weapon_Axe_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Axe_Adamantite.png",
+      "source": "axes/Adamantite_Adamantite_Texture_icon2x2.png",
+      "sha256": "55ce5381ceec6890f7b66ebbb0632490f697b9efd8decbc59994dc995dd9835c",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        33,
+        0,
+        95,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 2
+      }
+    },
+    "Weapon_Axe_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Axe_Cobalt.png",
+      "source": "axes/Cobalt_Cobalt_Texture_icon1x2.png",
+      "sha256": "d5fcb36f18212ac7b6228ba9a3439c937f97da8d00185f09cf9ad4ee2e943e5f",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        35,
+        1,
+        93,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Axe_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Axe_Copper.png",
+      "source": "axes/Copper_Copper_Texture_icon1x2.png",
+      "sha256": "f97152c0356c809652c5e88a59e7aa10f029a32c7de84ac8e8123ee9d143b2ff",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        31,
+        0,
+        97,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Axe_Crude": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Axe_Crude.png",
+      "source": "axes/Crude_Crude_Texture_icon2x2.png",
+      "sha256": "166c1c58bb3b6afc1a4a2efe87e14fb4caec872a9e2918fa332b00f6bc90ec92",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        30,
+        0,
+        99,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 2
+      }
+    },
+    "Weapon_Axe_Iron_Rusty": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Axe_Iron_Rusty.png",
+      "source": "axes/Iron_Iron_Rusty_Texture_icon2x2.png",
+      "sha256": "54ba0e0b427c77f9681eb3dfe58e21bf2be411492cda7296fd637b12672dd0aa",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        27,
+        0,
+        101,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 2
+      }
+    },
+    "Weapon_Axe_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Axe_Mithril.png",
+      "source": "axes/Mithril_Mithril_Texture_icon1x2.png",
+      "sha256": "9472ae5205f7d027936ae0b594ec2c83a1f1ecd5e7c70904fb5bcfd285968d27",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        36,
+        0,
+        92,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Axe_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Axe_Onyxium.png",
+      "source": "axes/Onyxium_Onyxium_texture_icon1x2.png",
+      "sha256": "fc27f50088f398315dbb0897b4d47f35a515f6bd403098ce46f23a9cff2bf646",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        33,
+        1,
+        96,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Axe_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Axe_Thorium.png",
+      "source": "axes/Thorium_Thorium_Texture_icon1x2.png",
+      "sha256": "243f3d52e214b7f25c722863c1a304a0d5b9d4f263ae77ce46ba09c609bef4d7",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        35,
+        0,
+        93,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Battleaxe_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Adamantite.png",
+      "source": "battleaxes/Adamantite_Adamantite_Texture_icon2x4.png",
+      "sha256": "af5240b1f3330cc7324a920442b9e898e7d17c1a7773528d75739908dbf468ee",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        71,
+        0,
+        185,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Battleaxe_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Cobalt.png",
+      "source": "battleaxes/Cobalt_Cobalt_Texture_icon2x4.png",
+      "sha256": "41b011f39461a2a46d6f75831aedb23ef7aec3c1b4e6c8c269982862f6cb367a",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        84,
+        0,
+        172,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Battleaxe_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Copper.png",
+      "source": "battleaxes/Copper_Copper_Texture_icon2x4.png",
+      "sha256": "c2bc6a28f089d1eb02ee65d89f7f28cd59c411a1106974f97844b392c14303ff",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        75,
+        0,
+        181,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Battleaxe_Crude": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Crude.png",
+      "source": "battleaxes/Crude_Crude_Texture_icon2x4.png",
+      "sha256": "6f3af04f971bd7289afe4d19f2fa73fafd01dcab7c229252bc3d2a1b1380a4fa",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        70,
+        0,
+        186,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Battleaxe_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Iron.png",
+      "source": "battleaxes/Iron_Iron_Texture_icon2x4.png",
+      "sha256": "eb522ab93c16afb1ebb4a7186d4c8530321a730e40a7c972921ea6f33c5bbab8",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        67,
+        0,
+        189,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Battleaxe_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Mithril.png",
+      "source": "battleaxes/Mithril_Mithril_Texture_icon2x4.png",
+      "sha256": "3d9912ea116896b3d82a1d9e10d07f987f5f72569497628e151d5cc2757a883a",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        64,
+        0,
+        192,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Battleaxe_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Onyxium.png",
+      "source": "battleaxes/Onyxium_Onyxium_Texture_icon2x4.png",
+      "sha256": "98a278943a5449344cad9d832392c8ddaee159127984908ffded968d0da9b47f",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        69,
+        1,
+        187,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Battleaxe_Scarab": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Scarab.png",
+      "source": "battleaxes/Scarab_Scarab_Texture_icon3x4.png",
+      "sha256": "ab110e085ac68de72b149ab946a818fa0c19f28d244c57b60a76b9ba6ab078ae",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        56,
+        0,
+        200,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 3,
+        "height": 4
+      }
+    },
+    "Weapon_Battleaxe_Steel_Rusty": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Steel_Rusty.png",
+      "source": "battleaxes/Steel_Steel_Rusty_Texture_icon2x4.png",
+      "sha256": "445c3aba697de0ab09107860ec9eb3884f3c404f6e83389a2dff6ad9058846b9",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        93,
+        0,
+        163,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Battleaxe_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Battleaxe_Thorium.png",
+      "source": "battleaxes/Thorium_Thorium_Texture_icon2x4.png",
+      "sha256": "c62ad93bbcea33c40834b579b696c1eb2a8c6ae46a518aacd17a1711d93a3868",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        66,
+        0,
+        190,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Club_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Club_Adamantite.png",
+      "source": "clubs/Adamantite_Adamantite_Texture_icon1x3.png",
+      "sha256": "c800f09b8824a0c705d3ebfc20fe9258df91b1bd72b1f839a9db22eba7b9cf33",
+      "canvasWidth": 64,
+      "canvasHeight": 192,
+      "alphaBounds": [
+        3,
+        0,
+        61,
+        192
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 3
+      }
+    },
+    "Weapon_Club_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Club_Cobalt.png",
+      "source": "clubs/Cobalt_Cobalt_Texture_icon1x3.png",
+      "sha256": "2468e825a1ba2f3924a8bb08dca1256fd213055dcbe029bddc90397933ab41de",
+      "canvasWidth": 192,
+      "canvasHeight": 192,
+      "alphaBounds": [
+        66,
+        0,
+        126,
+        192
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 3
+      }
+    },
+    "Weapon_Club_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Club_Copper.png",
+      "source": "clubs/Copper_Copper_Texture_icon1x3.png",
+      "sha256": "8ee597173fadf87309e9f6551e93323f1e14ad3594bd5ed6d8a398d465e69b41",
+      "canvasWidth": 64,
+      "canvasHeight": 192,
+      "alphaBounds": [
+        2,
+        0,
+        52,
+        192
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 3
+      }
+    },
+    "Weapon_Club_Crude": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Club_Crude.png",
+      "source": "clubs/Crude_Crude_Texture_icon1x3.png",
+      "sha256": "0a280a381c6128b114beb40f9737cd04193d2a444f14f64f2ba3d81fc129e39d",
+      "canvasWidth": 64,
+      "canvasHeight": 192,
+      "alphaBounds": [
+        10,
+        0,
+        52,
+        192
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 3
+      }
+    },
+    "Weapon_Club_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Club_Iron.png",
+      "source": "clubs/Iron_Iron_default_icon1x3.png",
+      "sha256": "3a836705fa012e10105c9ff05b4045cac42da713b004f34ccea0f227eae729a2",
+      "canvasWidth": 64,
+      "canvasHeight": 192,
+      "alphaBounds": [
+        2,
+        0,
+        62,
+        192
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 3
+      }
+    },
+    "Weapon_Club_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Club_Mithril.png",
+      "source": "clubs/Mithril_Mithril_Texture_icon1x3.png",
+      "sha256": "ead0c025403d4e8a60b4a521df9fc6695c1784ddc94b6554ae66c8ab22918f65",
+      "canvasWidth": 64,
+      "canvasHeight": 192,
+      "alphaBounds": [
+        0,
+        1,
+        64,
+        189
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 3
+      }
+    },
+    "Weapon_Club_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Club_Onyxium.png",
+      "source": "clubs/Onyxium_Onyxium_Texture_icon1x3.png",
+      "sha256": "14274a334e02424dd4b046503e0bcf61180b55ac0351a4c08bb61fdcf09bce34",
+      "canvasWidth": 64,
+      "canvasHeight": 192,
+      "alphaBounds": [
+        0,
+        0,
+        64,
+        192
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 3
+      }
+    },
+    "Weapon_Club_Steel_Flail_Rusty": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Club_Steel_Flail_Rusty.png",
+      "source": "clubs/Steel_Flail_Steel_Flail_Rusty_Texture_icon2x3.png",
+      "sha256": "4f094d04f93542eea95386175463bb57066e9ba74ada23cec7872a47f2ad2aef",
+      "canvasWidth": 128,
+      "canvasHeight": 192,
+      "alphaBounds": [
+        5,
+        1,
+        123,
+        192
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 3
+      }
+    },
+    "Weapon_Club_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Club_Thorium.png",
+      "source": "clubs/Thorium_Thorium_Texture_icon1x3.png",
+      "sha256": "2db4e9f659b97b8811df8dc1df99671db33569b78c4faedc035454d5bab289a6",
+      "canvasWidth": 64,
+      "canvasHeight": 192,
+      "alphaBounds": [
+        0,
+        0,
+        64,
+        192
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 3
+      }
+    },
+    "Weapon_Crossbow_Ancient_Steel": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Crossbow_Ancient_Steel.png",
+      "source": "crossbows2x2/crossbow_rusty_iron.png",
+      "sha256": "f2cc84bedc7bdd87ef0dda6f06b3859bd49e49dfb0a606d469b0c421ce814e63",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        0,
+        10,
+        128,
+        118
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 2
+      }
+    },
+    "Weapon_Crossbow_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Crossbow_Iron.png",
+      "source": "crossbows2x2/crossbow_iron.png",
+      "sha256": "640050aeaaf6c39b1b1041d45894f8c167ce868cf6a30f16f984204b42850a24",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        0,
+        19,
+        256,
+        237
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Adamantite.png",
+      "source": "daggers1x2/Adamantite_Adamantite_Texture_icon.png",
+      "sha256": "160d18bad9bf07e47ef71f0028388530202a8c00486ccb6dad369d7fc9d5e515",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        42,
+        1,
+        86,
+        127
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Bronze": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Bronze.png",
+      "source": "daggers1x2/Bronze_Bronze_Texture_icon.png",
+      "sha256": "68ac9f0412227955e544fae6eb295da42f8a2d3653f80bd1151337cd67aab1f2",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        47,
+        0,
+        81,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Bronze_Ancient": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Bronze_Ancient.png",
+      "source": "daggers1x2/Bronze_Ancient_Bronze_Ancient_Texture_icon.png",
+      "sha256": "50a64443a6c92c04af0c609e37279939db062c1f5d11c563633b6bfce9fb5384",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        42,
+        1,
+        86,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Cobalt.png",
+      "source": "daggers1x2/Cobalt_Cobalt_Texture_icon.png",
+      "sha256": "2268c3c8ced711b99861f56ee7dc3068ad3e96f94ff1dd6a2854ea1f881ca7e4",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        40,
+        0,
+        88,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Copper.png",
+      "source": "daggers1x2/Copper_Copper_Texture_icon.png",
+      "sha256": "ef8dd7d76f9b7e954790fe0ec67c8b3cb0f498337e33cbcb30e4f932138b0817",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        44,
+        1,
+        84,
+        127
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Crude": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Crude.png",
+      "source": "daggers1x2/Crude_Crude_Texture_icon.png",
+      "sha256": "0b95b20fc86a6758ed64eca07afb14d6e49351cd9ab9a0b646615662f2a792bf",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        44,
+        0,
+        85,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Iron.png",
+      "source": "daggers1x2/Iron_Iron_Texture_icon.png",
+      "sha256": "558b90c505fe6f90a070913c9e1bc77ef5b526a05280ab0525348bcf5f3d57e3",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        42,
+        0,
+        86,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Mithril.png",
+      "source": "daggers1x2/Mithril_Mithril_Texture_icon.png",
+      "sha256": "6c6f9161313e6d3cb4a232037db7b8495ed686e8cb6d90c0e12c55ab07ddff98",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        39,
+        0,
+        89,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Onyxium.png",
+      "source": "daggers1x2/Onyxium_Onyxium_Texture_icon.png",
+      "sha256": "226f12ad566013cf761c9d45874108f38f79a1b37d680230e50ce924ca6599f2",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        38,
+        0,
+        90,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Daggers_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Daggers_Thorium.png",
+      "source": "daggers1x2/Thorium_Thorium_Texture_icon.png",
+      "sha256": "51ebd932ee0dc7b4ba41ddb92bbb655af4577fe864de0e27a45c466ab84edd24",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        36,
+        0,
+        92,
+        128
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Gun_Blunderbuss": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Gun_Blunderbuss.png",
+      "source": "guns2x4/Blunderbuss_Blunderbuss_Texture_icon.png",
+      "sha256": "4805b94be61588cb8b19e0a37e14f9dd62fc259be0136788d2f88689b5e18159",
+      "canvasWidth": 128,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        29,
+        0,
+        99,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Gun_Blunderbuss_Rusty": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Gun_Blunderbuss_Rusty.png",
+      "source": "guns2x4/Blunderbuss_Blunderbuss_Rusty_Texture_icon.png",
+      "sha256": "6e266981e876f5f562e82f63ffbbe4ac339ef5dfd16553fd5419c50933186ce2",
+      "canvasWidth": 128,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        29,
+        0,
+        99,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Kunai": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Kunai.png",
+      "source": "throwing/Kunai1x2.png",
+      "sha256": "9eca3a0de7083a254547bcccd0de1c3f34f85662878a1d455a4ecac76f6b41e9",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        52,
+        5,
+        76,
+        122
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 2
+      }
+    },
+    "Weapon_Longsword_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Adamantite.png",
+      "source": "longswords/Adamantite_Adamantite_Texture_icon2x4.png",
+      "sha256": "cad45244a1b98318e0869edd3aa98187647546a4510a4dc8dfd114673e18e9ad",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        94,
+        0,
+        162,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Cobalt.png",
+      "source": "longswords/Cobalt_Cobalt_Texture_icon1x4.png",
+      "sha256": "2677944fae27e9ab121d75dd394f0a27e8173e42d7908016dc32bf9f87cb7bc5",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        104,
+        0,
+        152,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Copper.png",
+      "source": "longswords/Copper_Copper_Texture_icon1x4.png",
+      "sha256": "716355f4762b960a5422af4bdf6bcc6921228238a57884cbdacf29855559a0cb",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        105,
+        1,
+        151,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Crude": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Crude.png",
+      "source": "longswords/Crude_Crude_Texture_icon1x4.png",
+      "sha256": "986aac1d48c44ce8b430ff539492971695b411364f3c900887c6b966eda4dc10",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        96,
+        3,
+        160,
+        252
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Flame": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Flame.png",
+      "source": "longswords/Flame_Flame_Texture_icon2x4.png",
+      "sha256": "55703abf377ec4ad13cabd104ebfb4d1e31920d0a743364140a0e6d145dafbbc",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        92,
+        0,
+        164,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Iron.png",
+      "source": "longswords/Iron_Iron_Texture_icon2x4.png",
+      "sha256": "bb143a3cb1619103a2ed20d0cf3ff779a75ffbe78d1b4c45ee7eeb4b2954979b",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        88,
+        0,
+        168,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Katana": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Katana.png",
+      "source": "longswords/Katana_Katana_Texture_icon1x4.png",
+      "sha256": "8a12cb9ae20487c236f0b29546a52e96ab666bdf4c80271d5ce70c6e933f51e5",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        108,
+        1,
+        149,
+        254
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Mithril.png",
+      "source": "longswords/Mithril_Mithril_Texture_icon2x4.png",
+      "sha256": "baec7cf11df221a2275034aa7847942dfeb54cb3032f51ea573dcd67cd7b69f1",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        97,
+        1,
+        159,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Onyxium.png",
+      "source": "longswords/Onyxium_Onyxium_Texture_icon2x4.png",
+      "sha256": "a3dd5b01ed71b97449cb830aeecefd97db06a2609ef75e89aca54868d51a11d6",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        92,
+        1,
+        164,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Scarab": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Scarab.png",
+      "source": "longswords/Scarab_Scarab_Texture_icon2x4.png",
+      "sha256": "442956a0c18aceb5585ced6faf6c2dc6762fb55db61d82fdc37f42acb525856f",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        92,
+        0,
+        164,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Longsword_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Longsword_Thorium.png",
+      "source": "longswords/Thorium_Thorium_Texture_icon2x4.png",
+      "sha256": "9b303b32d1963fff0dfaa1dbfa3e461bab46ce02083f32c0c100135e084d26cb",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        95,
+        1,
+        161,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Mace_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Mace_Adamantite.png",
+      "source": "maces2x4/Adamantite_Adamantite_Texture_icon.png",
+      "sha256": "8e710a54f6308f8624fe8a3dfb31ce007e9165803fa78fde948c020989a5ab7a",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        74,
+        0,
+        182,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Mace_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Mace_Cobalt.png",
+      "source": "maces2x4/Cobalt_Cobalt_Texture_icon.png",
+      "sha256": "76d31dc25aad8d380c13c2b59a0dbe9bf9b71b605187683117067d2da0b1dd6d",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        72,
+        0,
+        184,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Mace_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Mace_Copper.png",
+      "source": "maces2x4/Copper_Copper_Texture_icon.png",
+      "sha256": "de6e1026d78903148ebb9dc8e7078af4add8dc94fedd274218cedaf514c36e5e",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        92,
+        0,
+        164,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Mace_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Mace_Iron.png",
+      "source": "maces2x4/Iron_Iron_Texture_icon.png",
+      "sha256": "7dce6b919db6275b180aa1af129d2ec80887fada1580e94ec0ba7631d03127f0",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        92,
+        0,
+        164,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Mace_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Mace_Mithril.png",
+      "source": "maces2x4/Mithril_Mithril_Texture_icon.png",
+      "sha256": "8c83859f3011da4b1a9013a2faa5191c8193bc359aaed7bfc9ee44ff74713ad2",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        68,
+        3,
+        188,
+        254
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Mace_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Mace_Onyxium.png",
+      "source": "maces2x4/Onyxium_Onyxium_Texture_icon.png",
+      "sha256": "4a4aa6f2891204b29d3a001e7bcf9960a6b87d7bc0c39a219628b4aa6b4a33fc",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        86,
+        5,
+        170,
+        252
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Mace_Prisma": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Mace_Prisma.png",
+      "source": "maces2x4/Prisma_Prisma_Texture_icon.png",
+      "sha256": "f8e52dc1aa2954cbf52d4be430a2eb8acf6a1b2855f4690906d5aa11f5def49e",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        92,
+        0,
+        164,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Mace_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Mace_Thorium.png",
+      "source": "maces2x4/Thorium_Thorium_Texture_icon.png",
+      "sha256": "97980c89e1832ebeb7627f3337a59671d3b23a611eb58a2599bbcd8d36e6af0c",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        66,
+        0,
+        190,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Adamantite.png",
+      "source": "shields4x4/Adamantite_Adamantite_Texture_icon.png",
+      "sha256": "19e431582347462f0a3e42dda7c3f21e8cdde9bb202b828a34fd1961cd52306a",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        47,
+        0,
+        209,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Cobalt.png",
+      "source": "shields4x4/Cobalt_Cobalt_Texture_icon.png",
+      "sha256": "c39454ee87b4d0d6534729ae9736eccf93ef4685a2bfa6311b53eea8760da471",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        57,
+        0,
+        199,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Copper.png",
+      "source": "shields4x4/Copper_Copper_Texture_icon.png",
+      "sha256": "f3fe02e889168a335a04a9d850117c017c281bd31bc5d2d149e1c5a2731ba4ee",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        48,
+        0,
+        208,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Iron.png",
+      "source": "shields4x4/Iron_Iron_Texture_icon.png",
+      "sha256": "42cf4c78b90f4470fabcb2f93175b519ca262a7ac2f4c03d48f6536850a01629",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        51,
+        0,
+        205,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Mithril.png",
+      "source": "shields4x4/Mithril_Mithril_Texture_icon.png",
+      "sha256": "966bfc0bf2be77ad718b5a45699bbe6e23d378899aaffed3daf87cef71c74e53",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        46,
+        0,
+        210,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Onyxium.png",
+      "source": "shields4x4/Onyxium_Onyxium_Texture_icon.png",
+      "sha256": "adffc31cce1db2363a3fc68c0ea81ea1d5935e706f1856e776eb81432e23a1b8",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        31,
+        0,
+        225,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Orbis_Incandescent": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Orbis_Incandescent.png",
+      "source": "shields4x4/Orbis_Knight_Orbis_Incandescent_Texture_icon.png",
+      "sha256": "4a18f530d18335e311fd3aba69112876fd3ffac930a79d31f84a922881ae64cf",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        30,
+        0,
+        226,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Orbis_Knight": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Orbis_Knight.png",
+      "source": "shields4x4/Orbis_Knight_Orbis_Knight_Texture_icon.png",
+      "sha256": "a2305010d89d10598b06da52858670cd6ddd02897f31ee5579dc8635312407de",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        30,
+        0,
+        226,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Rusty": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Rusty.png",
+      "source": "shields4x4/Rusty_Rusty_Texture_icon.png",
+      "sha256": "4fd969303edeaa1b1b0c024a6333c16cc4a4a8c8463d5fe00d1884d6bdec7c12",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        28,
+        10,
+        228,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Thorium.png",
+      "source": "shields4x4/Thorium_Thorium_Texture_icon.png",
+      "sha256": "5975041b423d16e8d1806f6e815beb3dc0b29499678d9d06f47bba8dc53051be",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        54,
+        0,
+        202,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shield_Wood": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shield_Wood.png",
+      "source": "shields4x4/Wood_Wood_Hide_icon.png",
+      "sha256": "f711279a0ce1949d2ebe2aeb0aa71c0a30251bab4569d20aff1547c6205c803f",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        30,
+        0,
+        226,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 4,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Adamantite.png",
+      "source": "Bows2x4/Adamantite_Adamantite_Texture_icon.png",
+      "sha256": "5f73705484566466bf05abce09e0a2a762d15adc629b08878ff40c60d40f4124",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        80,
+        0,
+        177,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Bronze": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Bronze.png",
+      "source": "Bows2x4/Bronze_Bronze_Texture_icon.png",
+      "sha256": "ac7890005d3fb661a4039c8a717c9480feb97633ba535a80822d02d77c5a77ef",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        100,
+        5,
+        156,
+        251
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Cobalt.png",
+      "source": "Bows2x4/Cobalt_Cobalt_Texture_icon.png",
+      "sha256": "10f1bdeee4e1be0a74b309f44a826aa6c07f657de1561cb8dfdbd6c55844dd98",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        100,
+        1,
+        156,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Copper.png",
+      "source": "Bows2x4/Copper_Copper_Texture_icon.png",
+      "sha256": "94ae4eb04f3b4d243df9d56dc2c41e68e226da9c6650ecf1ee21202f6ec89107",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        91,
+        1,
+        165,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Crude": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Crude.png",
+      "source": "Bows2x4/Crude_Crude_Texture_icon.png",
+      "sha256": "26e4cb019bd5b249172b7eb240a47971d8e670158bb7c7997dd6d385aeb1feaf",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        97,
+        0,
+        160,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Flame": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Flame.png",
+      "source": "Bows2x4/Flame_Flame_Texture_icon.png",
+      "sha256": "c5c76a1e887fe496776fea137f415bceda9ea7ee8ac53c95f3fed1cefa1321e5",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        80,
+        5,
+        175,
+        251
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Frost": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Frost.png",
+      "source": "Bows2x4/Frost_Frost_Texture_icon.png",
+      "sha256": "80828e5592c2fff47cf011ff82169458a84011965092cf2def221675dae247a8",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        82,
+        0,
+        174,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Iron.png",
+      "source": "Bows2x4/Iron_Iron_Texture_icon.png",
+      "sha256": "78bee1dc861a1cfe36dc173b2b16d0c9c18a52fd0fb5ec02fb369e19b023edee",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        98,
+        0,
+        158,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Mithril.png",
+      "source": "Bows2x4/Mithril_Mithril_Texture_icon.png",
+      "sha256": "449aeaaca6d3fd29bab42f45bba00f51957411e410838354f01ab0f7033ab2f1",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        90,
+        0,
+        166,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Thorium.png",
+      "source": "Bows2x4/Thorium_Thorium_Texture_icon.png",
+      "sha256": "1175a749fae1a80afdde2e8d04102e189b02e86403c6103fa47e2b59e47e9eb0",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        89,
+        4,
+        166,
+        252
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Shortbow_Vampire": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Shortbow_Vampire.png",
+      "source": "Bows2x4/Iron_Vamp_Texture_icon.png",
+      "sha256": "8988c5215fa58acd5a8a67b8fa8b4e6fcfeb1bc54e5d65b52c76a5857beeb50c",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        98,
+        0,
+        158,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Adamantite.png",
+      "source": "spears1x4/Adamantite_Adamantite_Texture_icon.png",
+      "sha256": "35fbfcd97bdde4b9669fa9c77a742a9719a8782842f609de84e636961bd58e09",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        103,
+        0,
+        154,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Bronze": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Bronze.png",
+      "source": "spears1x4/Bronze_Bronze_Texture_icon.png",
+      "sha256": "e356d2d115b9b9bf6e4e7364fa1b1e654d64c79d67f08a96dda211db35a793cc",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        104,
+        0,
+        152,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Cobalt.png",
+      "source": "spears1x4/Cobalt_Cobalt_Texture_icon.png",
+      "sha256": "501d352ff8a84c2a3ad11ca122d704397d422a831596348323f509bfc04d7de6",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        103,
+        0,
+        153,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Copper.png",
+      "source": "spears1x4/Copper_Copper_Texture_icon.png",
+      "sha256": "0d27aac87be12304fc7051468880dded42de1761cd3b56e6bf25cfb2eac898d5",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        108,
+        0,
+        148,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Crude": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Crude.png",
+      "source": "spears1x4/Crude_Crude_Texture_icon.png",
+      "sha256": "2bbe5eb9bccfe2f2404a882b09d698bcd18045b681129b0bfe8fb390a7b922c1",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        113,
+        0,
+        143,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Double_Incandescent": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Double_Incandescent.png",
+      "source": "spears1x4/Double_Incandescent_Double_Incandescent_Texture_icon.png",
+      "sha256": "cd69994c3924365bc3284ff88b91d734b31c41f6d610dd5addc9d41a202e5033",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        114,
+        2,
+        142,
+        254
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Iron.png",
+      "source": "spears1x4/Iron_Iron_Texture_icon.png",
+      "sha256": "bd2671d06451cabbbc8af4a916715a178bf155008c18abb41a520351335f53fc",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        115,
+        1,
+        141,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Mithril.png",
+      "source": "spears1x4/Mithril_Mithril_Texture_icon.png",
+      "sha256": "6d5291779d03107f831fc6e814d51be3f9751b5fe24cd9590228d863b6f7a47c",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        104,
+        1,
+        152,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Onyxium.png",
+      "source": "spears1x4/Onyxium_Onyxium_Texture_icon.png",
+      "sha256": "603be7a47db8abe989320109515bc5d1f826eda8ad622cf353fa5e1354250419",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        109,
+        1,
+        147,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spear_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spear_Thorium.png",
+      "source": "spears1x4/Thorium_Thorium_Texture_icon.png",
+      "sha256": "4ef32731206e36fd9d5ccb061516a31a1f06323bf91e879c9a9719c30523cb66",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        114,
+        1,
+        142,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Spellbook_Fire": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spellbook_Fire.png",
+      "source": "books/Book_Book_Fire_Texture_icon.png",
+      "sha256": "96ad56c7ba43a10de2c9d4d67d3117a32e602af50909b05029f980431ac4501d",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        32,
+        0,
+        96,
+        128
+      ],
+      "authoredFootprint": null
+    },
+    "Weapon_Spellbook_Frost": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spellbook_Frost.png",
+      "source": "books/Frost_Frost_Texture_icon.png",
+      "sha256": "528263165b46e9bc648b31ae6c6549417bdd03dae20ccdf370d16d330dcf89c8",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        31,
+        0,
+        97,
+        128
+      ],
+      "authoredFootprint": null
+    },
+    "Weapon_Spellbook_Grimoire_Brown": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spellbook_Grimoire_Brown.png",
+      "source": "books/Grimoire_Grimoire_Brown_Texture_icon.png",
+      "sha256": "673ba6ec9e6bf7059f640bccac9010312df77119f83a4b2dfbf663ef91ed41d3",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        30,
+        0,
+        98,
+        128
+      ],
+      "authoredFootprint": null
+    },
+    "Weapon_Spellbook_Grimoire_Purple": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Spellbook_Grimoire_Purple.png",
+      "source": "books/Grimoire_Grimoire_Purple_Texture_icon.png",
+      "sha256": "7a5f403e692a19bbf7d06bc62a4978df703cb5d5535e329a94db2d131029f40a",
+      "canvasWidth": 128,
+      "canvasHeight": 128,
+      "alphaBounds": [
+        30,
+        0,
+        98,
+        128
+      ],
+      "authoredFootprint": null
+    },
+    "Weapon_Staff_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Adamantite.png",
+      "source": "staves/Adamantite2x4.png",
+      "sha256": "5c115a7fb8cbbb4eb5a850abd16fe3adc6cfd1aa52052bd2d158f00136f1469c",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        83,
+        0,
+        173,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Bo_Wood": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Bo_Wood.png",
+      "source": "staves/Bo_Wood1x4.png",
+      "sha256": "57a242a206a6e3f516a29fead94cdb143e56e572057341c7fad6f506cac3b9eb",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        121,
+        0,
+        135,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Bronze": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Bronze.png",
+      "source": "staves/Bronze2x4n.png",
+      "sha256": "31b46c3fc1b4573dc087b52e709e60962bc69307ccdafdd4beb4afe4784d4138",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        95,
+        0,
+        161,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Cobalt.png",
+      "source": "staves/Cobalt1x4.png",
+      "sha256": "5d2ed22db6ebe430420bb2a08eb2db8235f4a1927f45470bcd8edb85b146cc9f",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        105,
+        1,
+        151,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Copper.png",
+      "source": "staves/Copper1x4.png",
+      "sha256": "c87e3303f8c545b2ee10c94b3c125929b3e810e32fd0a841b53e05fdf6e1289b",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        101,
+        0,
+        156,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Crystal_Flame": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Crystal_Flame.png",
+      "source": "staves/Crystal_Flame1x4.png",
+      "sha256": "6bd3c7369b4ce0f802105af6d93e134405eb15524103dd24ad29cd4f250acd8d",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        96,
+        3,
+        159,
+        254
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Crystal_Ice": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Crystal_Ice.png",
+      "source": "staves/Crystal_Ice_Crystal1x4.png",
+      "sha256": "bad1bc76c0563b1d1849a4efda609fd1bafa8e722f708ef52e45d8250dac5525",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        96,
+        0,
+        160,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Crystal_Purple": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Crystal_Purple.png",
+      "source": "staves/Crystal_Purple1x4.png",
+      "sha256": "9f3c466e058c62a0622f3730a72d922d69ceed5dbab06fb8eeb854faaf81f9db",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        103,
+        0,
+        153,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Crystal_Red": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Crystal_Red.png",
+      "source": "staves/Crystal_Red1x4.png",
+      "sha256": "2f70924ac8494223f8aa1f6f301dc736ae244d6bd65bba523af44249edc30bb5",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        107,
+        0,
+        149,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Frost": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Frost.png",
+      "source": "staves/Frost2x4.png",
+      "sha256": "3674aa8e48795caf3f176e99857265612418470f5a3417410b5ddea63753cb44",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        87,
+        1,
+        168,
+        255
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Iron.png",
+      "source": "staves/Iron1x4.png",
+      "sha256": "7311048b561f7ad7eda907f27e88da3a8242cc0156f32910001d690a2d21cad7",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        104,
+        0,
+        152,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Mithril.png",
+      "source": "staves/Mithril2x4.png",
+      "sha256": "21d0417f37d72a99dd3e375f1483af0d89a5ffe022aabf70571b9596141c4825",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        86,
+        0,
+        170,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Onyxium.png",
+      "source": "staves/Onyxium1x4.png",
+      "sha256": "9211e16e5458145e044d44c5f5866ec268bf3f1150d4b3418919ced273e1e67b",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        100,
+        0,
+        156,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Thorium.png",
+      "source": "staves/Thorium1x4.png",
+      "sha256": "fb2146a8fc89197ad11bd615e4c673cf096fccf404905d1cff06353f8e1c939b",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        103,
+        0,
+        153,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Wizard": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Wizard.png",
+      "source": "staves/Wizard2x4.png",
+      "sha256": "239513e56df9a9839629fc4a996736b23c0be7a8e24e422d3391fe47d724a00d",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        89,
+        5,
+        167,
+        250
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Wood": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Wood.png",
+      "source": "staves/Wood_Wood2x4.png",
+      "sha256": "dbe88cbfeb5065142dcbbd25e304f4c699356dd8ef5c23783ff9beb4d6d4ecad",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        94,
+        0,
+        162,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Staff_Wood_Rotten": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Staff_Wood_Rotten.png",
+      "source": "staves/Wood_Rotten2x4.png",
+      "sha256": "c35c6e2c7d40aaac6dd43025cec8f6f507278c7b04f417b8bd31593a61a590fc",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        94,
+        0,
+        162,
+        256
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Adamantite": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Adamantite.png",
+      "source": "swords/Adamantite1x4.png",
+      "sha256": "334bc839582b524c5517fa6b4ac0b369e1578b54277e9830ee15920b161ef0a0",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        102,
+        16,
+        154,
+        239
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Bronze": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Bronze.png",
+      "source": "swords/Bronze1x4.png",
+      "sha256": "38197aa7606a1bc0a54ba712c8fba07455775f2e8545a1341b44405296bbaf18",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        106,
+        10,
+        150,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Bronze_Ancient": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Bronze_Ancient.png",
+      "source": "swords/Bronze_Ancient2x4.png",
+      "sha256": "e13195db44bc1ff57950de9778f9c9966ad9c5d2c7afaef056a0460c91f4898d",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        94,
+        10,
+        162,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Cobalt": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Cobalt.png",
+      "source": "swords/Cobalt1x4.png",
+      "sha256": "d4c11a7a8c94464db09ff13acbf6dd87024268ee7948ecc214dc1b31465f61f3",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        105,
+        11,
+        151,
+        245
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Copper": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Copper.png",
+      "source": "swords/Copper1x4.png",
+      "sha256": "be60d58c6858127d8dbade25557ab5b3f5d3d1788b393893dd2f843c3a29f91e",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        105,
+        11,
+        151,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Crude": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Crude.png",
+      "source": "swords/Crude1x4.png",
+      "sha256": "c89412ed3da7884270744637b4d428f6ed3c88e729159e5eead1a88b6b3dbfa6",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        101,
+        11,
+        155,
+        244
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Cutlass": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Cutlass.png",
+      "source": "swords/Cutlass2x4.png",
+      "sha256": "b350dd88b225ce30f79042ad05f87ed14c78101da2d3c48dba5f72bb9413288d",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        89,
+        17,
+        167,
+        239
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Frost": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Frost.png",
+      "source": "swords/Frost2x4.png",
+      "sha256": "d3f9e4ab477698917345cff35babdc01a207616a7ac78e63eaa453273e82568a",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        94,
+        10,
+        162,
+        245
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Iron": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Iron.png",
+      "source": "swords/Iron2x4.png",
+      "sha256": "387fde1619bdae85c460bb497b502557c6e0b0c2baa6e4f37cfe6d4fe77f12fa",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        94,
+        10,
+        162,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Mithril": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Mithril.png",
+      "source": "swords/Mithril2x4.png",
+      "sha256": "caaba431e6631a4f2329dc9ebde14f830a6bad1f958144f4c05b8a1751688151",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        89,
+        11,
+        167,
+        245
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Nexus": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Nexus.png",
+      "source": "swords/Nexus2x4.png",
+      "sha256": "c53c9634216e7e42746e631b661eb48b4b3208efc71fcf1afb15e93c8290aaba",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        82,
+        20,
+        173,
+        236
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Onyxium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Onyxium.png",
+      "source": "swords/Onyxium2x4.png",
+      "sha256": "493c756b916b64fd0abcf89a36d8666db364a773680bf25f0b5c998b1b92c892",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        92,
+        10,
+        164,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Runic": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Runic.png",
+      "source": "swords/Runic2x4.png",
+      "sha256": "958fdb08c92b1a21fd4816e4fb6315c0c9b729a96412bc9c0e44e4240dc296b6",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        90,
+        13,
+        166,
+        243
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Silversteel": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Silversteel.png",
+      "source": "swords/Silversteel2x4.png",
+      "sha256": "27687d468a85a506cc092f5913c107488c1f75828f48e568c7f20404773c1cba",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        88,
+        10,
+        168,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Steel": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Steel.png",
+      "source": "swords/Steel1x4.png",
+      "sha256": "0a584150830b3e3a203f969c8258b361649473d4bb529af611f00b013b7f2424",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        99,
+        10,
+        157,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 1,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Thorium": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Thorium.png",
+      "source": "swords/Thorium2x4.png",
+      "sha256": "37319fb92f116794f3d6eb7f5bb23e09fd6f5da0dd756520a77e5dae155d159a",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        91,
+        12,
+        165,
+        244
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Sword_Wood": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Sword_Wood.png",
+      "source": "swords/Wood2x4.png",
+      "sha256": "1e7fb08d881659d3dc596457e6397c272e158caefdfbfe5394f29c30ade0bc76",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        91,
+        11,
+        165,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Wand_Wood": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Wand_Wood.png",
+      "source": "Wands/Wood_Wood2x4.png",
+      "sha256": "b8ecda38e2a8aac45a13379909e860f5575c7dc63d4328fde62c91b1320b0d4b",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        64,
+        10,
+        193,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    },
+    "Weapon_Wand_Wood_Rotten": {
+      "texture": "Icons/RPG/WeaponArt/Weapon_Wand_Wood_Rotten.png",
+      "source": "Wands/Wood_Rotten2x4.png",
+      "sha256": "8e307dc8d1eb741808f94d78f1af8b05966723eb9cb9ee5ffa55fc5859869516",
+      "canvasWidth": 256,
+      "canvasHeight": 256,
+      "alphaBounds": [
+        64,
+        10,
+        193,
+        246
+      ],
+      "authoredFootprint": {
+        "width": 2,
+        "height": 4
+      }
+    }
+  }
+}

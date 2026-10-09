@@ -1,0 +1,61 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.staff_apprentice.nm"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 110,
+  "Model": "Items/Weapons/Staff/Wood.blockymodel",
+  "Texture": "Items/Weapons/Staff/Wood_default.png",
+  "Icon": "Icons/ItemsGenerated/Weapon_Staff_Wood.png",
+  "PlayerAnimationsId": "Staff",
+  "Tags": {
+    "Type": [
+      "Weapon"
+    ],
+    "Family": [
+      "Staff"
+    ]
+  },
+  "Interactions": {
+    "Primary": "Staff_Primary",
+    "Secondary": "Staff_Primary"
+  },
+  "Weapon": {},
+  "InteractionVars": {
+    "Staff_Cast_Summon_Cost": {
+      "Interactions": [
+        {
+          "Parent": "Staff_Cast_Cost",
+          "StatModifiers": {
+            "Mana": -50
+          }
+        }
+      ]
+    },
+    "Staff_Cast_Summon_Launch": "RPG_Carrier_Staff_Launch_Root",
+    "Staff_Cast_Summon_Effect": "Staff_Cast_Effect",
+    "Staff_Cast_Summon_Fail": "Staff_Cast_Fail",
+    "Spear_Swing_Left_Damage": "RPG_Carrier_Focus_Melee_Damage",
+    "Spear_Swing_Right_Damage": "RPG_Carrier_Focus_Melee_Damage",
+    "Spear_Swing_Left_Effect": "Spear_Swing_Left_Effect",
+    "Spear_Swing_Right_Effect": "Spear_Swing_Right_Effect"
+  },
+  "Categories": [
+    "Items.Weapons"
+  ],
+  "IconProperties": {
+    "Scale": 0.3,
+    "Translation": [
+      -61,
+      -61
+    ],
+    "Rotation": [
+      50,
+      90,
+      0
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "ItemSoundSetId": "ISS_Weapons_Wood"
+}

@@ -56,11 +56,8 @@ final class IronSentinelStatProjectionTest {
                 GearRarity.UNCOMMON,List.of(roll),java.math.BigDecimal.ZERO);
         IronSentinelAffixes.requireAdapted(source);
         assertEquals(2/1.2,IronSentinelStatProjection.project(1,source,2).attackInterval(),1e-9);
-        var unsupported=catalog.affix("WA-003");
-        var bad=GearInstance.authoredQa(base,UUID.randomUUID(),base.sourceWindow().getLast(),1000,
-                GearRarity.UNCOMMON,List.of(new GearInstance.AffixRoll("WA-003",unsupported.side(),
-                        unsupported.exclusionGroup(),1,1,new GearRequirements.Gate(1,Map.of()),
-                        "Unsupported for Sentinel",unsupported.name())),java.math.BigDecimal.ZERO);
-        assertThrows(IllegalArgumentException.class,()->IronSentinelAffixes.requireAdapted(bad));
+        assertEquals(IronSentinelAffixes.Disposition.OWNER_ONLY,IronSentinelAffixes.classify("WA-003").disposition());
+        assertTrue(IronSentinelAffixes.classify("WA-003").adapted(),"Owner-only affixes are excluded, not copied to the summon");
+        assertThrows(IllegalArgumentException.class,()->IronSentinelStatProjection.attackInterval(Double.NaN,.2));
     }
 }

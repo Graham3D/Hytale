@@ -23,8 +23,10 @@ public final class RpgHudTickSystem extends EntityTickingSystem<EntityStore> {
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.HUD)){
         PlayerRef player = chunk.getComponent(index, PlayerRef.getComponentType());
         EntityStatMap stats = chunk.getComponent(index, EntityStatMap.getComponentType());
+        var hand = InventoryComponent.getItemInHand(store,chunk.getReferenceTo(index));
         if (player != null && stats != null) coordinator.tick(player, stats,
-                ItemStack.isEmpty(InventoryComponent.getItemInHand(store,chunk.getReferenceTo(index))));
+                ItemStack.isEmpty(hand), !ItemStack.isEmpty(hand) && hand.getItem().getWeapon() != null);
+        if(player!=null&&stats!=null)coordinator.tickEnemyTarget(player,store,chunk.getReferenceTo(index));
 
         }
     }

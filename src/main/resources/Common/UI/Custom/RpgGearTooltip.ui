@@ -1,0 +1,62 @@
+Group #ManagedGearTooltip {
+  Visible: false;
+  HitTestVisible: false;
+  Anchor: (Left: 0, Top: 0, Width: 400, Height: 240);
+  LayoutMode: Top;
+  Padding: (Full: 22);
+  Background: (TexturePath: "Icons/Hytale/ItemTooltipDefault.png", Border: 24);
+
+  Group #TooltipIdentity { Anchor: (Height: 70); LayoutMode: Top;
+    Group #TooltipTitleRow { Anchor: (Height: 46);
+      Group #TitleCommon { Visible: false; Anchor: (Full: 0); LayoutMode: Left;
+        Label #Name { Anchor: (Width: 258, Height: 46); Style: (FontName: "Default", FontSize: 20, TextColor: #ffffff, RenderBold: true, Wrap: true); }
+        Label #Rarity { Anchor: (Width: 98, Height: 24); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ffffff, Alignment: End); }
+      }
+      Group #TitleRare { Visible: false; Anchor: (Full: 0); LayoutMode: Left;
+        Label #Name { Anchor: (Width: 258, Height: 46); Style: (FontName: "Default", FontSize: 20, TextColor: #1d4dff, RenderBold: true, Wrap: true); }
+        Label #Rarity { Anchor: (Width: 98, Height: 24); Style: (FontName: "Secondary", FontSize: 14, TextColor: #1d4dff, Alignment: End); }
+      }
+      Group #TitleEpic { Visible: false; Anchor: (Full: 0); LayoutMode: Left;
+        Label #Name { Anchor: (Width: 258, Height: 46); Style: (FontName: "Default", FontSize: 20, TextColor: #6b00ff, RenderBold: true, Wrap: true); }
+        Label #Rarity { Anchor: (Width: 98, Height: 24); Style: (FontName: "Secondary", FontSize: 14, TextColor: #6b00ff, Alignment: End); }
+      }
+      Group #TitleLegendary { Visible: false; Anchor: (Full: 0); LayoutMode: Left;
+        Label #Name { Anchor: (Width: 258, Height: 46); Style: (FontName: "Default", FontSize: 20, TextColor: #ff9100, RenderBold: true, Wrap: true); }
+        Label #Rarity { Anchor: (Width: 98, Height: 24); Style: (FontName: "Secondary", FontSize: 14, TextColor: #ff9100, Alignment: End); }
+      }
+    }
+    Label #TooltipClassification { Anchor: (Height: 22); Style: (FontName: "Secondary", FontSize: 14, TextColor: #c9d2dd, Wrap: true); }
+  }
+
+  Group #TooltipDividerIdentity { Anchor: (Height: 14);
+    Group { Anchor: (Left: 6, Top: 6, Width: 344, Height: 1); Background: #425568; }
+    Group #AccentRare { Visible: false; Anchor: (Left: 6, Top: 6, Width: 344, Height: 1); Background: #1d4dff; }
+    Group #AccentEpic { Visible: false; Anchor: (Left: 6, Top: 6, Width: 344, Height: 1); Background: #6b00ff; }
+  }
+
+  Group #TooltipBase { LayoutMode: Top;
+    Label #TooltipDamageHeading { Visible: false; Anchor: (Height: 0); Text: "Damage"; Style: (FontName: "Secondary", FontSize: 14, TextColor: #bca57a); }
+    Label #TooltipDamageRange { Visible: false; Anchor: (Height: 0); Style: (FontName: "Default", FontSize: 22, TextColor: #ffffff, RenderBold: true); }
+    Group #TooltipBaseStats { LayoutMode: Top; }
+  }
+  Group #TooltipDividerBase { Visible: false; Anchor: (Height: 14);
+    Group { Anchor: (Left: 6, Top: 6, Width: 344, Height: 1); Background: #425568; }
+  }
+
+  Group #TooltipAffixes { LayoutMode: Top; }
+  Group #TooltipDividerAffix { Visible: false; Anchor: (Height: 14);
+    Group { Anchor: (Left: 6, Top: 6, Width: 344, Height: 1); Background: #425568; }
+  }
+
+  Group #TooltipLower { LayoutMode: Left;
+    Group #TooltipRequirements { Anchor: (Width: 230); LayoutMode: Top; }
+    Label #TooltipDurability { Anchor: (Width: 126, Height: 24); Style: (FontName: "Secondary", FontSize: 13, TextColor: #9caabb, Alignment: End); }
+  }
+
+  Group #TooltipFlavorSection { Visible: false; LayoutMode: Top;
+    Group #TooltipDividerFlavor { Anchor: (Height: 14);
+      Group { Anchor: (Left: 6, Top: 6, Width: 344, Height: 1); Background: #425568; }
+    }
+    Label #TooltipFlavor { Style: (FontName: "Secondary", FontSize: 13, TextColor: #9caabb, RenderItalics: true, Wrap: true); }
+  }
+}

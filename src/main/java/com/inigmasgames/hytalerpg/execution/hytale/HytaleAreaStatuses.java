@@ -31,12 +31,23 @@ final class HytaleAreaStatuses {
         for(int i=0;i<SLOWS.size();i++)if(present(controller,SLOWS.get(i)))slow=Math.max(slow,strengths[i]);
         return new com.inigmasgames.hytalerpg.progress.ControlEvidence(hard,slow);
     }
+    static com.inigmasgames.hytalerpg.progress.ControlEvidence observed(StatusService statuses,
+            Store<EntityStore> store,Ref<EntityStore> target){
+        var nativeView=observed(store,target);
+        if(target==null||!target.isValid())return nativeView;
+        var id=store.getComponent(target,com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+        if(id==null)return nativeView;
+        double exact=statuses.strongestSlow(id.getUuid(),
+                com.inigmasgames.hytalerpg.gear.GearNativeItems.recipientEffects(target,store)).magnitude();
+        return new com.inigmasgames.hytalerpg.progress.ControlEvidence(nativeView.immobilized(),Math.max(nativeView.slow(),exact));
+    }
     private static boolean present(EffectControllerComponent controller,String id){
         var effect=EntityEffect.getAssetMap().getAsset(id);return effect!=null&&controller.hasEffect(effect);
     }
     static boolean available() {
         return java.util.stream.Stream.concat(SLOWS.stream(), java.util.stream.Stream.of("RPG_Frozen", "RPG_Root",
-                        "RPG_Chill_Icon_1","RPG_Chill_Icon_2","RPG_Chill_Icon_3","RPG_Chill_Icon_4"))
+                        "RPG_Chill_Icon_1","RPG_Chill_Icon_2","RPG_Chill_Icon_3","RPG_Chill_Icon_4",
+                        "RPG_Affix_Stun","RPG_Affix_Silence","RPG_Affix_Blind"))
                 .allMatch(id -> EntityEffect.getAssetMap().getAsset(id) != null);
     }
     static void apply(RpgCombatKernel kernel, SkillExecutionContext context,
@@ -47,21 +58,31 @@ final class HytaleAreaStatuses {
         UUID id = UUID.fromString(target.stableId());
         StatusService.Result result;
         if (payload.status().equals("CHILL")) {
-            applyChill(kernel,context,id,control,payload.chillStacks(),trace,sources);
+            applyChill(kernel,context,id,control,payload.chillStacks(),trace,sources,
+                    com.inigmasgames.hytalerpg.gear.GearNativeItems.recipientEffects(target.handle(),store));
         } else if (payload.status().equals("ROOT") && control.boss()) {
             kernel.statuses().applySlow(id, context.rootCastId(), .35, payload.statusSeconds());
             trace.accept(RpgTraceEventType.STATUS_APPLIED, Map.of("targetId", target.stableId(), "status", "SLOW",
                     "magnitude", .35, "durationSeconds", payload.statusSeconds(), "detail", "AUTHORED_ROOT_SNARE_BOSS_SUBSTITUTE"));
         } else {
-            result = kernel.statuses().apply(id, RpgStatusType.valueOf(payload.status()), control, payload.statusSeconds());
+            result = kernel.statuses().apply(id, RpgStatusType.valueOf(payload.status()), control, payload.statusSeconds(),
+                    com.inigmasgames.hytalerpg.gear.GearNativeItems.recipientEffects(target.handle(),store));
             record(result, target.stableId(), trace);
         }
         synchronize(kernel.statuses(), id, target.handle(), store, owner);
     }
     static StatusService.ChillApplication applyChill(RpgCombatKernel kernel,SkillExecutionContext context,UUID target,
             ControlProfile control,int stacks,BiConsumer<RpgTraceEventType,Map<String,?>> trace,com.inigmasgames.hytalerpg.execution.ChillSourceRegistry sources){
+        return applyChill(kernel,context,target,control,stacks,trace,sources,
+                com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.EMPTY);
+    }
+    static StatusService.ChillApplication applyChill(RpgCombatKernel kernel,SkillExecutionContext context,UUID target,
+            ControlProfile control,int stacks,BiConsumer<RpgTraceEventType,Map<String,?>> trace,
+            com.inigmasgames.hytalerpg.execution.ChillSourceRegistry sources,
+            com.inigmasgames.hytalerpg.gear.GearEffectSnapshot targetGear){
         var before=kernel.statuses().inspect(target).active().get(RpgStatusType.CHILL);
-        var result=kernel.statuses().applyChill(context.request().actorId(),context.rootCastId(),target,control,stacks,context.compiledPlan().controls().deepFreeze());
+        var result=kernel.statuses().applyChill(context.request().actorId(),context.rootCastId(),target,control,stacks,
+                context.compiledPlan().controls().deepFreeze(),Double.NaN,targetGear);
         String provenance=sources.observed(context,target,before,kernel.statuses().inspect(target).active().get(RpgStatusType.CHILL),System.nanoTime()/1e9);
         if(provenance.endsWith("BUDGET"))trace.accept(RpgTraceEventType.STATUS_REJECTED,Map.of("targetId",target,"status","CHILL_PROVENANCE","reason",provenance,"nativeChillRetained",true));
         trace.accept(RpgTraceEventType.STATUS_REQUEST,Map.of("targetId",target,"status","CHILL","authoredStacks",stacks,
@@ -81,13 +102,13 @@ final class HytaleAreaStatuses {
                 chill!=null&&chill.stacks()==stack?chill:null);
         project(controller, target, store, owner, "RPG_Root", states.get(RpgStatusType.ROOT));
         project(controller, target, store, owner, "RPG_Frozen", states.get(RpgStatusType.FROZEN));
+        project(controller,target,store,owner,"RPG_Affix_Stun",states.get(RpgStatusType.STUN));
+        project(controller,target,store,owner,"RPG_Affix_Silence",states.get(RpgStatusType.SILENCE));
+        project(controller,target,store,owner,"RPG_Affix_Blind",states.get(RpgStatusType.BLIND));
         var slow = statuses.strongestSlow(id);
-        String selected = slow.magnitude() >= .35 ? "RPG_Root_Slow" : slow.magnitude() >= .30 ? "RPG_Frozen_Slow"
-                : slow.magnitude() > 0 ? "RPG_Chill_" + Math.clamp((int) Math.round(slow.magnitude() / .05), 1, 4) : "";
-        for (String effect : SLOWS) {
-            if (!effect.equals(selected)) remove(controller, target, store, effect);
-            else add(controller, target, store, owner, effect, Math.min(.3, slow.remainingSeconds()));
-        }
+        // Native speed effects have discrete strengths. NPC steering and player MovementManager
+        // each receive the exact strongest value from their single owner instead.
+        for(String effect:SLOWS)remove(controller,target,store,effect);
     }
     private static void project(EffectControllerComponent controller, Ref<EntityStore> target, Store<EntityStore> store,
             Ref<EntityStore> owner, String effect, StatusService.StatusView view) {

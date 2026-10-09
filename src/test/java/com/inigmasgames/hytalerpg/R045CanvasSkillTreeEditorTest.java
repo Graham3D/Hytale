@@ -173,7 +173,7 @@ class R045CanvasSkillTreeEditorTest {
         connect(editor,"passive01","out","skill01","in",true);int edges=editor.canvas().edges().size();
         var details=editor.inspect("fire_bolt","");
         assertEquals("SKILL",details.kind());assertEquals("Fire Bolt",details.name());
-        assertEquals(java.util.List.of("RESOURCE","COOLDOWN","RANGE","DAMAGE","REQUIRES","LINKED PASSIVES"),
+        assertEquals(java.util.List.of("RANK","RESOURCE","COOLDOWN","RANGE","DAMAGE","REQUIRES","LINKED PASSIVES"),
                 details.rows().stream().map(com.inigmasgames.canvasui.api.editor.CursorCanvasEditor.DetailRow::label).toList());
         var cleared=editor.clearNode("skill01",editor.canvas().snapshot());assertTrue(cleared.accepted(),cleared.message());
         editor.canvas().restore(cleared.authoritativeSnapshot());

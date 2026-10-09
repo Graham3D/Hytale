@@ -1,13 +1,13 @@
 {
   "QualityValue": 2,
-  "ItemTooltipTexture": "UI/ItemQualities/Tooltips/ItemTooltipUncommon.png",
-  "ItemTooltipArrowTexture": "UI/ItemQualities/Tooltips/ItemTooltipUncommonArrow.png",
+  "ItemTooltipTexture": "UI/ItemQualities/Tooltips/Hywind/ItemTooltipUncommon.png",
+  "ItemTooltipArrowTexture": "UI/ItemQualities/Tooltips/Hywind/ItemTooltipUncommonArrow.png",
   "SlotTexture": "UI/ItemQualities/Slots/SlotUncommon.png",
   "BlockSlotTexture": "UI/ItemQualities/Slots/SlotUncommon.png",
   "SpecialSlotTexture": "UI/ItemQualities/Slots/SlotUncommon.png",
   "TextColor": "#51c534",
   "LocalizationKey": "server.gear.quality.Uncommon",
-  "VisibleQualityLabel": false,
+  "VisibleQualityLabel": true,
   "RenderSpecialSlot": true,
   "ItemEntityConfig": {
     "ParticleSystemId": "Drop_Uncommon"

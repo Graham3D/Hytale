@@ -1367,9 +1367,7 @@ final class TavernPatronManager {
      * the ChunkStore, which Hytale explicitly forbids during an ECS tick.
      */
     static BlockType loadedBlockType(World world, int x, int y, int z) {
-        WorldChunk chunk = world.getChunkIfLoaded(
-                ChunkUtil.indexChunkFromBlock(x, z));
-        return chunk == null ? null : BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
+        return com.inigmasgames.taverns.api.LoadedBlocks.type(world, x, y, z);
     }
 
     private static boolean isPassable(BlockType block) {

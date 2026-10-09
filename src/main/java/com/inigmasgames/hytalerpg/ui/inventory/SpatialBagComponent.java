@@ -79,6 +79,23 @@ public final class SpatialBagComponent implements Component<EntityStore> {
         }
         return result;
     }
+    /** UI placement of a ring keeps its entry identity and commits both sides together. */
+    public synchronized SpatialBagAggregate.Result unequipRingAt(UUID owner, String side,
+                                                                  FootprintCatalog catalog, int x, int y,
+                                                                  String expectedPayloadJson) {
+        if (mode == OwnershipMode.NATIVE) throw new IllegalStateException("Spatial ownership required");
+        var before = state(owner);
+        var slot = rings.get(side);
+        if (slot == null || !slot.payloadJson().equals(expectedPayloadJson))
+            throw new IllegalStateException("Ring changed after selection");
+        var result = before.offerForEquipmentReturn(UUID.randomUUID(), slot.entryId(), before.revision(),
+                slot.payload(), catalog, x, y);
+        if (result.accepted()) {
+            state = result.bag();
+            rings = rings.with(side, null);
+        }
+        return result;
+    }
     /** Copied-save proof only. The caller must enforce the diagnostic marker before invocation. */
     public synchronized void activateQaProof(UUID owner) {
         state(owner);

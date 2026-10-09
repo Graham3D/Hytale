@@ -1,0 +1,18 @@
+{
+  "Type": "Simple",
+  "HorizontalSpeedMultiplier": 0.85,
+  "Effects": {
+    "ItemAnimationId": "StabLeft"
+  },
+  "RunTime": 0.066,
+  "Next": {
+    "Type": "Replace",
+    "Var": "Stab_Left_Selector",
+    "DefaultOk": true,
+    "DefaultValue": {
+      "Interactions": [
+        "RPG_Twin_Daggers_Weapon_Daggers_Primary_Stab_Left_Selector"
+      ]
+    }
+  }
+}

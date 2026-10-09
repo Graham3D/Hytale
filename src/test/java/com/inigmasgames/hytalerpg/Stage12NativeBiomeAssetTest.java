@@ -40,12 +40,31 @@ class Stage12NativeBiomeAssetTest {
         }
     }
     @Test void exactInstalledAssetsMatchRegistryPins()throws Exception{
+        // R031's gameplay baselines remain frozen. U7P5 removed three native roles and
+        // edited eight reference assets; qualify those explicitly without remapping rewards.
+        var audit=com.google.gson.JsonParser.parseString(Files.readString(Path.of("src/test/resources/u7p5-native-references.json"))).getAsJsonObject();
+        var retired=new HashSet<String>();
+        audit.getAsJsonArray("retiredRoles").forEach(id->retired.add(id.getAsString()));
+        var observed=new HashSet<String>();
         try(var zip=FileSystems.newFileSystem(assets())){
             var registry=EnemyRewardRegistry.load();
             for(var biome:registry.biomes())assertEquals(biome.assetSha256(),hash(Files.readAllBytes(zip.getPath("/"+biome.assetPath()))));
-            for(var role:registry.roles())assertEquals(role.assetSha256(),hash(Files.readAllBytes(zip.getPath("/"+role.assetPath()))));
-            for(var alias:registry.aliases())assertEquals(alias.assetSha256(),hash(Files.readAllBytes(zip.getPath("/"+alias.assetPath()))));
+            for(var role:registry.roles()){
+                var path=zip.getPath("/"+role.assetPath());
+                if(!Files.exists(path)){assertTrue(retired.contains(role.roleId()),"Unreviewed missing native role "+role.roleId());observed.add(role.roleId());continue;}
+                var overrides=audit.getAsJsonObject("updatedReferences");
+                String pin=overrides.has(role.assetPath())?overrides.get(role.assetPath()).getAsString():role.assetSha256();
+                assertEquals(pin,hash(Files.readAllBytes(path)),role.roleId());
+            }
+            for(var alias:registry.aliases()){
+                var path=zip.getPath("/"+alias.assetPath());
+                if(!Files.exists(path)){assertTrue(retired.contains(alias.roleId()),"Unreviewed missing native role "+alias.roleId());observed.add(alias.roleId());continue;}
+                var overrides=audit.getAsJsonObject("updatedReferences");
+                String pin=overrides.has(alias.assetPath())?overrides.get(alias.assetPath()).getAsString():alias.assetSha256();
+                assertEquals(pin,hash(Files.readAllBytes(path)),alias.roleId());
+            }
         }
+        assertEquals(retired,observed,"Retired roles stay historical; do not silently remap authored gameplay baselines");
     }
     private static String hash(byte[] bytes)throws Exception{return HexFormat.of().withUpperCase().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));}
     @Test void actualDefaultWorldgenCodecIdentifiesDefaultWithoutFolderGuess(){

@@ -1,0 +1,14 @@
+{
+  "Type": "Selector",
+  "RunTime": 0.05,
+  "Selector": {
+    "Id": "AOECircle",
+    "Range": 2.5
+  },
+  "HitEntity": {
+    "Interactions": [
+      "RPG_Carrier_Bomb_Damage"
+    ]
+  },
+  "Next": "RPG_GearRoute_I_Common_Projectile_Despawn"
+}

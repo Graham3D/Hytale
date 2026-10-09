@@ -45,6 +45,13 @@ try {
         'com/inigmasgames/hytalerpg/combat/RpgCombatKernel.class',
         'com/inigmasgames/hytalerpg/ui/inventory/AdvancedStatsViewModel.class',
         'com/inigmasgames/hytalerpg/ui/inventory/RpgRingEquipment.class',
+        'com/inigmasgames/hytalerpg/ui/inventory/WeaponArtCatalog.class',
+        'com/inigmasgames/hytalerpg/ui/trace/UiInteractionTrace.class',
+        'com/inigmasgames/hytalerpg/gear/GearQaTrace.class',
+        'com/inigmasgames/hytalerpg/gear/GearAffixQaSuite.class',
+        'com/inigmasgames/hytalerpg/commands/RpgGearTraceCommand.class',
+        'com/inigmasgames/hytalerpg/commands/RpgUiTraceCommand.class',
+        'com/inigmasgames/canvasui/api/CanvasInteractionObserver.class',
         'com/inigmasgames/canvasui/CanvasUI.class',
         'com/inigmasgames/taverns/TavernsPlugin.class',
         'com/inigmasgames/taverns/CoreModeManager.class',
@@ -53,13 +60,21 @@ try {
         'rpg/catalog/skills.json',
         'rpg/catalog/passives.json',
         'rpg/gear/native-bindings-v1.json',
+        'rpg/gear/affix-qa-fixtures-v1.json',
+        'rpg/gear/affix-qa-coverage-v1.json',
+        'rpg/gear/tooltip-families-v1.json',
+        'rpg/inventory/weapon-art-v1.json',
         'Common/UI/Custom/RpgHud.ui',
         'Common/UI/Custom/RpgSkillTree.ui',
         'Common/UI/Custom/RpgAdvancedStatRow.ui',
         'Common/UI/Custom/RpgAdvancedStatSection.ui',
         'Common/UI/Custom/RpgInventoryProbe.ui',
+        'Common/UI/Custom/InventoryDropTargets/OutsideSection1.ui',
+        'Common/UI/Custom/InventoryDropTargets/OutsideSection702.ui',
+        'Common/UI/Custom/InventoryDropTargets/TransparentSlot.png',
         'Common/UI/Custom/Icons/Hytale/SlotDefault@2x.png',
         'Common/UI/Custom/Icons/Hytale/ContainerHeader@2x.png',
+        'Common/UI/Custom/Icons/Hytale/ContainerHeaderNoRunes@2x.png',
         'Common/UI/Custom/Icons/Hytale/ContainerDecorationTop@2x.png',
         'Common/UI/Custom/Icons/Hytale/NavigationItemSelected@2x.png',
         'Common/UI/Custom/Icons/Hytale/NavigationItemHovered@2x.png',
@@ -103,9 +118,64 @@ try {
         'Server/Item/Items/Core/Core_Tavern.json',
         'rpg-build.properties'
     )
+    foreach ($band in @('Common', 'Magic', 'Rare', 'Legendary', 'Uncommon', 'Epic')) {
+        $required += "Common/UI/ItemQualities/Tooltips/Hywind/ItemTooltip${band}@2x.png"
+        $required += "Common/UI/ItemQualities/Tooltips/Hywind/ItemTooltip${band}Arrow@2x.png"
+    }
     foreach ($entry in $required) {
         if ($null -eq $zip.GetEntry($entry)) { throw "Missing required HyARPG entry: $entry" }
     }
+
+    $coverageReader = [IO.StreamReader]::new($zip.GetEntry('rpg/gear/affix-qa-coverage-v1.json').Open())
+    try { $coverage = $coverageReader.ReadToEnd() | ConvertFrom-Json } finally { $coverageReader.Dispose() }
+    $coverageIds = @($coverage | ForEach-Object affixId)
+    if ($coverage.Count -ne 160 -or @($coverageIds | Select-Object -Unique).Count -ne 160 -or
+        @($coverage | Where-Object result -eq 'FUNCTIONAL').Count -ne 159 -or
+        @($coverage | Where-Object { $_.result -eq 'GATED' -and $_.affixId -eq 'WA-155' -and -not $_.productionEnabled }).Count -ne 1 -or
+        @($coverage | Where-Object { $_.result -eq 'FUNCTIONAL' -and (@($_.proofHoles).Count -ne 0 -or -not $_.productionEnabled) }).Count -ne 0) {
+        throw 'Packaged affix QA coverage is incomplete or duplicated.'
+    }
+
+    $weaponManifestEntry = $zip.GetEntry('rpg/inventory/weapon-art-v1.json')
+    $weaponReader = [IO.StreamReader]::new($weaponManifestEntry.Open(), [Text.UTF8Encoding]::new($false), $true)
+    try { $weaponArt = $weaponReader.ReadToEnd() | ConvertFrom-Json } finally { $weaponReader.Dispose() }
+    $footprintEntry = $zip.GetEntry('rpg/inventory/footprints-v1.json')
+    $footprintReader = [IO.StreamReader]::new($footprintEntry.Open(), [Text.UTF8Encoding]::new($false), $true)
+    try { $footprints = $footprintReader.ReadToEnd() | ConvertFrom-Json } finally { $footprintReader.Dispose() }
+    if ($footprints.catalogRevision -ne 3) { throw 'Spatial footprint catalog revision mismatch.' }
+    if ($weaponArt.schemaVersion -ne 2 -or @($weaponArt.bindings.PSObject.Properties).Count -ne 133) {
+        throw 'Weapon art manifest version/count mismatch.'
+    }
+    $revisedNativeFootprints = 0
+    foreach ($binding in $weaponArt.bindings.PSObject.Properties) {
+        $itemId = $binding.Name
+        $value = $binding.Value
+        $path = 'Common/UI/Custom/' + $value.texture
+        if ($value.texture -ne "Icons/RPG/WeaponArt/$itemId.png" -or
+            $value.canvasWidth -lt 1 -or $value.canvasHeight -lt 1 -or
+            @($value.alphaBounds).Count -ne 4) {
+            throw "Invalid authored weapon art metadata: $itemId"
+        }
+        $size = $footprints.bindings.$itemId
+        if ($null -eq $size) { throw "No spatial footprint for authored weapon: $itemId" }
+        if ($null -ne $value.authoredFootprint) {
+            if ($size.width -ne $value.authoredFootprint.width -or
+                $size.height -ne $value.authoredFootprint.height) {
+                throw "Artist spatial suffix does not match catalog: $itemId"
+            }
+            if ($null -ne $size.previousWidth) { $revisedNativeFootprints++ }
+        }
+        $imageEntry = $zip.GetEntry($path)
+        if ($null -eq $imageEntry) { throw "Missing authored weapon art: $path" }
+        $imageStream = $imageEntry.Open()
+        try {
+            $algorithm = [Security.Cryptography.SHA256]::Create()
+            try { $imageHash = ([BitConverter]::ToString($algorithm.ComputeHash($imageStream))).Replace('-', '') }
+            finally { $algorithm.Dispose() }
+        } finally { $imageStream.Dispose() }
+        if ($imageHash -ne $value.sha256) { throw "Authored weapon PNG changed in package: $itemId" }
+    }
+    if ($revisedNativeFootprints -ne 74) { throw "Unexpected native weapon footprint changes: $revisedNativeFootprints" }
 
     $forbiddenPatterns = @(
         '^com/inigmasgames/persistentnpcs/',
@@ -132,7 +202,8 @@ try {
 
     foreach ($section in @(
             'Common/UI/Custom/InventoryNativeAlias/Section1.ui',
-            'Common/UI/Custom/InventoryNativeWorkspace/Section702.ui')) {
+            'Common/UI/Custom/InventoryNativeWorkspace/Section702.ui',
+            'Common/UI/Custom/InventoryDropTargets/OutsideSection702.ui')) {
         $sectionEntry = $zip.GetEntry($section)
         if ($null -eq $sectionEntry) { throw "Missing generated native inventory document: $section" }
         $sectionReader = [IO.StreamReader]::new($sectionEntry.Open(), [Text.UTF8Encoding]::new($false), $true)
@@ -140,6 +211,9 @@ try {
         if ($sectionText -notmatch '\.\./RpgInventory/GridCommon\.ui' -or
                 $sectionText -match 'ProfileInventory') {
             throw "Native inventory document has an orphan or ImmersiveNPC-owned base import: $section"
+        }
+        if ($section -like '*InventoryDropTargets*' -and $sectionText -notmatch 'InventorySectionId: 702;') {
+            throw "Outside drop target section mismatch: $section"
         }
     }
     foreach ($uiEntry in $zip.Entries | Where-Object { $_.FullName -like '*.ui' }) {

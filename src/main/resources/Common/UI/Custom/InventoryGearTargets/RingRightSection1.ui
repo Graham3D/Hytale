@@ -8,8 +8,9 @@ ItemGrid #GearTargetRingRight {
   Padding: 0;
   ShowScrollbar: false;
   AreItemsDraggable: true;
-  AllowMaxStackDraggableItems: true;
+  AllowMaxStackDraggableItems: false;
   DisplayItemQuantity: false;
   RenderItemQualityBackground: false;
   RenderEmptySlots: true;
+  InfoDisplay: None;
 }

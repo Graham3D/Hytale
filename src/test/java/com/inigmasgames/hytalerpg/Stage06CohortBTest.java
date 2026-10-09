@@ -22,7 +22,7 @@ class Stage06CohortBTest {
                 var ability=com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(input,java.nio.charset.StandardCharsets.UTF_8))
                         .getAsJsonObject().getAsJsonObject("Ability");
                 assertEquals(0,ability.get("Cost").getAsDouble());assertEquals(0,ability.get("Cooldown").getAsDouble());
-                assertEquals("None",ability.get("CostType").getAsString());assertEquals("Primary",ability.get("Slot").getAsString());
+                assertEquals("None",ability.get("CostType").getAsString());assertEquals("Core",ability.get("Slot").getAsString());
                 assertEquals("Root_RPG_Ability_Bridge",ability.get("Cast").getAsString());
             }
         }

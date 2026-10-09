@@ -1,0 +1,11 @@
+{
+  "revision": "gear-loot-picks-v2",
+  "rankDefaults": {
+    "COMMON": {"id":"common", "guaranteedPicks":0, "optionalPickChances":[0.30], "maxEquipment":1},
+    "SPECIALIST": {"id":"specialist", "guaranteedPicks":0, "optionalPickChances":[0.50], "maxEquipment":1},
+    "ELITE": {"id":"elite", "guaranteedPicks":0, "optionalPickChances":[0.75], "maxEquipment":1},
+    "MINIBOSS": {"id":"miniboss", "guaranteedPicks":1, "optionalPickChances":[0.25], "maxEquipment":2},
+    "BOSS": {"id":"boss", "guaranteedPicks":1, "optionalPickChances":[0.75], "maxEquipment":2}
+  },
+  "roleOverrides": {}
+}

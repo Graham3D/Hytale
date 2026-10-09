@@ -3,6 +3,7 @@ package com.inigmasgames.hytalerpg.execution.summon;
 import com.inigmasgames.hytalerpg.gear.GearAffixRuntime;
 import com.inigmasgames.hytalerpg.gear.GearCatalog;
 import com.inigmasgames.hytalerpg.gear.GearInstance;
+import com.inigmasgames.hytalerpg.gear.GearEffectSnapshot;
 import java.util.Objects;
 
 /** Iron Sentinel's pure chassis and source-local composition; native combat owns mitigation. */
@@ -20,6 +21,12 @@ public final class IronSentinelStatProjection {
         }
     }
     public static Stats project(int effectiveLevel,GearInstance bound,double nativeInterval){
+        return project(effectiveLevel,new GearEffectSnapshot(java.util.List.of(bound)),nativeInterval);
+    }
+    public static Stats project(int effectiveLevel,GearEffectSnapshot boundSource,double nativeInterval){
+        Objects.requireNonNull(boundSource);
+        if(boundSource.items().size()!=1)throw new IllegalArgumentException("Sentinel requires one bound source item");
+        GearInstance bound=boundSource.items().getFirst();
         Objects.requireNonNull(bound);
         if(effectiveLevel<1||nativeInterval<=0||!Double.isFinite(nativeInterval))
             throw new IllegalArgumentException("Invalid Sentinel rank or native interval");

@@ -1,0 +1,26 @@
+{
+  "Type": "Serial",
+  "Interactions": [
+    {
+      "Effects": {
+        "ItemAnimationId": "Throw"
+      },
+      "RunTime": 0.25,
+      "Type": "Simple"
+    },
+    {
+      "Cooldown": {
+        "Cooldown": 1
+      },
+      "Type": "ResetCooldown"
+    },
+    {
+      "Config": "RPG_Carrier_Bomb_Projectile",
+      "Next": {
+        "Type": "Simple",
+        "RunTime": 0.2
+      },
+      "Type": "RPG_CarrierProjectile"
+    }
+  ]
+}

@@ -88,6 +88,24 @@ final class IronSentinelReplacementCustodyTest {
             assertEquals("SENTINEL_BOUND",loot.inspect(newEvent).orElseThrow().state());
         }
     }
+    @Test void replacementPersistsItsOwnAcceptedOwnerSnapshotAcrossAckRestart(){
+        String event;UUID incoming;GearInstance equipped;
+        try(var store=new FileEncounterStore(directory)){
+            var loot=service(store);active(loot);var next=item();equipped=item();
+            event=loot.publishSentinelQa(owner,world,point,next).source().eventId();incoming=UUID.randomUUID();
+            var accepted=new GearEffectSnapshot(List.of(equipped));
+            var prepared=loot.prepareReplacingSentinel(event,owner,0,1000,next.identity(),incoming,world,point,8,2,1,accepted);
+            assertEquals(3,prepared.schemaVersion());assertEquals(accepted.revision(),prepared.ownerSnapshot().revision());
+            loot.acknowledgeForge(event,owner,next.identity(),incoming);
+        }
+        try(var store=new FileEncounterStore(directory)){
+            var loot=service(store);var restored=loot.claimSentinelRestore(owner,world,point).orElseThrow();
+            assertEquals(incoming,restored.instanceId());assertEquals(3,restored.schemaVersion());
+            assertEquals(equipped.identity(),restored.ownerItems().getFirst().identity());
+            assertNotEquals(restored.boundItem().identity(),restored.ownerItems().getFirst().identity());
+            assertEquals("SENTINEL_BOUND",loot.inspect(event).orElseThrow().state());
+        }
+    }
     @Test void strandedActiveBindingCanBeReplacedWithoutAProjectedActor(){
         try(var store=new FileEncounterStore(directory)){
             var loot=service(store);var old=active(loot);var next=item();

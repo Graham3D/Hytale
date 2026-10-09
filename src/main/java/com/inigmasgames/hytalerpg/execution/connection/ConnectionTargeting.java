@@ -8,11 +8,15 @@ public final class ConnectionTargeting {
     private ConnectionTargeting(){ }
     public record Selection(ConnectionWorldPort.Target target,String verdict){ }
     public static Selection select(ConnectionProfile profile,ConnectionWorldPort port){
+        return select(profile,port,profile.range());
+    }
+    public static Selection select(ConnectionProfile profile,ConnectionWorldPort port,double reach){
+        if(!Double.isFinite(reach)||reach<=0)throw new IllegalArgumentException("Invalid primary reach");
         var frame=port.frame();Vec3 origin=frame.feet().add(new Vec3(0,profile.originHeight(),0));
-        var end=port.unobstructedEndpoint(origin,origin.add(frame.aim().normalized().multiply(profile.range())));
+        var end=port.unobstructedEndpoint(origin,origin.add(frame.aim().normalized().multiply(reach)));
         var line=ConnectionShape.line(origin,end,profile.width(),profile.height());var query=profile.friendlyTether()?port.queryFriendly(line,64):port.query(line,64);
         if(query.overflow()||query.targets().size()>64)return new Selection(null,"CANDIDATE_BUDGET_REJECTED");
-        var target=query.targets().stream().filter(t->line.intersects(t.bounds())&&ConnectionShape.pointDistanceSquared(origin,t.bounds())<=profile.range()*profile.range()+1e-9&&port.lineOfSight(origin,t))
+        var target=query.targets().stream().filter(t->line.intersects(t.bounds())&&ConnectionShape.pointDistanceSquared(origin,t.bounds())<=reach*reach+1e-9&&port.lineOfSight(origin,t))
                 .sorted(Comparator.comparingDouble((ConnectionWorldPort.Target t)->line.entryDistance(t.bounds())).thenComparing(ConnectionWorldPort.Target::id)).findFirst();
         return new Selection(target.orElse(null),target.isPresent()?"PASS":"NO_VALID_AIMED_TARGET");
     }

@@ -18,6 +18,8 @@ public interface RpgLoadoutOperations {
     default void addLoadoutMutationListener(java.util.function.Consumer<UUID> listener) { }
     default long masteryXp(UUID player,String skill){return getPresentationView(player).state().skillMastery.getOrDefault(skill,0L);}
     default int baseSkillRank(UUID player,String skill){var state=getPresentationView(player).state();return state.gearEconomy.baseRanks().getOrDefault(skill,ProgressionMath.masteryLevel(state.skillMastery.getOrDefault(skill,0L)));}
+    default boolean skillAvailable(UUID player,SkillId skill){return learnedSkill(player,skill.value());}
+    default boolean learnedSkill(UUID player,String skill){return getPresentationView(player).state().learnedSkills.contains(skill);}
     MutationResult equipSkill(UUID player, SkillSlot slot, SkillId skill);
     MutationResult unequipSkill(UUID player, SkillSlot slot);
     MutationResult equipPassive(UUID player, PassiveSlot slot, PassiveId passive);

@@ -1,0 +1,68 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Predator",
+  "Modify": {
+    "DeathParticles": "Effect_Death_Flames",
+    "Appearance": "Slug_Magma",
+    "DropList": "Drop_Slug_Magma",
+    "Attack": "Larva_Silk_Bite",
+    "AttitudeGroup": "Vermin",
+    "MaxHealth": 103,
+    "MaxSpeed": 8,
+    "WanderRadius": 20,
+    "ViewRange": 8,
+    "HearingRange": 10,
+    "AlertedRange": 12,
+    "AlertedTime": [
+      2,
+      3
+    ],
+    "FleeIfNotThreatened": true,
+    "FleeRange": 15,
+    "HardLeashDistance": 60,
+    "LeashDistance": 30,
+    "CombatBehaviorDistance": 3,
+    "CombatBackOffAfterAttack": false,
+    "ChaseRelativeSpeed": 0.6,
+    "CombatMovingRelativeSpeed": 0.6,
+    "AlwaysSleepAtNight": false,
+    "DayTimeNapWeight": 0,
+    "TimidDuringDay": true,
+    "DayFlavorAnimation": "",
+    "NightFlavorAnimation": "",
+    "_CombatConfig": {
+      "EntityEffects": [
+        "Immunity_Fire"
+      ]
+    },
+    "IsMemory": true,
+    "MemoriesCategory": "Critter",
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    },
+    "_InteractionVars": {
+      "Melee_Damage": {
+        "Interactions": [
+          {
+            "$Comment": "Config for a successful melee hit, default values for Effects and HitShape are not overwritten here, see each NPC_ file",
+            "Parent": "NPC_Attack_Melee_Damage",
+            "DamageCalculator": {
+              "Type": "Absolute",
+              "BaseDamage": {
+                "Physical": 10
+              },
+              "RandomPercentageModifier": 0.1
+            },
+            "Type": "RPG_EnemyDamage"
+          }
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Slug_Magma.name",
+      "Description": "Translation key for NPC name display"
+    }
+  }
+}

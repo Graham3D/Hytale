@@ -80,6 +80,29 @@ class Stage12ProgressionClosureTest {
             assertEquals(105,repo().load(player).state().attributes.get("STR"));
         }
     }
+    @Test void levelResetIsAtomicRefundsPointsAndSurvivesReopenWithoutTouchingSkillsOrRewards(){
+        var original=seed();
+        original.level=99;
+        original.currentXp=new com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService().levelStartXp(99);
+        repo().save(original);
+        try(var s=service()){
+            assertTrue(s.resetOperatorLevel(player,original.revision,"reset-level").success());
+            var reset=repo().load(player).state();
+            assertEquals(1,reset.level);assertEquals(0,reset.currentXp);
+            assertEquals(13,reset.unspentAttributePoints);assertEquals(0,reset.pendingLevelUpPoints);
+            assertTrue(reset.attributes.values().stream().allMatch(value->value==10));
+            assertEquals(original.learnedSkills,reset.learnedSkills);
+            assertEquals(original.rewards,reset.rewards);assertEquals(original.cooldowns,reset.cooldowns);
+            assertFalse(s.resetOperatorLevel(player,original.revision,"stale").success());
+            assertTrue(s.resetOperatorLevel(player,reset.revision,"repeat").success());
+            assertEquals(13,repo().load(player).state().unspentAttributePoints);
+        }
+        try(var s=service()){
+            var restored=s.getPresentationView(player).state();
+            assertEquals(1,restored.level);assertEquals(0,restored.currentXp);
+            assertEquals(13,restored.unspentAttributePoints);
+        }
+    }
     @Test void earnedRewardStillCommitsAfterOperatorLevelChange(){
         try(var s=service()){
             var previous=new EarnedReward("pre-level-kill",100,1,Map.of(),"ENEMY_DEATH","root","skill","pre-level");

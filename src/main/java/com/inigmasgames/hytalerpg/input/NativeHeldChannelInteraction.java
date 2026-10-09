@@ -20,8 +20,8 @@ public final class NativeHeldChannelInteraction extends ChargingInteraction {
         var buffer=context.getCommandBuffer();var owner=context.getOwningEntity();var chain=context.getChain();
         if(buffer==null||owner==null||!owner.isValid()||chain==null||chain.getForkedChainId()!=null||!owner.equals(context.getEntity()))return;
         var player=buffer.getComponent(owner,PlayerRef.getComponentType());var item=context.getOriginalItemType();
-        if(player==null||item==null||!"RPG_Ability_Healing_Beam".equals(item.getId())||item.getAbility()==null
-                ||!NativeAbilityBridgeAudit.HEALING_ROOT_ID.equals(item.getAbility().getCastRootId()))return;
+        if(player==null||item==null||!"RPG_Ability_Healing_Beam".equals(item.getId())||!(item.getAbility() instanceof com.hypixel.hytale.server.core.asset.type.item.config.CoreItemAbility ability)
+                ||!NativeAbilityBridgeAudit.HEALING_ROOT_ID.equals(ability.getCastRootId()))return;
         boolean held=context.getClientState().chargeValue==-1f&&context.getClientState().state!=InteractionState.Failed
                 &&context.getState().state==InteractionState.NotFinished;
         inputs.nativeHold(player.getUuid(),type,chain.getChainId(),chain,item.getId(),context.getHeldItemSlot(),held);

@@ -1,0 +1,78 @@
+{
+  "Type": "Selector",
+  "RunTime": 0.041739,
+  "Effects": {
+    "Trails": [
+      {
+        "PositionOffset": {
+          "X": 1.7,
+          "Y": 0,
+          "Z": 0
+        },
+        "TargetNodeName": "Handle",
+        "TrailId": "Medium_Sword_Basic",
+        "RotationOffset": {
+          "Roll": 90.0
+        }
+      },
+      {
+        "PositionOffset": {
+          "X": 2.1,
+          "Y": 0,
+          "Z": 0
+        },
+        "TargetNodeName": "Handle",
+        "TrailId": "Sword_Distortion",
+        "RotationOffset": {
+          "Roll": 90.0
+        }
+      }
+    ],
+    "CameraEffect": "Sword_Swing_Diagonal_Right"
+  },
+  "Selector": {
+    "Id": "Horizontal",
+    "Direction": "ToLeft",
+    "TestLineOfSight": true,
+    "ExtendTop": 0.5,
+    "ExtendBottom": 0.5,
+    "StartDistance": 0.1,
+    "EndDistance": 3.15,
+    "Length": 90,
+    "RollOffset": 30,
+    "YawStartOffset": -60
+  },
+  "HitBlock": {
+    "Interactions": [
+      {
+        "Type": "Replace",
+        "Var": "Swing_Left_Hit_Block",
+        "DefaultOk": true,
+        "DefaultValue": {
+          "Interactions": [
+            "Block_Break_Adventure"
+          ]
+        }
+      }
+    ]
+  },
+  "HitEntity": {
+    "Interactions": [
+      {
+        "Type": "Replace",
+        "Var": "Swing_Left_Damage",
+        "DefaultOk": true,
+        "DefaultValue": {
+          "Interactions": [
+            "RPG_Action_Sword_S115_R40_Weapon_Sword_Primary_Swing_Left_Damage"
+          ]
+        }
+      }
+    ]
+  },
+  "Next": {
+    "Type": "Simple",
+    "$Comment": "Pad the interaction length",
+    "RunTime": 0.138261
+  }
+}

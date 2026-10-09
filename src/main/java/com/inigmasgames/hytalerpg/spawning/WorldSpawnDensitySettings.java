@@ -1,17 +1,15 @@
 package com.inigmasgames.hytalerpg.spawning;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.security.MessageDigest;
-import java.util.HexFormat;
 
 /** One server/save-wide setting; a missing file is the untouched native 1x default. */
-public final class WorldSpawnDensitySettings {
+public final class WorldSpawnDensitySettings implements SpawnDensitySetting {
     private record Data(int schemaVersion, double worldSpawnDensityMultiplier) {}
-    private record Envelope(String checksum, Data data) {}
     private final Gson gson = new Gson();
     private final Path path;
     private volatile double multiplier;
@@ -20,12 +18,15 @@ public final class WorldSpawnDensitySettings {
         this.path = path;
         try {
             if (!Files.exists(path)) { multiplier = 1.0; return; }
-            var envelope = gson.fromJson(Files.readString(path), Envelope.class);
-            if (envelope == null || envelope.data() == null || envelope.data().schemaVersion() != 1 ||
-                    !hash(gson.toJson(envelope.data())).equals(envelope.checksum()))
-                throw new IllegalStateException("WORLD_SPAWN_DENSITY_CHECKSUM_OR_SCHEMA");
-            validate(envelope.data().worldSpawnDensityMultiplier());
-            multiplier = envelope.data().worldSpawnDensityMultiplier();
+            var json = JsonParser.parseString(Files.readString(path)).getAsJsonObject();
+            // Earlier builds wrote a checksummed envelope. The multiplier is an
+            // owner-editable setting, so a valid manual edit must not require
+            // recomputing that legacy checksum. New writes use plain JSON.
+            var data = gson.fromJson(json.has("data") ? json.getAsJsonObject("data") : json, Data.class);
+            if (data == null || data.schemaVersion() != 1)
+                throw new IllegalStateException("WORLD_SPAWN_DENSITY_SCHEMA");
+            validate(data.worldSpawnDensityMultiplier());
+            multiplier = data.worldSpawnDensityMultiplier();
         } catch (Exception error) {
             throw new IllegalStateException("Refusing to reset world spawn density setting " + path, error);
         }
@@ -40,7 +41,7 @@ public final class WorldSpawnDensitySettings {
         var temp = path.resolveSibling(path.getFileName() + ".tmp");
         try {
             Files.createDirectories(path.toAbsolutePath().getParent());
-            var bytes = gson.toJson(new Envelope(hash(gson.toJson(data)), data)).getBytes(StandardCharsets.UTF_8);
+            var bytes = gson.toJson(data).getBytes(StandardCharsets.UTF_8);
             try (var channel = FileChannel.open(temp, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
                 var buffer = ByteBuffer.wrap(bytes);
                 while (buffer.hasRemaining()) channel.write(buffer);
@@ -65,7 +66,4 @@ public final class WorldSpawnDensitySettings {
         return (int) Math.min(Integer.MAX_VALUE, Math.ceil(baseline * multiplier));
     }
 
-    private static String hash(String value) throws Exception {
-        return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(value.getBytes(StandardCharsets.UTF_8)));
-    }
 }

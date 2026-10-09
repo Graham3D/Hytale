@@ -25,12 +25,14 @@ final class GearQaGenerationTest {
             assertTrue(gear.rngVersion().startsWith("admin-qa/"));
             assertEquals(Optional.empty(),GearEconomy.salvage(gear));
             assertEquals(gear,GearInstance.fromJson(gear.toJson()));
+            int prefixes=(int)gear.affixes().stream().filter(a->a.side()==GearCatalog.Side.PREFIX).count();
+            assertTrue(gear.rarity().legalNewBudget(prefixes,gear.affixes().size()-prefixes));
             assertEquals(gear.affixes().size(),GearTooltip.describe(gear,99,Map.of()).stream()
                     .filter(line->line.style()==GearTooltip.Style.AFFIX).count());
             switch(gear.rarity()){
                 case NORMAL->assertEquals(0,gear.affixes().size());
-                case MAGIC->assertTrue(gear.affixes().size()>=1&&gear.affixes().size()<=2);
-                case RARE->assertTrue(gear.affixes().size()>=3&&gear.affixes().size()<=6);
+                case MAGIC->assertEquals(1,gear.affixes().size());
+                case RARE->assertTrue(gear.affixes().size()>=2&&gear.affixes().size()<=3);
                 default->fail("Legacy rarity returned by QA generation");
             }
             assertEquals(gear, generator.generateQa(request));
@@ -50,13 +52,19 @@ final class GearQaGenerationTest {
         assertEquals(90,generator.generateQa(exact).itemLevel());
         var max=GearQaRequest.parse("sword","rare","hell","max","max-sword");
         var item=generator.generateQa(max);
-        assertEquals(1000,item.intrinsicThousandths());assertTrue(item.affixes().size()>=3&&item.affixes().size()<=6);
+        assertEquals(1000,item.intrinsicThousandths());assertTrue(item.affixes().size()>=2&&item.affixes().size()<=3);
         assertTrue(item.qaOnly());
-        var blocked=GearQaRequest.parse("shield","rare","hell",null,"shield-blocked");
-        assertTrue(assertThrows(IllegalArgumentException.class,()->generator.generateQa(blocked)).getMessage().startsWith("No valid HELL-era shield base"));
         for(String type:List.of("longbow","spear","shield","staff","wand","spellbook","rifle","blunderbuss","bomb")){
-            var unsupported=GearQaRequest.parse(type,"normal","normal",null,"blocked-"+type);
-            assertThrows(IllegalArgumentException.class,()->generator.generateQa(unsupported),type);
+            var request=GearQaRequest.parse(type,"normal","normal",null,"carrier-"+type);
+            boolean mapped=catalog.bases().stream().anyMatch(base->request.matches(base)
+                    &&base.era()==DifficultyId.NORMAL&&bindings.require(base.id()).mapped()
+                    &&base.worldDropCandidate()&&base.sourceWindow()!=null
+                    &&base.eligible(DifficultyId.NORMAL,base.sourceWindow().getLast()));
+            if(mapped){
+                var generated=generator.generateQa(request);
+                assertTrue(bindings.require(generated.baseId()).mapped(),type);
+                assertTrue(request.matches(catalog.base(generated.baseId())),type);
+            }else assertThrows(IllegalArgumentException.class,()->generator.generateQa(request),type);
         }
         assertThrows(IllegalArgumentException.class,()->generator.generateQa(
                 GearQaRequest.parse("helmet","rare","normal","90","outside-window")));
@@ -65,7 +73,7 @@ final class GearQaGenerationTest {
         assertNotEquals("a710b780471e616a298e9023bd1e8aa919d0c442119e6a43516463260f00e998",generator.revision());
     }
 
-    @Test void normalEraLegsCanRollFortifiedOrLaminatedAndHellHelmetHasSix() {
+    @Test void normalEraLegsCanRollFortifiedOrLaminatedAndHellRareUsesTwoOrThree() {
         var families=new HashSet<String>();
         for(int i=0;i<64&&!families.contains("GA-159")&&!families.contains("GA-160");i++){
             var request=GearQaRequest.parse("legs","magic","normal",null,"leg-affix-"+i);
@@ -75,7 +83,7 @@ final class GearQaGenerationTest {
         }
         assertTrue(families.contains("GA-159")||families.contains("GA-160"),families.toString());
         var helmet=generator.generateQa(GearQaRequest.parse("helmet","rare","hell",null,"rare-helmet"));
-        assertTrue(helmet.affixes().size()>=3&&helmet.affixes().size()<=6);
+        assertTrue(helmet.affixes().size()>=2&&helmet.affixes().size()<=3);
     }
 
 }

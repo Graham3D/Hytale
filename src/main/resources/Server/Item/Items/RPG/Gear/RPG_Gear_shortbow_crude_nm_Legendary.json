@@ -299,7 +299,9 @@
             "BaseDamage": {
               "Projectile": 1
             }
-          }
+          },
+          "RpgProcSelector": "Primary_Shoot_Damage_Strength_0",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -339,7 +341,9 @@
             "BaseDamage": {
               "Projectile": 1
             }
-          }
+          },
+          "RpgProcSelector": "Primary_Shoot_Damage_Strength_1",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -379,7 +383,9 @@
             "BaseDamage": {
               "Projectile": 2
             }
-          }
+          },
+          "RpgProcSelector": "Primary_Shoot_Damage_Strength_2",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -419,7 +425,9 @@
             "BaseDamage": {
               "Projectile": 4
             }
-          }
+          },
+          "RpgProcSelector": "Primary_Shoot_Damage_Strength_3",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -505,7 +513,9 @@
               "EntityStatId": "SignatureEnergy",
               "Amount": 1
             }
-          ]
+          ],
+          "RpgProcSelector": "Primary_Shoot_Damage_Strength_4",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -830,7 +840,9 @@
             "BaseDamage": {
               "Projectile": 9
             }
-          }
+          },
+          "RpgProcSelector": "Signature_Volley_Damage",
+          "RpgProcCoefficient": 0.3333333333333333
         }
       ]
     },
@@ -1014,7 +1026,9 @@
             "BaseDamage": {
               "Projectile": 0
             }
-          }
+          },
+          "RpgProcSelector": "Guard_Bash_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     }

@@ -27,7 +27,8 @@ public final class SupportDamageSystems {
         var value=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());return value==null?Double.NaN:value.get();
     }
     public static boolean secondaryCannotReflect(HytaleDamageMetadata metadata){
-        return metadata!=null&&(metadata.origin()==HytaleDamageMetadata.Origin.REFLECTED||metadata.origin()==HytaleDamageMetadata.Origin.REDIRECTED);
+        return metadata!=null&&(metadata.origin()==HytaleDamageMetadata.Origin.REFLECTED||metadata.origin()==HytaleDamageMetadata.Origin.REDIRECTED
+                ||metadata.monsterAffix()!=null&&metadata.origin()==HytaleDamageMetadata.Origin.PERIODIC);
     }
     private static SecondaryDamageAttempt submit(HytaleSupportSystem support,FiniteSupportEffects.Effect effect,
             Ref<EntityStore> target,Store<EntityStore> store,DamageCause cause,double amount,HytaleDamageMetadata.Origin origin){
@@ -45,7 +46,7 @@ public final class SupportDamageSystems {
         if(attempt.failure()!=null){
             // Disable this lease after an uncertain dispatch; never retry a possibly applied native hit.
             support.runtime().finite().remove(effect.key());
-            if(effect.context().profile().support()!=null&&effect.context().profile().support().aura()){
+            if(effect.context()!=null&&effect.context().profile().support()!=null&&effect.context().profile().support().aura()){
                 var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
                 if(owner!=null&&owner.isValid())try{
                     support.runtime().terminateAura(effect.key().owner(),effect.key().skill(),"NATIVE_SECONDARY_DAMAGE_DISPATCH_EXCEPTION",support.port(store,owner));
@@ -65,7 +66,8 @@ public final class SupportDamageSystems {
                                        Ref<EntityStore> recipient,Store<EntityStore> store,double now){
         // Every existing absorption path reaches here; consumption credit is independent of optional reflection.
         support.absorptionResolved(store,recipient,damage,absorption);
-        if(absorption==null||absorption.amount()<=0||!absorption.effect().context().compiledPlan().supportModifiers().reflectiveWard()||
+        if(absorption==null||absorption.amount()<=0||absorption.effect().context()==null
+                ||!absorption.effect().context().compiledPlan().supportModifiers().reflectiveWard()||
                 secondaryCannotReflect(HytaleDamageAdapter.metadata(damage))||!(damage.getSource() instanceof Damage.EntitySource attacker))return;
         var source=attacker.getRef();var effect=absorption.effect();
         if(source.equals(recipient)||!HytaleSupportSystem.alive(store,source)||!HytaleAreaQueries.hostile(store,source,recipient)||
@@ -139,6 +141,12 @@ public final class SupportDamageSystems {
             if(damage.isCancelled()||damage.getAmount()<=0||metadata!=null&&metadata.origin()==HytaleDamageMetadata.Origin.REDIRECTED)return;
             var id=chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid();var ref=chunk.getReferenceTo(index);
             double now=System.nanoTime()/1e9;var world=SupportNativeEffects.world(store);
+            var intrinsic=support.runtime().finite().intrinsicShield(world,id);
+            if(intrinsic.isPresent()){
+                var saved=store.getComponent(ref,com.inigmasgames.hytalerpg.enemies.EnemyShieldProjection.getComponentType());
+                // Validate BEFORE consuming a lease: an incomplete native binding cannot absorb unsaved capacity.
+                if(saved==null||!saved.snapshot().equals(intrinsic.get()))throw new IllegalStateException("BULWARK_NATIVE_SAVE_PROJECTION_MISMATCH");
+            }
             // Validate again here: membership/owner teardown ticks are not guaranteed to precede an incoming hit.
             for(var effect:support.runtime().finite().forTarget(world,id,now))if(com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects.isShield(effect)){
                 var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
@@ -158,6 +166,12 @@ public final class SupportDamageSystems {
                 return !result.cancelled();
             });
             damage.setAmount((float)hit.remainder());
+            for(var absorption:hit.intrinsicAllocations()){
+                var projection=store.getComponent(ref,com.inigmasgames.hytalerpg.enemies.EnemyShieldProjection.getComponentType());
+                if(projection==null)throw new IllegalStateException("BULWARK_NATIVE_SAVE_PROJECTION_MISSING");
+                projection.consumed(absorption.after());
+                support.traceIntrinsic(absorption,damage);
+            }
             for(var absorption:hit.allocations())support.traceFinite(absorption.effect(),RpgTraceEventType.BARRIER_ABSORBED,
                     Map.of("absorbed",absorption.amount(),"shieldRemaining",absorption.remaining(),"nativeAmountAfterShield",hit.remainder(),
                             "redirected",hit.redirected(),"authority",absorption.effect().kind().name()+"_POST_FILTER"));
@@ -192,7 +206,9 @@ public final class SupportDamageSystems {
     }
     public static final class Reflect extends DamageEventSystem {
         private final HytaleSupportSystem support;
+        private NativeEnemyReflectiveReaction enemyReaction;
         public Reflect(HytaleSupportSystem support){this.support=support;}
+        public void configureEnemyReaction(NativeEnemyReflectiveReaction reaction){enemyReaction=Objects.requireNonNull(reaction);}
         @Override public Query<EntityStore> getQuery(){return Query.and(UUIDComponent.getComponentType(),EntityStatMap.getComponentType());}
         @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getInspectDamageGroup();}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
@@ -205,10 +221,21 @@ public final class SupportDamageSystems {
             Double before=damage.getIfPresentMetaObject(BEFORE);double after=health(chunk,index);
             if(before==null||!Double.isFinite(before)||!Double.isFinite(after)||before<=after)return;
             var id=chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid();
+            var metadata=HytaleDamageAdapter.metadata(damage);
+            boolean originalDirect=metadata!=null?metadata.origin()==HytaleDamageMetadata.Origin.DIRECT:
+                    damage.getIfPresentMetaObject(Damage.INTERACTION_TYPE)!=null||damage.getSource() instanceof Damage.ProjectileSource;
+            if(originalDirect&&enemyReaction!=null){
+                var sourceId=store.getComponent(source,UUIDComponent.getComponentType());
+                var sourceStats=store.getComponent(source,EntityStatMap.getComponentType());
+                var sourceHealth=sourceStats==null?null:sourceStats.get(DefaultEntityStatTypes.getHealth());
+                if(sourceId!=null&&sourceHealth!=null&&sourceHealth.getMax()>0)
+                    enemyReaction.acceptPlayer(new NativeEnemyReflectiveReaction.PlayerHit(store,buffer,source,recipient,
+                            sourceId.getUuid(),id,"live/"+UUID.randomUUID(),before-after,after,sourceHealth.getMax()));
+            }
             double now=System.nanoTime()/1e9;var world=SupportNativeEffects.world(store);
             var effects=new ArrayList<FiniteSupportEffects.Effect>();
             support.runtime().finite().reflection(world,id,now).ifPresent(effects::add);
-            support.runtime().thorns(world,id,now).ifPresent(effects::add);
+            support.thorns(world,id,now).ifPresent(effects::add);
             for(var e:effects){
                 if(!HytaleSupportSystem.alive(store,source))break;
                 if(e.context().profile().support().aura()){

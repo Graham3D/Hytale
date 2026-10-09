@@ -1,0 +1,24 @@
+{
+  "Type": "StatsCondition",
+  "Costs": {
+    "Stamina": 0.1
+  },
+  "Next": {
+    "Type": "ChangeStat",
+    "Behaviour": "Set",
+    "StatModifiers": {
+      "StaminaRegenDelay": -3
+    },
+    "Next": {
+      "Type": "Replace",
+      "Var": "Pounce",
+      "DefaultOk": true,
+      "DefaultValue": {
+        "Interactions": [
+          "RPG_Twin_Daggers_Weapon_Daggers_Primary_Pounce"
+        ]
+      }
+    }
+  },
+  "Failed": "RPG_Twin_Daggers_Weapon_Daggers_Primary_Chain"
+}

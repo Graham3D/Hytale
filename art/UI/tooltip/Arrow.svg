@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="66" height="48" viewBox="0 0 66 48">
+  <!-- Native arrow control is 33x24 logical pixels, centered by the client. -->
+  <path d="M9 0 L33 28 L57 0 Z" fill="#101722" stroke="#05090d" stroke-width="3"/>
+  <path d="M14 0 L33 23 L52 0" fill="none" stroke="ACCENT" stroke-opacity="0.75" stroke-width="1.5"/>
+  <path d="M20 0 L33 16 L46 0" fill="none" stroke="#344252" stroke-opacity="0.6" stroke-width="1"/>
+</svg>

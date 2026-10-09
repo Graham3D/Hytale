@@ -1,0 +1,59 @@
+{
+  "Type": "Selector",
+  "RunTime": 0.066,
+  "Selector": {
+    "Id": "Stab",
+    "ExtendTop": 0.5,
+    "ExtendBottom": 0.5,
+    "ExtendLeft": 0.5,
+    "ExtendRight": 0.5,
+    "EndDistance": 2,
+    "TestLineOfSight": true
+  },
+  "Effects": {
+    "WorldSoundEventId": "SFX_Daggers_T2_Swing",
+    "LocalSoundEventId": "SFX_Daggers_T2_Swing_LR_Local",
+    "Trails": [
+      {
+        "PositionOffset": {
+          "X": 1.1,
+          "Y": 0,
+          "Z": 0
+        },
+        "RotationOffset": {
+          "Pitch": 0,
+          "Roll": 90,
+          "Yaw": 0
+        },
+        "TargetNodeName": "Handle",
+        "TrailId": "Dagger_Basic",
+        "TargetEntityPart": "SecondaryItem"
+      }
+    ],
+    "CameraEffect": "Daggers_Swing_Horizontal"
+  },
+  "Next": {
+    "Type": "Simple",
+    "RunTime": 0.066
+  },
+  "HitBlock": {
+    "Interactions": [
+      "Block_Break_Adventure"
+    ]
+  },
+  "HitEntity": {
+    "Interactions": [
+      {
+        "Type": "RPG_GearDamage",
+        "Offhand": true,
+        "Parent": "Weapon_Daggers_Primary_Swing_Right_Damage",
+        "DamageCalculator": {
+          "BaseDamage": {
+            "Physical": 6
+          }
+        },
+        "AngledDamage": []
+      }
+    ]
+  }
+}

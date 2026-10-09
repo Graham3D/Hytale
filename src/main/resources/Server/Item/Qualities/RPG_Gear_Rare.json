@@ -1,13 +1,13 @@
 {
   "QualityValue": 3,
-  "ItemTooltipTexture": "UI/ItemQualities/Tooltips/ItemTooltipRare.png",
-  "ItemTooltipArrowTexture": "UI/ItemQualities/Tooltips/ItemTooltipRareArrow.png",
+  "ItemTooltipTexture": "UI/ItemQualities/Tooltips/Hywind/ItemTooltipMagic.png",
+  "ItemTooltipArrowTexture": "UI/ItemQualities/Tooltips/Hywind/ItemTooltipMagicArrow.png",
   "SlotTexture": "UI/ItemQualities/Slots/SlotRare.png",
   "BlockSlotTexture": "UI/ItemQualities/Slots/SlotRare.png",
   "SpecialSlotTexture": "UI/ItemQualities/Slots/SlotRare.png",
   "TextColor": "#1d4dff",
   "LocalizationKey": "server.gear.quality.Rare",
-  "VisibleQualityLabel": false,
+  "VisibleQualityLabel": true,
   "RenderSpecialSlot": true,
   "ItemEntityConfig": {
     "ParticleSystemId": "Drop_Rare"

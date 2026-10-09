@@ -38,6 +38,18 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Stage04ExecutionTest {
+    @Test void manualRejectionNotifiesWithoutResourceOrCooldownChangesAndTriggeredFailuresStayQuiet() {
+        var harness = harness("quick_slash", 100, item("MACE", 10), null);
+        List<String> notices = new ArrayList<>();
+        harness.service.configureRejectionNotice((actor, code) -> { assertEquals(harness.actor, actor); notices.add(code); });
+        assertRejectedUnchanged(harness, "INVALID_MAIN_HAND", 100);
+        assertEquals(List.of("INVALID_MAIN_HAND"), notices);
+        harness.service.request(new SkillExecutionRequest(harness.actor, SkillSlot.SKILL01, "ITEM_TRIGGER", 42,
+                "triggered-reject", Vec3.FORWARD, SkillExecutionRequest.Origin.TRIGGERED), harness.port);
+        assertEquals(1, notices.size());
+        harness.service.configureRejectionNotice((actor, code) -> { throw new IllegalStateException("HUD missing"); });
+        assertRejectedUnchanged(harness, "INVALID_MAIN_HAND", 100);
+    }
     @Test void sixPilotProfilesAreCanonicalAndPounceUsesInnatePower() {
         var catalog = com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical();
         var profiles = Stage04SkillProfiles.loadCanonical(catalog);

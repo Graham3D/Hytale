@@ -1,0 +1,8 @@
+{
+  "Duration": 2,
+  "Debuff": true,
+  "ApplicationEffects": {
+    "EntityBottomTint": "#353047",
+    "ScreenEffect": "ScreenEffects/Spyglass.png"
+  }
+}

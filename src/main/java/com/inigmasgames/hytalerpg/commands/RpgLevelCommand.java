@@ -28,7 +28,7 @@ public final class RpgLevelCommand extends AbstractPlayerCommand {
     private final RpgHudCoordinator hud;
 
     public RpgLevelCommand(RpgLoadoutService levels,RpgUiProjectionService projection,RpgHudCoordinator hud){
-        super("level","Operator: set your RPG level (1..99) or reset allocated attributes.");
+        super("level","Operator: set your RPG level (1..99) or reset level/XP and refund allocated attributes.");
         this.levels=levels;this.projection=projection;this.hud=hud;
         value=withRequiredArg("value","1..99 or reset",ArgTypes.STRING);
         requirePermission(PERMISSION);
@@ -39,7 +39,7 @@ public final class RpgLevelCommand extends AbstractPlayerCommand {
         UUID owner=player.getUuid();String input=context.get(value);String correlation=UUID.randomUUID().toString();
         try{
             var result=input.equalsIgnoreCase("reset")
-                    ?levels.respecAttributes(owner,levels.getPresentationView(owner).state().revision,correlation)
+                    ?levels.resetOperatorLevel(owner,levels.getPresentationView(owner).state().revision,correlation)
                     :levels.setOperatorLevel(owner,Integer.parseInt(input),correlation);
             if(!result.success()){
                 context.sendMessage(Message.raw("Level: "+result.code()+": "+result.message()));return;
@@ -49,7 +49,7 @@ public final class RpgLevelCommand extends AbstractPlayerCommand {
             if(stats!=null){var view=projection.character(owner,player.getUsername(),new HytaleResourceViewAdapter().read(stats));
                 new DerivedStatEntityAdapter().apply(stats,view.derivedStats());}
             var state=levels.getPresentationView(owner).state();
-            context.sendMessage(Message.raw((input.equalsIgnoreCase("reset")?"Attributes reset.":"Level set to "+state.level+".")
+            context.sendMessage(Message.raw((input.equalsIgnoreCase("reset")?"Level reset to 1; attributes reset to 10 and allocated points refunded.":"Level set to "+state.level+".")
                     +" Unspent attribute points: "+state.unspentAttributePoints
                     +"; pending level-up points: "+state.pendingLevelUpPoints
                     +". Open /rpg character to allocate them."));

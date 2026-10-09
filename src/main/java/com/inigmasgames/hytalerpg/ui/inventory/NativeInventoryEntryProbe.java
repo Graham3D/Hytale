@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
+import com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,6 +43,7 @@ public final class NativeInventoryEntryProbe implements AutoCloseable {
     private final boolean automaticRedirect;
     private final Map<UUID, AtomicInteger> entryBudgets = new ConcurrentHashMap<>();
     private final Set<UUID> postOpenQueued = ConcurrentHashMap.newKeySet();
+    private final Set<UUID> nativeTraceBypass = ConcurrentHashMap.newKeySet();
     private final PacketFilter inbound, outbound;
     private volatile boolean closed;
 
@@ -63,6 +65,14 @@ public final class NativeInventoryEntryProbe implements AutoCloseable {
         inbound = PacketAdapters.registerInbound((PlayerPacketFilter)this::filter);
         outbound = PacketAdapters.registerOutbound((PlayerPacketWatcher)(player, packet) -> {
             if (packet instanceof SetPage page) record(player, "OUTBOUND_PAGE", Map.of("nativePage", String.valueOf(page.page)));
+            var diagnostic = UiInteractionTrace.current();
+            if (diagnostic != null && UiInteractionTrace.active(player.getUuid())) {
+                if (packet instanceof SetPage page) diagnostic.event(player.getUuid(), "NATIVE_PAGE", "",
+                        Map.of("page", String.valueOf(page.page), "direction", "OUTBOUND"));
+                if (packet instanceof UpdateWindow update)
+                    diagnostic.event(player.getUuid(), "WINDOW_UPDATE", "",
+                            Map.of("windowId", update.id, "direction", "OUTBOUND"));
+            }
             // In singleplayer the inbound adapter is bypassed by the stream transport.
             // An UpdateWindow for slot zero is emitted after the server creates the
             // client-requested window; verify its actual type on the world thread.
@@ -74,7 +84,12 @@ public final class NativeInventoryEntryProbe implements AutoCloseable {
         sessions.put(player.getUuid(), new Session(mode));
         record(player, "ARMED", Map.of("mode", mode.name(), "connectedAcceptance", false));
     }
-    public void detach(UUID player) { sessions.remove(player); gate.detach(player); entryBudgets.remove(player); postOpenQueued.remove(player); }
+    /** Temporarily let an unmodified native Inventory open for passive drop tracing. */
+    public void nativeTraceBypass(UUID player, boolean enabled) {
+        if (enabled) nativeTraceBypass.add(player);
+        else nativeTraceBypass.remove(player);
+    }
+    public void detach(UUID player) { sessions.remove(player); gate.detach(player); entryBudgets.remove(player); postOpenQueued.remove(player); nativeTraceBypass.remove(player); }
 
     private void postOpen(PlayerRef player) {
         if (closed || !postOpenQueued.add(player.getUuid())) return;
@@ -84,12 +99,16 @@ public final class NativeInventoryEntryProbe implements AutoCloseable {
         try {
             store.getExternalData().getWorld().execute(() -> {
                 try {
-                    if (closed || !ref.isValid() || player.getReference() != ref) return;
+                    if (closed || nativeTraceBypass.contains(player.getUuid())
+                            || !ref.isValid() || player.getReference() != ref) return;
                     var entity = store.getComponent(ref, Player.getComponentType());
                     if (entity == null || entity.getPageManager().getCustomPage() != null) return;
                     var windows = entity.getWindowManager();
                     Window nativeWindow = windows.getWindow(0);
                     if (!(nativeWindow instanceof FieldCraftingWindow) || nativeWindow.getType() != WindowType.PocketCrafting) return;
+                    var diagnostic = UiInteractionTrace.current();
+                    if (diagnostic != null) diagnostic.event(player.getUuid(), "FIELD_CRAFTING_WINDOW", "",
+                            Map.of("windowId", 0, "windowType", "PocketCrafting", "observation", "OPEN"));
                     if (entry.open(player, ref, store)) {
                         // Close only the exact window we observed. Never touch other
                         // crafting stations or a replacement opened meanwhile.
@@ -119,9 +138,14 @@ public final class NativeInventoryEntryProbe implements AutoCloseable {
     private boolean filter(PlayerRef player, Packet packet) {
         var session = sessions.get(player.getUuid());
         if (closed) return false;
+        var diagnostic = UiInteractionTrace.current();
+        if (packet instanceof ClientOpenWindow window && diagnostic != null)
+            diagnostic.event(player.getUuid(), "WINDOW_REQUEST", "",
+                    Map.of("windowType", String.valueOf(window.type), "direction", "INBOUND"));
         if (session != null && packet.getClass().getPackageName().matches(".*\\.(inventory|window|interface_)"))
             record(player, "INBOUND", Map.of("packet", packet.getClass().getSimpleName(),
                     "windowType", packet instanceof ClientOpenWindow w ? String.valueOf(w.type) : ""));
+        if (nativeTraceBypass.contains(player.getUuid())) return false;
         if (!automaticRedirect && (session == null || session.mode != Mode.REDIRECT)) return false;
         var request = gate.request(player.getUuid(), packet);
         if (!request.consumed()) return false;

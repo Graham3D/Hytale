@@ -136,7 +136,7 @@ class Stage13SkillTreeIconsSearchTest {
             assertEquals(0, ability.getNumber("Cost").intValue()); assertEquals(0, ability.getNumber("Cooldown").intValue());
             assertEquals("None", ability.getString("CostType").getValue());
             assertEquals("Root_RPG_Ability_Bridge", ability.getString("Cast").getValue());
-            assertEquals("Primary", ability.getString("Slot").getValue());
+            assertEquals("Core", ability.getString("Slot").getValue());
         }
     }
 

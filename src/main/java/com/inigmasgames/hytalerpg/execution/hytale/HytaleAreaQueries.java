@@ -28,7 +28,7 @@ final class HytaleAreaQueries {
     record Result(List<Candidate> candidates, boolean overflow) { }
     record ProjectileContact(Vec3 point,Vec3 normal,double fraction) { }
     static boolean loaded(Store<EntityStore> store,Vec3 point) {
-        return store.getExternalData().getWorld().getChunkIfLoaded(com.hypixel.hytale.math.util.ChunkUtil.indexChunkFromBlock(point.x(),point.z()))!=null;
+        return new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(store.getExternalData().getWorld().getChunkStore()).hasStorageInMemory((int)Math.floor(point.x()),(int)Math.floor(point.y()),(int)Math.floor(point.z()));
     }
 
     static Result query(Store<EntityStore> store, Ref<EntityStore> owner, AreaGeometry geometry, int budget) {

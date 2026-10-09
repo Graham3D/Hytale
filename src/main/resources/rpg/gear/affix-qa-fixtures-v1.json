@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "note": "These nine historical protected QA seeds retain their frozen IDs and rolls. GearAffixQaSuite derives 160 single-affix A/B pairs and legal combined rows from the current catalog. Issuance still requires mapped carriers and the runtime capability gate. QA-only over-budget rows do not change ordinary five-band generation.",
+  "fixtures": [
+    {"fixtureId":"head-magic","itemBaseId":"gm.cloth_linen.head.n","itemLevel":25,"rarity":"MAGIC","group":"armor","affixIds":["WA-091","WA-009"]},
+    {"fixtureId":"chest-magic","itemBaseId":"gm.cloth_linen.chest.n","itemLevel":30,"rarity":"MAGIC","group":"armor","affixIds":["WA-092","WA-012"]},
+    {"fixtureId":"hands-rare","itemBaseId":"gm.cloth_linen.hands.n","itemLevel":30,"rarity":"RARE","group":"armor","affixIds":["GA-159","WA-085","WA-151"]},
+    {"fixtureId":"legs-rare","itemBaseId":"gm.cloth_linen.legs.n","itemLevel":30,"rarity":"RARE","group":"armor","affixIds":["GA-160","WA-093","WA-086","WA-154"]},
+    {"fixtureId":"sword-rare","itemBaseId":"gm.sword_copper.n","itemLevel":15,"rarity":"RARE","group":"weapons","affixIds":["WA-001","WA-157"]},
+    {"fixtureId":"shortbow-rare","itemBaseId":"gm.shortbow_copper.n","itemLevel":15,"rarity":"RARE","group":"weapons","affixIds":["WA-002","WA-158","WA-088"]},
+    {"fixtureId":"battleaxe-paragon","itemBaseId":"gm.battleaxe_adamantite.h","itemLevel":90,"rarity":"VERY_RARE","group":"weapons","affixIds":["WA-121","WA-089"]},
+    {"fixtureId":"crossbow-magic","itemBaseId":"gm.crossbow_scout.nm","itemLevel":45,"rarity":"MAGIC","group":"weapons","affixIds":["WA-090"]},
+    {"fixtureId":"mace-magic","itemBaseId":"gm.mace_copper.n","itemLevel":15,"rarity":"MAGIC","group":"weapons","affixIds":["WA-087"]}
+  ]
+}

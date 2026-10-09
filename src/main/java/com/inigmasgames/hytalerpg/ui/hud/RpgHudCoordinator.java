@@ -22,6 +22,94 @@ public final class RpgHudCoordinator {
     private final RpgUiProjectionService projection;
     private final HytaleResourceViewAdapter resources = new HytaleResourceViewAdapter();
     private final RpgUiTraceService trace;
+    private java.util.function.BiFunction<UUID,UUID,java.util.Optional<com.inigmasgames.hytalerpg.enemies.EnemyDisplayDto>> enemySource=(world,entity)->java.util.Optional.empty();
+    private java.util.function.BiPredicate<UUID,UUID> qaNativeHealthbar=(world,entity)->false;
+    private com.inigmasgames.hytalerpg.execution.hytale.EnemyHealthBarPresentation enemyHealthBars;
+    public void configureEnemyHealthBars(com.inigmasgames.hytalerpg.execution.hytale.EnemyHealthBarPresentation presentation){enemyHealthBars=java.util.Objects.requireNonNull(presentation);}
+    public void configureEnemyTargets(java.util.function.BiFunction<UUID,UUID,java.util.Optional<com.inigmasgames.hytalerpg.enemies.EnemyDisplayDto>> source){enemySource=java.util.Objects.requireNonNull(source);}
+    public void configureQaNativeHealthbar(java.util.function.BiPredicate<UUID,UUID> source){qaNativeHealthbar=java.util.Objects.requireNonNull(source);}
+    /** Protection release bypasses the routine 4 Hz poll for viewers already tracking this actor. */
+    public void enemyDisplayChanged(UUID world,UUID entity){
+        var nativeWorld=com.hypixel.hytale.server.core.universe.Universe.get().getWorld(world);if(nativeWorld==null)return;
+        try{nativeWorld.execute(()->{
+            var store=nativeWorld.getEntityStore().getStore();
+            var target=store.getExternalData().getRefFromUUID(entity);
+            for(var session:sessions.values())if(world.equals(session.playerRef.getWorldUuid())&&world.equals(session.enemyWorld)
+                    &&entity.equals(session.enemyEntity)&&session.ownsActiveHuds()){
+                try{refreshEnemyTarget(session,store,session.playerRef.getReference(),target,world,entity);}
+                catch(RuntimeException failure){enemyPresentationFailed(session,failure);}
+            }
+        });}catch(RuntimeException worldClosing){/* Presentation must not block durable protection release or teardown. */}
+    }
+    /** After an applied hit, refresh only viewers already targeting this actor. */
+    public void enemyHealthChanged(UUID world,UUID entity,UUID player){
+        if(player!=null){
+            var session=sessions.get(player);
+            if(session!=null&&world.equals(session.playerRef.getWorldUuid())){
+                session.recentDamagedEntity=entity;
+                session.recentDamagedUntil=System.nanoTime()+3_000_000_000L;
+            }
+        }
+        enemyDisplayChanged(world,entity);
+    }
+    public void tickEnemyTarget(PlayerRef player,com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store,
+            com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> viewer){
+        // The live monster presentation is Hytale's entity-attached Nameplate
+        // and viewer-local EntityStat UI. This tick only expires native bar
+        // admissions; the projected CustomUI stack below is retained for
+        // diagnostics and is deliberately not polled in connected play.
+        var session=sessions.get(player.getUuid());if(session==null||!session.ownsActiveHuds())return;
+        long now=System.nanoTime();if(now-session.lastEnemyPollNanos<250_000_000L)return;session.lastEnemyPollNanos=now;
+        if(enemyHealthBars!=null)enemyHealthBars.tick(player,store,viewer);
+    }
+    private void tickProjectedEnemyTarget(PlayerRef player,com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store,
+            com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> viewer){
+        var session=sessions.get(player.getUuid());if(session==null||!session.ownsActiveHuds())return;
+        long now=System.nanoTime();if(now-session.lastEnemyPollNanos<250_000_000L)return;session.lastEnemyPollNanos=now;
+        try{
+        var world=store.getExternalData().getWorld().getWorldConfig().getUuid();
+        var target=com.hypixel.hytale.server.core.util.TargetUtil.getTargetEntity(viewer,24f,store);
+        var id=target==null||!target.isValid()?null:store.getComponent(target,com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+        var dead=target!=null&&target.isValid()&&store.getComponent(target,com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent.getComponentType())!=null;
+        if(id==null||dead||enemySource.apply(world,id.getUuid()).isEmpty()){
+            target=null;id=null;
+            if(session.recentDamagedEntity!=null&&now<session.recentDamagedUntil){
+                var recent=store.getExternalData().getRefFromUUID(session.recentDamagedEntity);
+                if(recent!=null&&recent.isValid()
+                        &&store.getComponent(recent,com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent.getComponentType())==null
+                        &&enemySource.apply(world,session.recentDamagedEntity).isPresent()){
+                    target=recent;
+                    id=store.getComponent(recent,com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+                }
+            }
+        }
+        session.enemyWorld=world;session.enemyEntity=id==null?null:id.getUuid();
+        refreshEnemyTarget(session,store,viewer,target,world,session.enemyEntity);
+        }catch(RuntimeException failure){
+            enemyPresentationFailed(session,failure);
+        }
+    }
+    private void refreshEnemyTarget(Session session,
+            com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store,
+            com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> viewer,
+            com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> target,
+            UUID world,UUID entity){
+        if(entity==null||target==null||!target.isValid()
+                ||store.getComponent(target,com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent.getComponentType())!=null){
+            session.hud.refreshEnemyTarget(null,null,0,0);return;
+        }
+        var display=enemySource.apply(world,entity).orElse(null);
+        if(display==null){session.hud.refreshEnemyTarget(null,null,0,0);return;}
+        var stats=store.getComponent(target,EntityStatMap.getComponentType());
+        var health=stats==null?null:stats.get(com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes.getHealth());
+        var frame=EnemyBillboardProjection.project(store,viewer,target);
+        session.hud.refreshEnemyTarget(display,frame,health==null?0:health.get(),health==null?0:health.getMax());
+    }
+    private void enemyPresentationFailed(Session session,RuntimeException failure){
+        session.enemyEntity=null;
+        trace.trace(session.playerRef.getUuid(),"ENEMY_TARGET_REFRESH_FAILED",ref(),Map.of("reason",String.valueOf(failure.getMessage())));
+        try{teardown(session.playerRef.getUuid(),"ENEMY_TARGET_REFRESH_FAILURE");}catch(RuntimeException ignored){}
+    }
     private java.util.function.ToIntFunction<UUID> finisherPips=ignored->0;
     private java.util.function.Consumer<UUID> ownerPublished=ignored->{};
     private java.util.function.Function<UUID,java.util.Optional<com.inigmasgames.hytalerpg.execution.summon.IronSentinelBinding>> sentinelSource=ignored->java.util.Optional.empty();
@@ -40,6 +128,10 @@ public final class RpgHudCoordinator {
     public void configureOwnerPublication(java.util.function.Consumer<UUID> observer){ownerPublished=java.util.Objects.requireNonNull(observer);}
     public void configureFinisherPips(java.util.function.ToIntFunction<UUID> reader){this.finisherPips=java.util.Objects.requireNonNull(reader);}
     private final Map<UUID, Session> sessions = new ConcurrentHashMap<>();
+    public void showSkillFailure(UUID actor, String code) {
+        var session = sessions.get(actor);
+        if (session != null) session.skillFailure.show(code, System.nanoTime());
+    }
     private final Map<UUID, XpView> xpFixtures = new ConcurrentHashMap<>();
 
     public RpgHudCoordinator(RpgUiProjectionService projection, RpgUiTraceService trace) {
@@ -73,6 +165,9 @@ public final class RpgHudCoordinator {
     }
 
     public void tick(PlayerRef playerRef, EntityStatMap stats, boolean emptyHand) {
+        tick(playerRef, stats, emptyHand, !emptyHand);
+    }
+    public void tick(PlayerRef playerRef, EntityStatMap stats, boolean emptyHand, boolean nativeWeaponReady) {
         Session session = sessions.get(playerRef.getUuid());
         if (session == null) return;
         long now = System.nanoTime();
@@ -86,6 +181,8 @@ public final class RpgHudCoordinator {
         try {
             RpgHudViewModel previous = session.model;
             RpgHudViewModel next = projection.hud(playerRef.getUuid(), resources.read(stats), xpFixtures.get(playerRef.getUuid()));
+            session.hud.refreshSkillFailure(session.skillFailure.view(now), !nativeWeaponReady
+                    && next.skills().stream().anyMatch(slot -> slot.skillId() != null && !slot.skillId().isBlank()));
             session.combo.refresh(next,finisherPips.applyAsInt(playerRef.getUuid()));
             if(session.sentinelAffixesOn)session.hud.refreshSentinelAffixes(sentinelLines(playerRef.getUuid()));
             ownerPublished.accept(playerRef.getUuid());
@@ -113,6 +210,7 @@ public final class RpgHudCoordinator {
     }
 
     public void teardown(UUID player, String reason) {
+        if(enemyHealthBars!=null)enemyHealthBars.forgetViewer(player);
         Session session = sessions.remove(player);
         xpFixtures.remove(player);
         if (session == null) return;
@@ -155,10 +253,13 @@ public final class RpgHudCoordinator {
     private static String ref() { return UUID.randomUUID().toString().substring(0, 12); }
 
     private static final class Session {
+        private final SkillFailureNotice skillFailure = new SkillFailureNotice();
         private final PlayerRef playerRef; private final HudManager manager;
         private final RpgHud hud; private RpgHudViewModel model; private long lastPollNanos; private boolean emptyHand;
         private final FinisherHud combo;
         private boolean sentinelAffixesOn;
+        private UUID enemyWorld,enemyEntity,recentDamagedEntity;
+        private long lastEnemyPollNanos,recentDamagedUntil;
         private Session(PlayerRef playerRef, HudManager manager, RpgHud hud,FinisherHud combo,
                         RpgHudViewModel model, long now) {
             this.combo=combo;

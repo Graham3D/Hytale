@@ -3,7 +3,7 @@ package com.inigmasgames.hytalerpg.gear;
 import java.math.BigDecimal;
 import java.util.*;
 
-/** Fixed, visibly QA-authored affix sets for definition/requirements/presentation testing, never drop generation. */
+/** Fixed, visibly QA-authored affix sets, not candidates for random gear generation. */
 public final class GearQaFixtures {
     private GearQaFixtures() {}
     public static GearInstance create(GearCatalog catalog,GearCatalog.Base base,UUID identity,int level,int intrinsic,GearRarity rarity) {

@@ -7,6 +7,10 @@ import org.bson.BsonDocument;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.HexFormat;
+import com.google.gson.JsonParser;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InventoryProbeBagTest {
@@ -25,7 +29,11 @@ class InventoryProbeBagTest {
         assertNull(InventoryProbeBag.rarityArtForQuality("RPG_Gear_Rare", new SpatialLayout.Size(2, 1)));
         assertNull(InventoryProbeBag.rarityArtForQuality("Common", new SpatialLayout.Size(1, 1)));
         assertEquals("#1d4dff", InventoryProbeBag.rarityColorForQuality("RPG_Gear_Rare"));
-        assertEquals("#a000ff", InventoryProbeBag.rarityColorForQuality("RPG_Gear_RandomRare"));
+        assertEquals("#6b00ff", InventoryProbeBag.rarityColorForQuality("RPG_Gear_RandomRare"));
+        assertEquals(com.inigmasgames.hytalerpg.gear.GearRarity.RARE.color,
+                InventoryProbeBag.rarityColorForQuality("RPG_Gear_RandomRare"));
+        assertEquals(com.inigmasgames.hytalerpg.gear.GearRarity.MAGIC.color,
+                InventoryProbeBag.rarityColorForQuality("RPG_Gear_Rare"));
         assertEquals("#51c534", InventoryProbeBag.rarityColorForQuality("RPG_Gear_Set"));
         assertEquals("#ff9100", InventoryProbeBag.rarityColorForQuality("RPG_Gear_Legendary"));
     }
@@ -39,12 +47,44 @@ class InventoryProbeBagTest {
         renderer.item(commands, entry("bow", 0, 0, 2, 4), "Weapon_Shortbow_Copper", 1);
         assertTrue(Arrays.stream(commands.getCommands()).anyMatch(command ->
                 "#Bag[76] #Icon.ItemId".equals(command.selector)));
+        var fit = WeaponArtCatalog.find("Weapon_Shortbow_Copper").fit(150, 302);
         assertAnchor(Arrays.stream(commands.getCommands()).filter(command ->
                 "#Bag[76] #PoseArt.Anchor".equals(command.selector)).findFirst().orElseThrow(),
-                "#Bag[76] #PoseArt.Anchor", 0, 1, 150, 300);
+                "#Bag[76] #PoseArt.Anchor", fit.left(), fit.top(), fit.width(), fit.height());
         assertAnchor(Arrays.stream(commands.getCommands()).filter(command ->
                 "#Bag[76] #RarityArt.Anchor".equals(command.selector)).findFirst().orElseThrow(),
                 "#Bag[76] #RarityArt.Anchor", 0, 1, 150, 300);
+    }
+
+    @Test void authoredWeaponPngsRemainByteIdenticalAndVisibleBoundsFitWithoutStretch() throws Exception {
+        var stream = getClass().getResourceAsStream("/rpg/inventory/weapon-art-v1.json");
+        assertNotNull(stream);
+        var manifest = JsonParser.parseString(new String(stream.readAllBytes(), StandardCharsets.UTF_8))
+                .getAsJsonObject().getAsJsonObject("bindings");
+        assertEquals(133, WeaponArtCatalog.count());
+        assertEquals(WeaponArtCatalog.ids(), manifest.keySet());
+        var footprints = FootprintCatalog.loadDefault();
+        for (String id : WeaponArtCatalog.ids()) {
+            var art = WeaponArtCatalog.find(id);
+            var image = getClass().getResourceAsStream("/Common/UI/Custom/" + art.texture());
+            assertNotNull(image, id);
+            var digest = MessageDigest.getInstance("SHA-256").digest(image.readAllBytes());
+            assertEquals(manifest.getAsJsonObject(id).get("sha256").getAsString(),
+                    HexFormat.of().formatHex(digest), id);
+            var size = footprints.size(id);
+            assertNotNull(size, id);
+            int width = size.width() * InventoryGridGeometry.PITCH - InventoryGridGeometry.SPACING;
+            int height = size.height() * InventoryGridGeometry.PITCH - InventoryGridGeometry.SPACING;
+            var fit = art.fit(width, height);
+            assertTrue(fit.width() > 0 && fit.height() > 0, id);
+            double xFactor = (double) fit.width() / art.canvasWidth();
+            double yFactor = (double) fit.height() / art.canvasHeight();
+            assertEquals(xFactor, yFactor, 0.02, id);
+            assertTrue(fit.left() + art.alphaLeft() * xFactor >= 1, id);
+            assertTrue(fit.top() + art.alphaTop() * yFactor >= 1, id);
+            assertTrue(fit.left() + art.alphaRight() * xFactor <= width - 1, id);
+            assertTrue(fit.top() + art.alphaBottom() * yFactor <= height - 1, id);
+        }
     }
 
     @Test void emptyPartialAndFullBagsUsePackagedDocumentsAndAddressExistingChildren() {

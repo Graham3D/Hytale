@@ -42,23 +42,30 @@ public record AuthoredEncounterCatalog(int schemaVersion,String profileId,List<R
         var roleDefinitions=new ArrayList<>(roles);var explicit=new HashSet<String>();roles.forEach(role->explicit.add(role.id()));
         for(var role:registry.roles())if(explicit.add(role.roleId()))roleDefinitions.add(new Role(role.roleId(),role.nativeHealth(),role.attackReference(),role.assetSha256(),"",Set.of(),Set.of()));
         for(var alias:registry.aliases())if(explicit.add(alias.roleId()))roleDefinitions.add(new Role(alias.roleId(),alias.nativeHealth(),alias.attackReference(),alias.assetSha256(),"",Set.of(),Set.of()));
-        for(var role:roleDefinitions)for(var mode:DifficultyId.values()){
+        for(var role:roleDefinitions){
+            boolean exceptional=!role.campaignRegion().isBlank()
+                    ||registry.resolveRole(role.id()).map(resolved->resolved.canonical().rank()==ProgressionMath.Rank.BOSS).orElse(false);
+            int referenceLevel=exceptional&&!MonsterProgression.current().explicitlyOptsIn(role.id())?-1
+                    :MonsterProgression.current().referenceLevel(role.id());
+            for(var mode:DifficultyId.values()){
             var resistance=new EnumMap<MonsterResistanceProfile.Channel,Double>(MonsterResistanceProfile.Channel.class);
             if(mode!=DifficultyId.NORMAL)for(var channel:role.affinities())resistance.put(channel,mode==DifficultyId.NIGHTMARE?.25:.50);
             var mitigation=new MonsterResistanceProfile(resistance,mode==DifficultyId.HELL?role.hellImmunities():Set.of());
             // Existing binding IDs are accepted explicitly; world UUID/difficulty/scope is never rebound.
             String worldProfile=switch(mode){case NORMAL->"rpg.encounters.r031.pilot";case NIGHTMARE->"rpg.encounters.nightmare.pending";case HELL->"rpg.encounters.hell.pending";};
             if(!role.campaignRegion().isBlank()){
-                add(result,role,mode,worldProfile,CAMPAIGN_GOLEM,bands.band(role.campaignRegion(),mode).maximum(),mitigation);
+                add(result,role,mode,worldProfile,CAMPAIGN_GOLEM,bands.band(role.campaignRegion(),mode).maximum(),mitigation,referenceLevel);
             }else for(var biome:biomes){
                 var band=bands.band(biome.rpgBand(),mode);
-                add(result,role,mode,worldProfile,biome.key(),(band.minimum()+band.maximum())/2,mitigation);
+                add(result,role,mode,worldProfile,biome.key(),(band.minimum()+band.maximum())/2,mitigation,referenceLevel);
+            }
             }
         }
         return List.copyOf(result);
     }
-    private void add(List<EncounterProfileResolver.Profile> result,Role role,DifficultyId mode,String worldProfile,String biome,int level,MonsterResistanceProfile resistance){
+    private void add(List<EncounterProfileResolver.Profile> result,Role role,DifficultyId mode,String worldProfile,String biome,int level,MonsterResistanceProfile resistance,int referenceLevel){
         result.add(new EncounterProfileResolver.Profile(profileId+"/"+role.id()+"/"+mode,mode,worldProfile,role.id(),biome,level,
-                role.nativeHealth(),role.attackReference(),1,1,resistance,EncounterProfileResolver.Evidence.AUTHORED_BASELINE_CONNECTED_UNVERIFIED));
+                role.nativeHealth(),role.attackReference(),1,1,resistance,
+                EncounterProfileResolver.Evidence.AUTHORED_BASELINE_CONNECTED_UNVERIFIED,referenceLevel));
     }
 }

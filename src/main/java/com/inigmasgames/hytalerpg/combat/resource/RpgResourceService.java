@@ -34,6 +34,32 @@ public final class RpgResourceService {
         if(narrowed>target)narrowed=Math.nextDown(narrowed);
         return Math.max(current,narrowed); // A recovery never removes current resource after a cap change.
     }
+    public static float nativeDebitTarget(float current,double amount,double minimum){
+        if(!Float.isFinite(current)||current<0||!Double.isFinite(amount)||amount<0||!Double.isFinite(minimum)||minimum<0)
+            throw new IllegalArgumentException("Invalid bounded native debit");
+        double target=Math.max(minimum,(double)current-amount);float narrowed=(float)target;
+        if(narrowed<target)narrowed=Math.nextUp(narrowed);
+        return Math.min(current,narrowed);
+    }
+    /** Same reservation/activation owner as ordinary costs; only externally spendable Mana is exposed. */
+    public synchronized double drainSpendableMana(UUID actor,double requested,NativeResourcePort resources,java.util.function.BooleanSupplier mayMutate){
+        if(actor==null||!Double.isFinite(requested)||requested<0)throw new IllegalArgumentException("Invalid external Mana debit");
+        if(!mayMutate.getAsBoolean()||!resources.hasResource(ResourceType.MANA))return 0;
+        double current=resources.current(ResourceType.MANA);
+        double held=pending.values().stream().filter(p->p.actor.equals(actor)&&p.cost.type()==ResourceType.MANA&&!p.committed).mapToDouble(p->p.cost.amount()).sum();
+        double amount=Math.min(requested,Math.max(0,Math.min(current,reservations.spendableMaximum(actor,resources.maximum(ResourceType.MANA)))-held));
+        if(amount<=0||!mayMutate.getAsBoolean())return 0;
+        double actual=resources.drainManaAtMost(amount,held);
+        if(!Double.isFinite(actual)||actual<0||actual>amount+1e-9)throw new IllegalStateException("NATIVE_MANA_DEBIT_EXCEEDED_ALLOWANCE");
+        return actual;
+    }
+    public double creditLivingHealth(double requested,NativeResourcePort resources,java.util.function.BooleanSupplier mayMutate){
+        if(!Double.isFinite(requested)||requested<0)throw new IllegalArgumentException("Invalid external Health credit");
+        if(!mayMutate.getAsBoolean()||!resources.hasResource(ResourceType.HEALTH)||resources.current(ResourceType.HEALTH)<=0)return 0;
+        double actual=resources.restoreHealthAtMost(requested);
+        if(!Double.isFinite(actual)||actual<0||actual>requested+1e-9)throw new IllegalStateException("NATIVE_HEALTH_CREDIT_EXCEEDED_ALLOWANCE");
+        return actual;
+    }
     public double spendableMaximum(UUID actor,ResourceType type,NativeResourcePort resources){
         if(type!=ResourceType.MANA&&type!=ResourceType.STAMINA)throw new IllegalArgumentException("No leechable resource");
         return type==ResourceType.MANA?reservations.spendableMaximum(actor,resources.maximum(type)):resources.maximum(type);
@@ -46,8 +72,12 @@ public final class RpgResourceService {
     }
     /** One final integer boundary, after ordinary factors, additive Attunement stacks and named Health conversion. */
     public ResourceCost evaluateActivation(ResourceCost declared,CompiledSkillPlan plan,int attunementStacks) {
+        return evaluateActivation(declared,plan,attunementStacks,1);
+    }
+    public ResourceCost evaluateActivation(ResourceCost declared,CompiledSkillPlan plan,int attunementStacks,double gearFactor) {
         if(attunementStacks<0||attunementStacks>5||attunementStacks>0&&!plan.resources().attunement())throw new IllegalArgumentException("Invalid Attunement stack count");
-        double factor=plan.kernelModifiers().resourceCostMultiplier()*(1-.03*attunementStacks);
+        if(!Double.isFinite(gearFactor)||gearFactor<0||gearFactor>1)throw new IllegalArgumentException("Invalid gear cost factor");
+        double factor=plan.kernelModifiers().resourceCostMultiplier()*(1-.03*attunementStacks)*gearFactor;
         if(!plan.resources().lifeblood())return declared.modified(factor);
         if(declared.type()!=ResourceType.MANA&&declared.type()!=ResourceType.STAMINA||declared.amount()<=0)
             throw new IllegalArgumentException("Lifeblood requires a positive upfront Mana/Stamina cost");
@@ -55,8 +85,12 @@ public final class RpgResourceService {
     }
     /** Continuous upkeep retains fractional units; the integer upfront-cost rule does not apply. */
     public ResourceCost evaluateUpkeep(ResourceCost slice, CompiledSkillPlan.KernelModifiers modifiers) {
+        return evaluateUpkeep(slice,modifiers,1);
+    }
+    public ResourceCost evaluateUpkeep(ResourceCost slice, CompiledSkillPlan.KernelModifiers modifiers,double gearFactor) {
         if(slice.type()==ResourceType.HEALTH)throw new IllegalArgumentException("Health upkeep is forbidden");
-        double multiplier = modifiers == null ? 1.0 : modifiers.resourceCostMultiplier();
+        if(!Double.isFinite(gearFactor)||gearFactor<0||gearFactor>1)throw new IllegalArgumentException("Invalid gear cost factor");
+        double multiplier = (modifiers == null ? 1.0 : modifiers.resourceCostMultiplier())*gearFactor;
         if (!Double.isFinite(multiplier) || multiplier < 0) throw new IllegalArgumentException("Invalid upkeep multiplier");
         return new ResourceCost(slice.type(), slice.amount() * multiplier);
     }
@@ -104,10 +138,14 @@ public final class RpgResourceService {
     public synchronized void finish(CostToken token) { pending.remove(token.tokenId()); }
 
     public double regenerate(UUID actor, ResourceType type, double seconds, NativeResourcePort resources) {
+        return regenerate(actor,type,seconds,resources,0);
+    }
+    public double regenerate(UUID actor, ResourceType type, double seconds, NativeResourcePort resources,double increased) {
         if (type != ResourceType.MANA && type != ResourceType.STAMINA || seconds <= 0.0) return 0.0;
+        if(!Double.isFinite(increased)||increased<0)throw new IllegalArgumentException("Invalid passive regeneration increase");
         double cap = type == ResourceType.MANA
                 ? reservations.spendableMaximum(actor, resources.maximum(type)) : resources.maximum(type);
-        return addCapped(type, resources.maximum(type) * profile.passiveRegenerationPerSecond * seconds, cap, resources);
+        return addCapped(type, resources.maximum(type) * profile.passiveRegenerationPerSecond * (1+increased) * seconds, cap, resources);
     }
     public synchronized RecoveryResult recoverHostileWeaponHit(UUID actor, String rootAttackId, boolean charged,
                                                                 NativeResourcePort resources) {

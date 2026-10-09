@@ -1,0 +1,68 @@
+{
+  "Type": "Parallel",
+  "Interactions": [
+    {
+      "Interactions": [
+        {
+          "Type": "Replace",
+          "Var": "Signature_Volley_Effects",
+          "DefaultValue": {
+            "Interactions": [
+              "RPG_GearRoute_I_Weapon_Shortbow_Signature_Volley_Effects"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "Shoot",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Volley_Strength_1_Left"
+        }
+      ]
+    },
+    {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "Shoot",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Volley_Strength_1_Center"
+        }
+      ]
+    },
+    {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "Shoot",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Volley_Strength_1_Right"
+        }
+      ]
+    },
+    {
+      "Interactions": [
+        {
+          "Type": "ChangeStat",
+          "StatModifiers": {
+            "SignatureCharges": -100
+          },
+          "ValueType": "Percent"
+        }
+      ]
+    }
+  ]
+}

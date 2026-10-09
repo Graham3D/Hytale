@@ -10,12 +10,22 @@ tasks.named('jar') { archiveFileName = 'HyARPG.jar' }
 def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
 def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")
 def serverJar = file("${gamePackage}/Server/HytaleServer.jar")
+def packboundServerJar = file("${projectDir}/build/native-patch/HytaleServer-packbound.jar")
 def assetsZip = file("${gamePackage}/Assets.zip")
 def htDevLibJar = file("${hytaleHome}/data/${patchline}/Saves/RPG/mods/HYTALEDEVLIB-0.5.0.jar")
 
 if (!serverJar.exists()) {
     throw new GradleException("Hytale server jar not found: ${serverJar}")
 }
+
+tasks.register('buildPackboundNative', Exec) {
+    group = 'verification'
+    description = 'Rebuild the version-pinned native Packbound and receipt hooks.'
+    commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+        file('tools/native-patch/Build-PackboundNative.ps1'), '-ServerJar', serverJar,
+        '-OutputDirectory', file('build/native-patch')
+}
+tasks.named('compileJava') { dependsOn tasks.named('buildPackboundNative') }
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
@@ -27,9 +37,9 @@ dependencies {
     implementation project(':canvas-ui')
     implementation project(':hytale-taverns')
     compileOnly project(':immersive-compat-api')
-    compileOnly files(serverJar)
+    compileOnly files(packboundServerJar)
     compileOnly files(htDevLibJar)
-    testImplementation files(serverJar)
+    testImplementation files(packboundServerJar)
     testImplementation project(':canvas-ui')
     testImplementation project(':hytale-taverns')
     testImplementation project(':immersive-compat-api')
@@ -61,6 +71,15 @@ tasks.register('auditSpatialGrantAssets', Exec) {
 
 tasks.named('check') { dependsOn tasks.named('auditSpatialGrantAssets') }
 
+tasks.register('auditNativeProcAssets', Exec) {
+    group = 'verification'
+    description = 'Checks every managed damage leaf against the pinned native strike and pellet graphs.'
+    def bundledPython = file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
+    def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
+    commandLine python, file('tools/New-NativeProcMetadata.py'), '--verify'
+}
+tasks.named('processResources') { dependsOn tasks.named('auditNativeProcAssets') }
+
 allprojects {
     tasks.matching { it.name == 'processResources' }.configureEach {
         dependsOn rootProject.tasks.named('validateCustomUi')
@@ -69,10 +88,14 @@ allprojects {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xmaxerrs', '1000']
 }
 
 tasks.test {
     useJUnitPlatform()
+    ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',
+     'GearSignatureProcRuntimeTest', 'NativeGearActionProfilesTest', 'NativeTwinAssaultTest',
+     'IronSentinelRestoredLeaseTest'].each { exclude "**/${it}*" }
     exclude '**/R023NativeRuneControlTest*'
     exclude '**/R024NativeInteractionAssetTest*'
     exclude '**/Stage09NativeManaTest*'
@@ -91,40 +114,74 @@ tasks.test {
     exclude '**/ReadyPathNativeCommandTest*'
     exclude '**/InventoryProbeBagTest*'
     exclude '**/NativeContainerFilterBypassTest*'
+    exclude '**/NativeEquipmentWriteTest*'
+    exclude '**/NativeEnemyActionsStartTest*'
     exclude '**/SpatialBagAggregateTest*'
     exclude '**/GearQaSpatialDeliveryTest*'
     exclude '**/NativeWorkspaceGridTest*'
     exclude '**/NativeGearTargetGridTest*'
+    exclude '**/GearStatusBindingsTest*'
+    exclude '**/GearStatusAcceptanceIntegrationTest*'
+    exclude '**/SentinelSourceConsumerTest*'
+    exclude '**/SentinelConditionalActionTest*'
+    exclude '**/MasterAffixCombatCompletionTest*'
+    exclude '**/MasterAffixSentinel*Test*'
+    exclude '**/MasterAffixSummonCompletionTest*'
+    exclude '**/MasterAffixFinalControlsTest*'
+    exclude '**/SignatureConsumerProofTest*'
+    ['EnemyNativePaletteTest','EnemyNativeDamageLeafTest','EnemyNativeTimingTest',
+     'EnemyNativeHealthTest','EnemyNativeDefenseTest','EnemyNativeOutgoingTest',
+     'EnemyNativeProjectilePathTest','EnemyNativeStagingTest',
+     'NativePackboundMutationHookTest'].each { exclude "**/${it}*" }
 }
 
 tasks.register('nativeControlTest', Test) {
+    // Native asset classes cache their stores statically; isolate fixture owners.
+    forkEvery = 1
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
     useJUnitPlatform()
-    filter {
-        includeTestsMatching '*R023NativeRuneControlTest'
-        includeTestsMatching '*R024NativeInteractionAssetTest'
-        includeTestsMatching '*Stage09NativeManaTest'
-        includeTestsMatching '*Stage12NativeBiomeAssetTest'
-        includeTestsMatching '*Stage13NativeBasicPathTest'
-        includeTestsMatching '*Stage13NativeCadenceAuditTest'
-        includeTestsMatching '*Stage13NativeAbilityReadinessTest'
-        includeTestsMatching '*R071NativeAbilityProjectionRepairTest'
-        includeTestsMatching '*Stage13NativeProjectileConstructionTest'
-        includeTestsMatching '*Stage13SkillTreeIconsSearchTest'
-        includeTestsMatching '*Stage13NativeAttitudeCacheTest'
-        includeTestsMatching '*Stage13NativeHealingBeamTest'
-        includeTestsMatching '*MantleNativeSourceContractTest'
-        includeTestsMatching '*DifficultyNativeCommandTest'
-        includeTestsMatching '*GearQaNativeCommandTest'
-        includeTestsMatching '*ReadyPathNativeCommandTest'
-        includeTestsMatching '*InventoryProbeBagTest'
-        includeTestsMatching '*NativeContainerFilterBypassTest'
-        includeTestsMatching '*SpatialBagAggregateTest'
-        includeTestsMatching '*GearQaSpatialDeliveryTest'
-        includeTestsMatching '*NativeWorkspaceGridTest'
-        includeTestsMatching '*NativeGearTargetGridTest'
-    }
+    // Include native test classes before forking, avoiding empty worker JVMs.
+        ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',
+         'GearSignatureProcRuntimeTest', 'NativeGearActionProfilesTest', 'NativeTwinAssaultTest',
+         'IronSentinelRestoredLeaseTest'].each { include "**/${it}.class" }
+          include '**/R023NativeRuneControlTest.class'
+          include '**/GearStatusBindingsTest.class'
+          include '**/GearStatusAcceptanceIntegrationTest.class'
+          include '**/SentinelSourceConsumerTest.class'
+          include '**/SentinelConditionalActionTest.class'
+          include '**/MasterAffixCombatCompletionTest.class'
+          include '**/MasterAffixSentinel*Test.class'
+          include '**/MasterAffixSummonCompletionTest.class'
+          include '**/MasterAffixFinalControlsTest.class'
+          include '**/SignatureConsumerProofTest.class'
+        ['EnemyNativePaletteTest','EnemyNativeDamageLeafTest','EnemyNativeTimingTest',
+         'EnemyNativeHealthTest','EnemyNativeDefenseTest','EnemyNativeOutgoingTest',
+         'EnemyNativeProjectilePathTest','EnemyNativeStagingTest',
+         'NativePackboundMutationHookTest'].each { include "**/${it}.class" }
+        include '**/NativeEnemyActionsStartTest.class'
+        include '**/R024NativeInteractionAssetTest.class'
+        include '**/Stage09NativeManaTest.class'
+        include '**/Stage12NativeBiomeAssetTest.class'
+        include '**/Stage13NativeBasicPathTest.class'
+        include '**/Stage13NativeCadenceAuditTest.class'
+        include '**/Stage13NativeAbilityReadinessTest.class'
+        include '**/R071NativeAbilityProjectionRepairTest.class'
+        include '**/Stage13NativeProjectileConstructionTest.class'
+        include '**/Stage13SkillTreeIconsSearchTest.class'
+        include '**/Stage13NativeAttitudeCacheTest.class'
+        include '**/Stage13NativeHealingBeamTest.class'
+        include '**/MantleNativeSourceContractTest.class'
+        include '**/DifficultyNativeCommandTest.class'
+        include '**/GearQaNativeCommandTest.class'
+        include '**/ReadyPathNativeCommandTest.class'
+        include '**/InventoryProbeBagTest.class'
+        include '**/NativeContainerFilterBypassTest.class'
+        include '**/NativeEquipmentWriteTest.class'
+        include '**/SpatialBagAggregateTest.class'
+        include '**/GearQaSpatialDeliveryTest.class'
+        include '**/NativeWorkspaceGridTest.class'
+        include '**/NativeGearTargetGridTest.class'
     // Separate JVM: native codecs require Hytale's logger; retained UI tests exercise the JUL fallback.
     systemProperty 'java.util.logging.manager', 'com.hypixel.hytale.logger.backend.HytaleLogManager'
 }
@@ -147,6 +204,18 @@ tasks.register('verifyHyArpgJar', Exec) {
 tasks.check {
     dependsOn tasks.named('verifyHyArpgJar')
 }
+
+tasks.register('auditU7P5AssetCompatibility', Exec) {
+    group = 'verification'
+    description = 'Offline U7P5 reference validation and frozen R176 hotfix semantics guard.'
+    dependsOn tasks.named('jar')
+    def bundledPython = file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
+    def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
+    commandLine python, file('tools/Test-U7P5AssetCompatibility.py'),
+        '--package', tasks.named('jar').get().archiveFile.get().asFile,
+        '--assets-zip', assetsZip, '--report', file('build/reports/u7p5-asset-compatibility.json')
+}
+tasks.named('check') { dependsOn tasks.named('auditU7P5AssetCompatibility') }
 
 tasks.processResources {
     def liveProbe = providers.gradleProperty('healingProbeLiveTest').map { it == 'true' }.getOrElse(false)
@@ -189,6 +258,12 @@ tasks.processResources {
                     template.replace('InventorySectionId: 1;', "InventorySectionId: ${sectionId};"), 'UTF-8')
             }
         }
+        def outsideDropSections = new File(destinationDir, 'Common/UI/Custom/InventoryDropTargets')
+        def outsideDropTemplate = new File(outsideDropSections, 'OutsideSection1.ui').getText('UTF-8')
+        (2..1024).each { sectionId ->
+            new File(outsideDropSections, "OutsideSection${sectionId}.ui").setText(
+                outsideDropTemplate.replace('InventorySectionId: 1;', "InventorySectionId: ${sectionId};"), 'UTF-8')
+        }
     }
     inputs.property('version', project.version)
     inputs.property('rpgRevision', rpg_revision)
@@ -227,4 +302,11 @@ tasks.register('printAuditClasspath') {
         println "htDevLibJar=${htDevLibJar}"
         println "rpgRevision=${rpg_revision}"
     }
+}
+
+tasks.register('generateEliteRoleMatrix', JavaExec) {
+    dependsOn 'classes'
+    classpath = sourceSets.main.runtimeClasspath + files(packboundServerJar, htDevLibJar)
+    mainClass = 'com.inigmasgames.hytalerpg.enemies.EnemyEliteRoleMatrix'
+    args file('docs/enemies/ELITE_ROLE_MATRIX.md').absolutePath
 }

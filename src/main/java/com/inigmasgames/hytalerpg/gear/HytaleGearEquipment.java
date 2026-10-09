@@ -21,8 +21,14 @@ import java.util.*;
 
 /** Reads native equipped slots. Only the native armor owner consumes managed resistance. */
 public final class HytaleGearEquipment {
+    @FunctionalInterface public interface DefenseContributions {
+        com.inigmasgames.hytalerpg.combat.defense.DefenseView.Contributions read(
+                Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor);
+    }
+    private DefenseContributions defenseContributions=(actor,accessor)->com.inigmasgames.hytalerpg.combat.defense.DefenseView.Contributions.NONE;
+    public void configureDefense(DefenseContributions provider){defenseContributions=Objects.requireNonNull(provider);}
     private final RpgLoadoutService players;
-    private record Publication(Ref<EntityStore> actor,GearAffixRuntime.Effects effects) {}
+    private record Publication(Ref<EntityStore> actor,List<GearInstance> valid,GearAffixRuntime.Effects effects) {}
     private final Map<UUID,Publication> published=new java.util.concurrent.ConcurrentHashMap<>();
     public GearAffixRuntime.Effects publishedEffects(UUID actor){var p=published.get(actor);return p==null||!players.ready(actor)||!p.actor().isValid()?GearAffixRuntime.Effects.NONE:p.effects();}
     private java.util.function.Consumer<com.hypixel.hytale.server.core.universe.world.World> lootTick=world->{};
@@ -30,7 +36,30 @@ public final class HytaleGearEquipment {
     public HytaleGearEquipment(RpgLoadoutService players) { this.players=players;players.addLoadoutMutationListener(published::remove); }
     public record View(int level,Map<RpgAttribute,Integer> baseline,List<GearInstance> equipped,GearRequirements.Validity validity) {}
     public GearAffixRuntime.Effects effects(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor) {
-        var v=findView(actor,accessor);if(v==null)return GearAffixRuntime.Effects.NONE;return GearAffixRuntime.effects(v.equipped().stream().filter(g->v.validity().valid().contains(g.identity())).toList());
+        var v=findView(actor,accessor);if(v==null)return GearAffixRuntime.Effects.NONE;
+        return resolveEffects(actor,accessor,v);
+    }
+    /** Attribute-derived offense before the envelope adds flat gear critical modifiers once. */
+    public com.inigmasgames.hytalerpg.combat.attribute.DerivedStats attributeDerived(
+            Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor) {
+        var view=view(actor,accessor);
+        var effects=resolveEffects(actor,accessor,view);
+        return DERIVED.derive(effects.raw(view.baseline()),effects.health(),effects.stamina(),effects.mana());
+    }
+    private GearAffixRuntime.Effects resolveEffects(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor,View view) {
+        var owner=accessor.getComponent(actor,PlayerRef.getComponentType()).getUuid();
+        var valid=view.equipped().stream().filter(g->view.validity().valid().contains(g.identity())).toList();
+        var previous=published.get(owner);
+        if(previous!=null&&previous.actor()==actor&&previous.valid().equals(valid)){
+            GearQaTrace.equipment(owner,previous.effects().snapshot(),view.equipped(),view.validity().valid());
+            return previous.effects();
+        }
+        if(previous==null&&published.size()>=1024){published.entrySet().removeIf(e->!e.getValue().actor().isValid());
+            if(published.size()>=1024)throw new IllegalStateException("GEAR_OWNER_CAPACITY");}
+        var effects=GearAffixRuntime.effects(valid);
+        published.put(owner,new Publication(actor,valid,effects));
+        GearQaTrace.equipment(owner,effects.snapshot(),view.equipped(),view.validity().valid());
+        return effects;
     }
     public static Map<RpgAttribute,Integer> requirementAttributes(View view,UUID candidate) {
         return GearRequirements.resolve(view.level(),view.baseline(),view.equipped().stream()
@@ -39,12 +68,25 @@ public final class HytaleGearEquipment {
     public record MagicFindBreakdown(double luck, double equippedGear) {
         public double total() { return luck + equippedGear; }
     }
-    public MagicFindBreakdown magicFindBreakdown(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor){var view=findView(actor,accessor);if(view==null)return new MagicFindBreakdown(0,0);double gear=0;
-        for(var item:view.equipped())if(!item.qaOnly()&&view.validity().valid().contains(item.identity()))for(var affix:item.affixes())if(affix.familyId().equals("WA-151"))gear+=affix.value()/100.;
-        double luck=GearMagicFind.snapshot(view.validity().permanentAttributes().getOrDefault(RpgAttribute.LUCK,10),0);
-        return new MagicFindBreakdown(luck, GearMagicFind.snapshot(view.validity().permanentAttributes().getOrDefault(RpgAttribute.LUCK,10),gear)-luck);
+    public MagicFindBreakdown magicFindBreakdown(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor){
+        var view=findView(actor,accessor);if(view==null)return new MagicFindBreakdown(0,0);
+        return magicFindBreakdown(view.validity().permanentAttributes().getOrDefault(RpgAttribute.LUCK,10),
+                view.equipped().stream().filter(item->view.validity().valid().contains(item.identity())).toList());
+    }
+    /** Same accepted-equipment owner for reward attribution, UI and offline qualification. */
+    public static MagicFindBreakdown magicFindBreakdown(int rawLuck,Collection<GearInstance> validEquipment){
+        double gear=validEquipment.stream()
+                .flatMap(item->item.affixes().stream()).filter(a->a.familyId().equals("WA-151"))
+                .mapToDouble(a->a.value()/100.0).sum();
+        double luck=GearMagicFind.snapshot(rawLuck,0);
+        return new MagicFindBreakdown(luck,GearMagicFind.snapshot(rawLuck,gear)-luck);
     }
     public double magicFind(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor){return magicFindBreakdown(actor,accessor).total();}
+    /** Reward capture reads the admitted equipped snapshot once, including authored QA gear. */
+    public static double goldFind(GearEffectSnapshot admitted) {
+        return admitted.sources(GearEffectSnapshot.Operator.GOLD_FIND).stream()
+                .mapToDouble(GearEffectSnapshot.Source::value).sum();
+    }
     /** Native readers must not hydrate or wait for persistence on the world thread. */
     View whenReady(UUID player,java.util.function.Supplier<View> read) {
         if(!players.ready(player)){published.remove(player);return null;}
@@ -62,26 +104,29 @@ public final class HytaleGearEquipment {
         var state=players.getPresentationView(player.getUuid()).state();
         var baseline=new EnumMap<RpgAttribute,Integer>(RpgAttribute.class);
         for(var attribute:RpgAttribute.values()) baseline.put(attribute,state.attributes.getOrDefault(attribute.name(),10));
-        var items=new ArrayList<GearInstance>();
-        collect(items,InventoryComponent.getItemInHand(accessor,actor),false);
+        var slots=new ArrayList<GearEquipmentResolution.Candidate>();
+        collect(slots,InventoryComponent.getItemInHand(accessor,actor),GearCatalog.Slot.HELD);
         var utility=accessor.getComponent(actor,InventoryComponent.Utility.getComponentType());
-        if(utility!=null) collect(items,utility.getActiveItem(),false);
+        if(utility!=null) collect(slots,utility.getActiveItem(),GearCatalog.Slot.HELD);
         var armor=accessor.getComponent(actor,InventoryComponent.Armor.getComponentType());
-        if(armor!=null) for(short slot=0;slot<armor.getInventory().getCapacity();slot++) collect(items,armor.getInventory().getItemStack(slot),true);
-        var counts=new HashMap<UUID,Integer>();items.forEach(g->counts.merge(g.identity(),1,Integer::sum));
-        items.removeIf(g->counts.get(g.identity())!=1);
-        var candidates=items.stream().map(g->new GearRequirements.Equipped(g.identity(),g.requirements(),GearAffixRuntime.attributes(g))).toList();
-        return new View(state.level,Map.copyOf(baseline),List.copyOf(items),GearRequirements.resolve(state.level,baseline,candidates));
+        if(armor!=null) for(var slot:com.hypixel.hytale.protocol.ItemArmorSlot.values())
+            if(slot.getValue()<armor.getInventory().getCapacity())collect(slots,
+                    armor.getInventory().getItemStack((short)slot.getValue()),GearCatalog.Slot.valueOf(slot.name().toUpperCase(Locale.ROOT)));
+        var resolved=GearEquipmentResolution.resolve(state.level,baseline,slots);
+        return new View(state.level,Map.copyOf(baseline),resolved.candidates(),resolved.validity());
         });
     }
-    private static void collect(List<GearInstance> items,ItemStack stack,boolean armorSlot) {
-        if(stack==null || stack.isEmpty() || stack.isBroken()) return;
-        try { var gear=GearNativeItems.read(stack); if(gear!=null && GearAffixRuntime.supported(gear) && (gear.category()==GearCatalog.Category.ARMOR)==armorSlot) items.add(gear); }
+    private static final GearCatalog EQUIPMENT_CATALOG=GearCatalog.load();
+    private static void collect(List<GearEquipmentResolution.Candidate> items,ItemStack stack,GearCatalog.Slot slot) {
+        if(stack==null || stack.isEmpty()) return;
+        try { var gear=GearNativeItems.read(stack); if(gear!=null)items.add(new GearEquipmentResolution.Candidate(
+                gear,true,!stack.isBroken(),EQUIPMENT_CATALOG.base(gear.baseId()).slot()==slot)); }
         catch(RuntimeException malformed) { /* Inert neutral carrier. Native use is separately denied. */ }
     }
     public boolean canUse(ItemStack stack,Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor) {
         if(!GearNativeItems.managed(stack)) return true;
         try {
+            if(com.hypixel.hytale.server.core.asset.type.item.config.Item.getAssetMap().getAsset(stack.getItemId())==null)return false;
             var gear=GearNativeItems.read(stack);if(!GearAffixRuntime.supported(gear))return false;var view=view(actor,accessor);
             if(view.equipped().stream().filter(g->g.identity().equals(gear.identity())).count()>1) return false;
             var others=view.equipped().stream().filter(g->!g.identity().equals(gear.identity()))
@@ -100,7 +145,7 @@ public final class HytaleGearEquipment {
         if(manager!=null) for(var chain:List.copyOf(manager.getChains().values())) {
             var held=chain.getContext().getHeldItem();
             var proxy=chain.getContext().getEntity();
-            if(ManagedGearProjectile.hasSnapshot(proxy,accessor))continue; // Released projectile snapshots are already committed.
+            if(ManagedGearProjectile.hasSnapshot(proxy,accessor)||ManagedCarrierProjectile.hasSnapshot(proxy,accessor))continue; // Released projectile snapshots are already committed.
             if(validatesHeldItem(chain.getType()) && GearNativeItems.managed(held) && !canUse(held,actor,accessor)) manager.cancelChains(chain);
         }
         for(var gear:view.equipped()) if(view.validity().valid().contains(gear.identity())) {
@@ -109,16 +154,16 @@ public final class HytaleGearEquipment {
             health+=stats.getOrDefault("health",0.0);mana+=stats.getOrDefault("mana",0.0);stamina+=stats.getOrDefault("stamina",0.0);
         }
         var nativeStats=accessor.getComponent(actor,EntityStatMap.getComponentType());
-        var applied=GearAffixRuntime.effects(view.equipped().stream().filter(g->view.validity().valid().contains(g.identity())).toList());
-        var owner=accessor.getComponent(actor,PlayerRef.getComponentType()).getUuid();
-        if(!published.containsKey(owner)&&published.size()>=1024){published.entrySet().removeIf(e->!e.getValue().actor().isValid());if(published.size()>=1024)throw new IllegalStateException("GEAR_OWNER_CAPACITY");}
-        published.put(owner,new Publication(actor,applied));
+        var applied=resolveEffects(actor,accessor,view);
         var baseline=DERIVED.derive(view.baseline());var total=applied.derive(DERIVED,view.baseline());
         health=total.maxHealth()-baseline.maxHealth();mana=total.maxMana()-baseline.maxMana();stamina=total.maxStamina()-baseline.maxStamina();
         if(nativeStats!=null) DerivedStatEntityAdapter.applyGearCapacity(nativeStats,health,mana,stamina);
         var effects=accessor.getComponent(actor,EffectControllerComponent.getComponentType());
         if(effects==null) return;
-        int tenth=(int)Math.round(Math.min(60,protection)*10);
+        // One managed physical projection owns armor, shield and global Defense. The inverse
+        // rating bridge preserves unaffixed armor rather than layering a second reduction.
+        var extra=defenseContributions.read(actor,accessor);
+        int tenth=nativeProtectionTenth(applied.snapshot(),view.level(),extra);
         String expected=tenth==0?"":"RPG_Gear_Protection_"+tenth;
         for(int index:effects.getActiveEffectIndexes()) {
             var asset=EntityEffect.getAssetMap().getAsset(index);
@@ -132,6 +177,21 @@ public final class HytaleGearEquipment {
             var active=effects.getActiveEffects().get(index);
             if(active==null || active.getRemainingDuration()<1) effects.addEffect(actor,effect,accessor);
         }
+    }
+    /** The actual native effect selection, shared by projection and offline codec qualification. */
+    public static int nativeProtectionTenth(GearEffectSnapshot admitted,int level) {
+        return nativeProtectionTenth(admitted,level,com.inigmasgames.hytalerpg.combat.defense.DefenseView.Contributions.NONE);
+    }
+    public static int nativeProtectionTenth(GearEffectSnapshot admitted,int level,
+            com.inigmasgames.hytalerpg.combat.defense.DefenseView.Contributions extra) {
+        double protection=admitted.items().stream().filter(item->item.category()==GearCatalog.Category.ARMOR)
+                .mapToDouble(GearAffixRuntime::protection).sum();
+        var defense=GearDefenseEffects.resolve(admitted,level,Math.min(60,protection)/100.0,
+                extra.otherRating()+extra.shieldRating(),extra.winningDefenseBreakFraction());
+        double k=com.inigmasgames.hytalerpg.combat.defense.DefenseView.scale(level);
+        double total=Math.max(0,defense.totalRating()*(1+extra.globalDefenseIncreased()));
+        double effective=total*(1-extra.winningDefenseBreakFraction());
+        return (int)Math.round(Math.clamp(effective/(k+effective),0,.60)*1000);
     }
     public final class Tick extends EntityTickingSystem<EntityStore> {
         @Override public Query<EntityStore> getQuery() { return PlayerRef.getComponentType(); }
@@ -151,15 +211,25 @@ public final class HytaleGearEquipment {
     }
     private void refreshHover(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor) {
         var view=findView(actor,accessor);if(view==null)return;
+        var snapshot=resolveEffects(actor,accessor,view).snapshot();
         var inventory=InventoryComponent.getCombined(accessor,actor,InventoryComponent.EVERYTHING);
         if(inventory==null)return;
+        UUID activeMainhand=null;
+        try { var held=GearNativeItems.read(InventoryComponent.getItemInHand(accessor,actor));
+            if(held!=null && !snapshot.forItem(held.identity()).empty()) activeMainhand=held.identity();
+        } catch(RuntimeException invalid) { /* Invalid held gear cannot authorize a twin Utility carrier. */ }
         for(short slot=0;slot<inventory.getCapacity();slot++) {
             var stack=inventory.getItemStack(slot);if(!GearNativeItems.managed(stack)) continue;
             try {
                 var gear=GearNativeItems.read(stack);
-                var presented=GearNativeItems.present(stack,gear,view.level(),requirementAttributes(view,gear.identity()));
-                if(!stack.equals(presented)) inventory.replaceItemStackInSlot(slot,stack,presented);
-            } catch(RuntimeException malformed) { /* Keep the owned object inert for diagnostics; never delete it. */ }
+                var action=GearNativeItems.actionVariant(stack,snapshot,activeMainhand);
+                var presented=GearNativeItems.present(action,gear,view.level(),requirementAttributes(view,gear.identity()));
+                if(!stack.equals(presented) && !inventory.replaceItemStackInSlot(slot,stack,presented).succeeded())
+                    System.err.println("GEAR_ACTION_CAS_RETRY slot="+slot+" carrier="+stack.getItemId());
+            } catch(RuntimeException malformed) {
+                System.err.println("GEAR_ACTION_OR_PRESENTATION_FAILED slot="+slot+" carrier="+stack.getItemId()+" cause="+malformed);
+                /* Keep the owned object inert for diagnostics; never delete it. */
+            }
         }
     }
     public final class Use extends EntityEventSystem<EntityStore,InteractionChainStartEvent> {
@@ -167,11 +237,20 @@ public final class HytaleGearEquipment {
         @Override public Query<EntityStore> getQuery() { return PlayerRef.getComponentType(); }
         @Override public void handle(int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,InteractionChainStartEvent event) {
             var proxy=event.getContext().getEntity();
-            if(ManagedGearProjectile.hasSnapshot(proxy,buffer))return; // Proxy impact uses its frozen launch validation.
+            if(ManagedGearProjectile.hasSnapshot(proxy,buffer)||ManagedCarrierProjectile.hasSnapshot(proxy,buffer))return; // Proxy impact uses its frozen launch validation.
             if(!validatesHeldItem(event.getType()))return;
             if(!canUse(event.getContext().getHeldItem(),chunk.getReferenceTo(i),buffer)) event.setCancelled(true);
             else if(GearNativeItems.managed(event.getContext().getHeldItem())) {
                 var gear=GearNativeItems.read(event.getContext().getHeldItem());
+                 if(event.getType()==InteractionType.Primary && gear.category()==GearCatalog.Category.HELD) {
+                     var accepted=effects(chunk.getReferenceTo(i),buffer).snapshot();
+                     var local=accepted.forItem(gear.identity());
+                     if(!local.empty() && (local.value("WA-008")>0 || local.value("WA-014")>0
+                             || local.value("WA-141")>0)) {
+                         var profile=NativeGearActionProfiles.primary(accepted,gear.identity());
+                         if(!profile.rootId().equals(event.getRootInteractionId())) {event.setCancelled(true);return;}
+                     }
+                 }
                 if(gear.category()==GearCatalog.Category.HELD && !GearInteractionAudit.inspect(event.getType(),event.getContext(),event.getChain().getInitialRootInteraction()).supported())
                     event.setCancelled(true);
             }

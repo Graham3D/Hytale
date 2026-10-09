@@ -1,0 +1,12 @@
+{
+  "Parent": "Skeleton_Bow",
+  "Animations": {
+    "Shoot": {
+      "ThirdPerson": "Characters/Animations/Items/Dual_Handed/Bow/Attacks/Shoot/Shoot.blockyanim",
+      "ThirdPersonMoving": "Characters/Animations/Items/Dual_Handed/Bow/Attacks/Shoot/Shoot_Moving.blockyanim",
+      "FirstPerson": "Characters/Animations/Items/Dual_Handed/Bow/Attacks/Shoot/Shoot_FPS.blockyanim",
+      "Speed": 1.216,
+      "ThirdPersonFace": "Characters/Animations/Expressions/Frown.blockyanim"
+    }
+  }
+}

@@ -31,6 +31,6 @@ final class IronSentinelSourceEligibilityTest {
         assertEquals("TARGET_NOT_WEAPON_OR_ARMOR",assertThrows(IllegalArgumentException.class,
                 ()->IronSentinelSourceEligibility.require(item("gm.tool.pickaxe.iron.n"))).getMessage());
         assertTrue(assertThrows(IllegalArgumentException.class,
-                ()->IronSentinelSourceEligibility.require(item("gm.shield_iron.n"))).getMessage().startsWith("TARGET_UNSUPPORTED_GEAR"));
+                ()->IronSentinelSourceEligibility.require(item("gm.longbow_wood.n"))).getMessage().startsWith("TARGET_UNSUPPORTED_GEAR"));
     }
 }

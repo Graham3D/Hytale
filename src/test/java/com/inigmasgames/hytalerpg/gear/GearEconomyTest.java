@@ -40,9 +40,14 @@ class GearEconomyTest {
             var source=source(DifficultyId.HELL,95,ProgressionMath.Rank.COMMON,seed);
             var low=generator.generate(source,0,source.eventId(),Set.of());var high=generator.generate(source,100,source.eventId(),Set.of());
             assertEquals(low.item()==null,high.item()==null);
-            if(low.item()!=null){assertEquals(low.item().baseId(),high.item().baseId());assertEquals(low.item().intrinsicThousandths(),high.item().intrinsicThousandths());assertEquals(95,high.item().itemLevel());assertEquals(DifficultyId.HELL,high.item().sourceEra());}
+            if(low.item()!=null&&high.item()!=null){
+                assertEquals(low.item().baseId(),high.item().baseId());
+                assertEquals(low.item().intrinsicThousandths(),high.item().intrinsicThousandths());
+                assertEquals(95,high.item().itemLevel());assertEquals(DifficultyId.HELL,high.item().sourceEra());
+            }
         }
-        assertFalse(GearMagicFind.distribution(DifficultyId.NORMAL,35,ProgressionMath.Rank.BOSS,999).containsKey(GearRarity.LEGENDARY));
+        assertEquals(0.0,GearMagicFind.distribution(DifficultyId.NORMAL,35,ProgressionMath.Rank.BOSS,999)
+                .getOrDefault(GearRarity.LEGENDARY,0.0),1e-9);
         assertEquals(.75,GearMagicFind.snapshot(150,0),1e-9);assertEquals(1.125,GearMagicFind.snapshot(250,0),1e-9);
     }
     @Test void candidateGenerationIsDeterministicAndEveryEraHasLegalBases(){

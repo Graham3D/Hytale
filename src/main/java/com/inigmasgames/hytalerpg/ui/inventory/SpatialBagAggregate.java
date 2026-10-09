@@ -80,7 +80,9 @@ public final class SpatialBagAggregate {
     public static SpatialBagAggregate fromBson(BsonDocument root, FootprintCatalog catalog) {
         UUID owner = UUID.fromString(root.getString("Owner").getValue());
         int catalogRevision = root.getInt32("CatalogRevision").getValue();
-        if (catalogRevision != catalog.revision()) throw new IllegalStateException("Spatial catalog migration required");
+        if (catalogRevision != catalog.revision()
+                && !(catalogRevision == 2 && catalog.revision() == 3))
+            throw new IllegalStateException("Spatial catalog migration required");
         long revision = savedRevision(root);
         var entries = new LinkedHashMap<UUID, Entry>();
         for (var value : root.getArray("Entries")) {
@@ -89,7 +91,11 @@ public final class SpatialBagAggregate {
             String payload = saved.getDocument("Payload").toJson();
             var size = new SpatialLayout.Size(saved.getInt32("Width").getValue(), saved.getInt32("Height").getValue());
             ItemStack stack = payload(payload);
-            if (!size.equals(catalog.size(GearNativeItems.nativeId(stack.getItemId()))))
+            String nativeId = GearNativeItems.nativeId(stack.getItemId());
+            var currentSize = catalog.size(nativeId);
+            var previousSize = catalog.previousSize(nativeId);
+            if (currentSize == null || !(size.equals(currentSize)
+                    || size.equals(previousSize) && catalogRevision >= 2))
                 throw new IllegalStateException("Saved footprint differs from catalog");
             var position = new SpatialLayout.Position(saved.getInt32("X").getValue(), saved.getInt32("Y").getValue());
             if (entries.putIfAbsent(id, new Entry(id, payload, size, position)) != null)
@@ -106,11 +112,30 @@ public final class SpatialBagAggregate {
             if (receipt.revision() > revision || receipts.putIfAbsent(id, receipt) != null)
                 throw new IllegalStateException("Invalid spatial receipt");
         }
-        // Existing 18x4 saves may contain entries beyond the new 15th column.
-        // Preserve every payload/id/receipt; only reflow positions that no longer fit.
+        // Revision 2 entries retain their identity, payload, and receipts. Repack
+        // against the artist's new rectangles only if every entry fits. A full
+        // bag keeps its old rectangles rather than losing an item or blocking
+        // player load; new pickups still use revision 3 dimensions.
+        Map<UUID, Entry> migrated = null;
+        if (catalogRevision == 2) {
+            var resized = new LinkedHashMap<UUID, Entry>();
+            for (var entry : entries.values()) {
+                String nativeId = GearNativeItems.nativeId(entry.payload().getItemId());
+                resized.put(entry.id(), new Entry(entry.id(), entry.payloadJson(),
+                        catalog.size(nativeId), entry.position()));
+            }
+            migrated = reflow(resized.values());
+        }
+        if (migrated == null) migrated = reflow(entries.values());
+        if (migrated == null)
+            throw new IllegalStateException("Saved spatial bag cannot fit revised grid");
+        return new SpatialBagAggregate(owner, catalog.revision(), revision, migrated, receipts);
+    }
+
+    private static Map<UUID, Entry> reflow(Collection<Entry> entries) {
         var migrated = new LinkedHashMap<UUID, Entry>();
         var layout = new SpatialLayout(InventoryGridGeometry.COLUMNS, InventoryGridGeometry.ROWS);
-        var ordered = entries.values().stream().sorted(Comparator
+        var ordered = entries.stream().sorted(Comparator
                 .comparingInt((Entry e) -> e.position().y())
                 .thenComparingInt(e -> e.position().x())
                 .thenComparing(e -> e.id().toString())).toList();
@@ -120,13 +145,13 @@ public final class SpatialBagAggregate {
         }
         for (var entry : ordered) {
             if (migrated.containsKey(entry.id())) continue;
-            var position = layout.firstFit(entry.size()).orElseThrow(() ->
-                    new IllegalStateException("Saved spatial bag cannot fit revised grid"));
+            var position = layout.firstFit(entry.size()).orElse(null);
+            if (position == null) return null;
             if (!layout.add(entry.id().toString(), entry.size(), position))
                 throw new IllegalStateException("Spatial reflow failed");
             migrated.put(entry.id(), new Entry(entry.id(), entry.payloadJson(), entry.size(), position));
         }
-        return new SpatialBagAggregate(owner, catalogRevision, revision, migrated, receipts);
+        return migrated;
     }
 
     /** Hytale's player save may normalize small BSON INT64 values to INT32. */
@@ -153,6 +178,73 @@ public final class SpatialBagAggregate {
         var next = new LinkedHashMap<>(entries);
         next.put(operationId, new Entry(operationId, payload, size, position.get()));
         return record(operationId, request, Outcome.ACCEPTED, operationId, next);
+    }
+
+    /** Plan an equipment return at the chosen rectangle in one bag revision. */
+    public Result offerAt(UUID operationId, long expectedRevision, ItemStack stack,
+                          FootprintCatalog catalog, int x, int y) {
+        return offerAt(operationId, operationId, expectedRevision, stack, catalog, x, y);
+    }
+    public Result offerAt(UUID operationId, UUID entryId, long expectedRevision, ItemStack stack,
+                          FootprintCatalog catalog, int x, int y) {
+        requireCatalog(catalog);
+        String payload = encode(stack);
+        String request = "offerAt:" + entryId + ":" + payload + ":" + expectedRevision + ":" + x + ":" + y;
+        var replay = replay(operationId, request);
+        if (replay != null) return replay;
+        if (expectedRevision != revision) return record(operationId, request, Outcome.STALE, null, entries);
+        if (entries.containsKey(entryId)) return record(operationId, request, Outcome.REPLAY_MISMATCH, null, entries);
+        var size = catalog.size(GearNativeItems.nativeId(stack.getItemId()));
+        if (size == null) return record(operationId, request, Outcome.UNMAPPED, null, entries);
+        var position = new SpatialLayout.Position(x, y);
+        var layout = layout();
+        if (!layout.fits(size, position, null)) return record(operationId, request, Outcome.NO_FIT, null, entries);
+        var next = new LinkedHashMap<>(entries);
+        next.put(entryId, new Entry(entryId, payload, size, position));
+        return record(operationId, request, Outcome.ACCEPTED, entryId, next);
+    }
+
+    /** A gear return prefers the released cell, then a free rectangle, then one atomic repack. */
+    public Result offerForEquipmentReturn(UUID operationId, UUID entryId, long expectedRevision,
+                                          ItemStack stack, FootprintCatalog catalog, int x, int y) {
+        Result planned;
+        if (x >= 0 && y >= 0) {
+            planned = offerAt(operationId, entryId, expectedRevision, stack, catalog, x, y);
+            if (planned.receipt().outcome() != Outcome.NO_FIT
+                    || x >= InventoryGridGeometry.COLUMNS || y >= InventoryGridGeometry.ROWS)
+                return planned;
+        }
+        planned = offerAll(operationId, expectedRevision, List.of(new OfferedItem(entryId, stack)), catalog);
+        if (planned.receipt().outcome() != Outcome.NO_FIT) return planned;
+        return offerRepacked(operationId, entryId, expectedRevision, stack, catalog);
+    }
+
+    /** Repack only as a candidate: a rejected fit never moves an existing entry. */
+    private Result offerRepacked(UUID operationId, UUID entryId, long expectedRevision,
+                                 ItemStack stack, FootprintCatalog catalog) {
+        requireCatalog(catalog);
+        String payload = encode(stack);
+        String request = "offerRepacked:" + entryId + ':' + payload + ':' + expectedRevision;
+        var replay = replay(operationId, request);
+        if (replay != null) return replay;
+        if (expectedRevision != revision) return record(operationId, request, Outcome.STALE, null, entries);
+        if (entries.containsKey(entryId)) return record(operationId, request, Outcome.REPLAY_MISMATCH, null, entries);
+        var size = catalog.size(GearNativeItems.nativeId(stack.getItemId()));
+        if (size == null) return record(operationId, request, Outcome.UNMAPPED, null, entries);
+        var ordered = new ArrayList<Entry>(entries.values());
+        ordered.add(new Entry(entryId, payload, size, new SpatialLayout.Position(0, 0)));
+        ordered.sort(Comparator.comparingInt((Entry entry) -> entry.size().width() * entry.size().height())
+                .reversed().thenComparing(entry -> entry.id().toString()));
+        var layout = new SpatialLayout(InventoryGridGeometry.COLUMNS, InventoryGridGeometry.ROWS);
+        var next = new LinkedHashMap<UUID, Entry>();
+        for (var entry : ordered) {
+            var position = layout.firstFit(entry.size());
+            if (position.isEmpty()) return record(operationId, request, Outcome.NO_FIT, null, entries);
+            if (!layout.add(entry.id().toString(), entry.size(), position.get()))
+                throw new IllegalStateException("Equipment return repack changed unexpectedly");
+            next.put(entry.id(), new Entry(entry.id(), entry.payloadJson(), entry.size(), position.get()));
+        }
+        return record(operationId, request, Outcome.ACCEPTED, entryId, next);
     }
 
     /** All-or-nothing pickup admission: fill compatible stacks before claiming new cells. */

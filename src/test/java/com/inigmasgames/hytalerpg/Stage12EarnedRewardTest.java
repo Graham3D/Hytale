@@ -39,6 +39,107 @@ class Stage12EarnedRewardTest {
     private Path head(){return rewards().resolve(player.toString()).resolve("head.json");}
     private Path receipt(String event){var hash=RewardIntent.digest(event);return rewards().resolve(player.toString()).resolve("receipts").resolve(hash.substring(0,2)).resolve(hash+".json");}
 
+    private EarnedReward goldDeath(int event,long base,double percent){
+        var world=new UUID(2,3);var enemy=new UUID(4,event);
+        var spawn=new EnemyRewardRegistry.Spawn(world,enemy,"fixture","fixture","fixture/biome",5,
+                ProgressionMath.Rank.COMMON,ProgressionMath.Rarity.ORDINARY,"fixture",0);
+        long xp=ProgressionMath.equalShare(ProgressionMath.enemyReward(5,ProgressionMath.Rank.COMMON,ProgressionMath.Rarity.ORDINARY,5),1);
+        var share=new EncounterContributions.Share(player,xp,ProgressionMath.Rank.COMMON.insight,5,1);
+        var plan=new EncounterContributions.DeathPlan(spawn,new com.inigmasgames.hytalerpg.execution.math.Vec3(0,0,0),100,List.of(share),Map.of(player,percent),base);
+        return plan.reward(share);
+    }
+
+    @Test void controlledDeathPotCommits120GoldInTheRealRewardReceipt(){
+        var reward=goldDeath(101,100,20);
+        var result=service().awardEarned(player,reward);
+        assertEquals(EarnedRewardStore.Outcome.COMMITTED,result.outcome());
+        assertEquals(120,state().goldBalance.gold());
+        assertEquals(0,state().goldBalance.remainder().signum());
+        assertEquals(result.receiptHash(),state().rewards.lastReceiptHash());
+        assertEquals(EarnedRewardStore.Outcome.DUPLICATE,service().awardEarned(player,reward).outcome());
+        assertEquals(120,state().goldBalance.gold());
+    }
+
+    @Test void baseOneGoldCarriesFractionAcrossRestartAndDuplicateDeath(){
+        var first=goldDeath(201,1,25);service().awardEarned(player,first);
+        assertEquals(1,state().goldBalance.gold());
+        assertEquals(0,new java.math.BigDecimal("0.25").compareTo(state().goldBalance.remainder()));
+        assertEquals(EarnedRewardStore.Outcome.DUPLICATE,service().awardEarned(player,first).outcome());
+        for(int event=202;event<=204;event++)service().awardEarned(player,goldDeath(event,1,25));
+        assertEquals(5,state().goldBalance.gold());
+        assertEquals(0,state().goldBalance.remainder().signum());
+        assertEquals(4,state().rewards.sequence());
+    }
+
+    @Test void interruptedGoldReceiptReplaysBalanceAndRemainderTogether(){
+        var reward=goldDeath(301,1,25);var armed=new AtomicBoolean(true);
+        var broken=service(repository(),point->{if(point==FileEarnedRewardStore.Boundary.AFTER_PLAYER&&armed.getAndSet(false))throw new IllegalStateException("fault");});
+        assertThrows(IllegalStateException.class,()->broken.awardEarned(player,reward));
+        var fresh=service();assertEquals(EarnedRewardStore.Outcome.DUPLICATE,fresh.awardEarned(player,reward).outcome());
+        assertEquals(1,state().goldBalance.gold());
+        assertEquals(0,new java.math.BigDecimal("0.25").compareTo(state().goldBalance.remainder()));
+        assertEquals(1,state().rewards.sequence());
+    }
+
+    @Test void nonDeathRewardAndInvalidGoldPayloadDoNotChangeBalance(){
+        service().awardEarned(player,reward("mastery",10));
+        assertEquals(GoldBalance.INITIAL,state().goldBalance);
+        assertThrows(IllegalArgumentException.class,()->new EarnedReward.GoldPot(1,Double.NaN));
+        assertThrows(IllegalArgumentException.class,()->new EarnedReward.GoldPot(0,20));
+    }
+
+    @Test void oneDeathPlanPaysOneGoldPotAcrossTwoCreditedRecipients(){
+        var other=new UUID(0,1);var world=new UUID(2,5);var enemy=new UUID(4,405);
+        var spawn=new EnemyRewardRegistry.Spawn(world,enemy,"fixture","fixture","fixture/biome",5,
+                ProgressionMath.Rank.COMMON,ProgressionMath.Rarity.ORDINARY,"fixture",0);
+        long xp=ProgressionMath.equalShare(ProgressionMath.enemyReward(5,ProgressionMath.Rank.COMMON,ProgressionMath.Rarity.ORDINARY,5),2);
+        var one=new EncounterContributions.Share(player,xp,ProgressionMath.Rank.COMMON.insight,5,2);
+        var two=new EncounterContributions.Share(other,xp,ProgressionMath.Rank.COMMON.insight,5,2);
+        var plan=new EncounterContributions.DeathPlan(spawn,new com.inigmasgames.hytalerpg.execution.math.Vec3(0,0,0),100,List.of(one,two))
+                .withGoldFind(Map.of(player,25d,other,0d));
+        var s=service();s.awardEarned(player,plan.reward(one));s.awardEarned(other,plan.reward(two));
+        assertEquals(0,state().goldBalance.gold());
+        assertEquals(0,repository().load(other).state().goldBalance.gold());
+        assertEquals(0,new java.math.BigDecimal("0.625").compareTo(state().goldBalance.remainder()));
+        assertEquals(0,new java.math.BigDecimal("0.5").compareTo(repository().load(other).state().goldBalance.remainder()));
+        assertEquals(0,java.math.BigDecimal.ONE.compareTo(plan.reward(one).goldPot().baseShare().add(plan.reward(two).goldPot().baseShare())));
+        assertEquals(EarnedRewardStore.Outcome.DUPLICATE,s.awardEarned(player,plan.reward(one)).outcome());
+        assertEquals(0,new java.math.BigDecimal("0.625").compareTo(state().goldBalance.remainder()));
+        var legacy=new EncounterContributions.DeathPlan(spawn,plan.deathPosition(),100,List.of(one,two));
+        assertNull(legacy.reward(one).goldPot(),"Historical frozen plans never gain a new reward on replay");
+    }
+
+    @Test void frozenDeathGoldSurvivesEncounterRestart(){
+        var world=new UUID(2,6);var enemy=new UUID(4,406);
+        var spawn=new EnemyRewardRegistry.Spawn(world,enemy,"fixture","fixture","fixture/biome",5,
+                ProgressionMath.Rank.COMMON,ProgressionMath.Rarity.ORDINARY,"fixture",0);
+        var ledger=new EncounterContributions();assertTrue(ledger.begin(spawn));
+        assertTrue(ledger.damage(world,enemy,player,100,50,100,true,1));
+        var participant=new EncounterContributions.Participant(player,world,new com.inigmasgames.hytalerpg.execution.math.Vec3(0,0,0),5,true,null);
+        var plan=ledger.death(world,enemy,participant.position(),2,List.of(participant)).withGoldFind(Map.of(player,25d));
+        var folder=temporary.resolve("encounters");
+        try(var encounter=new FileEncounterStore(folder)){
+            encounter.create(spawn);encounter.save(ledger.snapshot(world,enemy));encounter.freeze(plan);
+        }
+        try(var restarted=new FileEncounterStore(folder)){
+            assertEquals(25,restarted.death(world,enemy).orElseThrow().frozenGoldFind().get(player));
+            restarted.drain(8,(owner,reward)->service().awardEarned(owner,reward));
+        }
+        assertEquals(1,state().goldBalance.gold());
+        assertEquals(0,new java.math.BigDecimal("0.25").compareTo(state().goldBalance.remainder()));
+        try(var replay=new FileEncounterStore(folder)){replay.drain(8,(owner,reward)->service().awardEarned(owner,reward));}
+        assertEquals(1,state().goldBalance.gold());
+    }
+
+    @Test void schemaElevenMigrationAddsEmptyGoldWithoutChangingEarnedXp(){
+        var old=RpgPlayerState.create(player);old.currentXp=10;
+        var raw=new Gson().toJsonTree(old).getAsJsonObject();raw.addProperty("schemaVersion",11);raw.remove("goldBalance");
+        var migrated=new RpgStateMigrator().migrate(raw);
+        var restored=new Gson().fromJson(migrated.state(),RpgPlayerState.class);restored.normalizeShape();
+        assertEquals(10,restored.currentXp);assertEquals(GoldBalance.INITIAL,restored.goldBalance);
+        assertEquals(RpgPlayerState.CURRENT_SCHEMA,restored.schemaVersion);
+    }
+
     @Test void earnedThresholdAwardsFiveOfBothPointCountersAndSameAuthorityXp(){
         var service=service();var result=service.awardEarned(player,reward("death1",100));var state=state();
         assertEquals(EarnedRewardStore.Outcome.COMMITTED,result.outcome());assertEquals(100,state.currentXp);

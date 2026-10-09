@@ -102,7 +102,10 @@ public final class ConnectionRuntime {
             var targets=tether==null?targets(field,shape,port):List.of(tether);if(targets==null)return;
             if(profile.channel()&&!port.payUpkeep(field.context,tick,profile.intervalSeconds())){finish(field,"INSUFFICIENT_UPKEEP",port);return;}
             field.tick=tick;
-            hit(field,targets,tick,profile.coefficient()*(profile.channel()?profile.intervalSeconds():1),profile.channel(),shape.start().add(shape.end()).multiply(.5),port);
+            var payload=profile.channel()?com.inigmasgames.hytalerpg.execution.GearSupportModifiers.channelPayload(
+                    field.pulseContext,tick*profile.intervalSeconds()):field.pulseContext;
+            hit(field,targets,tick,profile.coefficient()*(profile.channel()?profile.intervalSeconds():1),profile.channel(),
+                    shape.start().add(shape.end()).multiply(.5),port,payload);
             if(field.done)return;
             port.present(field.context,shape,"IMPACT",profile.channel()?.1:.15);
         }
@@ -127,7 +130,8 @@ public final class ConnectionRuntime {
     }
     private ConnectionWorldPort.Target boundTarget(Field field,Vec3 origin,ConnectionWorldPort port){
         var target=(field.profile().friendlyTether()?port.resolveFriendly(field.targetId):port.resolveTarget(field.targetId)).orElse(null);
-        return target!=null&&ConnectionShape.pointDistanceSquared(origin,target.bounds())<=field.profile().range()*field.profile().range()+1e-9
+        double reach=com.inigmasgames.hytalerpg.execution.GearSupportModifiers.primaryReach(field.profile(),field.context.gearSnapshot());
+        return target!=null&&ConnectionShape.pointDistanceSquared(origin,target.bounds())<=reach*reach+1e-9
                 &&port.lineOfSight(origin,target)?target:null;
     }
     /** Same channel owner/scheduler; a zero lifetime denotes the explicitly held friendly tether. */
@@ -136,7 +140,8 @@ public final class ConnectionRuntime {
         var p=field.profile();var origin=port.frame().feet().add(new Vec3(0,p.originHeight(),0));
         var target=port.resolveFriendly(field.targetId).orElse(null);
         if(target==null){finish(field,"TETHER_TARGET_INVALID",port);return;}
-        if(ConnectionShape.pointDistanceSquared(origin,target.bounds())>p.range()*p.range()+1e-9){finish(field,"TETHER_RANGE_BROKEN",port);return;}
+        double reach=com.inigmasgames.hytalerpg.execution.GearSupportModifiers.primaryReach(p,field.context.gearSnapshot());
+        if(ConnectionShape.pointDistanceSquared(origin,target.bounds())>reach*reach+1e-9){finish(field,"TETHER_RANGE_BROKEN",port);return;}
         if(port.lineOfSight(origin,target))field.losLost=Double.NaN;
         else {
             if(Double.isNaN(field.losLost))field.losLost=now;
@@ -157,9 +162,11 @@ public final class ConnectionRuntime {
             field.visualChildren=children;
             // BASE interval, not modified interval: Rapid Pulse changes rate and multiplies payload by .8.
             double coefficient=p.coefficient()*.25;
-            double healed=port.heal(field.pulseContext,target,tick,coefficient);
+            var payload=com.inigmasgames.hytalerpg.execution.GearSupportModifiers.channelPayload(
+                    field.pulseContext,field.paidThrough-field.started);
+            double healed=port.heal(payload,target,tick,coefficient);
             for(var child:children){
-                healed+=port.heal(field.pulseContext,child.recipient(),tick,coefficient*child.coefficient());
+                healed+=port.heal(payload,child.recipient(),tick,coefficient*child.coefficient());
             }
             port.trace(field.context,"CONNECTION_TICK",Map.of("tick",tick,"coefficient",coefficient,"actualHealing",healed,
                     "secondaryRecipients",children.size(),"NoTetherFanout",true,"periodic",true));
@@ -306,6 +313,10 @@ public final class ConnectionRuntime {
         return unique.values().stream().sorted(Comparator.comparingDouble((ConnectionWorldPort.Target t)->shape.entryDistance(t.bounds())).thenComparing(ConnectionWorldPort.Target::id)).toList();
     }
     private void hit(Field field,List<ConnectionWorldPort.Target> targets,int tick,double coefficient,boolean periodic,Vec3 center,ConnectionWorldPort port) {
+        hit(field,targets,tick,coefficient,periodic,center,port,field.pulseContext);
+    }
+    private void hit(Field field,List<ConnectionWorldPort.Target> targets,int tick,double coefficient,boolean periodic,Vec3 center,
+                     ConnectionWorldPort port,SkillExecutionContext payload) {
         var children=targets.size()==1&&field.context.compiledPlan().finalTags().contains("TETHER")
                 &&Set.of(ConnectionProfile.Kind.DRAIN,ConnectionProfile.Kind.TETHER).contains(field.profile().kind())
                 ?continuations(field,targets.getFirst(),port):List.<TetherContinuations.Payload>of();
@@ -317,14 +328,14 @@ public final class ConnectionRuntime {
         for(var target:targets) {
             if(field.done)break;if(field.lastHit.getOrDefault(target.id(),-1)==tick)continue;
             field.lastHit.put(target.id(),tick);attempts++;
-            double lost=port.damage(field.pulseContext,target,tick,coefficient,periodic,center);if(Double.isFinite(lost)&&lost>0)healthLost+=lost;
-            if(!field.done&&field.profile().kind()==ConnectionProfile.Kind.DRAIN&&Double.isFinite(lost)&&lost>0)port.healFromDamage(field.pulseContext,tick,lost);
+            double lost=port.damage(payload,target,tick,coefficient,periodic,center);if(Double.isFinite(lost)&&lost>0)healthLost+=lost;
+            if(!field.done&&field.profile().kind()==ConnectionProfile.Kind.DRAIN&&Double.isFinite(lost)&&lost>0)port.healFromDamage(payload,tick,lost);
         }
         for(var child:children){
             if(field.lastHit.getOrDefault(child.recipient().id(),-1)==tick)continue;
             field.lastHit.put(child.recipient().id(),tick);attempts++;
-            double lost=port.damage(field.pulseContext,child.recipient(),tick,coefficient*child.coefficient(),periodic,child.recipient().bounds().centre());
-            if(Double.isFinite(lost)&&lost>0){healthLost+=lost;if(field.profile().kind()==ConnectionProfile.Kind.DRAIN)port.healFromDamage(field.pulseContext,tick,lost);}
+            double lost=port.damage(payload,child.recipient(),tick,coefficient*child.coefficient(),periodic,child.recipient().bounds().centre());
+            if(Double.isFinite(lost)&&lost>0){healthLost+=lost;if(field.profile().kind()==ConnectionProfile.Kind.DRAIN)port.healFromDamage(payload,tick,lost);}
             port.present(field.context,ConnectionShape.line(child.source().bounds().centre(),child.recipient().bounds().centre(),field.profile().width(),field.profile().height()),"TETHER_SECONDARY",.1);
         }
         port.trace(field.context,"CONNECTION_TICK",Map.of("tick",tick,"coefficient",coefficient,"targetAttempts",attempts,"actualHealthLoss",healthLost,"periodic",periodic));

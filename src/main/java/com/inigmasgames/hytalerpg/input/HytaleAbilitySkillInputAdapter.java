@@ -25,6 +25,35 @@ public final class HytaleAbilitySkillInputAdapter {
     private Predicate<UUID> executionSuppressed = ignored -> false;
     private BiConsumer<UUID, Packet> rawObserver = (player, packet) -> { };
     private boolean nativeExecutionOnly;
+    private java.util.function.BooleanSupplier diagnosticEnabled = () -> false;
+    private BiConsumer<UUID, java.util.Map<String,Object>> diagnosticSink = (actor, detail) -> { };
+    private final ConcurrentHashMap<UUID, DiagnosticBudget> diagnosticBudgets = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, java.util.Map<String,Object>> readiness = new ConcurrentHashMap<>();
+    private static final class DiagnosticBudget { long second; int count; }
+    public void configureDiagnostics(java.util.function.BooleanSupplier enabled,
+                                     BiConsumer<UUID, java.util.Map<String,Object>> sink) {
+        diagnosticEnabled = enabled; diagnosticSink = sink;
+    }
+    /** Values-only telemetry, capped at 16 events/second/player; never queues a cast from a packet. */
+    public void diagnostic(UUID actor, String boundary, java.util.Map<String,Object> detail) {
+        if (!diagnosticEnabled.getAsBoolean()) return;
+        var budget = diagnosticBudgets.computeIfAbsent(actor, ignored -> new DiagnosticBudget());
+        synchronized (budget) {
+            long second = System.nanoTime() / 1_000_000_000L;
+            if (budget.second != second) { budget.second = second; budget.count = 0; }
+            if (budget.count++ >= 16) return;
+        }
+        var values = new java.util.LinkedHashMap<String,Object>(detail);
+        values.put("boundary", boundary);
+        try { diagnosticSink.accept(actor, values); } catch (RuntimeException ignored) { }
+    }
+    public void diagnosticReadiness(UUID actor, String hand, boolean weapon, String first, String second) {
+        if (!diagnosticEnabled.getAsBoolean()) { readiness.remove(actor); return; }
+        var values = java.util.Map.<String,Object>of("heldItem", hand, "nativeWeaponEligible", weapon,
+                "skill01Rune", first, "skill02Rune", second,
+                "nativeRule", "CoreItemAbility.canUseWith requires a held ItemWeapon");
+        if (!values.equals(readiness.put(actor, values))) diagnostic(actor, "NATIVE_READINESS", values);
+    }
     private final ConcurrentHashMap<UUID, java.util.Map<Object, Boolean>> executedChains = new ConcurrentHashMap<>();
     private record Hold(InteractionType action,int id,java.lang.ref.WeakReference<com.hypixel.hytale.server.core.entity.InteractionChain> chain){}
     private final ConcurrentHashMap<UUID,Hold> heldChannels=new ConcurrentHashMap<>();
@@ -80,6 +109,8 @@ public final class HytaleAbilitySkillInputAdapter {
 
     public void acceptNativeExecution(UUID player, InteractionType action, int chainId, Object chainIdentity,
                                       String itemId, int nativeSlot) {
+        diagnostic(player, "NATIVE_CALLBACK", java.util.Map.of("action", String.valueOf(action),
+                "chainId", chainId, "originalItem", String.valueOf(itemId), "nativeSlot", nativeSlot));
         SkillSlot slot = slot(action);
         if (slot == null || chainIdentity == null || itemId == null
                 || !itemId.startsWith(NativeAbilityProjectionService.OWNED_ITEM_PREFIX)
@@ -126,6 +157,14 @@ public final class HytaleAbilitySkillInputAdapter {
             return;
         }
         if (!(packet instanceof SyncInteractionChains chains) || chains.updates == null) return;
+        if (diagnosticEnabled.getAsBoolean()) for (var chain : chains.updates) {
+            if (chain != null && chain.initial && isAbilityAction(chain.interactionType))
+                diagnostic(player, "INBOUND_ABILITY", java.util.Map.of("action", chain.interactionType.name(),
+                        "chainId", chain.chainId, "heldItem", String.valueOf(chain.itemInHandId),
+                        "activeHotbarSlot", chain.activeHotbarSlot, "activeToolsSlot", chain.activeToolsSlot,
+                        "toolsItem", String.valueOf(chain.toolsItemId), "rootOverride", chain.overrideRootInteraction,
+                        "fork", chain.forkedId != null, "castQueuedByObserver", false));
+        }
         if (nativeExecutionOnly) return;
         for (SyncInteractionChain chain : chains.updates) observe(player, chain);
     }
@@ -191,6 +230,8 @@ public final class HytaleAbilitySkillInputAdapter {
         executedChains.remove(player);
         heldChannels.remove(player);
         fireballCharges.remove(player);
+        diagnosticBudgets.remove(player);
+        readiness.remove(player);
     }
 
     public static SkillSlot slot(InteractionType type) {

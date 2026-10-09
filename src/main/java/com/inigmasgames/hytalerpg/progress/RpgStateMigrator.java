@@ -22,6 +22,7 @@ public final class RpgStateMigrator {
                 case 8 -> migrateV8ToV9(state);
                 case 9 -> migrateV9ToV10(state);
                 case 10 -> migrateV10ToV11(state);
+                case 11 -> migrateV11ToV12(state);
                 default -> throw new IllegalStateException("No migration from RPG schema v" + version);
             };
             version = state.get("schemaVersion").getAsInt();
@@ -96,6 +97,14 @@ public final class RpgStateMigrator {
     }
 
     public record MigrationResult(JsonObject state, int sourceVersion, int targetVersion, boolean migrated) {}
+    private static JsonObject migrateV11ToV12(JsonObject state){
+        // Hand-authored legacy fixtures may carry the current empty default; a nonempty
+        // pre-schema balance is never inferred or discarded.
+        if(state.has("goldBalance")&&!state.get("goldBalance").equals(new com.google.gson.Gson().toJsonTree(GoldBalance.INITIAL)))
+            throw new IllegalStateException("Unexpected pre-schema-12 Gold balance");
+        state.add("goldBalance",new com.google.gson.Gson().toJsonTree(GoldBalance.INITIAL));
+        state.addProperty("schemaVersion",12);return state;
+    }
     private static JsonObject migrateV10ToV11(JsonObject state){
         if(state.has("gearEconomy"))throw new IllegalStateException("Unexpected pre-schema-11 gear economy");
         // Legacy attained mastery ranks remain the fallback until the first explicit upgrade.

@@ -8,9 +8,12 @@ public final class SupportMagnitude {
     public static double tetherHealing(SkillExecutionContext context,double coefficient,double current,double maximum){
         var old=context.snapshot().modifiers();var increased=new java.util.ArrayList<>(old.increased());
         increased.add(context.compiledPlan().supportModifiers().healingIncreased(current,maximum));
+        increased.add(context.gearSnapshot().percent(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.HEALING_DONE));
         var buckets=new com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets(increased,old.reduced(),old.more(),old.less());
         // Commit snapshot already includes mastery. Do not apply it for a second time per recipient.
-        return new HealingCalculationService().direct(context.snapshot().basePower(),coefficient,context.snapshot().derivedStats().healingMultiplier(),1,0)*buckets.factor();
+        return new HealingCalculationService().direct(context.snapshot().basePower()
+                +context.gearSnapshot().total(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.HEALING_POWER),
+                coefficient,context.snapshot().derivedStats().healingMultiplier(),1,0)*buckets.factor();
     }
     public static com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage reflectionConditional(SkillExecutionContext context,double actualHealthLost,double amount){
         var conditions=context.compiledPlan().hitConditions();if(!conditions.active())return null;
@@ -25,13 +28,15 @@ public final class SupportMagnitude {
     }
     public static double shield(SkillExecutionContext context,double mastery){
         return new HealingCalculationService().direct(20,context.profile().support().coefficient(),
-                context.snapshot().derivedStats().healingMultiplier(),mastery,0)*context.snapshot().modifiers().factor()*context.compiledPlan().supportModifiers().barrierFactor();
+                context.snapshot().derivedStats().healingMultiplier(),mastery,0)*context.snapshot().modifiers().factor()*context.compiledPlan().supportModifiers().barrierFactor()
+                *(1+context.gearSnapshot().percent(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.BARRIER_STRENGTH));
     }
     public static double healing(SkillExecutionContext context,double mastery,double current,double maximum){
         var old=context.snapshot().modifiers();var increased=new java.util.ArrayList<>(old.increased());
         increased.add(context.compiledPlan().supportModifiers().healingIncreased(current,maximum));
+        increased.add(context.gearSnapshot().percent(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.HEALING_DONE));
         var buckets=new com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets(increased,old.reduced(),old.more(),old.less());
-        return new HealingCalculationService().direct(20,context.profile().support().coefficient(),
+        return new HealingCalculationService().direct(20+context.gearSnapshot().total(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.HEALING_POWER),context.profile().support().coefficient(),
                 context.snapshot().derivedStats().healingMultiplier(),mastery,0)*buckets.factor();
     }
 }

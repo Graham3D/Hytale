@@ -26,6 +26,10 @@ import java.util.*;
 
 /** Reversible native relationship overlay; no Role, allegiance-memory, inventory, Health or reward creation writes. */
 public final class HytaleConversionSystem extends EntityTickingSystem<EntityStore>{
+    private volatile java.util.function.BiPredicate<UUID,UUID> encounterConversionProtected=(world,entity)->false;
+    public void configureEncounterConversionProtection(java.util.function.BiPredicate<UUID,UUID> provider){
+        encounterConversionProtected=Objects.requireNonNull(provider);
+    }
     private final ConversionRegistry registry=new ConversionRegistry();
     private final Map<AttitudeView,Boolean> installed=Collections.synchronizedMap(new WeakHashMap<>());
     private final CombatTrace trace;
@@ -62,6 +66,7 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
         // Explicit authored Dominatable common-role opt-in. Unknown roles do NOT inherit COMMON.
         boolean classified=npc!=null&&"Wolf_Black".equals(npc.getRoleName());
         boolean protectedActor=npc==null||npc.getRole()==null||npc.isReserved()||npc.getRole().isInvulnerable()
+                ||encounterConversionProtected.test(world(store),id(store,target))
                 ||store.getComponent(target,Invulnerable.getComponentType())!=null||store.getComponent(target,SummonProjection.getComponentType())!=null
                 ||store.getComponent(target,ConversionProjection.getComponentType())!=null
                 ||store.getComponent(target,EntityStore.REGISTRY.getNonSerializedComponentType())!=null

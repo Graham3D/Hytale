@@ -39,7 +39,7 @@ class R021NativeAbilityCorrectionTest {
             Path asset = ITEMS.resolve("RPG_Ability_" + skill + ".json");
             assertTrue(Files.isRegularFile(asset), asset.toString());
             var ability = com.google.gson.JsonParser.parseString(Files.readString(asset)).getAsJsonObject().getAsJsonObject("Ability");
-            assertEquals("Primary", ability.get("Slot").getAsString(), skill);
+            assertEquals("Core", ability.get("Slot").getAsString(), skill);
             assertEquals(0.0, ability.get("Cooldown").getAsDouble(), skill);
             assertEquals(0.0, ability.get("Cost").getAsDouble(), skill);
             assertEquals("None", ability.get("CostType").getAsString(), skill);

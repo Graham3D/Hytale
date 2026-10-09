@@ -20,6 +20,7 @@ import com.inigmasgames.hytalerpg.combat.snapshot.CombatSnapshotFactory;
 public final class RpgCombatKernel {
     private final CombatBalanceProfile balance;
     private final EffectiveAttributeService effectiveAttributes;
+    private final com.inigmasgames.hytalerpg.combat.attribute.FortuneBreakService fortuneBreak;
     private final DerivedStatService derivedStats;
     private final ReservationService reservations;
     private final RpgResourceService resources;
@@ -35,6 +36,7 @@ public final class RpgCombatKernel {
     public RpgCombatKernel(CombatBalanceProfile balance, CriticalRoller criticalRoller) {
         this.balance = balance;
         effectiveAttributes = new EffectiveAttributeService(balance);
+        fortuneBreak = new com.inigmasgames.hytalerpg.combat.attribute.FortuneBreakService(balance);
         derivedStats = new DerivedStatService(balance, effectiveAttributes);
         reservations = new ReservationService();
         resources = new RpgResourceService(balance, reservations);
@@ -43,7 +45,7 @@ public final class RpgCombatKernel {
         basePower = new BasePowerResolver(ItemPowerRegistry.loadCanonical());
         scaling = new SkillScalingService(balance);
         damage = new DamageCalculationService(scaling, criticalRoller);
-        statuses = new StatusService(balance, System::nanoTime);
+        statuses = new StatusService(balance, System::nanoTime, criticalRoller);
         snapshots = new CombatSnapshotFactory();
         hostileCombat = new HostileCombatTracker(System::nanoTime);
     }
@@ -52,6 +54,7 @@ public final class RpgCombatKernel {
     }
     public CombatBalanceProfile balance() { return balance; }
     public EffectiveAttributeService effectiveAttributes() { return effectiveAttributes; }
+    public com.inigmasgames.hytalerpg.combat.attribute.FortuneBreakService fortuneBreak() { return fortuneBreak; }
     public DerivedStatService derivedStats() { return derivedStats; }
     public ReservationService reservations() { return reservations; }
     public RpgResourceService resources() { return resources; }

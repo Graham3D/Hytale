@@ -21,8 +21,8 @@ class GearAffixRuntimeTest {
     }
     @Test void localPowerAddsThenNormalizesThenMultipliesExactlyOnce(){
         var g=item("gm.sword_mithril.h",900,"WA-001","10","WA-002","25","WA-151","1");var r=GearAffixRuntime.physical(g);
-        assertEquals((g.intrinsicStats().get("physicalMin")+10)*1.25,r.minimum());
-        assertEquals((g.intrinsicStats().get("physicalMax")+10)*1.25,r.maximum());
+        assertEquals(Math.round((g.intrinsicStats().get("physicalMin")+10)*1.25*10)/10d,r.minimum());
+        assertEquals(Math.round((g.intrinsicStats().get("physicalMax")+10)*1.25*10)/10d,r.maximum());
         var floor=item("gm.sword_mithril.h",1000,"WA-157","1000");var f=GearAffixRuntime.physical(floor);
         assertEquals(f.minimum(),f.maximum());assertEquals(floor,GearInstance.fromJson(floor.toJson()));
     }
@@ -48,11 +48,12 @@ class GearAffixRuntimeTest {
         var p=CombatBalanceProfile.loadCanonical();var derived=effects.derive(new DerivedStatService(p,new EffectiveAttributeService(p)),Map.of());
         assertEquals(.75,new RpgCooldownService(p,()->0).calculate(10,1,derived.cooldownRecovery(),null).appliedRecovery());
     }
-    @Test void allSkillRanksModifyEffectiveOnlyAndUnsupportedAffixesFailClosed(){
+    @Test void allSkillRanksModifyEffectiveOnlyAndUncalibratedLightFailsClosed(){
         var g=item("gm.sword_mithril.h",1000,"WA-121","2");int baseRank=20;
         assertEquals(22,EffectiveSkillLevel.resolveBase(baseRank,GearAffixRuntime.effects(List.of(g)).allSkillRanks()));assertEquals(20,baseRank);
-        assertFalse(GearAffixRuntime.supported(item("gm.sword_mithril.h",1000,"WA-072","8")));
-        assertThrows(IllegalArgumentException.class,()->new GearDropGenerator(catalog,new GearBindings(),Set.of("WA-072")));
+        assertTrue(GearAffixRuntime.supported(item("gm.sword_mithril.h",1000,"WA-072","8")));
+        assertFalse(GearAffixRuntime.supported(item("gm.sword_mithril.h",1000,"WA-155","3")));
+        assertThrows(IllegalArgumentException.class,()->new GearDropGenerator(catalog,new GearBindings(),Set.of("WA-155")));
     }
     @Test void generatedItemsHaveWorkingOperatorsAcrossAllErasAndRankGates(){
         var generator=new GearDropGenerator(catalog,new GearBindings(),GearAffixRuntime.ENABLED);int ranks=0;

@@ -1,0 +1,43 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Swimming_Aggressive",
+  "Modify": {
+    "Appearance": "Piranha",
+    "FlockArray": [
+      "Piranha"
+    ],
+    "DropList": "Drop_Piranha",
+    "MaxHealth": 38,
+    "AlertedRange": 12,
+    "AttackRange": 1.5,
+    "IsMemory": true,
+    "MemoriesCategory": "Freshwater",
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    },
+    "_InteractionVars": {
+      "Melee_Damage": {
+        "Interactions": [
+          {
+            "$Comment": "Config for a successful melee hit, default values for Effects and HitShape are not overwritten here, see each NPC_ file",
+            "Parent": "NPC_Attack_Melee_Damage",
+            "DamageCalculator": {
+              "Type": "Absolute",
+              "BaseDamage": {
+                "Physical": 5
+              },
+              "RandomPercentageModifier": 0.1
+            },
+            "Type": "RPG_EnemyDamage"
+          }
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Piranha.name",
+      "Description": "Translation key for NPC name display"
+    }
+  }
+}

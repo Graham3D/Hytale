@@ -2,6 +2,7 @@ package com.inigmasgames.hytalerpg.diagnostics;
 
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import java.util.*;
 
 /** Owner-thread wall spans, including admission/lock waits. Diagnostic state never authorizes gameplay.
@@ -19,8 +20,18 @@ public final class NativeRpgTickMetrics {
     private static final class Tick {long id;final long[] nanos=new long[Phase.values().length];Tick(long id){this.id=id;}}
     public static void configure(RpgSkillTracer tracer){trace=Objects.requireNonNull(tracer);}
     public static Span enter(Store<EntityStore> store,Phase phase){
-        long started=System.nanoTime();var world=store.getExternalData().getWorld();
+        long started=System.nanoTime();var external=store.getExternalData();
+        if(external==null||external.getWorld()==null)return new Span(null,null,phase,started);
+        var world=external.getWorld();
         // Actual native ownership only. Off-thread calls are never mislabelled server ticks.
+        if(!world.isInThread())return new Span(null,null,phase,started);
+        return enter(world.getWorldConfig().getUuid(),world.getTick(),world.getBufferedTickLengthMetricSet().getLastValue(),phase,started);
+    }
+    /** Same native world tick owner for chunk spawn callbacks. */
+    public static Span enterChunk(Store<ChunkStore> store,Phase phase){
+        long started=System.nanoTime();var external=store.getExternalData();
+        if(external==null||external.getWorld()==null)return new Span(null,null,phase,started);
+        var world=external.getWorld();
         if(!world.isInThread())return new Span(null,null,phase,started);
         return enter(world.getWorldConfig().getUuid(),world.getTick(),world.getBufferedTickLengthMetricSet().getLastValue(),phase,started);
     }

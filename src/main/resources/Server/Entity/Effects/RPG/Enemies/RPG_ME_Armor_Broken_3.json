@@ -1,0 +1,1 @@
+{"Duration":4,"Debuff":true,"OverlapBehavior":"Overwrite","DamageResistance":{"Physical":[{"Amount":-0.25,"CalculationType":"Percent"}],"Projectile":[{"Amount":-0.25,"CalculationType":"Percent"}]}}

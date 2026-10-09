@@ -25,10 +25,58 @@ import java.util.*;
 /** Operator QA commands; generated items retain production rolls and protected QA provenance. */
 public final class RpgGearCommand extends AbstractCommandCollection {
     public static final String AUTHOR_PERMISSION="inigmasgames.rpg.gear.author";
+    private final Map<String,Integer> affixQaCursor=new java.util.concurrent.ConcurrentHashMap<>();
     public RpgGearCommand(HytaleGearEquipment equipment) {
         super("gear","Inspect gear and create protected generated QA equipment.");
         var catalog=GearCatalog.load();var bindings=new GearBindings();
         var generator=new GearDropGenerator(catalog,bindings,GearAffixRuntime.ENABLED);
+        var affixQa=new GearAffixQaSuite(catalog);
+        var affixQaCommands=new AbstractCommandCollection("affixqa","List or issue protected, mechanically qualified affix fixtures.") {};
+        var qa159=new AbstractCommandCollection("qa159","159 functional affixes on 17 distinct legal QA carriers.") {};
+        qa159.requirePermission(AUTHOR_PERMISSION);
+        qa159.addSubCommand(new AbstractAsyncCommand("list","List the compact pack, carriers, footprints and Sentinel eligibility.") {
+            @Override protected java.util.concurrent.CompletableFuture<Void> executeAsync(CommandContext c){
+                affixQa.fixtures().stream().filter(f->f.group().equals("qa159"))
+                        .forEach(f->c.sendMessage(Message.raw(Qa159Pack.listing(f,catalog))));
+                c.sendMessage(Message.raw("17 fixtures / 159 unique functional affixes; WA-155 excluded. Normal requirements apply. QA affixes function at runtime."));
+                return java.util.concurrent.CompletableFuture.completedFuture(null);
+            }
+        });
+        affixQaCommands.addSubCommand(qa159);
+        affixQaCommands.addSubCommand(new AbstractAsyncCommand("list","List affix QA fixtures and their exact affix IDs.") {
+            {requirePermission(AUTHOR_PERMISSION);}
+            @Override protected java.util.concurrent.CompletableFuture<Void> executeAsync(CommandContext c){
+                for(var row:affixQa.fixtures()) {
+                    var preview=affixQa.preview(row);
+                    var base=catalog.base(row.itemBaseId());
+                    String family=base.category()==GearCatalog.Category.ARMOR?base.slot().name():base.family();
+                    var rolls=preview.affixes().stream().map(roll->roll.familyId()+" "+roll.name()+"="+roll.value()
+                            +(roll.selector()==null?"":" selector="+roll.selector())).toList();
+                    c.sendMessage(Message.raw(row.fixtureId()+" "+row.itemBaseId()+" "+family+" "+row.group()+" "+row.rarity()
+                            +" "+rolls+" "+(affixQa.spawnable(row)?"SPAWNABLE":"PENDING_ADAPTER")));
+                }
+                c.sendMessage(Message.raw("A/B catalog: 160 affixed and 160 controls. Group spawn issues at most 8 per call; repeat to resume."));
+                return java.util.concurrent.CompletableFuture.completedFuture(null);
+            }
+        });
+        affixQaCommands.addSubCommand(new AbstractPlayerCommand("spawn","Issue one fixture ID, armor, weapons, support, summons, or all.") {
+            final RequiredArg<String> fixtureArg=withRequiredArg("fixtureId","fixture ID, armor, weapons, support, summons, or all",ArgTypes.STRING);
+            {requirePermission(AUTHOR_PERMISSION);}
+            @Override protected void execute(CommandContext c,Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,World world){
+                String target=c.get(fixtureArg);
+                var rows=affixQa.fixtures().stream().filter(row->target.equals("all")||target.equals(row.group())||target.equals(row.fixtureId()))
+                        .filter(affixQa::spawnable).toList();
+                if(rows.isEmpty()){
+                    boolean known=Set.of("all","armor","weapons","support","summons").contains(target)
+                            ||affixQa.fixtures().stream().anyMatch(row->row.fixtureId().equals(target));
+                    c.sendMessage(Message.raw((known?"No currently spawnable affix QA fixture for: ":"Unknown affix QA fixture/group: ")+target));
+                    return;
+                }
+                String cursorKey=player.getUuid()+"/"+target;
+                issueAffixFixtures(rows,affixQaCursor.getOrDefault(cursorKey,0),8,cursorKey,affixQaCursor,affixQa,equipment,store,actor,player,world);
+            }
+        });
+        addSubCommand(affixQaCommands);
         for(String token:GearQaRequest.typeTokens())addSubCommand(new AbstractPlayerCommand(token,
                 "Generate protected gear: /rpg gear "+token+" <rarity> <era> [itemLevel|max|seed:<seed>] [seed].") {
             final RequiredArg<String> rarityArg=withRequiredArg("quality","normal, magic or rare",ArgTypes.STRING);
@@ -70,17 +118,35 @@ public final class RpgGearCommand extends AbstractCommandCollection {
                     var weights=GearMagicFind.weights(era,level,rank,mf);
                     var source=new EnemyRewardRegistry.LootSource(seed,UUID.randomUUID(),UUID.randomUUID(),era,level,
                             "operator-diagnostic",rank,ProgressionMath.Rarity.ORDINARY,GearQualityProfile.CURRENT.revision());
-                    var result=generator.generate(source,mf,seed,Set.of());var random=new GearRandom(seed);
+                    var decision=GearLootProfiles.CURRENT.decide(source.role(),rank,seed);
                     c.sendMessage(Message.raw("Gear odds source="+era+"/"+level+"/"+rank+" rawLuck="+rawLuck
                             +" effectiveLuck="+effective+" gearMF="+(mf-baseMf)+" totalMF="+mf
-                            +" equipmentChance="+GearMagicFind.opportunity(rank)));
+                            +" profile="+decision.profileId()+" guaranteedPicks="+decision.guaranteedPicks()
+                            +" optionalPickChances="+decision.optionalPickChances()
+                            +" maxEquipment="+decision.maxEquipment()));
                     c.sendMessage(Message.raw("Eligible="+weights.base().entrySet().stream().filter(e->e.getValue()>0).map(e->e.getKey().label).toList()
                             +" base="+weights.base()+" rank="+weights.rank()+" mfFactor="+weights.magicFind()
                             +" probability="+weights.normalized()));
-                    c.sendMessage(Message.raw("seed="+seed+" opportunityRoll="+random.stream("opportunity").nextDouble()
-                            +" qualityRoll="+random.stream("rarity").nextDouble()+" result="
-                            +(result.item()==null?"NO_EQUIPMENT":result.item().quality()+" affixes="+result.item().affixes().size()
-                                    +" identity="+result.item().identity())));
+                    int generated=0;
+                    for(var pick:decision.rolls()){
+                        String pickDetails="pick="+pick.index()+" childReceiptId="+pick.childEventId()
+                                +(pick.guaranteed()?" guaranteed=true":" optionalChance="+pick.optionalChance()
+                                +" optionalRoll="+pick.optionalRoll());
+                        if(!pick.opportunity()){
+                            c.sendMessage(Message.raw(pickDetails+" result=NO_DROP"));
+                            continue;
+                        }
+                        var pickSource=new EnemyRewardRegistry.LootSource(pick.childEventId(),source.world(),
+                                source.enemy(),era,level,source.role(),rank,source.rarity(),source.profileRevision());
+                        var result=generator.generateGuaranteed(pickSource,mf,pick.seed(),Set.of());generated++;
+                        c.sendMessage(Message.raw(pickDetails
+                                +" qualityRoll="+new GearRandom(pick.seed()).stream("rarity").nextDouble()
+                                +" qualityWeights="+result.rarityDistribution()
+                                +" result="+result.item().quality()+" identity="+result.item().identity()
+                                +" delivery=DIAGNOSTIC_ONLY"));
+                    }
+                    c.sendMessage(Message.raw("seed="+seed+" opportunities="+decision.succeeded()
+                            +" itemsGenerated="+generated+" worldSpawn=NOT_ATTEMPTED"));
                 }catch(RuntimeException failure){c.sendMessage(Message.raw("Gear odds: "+failure.getMessage()));}
             }
         });
@@ -171,6 +237,25 @@ public final class RpgGearCommand extends AbstractCommandCollection {
                 }catch(RuntimeException failure){c.sendMessage(Message.raw("Gear debug inspection failed: "+failure.getMessage()));}
             }
         });
+    }
+
+    private static void issueAffixFixtures(List<GearAffixQaSuite.Fixture> rows,int index,int remaining,String cursorKey,Map<String,Integer> cursors,GearAffixQaSuite suite,
+                                           HytaleGearEquipment equipment,Store<EntityStore> store,Ref<EntityStore> actor,
+                                           PlayerRef player,World world){
+        if(index>=rows.size()){cursors.remove(cursorKey);player.sendMessage(Message.raw("Affix QA issuance complete: "+rows.size()+" fixture(s)."));return;}
+        if(remaining<=0){player.sendMessage(Message.raw("Affix QA paused at "+index+"/"+rows.size()+"; repeat the same spawn command to resume."));return;}
+        var row=rows.get(index);
+        try{
+            var gear=suite.create(row.fixtureId(),player.getUuid());var view=equipment.view(actor,store);
+            var stack=GearNativeItems.create(gear,view.level(),view.baseline());
+            deliver(stack,store,actor,player,world,message->{
+                if(message.startsWith("Generated gear saved")||message.startsWith("Delivered")){
+                    player.sendMessage(Message.raw("Affix QA "+row.fixtureId()+" saved: "+gear.identity()));
+                    cursors.put(cursorKey,index+1);
+                    issueAffixFixtures(rows,index+1,remaining-1,cursorKey,cursors,suite,equipment,store,actor,player,world);
+                }else player.sendMessage(Message.raw("Affix QA stopped at "+row.fixtureId()+": "+message));
+            });
+        }catch(RuntimeException failure){player.sendMessage(Message.raw("Affix QA stopped at "+row.fixtureId()+": "+failure.getMessage()));}
     }
 
     private static void deliver(com.hypixel.hytale.server.core.inventory.ItemStack stack,

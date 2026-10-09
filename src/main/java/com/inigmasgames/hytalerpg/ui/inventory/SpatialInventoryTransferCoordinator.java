@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.hytalerpg.gear.GearLootService;
 import com.inigmasgames.hytalerpg.gear.GearNativeItems;
 import java.util.Objects;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -149,6 +150,8 @@ public final class SpatialInventoryTransferCoordinator {
         UUID operation = UUID.randomUUID();
         var candidate = before.offerStacking(operation, before.revision(), stack, catalog);
         if (!candidate.accepted()) {
+            com.inigmasgames.hytalerpg.gear.GearQaTrace.record(owner,"PICKUP_ADMISSION",Map.of(
+                    "eventId",source.source().eventId(),"result","REJECTED","reason",candidate.receipt().outcome().name()));
             reply.accept("Spatial pickup rejected: " + candidate.receipt().outcome() + "; source remains protected.");
             finished.run();
             return;
@@ -194,12 +197,26 @@ public final class SpatialInventoryTransferCoordinator {
                                     return;
                                 }
                                 io.execute(() -> {
+                                    GearLootService.Loot acknowledged;
                                     try {
-                                        sourceChanged.accept(loot.acknowledgeSpatialPickup(event, owner, operation));
-                                        reply.accept("Protected pickup committed to spatial bag once.");
-                                        finished.run();
+                                        acknowledged = loot.acknowledgeSpatialPickup(event, owner, operation);
                                     } catch (RuntimeException uncertain) {
                                         reply.accept("Spatial pickup saved but receipt remains pending; reconnect for recovery.");
+                                        return;
+                                    }
+                                    // The durable receipt is FINALIZED. Projection or chat failure
+                                    // must not retain the player-wide transaction lock.
+                                    try {
+                                        sourceChanged.accept(acknowledged);
+                                        com.inigmasgames.hytalerpg.gear.GearQaTrace.record(owner,"PICKUP_ADMISSION",Map.of(
+                                                "eventId",event,"result","COMMITTED","itemIdentity",source.result().item().identity().toString()));
+                                        reply.accept("Protected pickup committed to spatial bag once.");
+                                    } catch (RuntimeException projection) {
+                                        com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                                                "RPG_SPATIAL_PICKUP_FINALIZED_PROJECTION_FAILED player=%s event=%s error=%s",
+                                                owner,event,projection);
+                                    } finally {
+                                        finished.run();
                                     }
                                 });
                             });
@@ -209,8 +226,10 @@ public final class SpatialInventoryTransferCoordinator {
                         }
                     });
                 } catch (RuntimeException failure) {
-                    if (!reserved) reply.accept("Spatial source reservation failed: " + failure.getMessage());
-                    else reply.accept("Spatial reservation uncertain; source stays reserved. Reconnect for recovery.");
+                    if (!reserved) {
+                        try { reply.accept("Spatial source reservation failed: " + failure.getMessage()); }
+                        finally { finished.run(); }
+                    } else reply.accept("Spatial reservation uncertain; source stays reserved. Reconnect for recovery.");
                 }
             });
         } catch (RuntimeException queueFailure) {
@@ -221,15 +240,18 @@ public final class SpatialInventoryTransferCoordinator {
 
     private void releaseBeforePublication(String event, UUID owner, UUID operation,
                                           Consumer<String> reply, Runnable finished) {
-        io.execute(() -> {
-            try {
-                sourceChanged.accept(loot.releaseUncommittedSpatialPickup(event, owner, operation));
-                reply.accept("Spatial pickup cancelled before bag publication; source remains protected.");
-            } catch (RuntimeException uncertain) {
-                reply.accept("Spatial cancellation uncertain; source stays reserved for recovery.");
-                return;
-            }
-            finished.run();
-        });
+        try {
+            io.execute(() -> {
+                try { sourceChanged.accept(loot.releaseUncommittedSpatialPickup(event, owner, operation)); }
+                catch (RuntimeException uncertain) {
+                    reply.accept("Spatial cancellation uncertain; source stays reserved for recovery.");
+                    return;
+                }
+                try { reply.accept("Spatial pickup cancelled before bag publication; source remains protected."); }
+                finally { finished.run(); }
+            });
+        } catch (RuntimeException queueFailure) {
+            reply.accept("Spatial cancellation queue unavailable; source stays reserved for recovery.");
+        }
     }
 }

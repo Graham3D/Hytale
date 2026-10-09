@@ -1,0 +1,124 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.wand_crystal.h"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 190,
+  "Model": "Items/Weapons/Wand/Wood.blockymodel",
+  "Texture": "Items/Weapons/Wand/Wood_Rotten.png",
+  "Icon": "Icons/ItemsGenerated/Weapon_Wand_Wood_Rotten.png",
+  "PlayerAnimationsId": "Wand",
+  "Tags": {
+    "Type": [
+      "Weapon"
+    ],
+    "Family": [
+      "Wand"
+    ]
+  },
+  "Interactions": {
+    "Primary": "Wand_Primary",
+    "Secondary": "Wand_Primary"
+  },
+  "Weapon": {},
+  "InteractionVars": {
+    "Wand_Cast_Left_Charged": {
+      "Interactions": [
+        {
+          "Parent": "Wand_Cast_Left_Charged",
+          "Costs": {
+            "Mana": 25
+          }
+        }
+      ]
+    },
+    "Wand_Cast_Left_Cost": {
+      "Interactions": [
+        {
+          "Parent": "Wand_Cast_Cost",
+          "StatModifiers": {
+            "Mana": -25
+          }
+        }
+      ]
+    },
+    "Wand_Cast_Left_Launch": "RPG_Carrier_Wand_Launch_Root",
+    "Wand_Cast_Left_Effect": "Wand_Cast_Effect",
+    "Wand_Cast_Left_Fail": "Wand_Cast_Fail",
+    "Sword_Swing_Left_Fast_Effect": {
+      "Interactions": [
+        {
+          "Parent": "Sword_Swing_Left_Fast_Effect",
+          "Effects": {
+            "Trails": [
+              {
+                "PositionOffset": {
+                  "X": 0.6,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "RotationOffset": {
+                  "Pitch": 0,
+                  "Roll": 90,
+                  "Yaw": 0
+                },
+                "TargetNodeName": "Handle",
+                "TrailId": "Small_Default"
+              }
+            ],
+            "WorldSoundEventId": "SFX_Weapon_Charge_Swing"
+          }
+        }
+      ]
+    },
+    "Sword_Swing_Left_Fast_Damage": "RPG_Carrier_Focus_Melee_Damage",
+    "Sword_Swing_Right_Fast_Effect": {
+      "Interactions": [
+        {
+          "Parent": "Sword_Swing_Right_Fast_Effect",
+          "Effects": {
+            "Trails": [
+              {
+                "PositionOffset": {
+                  "X": 0.6,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "RotationOffset": {
+                  "Pitch": 0,
+                  "Roll": 90,
+                  "Yaw": 0
+                },
+                "TargetNodeName": "Handle",
+                "TrailId": "Small_Default"
+              }
+            ],
+            "WorldSoundEventId": "SFX_Weapon_Charge_Swing"
+          }
+        }
+      ]
+    },
+    "Sword_Swing_Right_Fast_Damage": "RPG_Carrier_Focus_Melee_Damage"
+  },
+  "Categories": [
+    "Items.Weapons"
+  ],
+  "Utility": {
+    "Compatible": true
+  },
+  "IconProperties": {
+    "Scale": 0.6,
+    "Translation": [
+      -13,
+      -16
+    ],
+    "Rotation": [
+      45,
+      90,
+      0
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "ItemSoundSetId": "ISS_Weapons_Wand"
+}

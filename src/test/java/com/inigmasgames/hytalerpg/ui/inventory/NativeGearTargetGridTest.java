@@ -13,7 +13,7 @@ final class NativeGearTargetGridTest {
     }
 
     @Test void targetsUseDistinctDeniedAliasSlotsBeyondTheBag() {
-        assertEquals(85, NativeGearTargetGrid.CAPACITY);
+        assertEquals(86, NativeGearTargetGrid.CAPACITY);
         for (String slot : new String[]{"Weapon", "Offhand", "Head", "Chest", "Hands", "Legs",
                 "RingLeft", "RingRight"}) {
             var commands = new UICommandBuilder();
@@ -34,5 +34,18 @@ final class NativeGearTargetGridTest {
         assertFalse(NativeGearTargetGrid.contains("Unknown", 75));
         assertNull(NativeGearTargetGrid.slotAt(74));
         assertNull(NativeGearTargetGrid.slotAt(85));
+    }
+
+    @Test void transparentOutsideTargetIsTheOnlyRemainingAliasSlot() {
+        var commands = new UICommandBuilder();
+        NativeOutsideDropTarget.append(commands, 317);
+        var encoded = commands.getCommands();
+        var cells = BsonDocument.parse(encoded[encoded.length - 1].data).getArray("0");
+        assertEquals(1, cells.size());
+        assertEquals(85, cells.get(0).asDocument().getInt32("InventorySlotIndex").getValue());
+        assertEquals(NativeGearTargetGrid.CAPACITY - 1, NativeOutsideDropTarget.SLOT);
+        assertTrue(NativeOutsideDropTarget.isTarget(85));
+        assertTrue(NativeOutsideDropTarget.isTarget(0)); // target binding may report local index
+        assertFalse(NativeOutsideDropTarget.isTarget(84));
     }
 }

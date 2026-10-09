@@ -1,0 +1,31 @@
+{
+  "Model": "Skeleton_Mage_Corruption_Orb",
+  "UseModelScale": true,
+  "Physics": {
+    "Bounciness": 0,
+    "TerminalVelocityAir": 50,
+    "TerminalVelocityWater": 50,
+    "RotationMode": "Velocity",
+    "Gravity": 0,
+    "Type": "Standard"
+  },
+  "LaunchForce": 30,
+  "SpawnOffset": {
+    "Z": 0,
+    "Y": 0.1,
+    "X": -0.25
+  },
+  "Interactions": {
+    "ProjectileHit": {
+      "Interactions": [
+        "RPG_Carrier_Focus_Projectile_Damage",
+        "RPG_GearRoute_I_Common_Projectile_Despawn"
+      ]
+    },
+    "ProjectileMiss": {
+      "Interactions": [
+        "RPG_GearRoute_I_Common_Projectile_Despawn"
+      ]
+    }
+  }
+}

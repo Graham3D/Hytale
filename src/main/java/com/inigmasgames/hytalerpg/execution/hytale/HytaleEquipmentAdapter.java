@@ -32,7 +32,8 @@ public final class HytaleEquipmentAdapter {
             var range=com.inigmasgames.hytalerpg.gear.GearAffixRuntime.physical(gear);
             Double minimum=gear.intrinsicStats().containsKey("physicalMin")?range.minimum():null,maximum=minimum==null?null:range.maximum();
             return new SkillExecutionPort.Item(stack.getItemId(),nativePower.kind(),new ItemPowerDescriptor(stack.getItemId(),weaponTags(nativePower.kind()),
-                    minimum==null?null:(minimum+maximum)/2,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.magic(gear),minimum,maximum));
+                    minimum==null?null:(minimum+maximum)/2,
+                    com.inigmasgames.hytalerpg.gear.GearAffixRuntime.magic(gear),minimum,maximum),gear.identity());
         }
         var item = stack.getItem();
         var nativeTags=item == null || item.getData() == null ? Map.<String,String[]>of() : item.getData().getRawTags();

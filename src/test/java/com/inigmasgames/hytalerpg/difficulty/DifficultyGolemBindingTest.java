@@ -6,6 +6,24 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 class DifficultyGolemBindingTest {
     @TempDir Path root;
+    @Test void installedGolemRolesResolveTheNativeModelsUsedForPreSpawnClearance() throws Exception {
+        var assets=Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install",
+                "pre-release","package","game","latest","Assets.zip");
+        try(var zip=new java.util.zip.ZipFile(assets.toFile())){
+            for(var golem:GolemMilestones.load().golems()){
+                var roleEntry=zip.getEntry(golem.assetPath());
+                assertNotNull(roleEntry,"Installed native role "+golem.roleId());
+                com.google.gson.JsonObject role;
+                try(var reader=new java.io.InputStreamReader(zip.getInputStream(roleEntry),java.nio.charset.StandardCharsets.UTF_8)){
+                    role=com.google.gson.JsonParser.parseReader(reader).getAsJsonObject();
+                }
+                String appearance=role.getAsJsonObject("Modify").get("Appearance").getAsString();
+                assertEquals(golem.roleId(),appearance,"Command clearance must use the role's actual appearance");
+                assertNotNull(zip.getEntry("Server/Models/Elemental/"+appearance+".json"),
+                        "Native model asset required before spawning "+golem.roleId());
+            }
+        }
+    }
     @Test void exactAuditedMarkerOrOperatorOwnershipRequiredInEachWorld(){
         var worlds=new WorldDifficultyRegistry(root.resolve("worlds.json"));var policy=new GolemEncounterBinding(worlds);var catalog=GolemMilestones.load();
         for(var mode:DifficultyId.values()){

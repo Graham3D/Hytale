@@ -1055,182 +1055,182 @@
     {
       "baseId": "gm.shield_copper.n",
       "nativeItemId": "Weapon_Shield_Copper",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_copper_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Copper.json",
       "sourceSha256": "3A7D60075A5B351E75E839FAD4B750DB7228073E108EEF2B0ED148AA4F715210",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_copper.nm",
       "nativeItemId": "Weapon_Shield_Copper",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_copper_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Copper.json",
       "sourceSha256": "3A7D60075A5B351E75E839FAD4B750DB7228073E108EEF2B0ED148AA4F715210",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_copper.h",
       "nativeItemId": "Weapon_Shield_Copper",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_copper_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Copper.json",
       "sourceSha256": "3A7D60075A5B351E75E839FAD4B750DB7228073E108EEF2B0ED148AA4F715210",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_iron.n",
       "nativeItemId": "Weapon_Shield_Iron",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_iron_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Iron.json",
       "sourceSha256": "977898E7160D697EE2683F6FDB7F47460873AB564E1CE5557C4B3A720E857356",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_iron.nm",
       "nativeItemId": "Weapon_Shield_Iron",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_iron_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Iron.json",
       "sourceSha256": "977898E7160D697EE2683F6FDB7F47460873AB564E1CE5557C4B3A720E857356",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_iron.h",
       "nativeItemId": "Weapon_Shield_Iron",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_iron_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Iron.json",
       "sourceSha256": "977898E7160D697EE2683F6FDB7F47460873AB564E1CE5557C4B3A720E857356",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_thorium.n",
       "nativeItemId": "Weapon_Shield_Thorium",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_thorium_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Thorium.json",
       "sourceSha256": "3B650955DC271397C6572027D746101F337AE9E39BD839DDB74A98B5673F6380",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_thorium.nm",
       "nativeItemId": "Weapon_Shield_Thorium",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_thorium_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Thorium.json",
       "sourceSha256": "3B650955DC271397C6572027D746101F337AE9E39BD839DDB74A98B5673F6380",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_thorium.h",
       "nativeItemId": "Weapon_Shield_Thorium",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_thorium_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Thorium.json",
       "sourceSha256": "3B650955DC271397C6572027D746101F337AE9E39BD839DDB74A98B5673F6380",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_cobalt.n",
       "nativeItemId": "Weapon_Shield_Cobalt",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_cobalt_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Cobalt.json",
       "sourceSha256": "B65BE720BEC7521C1DB447DE7301F5AF3C8564466C6CFFBD0199154AAB315C76",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_cobalt.nm",
       "nativeItemId": "Weapon_Shield_Cobalt",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_cobalt_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Cobalt.json",
       "sourceSha256": "B65BE720BEC7521C1DB447DE7301F5AF3C8564466C6CFFBD0199154AAB315C76",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_cobalt.h",
       "nativeItemId": "Weapon_Shield_Cobalt",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_cobalt_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Cobalt.json",
       "sourceSha256": "B65BE720BEC7521C1DB447DE7301F5AF3C8564466C6CFFBD0199154AAB315C76",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_adamantite.n",
       "nativeItemId": "Weapon_Shield_Adamantite",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_adamantite_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Adamantite.json",
       "sourceSha256": "3EAAF72DBCB7EF84271B635802BC754BC53F115DEDFF196F25EDDEDC47A1ADE8",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_adamantite.nm",
       "nativeItemId": "Weapon_Shield_Adamantite",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_adamantite_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Adamantite.json",
       "sourceSha256": "3EAAF72DBCB7EF84271B635802BC754BC53F115DEDFF196F25EDDEDC47A1ADE8",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_adamantite.h",
       "nativeItemId": "Weapon_Shield_Adamantite",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_adamantite_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Adamantite.json",
       "sourceSha256": "3EAAF72DBCB7EF84271B635802BC754BC53F115DEDFF196F25EDDEDC47A1ADE8",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_mithril.n",
       "nativeItemId": "Weapon_Shield_Mithril",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_mithril_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Mithril.json",
       "sourceSha256": "3462547469CA0DBF2BA1851254CE9007B688629F4D87F2BDB35CB63DCBFCE4DC",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_mithril.nm",
       "nativeItemId": "Weapon_Shield_Mithril",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_mithril_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Mithril.json",
       "sourceSha256": "3462547469CA0DBF2BA1851254CE9007B688629F4D87F2BDB35CB63DCBFCE4DC",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_mithril.h",
       "nativeItemId": "Weapon_Shield_Mithril",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_mithril_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Mithril.json",
       "sourceSha256": "3462547469CA0DBF2BA1851254CE9007B688629F4D87F2BDB35CB63DCBFCE4DC",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.longbow_wood.n",
@@ -1594,267 +1594,333 @@
     },
     {
       "baseId": "gm.staff_flame.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Crystal_Red",
+      "managedItemId": "RPG_Gear_staff_flame_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Red.json",
+      "sourceSha256": "44ED061DA8DF28A98C3CAC484DD862DB415205B61245671BE8A7E8A690B3330A"
     },
     {
       "baseId": "gm.staff_flame.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Crystal_Red",
+      "managedItemId": "RPG_Gear_staff_flame_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Red.json",
+      "sourceSha256": "44ED061DA8DF28A98C3CAC484DD862DB415205B61245671BE8A7E8A690B3330A"
     },
     {
       "baseId": "gm.staff_flame.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Crystal_Red",
+      "managedItemId": "RPG_Gear_staff_flame_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Red.json",
+      "sourceSha256": "44ED061DA8DF28A98C3CAC484DD862DB415205B61245671BE8A7E8A690B3330A"
     },
     {
       "baseId": "gm.staff_ice.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Frost",
+      "managedItemId": "RPG_Gear_staff_ice_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Frost.json",
+      "sourceSha256": "69A0BB9D439C11E552560F4CA517EB4797BCD4CE7A9F5B7AA546FA8A7FEFC16F"
     },
     {
       "baseId": "gm.staff_ice.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Frost",
+      "managedItemId": "RPG_Gear_staff_ice_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Frost.json",
+      "sourceSha256": "69A0BB9D439C11E552560F4CA517EB4797BCD4CE7A9F5B7AA546FA8A7FEFC16F"
     },
     {
       "baseId": "gm.staff_ice.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Frost",
+      "managedItemId": "RPG_Gear_staff_ice_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Frost.json",
+      "sourceSha256": "69A0BB9D439C11E552560F4CA517EB4797BCD4CE7A9F5B7AA546FA8A7FEFC16F"
     },
     {
       "baseId": "gm.staff_healing.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Wizard",
+      "managedItemId": "RPG_Gear_staff_healing_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wizard.json",
+      "sourceSha256": "DA6C4F820578B4849E267EC71CC1944F24B6DC9170BC4B6850B7C924CD6D9FD8"
     },
     {
       "baseId": "gm.staff_healing.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Wizard",
+      "managedItemId": "RPG_Gear_staff_healing_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wizard.json",
+      "sourceSha256": "DA6C4F820578B4849E267EC71CC1944F24B6DC9170BC4B6850B7C924CD6D9FD8"
     },
     {
       "baseId": "gm.staff_healing.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Wizard",
+      "managedItemId": "RPG_Gear_staff_healing_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wizard.json",
+      "sourceSha256": "DA6C4F820578B4849E267EC71CC1944F24B6DC9170BC4B6850B7C924CD6D9FD8"
     },
     {
       "baseId": "gm.wand_oak.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Wood",
+      "managedItemId": "RPG_Gear_wand_oak_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "sourceSha256": "B276067C55A63D73EEB9D150EDB24A81D83C6F6D1DD137749FE1118FA0DB511B"
     },
     {
       "baseId": "gm.wand_oak.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Wood",
+      "managedItemId": "RPG_Gear_wand_oak_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "sourceSha256": "B276067C55A63D73EEB9D150EDB24A81D83C6F6D1DD137749FE1118FA0DB511B"
     },
     {
       "baseId": "gm.wand_oak.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Wood",
+      "managedItemId": "RPG_Gear_wand_oak_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "sourceSha256": "B276067C55A63D73EEB9D150EDB24A81D83C6F6D1DD137749FE1118FA0DB511B"
     },
     {
       "baseId": "gm.wand_crystal.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Wood_Rotten",
+      "managedItemId": "RPG_Gear_wand_crystal_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood_Rotten.json",
+      "sourceSha256": "9C935DBD2C118B43F6A41DA445FAF2C91C7EFAE8402269F47A3428CA5FAA5D7C"
     },
     {
       "baseId": "gm.wand_crystal.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Wood_Rotten",
+      "managedItemId": "RPG_Gear_wand_crystal_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood_Rotten.json",
+      "sourceSha256": "9C935DBD2C118B43F6A41DA445FAF2C91C7EFAE8402269F47A3428CA5FAA5D7C"
     },
     {
       "baseId": "gm.wand_crystal.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Wood_Rotten",
+      "managedItemId": "RPG_Gear_wand_crystal_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood_Rotten.json",
+      "sourceSha256": "9C935DBD2C118B43F6A41DA445FAF2C91C7EFAE8402269F47A3428CA5FAA5D7C"
     },
     {
       "baseId": "gm.wand_bone.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Tribal",
+      "managedItemId": "RPG_Gear_wand_bone_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Tribal.json",
+      "sourceSha256": "23F370F9DCF2D7EEBEECB16FFEEBD3123FA4E2FBC74DC1721DEB4B2916406451"
     },
     {
       "baseId": "gm.wand_bone.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Tribal",
+      "managedItemId": "RPG_Gear_wand_bone_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Tribal.json",
+      "sourceSha256": "23F370F9DCF2D7EEBEECB16FFEEBD3123FA4E2FBC74DC1721DEB4B2916406451"
     },
     {
       "baseId": "gm.wand_bone.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Tribal",
+      "managedItemId": "RPG_Gear_wand_bone_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Tribal.json",
+      "sourceSha256": "23F370F9DCF2D7EEBEECB16FFEEBD3123FA4E2FBC74DC1721DEB4B2916406451"
     },
     {
       "baseId": "gm.book_apprentice.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Grimoire_Brown",
+      "managedItemId": "RPG_Gear_book_apprentice_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Brown.json",
+      "sourceSha256": "0F24B61B35AF81643BAE64C31A6E34AEB0B7D71483AA41584F58ECDD052C02B3"
     },
     {
       "baseId": "gm.book_apprentice.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Grimoire_Brown",
+      "managedItemId": "RPG_Gear_book_apprentice_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Brown.json",
+      "sourceSha256": "0F24B61B35AF81643BAE64C31A6E34AEB0B7D71483AA41584F58ECDD052C02B3"
     },
     {
       "baseId": "gm.book_apprentice.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Grimoire_Brown",
+      "managedItemId": "RPG_Gear_book_apprentice_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Brown.json",
+      "sourceSha256": "0F24B61B35AF81643BAE64C31A6E34AEB0B7D71483AA41584F58ECDD052C02B3"
     },
     {
       "baseId": "gm.book_binder.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Grimoire_Purple",
+      "managedItemId": "RPG_Gear_book_binder_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Purple.json",
+      "sourceSha256": "C750D83EA1EFCE0A007E773338B692952797CFD5D2C7FA9E9ABFF0989553BA42"
     },
     {
       "baseId": "gm.book_binder.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Grimoire_Purple",
+      "managedItemId": "RPG_Gear_book_binder_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Purple.json",
+      "sourceSha256": "C750D83EA1EFCE0A007E773338B692952797CFD5D2C7FA9E9ABFF0989553BA42"
     },
     {
       "baseId": "gm.book_binder.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Grimoire_Purple",
+      "managedItemId": "RPG_Gear_book_binder_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Purple.json",
+      "sourceSha256": "C750D83EA1EFCE0A007E773338B692952797CFD5D2C7FA9E9ABFF0989553BA42"
     },
     {
       "baseId": "gm.book_prayer.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Grimoire_Brown",
+      "managedItemId": "RPG_Gear_book_prayer_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Brown.json",
+      "sourceSha256": "0F24B61B35AF81643BAE64C31A6E34AEB0B7D71483AA41584F58ECDD052C02B3"
     },
     {
       "baseId": "gm.book_prayer.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Grimoire_Brown",
+      "managedItemId": "RPG_Gear_book_prayer_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Brown.json",
+      "sourceSha256": "0F24B61B35AF81643BAE64C31A6E34AEB0B7D71483AA41584F58ECDD052C02B3"
     },
     {
       "baseId": "gm.book_prayer.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Grimoire_Brown",
+      "managedItemId": "RPG_Gear_book_prayer_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Grimoire_Brown.json",
+      "sourceSha256": "0F24B61B35AF81643BAE64C31A6E34AEB0B7D71483AA41584F58ECDD052C02B3"
     },
     {
       "baseId": "gm.bomb_standard.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed bomb exists. Durable harness needs atomic separate-ammo consumption before native spawn and frozen authored explosion power without inherited elemental/status effects. Current native throw spawns first then removes Weapon_Bomb; that sequence cannot authorize a durable harness.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Bomb",
+      "managedItemId": "RPG_Gear_bomb_standard_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json",
+      "sourceSha256": "EBFC39966BAA6A2E5F21AE68A5FE283D575AD8F8FB0E88042F3942E986748598"
     },
     {
       "baseId": "gm.bomb_standard.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed bomb exists. Durable harness needs atomic separate-ammo consumption before native spawn and frozen authored explosion power without inherited elemental/status effects. Current native throw spawns first then removes Weapon_Bomb; that sequence cannot authorize a durable harness.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Bomb",
+      "managedItemId": "RPG_Gear_bomb_standard_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json",
+      "sourceSha256": "EBFC39966BAA6A2E5F21AE68A5FE283D575AD8F8FB0E88042F3942E986748598"
     },
     {
       "baseId": "gm.bomb_standard.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed bomb exists. Durable harness needs atomic separate-ammo consumption before native spawn and frozen authored explosion power without inherited elemental/status effects. Current native throw spawns first then removes Weapon_Bomb; that sequence cannot authorize a durable harness.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Bomb",
+      "managedItemId": "RPG_Gear_bomb_standard_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json",
+      "sourceSha256": "EBFC39966BAA6A2E5F21AE68A5FE283D575AD8F8FB0E88042F3942E986748598"
     },
     {
       "baseId": "gm.bomb_fire.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed bomb exists. Durable harness needs atomic separate-ammo consumption before native spawn and frozen authored explosion power without inherited elemental/status effects. Current native throw spawns first then removes Weapon_Bomb; that sequence cannot authorize a durable harness.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Bomb",
+      "managedItemId": "RPG_Gear_bomb_fire_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json",
+      "sourceSha256": "EBFC39966BAA6A2E5F21AE68A5FE283D575AD8F8FB0E88042F3942E986748598"
     },
     {
       "baseId": "gm.bomb_fire.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed bomb exists. Durable harness needs atomic separate-ammo consumption before native spawn and frozen authored explosion power without inherited elemental/status effects. Current native throw spawns first then removes Weapon_Bomb; that sequence cannot authorize a durable harness.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Bomb",
+      "managedItemId": "RPG_Gear_bomb_fire_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json",
+      "sourceSha256": "EBFC39966BAA6A2E5F21AE68A5FE283D575AD8F8FB0E88042F3942E986748598"
     },
     {
       "baseId": "gm.bomb_fire.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed bomb exists. Durable harness needs atomic separate-ammo consumption before native spawn and frozen authored explosion power without inherited elemental/status effects. Current native throw spawns first then removes Weapon_Bomb; that sequence cannot authorize a durable harness.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Bomb",
+      "managedItemId": "RPG_Gear_bomb_fire_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json",
+      "sourceSha256": "EBFC39966BAA6A2E5F21AE68A5FE283D575AD8F8FB0E88042F3942E986748598"
     },
     {
       "baseId": "gm.longbow_mithril.n",
@@ -2110,321 +2176,393 @@
     },
     {
       "baseId": "gm.staff_apprentice.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Wood",
+      "managedItemId": "RPG_Gear_staff_apprentice_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wood.json",
+      "sourceSha256": "E3D9F2966AD3336B412EEAD6066C6A0611D409CE53B5EA1DD898E727E78886B6"
     },
     {
       "baseId": "gm.staff_apprentice.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Wood",
+      "managedItemId": "RPG_Gear_staff_apprentice_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wood.json",
+      "sourceSha256": "E3D9F2966AD3336B412EEAD6066C6A0611D409CE53B5EA1DD898E727E78886B6"
     },
     {
       "baseId": "gm.staff_apprentice.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Wood",
+      "managedItemId": "RPG_Gear_staff_apprentice_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Wood.json",
+      "sourceSha256": "E3D9F2966AD3336B412EEAD6066C6A0611D409CE53B5EA1DD898E727E78886B6"
     },
     {
       "baseId": "gm.staff_prismatic.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Crystal_Purple",
+      "managedItemId": "RPG_Gear_staff_prismatic_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Purple.json",
+      "sourceSha256": "1787F3A0F336A95C007C71C79D173E314DB299F0AB7E3D9AFA10A28D78A26D5E"
     },
     {
       "baseId": "gm.staff_prismatic.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Crystal_Purple",
+      "managedItemId": "RPG_Gear_staff_prismatic_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Purple.json",
+      "sourceSha256": "1787F3A0F336A95C007C71C79D173E314DB299F0AB7E3D9AFA10A28D78A26D5E"
     },
     {
       "baseId": "gm.staff_prismatic.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Crystal_Purple",
+      "managedItemId": "RPG_Gear_staff_prismatic_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Purple.json",
+      "sourceSha256": "1787F3A0F336A95C007C71C79D173E314DB299F0AB7E3D9AFA10A28D78A26D5E"
     },
     {
       "baseId": "gm.staff_mithril.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Mithril",
+      "managedItemId": "RPG_Gear_staff_mithril_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Mithril.json",
+      "sourceSha256": "EB8EFBDEEE108FE2D2B17FAC22E028F77BDF8E29FD541F7DF5EA9AB2ADC23107"
     },
     {
       "baseId": "gm.staff_mithril.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Mithril",
+      "managedItemId": "RPG_Gear_staff_mithril_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Mithril.json",
+      "sourceSha256": "EB8EFBDEEE108FE2D2B17FAC22E028F77BDF8E29FD541F7DF5EA9AB2ADC23107"
     },
     {
       "baseId": "gm.staff_mithril.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Mithril",
+      "managedItemId": "RPG_Gear_staff_mithril_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Mithril.json",
+      "sourceSha256": "EB8EFBDEEE108FE2D2B17FAC22E028F77BDF8E29FD541F7DF5EA9AB2ADC23107"
     },
     {
       "baseId": "gm.staff_warden.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Iron",
+      "managedItemId": "RPG_Gear_staff_warden_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Iron.json",
+      "sourceSha256": "744570E954B8DDEAB69ADFEA11B58EE1CDAE50225F36EE26C249D77035EED9FC"
     },
     {
       "baseId": "gm.staff_warden.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Iron",
+      "managedItemId": "RPG_Gear_staff_warden_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Iron.json",
+      "sourceSha256": "744570E954B8DDEAB69ADFEA11B58EE1CDAE50225F36EE26C249D77035EED9FC"
     },
     {
       "baseId": "gm.staff_warden.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Iron",
+      "managedItemId": "RPG_Gear_staff_warden_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Iron.json",
+      "sourceSha256": "744570E954B8DDEAB69ADFEA11B58EE1CDAE50225F36EE26C249D77035EED9FC"
     },
     {
       "baseId": "gm.staff_oracle.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Onyxium",
+      "managedItemId": "RPG_Gear_staff_oracle_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onyxium.json",
+      "sourceSha256": "35A88990BABA47A6C7B946F2AC55BD7BBB4ADBB395000655587BDE6861DF53E3"
     },
     {
       "baseId": "gm.staff_oracle.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Onyxium",
+      "managedItemId": "RPG_Gear_staff_oracle_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onyxium.json",
+      "sourceSha256": "35A88990BABA47A6C7B946F2AC55BD7BBB4ADBB395000655587BDE6861DF53E3"
     },
     {
       "baseId": "gm.staff_oracle.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Staff_Onyxium",
+      "managedItemId": "RPG_Gear_staff_oracle_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onyxium.json",
+      "sourceSha256": "35A88990BABA47A6C7B946F2AC55BD7BBB4ADBB395000655587BDE6861DF53E3"
     },
     {
       "baseId": "gm.wand_amber.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Wood",
+      "managedItemId": "RPG_Gear_wand_amber_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "sourceSha256": "B276067C55A63D73EEB9D150EDB24A81D83C6F6D1DD137749FE1118FA0DB511B"
     },
     {
       "baseId": "gm.wand_amber.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Wood",
+      "managedItemId": "RPG_Gear_wand_amber_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "sourceSha256": "B276067C55A63D73EEB9D150EDB24A81D83C6F6D1DD137749FE1118FA0DB511B"
     },
     {
       "baseId": "gm.wand_amber.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Wood",
+      "managedItemId": "RPG_Gear_wand_amber_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "sourceSha256": "B276067C55A63D73EEB9D150EDB24A81D83C6F6D1DD137749FE1118FA0DB511B"
     },
     {
       "baseId": "gm.wand_mithril.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Tribal",
+      "managedItemId": "RPG_Gear_wand_mithril_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Tribal.json",
+      "sourceSha256": "23F370F9DCF2D7EEBEECB16FFEEBD3123FA4E2FBC74DC1721DEB4B2916406451"
     },
     {
       "baseId": "gm.wand_mithril.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Tribal",
+      "managedItemId": "RPG_Gear_wand_mithril_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Tribal.json",
+      "sourceSha256": "23F370F9DCF2D7EEBEECB16FFEEBD3123FA4E2FBC74DC1721DEB4B2916406451"
     },
     {
       "baseId": "gm.wand_mithril.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Wand_Tribal",
+      "managedItemId": "RPG_Gear_wand_mithril_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Tribal.json",
+      "sourceSha256": "23F370F9DCF2D7EEBEECB16FFEEBD3123FA4E2FBC74DC1721DEB4B2916406451"
     },
     {
       "baseId": "gm.book_journeyman.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Fire",
+      "managedItemId": "RPG_Gear_book_journeyman_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Fire.json",
+      "sourceSha256": "4A7B7F96DA792CBF3027DE47BBAAE206CB2BA1C00C7D3503D72E2FC18733D563"
     },
     {
       "baseId": "gm.book_journeyman.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Fire",
+      "managedItemId": "RPG_Gear_book_journeyman_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Fire.json",
+      "sourceSha256": "4A7B7F96DA792CBF3027DE47BBAAE206CB2BA1C00C7D3503D72E2FC18733D563"
     },
     {
       "baseId": "gm.book_journeyman.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Fire",
+      "managedItemId": "RPG_Gear_book_journeyman_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Fire.json",
+      "sourceSha256": "4A7B7F96DA792CBF3027DE47BBAAE206CB2BA1C00C7D3503D72E2FC18733D563"
     },
     {
       "baseId": "gm.book_sage.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Frost",
+      "managedItemId": "RPG_Gear_book_sage_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Frost.json",
+      "sourceSha256": "F3A88FD76A27FB4D694E5DD8CEB74A26C3D051301E03853B82C435058E03361B"
     },
     {
       "baseId": "gm.book_sage.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Frost",
+      "managedItemId": "RPG_Gear_book_sage_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Frost.json",
+      "sourceSha256": "F3A88FD76A27FB4D694E5DD8CEB74A26C3D051301E03853B82C435058E03361B"
     },
     {
       "baseId": "gm.book_sage.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Frost",
+      "managedItemId": "RPG_Gear_book_sage_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Frost.json",
+      "sourceSha256": "F3A88FD76A27FB4D694E5DD8CEB74A26C3D051301E03853B82C435058E03361B"
     },
     {
       "baseId": "gm.book_sanctum.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Demon",
+      "managedItemId": "RPG_Gear_book_sanctum_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Demon.json",
+      "sourceSha256": "13394BA8484C6F0C82A835C36D3D3BF4CFBA27380C34BA44AE8623DB8F9190BA"
     },
     {
       "baseId": "gm.book_sanctum.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Demon",
+      "managedItemId": "RPG_Gear_book_sanctum_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Demon.json",
+      "sourceSha256": "13394BA8484C6F0C82A835C36D3D3BF4CFBA27380C34BA44AE8623DB8F9190BA"
     },
     {
       "baseId": "gm.book_sanctum.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Demon",
+      "managedItemId": "RPG_Gear_book_sanctum_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Demon.json",
+      "sourceSha256": "13394BA8484C6F0C82A835C36D3D3BF4CFBA27380C34BA44AE8623DB8F9190BA"
     },
     {
       "baseId": "gm.book_oracle.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Demon",
+      "managedItemId": "RPG_Gear_book_oracle_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Demon.json",
+      "sourceSha256": "13394BA8484C6F0C82A835C36D3D3BF4CFBA27380C34BA44AE8623DB8F9190BA"
     },
     {
       "baseId": "gm.book_oracle.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Demon",
+      "managedItemId": "RPG_Gear_book_oracle_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Demon.json",
+      "sourceSha256": "13394BA8484C6F0C82A835C36D3D3BF4CFBA27380C34BA44AE8623DB8F9190BA"
     },
     {
       "baseId": "gm.book_oracle.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed focus candidate exists, but its native spell/projectile/effect graph is not connected to frozen Gear Master Magic Power. Model reuse alone cannot authorize native fixed damage, statuses or deployables. Authored Healing Power also needs explicit routing into the existing healing owner; current SupportMagnitude uses the innate 20 baseline.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Spellbook_Demon",
+      "managedItemId": "RPG_Gear_book_oracle_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Demon.json",
+      "sourceSha256": "13394BA8484C6F0C82A835C36D3D3BF4CFBA27380C34BA44AE8623DB8F9190BA"
     },
     {
       "baseId": "gm.bomb_runed.n",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed bomb exists. Durable harness needs atomic separate-ammo consumption before native spawn and frozen authored explosion power without inherited elemental/status effects. Current native throw spawns first then removes Weapon_Bomb; that sequence cannot authorize a durable harness.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Bomb",
+      "managedItemId": "RPG_Gear_bomb_runed_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json",
+      "sourceSha256": "EBFC39966BAA6A2E5F21AE68A5FE283D575AD8F8FB0E88042F3942E986748598"
     },
     {
       "baseId": "gm.bomb_runed.nm",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed bomb exists. Durable harness needs atomic separate-ammo consumption before native spawn and frozen authored explosion power without inherited elemental/status effects. Current native throw spawns first then removes Weapon_Bomb; that sequence cannot authorize a durable harness.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Bomb",
+      "managedItemId": "RPG_Gear_bomb_runed_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json",
+      "sourceSha256": "EBFC39966BAA6A2E5F21AE68A5FE283D575AD8F8FB0E88042F3942E986748598"
     },
     {
       "baseId": "gm.bomb_runed.h",
-      "nativeItemId": null,
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Installed bomb exists. Durable harness needs atomic separate-ammo consumption before native spawn and frozen authored explosion power without inherited elemental/status effects. Current native throw spawns first then removes Weapon_Bomb; that sequence cannot authorize a durable harness.",
-      "resolutionClass": "MISSING_ADAPTER"
+      "nativeItemId": "Weapon_Bomb",
+      "managedItemId": "RPG_Gear_bomb_runed_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
+      "resolutionClass": "VALIDATED_NATIVE_REUSE",
+      "sourceAsset": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb.json",
+      "sourceSha256": "EBFC39966BAA6A2E5F21AE68A5FE283D575AD8F8FB0E88042F3942E986748598"
     },
     {
       "baseId": "gm.shield_wooden.n",
       "nativeItemId": "Weapon_Shield_Wood",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_wooden_n",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Wood.json",
       "sourceSha256": "A13248F8EEA8F7D299E29F09A09F84C6E91483D6A45F2FB0D382AA08569A2397",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_wooden.nm",
       "nativeItemId": "Weapon_Shield_Wood",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_wooden_nm",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Wood.json",
       "sourceSha256": "A13248F8EEA8F7D299E29F09A09F84C6E91483D6A45F2FB0D382AA08569A2397",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.shield_wooden.h",
       "nativeItemId": "Weapon_Shield_Wood",
-      "managedItemId": null,
-      "disposition": "BLOCKED_WITH_REASON",
-      "reason": "Native shield/guard exists. Authored shieldDefense is not consumed by current HytaleGearEquipment or SkillExecutionService; no Total Defense/Smite source is implemented. Native guard and zero-damage bash do not substitute for the authored field.",
+      "managedItemId": "RPG_Gear_shield_wooden_h",
+      "disposition": "MAPPED",
+      "reason": "Managed native action graph with valid-item local power and frozen native projectile impact.",
       "sourceAsset": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Wood.json",
       "sourceSha256": "A13248F8EEA8F7D299E29F09A09F84C6E91483D6A45F2FB0D382AA08569A2397",
-      "resolutionClass": "MISSING_ADAPTER"
+      "resolutionClass": "VALIDATED_NATIVE_REUSE"
     },
     {
       "baseId": "gm.plate_copper.head.n",

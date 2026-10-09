@@ -94,7 +94,7 @@ public final class NativeSpatialDragProbePage extends InteractiveCustomUIPage<Na
             slots[visual].setActivatable(true);
         }
         int before = commands.getCommands().length;
-        commands.set("#NativeAliasGrid.Slots", slots);
+        NativeItemGrid.writeSlots(commands, "#NativeAliasGrid", slots);
         var encodedCommands = commands.getCommands();
         if (encodedCommands.length != before + 1)
             throw new IllegalStateException("Unable to locate native alias slot command.");

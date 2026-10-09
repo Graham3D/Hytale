@@ -30,11 +30,15 @@ class DifficultyCombatTest {
         int[][] expected={{5,15,25,35},{42,47,52,57},{64,74,84,94}};
         var factors=ProgressionProfiles.load().difficulty(mode.name());
         for(int i=0;i<4;i++){
-            var spawn=wild(mode,i);assertEquals(expected[mode.ordinal()][i],spawn.level());assertEquals(103*factors.healthMultiplier(),spawn.combat().maxHealth(),1e-6);
-            assertEquals(27*factors.damageMultiplier(),spawn.combat().attackBasis(),1e-6);assertEquals(103,spawn.combat().nativeHealthBaseline(),1e-6);
+            var spawn=wild(mode,i);assertEquals(expected[mode.ordinal()][i],spawn.level());
+            var growth=MonsterProgression.current().at(spawn.level());
+            assertEquals(103*growth.healthGrowth()*factors.healthMultiplier(),spawn.combat().maxHealth(),1e-6);
+            assertEquals(27*growth.damageGrowth()*factors.damageMultiplier(),spawn.combat().attackBasis(),1e-6);
+            assertEquals(103,spawn.combat().nativeHealthBaseline(),1e-6);
             assertEquals(mode,spawn.lootSource().orElseThrow().difficulty());assertEquals(spawn.level(),spawn.lootSource().orElseThrow().sourceCombatLevel());
             assertEquals(EncounterProfileResolver.Evidence.AUTHORED_BASELINE_CONNECTED_UNVERIFIED,spawn.combat().evidence());
-            assertTrue(spawn.combat().resistance().resistance().isEmpty());assertTrue(spawn.combat().resistance().immunities().isEmpty());
+            assertEquals(growth.elementalFloor(),spawn.combat().resistance().raw(MonsterResistanceProfile.Channel.FIRE),1e-9);
+            assertTrue(spawn.combat().resistance().immunities().isEmpty());
         }
     }
     @ParameterizedTest @EnumSource(DifficultyId.class) void allFiveAuthoredGolemsHaveFrozenRewardLevels(DifficultyId mode){

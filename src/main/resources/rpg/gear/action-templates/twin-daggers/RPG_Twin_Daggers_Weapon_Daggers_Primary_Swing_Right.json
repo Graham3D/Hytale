@@ -1,0 +1,18 @@
+{
+  "Type": "Simple",
+  "HorizontalSpeedMultiplier": 0.85,
+  "Effects": {
+    "ItemAnimationId": "SwingRight"
+  },
+  "RunTime": 0.066,
+  "Next": {
+    "Type": "Replace",
+    "Var": "Swing_Right_Selector",
+    "DefaultOk": true,
+    "DefaultValue": {
+      "Interactions": [
+        "RPG_Twin_Daggers_Weapon_Daggers_Primary_Swing_Right_Selector"
+      ]
+    }
+  }
+}

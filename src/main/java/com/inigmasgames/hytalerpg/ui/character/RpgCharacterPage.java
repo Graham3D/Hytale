@@ -131,9 +131,7 @@ public final class RpgCharacterPage extends InteractiveCustomUIPage<RpgCharacter
         commands.set("#Status.TextSpans", Message.raw(status));
         for (RpgAttribute attribute : RpgAttribute.values()) {
             String key = title(attribute);
-            commands.set("#" + key + "Value.TextSpans", Message.raw("Raw "
-                    + model.derivedStats().rawAttributes().get(attribute) + "   Effective "
-                    + one(model.derivedStats().effective(attribute))));
+            commands.set("#" + key + "Value.TextSpans", Message.raw(model.attributeText(attribute)));
             commands.set("#" + key + "Plus.Disabled", model.unspentAttributePoints() <= 0);
             events.addEventBinding(CustomUIEventBindingType.Activating, "#" + key + "Plus",
                     new EventData().append("Action", "allocate").append("Attribute", attribute.name())

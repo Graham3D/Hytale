@@ -1,0 +1,9 @@
+{
+  "Type": "RPG_CarrierProjectile",
+  "RunTime": 0.25,
+  "Lifetime": 3.1,
+  "Effects": {
+    "ItemAnimationId": "CastLeftCharged"
+  },
+  "Config": "RPG_Carrier_Wand_Projectile"
+}

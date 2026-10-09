@@ -1,0 +1,12 @@
+{
+  "Type": "Condition",
+  "RequiredGameMode": "Creative",
+  "Next": {
+    "Type": "Serial",
+    "Interactions": [
+      "Block_Break",
+      "RPG_Carrier_Shield_Primary_Swing"
+    ]
+  },
+  "Failed": "RPG_Carrier_Shield_Primary_Swing"
+}

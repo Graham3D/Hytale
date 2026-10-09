@@ -14,6 +14,10 @@ public interface SupportWorldPort {
     List<UUID> allies(SkillExecutionContext context,double radius);
     default List<UUID> enemies(SkillExecutionContext context,double radius){throw new IllegalStateException("AURA_HOSTILE_QUERY_UNAVAILABLE");}
     default boolean upkeep(SkillExecutionContext context,double seconds,int quantum){throw new IllegalStateException("AURA_UPKEEP_UNAVAILABLE");}
+    /** Item-owned activation uses the canonical finite cost quote before native commitment. */
+    default double itemAuraActivationCost(SkillExecutionContext context){return context.profile().resourceCost();}
+    default double itemAuraInitialUpkeepCost(SkillExecutionContext context){return context.profile().support().upkeepPerSecond()*.25;}
+    default boolean payItemAuraActivation(SkillExecutionContext context){return context.profile().resourceCost()==0;}
     default void auraPulse(SkillExecutionContext context,List<UUID> targets,int tick,boolean chill){throw new IllegalStateException("AURA_PAYLOAD_UNAVAILABLE");}
     default void auraMembership(SkillExecutionContext context,List<UUID> allies,List<UUID> enemies){}
     default void auraEnded(SkillExecutionContext context){}

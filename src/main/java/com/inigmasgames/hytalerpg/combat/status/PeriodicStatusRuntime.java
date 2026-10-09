@@ -10,13 +10,22 @@ import java.util.UUID;
 /** Source-owned Burn/Poison timing and stack accounting. The port still owns all damage calculation/native filtering.
  * Accrual is integrated before source changes; ticks remain one second with a proportional final remainder. */
 public final class PeriodicStatusRuntime<C, T> {
+    public static final int BASE_POISON_SOURCE_CAP=3;
     public enum Kind { BURN, POISON, BLEED }
-    public record Source(UUID owner, String skill, UUID victim, Kind kind) {
+    public enum SourceKind { SKILL, MONSTER_AFFIX }
+    public record Source(UUID owner, String definitionId, UUID victim, Kind kind,SourceKind sourceKind,UUID world,long generation) {
         public Source {
-            if (owner == null || victim == null || skill == null || skill.isBlank() || kind == null)
+            if (owner == null || victim == null || definitionId == null || definitionId.isBlank() || kind == null||sourceKind==null||generation<0)
                 throw new IllegalArgumentException("Invalid periodic source");
+            if(sourceKind==SourceKind.MONSTER_AFFIX&&(world==null||!definitionId.equals("ME-008")||kind!=Kind.POISON))
+                throw new IllegalArgumentException("Invalid monster periodic source");
         }
-        String stableKey() { return owner + "/" + skill; }
+        public Source(UUID owner,String skill,UUID victim,Kind kind){this(owner,skill,victim,kind,SourceKind.SKILL,null,0);}
+        public static Source monster(com.inigmasgames.hytalerpg.combat.damage.MonsterAffixSource source,UUID victim){
+            return new Source(source.logicalActorId(),source.affixId(),victim,Kind.POISON,SourceKind.MONSTER_AFFIX,source.worldId(),source.encounterGeneration());
+        }
+        public String skill(){if(sourceKind!=SourceKind.SKILL)throw new IllegalStateException("MONSTER_SOURCE_IS_NOT_A_SKILL");return definitionId;}
+        String stableKey() { return sourceKind==SourceKind.SKILL?owner + "/" + definitionId:owner+"/MONSTER_AFFIX/"+definitionId+"/"+world+"/"+generation; }
     }
     public record View(int stacks, double remainingSeconds) { }
     public record PackageView(int stacks,int sourceCap,double coefficientPerSecond,double remainingSeconds){}
@@ -69,12 +78,23 @@ public final class PeriodicStatusRuntime<C, T> {
         return packages.keySet().stream().filter(s -> s.owner.equals(source.owner)).count() >= OWNER_CAP
                 ? "OWNER_PERIODIC_SOURCE_BUDGET" : "PASS";
     }
+    public synchronized String admission(Source source,C context){
+        var bound=packages.get(source);
+        if(context instanceof PeriodicContext.Monster next&&bound!=null&&bound.context instanceof PeriodicContext.Monster previous
+                &&!previous.source().nativeActorId().equals(next.source().nativeActorId()))return "MONSTER_PERIODIC_REBIND_REQUIRED";
+        return admission(source);
+    }
     /** Strength ranks immutable resolved offensive snapshots, not victim-mitigated damage. */
     public synchronized String apply(Source source, C context, T target, double coefficientPerSecond,
             double strength, double duration, int addedStacks, int sourceCap, double now, Port<C,T> port) {
         if (context == null || target == null || !finitePositive(coefficientPerSecond) || !finitePositive(strength)
                 || !finitePositive(duration) || duration > 120 || !Double.isFinite(now) || addedStacks < 1
                 || sourceCap < 1 || sourceCap > 12) throw new IllegalArgumentException("Invalid periodic application");
+        if(context instanceof PeriodicContext.Monster monster&&!source.equals(Source.monster(monster.source(),source.victim)))
+            throw new IllegalArgumentException("MONSTER_PERIODIC_SOURCE_MISMATCH");
+        if(context instanceof PeriodicContext.Skill&&source.sourceKind()!=SourceKind.SKILL)
+            throw new IllegalArgumentException("SKILL_PERIODIC_SOURCE_MISMATCH");
+        String bindingAdmission=admission(source,context);if(bindingAdmission.equals("MONSTER_PERIODIC_REBIND_REQUIRED"))return bindingAdmission;
         if (source.kind != Kind.POISON) { addedStacks = 1; sourceCap = 1; }
         // A source's world tick need not precede another caster's application. Settle
         // all competing packages before ranking; expired poison cannot evict a live
@@ -112,6 +132,23 @@ public final class PeriodicStatusRuntime<C, T> {
             if (entry.getKey().owner.equals(owner) && packages.get(entry.getKey()) == entry.getValue())
                 advance(entry.getKey(), entry.getValue(), now, port);
     }
+    /** Native marker lifetime is narrower than logical source ownership; an old actor cannot tick a newer binding. */
+    public synchronized boolean tickMonster(com.inigmasgames.hytalerpg.combat.damage.MonsterAffixSource binding,double now,Port<C,T> port){
+        if(!Double.isFinite(now))throw new IllegalArgumentException("Invalid periodic clock");
+        for(var entry:new ArrayList<>(packages.entrySet()))if(monsterBinding(entry.getValue(),binding)&&packages.get(entry.getKey())==entry.getValue())
+            advance(entry.getKey(),entry.getValue(),now,port);
+        return packages.values().stream().anyMatch(value->monsterBinding(value,binding));
+    }
+    public synchronized void cancelMonster(com.inigmasgames.hytalerpg.combat.damage.MonsterAffixSource binding,double now,Port<C,T> port){
+        if(!Double.isFinite(now))throw new IllegalArgumentException("Invalid periodic clock");
+        for(var entry:new ArrayList<>(packages.entrySet()))if(monsterBinding(entry.getValue(),binding))
+            finish(entry.getKey(),entry.getValue(),now,"OWNER_CANCELLED",port);
+    }
+    private static boolean monsterBinding(Package<?,?> value,com.inigmasgames.hytalerpg.combat.damage.MonsterAffixSource binding){
+        if(!(value.context instanceof PeriodicContext.Monster monster))return false;
+        var source=monster.source();return source.worldId().equals(binding.worldId())&&source.logicalActorId().equals(binding.logicalActorId())
+                &&source.nativeActorId().equals(binding.nativeActorId())&&source.encounterGeneration()==binding.encounterGeneration();
+    }
     private void advance(Source source, Package<C,T> value, double now, Port<C,T> port) {
         if (now < value.accountedAt) return;
         if (now - value.accountedAt > 2) {
@@ -142,7 +179,7 @@ public final class PeriodicStatusRuntime<C, T> {
         if (delta <= 1e-12) return;
         double coefficient = delta * value.coefficient * value.stacks;
         var last = value.accrued.isEmpty() ? null : value.accrued.getLast();
-        if (last != null && last.context == value.context) {
+        if (last != null && (last.context == value.context||last.context instanceof PeriodicContext&&last.context.equals(value.context))) {
             value.accrued.set(value.accrued.size() - 1, new Part<>(last.context, last.coefficient + coefficient, last.seconds + delta));
         } else {
             if (value.accrued.size() >= MAX_ACCRUAL_SEGMENTS) throw new IllegalStateException("PERIODIC_ACCRUAL_SEGMENT_BUDGET");
@@ -190,6 +227,7 @@ public final class PeriodicStatusRuntime<C, T> {
         port.changed(source, value.target, view(source.victim, source.kind, now));
     }
     public synchronized int size() { return packages.size(); }
+    public synchronized boolean hasOwner(UUID owner){return packages.keySet().stream().anyMatch(source->source.owner.equals(owner));}
     private static boolean finitePositive(double value) { return Double.isFinite(value) && value > 0; }
     private record Part<C>(C context, double coefficient, double seconds) { }
     private static final class Package<C,T> {

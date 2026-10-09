@@ -1,4 +1,10 @@
 Group {
+  Group #SkillFailureNotice { Anchor: (Width: 760, Height: 56); Visible: false;
+    Label #SkillFailureLow { Anchor: (Full: 0); Text: ""; Style: (FontSize: 20, RenderBold: true, Alignment: Center, TextColor: #ff7777(0.35)); }
+    Label #SkillFailureMedium { Anchor: (Full: 0); Text: ""; Style: (FontSize: 20, RenderBold: true, Alignment: Center, TextColor: #ff7777(0.70)); }
+    Label #SkillFailureFull { Anchor: (Full: 0); Text: ""; Style: (FontSize: 20, RenderBold: true, Alignment: Center, TextColor: #ff7777); }
+  }
+  Label #SkillWeaponHint { Anchor: (Right: 30, Bottom: 145, Width: 310, Height: 28); Text: "Hold a weapon to cast skills"; Visible: false; Style: (FontSize: 14, TextColor: #f2d488, Alignment: Center); }
   // Centering is implicit when Width is specified without Left/Right/Horizontal.
   // Native Hytale exclusively owns Health, Mana, and Stamina presentation.
   // Exact XP layer order: background, left-anchored fill, then owner frame.

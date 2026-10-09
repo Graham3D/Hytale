@@ -19,6 +19,7 @@ public final class RpgSkillTraceService implements RpgSkillTracer {
         if(enabled)router.setLevel(router.level());
     }
     @Override public void trace(RpgTraceRecord record){
+        com.inigmasgames.hytalerpg.gear.GearQaTrace.runtime(record);
         if(enabled)router.trace(record);
     }
     private void write(RpgTraceRecord record){

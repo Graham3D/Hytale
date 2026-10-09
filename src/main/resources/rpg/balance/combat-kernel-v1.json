@@ -38,5 +38,14 @@
   "frozenImmunitySeconds": 3.0,
   "protectedFrozenSlow": 0.30,
   "burnDurationSeconds": 4.0,
-  "poisonDurationSeconds": 6.0
+  "poisonDurationSeconds": 6.0,
+  "poisonBaselineCoefficientPerSecond": 0.06,
+  "fortuneBreak": {
+    "startingAllocationAttribute": 10,
+    "qualificationProgressLuck": 400.0,
+    "scalarAnchor": 300.0,
+    "scalarSpan": 200.0,
+    "exponent": 4.0,
+    "statusEscapeChance": 0.20
+  }
 }

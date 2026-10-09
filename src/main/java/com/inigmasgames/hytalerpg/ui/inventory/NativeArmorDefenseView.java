@@ -13,10 +13,21 @@ import java.util.OptionalDouble;
 
 /** Reads the engine's current armor/effect mitigation projection without simulating damage. */
 final class NativeArmorDefenseView {
-    private final Map<DamageCause, DamageSystems.ArmorDamageReduction.ArmorResistanceModifiers> modifiers;
+    private final Map<String,Double> directPercent;
 
     private NativeArmorDefenseView(Map<DamageCause, DamageSystems.ArmorDamageReduction.ArmorResistanceModifiers> modifiers) {
-        this.modifiers = modifiers;
+        var values=new java.util.LinkedHashMap<String,Double>();
+        for(var entry:modifiers.entrySet()){
+            var value=entry.getValue();
+            if(entry.getKey()!=null&&value!=null&&value.inheritedParentId==null&&Float.isFinite(value.multiplierModifier))
+                values.put(entry.getKey().getId(),value.multiplierModifier*100.0);
+        }
+        this.directPercent=Map.copyOf(values);
+    }
+    private NativeArmorDefenseView(Map<String,Double> percentages,boolean frozen){this.directPercent=Map.copyOf(percentages);}
+    static NativeArmorDefenseView frozen(Map<String,Double> percentages){
+        if(percentages.values().stream().anyMatch(v->v==null||!Double.isFinite(v)))throw new IllegalArgumentException("Invalid native defense projection");
+        return new NativeArmorDefenseView(percentages,true);
     }
 
     static NativeArmorDefenseView read(Ref<EntityStore> ref, Store<EntityStore> store) {
@@ -32,13 +43,7 @@ final class NativeArmorDefenseView {
     }
 
     OptionalDouble directPercent(String damageCauseId) {
-        DamageCause cause;
-        try { cause = DamageCause.getAssetMap().getAsset(damageCauseId); }
-        catch (RuntimeException unavailable) { return OptionalDouble.empty(); }
-        if (cause == null) return OptionalDouble.empty();
-        var value = modifiers.get(cause);
-        if (value == null || value.inheritedParentId != null || !Float.isFinite(value.multiplierModifier))
-            return OptionalDouble.empty();
-        return OptionalDouble.of(value.multiplierModifier * 100.0);
+        var value=directPercent.get(damageCauseId);
+        return value==null?OptionalDouble.empty():OptionalDouble.of(value);
     }
 }

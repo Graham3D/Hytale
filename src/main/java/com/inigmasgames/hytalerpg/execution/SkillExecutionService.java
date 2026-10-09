@@ -23,17 +23,105 @@ import java.util.UUID;
 /** Shared validate -> snapshot -> commit -> family-dispatch transaction. */
 public final class SkillExecutionService {
     private final RpgLoadoutOperations loadouts;
+    public boolean learnedSkill(UUID actor,String skill){return loadouts.learnedSkill(actor,skill);}
     private final Stage04SkillProfiles profiles;
     private final RpgCombatKernel kernel;
     private final SkillExecutorRegistry executors;
     private final SkillInstanceLifecycle lifecycle;
     private final ConcurrentInstanceRegistry concurrentInstances=new ConcurrentInstanceRegistry();
     private final RpgSkillTracer tracer;
+    private java.util.function.BiConsumer<UUID,String> rejectionNotice = (actor, code) -> { };
+    public void configureRejectionNotice(java.util.function.BiConsumer<UUID,String> notice) {
+        rejectionNotice = java.util.Objects.requireNonNull(notice);
+    }
     private final SkillReleaseScheduler releases = new SkillReleaseScheduler();
     private final ConditionalRepeatRuntime conditionalRepeats=new ConditionalRepeatRuntime();
     private final RetaliationLedger retaliation=new RetaliationLedger();
     private final CompiledProfileResolver compiledProfiles = new CompiledProfileResolver();
     private final AttunementLedger attunement = new AttunementLedger();
+
+    /** Builds a fixed-rank item child without reading a slot, learned record, linked plan, or payment ledger. */
+    public SkillExecutionContext itemChild(com.inigmasgames.hytalerpg.gear.ItemSkillTriggerRuntime.Child child,
+                                           SkillExecutionPort port,CommittedTarget target) {
+        java.util.Objects.requireNonNull(child);java.util.Objects.requireNonNull(port);
+        if(!java.util.Set.of("fire_bolt","frost_bolt","minor_heal").contains(child.skill())
+                ||target==null||!child.world().equals(target.worldId())
+                ||!child.target().equals(target.entityId())||!port.actorAliveAndUsable())
+            throw new IllegalArgumentException("INVALID_ITEM_CHILD_TARGET");
+        var source=child.source().forItem(child.item());
+        if(source.empty())throw new IllegalArgumentException("ITEM_CHILD_SOURCE_MISSING");
+        var profile=profiles.require(child.skill());
+        var plan=itemPlan(profile);
+        var request=new SkillExecutionRequest(child.actor(),com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL01,
+                "ITEM_TRIGGER",0,"item/"+child.root()+"/"+child.skill(),null,SkillExecutionRequest.Origin.TRIGGERED);
+        String instance="item/"+child.root()+"/"+child.skill()+"/"+UUID.randomUUID();
+        var item=source.items().getFirst();
+        double base=profile.support()!=null?0:
+                GearItemPower.forTriggeredSpell(item,child.root());
+        var power=new BasePowerResolver.Resolution(profile.support()!=null?BasePowerSource.NONE:BasePowerSource.MAGIC_WEAPON,
+                profile.support()!=null?com.inigmasgames.hytalerpg.combat.power.LinkTreeWeaponClass.UTILITY:
+                        com.inigmasgames.hytalerpg.combat.power.LinkTreeWeaponClass.MAGIC,
+                item.baseId(),base);
+        var triggeredEquipment=new SkillExecutionPort.Equipment(new SkillExecutionPort.Item(item.baseId(),"STAFF",
+                new com.inigmasgames.hytalerpg.combat.power.ItemPowerDescriptor(item.baseId(),
+                        java.util.Set.of("STAFF"),null,base)),null);
+        var attributes=derive(child.actor(),port);
+        var snapshot=kernel.snapshots().capture(child.root(),instance,child.actor(),attributes,power,plan,
+                profile.damageCoefficient(),ModifierBuckets.NONE,ResourceCost.NONE,0,profile.authoredStatuses());
+        return new SkillExecutionContext(request,child.root(),instance,profile,plan,snapshot,triggeredEquipment,target,
+                false,0,new com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget(child.actor(),child.root()),0,
+                new RootEffectBudget(child.actor(),child.root()),"",1,child.source(),child.item());
+    }
+
+    /** Fixed rank-one aura context. The source item and actor are explicit for Sentinel D08 callers. */
+    public SkillExecutionContext itemAura(UUID world,UUID actor,UUID item,String skill,
+                                          com.inigmasgames.hytalerpg.gear.GearEffectSnapshot source,
+                                          SkillExecutionPort port,CommittedTarget target){
+        return boundItemAura(world,actor,item,skill,source,derive(actor,port),port.equipment(),target);
+    }
+    /** Summon owner supplies its captured chassis attributes; no player loadout is read for D08. */
+    public SkillExecutionContext boundItemAura(UUID world,UUID actor,UUID item,String skill,
+            com.inigmasgames.hytalerpg.gear.GearEffectSnapshot source,DerivedStats attributes,
+            SkillExecutionPort.Equipment equipment,CommittedTarget target){
+        if(!java.util.Set.of("emanatism","thorns_aura","pedanticism").contains(skill)
+                ||source.forItem(item).empty()||!world.equals(target.worldId()))
+            throw new IllegalArgumentException("INVALID_ITEM_AURA_SOURCE");
+        var profile=profiles.require(skill);var plan=itemPlan(profile);
+        String root="item-aura/"+world+"/"+actor+"/"+item+"/"+skill;
+        String instance=root+"/rank1";
+        var request=new SkillExecutionRequest(actor,com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL01,
+                "ITEM_AURA",0,root,null,SkillExecutionRequest.Origin.TRIGGERED);
+        var power=new BasePowerResolver.Resolution(BasePowerSource.NONE,
+                com.inigmasgames.hytalerpg.combat.power.LinkTreeWeaponClass.UTILITY,null,0);
+        var snapshot=kernel.snapshots().capture(root,instance,actor,attributes,power,plan,
+                profile.damageCoefficient(),ModifierBuckets.NONE,ResourceCost.NONE,0,profile.authoredStatuses());
+        return new SkillExecutionContext(request,root,instance,profile,plan,snapshot,equipment,target,
+                false,0,new com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget(actor,root),0,
+                new RootEffectBudget(actor,root),"",1,source,item);
+    }
+
+    /** An unlinked canonical profile is independent of the player's current and saved loadout graph. */
+    public static CompiledSkillPlan itemPlan(Stage04SkillProfile profile) {
+        return ItemPlans.PLANS.computeIfAbsent(profile.skillId(),ignored->compileItemPlan(profile));
+    }
+    private static final class ItemPlans {
+        static final com.inigmasgames.hytalerpg.content.RpgCatalog CATALOG=
+                com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical();
+        static final java.util.concurrent.ConcurrentMap<String,CompiledSkillPlan> PLANS=
+                new java.util.concurrent.ConcurrentHashMap<>();
+    }
+    private static CompiledSkillPlan compileItemPlan(Stage04SkillProfile profile) {
+        var id=new com.inigmasgames.hytalerpg.domain.SkillId(profile.skillId());
+        var definition=ItemPlans.CATALOG.skill(id).orElseThrow();
+        var tags=new java.util.HashSet<>(definition.tags());tags.addAll(definition.linkCompatibilityTags());
+        return new CompiledSkillPlan(CompiledSkillPlan.CURRENT_SCHEMA,
+                com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL01,id,"item-rank1/"+profile.skillId(),
+                definition.family(),tags,java.util.List.of(),Map.of(),java.util.List.of(),java.util.List.of(),
+                java.util.List.of(),java.util.List.of(),java.util.List.of(),java.util.List.of(),
+                CompiledSkillPlan.KernelModifiers.NONE,java.util.List.of(),definition.vfxRecipeId(),
+                definition.soundRecipeId(),com.inigmasgames.hytalerpg.domain.ConcurrentInstancePolicy.unrestricted(),
+                CompiledSkillPlan.SafetyBudgets.baseline(0),false,java.util.List.of());
+    }
     private final com.inigmasgames.hytalerpg.execution.strike.FinisherLedger finisher=new com.inigmasgames.hytalerpg.execution.strike.FinisherLedger();
     public void observeNativeBasicRootHit(UUID actor,double now){finisher.observedRoot(actor,now);}
     public int finisherPips(UUID actor){return finisher.pips(actor,now());}
@@ -103,8 +191,8 @@ public final class SkillExecutionService {
         }
         emit(request, RpgTraceEventType.SKILL_VALIDATION_PASS, root, prepared.instanceId,
                 Map.of("skillId", prepared.profile.skillId(), "family", prepared.profile.family().name(),
-                        "windupSeconds", prepared.profile.windupSeconds()));
-        if (prepared.profile.windupSeconds() > 0.0) {
+                        "windupSeconds", prepared.windupSeconds));
+        if (prepared.windupSeconds > 0.0) {
             if (!lifecycle.begin(request.actorId(), prepared.instanceId, SkillInstanceLifecycle.Phase.WINDUP))
                 return reject(request, root, prepared.instanceId, "INCOMPATIBLE_ACTIVE_STATE");
             synchronized (windups) { windups.put(request.actorId(), prepared); }
@@ -249,6 +337,8 @@ public final class SkillExecutionService {
     private Prepared validate(SkillExecutionRequest request, SkillExecutionPort port, String root, String retainedInstance) {
         if(transferInProgress.test(request.actorId()))throw new Rejection("DIFFICULTY_TRANSFER_IN_PROGRESS",retainedInstance);
         if (!port.actorAliveAndUsable()) throw new Rejection("ACTOR_NOT_USABLE", retainedInstance);
+        if(request.origin()==SkillExecutionRequest.Origin.MANUAL && port.manualSkillsSilenced())
+            throw new Rejection("SILENCED",retainedInstance);
         if(releases.hasPendingPrimary(request.actorId(),request.slot())) throw new Rejection("PENDING_PRIMARY_FOR_SLOT",retainedInstance);
         var view = loadouts.getPresentationView(request.actorId());
         var skill = view.state().skill(request.slot()).orElseThrow(() -> new Rejection("EMPTY_SLOT", retainedInstance));
@@ -284,8 +374,16 @@ public final class SkillExecutionService {
                 throw new Rejection("EQUIPMENT_POWER_UNAVAILABLE", instance);
             }
         }
+        var gear=port.gearEffects().snapshot();
+        UUID gearSource;
+        try { gearSource=acceptedGearSource(profile,equipment,gear); }
+        catch(RuntimeException failure){
+            emitProjectileRejection(request,root,instance,profile,"COMMITTED_GEAR_SOURCE_UNAVAILABLE");
+            throw new Rejection("COMMITTED_GEAR_SOURCE_UNAVAILABLE",instance);
+        }
+        int itemSkillLevels=port.itemGrantedSkillLevels(profile,equipment);
         int effectiveSkillLevel=EffectiveSkillLevel.resolveBase(loadouts.baseSkillRank(request.actorId(),profile.skillId()),
-                port.itemGrantedSkillLevels(profile.skillId(),equipment));
+                itemSkillLevels);
         SkillExecutionPort.Validation family = port.familyPrerequisites(profile, plan,effectiveSkillLevel);
         if (!family.accepted()) {
             emitProjectileRejection(request, root, instance, profile, family.code());
@@ -294,9 +392,10 @@ public final class SkillExecutionService {
         ResourceCost declared = new ResourceCost(ResourceType.valueOf(profile.resourceType()), profile.resourceCost());
         int stacks=attunementFor(request,plan);
         ruthlessFor(request,plan); // Capacity and origin check before any payment or windup.
-        ResourceCost cost = kernel.resources().evaluateActivation(declared, plan,stacks);
+        ResourceCost cost = GearResourceModifiers.activation(kernel.resources(),profile,plan,stacks,gear,port.resources());
         if(profile.support()!=null&&profile.support().upkeepPerSecond()>0){
-            var first=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,profile.support().upkeepPerSecond()*.25*plan.supportModifiers().commitmentFactor()),plan.kernelModifiers());
+            var first=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,profile.support().upkeepPerSecond()*.25*plan.supportModifiers().commitmentFactor()),plan.kernelModifiers(),
+                    GearResourceModifiers.factor(gear,ResourceType.MANA,false,false));
             if(!kernel.resources().canAfford(request.actorId(),new ResourceCost(ResourceType.MANA,cost.amount()+first.amount()),port.resources()))
                 throw new Rejection("AURA_INITIAL_UPKEEP_UNAFFORDABLE",retainedInstance);
         }
@@ -310,7 +409,8 @@ public final class SkillExecutionService {
         }
         String concurrency=concurrentInstances.admission(request.actorId(),profile.skillId(),plan.concurrentInstances());
         if(!concurrency.equals("PASS"))throw new Rejection(concurrency,instance);
-        return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks,false,effectiveSkillLevel,port.gearEffects().windup(profile.windupSeconds()));
+        return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks,false,effectiveSkillLevel,
+                itemSkillLevels,port.gearEffects().windup(profile.windupSeconds()),gear,gearSource);
     }
 
     private int attunementFor(SkillExecutionRequest request,CompiledSkillPlan plan){
@@ -331,11 +431,15 @@ public final class SkillExecutionService {
         try{
             int stacks=attunementFor(prepared.request,prepared.plan);
             boolean powered=ruthlessFor(prepared.request,prepared.plan);
-            var cost=kernel.resources().evaluateActivation(new ResourceCost(ResourceType.valueOf(prepared.profile.resourceType()),prepared.profile.resourceCost()),prepared.plan,stacks);
+            var declared=new ResourceCost(ResourceType.valueOf(prepared.profile.resourceType()),prepared.profile.resourceCost());
+            var cost=GearResourceModifiers.activation(kernel.resources(),prepared.profile,prepared.plan,stacks,
+                    prepared.gearSnapshot,port.resources());
             var profile=CompiledProfileResolver.ruthless(compiledProfiles.resolve(profiles.require(prepared.profile.skillId()),prepared.plan),powered);
+            // HEAD resolves learned mastery at release. The accepted item's bonus stays frozen.
             int effectiveSkillLevel=EffectiveSkillLevel.resolveBase(loadouts.baseSkillRank(prepared.request.actorId(),profile.skillId()),
-                    port.itemGrantedSkillLevels(profile.skillId(),prepared.equipment));
-            prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,profile,prepared.plan,cost,prepared.equipment,stacks,powered,effectiveSkillLevel,prepared.windupSeconds);
+                    prepared.itemSkillLevels);
+            prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,profile,prepared.plan,cost,prepared.equipment,stacks,powered,
+                    effectiveSkillLevel,prepared.itemSkillLevels,prepared.windupSeconds,prepared.gearSnapshot,prepared.gearSourceItemId);
         }catch(RuntimeException failed){lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_RESOURCE_MODIFIER_REJECTED");}
         var releaseModifiers=prepared.plan.executionModifiers();
         String admission=releases.reserve(prepared.instanceId,prepared.request.actorId(),prepared.request.slot(),releaseModifiers);
@@ -405,7 +509,7 @@ public final class SkillExecutionService {
             context = new SkillExecutionContext(prepared.request, prepared.rootCastId, prepared.instanceId,
                     prepared.profile, prepared.plan, snapshot, prepared.equipment,target,false,0,
                     new com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget(prepared.request.actorId(),prepared.rootCastId),0,
-                    new RootEffectBudget(prepared.request.actorId(),prepared.rootCastId),"",prepared.effectiveSkillLevel);
+                    new RootEffectBudget(prepared.request.actorId(),prepared.rootCastId),"",prepared.effectiveSkillLevel,prepared.gearSnapshot,prepared.gearSourceItemId);
             if(prepared.profile.skillId().equals("quick_slash")){
                 preparationStage="WEAPON_LIGHT_PROFILE_CAPTURE";
                 var light=port.captureWeaponLightAttack(prepared.equipment);
@@ -674,6 +778,23 @@ public final class SkillExecutionService {
         return port.gearEffects().derive(kernel.derivedStats(),raw);
     }
 
+    /** Capture the exact valid held instance while the equipment and cost quote are accepted. */
+    static UUID acceptedGearSource(Stage04SkillProfile profile,SkillExecutionPort.Equipment equipment,
+            com.inigmasgames.hytalerpg.gear.GearEffectSnapshot gear){
+        String source=profile.basePowerSource();
+        SkillExecutionPort.Item held=source.equals("OFFHAND_WEAPON")?equipment.offHand():
+                source.equals("WEAPON")||source.equals("MAGIC_WEAPON")?equipment.mainHand():null;
+        if(held==null)return null;
+        if(held.gearItemId()==null)
+            return com.inigmasgames.hytalerpg.gear.GearCombatEffects.contributingItem(gear,held.itemId());
+        var local=gear.forItem(held.gearItemId());
+        if(local.empty())throw new IllegalStateException("COMMITTED_GEAR_SOURCE_ABSENT");
+        var item=local.items().getFirst();
+        if(!com.inigmasgames.hytalerpg.gear.GearCombatEffects.carrierMatches(item,held.itemId()))
+            throw new IllegalStateException("COMMITTED_GEAR_SOURCE_CARRIER_MISMATCH");
+        return held.gearItemId();
+    }
+
     private BasePowerResolver.Resolution resolvePower(Stage04SkillProfile profile, SkillExecutionPort.Equipment equipment) {
         return resolvePower(profile,equipment,null);
     }
@@ -716,6 +837,10 @@ public final class SkillExecutionService {
         var details=new LinkedHashMap<String,Object>();details.putAll(diagnostic);details.put("failureCode",code);
         emit(request, RpgTraceEventType.SKILL_VALIDATION_REJECTED, root, id, details);
         emit(request, RpgTraceEventType.SKILL_ACTIVATION_REJECTED, root, id, Map.of("failureCode", code));
+        if (request.origin() == SkillExecutionRequest.Origin.MANUAL) {
+            // UI failure must never change a rejected cast's payment/custody outcome.
+            try { rejectionNotice.accept(request.actorId(), code); } catch (RuntimeException ignored) { }
+        }
         return SkillExecutionResult.rejected(code);
     }
     private void preparationFailure(SkillExecutionRequest request, String root, String instance,
@@ -739,7 +864,9 @@ public final class SkillExecutionService {
     }
     private record Prepared(SkillExecutionRequest request, String rootCastId, String instanceId,
                             Stage04SkillProfile profile, CompiledSkillPlan plan, ResourceCost cost,
-                            SkillExecutionPort.Equipment equipment,int attunementStacks,boolean ruthlessEmpowered,int effectiveSkillLevel,double windupSeconds) { }
+                            SkillExecutionPort.Equipment equipment,int attunementStacks,boolean ruthlessEmpowered,int effectiveSkillLevel,
+                            int itemSkillLevels,double windupSeconds,
+                            com.inigmasgames.hytalerpg.gear.GearEffectSnapshot gearSnapshot,UUID gearSourceItemId) { }
     private static final class Rejection extends RuntimeException {
         private final String code; private final String skillInstanceId;
         private Rejection(String code, String skillInstanceId) { super(code); this.code = code; this.skillInstanceId = skillInstanceId; }

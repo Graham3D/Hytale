@@ -90,7 +90,29 @@ public final class CanvasSession implements AutoCloseable {
     }
 
     void pointerButton(com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent event) {
-        if (!isClosed()) input.button(event);
+        if (isClosed()) return;
+        var observer = CanvasUI.interactionObserver();
+        boolean observing;
+        try { observing = observer.enabled(playerId); }
+        catch (RuntimeException diagnosticFailure) { observing = false; }
+        if (!observing || event.getMouseButton() == null) {
+            input.button(event); return;
+        }
+        com.inigmasgames.canvasui.api.CanvasInteractionObserver.Action action;
+        try {
+            var point = event.getScreenPoint();
+            var hit = point == null ? CanvasHitTester.Hit.BACKGROUND
+                    : new CanvasHitTester().hit(canvas, CanvasPoint.of(point.x(), point.y()));
+            var node = hit.background() ? null : canvas.node(hit.nodeId());
+            action = observer.begin(playerId, canvas.definition().canvasId(),
+                    hit.background() ? "background" : hit.port() ? hit.nodeId() + "." + hit.portId() : hit.nodeId(),
+                    node == null ? "background" : node.type(),
+                    "mouse." + event.getMouseButton().mouseButtonType + "." + event.getMouseButton().state,
+                    point == null ? Double.NaN : point.x(), point == null ? Double.NaN : point.y());
+        } catch (RuntimeException diagnosticFailure) { input.button(event); return; }
+        try { input.button(event); }
+        catch (RuntimeException failure) { try { action.finish("HANDLER_EXCEPTION"); } catch (RuntimeException ignored) {} throw failure; }
+        try { action.finish("HANDLED"); } catch (RuntimeException ignored) {}
     }
     void pointerMotion(com.hypixel.hytale.server.core.event.events.player.PlayerMouseMotionEvent event) {
         if (!isClosed()) input.motion(event);

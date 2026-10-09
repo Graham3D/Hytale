@@ -34,7 +34,8 @@ class Stage13NativeTickMetricsTest {
         try(var paths=Files.list(nativeRoot)){
             for(var file:paths.filter(p->p.toString().endsWith(".java")).toList()){
                 var text=Files.readString(file);
-                if(text.contains("@Override public void tick(")||text.contains("@Override public void handle("))assertTrue(text.contains("NativeRpgTickMetrics.enter("),file.toString());
+                if(text.contains("@Override public void tick(")||text.contains("@Override public void handle("))
+                    assertTrue(text.contains("NativeRpgTickMetrics.enter(")||text.contains("NativeRpgTickMetrics.enterChunk("),file.toString());
             }
         }
     }

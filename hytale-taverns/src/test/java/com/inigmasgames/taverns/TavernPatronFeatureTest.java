@@ -300,8 +300,8 @@ public final class TavernPatronFeatureTest {
         String manager = source("TavernPatronManager.java");
         require(!manager.contains("world.getBlockType("),
                 "Patron ECS tick can still synchronously load a chunk");
-        require(manager.contains("world.getChunkIfLoaded("),
-                "Patron block scans are not restricted to loaded chunks");
+        require(manager.contains("LoadedBlocks.type(world, x, y, z)"),
+                "Patron block scans are not restricted to loaded sections");
         require(manager.contains("loadedBlockType(world, x, y, z)"),
                 "Entrance/Table scans bypass the safe loaded-chunk lookup");
 

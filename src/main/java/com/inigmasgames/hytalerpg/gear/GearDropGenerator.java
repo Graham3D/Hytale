@@ -20,7 +20,7 @@ public final class GearDropGenerator {
     /** Compatibility name; every generation caller now uses the implemented capability set. */
     public static final Set<String> STAGE_TWO_CANDIDATES=GearAffixRuntime.ENABLED;
     public GearDropGenerator(GearCatalog catalog,GearBindings bindings,Set<String> capabilities){this.catalog=catalog;this.bindings=bindings;this.capabilities=Set.copyOf(capabilities);
-        for(String id:capabilities){var a=catalog.affix(id);if(!GearAffixRuntime.ENABLED.contains(id)||!Set.of("Q","ALL").contains(a.tierModel())||!a.featureDisposition().equals("TEST"))throw new IllegalArgumentException("Unverified generation adapter "+id);}}
+        for(String id:capabilities){catalog.affix(id);if(!GearAffixRuntime.ENABLED.contains(id))throw new IllegalArgumentException("Unverified generation adapter "+id);}}
     public record Result(GearInstance item,Map<String,Double> categoryDistribution,Map<GearRarity,Double> rarityDistribution,String reason) {
         public Result{categoryDistribution=Map.copyOf(categoryDistribution);rarityDistribution=Map.copyOf(rarityDistribution);Objects.requireNonNull(reason);}
     }
@@ -34,6 +34,11 @@ public final class GearDropGenerator {
     public Result generate(EnemyRewardRegistry.LootSource source,double mf,String seed,Set<String> allowedFamilies){
         var random=new GearRandom(seed);
         if(!opportunity(source,seed))return new Result(null,Map.of(),Map.of(),"NO_DROP");
+        return generateGuaranteed(source,mf,seed,allowedFamilies);
+    }
+    /** Called only after a durable loot-profile pick has already passed NoDrop. */
+    public Result generateGuaranteed(EnemyRewardRegistry.LootSource source,double mf,String seed,Set<String> allowedFamilies){
+        var random=new GearRandom(seed);
         var bases=eligibleBases(source,allowedFamilies);
         if(bases.isEmpty())throw new IllegalStateException("No legal same-era base for source "+source.profileRevision()+"/"+source.sourceCombatLevel());
         var categories=new LinkedHashMap<String,Double>();for(var b:bases)categories.putIfAbsent(category(b),category(b).equals("ARMOR")?40.0:category(b).equals("SHIELD")?5.0:55.0);
@@ -99,20 +104,22 @@ public final class GearDropGenerator {
     private record Choice(GearCatalog.Affix affix,GearAffixTiers.Tier tier,GearRequirements.Gate gate){}
     private List<GearInstance.AffixRoll> affixes(GearCatalog.Base base,int level,GearRarity rarity,GearRandom random,boolean max){
         if(rarity==GearRarity.NORMAL)return List.of();
-        if(rarity!=GearRarity.MAGIC&&rarity!=GearRarity.RARE)throw new IllegalArgumentException("Legacy quality cannot be generated");
+        if(rarity==GearRarity.COMMON||rarity==GearRarity.UNCOMMON)throw new IllegalArgumentException("Legacy quality cannot be generated");
         var options=new ArrayList<Choice>();
         for(var affix:catalog.affixes())if(capabilities.contains(affix.id())&&eligible(affix,base))for(var tier:GearAffixTiers.compile(affix))
-            if(tier.minimumItemLevel()<=level&&GearAffixTiers.rarityAllows(affix,tier,rarity))options.add(new Choice(affix,tier,new GearRequirements.Gate(tier.requiredLevel(),Map.of(affix.requirementAttribute(base),affix.attributeFloor(5-tier.tier(),tier.minimumItemLevel())))));
+            if(tier.minimumItemLevel()<=level&&GearAffixTiers.rarityAllows(affix,tier,rarity)
+                    &&rollable(affix,base,tier))
+                options.add(new Choice(affix,tier,new GearRequirements.Gate(tier.requiredLevel(),Map.of(affix.requirementAttribute(base),affix.attributeFloor(5-tier.tier(),tier.minimumItemLevel())))));
         options.sort(Comparator.comparing((Choice c)->c.affix().id()).thenComparingInt(c->c.tier().tier()));
         var selected=new ArrayList<Choice>();var baseGate=new GearRequirements.Gate(base.requiredLevel(),base.requiredAttributes());
         int[] weights=GearQualityProfile.CURRENT.affixWeights(rarity);
         var budgets=new TreeMap<Integer,Double>();var splits=new HashMap<Integer,List<int[]>>();
         for(int n=1;n<=weights.length;n++){
-            int count=rarity==GearRarity.RARE?n+2:n;
+            int count=switch(rarity){case RARE->n+1;case VERY_RARE->n+3;case LEGENDARY->6;default->n;};
             var legal=new ArrayList<int[]>();
             for(int p=0;p<=Math.min(3,count);p++){
                 int s=count-p;
-                if(s>3||!rarity.legalBudget(p,s))continue;
+                if(s>3||!rarity.legalNewBudget(p,s))continue;
                 if(completion(options,new ArrayList<>(),p,s,baseGate,new int[]{0}))legal.add(new int[]{p,s});
             }
             if(!legal.isEmpty()){budgets.put(count,(double)weights[n-1]);splits.put(count,legal);}
@@ -128,14 +135,15 @@ public final class GearDropGenerator {
             if(max){int strongest=tierWeights.keySet().stream().mapToInt(c->c.tier().tier()).min().orElseThrow();tierWeights.keySet().removeIf(c->c.tier().tier()!=strongest);}
             selected.add(random.weighted(tierWeights,"affix-tier/"+selected.size()));p=np;s=ns;
         }
-        var result=new ArrayList<GearInstance.AffixRoll>();for(var c:selected){double factor=armorFactor(c.affix(),base),grid=c.tier().grid();
-            if(c.affix().tierModel().equals("ALL")){
+        var result=new ArrayList<GearInstance.AffixRoll>();for(var c:selected){double grid=c.tier().grid();
+            if(!c.affix().tierModel().equals("Q")){
                 double value=c.tier().low();
-                result.add(new GearInstance.AffixRoll(c.affix().id(),c.affix().side(),c.affix().exclusionGroup(),c.tier().tier(),value,c.gate(),"+"+(int)value+" to all learned active skills",c.affix().name()));continue;
+                String selector=c.affix().eligibility().equals("MATCH")
+                        ?randomChoice(matchingSkillIds(base),random.stream("affix-selector/"+result.size())):null;
+                result.add(new GearInstance.AffixRoll(c.affix().id(),c.affix().side(),c.affix().exclusionGroup(),c.tier().tier(),value,c.gate(),
+                        c.affix().tierModel().equals("ALL")?"+"+(int)value+" to all learned active skills":c.affix().effectContract(),c.affix().name(),selector));continue;
             }
-            double multiplier=new double[]{1,.85,.70,.55,.40}[c.tier().tier()-1];
-            long low=BigDecimal.valueOf(c.affix().topRange().getFirst()).multiply(BigDecimal.valueOf(multiplier)).multiply(BigDecimal.valueOf(factor)).divide(BigDecimal.valueOf(grid),0,RoundingMode.CEILING).longValueExact();
-            long high=BigDecimal.valueOf(c.affix().topRange().getLast()).multiply(BigDecimal.valueOf(multiplier)).multiply(BigDecimal.valueOf(factor)).divide(BigDecimal.valueOf(grid),0,RoundingMode.FLOOR).longValueExact();
+            long[] interval=scaledInterval(c.affix(),base,c.tier());long low=interval[0],high=interval[1];
             if(high<low)throw new IllegalStateException("Empty scaled affix interval");double value=BigDecimal.valueOf(max?high:random.stream("affix-value/"+result.size()).nextLong(low,high+1)).multiply(BigDecimal.valueOf(grid)).doubleValue();
             result.add(new GearInstance.AffixRoll(c.affix().id(),c.affix().side(),c.affix().exclusionGroup(),c.tier().tier(),value,c.gate(),c.affix().effectContract().split(" Require:")[0].replaceAll("\\bV\\b",Double.toString(value)),c.affix().name()));}
         return List.copyOf(result);
@@ -150,21 +158,83 @@ public final class GearDropGenerator {
         var gates=new ArrayList<>(chosen.stream().map(Choice::gate).toList());gates.add(next.gate());
         try{GearRequirements.combine(base,gates,BigDecimal.ZERO);return true;}catch(IllegalArgumentException invalid){return false;}
     }
-    private static boolean eligible(GearCatalog.Affix a,GearCatalog.Base b){
+    static boolean eligible(GearCatalog.Affix a,GearCatalog.Base b){
+        if(b.category()==GearCatalog.Category.TOOL)return false;
         if(b.category()==GearCatalog.Category.ARMOR){
-            if(a.id().startsWith("GA-")||a.armorExtension().startsWith("All armor"))return true;
-            if(Set.of("WA-090","WA-012").contains(a.id()))return b.slot()==GearCatalog.Slot.HEAD||b.slot()==GearCatalog.Slot.CHEST;
-            if(a.id().equals("WA-009"))return (b.slot()==GearCatalog.Slot.HEAD||b.slot()==GearCatalog.Slot.HANDS)&&Set.of(com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.INT,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS).contains(b.primaryAttribute());
-            return false;
+            if(a.id().startsWith("GA-"))return true;
+            String extension=a.armorExtension();
+            if(extension.startsWith("none."))return false;
+            boolean slot=extension.startsWith("All armor") || Arrays.stream(extension.split(";",2)[0].split(",\\s*"))
+                    .anyMatch(token->token.equalsIgnoreCase(b.slot().name()));
+            if(!slot)return false;
+            if(extension.contains("INT/WIS armor"))return Set.of(com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.INT,
+                    com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS).contains(b.primaryAttribute());
+            if(extension.contains("INT armor"))return b.primaryAttribute()==com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.INT;
+            if(extension.contains("WIS armor"))return b.primaryAttribute()==com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS;
+            return true;
         }
-        if(a.id().startsWith("GA-"))return false;String code=action(b).equals("shield")?"H":Set.of("staff","wand","book").contains(action(b))?"C":Set.of("shortbow","longbow","crossbow","rifle","blunderbuss").contains(action(b))?"R":action(b).equals("bomb")?"B":"M";
-        return a.eligibility().equals("ALL")||Arrays.asList(a.eligibility().split(",\\s*")).contains(code);
+        if(a.id().startsWith("GA-"))return false;
+        String action=action(b);
+        String code=action.equals("shield")?"H":Set.of("staff","wand","book").contains(action)?"C"
+                :Set.of("shortbow","longbow","crossbow","rifle","blunderbuss").contains(action)?"R":action.equals("bomb")?"B":"M";
+        if(a.eligibility().equals("ALL"))return true;
+        if(a.eligibility().equals("MATCH"))return !matchingSkillIds(b).isEmpty();
+        for(String token:a.eligibility().split(",\\s*"))if(token.equals(code))return true;
+        // Focus quick contact and charged projectile both use the managed local snapshot.
+        // Their elemental flat is legal once the capability gate admits the family.
+        if(code.equals("C") && Set.of("WA-008","WA-017","WA-018","WA-019","WA-020","WA-021","WA-022").contains(a.id())
+                && Arrays.asList(a.eligibility().split(",\\s*")).contains("C*"))return true;
+        // Twin Assault has a real two-instance dagger contact profile. The runtime still
+        // requires a distinct compatible offhand; owning the affix never fabricates one.
+        if(a.id().equals("WA-141") && action.equals("daggers")
+                && Arrays.asList(a.eligibility().split(",\\s*")).contains("M*"))return true;
+        // Other stars still require their native timing/block/dual-wield profile.
+        return false;
     }
-    private static double armorFactor(GearCatalog.Affix a,GearCatalog.Base b){
+    private static String randomChoice(List<String> choices,java.util.random.RandomGenerator random) {
+        if(choices.isEmpty())throw new IllegalStateException("No legal skill selector");
+        return choices.get(random.nextInt(choices.size()));
+    }
+    private static final class Selectors {
+        static final com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles PROFILES=
+                com.inigmasgames.hytalerpg.execution.Stage04SkillProfiles.loadCanonical(
+                        com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical());
+        static final Map<String,List<String>> BY_KIND=new java.util.concurrent.ConcurrentHashMap<>();
+    }
+    /** Uses the executable skill profile's allowed weapon kinds, not skill-name guesses. */
+    public static List<String> matchingSkillIds(GearCatalog.Base base) {
+        if(base.category()!=GearCatalog.Category.HELD)return List.of();
+        String kind=switch(action(base)) {
+            case "daggers"->"DAGGER";case "shortbow","longbow"->"BOW";
+            case "rifle","blunderbuss"->"GUN";case "book"->"SPELLBOOK";
+            default->action(base).toUpperCase(Locale.ROOT);
+        };
+        return Selectors.BY_KIND.computeIfAbsent(kind,key->Selectors.PROFILES.all().values().stream()
+                .filter(p->p.allowedMainHandKinds().contains(key)
+                        ||key.equals("SHIELD")&&p.requiredOffHandKinds().contains("SHIELD"))
+                .map(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile::skillId).sorted().toList());
+    }
+    static double armorFactor(GearCatalog.Affix a,GearCatalog.Base b){
         if(b.category()!=GearCatalog.Category.ARMOR)return 1;
         if(a.id().equals("GA-159"))return switch(b.slot()){case HEAD->.20/.36;case HANDS->.16/.36;case LEGS->.28/.36;default->1;};
-        if(a.operator().equals("ATTRIBUTE")||Set.of("WA-009","WA-012").contains(a.id()))return .5;
+        if(a.operator().equals("ATTRIBUTE") && !a.id().equals("WA-090"))return .5;
         if(Set.of("WA-091","WA-092","WA-093").contains(a.id()))return b.slot()==GearCatalog.Slot.CHEST||b.slot()==GearCatalog.Slot.LEGS?.5:.35;
+        String extension=a.armorExtension();
+        if(extension.contains("0.6 × V"))return .6;
+        if(extension.contains("0.5 × V"))return .5;
         return 1;
+    }
+    static long[] scaledInterval(GearCatalog.Affix a,GearCatalog.Base base,GearAffixTiers.Tier tier) {
+        if(!a.tierModel().equals("Q"))throw new IllegalArgumentException("Not a Q tier");
+        double factor=new double[]{1,.85,.70,.55,.40}[tier.tier()-1];
+        var multiplier=BigDecimal.valueOf(factor).multiply(BigDecimal.valueOf(armorFactor(a,base)));
+        var grid=BigDecimal.valueOf(tier.grid());
+        long low=BigDecimal.valueOf(a.topRange().getFirst()).multiply(multiplier).divide(grid,0,RoundingMode.CEILING).longValueExact();
+        long high=BigDecimal.valueOf(a.topRange().getLast()).multiply(multiplier).divide(grid,0,RoundingMode.FLOOR).longValueExact();
+        return new long[]{low,high};
+    }
+    static boolean rollable(GearCatalog.Affix a,GearCatalog.Base base,GearAffixTiers.Tier tier) {
+        if(!a.tierModel().equals("Q"))return true;
+        long[] interval=scaledInterval(a,base,tier);return interval[0]<=interval[1];
     }
 }

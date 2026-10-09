@@ -21,6 +21,23 @@ class GearTransactionsTest {
         return new EncounterContributions.DeathPlan(spawn,Vec3.ZERO,2000,List.of(new EncounterContributions.Share(a,xp,spawn.rank().insight,95,2),new EncounterContributions.Share(b,xp,spawn.rank().insight,95,2)));
     }
     void claims(GearLootService service,EncounterContributions.DeathPlan p){var policy=new GearClaims.Policy("party",1,GearClaims.Mode.ROUND_ROBIN,List.of(a,b),a,Set.of(),true,false);service.contribute(world,p.spawn().enemy(),a,policy,1500);service.contribute(world,p.spawn().enemy(),b,policy,1600);}
+    @Test void deathEmitsOpportunityEvidenceWithoutChangingItsDecision() throws Exception {
+        var plan=plan(77);
+        try(var trace=new GearQaTrace(root.resolve("gear-trace"));var store=new FileEncounterStore(root.resolve("encounter"))){
+            GearQaTrace.install(trace);
+            trace.on(a);trace.on(b);
+            var loot=new GearLootService(store,generator(),()->3000);claims(loot,plan);
+            var result=loot.death(plan,Map.of(a,0d,b,0d));
+            var recipient=result.allocation().assigned();
+            String path=trace.status(recipient).split("; ")[2];
+            trace.off(recipient);
+            String json=Files.readString(Path.of(path));
+            assertTrue(json.contains("ENEMY_GEAR_DECISION"));
+            assertTrue(json.contains("opportunityChance"));
+            assertTrue(json.contains("opportunityRoll"));
+            assertTrue(json.contains(plan.spawn().enemy().toString()));
+        }
+    }
     @Test void oneOutcomeGlobalRestartFrozenMfCursorAndInventoryFull() {
         var plan=plan(1);GearLootService.Loot first;
         try(var store=new FileEncounterStore(root)){var loot=new GearLootService(store,generator(),()->3000);claims(loot,plan);
@@ -125,6 +142,30 @@ class GearTransactionsTest {
             assertEquals("FINALIZED",loot.finishSpatialEquipment(operation,"ABORTED").stage());
         }
     }
+    @Test void equipmentJournalCanHoldTwoLargeBagSnapshotsWithoutWideningOtherReceiptBounds() throws Exception {
+        UUID operation=UUID.randomUUID();
+        String bag="{\"Payload\":\""+"x".repeat(225_000)+"\"}";
+        var receipt=new GearLootService.SpatialEquipmentReceipt(operation,a,440,bag,bag,
+                List.of(new GearLootService.EquipmentSlotChange("ARMOR",(short)0,null,"{}")),"PREPARED");
+        try(var store=new FileEncounterStore(root)){
+            var loot=new GearLootService(store,generator(),()->3000);
+            assertEquals(receipt,loot.prepareSpatialEquipment(receipt));
+            var path=root.resolve("gear/spatial-equipment");
+            try(var files=Files.list(path)){
+                assertTrue(files.anyMatch(file->{try{return Files.size(file)>FileEncounterStore.MAX_FILE_BYTES;}
+                    catch(java.io.IOException error){throw new java.io.UncheckedIOException(error);}}));
+            }
+            var stock=new GearLootService.SpatialStockReceipt(UUID.randomUUID(),UUID.randomUUID(),a,world,
+                    "x".repeat(FileEncounterStore.MAX_FILE_BYTES),440,"PREPARED");
+            assertEquals("ENCOUNTER_FILE_BOUNDS",assertThrows(IllegalStateException.class,
+                    ()->loot.prepareSpatialStock(stock)).getMessage());
+        }
+        try(var store=new FileEncounterStore(root)){
+            var loot=new GearLootService(store,generator(),()->3000);
+            assertEquals(List.of(receipt),loot.spatialEquipmentReceipts());
+            assertEquals("FINALIZED",loot.finishSpatialEquipment(operation,"FINALIZED").stage());
+        }
+    }
     @Test void protectedStockSourceHasOneDurableReservationAndRecoverableAbort() {
         UUID source=UUID.randomUUID(),first=UUID.randomUUID(),second=UUID.randomUUID();
         var prepared=new GearLootService.SpatialStockReceipt(source,first,a,world,"exact-payload",3,"PREPARED");
@@ -146,7 +187,7 @@ class GearTransactionsTest {
     }
     @Test void salvageIdentityCannotCreditTwoOwners(){
         try(var store=new FileEncounterStore(root)){var loot=new GearLootService(store,generator(),()->3000);GearLootService.Loot selected=null;
-            for(int i=10;i<40;i++){var p=plan(i);claims(loot,p);var row=loot.death(p,Map.of(a,100.,b,100.));if(row.result().item().rarity()!=GearRarity.COMMON){selected=row;break;}}
+            for(int i=10;i<40;i++){var p=plan(i);claims(loot,p);var row=loot.death(p,Map.of(a,100.,b,100.));if(GearEconomy.salvage(row.result().item()).isPresent()){selected=row;break;}}
             assertNotNull(selected);String event=selected.source().eventId();UUID owner=selected.allocation().assigned();var item=selected.result().item();
             loot.reservePickup(event,owner,0,3100,true);loot.acknowledgePickup(event,owner,item.identity());
             var reservation=loot.reserveSalvage(event,a,item);assertEquals(reservation,loot.reserveSalvage(event,a,item));assertTrue(loot.consumed(item.identity()));
@@ -161,7 +202,7 @@ class GearTransactionsTest {
     @Test void schemaMigrationPreservesAllPreviouslyAttainedMasteryAndRejectsMissingEconomy()throws Exception{
         var player=RpgPlayerState.create(a);player.skillMastery.put("quick_slash",400L);player.learnedSkills.add("quick_slash");
         var json=new com.google.gson.Gson().toJsonTree(player).getAsJsonObject();json.addProperty("schemaVersion",10);json.remove("gearEconomy");
-        var migrated=new RpgStateMigrator().migrate(json);assertEquals(11,migrated.targetVersion());assertEquals(400,migrated.state().getAsJsonObject("skillMastery").get("quick_slash").getAsLong());
+        var migrated=new RpgStateMigrator().migrate(json);assertEquals(com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,migrated.targetVersion());assertEquals(400,migrated.state().getAsJsonObject("skillMastery").get("quick_slash").getAsLong());
         var repo=new FileRpgPlayerStateRepository(root);repo.save(player);var envelope=com.google.gson.JsonParser.parseString(Files.readString(repo.path(a))).getAsJsonObject();
         // A raw current-schema fixture must not silently default a missing debit ledger.
         var raw=envelope.getAsJsonObject("state");raw.remove("gearEconomy");Files.writeString(repo.path(a),raw.toString());assertThrows(IllegalStateException.class,()->repo.load(a));

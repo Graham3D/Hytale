@@ -1,0 +1,20 @@
+{
+  "Type": "Simple",
+  "Effects": {
+    "ItemPlayerAnimationsId": "RPG_Summon_Archer_Command_083_Bow",
+    "ItemAnimationId": "Shoot"
+  },
+  "$Comment": "Prepare Delay",
+  "RunTime": 0.923361,
+  "Next": {
+    "Type": "LaunchProjectile",
+    "RunTime": 0.184672,
+    "Effects": {
+      "WorldSoundEventId": "SFX_Unarmed_Swing"
+    },
+    "ProjectileId": "Skeleton_Archer_Arrow",
+    "Tags": {
+      "AimingReference": []
+    }
+  }
+}

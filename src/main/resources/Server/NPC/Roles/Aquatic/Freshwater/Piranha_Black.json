@@ -1,0 +1,42 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Swimming_Aggressive",
+  "Modify": {
+    "Appearance": "Piranha_Black",
+    "FlockArray": [
+      "Piranha_Black"
+    ],
+    "DropList": "Drop_Piranha_Black",
+    "MaxHealth": 45,
+    "AttackRange": 1,
+    "IsMemory": true,
+    "MemoriesCategory": "Freshwater",
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    },
+    "_InteractionVars": {
+      "Melee_Damage": {
+        "Interactions": [
+          {
+            "$Comment": "Config for a successful melee hit, default values for Effects and HitShape are not overwritten here, see each NPC_ file",
+            "Parent": "NPC_Attack_Melee_Damage",
+            "DamageCalculator": {
+              "Type": "Absolute",
+              "BaseDamage": {
+                "Physical": 5
+              },
+              "RandomPercentageModifier": 0.1
+            },
+            "Type": "RPG_EnemyDamage"
+          }
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Piranha_Black.name",
+      "Description": "Translation key for NPC name display"
+    }
+  }
+}

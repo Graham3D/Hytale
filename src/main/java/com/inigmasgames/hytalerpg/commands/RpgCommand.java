@@ -253,7 +253,6 @@ public final class RpgCommand extends AbstractCommandCollection {
             addSubCommand(new RpgDevPointsCommand(allocation, uiTrace));
             addSubCommand(new RpgDevXpDisplayCommand(hud));
             addSubCommand(new AttributeCommand(loadouts));
-            addSubCommand(new ResetCommand(loadouts));
             addSubCommand(new ResourceCommand(loadouts, kernel, trace));
             addSubCommand(new RecoveryCommand(loadouts, kernel, trace));
             addSubCommand(new RecoveryProofCommand(loadouts, kernel, trace));
@@ -311,12 +310,6 @@ public final class RpgCommand extends AbstractCommandCollection {
                     RpgAttribute.parse(context.get(attribute)), Integer.parseInt(context.get(value)))); }
             catch (RuntimeException error) { error(context, error); }
         }
-    }
-
-    private static final class ResetCommand extends PlayerSubcommand {
-        ResetCommand(RpgLoadoutOperations loadouts) { super("reset", "Reset development attributes to 10.", loadouts); }
-        @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
-                                         PlayerRef playerRef, World world) { send(context, loadouts.resetDevelopmentAttributes(playerRef.getUuid())); }
     }
 
     private abstract static class KernelCommand extends PlayerSubcommand {

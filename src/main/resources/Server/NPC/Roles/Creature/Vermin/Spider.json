@@ -1,0 +1,127 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Spider",
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Spider.name",
+      "Description": "Translation key for NPC name display"
+    }
+  },
+  "Modify": {
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    },
+    "_InteractionVars": {
+      "Melee_Start": {
+        "Interactions": [
+          {
+            "Parent": "Spider_Bite",
+            "$Comment": "Sets animations and delay before hit",
+            "Effects": {
+              "ItemPlayerAnimationsId": "Spider_Default",
+              "ItemAnimationId": "Bite"
+            },
+            "RunTime": 0.333
+          }
+        ]
+      },
+      "Bite_Damage": {
+        "Interactions": [
+          {
+            "Type": "CooldownCondition",
+            "Id": "Spider_Poison",
+            "Next": {
+              "Type": "Serial",
+              "Interactions": [
+                {
+                  "Type": "TriggerCooldown",
+                  "Cooldown": {
+                    "Id": "Spider_Poison",
+                    "Cooldown": 8
+                  }
+                },
+                {
+                  "Type": "Simple",
+                  "RunTime": 0.1,
+                  "Effects": {
+                    "Particles": [
+                      {
+                        "SystemId": "Placeholder_Poison_Melee_Slash",
+                        "TargetEntityPart": "Entity",
+                        "PositionOffset": {
+                          "X": 0,
+                          "Y": 0.75,
+                          "Z": 1.5
+                        },
+                        "RotationOffset": {
+                          "Pitch": -30,
+                          "Roll": 0,
+                          "Yaw": 90
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Parent": "Spider_Bite_Damage",
+                  "DamageCalculator": {
+                    "Type": "Absolute",
+                    "BaseDamage": {
+                      "Physical": 23
+                    },
+                    "RandomPercentageModifier": 0.1
+                  },
+                  "DamageEffects": {
+                    "Knockback": {
+                      "Force": 0.5
+                    }
+                  },
+                  "Next": {
+                    "Type": "EffectCondition",
+                    "Entity": "Target",
+                    "EntityEffectIds": [
+                      "Antidote"
+                    ],
+                    "Match": "None",
+                    "Next": {
+                      "Type": "ClearEntityEffect",
+                      "Entity": "Target",
+                      "EntityEffectId": "Poison_T1",
+                      "Next": {
+                        "Type": "ApplyEffect",
+                        "Entity": "Target",
+                        "EffectId": "Poison_T1"
+                      }
+                    }
+                  },
+                  "Type": "RPG_EnemyDamage"
+                }
+              ]
+            },
+            "Failed": {
+              "Parent": "Spider_Bite_Damage",
+              "DamageCalculator": {
+                "Type": "Absolute",
+                "BaseDamage": {
+                  "Physical": 23
+                },
+                "RandomPercentageModifier": 0.1
+              },
+              "DamageEffects": {
+                "Knockback": {
+                  "Force": 0.5
+                }
+              },
+              "Type": "RPG_EnemyDamage"
+            }
+          }
+        ]
+      }
+    },
+    "_CombatConfig": {
+      "EntityEffects": [
+        "Immunity_Webs"
+      ]
+    }
+  }
+}

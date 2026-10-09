@@ -126,7 +126,7 @@ final class PreparedCraftingManager {
                 .filter(window -> window.getBlockType() != null
                         && CHEFS_STOVE_ITEM_ID.equals(window.getBlockType().getId()))
                 .filter(window -> {
-                    BlockType current = BlockType.getAssetMap().getAsset(world.getBlock(
+                    BlockType current = BlockType.getAssetMap().getAsset(com.inigmasgames.taverns.api.LoadedBlocks.getBlock(world, 
                             window.getX(), window.getY(), window.getZ()));
                     return current != null && CHEFS_STOVE_ITEM_ID.equals(current.getId());
                 })

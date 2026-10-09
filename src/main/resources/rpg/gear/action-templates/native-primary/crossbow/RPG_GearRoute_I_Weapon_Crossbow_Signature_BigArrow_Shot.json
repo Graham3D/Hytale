@@ -1,0 +1,17 @@
+{
+  "Type": "RPG_GearProjectile",
+  "RunTime": 0.2,
+  "Effects": {
+    "ItemAnimationId": "ShootCharged",
+    "ClearAnimationOnFinish": true
+  },
+  "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Crossbow_Signature",
+  "Next": {
+    "Type": "ChangeStat",
+    "Behaviour": "Set",
+    "StatModifiers": {
+      "SignatureCharges": -100
+    },
+    "ValueType": "Percent"
+  }
+}

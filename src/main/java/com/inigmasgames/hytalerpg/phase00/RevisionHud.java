@@ -17,6 +17,6 @@ final class RevisionHud extends CustomUIHud {
     @Override
     protected void build(@Nonnull UICommandBuilder commands) {
         commands.append("Phase00RevisionHud.ui");
-        commands.set("#BuildRevision.TextSpans", Message.raw(BuildIdentity.REVISION));
+        commands.set("#BuildRevision.TextSpans", Message.raw(BuildIdentity.DISPLAY_REVISION));
     }
 }

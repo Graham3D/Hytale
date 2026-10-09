@@ -1,0 +1,47 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Predator",
+  "Modify": {
+    "Appearance": "Zombie_Burnt",
+    "DropList": "Drop_Zombie_Burnt",
+    "DisableDamageGroups": [
+      "Zombie"
+    ],
+    "MaxHealth": 126,
+    "ViewRange": 12,
+    "HearingRange": 8,
+    "WanderRadius": 6,
+    "MaxSpeed": 9,
+    "Attack": "Root_NPC_Zombie_Burnt_Melee",
+    "AttackDistance": 2,
+    "CombatStrafeWeight": 0,
+    "CombatBackOffAfterAttack": false,
+    "AlwaysSleepAtNight": false,
+    "IsMemory": true,
+    "MemoriesCategory": "Undead",
+    "_InteractionVars": {
+      "Melee_Damage": {
+        "Interactions": [
+          {
+            "Parent": "NPC_Attack_Melee_Damage",
+            "DamageCalculator": {
+              "BaseDamage": {
+                "Physical": 30
+              }
+            },
+            "Type": "RPG_EnemyDamage"
+          }
+        ]
+      }
+    },
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Zombie_Burnt.name",
+      "Description": "Translation key for NPC name display"
+    }
+  }
+}

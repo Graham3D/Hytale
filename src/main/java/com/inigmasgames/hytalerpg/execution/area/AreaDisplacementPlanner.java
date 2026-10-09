@@ -8,6 +8,15 @@ import java.util.function.ToDoubleBiFunction;
 public final class AreaDisplacementPlanner {
     private AreaDisplacementPlanner(){}
     public record Plan(Vec3 destination,double distance,String reason){}
+    /** ME's coincident-center rule; all ordinary pull/push callers keep their existing center behavior. */
+    public static Plan push(Vec3 position,Vec3 center,Vec3 acceptedForward,double requested,double controlScale,boolean grounded,
+            ToDoubleBiFunction<Vec3,Vec3> collisionFraction,Predicate<Vec3> supported){
+        if(center.subtract(position).horizontalLength()<1e-9){
+            if(acceptedForward==null||acceptedForward.horizontalLength()<1e-9)return new Plan(position,0,"STRIKE_FORWARD_UNAVAILABLE");
+            center=position.subtract(acceptedForward.horizontalNormalized());
+        }
+        return plan(position,center,false,requested,controlScale,grounded,collisionFraction,supported);
+    }
     public static Plan plan(Vec3 position,Vec3 center,boolean pull,double requested,double controlScale,boolean grounded,
             ToDoubleBiFunction<Vec3,Vec3> collisionFraction,Predicate<Vec3> supported){
         if(!Double.isFinite(requested)||requested<0||requested>8||!Double.isFinite(controlScale)||controlScale<0||controlScale>1)

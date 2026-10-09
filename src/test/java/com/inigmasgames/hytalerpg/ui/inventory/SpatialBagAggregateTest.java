@@ -29,6 +29,8 @@ class SpatialBagAggregateTest {
                 new DefaultAssetMap<String, Item>(Map.of(
                         "Rock_Stone", rock,
                         "Weapon_Shortbow_Iron", new Item("Weapon_Shortbow_Iron"),
+                        "Weapon_Axe_Cobalt", new Item("Weapon_Axe_Cobalt"),
+                        "Weapon_Shield_Iron", new Item("Weapon_Shield_Iron"),
                         "RPG_Ring_Copper", new Item("RPG_Ring_Copper"))))
                 .setPath("Item/Items").setCodec(Item.CODEC).setKeyFunction(Item::getId);
         fixture = new HytaleAssetStore<>(builder) {
@@ -39,6 +41,118 @@ class SpatialBagAggregateTest {
     }
     @AfterAll static void teardown() { if (fixture != null) AssetRegistry.unregister(fixture); }
     private final FootprintCatalog catalog = FootprintCatalog.loadDefault();
+
+    @Test void chosenEquipmentRectangleIsAtomicAndPreservesPayload() {
+        var before = new SpatialBagAggregate(UUID.randomUUID(), catalog.revision());
+        var bow = new ItemStack("Weapon_Shortbow_Iron");
+        UUID admittedId = UUID.randomUUID();
+        var admitted = before.offerAt(admittedId, before.revision(), bow, catalog, 3, 1);
+        assertTrue(admitted.accepted());
+        assertEquals(new SpatialLayout.Position(3, 1), admitted.bag().entry(admittedId).orElseThrow().position());
+        assertEquals(bow, admitted.bag().entry(admittedId).orElseThrow().payload());
+        assertEquals(before.revision() + 1, admitted.bag().revision());
+        var blocked = admitted.bag().offerAt(UUID.randomUUID(), admitted.bag().revision(),
+                new ItemStack("Rock_Stone", 7), catalog, 3, 1);
+        assertEquals(SpatialBagAggregate.Outcome.NO_FIT, blocked.receipt().outcome());
+        assertEquals(admitted.bag().revision(), blocked.bag().revision());
+        assertEquals(admitted.bag().entries(), blocked.bag().entries());
+        var outside = admitted.bag().offerAt(UUID.randomUUID(), admitted.bag().revision(),
+                bow, catalog, InventoryGridGeometry.COLUMNS - 1, InventoryGridGeometry.ROWS - 1);
+        assertEquals(SpatialBagAggregate.Outcome.NO_FIT, outside.receipt().outcome());
+    }
+
+    @Test void equipmentReturnKeepsClickedPlacementOrUsesAnotherFreeCell() {
+        var initial = new SpatialBagAggregate(UUID.randomUUID(), catalog.revision());
+        UUID existingId = UUID.randomUUID();
+        var occupied = initial.offerAt(existingId, initial.revision(), new ItemStack("Rock_Stone"), catalog, 0, 0).bag();
+        UUID returnedId = UUID.randomUUID();
+        var returned = occupied.offerForEquipmentReturn(returnedId, returnedId, occupied.revision(),
+                new ItemStack("Rock_Stone"), catalog, 0, 0);
+        assertTrue(returned.accepted());
+        assertEquals(new SpatialLayout.Position(0, 0), returned.bag().entry(existingId).orElseThrow().position());
+        assertEquals(new SpatialLayout.Position(1, 0), returned.bag().entry(returnedId).orElseThrow().position());
+        assertEquals(occupied.revision() + 1, returned.bag().revision());
+    }
+
+    @Test void fragmentedEquipmentReturnRepacksAtomicallyWithoutLosingEntries() {
+        var bag = new SpatialBagAggregate(UUID.randomUUID(), catalog.revision());
+        for (int x = 0; x < 8; x += 2) {
+            UUID id = UUID.randomUUID();
+            bag = bag.offerAt(id, bag.revision(), new ItemStack("Weapon_Shortbow_Iron"), catalog, x, 0).bag();
+        }
+        for (int y = 0; y < 2; y++) for (int x = 8; x < InventoryGridGeometry.COLUMNS; x++) {
+            UUID id = UUID.randomUUID();
+            bag = bag.offerAt(id, bag.revision(), new ItemStack("Rock_Stone"), catalog, x, y).bag();
+        }
+        assertEquals(SpatialBagAggregate.Outcome.NO_FIT,
+                bag.offer(UUID.randomUUID(), bag.revision(), new ItemStack("Weapon_Shortbow_Iron"), catalog)
+                        .receipt().outcome());
+        var before = bag;
+        UUID returnedId = UUID.randomUUID();
+        var returned = before.offerForEquipmentReturn(returnedId, returnedId, before.revision(),
+                new ItemStack("Weapon_Shortbow_Iron"), catalog, 6, 0);
+        assertTrue(returned.accepted());
+        assertEquals(before.revision() + 1, returned.bag().revision());
+        assertEquals(before.entries().size() + 1, returned.bag().entries().size());
+        for (var entry : before.entries())
+            assertEquals(entry.payloadJson(), returned.bag().entry(entry.id()).orElseThrow().payloadJson());
+        assertEquals("Weapon_Shortbow_Iron", returned.bag().entry(returnedId).orElseThrow().payload().getItemId());
+        assertEquals(18, before.entries().size());
+    }
+
+    @Test void equipmentReturnWithoutTotalCapacityLeavesAllExistingEntriesUntouched() {
+        var bag = new SpatialBagAggregate(UUID.randomUUID(), catalog.revision());
+        var offered = new java.util.ArrayList<SpatialBagAggregate.OfferedItem>();
+        for (int i = 0; i < InventoryGridGeometry.CELLS - 7; i++)
+            offered.add(new SpatialBagAggregate.OfferedItem(UUID.randomUUID(), new ItemStack("Rock_Stone")));
+        bag = bag.offerAll(UUID.randomUUID(), bag.revision(), offered, catalog).bag();
+        UUID returnedId = UUID.randomUUID();
+        var rejected = bag.offerForEquipmentReturn(returnedId, returnedId, bag.revision(),
+                new ItemStack("Weapon_Shortbow_Iron"), catalog, 0, 0);
+        assertEquals(SpatialBagAggregate.Outcome.NO_FIT, rejected.receipt().outcome());
+        assertEquals(bag.revision(), rejected.bag().revision());
+        assertEquals(bag.entries(), rejected.bag().entries());
+    }
+
+    @Test void ringPlacementKeepsIdentityAndLeavesEquippedRingOnNoFit() {
+        UUID owner = UUID.randomUUID(), id = UUID.randomUUID();
+        var component = new SpatialBagComponent(owner, catalog);
+        component.activateQaProof(owner);
+        var before = component.state(owner);
+        var admitted = before.offer(id, before.revision(), new ItemStack("RPG_Ring_Copper"), catalog);
+        component.publish(owner, before, admitted.bag());
+        assertTrue(component.equipRing(owner, "left", id, admitted.bag().revision(), catalog).accepted());
+        String fingerprint = component.rings(owner).left().payloadJson();
+        var rejected = component.unequipRingAt(owner, "left", catalog,
+                InventoryGridGeometry.COLUMNS, 0, fingerprint);
+        assertEquals(SpatialBagAggregate.Outcome.NO_FIT, rejected.receipt().outcome());
+        assertEquals(id, component.rings(owner).left().entryId());
+        assertTrue(component.state(owner).entries().isEmpty());
+        var accepted = component.unequipRingAt(owner, "left", catalog, 4, 2, fingerprint);
+        assertTrue(accepted.accepted());
+        assertNull(component.rings(owner).left());
+        assertEquals(id, component.state(owner).entries().iterator().next().id());
+        assertEquals(new SpatialLayout.Position(4, 2), component.state(owner).entry(id).orElseThrow().position());
+    }
+
+    @Test void occupiedRingReturnCellPreservesTheExistingBagItem() {
+        UUID owner = UUID.randomUUID(), ringId = UUID.randomUUID(), rockId = UUID.randomUUID();
+        var component = new SpatialBagComponent(owner, catalog);
+        component.activateQaProof(owner);
+        var before = component.state(owner);
+        var ring = before.offer(ringId, before.revision(), new ItemStack("RPG_Ring_Copper"), catalog);
+        component.publish(owner, before, ring.bag());
+        assertTrue(component.equipRing(owner, "left", ringId, ring.bag().revision(), catalog).accepted());
+        var empty = component.state(owner);
+        var rock = empty.offerAt(rockId, empty.revision(), new ItemStack("Rock_Stone"), catalog, 0, 0);
+        component.publish(owner, empty, rock.bag());
+        String fingerprint = component.rings(owner).left().payloadJson();
+        var returned = component.unequipRingAt(owner, "left", catalog, 0, 0, fingerprint);
+        assertTrue(returned.accepted());
+        assertNull(component.rings(owner).left());
+        assertEquals(new SpatialLayout.Position(0, 0), component.state(owner).entry(rockId).orElseThrow().position());
+        assertEquals(new SpatialLayout.Position(1, 0), component.state(owner).entry(ringId).orElseThrow().position());
+    }
 
     @Test void ringTransferIsAtomicAndSurvivesPlayerComponentCodec() {
         UUID owner = UUID.randomUUID(), id = UUID.randomUUID();
@@ -399,5 +513,60 @@ class SpatialBagAggregateTest {
         assertTrue(exported.accepted());
         component.publishCopiedMigration(owner,component.state(owner),exported.bag(),SpatialBagComponent.OwnershipMode.QA_PROOF);
         assertTrue(component.state(owner).entries().isEmpty());
+    }
+
+    @Test void revisionTwoFootprintsRepackWhenThereIsRoomAndKeepIdentity() {
+        UUID owner = UUID.randomUUID();
+        UUID id = UUID.randomUUID();
+        var current = new SpatialBagAggregate(owner, catalog.revision())
+                .offer(id, 0, new ItemStack("Weapon_Axe_Cobalt"), catalog).bag();
+        var saved = current.toBson();
+        saved.put("CatalogRevision", new BsonInt32(2));
+        var entry = saved.getArray("Entries").get(0).asDocument();
+        entry.put("Width", new BsonInt32(1));
+        entry.put("Height", new BsonInt32(3));
+        var migrated = SpatialBagAggregate.fromBson(saved, catalog);
+        assertEquals(3, migrated.catalogRevision());
+        assertEquals(current.revision(), migrated.revision());
+        assertEquals(new SpatialLayout.Size(1, 2), migrated.entry(id).orElseThrow().size());
+        assertEquals(current.entry(id).orElseThrow().payloadJson(), migrated.entry(id).orElseThrow().payloadJson());
+        assertEquals(migrated.toBson(), SpatialBagAggregate.fromBson(migrated.toBson(), catalog).toBson());
+    }
+
+    @Test void fullRevisionTwoBagRetainsLegacyRectanglesWithoutDroppingItems() {
+        UUID owner = UUID.randomUUID();
+        UUID shieldId = UUID.randomUUID();
+        var bag = new SpatialBagAggregate(owner, catalog.revision())
+                .offer(shieldId, 0, new ItemStack("Weapon_Shield_Iron"), catalog).bag();
+        for (int i = 0; i < 59; i++)
+            bag = bag.offer(UUID.randomUUID(), bag.revision(), new ItemStack("Rock_Stone"), catalog).bag();
+        assertEquals(60, bag.entries().size());
+        var saved = bag.toBson();
+        saved.put("CatalogRevision", new BsonInt32(2));
+        var savedEntries = saved.getArray("Entries");
+        var shield = java.util.stream.IntStream.range(0, savedEntries.size())
+                .mapToObj(i -> savedEntries.get(i).asDocument())
+                .filter(e -> e.getString("Id").getValue().equals(shieldId.toString()))
+                .findFirst().orElseThrow();
+        shield.put("Width", new BsonInt32(2));
+        shield.put("Height", new BsonInt32(3));
+        var rock = java.util.stream.IntStream.range(0, savedEntries.size())
+                .mapToObj(i -> savedEntries.get(i).asDocument())
+                .filter(e -> !e.getString("Id").getValue().equals(shieldId.toString()))
+                .findFirst().orElseThrow();
+        for (int y = 0; y < 4; y++) for (int x = 0; x < 4; x++) {
+            if (x < 2 && y < 3) continue;
+            var copy = rock.clone();
+            copy.put("Id", new BsonString(UUID.randomUUID().toString()));
+            copy.put("X", new BsonInt32(x));
+            copy.put("Y", new BsonInt32(y));
+            savedEntries.add(copy);
+        }
+        var migrated = SpatialBagAggregate.fromBson(saved, catalog);
+        assertEquals(70, migrated.entries().size());
+        assertEquals(new SpatialLayout.Size(2, 3), migrated.entry(shieldId).orElseThrow().size());
+        assertEquals(bag.revision(), migrated.revision());
+        assertEquals(3, migrated.catalogRevision());
+        assertEquals(migrated.toBson(), SpatialBagAggregate.fromBson(migrated.toBson(), catalog).toBson());
     }
 }

@@ -9,6 +9,12 @@ public final class ProjectileControlPolicy {
     private ProjectileControlPolicy() {}
     public static StatusService.Result root(StatusService statuses, Stage04SkillProfile.Projectile payload,
             UUID target, String source, String role, ControlProfile control) {
+        return root(statuses,payload,target,source,role,control,
+                com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.EMPTY);
+    }
+    public static StatusService.Result root(StatusService statuses, Stage04SkillProfile.Projectile payload,
+            UUID target, String source, String role, ControlProfile control,
+            com.inigmasgames.hytalerpg.gear.GearEffectSnapshot targetGear) {
         if (!payload.statusId().equals("ROOT")) throw new IllegalArgumentException("ROOT payload required");
         if (control.protectedEntity() || control.boss() && !payload.details().allowsBossSlow(role))
             return new StatusService.Result(StatusService.Outcome.REJECTED, RpgStatusType.ROOT, 0, 0,
@@ -18,6 +24,6 @@ public final class ProjectileControlPolicy {
             return new StatusService.Result(StatusService.Outcome.APPLIED, RpgStatusType.FROZEN_SUBSTITUTE_SLOW,
                     1, payload.statusSeconds(), "AUTHORED_OPTED_IN_ROOT_SLOW");
         }
-        return statuses.apply(target, RpgStatusType.ROOT, control, payload.statusSeconds());
+        return statuses.apply(target, RpgStatusType.ROOT, control, payload.statusSeconds(),targetGear);
     }
 }

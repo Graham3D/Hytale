@@ -3,6 +3,7 @@ package com.inigmasgames.canvasui;
 import com.inigmasgames.canvasui.runtime.CanvasService;
 import com.inigmasgames.canvasui.api.editor.CursorCanvasEditor;
 import com.inigmasgames.canvasui.api.editor.CursorEditorOpenResult;
+import com.inigmasgames.canvasui.api.CanvasInteractionObserver;
 import com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -23,6 +24,7 @@ public final class CanvasUI {
     public static final String HYTALE_VERSION = required("hytale.version");
     private static volatile CanvasService service;
     private static volatile CursorHudProbeService cursorEditors;
+    private static volatile CanvasInteractionObserver interactionObserver = CanvasInteractionObserver.NONE;
 
     private CanvasUI() { }
 
@@ -57,6 +59,10 @@ public final class CanvasUI {
     public static void uninstall(CanvasService value, CursorHudProbeService editors) {
         if (service == value) service = null;
         if (cursorEditors == editors) cursorEditors = null;
+    }
+    public static CanvasInteractionObserver interactionObserver() { return interactionObserver; }
+    public static void setInteractionObserver(CanvasInteractionObserver observer) {
+        interactionObserver = observer == null ? CanvasInteractionObserver.NONE : observer;
     }
 
     private static Properties loadBuild() {

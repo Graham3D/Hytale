@@ -77,7 +77,8 @@ public final class BoundedTraceWriter implements AutoCloseable {
         if(current==null){current=new TraceSegmentWriter(path,maxBytes,inferKind(path),compression,verify,this::notifyFailure);segmentWriter=current;}
         current.write(line);
     }
-    private static String inferKind(java.nio.file.Path path){return path.getFileName().toString().toLowerCase(java.util.Locale.ROOT).startsWith("ui-")?"UI":"SKILL";}
+    private static String inferKind(java.nio.file.Path path){String name=path.getFileName().toString().toLowerCase(java.util.Locale.ROOT);
+        return name.startsWith("ui-")?"UI":name.startsWith("gear-")?"GEAR":"SKILL";}
     public Metrics metrics(){var current=segmentWriter;return new Metrics(accepted.get(),written.get(),dropped.get(),failed.get(),
             worker.getQueue().size(),bytes.get(),current==null?0:current.activeBytes(),current==null?0:current.activeEvents());}
     public TraceArchiveManager.Metrics archiveMetrics(){var current=segmentWriter;return current==null?null:current.archive().metrics();}

@@ -19,7 +19,9 @@ $pending = $null
 function Assert-Stopped {
     $running = @(Get-CimInstance Win32_Process -ErrorAction Stop | Where-Object {
         $_.Name -match '^Hytale(Client|Server)?(?:\.exe)?$' -or
-        ($_.Name -match '^javaw?(?:\.exe)?$' -and $_.CommandLine -match 'HytaleServer')
+        ($_.Name -match '^javaw?(?:\.exe)?$' -and
+            ($_.CommandLine -match '(?i)(?:^|\s)-jar\s+"?[^"\s]*HytaleServer\.jar(?:"|\s|$)' -or
+             $_.CommandLine -match '(?i)(?:^|\s)com\.hypixel\.hytale\.Main(?:\s|$)'))
     })
     if ($running.Count) { throw 'Close Hytale and its server completely, then run Update RPG Icons again.' }
 }
@@ -137,7 +139,7 @@ try {
         $manifest = Read-JsonEntry $zip 'manifest.json'
         if ($manifest.Group -ne 'InigmasGames' -or $manifest.Name -ne 'HyARPG') { throw 'Target is not the standalone HyARPG mod.' }
         $index = Read-JsonEntry $zip 'rpg/presentation/icon-index.json'
-        if ($index.schemaVersion -ne 1 -or @($index.entries).Count -notin @(153,156,157,158,163,164)) { throw 'Unsupported icon index; do not patch this build.' }
+        if ($index.schemaVersion -ne 1 -or @($index.entries).Count -notin @(153,156,157,158,163,164,165)) { throw 'Unsupported icon index; do not patch this build.' }
         $byFile = @{}
         $ids = @{}
         $catalogIds = @{}
@@ -166,7 +168,8 @@ try {
             ($skillCount -eq 89 -and $passiveCount -eq 67) -or
             ($skillCount -eq 90 -and $passiveCount -eq 67) -or
             ($skillCount -eq 91 -and $passiveCount -eq 67) -or
-            ($skillCount -eq 97 -and $passiveCount -eq 67))) { throw 'Icon index does not cover the full catalog.' }
+            ($skillCount -eq 97 -and $passiveCount -eq 67) -or
+            ($skillCount -eq 98 -and $passiveCount -eq 67))) { throw 'Icon index does not cover the full catalog.' }
         foreach ($kind in @('Skill','Passive')) {
             $folder = Join-Path $ArtRoot ($kind + 's')
             if (-not (Test-Path -LiteralPath $folder -PathType Container)) { continue }

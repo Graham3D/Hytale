@@ -39,6 +39,12 @@ public final class GearNativeDeathDrops extends EntityTickingSystem<EntityStore>
         if(death.getItemsLossMode()!=com.hypixel.hytale.server.core.asset.type.gameplay.DeathConfig.ItemsLossMode.ALL)return;
         var role=chunk.getComponent(index,NPCEntity.getComponentType()).getRole();
         if(role==null||role.hasDroppedDeathItems())return;
+        var spawn=encounters.snapshot(world,enemy).orElseThrow();
+        if(spawn.enemyRewards()!=null&&spawn.enemyRewards().origin()==
+                com.inigmasgames.hytalerpg.enemies.EnemyRewardContext.Origin.QA){
+            role.setDeathItemsDropped(); // Same native once-only owner, with no QA loot projection.
+            return;
+        }
         if(!role.isDropDeathItemsInstantly()){
             var corpse=chunk.getComponent(index,DeferredCorpseRemoval.getComponentType());
             if(corpse!=null&&!corpse.shouldRemove())return;

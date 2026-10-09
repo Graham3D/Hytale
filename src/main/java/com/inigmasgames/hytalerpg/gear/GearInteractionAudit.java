@@ -27,15 +27,21 @@ public final class GearInteractionAudit implements Collector {
     @Override public boolean collect(CollectorTag tag,InteractionContext context,Interaction interaction) {
         if(++visited>4096) throw new IllegalStateException("Gear graph operation limit");
         if(interaction instanceof DamageEntityInteraction) {
-            if(interaction instanceof ManagedGearDamageInteraction) leaves.add(interaction.getId());
+            if(interaction instanceof ManagedGearDamageInteraction || interaction instanceof ManagedCarrierDamageInteraction) leaves.add(interaction.getId());
             else blockers.add("Unmanaged native damage leaf: "+interaction.getId());
         }
         // Audit modern impacts too; legacy throws remain closed until their adapter is implemented.
-        if(interaction instanceof ManagedGearProjectile projectile) {
-            for(var route:projectile.getConfig().getInteractions().entrySet()) {
+        if(interaction instanceof ManagedGearProjectile || interaction instanceof ManagedCarrierProjectile) {
+            var config=interaction instanceof ManagedGearProjectile projectile?projectile.getConfig():
+                    ((ManagedCarrierProjectile)interaction).getConfig();
+            for(var route:config.getInteractions().entrySet()) {
                 InteractionManager.walkChain(this,route.getKey(),context,RootInteraction.getAssetMap().getAsset(route.getValue()));
             }
         } else if(interaction.getClass().getSimpleName().contains("Projectile")) blockers.add("Projectile adapter required: "+interaction.getId());
+        // Explode_Generic applies fixed native EntityDamage directly. It is not a
+        // DamageEntityInteraction leaf and otherwise evades the managed hit audit.
+        if(interaction.getClass().getSimpleName().contains("Explode"))
+            blockers.add("Unmanaged native explosion: "+interaction.getId());
         return false;
     }
     @Override public void outof() {}

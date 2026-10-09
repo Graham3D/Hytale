@@ -69,7 +69,9 @@
               "Physical": 11
             }
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Swing_Down_Left_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -86,7 +88,9 @@
               "Physical": 14
             }
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Swing_Down_Right_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -103,7 +107,9 @@
               "Physical": 23
             }
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Swing_Down_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -126,7 +132,9 @@
               "Amount": 2
             }
           ],
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Downstrike_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -155,7 +163,9 @@
             }
           },
           "EntityStatsOnHit": [],
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Signature_Whirlwind_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },

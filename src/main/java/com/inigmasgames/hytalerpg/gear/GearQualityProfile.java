@@ -13,7 +13,9 @@ public final class GearQualityProfile {
     private record Data(String revision,double[] normalWeights,double[] nightmareWeights,double[] hellWeights,
                         double[] commonRank,double[] specialistRank,double[] eliteRank,double[] minibossRank,
                         double[] bossRank,double mfKnee,double magicMfGain,double rareMfGain,
-                        int[] magicAffixWeights,int[] rareAffixWeights) {}
+                        int[] magicAffixWeights,int[] rareAffixWeights,
+                        int[] veryRareAffixWeights,int[] legendaryAffixWeights,
+                        double veryRareShare,double legendaryShare) {}
     public static final GearQualityProfile CURRENT=load();
     private final Data data;
     private GearQualityProfile(Data data){this.data=data;validate();}
@@ -28,14 +30,26 @@ public final class GearQualityProfile {
         for(var row:new double[][]{data.normalWeights(),data.nightmareWeights(),data.hellWeights(),
                 data.commonRank(),data.specialistRank(),data.eliteRank(),data.minibossRank(),data.bossRank()})
             if(row==null||row.length!=3||Arrays.stream(row).anyMatch(v->!Double.isFinite(v)||v<=0))throw new IllegalStateException("Invalid quality weights");
-        if(data.magicAffixWeights()==null||data.magicAffixWeights().length!=2||data.rareAffixWeights()==null
-                ||data.rareAffixWeights().length!=4||Arrays.stream(data.magicAffixWeights()).anyMatch(v->v<=0)
-                ||Arrays.stream(data.rareAffixWeights()).anyMatch(v->v<=0)||data.mfKnee()<=0
+        if(data.magicAffixWeights()==null||data.magicAffixWeights().length!=1||data.rareAffixWeights()==null
+                ||data.rareAffixWeights().length!=2||data.veryRareAffixWeights()==null||data.veryRareAffixWeights().length!=2
+                ||data.legendaryAffixWeights()==null||data.legendaryAffixWeights().length!=1
+                ||Arrays.stream(data.magicAffixWeights()).anyMatch(v->v<=0)
+                ||Arrays.stream(data.rareAffixWeights()).anyMatch(v->v<=0)
+                ||Arrays.stream(data.veryRareAffixWeights()).anyMatch(v->v<=0)
+                ||Arrays.stream(data.legendaryAffixWeights()).anyMatch(v->v<=0)
+                ||data.veryRareShare()<=0||data.veryRareShare()>=1
+                ||data.legendaryShare()<=0||data.legendaryShare()>=1
+                ||data.veryRareShare()+data.legendaryShare()>=1||data.mfKnee()<=0
                 ||data.magicMfGain()<0||data.rareMfGain()<0)throw new IllegalStateException("Invalid quality profile");
     }
     public String revision(){return data.revision();}
     public double[] base(DifficultyId era){return switch(era){case NORMAL->data.normalWeights().clone();case NIGHTMARE->data.nightmareWeights().clone();case HELL->data.hellWeights().clone();};}
     public double[] rank(ProgressionMath.Rank rank){return switch(rank){case COMMON->data.commonRank().clone();case SPECIALIST->data.specialistRank().clone();case ELITE->data.eliteRank().clone();case MINIBOSS->data.minibossRank().clone();case BOSS->data.bossRank().clone();};}
     public double[] magicFind(double mf){double saturated=mf/(mf+data.mfKnee());return new double[]{1,1+data.magicMfGain()*saturated,1+data.rareMfGain()*saturated};}
-    public int[] affixWeights(GearRarity rarity){return switch(rarity){case MAGIC->data.magicAffixWeights().clone();case RARE->data.rareAffixWeights().clone();default->throw new IllegalArgumentException("No new random affix budget for "+rarity);};}
+    public double veryRareShare(){return data.veryRareShare();}
+    public double legendaryShare(){return data.legendaryShare();}
+    public int[] affixWeights(GearRarity rarity){return switch(rarity){
+        case MAGIC->data.magicAffixWeights().clone();case RARE->data.rareAffixWeights().clone();
+        case VERY_RARE->data.veryRareAffixWeights().clone();case LEGENDARY->data.legendaryAffixWeights().clone();
+        default->throw new IllegalArgumentException("No new random affix budget for "+rarity);};}
 }

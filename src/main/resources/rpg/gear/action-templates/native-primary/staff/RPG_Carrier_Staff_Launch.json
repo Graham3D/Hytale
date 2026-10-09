@@ -1,0 +1,9 @@
+{
+  "Type": "RPG_CarrierProjectile",
+  "RunTime": 0.25,
+  "Lifetime": 3.1,
+  "Effects": {
+    "ItemAnimationId": "CastSummonCharged"
+  },
+  "Config": "RPG_Carrier_Staff_Projectile"
+}

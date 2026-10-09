@@ -49,12 +49,17 @@ public final class HytaleGearLoot implements AutoCloseable {
     private final Map<UUID,Ref<EntityStore>> spatialOperationSession=new ConcurrentHashMap<>();
     private final Map<UUID,Ref<EntityStore>> equipmentOperationSession=new ConcurrentHashMap<>();
     private final Map<UUID,Ref<EntityStore>> stockOperationSession=new ConcurrentHashMap<>();
+    private final Map<Ref<EntityStore>,Long> nativeDropDelayPoll=new ConcurrentHashMap<>();
     private final Map<UUID,Long> stockDropGrace=new ConcurrentHashMap<>();
+    private final Map<UUID,GearLootService.SpatialStockDropReceipt> finalizedStockDrops=new ConcurrentHashMap<>();
     private final java.util.concurrent.atomic.AtomicReference<String> copiedFault=new java.util.concurrent.atomic.AtomicReference<>();
     private final Map<UUID,Map<String,Ref<EntityStore>>> displays=new ConcurrentHashMap<>();
+    private final Set<UUID> projectionRequestedWorlds=ConcurrentHashMap.newKeySet();
     private final Map<String,Long> projectionWarningAt=new ConcurrentHashMap<>();
     private final Map<UUID,Long> pickupNoticeAt=new ConcurrentHashMap<>();
-    private final Map<UUID,Long> refreshAt=new ConcurrentHashMap<>(),pickupScanAt=new ConcurrentHashMap<>(),stockScanAt=new ConcurrentHashMap<>();private final Set<UUID> busy=ConcurrentHashMap.newKeySet();
+    private final Map<UUID,Long> refreshAt=new ConcurrentHashMap<>(),pickupScanAt=new ConcurrentHashMap<>(),stockScanAt=new ConcurrentHashMap<>();
+    private final SingleFlightTaskQueue refreshQueue=new SingleFlightTaskQueue();
+    private final BusyTransactions busy=new BusyTransactions();
     private final Map<UUID,Ref<EntityStore>> failedDropSession=new ConcurrentHashMap<>();
     private volatile String failure="";private volatile long cacheAt;
     private final CompletableFuture<Void> initialView;
@@ -65,9 +70,10 @@ public final class HytaleGearLoot implements AutoCloseable {
         this.spatial=new SpatialInventoryTransferCoordinator(loot,io,this::publish);
         initialView=CompletableFuture.runAsync(()->{
             refresh();
-            for(var receipt:loot.spatialStockDropReceipts())
-                if(receipt.stage().equals("PREPARED"))
-                    stockDropGrace.put(receipt.source(),System.currentTimeMillis()+30_000);
+            for(var receipt:loot.spatialStockDropReceipts()){
+                if(receipt.stage().equals("PREPARED"))stockDropGrace.put(receipt.source(),Long.MAX_VALUE);
+                else if(receipt.stage().equals("FINALIZED"))finalizedStockDrops.put(receipt.source(),receipt);
+            }
         },io).whenComplete((ignored,error)->{if(error!=null)failure="Initial gear custody view: "+error;});
     }
     /** Shared custody preparation once per runtime; never a per-join global scan. */
@@ -82,28 +88,46 @@ public final class HytaleGearLoot implements AutoCloseable {
     }
     private boolean consumeCopiedFault(String boundary){return copiedFault.compareAndSet(boundary,null);}
     public void configureProjectionNotification(java.util.function.Consumer<GearLootService.Loot> listener){projected=Objects.requireNonNull(listener);}
+    /** Publish a committed world receipt without waiting for the next full disk scan. Entity creation runs on the world task queue. */
+    public void acceptDelivery(GearLootService.Loot row){
+        if(row==null||!"WORLD".equals(row.state())||row.source()==null||row.result()==null||row.result().item()==null)return;
+        publish(row);
+        projectionRequestedWorlds.add(row.source().world());
+    }
     public boolean usable(GearInstance item){return !unavailableItems.contains(item.identity())&&
             (item.qaOnly()||failure.isEmpty()&&!pendingSalvage.contains(item.identity())&&!consumed.contains(item.identity())&&item.equals(usableItems.get(item.identity())));}
     public Optional<IronSentinelBinding> sentinel(UUID owner){return Optional.ofNullable(sentinels.get(owner));}
     public CompletionStage<IronSentinelBinding> prepareSentinel(GroundSource source,UUID owner,UUID instance,
             UUID world,Vec3 at,int effectiveLevel,double nativeInterval,double powerFactor){
+        return prepareSentinel(source,owner,instance,world,at,effectiveLevel,nativeInterval,powerFactor,GearEffectSnapshot.EMPTY);
+    }
+    public CompletionStage<IronSentinelBinding> prepareSentinel(GroundSource source,UUID owner,UUID instance,
+            UUID world,Vec3 at,int effectiveLevel,double nativeInterval,double powerFactor,GearEffectSnapshot acceptedOwner){
         var future=new CompletableFuture<IronSentinelBinding>();
         try{io.execute(()->{try{
             var row=loot.prepareSentinel(source.event(),owner,source.row().allocation().revision(),System.currentTimeMillis(),
-                    source.row().result().item().identity(),instance,world,at,effectiveLevel,nativeInterval,powerFactor);
+                    source.row().result().item().identity(),instance,world,at,effectiveLevel,nativeInterval,powerFactor,acceptedOwner);
+            safeTraceSentinel(owner,source,row);
             refresh();future.complete(row);
-        }catch(RuntimeException error){try{refresh();}catch(RuntimeException reload){error.addSuppressed(reload);}future.completeExceptionally(error);}});
+        }catch(RuntimeException error){GearQaTrace.record(owner,"IRON_SENTINEL_BIND",Map.of("result","REJECTED","reason",error.toString(),"sourceEvent",source.event()));
+            try{refresh();}catch(RuntimeException reload){error.addSuppressed(reload);}future.completeExceptionally(error);}});
         }catch(RuntimeException error){future.completeExceptionally(error);}
         return future;
     }
     public CompletionStage<IronSentinelBinding> prepareReplacingSentinel(GroundSource source,UUID owner,UUID instance,
             UUID world,Vec3 at,int effectiveLevel,double nativeInterval,double powerFactor){
+        return prepareReplacingSentinel(source,owner,instance,world,at,effectiveLevel,nativeInterval,powerFactor,GearEffectSnapshot.EMPTY);
+    }
+    public CompletionStage<IronSentinelBinding> prepareReplacingSentinel(GroundSource source,UUID owner,UUID instance,
+            UUID world,Vec3 at,int effectiveLevel,double nativeInterval,double powerFactor,GearEffectSnapshot acceptedOwner){
         var future=new CompletableFuture<IronSentinelBinding>();
         try{io.execute(()->{try{
             var row=loot.prepareReplacingSentinel(source.event(),owner,source.row().allocation().revision(),System.currentTimeMillis(),
-                    source.row().result().item().identity(),instance,world,at,effectiveLevel,nativeInterval,powerFactor);
+                    source.row().result().item().identity(),instance,world,at,effectiveLevel,nativeInterval,powerFactor,acceptedOwner);
+            safeTraceSentinel(owner,source,row);
             refresh();future.complete(row);
-        }catch(RuntimeException error){try{refresh();}catch(RuntimeException reload){error.addSuppressed(reload);}future.completeExceptionally(error);}});
+        }catch(RuntimeException error){GearQaTrace.record(owner,"IRON_SENTINEL_BIND",Map.of("result","REJECTED","reason",error.toString(),"sourceEvent",source.event()));
+            try{refresh();}catch(RuntimeException reload){error.addSuppressed(reload);}future.completeExceptionally(error);}});
         }catch(RuntimeException error){future.completeExceptionally(error);}
         return future;
     }
@@ -176,6 +200,32 @@ public final class HytaleGearLoot implements AutoCloseable {
         catch(RuntimeException rejected){failure="Iron Sentinel health checkpoint queue: "+rejected;}
     }
     public record GroundSource(String event,GearLootService.Loot row,Ref<EntityStore> entity) {}
+    private static void safeTraceSentinel(UUID owner,GroundSource source,IronSentinelBinding binding){
+        try{traceSentinel(owner,source,binding);}catch(RuntimeException diagnostic){
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log("Gear QA Sentinel trace failed: %s",diagnostic);
+        }
+    }
+    private static void traceSentinel(UUID owner,GroundSource source,IronSentinelBinding binding){
+        if(!GearQaTrace.active(owner))return;
+        var item=source.row().result().item();
+        var material=com.inigmasgames.hytalerpg.execution.summon.IronSentinelMaterial.require(item);
+        var stats=com.inigmasgames.hytalerpg.execution.summon.IronSentinelStatProjection.project(
+                binding.restoredLevel(),item,binding.restoredInterval());
+        var affixes=item.affixes().stream().map(roll->{
+            var decision=IronSentinelAffixes.classify(roll.familyId());
+            return Map.of("id",roll.familyId(),"value",roll.value(),
+                    "inheritancePolicy",decision.disposition().name(),"inherited",
+                    Qa159Pack.disposition(roll.familyId()).equals("INHERITED"),
+                    "reason",decision.reason());
+        }).toList();
+        GearQaTrace.record(owner,"IRON_SENTINEL_BIND",Map.ofEntries(
+                Map.entry("result",binding.state().name()),Map.entry("sourceEvent",source.event()),Map.entry("sourceItem",item.identity().toString()),
+                Map.entry("fixtureId",Qa159Pack.fixtureId(item)),Map.entry("checks",Qa159Pack.source(item)),
+                Map.entry("baseId",item.baseId()),Map.entry("materialNativeItem",material.nativeItemId()),Map.entry("materialModel",material.model()),
+                Map.entry("materialPersistence","audited base ID and frozen boundItem; no separate material component"),
+                Map.entry("affixes",affixes),Map.entry("sourceHealth",stats.sourceHealth()),Map.entry("sourcePhysicalMin",stats.sourcePhysicalMin()),
+                Map.entry("sourcePhysicalMax",stats.sourcePhysicalMax()),Map.entry("sourceProtection",stats.sourceProtection())));
+    }
     /** Native item entities are presentation of these world-owned receipts, never an item ID supplied by a client. */
     public List<GroundSource> visibleGroundSources(UUID world,Store<EntityStore> store){
         var shown=displays.get(world);if(shown==null||!failure.isEmpty())return List.of();
@@ -233,14 +283,24 @@ public final class HytaleGearLoot implements AutoCloseable {
                 ||row.reason().startsWith("PLAYER_SPATIAL_DROP"));
     }
     public void tick(World world){long now=System.currentTimeMillis();UUID id=world.getWorldConfig().getUuid();
+        // EntityTickingSystem runs while Store.tick is processing. Store.addEntity is
+        // forbidden in that phase, even on the correct world thread. World.execute
+        // defers projection until consumeTaskQueue runs outside the ECS system phase.
+        if(projectionRequestedWorlds.remove(id))world.execute(()->project(world));
         stockDropGrace.entrySet().removeIf(entry->entry.getValue()<=now);
+        nativeDropDelayPoll.keySet().removeIf(ref->!ref.isValid());
         if(!pendingDrops.isEmpty())reconcileIronDrops(world);
         if(pickupScanAt.getOrDefault(id,0L)<=now){pickupScanAt.put(id,now+100);scanPickup(world,now);}
+        // The historical marker is the active protected SpatialBag custody switch on this save.
         if(java.nio.file.Files.isRegularFile(spatialQaMarker)&&stockScanAt.getOrDefault(id,0L)<=now){
             stockScanAt.put(id,now+250);scanStockPickup(world);
         }
         if(refreshAt.getOrDefault(id,0L)>now)return;refreshAt.put(id,now+1000);
-        io.execute(()->{try{if(now-cacheAt>=1000)refresh();world.execute(()->project(world));}catch(RuntimeException error){failure=error.toString();}});
+        // One complete disk scan can outlast the polling interval. Never queue a
+        // second scan behind it on the same worker that commits pickup receipts.
+        try{refreshQueue.submit(io,()->{try{if(now-cacheAt>=1000)refresh();world.execute(()->project(world));}
+            catch(RuntimeException error){failure=error.toString();}});
+        }catch(RuntimeException rejected){failure=rejected.toString();}
     }
     private void scanPickup(World world,long now){var shown=displays.get(world.getWorldConfig().getUuid());if(shown==null||shown.isEmpty())return;
         var store=world.getEntityStore().getStore();for(var entry:shown.entrySet()){
@@ -255,23 +315,48 @@ public final class HytaleGearLoot implements AutoCloseable {
             var bag=store.getComponent(actor,SpatialBagComponent.getComponentType());
             if(bag==null||bag.mode(owner)==SpatialBagComponent.OwnershipMode.NATIVE)continue;
             var transform=store.getComponent(actor,TransformComponent.getComponentType());if(transform==null)continue;
-            var location=transform.getPosition();var nearby=new java.util.concurrent.atomic.AtomicBoolean();
+            var location=transform.getPosition();
+            var effects=GearNativeItems.effects(actor,store).snapshot();
+            var nearest=new java.util.concurrent.atomic.AtomicReference<Ref<EntityStore>>();
+            var distance=new double[]{Double.POSITIVE_INFINITY};
+            var restoreFence=new ArrayList<Ref<EntityStore>>();
             store.forEachChunk(ItemComponent.getComponentType(),(chunk,buffer)->{
-                if(nearby.get())return;
                 for(int index=0;index<chunk.size();index++){
                     var item=chunk.getComponent(index,ItemComponent.getComponentType());
                     if(item==null||ItemStack.isEmpty(item.getItemStack())||GearNativeItems.managed(item.getItemStack()))continue;
                     var ref=chunk.getReferenceTo(index);
                     var sourceId=store.getComponent(ref,UUIDComponent.getComponentType());
-                    if(store.getComponent(ref,PreventPickup.getComponentType())==null
-                            ||sourceId==null||System.currentTimeMillis()<stockDropGrace.getOrDefault(sourceId.getUuid(),0L))continue;
+                    if(sourceId==null||System.currentTimeMillis()<stockDropGrace.getOrDefault(sourceId.getUuid(),0L))continue;
+                    if(store.getComponent(ref,PreventPickup.getComponentType())==null){
+                        var finalized=finalizedStockDrops.get(sourceId.getUuid());
+                        if(finalized==null||!sameFrozen(item.getItemStack(),finalized.payloadJson()))continue;
+                        // Older persisted drops may reload without the pickup fence.
+                        // Mutate after chunk traversal so the archetype stays stable.
+                        restoreFence.add(ref);
+                        continue;
+                    }
+                    if(!nativeDropReady(store,ref))continue;
                     var sourcePosition=store.getComponent(ref,TransformComponent.getComponentType());
-                    if(sourcePosition!=null&&location.distanceSquared(sourcePosition.getPosition())<=6.25){
-                        nearby.set(true);return;
+                    if(sourcePosition==null)continue;
+                    double squared=location.distanceSquared(sourcePosition.getPosition());
+                    if(squared<distance[0]&&stockReachAllowed(store,actor,ref,effects,2.5)){
+                        distance[0]=squared;nearest.set(ref);
                     }
                 }
             });
-            if(nearby.get())takeNearbyStock(store,actor,player,world,message->{
+            for(var source:restoreFence)if(source.isValid()
+                    &&store.getComponent(source,PreventPickup.getComponentType())==null){
+                var uuid=store.getComponent(source,UUIDComponent.getComponentType());
+                var item=store.getComponent(source,ItemComponent.getComponentType());
+                var receipt=uuid==null?null:finalizedStockDrops.get(uuid.getUuid());
+                if(receipt!=null&&item!=null&&sameFrozen(item.getItemStack(),receipt.payloadJson())){
+                    store.putComponent(source,PreventPickup.getComponentType(),PreventPickup.INSTANCE);
+                    com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
+                            "RPG_STOCK_DROP_PICKUP_FENCE_RESTORED source=%s player=%s",
+                            receipt.source(),receipt.player());
+                }
+            }
+            if(nearest.get()!=null)takeNearbyStock(store,actor,player,world,nearest.get(),message->{
                 if(message.startsWith("Stock transfer rejected:")){
                     long now=System.currentTimeMillis();
                     if(now-pickupNoticeAt.getOrDefault(owner,0L)<10_000)return;
@@ -285,31 +370,61 @@ public final class HytaleGearLoot implements AutoCloseable {
         var shown=displays.computeIfAbsent(id,ignored->new HashMap<>());var expected=new HashSet<String>();
         for(var entry:records.entrySet()){var row=entry.getValue();if(!row.state().equals("WORLD")||!row.source().world().equals(id)||now>=row.allocation().expiresAt())continue;
             if(expected.size()>=256)break;expected.add(entry.getKey());var current=shown.get(entry.getKey());if(current!=null&&current.isValid())continue;
-            var p=row.position();var stack=GearNativeItems.create(row.result().item(),1,Map.of()).withMetadata(PROJECTION,new BsonString("true"));
-            var holder=ItemComponent.generateItemDrop(store,stack,new org.joml.Vector3d(p.x(),p.y()+.5,p.z()),com.hypixel.hytale.math.vector.Rotation3f.ZERO,0,0,0);
-            if(holder==null){warnProjection(entry.getKey(),row,now);continue;}
+            var p=row.position();
+            // Native item entities cannot be added to an unloaded section. The durable
+            // WORLD receipt remains available for projection when a player returns.
+            int x=(int)Math.floor(p.x()),y=(int)Math.floor(p.y()+.5),z=(int)Math.floor(p.z());
+            var section=world.getChunkStore().getChunkSectionReferenceAtBlock(x,y,z);
+            if(section==null||!section.isValid()){
+                traceProjectionFailure(entry.getKey(),row,now,"DEFERRED_UNLOADED","chunk section is not loaded");
+                continue;
+            }
+            // U7P5 keeps non-ticking sections addressable. Its entity-location
+            // system immediately UNLOADs an item added to one, returning null.
+            if(world.getChunkStore().getStore().getArchetype(section)
+                    .contains(com.hypixel.hytale.server.core.universe.world.storage.ChunkStore.REGISTRY.getNonTickingComponentType())){
+                traceProjectionFailure(entry.getKey(),row,now,"DEFERRED_NON_TICKING","chunk section is loaded but not ticking");
+                continue;
+            }
+            var stack=GearNativeItems.create(row.result().item(),1,Map.of()).withMetadata(PROJECTION,new BsonString("true"));
+            boolean playerDrop=row.reason().startsWith("PLAYER_SPATIAL_DROP") || row.reason().startsWith("PLAYER_IRON_DROP");
+            var velocity=playerDrop ? NativeInventoryDropOrigin.velocity(store,world.getEntityRef(row.allocation().assigned())) : new org.joml.Vector3d();
+            var holder=ItemComponent.generateItemDrop(store,stack,new org.joml.Vector3d(p.x(),p.y()+.5,p.z()),
+                    com.hypixel.hytale.math.vector.Rotation3f.ZERO,(float)velocity.x(),(float)velocity.y(),(float)velocity.z());
+            if(holder==null){traceProjectionFailure(entry.getKey(),row,now,"REJECTED_INVALID_STACK","native item entity generation failed");continue;}
             holder.putComponent(PreventPickup.getComponentType(),PreventPickup.INSTANCE);
             holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
             var spawned=store.addEntity(holder,AddReason.SPAWN);
-            if(spawned==null||!spawned.isValid()){warnProjection(entry.getKey(),row,now);continue;}
+            if(spawned==null||!spawned.isValid()){traceProjectionFailure(entry.getKey(),row,now,"REJECTED_ENTITY_ADD","native entity add failed in a loaded section");continue;}
+            if(playerDrop) beginNativeDropDelay(store,spawned);
             shown.put(entry.getKey(),spawned);
+            projectionWarningAt.keySet().removeIf(key->key.startsWith(entry.getKey()+"|"));
+            GearQaTrace.record(row.allocation().assigned(),"WORLD_DROP_SPAWN",Map.of(
+                    "eventId",entry.getKey(),"itemIdentity",row.result().item().identity().toString(),
+                    "result","SPAWNED","nativeItemEntity",true));
             try{projected.accept(row);}catch(RuntimeException diagnostic){com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
                     "RPG_GEAR_PROJECTION_TRACE_FAILED event=%s error=%s",entry.getKey(),diagnostic.toString());}
         }
         shown.entrySet().removeIf(e->{var ref=e.getValue();if(expected.contains(e.getKey())&&ref!=null&&ref.isValid())return false;
             if(ref!=null&&ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);return true;});
-        projectionWarningAt.keySet().removeIf(event->!expected.contains(event));
+        projectionWarningAt.keySet().removeIf(key->!expected.contains(key.substring(0,key.lastIndexOf('|'))));
         for(var event:expected){var row=records.get(event);if(row!=null)autoPickup(world,store,row,shown.get(event),now);}
     }
-    private void warnProjection(String event,GearLootService.Loot row,long now){
-        if(now-projectionWarningAt.getOrDefault(event,0L)<30_000)return;
-        projectionWarningAt.put(event,now);
-        com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
-                "RPG_GEAR_PROJECTION_REJECTED event=%s item=%s",event,row.result().item().identity());
+    private void traceProjectionFailure(String event,GearLootService.Loot row,long now,String result,String reason){
+        String notice=event+"|"+result;
+        if(now-projectionWarningAt.getOrDefault(notice,0L)<30_000)return;
+        projectionWarningAt.put(notice,now);
+        if(!result.startsWith("DEFERRED_"))com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                "RPG_GEAR_PROJECTION_REJECTED event=%s item=%s reason=%s",event,row.result().item().identity(),result);
+        GearQaTrace.record(row.allocation().assigned(),"WORLD_DROP_SPAWN",Map.of(
+                "eventId",event,"itemIdentity",row.result().item().identity().toString(),
+                "result",result,"reason",reason));
     }
     private void autoPickup(World world,Store<EntityStore> store,GearLootService.Loot row,Ref<EntityStore> projection,long now){
-        if((row.reason().startsWith("PLAYER_IRON_DROP")||row.reason().startsWith("PLAYER_SPATIAL_DROP"))
-                &&now<row.allocation().exclusiveUntil())return;
+        // A player drop is projected only after the inventory save and durable
+        // custody acknowledgement. The SOLO allocation already excludes other
+        // players; an extra time fence needlessly delays its owner picking it up.
+        if(projection!=null && projection.isValid() && !nativeDropReady(store,projection))return;
         var drop=projection!=null&&projection.isValid()?store.getComponent(projection,TransformComponent.getComponentType()):null;
         var q=drop!=null?drop.getPosition():null;
         for(var player:world.getPlayerRefs()){
@@ -337,36 +452,8 @@ public final class HytaleGearLoot implements AutoCloseable {
             if(entity!=null&&entity.getPageManager().getCustomPage() instanceof InventoryProbePage page
                     &&page.ownsSpatialAlias(event.getInventorySectionId())){
                 event.setCancelled(true); // The paired native container is empty; Hywind owns this source.
-                UUID entry=page.spatialEntryForDrop(event.getInventorySectionId(),event.getSlotId());
-                if(entry!=null){
-                    int requestedQuantity=page.consumeDropQuantity(event.getSlotId());
-                    var component=store.getComponent(actor,SpatialBagComponent.getComponentType());
-                    var saved=component==null?null:component.state(player.getUuid()).entry(entry).orElse(null);
-                    if(saved!=null&&!GearNativeItems.managed(saved.payload()))
-                        spatialStockDrop(store,actor,player,page,entry,requestedQuantity);
-                    else spatialIronDrop(store,actor,player,page,entry);
-                    return;
-                }
-                var nativeSource=page.nativeStorageForDrop(event.getInventorySectionId(),event.getSlotId());
-                var storage=store.getComponent(actor,InventoryComponent.Storage.getComponentType());
-                if(nativeSource==null||storage==null||nativeSource.slot()>=storage.getInventory().getCapacity()
-                        ||!nativeSource.fingerprint().equals(storage.getInventory().getItemStack(nativeSource.slot()))){
-                    notice(player,"Drop source changed. Refresh Inventory and try again.");return;
-                }
-                var stack=nativeSource.fingerprint();
-                if(GearNativeItems.managed(stack)){
-                    try{var gear=GearNativeItems.read(stack);
-                        IronSentinelSourceEligibility.requireLoaded(gear);
-                        playerIronDrop(store,actor,player,storage.getInventory(),nativeSource.slot(),stack,gear);
-                    }catch(RuntimeException invalid){notice(player,"Managed gear drop denied: "+invalid.getMessage());}
-                }else{
-                    // Mirror the native DropItemStack post-event operation against
-                    // real Storage, never against the empty cursor alias.
-                    var removed=storage.getInventory().removeItemStackFromSlot(nativeSource.slot(),stack.getQuantity());
-                    if(!ItemStack.isEmpty(removed.getOutput()))
-                        com.hypixel.hytale.server.core.entity.ItemUtils.throwItem(actor,removed.getOutput(),6.0f,store);
-                }
-                page.refreshAfterSpatialDrop(actor,store);
+                dropFromWorkspace(store,actor,player,page,event.getInventorySectionId(),event.getSlotId(),
+                        page.consumeDropQuantity(event.getSlotId()));
                 return;
             }
             var section=InventoryUtils.getSectionById(actor,event.getInventorySectionId(),store);
@@ -381,6 +468,43 @@ public final class HytaleGearLoot implements AutoCloseable {
             catch(RuntimeException invalid){notice(player,"Forgeable gear drop denied: "+invalid.getMessage());return;}
             playerIronDrop(store,actor,player,section,event.getSlotId(),stack,item);
         }
+    }
+    /** CustomUI already runs on the world thread; its empty native alias is not a native drop source. */
+    public void dropFromWorkspace(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,
+                                  InventoryProbePage page,int section,short sourceCell,int quantity){
+        var entity=store.getComponent(actor,Player.getComponentType());
+        if(entity==null||entity.getPageManager().getCustomPage()!=page||!page.ownsSpatialAlias(section))return;
+        UUID entry=page.spatialEntryForDrop(section,sourceCell);
+        if(entry!=null){
+            var component=store.getComponent(actor,SpatialBagComponent.getComponentType());
+            var saved=component==null?null:component.state(player.getUuid()).entry(entry).orElse(null);
+            if(saved==null){notice(player,"Drop source changed. Refresh Inventory and try again.");return;}
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
+                    "RPG_SPATIAL_DROP_ROUTE player=%s section=%s cell=%s entry=%s kind=%s quantity=%s",
+                    player.getUuid(),section,sourceCell,entry,
+                    GearNativeItems.managed(saved.payload())?"GEAR":"STOCK",quantity);
+            if(GearNativeItems.managed(saved.payload()))spatialIronDrop(store,actor,player,page,entry);
+            else spatialStockDrop(store,actor,player,page,entry,quantity);
+            return;
+        }
+        var nativeSource=page.nativeStorageForDrop(section,sourceCell);
+        var storage=store.getComponent(actor,InventoryComponent.Storage.getComponentType());
+        if(nativeSource==null||storage==null||nativeSource.slot()>=storage.getInventory().getCapacity()
+                ||!nativeSource.fingerprint().equals(storage.getInventory().getItemStack(nativeSource.slot()))){
+            notice(player,"Drop source changed. Refresh Inventory and try again.");return;
+        }
+        var stack=nativeSource.fingerprint();
+        if(GearNativeItems.managed(stack)){
+            try{var gear=GearNativeItems.read(stack);
+                IronSentinelSourceEligibility.requireLoaded(gear);
+                playerIronDrop(store,actor,player,storage.getInventory(),nativeSource.slot(),stack,gear);
+            }catch(RuntimeException invalid){notice(player,"Managed gear drop denied: "+invalid.getMessage());}
+        }else{
+            var removed=storage.getInventory().removeItemStackFromSlot(nativeSource.slot(),stack.getQuantity());
+            if(!ItemStack.isEmpty(removed.getOutput()))
+                com.hypixel.hytale.server.core.entity.ItemUtils.throwItem(actor,removed.getOutput(),6.0f,store);
+        }
+        page.refreshAfterSpatialDrop(actor,store);
     }
     /** Native outside-grid gesture -> durable stock receipt -> bag save -> protected world source. */
     private void spatialStockDrop(Store<EntityStore> store, Ref<EntityStore> actor, PlayerRef player,
@@ -407,10 +531,7 @@ public final class HytaleGearLoot implements AutoCloseable {
             var world=store.getExternalData().getWorld();
             var transform=store.getComponent(actor,TransformComponent.getComponentType());
             if(transform==null)throw new IllegalStateException("Player position unavailable");
-            var p=transform.getPosition();double yaw=transform.getRotation().yaw();
-            var safe=com.inigmasgames.hytalerpg.difficulty.HytaleDifficultyTravel.findSafe(world,
-                    p.x()-Math.sin(yaw)*3.5,p.y(),p.z()-Math.cos(yaw)*3.5);
-            if(p.distanceSquared(safe)>25)throw new IllegalStateException("No safe drop point nearby");
+            var safe=NativeInventoryDropOrigin.receiptPosition(store,actor);
             var receipt=new GearLootService.SpatialStockDropReceipt(source,operation,owner,
                     world.getWorldConfig().getUuid(),entryId,frozen(stack),before.revision(),
                     safe.x(),safe.y(),safe.z(),"PREPARED");
@@ -434,6 +555,8 @@ public final class HytaleGearLoot implements AutoCloseable {
                                 try{
                                     spawnStockDrop(store,world,receipt);
                                     io.execute(()->{try{loot.finishSpatialStockDrop(source,operation,"FINALIZED");
+                                        finalizedStockDrops.put(source,receipt);
+                                        stockDropGrace.remove(source);
                                         stockOperationSession.remove(owner,actor);busy.remove(owner);
                                         world.execute(()->{page.refreshAfterSpatialDrop(actor,store);
                                             notice(player,"Item dropped. Walk near it to collect it again.");});
@@ -448,6 +571,24 @@ public final class HytaleGearLoot implements AutoCloseable {
         }catch(RuntimeException rejected){busy.remove(owner);notice(player,"Ground drop rejected: "+rejected.getMessage());}
     }
 
+    private void beginNativeDropDelay(Store<EntityStore> store,Ref<EntityStore> ref){
+        store.getComponent(ref,ItemComponent.getComponentType()).setPickupDelay(ItemComponent.PICKUP_DELAY_DROPPED);
+        nativeDropDelayPoll.put(ref,System.nanoTime());
+    }
+    private boolean nativeDropReady(Store<EntityStore> store,Ref<EntityStore> ref){
+        Long last=nativeDropDelayPoll.get(ref);
+        if(last==null)return true;
+        long now=System.nanoTime();
+        var item=store.getComponent(ref,ItemComponent.getComponentType());
+        // PreventPickup excludes these custody-fenced entities from the native
+        // PlayerItemEntityPickupSystem. Advance its native timer here once per
+        // elapsed interval, including when more than one player scans the item.
+        if(item==null || item.pollPickupDelay((float)((now-last)/1_000_000_000.0))){
+            nativeDropDelayPoll.remove(ref);return item!=null;
+        }
+        nativeDropDelayPoll.put(ref,now);return false;
+    }
+
     private void spawnStockDrop(Store<EntityStore> store,World world,
                                 GearLootService.SpatialStockDropReceipt receipt){
         var existing=world.getEntityRef(receipt.source());
@@ -458,15 +599,19 @@ public final class HytaleGearLoot implements AutoCloseable {
             return;
         }
         var stack=ItemStack.CODEC.decode(BsonDocument.parse(receipt.payloadJson()),new ExtraInfo());
+        var velocity=NativeInventoryDropOrigin.velocity(store,world.getEntityRef(receipt.player()));
         var holder=ItemComponent.generateItemDrop(store,stack,
                 new org.joml.Vector3d(receipt.x(),receipt.y()+.5,receipt.z()),
-                com.hypixel.hytale.math.vector.Rotation3f.ZERO,0,0,0);
+                com.hypixel.hytale.math.vector.Rotation3f.ZERO,(float)velocity.x(),(float)velocity.y(),(float)velocity.z());
         if(holder==null)throw new IllegalStateException("Native item drop could not be constructed");
         holder.putComponent(UUIDComponent.getComponentType(),new UUIDComponent(receipt.source()));
         holder.putComponent(PreventPickup.getComponentType(),PreventPickup.INSTANCE);
         var spawned=store.addEntity(holder,AddReason.SPAWN);
         if(spawned==null||!spawned.isValid())throw new IllegalStateException("Native item drop could not spawn");
-        stockDropGrace.put(receipt.source(),System.currentTimeMillis()+10_000);
+        beginNativeDropDelay(store,spawned);
+        // Prevent all players from admitting the source until its drop receipt
+        // is durably finalized. Completion removes the fence immediately.
+        stockDropGrace.put(receipt.source(),Long.MAX_VALUE);
     }
 
     private void recoverStockDropOnReady(Store<EntityStore> store,Ref<EntityStore> actor,
@@ -510,6 +655,9 @@ public final class HytaleGearLoot implements AutoCloseable {
                     for(var decision:decisions){
                         try{loot.finishSpatialStockDrop(decision.getKey().source(),
                                 decision.getKey().operationId(),decision.getValue());
+                            if(decision.getValue().equals("FINALIZED"))
+                                finalizedStockDrops.put(decision.getKey().source(),decision.getKey());
+                            if(!decision.getValue().equals("QUARANTINED"))stockDropGrace.remove(decision.getKey().source());
                             if(decision.getValue().equals("QUARANTINED"))safe=false;
                         }catch(RuntimeException uncertain){safe=false;}
                     }
@@ -542,16 +690,15 @@ public final class HytaleGearLoot implements AutoCloseable {
             if(item==null||stack.getQuantity()!=1)
                 throw new IllegalArgumentException("Only exact managed gear is enabled for ground-drop QA");
             IronSentinelSourceEligibility.requireLoaded(item);
+            if(inventoryContains(store,actor,item.identity()))
+                throw new IllegalStateException("The exact gear is also present in native inventory");
             UUID operation=UUID.randomUUID();
             var planned=before.withdraw(operation,before.revision(),entryId,entry.payloadJson());
             if(!planned.accepted())throw new IllegalStateException("Bag withdrawal rejected: "+planned.receipt().outcome());
             var world=store.getExternalData().getWorld();
             var transform=store.getComponent(actor,TransformComponent.getComponentType());
             if(transform==null)throw new IllegalStateException("Player position unavailable");
-            double yaw=transform.getRotation().yaw();var p=transform.getPosition();
-            var safe=com.inigmasgames.hytalerpg.difficulty.HytaleDifficultyTravel.findSafe(world,
-                    p.x()-Math.sin(yaw)*3.5,p.y(),p.z()-Math.cos(yaw)*3.5);
-            if(p.distanceSquared(safe)>25)throw new IllegalStateException("No safe ground-drop point nearby");
+            var safe=NativeInventoryDropOrigin.receiptPosition(store,actor);
             String source=stack.getMetadata()!=null&&stack.getMetadata().containsKey(SOURCE)
                     ?stack.getMetadata().getString(SOURCE).getValue():null;
             reserved=loot.beginIronDrop(source,owner,world.getWorldConfig().getUuid(),
@@ -573,13 +720,33 @@ public final class HytaleGearLoot implements AutoCloseable {
                         failedDropSession.put(owner,actor);busy.remove(owner);
                         page.failSpatialDrop("Ground drop receipt pending. Reconnect for recovery.");return;
                     }
-                    io.execute(()->{try{
-                        publish(loot.acknowledgeIronDrop(event,owner,identity));
-                        world.execute(()->{try{project(world);page.refreshAfterSpatialDrop(actor,store);
+                    try{io.execute(()->{
+                        GearLootService.Loot acknowledged;
+                        try{acknowledged=loot.acknowledgeIronDrop(event,owner,identity);}
+                        catch(RuntimeException uncertain){failedDropSession.put(owner,actor);busy.remove(owner);
+                            world.execute(()->page.failSpatialDrop("Ground drop receipt uncertain. Reconnect for recovery."));return;}
+                        // The bag save and custody receipt are durable now. UI projection is a
+                        // separate world task and must never retain the player-wide transaction lock.
+                        busy.remove(owner);
+                        try{publish(acknowledged);}catch(RuntimeException projection){
+                            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                                    "RPG_SPATIAL_DROP_FINALIZED_PROJECTION_FAILED player=%s item=%s error=%s",
+                                    owner,identity,projection);}
+                        try{world.execute(()->{try{project(world);page.refreshAfterSpatialDrop(actor,store);
                             notice(player,"Gear dropped to protected ground custody. Walk near it to collect it again.");}
-                            finally{busy.remove(owner);}});
-                    }catch(RuntimeException uncertain){failedDropSession.put(owner,actor);busy.remove(owner);
-                        world.execute(()->page.failSpatialDrop("Ground drop receipt uncertain. Reconnect for recovery."));}});
+                            catch(RuntimeException projection){
+                                com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                                        "RPG_SPATIAL_DROP_FINALIZED_UI_FAILED player=%s item=%s error=%s",
+                                        owner,identity,projection);}});
+                        }catch(RuntimeException closed){
+                            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                                    "RPG_SPATIAL_DROP_FINALIZED_QUEUE_FAILED player=%s item=%s error=%s",
+                                    owner,identity,closed);}
+                    });}catch(RuntimeException rejected){
+                        failedDropSession.put(owner,actor);
+                        busy.remove(owner);
+                        page.failSpatialDrop("Ground drop receipt pending. Reconnect for recovery.");
+                    }
                 });}catch(RuntimeException closed){failedDropSession.put(owner,actor);busy.remove(owner);}
             });
         }catch(RuntimeException error){
@@ -603,10 +770,7 @@ public final class HytaleGearLoot implements AutoCloseable {
         try{
             var world=store.getExternalData().getWorld();var transform=store.getComponent(actor,TransformComponent.getComponentType());
             if(transform==null)throw new IllegalStateException("Player position unavailable");
-            double yaw=transform.getRotation().yaw();var p=transform.getPosition();
-            var safe=com.inigmasgames.hytalerpg.difficulty.HytaleDifficultyTravel.findSafe(world,
-                    p.x()-Math.sin(yaw)*3.5,p.y(),p.z()-Math.cos(yaw)*3.5);
-            if(p.distanceSquared(safe)>25)throw new IllegalStateException("No safe iron drop point within forge range");
+            var safe=NativeInventoryDropOrigin.receiptPosition(store,actor);
             var point=new Vec3(safe.x(),safe.y(),safe.z());
             String source=stack.getMetadata().containsKey(SOURCE)?stack.getMetadata().getString(SOURCE).getValue():null;
             if(source==null&&!item.qaOnly()){
@@ -856,7 +1020,10 @@ public final class HytaleGearLoot implements AutoCloseable {
         if(bagOwner!=null && bagOwner.mode(owner)!=SpatialBagComponent.OwnershipMode.NATIVE){
             if(!busy.add(owner))throw new IllegalArgumentException("Inventory transaction pending");
             spatialOperationSession.put(owner,actor);
-            spatial.acceptManagedWorldItem(row,stack,store,actor,player,world,reply,()->busy.remove(owner));
+            spatial.acceptManagedWorldItem(row,stack,store,actor,player,world,reply,()->{
+                spatialOperationSession.remove(owner,actor);
+                busy.remove(owner);
+            });
             return;
         }
         var inventory=InventoryComponent.getCombined(store,actor,InventoryComponent.HOTBAR_STORAGE_BACKPACK);
@@ -920,17 +1087,20 @@ public final class HytaleGearLoot implements AutoCloseable {
     }
     private static String frozen(ItemStack stack){return ItemStack.isEmpty(stack)?null:
             ItemStack.CODEC.encode(stack,new ExtraInfo()).asDocument().toJson();}
-    private static boolean sameFrozen(ItemStack stack,String json){
+    static boolean sameFrozen(ItemStack stack,String json){
         if(ItemStack.isEmpty(stack))return json==null;
         if(json==null)return false;
-        var expected=ItemStack.CODEC.decode(BsonDocument.parse(json),new ExtraInfo());
-        return withoutPresentation(stack).equals(withoutPresentation(expected));
+        var actual=ItemStack.CODEC.encode(stack,new ExtraInfo()).asDocument();
+        var expected=BsonDocument.parse(json);
+        stripPresentation(actual);
+        stripPresentation(expected);
+        return actual.equals(expected);
     }
-    private static ItemStack withoutPresentation(ItemStack stack){
-        var metadata=stack.getMetadata();
-        if(metadata==null||!metadata.containsKey(com.hypixel.hytale.server.core.asset.type.item.config.metadata.ItemDisplayMetadata.KEY))return stack;
-        var copy=metadata.clone();copy.remove(com.hypixel.hytale.server.core.asset.type.item.config.metadata.ItemDisplayMetadata.KEY);
-        return stack.withMetadata(copy);
+    private static void stripPresentation(BsonDocument item){
+        if(!item.containsKey("Metadata"))return;
+        var metadata=item.getDocument("Metadata");
+        metadata.remove(com.hypixel.hytale.server.core.asset.type.item.config.metadata.ItemDisplayMetadata.KEY);
+        if(metadata.isEmpty())item.remove("Metadata");
     }
     private static UUID displacementId(UUID operation,String section,short slot){
         return UUID.nameUUIDFromBytes((operation+":"+section+":"+slot).getBytes(java.nio.charset.StandardCharsets.UTF_8));
@@ -965,6 +1135,44 @@ public final class HytaleGearLoot implements AutoCloseable {
     /** Copied-save QA entry: one prepared receipt, one player save, then finalization. */
     public void transferEquipment(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,
                                   World world,UUID sourceId,String requestedSlot,boolean equip,
+                                  java.util.function.Consumer<String> reply){
+        transferEquipment(store,actor,player,world,sourceId,requestedSlot,equip,-1,-1,null,reply);
+    }
+    /** Read the exact equipped payload for a UI selection without changing native custody. */
+    public ItemStack equipmentForUi(Store<EntityStore> store,Ref<EntityStore> actor,String slot){
+        var target=equipmentSlot(slot,store,actor);
+        return target==null?null:target.read();
+    }
+    /** Read-only preview and commit gate share the exact post-displacement attribute view. */
+    public String requirementFeedback(Store<EntityStore> store, Ref<EntityStore> actor,
+                                      ItemStack incoming, String slot) {
+        if (!GearNativeItems.managed(incoming)) return null;
+        try { validateTarget(incoming, slot); }
+        catch (IllegalArgumentException incompatibleSlot) { return null; }
+        var view = equipment.view(actor, store);
+        if (view == null) return null;
+        var gear = GearNativeItems.read(incoming);
+        var removed = new HashSet<UUID>();
+        for (String displaced : List.of(slot,
+                slot.equals("held") && twoHanded(incoming) ? "offhand" :
+                        slot.equals("offhand") ? "held" : slot)) {
+            var target = equipmentSlot(displaced, store, actor);
+            if (target == null) continue;
+            var old = target.read();
+            if (GearNativeItems.managed(old)
+                    && (displaced.equals(slot) || slot.equals("held") && twoHanded(incoming)
+                        || slot.equals("offhand") && twoHanded(old)))
+                removed.add(GearNativeItems.read(old).identity());
+        }
+        var survivors = view.equipped().stream().filter(item -> !removed.contains(item.identity())).toList();
+        var attrs = GearRequirements.resolve(view.level(), view.baseline(), survivors.stream()
+                .map(item -> new GearRequirements.Equipped(item.identity(), item.requirements(),
+                        GearAffixRuntime.attributes(item))).toList()).permanentAttributes();
+        return gear.requirements().playerFeedback(view.level(), attrs);
+    }
+    public void transferEquipment(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,
+                                  World world,UUID sourceId,String requestedSlot,boolean equip,
+                                  int targetX,int targetY,String expectedPayload,
                                   java.util.function.Consumer<String> reply){
         UUID owner=player.getUuid();String slot=requestedSlot.toLowerCase(Locale.ROOT);
         if(!java.nio.file.Files.isRegularFile(spatialQaMarker))throw new IllegalStateException("Equipment QA requires copied-save marker");
@@ -1008,27 +1216,19 @@ public final class HytaleGearLoot implements AutoCloseable {
                         changes.add(new GearLootService.EquipmentSlotChange(held.section(),held.index(),frozen(held.read()),null));
                     }
                 }
-                if(GearNativeItems.managed(incoming)){
-                    var view=equipment.view(actor,store);
-                    if(view==null)throw new IllegalStateException("Character attributes not ready");
-                    var gear=GearNativeItems.read(incoming);
-                    var removed=new HashSet<UUID>();
-                    for(var change:changes)if(change.beforeJson()!=null){
-                        var prior=ItemStack.CODEC.decode(BsonDocument.parse(change.beforeJson()),new ExtraInfo());
-                        if(GearNativeItems.managed(prior))removed.add(GearNativeItems.read(prior).identity());
-                    }
-                    var survivors=view.equipped().stream().filter(g->!removed.contains(g.identity())).toList();
-                    var attrs=GearRequirements.resolve(view.level(),view.baseline(),survivors.stream()
-                            .map(g->new GearRequirements.Equipped(g.identity(),g.requirements(),GearAffixRuntime.attributes(g))).toList()).permanentAttributes();
-                    if(!gear.requirements().failures(view.level(),attrs,gear.category()==GearCatalog.Category.ARMOR).isEmpty())
-                        throw new IllegalArgumentException("Equipment requirements not met");
-                }
+                if (GearNativeItems.managed(incoming) && equipment.view(actor, store) == null)
+                    throw new IllegalStateException("Character attributes not ready");
+                String requirement = requirementFeedback(store, actor, incoming, slot);
+                if (requirement != null) throw new IllegalArgumentException(requirement);
                 var planned=before.exchange(operation,before.revision(),sourceId,entry.payloadJson(),displaced,FootprintCatalog.loadDefault());
                 if(!planned.accepted())throw new IllegalStateException("Equipment exchange rejected: "+planned.receipt().outcome());
                 commitEquipment(store,actor,player,world,component,before,planned.bag(),changes,operation,reply);
             }else{
                 if(ItemStack.isEmpty(old))throw new IllegalArgumentException("Equipment slot empty");
-                var planned=before.offer(operation,before.revision(),old,FootprintCatalog.loadDefault());
+                if(expectedPayload!=null&&!sameFrozen(old,expectedPayload))
+                    throw new IllegalStateException("Equipped item changed after selection");
+                var planned=before.offerForEquipmentReturn(operation,operation,before.revision(),old,
+                        FootprintCatalog.loadDefault(),targetX,targetY);
                 if(!planned.accepted())throw new IllegalStateException("Unequip rejected: "+planned.receipt().outcome());
                 changes.add(new GearLootService.EquipmentSlotChange(target.section(),target.index(),frozen(old),null));
                 commitEquipment(store,actor,player,world,component,before,planned.bag(),changes,operation,reply);
@@ -1052,6 +1252,13 @@ public final class HytaleGearLoot implements AutoCloseable {
                 targetMode==null?null:component.mode(owner).name(),targetMode==null?null:targetMode.name(),"PREPARED");
         io.execute(()->{
             try{loot.prepareSpatialEquipment(receipt);}catch(RuntimeException failed){
+                // The size guard runs before any receipt file is written. It cannot
+                // leave uncertain custody, so a retry must not inherit a busy lease.
+                if("ENCOUNTER_FILE_BOUNDS".equals(failed.getMessage())){
+                    busy.remove(owner);
+                    reply.accept("Equipment journal too large; transfer was not started.");
+                    return;
+                }
                 equipmentOperationSession.put(owner,actor);
                 reply.accept("Equipment journal uncertain; reconnect for automatic recovery: "+failed.getMessage());return;}
             if(consumeCopiedFault("equipment-after-prepare")){
@@ -1060,19 +1267,32 @@ public final class HytaleGearLoot implements AutoCloseable {
             }
             world.execute(()->{
                 var current=world.getEntityRef(owner);
-                if(current==null||!current.isValid()||current!=actor||player.getReference()!=actor
-                        ||store.getComponent(actor,SpatialBagComponent.getComponentType())!=component
-                        ||component.state(owner)!=before||!equipmentBeforeMatches(changes,store,actor)){
+                boolean currentState;
+                try{
+                    currentState=current!=null&&current.isValid()&&current==actor&&player.getReference()==actor
+                            &&store.getComponent(actor,SpatialBagComponent.getComponentType())==component
+                            &&component.state(owner)==before&&equipmentBeforeMatches(changes,store,actor);
+                }catch(RuntimeException preflight){
+                    com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                            "RPG_EQUIPMENT_PREFLIGHT_FAILED player=%s operation=%s error=%s",owner,operation,preflight);
+                    currentState=false;
+                }
+                if(!currentState){
                     io.execute(()->{try{loot.finishSpatialEquipment(operation,"ABORTED");}
                         finally{busy.remove(owner);reply.accept("Equipment transfer cancelled before publication.");}});return;}
+                var originalSlots=new ArrayList<EquipmentSlot>();
+                var originalStacks=new ArrayList<ItemStack>();
                 try{
                     equipmentOperationSession.put(owner,actor);
                     for(var change:changes){
                         var nativeSlot=equipmentSlotByReceipt(change,store,actor);
+                        originalSlots.add(nativeSlot);
+                        originalStacks.add(nativeSlot.read());
+                    }
+                    for(var change:changes){
+                        var nativeSlot=equipmentSlotByReceipt(change,store,actor);
                         var payload=change.afterJson()==null?ItemStack.EMPTY:ItemStack.CODEC.decode(BsonDocument.parse(change.afterJson()),new ExtraInfo());
-                        var transaction=nativeSlot.container().setItemStackForSlot(nativeSlot.index(),payload);
-                        if(!transaction.succeeded()||!sameFrozen(nativeSlot.read(),change.afterJson()))
-                            throw new IllegalStateException("Native equipment write rejected");
+                        writeNativeEquipment(nativeSlot.container(),nativeSlot.index(),payload,change.afterJson());
                     }
                     if(targetMode==null)component.publish(owner,before,after);
                     else component.publishCopiedMigration(owner,before,after,targetMode);
@@ -1088,7 +1308,52 @@ public final class HytaleGearLoot implements AutoCloseable {
                             reply.accept("Equipment transfer saved and finalized.");}
                         catch(RuntimeException uncertain){reply.accept("Equipment saved; receipt uncertain. Reconnect for recovery.");}});
                     });
-                }catch(RuntimeException uncertain){reply.accept("Equipment state uncertain; reconnect for automatic recovery: "+uncertain.getMessage());}
+                }catch(RuntimeException uncertain){
+                    com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                            "RPG_EQUIPMENT_COMMIT_FAILED player=%s operation=%s bagRevision=%d error=%s",
+                            owner,operation,component.state(owner).revision(),uncertain);
+                    if(component.state(owner)!=before){
+                        reply.accept("Equipment save uncertain; reconnect for automatic recovery.");
+                        return;
+                    }
+                    try{
+                        for(int i=0;i<originalSlots.size();i++){
+                            var change=changes.get(i);
+                            var nativeSlot=originalSlots.get(i);
+                            var original=originalStacks.get(i);
+                            if(!sameFrozen(nativeSlot.read(),change.beforeJson())){
+                                var restored=nativeSlot.container().setItemStackForSlot(nativeSlot.index(),original,false);
+                                if(!restored.succeeded()||!sameFrozen(nativeSlot.read(),change.beforeJson()))
+                                    throw new IllegalStateException("Native equipment rollback rejected");
+                            }
+                        }
+                    }catch(RuntimeException rollback){
+                        com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                                "RPG_EQUIPMENT_ROLLBACK_FAILED player=%s operation=%s error=%s",owner,operation,rollback);
+                        reply.accept("Equipment state uncertain; reconnect for automatic recovery.");
+                        return;
+                    }
+                    saveNative(store,actor,world).whenComplete((ignored,error)->{
+                        if(error!=null){
+                            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                                    "RPG_EQUIPMENT_ROLLBACK_SAVE_FAILED player=%s operation=%s error=%s",owner,operation,error);
+                            reply.accept("Equipment save uncertain; reconnect for automatic recovery.");
+                            return;
+                        }
+                        io.execute(()->{
+                            try{
+                                loot.finishSpatialEquipment(operation,"ABORTED");
+                                equipmentOperationSession.remove(owner,actor);
+                                busy.remove(owner);
+                                reply.accept("Equipment transfer rejected; original gear restored. Try again.");
+                            }catch(RuntimeException finish){
+                                com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                                        "RPG_EQUIPMENT_ABORT_FAILED player=%s operation=%s error=%s",owner,operation,finish);
+                                reply.accept("Equipment journal uncertain; reconnect for automatic recovery.");
+                            }
+                        });
+                    });
+                }
             });
         });
     }
@@ -1101,6 +1366,13 @@ public final class HytaleGearLoot implements AutoCloseable {
             case "STORAGE"->store.getComponent(actor,InventoryComponent.Storage.getComponentType()).getInventory();
             default->throw new IllegalArgumentException("Invalid equipment section");};
         return new EquipmentSlot(change.section(),change.slot(),component);
+    }
+    static void writeNativeEquipment(ItemContainer container,short index,ItemStack payload,String expectedJson){
+        // The transfer already validates the native slot and stat requirements. ADD
+        // filters belong to client inventory moves and can reject server-owned bags.
+        var transaction=container.setItemStackForSlot(index,payload,false);
+        if(!transaction.succeeded()||!sameFrozen(container.getItemStack(index),expectedJson))
+            throw new IllegalStateException("Native equipment write rejected");
     }
     private static boolean equipmentBeforeMatches(List<GearLootService.EquipmentSlotChange> changes,
                                                   Store<EntityStore> store,Ref<EntityStore> actor){
@@ -1204,14 +1476,16 @@ public final class HytaleGearLoot implements AutoCloseable {
         if(!busy.add(owner))return;
         io.execute(()->{
             List<GearLootService.SpatialEquipmentReceipt> pending;
+            // QUARANTINED is terminal: it records an unresolved historical transfer,
+            // not an in-flight operation that may retain the player's global lock.
             try{pending=loot.spatialEquipmentReceipts().stream().filter(r->r.player().equals(owner)
-                    &&Set.of("PREPARED","QUARANTINED").contains(r.stage())).toList();}
+                    &&r.stage().equals("PREPARED")).toList();}
             catch(RuntimeException error){com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
-                    "RPG_SPATIAL_EQUIPMENT_RECOVERY_READ_FAILED player=%s error=%s",owner,error);return;}
+                    "RPG_SPATIAL_EQUIPMENT_RECOVERY_READ_FAILED player=%s error=%s",owner,error);busy.remove(owner);return;}
             world.execute(()->{
-                if(world.getEntityRef(owner)!=actor||!actor.isValid())return;
+                if(world.getEntityRef(owner)!=actor||!actor.isValid()){busy.remove(owner);return;}
                 var component=store.getComponent(actor,SpatialBagComponent.getComponentType());
-                if(component==null)return;
+                if(component==null){busy.remove(owner);return;}
                 var snapshot=component.state(owner).toBson();
                 var decisions=new ArrayList<Map.Entry<UUID,String>>();
                 for(var receipt:pending){
@@ -1230,19 +1504,19 @@ public final class HytaleGearLoot implements AutoCloseable {
                     decisions.add(Map.entry(receipt.operationId(),after?"FINALIZED":before?"ABORTED":"QUARANTINED"));
                 }
                 io.execute(()->{
-                    boolean safe=true;
                     for(var decision:decisions)try{
                         loot.finishSpatialEquipment(decision.getKey(),decision.getValue());
-                        if(decision.getValue().equals("QUARANTINED"))safe=false;
                         com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
                                 "RPG_SPATIAL_EQUIPMENT_RECOVERY player=%s operation=%s result=%s",owner,decision.getKey(),decision.getValue());
                     }catch(RuntimeException error){
-                        safe=false;
                         com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
                                 "RPG_SPATIAL_EQUIPMENT_RECOVERY_FAILED player=%s operation=%s error=%s",owner,decision.getKey(),error);
                     }
                     equipmentOperationSession.remove(owner);
-                    if(safe){busy.remove(owner);world.execute(recovered);}
+                    // A quarantined receipt remains in the journal for investigation;
+                    // it must not strand unrelated drops, pickups, or subsequent recovery.
+                    busy.remove(owner);
+                    world.execute(recovered);
                 });
             });
         });
@@ -1250,17 +1524,22 @@ public final class HytaleGearLoot implements AutoCloseable {
     /** Explicit copied-save stock admission; the holder guard prevents native pickup first. */
     public void takeNearbyStock(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,World world,
                                 java.util.function.Consumer<String> reply){
+        takeNearbyStock(store,actor,player,world,null,reply);
+    }
+    private void takeNearbyStock(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,World world,
+                                 Ref<EntityStore> selected,java.util.function.Consumer<String> reply){
         UUID owner=player.getUuid();
-        if(!java.nio.file.Files.isRegularFile(spatialQaMarker))throw new IllegalStateException("Stock QA marker required");
+        if(!java.nio.file.Files.isRegularFile(spatialQaMarker))throw new IllegalStateException("Protected spatial custody is not enabled");
         if(!busy.add(owner)){reply.accept("Inventory transaction pending");return;}
         try{
             var component=store.getComponent(actor,SpatialBagComponent.getComponentType());
             if(component==null||component.mode(owner)==SpatialBagComponent.OwnershipMode.NATIVE)
-                throw new IllegalStateException("Attach the QA bag first");
+                throw new IllegalStateException("Protected spatial bag is not active");
             var playerPosition=store.getComponent(actor,TransformComponent.getComponentType()).getPosition();
-            var nearest=new java.util.concurrent.atomic.AtomicReference<Ref<EntityStore>>();
+            var effects=GearNativeItems.effects(actor,store).snapshot();
+            var nearest=new java.util.concurrent.atomic.AtomicReference<Ref<EntityStore>>(selected);
             var distance=new double[]{36};
-            store.forEachChunk(ItemComponent.getComponentType(),(chunk,buffer)->{
+            if(selected==null)store.forEachChunk(ItemComponent.getComponentType(),(chunk,buffer)->{
                 for(int index=0;index<chunk.size();index++){
                     var candidate=chunk.getReferenceTo(index);
                     if(store.getComponent(candidate,PreventPickup.getComponentType())==null)continue;
@@ -1276,7 +1555,12 @@ public final class HytaleGearLoot implements AutoCloseable {
             });
             var source=nearest.get();
             if(source==null)throw new IllegalStateException("No protected stock item within six blocks; UUID and pickup fence required");
-            var sourceUuid=store.getComponent(source,UUIDComponent.getComponentType()).getUuid();
+            var sourceComponent=store.getComponent(source,UUIDComponent.getComponentType());
+            if(sourceComponent==null||System.currentTimeMillis()<stockDropGrace.getOrDefault(sourceComponent.getUuid(),0L))
+                throw new IllegalStateException("Protected stock source is still in drop custody");
+            if(selected!=null&&!stockReachAllowed(store,actor,source,effects,2.5))
+                throw new IllegalStateException("Protected source no longer meets pickup reach or line of access");
+            var sourceUuid=sourceComponent.getUuid();
             var stack=store.getComponent(source,ItemComponent.getComponentType()).getItemStack();
             var before=component.state(owner);UUID operation=UUID.randomUUID();
             var planned=before.offerStacking(operation,before.revision(),stack,FootprintCatalog.loadDefault());
@@ -1297,6 +1581,9 @@ public final class HytaleGearLoot implements AutoCloseable {
                             ||store.getComponent(actor,SpatialBagComponent.getComponentType())!=component
                             ||component.state(owner)!=before||currentSource!=source||!source.isValid()
                             ||store.getComponent(source,PreventPickup.getComponentType())==null
+                            ||System.currentTimeMillis()<stockDropGrace.getOrDefault(sourceUuid,0L)
+                            ||selected!=null&&!stockReachAllowed(store,actor,source,
+                                    GearNativeItems.effects(actor,store).snapshot(),2.5)
                             ||!sameFrozen(store.getComponent(source,ItemComponent.getComponentType()).getItemStack(),receipt.payloadJson())){
                         io.execute(()->{try{loot.finishSpatialStock(sourceUuid,operation,"ABORTED");}
                             finally{busy.remove(owner);reply.accept("Stock transfer cancelled; source remains protected.");}});return;}
@@ -1326,6 +1613,31 @@ public final class HytaleGearLoot implements AutoCloseable {
             });
         }catch(RuntimeException rejected){busy.remove(owner);reply.accept("Stock transfer rejected: "+rejected.getMessage());}
     }
+    /** The ordinary protected stock radius remains 2.5. Only audited materials use the extension. */
+    private static boolean stockReachAllowed(Store<EntityStore> store,Ref<EntityStore> actor,
+                                             Ref<EntityStore> source,GearEffectSnapshot effects,double normalReach){
+        if(source==null||!source.isValid()||store.getComponent(source,PreventPickup.getComponentType())==null)return false;
+        var player=store.getComponent(actor,TransformComponent.getComponentType());
+        var dropped=store.getComponent(source,TransformComponent.getComponentType());
+        var item=store.getComponent(source,ItemComponent.getComponentType());
+        if(player==null||dropped==null||item==null||ItemStack.isEmpty(item.getItemStack()))return false;
+        double distance=player.getPosition().distance(dropped.getPosition());
+        if(distance<=normalReach)return true;
+        var kind=NativeAffixMaterialPickup.describe(item.getItemStack());
+        return NativeAffixMaterialPickup.admit(effects,normalReach,new NativeAffixMaterialPickup.Candidate(
+                kind,distance,true,true,true,stockLineOfAccess(store,player.getPosition(),dropped.getPosition())));
+    }
+    private static boolean stockLineOfAccess(Store<EntityStore> store,org.joml.Vector3d from,org.joml.Vector3d to){
+        var collision=new com.hypixel.hytale.server.core.modules.collision.CollisionResult();
+        collision.setDefaultPlayerSettings();collision.disableCharacterCollisions();
+        collision.disableTriggerBlocks();collision.disableDamageBlocks();
+        com.hypixel.hytale.server.core.modules.collision.CollisionModule.findCollisions(
+                new com.hypixel.hytale.math.shape.Box(-.01,-.01,-.01,.01,.01,.01),
+                new org.joml.Vector3d(from).add(0,1,0),new org.joml.Vector3d(to).sub(from),collision,store);
+        for(int i=0;i<collision.getBlockCollisionCount();i++)
+            if(collision.getBlockCollision(i).collisionStart<1-1e-6)return false;
+        return true;
+    }
     private void recoverStockOnReady(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef player,
                                      World world,Runnable recovered){
         UUID owner=player.getUuid();
@@ -1337,13 +1649,13 @@ public final class HytaleGearLoot implements AutoCloseable {
             List<GearLootService.SpatialStockReceipt> receipts;
             try{receipts=loot.spatialStockReceipts().stream().filter(r->r.player().equals(owner)
                     &&r.world().equals(world.getWorldConfig().getUuid())
-                    &&Set.of("PREPARED","FINALIZED","QUARANTINED").contains(r.stage())).toList();}
+                    &&Set.of("PREPARED","FINALIZED").contains(r.stage())).toList();}
             catch(RuntimeException failure){com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
-                    "RPG_SPATIAL_STOCK_RECOVERY_READ_FAILED player=%s error=%s",owner,failure);return;}
+                    "RPG_SPATIAL_STOCK_RECOVERY_READ_FAILED player=%s error=%s",owner,failure);busy.remove(owner);return;}
             world.execute(()->{
-                if(world.getEntityRef(owner)!=actor||!actor.isValid())return;
+                if(world.getEntityRef(owner)!=actor||!actor.isValid()){busy.remove(owner);return;}
                 var component=store.getComponent(actor,SpatialBagComponent.getComponentType());
-                if(component==null)return;
+                if(component==null){busy.remove(owner);return;}
                 var bag=component.state(owner);
                 var decisions=new ArrayList<Map.Entry<GearLootService.SpatialStockReceipt,String>>();
                 for(var receipt:receipts){
@@ -1368,18 +1680,20 @@ public final class HytaleGearLoot implements AutoCloseable {
                     decisions.add(Map.entry(receipt,decision));
                 }
                 io.execute(()->{
-                    boolean safe=true;
                     for(var decision:decisions){
                         var receipt=decision.getKey();String stage=decision.getValue();
                         try{
-                            if(stage.equals("QUARANTINED"))safe=false;
                             if(receipt.stage().equals("PREPARED"))loot.finishSpatialStock(receipt.source(),receipt.operationId(),stage);
                             com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
                                     "RPG_SPATIAL_STOCK_RECOVERY player=%s source=%s result=%s",owner,receipt.source(),stage);
-                        }catch(RuntimeException uncertain){safe=false;}
+                        }catch(RuntimeException uncertain){
+                            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                                    "RPG_SPATIAL_STOCK_RECOVERY_FAILED player=%s source=%s error=%s",owner,receipt.source(),uncertain);
+                        }
                     }
                     stockOperationSession.remove(owner);
-                    if(safe){busy.remove(owner);world.execute(recovered);}
+                    busy.remove(owner);
+                    world.execute(recovered);
                 });
             });
         });
@@ -1393,6 +1707,7 @@ public final class HytaleGearLoot implements AutoCloseable {
         try{io.execute(()->{try{
             var pending=loot.spatialPickupReceipts().stream().filter(r->r.player().equals(owner)
                     &&!Set.of("FINALIZED","ABORTED").contains(r.stage())).toList();
+            if(pending.isEmpty()){busy.remove(owner);return;}
             world.execute(()->{
                 var current=world.getEntityRef(owner);
                 if(current==null||!current.isValid()||current!=player.getReference()){
@@ -1430,8 +1745,39 @@ public final class HytaleGearLoot implements AutoCloseable {
                 }catch(RuntimeException unresolved){reply.accept("Spatial recovery quarantined: "+unresolved.getMessage());}});}catch(RuntimeException rejected){
                     reply.accept("Spatial recovery queue unavailable.");}
             });
-        }catch(RuntimeException error){reply.accept("Spatial recovery: "+error.getMessage());}});
-        }catch(RuntimeException rejected){reply.accept("Spatial recovery queue unavailable.");}
+        }catch(RuntimeException error){busy.remove(owner);reply.accept("Spatial recovery: "+error.getMessage());}});
+        }catch(RuntimeException rejected){busy.remove(owner);reply.accept("Spatial recovery queue unavailable.");}
+    }
+    /** Diagnostic ownership only; a receipt remains the authority for uncertain custody. */
+    private static final class BusyTransactions {
+        private record Lease(String holder,long startedNanos,java.util.concurrent.atomic.AtomicLong lastWarningNanos) {}
+        private final ConcurrentHashMap<UUID,Lease> holders=new ConcurrentHashMap<>();
+        boolean add(UUID owner){
+            long now=System.nanoTime();
+            String caller=StackWalker.getInstance().walk(frames->frames.skip(1)
+                    .map(StackWalker.StackFrame::getMethodName).findFirst().orElse("unknown"));
+            var candidate=new Lease(caller,now,new java.util.concurrent.atomic.AtomicLong());
+            var held=holders.putIfAbsent(owner,candidate);
+            if(held==null)return true;
+            long ageMs=TimeUnit.NANOSECONDS.toMillis(now-held.startedNanos());
+            long warned=held.lastWarningNanos().get();
+            if(ageMs>=5000&&(warned==0||now-warned>=TimeUnit.SECONDS.toNanos(10))
+                    &&held.lastWarningNanos().compareAndSet(warned,now))
+                com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                        "RPG_INVENTORY_TRANSACTION_PENDING player=%s requested=%s holder=%s heldMs=%d",
+                        owner,caller,held.holder(),ageMs);
+            return false;
+        }
+        boolean contains(UUID owner){return holders.containsKey(owner);}
+        boolean remove(UUID owner){
+            var held=holders.remove(owner);
+            if(held==null)return false;
+            long ageMs=TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-held.startedNanos());
+            if(ageMs>=5000)com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
+                    "RPG_INVENTORY_TRANSACTION_RELEASED player=%s holder=%s heldMs=%d",
+                    owner,held.holder(),ageMs);
+            return true;
+        }
     }
     private static long elapsedMs(long start,long end){return TimeUnit.NANOSECONDS.toMillis(end-start);}
     private static boolean sameIdentity(ItemStack stack,UUID id){try{return stack!=null&&stack.getMetadata()!=null&&stack.getMetadata().containsKey(GearNativeItems.KEY)&&GearInstance.fromJson(stack.getMetadata().getString(GearNativeItems.KEY).getValue()).identity().equals(id);}catch(RuntimeException invalid){return false;}}

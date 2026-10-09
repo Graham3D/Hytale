@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.canvasui.runtime.CanvasSession;
+import com.inigmasgames.canvasui.CanvasUI;
 
 import javax.annotation.Nonnull;
 
@@ -43,7 +44,20 @@ public final class CanvasPage extends InteractiveCustomUIPage<CanvasPage.Data> {
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, Data data) {
         String value = "zoom-slider".equals(data.targetKind)
                 ? Float.toString(data.zoomValue) : data.value;
-        backend.handleEvent(data.event, data.targetKind, data.targetId, value);
+        var observer = CanvasUI.interactionObserver();
+        boolean observing;
+        try { observing = observer.enabled(session.playerId()); }
+        catch (RuntimeException diagnosticFailure) { observing = false; }
+        if (!observing) { backend.handleEvent(data.event, data.targetKind, data.targetId, value); return; }
+        com.inigmasgames.canvasui.api.CanvasInteractionObserver.Action action;
+        try {
+            action = observer.begin(session.playerId(), session.canvas().definition().canvasId(),
+                data.targetId == null || data.targetId.isBlank() ? data.targetKind : data.targetId, data.targetKind,
+                data.event, Double.NaN, Double.NaN); }
+        catch (RuntimeException diagnosticFailure) { backend.handleEvent(data.event, data.targetKind, data.targetId, value); return; }
+        try { backend.handleEvent(data.event, data.targetKind, data.targetId, value); }
+        catch (RuntimeException failure) { try { action.finish("HANDLER_EXCEPTION"); } catch (RuntimeException ignored) {} throw failure; }
+        try { action.finish("HANDLED"); } catch (RuntimeException ignored) {}
     }
 
     @Override

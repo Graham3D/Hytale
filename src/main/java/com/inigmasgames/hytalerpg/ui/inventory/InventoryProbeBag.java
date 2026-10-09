@@ -71,7 +71,15 @@ final class InventoryProbeBag {
         int artHeight = (int) Math.floor(entry.size().height() * 64 * scale);
         Anchor artAnchor = anchor((width - artWidth) / 2, (height - artHeight) / 2,
                 artWidth, artHeight);
-        commands.setObject(selector + " #PoseArt.Anchor", artAnchor);
+        String nativeId = GearNativeItems.nativeId(itemId);
+        var authoredArt = WeaponArtCatalog.find(nativeId);
+        if (authoredArt != null) {
+            var fit = authoredArt.fit(width, height);
+            commands.setObject(selector + " #PoseArt.Anchor", anchor(fit.left(), fit.top(),
+                    fit.width(), fit.height()));
+        } else {
+            commands.setObject(selector + " #PoseArt.Anchor", artAnchor);
+        }
         commands.setObject(selector + " #RarityArt.Anchor", artAnchor);
         commands.setObject(selector + " #RarityGlow.Anchor", artAnchor);
         // ItemIcon scales to its anchor. Keep that anchor square so a square
@@ -81,8 +89,12 @@ final class InventoryProbeBag {
         commands.setObject(selector + " #Icon.Anchor", anchor((width - iconSide) / 2,
                 (height - iconSide) / 2, iconSide, iconSide));
         commands.set(selector + " #Icon.ItemId", itemId);
-        String nativeId = GearNativeItems.nativeId(itemId);
-        if (POSE_BATCH.contains(nativeId)) {
+        if (authoredArt != null) {
+            commands.setObject(selector + " #PoseArt.Background", new PatchStyle()
+                    .setTexturePath(Value.of(authoredArt.texture())));
+            commands.set(selector + " #PoseArt.Visible", true);
+            commands.set(selector + " #Icon.Visible", false);
+        } else if (POSE_BATCH.contains(nativeId)) {
             commands.setObject(selector + " #PoseArt.Background", new PatchStyle()
                     .setTexturePath(Value.of("Icons/RPG/PoseBatch/" + nativeId + ".png")));
             commands.set(selector + " #PoseArt.Visible", true);
@@ -93,16 +105,20 @@ final class InventoryProbeBag {
         if (stack != null) {
             String color = rarityColor(stack);
             String rarityArt = color == null ? null : rarityArtForSize(entry.size());
-            if (rarityArt != null) {
-                commands.setObject(selector + " #RarityArt.Background", new PatchStyle()
-                        .setTexturePath(Value.of(rarityArt)).setColor(Value.of(color + "88")));
+            if (color != null) {
+                // Newly audited 3x4 and 4x4 rectangles still receive rarity
+                // tint without resampling or altering the artist's item PNG.
+                var overlay = new PatchStyle().setColor(Value.of(color + "88"));
+                if (rarityArt != null) overlay.setTexturePath(Value.of(rarityArt));
+                commands.setObject(selector + " #RarityArt.Background", overlay);
                 commands.set(selector + " #RarityArt.Visible", true);
-                // CustomUI has tint/alpha but no exposed additive or screen blend.
-                // A second, faint pass through the same unmodified footprint art
-                // lifts its highlight and border without replacing native cells.
-                commands.setObject(selector + " #RarityGlow.Background", new PatchStyle()
-                        .setTexturePath(Value.of(rarityArt)).setColor(Value.of("#ffffff26")));
-                commands.set(selector + " #RarityGlow.Visible", true);
+                if (rarityArt != null) {
+                    // A second faint pass through the same footprint art lifts
+                    // its border without replacing native cells.
+                    commands.setObject(selector + " #RarityGlow.Background", new PatchStyle()
+                            .setTexturePath(Value.of(rarityArt)).setColor(Value.of("#ffffff26")));
+                    commands.set(selector + " #RarityGlow.Visible", true);
+                }
             }
         }
     }
@@ -110,12 +126,9 @@ final class InventoryProbeBag {
     private static String rarityColor(ItemStack stack) {
         try {
             var managed = GearNativeItems.read(stack);
-            if (managed != null) return switch (managed.rarity()) {
-                case COMMON, NORMAL -> null;
-                case UNCOMMON, MAGIC -> "#1d4dff";
-                case RARE, VERY_RARE -> "#a000ff";
-                case LEGENDARY -> "#ff9100";
-            };
+            if (managed != null) return managed.rarity().presentation ==
+                    com.inigmasgames.hytalerpg.gear.GearRarityPresentation.NORMAL
+                    ? null : managed.rarity().presentation.color;
         } catch (RuntimeException invalidManagedItem) { return null; }
         try {
             var quality = ItemQuality.getAssetMap().getAsset(stack.getQualityIndex());
@@ -128,13 +141,9 @@ final class InventoryProbeBag {
     }
 
     static String rarityColorForQuality(String qualityId) {
-        return switch (qualityId) {
-            case "RPG_Gear_Rare" -> "#1d4dff";
-            case "RPG_Gear_RandomRare", "RPG_Gear_Epic" -> "#a000ff";
-            case "RPG_Gear_Set" -> "#51c534";
-            case "RPG_Gear_Legendary", "RPG_Gear_Unique" -> "#ff9100";
-            default -> null;
-        };
+        var presentation = com.inigmasgames.hytalerpg.gear.GearRarityPresentation.forQualityAsset(qualityId);
+        return presentation == null || presentation == com.inigmasgames.hytalerpg.gear.GearRarityPresentation.NORMAL
+                ? null : presentation.color;
     }
 
     static String rarityArtForSize(SpatialLayout.Size size) {

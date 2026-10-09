@@ -74,8 +74,8 @@ public final class RpgUiProjectionService {
             if(plan!=null&&stage04.supports(id.get().value())){
                 var profile=new com.inigmasgames.hytalerpg.execution.CompiledProfileResolver().resolve(stage04.require(id.get().value()),plan);
                 if(resourceService!=null){
-                    var cost=resourceService.evaluateActivation(new com.inigmasgames.hytalerpg.combat.resource.ResourceCost(
-                            com.inigmasgames.hytalerpg.combat.resource.ResourceType.valueOf(profile.resourceType()),profile.resourceCost()),plan,attunement.applyAsInt(player,slot));
+                    var cost=com.inigmasgames.hytalerpg.execution.GearResourceModifiers.activation(resourceService,
+                            profile,plan,attunement.applyAsInt(player,slot),gearEffects.apply(player).snapshot(),readOnlyResources(resources));
                     if(!resourceService.canAfford(player,cost,readOnlyResources(resources)))resourceFailure="LOW_"+cost.type().name();
                 }
                 var cooldownTerms=com.inigmasgames.hytalerpg.execution.BlizzardCooldownPolicy.terms(profile,plan,currentDerived);

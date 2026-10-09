@@ -9,6 +9,7 @@ public final class BuildIdentity {
     private static final Properties VALUES = load();
 
     public static final String REVISION = required("rpg.revision");
+    public static final String DISPLAY_REVISION = REVISION.split("-", 2)[0];
     public static final String VERSION = required("rpg.version");
     public static final String STAGE = required("rpg.stage");
     public static final String HYTALE_VERSION = required("hytale.version");

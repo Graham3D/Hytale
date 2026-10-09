@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 1,
+  "note": "Approved 17-item pack: 13 skiller exclusions require 13 held carriers plus four armor pieces. Count budget only is bypassed.",
+  "fixtures": [
+    {
+      "fixtureId": "qa159-01",
+      "itemBaseId": "gm.plate_iron.head.h",
+      "itemLevel": 76,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-012",
+        "WA-075",
+        "WA-078",
+        "WA-079",
+        "WA-080",
+        "WA-090",
+        "WA-092",
+        "WA-098",
+        "WA-151",
+        "WA-154"
+      ]
+    },
+    {
+      "fixtureId": "qa159-02",
+      "itemBaseId": "gm.robes_oracle.chest.h",
+      "itemLevel": 91,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "GA-160",
+        "WA-073",
+        "WA-087",
+        "WA-093",
+        "WA-099",
+        "WA-101",
+        "WA-104",
+        "WA-105",
+        "WA-110",
+        "WA-114"
+      ]
+    },
+    {
+      "fixtureId": "qa159-03",
+      "itemBaseId": "gm.cloth_cinder.hands.h",
+      "itemLevel": 99,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-006",
+        "WA-007",
+        "WA-009",
+        "WA-013",
+        "WA-024",
+        "WA-074",
+        "WA-081",
+        "WA-088",
+        "WA-091",
+        "WA-153"
+      ]
+    },
+    {
+      "fixtureId": "qa159-04",
+      "itemBaseId": "gm.leather_raven.legs.h",
+      "itemLevel": 91,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "GA-159",
+        "WA-072",
+        "WA-076",
+        "WA-077",
+        "WA-089",
+        "WA-100",
+        "WA-102",
+        "WA-111",
+        "WA-152",
+        "WA-156"
+      ]
+    },
+    {
+      "fixtureId": "qa159-05",
+      "itemBaseId": "gm.sword_copper.h",
+      "itemLevel": 71,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-001",
+        "WA-005",
+        "WA-025",
+        "WA-036",
+        "WA-052",
+        "WA-061",
+        "WA-066",
+        "WA-094",
+        "WA-124",
+        "WA-146"
+      ]
+    },
+    {
+      "fixtureId": "qa159-06",
+      "itemBaseId": "gm.battleaxe_iron.h",
+      "itemLevel": 76,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-002",
+        "WA-034",
+        "WA-037",
+        "WA-051",
+        "WA-059",
+        "WA-068",
+        "WA-071",
+        "WA-127",
+        "WA-135",
+        "WA-137"
+      ]
+    },
+    {
+      "fixtureId": "qa159-07",
+      "itemBaseId": "gm.mace_thorium.h",
+      "itemLevel": 83,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-010",
+        "WA-014",
+        "WA-033",
+        "WA-040",
+        "WA-045",
+        "WA-056",
+        "WA-123",
+        "WA-136",
+        "WA-157"
+      ]
+    },
+    {
+      "fixtureId": "qa159-08",
+      "itemBaseId": "gm.daggers_adamantite.h",
+      "itemLevel": 99,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-018",
+        "WA-027",
+        "WA-029",
+        "WA-038",
+        "WA-041",
+        "WA-057",
+        "WA-129",
+        "WA-141",
+        "WA-145"
+      ]
+    },
+    {
+      "fixtureId": "qa159-09",
+      "itemBaseId": "gm.daggers_cobalt.h",
+      "itemLevel": 91,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-043",
+        "WA-055",
+        "WA-064",
+        "WA-082",
+        "WA-096",
+        "WA-097",
+        "WA-126",
+        "WA-138",
+        "WA-158"
+      ]
+    },
+    {
+      "fixtureId": "qa159-10",
+      "itemBaseId": "gm.shortbow_cobalt.h",
+      "itemLevel": 91,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-008",
+        "WA-017",
+        "WA-023",
+        "WA-031",
+        "WA-035",
+        "WA-049",
+        "WA-065",
+        "WA-122",
+        "WA-134"
+      ]
+    },
+    {
+      "fixtureId": "qa159-11",
+      "itemBaseId": "gm.crossbow_heavy.h",
+      "itemLevel": 99,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-015",
+        "WA-019",
+        "WA-026",
+        "WA-050",
+        "WA-062",
+        "WA-085",
+        "WA-095",
+        "WA-133",
+        "WA-139"
+      ]
+    },
+    {
+      "fixtureId": "qa159-12",
+      "itemBaseId": "gm.longsword_adamantite.h",
+      "itemLevel": 99,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-021",
+        "WA-030",
+        "WA-039",
+        "WA-046",
+        "WA-053",
+        "WA-125",
+        "WA-140",
+        "WA-143",
+        "WA-144"
+      ]
+    },
+    {
+      "fixtureId": "qa159-13",
+      "itemBaseId": "gm.shield_mithril.h",
+      "itemLevel": 99,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-047",
+        "WA-069",
+        "WA-070",
+        "WA-083",
+        "WA-084",
+        "WA-132",
+        "WA-142",
+        "WA-147",
+        "WA-149"
+      ]
+    },
+    {
+      "fixtureId": "qa159-14",
+      "itemBaseId": "gm.staff_flame.h",
+      "itemLevel": 91,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-004",
+        "WA-048",
+        "WA-058",
+        "WA-107",
+        "WA-109",
+        "WA-112",
+        "WA-116",
+        "WA-117",
+        "WA-128"
+      ]
+    },
+    {
+      "fixtureId": "qa159-15",
+      "itemBaseId": "gm.staff_healing.h",
+      "itemLevel": 91,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-022",
+        "WA-060",
+        "WA-086",
+        "WA-103",
+        "WA-118",
+        "WA-119",
+        "WA-120",
+        "WA-131",
+        "WA-148"
+      ]
+    },
+    {
+      "fixtureId": "qa159-16",
+      "itemBaseId": "gm.book_binder.h",
+      "itemLevel": 99,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-011",
+        "WA-020",
+        "WA-028",
+        "WA-044",
+        "WA-054",
+        "WA-108",
+        "WA-113",
+        "WA-121",
+        "WA-150"
+      ]
+    },
+    {
+      "fixtureId": "qa159-17",
+      "itemBaseId": "gm.wand_crystal.h",
+      "itemLevel": 91,
+      "rarity": "LEGENDARY",
+      "group": "qa159",
+      "affixIds": [
+        "WA-003",
+        "WA-016",
+        "WA-032",
+        "WA-042",
+        "WA-063",
+        "WA-067",
+        "WA-106",
+        "WA-115",
+        "WA-130"
+      ]
+    }
+  ]
+}

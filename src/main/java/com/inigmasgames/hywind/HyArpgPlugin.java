@@ -78,23 +78,46 @@ public final class HyArpgPlugin extends TavernsPlugin {
     private PacketFilter outboundWatcher;
     private com.inigmasgames.hytalerpg.ui.inventory.NativeInventoryEntryProbe inventoryEntryProbe;
     private com.inigmasgames.hytalerpg.ui.inventory.TabTraceProbe tabTraceProbe;
+    private com.inigmasgames.hytalerpg.ui.inventory.NativeInventoryDropTraceProbe nativeDropTraceProbe;
     private com.inigmasgames.hytalerpg.execution.hytale.HealingPresentationProbe healingProbe;
     private RpgSkillTraceService skillTrace;
     private RpgLoadoutService loadouts;
     private RpgCombatKernel combatKernel;
     private RpgUiTraceService uiTrace;
+    private com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace interactionTrace;
+    private com.inigmasgames.hytalerpg.gear.GearQaTrace gearQaTrace;
+    private com.inigmasgames.hytalerpg.gear.GearQaTrace sentinelQaTrace;
     private RpgHudCoordinator rpgHud;
     private HytaleAbilitySkillInputAdapter abilityInputs;
     private NativeAbilityProjectionService nativeAbilities;
     private HytaleSkillExecutionSystem skillExecutionSystem;
     private com.inigmasgames.hytalerpg.progress.FileEncounterStore encounterStore;
     private com.inigmasgames.hytalerpg.gear.HytaleGearLoot gearLootRuntime;
+    private com.inigmasgames.hytalerpg.gear.NativeAffixDurabilityInstallation gearDurability;
+    private com.inigmasgames.hytalerpg.execution.hytale.GearRecoveryBindings gearRecovery;
+    private com.inigmasgames.hytalerpg.execution.hytale.GearSignatureBindings gearSignatures;
+    private com.inigmasgames.hytalerpg.execution.hytale.GearStatusBindings gearStatuses;
+    private com.inigmasgames.hytalerpg.execution.hytale.NativeItemAffixBindings itemAffixes;
+    private final java.util.List<HytaleDamageLifecycleSystems.AppliedObserver> gearReceiptObservers=new java.util.ArrayList<>();
     private com.inigmasgames.hytalerpg.execution.hytale.HytalePlayerPersistenceReady persistenceReady;
     private com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards encounterRewards;
+    private com.inigmasgames.hytalerpg.execution.hytale.PlayerHitRootOwner playerHitRoots;
+    private com.inigmasgames.hytalerpg.combat.hytale.NativeSystemReplacement enemyArmor,enemyOutgoingEffects,enemySpawnGroups;
+    private com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge packboundNativeHook;
+    private AutoCloseable enemyProjectileHook;
+    private AutoCloseable enemyDamageReceiptHook;
+    private com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActions enemyActions;
+    private com.inigmasgames.hytalerpg.enemies.EnemyReflectiveEffects enemyReflectiveEffects;
+    private com.inigmasgames.hytalerpg.enemies.EnemyWorldAdmission enemyWorldAdmission;
+    private com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthOwner enemyBirthOwner;
+    private com.inigmasgames.hytalerpg.execution.hytale.EnemyHealthBarPresentation enemyHealthBars;
     private com.inigmasgames.hytalerpg.difficulty.DifficultyRuntime difficultyRuntime;
     private java.util.concurrent.ExecutorService difficultyIo;
     private com.inigmasgames.hytalerpg.difficulty.HytaleDifficultyPortals difficultyPortals;
     private com.inigmasgames.hytalerpg.spawning.NativeWorldSpawnDensity worldSpawnDensity;
+    private com.inigmasgames.hytalerpg.spawning.HywindWorldConfiguration worldConfiguration;
+    private com.inigmasgames.hytalerpg.spawning.NativePopulationBalance populationBalance;
+    private com.inigmasgames.hytalerpg.diagnostics.MonsterSpawnTrace monsterSpawnTrace;
     private com.inigmasgames.hywind.compat.RpgGameplayEventPublisher immersiveEvents =
             com.inigmasgames.hywind.compat.RpgGameplayEventPublisher.NO_OP;
     private CanvasService canvasService;
@@ -160,6 +183,12 @@ public final class HyArpgPlugin extends TavernsPlugin {
             setupOptionalImmersiveBridge();
             com.hypixel.hytale.server.npc.NPCPlugin.get().registerCoreComponentType(
                     "HywindOpenBarterShop", com.inigmasgames.hytalerpg.ui.inventory.HywindOpenBarterShopAction.Builder::new);
+            com.hypixel.hytale.server.npc.NPCPlugin.get().registerCoreComponentType(
+                    com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.WALK_TYPE,
+                    com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.WalkBuilder::new);
+            com.hypixel.hytale.server.npc.NPCPlugin.get().registerCoreComponentType(
+                    com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.ATTACK_TYPE,
+                    com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.AttackBuilder::new);
             var triggerVolumes = com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin.get();
             if (triggerVolumes == null) throw new IllegalStateException("Required TriggerVolumes producer registry unavailable");
             triggerVolumes.registerEffectType(
@@ -269,6 +298,9 @@ public final class HyArpgPlugin extends TavernsPlugin {
 
     private void setupRpg() {
         try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("BOOT_RPG_SETUP", null)) {
+        var saveRoot=com.inigmasgames.hytalerpg.spawning.HywindWorldConfiguration.resolveSaveRoot(rpgDataDirectory());
+        worldConfiguration=new com.inigmasgames.hytalerpg.spawning.HywindWorldConfiguration(
+                saveRoot,rpgDataDirectory().resolve("world-spawn-density.json"));
         LOGGER.atInfo().log("HYTALE_RPG_SETUP revision=%s version=%s hytale=%s stage=%s combatEnabled=true",
                 BuildIdentity.REVISION, BuildIdentity.VERSION, BuildIdentity.HYTALE_VERSION,
                 BuildIdentity.STAGE);
@@ -307,6 +339,10 @@ public final class HyArpgPlugin extends TavernsPlugin {
         loadouts.addMutationListener(nativeAbilities::onLoadoutMutation);
         abilityInputs = new HytaleAbilitySkillInputAdapter(nativeAbilities::observeInput);
         abilityInputs.useNativeExecution();
+        abilityInputs.configureDiagnostics(() -> skillTrace.level() == com.inigmasgames.hytalerpg.diagnostics.SkillTraceLevel.DETAILED,
+                (actor, detail) -> skillTrace.trace(com.inigmasgames.hytalerpg.diagnostics.RpgTraceRecord.create(
+                        actor, com.inigmasgames.hytalerpg.diagnostics.RpgTraceEventType.NATIVE_ABILITY_BOUNDARY,
+                        "native-ability-boundary", detail)));
         getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
                 .register(com.inigmasgames.hytalerpg.input.NativeSkillActivationInteraction.TYPE,
                         com.inigmasgames.hytalerpg.input.NativeSkillActivationInteraction.class,
@@ -340,6 +376,11 @@ public final class HyArpgPlugin extends TavernsPlugin {
                         com.inigmasgames.hytalerpg.combat.hytale.ManagedWeaponFireInteraction.class,
                         com.inigmasgames.hytalerpg.combat.hytale.ManagedWeaponFireInteraction.codec(nativeWeaponFire));
         var summonSystem=skillExecutionSystem.configureSummons(rpgDataDirectory().resolve("corpse-consumption"));
+        com.inigmasgames.hytalerpg.gear.GearNativeItems.bindRecipientEffects(summonSystem::sentinelEffects);
+        var sentinelItemAuras=new com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras(
+                supportSystem,combatKernel,bosses,combatTrace);
+        supportSystem.configureSentinelItemAuras(sentinelItemAuras);
+        summonSystem.configureSentinelItemAuras(sentinelItemAuras);
         com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.SummonProjection.class,
                 com.inigmasgames.hytalerpg.execution.hytale.SummonProjection::new));
@@ -355,6 +396,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 com.inigmasgames.hytalerpg.execution.hytale.ConversionProjection::new));
         var conversionSystem=skillExecutionSystem.configureConversions();
         encounterRewards=new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards(encounterStore,loadouts,skillTrace,combatKernel);
+        playerHitRoots=new com.inigmasgames.hytalerpg.execution.hytale.PlayerHitRootOwner(encounterRewards);
+        skillExecutionSystem.nativeBasics().configureDurableRoots(playerHitRoots::issue);
         encounterRewards.configureActive(()->startupState==StartupState.RUNNING);
         difficultyRuntime=new com.inigmasgames.hytalerpg.difficulty.DifficultyRuntime(
                 rpgDataDirectory().resolve("difficulty-worlds.json"),com.hypixel.hytale.server.core.universe.Universe.get().getWorldsPath());
@@ -362,6 +405,24 @@ public final class HyArpgPlugin extends TavernsPlugin {
         encounterRewards.configureGolems(difficultyRuntime.worlds());
         com.inigmasgames.hytalerpg.difficulty.DifficultyHealthProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.difficulty.DifficultyHealthProjection.class,"RpgDifficultyHealth",com.inigmasgames.hytalerpg.difficulty.DifficultyHealthProjection.CODEC));
+        com.inigmasgames.hytalerpg.enemies.EnemyShieldProjection.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.enemies.EnemyShieldProjection.class,"RpgEnemyShield",com.inigmasgames.hytalerpg.enemies.EnemyShieldProjection.CODEC));
+        com.inigmasgames.hytalerpg.execution.hytale.EnemyStaging.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.execution.hytale.EnemyStaging.class,"RpgEnemyStaging",com.inigmasgames.hytalerpg.execution.hytale.EnemyStaging.CODEC));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.EnemyStaging.Visibility());
+        com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity.class,"RpgEnemyActorIdentity",
+                com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity.CODEC));
+        com.inigmasgames.hytalerpg.execution.hytale.QaTransientMarker.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.execution.hytale.QaTransientMarker.class,
+                com.inigmasgames.hytalerpg.execution.hytale.QaTransientMarker::new));
+        com.inigmasgames.hytalerpg.enemies.EnemyProjectileReceipt.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.enemies.EnemyProjectileReceipt.class,"RpgEnemyProjectileReceipt",
+                com.inigmasgames.hytalerpg.enemies.EnemyProjectileReceipt.CODEC));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActorRecovery());
+        com.inigmasgames.hytalerpg.enemies.EnemyEngagementClock.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.enemies.EnemyEngagementClock.class,"RpgEnemyEngagementClock",
+                com.inigmasgames.hytalerpg.enemies.EnemyEngagementClock.CODEC));
         // Register the candidate same-player save format, but never attach it or import native items
         // until protected pickup and native equipment handoffs pass connected acceptance.
         com.inigmasgames.hytalerpg.ui.inventory.SpatialBagComponent.bind(getEntityStoreRegistry().registerComponent(
@@ -376,7 +437,55 @@ public final class HyArpgPlugin extends TavernsPlugin {
                     == com.inigmasgames.hytalerpg.ui.inventory.SpatialBagComponent.OwnershipMode.NATIVE;
         });
         var difficultyCombat=new com.inigmasgames.hytalerpg.execution.hytale.HytaleDifficultyCombat(skillTrace);
+        enemyHealthBars=difficultyCombat.healthBars();
+        difficultyCombat.healthBars().configureBossBars(bosses);
+        var enemyBindings=com.inigmasgames.hytalerpg.enemies.EnemyNativeBindings.load();
+        com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.configure(
+                new com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.Provider(){
+                    @Override public double movement(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> actor,
+                            com.hypixel.hytale.server.npc.role.Role role,
+                            com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> accessor){
+                        var store=actor.getStore();
+                        if(!actor.isValid()||!store.isInThread())return 1;
+                        var id=accessor.getComponent(actor,com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+                        var npc=accessor.getComponent(actor,com.hypixel.hytale.server.npc.entities.NPCEntity.getComponentType());
+                        if(id==null||npc==null)return 1;
+                        var world=store.getExternalData().getWorld().getWorldConfig().getUuid();
+                        var state=difficultyCombat.enemyState(world,id.getUuid()).orElse(null);
+                        return state!=null&&state.descriptor().nativeRoleId().equals(npc.getRoleName())
+                                &&state.descriptor().entityId().equals(id.getUuid())?state.providers().movementMultiplier():1;
+                    }
+                    @Override public com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.Recovery recovery(
+                            com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> actor,
+                            com.hypixel.hytale.server.npc.role.Role role,String actualRoot,
+                            com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store){
+                        if(!actor.isValid()||actor.getStore()!=store||!store.isInThread()
+                                ||store.getComponent(actor,com.inigmasgames.hytalerpg.execution.hytale.EnemyStaging.getComponentType())!=null)return null;
+                        var id=store.getComponent(actor,com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+                        var npc=store.getComponent(actor,com.hypixel.hytale.server.npc.entities.NPCEntity.getComponentType());
+                        if(id==null||npc==null)return null;
+                        var world=store.getExternalData().getWorld().getWorldConfig().getUuid();
+                        var state=difficultyCombat.enemyState(world,id.getUuid()).orElse(null);
+                        if(state==null||!state.descriptor().entityId().equals(id.getUuid())
+                                ||!state.descriptor().nativeRoleId().equals(npc.getRoleName()))return null;
+                        var binding=enemyBindings.requireActorRole(state.descriptor());
+                        var profile=binding.recoveryProfile(actualRoot).orElse(null);
+                        if(profile==null)return null;
+                        return new com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.Recovery(actualRoot,
+                                state.descriptor().nativeBindingRevision(),
+                                com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.protectedSeconds(profile),
+                                state.providers().recoveryRateMultiplier());
+                    }
+                });
         encounterRewards.configureCombat(difficultyCombat);
+        enemyWorldAdmission=new com.inigmasgames.hytalerpg.enemies.EnemyWorldAdmission(
+                encounterRewards::recoverEnemyWorld,
+                new com.inigmasgames.hytalerpg.enemies.EnemyPackCapacity(
+                        ()->worldConfiguration.snapshot().enemyBalance().promotion()),true);
+        encounterRewards.configureEnemyAdmission(enemyWorldAdmission);
+        combatKernel.statuses().configureEncounterAdmission(difficultyCombat::statusImmune,
+                difficultyCombat::allowsExternalMutation,difficultyCombat::slowImmune);
+        com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.configureEncounterProtection(difficultyCombat::blocksIncoming);
         encounterRewards.configureUnlockNotification((id,mode)->{
             var player=com.hypixel.hytale.server.core.universe.Universe.get().getPlayer(id);
             if(player!=null)player.sendMessage(com.hypixel.hytale.server.core.Message.raw(mode+" unlocked — all required golems completed. Recommended level: "+mode.recommendedLevel()+"+."));
@@ -399,11 +508,22 @@ public final class HyArpgPlugin extends TavernsPlugin {
             var world=event.getWorld();
             var binding=difficultyRuntime.worldLoaded(world.getWorldConfig().getUuid(),world.getName());
             LOGGER.atInfo().log("RPG_DIFFICULTY_WORLD world=%s binding=%s connectedProof=false",world.getName(),binding);
+            enemyWorldAdmission.begin(world.getWorldConfig().getUuid()).whenComplete((inventory,error)->{
+                if(error!=null)LOGGER.atWarning().withCause(error).log("RPG_ENEMY_WORLD_RECOVERY_REJECTED world=%s",world.getName());
+                else LOGGER.atInfo().log("RPG_ENEMY_WORLD_RECOVERED world=%s births=%d packs=%d anchors=%d freshAdmission=%s connectedProof=false",
+                        world.getName(),inventory.births().size(),inventory.packs().size(),inventory.anchors().size(),
+                        enemyWorldAdmission.admits(world.getWorldConfig().getUuid()));
+            });
         });
-        for(var world:com.hypixel.hytale.server.core.universe.Universe.get().getWorlds().values())
+        for(var world:com.hypixel.hytale.server.core.universe.Universe.get().getWorlds().values()){
             difficultyRuntime.worldLoaded(world.getWorldConfig().getUuid(),world.getName());
+            enemyWorldAdmission.begin(world.getWorldConfig().getUuid()).whenComplete((inventory,error)->{
+                if(error!=null)LOGGER.atWarning().withCause(error).log("RPG_ENEMY_WORLD_RECOVERY_REJECTED world=%s",world.getName());
+            });
+        }
         supportSystem.configureEncounterRewards(encounterRewards);
         conversionSystem.configureRewardExclusion(encounterRewards::invalidateConverted);
+        conversionSystem.configureEncounterConversionProtection(difficultyCombat::blocksConversion);
         getEntityStoreRegistry().registerSystem(conversionSystem);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleConversionSystem.Removal(conversionSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleConversionSystem.Death(conversionSystem));
@@ -415,11 +535,51 @@ public final class HyArpgPlugin extends TavernsPlugin {
         uiProjection.configureActiveRemaining(skillExecutionSystem::activeSkillRemaining);
         uiProjection.configureResourceReadiness(combatKernel.resources(),executions::attunementStacks);
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
+        rpgHud.configureEnemyTargets(difficultyCombat::enemyDisplay);
+        rpgHud.configureQaNativeHealthbar(difficultyCombat::qaNativeHealthbar);
+        rpgHud.configureEnemyHealthBars(difficultyCombat.healthBars());
+        // R217: native Nameplate + viewer-local EntityStat Healthbar own the live
+        // monster presentation. Keep the projected HUD code as a diagnostic path.
+        executions.configureRejectionNotice(rpgHud::showSkillFailure);
         rpgHud.configureFinisherPips(executions::finisherPips);
         rpgHud.configureOwnerPublication(encounterRewards::ownerPublished);
         var rpgCommand=new RpgCommand(catalog, loadouts, combatKernel, combatTrace,
                 uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities,
                 rpgDataDirectory().resolve("skill-tree-port-bindings"));
+        interactionTrace = new com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace(
+                rpgDataDirectory().resolve("evidence").resolve("ui-trace"));
+        com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.install(interactionTrace);
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgUiTraceCommand(interactionTrace));
+        gearQaTrace = new com.inigmasgames.hytalerpg.gear.GearQaTrace(
+                rpgDataDirectory().resolve("evidence").resolve("gear-trace"));
+        com.inigmasgames.hytalerpg.gear.GearQaTrace.install(gearQaTrace);
+        gearQaTrace.actorOwner(actor -> summonSystem.registry().findByEntity(actor).map(lease -> lease.owner()).orElse(actor));
+        sentinelQaTrace = new com.inigmasgames.hytalerpg.gear.GearQaTrace(
+                rpgDataDirectory().resolve("evidence").resolve("sentinel-trace"),"Sentinel");
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSentinelTraceCommand(sentinelQaTrace,summonSystem));
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
+                event -> sentinelQaTrace.disconnect(event.getPlayerRef().getUuid()));
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgGearTraceCommand(gearQaTrace));
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
+                event -> gearQaTrace.disconnect(event.getPlayerRef().getUuid()));
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
+                event -> interactionTrace.disconnect(event.getPlayerRef().getUuid()));
+        CanvasUI.setInteractionObserver(new com.inigmasgames.canvasui.api.CanvasInteractionObserver() {
+            @Override public boolean enabled(java.util.UUID player) {
+                return com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.active(player);
+            }
+            @Override public Action begin(java.util.UUID player, String canvasId, String elementId,
+                                          String controlType, String event, double x, double y) {
+                var details = new java.util.LinkedHashMap<String, Object>();
+                details.put("canvasId", canvasId); details.put("controlType", controlType);
+                if (Double.isFinite(x)) details.put("pointerX", x);
+                if (Double.isFinite(y)) details.put("pointerY", y);
+                var action = interactionTrace.begin(player, "canvasui", "canvas." + elementId, event, details);
+                action.stage("HIT_TEST", java.util.Map.of("resolvedTarget", elementId,
+                        "nodeType", controlType));
+                return result -> action.complete(result, java.util.Map.of("canvasId", canvasId));
+            }
+        });
         {
             inventoryEntryProbe = new com.inigmasgames.hytalerpg.ui.inventory.NativeInventoryEntryProbe(
                     uiProjection, uiTrace, rpgDataDirectory(), rpgCommand.inventoryEntry());
@@ -439,16 +599,36 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEntityStoreRegistry().registerSystem(tabTraceProbe.new Tick());
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
                 event -> tabTraceProbe.detach(event.getPlayerRef().getUuid()));
+        nativeDropTraceProbe = new com.inigmasgames.hytalerpg.ui.inventory.NativeInventoryDropTraceProbe(
+                rpgDataDirectory().resolve("logs").resolve("rpg"), inventoryEntryProbe);
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgNativeDropTraceCommand(nativeDropTraceProbe));
+        getEntityStoreRegistry().registerSystem(nativeDropTraceProbe.new PlayerRequestObserver());
+        getEntityStoreRegistry().registerSystem(nativeDropTraceProbe.new DropObserver());
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
+                event -> nativeDropTraceProbe.detach(event.getPlayerRef().getUuid()));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgUnsummonCommand(summonSystem,conversionSystem));
-        worldSpawnDensity = new com.inigmasgames.hytalerpg.spawning.NativeWorldSpawnDensity(
-                new com.inigmasgames.hytalerpg.spawning.WorldSpawnDensitySettings(
-                        rpgDataDirectory().resolve("world-spawn-density.json")));
+        worldSpawnDensity = new com.inigmasgames.hytalerpg.spawning.NativeWorldSpawnDensity(worldConfiguration);
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnsCommand(worldSpawnDensity));
+        monsterSpawnTrace=new com.inigmasgames.hytalerpg.diagnostics.MonsterSpawnTrace(
+                rpgDataDirectory().resolve("logs").resolve("rpg").resolve("monster-spawn-trace"));
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnTraceCommand(monsterSpawnTrace,worldSpawnDensity));
         getChunkStoreRegistry().registerSystem(worldSpawnDensity.new Tick());
+        populationBalance=new com.inigmasgames.hytalerpg.spawning.NativePopulationBalance(
+                ()->worldConfiguration.snapshot().population());
+        getChunkStoreRegistry().registerSystem(populationBalance.new Tick());
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgWorldConfigCommand(
+                worldConfiguration,worldSpawnDensity,populationBalance));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgDifficultyCommand(difficultyRuntime,loadouts,difficultyWorlds,difficultyTravel,portalRegistry,difficultyIo,travelPort,difficultyCombat));
         var gearEquipment=new com.inigmasgames.hytalerpg.gear.HytaleGearEquipment(loadouts);
+        gearEquipment.configureDefense((actor,accessor)->{
+            var player=accessor.getComponent(actor,com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
+            double broken=supportSystem.runtime().finite().winningStat(player.getWorldUuid(),player.getUuid(),0,
+                    com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects.Stat.DEFENSE_BREAK,System.nanoTime()/1e9);
+            return new com.inigmasgames.hytalerpg.combat.defense.DefenseView.Contributions(0,0,0,broken);
+        });
         com.inigmasgames.hytalerpg.gear.GearNativeItems.bind(gearEquipment);
+        skillTreeProjection.configureGearEffects(gearEquipment::publishedEffects);
         uiProjection.configureGearEffects(gearEquipment::publishedEffects);
         boolean gearQa=java.nio.file.Files.isRegularFile(rpgDataDirectory().resolve("gear-qa-enabled"));
         var spatialQaMarker=rpgDataDirectory().resolve("spatial-inventory-qa-enabled");
@@ -468,9 +648,12 @@ public final class HyArpgPlugin extends TavernsPlugin {
             summonSystem.configureIronSentinel(gearLootRuntime);
             gearLootRuntime.configureProjectionNotification(encounterRewards::gearProjected);
             encounterRewards.configureGearLoot(loot,gearEquipment);
-            encounterStore.configureGearDelivery(plan->{var outcome=loot.deliver(plan);
-                try{encounterRewards.lootDelivered(plan,outcome);}
+            encounterStore.configureGearDelivery(plan->{var outcomes=loot.deliverPicks(plan);for(int pick=0;pick<outcomes.size();pick++){
+                var outcome=outcomes.get(pick);
+                gearLootRuntime.acceptDelivery(outcome);
+                try{encounterRewards.lootDelivered(plan,outcome,pick==outcomes.size()-1);}
                 catch(RuntimeException diagnostic){getLogger().atWarning().log("RPG_GEAR_REWARD_TRACE_FAILED event=%s error=%s",plan.spawn().eventId(),diagnostic.toString());}
+            }
             });
             com.inigmasgames.hytalerpg.gear.GearNativeItems.bindAuthority(gearLootRuntime::usable);
             gearEquipment.configureLootTick(gearLootRuntime::tick);
@@ -484,6 +667,30 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 .register(com.inigmasgames.hytalerpg.gear.ManagedGearDamageInteraction.TYPE,
                         com.inigmasgames.hytalerpg.gear.ManagedGearDamageInteraction.class,
                         com.inigmasgames.hytalerpg.gear.ManagedGearDamageInteraction.CODEC);
+        getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
+                .register(com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyDamageInteraction.TYPE,
+                        com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyDamageInteraction.class,
+                        com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyDamageInteraction.CODEC);
+        getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
+                .register(com.inigmasgames.hytalerpg.gear.NativeTwinAssaultGate.TYPE,
+                        com.inigmasgames.hytalerpg.gear.NativeTwinAssaultGate.class,
+                        com.inigmasgames.hytalerpg.gear.NativeTwinAssaultGate.CODEC);
+        getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
+                .register(com.inigmasgames.hytalerpg.gear.ManagedCarrierDamageInteraction.TYPE,
+                        com.inigmasgames.hytalerpg.gear.ManagedCarrierDamageInteraction.class,
+                        com.inigmasgames.hytalerpg.gear.ManagedCarrierDamageInteraction.CODEC);
+        getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
+                .register(com.inigmasgames.hytalerpg.gear.ManagedCarrierProjectile.TYPE,
+                        com.inigmasgames.hytalerpg.gear.ManagedCarrierProjectile.class,
+                        com.inigmasgames.hytalerpg.gear.ManagedCarrierProjectile.CODEC);
+        com.inigmasgames.hytalerpg.gear.ManagedCarrierProjectile.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.gear.ManagedCarrierProjectile.Snapshot.class,
+                com.inigmasgames.hytalerpg.gear.ManagedCarrierProjectile.Snapshot::new));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.ManagedCarrierProjectile.Launch());
+        // SystemDependency validates its target at registration, even for Order.BEFORE.
+        // Both projectile Impact systems reference Use; register Use before either one.
+        getEntityStoreRegistry().registerSystem(gearEquipment.new Use());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.ManagedCarrierProjectile.Impact());
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgGearCommand(gearEquipment));
         getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
                 .register(com.inigmasgames.hytalerpg.gear.ManagedGearProjectile.TYPE,
@@ -492,11 +699,33 @@ public final class HyArpgPlugin extends TavernsPlugin {
         com.inigmasgames.hytalerpg.gear.ManagedGearProjectile.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.gear.ManagedGearProjectile.Snapshot.class,
                 com.inigmasgames.hytalerpg.gear.ManagedGearProjectile.Snapshot::new));
-        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.ManagedGearProjectile.Launch());
+        com.inigmasgames.hytalerpg.gear.NativeAffixProjectilePathSystem.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.gear.NativeAffixProjectileTravel.Path.class,
+                com.inigmasgames.hytalerpg.gear.NativeAffixProjectileTravel.Path::new));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.NativeAffixProjectilePathSystem.BeforePhysics());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.NativeAffixProjectilePathSystem());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.ManagedGearProjectile.Launch(playerHitRoots));
         getEntityStoreRegistry().registerSystem(gearEquipment.new Tick());
-        getEntityStoreRegistry().registerSystem(gearEquipment.new Use());
+        // Item-skill availability runs before skill execution, whose system type must
+        // already exist when Hytale validates the dependency at registration.
+        getEntityStoreRegistry().registerSystem(skillExecutionSystem);
+        itemAffixes=new com.inigmasgames.hytalerpg.execution.hytale.NativeItemAffixBindings(
+                loadouts,skillExecutionSystem,HytaleDamageLifecycleSystems.AppliedReceipt::acceptedDamage,
+                HytaleDamageLifecycleSystems.AppliedReceipt::procCoefficient,
+                skillExecutionSystem.sentinelChildPort(summonSystem));
+        getEntityStoreRegistry().registerSystem(itemAffixes.availabilityTick());
+        getEntityStoreRegistry().registerSystem(itemAffixes.blockObserver());
+        getEntityStoreRegistry().registerSystem(itemAffixes.removal());
+        summonSystem.configureSentinelItemBindings(itemAffixes);
+        getEntityStoreRegistry().registerSystem(summonSystem.sentinelBlockCostObserver());
+        getEntityStoreRegistry().registerSystem(summonSystem.sentinelBlockObserver());
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.ManagedGearProjectile.Impact());
         getEntityStoreRegistry().registerSystem(gearEquipment.new BeforeArmor());
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgEnemiesCommand(
+                difficultyRuntime,com.inigmasgames.hytalerpg.enemies.EnemyAffixRegistry.canonical(),
+                enemyBindings,enemyWorldAdmission,()->packboundNativeHook!=null&&enemyProjectileHook!=null&&enemyDamageReceiptHook!=null,difficultyCombat,
+                supportSystem.runtime().finite()));
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnCommand(()->enemyBirthOwner));
         getCommandRegistry().registerCommand(rpgCommand);
         if(Boolean.getBoolean("rpg.healingPresentationProbe")||com.inigmasgames.hytalerpg.execution.hytale.HealingProbePolicy.liveTestBuild()){
             healingProbe=new com.inigmasgames.hytalerpg.execution.hytale.HealingPresentationProbe(skillTrace);
@@ -514,23 +743,97 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 productionPowers.all().size(),skillTrace.level());
         getEventRegistry().register(LoadedAssetsEvent.class, RootInteraction.class,
                 NativeAbilityBridgeAudit::onRootInteractionsLoaded);
-        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace,combatKernel.statuses()));
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Gather(combatTrace,combatKernel.statuses(),difficultyCombat.healthBars()));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.combat.hytale.NativeDamageLeafReceipts.Gather());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter.ManagedGearGather());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.combat.hytale.HytaleConditionalDamage.GearGather(
+                combatKernel.statuses(),skillExecutionSystem::activePeriodicKinds,(victim,stats)->
+                    com.inigmasgames.hytalerpg.combat.hytale.NativeNormalHealthMaximum.value(stats)));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.NativeAffixBlockCostSystem());
+        com.inigmasgames.hytalerpg.gear.NativeAffixLightSystem.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.gear.NativeAffixLightSystem.State.class,
+                com.inigmasgames.hytalerpg.gear.NativeAffixLightSystem.State::new));
+        if(System.getProperty("rpg.gear.lightMetresPerNativeUnit")!=null
+                ||System.getProperty("rpg.gear.lightMaximumNativeRadius")!=null) {
+            var calibration=com.inigmasgames.hytalerpg.gear.NativeAffixLightProjection.Calibration.fromSystemProperties();
+            getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.NativeAffixLightSystem(calibration));
+        } else LOGGER.atInfo().log("GEAR_LIGHT_CALIBRATION_PENDING affix=WA-155 unit=metres productionRoll=GATED");
+        gearDurability=new com.inigmasgames.hytalerpg.gear.NativeAffixDurabilityInstallation();
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Filter(combatTrace));
-        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.combat.hytale.NativeDamageLeafReceipts.Before());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.combat.hytale.NativeDamageLeafReceipts.After());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeStatusPhysicalMiss(combatKernel.statuses()));
+        getEntityStoreRegistry().registerSystem(supportSystem);
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Absorb(supportSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Shield(supportSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter.GearResistanceFilter());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.HealthCap(supportSystem));
+        // Registration order satisfies SystemDependency.validate; the declared
+        // before/after edges still determine actual damage pipeline execution.
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.BeforeAbsorption());
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.BeforeApplication());
+        gearRecovery=new com.inigmasgames.hytalerpg.execution.hytale.GearRecoveryBindings(
+                combatKernel,supportSystem,summonSystem,bosses);
+        gearSignatures=new com.inigmasgames.hytalerpg.execution.hytale.GearSignatureBindings(difficultyCombat,summonSystem);
+        encounterRewards.configureSignatureKill(gearSignatures);
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.gear.NativeGearAttackAcceptance.Prechain());
+        getEntityStoreRegistry().registerSystem(gearSignatures.dispatch());
+        getEntityStoreRegistry().registerSystem(gearSignatures.defenseFilter());
+        getEntityStoreRegistry().registerSystem(gearSignatures.rawBefore());
+        getEntityStoreRegistry().registerSystem(gearSignatures.rawAfter());
+        getEntityStoreRegistry().registerSystem(gearSignatures.new Removal());
+        getEntityStoreRegistry().registerSystem(gearSignatures.new Death());
+        gearReceiptObservers.add(gearSignatures.receipt());
+        skillExecutionSystem.configureRecovery(gearRecovery.committedAttacks());
+        encounterRewards.configureRecovery(gearRecovery.creditedDeaths());
+        gearReceiptObservers.add(gearRecovery.observer());
+        gearStatuses=new com.inigmasgames.hytalerpg.execution.hytale.GearStatusBindings(combatKernel.statuses(),bosses,skillExecutionSystem,
+                (target,buffer)->com.inigmasgames.hytalerpg.gear.GearNativeItems.recipientEffects(target,buffer));
+        skillExecutionSystem.configureStatusBindings(gearStatuses);
+        getEntityStoreRegistry().registerSystem(gearStatuses.nativeAcceptance());
+        gearReceiptObservers.add(gearStatuses.observer());
+        gearReceiptObservers.add(itemAffixes.applicationObserver());
+        getEntityStoreRegistry().registerSystem(gearStatuses.tickSystem());
+        getEntityStoreRegistry().registerSystem(gearStatuses.removal());
+        getEntityStoreRegistry().registerSystem(gearRecovery.tickSystem());
+        getEntityStoreRegistry().registerSystem(gearRecovery.deathSystem());
+        getEntityStoreRegistry().registerSystem(gearRecovery.removalSystem());
+        getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent.class,
+                event->{if(!event.isCancelled()){
+                    var worldId=event.getWorld().getWorldConfig().getUuid();
+                    gearRecovery.cancelWorld(worldId);gearSignatures.clearWorld(worldId);
+                    gearStatuses.clearWorld(worldId);itemAffixes.worldUnload(worldId);summonSystem.worldUnload(worldId);
+                    difficultyCombat.healthBars().forgetWorld(worldId);
+                }});
+        getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace,
+                (receipt,target,source,buffer)->{
+                    for(var observer:gearReceiptObservers)observer.observed(receipt,target,source,buffer);
+                }));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Inspect(
-                combatTrace, combatKernel.hostileCombat(), immersiveEvents));
+                combatTrace, combatKernel.hostileCombat(), difficultyCombat.healthBars(), immersiveEvents));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeAffixFearBreak(combatKernel.statuses()));
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.ReactionObserver(skillExecutionSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeBasicAttackObserver.Start(skillExecutionSystem.nativeBasics()));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeBasicAttackObserver.Before(skillExecutionSystem.nativeBasics()));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeBasicAttackObserver.After(skillExecutionSystem.nativeBasics()));
+        com.inigmasgames.hytalerpg.execution.hytale.MonsterPeriodicProjection.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.execution.hytale.MonsterPeriodicProjection.class,
+                com.inigmasgames.hytalerpg.execution.hytale.MonsterPeriodicProjection::new));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.MonsterPeriodicProjection.Tick(skillExecutionSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.MonsterPeriodicProjection.Removal(skillExecutionSystem));
         LOGGER.atInfo().log("RPG_STAGE13_NATIVE_BASIC_HOOK start=INTERACTION_CHAIN_START before=POST_FILTER after=POST_APPLY scope=AUDITED_MELEE recovery=ROOT_HEALTH_LOSS finisher=ROOT_HEALTH_LOSS connectedProof=false");
         getEntityStoreRegistry().registerSystem(new HomeRestorationTickSystem(combatKernel.homeRestoration(),
                 combatKernel.hostileCombat(), combatKernel.resources()));
         getEntityStoreRegistry().registerSystem(new RpgHudTickSystem(rpgHud));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.EnemyHealthBarPresentation.AnchorFollow(
+                difficultyCombat.healthBars()));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.EnemyHealthBarPresentation.NamePackets(
+                difficultyCombat.healthBars()));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.EnemyHealthBarPresentation.QaCanonicalQueueAudit(
+                difficultyCombat.healthBars()));
+        var enemyWeaponVisuals=new com.inigmasgames.hytalerpg.execution.hytale.HytaleEnemyWeaponVisuals();
+        getEntityStoreRegistry().registerSystem(enemyWeaponVisuals);
         getEntityStoreRegistry().registerSystem(new NativeAbilityProjectionTickSystem(nativeAbilities));
-        getEntityStoreRegistry().registerSystem(skillExecutionSystem);
-        getEntityStoreRegistry().registerSystem(supportSystem);
-        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Absorb(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Removal(supportSystem));
         com.inigmasgames.hytalerpg.execution.hytale.SupportEffectProjection.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.execution.hytale.SupportEffectProjection.class,
@@ -540,19 +843,110 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.NativeOutgoing(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.DirectDamageBreak(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.Removal(supportSystem));
-        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Shield(supportSystem));
-        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.HealthCap(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.BeforeApply());
-        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Reflect(supportSystem));
+        var sharedReflection=new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Reflect(supportSystem);
+        getEntityStoreRegistry().registerSystem(sharedReflection);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleRetaliationSystem(skillExecutionSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Tracking(encounterRewards));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemySpawnGroups.Capture());
+        var enemyStagingRecovery=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStagingRecovery(
+                encounterRewards,enemyWorldAdmission);
+        getEntityStoreRegistry().registerSystem(enemyStagingRecovery);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Inspect(encounterRewards));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.PlayerInjuries(encounterRewards));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.HealthObservation(encounterRewards));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Death(encounterRewards));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Delivery(encounterRewards));
         getEntityStoreRegistry().registerSystem(difficultyCombat.new Outgoing());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses.Knockback(difficultyCombat));
+        getEntityStoreRegistry().registerSystem(difficultyCombat.new IncomingProtection());
         getEntityStoreRegistry().registerSystem(difficultyCombat.new Resistance());
+        enemyArmor=com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyArmor.install(
+                com.hypixel.hytale.server.core.universe.world.storage.EntityStore.REGISTRY,
+                new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyArmor(
+                        (store,target)->difficultyCombat.physicalDefense(store,target,supportSystem.runtime().finite()),difficultyCombat::elementalDefense));
+        var enemySourceEffects=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyOutgoingEffects();
+        enemyOutgoingEffects=enemySourceEffects.install(com.hypixel.hytale.server.core.universe.world.storage.EntityStore.REGISTRY);
+        var enemyResources=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyResources(combatKernel,bosses,combatTrace);
+        var enemyStatuses=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses(skillExecutionSystem,supportSystem,difficultyCombat,combatKernel,bosses,combatTrace);
+        enemyActions=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActions(enemySourceEffects,enemyResources.andThen(enemyStatuses));
+        enemyReflectiveEffects=new com.inigmasgames.hytalerpg.enemies.EnemyReflectiveEffects();
+        var enemyReflectiveReaction=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyReflectiveReaction(
+                difficultyCombat,enemyWorldAdmission,enemyActions,bosses,enemyReflectiveEffects);
+        sharedReflection.configureEnemyReaction(enemyReflectiveReaction);
+        com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyDamageInteraction.configure(enemyActions::scope);
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActions.Start(enemyActions));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyProjectileDamage(
+                difficultyCombat,enemyActions,enemyBindings));
+        var enemyBalance=com.inigmasgames.hytalerpg.enemies.EnemyBalance.canonical();
+        try{
+            packboundNativeHook=com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge
+                    .tryInstall(difficultyCombat).orElse(null);
+        }catch(LinkageError missingPatch){
+            packboundNativeHook=null;
+            LOGGER.atWarning().withCause(missingPatch)
+                    .log("RPG_PACKBOUND_NATIVE_PATCH_LINKAGE_FAILED promotion=false");
+        }
+        if(packboundNativeHook!=null)try{
+            enemyProjectileHook=com.inigmasgames.hytale.patch.NativeProjectileReceiptHook.install(enemyActions::attachProjectile);
+        }catch(LinkageError|RuntimeException missingHook){
+            enemyProjectileHook=null;
+            LOGGER.atWarning().withCause(missingHook).log("RPG_ENEMY_PROJECTILE_RECEIPT_HOOK_UNAVAILABLE promotion=false");
+        }
+        if(packboundNativeHook!=null)try{
+            enemyDamageReceiptHook=com.inigmasgames.hytale.patch.NativeDamageReceiptHook.install(context->{
+                String enemy=enemyActions.originalDamageReceipt(context);
+                if(enemy!=null)return enemy;
+                try{return skillExecutionSystem.nativeBasics().originalDamageReceipt(context);}
+                catch(RuntimeException unavailable){return null;} // Receipt failure cannot alter an ordinary player hit.
+            });
+        }catch(LinkageError|RuntimeException missingHook){
+            enemyDamageReceiptHook=null;
+            LOGGER.atWarning().withCause(missingHook).log("RPG_ENEMY_DAMAGE_RECEIPT_HOOK_UNAVAILABLE promotion=false");
+        }
+        skillExecutionSystem.nativeBasics().configureNativeDamageReceipt(enemyDamageReceiptHook!=null);
+        var enemyDecision=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthDecision(
+                encounterRewards,enemyBindings,enemyBalance,worldConfiguration::snapshot);
+        var enemyReservation=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthReservation(
+                enemyDecision,enemyWorldAdmission,encounterRewards);
+        var enemyAttachment=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthAttachment(
+                encounterRewards,
+                new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStateAttachment(supportSystem.runtime().finite()),
+                new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActionAttachment(
+                        encounterRewards,difficultyCombat,enemyActions,supportSystem.runtime().finite(),enemyBindings),enemyBalance,enemyBindings);
+        var enemyPublication=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthPublication(
+                encounterRewards,difficultyCombat,enemyWorldAdmission,
+                com.inigmasgames.hytalerpg.enemies.EnemyVisualVariants.canonical(),enemyBindings,enemyWeaponVisuals);
+        var enemyBirthOwner=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthOwner(
+                enemyBindings,enemyWorldAdmission,encounterRewards,difficultyCombat,enemyActions,
+                enemyReservation,enemyDecision,enemyAttachment,enemyPublication,packboundNativeHook!=null&&enemyProjectileHook!=null&&enemyDamageReceiptHook!=null);
+        this.enemyBirthOwner=enemyBirthOwner;
+        encounterRewards.configureQaEncounters(enemyBirthOwner.qaEncounters());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthOwner.Removal(enemyBirthOwner));
+        var enemyWholeBirthRecovery=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyWholeBirthRecovery(
+                enemyWorldAdmission,encounterRewards,enemyBindings,enemyAttachment,enemyPublication,enemyBirthOwner);
+        getEntityStoreRegistry().registerSystem(enemyWholeBirthRecovery);
+        var enemyWorldRebind=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyWorldRebind(
+                enemyWorldAdmission,enemyBirthOwner,packboundNativeHook!=null,enemyDamageReceiptHook!=null);
+        enemyStagingRecovery.onReconciled(enemyWorldRebind::begin);
+        enemyWholeBirthRecovery.onPublished(enemyWorldRebind::begin);
+        getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.AddWorldEvent.class,
+                event->enemyWorldRebind.begin(event.getWorld()));
+        for(var existingWorld:com.hypixel.hytale.server.core.universe.Universe.get().getWorlds().values())
+            enemyWorldRebind.begin(existingWorld);
+        enemySpawnGroups=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemySpawnGroups(
+                com.hypixel.hytale.server.spawning.SpawningPlugin.get(),enemyBirthOwner)
+                .install(com.hypixel.hytale.server.core.universe.world.storage.ChunkStore.REGISTRY);
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyEngagement(
+                difficultyCombat,supportSystem.runtime().finite(),
+                enemyBindings,enemyBalance));
+        var enemyAura=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura(
+                difficultyCombat,supportSystem,enemyBindings,enemyBalance);
+        difficultyCombat.configureEnemyPackObserver(enemyAura::reconcilePack);
+        getEntityStoreRegistry().registerSystem(enemyAura);
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura.Death(enemyAura));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura.Removal(enemyAura));
+
         LOGGER.atInfo().log("RPG_STAGE12_NATIVE_REWARDS spawn=LEGACY_WORLD_SPAWN contribution=POST_APPLY_HEALTH_LOSS death=NATIVE_DEATH_COMPONENT deliveryBudget=8_per_second party=SOLO_ONLY connectedProof=false");
         LOGGER.atInfo().log("RPG_STAGE12_SUPPORT_CREDIT healing=POST_NATIVE_WRITE absorption=ACTUAL_CONSUMPTION partyProvider=%s mastery=true connectedProof=false",encounterRewards.partyAvailability());
         LOGGER.atInfo().log("RPG_STAGE12_MASTERY damage=INSPECT_BEFORE_DEATH control=NATIVE_STATE_CHANGE healing=HOSTILE_INJURY_ONLY rootDedup=DURABLE sustainedIntervalSeconds=5 movementAvoidance=UNAVAILABLE connectedProof=false");
@@ -603,10 +997,15 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEventRegistry().registerAsync(com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent.class,
                 incoming->incoming.thenCompose(event->{
                     if(event.getWorld()==null)return java.util.concurrent.CompletableFuture.completedFuture(event);
+                    var hitRoot=playerHitRoots.open(event.getWorld().getWorldConfig().getUuid(),event.getPlayerRef().getUuid(),event.getPlayerRef())
+                            .handle((ignored,error)->{if(error!=null)LOGGER.atWarning().withCause(error)
+                                    .log("PLAYER_HIT_ROOT_RESERVATION_UNAVAILABLE player=%s",event.getPlayerRef().getUuid());
+                                return (Void)null;}).toCompletableFuture();
                     var player=persistenceReady.preConnect(event.getPlayerRef(),event.getWorld().getWorldConfig().getUuid());
                     var custody=gearLootRuntime==null?java.util.concurrent.CompletableFuture.<Void>completedFuture(null):gearLootRuntime.prepareInitialView();
-                    return java.util.concurrent.CompletableFuture.allOf(player,custody).orTimeout(30,java.util.concurrent.TimeUnit.SECONDS)
-                            .whenComplete((ignored,error)->{if(error!=null)persistenceReady.detach(event.getPlayerRef());})
+                    return java.util.concurrent.CompletableFuture.allOf(player,custody,hitRoot).orTimeout(30,java.util.concurrent.TimeUnit.SECONDS)
+                            .whenComplete((ignored,error)->{if(error!=null){persistenceReady.detach(event.getPlayerRef());
+                                playerHitRoots.detach(event.getPlayerRef().getUuid(),event.getPlayerRef());}})
                             .thenApply(ignored->event);
                 }));
         if(rpgCommand.getSubCommand("readypath") instanceof com.inigmasgames.hytalerpg.commands.RpgReadyPathCommand diagnostic)
@@ -629,11 +1028,17 @@ public final class HyArpgPlugin extends TavernsPlugin {
         });
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, event -> {
             UUID player = event.getPlayerRef().getUuid();
+            com.inigmasgames.hytalerpg.gear.ManagedGearDamageInteraction.forget(player);
+            if(gearRecovery!=null)gearRecovery.cancel(player);
+            if(gearSignatures!=null)gearSignatures.clearActor(player);
+            if(itemAffixes!=null)itemAffixes.detach(player);
+            com.inigmasgames.hytalerpg.gear.ManagedCarrierDamageInteraction.forget(player);
             var sentinelWorld=com.hypixel.hytale.server.core.universe.Universe.get().getWorld(event.getPlayerRef().getWorldUuid());
             if(sentinelWorld!=null)sentinelWorld.execute(()->summonSystem.dormancyForTransfer(sentinelWorld.getEntityStore().getStore(),player));
             difficultyPortals.disconnect(player);
             if(healingProbe!=null)healingProbe.detach(player);
             persistenceReady.detach(event.getPlayerRef());
+            if(playerHitRoots!=null)playerHitRoots.detach(player,event.getPlayerRef());
             try { rpgHud.teardown(player, "PLAYER_DISCONNECT"); }
             catch (RuntimeException error) {
                 LOGGER.atWarning().withCause(error).log("RPG HUD disconnect teardown failed player=%s", player);
@@ -649,10 +1054,16 @@ public final class HyArpgPlugin extends TavernsPlugin {
             var playerRef = event.getHolder().getComponent(
                     com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
             if (playerRef != null) {
+                com.inigmasgames.hytalerpg.gear.ManagedGearDamageInteraction.forget(playerRef.getUuid());
+                if(gearRecovery!=null)gearRecovery.cancel(playerRef.getUuid());
+                if(gearSignatures!=null)gearSignatures.clearActor(playerRef.getUuid());
+                if(itemAffixes!=null)itemAffixes.detach(playerRef.getUuid());
+                com.inigmasgames.hytalerpg.gear.ManagedCarrierDamageInteraction.forget(playerRef.getUuid());
                 var sentinelWorld=com.hypixel.hytale.server.core.universe.Universe.get().getWorld(playerRef.getWorldUuid());
                 if(sentinelWorld!=null)sentinelWorld.execute(()->summonSystem.dormancyForTransfer(sentinelWorld.getEntityStore().getStore(),playerRef.getUuid()));
                 nativeAbilities.detach(playerRef.getUuid(), "WORLD_DRAIN");
                 persistenceReady.drain(playerRef);
+                if(playerHitRoots!=null)playerHitRoots.detach(playerRef.getUuid(),playerRef);
                 if(healingProbe!=null)healingProbe.detach(playerRef.getUuid());
                 abilityInputs.clear(playerRef.getUuid());
                 bosses.clear(playerRef.getUuid());
@@ -731,13 +1142,54 @@ public final class HyArpgPlugin extends TavernsPlugin {
     }
 
     private void shutdownRpg() {
+        RuntimeException enemyTeardown=null;
+        try{if(enemyHealthBars!=null)enemyHealthBars.shutdown();}
+        catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_PRESENTATION_TEARDOWN",failure);}
+        finally{enemyHealthBars=null;}
+        try{if(enemySpawnGroups!=null)enemySpawnGroups.close();}
+        catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_SPAWN_GROUPS_TEARDOWN",failure);}
+        finally{enemySpawnGroups=null;}
+        try{if(enemyProjectileHook!=null)enemyProjectileHook.close();}
+        catch(Exception failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_PROJECTILE_HOOK_TEARDOWN",failure);}
+        finally{enemyProjectileHook=null;}
+        try{if(enemyDamageReceiptHook!=null)enemyDamageReceiptHook.close();}
+        catch(Exception failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_DAMAGE_RECEIPT_HOOK_TEARDOWN",failure);}
+        finally{enemyDamageReceiptHook=null;}
+        try{if(enemyActions!=null)enemyActions.clear();}
+        catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_ACTION_TEARDOWN",failure);}
+        finally{enemyActions=null;}
+        try{com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyDamageInteraction.configure(call->null);}
+        catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_DAMAGE_SCOPE_TEARDOWN",failure);}
+        try{if(packboundNativeHook!=null)packboundNativeHook.close();}
+        catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_PACKBOUND_HOOK_TEARDOWN",failure);}
+        finally{packboundNativeHook=null;}
+        try{com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.configure(
+                new com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.Provider(){});}
+        catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_TIMING_TEARDOWN",failure);}
+        try{com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.configureEncounterProtection((store,target)->false);}
+        catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_PROTECTION_TEARDOWN",failure);}
+        try{if(enemyOutgoingEffects!=null)enemyOutgoingEffects.close();}
+        catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_OUTGOING_TEARDOWN",failure);}
+        finally{enemyOutgoingEffects=null;}
+        try{if(enemyArmor!=null)enemyArmor.close();}
+        catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_ARMOR_TEARDOWN",failure);}
+        finally{enemyArmor=null;}
+        enemyReflectiveEffects=null;
+        gearReceiptObservers.clear();
+        gearStatuses=null;itemAffixes=null;
+        if(gearSignatures!=null){gearSignatures.close();gearSignatures=null;}
+        if(gearDurability!=null){gearDurability.close();gearDurability=null;}
         startupState=StartupState.STOPPING;
         immersiveEvents.close();
         immersiveEvents = com.inigmasgames.hywind.compat.RpgGameplayEventPublisher.NO_OP;
+        if (nativeDropTraceProbe != null) nativeDropTraceProbe.close();
         if (inventoryEntryProbe != null) inventoryEntryProbe.close();
         if (tabTraceProbe != null) tabTraceProbe.close();
         if(persistenceReady!=null)persistenceReady.close();
         if (worldSpawnDensity != null) { worldSpawnDensity.close(); worldSpawnDensity = null; }
+        if (populationBalance != null) { populationBalance.close(); populationBalance = null; }
+        worldConfiguration=null;
+        if (monsterSpawnTrace != null) { monsterSpawnTrace.close(); monsterSpawnTrace = null; }
         com.inigmasgames.hytalerpg.gear.GearNativeItems.bind(null);
         com.inigmasgames.hytalerpg.gear.GearNativeItems.bindAuthority(com.inigmasgames.hytalerpg.gear.GearInstance::qaOnly);
         if(gearLootRuntime!=null){gearLootRuntime.close();gearLootRuntime=null;}
@@ -752,6 +1204,10 @@ public final class HyArpgPlugin extends TavernsPlugin {
             outboundWatcher = null;
         }
         RpgDiagnosticsModule.close();
+        CanvasUI.setInteractionObserver(null);
+        if (interactionTrace != null) { interactionTrace.close(); interactionTrace = null; }
+        if (gearQaTrace != null) { gearQaTrace.close(); gearQaTrace = null; }
+        if (sentinelQaTrace != null) { sentinelQaTrace.close(); sentinelQaTrace = null; }
         if (nativeAbilities != null) { nativeAbilities.close(); nativeAbilities = null; }
         if (rpgHud != null) { rpgHud.close(); rpgHud = null; }
         skillExecutionSystem = null;
@@ -769,6 +1225,13 @@ public final class HyArpgPlugin extends TavernsPlugin {
         }
         combatKernel = null;
         LOGGER.atInfo().log("HYTALE_RPG_SHUTDOWN revision=%s stage=%s", BuildIdentity.REVISION, BuildIdentity.STAGE);
+        if(enemyTeardown!=null)throw enemyTeardown;
+    }
+
+    private static RuntimeException enemyTeardownFailure(RuntimeException first,String boundary,Exception failure){
+        var wrapped=new IllegalStateException(boundary,failure);
+        if(first==null)return wrapped;
+        first.addSuppressed(wrapped);return first;
     }
 
     private void shutdownCanvas() {

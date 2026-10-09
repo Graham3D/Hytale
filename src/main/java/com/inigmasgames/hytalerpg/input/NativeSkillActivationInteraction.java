@@ -29,11 +29,21 @@ public final class NativeSkillActivationInteraction extends SimpleInstantInterac
         var chain = context.getChain();
         if (buffer == null || owner == null || !owner.isValid() || chain == null) return;
         // Do not activate proxy actors, child/fork chains, foreign runes or Signature Move.
-        if (!owner.equals(context.getEntity()) || chain.getForkedChainId() != null) return;
         var player = buffer.getComponent(owner, PlayerRef.getComponentType());
+        if (player == null) return;
+        if (!owner.equals(context.getEntity()) || chain.getForkedChainId() != null) {
+            inputs.diagnostic(player.getUuid(), "BRIDGE_REJECTED", java.util.Map.of(
+                    "reason", "PROXY_OR_FORK", "action", type.name(), "chainId", chain.getChainId()));
+            return;
+        }
         var original = context.getOriginalItemType();
-        var ability = original == null ? null : original.getAbility();
-        if (player == null || ability == null || !NativeAbilityBridgeAudit.rootForItem(original.getId()).equals(ability.getCastRootId())) return;
+        var ability = original != null && original.getAbility() instanceof com.hypixel.hytale.server.core.asset.type.item.config.CoreItemAbility a ? a : null;
+        if (ability == null || !NativeAbilityBridgeAudit.rootForItem(original.getId()).equals(ability.getCastRootId())) {
+            inputs.diagnostic(player.getUuid(), "BRIDGE_REJECTED", java.util.Map.of(
+                    "reason", "ORIGINAL_ITEM_OR_ROOT_MISMATCH", "action", type.name(),
+                    "chainId", chain.getChainId(), "originalItem", original == null ? "" : original.getId()));
+            return;
+        }
         inputs.acceptNativeExecution(player.getUuid(), type, chain.getChainId(), chain,
                 original.getId(), context.getHeldItemSlot());
     }

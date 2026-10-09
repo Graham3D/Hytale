@@ -1,0 +1,21 @@
+$Base = "../RpgInventory/GridCommon.ui";
+ItemGrid #OutsideDropTarget {
+  InventorySectionId: 1;
+  Anchor: (Full: 0);
+  SlotsPerRow: 1;
+  // One transparent cell spans the viewport; the centered workspace above it
+  // retains hit priority, so only releases outside the window reach this grid.
+  Style: (...$Base.@ProbeGridStyle, SlotSize: 4096, SlotSpacing: 0, SlotBackground: "TransparentSlot.png");
+  Background: #000000(0);
+  // Mask all native cell painting, including its built-in hover overlay.
+  // The grid remains visible/hit-testable for native cursor releases.
+  MaskTexturePath: "TransparentSlot.png";
+  InfoDisplay: None;
+  Padding: 0;
+  ShowScrollbar: false;
+  AreItemsDraggable: true;
+  AllowMaxStackDraggableItems: true;
+  DisplayItemQuantity: false;
+  RenderItemQualityBackground: false;
+  RenderEmptySlots: true;
+}

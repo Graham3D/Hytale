@@ -40,5 +40,7 @@
       "EntityStatId": "SignatureEnergy",
       "Amount": 1
     }
-  ]
+  ],
+  "RpgProcSelector": "RPG_GearRoute_I_Weapon_Crossbow_Damage_Combo_Projectile",
+  "RpgProcCoefficient": 1.0
 }

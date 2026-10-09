@@ -1,0 +1,8 @@
+{
+  "Duration": 0.6,
+  "Debuff": true,
+  "ApplicationEffects": {
+    "MovementEffects": { "DisableAll": true },
+    "AbilityEffects": { "Disabled": ["Primary", "Secondary", "Ability1", "Ability2", "Ability3", "Ability4"] }
+  }
+}

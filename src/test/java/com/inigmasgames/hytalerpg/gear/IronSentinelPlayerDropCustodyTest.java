@@ -58,6 +58,24 @@ final class IronSentinelPlayerDropCustodyTest {
             assertEquals("SPATIAL_BAG",loot.releaseIronDrop(event,owner,item.identity()).state());
         }
     }
+    @Test void migratedBagGearCanDropWithAnOlderPlayerOwnedInventoryReceipt() {
+        UUID owner=UUID.randomUUID(),other=UUID.randomUUID(),world=UUID.randomUUID();var item=iron(false);
+        String event="migrated-source/"+UUID.randomUUID();long now=System.currentTimeMillis();
+        var source=new EnemyRewardRegistry.LootSource(event,world,UUID.randomUUID(),item.sourceEra(),
+                item.itemLevel(),"test",ProgressionMath.Rank.COMMON,ProgressionMath.Rarity.ORDINARY,"test");
+        var allocation=new GearClaims.Allocation(GearClaims.Mode.SOLO,"solo/"+owner,0,List.of(owner),owner,owner,owner,
+                now,now+300_000,1,owner,List.of());
+        var initial=new GearLootService.Loot(source,Vec3.ZERO,allocation,0,"natural",
+                new GearDropGenerator.Result(item,Map.of(),Map.of(),"GENERATED_CANDIDATE"),
+                "INVENTORY","natural","test");
+        try(var store=new FileEncounterStore(root.resolve("migrated-bag"))){
+            store.gearTransaction("loot",event,GearLootService.Loot.class,old->old.orElse(initial));
+            var loot=service(store);
+            assertThrows(IllegalArgumentException.class,()->loot.beginIronDrop(event,other,world,Vec3.ZERO,item,true));
+            assertEquals("DROP_PENDING_NATIVE_SAVE",loot.beginIronDrop(event,owner,world,Vec3.ZERO,item,true).state());
+            assertEquals("SPATIAL_BAG",loot.releaseIronDrop(event,owner,item.identity()).state());
+        }
+    }
     @Test void cobaltDaggersAndArmorRetainIdentityAcrossDropAndForge(){
         for(String baseId:List.of("gm.daggers_cobalt.n","gm.plate_iron.head.n")){
             UUID owner=UUID.randomUUID(),world=UUID.randomUUID();var item=qa(baseId);

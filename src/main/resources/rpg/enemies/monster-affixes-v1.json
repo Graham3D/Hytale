@@ -1,0 +1,1112 @@
+{
+  "schemaVersion": 1,
+  "revision": "monster-affixes-v1.1-stone-skin-rating",
+  "difficultyOrder": [
+    "NORMAL",
+    "NIGHTMARE",
+    "HELL"
+  ],
+  "definitions": [
+    {
+      "id": "ME-001",
+      "key": "extra_fast",
+      "operator": "EXTRA_FAST",
+      "displayName": "Extra Fast",
+      "tagTemplate": "Extra Fast",
+      "randomWeights": [
+        100,
+        100,
+        100
+      ],
+      "requiredCapabilities": [
+        "MOBILE"
+      ],
+      "constraintGroups": [],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "movementIncrease": [
+          0.2,
+          0.25,
+          0.3
+        ],
+        "recoveryRateIncrease": [
+          0.1,
+          0.15,
+          0.2
+        ]
+      },
+      "inheritance": {
+        "mode": "MOVEMENT_ONLY",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-001-P",
+      "negativeTestId": "ME-001-N"
+    },
+    {
+      "id": "ME-002",
+      "key": "extra_strong",
+      "operator": "EXTRA_STRONG",
+      "displayName": "Extra Strong",
+      "tagTemplate": "Extra Strong",
+      "randomWeights": [
+        100,
+        100,
+        100
+      ],
+      "requiredCapabilities": [
+        "PHYSICAL_DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "physicalIncrease": [
+          0.25,
+          0.35,
+          0.45
+        ]
+      },
+      "inheritance": {
+        "mode": "PHYSICAL_INCREASE",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-002-P",
+      "negativeTestId": "ME-002-N"
+    },
+    {
+      "id": "ME-003",
+      "key": "magic_resistant",
+      "operator": "MAGIC_RESISTANT",
+      "displayName": "Magic Resistant",
+      "tagTemplate": "Magic Resistant",
+      "randomWeights": [
+        40,
+        80,
+        100
+      ],
+      "requiredCapabilities": [],
+      "constraintGroups": [
+        "SURVIVAL"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "elementalResistanceAdd": [
+          0.15,
+          0.2,
+          0.25
+        ]
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-003-P",
+      "negativeTestId": "ME-003-N"
+    },
+    {
+      "id": "ME-004",
+      "key": "stone_skin",
+      "operator": "STONE_SKIN",
+      "displayName": "Stone Skin",
+      "tagTemplate": "Stone Skin",
+      "randomWeights": [
+        60,
+        80,
+        100
+      ],
+      "requiredCapabilities": [
+        "DEFENSE_STAT"
+      ],
+      "constraintGroups": [
+        "SURVIVAL"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "defenseRatingScale": [
+          0.25,
+          0.3333333333333333,
+          0.42857142857142855
+        ]
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-004-P",
+      "negativeTestId": "ME-004-N"
+    },
+    {
+      "id": "ME-005",
+      "key": "fire_enchanted",
+      "operator": "FIRE_ENCHANTED",
+      "displayName": "Fire Enchanted",
+      "tagTemplate": "Fire Enchanted",
+      "randomWeights": [
+        70,
+        80,
+        90
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "ELEMENTAL",
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "extraPowerFraction": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "resistanceAdd": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "channel": "FIRE"
+      },
+      "inheritance": {
+        "mode": "EXTRA_ELEMENTAL_POWER_ONLY",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-005-P",
+      "negativeTestId": "ME-005-N"
+    },
+    {
+      "id": "ME-006",
+      "key": "cold_enchanted",
+      "operator": "COLD_ENCHANTED",
+      "displayName": "Cold Enchanted",
+      "tagTemplate": "Cold Enchanted",
+      "randomWeights": [
+        70,
+        80,
+        90
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "ELEMENTAL",
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "extraPowerFraction": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "resistanceAdd": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "channel": "WATER"
+      },
+      "inheritance": {
+        "mode": "EXTRA_ELEMENTAL_POWER_ONLY",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-006-P",
+      "negativeTestId": "ME-006-N"
+    },
+    {
+      "id": "ME-007",
+      "key": "lightning_enchanted",
+      "operator": "LIGHTNING_ENCHANTED",
+      "displayName": "Lightning Enchanted",
+      "tagTemplate": "Lightning Enchanted",
+      "randomWeights": [
+        70,
+        80,
+        90
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "ELEMENTAL",
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "extraPowerFraction": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "resistanceAdd": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "channel": "LIGHTNING"
+      },
+      "inheritance": {
+        "mode": "EXTRA_ELEMENTAL_POWER_ONLY",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-007-P",
+      "negativeTestId": "ME-007-N"
+    },
+    {
+      "id": "ME-008",
+      "key": "poison_enchanted",
+      "operator": "POISON_ENCHANTED",
+      "displayName": "Poison Enchanted",
+      "tagTemplate": "Poison Enchanted",
+      "randomWeights": [
+        50,
+        70,
+        90
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "ELEMENTAL",
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "extraPowerFraction": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "resistanceAdd": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "channel": "EARTH"
+      },
+      "inheritance": {
+        "mode": "EXTRA_ELEMENTAL_POWER_ONLY",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-008-P",
+      "negativeTestId": "ME-008-N"
+    },
+    {
+      "id": "ME-009",
+      "key": "wind_enchanted",
+      "operator": "WIND_ENCHANTED",
+      "displayName": "Wind Enchanted",
+      "tagTemplate": "Wind Enchanted",
+      "randomWeights": [
+        50,
+        60,
+        70
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "ELEMENTAL",
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "extraPowerFraction": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "resistanceAdd": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "channel": "WIND"
+      },
+      "inheritance": {
+        "mode": "EXTRA_ELEMENTAL_POWER_ONLY",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-009-P",
+      "negativeTestId": "ME-009-N"
+    },
+    {
+      "id": "ME-010",
+      "key": "earth_enchanted",
+      "operator": "EARTH_ENCHANTED",
+      "displayName": "Earth Enchanted",
+      "tagTemplate": "Earth Enchanted",
+      "randomWeights": [
+        50,
+        60,
+        70
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "ELEMENTAL",
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "extraPowerFraction": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "resistanceAdd": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "channel": "EARTH"
+      },
+      "inheritance": {
+        "mode": "EXTRA_ELEMENTAL_POWER_ONLY",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-010-P",
+      "negativeTestId": "ME-010-N"
+    },
+    {
+      "id": "ME-011",
+      "key": "void_enchanted",
+      "operator": "VOID_ENCHANTED",
+      "displayName": "Void Enchanted",
+      "tagTemplate": "Void Enchanted",
+      "randomWeights": [
+        50,
+        60,
+        70
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "ELEMENTAL",
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "extraPowerFraction": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "resistanceAdd": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "channel": "VOID"
+      },
+      "inheritance": {
+        "mode": "EXTRA_ELEMENTAL_POWER_ONLY",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-011-P",
+      "negativeTestId": "ME-011-N"
+    },
+    {
+      "id": "ME-012",
+      "key": "spectral_hit",
+      "operator": "SPECTRAL_HIT",
+      "displayName": "Spectral Hit",
+      "tagTemplate": "Spectral Hit",
+      "randomWeights": [
+        30,
+        50,
+        70
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "ELEMENTAL",
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "extraPowerFraction": [
+          0.2,
+          0.25,
+          0.3
+        ],
+        "channels": [
+          "WIND",
+          "WATER",
+          "FIRE",
+          "EARTH",
+          "LIGHTNING",
+          "VOID"
+        ]
+      },
+      "inheritance": {
+        "mode": "EXTRA_ELEMENTAL_POWER_ONLY",
+        "parameterScale": 0.5
+      },
+      "positiveTestId": "ME-012-P",
+      "negativeTestId": "ME-012-N"
+    },
+    {
+      "id": "ME-013",
+      "key": "mana_burn",
+      "operator": "MANA_BURN",
+      "displayName": "Mana Burn",
+      "tagTemplate": "Mana Burn",
+      "randomWeights": [
+        25,
+        50,
+        70
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT",
+        "APPLIED_HIT_RECEIPTS"
+      ],
+      "constraintGroups": [
+        "DENIAL"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "maxManaFraction": [
+          0.02,
+          0.03,
+          0.04
+        ],
+        "damageFractionCap": 0.25,
+        "opportunityLockMs": 1000,
+        "victimAggregateMaxManaFractionPerSecond": 0.08
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-013-P",
+      "negativeTestId": "ME-013-N"
+    },
+    {
+      "id": "ME-014",
+      "key": "cursed",
+      "operator": "CURSED",
+      "displayName": "Cursed",
+      "tagTemplate": "Cursed",
+      "randomWeights": [
+        30,
+        50,
+        60
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT",
+        "HOSTILE_STATUS_ADMISSION"
+      ],
+      "constraintGroups": [
+        "DENIAL"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "statusChance": [
+          0.25,
+          0.3,
+          0.35
+        ],
+        "outgoingDirectReduction": [
+          0.1,
+          0.125,
+          0.15
+        ],
+        "durationMs": 4000,
+        "opportunityLockMs": 2000,
+        "statusPackage": "ME_WEAKENED"
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-014-P",
+      "negativeTestId": "ME-014-N"
+    },
+    {
+      "id": "ME-015",
+      "key": "knockback",
+      "operator": "KNOCKBACK",
+      "displayName": "Knockback",
+      "tagTemplate": "Knockback",
+      "randomWeights": [
+        35,
+        50,
+        60
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "CONTROL"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "additionalNativeKnockbackStrength": [
+          0.5,
+          0.65,
+          0.8
+        ]
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-015-P",
+      "negativeTestId": "ME-015-N"
+    },
+    {
+      "id": "ME-016",
+      "key": "vampiric",
+      "operator": "VAMPIRIC",
+      "displayName": "Vampiric",
+      "tagTemplate": "Vampiric",
+      "randomWeights": [
+        25,
+        45,
+        60
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT",
+        "APPLIED_HIT_RECEIPTS"
+      ],
+      "constraintGroups": [
+        "SURVIVAL"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "healthLeechFraction": [
+          0.05,
+          0.07,
+          0.1
+        ],
+        "maxOwnHealthFractionPerSecond": 0.01
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-016-P",
+      "negativeTestId": "ME-016-N"
+    },
+    {
+      "id": "ME-017",
+      "key": "unwavering",
+      "operator": "UNWAVERING",
+      "displayName": "Unwavering",
+      "tagTemplate": "Unwavering",
+      "randomWeights": [
+        25,
+        40,
+        55
+      ],
+      "requiredCapabilities": [],
+      "constraintGroups": [],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "statusImmunityFamilies": [
+          "STUN_STAGGER"
+        ]
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-017-P",
+      "negativeTestId": "ME-017-N"
+    },
+    {
+      "id": "ME-018",
+      "key": "unstoppable",
+      "operator": "UNSTOPPABLE",
+      "displayName": "Unstoppable",
+      "tagTemplate": "Unstoppable",
+      "randomWeights": [
+        25,
+        40,
+        55
+      ],
+      "requiredCapabilities": [
+        "MOBILE"
+      ],
+      "constraintGroups": [],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "immuneMovementComponent": "SLOW_ONLY"
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-018-P",
+      "negativeTestId": "ME-018-N"
+    },
+    {
+      "id": "ME-019",
+      "key": "frenzied",
+      "operator": "FRENZIED",
+      "displayName": "Frenzied",
+      "tagTemplate": "Frenzied",
+      "randomWeights": [
+        25,
+        45,
+        60
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "cycleMs": 12000,
+        "activeWindowStartMs": 8000,
+        "activeWindowDurationMs": 4000,
+        "allDirectIncrease": [
+          0.2,
+          0.25,
+          0.3
+        ],
+        "movementIncrease": [
+          0.1,
+          0.125,
+          0.15
+        ],
+        "recoveryRateIncrease": [
+          0.1,
+          0.125,
+          0.15
+        ]
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-019-P",
+      "negativeTestId": "ME-019-N"
+    },
+    {
+      "id": "ME-020",
+      "key": "avenger",
+      "operator": "AVENGER",
+      "displayName": "Avenger",
+      "tagTemplate": "Avenger {stacks}/5",
+      "randomWeights": [
+        15,
+        35,
+        50
+      ],
+      "requiredCapabilities": [
+        "PACK_LEADER",
+        "MINION_ROSTER",
+        "DIRECT_HIT"
+      ],
+      "constraintGroups": [
+        "LEADER",
+        "OFFENSE"
+      ],
+      "allowedRarities": [
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "perDefeatedMinionDirectIncrease": [
+          0.05,
+          0.06,
+          0.07
+        ],
+        "perDefeatedMinionMovementIncrease": 0.02,
+        "maxStacks": 5
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-020-P",
+      "negativeTestId": "ME-020-N"
+    },
+    {
+      "id": "ME-021",
+      "key": "empowered_minions",
+      "operator": "EMPOWERED_MINIONS",
+      "displayName": "Empowered Minions",
+      "tagTemplate": "Empowered Minions",
+      "randomWeights": [
+        25,
+        45,
+        60
+      ],
+      "requiredCapabilities": [
+        "PACK_LEADER",
+        "MINION_ROSTER"
+      ],
+      "constraintGroups": [
+        "LEADER"
+      ],
+      "allowedRarities": [
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "minionMaxHealthIncrease": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "minionDirectIncrease": [
+          0.1,
+          0.125,
+          0.15
+        ],
+        "minionMovementIncrease": [
+          0.05,
+          0.075,
+          0.1
+        ]
+      },
+      "inheritance": {
+        "mode": "EMPOWERED_MINION_SNAPSHOT"
+      },
+      "positiveTestId": "ME-021-P",
+      "negativeTestId": "ME-021-N"
+    },
+    {
+      "id": "ME-022",
+      "key": "horde",
+      "operator": "HORDE",
+      "displayName": "Horde",
+      "tagTemplate": "Horde",
+      "randomWeights": [
+        15,
+        25,
+        35
+      ],
+      "requiredCapabilities": [
+        "PACK_LEADER",
+        "MINION_ROSTER"
+      ],
+      "constraintGroups": [
+        "LEADER"
+      ],
+      "allowedRarities": [
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "additionalInitialMinions": 2,
+        "maximumPackMembers": 8
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-022-P",
+      "negativeTestId": "ME-022-N"
+    },
+    {
+      "id": "ME-023",
+      "key": "aura_enchanted",
+      "operator": "AURA_ENCHANTED",
+      "displayName": "Aura Enchanted",
+      "tagTemplate": "Aura: {selectorLabel}",
+      "randomWeights": [
+        20,
+        35,
+        50
+      ],
+      "requiredCapabilities": [
+        "PACK_LEADER",
+        "MINION_ROSTER"
+      ],
+      "constraintGroups": [
+        "LEADER"
+      ],
+      "allowedRarities": [
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "selectorWeights": {
+          "MIGHT": 1,
+          "WARD": 1,
+          "HASTE": 1
+        },
+        "radiusMeters": 8,
+        "membershipUpdateMs": 250,
+        "providerExpiryMs": 500,
+        "mightPhysicalIncrease": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "wardElementalResistanceAdd": [
+          0.1,
+          0.15,
+          0.2
+        ],
+        "hasteMovementIncrease": [
+          0.1,
+          0.125,
+          0.15
+        ],
+        "hasteRecoveryRateIncrease": [
+          0.05,
+          0.075,
+          0.1
+        ]
+      },
+      "inheritance": {
+        "mode": "PACK_AURA_MEMBERSHIP_ONLY"
+      },
+      "positiveTestId": "ME-023-P",
+      "negativeTestId": "ME-023-N"
+    },
+    {
+      "id": "ME-024",
+      "key": "packbound",
+      "operator": "PACKBOUND",
+      "displayName": "Packbound",
+      "tagTemplate": "Packbound: {guardLabel}",
+      "randomWeights": [
+        8,
+        18,
+        25
+      ],
+      "requiredCapabilities": [
+        "PACK_LEADER",
+        "MINION_ROSTER"
+      ],
+      "constraintGroups": [
+        "LEADER",
+        "SURVIVAL"
+      ],
+      "allowedRarities": [
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "minimumInitialGuards": 2,
+        "maximumInitialGuards": 5,
+        "guardAreaMeters": 24,
+        "allDamageBlocked": true,
+        "allExternalStatusMutationsBlocked": true
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-024-P",
+      "negativeTestId": "ME-024-N"
+    },
+    {
+      "id": "ME-025",
+      "key": "armor_breaker",
+      "operator": "ARMOR_BREAKER",
+      "displayName": "Armor Breaker",
+      "tagTemplate": "Armor Breaker",
+      "randomWeights": [
+        25,
+        40,
+        55
+      ],
+      "requiredCapabilities": [
+        "DIRECT_HIT",
+        "HOSTILE_STATUS_ADMISSION"
+      ],
+      "constraintGroups": [],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "statusChance": [
+          0.2,
+          0.25,
+          0.3
+        ],
+        "defenseReduction": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "durationMs": 4000,
+        "opportunityLockMs": 2000,
+        "statusPackage": "ME_ARMOR_BROKEN"
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-025-P",
+      "negativeTestId": "ME-025-N"
+    },
+    {
+      "id": "ME-026",
+      "key": "reflective",
+      "operator": "REFLECTIVE",
+      "displayName": "Reflective",
+      "tagTemplate": "Reflective",
+      "randomWeights": [
+        10,
+        20,
+        30
+      ],
+      "requiredCapabilities": [
+        "APPLIED_HIT_RECEIPTS"
+      ],
+      "constraintGroups": [],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "healthDamageReflectFraction": [
+          0.06,
+          0.08,
+          0.1
+        ],
+        "maxVictimHealthFractionPerHit": 0.01,
+        "maxVictimHealthFractionPerSecond": 0.02,
+        "maximumOriginDistanceMeters": 24
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-026-P",
+      "negativeTestId": "ME-026-N"
+    },
+    {
+      "id": "ME-027",
+      "key": "bulwark",
+      "operator": "BULWARK",
+      "displayName": "Bulwark",
+      "tagTemplate": "Bulwark",
+      "randomWeights": [
+        20,
+        35,
+        50
+      ],
+      "requiredCapabilities": [
+        "SHIELD_OWNER"
+      ],
+      "constraintGroups": [
+        "SURVIVAL"
+      ],
+      "allowedRarities": [
+        "CHAMPION",
+        "UNIQUE",
+        "SUPER_UNIQUE",
+        "BOSS"
+      ],
+      "parameters": {
+        "initialShieldMaxHealthFraction": [
+          0.15,
+          0.2,
+          0.25
+        ],
+        "regenerates": false
+      },
+      "inheritance": {
+        "mode": "NONE"
+      },
+      "positiveTestId": "ME-027-P",
+      "negativeTestId": "ME-027-N"
+    }
+  ]
+}

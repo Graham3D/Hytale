@@ -1,0 +1,10 @@
+{
+  "RequireNewClick": true,
+  "ClickQueuingTimeout": 0.173913,
+  "Cooldown": {
+    "Cooldown": 0.188696
+  },
+  "Interactions": [
+    "RPG_Action_Sword_S115_R40_Weapon_Sword_Primary"
+  ]
+}

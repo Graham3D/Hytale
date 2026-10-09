@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "revision": "master-enemies-v1.0",
+  "difficultyOrder": [
+    "NORMAL",
+    "NIGHTMARE",
+    "HELL"
+  ],
+  "promotion": {
+    "weightsByDifficulty": {
+      "NORMAL": { "NORMAL": 920, "CHAMPION": 16, "UNIQUE": 64 },
+      "NIGHTMARE": { "NORMAL": 860, "CHAMPION": 28, "UNIQUE": 112 },
+      "HELL": { "NORMAL": 800, "CHAMPION": 40, "UNIQUE": 160 }
+    },
+    "championMembers": [
+      2,
+      4
+    ],
+    "uniqueMinions": [
+      3,
+      5
+    ],
+    "maximumPackMembers": 8,
+    "specialPackLimitPerLoadedWorld": 12,
+    "specialPackLimitPerHorizontalCell": 3,
+    "horizontalCellMeters": 64,
+    "ordinaryLeashMeters": 32,
+    "minimumMinionSpawnDistanceMeters": 4,
+    "maximumMinionSpawnDistanceMeters": 10,
+    "promoteNativeBosses": false,
+    "promoteNeutralWithoutExplicitBinding": false
+  },
+  "rarities": {
+    "NORMAL": {
+      "maxHealth": 1.0,
+      "directDamage": 1.0,
+      "xp": 1.0,
+      "quantity": 1.0,
+      "learn": 1.0,
+      "learnCap": 0.0,
+      "affixes": [
+        0,
+        0,
+        0
+      ]
+    },
+    "CHAMPION": {
+      "maxHealth": 1.6,
+      "directDamage": 1.05,
+      "xp": 1.5,
+      "quantity": 1.2,
+      "learn": 1.15,
+      "learnCap": 0.03,
+      "affixes": [
+        1,
+        1,
+        1
+      ]
+    },
+    "UNIQUE": {
+      "maxHealth": 2.4,
+      "directDamage": 1.1,
+      "xp": 2.0,
+      "quantity": 1.5,
+      "learn": 1.35,
+      "learnCap": 0.06,
+      "affixes": [
+        1,
+        2,
+        3
+      ]
+    },
+    "SUPER_UNIQUE": {
+      "maxHealth": 3.0,
+      "directDamage": 1.15,
+      "xp": 2.5,
+      "quantity": 1.8,
+      "learn": 1.6,
+      "learnCap": 0.09,
+      "additionalAffixes": [
+        0,
+        1,
+        2
+      ]
+    },
+    "BOSS": {
+      "maxHealth": 1.0,
+      "directDamage": 1.0,
+      "xp": 1.0,
+      "quantity": 1.0,
+      "learn": 1.75,
+      "learnCap": 0.1,
+      "automaticAffixes": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "relationships": {
+    "MINION": {
+      "maxHealth": 1.15,
+      "directDamage": 1.0,
+      "xp": 1.05,
+      "quantity": 1.0,
+      "learn": 1.05,
+      "learnCap": 0.005,
+      "ownAffixCount": 0
+    }
+  },
+  "affixRewards": {
+    "firstCountAtBaseline": 1,
+    "maximumCount": 4,
+    "xpPerAdditionalAffix": 0.15,
+    "quantityPerAdditionalAffix": 0.15,
+    "learnPerAdditionalAffix": 0
+  },
+  "loot": {
+    "quantityMode": "BONUS_FROM_FINALIZED_BASE_EQUIPMENT_SLOTS",
+    "maximumEquipmentPerDefeat": 16,
+    "modifyQualityWeights": false,
+    "multiplyNativeMaterials": false
+  },
+  "learning": {
+    "retainCanonicalSourceMapping": true,
+    "retainWisdomFormula": true,
+    "retainPity": true,
+    "ordinaryChanceCap": 0.95,
+    "bonusMode": "MIN_RELATIVE_BONUS_AND_RARITY_POINT_CAP",
+    "allowAdditionalAbilityPerSource": false
+  },
+  "immunity": {
+    "ordinaryElementalResistanceCap": 0.75,
+    "ordinaryPenetrationBreaksImmunity": false,
+    "nativeAffinityGrantChance": [
+      0,
+      0.2,
+      1.0
+    ],
+    "affixGrantChance": [
+      0,
+      0.15,
+      0.35
+    ],
+    "affixGrantRarities": [
+      "UNIQUE",
+      "SUPER_UNIQUE"
+    ],
+    "newElementalCaps": {
+      "NORMAL": [
+        0,
+        1,
+        1
+      ],
+      "CHAMPION": [
+        0,
+        1,
+        1
+      ],
+      "UNIQUE": [
+        0,
+        1,
+        2
+      ],
+      "SUPER_UNIQUE": [
+        0,
+        1,
+        2
+      ]
+    },
+    "randomPhysicalImmunity": false,
+    "preserveExistingAuthoredNativeImmunities": true
+  },
+  "aggregateCaps": {
+    "movementMultiplier": 1.5,
+    "recoveryRateMultiplier": 1.5,
+    "allDirectIncrease": 0.6,
+    "physicalDirectIncrease": 0.6,
+    "extraElementalPowerFraction": 0.3,
+    "defenseIncrease": 1.0,
+    "nonRarityMaxHealthIncrease": 0.5
+  },
+  "packRecovery": {
+    "rosterCheckIntervalMs": 500,
+    "strayTimeoutMs": 5000,
+    "navigationFailureTimeoutMs": 10000,
+    "loadedRecoveryTimeoutMs": 30000,
+    "missingGuardCountsAsDefeated": false
+  },
+  "presentation": {
+    "targetCardAllTagsRequired": true,
+    "targetCardWidth": 420,
+    "targetCardMaxWidth": 560,
+    "viewportMargin": 16,
+    "padding": 12,
+    "tagGap": 4,
+    "titleFontSize": 18,
+    "tagFontSize": 14,
+    "maxTitleLines": 2,
+    "generatedNameMaxCodepoints": 32,
+    "authoredNameMaxCodepoints": 40,
+    "routineStateUpdatesPerSecond": 4,
+    "overheadMode": "SUPPORTED_TEXT_IDENTIFIER"
+  },
+  "trace": {
+    "detailedMaximumMillis": 30000,
+    "detailedMaximumEvents": 10000
+  },
+  "qa": {
+    "marker": "enemy-qa-enabled",
+    "requiresCopiedSaveGuard": false,
+    "requiresActiveRpgSave": true,
+    "qaEconomicRewards": false
+  },
+  "permissions": {
+    "author": "inigmasgames.rpg.enemies.author"
+  }
+}

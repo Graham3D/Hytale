@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="107" height="107" viewBox="0 0 107 107">
+  <!-- Stock native @2x dimensions and 24-logical-pixel nine-slice boundary.
+       Corner ornaments stay wholly inside the 48-pixel corner slices. -->
+  <path d="M29 22 H78 L85 29 V78 L78 85 H29 L22 78 V29 Z" fill="#101722" stroke="#05090d" stroke-width="3"/>
+  <path d="M29 24 H78 L83 29 V78 L78 83 H29 L24 78 V29 Z" fill="none" stroke="ACCENT" stroke-opacity="0.75" stroke-width="1.5"/>
+  <path d="M30 28 H77 L79 30 V77 L77 79 H30 L28 77 V30 Z" fill="none" stroke="#344252" stroke-opacity="0.6" stroke-width="1"/>
+  <g fill="none" stroke="ACCENT" stroke-opacity="0.45" stroke-width="1">
+    <path d="M30 39 V30 H39 M33 37 V33 H37"/>
+    <path d="M68 30 H77 V39 M70 33 H74 V37"/>
+    <path d="M30 68 V77 H39 M33 70 V74 H37"/>
+    <path d="M68 77 H77 V68 M70 74 H74 V70"/>
+  </g>
+</svg>

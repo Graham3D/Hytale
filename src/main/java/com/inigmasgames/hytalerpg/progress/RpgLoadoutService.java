@@ -32,6 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
+import com.inigmasgames.hytalerpg.gear.GearEffectSnapshot;
+import com.inigmasgames.hytalerpg.gear.ItemSkillGrants;
 
 /** Single transaction boundary for all loadout and gameplay graph mutations. */
 public final class RpgLoadoutService implements RpgLoadoutOperations, AutoCloseable {
@@ -121,6 +123,59 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
         this.inactiveRecovery=new InactivePassiveRecovery(catalog,compiler,graphService);
     }
 
+    /** Equipment owner calls this after every valid-set publication, including an empty set on detach. */
+    public void publishItemSkillAvailability(UUID player,GearEffectSnapshot validEquipment) {
+        var grants=ItemSkillGrants.from(validEquipment);
+        if(!(entitlements instanceof OwnershipEntitlementPolicy policy))
+            throw new IllegalStateException("ITEM_GRANT_REQUIRES_OWNERSHIP_POLICY");
+        Holder holder=holder(player);
+        synchronized(holder) {
+            ensureUsable(player,holder);
+            var unavailable=new java.util.HashSet<String>();
+            for(String skill:holder.state.equippedSkills)
+                if(skill!=null&&!entitlements.developmentMode()&&!holder.state.learnedSkills.contains(skill)&&!grants.containsValue(skill))unavailable.add(skill);
+            if(unavailable.isEmpty()&&policy.temporaryGrants(player).equals(grants))return;
+            if(!unavailable.isEmpty()) {
+                MutationResult result=mutate(holder,player,reference(),candidate->{
+                    for(SkillSlot slot:SkillSlot.values())
+                        if(candidate.skill(slot).map(SkillId::value).filter(unavailable::contains).isPresent()) {
+                            removeRoutesToSkill(candidate,slot);
+                            candidate.skill(slot,null);
+                        }
+                },true);
+                if(!result.success())throw new IllegalStateException("ITEM_GRANT_ASSIGNMENT_CLEANUP_FAILED:"+result.code());
+            }
+            policy.publishTemporarySkills(player,grants);
+            synchronized(holder.presentationLock){holder.presentationState=null;}
+            for(var listener:loadoutMutationListeners)try{listener.accept(player);}catch(RuntimeException ignored){}
+        }
+    }
+
+    /** Disconnect/world-detach callback: revoke item access before a later session can execute. */
+    public void detachItemSkillAvailability(UUID player) {
+        publishItemSkillAvailability(player,GearEffectSnapshot.EMPTY);
+    }
+
+    /** An unlearned item grant always starts at rank one, regardless of saved mastery history. */
+    @Override public int baseSkillRank(UUID player,String skill) {
+        Holder holder=readHolder(player,false);
+        var state=holder.state;
+        if(!state.learnedSkills.contains(skill)&&entitlements instanceof OwnershipEntitlementPolicy policy
+                &&policy.temporaryCopies(player,skill)>0)return 1;
+        return state.gearEconomy.baseRanks().getOrDefault(skill,ProgressionMath.masteryLevel(state.skillMastery.getOrDefault(skill,0L)));
+    }
+
+    public boolean skillAvailable(UUID player,SkillId skill) {
+        Holder holder=readHolder(player,false);
+        return entitlements.skill(holder.state,skill).allowed();
+    }
+
+    /** Learned-only skiller affixes must not raise the rank of a borrowed, unlearned skill. */
+    public boolean learnedSkill(UUID player,String skill) {
+        Holder holder=readHolder(player,false);
+        return holder.state.learnedSkills.contains(skill);
+    }
+
     /** Runtime projection hook. Listener failures cannot roll back or invalidate an already-saved RPG state. */
     public void addMutationListener(Consumer<UUID> listener) { mutationListeners.add(listener); }
     @Override public void addLoadoutMutationListener(Consumer<UUID> listener) { loadoutMutationListeners.add(listener); }
@@ -160,11 +215,18 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
                 if(!intent.player().equals(player)||!intent.before().matches(current()))throw new IllegalStateException("STALE_REWARD_INTENT");
                 for(String id:intent.reward().mastery().keySet())if(catalog.skill(new SkillId(id)).isEmpty())throw new IllegalStateException("RECOVERY_UNKNOWN_MASTERY_SKILL");
                 validateProgression(intent.reward(),intent.before());
+                long priorGold=holder.state.goldBalance.gold();
                 var candidate=holder.state.copy();intent.after().applyTo(candidate);candidate.revision=Math.addExact(candidate.revision,1);
                 try{repository.save(candidate);}catch(RuntimeException error){holder.persistenceUncertain=true;throw error;}
                 holder.state=candidate;
-                trace(player,RpgTraceEventType.PROGRESSION_REWARD_COMMITTED,intent.reward().correlationId(),
-                        rewardDetails(intent.reward(),candidate.rewards.sequence(),intent.hash()));
+                var committed=new LinkedHashMap<String,Object>(rewardDetails(intent.reward(),candidate.rewards.sequence(),intent.hash()));
+                if(intent.reward().goldPot()!=null){
+                    committed.put("goldBonus",intent.reward().goldPot().baseShare()
+                            .multiply(java.math.BigDecimal.valueOf(intent.reward().goldPot().findPercent()).movePointLeft(2)));
+                    committed.put("goldGranted",candidate.goldBalance.gold()-priorGold);
+                    committed.put("goldRemainder",candidate.goldBalance.remainder());
+                }
+                trace(player,RpgTraceEventType.PROGRESSION_REWARD_COMMITTED,intent.reward().correlationId(),committed);
                 // No graph recompile or loadout listener: earning XP must not clear Attunement, triggers or effects.
                 // The existing bounded HUD/projection tick reads the same state authority.
             }
@@ -172,6 +234,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
     }
     private static Map<String,Object> rewardDetails(EarnedReward reward,long sequence,String hash){
         return details("eventId",reward.eventId(),"reason",reward.reason(),"characterXp",reward.characterXp(),"insight",reward.insight(),
+                "goldBase",reward.goldPot()==null?0:reward.goldPot().baseShare(),"goldFindPercent",reward.goldPot()==null?0:reward.goldPot().findPercent(),
                 "mastery",reward.mastery(),"rootCastId",reward.rootCastId(),"skillInstanceId",reward.skillInstanceId(),
                 "correlationId",reward.correlationId(),"sequence",sequence,"receiptHash",hash,"playerPersisted",true,
                 "progression",reward.progression()==null?"NONE":reward.progression());
@@ -403,6 +466,21 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
             for(var attribute:RpgAttribute.values())candidate.attributes.put(attribute.name(),10);
         });
     }
+    /** Atomic operator reset: refund allocated points and reset XP/level together. */
+    public MutationResult resetOperatorLevel(UUID player,long expectedRevision,String correlation){
+        return mutateProgress(player,expectedRevision,correlation,candidate->{
+            String denial=respecRejection.apply(player);
+            if(!denial.isEmpty())throw new IllegalArgumentException(denial);
+            int refund=0;
+            for(var attribute:RpgAttribute.values())
+                refund=Math.addExact(refund,Math.max(0,candidate.attributes.getOrDefault(attribute.name(),10)-10));
+            candidate.unspentAttributePoints=Math.addExact(candidate.unspentAttributePoints,refund);
+            for(var attribute:RpgAttribute.values())candidate.attributes.put(attribute.name(),10);
+            candidate.currentXp=0;
+            candidate.level=1;
+            candidate.pendingLevelUpPoints=0;
+        });
+    }
     /** Operator command entry point; the command owns permission and self-only checks. */
     public MutationResult setOperatorLevel(UUID player,int target,String correlation){
         Holder holder=holder(player);
@@ -451,7 +529,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
             if(playerWork.failure()!=null||holder.persistenceUncertain&&!holder.rewardRecoveryRequired)return readOnlyUncertain(holder);
             var state=holder.state;
             if(holder.presentationState==null||!sameCompiledInputs(holder.presentationState,state)){
-                holder.presentationCompiled=compiler.compile(state);
+                holder.presentationCompiled=compiler.compile(state,id->entitlements.skill(state,id).allowed());
                 holder.presentationGraph=graphService.validate(state);
                 holder.presentationCompilations++;
             }
@@ -623,6 +701,9 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
     }
 
     private MutationResult mutate(Holder holder, UUID player, String correlation, Consumer<RpgPlayerState> mutation) {
+        return mutate(holder,player,correlation,mutation,false);
+    }
+    private MutationResult mutate(Holder holder, UUID player, String correlation, Consumer<RpgPlayerState> mutation,boolean equipmentWithdrawal) {
         ensureUsable(player,holder);
         RpgPlayerState candidate = holder.state.copy();
         try { mutation.accept(candidate); }
@@ -633,6 +714,8 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
         candidate.revision = holder.state.revision + 1;
         if(!java.util.Objects.equals(candidate.rewards,holder.state.rewards))return fail(player,correlation,RpgTraceEventType.COMPILE_FAILURE,
                 ValidationCode.INVALID_REQUEST,"Reward checkpoint is owned by the earned-reward authority",holder.state.revision);
+        if(!java.util.Objects.equals(candidate.goldBalance,holder.state.goldBalance))return fail(player,correlation,RpgTraceEventType.COMPILE_FAILURE,
+                ValidationCode.INVALID_REQUEST,"Gold balance is owned by the earned-reward authority",holder.state.revision);
         if(!java.util.Objects.equals(candidate.acquisition,holder.state.acquisition))return fail(player,correlation,RpgTraceEventType.COMPILE_FAILURE,
                 ValidationCode.INVALID_REQUEST,"Acquisition counters are owned by the earned-reward authority",holder.state.revision);
         candidate.inactivePassives.keySet().retainAll(holder.state.inactivePassives.keySet());
@@ -643,7 +726,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
                 ||!java.util.Arrays.equals(holder.state.joints,candidate.joints)||!holder.state.linkEdges().equals(candidate.linkEdges())
                 ||!holder.state.inactivePassives.equals(candidate.inactivePassives);
         boolean refundsAttributes=holder.state.attributes.entrySet().stream().anyMatch(e->candidate.attributes.getOrDefault(e.getKey(),0)<e.getValue());
-        if(changesLoadout||refundsAttributes){String denial=respecRejection.apply(player);if(!denial.isEmpty())return fail(player,correlation,RpgTraceEventType.COMPILE_FAILURE,ValidationCode.INVALID_REQUEST,denial,holder.state.revision);}
+        if(!equipmentWithdrawal&&(changesLoadout||refundsAttributes)){String denial=respecRejection.apply(player);if(!denial.isEmpty())return fail(player,correlation,RpgTraceEventType.COMPILE_FAILURE,ValidationCode.INVALID_REQUEST,denial,holder.state.revision);}
         CompilationResult compiled = compileTraced(player, candidate, correlation);
         if (!compiled.success()) return MutationResult.failure(compiled.code(), compiled.message() + "\nTrace: " + correlation,
                 correlation, holder.state.revision);
@@ -672,7 +755,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
         try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_PLAYER_COMPILE_TRACE", player)) {
         trace(player, RpgTraceEventType.COMPILE_BEGIN, correlation,
                 details("RPG revision", state.revision, "schemaVersion", state.schemaVersion));
-        CompilationResult result = compiler.compile(state);
+        CompilationResult result = compiler.compile(state,id->entitlements.skill(state,id).allowed());
         if (!result.success()) {
             trace(player, RpgTraceEventType.COMPILE_FAILURE, correlation,
                     details("RPG revision", state.revision, "validationResult", "FAIL",

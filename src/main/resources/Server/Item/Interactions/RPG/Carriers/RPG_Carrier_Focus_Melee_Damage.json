@@ -1,0 +1,10 @@
+{
+  "Type": "RPG_CarrierDamage",
+  "DamageCalculator": {
+    "BaseDamage": {
+      "Physical": 1
+    }
+  },
+  "RpgProcSelector": "RPG_Carrier_Focus_Melee_Damage",
+  "RpgProcCoefficient": 1.0
+}

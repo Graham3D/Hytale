@@ -1,0 +1,17 @@
+{
+  "Type": "Charging",
+  "DisplayProgress": false,
+  "Next": {
+    "0": "RPG_Action_Sword_S115_R40_Weapon_Sword_Primary_Chain",
+    "0.151304": {
+      "Type": "Replace",
+      "Var": "Thrust_Stamina",
+      "DefaultOk": true,
+      "DefaultValue": {
+        "Interactions": [
+          "RPG_Action_Sword_S115_R40_Weapon_Sword_Primary_Thrust_StaminaCondition"
+        ]
+      }
+    }
+  }
+}

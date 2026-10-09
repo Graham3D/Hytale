@@ -14,6 +14,7 @@ import com.inigmasgames.hytalerpg.combat.status.StatusService;
 public final class AreaStatusProjectionSystem extends EntityTickingSystem<EntityStore> {
     private static final com.hypixel.hytale.logger.HytaleLogger LOGGER = com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass();
     private final StatusService statuses;
+    private final NativePlayerStatusMovement players = new NativePlayerStatusMovement();
     public AreaStatusProjectionSystem(StatusService statuses) { this.statuses = statuses; }
     public static void requireAssets() {
         if (!HytaleAreaStatuses.available()) throw new IllegalStateException("Stage 06 native status assets missing");
@@ -38,6 +39,8 @@ public final class AreaStatusProjectionSystem extends EntityTickingSystem<Entity
         var ref = chunk.getReferenceTo(index); var id = chunk.getComponent(index, UUIDComponent.getComponentType()).getUuid();
         try {
             HytaleAreaStatuses.synchronize(statuses, id, ref, store, null);
+            players.synchronize(id, ref, store, statuses.strongestSlow(id,
+                    com.inigmasgames.hytalerpg.gear.GearNativeItems.effects(ref, store).snapshot()).magnitude());
         } catch (RuntimeException error) {
             // Never throw from every world tick or turn one native rejection into unbounded logging.
             // Retain the entity-owned marker so expired effects can still be removed on a later retry.
@@ -48,8 +51,10 @@ public final class AreaStatusProjectionSystem extends EntityTickingSystem<Entity
             }
             return;
         }
-        if (statuses.inspect(id).active().isEmpty() && statuses.strongestSlow(id).magnitude() == 0)
+        if (statuses.inspect(id).active().isEmpty() && statuses.strongestSlow(id).magnitude() == 0){
+            players.forget(id);
             buffer.removeComponent(ref, AreaStatusProjection.getComponentType());
+        }
 
         }
     }

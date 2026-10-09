@@ -1,0 +1,7 @@
+{
+  "Duration": 1.5,
+  "Debuff": true,
+  "ApplicationEffects": {
+    "AbilityEffects": { "Disabled": ["Ability1", "Ability2", "Ability3", "Ability4"] }
+  }
+}

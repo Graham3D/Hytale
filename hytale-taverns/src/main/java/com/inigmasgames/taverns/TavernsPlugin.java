@@ -251,7 +251,7 @@ public abstract class TavernsPlugin extends JavaPlugin {
     }
 
     private static boolean isCoreBlock(World world, Vector3i position, String itemId) {
-        BlockType blockType = BlockType.getAssetMap().getAsset(world.getBlock(position.x(), position.y(), position.z()));
+        BlockType blockType = BlockType.getAssetMap().getAsset(com.inigmasgames.taverns.api.LoadedBlocks.getBlock(world, position.x(), position.y(), position.z()));
         return blockType != null && itemId.equals(blockType.getId());
     }
 

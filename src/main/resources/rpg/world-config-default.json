@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "configRevision": "hywind-world-r237",
+  "world": {"nativeEnvironmentSpawnMultiplier": 1.0},
+  "spawnPopulationBalance": {
+    "enabled": true,
+    "mode": "NATIVE_WEIGHTED_SELECTION",
+    "scope": "PER_ENVIRONMENT",
+    "hostileTargetShare": 0.65,
+    "wildlifeTargetShare": 0.35,
+    "excludePassiveAvians": true,
+    "excludeAquaticWildlife": true,
+    "preserveNativePopulationCaps": true,
+    "preserveNativeSpeciesWeights": true,
+    "countExpectedFlockMembers": true,
+    "forceDespawnToTarget": false
+  },
+  "monsterRarity": {
+    "enabledForNewSpawns": true,
+    "perEra": {
+      "NORMAL": {"championChance": 0.016, "uniqueChance": 0.064, "uniqueAffixCount": 1, "superUniqueAdditionalAffixes": 0},
+      "NIGHTMARE": {"championChance": 0.028, "uniqueChance": 0.112, "uniqueAffixCount": 2, "superUniqueAdditionalAffixes": 1},
+      "HELL": {"championChance": 0.04, "uniqueChance": 0.16, "uniqueAffixCount": 3, "superUniqueAdditionalAffixes": 2}
+    }
+  },
+  "packs": {
+    "championMembersMin": 2,
+    "championMembersMax": 4,
+    "uniqueMinionsMin": 3,
+    "uniqueMinionsMax": 5,
+    "maxMembersPerPack": 8,
+    "maxActiveSpecialPacksPerLoadedWorld": 12,
+    "maxSpecialPacksPer64mCell": 3
+  },
+  "combat": {
+    "rarityStatFactors": {
+      "CHAMPION": {"health": 1.6, "directDamage": 1.05},
+      "UNIQUE": {"health": 2.4, "directDamage": 1.1},
+      "SUPER_UNIQUE": {"health": 3.0, "directDamage": 1.15}
+    }
+  },
+  "monsterAffixes": {"randomWeightMultipliers": {}, "randomlyEligibleAffixesDisabled": []},
+  "newImmunityGrants": {
+    "perEra": {
+      "NORMAL": {"nativeAffinityChance": 0.0, "elementalAffixChance": 0.0},
+      "NIGHTMARE": {"nativeAffinityChance": 0.2, "elementalAffixChance": 0.15},
+      "HELL": {"nativeAffinityChance": 1.0, "elementalAffixChance": 0.35}
+    }
+  },
+  "rewards": {"xpBonusPerAffixBeyondFirst": 0.15, "equipmentQuantityBonusPerAffixBeyondFirst": 0.15}
+}

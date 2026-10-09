@@ -10,18 +10,26 @@ public final class LearningSources {
     public record Binding(String combatIdentity,String source,ProgressionMath.AcquisitionRarity rarity){
         public Binding {AcquisitionProgress.id(combatIdentity);AcquisitionProgress.id(source);Objects.requireNonNull(rarity);}
     }
-    public record Opportunity(String skill,String source,ProgressionMath.AcquisitionRarity rarity,double effectiveWisdom){
+    public record Opportunity(String skill,String source,ProgressionMath.AcquisitionRarity rarity,double effectiveWisdom,
+            com.inigmasgames.hytalerpg.enemies.EnemyRewardContext enemyRewards){
+        public Opportunity(String skill,String source,ProgressionMath.AcquisitionRarity rarity,double effectiveWisdom){this(skill,source,rarity,effectiveWisdom,null);}
         public Opportunity {AcquisitionProgress.id(skill);AcquisitionProgress.id(source);ProgressionMath.learnChance(rarity,effectiveWisdom);}
+        public Opportunity withEnemyRewards(com.inigmasgames.hytalerpg.enemies.EnemyRewardContext context){
+            return new Opportunity(skill,source,rarity,effectiveWisdom,context);
+        }
+        public double chance(){double base=ProgressionMath.learnChance(rarity,effectiveWisdom);
+            return enemyRewards==null?base:enemyRewards.learningChance(base);}
         public EarnedReward decide(EarnedReward defeat,RewardCheckpoint before,DoubleSupplier random){
             Objects.requireNonNull(before.acquisition());
+            if(enemyRewards!=null&&!enemyRewards.economic())return defeat;
             if(before.acquisition().learnedSkills().contains(skill))return defeat; // No RNG call or pity change.
             int failures=before.acquisition().progress().pity().getOrDefault(source,0);
             boolean learned=failures>=ProgressionMath.pityFailures(rarity);
             if(!learned){double roll=random.getAsDouble();if(!Double.isFinite(roll)||roll<0||roll>=1)throw new IllegalArgumentException("INVALID_LEARNING_ROLL");
-                learned=roll<ProgressionMath.learnChance(rarity,effectiveWisdom);}
+                learned=roll<chance();}
             if(defeat.progression()!=null)throw new IllegalArgumentException("DEFEAT_ALREADY_HAS_PROGRESSION");
             return new EarnedReward(defeat.eventId(),defeat.characterXp(),defeat.insight(),defeat.mastery(),defeat.reason(),defeat.rootCastId(),defeat.skillInstanceId(),defeat.correlationId(),
-                    new ProgressionDelta(learned?ProgressionDelta.Kind.LEARNING_SUCCESS:ProgressionDelta.Kind.LEARNING_FAILURE,skill,source,0));
+                    new ProgressionDelta(learned?ProgressionDelta.Kind.LEARNING_SUCCESS:ProgressionDelta.Kind.LEARNING_FAILURE,skill,source,0),defeat.milestone(),defeat.goldPot());
         }
     }
     private final Map<String,SkillDefinition> signatures;

@@ -7,6 +7,8 @@ import com.inigmasgames.hytalerpg.domain.CompiledSkillPlan;
 /** Hytale-facing capabilities. Pure orchestration never reaches into client state. */
 public interface SkillExecutionPort {
     boolean actorAliveAndUsable();
+    /** Manual skill requests only; ordinary native Primary/Secondary attacks bypass this port. */
+    default boolean manualSkillsSilenced(){return false;}
     Equipment equipment();
     NativeResourcePort resources();
     Validation familyPrerequisites(Stage04SkillProfile profile, CompiledSkillPlan plan);
@@ -15,6 +17,9 @@ public interface SkillExecutionPort {
     }
     /** Authoritative equipment integration boundary; zero until an audited item grants this skill. */
     default int itemGrantedSkillLevels(String skillId,Equipment equipment){return 0;}
+    default int itemGrantedSkillLevels(Stage04SkillProfile profile,Equipment equipment){
+        return itemGrantedSkillLevels(profile.skillId(),equipment);
+    }
     default com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects gearEffects(){return com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects.NONE;}
     /** Native ports must capture an authored reference for Quick Slash; pure family fixtures may omit it. */
     default com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile captureWeaponLightAttack(Equipment equipment){return null;}
@@ -57,7 +62,10 @@ public interface SkillExecutionPort {
     }
 
     record Equipment(Item mainHand, Item offHand) { }
-    record Item(String itemId, String weaponKind, ItemPowerDescriptor power) { }
+    /** Frozen managed instance identity, when this equipped stack is a valid gear source. */
+    record Item(String itemId, String weaponKind, ItemPowerDescriptor power, java.util.UUID gearItemId) {
+        public Item(String itemId,String weaponKind,ItemPowerDescriptor power){this(itemId,weaponKind,power,null);}
+    }
     record Validation(boolean accepted, String code) {
         public static Validation pass() { return new Validation(true, "PASS"); }
         public static Validation reject(String code) { return new Validation(false, code); }

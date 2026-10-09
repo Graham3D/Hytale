@@ -1,0 +1,2181 @@
+{
+  "schemaVersion": 1,
+  "revision": "hytale-0.7.0-pre.5.1-larva-owner-qa-1",
+  "serverJarSha256": "35a34a32175cd92ce5e2a51310953db3a4a64cac89d995cbd4830c52a9b1b904",
+  "assetsSha256": "eddf425546559bfbc3f2656babf30daa4008543c38ee5aa4499c605ed1732236",
+  "bindings": [
+    {
+      "canonicalRoleId": "Larva_Void",
+      "nativeRoleIds": [
+        "Larva_Void"
+      ],
+      "encounterProfileIdsByMode": {
+        "NORMAL": "rpg.encounters.r081.authored-test.v1/Larva_Void/NORMAL",
+        "NIGHTMARE": "rpg.encounters.r081.authored-test.v1/Larva_Void/NIGHTMARE",
+        "HELL": "rpg.encounters.r081.authored-test.v1/Larva_Void/HELL"
+      },
+      "modelAssetId": "Larva_Void",
+      "defaultTextureAssetIds": [
+        "NPC/Beast/Larva/Models/Model_Void.png",
+        "NPC/Beast/Larva/Models/Attachments/Crest_Texture.png"
+      ],
+      "capabilities": [
+        "DIRECT_HIT",
+        "PHYSICAL_DIRECT_HIT",
+        "NATIVE_KNOCKBACK",
+        "MOBILE",
+        "RECOVERY_TIMELINE",
+        "DEFENSE_STAT",
+        "PACK_LEADER",
+        "MINION_ROSTER",
+        "HOSTILE_STATUS_ADMISSION",
+        "SHIELD_OWNER",
+        "APPLIED_HIT_RECEIPTS"
+      ],
+      "defenseBinding": {
+        "ownerSymbol": "NativeEnemyArmor.physicalDefense",
+        "valueField": "EnemyAffixSnapshot.stoneSkinDefenseRating",
+        "mitigationOwnerSymbol": "NativeEnemyArmor"
+      },
+      "movementBinding": {
+        "ownerSymbol": "NativeNpcTiming.Walk",
+        "speedField": "EnemyAffixSnapshot.movementMultiplier",
+        "baselineUnit": "metersPerSecond"
+      },
+      "healthResourceBinding": {
+        "ownerSymbol": "EntityStatMap.Health",
+        "receiptProducerSymbol": "NativeDamageLeafReceipts"
+      },
+      "actionBindings": [
+        {
+          "nativeActionId": "Larva_Void_Bite",
+          "sourceProducerSymbol": "ActionAttack.execute",
+          "rootIdProducerSymbol": "InteractionManager.initChain",
+          "authoredStrikeKeys": [
+            "bite"
+          ],
+          "nativeCauseToCanonicalChannelMap": {
+            "Physical": "PHYSICAL"
+          },
+          "procCoefficientPolicyId": "single-strike/1",
+          "offenseSnapshotBoundary": "InteractionChainStartEvent",
+          "appliedHitReceiptConsumerSymbol": "EnemyNativeStrikeScope",
+          "scalableRecoveryBinding": {
+            "ownerSymbol": "NativeNpcTiming.Attack",
+            "fieldOrProfileId": "Larva_Void_Bite/installed-0.7.0-pre.5.1"
+          },
+          "preservesAnimationAndHitCount": true,
+          "supportedAffixIds": [
+            "ME-001",
+            "ME-002",
+            "ME-003",
+            "ME-004",
+            "ME-005",
+            "ME-006",
+            "ME-007",
+            "ME-008",
+            "ME-009",
+            "ME-010",
+            "ME-011",
+            "ME-012",
+            "ME-013",
+            "ME-014",
+            "ME-015",
+            "ME-016",
+            "ME-017",
+            "ME-018",
+            "ME-019",
+            "ME-020",
+            "ME-021",
+            "ME-022",
+            "ME-023",
+            "ME-024",
+            "ME-025",
+            "ME-026",
+            "ME-027"
+          ],
+          "positiveNativeTestId": "LarvaNativeBindingAssetTest.roleAndRootResolve",
+          "negativeNativeTestId": "LarvaNativeBindingAssetTest.rejectChangedParentOrImpulse"
+        }
+      ],
+      "controlProfileId": "Template_Predator",
+      "sourceValidationId": "EncounterProfileResolver.classifyAuthored",
+      "nativeLootSourceId": "Empty",
+      "nativeImmunityChannels": [],
+      "nativeStatusSource": {
+        "existingChance": {
+          "CHILL": 0.0,
+          "ELECTRIFIED": 0.0,
+          "POISON": 0.0,
+          "WEAKEN": 0.0,
+          "KNOCKBACK": 0.0,
+          "ARMOR_BREAK": 0.0
+        },
+        "penetration": 0.0
+      },
+      "nativeStunStaggerImmune": false,
+      "nativeSlowImmune": false,
+      "maximumBaseEquipmentSlots": 1,
+      "productionPromotionEnabled": true,
+      "sourceAssetPath": "Server/NPC/Roles/Void/Larva_Void.json",
+      "sourceAssetSha256": "a573e8ebafca701f5d4a89bd4f6d334bbaeb70909dad1530e221f4236589bb4d",
+      "distanceDisplacementDelivery": false,
+      "evidenceFiles": [
+        "evidence/master-enemies/baseline/native-adapter-assets.json",
+        "docs/enemies/INTEGRATION_MAP.md"
+      ]
+    },
+    {
+      "canonicalRoleId": "Trork_Warrior",
+      "nativeRoleIds": [
+        "Trork_Warrior"
+      ],
+      "encounterProfileIdsByMode": {
+        "NORMAL": "rpg.encounters.r081.authored-test.v1/Trork_Warrior/NORMAL",
+        "NIGHTMARE": "rpg.encounters.r081.authored-test.v1/Trork_Warrior/NIGHTMARE",
+        "HELL": "rpg.encounters.r081.authored-test.v1/Trork_Warrior/HELL"
+      },
+      "modelAssetId": "Trork_Warrior",
+      "defaultTextureAssetIds": [
+        "NPC/Intelligent/Trork/Models/Model_Textures/Cyan_Dark.png",
+        "NPC/Intelligent/Trork/Models/Attachments/Eyebrows/Eyebrows_Textures/Brown.png",
+        "NPC/Intelligent/Trork/Models/Attachments/Warrior/Chest_Texture.png",
+        "NPC/Intelligent/Trork/Models/Attachments/Warrior/Hands_Texture.png",
+        "NPC/Intelligent/Trork/Models/Attachments/Warrior/Feet_Texture.png",
+        "NPC/Intelligent/Trork/Models/Attachments/Warrior/Head_Texture.png",
+        "NPC/Intelligent/Trork/Models/Attachments/Beards/SingleBraided_Textures/Brown.png",
+        "NPC/Intelligent/Trork/Models/Attachments/Cosmetics/Tusks_Small_Texture.png"
+      ],
+      "capabilities": [
+        "DIRECT_HIT",
+        "PHYSICAL_DIRECT_HIT",
+        "NATIVE_KNOCKBACK",
+        "MOBILE",
+        "DEFENSE_STAT",
+        "PACK_LEADER",
+        "MINION_ROSTER",
+        "HOSTILE_STATUS_ADMISSION",
+        "APPLIED_HIT_RECEIPTS"
+      ],
+      "defenseBinding": {
+        "ownerSymbol": "NativeEnemyArmor.physicalDefense",
+        "valueField": "EnemyAffixSnapshot.stoneSkinDefenseRating",
+        "mitigationOwnerSymbol": "NativeEnemyArmor"
+      },
+      "movementBinding": {
+        "ownerSymbol": "NativeNpcTiming.Walk",
+        "speedField": "EnemyAffixSnapshot.movementMultiplier",
+        "baselineUnit": "metersPerSecond"
+      },
+      "healthResourceBinding": {
+        "ownerSymbol": "EntityStatMap.Health",
+        "receiptProducerSymbol": "NativeDamageLeafReceipts"
+      },
+      "actionBindings": [
+        {
+          "nativeActionId": "Trork_Warrior_Battleaxe_Swing_Left",
+          "sourceProducerSymbol": "ActionAttack.execute",
+          "rootIdProducerSymbol": "InteractionManager.initChain",
+          "authoredStrikeKeys": [
+            "swing_left"
+          ],
+          "nativeCauseToCanonicalChannelMap": {
+            "Physical": "PHYSICAL"
+          },
+          "procCoefficientPolicyId": "single-strike/1",
+          "offenseSnapshotBoundary": "InteractionChainStartEvent",
+          "appliedHitReceiptConsumerSymbol": "EnemyNativeStrikeScope",
+          "scalableRecoveryBinding": null,
+          "preservesAnimationAndHitCount": true,
+          "positiveNativeTestId": "EnemyNativeAssetRoutingTest.everyWarriorAttackStillUsesItsNativeSelectorDamageVariableAndEffects",
+          "negativeNativeTestId": "EnemyNativeAssetRoutingTest.changedWarriorSelectorCannotPassThePinnedGraph"
+        },
+        {
+          "nativeActionId": "Trork_Warrior_Battleaxe_Swing_Right",
+          "sourceProducerSymbol": "ActionAttack.execute",
+          "rootIdProducerSymbol": "InteractionManager.initChain",
+          "authoredStrikeKeys": [
+            "swing_right"
+          ],
+          "nativeCauseToCanonicalChannelMap": {
+            "Physical": "PHYSICAL"
+          },
+          "procCoefficientPolicyId": "single-strike/1",
+          "offenseSnapshotBoundary": "InteractionChainStartEvent",
+          "appliedHitReceiptConsumerSymbol": "EnemyNativeStrikeScope",
+          "scalableRecoveryBinding": null,
+          "preservesAnimationAndHitCount": true,
+          "positiveNativeTestId": "EnemyNativeAssetRoutingTest.everyWarriorAttackStillUsesItsNativeSelectorDamageVariableAndEffects",
+          "negativeNativeTestId": "EnemyNativeAssetRoutingTest.changedWarriorSelectorCannotPassThePinnedGraph"
+        },
+        {
+          "nativeActionId": "Trork_Warrior_Battleaxe_Swing_Up_Left",
+          "sourceProducerSymbol": "ActionAttack.execute",
+          "rootIdProducerSymbol": "InteractionManager.initChain",
+          "authoredStrikeKeys": [
+            "swing_up_left"
+          ],
+          "nativeCauseToCanonicalChannelMap": {
+            "Physical": "PHYSICAL"
+          },
+          "procCoefficientPolicyId": "single-strike/1",
+          "offenseSnapshotBoundary": "InteractionChainStartEvent",
+          "appliedHitReceiptConsumerSymbol": "EnemyNativeStrikeScope",
+          "scalableRecoveryBinding": null,
+          "preservesAnimationAndHitCount": true,
+          "positiveNativeTestId": "EnemyNativeAssetRoutingTest.everyWarriorAttackStillUsesItsNativeSelectorDamageVariableAndEffects",
+          "negativeNativeTestId": "EnemyNativeAssetRoutingTest.changedWarriorSelectorCannotPassThePinnedGraph"
+        },
+        {
+          "nativeActionId": "Trork_Warrior_Battleaxe_Swing_Down",
+          "sourceProducerSymbol": "ActionAttack.execute",
+          "rootIdProducerSymbol": "InteractionManager.initChain",
+          "authoredStrikeKeys": [
+            "swing_down"
+          ],
+          "nativeCauseToCanonicalChannelMap": {
+            "Physical": "PHYSICAL"
+          },
+          "procCoefficientPolicyId": "single-strike/1",
+          "offenseSnapshotBoundary": "InteractionChainStartEvent",
+          "appliedHitReceiptConsumerSymbol": "EnemyNativeStrikeScope",
+          "scalableRecoveryBinding": null,
+          "preservesAnimationAndHitCount": true,
+          "positiveNativeTestId": "EnemyNativeAssetRoutingTest.everyWarriorAttackStillUsesItsNativeSelectorDamageVariableAndEffects",
+          "negativeNativeTestId": "EnemyNativeAssetRoutingTest.changedWarriorSelectorCannotPassThePinnedGraph"
+        },
+        {
+          "nativeActionId": "Trork_Warrior_Battleaxe_Swing_Up_Right",
+          "sourceProducerSymbol": "ActionAttack.execute",
+          "rootIdProducerSymbol": "InteractionManager.initChain",
+          "authoredStrikeKeys": [
+            "swing_up_right"
+          ],
+          "nativeCauseToCanonicalChannelMap": {
+            "Physical": "PHYSICAL"
+          },
+          "procCoefficientPolicyId": "single-strike/1",
+          "offenseSnapshotBoundary": "InteractionChainStartEvent",
+          "appliedHitReceiptConsumerSymbol": "EnemyNativeStrikeScope",
+          "scalableRecoveryBinding": null,
+          "preservesAnimationAndHitCount": true,
+          "positiveNativeTestId": "EnemyNativeAssetRoutingTest.everyWarriorAttackStillUsesItsNativeSelectorDamageVariableAndEffects",
+          "negativeNativeTestId": "EnemyNativeAssetRoutingTest.changedWarriorSelectorCannotPassThePinnedGraph"
+        }
+      ],
+      "controlProfileId": "Template_Trork_Melee",
+      "sourceValidationId": "EncounterProfileResolver.classifyAuthored",
+      "nativeLootSourceId": "Drop_Trork_Warrior",
+      "nativeImmunityChannels": [],
+      "nativeStatusSource": {
+        "existingChance": {
+          "CHILL": 0.0,
+          "ELECTRIFIED": 0.0,
+          "POISON": 0.0,
+          "WEAKEN": 0.0,
+          "KNOCKBACK": 0.0,
+          "ARMOR_BREAK": 0.0
+        },
+        "penetration": 0.0
+      },
+      "nativeStunStaggerImmune": false,
+      "nativeSlowImmune": false,
+      "maximumBaseEquipmentSlots": 1,
+      "productionPromotionEnabled": true,
+      "sourceAssetPath": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Warrior.json",
+      "sourceAssetSha256": "cb1d4223bd75cded0f2c25b5b8167076413dc04f9130d4a3353a1a40938b3e73",
+      "distanceDisplacementDelivery": false,
+      "evidenceFiles": [
+        "docs/enemies/INTEGRATION_MAP.md",
+        "evidence/master-enemies/baseline/native-timing-movement-api.txt"
+      ]
+    },
+    {
+      "canonicalRoleId": "Skeleton_Scout",
+      "nativeRoleIds": [
+        "Skeleton_Scout"
+      ],
+      "encounterProfileIdsByMode": {
+        "NORMAL": "rpg.encounters.r081.authored-test.v1/Skeleton_Scout/NORMAL",
+        "NIGHTMARE": "rpg.encounters.r081.authored-test.v1/Skeleton_Scout/NIGHTMARE",
+        "HELL": "rpg.encounters.r081.authored-test.v1/Skeleton_Scout/HELL"
+      },
+      "modelAssetId": "Skeleton_Scout",
+      "defaultTextureAssetIds": [
+        "NPC/Undead/Skeleton/Models/Model_Textures/White.png",
+        "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+        "NPC/Undead/Skeleton/Models/Attachments/Archer/Legs_Texture.png",
+        "NPC/Undead/Skeleton/Models/Attachments/Archer/Head_Texture/Brown.png",
+        "Items/Back/Quiver_Texture.png"
+      ],
+      "capabilities": [
+        "DIRECT_HIT",
+        "PHYSICAL_DIRECT_HIT",
+        "DEFENSE_STAT",
+        "HOSTILE_STATUS_ADMISSION",
+        "APPLIED_HIT_RECEIPTS"
+      ],
+      "defenseBinding": {
+        "ownerSymbol": "NativeEnemyArmor.physicalDefense",
+        "valueField": "EnemyAffixSnapshot.stoneSkinDefenseRating",
+        "mitigationOwnerSymbol": "NativeEnemyArmor"
+      },
+      "movementBinding": null,
+      "healthResourceBinding": {
+        "ownerSymbol": "EntityStatMap.Health",
+        "receiptProducerSymbol": "NativeDamageLeafReceipts"
+      },
+      "actionBindings": [
+        {
+          "nativeActionId": "Skeleton_Scout_Bow_Shoot",
+          "sourceProducerSymbol": "ActionAttack.execute",
+          "rootIdProducerSymbol": "InteractionManager.initChain",
+          "authoredStrikeKeys": [
+            "arrow"
+          ],
+          "nativeCauseToCanonicalChannelMap": {
+            "Projectile": "PHYSICAL"
+          },
+          "procCoefficientPolicyId": "single-strike/1",
+          "offenseSnapshotBoundary": "InteractionChainStartEvent",
+          "appliedHitReceiptConsumerSymbol": "NativeEnemyProjectileDamage",
+          "scalableRecoveryBinding": null,
+          "preservesAnimationAndHitCount": true,
+          "supportedAffixIds": [
+            "ME-002",
+            "ME-003",
+            "ME-004",
+            "ME-017"
+          ],
+          "positiveNativeTestId": "EnemyNativeProjectilePathTest.installedScoutKeepsItsOriginalSingleArrowWithoutNativeDisplacement",
+          "negativeNativeTestId": "EnemyNativeProjectilePathTest.countsOriginalNativeLaunchAndRejectsRepeatedRoutes"
+        }
+      ],
+      "controlProfileId": "Template_Intelligent",
+      "sourceValidationId": "EncounterProfileResolver.classifyAuthored",
+      "nativeLootSourceId": "Drop_Skeleton_Scout",
+      "nativeImmunityChannels": [],
+      "nativeStatusSource": {
+        "existingChance": {
+          "CHILL": 0.0,
+          "ELECTRIFIED": 0.0,
+          "POISON": 0.0,
+          "WEAKEN": 0.0,
+          "KNOCKBACK": 0.0,
+          "ARMOR_BREAK": 0.0
+        },
+        "penetration": 0.0
+      },
+      "nativeStunStaggerImmune": false,
+      "nativeSlowImmune": false,
+      "maximumBaseEquipmentSlots": 1,
+      "productionPromotionEnabled": true,
+      "sourceAssetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout.json",
+      "sourceAssetSha256": "28d93a5c856bb1965d82d33e78b173027944569d7f14abe4f25f5f53c9ac99ee",
+      "distanceDisplacementDelivery": true,
+      "evidenceFiles": [
+        "docs/enemies/INTEGRATION_MAP.md",
+        "evidence/master-enemies/progress-2026-10-03.md"
+      ]
+    },
+    {
+      "canonicalRoleId": "Golem_Crystal_Earth",
+      "nativeRoleIds": [
+        "Golem_Crystal_Earth"
+      ],
+      "encounterProfileIdsByMode": {
+        "NORMAL": "rpg.encounters.r081.authored-test.v1/Golem_Crystal_Earth/NORMAL",
+        "NIGHTMARE": "rpg.encounters.r081.authored-test.v1/Golem_Crystal_Earth/NIGHTMARE",
+        "HELL": "rpg.encounters.r081.authored-test.v1/Golem_Crystal_Earth/HELL"
+      },
+      "modelAssetId": "Golem_Crystal_Earth",
+      "defaultTextureAssetIds": [
+        "NPC/Elemental/Golem_Crystal/Models/Model_Textures/Earth.png"
+      ],
+      "capabilities": [
+        "DEFENSE_STAT",
+        "PACK_LEADER",
+        "MINION_ROSTER",
+        "SHIELD_OWNER",
+        "APPLIED_HIT_RECEIPTS"
+      ],
+      "defenseBinding": {
+        "ownerSymbol": "NativeEnemyArmor.physicalDefense",
+        "valueField": "EnemyAffixSnapshot.stoneSkinDefenseRating",
+        "mitigationOwnerSymbol": "NativeEnemyArmor"
+      },
+      "movementBinding": null,
+      "healthResourceBinding": {
+        "ownerSymbol": "EntityStatMap.Health",
+        "receiptProducerSymbol": "NativeDamageLeafReceipts"
+      },
+      "actionBindings": [],
+      "controlProfileId": "Template_Intelligent",
+      "sourceValidationId": "EncounterProfileResolver.classifyAuthored",
+      "nativeLootSourceId": "Drop_Golem_Crystal_Earth",
+      "nativeImmunityChannels": [],
+      "nativeStatusSource": {
+        "existingChance": {
+          "CHILL": 0.0,
+          "ELECTRIFIED": 0.0,
+          "POISON": 0.0,
+          "WEAKEN": 0.0,
+          "KNOCKBACK": 0.0,
+          "ARMOR_BREAK": 0.0
+        },
+        "penetration": 0.0
+      },
+      "nativeStunStaggerImmune": false,
+      "nativeSlowImmune": false,
+      "maximumBaseEquipmentSlots": 0,
+      "productionPromotionEnabled": false,
+      "sourceAssetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Earth.json",
+      "sourceAssetSha256": "8a93a3acb4872289dca45686f80d188fd8a00ac22d454e4c22b94a030569da06",
+      "distanceDisplacementDelivery": false,
+      "evidenceFiles": [
+        "docs/enemies/INTEGRATION_MAP.md"
+      ]
+    },
+    {
+      "canonicalRoleId": "Golem_Firesteel",
+      "nativeRoleIds": [
+        "Golem_Firesteel"
+      ],
+      "encounterProfileIdsByMode": {
+        "NORMAL": "rpg.encounters.r081.authored-test.v1/Golem_Firesteel/NORMAL",
+        "NIGHTMARE": "rpg.encounters.r081.authored-test.v1/Golem_Firesteel/NIGHTMARE",
+        "HELL": "rpg.encounters.r081.authored-test.v1/Golem_Firesteel/HELL"
+      },
+      "modelAssetId": "Golem_Firesteel",
+      "defaultTextureAssetIds": [
+        "NPC/Elemental/Golem_Firesteel/Models/Texture.png"
+      ],
+      "capabilities": [
+        "DEFENSE_STAT",
+        "PACK_LEADER",
+        "MINION_ROSTER",
+        "SHIELD_OWNER",
+        "APPLIED_HIT_RECEIPTS"
+      ],
+      "defenseBinding": {
+        "ownerSymbol": "NativeEnemyArmor.physicalDefense",
+        "valueField": "EnemyAffixSnapshot.stoneSkinDefenseRating",
+        "mitigationOwnerSymbol": "NativeEnemyArmor"
+      },
+      "movementBinding": null,
+      "healthResourceBinding": {
+        "ownerSymbol": "EntityStatMap.Health",
+        "receiptProducerSymbol": "NativeDamageLeafReceipts"
+      },
+      "actionBindings": [],
+      "controlProfileId": "Template_Intelligent",
+      "sourceValidationId": "EncounterProfileResolver.classifyAuthored",
+      "nativeLootSourceId": "Drop_Golem_Firesteel",
+      "nativeImmunityChannels": [
+        "FIRE"
+      ],
+      "nativeStatusSource": {
+        "existingChance": {
+          "CHILL": 0.0,
+          "ELECTRIFIED": 0.0,
+          "POISON": 0.0,
+          "WEAKEN": 0.0,
+          "KNOCKBACK": 0.0,
+          "ARMOR_BREAK": 0.0
+        },
+        "penetration": 0.0
+      },
+      "nativeStunStaggerImmune": false,
+      "nativeSlowImmune": false,
+      "maximumBaseEquipmentSlots": 0,
+      "productionPromotionEnabled": true,
+      "sourceAssetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Firesteel.json",
+      "sourceAssetSha256": "7117e1725a8306e235edd01802c295a3af95cbebead8eb05bd910ae3285c0d9f",
+      "distanceDisplacementDelivery": false,
+      "evidenceFiles": [
+        "docs/enemies/INTEGRATION_MAP.md"
+      ]
+    },
+    {
+      "canonicalRoleId": "Golem_Crystal_Frost",
+      "nativeRoleIds": [
+        "Golem_Crystal_Frost"
+      ],
+      "encounterProfileIdsByMode": {
+        "NORMAL": "rpg.encounters.r081.authored-test.v1/Golem_Crystal_Frost/NORMAL",
+        "NIGHTMARE": "rpg.encounters.r081.authored-test.v1/Golem_Crystal_Frost/NIGHTMARE",
+        "HELL": "rpg.encounters.r081.authored-test.v1/Golem_Crystal_Frost/HELL"
+      },
+      "modelAssetId": "Golem_Crystal_Frost",
+      "defaultTextureAssetIds": [
+        "NPC/Elemental/Golem_Crystal/Models/Model_Textures/Frost.png"
+      ],
+      "capabilities": [
+        "DIRECT_HIT",
+        "PHYSICAL_DIRECT_HIT",
+        "DEFENSE_STAT",
+        "PACK_LEADER",
+        "MINION_ROSTER",
+        "SHIELD_OWNER",
+        "APPLIED_HIT_RECEIPTS"
+      ],
+      "defenseBinding": {
+        "ownerSymbol": "NativeEnemyArmor.physicalDefense",
+        "valueField": "EnemyAffixSnapshot.stoneSkinDefenseRating",
+        "mitigationOwnerSymbol": "NativeEnemyArmor"
+      },
+      "movementBinding": null,
+      "healthResourceBinding": {
+        "ownerSymbol": "EntityStatMap.Health",
+        "receiptProducerSymbol": "NativeDamageLeafReceipts"
+      },
+      "actionBindings": [
+        {
+          "nativeActionId": "Root_NPC_Golem_Crystal_Attack",
+          "sourceProducerSymbol": "ActionAttack.execute",
+          "rootIdProducerSymbol": "InteractionManager.initChain",
+          "authoredStrikeKeys": [
+            "Swing_Left_Damage",
+            "Swing_Right_Damage",
+            "Spin_Damage",
+            "Ground_Slam_Damage",
+            "Stomp_Damage",
+            "Spin_Heavy_Damage",
+            "Clap_Damage"
+          ],
+          "nativeCauseToCanonicalChannelMap": {
+            "Physical": "PHYSICAL"
+          },
+          "procCoefficientPolicyId": "native-variable/1",
+          "offenseSnapshotBoundary": "InteractionChainStartEvent",
+          "appliedHitReceiptConsumerSymbol": "EnemyNativeStrikeScope",
+          "scalableRecoveryBinding": null,
+          "preservesAnimationAndHitCount": true,
+          "supportedAffixIds": [
+            "ME-003",
+            "ME-006",
+            "ME-027"
+          ],
+          "positiveNativeTestId": "FrostGolemNativeBindingAssetTest.certifiesAllNativeVariables",
+          "negativeNativeTestId": "FrostGolemNativeBindingAssetTest.rejectsChangedNativeVariable"
+        }
+      ],
+      "controlProfileId": "Template_Intelligent",
+      "sourceValidationId": "EncounterProfileResolver.classifyAuthored",
+      "nativeLootSourceId": "Drop_Golem_Crystal_Frost",
+      "nativeImmunityChannels": [],
+      "nativeStatusSource": {
+        "existingChance": {
+          "CHILL": 0.0,
+          "ELECTRIFIED": 0.0,
+          "POISON": 0.0,
+          "WEAKEN": 0.0,
+          "KNOCKBACK": 0.0,
+          "ARMOR_BREAK": 0.0
+        },
+        "penetration": 0.0
+      },
+      "nativeStunStaggerImmune": false,
+      "nativeSlowImmune": false,
+      "maximumBaseEquipmentSlots": 0,
+      "productionPromotionEnabled": false,
+      "sourceAssetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Frost.json",
+      "sourceAssetSha256": "798f05745b3577bcc12b70dd286a3d8f4f2c76e718e38b4cd574fb81be672c89",
+      "distanceDisplacementDelivery": false,
+      "evidenceFiles": [
+        "docs/enemies/INTEGRATION_MAP.md"
+      ]
+    }
+  ],
+  "derivedBindings": {
+    "canonicalVariants": [
+      {
+        "canonicalRoleId": "Skeleton_Scout",
+        "nativeRoleIds": [
+          "Skeleton_Scout_Wander",
+          "Skeleton_Scout_Patrol"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Burnt_Lancer",
+        "nativeRoleIds": [
+          "Skeleton_Burnt_Lancer_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Fighter",
+        "nativeRoleIds": [
+          "Skeleton_Fighter_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Frost_Fighter",
+        "nativeRoleIds": [
+          "Skeleton_Frost_Fighter_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Frost_Knight",
+        "nativeRoleIds": [
+          "Skeleton_Frost_Knight_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Frost_Soldier",
+        "nativeRoleIds": [
+          "Skeleton_Frost_Soldier_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Incandescent_Footman",
+        "nativeRoleIds": [
+          "Skeleton_Incandescent_Footman_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Sand_Assassin",
+        "nativeRoleIds": [
+          "Skeleton_Sand_Assassin_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Sand_Guard",
+        "nativeRoleIds": [
+          "Skeleton_Sand_Guard_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Burnt_Soldier",
+        "nativeRoleIds": [
+          "Skeleton_Burnt_Soldier_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Frost_Mage",
+        "nativeRoleIds": [
+          "Skeleton_Frost_Mage_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Incandescent_Mage",
+        "nativeRoleIds": [
+          "Skeleton_Incandescent_Mage_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Mage",
+        "nativeRoleIds": [
+          "Skeleton_Mage_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Sand_Mage",
+        "nativeRoleIds": [
+          "Skeleton_Sand_Mage_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Burnt_Praetorian",
+        "nativeRoleIds": [
+          "Skeleton_Burnt_Praetorian_Wander"
+        ]
+      }
+    ],
+    "nativeArchetypes": [
+      {
+        "id": "installed-predator-physical-single-melee-v1",
+        "parentRoleId": "Template_Predator",
+        "nativeActionId": "Root_NPC_Attack_Melee",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-005",
+          "ME-006",
+          "ME-007",
+          "ME-008",
+          "ME-009",
+          "ME-010",
+          "ME-011",
+          "ME-012",
+          "ME-013",
+          "ME-014",
+          "ME-016",
+          "ME-017",
+          "ME-018",
+          "ME-020",
+          "ME-021",
+          "ME-022",
+          "ME-024",
+          "ME-025",
+          "ME-026"
+        ],
+        "memberRoleIds": [
+          {
+            "roleId": "Cow_Undead",
+            "modelAssetId": "Cow_Undead",
+            "defaultTextureAssetIds": [
+              "NPC/Undead/Cow_Undead/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Cow_Undead"
+          },
+          {
+            "roleId": "Crocodile",
+            "modelAssetId": "Crocodile",
+            "defaultTextureAssetIds": [
+              "NPC/Swimming_Beast/Crocodile/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Crocodile"
+          },
+          {
+            "roleId": "Emberwulf",
+            "modelAssetId": "Emberwulf",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Emberwulf/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Emberwulf"
+          },
+          {
+            "roleId": "Hound_Bleached",
+            "modelAssetId": "Hound_Bleached",
+            "defaultTextureAssetIds": [
+              "NPC/Undead/Hound_Bleached/Models/Model_Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Hound_Bleached"
+          },
+          {
+            "roleId": "Leopard_Snow",
+            "modelAssetId": "Leopard_Snow",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Tiger_Sabertooth/Models/Snow_Leopard_Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Leopard_Snow"
+          },
+          {
+            "roleId": "Pig_Undead",
+            "modelAssetId": "Pig_Undead",
+            "defaultTextureAssetIds": [
+              "NPC/Undead/Pig_Undead/Models/Texture2.png"
+            ],
+            "nativeLootSourceId": "Drop_Pig_Undead"
+          },
+          {
+            "roleId": "Raptor_Cave",
+            "modelAssetId": "Raptor_Cave",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Raptor_Cave/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Raptor_Cave"
+          },
+          {
+            "roleId": "Tiger_Sabertooth",
+            "modelAssetId": "Tiger_Sabertooth",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Tiger_Sabertooth/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Tiger_Sabertooth"
+          }
+        ]
+      },
+      {
+        "id": "installed-predator-selector-physical-single-melee-v1",
+        "parentRoleId": "Template_Predator",
+        "nativeActionId": "Root_NPC_Attack_Melee",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-005",
+          "ME-006",
+          "ME-007",
+          "ME-008",
+          "ME-009",
+          "ME-010",
+          "ME-011",
+          "ME-012",
+          "ME-013",
+          "ME-014",
+          "ME-016",
+          "ME-017",
+          "ME-018",
+          "ME-020",
+          "ME-021",
+          "ME-022",
+          "ME-024",
+          "ME-025",
+          "ME-026"
+        ],
+        "memberRoleIds": [
+          {
+            "roleId": "Fen_Stalker",
+            "modelAssetId": "Fen_Stalker",
+            "defaultTextureAssetIds": [
+              "NPC/Swimming_Beast/Fen_Stalker/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Fen_Stalker"
+          },
+          {
+            "roleId": "Rex_Cave",
+            "modelAssetId": "Rex_Cave",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Rex_Cave/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Rex_Cave"
+          }
+        ]
+      },
+      {
+        "id": "installed-predator-bite-physical-single-melee-v1",
+        "parentRoleId": "Template_Predator",
+        "nativeActionId": "member-native-action",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-005",
+          "ME-006",
+          "ME-007",
+          "ME-008",
+          "ME-009",
+          "ME-010",
+          "ME-011",
+          "ME-012",
+          "ME-013",
+          "ME-014",
+          "ME-016",
+          "ME-017",
+          "ME-018",
+          "ME-020",
+          "ME-021",
+          "ME-022",
+          "ME-024",
+          "ME-025",
+          "ME-026"
+        ],
+        "memberRoleIds": [
+          {
+            "roleId": "Fox",
+            "modelAssetId": "Fox",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Fox/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Fox",
+            "nativeActionId": "Root_NPC_Fox_Attack"
+          },
+          {
+            "roleId": "Hyena",
+            "modelAssetId": "Hyena",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Hyena/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Hyena",
+            "nativeActionId": "Root_NPC_Hyena_Attack"
+          },
+          {
+            "roleId": "Rat",
+            "modelAssetId": "Rat",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Rat/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Rat",
+            "nativeActionId": "Root_NPC_Rat_Attack"
+          },
+          {
+            "roleId": "Snake_Cobra",
+            "modelAssetId": "Snake_Cobra",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Snake/Models/Model_Textures/Cobra.png"
+            ],
+            "nativeLootSourceId": "Drop_Snake_Cobra",
+            "nativeActionId": "Root_NPC_Snake_Attack"
+          },
+          {
+            "roleId": "Snake_Marsh",
+            "modelAssetId": "Snake_Marsh",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Snake/Models/Model_Textures/Marsh.png"
+            ],
+            "nativeLootSourceId": "Drop_Snake_Marsh",
+            "nativeActionId": "Root_NPC_Snake_Attack"
+          },
+          {
+            "roleId": "Snake_Rattle",
+            "modelAssetId": "Snake_Rattle",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Snake/Models/Model_Textures/Rattlesnake.png"
+            ],
+            "nativeLootSourceId": "Drop_Snake_Rattle",
+            "nativeActionId": "Root_NPC_Snake_Attack"
+          },
+          {
+            "roleId": "Wolf_Black",
+            "modelAssetId": "Wolf_Black",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Wolf/Models/Model_Textures/Black.png"
+            ],
+            "nativeLootSourceId": "Drop_Wolf_Black",
+            "nativeActionId": "Root_NPC_Wolf_Attack"
+          },
+          {
+            "roleId": "Wolf_White",
+            "modelAssetId": "Wolf_White",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Wolf/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Wolf_Black",
+            "nativeActionId": "Root_NPC_Wolf_Attack"
+          }
+        ]
+      }
+    ],
+    "installedCombatArchetypes": [
+      {
+        "id": "installed-single-melee-v1",
+        "routeKind": "SINGLE_MELEE",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-005",
+          "ME-006",
+          "ME-007",
+          "ME-008",
+          "ME-009",
+          "ME-010",
+          "ME-011",
+          "ME-012",
+          "ME-013",
+          "ME-014",
+          "ME-016",
+          "ME-017",
+          "ME-018",
+          "ME-020",
+          "ME-021",
+          "ME-022",
+          "ME-024",
+          "ME-025",
+          "ME-026"
+        ],
+        "members": [
+          {
+            "roleId": "Piranha",
+            "parentRoleId": "Template_Swimming_Aggressive",
+            "modelAssetId": "Piranha",
+            "defaultTextureAssetIds": [
+              "NPC/Swimming_Beast/Piranha/Models/Texture.png",
+              "NPC/Swimming_Wildlife/Bluegill/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Piranha",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Shark_Hammerhead_Bite",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Piranha_Black",
+            "parentRoleId": "Template_Swimming_Aggressive",
+            "modelAssetId": "Piranha_Black",
+            "defaultTextureAssetIds": [
+              "NPC/Swimming_Beast/Piranha_Black/Models/Texture.png",
+              "NPC/Swimming_Wildlife/Bluegill/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Piranha_Black",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Shark_Hammerhead_Bite",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Slug_Magma",
+            "parentRoleId": "Template_Predator",
+            "modelAssetId": "Slug_Magma",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Slug_Magma/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Slug_Magma",
+            "nativeImmunityChannels": [
+              "FIRE"
+            ],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Larva_Silk_Bite",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "installed-chain-shared-melee-v1",
+        "routeKind": "CHAIN_SHARED_MELEE",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-005",
+          "ME-006",
+          "ME-007",
+          "ME-008",
+          "ME-009",
+          "ME-010",
+          "ME-011",
+          "ME-012",
+          "ME-013",
+          "ME-014",
+          "ME-016",
+          "ME-017",
+          "ME-018",
+          "ME-020",
+          "ME-021",
+          "ME-022",
+          "ME-024",
+          "ME-025",
+          "ME-026"
+        ],
+        "members": [
+          {
+            "roleId": "Crawler_Void",
+            "parentRoleId": "Template_Predator",
+            "modelAssetId": "Crawler_Void",
+            "defaultTextureAssetIds": [
+              "NPC/Void/Crawler_Void/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Crawler_Void",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Crawler_Void_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Scarak_Fighter",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Scarak_Fighter",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Scarak_Fighter/Models/Model_Default.png"
+            ],
+            "nativeLootSourceId": "Drop_Scarak_Fighter",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Scarak_Fighter_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Burnt_Lancer",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Burnt_Lancer",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Items/Armors/Steel/Chest_Ancient.png",
+              "Items/Armors/Steel/Hands_Ancient.png",
+              "Items/Armors/Steel/Legs_Ancient.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Lancer/Cape_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Lancer/Head_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Burnt.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Burnt_Lancer",
+            "nativeImmunityChannels": [
+              "FIRE"
+            ],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Burnt_Lancer_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Fighter",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Fighter",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Cosmetics/Shoes/BootsBasic_Textures/Rotten_Leather.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Chest/Tunic_Torn_Textures/Tunic_Torn_Brown.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Fighter",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Fighter_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Frost_Fighter",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Frost_Fighter",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Cosmetics/Shoes/BootsBasic_Textures/Scavenger_Leather.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Chest/Tunic_Torn_Textures/Tunic_Torn_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Frost.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Frost_Fighter",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Frost_Fighter_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Frost_Knight",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Frost_Knight",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Soldier/Chest_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Soldier/Feet_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Soldier/Hands_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Soldier/Head_Texture.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Frost.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Frost_Knight",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Frost_Knight_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Frost_Soldier",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Frost_Soldier",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Archer/Legs_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Haircuts/Frozen_Spikes_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Soldier/Chest_Texture.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Frost.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Frost_Soldier",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Frost_Soldier_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Incandescent_Footman",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Incandescent_Footman",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Items/Armors/Steel/Chest_Incandescent.png",
+              "Items/Armors/Steel/Hands_Incandescent.png",
+              "Items/Armors/Steel/Legs_Incandescent.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Lancer/Cape_Burnt.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Incandescent_Footman/Head_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Incandescent_Footman/Leg_Texture.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Burnt_Black.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Incandescent_Footman",
+            "nativeImmunityChannels": [
+              "FIRE"
+            ],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Incandescent_Footman_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Sand_Assassin",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Sand_Assassin",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Arms/Band_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Chest/Rag_Small_Torn_Textures/Rag_Small_Torn_Brown.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Band_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Haircuts/Pointy_Dirty_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Legs/Pants_Large_Textures/Apprentice_Zombie.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Sand.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Sand_Assassin",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Sand_Assassin_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Sand_Guard",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Sand_Guard",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Arms/Band_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Chest/Rag_Small_Torn_Textures/Rag_Small_Torn_Beige.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Band_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Legs/Band_Texture.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Sand.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Sand_Guard",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Sand_Guard_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Wraith",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Wraith",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Wraith/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Wraith",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Wraith_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Zombie_Burnt",
+            "parentRoleId": "Template_Predator",
+            "modelAssetId": "Zombie_Burnt",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Zombie.png",
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Zombie_Burnt.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Zombie/Models/Attachments/Head/Eyes_Blue.png",
+              "NPC/Undead/Zombie/Models/Zombie.png",
+              "NPC/Undead/Zombie/Models/Zombie_Burnt.png"
+            ],
+            "nativeLootSourceId": "Drop_Zombie_Burnt",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Zombie_Burnt_Melee",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "installed-chain-variable-melee-v1",
+        "routeKind": "CHAIN_VARIABLE_MELEE",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-005",
+          "ME-006",
+          "ME-007",
+          "ME-008",
+          "ME-009",
+          "ME-010",
+          "ME-011",
+          "ME-012",
+          "ME-013",
+          "ME-014",
+          "ME-016",
+          "ME-017",
+          "ME-018",
+          "ME-020",
+          "ME-021",
+          "ME-022",
+          "ME-024",
+          "ME-025",
+          "ME-026"
+        ],
+        "members": [
+          {
+            "roleId": "Bear_Grizzly",
+            "parentRoleId": "Template_Predator",
+            "modelAssetId": "Bear_Grizzly",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Bear_Grizzly/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Bear_Grizzly",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Bear_Grizzly_Attack",
+                "strikeKeys": [
+                  "Swipe_Left_Damage",
+                  "Swipe_Right_Damage",
+                  "Stomp_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Bear_Polar",
+            "parentRoleId": "Bear_Grizzly",
+            "modelAssetId": "Bear_Polar",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Bear_Grizzly/Models/Texture.png",
+              "NPC/Beast/Bear_Polar/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Bear_Polar",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Bear_Polar_Attack",
+                "strikeKeys": [
+                  "Swipe_Left_Damage",
+                  "Swipe_Right_Damage",
+                  "Stomp_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Scorpion",
+            "parentRoleId": "Template_Predator",
+            "modelAssetId": "Scorpion",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Scorpion/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Scorpion",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Scorpion_Attack",
+                "strikeKeys": [
+                  "Snap_Left_Damage",
+                  "Snap_Right_Damage",
+                  "Sting_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Burnt_Soldier",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Burnt_Soldier",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Items/Armors/Steel/Chest_Ancient.png",
+              "Items/Armors/Steel/Hands_Ancient.png",
+              "Items/Armors/Steel/Head_Ancient.png",
+              "Items/Armors/Steel/Legs_Ancient.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Burnt.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Burnt_Soldier",
+            "nativeImmunityChannels": [
+              "FIRE"
+            ],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Burnt_Soldier_Attack",
+                "strikeKeys": [
+                  "Skeleton_Burnt_Soldier_Sword_Swing_Left_Damage",
+                  "Skeleton_Burnt_Soldier_Sword_Swing_Right_Damage",
+                  "Skeleton_Burnt_Soldier_Sword_Swing_Down_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Toad_Rhino",
+            "parentRoleId": "Template_Predator",
+            "modelAssetId": "Toad_Rhino",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Toad_Rhino/Models/Model_Textures/Blue.png"
+            ],
+            "nativeLootSourceId": "Drop_Toad_Rhino",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Toad_Rhino_Attack",
+                "strikeKeys": [
+                  "Tongue_Damage",
+                  "Headbutt_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Toad_Rhino_Magma",
+            "parentRoleId": "Template_Predator",
+            "modelAssetId": "Toad_Rhino_Magma",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Toad_Rhino/Models/Model_Textures/Blue.png",
+              "NPC/Beast/Toad_Rhino/Models/Model_Textures/Magma.png"
+            ],
+            "nativeLootSourceId": "Drop_Toad_Rhino_Magma",
+            "nativeImmunityChannels": [
+              "FIRE"
+            ],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Toad_Rhino_Magma_Attack",
+                "strikeKeys": [
+                  "Tongue_Damage",
+                  "Headbutt_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "installed-chain-repeated-melee-v1",
+        "routeKind": "CHAIN_REPEATED_MELEE",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-005",
+          "ME-006",
+          "ME-007",
+          "ME-008",
+          "ME-009",
+          "ME-010",
+          "ME-011",
+          "ME-012",
+          "ME-013",
+          "ME-014",
+          "ME-016",
+          "ME-017",
+          "ME-018",
+          "ME-020",
+          "ME-021",
+          "ME-022",
+          "ME-024",
+          "ME-025",
+          "ME-026"
+        ],
+        "members": [
+          {
+            "roleId": "Goblin_Scrapper",
+            "parentRoleId": "Template_Goblin_Scrapper",
+            "modelAssetId": "Goblin_Scrapper",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Intelligent/Goblin/Models/Model_Textures/Moldy.png"
+            ],
+            "nativeLootSourceId": "Drop_Goblin_Scrapper",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Goblin_Scrapper_Club_Attack",
+                "strikeKeys": [
+                  "Club_Swing_Left_Right_Damage",
+                  "Club_Swing_Left_Right_Down_Damage"
+                ],
+                "channel": "Physical",
+                "contactOccurrences": {
+                  "Club_Swing_Left_Right_Damage": 6,
+                  "Club_Swing_Left_Right_Down_Damage": 3
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "installed-single-projectile-v1",
+        "routeKind": "SINGLE_PROJECTILE",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-017"
+        ],
+        "members": [
+          {
+            "roleId": "Eye_Void",
+            "parentRoleId": "Template_Flying_Aggressive",
+            "modelAssetId": "Eye_Void",
+            "defaultTextureAssetIds": [
+              "NPC/Void/Eye_Void/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Eye_Void",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Eye_Void_Surge_Blast",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Burnt_Gunner",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Burnt_Gunner",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Items/Armors/Steel/Chest_Ancient.png",
+              "Items/Armors/Steel/Hands_Ancient.png",
+              "Items/Armors/Steel/Legs_Ancient.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Gunner/Head_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Lancer/Cape_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Burnt.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Burnt_Gunner",
+            "nativeImmunityChannels": [
+              "FIRE"
+            ],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Skeleton_Burnt_Gunner_Gun_Shoot",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Frost_Mage",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Frost_Mage",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Chest/Tunic_Torn_Long_Textures/Tunic_Torn_Long_Violet.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Beards/Frost_Undead_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Haircuts/Frozen_Spikes_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archmage/Feet_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archmage/Hands_Texture.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Frost.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Frost_Mage",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Skeleton_Sand_Mage_Spellbook_Corruption_Orb",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Incandescent_Mage",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Incandescent_Mage",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Alchemist/Feet_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Alchemist/Hands_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Incandescent_Mage/Chest_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Incandescent_Mage/Head_Texture.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Burnt_Black.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Incandescent_Mage",
+            "nativeImmunityChannels": [
+              "FIRE"
+            ],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Skeleton_Sand_Mage_Spellbook_Corruption_Orb",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Mage",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Mage",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Archmage/Legs_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Chest/Tunic_Torn_Long_Textures/Tunic_Torn_Long_Green.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Haircuts/Pointy_Dirty_Grey.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Mage",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Skeleton_Mage_Wand_Corruption_Orb",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Sand_Mage",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Sand_Mage",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Cosmetics/Shoes/Sandals_basic.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Archer/Head_Band_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Chest/Tunic_Torn_Long_Textures/Tunic_Torn_Long_Purple.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Beards/Dry_Undead_Grey_Brown.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Sand.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Sand_Mage",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Skeleton_Sand_Mage_Spellbook_Corruption_Orb",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "installed-mixed-native-actions-v1",
+        "routeKind": "MIXED_NATIVE_ACTIONS",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-017"
+        ],
+        "members": [
+          {
+            "roleId": "Outlander_Berserker",
+            "parentRoleId": "Template_Trork_Melee",
+            "modelAssetId": "Outlander_Berserker",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Outlander_1.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Outlander_Brown.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Outlander_1.png",
+              "Characters/Player_Textures/Outlander_1.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Intelligent/Outlander/Models/Attachments/Berserker/Chest_Texture.png",
+              "NPC/Intelligent/Outlander/Models/Attachments/Berserker/Hands_Texture.png",
+              "NPC/Intelligent/Outlander/Models/Attachments/Berserker/Head_Texture.png",
+              "NPC/Intelligent/Outlander/Models/Attachments/Berserker/Legs_Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Outlander_Berserker",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Outlander_Berserker_Axe_Swing_Left",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              },
+              {
+                "rootId": "Outlander_Berserker_Axe_Swing_Right",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              },
+              {
+                "rootId": "Outlander_Berserker_Axe_Swing_Down",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              },
+              {
+                "rootId": "Outlander_Berserker_Axe_Swing_Up_Left",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Outlander_Hunter",
+            "parentRoleId": "Template_Trork_Hybrid",
+            "modelAssetId": "Outlander_Hunter",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Outlander_1.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Outlander_Brown.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Outlander_1.png",
+              "Characters/Player_Textures/Outlander_1.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Intelligent/Outlander/Models/Attachments/Hunter/Cape_Texture.png",
+              "NPC/Intelligent/Outlander/Models/Attachments/Hunter/Chest_Texture.png",
+              "NPC/Intelligent/Outlander/Models/Attachments/Hunter/Head_Texture.png",
+              "NPC/Intelligent/Outlander/Models/Attachments/Hunter/Legs_Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Outlander_Hunter",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Outlander_Hunter_Daggers_Swing_Left_Right",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              },
+              {
+                "rootId": "Outlander_Hunter_Daggers_Swing_Right_Left",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              },
+              {
+                "rootId": "Outlander_Hunter_Bow_Shoot",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "installed-dual-native-actions-v1",
+        "routeKind": "DUAL_NATIVE_ACTIONS",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-005",
+          "ME-006",
+          "ME-007",
+          "ME-008",
+          "ME-009",
+          "ME-010",
+          "ME-011",
+          "ME-012",
+          "ME-013",
+          "ME-014",
+          "ME-016",
+          "ME-017",
+          "ME-018",
+          "ME-020",
+          "ME-021",
+          "ME-022",
+          "ME-024",
+          "ME-025",
+          "ME-026"
+        ],
+        "members": [
+          {
+            "roleId": "Void_Spectre",
+            "parentRoleId": "Template_Void_Spectre",
+            "modelAssetId": "Void_Spectre",
+            "defaultTextureAssetIds": [
+              "NPC/Void/Void_Spectre/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Void_Spectre",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Attack_Melee",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              },
+              {
+                "rootId": "Root_NPC_Void_Spectre_Charge",
+                "strikeKeys": [
+                  "Charge_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "installed-conditional-melee-v1",
+        "routeKind": "CONDITIONAL_MELEE",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-017",
+          "ME-018",
+          "ME-026"
+        ],
+        "members": [
+          {
+            "roleId": "Snapdragon",
+            "parentRoleId": "Template_Predator",
+            "modelAssetId": "Snapdragon",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Snapdragon/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Snapdragon",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Attack_Melee",
+                "strikeKeys": [
+                  "native_cooldown",
+                  "native_fallback"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
+            "roleId": "Spider",
+            "parentRoleId": "Template_Spider",
+            "modelAssetId": "Spider",
+            "defaultTextureAssetIds": [
+              "NPC/Beast/Spider/Models/Texture.png"
+            ],
+            "nativeLootSourceId": "Drop_Spider",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Attack_Melee",
+                "strikeKeys": [
+                  "native_cooldown",
+                  "native_fallback"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "installed-cae-native-actions-v1",
+        "routeKind": "CAE_NATIVE_ACTIONS",
+        "supportedAffixIds": [
+          "ME-002",
+          "ME-003",
+          "ME-004",
+          "ME-005",
+          "ME-006",
+          "ME-007",
+          "ME-008",
+          "ME-009",
+          "ME-010",
+          "ME-011",
+          "ME-012",
+          "ME-013",
+          "ME-014",
+          "ME-016",
+          "ME-017",
+          "ME-018",
+          "ME-025",
+          "ME-026"
+        ],
+        "members": [
+          {
+            "roleId": "Skeleton_Burnt_Praetorian",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Burnt_Praetorian",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton_Elite/Models/Attachments/Elite/Chest_Texture.png",
+              "NPC/Undead/Skeleton_Elite/Models/Attachments/Elite/Hands_Texture.png",
+              "NPC/Undead/Skeleton_Elite/Models/Attachments/Elite/Head_Texture.png",
+              "NPC/Undead/Skeleton_Elite/Models/Attachments/Elite/Legs_Texture.png",
+              "NPC/Undead/Skeleton_Elite/Models/Attachments/Praetorian/Chest_Texture.png",
+              "NPC/Undead/Skeleton_Elite/Models/Attachments/Praetorian/Hands_Texture.png",
+              "NPC/Undead/Skeleton_Elite/Models/Attachments/Praetorian/Head_Texture.png",
+              "NPC/Undead/Skeleton_Elite/Models/Attachments/Praetorian/Legs_Texture.png",
+              "NPC/Undead/Skeleton_Elite/Models/Model_Textures/Burnt.png",
+              "NPC/Undead/Skeleton_Elite/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Burnt_Praetorian",
+            "nativeImmunityChannels": [
+              "FIRE"
+            ],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Burnt_Praetorian_Attack",
+                "strikeKeys": [
+                  "Sword_Swing_Down_Damage",
+                  "Sword_Swing_Left_Damage",
+                  "Sword_Swing_Right_Damage"
+                ],
+                "channel": "Physical",
+                "variantOwnerId": "CAE_Skeleton_Praetorian"
+              },
+              {
+                "rootId": "Root_NPC_Skeleton_Burnt_Praetorian_Charge_Hit",
+                "strikeKeys": [
+                  "charge"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -9,7 +9,25 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
                                     CombatSnapshot snapshot, SkillExecutionPort.Equipment equipment,
                                     CommittedTarget target, boolean echo,int barrageBatch,
                                     com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget leechBudget,int multistrikeIndex,
-                                    RootEffectBudget effects,String secondaryKind,int effectiveSkillLevel) {
+                                    RootEffectBudget effects,String secondaryKind,int effectiveSkillLevel,
+                                    com.inigmasgames.hytalerpg.gear.GearEffectSnapshot gearSnapshot,
+                                    java.util.UUID gearSourceItemId) {
+    public SkillExecutionContext(SkillExecutionRequest request,String rootCastId,String skillInstanceId,Stage04SkillProfile profile,
+            CompiledSkillPlan compiledPlan,CombatSnapshot snapshot,SkillExecutionPort.Equipment equipment,CommittedTarget target,
+            boolean echo,int barrageBatch,com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget leechBudget,
+            int multistrikeIndex,RootEffectBudget effects,String secondaryKind,int effectiveSkillLevel,
+            com.inigmasgames.hytalerpg.gear.GearEffectSnapshot gearSnapshot){
+        this(request,rootCastId,skillInstanceId,profile,compiledPlan,snapshot,equipment,target,echo,barrageBatch,
+                leechBudget,multistrikeIndex,effects,secondaryKind,effectiveSkillLevel,gearSnapshot,null);
+    }
+    public SkillExecutionContext(SkillExecutionRequest request,String rootCastId,String skillInstanceId,Stage04SkillProfile profile,
+            CompiledSkillPlan compiledPlan,CombatSnapshot snapshot,SkillExecutionPort.Equipment equipment,CommittedTarget target,
+            boolean echo,int barrageBatch,com.inigmasgames.hytalerpg.combat.resource.RootLeechBudget leechBudget,
+            int multistrikeIndex,RootEffectBudget effects,String secondaryKind,int effectiveSkillLevel){
+        this(request,rootCastId,skillInstanceId,profile,compiledPlan,snapshot,equipment,target,echo,barrageBatch,
+                leechBudget,multistrikeIndex,effects,secondaryKind,effectiveSkillLevel,
+                com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.EMPTY);
+    }
     /** Retained canonical-constructor compatibility for fixtures authored before effective skill levels. */
     public SkillExecutionContext(SkillExecutionRequest request,String rootCastId,String skillInstanceId,Stage04SkillProfile profile,
             CompiledSkillPlan compiledPlan,CombatSnapshot snapshot,SkillExecutionPort.Equipment equipment,CommittedTarget target,boolean echo,int barrageBatch,
@@ -43,8 +61,10 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
         if (request == null || rootCastId == null || skillInstanceId == null || profile == null
                 || compiledPlan == null || snapshot == null || barrageBatch<0 || barrageBatch>2 || echo&&barrageBatch>0
                 ||leechBudget==null||!leechBudget.owns(request.actorId(),rootCastId)||effects==null||!effects.owns(request.actorId(),rootCastId)
-                ||effectiveSkillLevel<1||effectiveSkillLevel>1001)
+                ||effectiveSkillLevel<1||effectiveSkillLevel>1001||gearSnapshot==null)
             throw new IllegalArgumentException("Committed execution context is incomplete");
+        if(gearSourceItemId!=null&&gearSnapshot.forItem(gearSourceItemId).empty())
+            throw new IllegalArgumentException("COMMITTED_GEAR_SOURCE_ABSENT");
         effects.mastery().bindPrimary(skillInstanceId,profile.summon()!=null||profile.connection()!=null&&profile.connection().channel()
                 ||profile.support()!=null&&profile.support().aura());
         if(multistrikeIndex<0||multistrikeIndex>2||multistrikeIndex>0&&(echo||barrageBatch>0))throw new IllegalArgumentException("Invalid Multistrike child identity");
@@ -59,7 +79,7 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
         if(effect==null||effect.isBlank()||effect.length()>512)throw new IllegalArgumentException("INVALID_PROJECTILE_STATUS_SOURCE");
         String child=skillInstanceId+"/status-child/"+java.util.UUID.nameUUIDFromBytes(effect.getBytes(java.nio.charset.StandardCharsets.UTF_8));var old=snapshot;
         var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,"projectile_status",effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,"projectile_status",effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext conditionalCopy(CommittedTarget solution){
         String kind=compiledPlan.conditionalRepeat();
@@ -67,19 +87,19 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
         if(kind.equals("critical_trigger")&&!target.equals(solution))throw new IllegalStateException("CRITICAL_TRIGGER_CANNOT_RETARGET");
         String child=skillInstanceId+"/"+kind;var old=snapshot.withMagnitudeFactor(.50);
         var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,solution,false,0,leechBudget,0,effects,kind,effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,solution,false,0,leechBudget,0,effects,kind,effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext proliferationCopy(String token){
         if(derivedRelease()||!compiledPlan.proliferation()||token==null||token.length()>256)throw new IllegalStateException("PROLIFERATION_CANNOT_RECURSE");
         String child=skillInstanceId+"/proliferation/"+java.util.UUID.nameUUIDFromBytes(token.getBytes(java.nio.charset.StandardCharsets.UTF_8));var old=snapshot;
         var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,"proliferation",effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,"proliferation",effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext hitProcCopy(String kind,int ordinal){
         if(derivedRelease()||ordinal<1||ordinal>16||!java.util.Set.of("hemorrhage","terror","shatter","proliferation").contains(kind))throw new IllegalStateException("HIT_PROC_CANNOT_RECURSE");
         String child=skillInstanceId+"/"+kind+"-"+ordinal;var old=snapshot;
         var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,kind,effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,kind,effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext aftermathCopy(){
         if(derivedRelease()||!compiledPlan.zones().aftermath())throw new IllegalStateException("AFTERMATH_CANNOT_RECURSE");
@@ -87,28 +107,28 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
         String child=skillInstanceId+"/aftermath";var old=snapshot.withMagnitudeFactor(.50);
         var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),
                 old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-        return new SkillExecutionContext(request,rootCastId,child,next,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,"aftermath",effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,child,next,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,"aftermath",effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext cascadeCopy(int ordinal){
         if(derivedRelease()||!compiledPlan.zones().cascade()||ordinal<1||ordinal>2)throw new IllegalStateException("CASCADE_CANNOT_RECURSE");
         String child=skillInstanceId+"/cascade-"+ordinal;var old=snapshot.withMagnitudeFactor(.45);
         var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),
                 old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,"cascade",effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,"cascade",effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext withSnapshot(CombatSnapshot inherited) {
         if(!rootCastId.equals(inherited.rootCastId())||!skillInstanceId.equals(inherited.skillInstanceId())
                 ||!request.actorId().equals(inherited.actorId()))throw new IllegalArgumentException("Foreign derived snapshot");
-        return new SkillExecutionContext(request,rootCastId,skillInstanceId,profile,compiledPlan,inherited,equipment,target,echo,barrageBatch,leechBudget,multistrikeIndex,effects,secondaryKind,effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,skillInstanceId,profile,compiledPlan,inherited,equipment,target,echo,barrageBatch,leechBudget,multistrikeIndex,effects,secondaryKind,effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext barrageCopy(int batch) {
         if(echo||multistrikeIndex>0||!secondaryKind.isEmpty()||batch<1||batch>=compiledPlan.executionModifiers().barrageBatches())throw new IllegalStateException("INVALID_BARRAGE_BATCH");
         if(compiledPlan.orbit()){
             String child=skillInstanceId+"/barrage-"+batch;var old=snapshot;
             var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-            return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,batch,leechBudget,0,effects,"",effectiveSkillLevel);
+            return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,batch,leechBudget,0,effects,"",effectiveSkillLevel,gearSnapshot,gearSourceItemId);
         }
-        return new SkillExecutionContext(request,rootCastId,skillInstanceId,profile,compiledPlan,snapshot,equipment,target,false,batch,leechBudget,0,effects,"",effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,skillInstanceId,profile,compiledPlan,snapshot,equipment,target,false,batch,leechBudget,0,effects,"",effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext echoCopy() {
         if(echo||multistrikeIndex>0||!secondaryKind.isEmpty()) throw new IllegalStateException("ECHO_CANNOT_REPEAT_ITSELF");
@@ -120,7 +140,7 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
                 old.criticalChance(),old.criticalMultiplier(),
                 new com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets(buckets.increased(),buckets.reduced(),buckets.more(),less),
                 old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-        return new SkillExecutionContext(request,rootCastId,instance,profile,compiledPlan,copied,equipment,target,true,0,leechBudget,0,effects,"",effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,instance,profile,compiledPlan,copied,equipment,target,true,0,leechBudget,0,effects,"",effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext multistrikeCopy(int index){
         if(!compiledPlan.strikes().multistrike()||derivedRelease()||index<1||index>2)throw new IllegalStateException("MULTISTRIKE_CANNOT_RECURSE");
@@ -128,7 +148,7 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
         var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),
                 old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),
                 old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,index,effects,"",effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,index,effects,"",effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
     public SkillExecutionContext secondaryCopy(String kind,int ordinal,double magnitude){
         if(derivedRelease()||ordinal<1||ordinal>16||!Double.isFinite(magnitude)||magnitude<0||magnitude>1
@@ -138,6 +158,6 @@ public record SkillExecutionContext(SkillExecutionRequest request, String rootCa
         var inherited=new CombatSnapshot(rootCastId,child,old.actorId(),old.rawAttributes(),old.effectiveAttributes(),old.derivedStats(),
                 old.itemId(),old.weaponClass(),old.basePowerSource(),old.basePower(),old.compiledPlanHash(),old.skillCoefficient(),
                 old.criticalChance(),old.criticalMultiplier(),old.modifiers(),old.resourceCost(),old.cooldownSeconds(),old.statusModifiers());
-        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,kind,effectiveSkillLevel);
+        return new SkillExecutionContext(request,rootCastId,child,profile,compiledPlan,inherited,equipment,target,false,0,leechBudget,0,effects,kind,effectiveSkillLevel,gearSnapshot,gearSourceItemId);
     }
 }

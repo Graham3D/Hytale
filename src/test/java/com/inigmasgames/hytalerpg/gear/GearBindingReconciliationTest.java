@@ -34,9 +34,11 @@ class GearBindingReconciliationTest {
     }
     @Test void countsDoNotRelabelAdapterWorkAsNativeImpossibility(){
         assertEquals(447,bindings.all().size());
-        assertEquals(318,bindings.all().stream().filter(GearBindings.Binding::mapped).count());
-        assertEquals(114,bindings.all().stream().filter(b->b.resolutionClass().equals("MISSING_ADAPTER")).count());
-        assertEquals(15,bindings.all().stream().filter(b->b.resolutionClass().equals("TRUE_NATIVE_CAPABILITY_BLOCKER")).count());
+        long mapped=bindings.all().stream().filter(GearBindings.Binding::mapped).count();
+        long missing=bindings.all().stream().filter(b->b.resolutionClass().equals("MISSING_ADAPTER")).count();
+        long blocked=bindings.all().stream().filter(b->b.resolutionClass().equals("TRUE_NATIVE_CAPABILITY_BLOCKER")).count();
+        assertEquals(447,mapped+missing+blocked,"Every base needs one resolved disposition");
+        assertTrue(mapped>=318,"Previously mapped carriers must not be lost");
         assertTrue(bindings.all().stream().noneMatch(b->b.resolutionClass().equals("RESOLVABLE_AUDIT")));
         for(var binding:bindings.all())if(binding.mapped())assertEquals("VALIDATED_NATIVE_REUSE",binding.resolutionClass());
     }

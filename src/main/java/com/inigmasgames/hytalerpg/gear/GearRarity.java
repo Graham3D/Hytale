@@ -2,21 +2,22 @@ package com.inigmasgames.hytalerpg.gear;
 
 import com.inigmasgames.hytalerpg.difficulty.DifficultyId;
 
-/** Frozen legacy values remain decodable; new random rolls use NORMAL, MAGIC, RARE only. */
+/** Persisted historical budgets remain readable. New drops use legalNewBudget. */
 public enum GearRarity {
-    COMMON("Normal", "#ffffff", "Common", 0, 0, 1),
-    UNCOMMON("Magic", "#1d4dff", "Uncommon", 1, 1, 1),
-    RARE("Rare", "#a000ff", "Rare", 3, 6, 10),
-    VERY_RARE("Rare", "#a000ff", "Epic", 4, 5, 35),
-    LEGENDARY("Legendary", "#ff9100", "Legendary", 6, 6, 60),
-    NORMAL("Normal", "#ffffff", "Common", 0, 0, 1),
-    MAGIC("Magic", "#1d4dff", "Uncommon", 1, 2, 1);
+    COMMON(GearRarityPresentation.NORMAL, "Common", 0, 0, 1),
+    UNCOMMON(GearRarityPresentation.RARE, "Uncommon", 1, 1, 1),
+    RARE(GearRarityPresentation.EPIC, "Rare", 2, 3, 10),
+    VERY_RARE(GearRarityPresentation.EPIC, "Epic", 4, 5, 35),
+    LEGENDARY(GearRarityPresentation.LEGENDARY, "Legendary", 6, 6, 60),
+    NORMAL(GearRarityPresentation.NORMAL, "Common", 0, 0, 1),
+    MAGIC(GearRarityPresentation.RARE, "Uncommon", 1, 1, 1);
 
     public static final String AFFIX_COLOR = "#1d4dff";
+    public final GearRarityPresentation presentation;
     public final String label, color, nativeParticleTier;
     public final int minAffixes, maxAffixes, minimumLevel;
-    GearRarity(String label, String color, String nativeTier, int min, int max, int level) {
-        this.label=label; this.color=color; nativeParticleTier=nativeTier;
+    GearRarity(GearRarityPresentation presentation, String nativeTier, int min, int max, int level) {
+        this.presentation=presentation; this.label=presentation.label; this.color=presentation.color; nativeParticleTier=nativeTier;
         minAffixes=min; maxAffixes=max; minimumLevel=level;
     }
     public String particlePath() {
@@ -30,12 +31,22 @@ public enum GearRarity {
     }
     public boolean legalBudget(int prefixes, int suffixes) {
         if(prefixes<0 || suffixes<0) return false;
+        if(legalNewBudget(prefixes,suffixes)) return true;
+        // Version-one saves were issued under the three-band profile. Decode them
+        // unchanged; generation never calls this compatibility branch.
         return switch(this) {
-            case COMMON,NORMAL -> prefixes==0 && suffixes==0;
-            case UNCOMMON -> prefixes+suffixes==1;
             case MAGIC -> prefixes+suffixes==1 || prefixes==1 && suffixes==1;
             case RARE -> prefixes>=1 && suffixes>=1 && prefixes<=3 && suffixes<=3 && prefixes+suffixes>=2 && prefixes+suffixes<=6;
-            case VERY_RARE -> prefixes>=2 && suffixes>=2 && prefixes<=3 && suffixes<=3 && prefixes+suffixes<=5;
+            default -> false;
+        };
+    }
+    public boolean legalNewBudget(int prefixes,int suffixes) {
+        if(prefixes<0 || suffixes<0) return false;
+        return switch(this) {
+            case COMMON,NORMAL -> prefixes==0 && suffixes==0;
+            case UNCOMMON,MAGIC -> prefixes+suffixes==1;
+            case RARE -> prefixes>=1 && suffixes>=1 && prefixes<=2 && suffixes<=2 && prefixes+suffixes<=3;
+            case VERY_RARE -> prefixes>=1 && suffixes>=1 && prefixes<=3 && suffixes<=3 && prefixes+suffixes>=4 && prefixes+suffixes<=5;
             case LEGENDARY -> prefixes==3 && suffixes==3;
         };
     }

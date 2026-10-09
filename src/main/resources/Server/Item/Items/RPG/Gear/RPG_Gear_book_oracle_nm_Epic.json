@@ -1,0 +1,71 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.book_oracle.nm"
+  },
+  "Quality": "RPG_Gear_Epic",
+  "MaxStack": 1,
+  "MaxDurability": 170,
+  "Model": "NPC/Void/Necromancer_Void/Models/Weapons/Spellbook/Demon.blockymodel",
+  "Texture": "NPC/Void/Necromancer_Void/Models/Weapons/Spellbook/Demon_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Weapon_Spellbook_Demon.png",
+  "PlayerAnimationsId": "Spellbook",
+  "Tags": {
+    "Type": [
+      "Weapon"
+    ],
+    "Family": [
+      "Spellbook"
+    ]
+  },
+  "Interactions": {
+    "Primary": "Spellbook_Primary",
+    "Secondary": "Spellbook_Primary"
+  },
+  "Weapon": {},
+  "InteractionVars": {
+    "Spellbook_Cast_Hurl_Charged": {
+      "Interactions": [
+        {
+          "Parent": "Spellbook_Cast_Hurl_Charged",
+          "Costs": {
+            "Mana": 100
+          }
+        }
+      ]
+    },
+    "Spellbook_Cast_Hurl_Cost": {
+      "Interactions": [
+        {
+          "StatModifiers": {
+            "Mana": -100
+          },
+          "Type": "ChangeStat"
+        }
+      ]
+    },
+    "Spellbook_Cast_Hurl_Launch": "RPG_Carrier_Book_Launch_Root",
+    "Spellbook_Cast_Hurl_Effect": "Spellbook_Cast_Effect",
+    "Spellbook_Cast_Hurl_Fail": "Spellbook_Cast_Fail",
+    "Block_Effect": "Block_Swing_Down_Effect",
+    "Block_Swing_Left_Damage": "RPG_Carrier_Focus_Melee_Damage",
+    "Block_Swing_Right_Damage": "RPG_Carrier_Focus_Melee_Damage",
+    "Block_Swing_Down_Damage": "RPG_Carrier_Focus_Melee_Damage"
+  },
+  "Categories": [
+    "Items.Weapons"
+  ],
+  "IconProperties": {
+    "Scale": 0.6,
+    "Translation": [
+      -10,
+      -10
+    ],
+    "Rotation": [
+      45,
+      90,
+      0
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "ItemSoundSetId": "ISS_Weapons_Books"
+}

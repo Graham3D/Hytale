@@ -1,0 +1,48 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.bomb_fire.n"
+  },
+  "Quality": "RPG_Gear_Common",
+  "MaxStack": 1,
+  "MaxDurability": 110,
+  "Model": "NPC/Intelligent/Goblin/Models/Weapons/Bomb/Fire.blockymodel",
+  "Texture": "NPC/Intelligent/Goblin/Models/Weapons/Bomb/Fire_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Weapon_Bomb_Fire_Goblin.png",
+  "PlayerAnimationsId": "Item",
+  "Tags": {
+    "Type": [
+      "Weapon"
+    ],
+    "Family": [
+      "Bomb"
+    ]
+  },
+  "Interactions": {
+    "Primary": "RPG_Carrier_Bomb_Throw_Root"
+  },
+  "Weapon": {},
+  "Categories": [
+    "Items.Weapons"
+  ],
+  "IconProperties": {
+    "Scale": 0.87,
+    "Translation": [
+      -7.11,
+      -7.7
+    ],
+    "Rotation": [
+      4.685,
+      6.935,
+      315
+    ]
+  },
+  "Particles": [
+    {
+      "SystemId": "Fuse_Bomb",
+      "TargetNodeName": "Fuse_Lit",
+      "TargetEntityPart": "PrimaryItem",
+      "Scale": 2
+    }
+  ],
+  "SoundEventId": "SFX_Bomb_Fuse"
+}

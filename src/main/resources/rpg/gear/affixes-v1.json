@@ -3178,8 +3178,8 @@
       "topAndGroup": "top 3–5% cleanse respite",
       "exclusionGroup": "cleanse_respite",
       "operator": "CLEANSE_RESPITE",
-      "scopeContract": "After an actual cleanse, grant the recipient a barrier equal to V% normal Max Health for 3 s. 10 s per-caster/recipient ICD; no additional cleanse; Ameliorate integration needed. Require: WIS-CORE. Armor: none.",
-      "featureRequirement": "After an actual cleanse, grant the recipient a barrier equal to V% normal Max Health for 3 s. 10 s per-caster/recipient ICD; no additional cleanse; Ameliorate integration needed. Require: WIS-CORE. Armor: none.",
+      "scopeContract": "After an actual cleanse, grant the recipient a barrier equal to V% normal Max Health for 3 s. 10 s per-caster/recipient ICD; no additional cleanse; canonical successful-cleanse event; no new or changed skill. Require: WIS-CORE. Armor: none.",
+      "featureRequirement": "After an actual cleanse, grant the recipient a barrier equal to V% normal Max Health for 3 s. 10 s per-caster/recipient ICD; no additional cleanse; canonical successful-cleanse event; no new or changed skill. Require: WIS-CORE. Armor: none.",
       "topRange": [
         3.0,
         5.0
@@ -3188,7 +3188,7 @@
       "weight": 75,
       "requirementPolicy": "WIS-CORE",
       "armorExtension": "none.",
-      "effectContract": "After an actual cleanse, grant the recipient a barrier equal to V% normal Max Health for 3 s. 10 s per-caster/recipient ICD; no additional cleanse; Ameliorate integration needed. Require: WIS-CORE. Armor: none.",
+      "effectContract": "After an actual cleanse, grant the recipient a barrier equal to V% normal Max Health for 3 s. 10 s per-caster/recipient ICD; no additional cleanse; canonical successful-cleanse event; no new or changed skill. Require: WIS-CORE. Armor: none.",
       "authoredCells": [
         "WA-112 of Respite Suffix",
         "ilvl 70+ | Q | GATED C; top 3–5% cleanse respite  | weight R",
@@ -3402,7 +3402,7 @@
       "topAndGroup": "top 10–16% summon cost",
       "exclusionGroup": "summon_cost",
       "operator": "SUMMON_COST",
-      "scopeContract": "V% reduced finite numeric Mana costs of summon skills. Cannot reduce sacrificed items/corpses or Simulacrum full-pool drain. Require: WIS-CORE. Armor: none.",
+      "scopeContract": "V% reduced finite numeric Mana costs of summon skills. Includes the existing finite 20-Mana Simulacrum cost. Cannot reduce sacrificed items/corpses. Require: WIS-CORE. Armor: none.",
       "featureRequirement": "CONNECTED_MECHANICAL_ACCEPTANCE",
       "topRange": [
         10.0,
@@ -3412,7 +3412,7 @@
       "weight": 300,
       "requirementPolicy": "WIS-CORE",
       "armorExtension": "none.",
-      "effectContract": "V% reduced finite numeric Mana costs of summon skills. Cannot reduce sacrificed items/corpses or Simulacrum full-pool drain. Require: WIS-CORE. Armor: none.",
+      "effectContract": "V% reduced finite numeric Mana costs of summon skills. Includes the existing finite 20-Mana Simulacrum cost. Cannot reduce sacrificed items/corpses. Require: WIS-CORE. Armor: none.",
       "authoredCells": [
         "WA-120 of Muster Suffix",
         "ilvl 35+ | Q | TEST C; top 10–16% summon cost  | weight S",

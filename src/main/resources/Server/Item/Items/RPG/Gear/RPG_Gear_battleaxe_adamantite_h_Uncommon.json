@@ -36,7 +36,9 @@
             "WorldSoundEventId": "SFX_Battleaxe_T2_Impact",
             "LocalSoundEventId": "SFX_Battleaxe_T2_Impact"
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Swing_Down_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -53,7 +55,9 @@
             "WorldSoundEventId": "SFX_Battleaxe_T2_Impact",
             "LocalSoundEventId": "SFX_Battleaxe_T2_Impact"
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Swing_Down_Left_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -70,7 +74,9 @@
             "WorldSoundEventId": "SFX_Battleaxe_T2_Impact",
             "LocalSoundEventId": "SFX_Battleaxe_T2_Impact"
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Swing_Down_Right_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -93,7 +99,9 @@
             "WorldSoundEventId": "SFX_Battleaxe_T2_Impact",
             "LocalSoundEventId": "SFX_Battleaxe_T2_Impact"
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Downstrike_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -111,7 +119,9 @@
             "WorldSoundEventId": "SFX_Battleaxe_T2_Impact",
             "LocalSoundEventId": "SFX_Battleaxe_T2_Impact"
           },
-          "Type": "RPG_GearDamage"
+          "Type": "RPG_GearDamage",
+          "RpgProcSelector": "Signature_Whirlwind_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },

@@ -34,13 +34,13 @@ public final class NativeWorldSpawnDensity implements AutoCloseable {
     private record Applied(double density, int segments, int chunks) {}
     public record Snapshot(String world, int actual, double nativeTarget, double effectiveTarget,
                            int baselineCap, int effectiveCap, int jobs) {}
-    private final WorldSpawnDensitySettings settings;
+    private final SpawnDensitySetting settings;
     private final Map<World, Map<Integer, Applied>> applied = Collections.synchronizedMap(new WeakHashMap<>());
     private final Map<World, Long> lastChunkRefresh = Collections.synchronizedMap(new WeakHashMap<>());
     private final Map<GameplayConfig, Integer> baselineCaps = Collections.synchronizedMap(new IdentityHashMap<>());
     private volatile boolean closed;
 
-    public NativeWorldSpawnDensity(WorldSpawnDensitySettings settings) { this.settings = settings; }
+    public NativeWorldSpawnDensity(SpawnDensitySetting settings) { this.settings = settings; }
     public double multiplier() { return settings.multiplier(); }
 
     public CompletableFuture<Void> set(double multiplier) {
@@ -100,6 +100,14 @@ public final class NativeWorldSpawnDensity implements AutoCloseable {
         var entities = world.getEntityStore().getStore();
         var data = entities.getResource(WorldSpawnData.getResourceType());
         if (data == null) return;
+        if(com.inigmasgames.hytalerpg.diagnostics.MonsterSpawnTrace.enabled())try{
+            com.inigmasgames.hytalerpg.diagnostics.MonsterSpawnTrace.population(world.getWorldConfig().getUuid(),
+                    "world="+world.getName()+" multiplier="+multiplier+" actual="+data.getActualNPCs()
+                    +" expected="+data.getExpectedNPCs()+" activeJobs="+data.getActiveSpawnJobs()
+                    +" completedJobs="+data.getTotalSpawnJobsCompleted()
+                    +" completedJobBudget="+data.getTotalSpawnJobBudgetUsed()
+                    +" nativeCap="+config.getMaxEnvironmentalNPCSpawns());
+        }catch(RuntimeException ignored){/* Diagnostics cannot affect population projection. */}
         // Existing saves at 1x must leave native world/chunk population state untouched.
         if (multiplier == 1.0 && !applied.containsKey(world)) return;
         var time = entities.getResource(WorldTimeResource.getResourceType());

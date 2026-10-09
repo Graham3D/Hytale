@@ -19,6 +19,7 @@ public final class SupportRuntime {
     private final SupportProgressStore progress;
     private final Map<UUID,LinkedHashMap<String,Aura>> active=new HashMap<>();
     private final Map<UUID,Session> sessions=new HashMap<>();
+    private final Set<UUID> transientSentinelAuras=new HashSet<>();
     private final FiniteSupportEffects finite=new FiniteSupportEffects();
     private final WeaponImbueContacts imbues=new WeaponImbueContacts(finite);
     public FiniteSupportEffects finite(){return finite;}
@@ -27,6 +28,64 @@ public final class SupportRuntime {
         this.reservations=reservations;this.fields=fields;this.progress=progress;
     }
     public synchronized boolean active(UUID actor,String skill){return active.getOrDefault(actor,new LinkedHashMap<>()).containsKey(skill);}
+    public static String itemAuraKey(UUID item,String skill){return "item:"+Objects.requireNonNull(item)+":"+Objects.requireNonNull(skill);}
+    public record ItemAuraSource(UUID item,String skill) { }
+    public synchronized Set<ItemAuraSource> itemAuras(UUID actor){
+        var result=new HashSet<ItemAuraSource>();
+        for(var key:active.getOrDefault(actor,new LinkedHashMap<>()).keySet())if(key.startsWith("item:")){
+            int separator=key.indexOf(':',5);
+            result.add(new ItemAuraSource(UUID.fromString(key.substring(5,separator)),key.substring(separator+1)));
+        }
+        return Set.copyOf(result);
+    }
+    public synchronized boolean itemAuraActive(UUID actor,UUID item,String skill){
+        return active.getOrDefault(actor,new LinkedHashMap<>()).containsKey(itemAuraKey(item,skill));
+    }
+    /** D08 permits free sustain only for a bound Sentinel item, never for a player item. */
+    public synchronized String activateItemAura(SkillExecutionContext context,UUID item,boolean sentinelFree,
+                                                 double now,SupportWorldPort port){
+        Objects.requireNonNull(context);Objects.requireNonNull(port);
+        String skill=context.profile().skillId(),key=itemAuraKey(item,skill);
+        if(!Set.of("emanatism","thorns_aura","pedanticism").contains(skill)
+                ||context.effectiveSkillLevel()!=1||!context.profile().support().aura()
+                ||context.gearSnapshot().forItem(item).empty()
+                ||!context.request().action().equals("ITEM_AURA"))return "INVALID_ITEM_AURA";
+        UUID actor=context.request().actorId();
+        if(itemAuraActive(actor,item,skill))return "ACTIVE";
+        String validity=port.valid(context);if(!validity.equals("PASS"))return validity;
+        if(active.getOrDefault(actor,new LinkedHashMap<>()).size()>=4)return "OWNER_AURA_BUDGET";
+        String admission=fields.admission(actor);if(!admission.equals("PASS"))return admission;
+        double fraction=sentinelFree?0:context.profile().support().reservationFraction();
+        if(!sentinelFree){double max=port.resources().maximum(ResourceType.MANA),amount=max*fraction;
+            if(reservations.reserved(actor,max)+amount>max+1e-9)return "AURA_RESERVATION_OVERFLOW";
+            double first=port.itemAuraInitialUpkeepCost(context);
+            if(port.resources().current(ResourceType.MANA)+1e-9<amount+port.itemAuraActivationCost(context)+first)
+                return "INSUFFICIENT_CURRENT_MANA_FOR_AURA";}
+        Set<UUID> members=context.profile().support().allyAura()?members(context,radius(context),port):Set.of();
+        Set<UUID> enemies=context.profile().support().hostileAura()?enemies(context,radius(context),port):Set.of();
+        String allocation="aura:"+key;double current=sentinelFree?0:port.resources().current(ResourceType.MANA);
+        var previous=sentinelFree?Map.<String,ReservationService.Reservation>of():reservations.reservations(actor);
+        fields.reserve(actor,context.skillInstanceId());
+        try{if(fraction>0)reservations.addPercentage(actor,allocation,fraction,port.resources());
+            if(!sentinelFree&&!port.payItemAuraActivation(context))throw new IllegalStateException("ITEM_AURA_ACTIVATION_UNAFFORDABLE");}
+        catch(RuntimeException failure){
+            if(!sentinelFree)reservations.rollbackMutation(actor,previous,current,port.resources());
+            fields.release(actor,context.skillInstanceId());throw failure;
+        }
+        var aura=new Aura(context,allocation,fraction,now,members,enemies);aura.freeSustain=sentinelFree;
+        active.computeIfAbsent(actor,ignored->new LinkedHashMap<>()).put(key,aura);
+        try{
+            if(aura.timeline!=null){String payment=advance(aura,now,port);
+                if(!payment.equals("ACTIVE")){end(actor,key,payment,port);return payment;}}
+            port.auraMembership(context,List.copyOf(members),List.copyOf(enemies));
+        }catch(RuntimeException failure){end(actor,key,"ITEM_AURA_ACTIVATION_FAILED",port);throw failure;}
+        if(sentinelFree)transientSentinelAuras.add(actor);
+        port.trace(context,"ITEM_AURA_ACTIVATED",Map.of("item",item.toString(),"freeSentinelSustain",sentinelFree));
+        return "ACTIVE";
+    }
+    public synchronized void endItemAura(UUID actor,UUID item,String skill,String reason,SupportWorldPort port){
+        end(actor,itemAuraKey(item,skill),reason,port);
+    }
     /** Event-paid Auras query only when a producing weapon execution arrives, never per idle tick. */
     public synchronized SkillExecutionContext activeContext(UUID actor,String skill){
         var aura=active.getOrDefault(actor,new LinkedHashMap<>()).get(skill);return aura==null?null:aura.context;
@@ -40,7 +99,8 @@ public final class SupportRuntime {
     }
     public synchronized Set<UUID> activeMembers(SkillExecutionContext context,double now){
         if(context==null||!Double.isFinite(now))throw new IllegalArgumentException("INVALID_AURA_MEMBER_SNAPSHOT");
-        var aura=active.getOrDefault(context.request().actorId(),new LinkedHashMap<>()).get(context.profile().skillId());
+        var aura=active.getOrDefault(context.request().actorId(),new LinkedHashMap<>()).values().stream()
+                .filter(value->value.context==context).findFirst().orElse(null);
         return aura==null||aura.context!=context||now>aura.validUntil?Set.of():Set.copyOf(aura.members);
     }
     public synchronized SupportProgress state(UUID actor){return session(actor).state;}
@@ -220,11 +280,13 @@ public final class SupportRuntime {
             session.state=session.state.observedTime(seconds,eligible);
         }
         if(!alive){cancel(actor,"OWNER_DEAD",port);flush(actor,session);return;}
-        var cancelled=reservations.reconcileMaximum(actor,port.resources());
-        for(var aura:List.copyOf(active.getOrDefault(actor,new LinkedHashMap<>()).values())){
+        var cancelled=active.getOrDefault(actor,new LinkedHashMap<>()).values().stream().allMatch(a->a.freeSustain)
+                ?Set.<String>of():reservations.reconcileMaximum(actor,port.resources());
+        for(var entry:List.copyOf(active.getOrDefault(actor,new LinkedHashMap<>()).entrySet())){
+            var aura=entry.getValue();String auraKey=entry.getKey();
             String reason=port.valid(aura.context);
             if(cancelled.contains(aura.allocation))reason="MAXIMUM_RESERVATION_CANCELLED";
-            if(!reason.equals("PASS")){end(actor,aura.context.profile().skillId(),reason,port);continue;}
+            if(!reason.equals("PASS")){end(actor,auraKey,reason,port);continue;}
             var profile=aura.context.profile().support();
             if(profile.kind()==SupportProfile.Kind.MANAGUARD&&aura.context.compiledPlan().supportModifiers().sharedAegis()){
                 try{
@@ -233,7 +295,7 @@ public final class SupportRuntime {
                     if(!Objects.equals(next,aura.sharedTarget))port.trace(aura.context,"AURA_MEMBERSHIP_CHANGED",Map.of("sharedRecipient",next==null?"NONE":next.toString(),
                             "sharedDeficit",session.state.managuard().sharedDeficit(),"refilled",false));
                     aura.sharedTarget=next;
-                }catch(RuntimeException failure){end(actor,aura.context.profile().skillId(),"SHARED_AEGIS_QUERY_FAILED",port);continue;}
+                }catch(RuntimeException failure){end(actor,auraKey,"SHARED_AEGIS_QUERY_FAILED",port);continue;}
             }
             if(profile.kind()==SupportProfile.Kind.MANAGUARD)
                 session.state=session.state.guard(session.state.managuard().validateCapacity(
@@ -243,18 +305,18 @@ public final class SupportRuntime {
                 Set<UUID> next;
                 try{next=profile.allyAura()?members(aura.context,radius(aura.context),port):Set.of();
                     aura.enemies=profile.hostileAura()?enemies(aura.context,radius(aura.context),port):Set.of();}
-                catch(RuntimeException failure){end(actor,aura.context.profile().skillId(),"MEMBERSHIP_FAILED_"+failure.getMessage(),port);continue;}
+                catch(RuntimeException failure){end(actor,auraKey,"MEMBERSHIP_FAILED_"+failure.getMessage(),port);continue;}
                 if(!aura.members.equals(next))port.trace(aura.context,"AURA_MEMBERSHIP_CHANGED",Map.of("before",aura.members.size(),"after",next.size()));
                 aura.members=next;
             }
             if(aura.timeline!=null){
                 String result;
                 try{result=advance(aura,now,port);}catch(RuntimeException error){result="AURA_NATIVE_FAILURE_"+error.getClass().getSimpleName();}
-                if(!result.equals("ACTIVE")){end(actor,aura.context.profile().skillId(),result,port);continue;}
+                if(!result.equals("ACTIVE")){end(actor,auraKey,result,port);continue;}
             }
             aura.validUntil=aura.timeline==null?now+.25:Math.min(now+.25,aura.timeline.paidUntil());
             try{port.auraMembership(aura.context,List.copyOf(aura.members),List.copyOf(aura.enemies));port.sharedRecipient(aura.context,aura.sharedTarget);}
-            catch(RuntimeException failure){end(actor,aura.context.profile().skillId(),"MEMBERSHIP_NATIVE_EXCEPTION",port);continue;}
+            catch(RuntimeException failure){end(actor,auraKey,"MEMBERSHIP_NATIVE_EXCEPTION",port);continue;}
             if(now-aura.lastVisual>=.5){port.present(aura.context,radius(aura.context),.2);aura.lastVisual=now;}
         }
         if(now-session.lastSave>=1){flush(actor,session);session.lastSave=now;}
@@ -355,7 +417,8 @@ public final class SupportRuntime {
                 SupportProfile.Kind.REFLECT,magnitude(strongest),0,0,strongest.validUntil,c.rootCastId(),c.skillInstanceId(),c.request().correlationId(),c,0));
     }
     public synchronized boolean claimAuraSecondary(SkillExecutionContext context,double now){
-        var aura=active.getOrDefault(context.request().actorId(),new LinkedHashMap<>()).get(context.profile().skillId());
+        var aura=active.getOrDefault(context.request().actorId(),new LinkedHashMap<>()).values().stream()
+                .filter(value->value.context==context).findFirst().orElse(null);
         if(aura==null||!aura.context.skillInstanceId().equals(context.skillInstanceId())||now>aura.validUntil)return false;
         long epoch=(long)Math.floor(now);if(epoch!=aura.epoch){aura.epoch=epoch;aura.secondary=0;}
         if(aura.secondary>=8)return false;aura.secondary++;return true;
@@ -366,7 +429,7 @@ public final class SupportRuntime {
             (context.profile().support().kind()==SupportProfile.Kind.MANAGUARD?context.compiledPlan().supportModifiers().barrierFactor():1);}
     private String advance(Aura aura,double now,SupportWorldPort port){
         return aura.timeline.advance(now,new AuraTimeline.Port(){
-            public boolean pay(double seconds,int quantum){return port.upkeep(aura.context,seconds,quantum);}
+            public boolean pay(double seconds,int quantum){return aura.freeSustain||port.upkeep(aura.context,seconds,quantum);}
             public void pulse(int ordinal,boolean chill){
                 var targets=List.copyOf(aura.enemies);
                 if(chill&&aura.context.compiledPlan().pulses().rapidPulse())targets=targets.stream()
@@ -385,6 +448,9 @@ public final class SupportRuntime {
         if(failed!=null)throw failed;
     }
     public synchronized void detach(UUID actor,String reason,SupportWorldPort port){
+        if(transientSentinelAuras.remove(actor)){
+            try{cancel(actor,reason,port);}finally{sessions.remove(actor);}return;
+        }
         if(progress instanceof SupportProgressStore.Async async){
             var s=sessions.get(actor);
             if(s==null){cancel(actor,reason,port);return;}
@@ -404,10 +470,10 @@ public final class SupportRuntime {
     private void end(UUID actor,String skill,String reason,SupportWorldPort port){
         var bySkill=active.get(actor);if(bySkill==null)return;var aura=bySkill.get(skill);if(aura==null)return;
         var session=sessions.get(actor);if(session!=null&&session.escrow!=null&&aura.context.profile().support().kind()==SupportProfile.Kind.MANAGUARD)session.escrow.revoke();
-        try{reservations.remove(actor,aura.allocation,port.resources());}
+        try{if(!aura.freeSustain)reservations.remove(actor,aura.allocation,port.resources());}
         finally{
             // A native write failure must not retain buffs/field capacity. Ready cleanup can release a stale stat modifier.
-            reservations.remove(actor,aura.allocation);
+            if(!aura.freeSustain)reservations.remove(actor,aura.allocation);
             bySkill.remove(skill);if(bySkill.isEmpty())active.remove(actor);
             fields.release(actor,aura.context.skillInstanceId());
             port.auraEnded(aura.context);
@@ -427,6 +493,7 @@ public final class SupportRuntime {
     private Session session(UUID actor){
         var existing=sessions.get(actor);if(existing!=null&&existing.detached)throw new IllegalStateException("SUPPORT_SESSION_RECOVERY_PENDING");
         return sessions.computeIfAbsent(actor,id->{
+        if(transientSentinelAuras.contains(id))return new Session(SupportProgress.INITIAL,false);
         var settling=settlements.get(id);if(settling!=null){
             if(!settling.isDone())throw new IllegalStateException("SUPPORT_SESSION_RECOVERY_PENDING");
             settling.getNow(null);settlements.remove(id);
@@ -452,6 +519,7 @@ public final class SupportRuntime {
         var s=sessions.get(actor);return s==null||!s.detached;
     }
     private void flush(UUID actor,Session session){
+        if(transientSentinelAuras.contains(actor))return;
         if(progress instanceof SupportProgressStore.Async){
             poll(actor,session);if(session.pending!=null||session.preparingActivation!=null||session.preparedActivation!=null)return;
             boolean guard=active.getOrDefault(actor,new LinkedHashMap<>()).values().stream().anyMatch(a->a.context.profile().support().kind()==SupportProfile.Kind.MANAGUARD);
@@ -495,7 +563,7 @@ public final class SupportRuntime {
     private static final class Aura {
         final SkillExecutionContext context,pulseContext;final String allocation;double fraction;
         final com.inigmasgames.hytalerpg.execution.ChillPulseLedger chill=new com.inigmasgames.hytalerpg.execution.ChillPulseLedger();
-        Set<UUID> members,enemies;UUID sharedTarget;double validUntil,lastVisual;final AuraTimeline timeline;long epoch=-1;int secondary;boolean limitReported;
+        Set<UUID> members,enemies;UUID sharedTarget;double validUntil,lastVisual;final AuraTimeline timeline;long epoch=-1;int secondary;boolean limitReported,freeSustain;
         Aura(SkillExecutionContext context,String allocation,double fraction,double now,Set<UUID> members,Set<UUID> enemies){
             this.context=context;this.allocation=allocation;this.fraction=fraction;this.members=members;this.enemies=enemies;validUntil=now+.25;lastVisual=now;
             pulseContext=context.compiledPlan().pulses().payload(context);

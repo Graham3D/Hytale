@@ -90,11 +90,13 @@ public final class RpgDifficultyCommand extends AbstractCommandCollection {
                 var golem=GolemMilestones.load().require(text.toLowerCase(Locale.ROOT));
                 // Explicit campaign authoring, distinct from /npc spawn and forced travel. Native role stats are retained.
                 var npc=com.hypixel.hytale.server.npc.NPCPlugin.get();npc.validateSpawnableRole(golem.roleId());UUID placement=UUID.randomUUID();
+                // NPCPlugin receives no explicit Model, so its pre-add holder does not yet have ModelComponent.
+                // The audited role Appearance IDs match these native model asset IDs; keep native NPC model selection.
+                var modelAsset=com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset.getAssetMap().getAsset(golem.roleId());
+                if(modelAsset==null)throw new IllegalStateException("NATIVE_GOLEM_ASSET_MISSING:"+golem.roleId());
+                HytaleDifficultyTravel.requireClear(w,at,modelAsset.getBoundingBox());
                 var result=npc.spawnEntity(s,npc.getIndex(golem.roleId()),at,t.getRotation(),null,
                         (entity,holder,store)->{
-                            var model=holder.getComponent(com.hypixel.hytale.server.core.modules.entity.component.ModelComponent.getComponentType());
-                            if(model==null)throw new IllegalStateException("NATIVE_GOLEM_MODEL_MISSING");
-                            HytaleDifficultyTravel.requireClear(w,at,model.getModel().getBoundingBox());
                             holder.addComponent(CampaignEncounterProjection.getComponentType(),new CampaignEncounterProjection(p.getWorldUuid(),placement,golem.roleId()));
                         },null);
                 if(result==null)throw new IllegalStateException("CAMPAIGN_GOLEM_SPAWN_FAILED");

@@ -38,16 +38,50 @@ public final class EncounterContributions {
         }
         public Snapshot invalidated(){return new Snapshot(spawn,credits,firstCombat,progressAt,lastObserved,lowestHealthFraction,true);}
     }
-    public record DeathPlan(EnemyRewardRegistry.Spawn spawn,Vec3 deathPosition,long deathAtMillis,List<Share> shares){
+    public record DeathPlan(EnemyRewardRegistry.Spawn spawn,Vec3 deathPosition,long deathAtMillis,List<Share> shares,Map<UUID,Double> frozenGoldFind,Long frozenGoldBase){
+        public DeathPlan(EnemyRewardRegistry.Spawn spawn,Vec3 deathPosition,long deathAtMillis,List<Share> shares){this(spawn,deathPosition,deathAtMillis,shares,null,null);}
         public DeathPlan {Objects.requireNonNull(spawn);Objects.requireNonNull(deathPosition);shares=List.copyOf(shares);
+            if(frozenGoldFind!=null){
+                if(frozenGoldFind.size()>MAX_CONTRIBUTORS||frozenGoldFind.entrySet().stream().anyMatch(e->e.getKey()==null||e.getValue()==null||!Double.isFinite(e.getValue())||e.getValue()<0||e.getValue()>10_000))
+                    throw new IllegalArgumentException("INVALID_FROZEN_GOLD_FIND");
+                frozenGoldFind=Map.copyOf(frozenGoldFind);
+            }
+            if(frozenGoldBase!=null&&(frozenGoldBase<1||frozenGoldBase>1_000_000))throw new IllegalArgumentException("INVALID_FROZEN_GOLD_BASE");
             if(deathAtMillis<spawn.spawnedAtMillis()||shares.size()>MAX_CONTRIBUTORS)throw new IllegalArgumentException("INVALID_DEATH_PLAN");
+            if(spawn.enemyRewards()!=null&&!spawn.enemyRewards().economic()&&!shares.isEmpty())throw new IllegalArgumentException("INELIGIBLE_ENEMY_REWARDS");
             Set<UUID> unique=new HashSet<>();
             for(var share:shares)if(!unique.add(share.player())||share.insight()!=(spawn.level()>0?spawn.rank().insight:0)
-                    ||share.xp()!=(spawn.level()>0?ProgressionMath.equalShare(ProgressionMath.enemyReward(spawn.level(),spawn.rank(),spawn.rarity(),share.commonPotPlayerLevel()),share.eligiblePartyMembers()):0))throw new IllegalArgumentException("DEATH_SHARE_PROFILE_MISMATCH");}
+                    ||share.xp()!=(spawn.level()>0?ProgressionMath.equalShare(spawn.rewardXp(share.commonPotPlayerLevel()),share.eligiblePartyMembers()):0)
+                    ||share.learning()!=null&&!Objects.equals(share.learning().enemyRewards(),spawn.enemyRewards()))throw new IllegalArgumentException("DEATH_SHARE_PROFILE_MISMATCH");}
+        public DeathPlan withGoldFind(Map<UUID,Double> values){
+            if(values.size()>MAX_CONTRIBUTORS||values.entrySet().stream().anyMatch(e->e.getKey()==null||e.getValue()==null||!Double.isFinite(e.getValue())||e.getValue()<0||e.getValue()>10_000))throw new IllegalArgumentException("INVALID_FROZEN_GOLD_FIND");
+            var selected=new HashMap<UUID,Double>();for(var share:shares)selected.put(share.player(),values.getOrDefault(share.player(),0d));
+            return new DeathPlan(spawn,deathPosition,deathAtMillis,shares,Map.copyOf(selected),GoldRewardPolicy.loadCanonical().ordinaryBaseGold());
+        }
         public EarnedReward reward(Share share){
             if(!shares.contains(share))throw new IllegalArgumentException("NOT_AN_ELIGIBLE_DEATH_SHARE");
+            // Pre-Gold frozen plans stay unchanged. New plans split one pot using the same
+            // eligible equal-party-share weights as encounter XP, with subunits retained.
+            var gold=spawn.level()>0&&spawn.milestone()==null&&frozenGoldBase!=null
+                    ?new EarnedReward.GoldPot(frozenGoldBase,frozenGoldFind==null?0:frozenGoldFind.getOrDefault(share.player(),0d),goldFraction(share)):null;
             return new EarnedReward(spawn.eventId(),share.xp(),share.insight(),Map.of(),"ELIGIBLE_ENEMY_DEATH","","",spawn.enemy().toString(),null,
-                    spawn.milestone()==null?null:new com.inigmasgames.hytalerpg.difficulty.MilestoneAward(spawn.world(),spawn.enemy(),spawn.eventId(),deathAtMillis,spawn.milestone()));
+                    spawn.milestone()==null?null:new com.inigmasgames.hytalerpg.difficulty.MilestoneAward(spawn.world(),spawn.enemy(),spawn.eventId(),deathAtMillis,spawn.milestone()),gold);
+        }
+        private java.math.BigDecimal goldFraction(Share requested){
+            var sorted=shares.stream().sorted(Comparator.comparing(s->s.player().toString())).toList();
+            var weights=new java.util.LinkedHashMap<UUID,java.math.BigDecimal>();
+            var total=java.math.BigDecimal.ZERO;
+            for(var share:sorted){var weight=java.math.BigDecimal.ONE.divide(java.math.BigDecimal.valueOf(share.eligiblePartyMembers()),24,java.math.RoundingMode.DOWN);
+                weights.put(share.player(),weight);total=total.add(weight);}
+            var allocated=java.math.BigDecimal.ZERO;
+            for(int i=0;i<sorted.size();i++){
+                var id=sorted.get(i).player();
+                var part=i==sorted.size()-1?java.math.BigDecimal.ONE.subtract(allocated)
+                        :weights.get(id).divide(total,24,java.math.RoundingMode.DOWN);
+                if(id.equals(requested.player()))return part;
+                allocated=allocated.add(part);
+            }
+            throw new IllegalArgumentException("NOT_AN_ELIGIBLE_GOLD_SHARE");
         }
     }
     private static final class Encounter {
@@ -123,6 +157,7 @@ public final class EncounterContributions {
     }
     public synchronized boolean masteryEligible(UUID world,UUID enemy,UUID player,int playerLevel,long now){
         if(playerLevel<1||playerLevel>99)return false;var e=active(world,enemy,now);
+        if(e!=null&&e.spawn.enemyRewards()!=null&&!e.spawn.enemyRewards().economic())return false;
         if(e!=null&&e.spawn.level()==0)return false; // Historical milestone-only encounters retain their unassigned level.
         if(e==null||e.spawn.level()-playerLevel<=-11||e.firstCombat<0||now-e.progressAt>FARM_WINDOW_MS)return false;
         var contribution=e.contributors.get(player);return contribution!=null&&recent(contribution.observedAtMillis(),now);
@@ -133,6 +168,11 @@ public final class EncounterContributions {
         if(e.death!=null)return e.death;
         if(participants.size()>MAX_CONTRIBUTORS)throw new IllegalArgumentException("PARTICIPANT_QUERY_BUDGET");
         if(now<e.lastObserved||now<e.spawn.spawnedAtMillis())throw new IllegalStateException("ENCOUNTER_CLOCK_REVERSED");
+        // QA and other non-economic Master Enemies still need a durable death/pack receipt,
+        // but may never acquire player reward, learning, or loot shares from combat credit.
+        if(e.spawn.enemyRewards()!=null&&!e.spawn.enemyRewards().economic()){
+            e.death=new DeathPlan(e.spawn,position,now,List.of());return e.death;
+        }
         Map<String,List<Participant>> groups=new TreeMap<>();Set<UUID> seen=new HashSet<>();
         for(var participant:participants){
             if(!seen.add(participant.player()))throw new IllegalArgumentException("DUPLICATE_PARTICIPANT");

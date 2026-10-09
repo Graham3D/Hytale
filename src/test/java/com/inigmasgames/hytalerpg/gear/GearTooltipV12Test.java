@@ -69,7 +69,7 @@ final class GearTooltipV12Test {
         assertEquals(List.of("+11.7% Enhanced Armor"),lines.stream().filter(l->l.style()==GearTooltip.Style.AFFIX).map(GearTooltip.Line::text).toList());
         assertTrue(lines.stream().anyMatch(l->l.text().equals("Armor: 2.6")));
         assertTrue(lines.stream().anyMatch(l->l.text().equals("Health: +2.5")));
-        assertTrue(lines.stream().anyMatch(l->l.text().equals("Required Dexterity: 10")));
+        assertTrue(lines.stream().anyMatch(l->l.text().equals("Requires 10 Dexterity")));
         assertEquals(identity,item.identity());assertEquals(affixes,item.affixes());assertEquals(requirements,item.requirements());
         assertEquals(item,GearInstance.fromJson(item.toJson()));
     }

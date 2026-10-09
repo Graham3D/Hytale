@@ -20,6 +20,17 @@ public final class DamageCalculationService {
         return new Result(request.basePower(), attributeMultiplier, scaledBasePower, skillRawDamage,
                 modifierFactor, preCritDamage, criticalHit, preMitigationDamage);
     }
+    /** Skill path: use this owner's critical RNG for one committed multi-channel direct hit. */
+    public com.inigmasgames.hytalerpg.gear.GearCombatEffects.Hit calculateGear(
+            com.inigmasgames.hytalerpg.gear.GearEffectSnapshot equipped,java.util.UUID contributingItem,
+            String rootId,double scaledPhysicalPower,double coefficient,boolean attack,boolean spell,
+            double skillConvertedFraction,com.inigmasgames.hytalerpg.gear.GearCombatEffects.Channel skillDestination,
+            double baselineCritChance,double baselineCritMultiplier,boolean canCrit,
+            com.inigmasgames.hytalerpg.execution.math.Vec3 origin){
+        return com.inigmasgames.hytalerpg.gear.GearCombatEffects.attack(equipped,contributingItem,rootId,
+                scaledPhysicalPower,coefficient,attack,spell,skillConvertedFraction,skillDestination,
+                baselineCritChance,baselineCritMultiplier,canCrit,origin,critical);
+    }
     private static void validate(Request request) {
         if (request.basePower() < 0.0 || request.skillCoefficient() < 0.0 || request.effectiveAttribute() < 0.0
                 || request.criticalChance() < 0.0 || request.criticalChance() > 1.0 || request.criticalMultiplier() < 1.0)

@@ -18,7 +18,10 @@ public final class GearAffixDisplay {
         private static final RpgCatalog SKILLS=RpgCatalog.loadCanonical();
     }
     /** An affix with [Skill] needs a frozen selected SkillId before its gated family may enter loot. */
-    public static String format(GearInstance.AffixRoll roll){return format(roll,null);}
+    public static String format(GearInstance.AffixRoll roll){
+        Objects.requireNonNull(roll);
+        return format(roll,roll.selector()==null?null:new SkillId(roll.selector()));
+    }
     public static String format(GearInstance.AffixRoll roll,SkillId selectedSkill){
         Objects.requireNonNull(roll);
         GearCatalog.Affix definition;

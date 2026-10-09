@@ -1,5 +1,5 @@
 {
-  "revision": "hywind-three-quality-v1",
+  "revision": "hywind-five-band-v1",
   "normalWeights": [70, 27, 3],
   "nightmareWeights": [50, 37, 13],
   "hellWeights": [35, 42, 23],
@@ -11,6 +11,10 @@
   "mfKnee": 0.5,
   "magicMfGain": 2.0,
   "rareMfGain": 4.5,
-  "magicAffixWeights": [65, 35],
-  "rareAffixWeights": [40, 30, 20, 10]
+  "magicAffixWeights": [1],
+  "rareAffixWeights": [60, 40],
+  "veryRareAffixWeights": [60, 40],
+  "legendaryAffixWeights": [1],
+  "veryRareShare": 0.15,
+  "legendaryShare": 0.08
 }

@@ -1,0 +1,21 @@
+{
+  "Type": "Simple",
+  "RunTime": 0.313913,
+  "HorizontalSpeedMultiplier": 0.75,
+  "Effects": {
+    "ItemAnimationId": "SwingDownStrong",
+    "WorldSoundEventId": "SFX_Sword_T2_Swing_Down",
+    "LocalSoundEventId": "SFX_Sword_T2_Swing_Down_Local",
+    "ItemPlayerAnimationsId": "RPG_Action_Sword_S115_R40_Animations"
+  },
+  "Next": {
+    "Type": "Replace",
+    "Var": "Swing_Down_Selector",
+    "DefaultOk": true,
+    "DefaultValue": {
+      "Interactions": [
+        "RPG_Action_Sword_S115_R40_Weapon_Sword_Primary_Swing_Down_Selector"
+      ]
+    }
+  }
+}

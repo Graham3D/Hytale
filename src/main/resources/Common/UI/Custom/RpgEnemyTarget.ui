@@ -1,0 +1,35 @@
+// Compact viewer-local projection of a monster's head position. No pinned top-center card.
+Group #RpgEnemyTarget {
+    Anchor: (Horizontal: 0, Vertical: 0, Width: 192, Height: 96);
+    Visible: false;
+    Label #RpgEnemyName {
+      Anchor: (Top: 0, Width: 192, Height: 20);
+      Text: "";
+      Style: (FontSize: 16, RenderBold: true, TextColor: #f2eee5, Alignment: Center);
+    }
+    Label #RpgEnemyIdentity {
+      Anchor: (Top: 20, Width: 192, Height: 16);
+      Text: "";
+      Style: (FontSize: 12, TextColor: #b6c2cf, Alignment: Center);
+    }
+    Group #RpgEnemyHealth {
+      Anchor: (Top: 38, Width: 128, Height: 24);
+      Group #RpgEnemyHealthBackground {
+        Anchor: (Left: 4, Top: 0, Width: 120, Height: 24);
+        Background: (TexturePath: "Assets/MonsterHealth/Monster_HB_BG.png");
+      }
+      Group #RpgEnemyHealthFill {
+        Anchor: (Left: 4, Top: 0, Width: 0, Height: 24);
+        Background: (TexturePath: "Assets/MonsterHealth/Monster_HB.png");
+      }
+      Group #RpgEnemyHealthFrame {
+        Anchor: (Left: 0, Top: 0, Width: 128, Height: 24);
+        Background: (TexturePath: "Assets/MonsterHealth/Monster_HB_Frame.png");
+      }
+    }
+    Label #RpgEnemyAffixes {
+      Anchor: (Top: 66, Width: 192, Height: 30);
+      Text: "";
+      Style: (FontSize: 12, RenderBold: false, TextColor: #f2eee5, Alignment: Center, Wrap: true, WrapMaxLines: 2);
+    }
+}

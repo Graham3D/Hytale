@@ -163,7 +163,7 @@ final class TableServingManager {
             return Optional.empty();
         }
         BlockType blockType = BlockType.getAssetMap().getAsset(
-                world.getBlock(position.x(), position.y(), position.z()));
+                com.inigmasgames.taverns.api.LoadedBlocks.getBlock(world, position.x(), position.y(), position.z()));
         if (blockType == null || blockType == BlockType.EMPTY || !isRegisteredTable(blockType)) {
             return Optional.empty();
         }
@@ -185,7 +185,7 @@ final class TableServingManager {
             Vector3i candidate = new Vector3i(
                     position.x(), position.y() + offsetY, position.z());
             BlockType blockType = BlockType.getAssetMap().getAsset(
-                    world.getBlock(candidate.x(), candidate.y(), candidate.z()));
+                    com.inigmasgames.taverns.api.LoadedBlocks.getBlock(world, candidate.x(), candidate.y(), candidate.z()));
             if (blockType != null && blockType != BlockType.EMPTY
                     && isRegisteredTable(blockType)) {
                 return Optional.of(candidate);
@@ -352,7 +352,7 @@ final class TableServingManager {
             World world,
             CommandBuffer<EntityStore> commandBuffer) {
         BlockType blockType = BlockType.getAssetMap().getAsset(
-                world.getBlock(tablePosition.x(), tablePosition.y(), tablePosition.z()));
+                com.inigmasgames.taverns.api.LoadedBlocks.getBlock(world, tablePosition.x(), tablePosition.y(), tablePosition.z()));
         if (blockType == null || blockType == BlockType.EMPTY || !isRegisteredTable(blockType)) {
             return false;
         }
@@ -944,9 +944,7 @@ final class TableServingManager {
 
     /** Non-loading lookup safe to use while an EntityStore system is processing. */
     private static BlockType loadedBlockType(World world, int x, int y, int z) {
-        WorldChunk chunk = world.getChunkIfLoaded(
-                ChunkUtil.indexChunkFromBlock(x, z));
-        return chunk == null ? null : BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
+        return com.inigmasgames.taverns.api.LoadedBlocks.type(world, x, y, z);
     }
 
     private static void stripLegacyItemComponents(
@@ -1067,7 +1065,7 @@ final class TableServingManager {
             return false;
         }
         World world = commandBuffer.getExternalData().getWorld();
-        BlockType chair = BlockType.getAssetMap().getAsset(world.getBlock(
+        BlockType chair = BlockType.getAssetMap().getAsset(com.inigmasgames.taverns.api.LoadedBlocks.getBlock(world, 
                 chairPosition.x(), chairPosition.y(), chairPosition.z()));
         if (chair == null || !isRegisteredCategory(chair, ComfortCategory.SEATING)) {
             return false;
@@ -1109,13 +1107,8 @@ final class TableServingManager {
 
     static ServingPose servingPose(World world, TableTarget target) {
         TableKey key = target.key();
-        long chunkIndex = ChunkUtil.indexChunkFromBlock(key.x(), key.z());
-        WorldChunk chunk = world.getChunkIfLoaded(chunkIndex);
-        RotationTuple blockRotation = chunk == null
-                ? RotationTuple.NONE
-                : chunk.getBlockChunk().getSectionAtBlockY(key.y()).getRotation(
-                        ChunkUtil.localCoordinate(key.x()), key.y(),
-                        ChunkUtil.localCoordinate(key.z()));
+        RotationTuple blockRotation = com.inigmasgames.taverns.api.LoadedBlocks.rotation(
+                world, key.x(), key.y(), key.z());
         Rotation3f displayRotation = new Rotation3f();
         blockRotation.applyRotationTo(displayRotation);
 
@@ -1163,17 +1156,8 @@ final class TableServingManager {
     }
 
     private static Vector3i tableAnchor(World world, Vector3i position) {
-        WorldChunk chunk = world.getChunkIfLoaded(
-                ChunkUtil.indexChunkFromBlock(position.x(), position.z()));
-        if (chunk == null) {
-            return new Vector3i(position);
-        }
-        int filler = chunk.getBlockChunk()
-                .getSectionAtBlockY(position.y())
-                .getFiller(
-                        ChunkUtil.localCoordinate(position.x()),
-                        position.y(),
-                        ChunkUtil.localCoordinate(position.z()));
+        int filler = com.inigmasgames.taverns.api.LoadedBlocks.filler(
+                world, position.x(), position.y(), position.z());
         if (filler == FillerBlockUtil.NO_FILLER) {
             return new Vector3i(position);
         }

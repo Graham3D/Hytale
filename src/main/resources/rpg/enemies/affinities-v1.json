@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "revision": "enemy-affinities-v1.0",
+  "applyToNativeBossEncounter": false,
+  "roleEntries": [
+    {
+      "canonicalRoleId": "Golem_Crystal_Flame",
+      "channel": "FIRE",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Golem_Firesteel",
+      "channel": "FIRE",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Spirit_Ember",
+      "channel": "FIRE",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Emberwulf",
+      "channel": "FIRE",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Slug_Magma",
+      "channel": "FIRE",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Toad_Rhino_Magma",
+      "channel": "FIRE",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Golem_Crystal_Frost",
+      "channel": "WATER",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Spirit_Frost",
+      "channel": "WATER",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Golem_Crystal_Thunder",
+      "channel": "LIGHTNING",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Spirit_Thunder",
+      "channel": "LIGHTNING",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Golem_Crystal_Earth",
+      "channel": "EARTH",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Golem_Crystal_Sand",
+      "channel": "EARTH",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Spirit_Root",
+      "channel": "EARTH",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Feran_Windwalker",
+      "channel": "WIND",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Void_Spawn_Entombed",
+      "channel": "VOID",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    },
+    {
+      "canonicalRoleId": "Void_Spectre",
+      "channel": "VOID",
+      "rawResistanceFloor": [
+        0.2,
+        0.4,
+        0.6
+      ]
+    }
+  ]
+}

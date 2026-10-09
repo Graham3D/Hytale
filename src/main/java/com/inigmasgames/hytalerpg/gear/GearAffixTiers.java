@@ -37,9 +37,13 @@ public final class GearAffixTiers {
     public static boolean rarityAllows(GearCatalog.Affix affix,Tier tier,GearRarity rarity) {
         if(rarity.quality()==GearQuality.NORMAL) return false;
         return switch(affix.tierModel()) {
-            case "NAMED" -> tier.low()==1 || rarity.quality()==GearQuality.RARE && tier.low()<=4;
-            case "FAMILY" -> rarity.quality()==GearQuality.RARE;
-            case "ALL" -> rarity==GearRarity.LEGENDARY?true:rarity.quality()==GearQuality.RARE && tier.low()!=2;
+            case "NAMED" -> tier.tier()==1 || rarity!=GearRarity.MAGIC && rarity!=GearRarity.UNCOMMON
+                    && (tier.tier()<4 || rarity==GearRarity.RARE);
+            case "FAMILY" -> rarity!=GearRarity.MAGIC && rarity!=GearRarity.UNCOMMON
+                    && (tier.tier()<3 || rarity==GearRarity.RARE);
+            case "ALL" -> tier.tier()==1
+                    ? rarity==GearRarity.VERY_RARE || rarity==GearRarity.LEGENDARY
+                    : rarity==GearRarity.LEGENDARY;
             default -> true;
         };
     }

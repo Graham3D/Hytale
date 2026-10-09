@@ -28,11 +28,12 @@ public final class GearBindings {
                         || !row.mapped() && row.managedItemId()!=null)
                     throw new IllegalStateException("Invalid gear binding "+row.baseId());
             }
-            bindings=Map.copyOf(rows);
+            bindings=Collections.unmodifiableMap(new TreeMap<>(rows));
         } catch(IOException e) { throw new UncheckedIOException(e); }
     }
     public Binding require(String base) {
         var b=bindings.get(base); if(b==null) throw new IllegalArgumentException("No binding for "+base); return b;
     }
+    /** Stable order for native-id registration, package audits and diagnostics. */
     public Collection<Binding> all() { return bindings.values(); }
 }

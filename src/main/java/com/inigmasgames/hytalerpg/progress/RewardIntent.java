@@ -16,6 +16,8 @@ public record RewardIntent(UUID player,EarnedReward reward,RewardCheckpoint befo
     public static RewardIntent create(UUID player,EarnedReward reward,RewardCheckpoint before){
         // Ordinary rewards retain their historical hash shape and never overwrite difficulty progression.
         if(reward.milestone()==null)before=before.withoutDifficulty();
+        // A non-currency award neither changes Gold nor expands historical intent hashes.
+        if(reward.goldPot()==null)before=before.withoutGold();
         return new RewardIntent(player,reward,before,calculate(player,reward,before));
     }
     public RewardCheckpoint after(){return before.advance(reward,hash);}

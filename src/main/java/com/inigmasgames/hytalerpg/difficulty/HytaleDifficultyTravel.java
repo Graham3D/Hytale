@@ -44,13 +44,23 @@ public final class HytaleDifficultyTravel implements DifficultyTravel.Port {
         return worlds.prepare(mode).thenCompose(world->{var provider=world.getWorldConfig().getSpawnProvider();
             if(provider==null)return CompletableFuture.failedFuture(new IllegalStateException("NATIVE_CAMPAIGN_SPAWN_MISSING"));
             return provider.getSpawnPointAsync(world,player).thenCompose(transform->{
-                var position=transform.getPosition();long chunk=com.hypixel.hytale.math.util.ChunkUtil.indexChunkFromBlock((int)Math.floor(position.x()),(int)Math.floor(position.z()));
-                return world.getChunkAsync(chunk).thenApplyAsync(loaded->{
+                var position=transform.getPosition();
+                return loadSpawnSections(world,position.x(),position.y(),position.z()).thenApplyAsync(loaded->{
                     var safe=findSafe(world,position.x(),position.y(),position.z());
                     return new DifficultyTravel.Destination(world.getWorldConfig().getUuid(),world.getName(),mode,safe.x(),safe.y(),safe.z(),transform.getRotation().yaw());
                 },world);
             });
         });
+    }
+    /** Preload only sections intersecting the existing spawn search and clearance bounds. */
+    private static CompletableFuture<Void> loadSpawnSections(World world,double x,double y,double z){
+        int bx=(int)Math.floor(x),by=(int)Math.floor(y),bz=(int)Math.floor(z);
+        var loads=new ArrayList<CompletableFuture<?>>();
+        for(int sx=Math.floorDiv(bx-3,32);sx<=Math.floorDiv(bx+3,32);sx++)
+            for(int sy=Math.floorDiv(by-5,32);sy<=Math.floorDiv(by+6,32);sy++)
+                for(int sz=Math.floorDiv(bz-3,32);sz<=Math.floorDiv(bz+3,32);sz++)
+                    if(sy>=0&&sy<10)loads.add(world.getChunkStore().getChunkSectionReferenceAtBlockAsync(sx*32,sy*32,sz*32));
+        return CompletableFuture.allOf(loads.toArray(CompletableFuture[]::new));
     }
     /** Search only around the native approved spawn. Never build a platform or overwrite existing blocks. */
     public static org.joml.Vector3d findSafe(World world,double x,double y,double z){
@@ -61,20 +71,23 @@ public final class HytaleDifficultyTravel implements DifficultyTravel.Port {
     }
     static boolean safe(World world,int x,int y,int z){
         if(y<1||y>317)return false;
-        var c=world.getChunkIfLoaded(com.hypixel.hytale.math.util.ChunkUtil.indexChunkFromBlock(x,z));
-        return c!=null&&c.getBlock(x,y,z)==0&&c.getBlock(x,y+1,z)==0&&c.getBlock(x,y+2,z)==0
+        var c=new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore());
+        if(!c.hasStorageInMemory(x,y-1,z)||!c.hasStorageInMemory(x,y+2,z))return false;
+        var floor=com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.getAssetMap().getAsset(c.getBlock(x,y-1,z));
+        return floor!=null&&c.getBlock(x,y,z)==0&&c.getBlock(x,y+1,z)==0&&c.getBlock(x,y+2,z)==0
                 &&c.getFluidId(x,y,z)==0&&c.getFluidId(x,y+1,z)==0
-                &&com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.getAssetMap().getAsset(c.getBlock(x,y-1,z)).getMaterial()==com.hypixel.hytale.protocol.BlockMaterial.Solid;
+                &&floor.getMaterial()==com.hypixel.hytale.protocol.BlockMaterial.Solid;
     }
     /** Operator placement verifies the actual native model bounds before NPCPlugin adds the holder. */
     public static void requireClear(World world,org.joml.Vector3dc at,com.hypixel.hytale.math.shape.Box bounds){
         if(bounds==null||bounds.width()>20||bounds.height()>20||bounds.depth()>20)throw new IllegalStateException("UNSUPPORTED_ENCOUNTER_BOUNDS");
         for(int x=(int)Math.floor(at.x()+bounds.min.x);x<(int)Math.ceil(at.x()+bounds.max.x);x++)
             for(int z=(int)Math.floor(at.z()+bounds.min.z);z<(int)Math.ceil(at.z()+bounds.max.z);z++){
-                var chunk=world.getChunkIfLoaded(com.hypixel.hytale.math.util.ChunkUtil.indexChunkFromBlock(x,z));
-                if(chunk==null)throw new IllegalStateException("ENCOUNTER_SPACE_NOT_LOADED");
-                for(int y=(int)Math.floor(at.y()+Math.max(0,bounds.min.y));y<(int)Math.ceil(at.y()+bounds.max.y);y++)
+                var chunk=new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore());
+                for(int y=(int)Math.floor(at.y()+Math.max(0,bounds.min.y));y<(int)Math.ceil(at.y()+bounds.max.y);y++){
+                    if(!chunk.hasStorageInMemory(x,y,z))throw new IllegalStateException("ENCOUNTER_SPACE_NOT_LOADED");
                     if(y<1||y>318||chunk.getBlock(x,y,z)!=0||chunk.getFluidId(x,y,z)!=0)throw new IllegalStateException("ENCOUNTER_SPACE_OBSTRUCTED");
+                }
             }
     }
     @Override public CompletionStage<Void> handoff(DifficultyTravel.Pending pending){

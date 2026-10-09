@@ -1,0 +1,40 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Void_Spectre",
+  "Modify": {
+    "MemoriesNameOverride": "Void_Spectre",
+    "DropList": "Drop_Void_Spectre",
+    "_InteractionVars": {
+      "Charge_Damage": {
+        "Interactions": [
+          {
+            "Parent": "Void_Spectre_Charge_Damage",
+            "DamageCalculator": {
+              "Type": "Absolute",
+              "BaseDamage": {
+                "Physical": 40
+              },
+              "RandomPercentageModifier": 0.1
+            },
+            "Type": "RPG_EnemyDamage"
+          }
+        ]
+      },
+      "Melee_Damage": {
+        "Interactions": [
+          {
+            "Parent": "NPC_Attack_Melee_Damage",
+            "DamageCalculator": {
+              "Type": "Absolute",
+              "BaseDamage": {
+                "Physical": 20
+              },
+              "RandomPercentageModifier": 0.1
+            },
+            "Type": "RPG_EnemyDamage"
+          }
+        ]
+      }
+    }
+  }
+}

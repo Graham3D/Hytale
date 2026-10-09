@@ -29,7 +29,14 @@ public record EnemyRewardRegistry(int schemaVersion,String profileId,String serv
     public record Spawn(UUID world,UUID enemy,String roleId,String combatIdentity,String biomeKey,int level,
                         ProgressionMath.Rank rank,ProgressionMath.Rarity rarity,String registryProfile,long spawnedAtMillis,
                         com.inigmasgames.hytalerpg.difficulty.GolemEncounter milestone,
-                        com.inigmasgames.hytalerpg.difficulty.EncounterProfileResolver.Resolved combat){
+                        com.inigmasgames.hytalerpg.difficulty.EncounterProfileResolver.Resolved combat,
+                        com.inigmasgames.hytalerpg.enemies.EnemyRewardContext enemyRewards){
+        public Spawn(UUID world,UUID enemy,String roleId,String combatIdentity,String biomeKey,int level,
+                     ProgressionMath.Rank rank,ProgressionMath.Rarity rarity,String registryProfile,long spawnedAtMillis,
+                     com.inigmasgames.hytalerpg.difficulty.GolemEncounter milestone,
+                     com.inigmasgames.hytalerpg.difficulty.EncounterProfileResolver.Resolved combat){
+            this(world,enemy,roleId,combatIdentity,biomeKey,level,rank,rarity,registryProfile,spawnedAtMillis,milestone,combat,null);
+        }
         public Spawn(UUID world,UUID enemy,String roleId,String combatIdentity,String biomeKey,int level,ProgressionMath.Rank rank,ProgressionMath.Rarity rarity,String registryProfile,long spawnedAtMillis){
             this(world,enemy,roleId,combatIdentity,biomeKey,level,rank,rarity,registryProfile,spawnedAtMillis,null);
         }
@@ -41,6 +48,7 @@ public record EnemyRewardRegistry(int schemaVersion,String profileId,String serv
             if(combat!=null&&(!world.equals(combat.worldId())||!enemy.equals(combat.enemyId())||!roleId.equals(combat.roleId())||!biomeKey.equals(combat.biomeKey())
                     ||level!=combat.sourceCombatLevel()||!registryProfile.equals(combat.profileId())||milestone!=null&&milestone.difficulty()!=combat.difficulty()))throw new IllegalArgumentException("FROZEN_COMBAT_SOURCE_MISMATCH");}
         public String eventId(){return "enemy-death/"+world+"/"+enemy;}
+        public long rewardXp(int playerLevel){return enemyRewards==null?ProgressionMath.enemyReward(level,rank,rarity,playerLevel):ProgressionMath.enemyReward(level,rank,enemyRewards.xpFactor(),playerLevel);}
         /** Future item generation consumes this frozen source, never the killer's level/current world. */
         public Optional<LootSource> lootSource(){return combat==null?Optional.empty():Optional.of(new LootSource(eventId(),world,enemy,combat.difficulty(),level,roleId,rank,rarity,registryProfile));}
     }

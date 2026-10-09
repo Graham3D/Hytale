@@ -165,7 +165,7 @@ final class ComfortManager {
         for (int y = bounds.minY(); y <= bounds.maxY(); y++) {
             for (int z = bounds.minZ(); z <= bounds.maxZ(); z++) {
                 for (int x = bounds.minX(); x <= bounds.maxX(); x++) {
-                    BlockType block = BlockType.getAssetMap().getAsset(world.getBlock(x, y, z));
+                    BlockType block = BlockType.getAssetMap().getAsset(com.inigmasgames.taverns.api.LoadedBlocks.getBlock(world, x, y, z));
                     if (block == null || block == BlockType.EMPTY) {
                         continue;
                     }

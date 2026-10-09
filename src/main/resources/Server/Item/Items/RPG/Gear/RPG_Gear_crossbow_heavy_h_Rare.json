@@ -94,7 +94,9 @@
             "BaseDamage": {
               "Projectile": 10.5
             }
-          }
+          },
+          "RpgProcSelector": "Standard_Projectile_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -180,7 +182,9 @@
               "EntityStatId": "SignatureEnergy",
               "Amount": 1
             }
-          ]
+          ],
+          "RpgProcSelector": "Combo_Projectile_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -823,7 +827,9 @@
             "BaseDamage": {
               "Projectile": 82
             }
-          }
+          },
+          "RpgProcSelector": "Signature_BigArrow_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     },
@@ -1019,7 +1025,9 @@
             "BaseDamage": {
               "Physical": 0
             }
-          }
+          },
+          "RpgProcSelector": "Guard_Bash_Damage",
+          "RpgProcCoefficient": 1.0
         }
       ]
     }

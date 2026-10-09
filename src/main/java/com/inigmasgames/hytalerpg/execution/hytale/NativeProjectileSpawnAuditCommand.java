@@ -34,9 +34,11 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
         var expected=java.nio.file.Path.of(System.getProperty("rpg.projectileSpawnAuditRoot","UNSET")).toAbsolutePath().normalize();
         if(!Boolean.getBoolean("rpg.projectileSpawnAudit")||world==null||!world.getSavePath().toAbsolutePath().normalize().startsWith(expected)
                 ||Universe.get().getWorlds().values().stream().anyMatch(w->w.getPlayerCount()!=0))return CompletableFuture.failedFuture(new IllegalStateException("ISOLATED_EMPTY_WORLD_REQUIRED"));
-        world.getChunkAsync(0L).whenComplete((auditChunk,loadFailure)->{
+        world.getChunkStore().getChunkSectionReferenceAtBlockAsync(4,200,4).whenComplete((auditRef,loadFailure)->{
             if(loadFailure!=null){result.completeExceptionally(loadFailure);return;}
             world.execute(()->{
+            var auditChunk=world.getChunkStore().getStore().getComponent(auditRef,com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection.getComponentType());
+            var auditBlocks=world.getChunkStore().getStore().getComponent(auditRef,com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection.getComponentType());
             auditChunk.addKeepLoaded();
             var store=world.getEntityStore().getStore();Ref<EntityStore> actor=null;var spawned=new AtomicReference<Ref<EntityStore>>();var deferred=new AtomicBoolean();
             try{
@@ -45,7 +47,7 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                 holder.addComponent(TransformComponent.getComponentType(),new TransformComponent(new Vector3d(0,200,0),new com.hypixel.hytale.math.vector.Rotation3f()));
                 holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());actor=store.addEntity(holder,AddReason.SPAWN);
                 var context=context(owner);var source=ProjectileConfig.getAssetMap().getAsset("Projectile_Config_RPG_Fire_Bolt");
-                NativeBlizzardVisuals.audit(store,auditChunk,context);
+                NativeBlizzardVisuals.audit(store,auditBlocks,context);
                 NativeHealingBeamVisuals.audit(store,context);
                 HealingTetherPresentation.audit(store,context);
                 SplineHealingParticleVisuals.audit(store,context);

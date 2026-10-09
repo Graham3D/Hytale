@@ -23,16 +23,39 @@ class WorldSpawnDensitySettingsTest {
         assertEquals(1.0, new WorldSpawnDensitySettings(path).multiplier());
     }
 
-    @Test void rejectsUnsafeValuesAndCorruptionWithoutReplacingSave() throws Exception {
+    @Test void manualEditOfLegacyEnvelopeIsAcceptedWithoutResettingSave() throws Exception {
+        var path = temp.resolve("world-spawn-density.json");
+        var settings = new WorldSpawnDensitySettings(path);
+        settings.set(4.0);
+        // R234 wrote an envelope whose checksum still describes 4.0 after an owner edit.
+        var legacy = "{\"checksum\":\"ccc0d48898694aa24f055986462ec40f9ca2989f7f3098b7d798c05b536b64c0\"," +
+                "\"data\":{\"schemaVersion\":1,\"worldSpawnDensityMultiplier\":8.0}}";
+        Files.writeString(path, legacy);
+        assertEquals(8.0, new WorldSpawnDensitySettings(path).multiplier());
+        assertEquals(legacy, Files.readString(path));
+        new WorldSpawnDensitySettings(path).set(6.0);
+        assertEquals(6.0, new WorldSpawnDensitySettings(path).multiplier());
+        assertFalse(Files.readString(path).contains("checksum"));
+        Files.writeString(path, Files.readString(path).replace("6.0", "8.0"));
+        assertEquals(8.0, new WorldSpawnDensitySettings(path).multiplier());
+    }
+
+    @Test void rejectsUnsafeValuesAndMalformedSettingsWithoutReplacingSave() throws Exception {
         var path = temp.resolve("world-spawn-density.json");
         var settings = new WorldSpawnDensitySettings(path);
         for (double value : new double[] {0, -2, 100, Double.NaN, Double.POSITIVE_INFINITY})
             assertThrows(IllegalArgumentException.class, () -> settings.set(value));
         assertFalse(Files.exists(path));
-        settings.set(4.0);
-        var before = Files.readString(path);
-        Files.writeString(path, before.replace("4.0", "8.0"));
-        assertThrows(IllegalStateException.class, () -> new WorldSpawnDensitySettings(path));
+        for (var invalid : new String[] {
+                "{\"schemaVersion\":2,\"worldSpawnDensityMultiplier\":8.0}",
+                "{\"schemaVersion\":1,\"worldSpawnDensityMultiplier\":9.0}",
+                "{\"schemaVersion\":1,\"worldSpawnDensityMultiplier\":",
+                "{\"data\":null}"
+        }) {
+            Files.writeString(path, invalid);
+            assertThrows(IllegalStateException.class, () -> new WorldSpawnDensitySettings(path));
+            assertEquals(invalid, Files.readString(path));
+        }
     }
 
     @Test void installedNativeEnvironmentTargetFollowsDensityWithoutSpeciesMutation() {

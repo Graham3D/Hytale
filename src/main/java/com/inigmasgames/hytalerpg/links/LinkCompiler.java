@@ -45,6 +45,11 @@ public final class LinkCompiler {
     }
 
     public CompilationResult compile(RpgPlayerState state) {
+        return compile(state,ignored->true);
+    }
+
+    /** Availability is live equipment state; saved assignment and graph remain untouched here. */
+    public CompilationResult compile(RpgPlayerState state,java.util.function.Predicate<SkillId> available) {
         try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_SKILL_PLAN_COMPILE", null)) {
         GraphValidationResult graph = graphService.validate(state);
         if (!graph.valid()) return CompilationResult.failure(graph.firstIssue().code(), graph.firstIssue().message());
@@ -53,6 +58,7 @@ public final class LinkCompiler {
         for (SkillSlot slot : SkillSlot.values()) {
             var skillId = state.skill(slot);
             if (skillId.isEmpty()) continue;
+            if (!available.test(skillId.get())) continue;
             var definition = catalog.skill(skillId.get());
             if (definition.isEmpty()) {
                 plans.put(slot, degradedPlan(slot, skillId.get(), "Definition is missing from the current catalog"));

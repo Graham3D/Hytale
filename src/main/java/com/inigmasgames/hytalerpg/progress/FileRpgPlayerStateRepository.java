@@ -59,6 +59,9 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
             if(!migration.state().has("rewards")||!migration.state().get("rewards").isJsonObject())
                 throw new IllegalStateException("Missing schema-8 earned-reward checkpoint");
             var rewardJson=migration.state().getAsJsonObject("rewards");
+            if(!migration.state().has("goldBalance")||!migration.state().get("goldBalance").isJsonObject())throw new IllegalStateException("Missing schema-12 Gold balance");
+            var goldJson=migration.state().getAsJsonObject("goldBalance");
+            for(String field:List.of("gold","remainder"))if(!goldJson.has(field)||goldJson.get(field).isJsonNull())throw new IllegalStateException("Incomplete Gold balance "+field);
             if(!migration.state().has("acquisition")||!migration.state().get("acquisition").isJsonObject())throw new IllegalStateException("Missing schema-9 acquisition ledger");
             var acquisitionJson=migration.state().getAsJsonObject("acquisition");
             for(String required:List.of("meaningfulSkills","pity","spentInsight"))

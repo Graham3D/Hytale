@@ -21,6 +21,28 @@ public final class GearRequirements {
                 errors.add("Insufficient "+stat+" to "+(armor?"don":"wield")+" this item");
             return List.copyOf(errors);
         }
+        public List<RpgAttribute> missingAttributes(Map<RpgAttribute,Integer> permanent) {
+            return Arrays.stream(RpgAttribute.values())
+                    .filter(stat -> permanent.getOrDefault(stat, 0) < attributes.getOrDefault(stat, 0))
+                    .toList();
+        }
+        public String playerFeedback(int actorLevel, Map<RpgAttribute,Integer> permanent) {
+            var missing = missingAttributes(permanent).stream().map(stat -> switch (stat) {
+                case STR -> "Strength";
+                case DEX -> "Dexterity";
+                case INT -> "Intelligence";
+                case WIS -> "Wisdom";
+                case LUCK -> "Luck";
+            }).toList();
+            if (!missing.isEmpty()) {
+                String joined = missing.size() == 1 ? missing.get(0)
+                        : missing.size() == 2 ? String.join(" and ", missing)
+                        : String.join(", ", missing.subList(0, missing.size() - 1))
+                                + ", and " + missing.get(missing.size() - 1);
+                return "Insufficient " + joined;
+            }
+            return actorLevel < level ? "Requires level " + level : null;
+        }
     }
     public static Gate combine(Gate base,List<Gate> affixes,BigDecimal localReduction) {
         if(localReduction==null || localReduction.signum()<0 || localReduction.compareTo(BigDecimal.ONE)>=0)

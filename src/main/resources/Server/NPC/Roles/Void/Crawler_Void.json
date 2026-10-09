@@ -1,0 +1,129 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Predator",
+  "Modify": {
+    "DeathParticles": "Effect_Death_Void",
+    "Appearance": "Crawler_Void",
+    "AttitudeGroup": "Void",
+    "DropList": "Drop_Crawler_Void",
+    "MaxHealth": 70,
+    "MaxSpeed": 8,
+    "WanderRadius": 12,
+    "ViewRange": 18,
+    "HearingRange": 12,
+    "AbsoluteDetectionRange": {
+      "Compute": "AbsoluteDetectionRange"
+    },
+    "AlertedRange": 18,
+    "IsMemory": true,
+    "MemoriesCategory": "Voidspawn",
+    "MemoriesNameOverride": "Crawler_Void",
+    "MemoriesUnlockedBy": "Kill",
+    "AlertedTime": {
+      "Compute": "AlertedTime"
+    },
+    "MaintainDistanceWhileAlerted": false,
+    "ThreatenDelayRange": {
+      "Compute": "ThreatenDelayRange"
+    },
+    "ThreatenAnimation": "Jump",
+    "FleeIfNotThreatened": false,
+    "FleeRange": 11,
+    "HardLeashDistance": 60,
+    "LeashDistance": 30,
+    "LeashMinPlayerDistance": 7,
+    "LeashTimer": [
+      3,
+      4
+    ],
+    "CombatBehaviorDistance": 6.5,
+    "CombatRelativeTurnSpeed": 1,
+    "CombatDirectWeight": 10,
+    "CombatStrafeWeight": 10,
+    "CombatBackOffAfterAttack": true,
+    "CombatBackOffDurationRange": [
+      3,
+      4
+    ],
+    "CombatBackOffDistanceRange": [
+      2,
+      3
+    ],
+    "CombatStrafingFrequencyRange": [
+      1,
+      2
+    ],
+    "CombatStrafingDurationRange": [
+      2,
+      3
+    ],
+    "CombatMovingRelativeSpeed": 0.7,
+    "HitInterruptEnabled": true,
+    "KnockbackScale": 0.3,
+    "Attack": "Root_NPC_Crawler_Void_Attack",
+    "AttackDistance": 2.25,
+    "ChaseRelativeSpeed": 1,
+    "AlwaysSleepAtNight": false,
+    "DayFlavorAnimation": "",
+    "DayTimeNapWeight": 0,
+    "TimidDuringDay": false,
+    "DayTimePeriod": [
+      18.01,
+      6.01
+    ],
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    },
+    "_InteractionVars": {
+      "Melee_Damage": {
+        "Interactions": [
+          {
+            "Parent": "NPC_Attack_Melee_Damage",
+            "DamageCalculator": {
+              "Type": "Absolute",
+              "BaseDamage": {
+                "Physical": 16
+              },
+              "RandomPercentageModifier": 0.1
+            },
+            "DamageEffects": {
+              "Knockback": {
+                "Type": "Directional",
+                "Force": 0.5,
+                "RelativeX": 0,
+                "RelativeZ": -1,
+                "VelocityY": 1,
+                "VelocityType": "Set"
+              }
+            },
+            "Type": "RPG_EnemyDamage"
+          }
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Crawler_Void.name",
+      "Description": "Translation key for NPC name display"
+    },
+    "AlertedTime": {
+      "Value": [
+        1,
+        1.5
+      ],
+      "Description": "How long to wait in an alerted or threatening state before switching to active combat."
+    },
+    "ThreatenDelayRange": {
+      "Value": [
+        1,
+        1
+      ],
+      "Description": "Delay before the threaten animation is played."
+    },
+    "AbsoluteDetectionRange": {
+      "Value": 4,
+      "Description": "The range at which a target is guaranteed to be detected. If zero, absolute detection will be disabled."
+    }
+  }
+}

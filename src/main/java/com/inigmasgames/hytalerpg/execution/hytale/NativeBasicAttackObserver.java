@@ -21,7 +21,9 @@ import com.inigmasgames.hytalerpg.combat.hytale.*;
 import com.inigmasgames.hytalerpg.combat.power.NativeItemPowerRegistry;
 import com.inigmasgames.hytalerpg.combat.resource.RootWeaponHit;
 import com.inigmasgames.hytalerpg.diagnostics.RpgTraceEventType;
+import com.inigmasgames.hytale.patch.NativeDamageReceiptHook;
 import java.util.*;
+import java.util.function.Consumer;
 
 /** Pinned execution-side witness, never a packet/button/timestamp heuristic. Native damage remains untouched. */
 public final class NativeBasicAttackObserver {
@@ -37,7 +39,34 @@ public final class NativeBasicAttackObserver {
         boolean intercept(Ref<EntityStore> target,Store<EntityStore> store,
                           CommandBuffer<EntityStore> buffer,Ref<EntityStore> source,double now);
     }
-    private record Root(InteractionChain chain,NativeBasicAttackPaths paths,RootWeaponHit receipt,String item){}
+    @FunctionalInterface public interface DurableRoot {String issue(UUID world,UUID actor);}
+    private record HitKey(int chain,List<Integer> fork,String operationRoot,int operation,int counter,UUID target){}
+    private static final class HitProgress {
+        final String id;
+        int nextComponent;
+        HitProgress(String id){this.id=id;this.nextComponent=1;}
+    }
+    private static final class HitState {
+        long next;
+        final Map<HitKey,HitProgress> latest=new HashMap<>();
+    }
+    private static final class CompletedPlayerHit {
+        final Store<EntityStore> store;
+        final CommandBuffer<EntityStore> buffer;
+        final Ref<EntityStore> attacker,victim;
+        final UUID attackerId,victimId;
+        final String receipt;
+        final double attackerMax;
+        final NativeOriginalHitHealthGroup health=new NativeOriginalHitHealthGroup();
+        CompletedPlayerHit(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,
+                Ref<EntityStore> attacker,Ref<EntityStore> victim,UUID attackerId,UUID victimId,
+                String receipt,double attackerMax){
+            this.store=store;this.buffer=buffer;this.attacker=attacker;this.victim=victim;
+            this.attackerId=attackerId;this.victimId=victimId;this.receipt=receipt;this.attackerMax=attackerMax;
+        }
+    }
+    private record Root(InteractionChain chain,NativeBasicAttackPaths paths,RootWeaponHit receipt,String item,
+                        String durableRoot,HitState hits){}
     private record Witness(Root root,boolean charged,double healthBefore,Ref<EntityStore> source,String victim,String identity){}
     private record CacheKey(String item,RootInteraction root,Map<String,String> variables){}
     private static final MetaKey<Witness> WITNESS=Damage.META_REGISTRY.registerMetaObject(ignored->null,false,"InigmasGames:NativeBasicHitWitness",null);
@@ -47,6 +76,10 @@ public final class NativeBasicAttackObserver {
     private final RpgCombatKernel kernel;
     private final CombatTrace trace;
     private final ObservedHit onHit;
+    private final Map<String,CompletedPlayerHit> completedPlayerHits=new HashMap<>();
+    private Consumer<NativeEnemyReflectiveReaction.PlayerHit> playerHit=ignored->{};
+    private volatile boolean nativeDamageReceiptEnabled;
+    private DurableRoot durableRoots=(world,actor)->null;
     private FriendlyConstructHit constructHits=(actor,target,identity,store,buffer,source,now)->false;
     private ConstructDamageGate constructDamageGate=(target,store,buffer,source,now)->false;
     public NativeBasicAttackObserver(RpgCombatKernel kernel,CombatTrace trace,ObservedHit onHit){
@@ -54,7 +87,10 @@ public final class NativeBasicAttackObserver {
     }
     public synchronized void configureFriendlyConstructHits(FriendlyConstructHit value){constructHits=Objects.requireNonNull(value);}
     public synchronized void configureConstructDamageGate(ConstructDamageGate value){constructDamageGate=Objects.requireNonNull(value);}
-    public synchronized void forget(UUID actor){roots.remove(actor);}
+    public synchronized void configureDurableRoots(DurableRoot value){durableRoots=Objects.requireNonNull(value);}
+    public synchronized void configurePlayerHit(Consumer<NativeEnemyReflectiveReaction.PlayerHit> value){playerHit=Objects.requireNonNull(value);}
+    public void configureNativeDamageReceipt(boolean enabled){nativeDamageReceiptEnabled=enabled;}
+    public synchronized void forget(UUID actor){roots.remove(actor);completedPlayerHits.values().removeIf(hit->hit.attackerId.equals(actor));}
     private synchronized void start(UUID actor,Ref<EntityStore> actorRef,InteractionChainStartEvent event){
         var chain=event.getChain();var context=event.getContext();var item=context.getOriginalItemType();
         if(event.getType()!=InteractionType.Primary||chain.getForkedChainId()!=null||context.getEntity()!=actorRef||item==null||item.getWeapon()==null)return;
@@ -74,7 +110,111 @@ public final class NativeBasicAttackObserver {
         owned.removeIf(root->root.chain().getFinalState()!=InteractionState.NotFinished&&root.chain().getContext().getEntry()==null);
         if(owned.stream().anyMatch(root->root.chain()==chain))return;
         if(owned.size()>=32)throw new IllegalStateException("NATIVE_BASIC_ROOT_LIMIT");
-        owned.add(new Root(chain,resolved,new RootWeaponHit(actor),item.getId()));
+        String durableRoot;
+        try{durableRoot=durableRoots.issue(actorRef.getStore().getExternalData().getWorld().getWorldConfig().getUuid(),actor);}
+        catch(RuntimeException unavailable){durableRoot=null;}
+        owned.add(new Root(chain,resolved,new RootWeaponHit(actor),item.getId(),durableRoot,new HitState()));
+    }
+    /** Called only by the existing neutral native leaf hook; ordinary weapon execution is untouched. */
+    public synchronized String originalDamageReceipt(NativeDamageReceiptHook.Context context){
+        if(context.source()==null||context.componentIndex()<0
+                ||!context.source().equals(context.executor())||!context.source().equals(context.owner()))return null;
+        var owned=roots.get(context.source());if(owned==null)return null;
+        Root matched=null;InteractionChain leaf=null;
+        for(var root:owned){
+            if(root.durableRoot()==null||root.chain().getInitialRootInteraction()==null
+                    ||!root.chain().getInitialRootInteraction().getId().equals(context.initialRoot()))continue;
+            var queue=new ArrayDeque<InteractionChain>();queue.add(root.chain());
+            var seen=Collections.newSetFromMap(new IdentityHashMap<InteractionChain,Boolean>());
+            while(!queue.isEmpty()){
+                var chain=queue.removeFirst();if(!seen.add(chain))continue;
+                var chainContext=chain.getContext();
+                var nativeTarget=chainContext.getTargetEntity();
+                var targetId=nativeTarget==null||!nativeTarget.isValid()?null:
+                        chainContext.getCommandBuffer().getComponent(nativeTarget,UUIDComponent.getComponentType());
+                if(chain.getChainId()==context.chainId()
+                        &&NativeEnemyAction.forkPath(chain.getForkedChainId()).equals(context.forkPath())
+                        &&context.world().equals(chainContext.getCommandBuffer().getStore().getExternalData().getWorld().getWorldConfig().getUuid())
+                        &&targetId!=null&&context.target().equals(targetId.getUuid())
+                        &&chain.getRootInteraction()!=null&&chain.getRootInteraction().getId().equals(context.operationRoot())
+                        &&chain.getOperationIndex()==context.operationIndex()
+                        &&chainContext.getOperationCounter()==context.operationCounter()
+                        &&chainContext.getChain()==chain&&chainContext.getEntry()!=null
+                        &&!chainContext.getEntry().isUseSimulationState()){
+                    if(matched!=null)throw new IllegalStateException("PLAYER_HIT_AMBIGUOUS_NATIVE_ROOT");
+                    matched=root;leaf=chain;
+                }
+                queue.addAll(chain.getForkedChains().values());queue.addAll(chain.getNewForks());
+                if(seen.size()+queue.size()>256)throw new IllegalStateException("PLAYER_HIT_NATIVE_FORK_LIMIT");
+            }
+        }
+        if(matched==null)return null;
+        var operation=leaf.getRootInteraction();
+        if(context.operationIndex()<0||context.operationIndex()>=operation.getOperationMax()
+                ||matched.paths().classify(operation.getOperation(context.operationIndex())).isEmpty())return null;
+        var key=new HitKey(context.chainId(),context.forkPath(),context.operationRoot(),
+                context.operationIndex(),context.operationCounter(),context.target());
+        var state=matched.hits();
+        HitProgress progress;
+        if(context.componentIndex()==0){
+            if(state.latest.size()>=128&&!state.latest.containsKey(key))throw new IllegalStateException("PLAYER_HIT_PROGRESS_LIMIT");
+            progress=new HitProgress(matched.durableRoot()+"/hit/"+(++state.next)+"/"+context.target());
+            state.latest.put(key,progress);
+        }else{
+            progress=state.latest.get(key);
+            if(progress==null||progress.nextComponent!=context.componentIndex())return null;
+            progress.nextComponent++;
+        }
+        return progress.id+"/component/"+context.componentIndex();
+    }
+    private synchronized void completedPlayerComponent(int i,ArchetypeChunk<EntityStore> chunk,
+            Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+        // The native receipt class is supplied by the version-pinned server patch, not the mod JAR.
+        // Ordinary player damage must never resolve it when that patch is unavailable.
+        if(!nativeDamageReceiptEnabled)return;
+        String receipt=NativeDamageReceiptHook.receipt(damage);
+        if(receipt==null||!receipt.startsWith("combat.hit/")||HytaleDamageAdapter.metadata(damage)!=null
+                ||!(damage.getSource() instanceof Damage.EntitySource entity))return;
+        int marker=receipt.lastIndexOf("/component/");if(marker<0)return;
+        int component;
+        try{component=Integer.parseInt(receipt.substring(marker+11));}catch(NumberFormatException invalid){return;}
+        if(component<0||component>32)return;
+        var attacker=entity.getRef();var victim=chunk.getReferenceTo(i);
+        if(attacker==null||!attacker.isValid()||attacker.equals(victim)
+                ||store.getComponent(attacker,PlayerRef.getComponentType())==null)return;
+        var sourceId=store.getComponent(attacker,UUIDComponent.getComponentType());
+        var targetId=store.getComponent(victim,UUIDComponent.getComponentType());
+        var stats=chunk.getComponent(i,EntityStatMap.getComponentType());
+        var sourceStats=store.getComponent(attacker,EntityStatMap.getComponentType());
+        var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
+        var attackerHp=sourceStats==null?null:sourceStats.get(DefaultEntityStatTypes.getHealth());
+        double before=SupportDamageSystems.observedHealthBefore(damage);
+        if(sourceId==null||targetId==null||hp==null||attackerHp==null
+                ||!Double.isFinite(before)||!Double.isFinite(hp.get())
+                ||!Double.isFinite(attackerHp.getMax())||attackerHp.getMax()<=0)return;
+        String group=receipt.substring(0,marker);
+        var aggregate=completedPlayerHits.get(group);
+        if(aggregate==null){
+            if(completedPlayerHits.size()>=4096)return;
+            aggregate=new CompletedPlayerHit(store,buffer,attacker,victim,sourceId.getUuid(),
+                    targetId.getUuid(),group,attackerHp.getMax());
+            completedPlayerHits.put(group,aggregate);
+            var queued=aggregate;
+            try{buffer.run(later->{
+                Consumer<NativeEnemyReflectiveReaction.PlayerHit> consumer;
+                synchronized(this){
+                    if(completedPlayerHits.remove(group)!=queued)return;
+                    consumer=playerHit;
+                }
+                var snapshot=queued.health.snapshot();
+                if(later!=queued.store||snapshot.actualHealthLoss()<=0||snapshot.components()==0)return;
+                consumer.accept(new NativeEnemyReflectiveReaction.PlayerHit(queued.store,queued.buffer,
+                        queued.attacker,queued.victim,queued.attackerId,queued.victimId,
+                        queued.receipt,snapshot.actualHealthLoss(),snapshot.healthAfter(),queued.attackerMax));
+            });}catch(RuntimeException rejected){completedPlayerHits.remove(group);return;}
+        }
+        if(aggregate.store!=store||aggregate.attacker!=attacker||aggregate.victim!=victim)return;
+        aggregate.health.add(component,before,hp.get(),damage.isCancelled());
     }
     private synchronized Witness find(UUID actor,Ref<EntityStore> source,Ref<EntityStore> target,double before,String victim){
         var owned=roots.get(actor);if(owned==null)return null;
@@ -175,6 +315,8 @@ public final class NativeBasicAttackObserver {
         @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.AFTER,DamageSystems.ApplyDamage.class),new SystemGroupDependency<>(Order.BEFORE,DamageModule.get().getInspectDamageGroup()));}
         @Override public void handle(int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
+            try{owner.completedPlayerComponent(i,chunk,store,buffer,damage);}
+            catch(RuntimeException ignored){} // A receipt failure cannot alter an ordinary native hit.
             var witness=damage.getIfPresentMetaObject(WITNESS);if(witness==null)return;
             damage.putMetaObject(WITNESS,null);
             var hp=chunk.getComponent(i,EntityStatMap.getComponentType()).get(DefaultEntityStatTypes.getHealth());if(hp==null)return;

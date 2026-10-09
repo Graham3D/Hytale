@@ -82,7 +82,7 @@ class GearFoundationTest {
     @Test void hoverReportsEveryFailureAndArmorVerb() {
         var item=GearInstance.authoredQa(catalog.base("gm.plate_iron.head.n"),UUID.randomUUID(),10,1000,GearRarity.COMMON,List.of(),BigDecimal.ZERO);
         var lines=GearTooltip.describe(item,1,Map.of(STR,10));
-        assertTrue(lines.stream().anyMatch(l->l.text().startsWith("Required Strength:")&&l.style()==GearTooltip.Style.ERROR));
+        assertTrue(lines.stream().anyMatch(l->l.text().matches("Requires [0-9]+ Strength")&&l.style()==GearTooltip.Style.ERROR));
         assertTrue(lines.stream().anyMatch(l->l.text().equals("Armor: "+GearTooltip.number(item.intrinsicStats().get("protectionPoints")))));
         assertEquals("#ffffff",lines.getFirst().color());
         assertTrue(lines.stream().noneMatch(l->l.style()==GearTooltip.Style.AFFIX));

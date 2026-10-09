@@ -1,0 +1,3 @@
+Group { Anchor: (Height: 24);
+  Label #Text { Anchor: (Full: 0); Style: (FontName: "Secondary", FontSize: 14, TextColor: #c9d2dd, Wrap: true); }
+}

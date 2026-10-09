@@ -1560,7 +1560,7 @@
       "nativeHealth": 30,
       "attackReference": 1,
       "assetPath": "Server/NPC/Roles/Void/Void_Spectre.json",
-      "assetSha256": "E527A7370FCE03709FEEFE164E3DBE546BED19C2B71711EA8EED2FDAB18C8944",
+      "assetSha256": "E005E84AE112430819C630C7E39679C07CB96CF2B59C4C999D789BFB217844EC",
       "evidence": "ASSET_AUDITED_CONNECTED_UNVERIFIED",
       "combatIdentity": "void_spectre",
       "rank": "COMMON",

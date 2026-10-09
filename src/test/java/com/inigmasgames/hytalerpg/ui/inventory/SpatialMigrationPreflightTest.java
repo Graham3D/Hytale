@@ -11,10 +11,15 @@ class SpatialMigrationPreflightTest {
     private static final FootprintCatalog CATALOG = FootprintCatalog.loadDefault();
 
     @Test void catalogUsesExplicitReviewedBindingsAndNoUnknownFallback() {
-        assertEquals(2, CATALOG.revision());
+        assertEquals(3, CATALOG.revision());
         assertEquals(5608, CATALOG.bindingCount());
         assertEquals(new SpatialLayout.Size(2, 4), CATALOG.size("Weapon_Shortbow_Iron"));
         assertEquals(new SpatialLayout.Size(2, 4), CATALOG.size("Weapon_Staff_Adamantite"));
+        assertEquals(new SpatialLayout.Size(1, 2), CATALOG.size("Weapon_Axe_Cobalt"));
+        assertEquals(new SpatialLayout.Size(2, 2), CATALOG.size("Weapon_Crossbow_Iron"));
+        assertEquals(new SpatialLayout.Size(4, 4), CATALOG.size("Weapon_Shield_Iron"));
+        assertEquals(new SpatialLayout.Size(1, 3), CATALOG.previousSize("Weapon_Axe_Cobalt"));
+        assertEquals(new SpatialLayout.Size(2, 3), CATALOG.previousSize("Weapon_Shield_Iron"));
         assertEquals(new SpatialLayout.Size(2, 3), CATALOG.size("Armor_Iron_Chest"));
         assertEquals(new SpatialLayout.Size(1, 1), CATALOG.size("Potion_Health"));
         assertEquals(new SpatialLayout.Size(2, 4), CATALOG.size("RPG_Gear_battleaxe_adamantite_h_Legendary"));
