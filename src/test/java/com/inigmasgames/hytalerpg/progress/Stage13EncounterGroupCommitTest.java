@@ -160,6 +160,37 @@ class Stage13EncounterGroupCommitTest {
             var fence=pool.submit(effects::await);assertFalse(fence.isDone());assertTrue(calls.isEmpty());persisted.complete(true);fence.get(5,TimeUnit.SECONDS);assertEquals(List.of(1,2),calls);
         }
     }
+    @Test void queuedFastEffectsDoNotExpireBeforeTheirWorkerStarts()throws Exception{
+        var applied=new AtomicInteger();
+        try(var effects=new DurableEncounterEffects()){
+            CompletionStage<Void> last=null;
+            try(var first=effects.reserve()){
+                last=first.submit(CompletableFuture.completedStage(null),ignored->{
+                    try{Thread.sleep(2500);}catch(InterruptedException error){Thread.currentThread().interrupt();throw new IllegalStateException(error);}
+                    applied.incrementAndGet();
+                });
+            }
+            for(int i=0;i<160;i++)try(var lease=effects.reserve()){
+                last=lease.submit(CompletableFuture.completedStage(null),ignored->{
+                    try{Thread.sleep(20);}catch(InterruptedException error){Thread.currentThread().interrupt();throw new IllegalStateException(error);}
+                    applied.incrementAndGet();
+                });
+            }
+            last.toCompletableFuture().get(12,TimeUnit.SECONDS);
+            assertEquals(161,applied.get());
+            assertNull(effects.failure());
+        }
+    }
+    @Test void startedEffectStillFailsClosedWhenDurabilityIsUncertain()throws Exception{
+        var effects=new DurableEncounterEffects();var durable=new CompletableFuture<Boolean>();var applied=new AtomicInteger();
+        try(var lease=effects.reserve()){
+            var receipt=lease.submit(durable,ignored->applied.incrementAndGet());
+            assertThrows(ExecutionException.class,()->receipt.toCompletableFuture().get(7,TimeUnit.SECONDS));
+            assertNotNull(effects.failure());
+            assertEquals(0,applied.get());
+            assertThrows(IllegalStateException.class,effects::reserve);
+        }finally{assertThrows(IllegalStateException.class,effects::close);}
+    }
     @Test void deferredEffectsCapacityRejectsBeforeContributionAndCanBeReleased(){
         try(var effects=new DurableEncounterEffects()){
             var leases=new ArrayList<DurableEncounterEffects.Reservation>();for(int i=0;i<DurableEncounterEffects.MAX_PENDING;i++)leases.add(effects.reserve());

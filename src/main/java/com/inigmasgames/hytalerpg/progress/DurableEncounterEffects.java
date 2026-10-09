@@ -21,19 +21,29 @@ public final class DurableEncounterEffects implements AutoCloseable {
         public <T> CompletionStage<Void> submit(CompletionStage<T> durable,Consumer<T> effect){synchronized(DurableEncounterEffects.this){
             if(submitted||released||closed||failure!=null)throw new IllegalStateException("ENCOUNTER_EFFECTS_UNAVAILABLE",failure);
             submitted=true;
-            tail=CompletableFuture.runAsync(()->{
+            var receipt=new CompletableFuture<Void>();
+            tail=receipt;
+            receipt.whenComplete((ignored,error)->{
+                if(error!=null){synchronized(DurableEncounterEffects.this){if(failure==null)failure=error;failures++;}}
+            });
+            worker.execute(()->{
+                // Queue time is bounded by MAX_PENDING, but it is not execution time.
+                // Start the uncertainty deadline only when this ordered job actually runs.
+                receipt.orTimeout(EncounterGroupCommit.DEADLINE_MILLIS,TimeUnit.MILLISECONDS);
                 try{
                     if(failure!=null)throw new IllegalStateException("ENCOUNTER_EFFECTS_UNAVAILABLE",failure);
                     T result=durable.toCompletableFuture().get(EncounterGroupCommit.DEADLINE_MILLIS,TimeUnit.MILLISECONDS);
                     effect.accept(result);
-                }catch(Throwable error){failure=error;if(error instanceof InterruptedException)Thread.currentThread().interrupt();throw new CompletionException(error);}
+                    receipt.complete(null);
+                }catch(Throwable error){
+                    synchronized(DurableEncounterEffects.this){if(failure==null)failure=error;}
+                    if(error instanceof InterruptedException)Thread.currentThread().interrupt();
+                    receipt.completeExceptionally(error);
+                }
                 finally{release();}
-            },worker);
-            // Timeout is uncertainty, NOT cancellation: the physical job still owns its ticket
-            // until it actually exits. Late durable writes remain recoverable, never retried.
-            tail.orTimeout(EncounterGroupCommit.DEADLINE_MILLIS,TimeUnit.MILLISECONDS).whenComplete((ignored,error)->{
-                if(error!=null){failure=error;synchronized(DurableEncounterEffects.this){failures++;}}
             });
+            // Timeout is uncertainty, NOT cancellation: the physical job keeps its ticket
+            // until it exits. Late durable writes remain recoverable and are never retried.
             return tail.minimalCompletionStage();
         }}
         private void release(){synchronized(DurableEncounterEffects.this){if(!released){released=true;pending--;reservations.remove(this);if(submitted)completed++;}}}
